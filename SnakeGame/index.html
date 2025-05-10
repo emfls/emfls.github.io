@@ -16,17 +16,6 @@
       align-items: center;
       padding: 1rem;
     }
-    #ad-banner {
-      width: 100%;
-      height: 80px;
-      margin-bottom: 1rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #00000044;
-      color: #aaa;
-      font-size: 0.9rem;
-    }
     h1 {
       margin-bottom: 0.3rem;
       font-size: 2rem;
@@ -61,8 +50,8 @@
       cursor: pointer;
     }
     #score {
-      margin: 0.8rem 0;
-      font-size: 1.2rem;
+      margin: 0.5rem 0 0.8rem;
+      font-size: 1.1rem;
     }
     .controls {
       display: grid;
@@ -73,7 +62,7 @@
       grid-template-columns: 50px 50px 50px;
       grid-template-rows: 50px 50px 50px;
       gap: 0.4rem;
-      margin: 1.2rem 0;
+      margin: 1.2rem 0 0.5rem;
     }
     .btn {
       background: #4e54c8;
@@ -84,11 +73,27 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: background-color 0.2s ease;
+    }
+    .btn:active {
+      background-color: #6a72f8;
     }
     .btn.up { grid-area: up; }
     .btn.down { grid-area: down; }
     .btn.left { grid-area: left; }
     .btn.right { grid-area: right; }
+
+    #ad-banner {
+      width: 100%;
+      height: 80px;
+      margin: 0.8rem 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #00000044;
+      color: #aaa;
+      font-size: 0.9rem;
+    }
 
     #game-over {
       position: absolute;
@@ -104,41 +109,34 @@
       justify-content: center;
       z-index: 20;
     }
+
     #game-over p {
       font-size: 1.5rem;
       margin-bottom: 1rem;
     }
-    button.restart {
-      padding: 1rem 2rem;
-      background-color: #4e54c8;
-      border: none;
-      border-radius: 8px;
-      color: white;
-      font-size: 1.3rem;
-    }
-    #home-btn {
-      margin-top: 1.5rem;
+
+    button.restart, button.menu, button.share {
       padding: 1rem;
+      margin-top: 1rem;
       font-size: 1.1rem;
-      background-color: #333;
+      background-color: #4e54c8;
       color: white;
       border: none;
+      border-radius: 10px;
       width: 90%;
       max-width: 400px;
-      border-radius: 10px;
+      transition: background-color 0.2s ease;
       cursor: pointer;
+    }
+
+    button.restart:active, button.menu:active, button.share:active {
+      background-color: #6a72f8;
     }
   </style>
 </head>
 <body>
-  <div id="ad-banner">
-    <!-- 여기에 구글 자동 광고 코드 삽입 -->
-    Google Ad Banner Here
-  </div>
-
   <h1>QuickPlay: Snake</h1>
   <p class="description">Eat. Grow. Avoid crashing. Good luck!</p>
-  <div id="score">Score: 0</div>
   <div class="game-container">
     <canvas id="game" width="300" height="300"></canvas>
     <button id="start-btn">Start Game</button>
@@ -152,7 +150,13 @@
     <button class="btn down" onclick="setDirection('ArrowDown')">🔽</button>
   </div>
 
-  <button id="home-btn" onclick="goHome()">🏠 Back to Main</button>
+  <div id="ad-banner">
+    <!-- Google AdSense 코드 삽입 위치 -->
+    Google Ad Banner
+  </div>
+
+  <button class="menu" onclick="goToMain()">📂 다른 게임 목록</button>
+  <button class="share" onclick="shareGame()">📤 공유하기</button>
 
   <script>
     const canvas = document.getElementById('game');
@@ -234,7 +238,6 @@
       } else {
         snake.pop();
       }
-      document.getElementById('score').textContent = 'Score: ' + score;
     }
 
     function loop() {
@@ -249,7 +252,6 @@
       dir = 'ArrowRight';
       score = 0;
       running = true;
-      document.getElementById('score').textContent = 'Score: 0';
       gameOverDiv.style.display = 'none';
     }
 
@@ -275,8 +277,18 @@
       gameOverDiv.style.display = 'flex';
     }
 
-    function goHome() {
+    function goToMain() {
       window.location.href = '/'; // 또는 'index.html'
+    }
+
+    function shareGame() {
+      const url = window.location.href;
+      const text = '🐍 심심할 때 즐기기 좋은 스네이크 게임! 도전해봐!';
+      if (navigator.share) {
+        navigator.share({ title: 'QuickPlay: Snake', text, url });
+      } else {
+        alert(`공유 링크:\n${url}`);
+      }
     }
   </script>
 </body>
