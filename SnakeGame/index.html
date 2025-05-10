@@ -25,17 +25,20 @@
       font-size: 1rem;
       color: #ccc;
     }
+    .game-container {
+      position: relative;
+    }
     canvas {
       background-color: #222;
       border: 2px solid #4e54c8;
       touch-action: none;
     }
-    #score {
-      margin: 0.8rem 0;
-      font-size: 1.2rem;
-    }
     #start-btn {
-      margin-bottom: 1rem;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
       padding: 0.5rem 1rem;
       font-size: 1rem;
       background-color: #4e54c8;
@@ -43,6 +46,10 @@
       border-radius: 5px;
       color: white;
       cursor: pointer;
+    }
+    #score {
+      margin: 0.8rem 0;
+      font-size: 1.2rem;
     }
     .controls {
       display: grid;
@@ -66,31 +73,10 @@
     .btn.down { grid-area: down; }
     .btn.left { grid-area: left; }
     .btn.right { grid-area: right; }
-    #ranking {
-      width: 100%;
-      max-width: 300px;
-      margin-top: 1.5rem;
-    }
-    #ranking h2 {
-      font-size: 1rem;
-      margin-bottom: 0.5rem;
-    }
-    #ranking ol {
-      font-size: 0.9rem;
-      padding-left: 1rem;
-      max-height: 200px;
-      overflow-y: auto;
-    }
     #game-over {
       display: none;
       text-align: center;
       margin-top: 1rem;
-    }
-    input[type="text"] {
-      padding: 0.5rem;
-      border-radius: 4px;
-      border: none;
-      margin-top: 0.5rem;
     }
     button.restart {
       margin-top: 1rem;
@@ -105,10 +91,12 @@
 </head>
 <body>
   <h1>QuickPlay: Snake</h1>
-  <p class="description">Eat. Grow. Avoid crashing. Stay in the Top 100!</p>
-  <button id="start-btn">Start Game</button>
+  <p class="description">Eat. Grow. Avoid crashing. Good luck!</p>
   <div id="score">Score: 0</div>
-  <canvas id="game" width="300" height="300"></canvas>
+  <div class="game-container">
+    <canvas id="game" width="300" height="300"></canvas>
+    <button id="start-btn">Start Game</button>
+  </div>
   <div class="controls">
     <button class="btn up" onclick="setDirection('ArrowUp')">🔼</button>
     <button class="btn left" onclick="setDirection('ArrowLeft')">◀️</button>
@@ -116,13 +104,8 @@
     <button class="btn down" onclick="setDirection('ArrowDown')">🔽</button>
   </div>
   <div id="game-over"></div>
-  <div id="ranking">
-    <h2>🏆 Top 100 Rankings</h2>
-    <ol id="ranking-list"></ol>
-  </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbzImgZlthlsd8bT27xY9HgDZbkj0b4sf4khz9yZW3jrGbFWTb8vsrihtcEMOnWpp8qx/exec";
     const canvas = document.getElementById('game');
     const ctx = canvas.getContext('2d');
     const box = 15;
@@ -133,11 +116,14 @@
     let running = false;
     let interval;
 
-    document.getElementById('start-btn').onclick = () => {
+    const startBtn = document.getElementById('start-btn');
+    const gameOverDiv = document.getElementById('game-over');
+
+    startBtn.onclick = () => {
       resetGame();
       running = true;
       interval = setInterval(loop, 150);
-      document.getElementById('start-btn').style.display = 'none';
+      startBtn.style.display = 'none';
     };
 
     document.addEventListener('keydown', e => {
@@ -185,7 +171,7 @@
       ) {
         running = false;
         clearInterval(interval);
-        checkRanking(score);
+        showGameOver();
         return;
       }
 
@@ -212,53 +198,14 @@
       score = 0;
       running = true;
       document.getElementById('score').textContent = 'Score: 0';
-      document.getElementById('game-over').style.display = 'none';
+      gameOverDiv.style.display = 'none';
     }
 
-    async function checkRanking(score) {
-      const gameOverDiv = document.getElementById('game-over');
+    function showGameOver() {
       gameOverDiv.innerHTML = '';
-      gameOverDiv.style.display = 'block';
+      const msg = document.createElement('p');
+      msg.textContent = `Your score: ${score}`;
 
-      try {
-        const res = await fetch(API_URL);
-        if (!res.ok) throw new Error("Failed to fetch ranking");
-
-        const data = await res.json();
-        const validData = data.filter(d => d[1] && !isNaN(parseInt(d[1])));
-        const scores = validData.map(d => parseInt(d[1]));
-
-        if (scores.length < 100 || score > scores[99]) {
-          const input = document.createElement('input');
-          input.placeholder = 'Enter your nickname';
-          input.id = 'nickname-input';
-          const button = document.createElement('button');
-          button.textContent = 'Submit';
-          button.className = 'restart';
-          button.onclick = async () => {
-            const nickname = document.getElementById('nickname-input').value || 'Anonymous';
-            await fetch(API_URL, {
-              method: 'POST',
-              body: JSON.stringify({ nickname, score })
-            });
-            await loadRanking();
-            showRetry(gameOverDiv);
-          };
-          gameOverDiv.append("🎉 Top 100!", document.createElement('br'), input, button);
-        } else {
-          const msg = document.createElement('p');
-          msg.textContent = `😢 Your score: ${score}. Not in top 100.`;
-          gameOverDiv.appendChild(msg);
-          showRetry(gameOverDiv);
-        }
-      } catch (err) {
-        console.error(err);
-        gameOverDiv.innerHTML = '<p>⚠️ Ranking fetch failed.</p>';
-        showRetry(gameOverDiv);
-      }
-    }
-
-    function showRetry(container) {
       const retry = document.createElement('button');
       retry.textContent = 'Try Again';
       retry.className = 'restart';
@@ -266,25 +213,14 @@
         resetGame();
         running = true;
         interval = setInterval(loop, 150);
-        container.style.display = 'none';
-        document.getElementById('start-btn').style.display = 'none';
+        gameOverDiv.style.display = 'none';
+        startBtn.style.display = 'none';
       };
-      container.appendChild(retry);
-    }
 
-    async function loadRanking() {
-      const res = await fetch(API_URL);
-      const data = await res.json();
-      const list = document.getElementById('ranking-list');
-      list.innerHTML = '';
-      data.forEach(([name, sc], i) => {
-        const li = document.createElement('li');
-        li.textContent = `${i + 1}. ${name} - ${sc}`;
-        list.appendChild(li);
-      });
+      gameOverDiv.appendChild(msg);
+      gameOverDiv.appendChild(retry);
+      gameOverDiv.style.display = 'block';
     }
-
-    loadRanking();
   </script>
 </body>
 </html>
