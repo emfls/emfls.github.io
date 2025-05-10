@@ -62,7 +62,7 @@
       grid-template-columns: 50px 50px 50px;
       grid-template-rows: 50px 50px 50px;
       gap: 0.4rem;
-      margin: 1rem 0;
+      margin: 1.2rem 0;
     }
     .btn {
       background: #4e54c8;
@@ -70,6 +70,9 @@
       border: none;
       font-size: 1.2rem;
       border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .btn.up { grid-area: up; }
     .btn.down { grid-area: down; }
@@ -90,19 +93,30 @@
       justify-content: center;
       z-index: 20;
     }
-
     #game-over p {
       font-size: 1.5rem;
       margin-bottom: 1rem;
     }
-
-    button.restart {
+    button.restart,
+    button.back {
       padding: 1rem 2rem;
       background-color: #4e54c8;
       border: none;
       border-radius: 8px;
       color: white;
       font-size: 1.3rem;
+      margin-top: 0.8rem;
+    }
+    #ad-banner {
+      width: 100%;
+      height: 80px;
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #00000044;
+      color: #aaa;
+      font-size: 0.9rem;
     }
   </style>
 </head>
@@ -120,6 +134,11 @@
     <button class="btn left" onclick="setDirection('ArrowLeft')">◀️</button>
     <button class="btn right" onclick="setDirection('ArrowRight')">▶️</button>
     <button class="btn down" onclick="setDirection('ArrowDown')">🔽</button>
+  </div>
+
+  <div id="ad-banner">
+    <!-- 여기에 구글 광고 코드 삽입 -->
+    Google Ad Banner Here
   </div>
 
   <script>
@@ -172,7 +191,7 @@
       ctx.fillRect(food.x * box, food.y * box, box, box);
 
       snake.forEach((s, index) => {
-        ctx.fillStyle = index === 0 ? '#0f0' : '#6f6';
+        ctx.fillStyle = index === 0 ? '#0a0' : '#6f6';
         ctx.fillRect(s.x * box, s.y * box, box, box);
       });
     }
@@ -238,8 +257,16 @@
         startBtn.style.display = 'none';
       };
 
+      const backBtn = document.createElement('button');
+      backBtn.textContent = 'Back to Main';
+      backBtn.className = 'back';
+      backBtn.onclick = () => {
+        window.location.href = '/'; // or 'index.html'
+      };
+
       gameOverDiv.appendChild(msg);
       gameOverDiv.appendChild(retry);
+      gameOverDiv.appendChild(backBtn);
       gameOverDiv.style.display = 'flex';
     }
   </script>
