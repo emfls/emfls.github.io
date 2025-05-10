@@ -34,6 +34,16 @@
       margin: 0.8rem 0;
       font-size: 1.2rem;
     }
+    #start-btn {
+      margin-bottom: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      background-color: #4e54c8;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+    }
     .controls {
       display: grid;
       grid-template-columns: 60px 60px 60px;
@@ -48,7 +58,6 @@
       font-size: 1.3rem;
       border-radius: 8px;
     }
-    .btn.center { visibility: hidden; }
     #ranking {
       width: 100%;
       max-width: 300px;
@@ -89,18 +98,14 @@
 <body>
   <h1>QuickPlay: Snake</h1>
   <p class="description">Eat. Grow. Avoid crashing. Stay in the Top 100!</p>
+  <button id="start-btn">Start Game</button>
   <div id="score">Score: 0</div>
   <canvas id="game" width="300" height="300"></canvas>
   <div class="controls">
-    <button class="btn"></button>
     <button class="btn" onclick="setDirection('ArrowUp')">🔼</button>
-    <button class="btn"></button>
     <button class="btn" onclick="setDirection('ArrowLeft')">◀️</button>
-    <button class="btn center"></button>
     <button class="btn" onclick="setDirection('ArrowRight')">▶️</button>
-    <button class="btn"></button>
     <button class="btn" onclick="setDirection('ArrowDown')">🔽</button>
-    <button class="btn"></button>
   </div>
   <div id="game-over"></div>
   <div id="ranking">
@@ -113,11 +118,19 @@
     const canvas = document.getElementById('game');
     const ctx = canvas.getContext('2d');
     const box = 15;
-    let snake = [{ x: 5, y: 5 }];
-    let food = spawnFood();
+    let snake = [];
+    let food = {};
     let dir = 'ArrowRight';
     let score = 0;
-    let running = true;
+    let running = false;
+    let interval;
+
+    document.getElementById('start-btn').onclick = () => {
+      resetGame();
+      running = true;
+      interval = setInterval(loop, 150);
+      document.getElementById('start-btn').style.display = 'none';
+    };
 
     document.addEventListener('keydown', e => {
       if (["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(e.key)) {
@@ -163,6 +176,7 @@
         snake.some(seg => seg.x === head.x && seg.y === head.y)
       ) {
         running = false;
+        clearInterval(interval);
         checkRanking(score);
         return;
       }
@@ -183,13 +197,20 @@
       draw();
     }
 
-    setInterval(loop, 150);
+    function resetGame() {
+      snake = [{ x: 5, y: 5 }];
+      food = spawnFood();
+      dir = 'ArrowRight';
+      score = 0;
+      running = true;
+      document.getElementById('score').textContent = 'Score: 0';
+      document.getElementById('game-over').style.display = 'none';
+    }
 
     async function checkRanking(score) {
       const res = await fetch(API_URL);
       const data = await res.json();
       const scores = data.map(d => parseInt(d[1]));
-
       const gameOverDiv = document.getElementById('game-over');
       gameOverDiv.innerHTML = '';
 
@@ -213,7 +234,12 @@
         const retry = document.createElement('button');
         retry.textContent = 'Try Again';
         retry.className = 'restart';
-        retry.onclick = () => location.reload();
+        retry.onclick = () => {
+          resetGame();
+          running = true;
+          interval = setInterval(loop, 150);
+          gameOverDiv.style.display = 'none';
+        };
         gameOverDiv.append(msg, retry);
       }
       gameOverDiv.style.display = 'block';
