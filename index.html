@@ -5,12 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>QuickPlay Arcade – Simple Web Games</title>
 
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#4e54c8"/>
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
     * {
       box-sizing: border-box;
       -webkit-user-select: none;
-      -ms-user-select: none;
       user-select: none;
     }
 
@@ -19,7 +23,6 @@
       font-family: 'Inter', sans-serif;
       background-color: #f5f6fa;
       color: #222;
-      line-height: 1.6;
       -webkit-tap-highlight-color: transparent;
     }
 
@@ -100,6 +103,18 @@
       background-color: #eaeaea;
     }
   </style>
+
+  <script>
+    // 모바일에서 게임 클릭 시 풀스크린 요청
+    function launchFullScreen(url) {
+      const a = document.createElement('a')
+      a.href = url
+      a.target = '_blank'
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+    }
+  </script>
 </head>
 <body>
   <header>
@@ -116,12 +131,12 @@
     <section>
       <h2>Games</h2>
       <ul>
-        <li>
-          <a href="game1/index.html">🎮 Game Title 1</a>
-          <p>Quick tap-to-play action game.</p>
+        <li onclick="launchFullScreen('game1/index.html')">
+          <a>🎮 Game Title 1</a>
+          <p>Quick tap-to-play arcade game.</p>
         </li>
-        <li>
-          <a href="game2/index.html">🧠 Game Title 2</a>
+        <li onclick="launchFullScreen('game2/index.html')">
+          <a>🧠 Game Title 2</a>
           <p>Simple brain teaser to kill 2 minutes.</p>
         </li>
       </ul>
@@ -129,7 +144,4 @@
   </main>
 
   <footer>
-    © 2025 QuickPlay Arcade · Built by Itagi
-  </footer>
-</body>
-</html>
+    © 2025 QuickPlay
