@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Snake Game</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background-color: #111;
+      color: white;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+    }
+    h1 {
+      margin-bottom: 0.3rem;
+      font-size: 2rem;
+    }
+    p.description {
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      color: #ccc;
+    }
+    canvas {
+      background-color: #222;
+      border: 2px solid #4e54c8;
+      touch-action: none;
+    }
+    #score {
+      margin: 0.8rem 0;
+      font-size: 1.2rem;
+    }
+    .controls {
+      display: grid;
+      grid-template-columns: 60px 60px 60px;
+      grid-template-rows: 60px 60px 60px;
+      gap: 0.5rem;
+      margin: 1rem 0;
+    }
+    .btn {
+      background: #4e54c8;
+      color: white;
+      border: none;
+      font-size: 1.3rem;
+      border-radius: 8px;
+    }
+    .btn.center { visibility: hidden; }
+    #ranking {
+      width: 100%;
+      max-width: 300px;
+      margin-top: 1.5rem;
+    }
+    #ranking h2 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    #ranking ol {
+      font-size: 0.9rem;
+      padding-left: 1rem;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    #game-over {
+      display: none;
+      text-align: center;
+      margin-top: 1rem;
+    }
+    input[type="text"] {
+      padding: 0.5rem;
+      border-radius: 4px;
+      border: none;
+      margin-top: 0.5rem;
+    }
+    button.restart {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background-color: #4e54c8;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>QuickPlay: Snake</h1>
+  <p class="description">Eat. Grow. Avoid crashing. Stay in the Top 100!</p>
+  <div id="score">Score: 0</div>
+  <canvas id="game" width="300" height="300"></canvas>
+  <div class="controls">
+    <button class="btn"></button>
+    <button class="btn" onclick="setDirection('ArrowUp')">🔼</button>
+    <button class="btn"></button>
+    <button class="btn" onclick="setDirection('ArrowLeft')">◀️</button>
+    <button class="btn center"></button>
+    <button class="btn" onclick="setDirection('ArrowRight')">▶️</button>
+    <button class="btn"></button>
+    <button class="btn" onclick="setDirection('ArrowDown')">🔽</button>
+    <button class="btn"></button>
+  </div>
+  <div id="game-over"></div>
+  <div id="ranking">
+    <h2>🏆 Top 100 Rankings</h2>
+    <ol id="ranking-list"></ol>
+  </div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbwInWdJ0iPASQz87vvAD_XHNDe2GIM5ooTDIPCgg65rLbQRdDMLME2vDtqSTpbgQ_EA/exec";
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+    const box = 15;
+    let snake = [{ x: 5, y: 5 }];
+    let food = spawnFood();
+    let dir = 'ArrowRight';
+    let score = 0;
+    let running = true;
+
+    document.addEventListener('keydown', e => {
+      if (["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(e.key)) {
+        setDirection(e.key);
+      }
+    });
+
+    function setDirection(newDir) {
+      const opposites = {
+        ArrowLeft: 'ArrowRight',
+        ArrowRight: 'ArrowLeft',
+        ArrowUp: 'ArrowDown',
+        ArrowDown: 'ArrowUp'
+      };
+      if (newDir !== opposites[dir]) dir = newDir;
+    }
+
+    function spawnFood() {
+      return {
+        x: Math.floor(Math.random() * (canvas.width / box)),
+        y: Math.floor(Math.random() * (canvas.height / box))
+      };
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'red';
+      ctx.fillRect(food.x * box, food.y * box, box, box);
+      ctx.fillStyle = 'lime';
+      snake.forEach(s => ctx.fillRect(s.x * box, s.y * box, box, box));
+    }
+
+    function update() {
+      const head = { ...snake[0] };
+      if (dir === 'ArrowLeft') head.x--;
+      if (dir === 'ArrowRight') head.x++;
+      if (dir === 'ArrowUp') head.y--;
+      if (dir === 'ArrowDown') head.y++;
+
+      if (
+        head.x < 0 || head.x >= canvas.width / box ||
+        head.y < 0 || head.y >= canvas.height / box ||
+        snake.some(seg => seg.x === head.x && seg.y === head.y)
+      ) {
+        running = false;
+        checkRanking(score);
+        return;
+      }
+
+      snake.unshift(head);
+      if (head.x === food.x && head.y === food.y) {
+        score++;
+        food = spawnFood();
+      } else {
+        snake.pop();
+      }
+      document.getElementById('score').textContent = 'Score: ' + score;
+    }
+
+    function loop() {
+      if (!running) return;
+      update();
+      draw();
+    }
+
+    setInterval(loop, 150);
+
+    async function checkRanking(score) {
+      const res = await fetch(API_URL);
+      const data = await res.json();
+      const scores = data.map(d => parseInt(d[1]));
+
+      const gameOverDiv = document.getElementById('game-over');
+      gameOverDiv.innerHTML = '';
+
+      if (scores.length < 100 || score > scores[99]) {
+        const input = document.createElement('input');
+        input.placeholder = 'Enter your nickname';
+        const button = document.createElement('button');
+        button.textContent = 'Submit';
+        button.className = 'restart';
+        button.onclick = async () => {
+          await fetch(API_URL, {
+            method: 'POST',
+            body: JSON.stringify({ nickname: input.value || 'Anonymous', score })
+          });
+          location.reload();
+        };
+        gameOverDiv.append("🎉 Top 100!", input, button);
+      } else {
+        const msg = document.createElement('p');
+        msg.textContent = `😢 Your score: ${score}. Not in top 100.`;
+        const retry = document.createElement('button');
+        retry.textContent = 'Try Again';
+        retry.className = 'restart';
+        retry.onclick = () => location.reload();
+        gameOverDiv.append(msg, retry);
+      }
+      gameOverDiv.style.display = 'block';
+    }
+
+    async function loadRanking() {
+      const res = await fetch(API_URL);
+      const data = await res.json();
+      const list = document.getElementById('ranking-list');
+      list.innerHTML = '';
+      data.forEach(([name, sc], i) => {
+        const li = document.createElement('li');
+        li.textContent = `${i + 1}. ${name} - ${sc}`;
+        list.appendChild(li);
+      });
+    }
+
+    loadRanking();
+  </script>
+</body>
+</html>
