@@ -131,7 +131,7 @@
   </style>
 </head>
 <body>
-  <h1><span style="color:#0a0;">S</span><span style="color:#6f6;">nake</span> Game</h1>
+  <h1><span style="color:#8f94fb;">QuickPlay:</span> <span style="color:#0a0;">S</span><span style="color:#6f6;">nake</span></h1>
   <p class="description">Eat, grow, and don't crash. Can you beat your best?</p>
 
   <div class="game-container">
@@ -148,8 +148,8 @@
   </div>
 
   <div id="ad-banner">
-    <!-- Insert Google AdSense Code Here -->
-    Ad Banner (Example)
+    <!-- Google AdSense here -->
+    Ad Banner Placeholder
   </div>
 
   <button class="menu" onclick="goToMain()">📂 Other Games</button>
@@ -165,6 +165,7 @@
     let score = 0;
     let running = false;
     let interval;
+    let lastScore = 0;
 
     const startBtn = document.getElementById('start-btn');
     const gameOverDiv = document.getElementById('game-over');
@@ -253,6 +254,7 @@
     }
 
     function showGameOver() {
+      lastScore = score; // 저장
       gameOverDiv.innerHTML = '';
 
       const msg = document.createElement('p');
@@ -275,16 +277,20 @@
     }
 
     function goToMain() {
-      window.location.href = '/'; // 또는 'index.html'
+      window.location.href = '/'; // or 'index.html'
     }
 
     function shareGame() {
       const url = window.location.href;
-      const text = '🐍 QuickPlay Snake - Can you beat your high score?';
+      const text = `🐍 QuickPlay Snake - My score: ${lastScore}\nPlay now!`;
       if (navigator.share) {
-        navigator.share({ title: 'QuickPlay: Snake', text, url });
+        navigator.share({ title: 'QuickPlay: Snake', text, url })
+          .catch(() => alert('Sharing failed. Try copying the link.'));
       } else {
-        alert(`Copy this link to share:\n${url}`);
+        const full = `${text}\n${url}`;
+        navigator.clipboard.writeText(full)
+          .then(() => alert('Link with score copied to clipboard!'))
+          .catch(() => alert(`Copy this link:\n${full}`));
       }
     }
   </script>
