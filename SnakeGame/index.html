@@ -22,8 +22,10 @@
     }
     p.description {
       margin-bottom: 1rem;
-      font-size: 1rem;
+      font-size: 0.85rem;
       color: #ccc;
+      text-align: center;
+      padding: 0 1rem;
     }
     .game-container {
       position: relative;
@@ -39,11 +41,11 @@
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 10;
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
+      padding: 1rem 2rem;
+      font-size: 1.3rem;
       background-color: #4e54c8;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       color: white;
       cursor: pointer;
     }
@@ -57,35 +59,50 @@
         ". up ."
         "left . right"
         ". down .";
-      grid-template-columns: 60px 60px 60px;
-      grid-template-rows: 60px 60px 60px;
-      gap: 0.5rem;
+      grid-template-columns: 50px 50px 50px;
+      grid-template-rows: 50px 50px 50px;
+      gap: 0.4rem;
       margin: 1rem 0;
     }
     .btn {
       background: #4e54c8;
       color: white;
       border: none;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       border-radius: 8px;
     }
     .btn.up { grid-area: up; }
     .btn.down { grid-area: down; }
     .btn.left { grid-area: left; }
     .btn.right { grid-area: right; }
+
     #game-over {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.6);
+      color: white;
       display: none;
-      text-align: center;
-      margin-top: 1rem;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
     }
+
+    #game-over p {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
     button.restart {
-      margin-top: 1rem;
-      padding: 0.5rem 1rem;
+      padding: 1rem 2rem;
       background-color: #4e54c8;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       color: white;
-      font-size: 1rem;
+      font-size: 1.3rem;
     }
   </style>
 </head>
@@ -96,6 +113,7 @@
   <div class="game-container">
     <canvas id="game" width="300" height="300"></canvas>
     <button id="start-btn">Start Game</button>
+    <div id="game-over"></div>
   </div>
   <div class="controls">
     <button class="btn up" onclick="setDirection('ArrowUp')">🔼</button>
@@ -103,7 +121,6 @@
     <button class="btn right" onclick="setDirection('ArrowRight')">▶️</button>
     <button class="btn down" onclick="setDirection('ArrowDown')">🔽</button>
   </div>
-  <div id="game-over"></div>
 
   <script>
     const canvas = document.getElementById('game');
@@ -153,8 +170,11 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = 'red';
       ctx.fillRect(food.x * box, food.y * box, box, box);
-      ctx.fillStyle = 'lime';
-      snake.forEach(s => ctx.fillRect(s.x * box, s.y * box, box, box));
+
+      snake.forEach((s, index) => {
+        ctx.fillStyle = index === 0 ? '#0f0' : '#6f6';
+        ctx.fillRect(s.x * box, s.y * box, box, box);
+      });
     }
 
     function update() {
@@ -203,6 +223,7 @@
 
     function showGameOver() {
       gameOverDiv.innerHTML = '';
+
       const msg = document.createElement('p');
       msg.textContent = `Your score: ${score}`;
 
@@ -219,7 +240,7 @@
 
       gameOverDiv.appendChild(msg);
       gameOverDiv.appendChild(retry);
-      gameOverDiv.style.display = 'block';
+      gameOverDiv.style.display = 'flex';
     }
   </script>
 </body>
