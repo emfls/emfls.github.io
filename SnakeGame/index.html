@@ -16,6 +16,17 @@
       align-items: center;
       padding: 1rem;
     }
+    #ad-banner {
+      width: 100%;
+      height: 80px;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #00000044;
+      color: #aaa;
+      font-size: 0.9rem;
+    }
     h1 {
       margin-bottom: 0.3rem;
       font-size: 2rem;
@@ -97,30 +108,34 @@
       font-size: 1.5rem;
       margin-bottom: 1rem;
     }
-    button.restart,
-    button.back {
+    button.restart {
       padding: 1rem 2rem;
       background-color: #4e54c8;
       border: none;
       border-radius: 8px;
       color: white;
       font-size: 1.3rem;
-      margin-top: 0.8rem;
     }
-    #ad-banner {
-      width: 100%;
-      height: 80px;
-      margin-top: 1rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #00000044;
-      color: #aaa;
-      font-size: 0.9rem;
+    #home-btn {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      font-size: 1.1rem;
+      background-color: #333;
+      color: white;
+      border: none;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 10px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
+  <div id="ad-banner">
+    <!-- 여기에 구글 자동 광고 코드 삽입 -->
+    Google Ad Banner Here
+  </div>
+
   <h1>QuickPlay: Snake</h1>
   <p class="description">Eat. Grow. Avoid crashing. Good luck!</p>
   <div id="score">Score: 0</div>
@@ -129,6 +144,7 @@
     <button id="start-btn">Start Game</button>
     <div id="game-over"></div>
   </div>
+
   <div class="controls">
     <button class="btn up" onclick="setDirection('ArrowUp')">🔼</button>
     <button class="btn left" onclick="setDirection('ArrowLeft')">◀️</button>
@@ -136,10 +152,7 @@
     <button class="btn down" onclick="setDirection('ArrowDown')">🔽</button>
   </div>
 
-  <div id="ad-banner">
-    <!-- 여기에 구글 광고 코드 삽입 -->
-    Google Ad Banner Here
-  </div>
+  <button id="home-btn" onclick="goHome()">🏠 Back to Main</button>
 
   <script>
     const canvas = document.getElementById('game');
@@ -257,17 +270,13 @@
         startBtn.style.display = 'none';
       };
 
-      const backBtn = document.createElement('button');
-      backBtn.textContent = 'Back to Main';
-      backBtn.className = 'back';
-      backBtn.onclick = () => {
-        window.location.href = '/'; // or 'index.html'
-      };
-
       gameOverDiv.appendChild(msg);
       gameOverDiv.appendChild(retry);
-      gameOverDiv.appendChild(backBtn);
       gameOverDiv.style.display = 'flex';
+    }
+
+    function goHome() {
+      window.location.href = '/'; // 또는 'index.html'
     }
   </script>
 </body>
