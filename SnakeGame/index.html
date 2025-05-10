@@ -216,36 +216,46 @@
     }
 
     async function checkRanking(score) {
-      const res = await fetch(API_URL);
-      const data = await res.json();
-      const scores = data.map(d => parseInt(d[1]));
       const gameOverDiv = document.getElementById('game-over');
       gameOverDiv.innerHTML = '';
+      gameOverDiv.style.display = 'block';
 
-      if (scores.length < 100 || score > scores[99]) {
-        const input = document.createElement('input');
-        input.placeholder = 'Enter your nickname';
-        input.id = 'nickname-input';
-        const button = document.createElement('button');
-        button.textContent = 'Submit';
-        button.className = 'restart';
-        button.onclick = async () => {
-          const nickname = document.getElementById('nickname-input').value || 'Anonymous';
-          await fetch(API_URL, {
-            method: 'POST',
-            body: JSON.stringify({ nickname, score })
-          });
-          await loadRanking();
+      try {
+        const res = await fetch(API_URL);
+        if (!res.ok) throw new Error("Failed to fetch ranking");
+
+        const data = await res.json();
+        const validData = data.filter(d => d[1] && !isNaN(parseInt(d[1])));
+        const scores = validData.map(d => parseInt(d[1]));
+
+        if (scores.length < 100 || score > scores[99]) {
+          const input = document.createElement('input');
+          input.placeholder = 'Enter your nickname';
+          input.id = 'nickname-input';
+          const button = document.createElement('button');
+          button.textContent = 'Submit';
+          button.className = 'restart';
+          button.onclick = async () => {
+            const nickname = document.getElementById('nickname-input').value || 'Anonymous';
+            await fetch(API_URL, {
+              method: 'POST',
+              body: JSON.stringify({ nickname, score })
+            });
+            await loadRanking();
+            showRetry(gameOverDiv);
+          };
+          gameOverDiv.append("🎉 Top 100!", document.createElement('br'), input, button);
+        } else {
+          const msg = document.createElement('p');
+          msg.textContent = `😢 Your score: ${score}. Not in top 100.`;
+          gameOverDiv.appendChild(msg);
           showRetry(gameOverDiv);
-        };
-        gameOverDiv.append("🎉 Top 100!", document.createElement('br'), input, button);
-      } else {
-        const msg = document.createElement('p');
-        msg.textContent = `😢 Your score: ${score}. Not in top 100.`;
-        gameOverDiv.appendChild(msg);
+        }
+      } catch (err) {
+        console.error(err);
+        gameOverDiv.innerHTML = '<p>⚠️ Ranking fetch failed.</p>';
         showRetry(gameOverDiv);
       }
-      gameOverDiv.style.display = 'block';
     }
 
     function showRetry(container) {
