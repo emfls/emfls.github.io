@@ -46,6 +46,10 @@
     }
     .controls {
       display: grid;
+      grid-template-areas:
+        ". up ."
+        "left . right"
+        ". down .";
       grid-template-columns: 60px 60px 60px;
       grid-template-rows: 60px 60px 60px;
       gap: 0.5rem;
@@ -58,6 +62,10 @@
       font-size: 1.3rem;
       border-radius: 8px;
     }
+    .btn.up { grid-area: up; }
+    .btn.down { grid-area: down; }
+    .btn.left { grid-area: left; }
+    .btn.right { grid-area: right; }
     #ranking {
       width: 100%;
       max-width: 300px;
@@ -102,10 +110,10 @@
   <div id="score">Score: 0</div>
   <canvas id="game" width="300" height="300"></canvas>
   <div class="controls">
-    <button class="btn" onclick="setDirection('ArrowUp')">🔼</button>
-    <button class="btn" onclick="setDirection('ArrowLeft')">◀️</button>
-    <button class="btn" onclick="setDirection('ArrowRight')">▶️</button>
-    <button class="btn" onclick="setDirection('ArrowDown')">🔽</button>
+    <button class="btn up" onclick="setDirection('ArrowUp')">🔼</button>
+    <button class="btn left" onclick="setDirection('ArrowLeft')">◀️</button>
+    <button class="btn right" onclick="setDirection('ArrowRight')">▶️</button>
+    <button class="btn down" onclick="setDirection('ArrowDown')">🔽</button>
   </div>
   <div id="game-over"></div>
   <div id="ranking">
@@ -217,32 +225,41 @@
       if (scores.length < 100 || score > scores[99]) {
         const input = document.createElement('input');
         input.placeholder = 'Enter your nickname';
+        input.id = 'nickname-input';
         const button = document.createElement('button');
         button.textContent = 'Submit';
         button.className = 'restart';
         button.onclick = async () => {
+          const nickname = document.getElementById('nickname-input').value || 'Anonymous';
           await fetch(API_URL, {
             method: 'POST',
-            body: JSON.stringify({ nickname: input.value || 'Anonymous', score })
+            body: JSON.stringify({ nickname, score })
           });
-          location.reload();
+          await loadRanking();
+          showRetry(gameOverDiv);
         };
-        gameOverDiv.append("🎉 Top 100!", input, button);
+        gameOverDiv.append("🎉 Top 100!", document.createElement('br'), input, button);
       } else {
         const msg = document.createElement('p');
         msg.textContent = `😢 Your score: ${score}. Not in top 100.`;
-        const retry = document.createElement('button');
-        retry.textContent = 'Try Again';
-        retry.className = 'restart';
-        retry.onclick = () => {
-          resetGame();
-          running = true;
-          interval = setInterval(loop, 150);
-          gameOverDiv.style.display = 'none';
-        };
-        gameOverDiv.append(msg, retry);
+        gameOverDiv.appendChild(msg);
+        showRetry(gameOverDiv);
       }
       gameOverDiv.style.display = 'block';
+    }
+
+    function showRetry(container) {
+      const retry = document.createElement('button');
+      retry.textContent = 'Try Again';
+      retry.className = 'restart';
+      retry.onclick = () => {
+        resetGame();
+        running = true;
+        interval = setInterval(loop, 150);
+        container.style.display = 'none';
+        document.getElementById('start-btn').style.display = 'none';
+      };
+      container.appendChild(retry);
     }
 
     async function loadRanking() {
