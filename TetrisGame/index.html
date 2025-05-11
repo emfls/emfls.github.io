@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tetris Game</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -14,17 +13,17 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      background: #1a1a1a; /* Dark background from SnakeGame */
-      font-family: 'VT323', monospace; /* Pixelated font from SnakeGame */
+      background: #000; /* Black background from screenshot */
+      font-family: Arial, sans-serif;
       color: #fff;
     }
     canvas {
-      border: 2px solid #0f0; /* Neon green border from SnakeGame */
+      border: 2px solid #0000ff; /* Blue border to match the theme */
       background: #000;
     }
     #controls {
       display: none;
-      margin-top: 10px;
+      margin-top: 20px;
       text-align: center;
     }
     #controls .row {
@@ -37,43 +36,37 @@
       width: 50px;
       height: 50px;
       font-size: 18px;
-      background: #333; /* Dark button background */
+      background: #4169e1; /* Blue button color from screenshot */
       color: #fff;
-      border: 1px solid #0f0; /* Neon green border */
-      border-radius: 5px;
+      border: none;
+      border-radius: 10px; /* Rounded corners */
       cursor: pointer;
-      font-family: 'VT323', monospace;
-      transition: background 0.3s, box-shadow 0.3s;
+      transition: background 0.3s;
     }
     #controls button:hover {
-      background: #555;
-      box-shadow: 0 0 10px #0f0; /* Neon glow on hover */
+      background: #5a81fa; /* Lighter blue on hover */
     }
     #restart {
       display: none;
       margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 24px;
-      background: #333; /* Dark button background */
+      padding: 10px 40px;
+      font-size: 18px;
+      background: #4169e1; /* Blue button color */
       color: #fff;
-      border: 1px solid #0f0; /* Neon green border */
-      border-radius: 5px;
+      border: none;
+      border-radius: 20px; /* More rounded corners */
       cursor: pointer;
-      font-family: 'VT323', monospace;
-      transition: background 0.3s, box-shadow 0.3s;
+      transition: background 0.3s;
     }
     #restart:hover {
-      background: #555;
-      box-shadow: 0 0 10px #0f0; /* Neon glow on hover */
+      background: #5a81fa;
     }
     #score {
-      font-size: 28px;
+      font-size: 24px;
       font-weight: bold;
       margin-bottom: 10px;
       text-align: center;
       color: #fff;
-      text-shadow: 0 0 5px #0f0; /* Neon glow effect */
-      font-family: 'VT323', monospace;
     }
     @media (max-width: 600px) {
       #controls {
@@ -87,8 +80,8 @@
   </style>
 </head>
 <body>
-  <div id="score">Score: 0</div>
-  <button id="restart" onclick="restartGame()">Restart</button>
+  <div id="score">Your score: 0</div>
+  <button id="restart" onclick="restartGame()">Try Again</button>
   <script>
     let board = [];
     let currentPiece;
@@ -110,11 +103,16 @@
 
     const colors = ['cyan', 'yellow', 'purple', 'orange', 'blue', 'green', 'red'];
 
+    // Variables for continuous movement
+    let moveInterval = null;
+    let moveDirection = null;
+
     function setup() {
       createCanvas(cols * blockSize, rows * blockSize);
       frameRate(3);
       resetBoard();
       spawnPiece();
+      setupButtonListeners();
     }
 
     function draw() {
@@ -124,14 +122,13 @@
       if (!gameOver) {
         updateGame();
       } else {
-        textSize(32);
+        textSize(24);
         fill(255);
         textAlign(CENTER);
-        textStyle(BOLD);
         text('Game Over', width / 2, height / 2);
         document.getElementById('restart').style.display = 'block';
       }
-      document.getElementById('score').innerText = 'Score: ' + score;
+      document.getElementById('score').innerText = 'Your score: ' + score;
     }
 
     function resetBoard() {
@@ -273,15 +270,55 @@
       document.getElementById('restart').style.display = 'none';
       spawnPiece();
     }
+
+    // Continuous movement logic
+    function startMoving(direction) {
+      if (gameOver) return;
+      moveDirection = direction;
+      if (!moveInterval) {
+        moveInterval = setInterval(() => {
+          if (moveDirection === 'left') moveLeft();
+          else if (moveDirection === 'right') moveRight();
+          else if (moveDirection === 'down') moveDown();
+          else if (moveDirection === 'rotate') rotatePiece();
+        }, 100); // Adjust speed of continuous movement
+      }
+    }
+
+    function stopMoving() {
+      clearInterval(moveInterval);
+      moveInterval = null;
+      moveDirection = null;
+    }
+
+    function setupButtonListeners() {
+      const buttons = {
+        'left': document.getElementById('left-btn'),
+        'right': document.getElementById('right-btn'),
+        'down': document.getElementById('down-btn'),
+        'rotate': document.getElementById('rotate-btn')
+      };
+
+      for (let direction in buttons) {
+        buttons[direction].addEventListener('mousedown', () => startMoving(direction));
+        buttons[direction].addEventListener('mouseup', stopMoving);
+        buttons[direction].addEventListener('mouseleave', stopMoving); // Stop moving if mouse leaves button
+        buttons[direction].addEventListener('touchstart', (e) => {
+          e.preventDefault();
+          startMoving(direction);
+        });
+        buttons[direction].addEventListener('touchend', stopMoving);
+      }
+    }
   </script>
   <div id="controls">
     <div class="row">
-      <button onclick="moveLeft()">←</button>
-      <button onclick="rotatePiece()">↻</button>
-      <button onclick="moveRight()">→</button>
+      <button id="rotate-btn">↻</button>
     </div>
     <div class="row">
-      <button onclick="moveDown()" style="margin-left: 60px;">↓</button>
+      <button id="left-btn">◄</button>
+      <button id="down-btn">▼</button>
+      <button id="right-btn">►</button>
     </div>
   </div>
 </body>
