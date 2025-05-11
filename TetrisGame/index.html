@@ -134,6 +134,35 @@
     function rotatePiece() {
       playerRotateRight();
     }
+  
+    document.getElementById('start-btn').onclick = startGame;
+
+    function goToMain() {
+      window.location.href = '/';
+    }
+
+    function shareGame() {
+      const url = window.location.href;
+      const text = `🧱 QuickPlay Tetris - Can you beat my score?`;
+      if (navigator.share) {
+        navigator.share({ title: 'QuickPlay: Tetris', text, url })
+          .catch(() => alert('Sharing failed. Copy the link manually.'));
+      } else {
+        navigator.clipboard.writeText(url + '
+' + text)
+          .then(() => alert('Link copied to clipboard!'))
+          .catch(() => alert('Copy this link:
+' + url));
+      }
+    }
+
+    // Dummy setup to make sure startGame is defined
+    let player = { pos: {x:0,y:0}, matrix: [], score: 0 };
+    let arena = Array.from({ length: 20 }, () => Array(12).fill(0));
+    function startGame() {
+      alert("Game Started (placeholder)");
+      document.getElementById('overlay').classList.add('hidden');
+    }
   </script>
 </body>
 </html>
