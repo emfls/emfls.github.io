@@ -204,18 +204,19 @@
     }
 
     function playerRotateRight() {
-      const rotated = rotate(player.matrix);
-      const pos = player.pos.x;
-      let offset = 1;
-      while (collide(arena, { pos: player.pos, matrix: rotated })) {
-        player.pos.x += offset;
-        offset = -(offset + (offset > 0 ? 1 : -1));
-        if (offset > rotated[0].length) {
-          player.pos.x = pos;
-          return; // 회전 실패 시 원위치
-        }
-      }
-      player.matrix = rotated;
+  const rotated = rotate(player.matrix);
+  const pos = player.pos.x;
+  let offset = 1;
+  while (collide(arena, { pos: player.pos, matrix: rotated })) {
+    player.pos.x += offset;
+    offset = -(offset + (offset > 0 ? 1 : -1));
+    if (offset > rotated[0].length) {
+      player.pos.x = pos;
+      return; // 회전 실패 시 원위치
+    }
+  }
+  player.matrix = rotated;
+}
     }
 
     function collide(arena, player) {
@@ -249,14 +250,24 @@
     }
 
     function update(time = 0) {
-      const deltaTime = time - lastTime;
-      lastTime = time;
-      dropCounter += deltaTime;
-      if (dropCounter > dropInterval) {
-        playerDrop();
-      }
-      draw();
-      animationFrame = requestAnimationFrame(update);
+  const deltaTime = time - lastTime;
+  lastTime = time;
+  dropCounter += deltaTime;
+  if (dropCounter > dropInterval) {
+    playerDrop();
+  }
+  draw();
+
+  // 수평 이동 시 충돌 방지
+  if (collide(arena, player)) {
+    if (player.pos.x < 0) player.pos.x = 0;
+    else if (player.pos.x + player.matrix[0].length > COLS) {
+      player.pos.x = COLS - player.matrix[0].length;
+    }
+  }
+
+  animationFrame = requestAnimationFrame(update);
+}
     }
 
     function startGame() {
@@ -297,11 +308,18 @@
 
     document.getElementById('start-btn').onclick = startGame;
     document.addEventListener('keydown', e => {
-      if (e.key === 'ArrowLeft') player.pos.x--;
-      else if (e.key === 'ArrowRight') player.pos.x++;
-      else if (e.key === 'ArrowDown') playerDrop();
-      else if (e.key === 'ArrowUp') playerRotateRight();
-    });
+  if (e.key === 'ArrowLeft') {
+    player.pos.x--;
+    if (collide(arena, player)) player.pos.x++;
+  } else if (e.key === 'ArrowRight') {
+    player.pos.x++;
+    if (collide(arena, player)) player.pos.x--;
+  } else if (e.key === 'ArrowDown') {
+    playerDrop();
+  } else if (e.key === 'ArrowUp') {
+    playerRotateRight();
+  }
+});
   </script>
 </body>
 </html>
