@@ -30,11 +30,33 @@
       margin-bottom: 1rem;
       text-align: center;
     }
+    .game-wrapper {
+      position: relative;
+    }
     canvas {
       background-color: #222;
       border: 2px solid #4e54c8;
+      display: block;
     }
-    #start-btn, .menu, .share {
+    #overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.6);
+      z-index: 10;
+    }
+    #overlay.hidden { display: none; }
+    #overlay p {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    button {
       margin-top: 1rem;
       padding: 1rem;
       font-size: 1.1rem;
@@ -47,23 +69,8 @@
       transition: background-color 0.2s ease;
       cursor: pointer;
     }
-    #start-btn:active, .menu:active, .share:active {
+    button:active {
       background-color: #6a72f8;
-    }
-    #game-over {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background-color: rgba(0, 0, 0, 0.6);
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 10;
-    }
-    #game-over p {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
     }
   </style>
 </head>
@@ -71,26 +78,43 @@
   <h1><span class="qp">QuickPlay:</span> <span class="t">T</span><span class="et">et</span><span class="ris">ris</span></h1>
   <p class="description">Rotate and stack. Clear lines. Don't reach the top!</p>
 
-  <canvas id="tetris" width="240" height="400"></canvas>
-
-  <button id="start-btn">Start Game</button>
-  <button class="menu" onclick="goToMain()">📂 Other Games</button>
-  <button class="share" onclick="shareGame()">📤 Share</button>
-
-  <div id="game-over">
-    <p id="final-score"></p>
-    <button onclick="startGame()" class="menu">Try Again</button>
+  <div class="game-wrapper" style="position: relative;">
+    <canvas id="tetris" width="240" height="400"></canvas>
+    <div id="overlay">
+      <p id="final-score">Ready?</p>
+      <button id="start-btn">Start Game</button>
+    </div>
   </div>
+
+  <button onclick="goToMain()">📂 Other Games</button>
+  <button onclick="shareGame()">📤 Share</button>
 
   <script>
     const canvas = document.getElementById('tetris');
     const context = canvas.getContext('2d');
     context.scale(20, 20);
 
-    const matrix = [
-      [1, 1, 1],
-      [0, 1, 0],
-    ];
+    const ROWS = 20;
+    const COLS = 12;
+    let dropCounter = 0;
+    let dropInterval = 1000;
+    let lastTime = 0;
+    let animationFrame;
+
+    const arena = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+
+    const player = {
+      pos: {x: 5, y: 0},
+      matrix: createPiece(),
+      score: 0
+    };
+
+    function createPiece() {
+      return [
+        [0, 1, 0],
+        [1, 1, 1],
+      ];
+    }
 
     function drawMatrix(matrix, offset) {
       matrix.forEach((row, y) => {
@@ -103,25 +127,90 @@
       });
     }
 
+    function drawArena(arena) {
+      arena.forEach((row, y) => {
+        row.forEach((value, x) => {
+          if (value !== 0) {
+            context.fillStyle = '#444';
+            context.fillRect(x, y, 1, 1);
+          }
+        });
+      });
+    }
+
     function draw() {
       context.fillStyle = '#222';
       context.fillRect(0, 0, canvas.width, canvas.height);
+
+      drawArena(arena);
       drawMatrix(player.matrix, player.pos);
     }
 
-    function update() {
-      draw();
+    function merge(arena, player) {
+      player.matrix.forEach((row, y) => {
+        row.forEach((value, x) => {
+          if (value !== 0) {
+            arena[y + player.pos.y][x + player.pos.x] = value;
+          }
+        });
+      });
     }
 
-    let player = {
-      pos: {x: 3, y: 0},
-      matrix: matrix,
-    };
+    function playerDrop() {
+      player.pos.y++;
+      if (collide(arena, player)) {
+        player.pos.y--;
+        merge(arena, player);
+        player.pos.y = 0;
+        player.matrix = createPiece();
+        if (collide(arena, player)) {
+          gameOver();
+          return;
+        }
+      }
+      dropCounter = 0;
+    }
+
+    function collide(arena, player) {
+      const [m, o] = [player.matrix, player.pos];
+      for (let y = 0; y < m.length; ++y) {
+        for (let x = 0; x < m[y].length; ++x) {
+          if (m[y][x] !== 0 && (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    function update(time = 0) {
+      const deltaTime = time - lastTime;
+      lastTime = time;
+      dropCounter += deltaTime;
+      if (dropCounter > dropInterval) {
+        playerDrop();
+      }
+      draw();
+      animationFrame = requestAnimationFrame(update);
+    }
 
     function startGame() {
-      document.getElementById('game-over').style.display = 'none';
-      player.pos.y = 0;
+      cancelAnimationFrame(animationFrame);
+      arena.forEach(row => row.fill(0));
+      player.matrix = createPiece();
+      player.pos = {x: 4, y: 0};
+      player.score = 0;
+      document.getElementById('overlay').classList.add('hidden');
+      lastTime = 0;
+      dropCounter = 0;
       update();
+    }
+
+    function gameOver() {
+      cancelAnimationFrame(animationFrame);
+      document.getElementById('final-score').textContent = `Your score: ${player.score}`;
+      document.getElementById('start-btn').textContent = 'Try Again';
+      document.getElementById('overlay').classList.remove('hidden');
     }
 
     function goToMain() {
