@@ -3,77 +3,77 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QuickPlay: Tetris</title>
+  <title>Tetris Game</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      user-select: none;
-    }
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: #111;
-      color: white;
+      margin: 0;
       display: flex;
       flex-direction: column;
+      justify-content: center;
       align-items: center;
-      padding: 1rem;
-    }
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 0.3rem;
-    }
-    h1 span.qp { color: #8f94fb; }
-    h1 span.t { color: #0f0; }
-    h1 span.et { color: #6f6; }
-    h1 span.ris { color: #8f8; }
-    p.description {
-      font-size: 0.9rem;
-      color: #ccc;
-      margin-bottom: 1rem;
+      height: 100vh;
+      background: #1a1a1a; /* Dark background from SnakeGame */
+      font-family: 'VT323', monospace; /* Pixelated font from SnakeGame */
+      color: #fff;
     }
     canvas {
-      border: 2px solid #4e54c8;
-      display: block;
-      margin-bottom: 1rem;
+      border: 2px solid #0f0; /* Neon green border from SnakeGame */
+      background: #000;
     }
     #controls {
       display: none;
-      position: fixed;
-      bottom: 10px;
-      width: 100%;
+      margin-top: 10px;
       text-align: center;
-      z-index: 10;
+    }
+    #controls .row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
     }
     #controls button {
       padding: 10px;
-      margin: 5px;
-      font-size: 16px;
-      background: #4e54c8;
+      width: 50px;
+      height: 50px;
+      font-size: 18px;
+      background: #333; /* Dark button background */
       color: #fff;
-      border: 1px solid #fff;
+      border: 1px solid #0f0; /* Neon green border */
       border-radius: 5px;
       cursor: pointer;
+      font-family: 'VT323', monospace;
+      transition: background 0.3s, box-shadow 0.3s;
     }
-    #controls button:active {
-      background: #6a72f8;
+    #controls button:hover {
+      background: #555;
+      box-shadow: 0 0 10px #0f0; /* Neon glow on hover */
     }
     #restart {
       display: none;
-      position: absolute;
-      padding: 12px 24px;
-      font-size: 18px;
-      background: #4e54c8;
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 24px;
+      background: #333; /* Dark button background */
       color: #fff;
-      border: none;
-      border-radius: 10px;
+      border: 1px solid #0f0; /* Neon green border */
+      border-radius: 5px;
       cursor: pointer;
+      font-family: 'VT323', monospace;
+      transition: background 0.3s, box-shadow 0.3s;
     }
-    #restart:active {
-      background: #6a72f8;
+    #restart:hover {
+      background: #555;
+      box-shadow: 0 0 10px #0f0; /* Neon glow on hover */
+    }
+    #score {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-align: center;
+      color: #fff;
+      text-shadow: 0 0 5px #0f0; /* Neon glow effect */
+      font-family: 'VT323', monospace;
     }
     @media (max-width: 600px) {
       #controls {
@@ -81,24 +81,208 @@
       }
       canvas {
         max-width: 100%;
-        max-height: 60vh;
+        max-height: 50vh;
       }
     }
   </style>
 </head>
 <body>
-  <h1><span class="qp">QuickPlay:</span> <span class="t">T</span><span class="et">et</span><span class="ris">ris</span></h1>
-  <p class="description">Rotate and stack. Clear lines. Don't reach the top!</p>
-
-  <div id="controls">
-    <button onclick="moveLeft()">◀️</button>
-    <button onclick="moveRight()">▶️</button>
-    <button onclick="rotatePiece()">🔄</button>
-    <button onclick="moveDown()">🔽</button>
-  </div>
-  <button id="restart" onclick="restartGame()">Try Again</button>
+  <div id="score">Score: 0</div>
+  <button id="restart" onclick="restartGame()">Restart</button>
   <script>
-    // ... script block remains unchanged from the provided code ...
+    let board = [];
+    let currentPiece;
+    let score = 0;
+    let gameOver = false;
+    const cols = 10;
+    const rows = 20;
+    const blockSize = 20;
+
+    const shapes = [
+      [[1, 1, 1, 1]], // I
+      [[1, 1], [1, 1]], // O
+      [[1, 1, 1], [0, 1, 0]], // T
+      [[1, 1, 1], [1, 0, 0]], // L
+      [[1, 1, 1], [0, 0, 1]], // J
+      [[1, 1, 0], [0, 1, 1]], // S
+      [[0, 1, 1], [1, 1, 0]] // Z
+    ];
+
+    const colors = ['cyan', 'yellow', 'purple', 'orange', 'blue', 'green', 'red'];
+
+    function setup() {
+      createCanvas(cols * blockSize, rows * blockSize);
+      frameRate(3);
+      resetBoard();
+      spawnPiece();
+    }
+
+    function draw() {
+      background(0);
+      drawBoard();
+      drawPiece();
+      if (!gameOver) {
+        updateGame();
+      } else {
+        textSize(32);
+        fill(255);
+        textAlign(CENTER);
+        textStyle(BOLD);
+        text('Game Over', width / 2, height / 2);
+        document.getElementById('restart').style.display = 'block';
+      }
+      document.getElementById('score').innerText = 'Score: ' + score;
+    }
+
+    function resetBoard() {
+      board = Array(rows).fill().map(() => Array(cols).fill(0));
+    }
+
+    function spawnPiece() {
+      const rand = floor(random(shapes.length));
+      currentPiece = {
+        shape: shapes[rand],
+        color: colors[rand],
+        x: floor(cols / 2) - floor(shapes[rand][0].length / 2),
+        y: 0
+      };
+      if (collides()) {
+        gameOver = true;
+      }
+    }
+
+    function drawBoard() {
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          if (board[y][x]) {
+            fill(board[y][x]);
+            rect(x * blockSize, y * blockSize, blockSize, blockSize);
+          }
+        }
+      }
+    }
+
+    function drawPiece() {
+      fill(currentPiece.color);
+      for (let y = 0; y < currentPiece.shape.length; y++) {
+        for (let x = 0; x < currentPiece.shape[y].length; x++) {
+          if (currentPiece.shape[y][x]) {
+            rect((currentPiece.x + x) * blockSize, (currentPiece.y + y) * blockSize, blockSize, blockSize);
+          }
+        }
+      }
+    }
+
+    function collides() {
+      for (let y = 0; y < currentPiece.shape.length; y++) {
+        for (let x = 0; x < currentPiece.shape[y].length; x++) {
+          if (currentPiece.shape[y][x]) {
+            let newX = currentPiece.x + x;
+            let newY = currentPiece.y + y;
+            if (newX < 0 || newX >= cols || newY >= rows || (newY >= 0 && board[newY][newX])) {
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
+
+    function mergePiece() {
+      for (let y = 0; y < currentPiece.shape.length; y++) {
+        for (let x = 0; x < currentPiece.shape[y].length; x++) {
+          if (currentPiece.shape[y][x]) {
+            board[currentPiece.y + y][currentPiece.x + x] = currentPiece.color;
+          }
+        }
+      }
+    }
+
+    function clearLines() {
+      let linesCleared = 0;
+      for (let y = rows - 1; y >= 0; y--) {
+        if (board[y].every(cell => cell !== 0)) {
+          board.splice(y, 1);
+          board.unshift(Array(cols).fill(0));
+          linesCleared++;
+          y++;
+        }
+      }
+      score += linesCleared * 1;
+    }
+
+    function updateGame() {
+      currentPiece.y++;
+      if (collides()) {
+        currentPiece.y--;
+        mergePiece();
+        clearLines();
+        spawnPiece();
+      }
+    }
+
+    function rotateShape(shape) {
+      let newShape = Array(shape[0].length).fill().map(() => Array(shape.length).fill(0));
+      for (let y = 0; y < shape.length; y++) {
+        for (let x = 0; x < shape[y].length; x++) {
+          newShape[x][shape.length - 1 - y] = shape[y][x];
+        }
+      }
+      return newShape;
+    }
+
+    function keyPressed() {
+      if (!gameOver) {
+        if (keyCode === LEFT_ARROW) moveLeft();
+        if (keyCode === RIGHT_ARROW) moveRight();
+        if (keyCode === UP_ARROW) rotatePiece();
+        if (keyCode === DOWN_ARROW) moveDown();
+      }
+    }
+
+    function moveLeft() {
+      currentPiece.x--;
+      if (collides()) currentPiece.x++;
+    }
+
+    function moveRight() {
+      currentPiece.x++;
+      if (collides()) currentPiece.x--;
+    }
+
+    function rotatePiece() {
+      let originalShape = currentPiece.shape;
+      currentPiece.shape = rotateShape(currentPiece.shape);
+      if (collides()) currentPiece.shape = originalShape;
+    }
+
+    function moveDown() {
+      currentPiece.y++;
+      if (collides()) {
+        currentPiece.y--;
+        mergePiece();
+        clearLines();
+        spawnPiece();
+      }
+    }
+
+    function restartGame() {
+      resetBoard();
+      score = 0;
+      gameOver = false;
+      document.getElementById('restart').style.display = 'none';
+      spawnPiece();
+    }
   </script>
+  <div id="controls">
+    <div class="row">
+      <button onclick="moveLeft()">←</button>
+      <button onclick="rotatePiece()">↻</button>
+      <button onclick="moveRight()">→</button>
+    </div>
+    <div class="row">
+      <button onclick="moveDown()" style="margin-left: 60px;">↓</button>
+    </div>
+  </div>
 </body>
 </html>
