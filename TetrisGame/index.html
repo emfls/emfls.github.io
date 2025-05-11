@@ -120,49 +120,68 @@
   <button onclick="shareGame()">📤 Share</button>
 
   <script>
-    function moveLeft() {
-      player.pos.x--;
-      if (collide(arena, player)) player.pos.x++;
-    }
-    function moveRight() {
-      player.pos.x++;
-      if (collide(arena, player)) player.pos.x--;
-    }
-    function moveDown() {
-      playerDrop();
-    }
-    function rotatePiece() {
-      playerRotateRight();
-    }
-  
-    document.getElementById('start-btn').onclick = startGame;
+    document.addEventListener('DOMContentLoaded', () => {
+      let player = { pos: {x:0,y:0}, matrix: [], score: 0 };
+      let arena = Array.from({ length: 20 }, () => Array(12).fill(0));
 
-    function goToMain() {
-      window.location.href = '/';
-    }
-
-    function shareGame() {
-      const url = window.location.href;
-      const text = `🧱 QuickPlay Tetris - Can you beat my score?`;
-      if (navigator.share) {
-        navigator.share({ title: 'QuickPlay: Tetris', text, url })
-          .catch(() => alert('Sharing failed. Copy the link manually.'));
-      } else {
-        navigator.clipboard.writeText(url + '
-' + text)
-          .then(() => alert('Link copied to clipboard!'))
-          .catch(() => alert('Copy this link:
-' + url));
+      function updateScore() {
+        document.getElementById('score-display').textContent = 'Score: ' + player.score;
       }
-    }
 
-    // Dummy setup to make sure startGame is defined
-    let player = { pos: {x:0,y:0}, matrix: [], score: 0 };
-    let arena = Array.from({ length: 20 }, () => Array(12).fill(0));
-    function startGame() {
-      alert("Game Started (placeholder)");
-      document.getElementById('overlay').classList.add('hidden');
-    }
+      function collide(arena, player) {
+        return false;
+      }
+
+      function playerDrop() {
+        // Dummy drop
+        player.score++;
+        updateScore();
+      }
+
+      function playerRotateRight() {
+        // Dummy rotate
+      }
+
+      function moveLeft() {
+        player.pos.x--;
+        if (collide(arena, player)) player.pos.x++;
+      }
+      function moveRight() {
+        player.pos.x++;
+        if (collide(arena, player)) player.pos.x--;
+      }
+      function moveDown() {
+        playerDrop();
+      }
+      function rotatePiece() {
+        playerRotateRight();
+      }
+
+      function startGame() {
+        document.getElementById('overlay').classList.add('hidden');
+        player.score = 0;
+        updateScore();
+      }
+
+      document.getElementById('start-btn').onclick = startGame;
+
+      window.goToMain = function () {
+        window.location.href = '/';
+      }
+
+      window.shareGame = function () {
+        const url = window.location.href;
+        const text = `🧱 QuickPlay Tetris - Can you beat my score?`;
+        if (navigator.share) {
+          navigator.share({ title: 'QuickPlay: Tetris', text, url })
+            .catch(() => alert('Sharing failed. Copy the link manually.'));
+        } else {
+          navigator.clipboard.writeText(url + '\n' + text)
+            .then(() => alert('Link copied to clipboard!'))
+            .catch(() => alert('Copy this link:\n' + url));
+        }
+      }
+    });
   </script>
 </body>
 </html>
