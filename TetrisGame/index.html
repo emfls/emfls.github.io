@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuickPlay: Tetris</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background-color: #111;
+      color: white;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    h1 span.qp { color: #8f94fb; }
+    h1 span.t { color: #0ff; }
+    h1 span.et { color: #0f0; }
+    h1 span.ris { color: #6f6; }
+    p.description {
+      font-size: 0.85rem;
+      color: #ccc;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    canvas {
+      background-color: #222;
+      border: 2px solid #4e54c8;
+    }
+    #start-btn, .menu, .share {
+      margin-top: 1rem;
+      padding: 1rem;
+      font-size: 1.1rem;
+      background-color: #4e54c8;
+      border: none;
+      border-radius: 10px;
+      color: white;
+      width: 90%;
+      max-width: 400px;
+      transition: background-color 0.2s ease;
+      cursor: pointer;
+    }
+    #start-btn:active, .menu:active, .share:active {
+      background-color: #6a72f8;
+    }
+    #game-over {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0, 0, 0, 0.6);
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 10;
+    }
+    #game-over p {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1><span class="qp">QuickPlay:</span> <span class="t">T</span><span class="et">et</span><span class="ris">ris</span></h1>
+  <p class="description">Rotate and stack. Clear lines. Don't reach the top!</p>
+
+  <canvas id="tetris" width="240" height="400"></canvas>
+
+  <button id="start-btn">Start Game</button>
+  <button class="menu" onclick="goToMain()">📂 Other Games</button>
+  <button class="share" onclick="shareGame()">📤 Share</button>
+
+  <div id="game-over">
+    <p id="final-score"></p>
+    <button onclick="startGame()" class="menu">Try Again</button>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('tetris');
+    const context = canvas.getContext('2d');
+    context.scale(20, 20);
+
+    const matrix = [
+      [1, 1, 1],
+      [0, 1, 0],
+    ];
+
+    function drawMatrix(matrix, offset) {
+      matrix.forEach((row, y) => {
+        row.forEach((value, x) => {
+          if (value !== 0) {
+            context.fillStyle = '#0f0';
+            context.fillRect(x + offset.x, y + offset.y, 1, 1);
+          }
+        });
+      });
+    }
+
+    function draw() {
+      context.fillStyle = '#222';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      drawMatrix(player.matrix, player.pos);
+    }
+
+    function update() {
+      draw();
+    }
+
+    let player = {
+      pos: {x: 3, y: 0},
+      matrix: matrix,
+    };
+
+    function startGame() {
+      document.getElementById('game-over').style.display = 'none';
+      player.pos.y = 0;
+      update();
+    }
+
+    function goToMain() {
+      window.location.href = '/';
+    }
+
+    function shareGame() {
+      const url = window.location.href;
+      const text = `🧱 QuickPlay Tetris - Can you beat my score?`;
+      if (navigator.share) {
+        navigator.share({ title: 'QuickPlay: Tetris', text, url })
+          .catch(() => alert('Sharing failed. Copy the link manually.'));
+      } else {
+        navigator.clipboard.writeText(url + '\n' + text)
+          .then(() => alert('Link copied to clipboard!'))
+          .catch(() => alert('Copy this link:\n' + url));
+      }
+    }
+
+    document.getElementById('start-btn').onclick = startGame;
+  </script>
+</body>
+</html>
