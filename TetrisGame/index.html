@@ -37,6 +37,16 @@
       background-color: #222;
       border: 2px solid #4e54c8;
       display: block;
+      position: relative;
+    }
+    #score-display {
+      position: absolute;
+      top: 5px;
+      left: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #0f0;
+      z-index: 5;
     }
     #overlay {
       position: absolute;
@@ -79,6 +89,7 @@
   <p class="description">Rotate and stack. Clear lines. Don't reach the top!</p>
 
   <div class="game-wrapper" style="position: relative;">
+    <div id="score-display">Score: 0</div>
     <canvas id="tetris" width="240" height="400"></canvas>
     <div id="overlay">
       <p id="final-score">Ready?</p>
@@ -93,6 +104,7 @@
     const canvas = document.getElementById('tetris');
     const context = canvas.getContext('2d');
     context.scale(20, 20);
+    const scoreDisplay = document.getElementById('score-display');
 
     const ROWS = 20;
     const COLS = 12;
@@ -103,13 +115,7 @@
 
     const colors = [
       null,
-      '#0f0', // green
-      '#f00', // red
-      '#00f', // blue
-      '#ff0', // yellow
-      '#0ff', // cyan
-      '#f0f', // magenta
-      '#ffa500', // orange
+      '#0f0', '#f00', '#00f', '#ff0', '#0ff', '#f0f', '#ffa500'
     ];
 
     function createPiece(type) {
@@ -118,7 +124,7 @@
         case 'O': return [ [2,2],[2,2] ];
         case 'L': return [ [0,0,3],[3,3,3] ];
         case 'J': return [ [4,0,0],[4,4,4] ];
-        case 'I': return [ [5,5,5,5] ];
+        case 'I': return [ [5],[5],[5],[5] ];
         case 'S': return [ [0,6,6],[6,6,0] ];
         case 'Z': return [ [7,7,0],[0,7,7] ];
       }
@@ -188,11 +194,12 @@
         merge(arena, player);
         arenaSweep();
         playerReset();
+        updateScore();
       }
       dropCounter = 0;
     }
 
-    function playerRotate(matrix) {
+    function rotate(matrix) {
       for (let y = 0; y < matrix.length; ++y) {
         for (let x = 0; x < y; ++x) {
           [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
@@ -204,14 +211,14 @@
     function playerRotateRight() {
       const pos = player.pos.x;
       let offset = 1;
-      playerRotate(player.matrix);
+      rotate(player.matrix);
       while (collide(arena, player)) {
         player.pos.x += offset;
         offset = -(offset + (offset > 0 ? 1 : -1));
         if (offset > player.matrix[0].length) {
-          playerRotate(player.matrix);
-          playerRotate(player.matrix);
-          playerRotate(player.matrix);
+          rotate(player.matrix);
+          rotate(player.matrix);
+          rotate(player.matrix);
           player.pos.x = pos;
           return;
         }
@@ -231,6 +238,7 @@
     }
 
     function arenaSweep() {
+      let rowsCleared = 0;
       outer: for (let y = arena.length - 1; y >= 0; --y) {
         for (let x = 0; x < arena[y].length; ++x) {
           if (arena[y][x] === 0) continue outer;
@@ -238,8 +246,13 @@
         const row = arena.splice(y, 1)[0].fill(0);
         arena.unshift(row);
         ++y;
-        player.score++;
+        rowsCleared++;
       }
+      player.score += rowsCleared;
+    }
+
+    function updateScore() {
+      scoreDisplay.textContent = 'Score: ' + player.score;
     }
 
     function update(time = 0) {
@@ -258,6 +271,7 @@
       arena.forEach(row => row.fill(0));
       playerReset();
       player.score = 0;
+      updateScore();
       document.getElementById('overlay').classList.add('hidden');
       lastTime = 0;
       dropCounter = 0;
