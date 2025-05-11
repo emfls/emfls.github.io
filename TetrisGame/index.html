@@ -82,6 +82,18 @@
     button:active {
       background-color: #6a72f8;
     }
+    .mobile-controls {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .mobile-controls button {
+      width: 60px;
+      height: 60px;
+      font-size: 1.5rem;
+    }
   </style>
 </head>
 <body>
@@ -97,229 +109,31 @@
     </div>
   </div>
 
+  <div class="mobile-controls">
+    <button onclick="moveLeft()">◀️</button>
+    <button onclick="rotatePiece()">🔄</button>
+    <button onclick="moveRight()">▶️</button>
+    <button onclick="moveDown()">🔽</button>
+  </div>
+
   <button onclick="goToMain()">📂 Other Games</button>
   <button onclick="shareGame()">📤 Share</button>
 
   <script>
-    const canvas = document.getElementById('tetris');
-    const context = canvas.getContext('2d');
-    context.scale(20, 20);
-    const scoreDisplay = document.getElementById('score-display');
-
-    const ROWS = 20;
-    const COLS = 12;
-    let dropCounter = 0;
-    let dropInterval = 1000;
-    let lastTime = 0;
-    let animationFrame;
-
-    const colors = [
-      null,
-      '#0f0', '#f00', '#00f', '#ff0', '#0ff', '#f0f', '#ffa500'
-    ];
-
-    function createPiece(type) {
-      switch (type) {
-        case 'T': return [[0,1,0],[1,1,1]];
-        case 'O': return [[2,2],[2,2]];
-        case 'L': return [[0,0,3],[3,3,3]];
-        case 'J': return [[4,0,0],[4,4,4]];
-        case 'I': return [[5,5,5,5]];
-        case 'S': return [[0,6,6],[6,6,0]];
-        case 'Z': return [[7,7,0],[0,7,7]];
-      }
+    function moveLeft() {
+      player.pos.x--;
+      if (collide(arena, player)) player.pos.x++;
     }
-
-    const arena = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
-
-    const player = {
-      pos: {x: 0, y: 0},
-      matrix: null,
-      score: 0
-    };
-
-    function drawMatrix(matrix, offset) {
-      matrix.forEach((row, y) => {
-        row.forEach((value, x) => {
-          if (value !== 0) {
-            context.fillStyle = colors[value];
-            context.fillRect(x + offset.x, y + offset.y, 1, 1);
-          }
-        });
-      });
+    function moveRight() {
+      player.pos.x++;
+      if (collide(arena, player)) player.pos.x--;
     }
-
-    function drawArena(arena) {
-      arena.forEach((row, y) => {
-        row.forEach((value, x) => {
-          if (value !== 0) {
-            context.fillStyle = colors[value];
-            context.fillRect(x, y, 1, 1);
-          }
-        });
-      });
+    function moveDown() {
+      playerDrop();
     }
-
-    function draw() {
-      context.fillStyle = '#222';
-      context.fillRect(0, 0, canvas.width, canvas.height);
-      drawArena(arena);
-      drawMatrix(player.matrix, player.pos);
+    function rotatePiece() {
+      playerRotateRight();
     }
-
-    function merge(arena, player) {
-      player.matrix.forEach((row, y) => {
-        row.forEach((value, x) => {
-          if (value !== 0) {
-            arena[y + player.pos.y][x + player.pos.x] = value;
-          }
-        });
-      });
-    }
-
-    function playerReset() {
-      const pieces = 'TJLOSZI';
-      player.matrix = createPiece(pieces[Math.floor(Math.random() * pieces.length)]);
-      player.pos.y = 0;
-      player.pos.x = (COLS / 2 | 0) - (player.matrix[0].length / 2 | 0);
-      if (collide(arena, player)) {
-        gameOver();
-      }
-    }
-
-    function playerDrop() {
-      player.pos.y++;
-      if (collide(arena, player)) {
-        player.pos.y--;
-        merge(arena, player);
-        arenaSweep();
-        playerReset();
-        updateScore();
-      }
-      dropCounter = 0;
-    }
-
-    function rotate(matrix) {
-      return matrix[0].map((_, i) => matrix.map(row => row[i])).reverse();
-    }
-
-    function playerRotateRight() {
-  const rotated = rotate(player.matrix);
-  const pos = player.pos.x;
-  let offset = 1;
-  while (collide(arena, { pos: player.pos, matrix: rotated })) {
-    player.pos.x += offset;
-    offset = -(offset + (offset > 0 ? 1 : -1));
-    if (offset > rotated[0].length) {
-      player.pos.x = pos;
-      return; // 회전 실패 시 원위치
-    }
-  }
-  player.matrix = rotated;
-}
-    }
-
-    function collide(arena, player) {
-      const [m, o] = [player.matrix, player.pos];
-      for (let y = 0; y < m.length; ++y) {
-        for (let x = 0; x < m[y].length; ++x) {
-          if (m[y][x] !== 0 && (arena[y + o.y] && arena[y + o.y][x + o.x]) !== 0) {
-            return true;
-          }
-        }
-      }
-      return false;
-    }
-
-    function arenaSweep() {
-      let rowsCleared = 0;
-      outer: for (let y = arena.length - 1; y >= 0; --y) {
-        for (let x = 0; x < arena[y].length; ++x) {
-          if (arena[y][x] === 0) continue outer;
-        }
-        const row = arena.splice(y, 1)[0].fill(0);
-        arena.unshift(row);
-        ++y;
-        rowsCleared++;
-      }
-      player.score += rowsCleared;
-    }
-
-    function updateScore() {
-      scoreDisplay.textContent = 'Score: ' + player.score;
-    }
-
-    function update(time = 0) {
-  const deltaTime = time - lastTime;
-  lastTime = time;
-  dropCounter += deltaTime;
-  if (dropCounter > dropInterval) {
-    playerDrop();
-  }
-  draw();
-
-  // 수평 이동 시 충돌 방지
-  if (collide(arena, player)) {
-    if (player.pos.x < 0) player.pos.x = 0;
-    else if (player.pos.x + player.matrix[0].length > COLS) {
-      player.pos.x = COLS - player.matrix[0].length;
-    }
-  }
-
-  animationFrame = requestAnimationFrame(update);
-}
-    }
-
-    function startGame() {
-      cancelAnimationFrame(animationFrame);
-      arena.forEach(row => row.fill(0));
-      playerReset();
-      player.score = 0;
-      updateScore();
-      document.getElementById('overlay').classList.add('hidden');
-      lastTime = 0;
-      dropCounter = 0;
-      update();
-    }
-
-    function gameOver() {
-      cancelAnimationFrame(animationFrame);
-      document.getElementById('final-score').textContent = `Your score: ${player.score}`;
-      document.getElementById('start-btn').textContent = 'Try Again';
-      document.getElementById('overlay').classList.remove('hidden');
-    }
-
-    function goToMain() {
-      window.location.href = '/';
-    }
-
-    function shareGame() {
-      const url = window.location.href;
-      const text = `🧱 QuickPlay Tetris - Can you beat my score?`;
-      if (navigator.share) {
-        navigator.share({ title: 'QuickPlay: Tetris', text, url })
-          .catch(() => alert('Sharing failed. Copy the link manually.'));
-      } else {
-        navigator.clipboard.writeText(url + '\n' + text)
-          .then(() => alert('Link copied to clipboard!'))
-          .catch(() => alert('Copy this link:\n' + url));
-      }
-    }
-
-    document.getElementById('start-btn').onclick = startGame;
-    document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowLeft') {
-    player.pos.x--;
-    if (collide(arena, player)) player.pos.x++;
-  } else if (e.key === 'ArrowRight') {
-    player.pos.x++;
-    if (collide(arena, player)) player.pos.x--;
-  } else if (e.key === 'ArrowDown') {
-    playerDrop();
-  } else if (e.key === 'ArrowUp') {
-    playerRotateRight();
-  }
-});
   </script>
 </body>
 </html>
