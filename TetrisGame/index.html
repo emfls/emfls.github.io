@@ -200,8 +200,7 @@
     }
 
     function rotate(matrix) {
-      const result = matrix.map((_, i) => matrix.map(row => row[i])).reverse();
-      return result;
+      return matrix[0].map((_, i) => matrix.map(row => row[i])).reverse();
     }
 
     function playerRotateRight() {
@@ -211,7 +210,10 @@
       while (collide(arena, { pos: player.pos, matrix: rotated })) {
         player.pos.x += offset;
         offset = -(offset + (offset > 0 ? 1 : -1));
-        if (offset > rotated[0].length) return;
+        if (offset > rotated[0].length) {
+          player.pos.x = pos;
+          return; // 회전 실패 시 원위치
+        }
       }
       player.matrix = rotated;
     }
