@@ -244,18 +244,20 @@
       }
 
       function playerRotateRight() {
-        const rotated = playerRotate(player.matrix);
-        const pos = player.pos.x;
-        let offset = 1;
-        while (collide(arena, {pos: player.pos, matrix: rotated})) {
-          player.pos.x += offset;
-          offset = -(offset + (offset > 0 ? 1 : -1));
-          if (offset > rotated[0].length) {
-            player.pos.x = pos;
-            return;
-          }
-        }
-        player.matrix = rotated;
+  const rotated = playerRotate(player.matrix);
+  const pos = player.pos.x;
+  let offset = 1;
+  while (collide(arena, { pos: player.pos, matrix: rotated })) {
+    player.pos.x += offset;
+    offset = -(offset + (offset > 0 ? 1 : -1));
+    if (offset > rotated[0].length) {
+      player.pos.x = pos;
+      return;
+    }
+  }
+  player.matrix = rotated;
+  player.pos.x = pos;
+}
       }
 
       function update(time = 0) {
