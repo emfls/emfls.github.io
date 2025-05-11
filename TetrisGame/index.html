@@ -120,13 +120,13 @@
 
     function createPiece(type) {
       switch (type) {
-        case 'T': return [ [0,1,0],[1,1,1] ];
-        case 'O': return [ [2,2],[2,2] ];
-        case 'L': return [ [0,0,3],[3,3,3] ];
-        case 'J': return [ [4,0,0],[4,4,4] ];
-        case 'I': return [ [5],[5],[5],[5] ];
-        case 'S': return [ [0,6,6],[6,6,0] ];
-        case 'Z': return [ [7,7,0],[0,7,7] ];
+        case 'T': return [[0,1,0],[1,1,1]];
+        case 'O': return [[2,2],[2,2]];
+        case 'L': return [[0,0,3],[3,3,3]];
+        case 'J': return [[4,0,0],[4,4,4]];
+        case 'I': return [[5,5,5,5]];
+        case 'S': return [[0,6,6],[6,6,0]];
+        case 'Z': return [[7,7,0],[0,7,7]];
       }
     }
 
@@ -200,29 +200,20 @@
     }
 
     function rotate(matrix) {
-      for (let y = 0; y < matrix.length; ++y) {
-        for (let x = 0; x < y; ++x) {
-          [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
-        }
-      }
-      matrix.forEach(row => row.reverse());
+      const result = matrix.map((_, i) => matrix.map(row => row[i])).reverse();
+      return result;
     }
 
     function playerRotateRight() {
+      const rotated = rotate(player.matrix);
       const pos = player.pos.x;
       let offset = 1;
-      rotate(player.matrix);
-      while (collide(arena, player)) {
+      while (collide(arena, { pos: player.pos, matrix: rotated })) {
         player.pos.x += offset;
         offset = -(offset + (offset > 0 ? 1 : -1));
-        if (offset > player.matrix[0].length) {
-          rotate(player.matrix);
-          rotate(player.matrix);
-          rotate(player.matrix);
-          player.pos.x = pos;
-          return;
-        }
+        if (offset > rotated[0].length) return;
       }
+      player.matrix = rotated;
     }
 
     function collide(arena, player) {
