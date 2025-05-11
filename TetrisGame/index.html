@@ -101,26 +101,42 @@
     let lastTime = 0;
     let animationFrame;
 
+    const colors = [
+      null,
+      '#0f0', // green
+      '#f00', // red
+      '#00f', // blue
+      '#ff0', // yellow
+      '#0ff', // cyan
+      '#f0f', // magenta
+      '#ffa500', // orange
+    ];
+
+    function createPiece(type) {
+      switch (type) {
+        case 'T': return [ [0,1,0],[1,1,1] ];
+        case 'O': return [ [2,2],[2,2] ];
+        case 'L': return [ [0,0,3],[3,3,3] ];
+        case 'J': return [ [4,0,0],[4,4,4] ];
+        case 'I': return [ [5,5,5,5] ];
+        case 'S': return [ [0,6,6],[6,6,0] ];
+        case 'Z': return [ [7,7,0],[0,7,7] ];
+      }
+    }
+
     const arena = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
 
     const player = {
-      pos: {x: 5, y: 0},
-      matrix: createPiece(),
+      pos: {x: 0, y: 0},
+      matrix: null,
       score: 0
     };
-
-    function createPiece() {
-      return [
-        [0, 1, 0],
-        [1, 1, 1],
-      ];
-    }
 
     function drawMatrix(matrix, offset) {
       matrix.forEach((row, y) => {
         row.forEach((value, x) => {
           if (value !== 0) {
-            context.fillStyle = '#0f0';
+            context.fillStyle = colors[value];
             context.fillRect(x + offset.x, y + offset.y, 1, 1);
           }
         });
@@ -131,7 +147,7 @@
       arena.forEach((row, y) => {
         row.forEach((value, x) => {
           if (value !== 0) {
-            context.fillStyle = '#444';
+            context.fillStyle = colors[value];
             context.fillRect(x, y, 1, 1);
           }
         });
@@ -141,7 +157,6 @@
     function draw() {
       context.fillStyle = '#222';
       context.fillRect(0, 0, canvas.width, canvas.height);
-
       drawArena(arena);
       drawMatrix(player.matrix, player.pos);
     }
@@ -156,19 +171,51 @@
       });
     }
 
+    function playerReset() {
+      const pieces = 'TJLOSZI';
+      player.matrix = createPiece(pieces[Math.floor(Math.random() * pieces.length)]);
+      player.pos.y = 0;
+      player.pos.x = (COLS / 2 | 0) - (player.matrix[0].length / 2 | 0);
+      if (collide(arena, player)) {
+        gameOver();
+      }
+    }
+
     function playerDrop() {
       player.pos.y++;
       if (collide(arena, player)) {
         player.pos.y--;
         merge(arena, player);
-        player.pos.y = 0;
-        player.matrix = createPiece();
-        if (collide(arena, player)) {
-          gameOver();
+        arenaSweep();
+        playerReset();
+      }
+      dropCounter = 0;
+    }
+
+    function playerRotate(matrix) {
+      for (let y = 0; y < matrix.length; ++y) {
+        for (let x = 0; x < y; ++x) {
+          [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
+        }
+      }
+      matrix.forEach(row => row.reverse());
+    }
+
+    function playerRotateRight() {
+      const pos = player.pos.x;
+      let offset = 1;
+      playerRotate(player.matrix);
+      while (collide(arena, player)) {
+        player.pos.x += offset;
+        offset = -(offset + (offset > 0 ? 1 : -1));
+        if (offset > player.matrix[0].length) {
+          playerRotate(player.matrix);
+          playerRotate(player.matrix);
+          playerRotate(player.matrix);
+          player.pos.x = pos;
           return;
         }
       }
-      dropCounter = 0;
     }
 
     function collide(arena, player) {
@@ -181,6 +228,18 @@
         }
       }
       return false;
+    }
+
+    function arenaSweep() {
+      outer: for (let y = arena.length - 1; y >= 0; --y) {
+        for (let x = 0; x < arena[y].length; ++x) {
+          if (arena[y][x] === 0) continue outer;
+        }
+        const row = arena.splice(y, 1)[0].fill(0);
+        arena.unshift(row);
+        ++y;
+        player.score++;
+      }
     }
 
     function update(time = 0) {
@@ -197,8 +256,7 @@
     function startGame() {
       cancelAnimationFrame(animationFrame);
       arena.forEach(row => row.fill(0));
-      player.matrix = createPiece();
-      player.pos = {x: 4, y: 0};
+      playerReset();
       player.score = 0;
       document.getElementById('overlay').classList.add('hidden');
       lastTime = 0;
@@ -231,6 +289,12 @@
     }
 
     document.getElementById('start-btn').onclick = startGame;
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft') player.pos.x--;
+      else if (e.key === 'ArrowRight') player.pos.x++;
+      else if (e.key === 'ArrowDown') playerDrop();
+      else if (e.key === 'ArrowUp') playerRotateRight();
+    });
   </script>
 </body>
 </html>
