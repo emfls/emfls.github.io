@@ -3,8 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
-     crossorigin="anonymous"></script>
   <title>Flappy Dot</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,15 +36,9 @@
       font-weight: bold;
       margin-top: 350px;
     }
-    button:hover {
-      background-color: #fff;
-    }
-    h1 {
-      margin-top: 10px;
-    }
-    #jumpButtonWrapper {
-      margin-top: 0px;
-    }
+    button:hover { background-color: #fff; }
+    h1 { margin-top: 10px; }
+    #jumpButtonWrapper { margin-top: 0px; }
     #jumpButton {
       font-size: 18px;
       font-weight: bold;
@@ -58,9 +50,7 @@
       cursor: pointer;
       height: 70px;
     }
-    #jumpButton:active {
-      transform: scale(0.95);
-    }
+    #jumpButton:active { transform: scale(0.95); }
   </style>
 </head>
 <body>
@@ -88,7 +78,7 @@
       width: 20,
       height: 20,
       gravity: 0.6,
-      lift: -8,
+      lift: -7,
       velocity: 0
     };
 
@@ -105,6 +95,7 @@
     let frames = 0;
     let gameStarted = false;
     let requestId = null;
+    let lastTime = 0;
 
     function drawClouds() {
       ctx.fillStyle = "rgba(255,255,255,0.8)";
@@ -187,18 +178,15 @@
         exp.radius += 1;
         exp.alpha -= 0.02;
 
-        if (exp.alpha <= 0) {
-          explosions.splice(i, 1);
-        }
+        if (exp.alpha <= 0) explosions.splice(i, 1);
       }
     }
 
-    function update() {
-  if (frames % 60 === 0 && !gameOver && gameStarted) score++;
+    function update(delta) {
       if (!gameStarted || gameOver) return;
 
-      bird.velocity += bird.gravity;
-      bird.y += bird.velocity;
+      bird.velocity += bird.gravity * delta * 60;
+      bird.y += bird.velocity * delta * 60;
 
       if (bird.y + bird.height > canvas.height || bird.y < 0) gameOver = true;
 
@@ -211,7 +199,7 @@
       }
 
       for (let bomb of bombs) {
-        bomb.x -= 2 + Math.min(score / 20, 3);
+        bomb.x -= (2 + Math.min(score / 20, 3)) * delta * 60;
         if (
           bird.x < bomb.x + 20 &&
           bird.x + bird.width > bomb.x &&
@@ -225,6 +213,8 @@
 
       if (bombs.length && bombs[0].x + 20 < 0) bombs.shift();
       updateClouds();
+
+      if (frames % 60 === 0) score++;
     }
 
     function draw() {
@@ -246,18 +236,26 @@
       }
     }
 
-    function gameLoop() {
-      update();
+    function gameLoop(timestamp) {
+      if (!lastTime) lastTime = timestamp;
+      const delta = (timestamp - lastTime) / 1000;
+      lastTime = timestamp;
+
+      update(delta);
       draw();
       frames++;
-      if (!gameOver || explosions.length > 0) requestId = requestAnimationFrame(gameLoop);
+
+      if (!gameOver || explosions.length > 0) {
+        requestId = requestAnimationFrame(gameLoop);
+      }
     }
 
     function startGame() {
       bird.velocity = 0;
       gameStarted = true;
       menu.style.display = "none";
-      gameLoop();
+      lastTime = performance.now();
+      requestAnimationFrame(gameLoop);
     }
 
     function resetGame() {
@@ -271,6 +269,7 @@
       gameStarted = true;
       gameoverMenu.style.display = "none";
       menu.style.display = "none";
+      lastTime = performance.now();
       requestAnimationFrame(gameLoop);
     }
 
@@ -300,25 +299,8 @@
       e.preventDefault();
       flap();
     }, { passive: false });
-
-    const jumpBtn = document.getElementById("jumpButton");
-    jumpBtn.addEventListener("click", () => {
-      if (!gameStarted) startGame();
-      flap();
-    });
-
-    if (/Mobi|Android/i.test(navigator.userAgent)) {
-      document.getElementById("jumpButtonWrapper").style.display = "block";
-    }
   </script>
-  <div id="jumpButtonWrapper">
-    <button style="margin-top: 30px" id="jumpButton">JUMP</button>
-  </div>
-  <button style="margin-top: 50px; width: 90%; height: 60px;" class="menu" onclick="goToMain()">📂 Other Games</button>
-  <script>
-    function goToMain() {
-      window.location.href = "/";
-    }
-  </script>
+
+  <button style="margin-top: 50px; width: 90%; height: 60px;" onclick="window.location.href='/'">📂 Other Games</button>
 </body>
 </html>
