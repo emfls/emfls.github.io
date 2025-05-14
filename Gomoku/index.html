@@ -401,5 +401,37 @@
       onclick="window.location.href='/'">
       Other Games
     </button>
+    <button 
+            style="
+        margin-top: 10px;
+        width: 90%;
+        height: 60px;
+        font-size: 16px;
+        font-weight: bold;
+        background-color: #deb887;
+        cursor: pointer;
+        border-radius: 6px;
+        border: solid;
+        color: black;
+        border-color: black;
+      "
+            onclick="shareGame()">Share</button>
+    <script>
+    function shareGame() {
+  const shareData = {
+    title: "Gomoku",
+    text: "Try this awesome AI Gomoku game!",
+    url: window.location.href
+  };
+
+  if (navigator.share) {
+    navigator.share(shareData)
+      .catch((err) => console.log("Sharing failed", err));
+  } else {
+    copyLink(); // 폴백: 클립보드 복사
+  }
+}
+
+    </script>
   </body>
 </html>
