@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>오목 게임</title>
+  <style>
+    :root {
+      --board-size: min(90vw, 480px);
+      --cell-gap: calc(var(--board-size) / 15);
+      --stone-size: calc(var(--cell-gap) * 0.6);
+    }
+
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: #f8f5ee;
+      margin: 0;
+      padding: 1rem;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+    }
+
+    #board {
+      position: relative;
+      width: var(--board-size);
+      height: var(--board-size);
+      background: #c9a96b;
+      border: 3px solid #333;
+      margin: 0 auto;
+      touch-action: manipulation;
+    }
+
+    .grid-line {
+      position: absolute;
+      background: #000;
+      pointer-events: none;
+    }
+
+    .h-line {
+      height: 1px;
+      width: 100%;
+    }
+
+    .v-line {
+      width: 1px;
+      height: 100%;
+    }
+
+    .cell {
+      position: absolute;
+      width: var(--cell-gap);
+      height: var(--cell-gap);
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+    }
+
+    .stone {
+      width: var(--stone-size);
+      height: var(--stone-size);
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+    }
+
+    .black {
+      background-color: black;
+    }
+
+    .white {
+      background-color: white;
+      border: 1px solid #aaa;
+    }
+
+    #message {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+    }
+
+    button {
+      margin-top: 1rem;
+      padding: 10px 20px;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>🟤 오목 게임</h1>
+  <div id="board"></div>
+  <div id="message"></div>
+  <button onclick="resetGame()">다시 시작</button>
+
+  <script>
+    const boardSize = 15;
+    const board = document.getElementById("board");
+    const message = document.getElementById("message");
+    let currentPlayer = "black"; // or "white"
+    let gameOver = false;
+    let cells = [];
+
+    function createBoard() {
+      board.innerHTML = "";
+      cells = [];
+
+      // 선 그리기
+      for (let i = 0; i < boardSize; i++) {
+        const h = document.createElement("div");
+        h.className = "grid-line h-line";
+        h.style.top = `calc(${i} * var(--cell-gap) + var(--cell-gap) / 2)`;
+        board.appendChild(h);
+
+        const v = document.createElement("div");
+        v.className = "grid-line v-line";
+        v.style.left = `calc(${i} * var(--cell-gap) + var(--cell-gap) / 2)`;
+        board.appendChild(v);
+      }
+
+      for (let y = 0; y < boardSize; y++) {
+        const row = [];
+        for (let x = 0; x < boardSize; x++) {
+          const cell = document.createElement("div");
+          cell.className = "cell";
+          cell.dataset.x = x;
+          cell.dataset.y = y;
+          cell.style.left = `calc(${x} * var(--cell-gap) + var(--cell-gap) / 2)`;
+          cell.style.top = `calc(${y} * var(--cell-gap) + var(--cell-gap) / 2)`;
+          cell.addEventListener("click", handleClick);
+          board.appendChild(cell);
+          row.push(null); // 초기엔 돌 없음
+        }
+        cells.push(row);
+      }
+
+      message.textContent = "⚫ 흑돌 차례";
+    }
+
+    function handleClick(e) {
+      if (gameOver) return;
+      const x = parseInt(e.target.dataset.x);
+      const y = parseInt(e.target.dataset.y);
+      if (cells[y][x]) return;
+
+      const stone = document.createElement("div");
+      stone.className = `stone ${currentPlayer}`;
+      e.target.appendChild(stone);
+      cells[y][x] = currentPlayer;
+
+      if (checkWin(x, y, currentPlayer)) {
+        message.textContent = currentPlayer === "black" ? "⚫ 흑돌 승리!" : "⚪ 백돌 승리!";
+        gameOver = true;
+        return;
+      }
+
+      currentPlayer = currentPlayer === "black" ? "white" : "black";
+      message.textContent = currentPlayer === "black" ? "⚫ 흑돌 차례" : "⚪ 백돌 차례";
+    }
+
+    function checkWin(x, y, player) {
+      const directions = [
+        [1, 0], [0, 1], [1, 1], [1, -1]
+      ];
+      for (let [dx, dy] of directions) {
+        let count = 1 + countStones(x, y, dx, dy, player) + countStones(x, y, -dx, -dy, player);
+        if (count === 5) return true;
+      }
+      return false;
+    }
+
+    function countStones(x, y, dx, dy, player) {
+      let count = 0;
+      let nx = x + dx;
+      let ny = y + dy;
+      while (
+        nx >= 0 && ny >= 0 &&
+        nx < boardSize && ny < boardSize &&
+        cells[ny][nx] === player
+      ) {
+        count++;
+        nx += dx;
+        ny += dy;
+      }
+      return count;
+    }
+
+    function resetGame() {
+      currentPlayer = "black";
+      gameOver = false;
+      createBoard();
+    }
+
+    resetGame();
+  </script>
+</body>
+</html>
