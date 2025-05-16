@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aero Jump</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      background: linear-gradient(to bottom, #a1c4fd, #c2e9fb);
+      font-family: 'Press Start 2P', cursive;
+      height: 100%;
+      overflow: hidden;
+    }
+    header {
+      background: #1e3c72;
+      color: #fff;
+      text-align: center;
+      padding: 1rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    header h1 {
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+    }
+    #gameWrapper {
+      width: 95%;
+      max-width: 420px;
+      height: 620px;
+      margin: 2rem auto;
+      background: #fefefe;
+      border: 3px solid #1e3c72;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      overflow: hidden;
+      position: relative;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, #81ecec, #74b9ff);
+    }
+    #scoreDisplay {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: rgba(0, 0, 0, 0.4);
+      color: #fff;
+      padding: 0.4rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.7rem;
+      z-index: 5;
+    }
+    #touchControls {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 2rem;
+      z-index: 10;
+    }
+    #touchControls button {
+      width: 60px;
+      height: 60px;
+      border: 3px solid #2d3436;
+      border-radius: 50%;
+      background: #00b894;
+      color: #fff;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    }
+    #touchControls button:active {
+      background: #00a180;
+    }
+    #gameOverOverlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      color: #fff;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.8rem;
+      text-align: center;
+      padding: 1rem;
+      z-index: 15;
+    }
+    #gameOverOverlay div { margin-bottom: 1rem; }
+    #gameOverOverlay button {
+      margin: 0 0.5rem;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      background: #fdcb6e;
+      color: #2d3436;
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-family: 'Press Start 2P', cursive;
+    }
+    #gameOverOverlay button:hover { background: #e1b85d; }
+    footer#otherGames {
+      text-align: center;
+      margin: 2rem 0;
+    }
+    footer#otherGames a {
+      display: inline-block;
+      background: #0984e3;
+      color: #fff;
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    footer#otherGames a:hover { background: #087de1; }
+  </style>
+</head>
+<body>
+  <header><h1>Aero Jump</h1></header>
+  <div id="gameWrapper">
+    <div id="scoreDisplay">SCORE: 0</div>
+    <canvas id="gameCanvas"></canvas>
+    <div id="touchControls">
+      <button id="leftBtn">◀</button>
+      <button id="rightBtn">▶</button>
+    </div>
+    <div id="gameOverOverlay">
+      <div id="finalScore">Score: 0</div>
+      <div>
+        <button id="shareBtn">Share</button>
+        <button id="restartBtn">Restart</button>
+      </div>
+    </div>
+  </div>
+  <footer id="otherGames">
+    <a href="window.location.href='/'">Other Games</a>
+  </footer>
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = canvas.offsetWidth;
+    let height = canvas.height = canvas.offsetHeight;
+
+    const player = { x: width / 2, y: height - 60, size: 30, vy: 0 };
+    const gravity = 0.5;
+    const jumpVelocity = -12;
+    let left = false, right = false;
+    let platforms = [], nextPlatformY, rowCounter = 0, score = 0;
+    let lastAnchorX;
+
+    function initPlatforms() {
+      platforms = [];
+      rowCounter = 0;
+      nextPlatformY = player.y + player.size + 5;
+      lastAnchorX = player.x;
+      while (nextPlatformY > -50) spawnRow();
+    }
+
+    function spawnRow() {
+      const maxPlatforms = Math.max(2, 6 - Math.floor(rowCounter / 3));
+      const initialWidth = width * 0.6;
+      const minWidth = width * 0.25;
+      const decrement = 2;
+      const platformWidth = Math.max(minWidth, initialWidth - rowCounter * decrement);
+      const reachableRange = 120;
+
+      // Anchor platform
+      let anchorX = lastAnchorX + (Math.random() * 2 - 1) * reachableRange;
+      anchorX = Math.max(0, Math.min(anchorX, width - platformWidth));
+      platforms.push({ x: anchorX, y: nextPlatformY, w: platformWidth, h: 10 });
+
+      // Additional platforms
+      for (let i = 1; i < maxPlatforms; i++) {
+        const x = Math.random() * (width - platformWidth);
+        platforms.push({ x, y: nextPlatformY, w: platformWidth, h: 10 });
+      }
+
+      lastAnchorX = anchorX;
+      nextPlatformY -= 60 + Math.random() * 70;
+      rowCounter++;
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = '#2ecc71';
+      platforms.forEach(p => ctx.fillRect(p.x, p.y, p.w, p.h));
+      ctx.fillStyle = '#d63031';
+      ctx.beginPath();
+      ctx.arc(player.x, player.y, player.size / 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function update() {
+      if (left) player.x -= 5;
+      if (right) player.x += 5;
+      player.x = Math.max(player.size / 2, Math.min(player.x, width - player.size / 2));
+      player.vy += gravity;
+      player.y += player.vy;
+
+      platforms.forEach(p => {
+        const half = player.size / 2;
+        const bottom = player.y + half;
+        const prev = bottom - player.vy;
+        if (player.vy > 0 && player.x + half > p.x && player.x - half < p.x + p.w && prev <= p.y && bottom >= p.y) {
+          player.vy = jumpVelocity;
+        }
+      });
+
+      if (player.y < height / 2) {
+        const delta = height / 2 - player.y;
+        player.y = height / 2;
+        platforms.forEach(p => p.y += delta);
+        nextPlatformY += delta;
+        score += Math.floor(delta);
+        while (nextPlatformY > -50) spawnRow();
+      }
+
+      platforms = platforms.filter(p => p.y < height);
+      document.getElementById('scoreDisplay').innerText = 'SCORE: ' + Math.floor(score / 10);
+
+      if (player.y > height) {
+        document.getElementById('finalScore').innerText = 'Score: ' + Math.floor(score / 10);
+        document.getElementById('gameOverOverlay').style.display = 'flex';
+        return;
+      }
+
+      draw();
+      requestAnimationFrame(update);
+    }
+
+    // Controls
+    document.getElementById('leftBtn').addEventListener('mousedown', () => left = true);
+    document.getElementById('rightBtn').addEventListener('mousedown', () => right = true);
+    document.getElementById('leftBtn').addEventListener('mouseup', () => left = false);
+    document.getElementById('rightBtn').addEventListener('mouseup', () => right = false);
+    document.getElementById('leftBtn').addEventListener('touchstart', () => left = true);
+    document.getElementById('rightBtn').addEventListener('touchstart', () => right = true);
+    document.getElementById('leftBtn').addEventListener('touchend', () => left = false);
+    document.getElementById('rightBtn').addEventListener('touchend', () => right = false);
+
+    window.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft') left = true;
+      if (e.key === 'ArrowRight') right = true;
+    });
+    window.addEventListener('keyup', e => {
+      if (e.key === 'ArrowLeft') left = false;
+      if (e.key === 'ArrowRight') right = false;
+    });
+    window.addEventListener('resize', () => {
+      width = canvas.width = canvas.offsetWidth;
+      height = canvas.height = canvas.offsetHeight;
+    });
+
+    document.getElementById('restartBtn').onclick = () => location.reload();
+    document.getElementById('shareBtn').onclick = async () => {
+      const shareData = {
+        title: 'Aero Jump',
+        text: `My Score: ${Math.floor(score / 10)}!`,
+        url: location.href
+      };
+      try {
+        if (navigator.share) {
+          await navigator.share(shareData);
+        } else {
+          await navigator.clipboard.writeText(location.href);
+          alert('Link copied to clipboard!');
+        }
+      } catch {};
+    };
+
+    window.onload = () => {
+      initPlatforms();
+      update();
+    };
+  </script>
+</body>
+</html>
