@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+  <title>PONG vs AI</title>
+  <style>
+    :root { --main-width: 90vw; --max-width: 400px; }
+    body, html { margin: 0; padding: 0; background: #151a23; height: 100%; }
+    body { display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+    #container {
+      width: var(--main-width); max-width: var(--max-width);
+      margin: 0 auto; display: flex; flex-direction: column; align-items: center;
+    }
+    #gameTitle {
+      color: #f9bc60; font-size: 2.1rem; margin-top: 2.1rem; margin-bottom: 0.5rem;
+      text-align: center; font-weight: bold; letter-spacing: 2px;
+    }
+    #desc {
+      color: #eee; text-align: center; margin-bottom: 1.1rem; font-size: 1.07rem;
+      line-height: 1.5;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    #pong {
+      background: #232946; border-radius: 20px; box-shadow: 0 8px 32px #0007;
+      display: block; margin: 0 auto 14px auto;
+    }
+    #scoreBoard {
+      color: #fff; font-size: 1.5rem; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin-bottom: 5px; letter-spacing: 2px; text-align: center;
+      height: 2.1rem;
+    }
+    #startBtn, .gameOverBtns button {
+      font-size: 1rem; padding: 9px 26px; border-radius: 10px; border: none;
+      background: #ef4565; color: #fff; cursor: pointer; margin: 12px 5px 0 5px;
+      box-shadow: 0 2px 8px #0003; transition: background 0.2s;
+      font-weight: 600; letter-spacing: 1px;
+    }
+    #startBtn:hover, .gameOverBtns button:hover { background: #d7264c; }
+    #winMsg {
+      color: #ffce6d; font-size: 1.5rem; font-weight: bold; text-shadow: 2px 4px 10px #000b;
+      text-align: center; margin-top: 10px; min-height: 2.2rem;
+    }
+    .gameOverBtns { text-align: center; margin-top: 1.2rem; }
+    #otherGames {
+      width: 90vw; max-width: 400px; margin: 32px auto 20px auto; display: block;
+      font-size: 1.04rem; padding: 12px 0; border-radius: 10px; border: none;
+      background: #f9bc60; color: #22223b; font-weight: 600; letter-spacing: 1px;
+      box-shadow: 0 2px 8px #0002;
+      transition: background 0.18s;
+      text-align: center;
+    }
+    #otherGames:hover { background: #facf85; }
+    @media (max-width: 450px) {
+      #pong { width: 98vw !important; max-width: 98vw; }
+      #container, #otherGames { max-width: 98vw; }
+    }
+    .desc-ctrl { color: #bbb; font-size: 0.98rem; margin-top: 6px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="gameTitle">PONG vs AI</div>
+    <div id="desc">First to 10 wins!</div>
+    <div id="scoreBoard"></div>
+    <canvas id="pong" width="400" height="260" style="width:100%;max-width:400px;"></canvas>
+    <button id="startBtn" onclick="startGame()">Start Game</button>
+    <div id="winMsg"></div>
+    <div class="gameOverBtns" style="display:none;">
+      <button onclick="restartGame()">Restart</button>
+      <button onclick="shareScore()">Share</button>
+    </div>
+    <div class="desc-ctrl">
+      Controls: W/S (Left, You) &middot; Right paddle is AI. On mobile, drag left side.
+    </div>
+  </div>
+  <button id="otherGames" onclick="window.location.href='../'">Other Games</button>
+  <script>
+    // --- 변수 선언 ---
+    const canvas = document.getElementById('pong');
+    const ctx = canvas.getContext('2d');
+    const scoreBoard = document.getElementById('scoreBoard');
+    const startBtn = document.getElementById('startBtn');
+    const winMsgDiv = document.getElementById('winMsg');
+    const gameOverBtns = document.querySelector('.gameOverBtns');
+    const maxScore = 10;
+
+    const paddleWidth = 12, paddleHeight = 56, ballSize = 14;
+    const paddleSpeed = 6, ballSpeedStart = 4;
+    let leftY, rightY, ballX, ballY, ballVelX, ballVelY;
+    let leftScore = 0, rightScore = 0, gameRunning = false, inGame = false;
+    let leftMove = 0;
+    let aiLevel = 0.15; // 난이도 (0.11~0.24 추천)
+    let rafId;
+
+    // Spark 파티클 시스템
+    let particles = [];
+    function spawnSpark(x, y, color = "#ffe287", count = 15) {
+      for (let i = 0; i < count; i++) {
+        let angle = Math.random() * 2 * Math.PI;
+        let speed = 2.3 + Math.random() * 2.2;
+        particles.push({
+          x, y,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          alpha: 1.1,
+          life: 12 + Math.random() * 5,
+          color
+        });
+      }
+    }
+    function updateParticles() {
+      for (let i = particles.length - 1; i >= 0; i--) {
+        let p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vx *= 0.91;
+        p.vy *= 0.91;
+        p.alpha -= 0.06;
+        p.life--;
+        if (p.life <= 0 || p.alpha <= 0) particles.splice(i, 1);
+      }
+    }
+    function drawParticles() {
+      for (const p of particles) {
+        ctx.globalAlpha = Math.max(p.alpha, 0);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2.1, 0, 2 * Math.PI);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    function resetVars() {
+      leftY = (canvas.height - paddleHeight) / 2;
+      rightY = (canvas.height - paddleHeight) / 2;
+      ballX = (canvas.width - ballSize) / 2;
+      ballY = (canvas.height - ballSize) / 2;
+      let angle = (Math.random() - 0.5) * Math.PI / 3;
+      let dir = (Math.random() > 0.5) ? 1 : -1;
+      ballVelX = ballSpeedStart * dir * Math.cos(angle);
+      ballVelY = ballSpeedStart * Math.sin(angle);
+    }
+    function updateScore() {
+      scoreBoard.textContent = `${leftScore} : ${rightScore}`;
+    }
+    function drawPaddle(x, y) {
+      ctx.fillStyle = "#fffffe";
+      ctx.fillRect(x, y, paddleWidth, paddleHeight);
+    }
+    function drawBall(x, y) {
+      ctx.beginPath();
+      ctx.arc(x + ballSize / 2, y + ballSize / 2, ballSize / 2, 0, Math.PI * 2);
+      ctx.fillStyle = "#f9bc60";
+      ctx.fill();
+    }
+    function drawCenterLine() {
+      ctx.save();
+      ctx.setLineDash([9, 11]);
+      ctx.strokeStyle = "#393d42";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(canvas.width / 2, 0);
+      ctx.lineTo(canvas.width / 2, canvas.height);
+      ctx.stroke();
+      ctx.restore();
+    }
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawCenterLine();
+      drawPaddle(10, leftY);
+      drawPaddle(canvas.width - paddleWidth - 10, rightY);
+      drawBall(ballX, ballY);
+      drawParticles();
+    }
+    function stepGame() {
+      leftY += leftMove * paddleSpeed;
+      leftY = Math.max(0, Math.min(canvas.height - paddleHeight, leftY));
+      // AI (오른쪽)
+      let targetY = ballY - (paddleHeight - ballSize) / 2;
+      rightY += (targetY - rightY) * aiLevel;
+      rightY = Math.max(0, Math.min(canvas.height - paddleHeight, rightY));
+      // 공 이동
+      ballX += ballVelX;
+      ballY += ballVelY;
+
+      // 벽 반사
+      if (ballY <= 0 || ballY + ballSize >= canvas.height) ballVelY *= -1;
+      // Paddle 충돌
+      let sparkAt = null;
+      if (
+        ballX <= 10 + paddleWidth &&
+        ballY + ballSize >= leftY &&
+        ballY <= leftY + paddleHeight
+      ) {
+        ballX = 10 + paddleWidth;
+        ballVelX *= -1.07;
+        let hit = (ballY + ballSize / 2 - (leftY + paddleHeight / 2)) / (paddleHeight / 2);
+        ballVelY += hit * 2.0;
+        sparkAt = {x: ballX + ballSize/2, y: ballY + ballSize/2, color: "#ffe287"};
+      }
+      if (
+        ballX + ballSize >= canvas.width - 10 - paddleWidth &&
+        ballY + ballSize >= rightY &&
+        ballY <= rightY + paddleHeight
+      ) {
+        ballX = canvas.width - 10 - paddleWidth - ballSize;
+        ballVelX *= -1.07;
+        let hit = (ballY + ballSize / 2 - (rightY + paddleHeight / 2)) / (paddleHeight / 2);
+        ballVelY += hit * 2.0;
+        sparkAt = {x: ballX + ballSize/2, y: ballY + ballSize/2, color: "#86f4ff"};
+      }
+      if (sparkAt) spawnSpark(sparkAt.x, sparkAt.y, sparkAt.color);
+
+      // 점수 및 게임 오버 체크
+      if (ballX < 0) {
+        rightScore++;
+        updateScore();
+        if (rightScore >= maxScore) { endGame(false); return; }
+        resetVars();
+      }
+      if (ballX > canvas.width) {
+        leftScore++;
+        updateScore();
+        if (leftScore >= maxScore) { endGame(true); return; }
+        resetVars();
+      }
+      updateParticles();
+      draw();
+      rafId = requestAnimationFrame(stepGame);
+    }
+    function startGame() {
+      leftScore = 0;
+      rightScore = 0;
+      updateScore();
+      resetVars();
+      draw();
+      startBtn.style.display = "none";
+      winMsgDiv.textContent = "";
+      gameOverBtns.style.display = "none";
+      inGame = true;
+      gameRunning = true;
+      rafId = requestAnimationFrame(stepGame);
+    }
+    function restartGame() {
+      leftScore = 0;
+      rightScore = 0;
+      updateScore();
+      resetVars();
+      draw();
+      winMsgDiv.textContent = "";
+      gameOverBtns.style.display = "none";
+      inGame = true;
+      gameRunning = true;
+      rafId = requestAnimationFrame(stepGame);
+    }
+    function endGame(playerWin) {
+      gameRunning = false;
+      inGame = false;
+      cancelAnimationFrame(rafId);
+      winMsgDiv.textContent = playerWin ? "You Win! 🎉" : "AI Wins! 🤖";
+      gameOverBtns.style.display = "block";
+    }
+    // 공유 버튼
+    function shareScore() {
+      let text = `[Pong vs AI]\n${winMsgDiv.textContent}\nMy Score: ${leftScore}, AI: ${rightScore}\n\nTry it here:\n${window.location.href}`;
+      if (navigator.share) {
+        navigator.share({ title: "Pong vs AI", text });
+      } else {
+        navigator.clipboard.writeText(text);
+        alert("Copied result to clipboard!\n\n" + text);
+      }
+    }
+    // 키보드 조작
+    document.addEventListener('keydown', e => {
+      if (!inGame) return;
+      if (e.key === 'w' || e.key === 'W') leftMove = -1;
+      if (e.key === 's' || e.key === 'S') leftMove = 1;
+    });
+    document.addEventListener('keyup', e => {
+      if (!inGame) return;
+      if (e.key === 'w' || e.key === 'W') leftMove = 0;
+      if (e.key === 's' || e.key === 'S') leftMove = 0;
+    });
+    // 모바일 터치(왼쪽 패들만)
+    canvas.addEventListener('touchstart', function (e) {
+      if (!inGame) return;
+      const rect = canvas.getBoundingClientRect();
+      for (const touch of e.touches) {
+        if (touch.clientX - rect.left < canvas.width / 2) {
+          let y = touch.clientY - rect.top - paddleHeight / 2;
+          y = Math.max(0, Math.min(canvas.height - paddleHeight, y));
+          leftY = y;
+        }
+      }
+    });
+    canvas.addEventListener('touchmove', function (e) {
+      if (!inGame) return;
+      const rect = canvas.getBoundingClientRect();
+      for (const touch of e.touches) {
+        if (touch.clientX - rect.left < canvas.width / 2) {
+          let y = touch.clientY - rect.top - paddleHeight / 2;
+          y = Math.max(0, Math.min(canvas.height - paddleHeight, y));
+          leftY = y;
+        }
+      }
+      e.preventDefault();
+    });
+    // Prevent scroll on mobile
+    document.body.addEventListener('touchmove', function(e){if(inGame)e.preventDefault();}, {passive:false});
+    // 최초 화면 준비
+    updateScore();
+    resetVars();
+    draw();
+    startBtn.style.display = "block";
+    winMsgDiv.textContent = "";
+    gameOverBtns.style.display = "none";
+  </script>
+</body>
+</html>
