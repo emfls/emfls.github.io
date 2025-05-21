@@ -1,259 +1,276 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <script
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
-            crossorigin="anonymous"></script>
-        <title>Speed Tap</title>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet" />
-        <style>
-            * {
-                box-sizing: border-box;
-                margin: 0;
-                padding: 0;
-                user-select: none;
-            }
 
-            body {
-                font-family: "Inter", sans-serif;
-                height: 100vh;
-                background: linear-gradient(135deg, #2c3e50, #34495e);
-                color: #fff;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: flex-start;
-                text-align: center;
-                padding: 2rem;
-            }
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="How fast are your fingers? Tap as many times as you can in just 5 seconds! Challenge friends and climb the leaderboard. Free, mobile-friendly web game.">
+    <meta name="keywords" content="speed tap, tap game, reflex game, 5 seconds challenge, 반응속도, 클릭게임, 모바일 게임, 무료 웹게임, 브라우저 게임, 스피드테스트">
+    <meta name="author" content="Itagi">
+    <meta name="robots" content="index, follow">
 
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://emfls.github.io/SpeedTap">
+
+    <!-- Open Graph (Facebook, Kakao, Discord) -->
+    <meta property="og:title" content="Speed Tap">
+    <meta property="og:description" content="Tap as fast as you can in just 5 seconds! How many taps can you do? Free web game – challenge your friends!">
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png">
+    <meta property="og:url" content="https://emfls.github.io/SpeedTap">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Speed Tap">
+    <meta name="twitter:description" content="Can you beat your friends? Try Speed Tap: tap as fast as possible in 5 seconds!">
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+    <title>Speed Tap</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+        
+        body {
+            font-family: "Inter", sans-serif;
+            height: 100vh;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        h1 {
+            font-size: 4rem;
+            /* 기존 3rem → 4rem */
+            background: linear-gradient(90deg, #f9ca24, #e056fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            animation: bounceIn 1s ease;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        
+        @media (max-width: 500px) {
             h1 {
-                font-size: 4rem; /* 기존 3rem → 4rem */
-                background: linear-gradient(90deg, #f9ca24, #e056fd);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-                animation: bounceIn 1s ease;
-                margin-bottom: 1rem;
-                line-height: 1.2;
+                font-size: 2.5rem;
             }
-            @media (max-width: 500px) {
-                h1 {
-                    font-size: 2.5rem;
-                }
+        }
+        
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
             }
-
-            @keyframes bounceIn {
-                0% {
-                    transform: scale(0.5);
-                    opacity: 0;
-                }
-                60% {
-                    transform: scale(1.2);
-                    opacity: 1;
-                }
-                80% {
-                    transform: scale(0.95);
-                }
-                100% {
-                    transform: scale(1);
-                }
+            60% {
+                transform: scale(1.2);
+                opacity: 1;
             }
-
+            80% {
+                transform: scale(0.95);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        #tapZone {
+            background: #1abc9c;
+            width: 280px;
+            height: 280px;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            transition: background 0.2s ease, transform 0.1s ease;
+            cursor: pointer;
+            font-size: 2rem;
+            position: relative;
+            animation: none;
+        }
+        
+        #tapZone:active {
+            background: #16a085;
+        }
+        /* 숫자 팝 효과 */
+        
+        .pop {
+            animation: pop 0.2s ease;
+        }
+        
+        @keyframes pop {
+            0% {
+                transform: scale(1);
+                color: #ffffff;
+            }
+            50% {
+                transform: scale(1.3);
+                color: #ffd700;
+            }
+            100% {
+                transform: scale(1);
+                color: #ffffff;
+            }
+        }
+        
+        #result {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        
+        button {
+            padding: 0.8rem 1.6rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            background-color: #f39c12;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            transition: background 0.2s ease, transform 0.1s ease;
+        }
+        
+        button:hover {
+            background-color: #e67e22;
+        }
+        
+        button:active {
+            transform: scale(0.97);
+        }
+        
+        @media (max-width: 500px) {
             #tapZone {
-                background: #1abc9c;
-                width: 280px;
-                height: 280px;
-                border-radius: 1.5rem;
-                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-weight: bold;
-                margin-bottom: 2rem;
-                transition:
-                    background 0.2s ease,
-                    transform 0.1s ease;
-                cursor: pointer;
+                width: 220px;
+                height: 220px;
+            }
+            h1 {
                 font-size: 2rem;
-                position: relative;
-                animation: none;
             }
+        }
 
-            #tapZone:active {
-                background: #16a085;
-            }
+    </style>
+</head>
 
-            /* 숫자 팝 효과 */
-            .pop {
-                animation: pop 0.2s ease;
-            }
+<body>
+    <h1>SPEED TAP</h1>
+    <p style="margin-top: -10px; margin-bottom: 30px">Tap as fast as you can in just 5 seconds!</p>
 
-            @keyframes pop {
-                0% {
-                    transform: scale(1);
-                    color: #ffffff;
-                }
-                50% {
-                    transform: scale(1.3);
-                    color: #ffd700;
-                }
-                100% {
-                    transform: scale(1);
-                    color: #ffffff;
-                }
-            }
+    <div id="tapZone">Tap to Start</div>
 
-            #result {
-                font-size: 1.3rem;
-                margin-bottom: 1rem;
-            }
+    <div id="result"></div>
 
-            .button-group {
-                display: flex;
-                gap: 1rem;
-                flex-wrap: wrap;
-                justify-content: center;
-                margin-top: 1rem;
-            }
+    <div class="button-group" id="afterButtons" style="display: none">
+        <button id="restartBtn">Restart</button>
+        <button id="shareBtn">Share</button>
+    </div>
 
-            button {
-                padding: 0.8rem 1.6rem;
-                font-size: 1rem;
-                border: none;
-                border-radius: 30px;
-                cursor: pointer;
-                background-color: #f39c12;
-                color: white;
-                font-weight: bold;
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-                transition:
-                    background 0.2s ease,
-                    transform 0.1s ease;
-            }
+    <script>
+        const tapZone = document.getElementById("tapZone");
+        const result = document.getElementById("result");
+        const restartBtn = document.getElementById("restartBtn");
+        const shareBtn = document.getElementById("shareBtn");
+        const afterButtons = document.getElementById("afterButtons");
 
-            button:hover {
-                background-color: #e67e22;
-            }
+        let taps = 0;
+        let isPlaying = false;
+        let timer;
 
-            button:active {
-                transform: scale(0.97);
-            }
+        function updateFontSize() {
+            const baseSize = 2; // rem
+            const growthRate = 0.05;
+            const maxSize = 5;
+            let newSize = baseSize + taps * growthRate;
+            if (newSize > maxSize) newSize = maxSize;
+            tapZone.style.fontSize = `${newSize}rem`;
+        }
 
-            @media (max-width: 500px) {
-                #tapZone {
-                    width: 220px;
-                    height: 220px;
-                }
+        function startGame() {
+            taps = 0;
+            isPlaying = true;
+            result.textContent = "";
+            tapZone.textContent = "Go!";
+            tapZone.style.pointerEvents = "auto";
+            tapZone.style.fontSize = "2rem";
+            tapZone.classList.remove("pop");
+            afterButtons.style.display = "none";
 
-                h1 {
-                    font-size: 2rem;
-                }
-            }
-        </style>
-    </head>
-    <body>
-        <h1>SPEED TAP</h1>
-        <p style="margin-top: -10px; margin-bottom: 30px">Tap as fast as you can in just 5 seconds!</p>
+            timer = setTimeout(() => {
+                isPlaying = false;
+                tapZone.textContent = "⏰ Time's up!";
+                tapZone.style.pointerEvents = "none";
+                tapZone.style.fontSize = "2rem"; // Reset size
+                tapZone.classList.remove("pop"); // Remove animation
+                result.textContent = `You tapped ${taps} times in 5 seconds!`;
+                afterButtons.style.display = "flex";
+            }, 5000);
+        }
 
-        <div id="tapZone">Tap to Start</div>
+        tapZone.addEventListener("click", () => {
+            if (!isPlaying) {
+                startGame();
+            } else {
+                taps++;
+                tapZone.textContent = `${taps}`;
+                updateFontSize();
 
-        <div id="result"></div>
-
-        <div class="button-group" id="afterButtons" style="display: none">
-            <button id="restartBtn">Restart</button>
-            <button id="shareBtn">Share</button>
-        </div>
-
-        <script>
-            const tapZone = document.getElementById("tapZone");
-            const result = document.getElementById("result");
-            const restartBtn = document.getElementById("restartBtn");
-            const shareBtn = document.getElementById("shareBtn");
-            const afterButtons = document.getElementById("afterButtons");
-
-            let taps = 0;
-            let isPlaying = false;
-            let timer;
-
-            function updateFontSize() {
-                const baseSize = 2; // rem
-                const growthRate = 0.05;
-                const maxSize = 5;
-                let newSize = baseSize + taps * growthRate;
-                if (newSize > maxSize) newSize = maxSize;
-                tapZone.style.fontSize = `${newSize}rem`;
-            }
-
-            function startGame() {
-                taps = 0;
-                isPlaying = true;
-                result.textContent = "";
-                tapZone.textContent = "Go!";
-                tapZone.style.pointerEvents = "auto";
-                tapZone.style.fontSize = "2rem";
+                // 애니메이션 다시 적용하려면 재트리거 필요
                 tapZone.classList.remove("pop");
-                afterButtons.style.display = "none";
-
-                timer = setTimeout(() => {
-                    isPlaying = false;
-                    tapZone.textContent = "⏰ Time's up!";
-                    tapZone.style.pointerEvents = "none";
-                    tapZone.style.fontSize = "2rem"; // Reset size
-                    tapZone.classList.remove("pop"); // Remove animation
-                    result.textContent = `You tapped ${taps} times in 5 seconds!`;
-                    afterButtons.style.display = "flex";
-                }, 5000);
+                void tapZone.offsetWidth; // 강제 리플로우
+                tapZone.classList.add("pop");
             }
+        });
 
-            tapZone.addEventListener("click", () => {
-                if (!isPlaying) {
-                    startGame();
-                } else {
-                    taps++;
-                    tapZone.textContent = `${taps}`;
-                    updateFontSize();
+        restartBtn.addEventListener("click", () => {
+            tapZone.textContent = "Tap to Start";
+            result.textContent = "";
+            tapZone.style.fontSize = "2rem";
+            tapZone.classList.remove("pop");
+            afterButtons.style.display = "none";
+            tapZone.style.pointerEvents = "auto";
+        });
 
-                    // 애니메이션 다시 적용하려면 재트리거 필요
-                    tapZone.classList.remove("pop");
-                    void tapZone.offsetWidth; // 강제 리플로우
-                    tapZone.classList.add("pop");
+        shareBtn.addEventListener("click", async() => {
+            const shareText = `💥 I tapped ${taps} times in 5 seconds!\nTry it yourself: ${window.location.href}`;
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: "Speed Tap Challenge",
+                        text: shareText,
+                        url: window.location.href
+                    });
+                } catch (err) {
+                    alert("Share canceled or failed.");
                 }
-            });
+            } else {
+                await navigator.clipboard.writeText(shareText);
+                alert("Link copied to clipboard!");
+            }
+        });
 
-            restartBtn.addEventListener("click", () => {
-                tapZone.textContent = "Tap to Start";
-                result.textContent = "";
-                tapZone.style.fontSize = "2rem";
-                tapZone.classList.remove("pop");
-                afterButtons.style.display = "none";
-                tapZone.style.pointerEvents = "auto";
-            });
+    </script>
 
-            shareBtn.addEventListener("click", async () => {
-                const shareText = `💥 I tapped ${taps} times in 5 seconds!\nTry it yourself: ${window.location.href}`;
-                if (navigator.share) {
-                    try {
-                        await navigator.share({
-                            title: "Speed Tap Challenge",
-                            text: shareText,
-                            url: window.location.href
-                        });
-                    } catch (err) {
-                        alert("Share canceled or failed.");
-                    }
-                } else {
-                    await navigator.clipboard.writeText(shareText);
-                    alert("Link copied to clipboard!");
-                }
-            });
-        </script>
-
-        <button
-            style="
+    <button style="
                 background: f39c12;
                 padding: 19px 20px 20px 20px;
                 border-radius: 20px;
@@ -265,9 +282,9 @@
                 position: relative;
                 color: white;
                 font-weight: bold;
-            "
-            onclick="window.location.href='/'">
+            " onclick="window.location.href='/'">
             📂 Other Games
         </button>
-    </body>
+</body>
+
 </html>
