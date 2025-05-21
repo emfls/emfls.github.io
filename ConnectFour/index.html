@@ -1,285 +1,391 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script
-      async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
-      crossorigin="anonymous"></script>
-  <title>Connect Four</title>
-  <style>
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent;}
-    html, body {
-      margin: 0; padding: 0;
-      background: #f5f7fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      user-select: none; -webkit-user-select: none;
-    }
-    #wrapper {
-      width: 90vw; max-width: 400px; margin: 24px auto;
-      text-align: center;
-    }
-    h1 {
-      margin: 0 0 6px 0; font-size: 2rem; font-weight: 900; letter-spacing: 0.02em;
-    }
-    .desc {
-      font-size: 1.04rem; margin-bottom: 12px; color: #666;
-      white-space: nowrap;
-    }
-    #modeSel {
-      margin-bottom: 10px; display: flex; gap: 8px; justify-content: center;
-    }
-    .modebtn {
-      padding: 0.45em 1.2em; border-radius: 1.5em;
-      font-size: 1rem; font-weight: bold;
-      border: none; cursor: pointer;
-      background: #e4eaf7; color: #284c7b;
-      transition: background 0.12s, color 0.12s;
-    }
-    .modebtn.active {
-      background: #467be6; color: #fff;
-    }
-    #board {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      grid-template-rows: repeat(6, 1fr);
-      gap: 4px;
-      background: #3050a0;
-      border-radius: 12px;
-      padding: 6px;
-      width: 100%; aspect-ratio: 7/6;
-      margin: 0 auto 12px auto;
-      touch-action: manipulation;
-    }
-    .cell {
-      background: #e4eaf7;
-      border-radius: 50%;
-      width: 100%; aspect-ratio: 1/1;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 2rem;
-      cursor: pointer;
-      transition: background .12s;
-    }
-    .cell.filled { cursor: default; }
-    #turn {
-      margin-bottom: 10px;
-      font-weight: bold; font-size: 1.1rem;
-      letter-spacing: 0.02em;
-    }
-    #overMsg {
-      font-size: 1.14rem; font-weight: bold;
-      color: #e24a4a; margin: 18px 0 10px 0;
-    }
-    .btns {
-      display: flex; gap: 8px; margin: 0 auto 0 auto; justify-content: center;
-      flex-wrap: wrap; width: 100%;
-    }
-    .btn {
-      flex: 1 1 42%;
-      min-width: 98px; max-width: 180px;
-      background: #467be6; color: #fff;
-      border: none; border-radius: 1.5em;
-      padding: 0.68em 0;
-      font-size: 1rem; font-weight: 600;
-      box-shadow: 0 2px 8px #17448c12;
-      margin-bottom: 8px; cursor: pointer;
-      transition: background 0.12s;
-    }
-    .btn:active { background: #2856ad; }
-    #otherGames {
-      width: 90%; max-width: 400px; margin: 20px auto 0 auto;
-      background: #e6e8f2;
-      border-radius: 1.4em;
-      color: #365ca0; border: none;
-      padding: 0.82em 0; font-size: 1rem; font-weight: bold;
-      text-decoration: none; display: block;
-      box-shadow: 0 1px 5px #bccbe822;
-      letter-spacing: 0.03em;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Play Connect Four online for free! Challenge a friend or the computer in this classic 2-player strategy game. Simple, fast, and mobile-friendly.">
+    <meta name="keywords" content="Connect Four, four in a row, online game, free game, two player, vs AI, strategy game, board game, browser, mobile, puzzle, classic">
+    <meta name="author" content="Itagi">
+    <meta name="robots" content="index, follow">
+
+    <!-- 표준 주소 (canonical) -->
+    <link rel="canonical" href="https://emfls.github.io/ConnectFour">
+
+    <!-- Open Graph (SNS 공유) -->
+    <meta property="og:title" content="Connect Four – Free Online 2-Player Game!">
+    <meta property="og:description" content="Play Connect Four for free in your browser! Get four in a row to win against a friend or AI.">
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png">
+    <meta property="og:url" content="https://emfls.github.io/ConnectFour">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter 카드 -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Connect Four – Free Online 2-Player Game!">
+    <meta name="twitter:description" content="Play Connect Four online – compete with a friend or try to beat the AI! No download needed.">
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+    <title>Connect Four</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f5f7fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        #wrapper {
+            width: 90vw;
+            max-width: 400px;
+            margin: 24px auto;
+            text-align: center;
+        }
+        
+        h1 {
+            margin: 0 0 6px 0;
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 0.02em;
+        }
+        
+        .desc {
+            font-size: 1.04rem;
+            margin-bottom: 12px;
+            color: #666;
+            white-space: nowrap;
+        }
+        
+        #modeSel {
+            margin-bottom: 10px;
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        
+        .modebtn {
+            padding: 0.45em 1.2em;
+            border-radius: 1.5em;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            background: #e4eaf7;
+            color: #284c7b;
+            transition: background 0.12s, color 0.12s;
+        }
+        
+        .modebtn.active {
+            background: #467be6;
+            color: #fff;
+        }
+        
+        #board {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            gap: 4px;
+            background: #3050a0;
+            border-radius: 12px;
+            padding: 6px;
+            width: 100%;
+            aspect-ratio: 7/6;
+            margin: 0 auto 12px auto;
+            touch-action: manipulation;
+        }
+        
+        .cell {
+            background: #e4eaf7;
+            border-radius: 50%;
+            width: 100%;
+            aspect-ratio: 1/1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: background .12s;
+        }
+        
+        .cell.filled {
+            cursor: default;
+        }
+        
+        #turn {
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            letter-spacing: 0.02em;
+        }
+        
+        #overMsg {
+            font-size: 1.14rem;
+            font-weight: bold;
+            color: #e24a4a;
+            margin: 18px 0 10px 0;
+        }
+        
+        .btns {
+            display: flex;
+            gap: 8px;
+            margin: 0 auto 0 auto;
+            justify-content: center;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+        
+        .btn {
+            flex: 1 1 42%;
+            min-width: 98px;
+            max-width: 180px;
+            background: #467be6;
+            color: #fff;
+            border: none;
+            border-radius: 1.5em;
+            padding: 0.68em 0;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 2px 8px #17448c12;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: background 0.12s;
+        }
+        
+        .btn:active {
+            background: #2856ad;
+        }
+        
+        #otherGames {
+            width: 90%;
+            max-width: 400px;
+            margin: 20px auto 0 auto;
+            background: #e6e8f2;
+            border-radius: 1.4em;
+            color: #365ca0;
+            border: none;
+            padding: 0.82em 0;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            display: block;
+            box-shadow: 0 1px 5px #bccbe822;
+            letter-spacing: 0.03em;
+        }
+
+    </style>
 </head>
+
 <body>
-  <div id="wrapper">
-    <h1>Connect Four</h1>
-    <div class="desc">4 in a row to win!</div>
-    <div id="modeSel">
-      <button class="modebtn active" id="mode2p" onclick="setMode('2p')">2 Players</button>
-      <button class="modebtn" id="modeai" onclick="setMode('ai')">Play vs AI</button>
+    <div id="wrapper">
+        <h1>Connect Four</h1>
+        <div class="desc">4 in a row to win!</div>
+        <div id="modeSel">
+            <button class="modebtn active" id="mode2p" onclick="setMode('2p')">2 Players</button>
+            <button class="modebtn" id="modeai" onclick="setMode('ai')">Play vs AI</button>
+        </div>
+        <div id="turn"></div>
+        <div id="board"></div>
+        <div id="overMsg"></div>
+        <div class="btns" id="gameBtns" style="display:none">
+            <button class="btn" onclick="restart()">Restart</button>
+            <button class="btn" onclick="share()">Share</button>
+        </div>
+        <a id="otherGames" href="../" style="margin-top:22px;">Other Games</a>
     </div>
-    <div id="turn"></div>
-    <div id="board"></div>
-    <div id="overMsg"></div>
-    <div class="btns" id="gameBtns" style="display:none">
-      <button class="btn" onclick="restart()">Restart</button>
-      <button class="btn" onclick="share()">Share</button>
-    </div>
-    <a id="otherGames" href="../" style="margin-top:22px;">Other Games</a>
-  </div>
-  <script>
-    // Prevent selection/drag on mobile
-    document.addEventListener('touchmove', e => { if (e.scale !== 1) e.preventDefault(); }, { passive: false });
-    document.body.addEventListener('dragstart', e => e.preventDefault());
-    document.body.addEventListener('selectstart', e => e.preventDefault());
+    <script>
+        // Prevent selection/drag on mobile
+        document.addEventListener('touchmove', e => {
+            if (e.scale !== 1) e.preventDefault();
+        }, {
+            passive: false
+        });
+        document.body.addEventListener('dragstart', e => e.preventDefault());
+        document.body.addEventListener('selectstart', e => e.preventDefault());
 
-    const ROWS = 6, COLS = 7;
-    let board, turn, over, winner;
-    let mode = "2p"; // "2p" or "ai"
-    const COLORS = ['🔵', '🟡'];
+        const ROWS = 6,
+            COLS = 7;
+        let board, turn, over, winner;
+        let mode = "2p"; // "2p" or "ai"
+        const COLORS = ['🔵', '🟡'];
 
-    function emptyBoard() {
-      return Array.from({length: ROWS}, () => Array(COLS).fill(null));
-    }
+        function emptyBoard() {
+            return Array.from({
+                length: ROWS
+            }, () => Array(COLS).fill(null));
+        }
 
-    function render() {
-      const boardDiv = document.getElementById('board');
-      boardDiv.innerHTML = '';
-      for (let r = 0; r < ROWS; r++) {
-        for (let c = 0; c < COLS; c++) {
-          let cell = document.createElement('div');
-          cell.className = 'cell' + (board[r][c] !== null ? ' filled' : '');
-          cell.dataset.col = c;
-          cell.style.pointerEvents = over ? 'none' : '';
-          cell.innerHTML = board[r][c] !== null ? COLORS[board[r][c]] : '';
-          cell.onclick = () => {
-            if (over) return;
-            if (mode === "ai" && turn === 1) return; // AI 차례엔 클릭 무효
-            if (playerMove(c)) {
-              render();
-              if (mode === "ai" && !over && turn === 1) {
-                setTimeout(aiMove, 350); // 약간의 지연
-              }
+        function render() {
+            const boardDiv = document.getElementById('board');
+            boardDiv.innerHTML = '';
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < COLS; c++) {
+                    let cell = document.createElement('div');
+                    cell.className = 'cell' + (board[r][c] !== null ? ' filled' : '');
+                    cell.dataset.col = c;
+                    cell.style.pointerEvents = over ? 'none' : '';
+                    cell.innerHTML = board[r][c] !== null ? COLORS[board[r][c]] : '';
+                    cell.onclick = () => {
+                        if (over) return;
+                        if (mode === "ai" && turn === 1) return; // AI 차례엔 클릭 무효
+                        if (playerMove(c)) {
+                            render();
+                            if (mode === "ai" && !over && turn === 1) {
+                                setTimeout(aiMove, 350); // 약간의 지연
+                            }
+                        }
+                    };
+                    boardDiv.appendChild(cell);
+                }
             }
-          };
-          boardDiv.appendChild(cell);
+            let msg = "";
+            if (!over) {
+                msg = COLORS[turn] + (mode === "ai" ? (turn === 0 ? " (You)" : " (AI)") : "") + "'s turn";
+            } else if (winner !== null) msg = COLORS[winner] + (mode === "ai" ? (winner === 0 ? " (You)" : " (AI)") : "") + " wins!";
+            else msg = "Draw!";
+            document.getElementById('turn').textContent = msg;
+            document.getElementById('overMsg').textContent = over && winner !== null ? msg : (over ? "Draw!" : "");
+            document.getElementById('gameBtns').style.display = over ? "flex" : "none";
+            document.getElementById('mode2p').classList.toggle('active', mode === '2p');
+            document.getElementById('modeai').classList.toggle('active', mode === 'ai');
         }
-      }
-      let msg = "";
-      if (!over) {
-        msg = COLORS[turn] + (mode === "ai" ? (turn === 0 ? " (You)" : " (AI)") : "") + "'s turn";
-      } else if (winner !== null) msg = COLORS[winner] + (mode === "ai" ? (winner === 0 ? " (You)" : " (AI)") : "") + " wins!";
-      else msg = "Draw!";
-      document.getElementById('turn').textContent = msg;
-      document.getElementById('overMsg').textContent = over && winner !== null ? msg : (over ? "Draw!" : "");
-      document.getElementById('gameBtns').style.display = over ? "flex":"none";
-      document.getElementById('mode2p').classList.toggle('active', mode==='2p');
-      document.getElementById('modeai').classList.toggle('active', mode==='ai');
-    }
 
-    // 플레이어(또는 2P)가 실제 돌을 두는 함수 (실제 상태 갱신)
-    function playerMove(col) {
-      if (over) return false;
-      for (let r = ROWS-1; r >= 0; r--) {
-        if (board[r][col] === null) {
-          board[r][col] = turn;
-          // 실제 승리/무승부 판정은 여기서만!
-          if (checkWin(r, col, turn)) {
-            over = true; winner = turn;
-          } else if (board.flat().every(cell=>cell!==null)) {
-            over = true; winner = null;
-          } else {
-            turn = 1-turn;
-          }
-          return true;
+        // 플레이어(또는 2P)가 실제 돌을 두는 함수 (실제 상태 갱신)
+        function playerMove(col) {
+            if (over) return false;
+            for (let r = ROWS - 1; r >= 0; r--) {
+                if (board[r][col] === null) {
+                    board[r][col] = turn;
+                    // 실제 승리/무승부 판정은 여기서만!
+                    if (checkWin(r, col, turn)) {
+                        over = true;
+                        winner = turn;
+                    } else if (board.flat().every(cell => cell !== null)) {
+                        over = true;
+                        winner = null;
+                    } else {
+                        turn = 1 - turn;
+                    }
+                    return true;
+                }
+            }
+            return false;
         }
-      }
-      return false;
-    }
 
-    // AI, 시뮬레이션 등에서 임시로 놓아보는 함수 (over/winner 상태 영향 X)
-    function tryMove(col, whichTurn) {
-      for (let r = ROWS-1; r >= 0; r--) {
-        if (board[r][col] === null) {
-          board[r][col] = whichTurn;
-          return r;
+        // AI, 시뮬레이션 등에서 임시로 놓아보는 함수 (over/winner 상태 영향 X)
+        function tryMove(col, whichTurn) {
+            for (let r = ROWS - 1; r >= 0; r--) {
+                if (board[r][col] === null) {
+                    board[r][col] = whichTurn;
+                    return r;
+                }
+            }
+            return -1;
         }
-      }
-      return -1;
-    }
-    function undoMove(col) {
-      for (let r = 0; r < ROWS; r++) {
-        if (board[r][col] !== null) {
-          board[r][col] = null;
-          break;
+
+        function undoMove(col) {
+            for (let r = 0; r < ROWS; r++) {
+                if (board[r][col] !== null) {
+                    board[r][col] = null;
+                    break;
+                }
+            }
         }
-      }
-    }
 
-    function checkWin(r, c, color) {
-      return (
-        count(r, c, 0, 1, color) + count(r, c, 0, -1, color) > 2 ||
-        count(r, c, 1, 0, color) + count(r, c, -1, 0, color) > 2 ||
-        count(r, c, 1, 1, color) + count(r, c, -1, -1, color) > 2 ||
-        count(r, c, 1, -1, color) + count(r, c, -1, 1, color) > 2
-      );
-    }
-    function count(r, c, dr, dc, color) {
-      let cnt = 0;
-      for (let i = 1; i < 4; i++) {
-        let nr = r + dr*i, nc = c + dc*i;
-        if (nr<0||nr>=ROWS||nc<0||nc>=COLS) break;
-        if (board[nr][nc]===color) cnt++; else break;
-      }
-      return cnt;
-    }
+        function checkWin(r, c, color) {
+            return (
+                count(r, c, 0, 1, color) + count(r, c, 0, -1, color) > 2 ||
+                count(r, c, 1, 0, color) + count(r, c, -1, 0, color) > 2 ||
+                count(r, c, 1, 1, color) + count(r, c, -1, -1, color) > 2 ||
+                count(r, c, 1, -1, color) + count(r, c, -1, 1, color) > 2
+            );
+        }
 
-    function restart() {
-      board = emptyBoard();
-      turn = 0; over = false; winner = null;
-      render();
-    }
-    function setMode(m) {
-      if (mode !== m) {
-        mode = m;
+        function count(r, c, dr, dc, color) {
+            let cnt = 0;
+            for (let i = 1; i < 4; i++) {
+                let nr = r + dr * i,
+                    nc = c + dc * i;
+                if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) break;
+                if (board[nr][nc] === color) cnt++;
+                else break;
+            }
+            return cnt;
+        }
+
+        function restart() {
+            board = emptyBoard();
+            turn = 0;
+            over = false;
+            winner = null;
+            render();
+        }
+
+        function setMode(m) {
+            if (mode !== m) {
+                mode = m;
+                restart();
+            }
+        }
+
+        function aiMove() {
+            if (over || turn !== 1) return;
+
+            let validCols = [];
+            for (let c = 0; c < COLS; c++)
+                if (board[0][c] === null) validCols.push(c);
+
+            // 1. AI가 이길 수 있는 곳 찾기
+            for (let ci of validCols) {
+                let row = tryMove(ci, 1);
+                if (row !== -1 && checkWin(row, ci, 1)) {
+                    undoMove(ci);
+                    playerMove(ci); // 실제로 둠 (AI 차례에)
+                    render();
+                    return;
+                }
+                if (row !== -1) undoMove(ci);
+            }
+            // 2. 플레이어가 이길 수 있는 곳 막기
+            for (let ci of validCols) {
+                let row = tryMove(ci, 0);
+                if (row !== -1 && checkWin(row, ci, 0)) {
+                    undoMove(ci);
+                    playerMove(ci); // 막기 위해 둠
+                    render();
+                    return;
+                }
+                if (row !== -1) undoMove(ci);
+            }
+            // 3. 중앙 우선
+            let bestCols = [3, 2, 4, 1, 5, 0, 6].filter(c => validCols.includes(c));
+            let col = bestCols.length > 0 ? bestCols[0] : validCols[Math.floor(Math.random() * validCols.length)];
+            playerMove(col); // 랜덤(중앙 우선)
+            render();
+        }
+
+        function share() {
+            const url = location.href;
+            if (navigator.share) {
+                navigator.share({
+                    title: "Connect Four",
+                    url
+                });
+            } else {
+                navigator.clipboard.writeText(url);
+                alert("Link copied!");
+            }
+        }
+        // init
         restart();
-      }
-    }
 
-    function aiMove() {
-      if (over || turn !== 1) return;
-
-      let validCols = [];
-      for (let c = 0; c < COLS; c++) if (board[0][c] === null) validCols.push(c);
-
-      // 1. AI가 이길 수 있는 곳 찾기
-      for (let ci of validCols) {
-        let row = tryMove(ci, 1);
-        if (row !== -1 && checkWin(row, ci, 1)) {
-          undoMove(ci);
-          playerMove(ci); // 실제로 둠 (AI 차례에)
-          render();
-          return;
-        }
-        if (row !== -1) undoMove(ci);
-      }
-      // 2. 플레이어가 이길 수 있는 곳 막기
-      for (let ci of validCols) {
-        let row = tryMove(ci, 0);
-        if (row !== -1 && checkWin(row, ci, 0)) {
-          undoMove(ci);
-          playerMove(ci); // 막기 위해 둠
-          render();
-          return;
-        }
-        if (row !== -1) undoMove(ci);
-      }
-      // 3. 중앙 우선
-      let bestCols = [3,2,4,1,5,0,6].filter(c=>validCols.includes(c));
-      let col = bestCols.length > 0 ? bestCols[0] : validCols[Math.floor(Math.random()*validCols.length)];
-      playerMove(col); // 랜덤(중앙 우선)
-      render();
-    }
-
-    function share() {
-      const url = location.href;
-      if (navigator.share) {
-        navigator.share({ title: "Connect Four", url });
-      } else {
-        navigator.clipboard.writeText(url);
-        alert("Link copied!");
-      }
-    }
-    // init
-    restart();
-  </script>
+    </script>
 </body>
+
 </html>
