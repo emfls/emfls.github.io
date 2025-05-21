@@ -255,6 +255,15 @@
       let turret, upg, enemies, frame, spawnCD, wave, gold, kills, life, phase, gameover;
       let bossSpawnedInWave, normalSpawnedInWave;
 
+      // touchmove는 캔버스에만!
+      canvas.addEventListener(
+        "touchmove",
+        (e) => {
+          e.preventDefault();
+        },
+        { passive: false }
+      );
+      
       function drawPlasmaCannon(ctx, x, y, w, h, t) {
         ctx.save();
         ctx.translate(x, y);
@@ -533,7 +542,13 @@
         document.getElementById("restartBtn").style.display = gameover ? "inline-block" : "none";
         document.getElementById("shareBtn").style.display = gameover ? "inline-block" : "none";
       }
+      
+      let upgrading = false;
       function upgrade(type) {
+        if (upgrading) return;
+        upgrading = true;
+        setTimeout(() => upgrading = false, 250); // 0.25초 잠금
+        
         if (gameover) return;
         let u = upg[type];
         if (type === "spd" && turret.rate >= u.max) return;
