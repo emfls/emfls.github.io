@@ -1,185 +1,197 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <head>
+    <!-- SEO 최적화 완료 -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Play Tic Tac Toe (XO) online in Secure Mode! Challenge the AI in this stylish, retro arcade game – mobile-friendly and fast loading." />
+    <meta
+      name="keywords"
+      content="Tic Tac Toe, TicTacToe, tic tac toe, XO, tic-tac-toe, online game, free web game, board game, AI game, retro game, mobile game, 틱택토, 퍼즐게임, 오목" />
+
+    <!-- Open Graph (SNS, 카톡, 트위터 등에서 썸네일/미리보기용) -->
+    <meta property="og:title" content="Tic Tac Toe" />
+    <meta
+      property="og:description"
+      content="Challenge AI in retro Tic Tac Toe! Play instantly, mobile optimized, no signup." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/TicTacToe/index.html" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Tic Tac Toe" />
+    <meta name="twitter:description" content="Play Tic Tac Toe online – Secure Mode. Mobile, fast, and fun!" />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <script
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
-            crossorigin="anonymous"></script>
-  <title>Tic Tac Toe – Secure Mode</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
-  <style>
-    * {
-      user-select: none;
-      -webkit-user-select: none;
-      -ms-user-select: none;
-    }
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <title>Tic Tac Toe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+    <style>
+      * {
+        user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+      }
 
-    body {
-      margin: 0;
-      font-family: 'Press Start 2P', cursive;
-      background: radial-gradient(circle at center, #111, #000);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      height: 100vh;
-      color: #fff;
-      text-align: center;
-    }
+      body {
+        margin: 0;
+        font-family: "Press Start 2P", cursive;
+        background: radial-gradient(circle at center, #111, #000);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        height: 100vh;
+        color: #fff;
+        text-align: center;
+      }
 
-    h1 {
-      font-size: 1.6rem;
-      margin-bottom: 2rem;
+      h1 {
+        font-size: 1.6rem;
+        margin-bottom: 2rem;
         margin-top: 2rem;
-      color: #00ffff;
-      text-shadow: 0 0 5px #0ff, 0 0 10px #0ff;
-    }
-
-    .status {
-      font-size: 1rem;
-      margin-bottom: 2rem;
-      color: #ffeb3b;
-      text-shadow: 0 0 5px #fdd835, 0 0 10px #fbc02d;
-    }
-
-    .board {
-      display: grid;
-      grid-template-columns: repeat(3, 80px);
-      grid-template-rows: repeat(3, 80px);
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-
-    .cell {
-      background: #222;
-      border: 2px solid #00e5ff;
-      font-size: 2rem;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 8px;
-      cursor: pointer;
-      box-shadow: 0 0 5px #00e5ff, inset 0 0 8px #00e5ff;
-      transition: transform 0.1s, box-shadow 0.2s;
-    }
-
-    .cell:hover {
-      box-shadow: 0 0 10px #ff4081, inset 0 0 10px #ff4081;
-      transform: scale(1.05);
-    }
-
-    .cell:active {
-      transform: scale(0.95);
-    }
-
-    .button-container {
-      margin-top: 1rem;
-    }
-
-    button {
-      background-color: #1a237e;
-      color: #fff;
-      font-family: 'Press Start 2P', cursive;
-      font-size: 0.8rem;
-      padding: 20px 20px;
-      border: 2px solid #03a9f4;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #03a9f4;
-      cursor: pointer;
-      transition: all 0.3s ease;
-        
-    }
-
-    button:hover {
-      background-color: #0d47a1;
-      box-shadow: 0 0 20px #03a9f4, 0 0 40px #03a9f4;
-    }
-
-    button:active {
-      transform: scale(0.95);
-    }
-  </style>
-</head>
-<body oncontextmenu="return false">
-  <h1>Tic Tac Toe</h1>
-  <div class="status" id="status">Your Turn: ❌</div>
-  <div class="board" id="board"></div>
-  <div class="button-container">
-    <button onclick="resetGame()">RESTART</button>
-  </div>
-
-  <script>
-    // 스크랩 방지 JS
-    document.addEventListener("keydown", function (e) {
-      if (
-        e.ctrlKey && (e.key === "u" || e.key === "U" || e.key === "c" || e.key === "C") ||
-        e.key === "F12"
-      ) {
-        e.preventDefault();
-      }
-    });
-
-    const board = document.getElementById("board");
-    const statusDiv = document.getElementById("status");
-    let cells = [];
-    let gameActive = true;
-    let playerTurn = true;
-
-    const PLAYER = "❌";
-    const AI = "⭕️";
-
-    const winCombos = [
-      [0,1,2],[3,4,5],[6,7,8],
-      [0,3,6],[1,4,7],[2,5,8],
-      [0,4,8],[2,4,6]
-    ];
-
-    function createBoard() {
-      cells = [];
-      board.innerHTML = "";
-      for (let i = 0; i < 9; i++) {
-        const cell = document.createElement("div");
-        cell.classList.add("cell");
-        cell.dataset.index = i;
-        cell.addEventListener("click", handlePlayerClick);
-        board.appendChild(cell);
-        cells.push(cell);
-      }
-    }
-
-    function handlePlayerClick(e) {
-      const index = e.target.dataset.index;
-      if (!gameActive || !playerTurn || cells[index].textContent) return;
-
-      cells[index].textContent = PLAYER;
-      if (checkWin(PLAYER)) {
-        statusDiv.textContent = `YOU WINS!`;
-        gameActive = false;
-        return;
+        color: #00ffff;
+        text-shadow:
+          0 0 5px #0ff,
+          0 0 10px #0ff;
       }
 
-      if (isBoardFull()) {
-        statusDiv.textContent = `DRAW!`;
-        gameActive = false;
-        return;
+      .status {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+        color: #ffeb3b;
+        text-shadow:
+          0 0 5px #fdd835,
+          0 0 10px #fbc02d;
       }
 
-      playerTurn = false;
-      statusDiv.textContent = `AI THINKING...`;
-      setTimeout(() => {
-        aiMove();
-      }, 500);
-    }
+      .board {
+        display: grid;
+        grid-template-columns: repeat(3, 80px);
+        grid-template-rows: repeat(3, 80px);
+        gap: 10px;
+        margin-bottom: 20px;
+      }
 
-    function aiMove() {
-      const bestMove = getBestMove();
-      if (bestMove !== null) {
-        cells[bestMove].textContent = AI;
-        if (checkWin(AI)) {
-          statusDiv.textContent = `AI WINS!`;
+      .cell {
+        background: #222;
+        border: 2px solid #00e5ff;
+        font-size: 2rem;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        cursor: pointer;
+        box-shadow:
+          0 0 5px #00e5ff,
+          inset 0 0 8px #00e5ff;
+        transition:
+          transform 0.1s,
+          box-shadow 0.2s;
+      }
+
+      .cell:hover {
+        box-shadow:
+          0 0 10px #ff4081,
+          inset 0 0 10px #ff4081;
+        transform: scale(1.05);
+      }
+
+      .cell:active {
+        transform: scale(0.95);
+      }
+
+      .button-container {
+        margin-top: 1rem;
+      }
+
+      button {
+        background-color: #1a237e;
+        color: #fff;
+        font-family: "Press Start 2P", cursive;
+        font-size: 0.8rem;
+        padding: 20px 20px;
+        border: 2px solid #03a9f4;
+        border-radius: 10px;
+        box-shadow: 0 0 10px #03a9f4;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #0d47a1;
+        box-shadow:
+          0 0 20px #03a9f4,
+          0 0 40px #03a9f4;
+      }
+
+      button:active {
+        transform: scale(0.95);
+      }
+    </style>
+  </head>
+  <body oncontextmenu="return false">
+    <h1>Tic Tac Toe</h1>
+    <div class="status" id="status">Your Turn: ❌</div>
+    <div class="board" id="board"></div>
+    <div class="button-container">
+      <button onclick="resetGame()">RESTART</button>
+    </div>
+
+    <script>
+      // 스크랩 방지 JS
+      document.addEventListener("keydown", function (e) {
+        if ((e.ctrlKey && (e.key === "u" || e.key === "U" || e.key === "c" || e.key === "C")) || e.key === "F12") {
+          e.preventDefault();
+        }
+      });
+
+      const board = document.getElementById("board");
+      const statusDiv = document.getElementById("status");
+      let cells = [];
+      let gameActive = true;
+      let playerTurn = true;
+
+      const PLAYER = "❌";
+      const AI = "⭕️";
+
+      const winCombos = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+      ];
+
+      function createBoard() {
+        cells = [];
+        board.innerHTML = "";
+        for (let i = 0; i < 9; i++) {
+          const cell = document.createElement("div");
+          cell.classList.add("cell");
+          cell.dataset.index = i;
+          cell.addEventListener("click", handlePlayerClick);
+          board.appendChild(cell);
+          cells.push(cell);
+        }
+      }
+
+      function handlePlayerClick(e) {
+        const index = e.target.dataset.index;
+        if (!gameActive || !playerTurn || cells[index].textContent) return;
+
+        cells[index].textContent = PLAYER;
+        if (checkWin(PLAYER)) {
+          statusDiv.textContent = `YOU WINS!`;
           gameActive = false;
           return;
         }
@@ -190,78 +202,99 @@
           return;
         }
 
-        statusDiv.textContent = `Your Turn: ${PLAYER}`;
-        playerTurn = true;
-      }
-    }
-
-    function getBestMove() {
-      for (let i = 0; i < cells.length; i++) {
-        if (!cells[i].textContent) {
-          cells[i].textContent = AI;
-          if (checkWin(AI)) return i;
-          cells[i].textContent = "";
-        }
+        playerTurn = false;
+        statusDiv.textContent = `AI THINKING...`;
+        setTimeout(() => {
+          aiMove();
+        }, 500);
       }
 
-      for (let i = 0; i < cells.length; i++) {
-        if (!cells[i].textContent) {
-          cells[i].textContent = PLAYER;
-          if (checkWin(PLAYER)) {
-            cells[i].textContent = "";
-            return i;
+      function aiMove() {
+        const bestMove = getBestMove();
+        if (bestMove !== null) {
+          cells[bestMove].textContent = AI;
+          if (checkWin(AI)) {
+            statusDiv.textContent = `AI WINS!`;
+            gameActive = false;
+            return;
           }
-          cells[i].textContent = "";
+
+          if (isBoardFull()) {
+            statusDiv.textContent = `DRAW!`;
+            gameActive = false;
+            return;
+          }
+
+          statusDiv.textContent = `Your Turn: ${PLAYER}`;
+          playerTurn = true;
         }
       }
 
-      if (!cells[4].textContent) return 4;
+      function getBestMove() {
+        for (let i = 0; i < cells.length; i++) {
+          if (!cells[i].textContent) {
+            cells[i].textContent = AI;
+            if (checkWin(AI)) return i;
+            cells[i].textContent = "";
+          }
+        }
 
-      const corners = [0, 2, 6, 8];
-      for (let i of corners) {
-        if (!cells[i].textContent) return i;
+        for (let i = 0; i < cells.length; i++) {
+          if (!cells[i].textContent) {
+            cells[i].textContent = PLAYER;
+            if (checkWin(PLAYER)) {
+              cells[i].textContent = "";
+              return i;
+            }
+            cells[i].textContent = "";
+          }
+        }
+
+        if (!cells[4].textContent) return 4;
+
+        const corners = [0, 2, 6, 8];
+        for (let i of corners) {
+          if (!cells[i].textContent) return i;
+        }
+
+        for (let i = 0; i < cells.length; i++) {
+          if (!cells[i].textContent) return i;
+        }
+
+        return null;
       }
 
-      for (let i = 0; i < cells.length; i++) {
-        if (!cells[i].textContent) return i;
+      function checkWin(player) {
+        return winCombos.some((combo) => combo.every((index) => cells[index].textContent === player));
       }
 
-      return null;
-    }
+      function isBoardFull() {
+        return cells.every((cell) => cell.textContent);
+      }
 
-    function checkWin(player) {
-      return winCombos.some(combo =>
-        combo.every(index => cells[index].textContent === player)
-      );
-    }
+      function resetGame() {
+        gameActive = true;
+        playerTurn = true;
+        statusDiv.textContent = `Your Turn: ${PLAYER}`;
+        createBoard();
+      }
 
-    function isBoardFull() {
-      return cells.every(cell => cell.textContent);
-    }
-
-    function resetGame() {
-      gameActive = true;
-      playerTurn = true;
-      statusDiv.textContent = `Your Turn: ${PLAYER}`;
       createBoard();
-    }
-
-    createBoard();
-  </script>
+    </script>
     <button
-            style="
-                padding: 19px 20px 20px 20px;
-                border-radius: 10px;
-                margin-top: 30px;
-                text-align: center;
-                width: 90%;
-                max-width: 400px;
-                position: relative;
-                color: white;
-                font-weight: bold;
-            "
-            onclick="window.location.href='/'">
-            Other Games
-        </button>
-</body>
+      style="
+        padding: 19px 20px 20px 20px;
+        border-radius: 10px;
+        margin-top: 30px;
+        text-align: center;
+        width: 90%;
+        max-width: 400px;
+        position: relative;
+        color: white;
+        font-weight: bold;
+      "
+      onclick="window.location.href='/'">
+      Other Games
+    </button>
+  </body>
 </html>
