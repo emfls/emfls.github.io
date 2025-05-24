@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Easy Letter & Word Counter</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <meta name="description" content="Super simple letter and word counter. Paste or type your text and get instant results. 100% private, no upload.">
+  <style>
+    body { background: #f8fbff; margin: 0; font-family: 'Segoe UI', Arial, sans-serif; }
+    .container { max-width: 420px; margin: 36px auto 0 auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 20px #13d2b033; padding: 26px 16px 20px 16px; }
+    .logo { font-size: 1.2em; color: #1588c7; font-weight: bold; margin-bottom: 6px; text-align:center;}
+    .desc { color: #19788a; text-align: center; margin-bottom: 18px; font-size: 1.08em; }
+    textarea {
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 100px;
+      border: 1.2px solid #b5e2f2;
+      border-radius: 10px;
+      padding: 13px;
+      font-size: 1.08em;
+      background: #fafdff;
+      font-family: inherit;
+      resize: vertical;
+      margin-bottom: 10px;
+      line-height: 1.6;
+      transition: border 0.2s;
+    }
+    textarea:focus { border-color: #1588c7; outline: none; }
+    .count-area {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 1.10em;
+      color: #1a5c9b;
+      font-weight: bold;
+    }
+    .footer {
+      color: #aaa;
+      text-align: center;
+      font-size: 0.93em;
+      margin-top: 14px;
+    }
+    @media (max-width:500px) {
+      .container { max-width: 99vw; padding:10px 2vw 12px 2vw; }
+      textarea { font-size: 1em; }
+      .desc { font-size: 1em; }
+      .count-area { font-size: 1em; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">📝 Letter & Word Counter</div>
+    <div class="desc">
+      Just type or paste your text below.<br>
+      <span style="color:#17a088">You'll instantly see the number of letters and words!</span>
+    </div>
+    <textarea id="inputArea" placeholder="Type or paste any text here."></textarea>
+    <div class="count-area">
+      <span id="charCount">Letters: 0</span>
+      <span id="wordCount">Words: 0</span>
+    </div>
+    <div class="footer">
+      <b>Tip</b>: Spaces and line breaks are also counted as letters.<br>
+      Word count is based on spaces between words.<br>
+      <span style="color:#19788a;">Nothing is uploaded – everything stays on your device.</span>
+    </div>
+  </div>
+  <script>
+    const inputArea = document.getElementById('inputArea');
+    const charCount = document.getElementById('charCount');
+    const wordCount = document.getElementById('wordCount');
+
+    function updateCounts() {
+      const text = inputArea.value;
+      charCount.textContent = "Letters: " + text.length;
+      // Word count = number of space-separated blocks, ignoring empty blocks
+      const words = text.trim().split(/\s+/).filter(Boolean);
+      wordCount.textContent = "Words: " + (text.trim() ? words.length : 0);
+    }
+    inputArea.addEventListener('input', updateCounts);
+
+    updateCounts();
+  </script>
+</body>
+</html>
