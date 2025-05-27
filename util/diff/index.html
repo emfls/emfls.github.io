@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Text Diff Comparison Tool</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="Quickly compare two blocks of text and highlight differences. All browser-based, free, and private." />
+        <meta
+            name="keywords"
+            content="diff, text compare, difference checker, online, compare files, highlight changes, browser-based, privacy" />
+        <meta name="author" content="Itagi" />
+        <meta name="language" content="en" />
+        <link rel="canonical" href="https://emfls.github.io/util/diff/" />
+        <meta property="og:title" content="Text Diff Comparison Tool" />
+        <meta
+            property="og:description"
+            content="Easily compare text and see the difference. All in your browser. No upload, 100% private." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://emfls.github.io/util/diff/" />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Text Diff Comparison Tool" />
+        <meta name="twitter:description" content="Compare two texts and highlight differences in your browser." />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+        <link rel="icon" href="/icon-192.png" />
+        <!-- 광고 스크립트 -->
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+        <!-- jsdiff (browser, minified) -->
+        <script src="https://cdn.jsdelivr.net/npm/diff@5.2.0/dist/diff.min.js"></script>
+        <style>
+            :root {
+                --main: #117c9a;
+                --main-dark: #0c4d60;
+                --bg: #f8fbff;
+            }
+            body {
+                background: var(--bg);
+                margin: 0;
+                font-family: "Segoe UI", Arial, sans-serif;
+                color: #234;
+            }
+            .container {
+                max-width: 610px;
+                margin: 38px auto 0 auto;
+                background: #fff;
+                border-radius: 18px;
+                box-shadow: 0 4px 22px #117c9a33;
+                padding: 28px 18px 22px 18px;
+            }
+            .logo {
+                font-size: 1.25em;
+                font-weight: bold;
+                text-align: center;
+                color: var(--main-dark);
+                margin-bottom: 10px;
+            }
+            .desc {
+                text-align: center;
+                color: #19788a;
+                margin-bottom: 16px;
+                font-size: 1.03em;
+            }
+            .textarea-wrap {
+                display: flex;
+                gap: 12px;
+                margin-bottom: 10px;
+                flex-wrap: wrap;
+            }
+            textarea {
+                flex: 1;
+                min-width: 210px;
+                min-height: 110px;
+                border: 1.3px solid #afdbe6;
+                border-radius: 8px;
+                padding: 11px;
+                font-size: 1.06em;
+                background: #fafdff;
+                font-family: "Fira Mono", "Menlo", monospace;
+                resize: vertical;
+                transition: border 0.18s;
+            }
+            textarea:focus {
+                border-color: var(--main);
+            }
+            .label-row {
+                display: flex;
+                gap: 12px;
+                justify-content: space-between;
+                margin-bottom: 4px;
+                font-size: 0.98em;
+            }
+            .label-row label {
+                color: #127080;
+            }
+            .action-btn {
+                background: var(--main);
+                color: #fff;
+                border: none;
+                border-radius: 8px;
+                padding: 11px 0;
+                width: 100%;
+                font-size: 1.13em;
+                font-weight: bold;
+                cursor: pointer;
+                margin-top: 8px;
+                margin-bottom: 13px;
+                box-shadow: 0 2px 12px #117c9a28;
+                transition: background 0.15s;
+            }
+            .action-btn:active {
+                background: var(--main-dark);
+            }
+            .diff-result {
+                min-height: 42px;
+                background: #f7fcff;
+                border: 1.1px solid #b2e0ee;
+                border-radius: 7px;
+                font-family: "Fira Mono", "Menlo", monospace;
+                font-size: 1.06em;
+                padding: 14px;
+                white-space: pre-wrap;
+                word-break: break-all;
+                margin-bottom: 10px;
+            }
+            .footer {
+                color: #789;
+                text-align: center;
+                font-size: 0.93em;
+                margin-top: 15px;
+            }
+            .ins {
+                background: #c6ffd8;
+                color: #22843a;
+                border-radius: 3px;
+                padding: 1px 2px;
+            }
+            .del {
+                background: #ffe3e3;
+                color: #c13a3a;
+                border-radius: 3px;
+                padding: 1px 2px;
+            }
+            #backBtn {
+                position: fixed;
+                left: 50%;
+                bottom: 32px;
+                transform: translateX(-50%);
+                background: #117c9a;
+                color: #fff;
+                font-weight: 700;
+                border: none;
+                border-radius: 2rem;
+                padding: 0.58em 1.5em;
+                box-shadow: 0 4px 16px #13d2b066;
+                font-size: 1.09em;
+                text-decoration: none;
+                cursor: pointer;
+                letter-spacing: 0.01em;
+                transition:
+                    background 0.15s,
+                    transform 0.12s;
+                z-index: 2000;
+            }
+            #backBtn:hover {
+                background: #0c4d60;
+                transform: translateX(-50%) scale(1.04);
+            }
+            @media (max-width: 700px) {
+                .container {
+                    max-width: 99vw;
+                    padding: 11px 2vw 14px 2vw;
+                }
+                textarea {
+                    font-size: 1em;
+                }
+                #backBtn {
+                    bottom: 18px;
+                    font-size: 0.98em;
+                    padding: 0.48em 1em;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="logo">🔎 Text Diff Comparison Tool</div>
+            <div class="desc">
+                Paste or type text in both boxes below and click Compare.<br />
+                Added, deleted, and changed sections will be highlighted.
+            </div>
+            <div class="label-row">
+                <label for="leftInput">Left Text</label>
+                <label for="rightInput">Right Text</label>
+            </div>
+            <div class="textarea-wrap">
+                <textarea id="leftInput" placeholder="Original or old version"></textarea>
+                <textarea id="rightInput" placeholder="Modified or new version"></textarea>
+            </div>
+            <button class="action-btn" id="compareBtn">Compare</button>
+            <div class="diff-result" id="diffResult"></div>
+            <div class="footer">
+                No data is uploaded. All processing happens instantly in your browser.<br />
+                <b>Tip:</b> Use for code, articles, essays, or any plain text.
+            </div>
+        </div>
+        <a href="../index.html" id="backBtn">Other Util</a>
+        <script>
+            const leftInput = document.getElementById("leftInput");
+            const rightInput = document.getElementById("rightInput");
+            const diffResult = document.getElementById("diffResult");
+
+            function escapeHTML(str) {
+                return str.replace(/[&<>"']/g, function (m) {
+                    return {
+                        "&": "&amp;",
+                        "<": "&lt;",
+                        ">": "&gt;",
+                        '"': "&quot;",
+                        "'": "&#39;"
+                    }[m];
+                });
+            }
+            function formatDiff(diff) {
+                return diff
+                    .map((part) => {
+                        const val = escapeHTML(part.value);
+                        if (part.added) return '<span class="ins">' + val + "</span>";
+                        if (part.removed) return '<span class="del">' + val + "</span>";
+                        return val;
+                    })
+                    .join("");
+            }
+
+            // 실시간 비교 함수
+            function updateDiff() {
+                const left = leftInput.value;
+                const right = rightInput.value;
+                if (!left && !right) {
+                    diffResult.innerHTML = '<span style="color:#888;">Enter text above to compare.</span>';
+                    return;
+                }
+                const diff = Diff.diffWordsWithSpace(left, right);
+                diffResult.innerHTML = formatDiff(diff);
+            }
+
+            // 이벤트 연결 (입력될 때마다)
+            leftInput.addEventListener("input", updateDiff);
+            rightInput.addEventListener("input", updateDiff);
+
+            // 초기 안내문
+            updateDiff();
+        </script>
+    </body>
+</html>

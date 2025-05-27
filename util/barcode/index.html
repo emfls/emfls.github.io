@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Barcode, ISBN, UPC Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Create barcodes instantly: ISBN, UPC, EAN, Code128, and more. Download your barcode as a PNG image. Free, private, browser-based." />
+    <meta name="keywords" content="barcode generator, ISBN, UPC, EAN, code128, online, image, create, download" />
+    <meta name="author" content="Itagi" />
+    <meta name="language" content="en" />
+    <link rel="canonical" href="https://emfls.github.io/util/barcode/" />
+    <meta property="og:title" content="Barcode, ISBN, UPC Generator" />
+    <meta
+      property="og:description"
+      content="Create barcodes instantly: ISBN, UPC, EAN, Code128, and more. Download your barcode as a PNG image. Free, browser-based." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/util/barcode/" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Barcode, ISBN, UPC Generator" />
+    <meta
+      name="twitter:description"
+      content="Create barcodes instantly: ISBN, UPC, EAN, Code128, and more. Download as PNG." />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <link rel="icon" href="/icon-192.png" />
+    <!-- 광고 스크립트 -->
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <!-- JsBarcode -->
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode/dist/JsBarcode.all.min.js"></script>
+    <style>
+      :root {
+        --main: #2379cc;
+        --main-dark: #1c477a;
+        --bg: #f6faff;
+      }
+      body {
+        background: var(--bg);
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: #234;
+      }
+      .container {
+        max-width: 430px;
+        margin: 38px auto 0 auto;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 22px #2379cc33;
+        padding: 28px 18px 22px 18px;
+      }
+      .logo {
+        font-size: 1.23em;
+        font-weight: bold;
+        text-align: center;
+        color: var(--main-dark);
+        margin-bottom: 9px;
+      }
+      .desc {
+        text-align: center;
+        color: #2879b8;
+        margin-bottom: 18px;
+        font-size: 1.04em;
+      }
+      .input-row {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 11px;
+      }
+      .input-row label {
+        min-width: 98px;
+        color: #286473;
+        font-size: 0.99em;
+      }
+      .input-row select,
+      .input-row input[type="text"] {
+        flex: 1;
+        padding: 8px 8px;
+        font-size: 1.04em;
+        border: 1.3px solid #afd4f6;
+        border-radius: 7px;
+        background: #fafdff;
+        color: #234;
+      }
+      .input-row input[type="text"] {
+        width: 100%;
+      }
+      .action-btn {
+        background: var(--main);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 0;
+        width: 100%;
+        font-size: 1.13em;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 10px;
+        margin-bottom: 14px;
+        box-shadow: 0 2px 12px #2379cc28;
+        transition: background 0.15s;
+      }
+      .action-btn:active {
+        background: var(--main-dark);
+      }
+      .barcode-area {
+        text-align: center;
+        margin: 20px 0 7px 0;
+        min-height: 120px; /* space for barcode */
+      }
+      .footer {
+        color: #789;
+        text-align: center;
+        font-size: 0.93em;
+        margin-top: 16px;
+      }
+      #backBtn {
+        position: fixed;
+        left: 50%;
+        bottom: 32px;
+        transform: translateX(-50%);
+        background: #2379cc;
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 2rem;
+        padding: 0.58em 1.5em;
+        box-shadow: 0 4px 16px #13d2b066;
+        font-size: 1.09em;
+        text-decoration: none;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+        transition:
+          background 0.15s,
+          transform 0.12s;
+        z-index: 2000;
+      }
+      #backBtn:hover {
+        background: #1c477a;
+        transform: translateX(-50%) scale(1.04);
+      }
+      @media (max-width: 600px) {
+        .container {
+          max-width: 99vw;
+          padding: 12px 2vw 12px 2vw;
+        }
+        #backBtn {
+          bottom: 18px;
+          font-size: 0.98em;
+          padding: 0.48em 1em;
+        }
+      }
+      .info-msg {
+        color: #e44;
+        text-align: center;
+        font-size: 1.03em;
+        margin: 4px 0 8px 0;
+      }
+      .barcode-options {
+        text-align: right;
+        font-size: 0.97em;
+        color: #2277b9;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">📦 Barcode, ISBN, UPC Generator</div>
+      <div class="desc">
+        Instantly generate barcodes for ISBN, UPC, EAN, Code128 and more.<br />
+        Download as PNG image, no upload, 100% private.
+      </div>
+      <form id="barcodeForm" autocomplete="off">
+        <div class="input-row">
+          <label for="barcodeType">Type</label>
+          <select id="barcodeType">
+            <option value="EAN13">EAN-13</option>
+            <option value="ISBN">ISBN</option>
+            <option value="UPC">UPC-A</option>
+            <option value="CODE128">Code128</option>
+            <option value="CODE39">Code39</option>
+            <option value="ITF">ITF</option>
+          </select>
+        </div>
+        <div class="input-row">
+          <label for="barcodeValue">Value</label>
+          <input type="text" id="barcodeValue" placeholder="Enter value (e.g. 9781234567890)" required />
+        </div>
+        <div class="barcode-options">
+          Barcode will auto-correct, check digit if possible.<br />
+          (ISBN, EAN13, UPC require 12~13 numeric digits)
+        </div>
+        <button type="submit" class="action-btn">Generate Barcode</button>
+      </form>
+      <div class="info-msg" id="infoMsg"></div>
+      <div class="barcode-area">
+        <svg id="barcodeSvg"></svg>
+        <br />
+        <button
+          class="action-btn"
+          id="downloadBtn"
+          style="width: auto; display: none; margin: 0 auto 7px auto; padding: 8px 18px; font-size: 1.01em">
+          Download PNG
+        </button>
+      </div>
+      <div class="footer">
+        Supports: <b>EAN-13, ISBN, UPC-A, Code128, Code39, ITF</b>.<br />
+        Barcode images are generated locally – nothing is uploaded.
+      </div>
+    </div>
+    <a href="../index.html" id="backBtn">Other Util</a>
+    <script>
+      const barcodeType = document.getElementById("barcodeType");
+      const barcodeValue = document.getElementById("barcodeValue");
+      const barcodeForm = document.getElementById("barcodeForm");
+      const barcodeSvg = document.getElementById("barcodeSvg");
+      const infoMsg = document.getElementById("infoMsg");
+      const downloadBtn = document.getElementById("downloadBtn");
+
+      function padLeft(str, len, pad = "0") {
+        str = String(str);
+        return str.length >= len ? str : pad.repeat(len - str.length) + str;
+      }
+
+      function calcEAN13CheckDigit(value12) {
+        // Returns check digit for 12-digit EAN/ISBN
+        let sum = 0;
+        for (let i = 0; i < 12; i++) {
+          sum += parseInt(value12[i]) * (i % 2 === 0 ? 1 : 3);
+        }
+        return (10 - (sum % 10)) % 10;
+      }
+      function isNumeric(str) {
+        return /^\d+$/.test(str);
+      }
+
+      barcodeForm.onsubmit = function (e) {
+        e.preventDefault();
+        let type = barcodeType.value;
+        let value = barcodeValue.value.replace(/[-\s]/g, "");
+        let displayType = type;
+        infoMsg.textContent = "";
+        if (!value) {
+          infoMsg.textContent = "Please enter a value.";
+          barcodeSvg.innerHTML = "";
+          downloadBtn.style.display = "none";
+          return;
+        }
+
+        // Type-specific validation/correction
+        if (type === "EAN13" || type === "ISBN" || type === "UPC") {
+          if (!isNumeric(value)) {
+            infoMsg.textContent = "Only numeric values are allowed for this type.";
+            barcodeSvg.innerHTML = "";
+            downloadBtn.style.display = "none";
+            return;
+          }
+          if (type === "ISBN") {
+            if (value.length === 10) {
+              // Convert ISBN-10 to ISBN-13
+              value = "978" + value.slice(0, 9);
+              value += calcEAN13CheckDigit(value);
+              displayType = "EAN13";
+            } else if (value.length === 13 && value.startsWith("978")) {
+              displayType = "EAN13";
+            }
+          }
+          if (type === "UPC") {
+            if (value.length === 11) {
+              value += calcEAN13CheckDigit("0" + value);
+            }
+            if (value.length === 12) {
+              // UPC-A는 EAN-13에서 첫 자리가 0일 때
+              if (!value.startsWith("0")) {
+                value = "0" + value.slice(0, 11);
+                value += calcEAN13CheckDigit(value);
+              }
+              displayType = "EAN13";
+            }
+            if (value.length !== 12) {
+              infoMsg.textContent = "UPC-A requires 12 numeric digits.";
+              barcodeSvg.innerHTML = "";
+              downloadBtn.style.display = "none";
+              return;
+            }
+          }
+          if (displayType === "EAN13") {
+            if (value.length === 12) {
+              value += calcEAN13CheckDigit(value);
+              infoMsg.textContent = "Check digit added automatically.";
+            }
+            if (value.length !== 13) {
+              infoMsg.textContent = "EAN-13/ISBN must be 13 digits (numbers only).";
+              barcodeSvg.innerHTML = "";
+              downloadBtn.style.display = "none";
+              return;
+            }
+          }
+        }
+        // Generate barcode
+        JsBarcode(barcodeSvg, value, {
+          format: displayType,
+          lineColor: "#2379cc",
+          width: 2.1,
+          height: 80,
+          displayValue: true,
+          font: "inherit",
+          fontSize: 19,
+          margin: 12,
+          textMargin: 6
+        });
+        barcodeSvg.style.background = "#fff";
+        downloadBtn.style.display = "inline-block";
+        infoMsg.textContent = infoMsg.textContent || "Barcode generated below.";
+      };
+
+      downloadBtn.onclick = function () {
+        // Download barcodeSvg as PNG
+        const svgString = new XMLSerializer().serializeToString(barcodeSvg);
+        const svg = new Blob([svgString], { type: "image/svg+xml" });
+        const url = URL.createObjectURL(svg);
+        const img = new window.Image();
+        img.onload = function () {
+          const canvas = document.createElement("canvas");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext("2d");
+          ctx.fillStyle = "#fff";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.drawImage(img, 0, 0);
+          URL.revokeObjectURL(url);
+          canvas.toBlob(function (blob) {
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "barcode.png";
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => {
+              URL.revokeObjectURL(a.href);
+              a.remove();
+            }, 400);
+          }, "image/png");
+        };
+        img.src = url;
+      };
+    </script>
+  </body>
+</html>
