@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Easy Image Editor – Resize, Crop, Watermark</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Resize, crop, and watermark your image in seconds! Super easy, for kids and everyone. All free, no upload." />
+  <meta name="keywords" content="image, photo, resize, crop, watermark, easy, kids, online, free, beginner" />
+  <meta name="author" content="Itagi" />
+  <meta name="language" content="en" />
+  <link rel="canonical" href="https://emfls.github.io/util/imagetool/" />
+  <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+  <meta property="og:title" content="Easy Image Editor – Resize, Crop, Watermark" />
+  <meta property="og:description" content="Resize, crop, and watermark your image in seconds! Super easy, for kids and everyone. No upload, free forever." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://emfls.github.io/util/imagetool/" />
+  <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Easy Image Editor – Resize, Crop, Watermark" />
+  <meta name="twitter:description" content="Resize, crop, and watermark your image in seconds! Super easy, for kids and everyone. No upload, free forever." />
+  <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+  <style>
+    body { background:#f8fcff; font-family:'Segoe UI',Arial,sans-serif; margin:0; color:#233;}
+    .container { max-width:350px; margin:26px auto 0 auto; background:#fff; border-radius:17px; box-shadow:0 4px 22px #2a6fe433; padding:16px 10px 18px 10px;}
+    .logo { font-size:1.4em; text-align:center; color:#176dd7; font-weight:bold; margin-bottom:8px;}
+    .desc { text-align:center; color:#187; margin-bottom:14px; font-size:1.08em;}
+    #uploadBtn { display:block; width:100%; margin:0 auto 18px auto; font-size:1.15em; padding:13px 0; border-radius:10px; background:#2976d3; color:#fff; border:none; font-weight:bold; cursor:pointer;}
+    .preview-wrap { text-align:center; margin-bottom:14px;}
+    #previewImg { max-width:98%; max-height:260px; border-radius:9px; background:#e0e9f3; border:1.3px solid #b9daf8;}
+    .slider-row { display:flex; align-items:center; gap:7px; margin:8px 0;}
+    .slider-label { min-width:44px; color:#19788a; font-size:1.04em;}
+    .slider-val { width:38px; text-align:center; font-size:1.06em;}
+    input[type="range"] { flex:1; accent-color:#176dd7; }
+    .input-row { display:flex; align-items:center; gap:7px; margin:8px 0;}
+    input[type="text"] { flex:1; font-size:1.1em; border-radius:7px; border:1.2px solid #b9daf8; padding:6px 8px;}
+    .action-btn { width:100%; background:#1dc78a; color:#fff; border:none; border-radius:9px; font-size:1.18em; font-weight:bold; padding:13px 0; margin:13px 0 8px 0; cursor:pointer;}
+    .action-btn:active { background:#16a374;}
+    .download-btn { background:#2976d3; color:#fff; border:none; border-radius:7px; font-size:1.08em; padding:9px 14px; cursor:pointer;}
+    .footer { color:#789; text-align:center; font-size:0.93em; margin-top:10px;}
+    #backBtn { position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%); background: #2976d3; color: #fff; font-weight: 700; border: none; border-radius: 2rem; padding: 0.58em 1.5em; box-shadow: 0 4px 16px #2976d366; font-size: 1.09em; text-decoration: none; cursor: pointer; letter-spacing: 0.01em; transition: background 0.15s, transform 0.12s; z-index: 2000;}
+    #backBtn:hover { background: #154c99; transform: translateX(-50%) scale(1.04);}
+    @media (max-width:600px){.container{max-width:99vw; padding:9px 2vw 13px 2vw;}#backBtn{bottom:18px;font-size:0.98em;padding:0.48em 1em;}#previewImg{max-width:97vw; max-height:45vw;}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">🖼️ Easy Image Editor</div>
+    <div class="desc">
+      <b>1. Upload your photo</b> (click the button)<br>
+      <b>2. Change size, crop, or add name (watermark)</b><br>
+      <b>3. Click Save!</b>
+    </div>
+    <input type="file" accept="image/*" id="uploadBtn" />
+    <div class="preview-wrap">
+      <canvas id="previewImg" style="display:none;"></canvas>
+    </div>
+    <div id="editBox" style="display:none;">
+      <div class="slider-row">
+        <span class="slider-label">Width</span>
+        <input type="range" id="widthSlider" min="30" max="800" value="200" />
+        <input type="number" id="widthVal" class="slider-val" min="30" max="800" value="200" />
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Height</span>
+        <input type="range" id="heightSlider" min="30" max="800" value="200" />
+        <input type="number" id="heightVal" class="slider-val" min="30" max="800" value="200" />
+      </div>
+      <div class="slider-row">
+        <span class="slider-label">Crop</span>
+        <input type="range" id="cropSlider" min="0" max="40" value="0" />
+        <span style="font-size:0.95em;color:#999;">(Crop edges)</span>
+      </div>
+      <div class="input-row">
+        <span class="slider-label">Watermark</span>
+        <input type="text" id="watermarkText" placeholder="(Type text here)" maxlength="16" />
+      </div>
+      <button class="action-btn" id="applyBtn">Apply</button>
+      <button class="download-btn" id="downloadBtn" style="display:none;">Save</button>
+    </div>
+    <div class="footer">
+      <b>Everything is free!</b><br>
+      <span style="color:#18b;">Your photo never leaves your device.<br>All editing is local!</span>
+    </div>
+  </div>
+  <a href="../index.html" id="backBtn">Other Util</a>
+  <script>
+    // Simple image editor for everyone!
+    const uploadBtn = document.getElementById('uploadBtn');
+    const previewImg = document.getElementById('previewImg');
+    const editBox = document.getElementById('editBox');
+    const widthSlider = document.getElementById('widthSlider');
+    const widthVal = document.getElementById('widthVal');
+    const heightSlider = document.getElementById('heightSlider');
+    const heightVal = document.getElementById('heightVal');
+    const cropSlider = document.getElementById('cropSlider');
+    const watermarkText = document.getElementById('watermarkText');
+    const applyBtn = document.getElementById('applyBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    let imgObj = null, origW = 0, origH = 0;
+
+    uploadBtn.onchange = function(e) {
+      const file = e.target.files[0];
+      if (!file || !file.type.startsWith('image/')) return;
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        const img = new Image();
+        img.onload = function() {
+          imgObj = img;
+          origW = img.width;
+          origH = img.height;
+          widthSlider.max = widthVal.max = origW;
+          heightSlider.max = heightVal.max = origH;
+          widthSlider.value = widthVal.value = origW;
+          heightSlider.value = heightVal.value = origH;
+          cropSlider.max = Math.floor(Math.min(origW, origH) / 3);
+          cropSlider.value = 0;
+          previewImg.width = origW;
+          previewImg.height = origH;
+          previewImg.style.display = 'block';
+          drawPreview();
+          editBox.style.display = 'block';
+          downloadBtn.style.display = 'none';
+        };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    function drawPreview() {
+      if (!imgObj) return;
+      let w = parseInt(widthSlider.value);
+      let h = parseInt(heightSlider.value);
+      let crop = parseInt(cropSlider.value);
+      previewImg.width = w;
+      previewImg.height = h;
+      const ctx = previewImg.getContext('2d');
+      ctx.clearRect(0, 0, w, h);
+      ctx.drawImage(
+        imgObj,
+        crop, crop,
+        imgObj.width - crop * 2,
+        imgObj.height - crop * 2,
+        0, 0,
+        w, h
+      );
+      const wmText = watermarkText.value.trim();
+      if (wmText) {
+        ctx.font = Math.floor(w / 14) + 'px Arial';
+        ctx.fillStyle = '#2976d3';
+        ctx.globalAlpha = 0.7;
+        ctx.fillText(wmText, w - ctx.measureText(wmText).width - 12, h - 15);
+        ctx.globalAlpha = 1.0;
+      }
+    }
+
+    [widthSlider, heightSlider, widthVal, heightVal, cropSlider, watermarkText].forEach(el => {
+      el.oninput = function() {
+        if (el === widthSlider || el === widthVal) {
+          widthSlider.value = widthVal.value = el.value;
+        }
+        if (el === heightSlider || el === heightVal) {
+          heightSlider.value = heightVal.value = el.value;
+        }
+        drawPreview();
+      };
+    });
+
+    applyBtn.onclick = function() {
+      drawPreview();
+      downloadBtn.style.display = 'inline-block';
+    };
+
+    downloadBtn.onclick = function() {
+      const link = document.createElement('a');
+      link.href = previewImg.toDataURL('image/png');
+      link.download = 'my_image.png';
+      link.click();
+    };
+  </script>
+</body>
+</html>
