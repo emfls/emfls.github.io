@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CRC Generator – Online CRC32 & CRC16 Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Instantly generate CRC checksums. Supports CRC32, CRC16, and more. Paste text or hex, see CRC result in your browser. Free, secure, no upload." />
+  <meta name="keywords" content="CRC, CRC32, CRC16, checksum, hash, calculator, online, text, hex, browser, free" />
+  <meta name="author" content="Itagi" />
+  <meta name="language" content="en" />
+  <link rel="canonical" href="https://emfls.github.io/util/crc/" />
+  <meta property="og:title" content="CRC Generator – Online CRC32 & CRC16 Calculator" />
+  <meta property="og:description" content="Generate CRC checksums (CRC32, CRC16, etc) for text or hex. No upload, instant result in your browser." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://emfls.github.io/util/crc/" />
+  <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="CRC Generator – Online CRC32 & CRC16 Calculator" />
+  <meta name="twitter:description" content="Paste text or hex, select CRC type, and instantly see your checksum." />
+  <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+  <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+  <script
+    async
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+    crossorigin="anonymous"></script>
+  <style>
+    :root { --main: #3271d5; --main-dark: #20477f; --bg: #f5f9ff; }
+    body { background: var(--bg); margin: 0; font-family: "Segoe UI", Arial, sans-serif; color: #234;}
+    .container {
+      max-width: 440px;
+      margin: 38px auto 0 auto;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 4px 20px #3271d544;
+      padding: 26px 18px 22px 18px;
+    }
+    .logo { font-size: 1.18em; font-weight: bold; text-align: center; color: var(--main-dark); margin-bottom: 9px; }
+    .desc { color: #2472a8; text-align: center; margin-bottom: 17px; font-size: 1.03em;}
+    textarea {
+      width: 100%; min-height: 70px; border: 1.2px solid #bed8f5; border-radius: 8px;
+      padding: 10px; font-size: 1.03em; background: #fafdff; margin-bottom: 11px; resize: vertical;
+      font-family: "Fira Mono", Menlo, monospace;
+    }
+    textarea:focus { border-color: var(--main);}
+    .input-row {
+      display: flex; gap: 9px; align-items: center; margin-bottom: 11px; flex-wrap: wrap;
+    }
+    .input-row label { font-size: 1em; color: #3271d5; min-width: 72px; }
+    .input-row select, .input-row input[type="text"] {
+      font-size: 1.01em; padding: 7px 10px; border: 1.1px solid #bed8f5;
+      border-radius: 7px; background: #fafdff; color: #234; transition: border 0.14s;
+    }
+    .input-row select:focus, .input-row input[type="text"]:focus { border-color: var(--main);}
+    .option-row { display: flex; gap: 14px; align-items: center; margin-bottom: 8px;}
+    .option-row label { font-size: 0.99em; color: #2561a4;}
+    .result-label { font-size: 0.98em; color: #4d71b5; margin: 7px 0 2px 0;}
+    .crc-result {
+      background: #eaf5ff; border: 1px solid #c6e2fb; border-radius: 7px;
+      padding: 8px 10px; margin-bottom: 5px; font-size: 1.07em; min-height: 20px;
+      font-family: "Fira Mono", Menlo, monospace;
+      word-break: break-all;
+    }
+    .footer { color: #aaa; text-align: center; font-size: 0.94em; margin-top: 16px;}
+    #backBtn {
+      position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%);
+      background: #3271d5; color: #fff; font-weight: 700; border: none; border-radius: 2rem;
+      padding: 0.58em 1.5em; box-shadow: 0 4px 16px #13d2b066; font-size: 1.09em; text-decoration: none;
+      cursor: pointer; letter-spacing: 0.01em; transition: background 0.15s, transform 0.12s; z-index: 2000;
+    }
+    #backBtn:hover { background: #20477f; transform: translateX(-50%) scale(1.04);}
+    @media (max-width: 500px) {
+      .container { max-width: 99vw; padding: 10px 2vw 10px 2vw;}
+      #backBtn { bottom: 18px; font-size: 0.98em; padding: 0.48em 1em;}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">🔢 CRC Generator</div>
+    <div class="desc">
+      Enter text or hex, select CRC type, and get the checksum instantly!<br>
+      <span style="color:#20477f; font-size:0.96em;">No data is sent or saved. Everything runs in your browser.</span>
+    </div>
+    <div class="input-row">
+      <label for="crcType">Type</label>
+      <select id="crcType">
+        <option value="crc32">CRC-32</option>
+        <option value="crc16">CRC-16-IBM</option>
+        <option value="crc16ccitt">CRC-16-CCITT</option>
+      </select>
+    </div>
+    <div class="input-row">
+      <label for="inputFormat">Input</label>
+      <select id="inputFormat">
+        <option value="text">Text</option>
+        <option value="hex">Hex (e.g. DEADBEEF)</option>
+      </select>
+    </div>
+    <textarea id="inputData" placeholder="Type your text or paste hex here..."></textarea>
+    <div class="result-label">CRC Result:</div>
+    <div class="crc-result" id="crcResult">—</div>
+    <div class="result-label">Decimal:</div>
+    <div class="crc-result" id="crcDec">—</div>
+    <div class="footer">
+      <b>What is CRC?</b> Cyclic Redundancy Check (CRC) is a common error-detecting code.<br>
+      <b>Tip:</b> For hex input, paste bytes without spaces or 0x.<br>
+      Supports: CRC-32, CRC-16-IBM, CRC-16-CCITT.
+    </div>
+  </div>
+  <a href="../index.html" id="backBtn">Other Util</a>
+  <script>
+    // CRC32 implementation
+    function crc32(buf) {
+      let crc = 0 ^ (-1);
+      for (let i = 0; i < buf.length; i++) {
+        crc = (crc >>> 8) ^ crc32table[(crc ^ buf[i]) & 0xFF];
+      }
+      return (crc ^ (-1)) >>> 0;
+    }
+    const crc32table = (() => {
+      let c, crcTable = [];
+      for (let n = 0; n < 256; n++) {
+        c = n;
+        for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1;
+        crcTable[n] = c >>> 0;
+      }
+      return crcTable;
+    })();
+
+    // CRC16-IBM (poly 0x8005, init 0x0000)
+    function crc16_ibm(buf) {
+      let crc = 0x0000;
+      for (let i = 0; i < buf.length; i++) {
+        crc ^= buf[i];
+        for (let j = 0; j < 8; j++) {
+          if (crc & 1) crc = (crc >>> 1) ^ 0xA001;
+          else crc = crc >>> 1;
+        }
+      }
+      return crc & 0xFFFF;
+    }
+
+    // CRC16-CCITT (poly 0x1021, init 0xFFFF)
+    function crc16_ccitt(buf) {
+      let crc = 0xFFFF;
+      for (let i = 0; i < buf.length; i++) {
+        crc ^= (buf[i] << 8);
+        for (let j = 0; j < 8; j++) {
+          if (crc & 0x8000) crc = (crc << 1) ^ 0x1021;
+          else crc <<= 1;
+          crc &= 0xFFFF;
+        }
+      }
+      return crc & 0xFFFF;
+    }
+
+    function toBytes(str, inputType) {
+      if (inputType === "hex") {
+        let s = str.replace(/[\s0x]/g, "");
+        if (s.length % 2) s = "0" + s;
+        let bytes = [];
+        for (let i = 0; i < s.length; i += 2) {
+          bytes.push(parseInt(s.substr(i, 2), 16));
+        }
+        return new Uint8Array(bytes);
+      } else { // text
+        return new TextEncoder().encode(str);
+      }
+    }
+
+    const inputData = document.getElementById("inputData");
+    const crcType = document.getElementById("crcType");
+    const inputFormat = document.getElementById("inputFormat");
+    const crcResult = document.getElementById("crcResult");
+    const crcDec = document.getElementById("crcDec");
+
+    function updateCRC() {
+      let input = inputData.value.trim();
+      if (!input) {
+        crcResult.textContent = "—";
+        crcDec.textContent = "—";
+        return;
+      }
+      let buf;
+      try {
+        buf = toBytes(input, inputFormat.value);
+      } catch {
+        crcResult.textContent = "Invalid input.";
+        crcDec.textContent = "—";
+        return;
+      }
+      let crc, crcHex;
+      if (crcType.value === "crc32") {
+        crc = crc32(buf);
+        crcHex = crc.toString(16).toUpperCase().padStart(8, "0");
+      } else if (crcType.value === "crc16") {
+        crc = crc16_ibm(buf);
+        crcHex = crc.toString(16).toUpperCase().padStart(4, "0");
+      } else {
+        crc = crc16_ccitt(buf);
+        crcHex = crc.toString(16).toUpperCase().padStart(4, "0");
+      }
+      crcResult.textContent = "0x" + crcHex;
+      crcDec.textContent = crc.toString();
+    }
+
+    inputData.oninput = crcType.onchange = inputFormat.onchange = updateCRC;
+    updateCRC();
+  </script>
+</body>
+</html>
