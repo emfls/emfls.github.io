@@ -1,357 +1,382 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="Play the classic Minesweeper game in your browser! Uncover safe cells, avoid the mines, and challenge your best score. Free, fast, and mobile-friendly." />
+        <meta
+            name="keywords"
+            content="minesweeper, webgame, browser game, puzzle, mine game, free, logic, classic, 모바일 게임, 지뢰찾기, no download, instant play, 온라인" />
+        <meta name="author" content="Itagi" />
+        <meta name="robots" content="index, follow" />
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Play the classic Minesweeper game in your browser! Uncover safe cells, avoid the mines, and challenge your best score. Free, fast, and mobile-friendly.">
-    <meta name="keywords" content="minesweeper, webgame, browser game, puzzle, mine game, free, logic, classic, 모바일 게임, 지뢰찾기, no download, instant play, 온라인">
-    <meta name="author" content="Itagi">
-    <meta name="robots" content="index, follow">
+        <!-- Canonical URL -->
+        <link rel="canonical" href="https://emfls.github.io/Minesweeper" />
 
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://emfls.github.io/Minesweeper">
+        <!-- Open Graph -->
+        <meta property="og:title" content="QuickPlay: Minesweeper – Classic Puzzle Web Game" />
+        <meta
+            property="og:description"
+            content="Classic Minesweeper for browser! Reveal safe tiles, avoid the bombs. Free, mobile-optimized, and fun for all." />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta property="og:url" content="https://emfls.github.io/Minesweeper" />
+        <meta property="og:type" content="website" />
 
-    <!-- Open Graph -->
-    <meta property="og:title" content="QuickPlay: Minesweeper – Classic Puzzle Web Game">
-    <meta property="og:description" content="Classic Minesweeper for browser! Reveal safe tiles, avoid the bombs. Free, mobile-optimized, and fun for all.">
-    <meta property="og:image" content="https://emfls.github.io/thumbnail.png">
-    <meta property="og:url" content="https://emfls.github.io/Minesweeper">
-    <meta property="og:type" content="website">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="QuickPlay: Minesweeper – Classic Puzzle Web Game">
-    <meta name="twitter:description" content="Test your logic and luck with Minesweeper – no download, play instantly!">
-    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
-    <title>QuickPlay: Minesweeper</title>
-    <style>
-        html,
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #333;
-            color: #fff;
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            overflow: hidden;
-        }
-        
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 10px;
-        }
-        
-        #game-container {
-            margin-top: 150px;
-            width: 352px;
-            height: 384px;
-            overflow: auto;
-            border: 1px solid #555;
-        }
-        
-        #game {
-            display: grid;
-            grid-template-columns: repeat(100, 30px);
-            gap: 2px;
-            width: max-content;
-        }
-        
-        .cell {
-            width: 30px;
-            height: 30px;
-            background-color: #888;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-weight: bold;
-            user-select: none;
-        }
-        
-        .revealed {
-            background-color: #ccc;
-            cursor: default;
-        }
-        
-        .mine {
-            background-color: red;
-        }
-        
-        #overlay {
-            position: fixed;
-            margin-top: 240px;
-            width: 320px;
-            height: 320px;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-        }
-        
-        #overlay h2 {
-            color: #fff;
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-        
-        #overlay p {
-            margin: 5px 0 20px;
-            font-size: 18px;
-        }
-        
-        #overlay button {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 5px;
-            cursor: pointer;
-        }
-        
-        #minimap {
-            position: fixed;
-            top: 95px;
-            width: 120px;
-            height: 120px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid #888;
-            z-index: 5;
-        }
-        
-        #minimap canvas {
-            width: 100%;
-            height: 100%;
-            display: block;
-            background: #222;
-            border-radius: 4px;
-            pointer-events: none;
-        }
-        
-        body>button:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-    </style>
-</head>
-
-<body>
-    <h1 style="font-family: &quot;Arial Black&quot;, sans-serif; font-size: 28px; margin-bottom: 0px; margin-top: 0px;">
-        Minesweeper
-    </h1>
-    <p style="font-size: 14px; color: white; margin-bottom: 3px">Uncover all the safe cells without triggering a mine.</p>
-    <div id="game-container">
-        <div id="game"></div>
-    </div>
-    <div id="overlay">
-        <h2>Game Over!</h2>
-        <p id="scoreDisplay">Score: 0</p>
-        <button onclick="resetGame()">Restart</button>
-        <button onclick="shareScore()">Share</button>
-    </div>
-    <div id="minimap">
-        <canvas id="minimapCanvas" width="100" height="100"></canvas>
-    </div>
-
-    <script>
-        const rows = 100;
-        const cols = 100;
-        const mineCount = rows * cols * 0.2;
-        const game = document.getElementById("game");
-        const overlay = document.getElementById("overlay");
-        const scoreDisplay = document.getElementById("scoreDisplay");
-        const cells = [];
-        let gameEnded = false;
-
-        function createBoard() {
-            game.innerHTML = "";
-            for (let r = 0; r < rows; r++) {
-                cells[r] = [];
-                for (let c = 0; c < cols; c++) {
-                    const cell = document.createElement("div");
-                    cell.classList.add("cell");
-                    cell.dataset.row = r;
-                    cell.dataset.col = c;
-                    cell.addEventListener("click", () => revealCell(r, c));
-                    game.appendChild(cell);
-                    cells[r][c] = {
-                        element: cell,
-                        mine: false,
-                        revealed: false,
-                        adjacent: 0
-                    };
-                }
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="QuickPlay: Minesweeper – Classic Puzzle Web Game" />
+        <meta
+            name="twitter:description"
+            content="Test your logic and luck with Minesweeper – no download, play instantly!" />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
             }
-        }
+            gtag("js", new Date());
 
-        function placeMines() {
-            let placed = 0;
-            while (placed < mineCount) {
-                const r = Math.floor(Math.random() * rows);
-                const c = Math.floor(Math.random() * cols);
-                if (!cells[r][c].mine) {
-                    cells[r][c].mine = true;
-                    placed++;
-                }
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+        <title>QuickPlay: Minesweeper</title>
+        <style>
+            html,
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #333;
+                color: #fff;
+                margin: 0;
+                padding: 0;
+                height: 100%;
+                overflow: hidden;
             }
-        }
 
-        function countAdjacents() {
-            for (let r = 0; r < rows; r++) {
-                for (let c = 0; c < cols; c++) {
-                    if (cells[r][c].mine) continue;
-                    let count = 0;
-                    for (let i = -1; i <= 1; i++) {
-                        for (let j = -1; j <= 1; j++) {
-                            const nr = r + i;
-                            const nc = c + j;
-                            if (
-                                nr >= 0 && nr < rows &&
-                                nc >= 0 && nc < cols &&
-                                cells[nr][nc].mine
-                            ) count++;
-                        }
+            body {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 10px;
+            }
+
+            #game-container {
+                margin-top: 150px;
+                width: 352px;
+                height: 384px;
+                overflow: auto;
+                border: 1px solid #555;
+            }
+
+            #game {
+                display: grid;
+                grid-template-columns: repeat(100, 30px);
+                gap: 2px;
+                width: max-content;
+            }
+
+            .cell {
+                width: 30px;
+                height: 30px;
+                background-color: #888;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                font-weight: bold;
+                user-select: none;
+            }
+
+            .revealed {
+                background-color: #ccc;
+                cursor: default;
+            }
+
+            .mine {
+                background-color: red;
+            }
+
+            #overlay {
+                position: fixed;
+                margin-top: 240px;
+                width: 320px;
+                height: 320px;
+                background-color: rgba(0, 0, 0, 0.7);
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                z-index: 10;
+            }
+
+            #overlay h2 {
+                color: #fff;
+                font-size: 32px;
+                margin-bottom: 10px;
+            }
+
+            #overlay p {
+                margin: 5px 0 20px;
+                font-size: 18px;
+            }
+
+            #overlay button {
+                padding: 10px 20px;
+                font-size: 16px;
+                margin: 5px;
+                cursor: pointer;
+            }
+
+            #minimap {
+                position: fixed;
+                top: 95px;
+                width: 120px;
+                height: 120px;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid #888;
+                z-index: 5;
+            }
+
+            #minimap canvas {
+                width: 100%;
+                height: 100%;
+                display: block;
+                background: #222;
+                border-radius: 4px;
+                pointer-events: none;
+            }
+
+            body > button:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1
+            style="
+                font-family: &quot;Arial Black&quot;, sans-serif;
+                font-size: 28px;
+                margin-bottom: 0px;
+                margin-top: 0px;
+            ">
+            Minesweeper
+        </h1>
+        <p style="font-size: 14px; color: white; margin-bottom: 3px">
+            Uncover all the safe cells without triggering a mine.
+        </p>
+        <div id="game-container">
+            <div id="game"></div>
+        </div>
+        <div id="overlay">
+            <h2>Game Over!</h2>
+            <p id="scoreDisplay">Score: 0</p>
+            <button onclick="resetGame()">Restart</button>
+            <button onclick="shareScore()">Share</button>
+        </div>
+        <div id="minimap">
+            <canvas id="minimapCanvas" width="100" height="100"></canvas>
+        </div>
+
+        <script>
+            const rows = 100;
+            const cols = 100;
+            const mineCount = rows * cols * 0.2;
+            const game = document.getElementById("game");
+            const overlay = document.getElementById("overlay");
+            const scoreDisplay = document.getElementById("scoreDisplay");
+            const cells = [];
+            let gameEnded = false;
+
+            function createBoard() {
+                game.innerHTML = "";
+                for (let r = 0; r < rows; r++) {
+                    cells[r] = [];
+                    for (let c = 0; c < cols; c++) {
+                        const cell = document.createElement("div");
+                        cell.classList.add("cell");
+                        cell.dataset.row = r;
+                        cell.dataset.col = c;
+                        cell.addEventListener("click", () => revealCell(r, c));
+                        game.appendChild(cell);
+                        cells[r][c] = {
+                            element: cell,
+                            mine: false,
+                            revealed: false,
+                            adjacent: 0
+                        };
                     }
-                    cells[r][c].adjacent = count;
                 }
             }
-        }
 
-        function revealCell(r, c) {
-            if (gameEnded || cells[r][c].revealed) return;
+            function placeMines() {
+                let placed = 0;
+                while (placed < mineCount) {
+                    const r = Math.floor(Math.random() * rows);
+                    const c = Math.floor(Math.random() * cols);
+                    if (!cells[r][c].mine) {
+                        cells[r][c].mine = true;
+                        placed++;
+                    }
+                }
+            }
 
-            const cell = cells[r][c];
-            cell.revealed = true;
-            cell.element.classList.add("revealed");
+            function countAdjacents() {
+                for (let r = 0; r < rows; r++) {
+                    for (let c = 0; c < cols; c++) {
+                        if (cells[r][c].mine) continue;
+                        let count = 0;
+                        for (let i = -1; i <= 1; i++) {
+                            for (let j = -1; j <= 1; j++) {
+                                const nr = r + i;
+                                const nc = c + j;
+                                if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && cells[nr][nc].mine) count++;
+                            }
+                        }
+                        cells[r][c].adjacent = count;
+                    }
+                }
+            }
 
-            if (cell.mine) {
-                cell.element.classList.add("mine");
-                cell.element.textContent = "💣";
-                gameEnded = true;
+            function revealCell(r, c) {
+                if (gameEnded || cells[r][c].revealed) return;
+
+                const cell = cells[r][c];
+                cell.revealed = true;
+                cell.element.classList.add("revealed");
+
+                if (cell.mine) {
+                    cell.element.classList.add("mine");
+                    cell.element.textContent = "💣";
+                    gameEnded = true;
+                    const score = calculateScore();
+                    scoreDisplay.textContent = `Score: ${score}`;
+                    overlay.style.display = "flex";
+                    return;
+                }
+
+                if (cell.adjacent > 0) {
+                    cell.element.textContent = cell.adjacent;
+                    return;
+                }
+
+                // flood fill only in 4 directions (up/down/left/right)
+                const directions = [
+                    [-1, 0],
+                    [1, 0],
+                    [0, -1],
+                    [0, 1]
+                ];
+                for (const [dr, dc] of directions) {
+                    const nr = r + dr;
+                    const nc = c + dc;
+                    if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && !cells[nr][nc].revealed) {
+                        revealCell(nr, nc);
+                    }
+                }
+            }
+
+            function calculateScore() {
+                let revealedCount = 0;
+                for (let r = 0; r < rows; r++) {
+                    for (let c = 0; c < cols; c++) {
+                        if (cells[r][c].revealed && !cells[r][c].mine) revealedCount++;
+                    }
+                }
+                return revealedCount;
+            }
+
+            function resetGame() {
+                gameEnded = false;
+                overlay.style.display = "none";
+                createBoard();
+                placeMines();
+                countAdjacents();
+            }
+
+            function shareScore() {
+                const url = window.location.href;
                 const score = calculateScore();
-                scoreDisplay.textContent = `Score: ${score}`;
-                overlay.style.display = "flex";
-                return;
-            }
-
-            if (cell.adjacent > 0) {
-                cell.element.textContent = cell.adjacent;
-                return;
-            }
-
-            // flood fill only in 4 directions (up/down/left/right)
-            const directions = [
-                [-1, 0],
-                [1, 0],
-                [0, -1],
-                [0, 1]
-            ];
-            for (const [dr, dc] of directions) {
-                const nr = r + dr;
-                const nc = c + dc;
-                if (
-                    nr >= 0 && nr < rows &&
-                    nc >= 0 && nc < cols &&
-                    !cells[nr][nc].revealed
-                ) {
-                    revealCell(nr, nc);
+                const text = `🐤 I scored ${score} in Minesweeper! Can you beat that?`;
+                if (navigator.share) {
+                    navigator
+                        .share({
+                            title: "QuickPlay: Minesweeper",
+                            text,
+                            url
+                        })
+                        .catch(() => alert("Sharing failed. Try copying the link."));
+                } else {
+                    const full = `${text}\n${url}`;
+                    navigator.clipboard
+                        .writeText(full)
+                        .then(() => alert("Link with score copied to clipboard!"))
+                        .catch(() => alert(`Copy this link:\n${full}`));
                 }
             }
-        }
 
-        function calculateScore() {
-            let revealedCount = 0;
-            for (let r = 0; r < rows; r++) {
-                for (let c = 0; c < cols; c++) {
-                    if (cells[r][c].revealed && !cells[r][c].mine) revealedCount++;
-                }
-            }
-            return revealedCount;
-        }
-
-        function resetGame() {
-            gameEnded = false;
-            overlay.style.display = "none";
             createBoard();
             placeMines();
             countAdjacents();
-        }
 
-        function shareScore() {
-            const url = window.location.href;
-            const score = calculateScore();
-            const text = `🐤 I scored ${score} in Minesweeper! Can you beat that?`;
-            if (navigator.share) {
-                navigator
-                    .share({
-                        title: "QuickPlay: Minesweeper",
-                        text,
-                        url
-                    })
-                    .catch(() => alert("Sharing failed. Try copying the link."));
-            } else {
-                const full = `${text}\n${url}`;
-                navigator.clipboard
-                    .writeText(full)
-                    .then(() => alert("Link with score copied to clipboard!"))
-                    .catch(() => alert(`Copy this link:\n${full}`));
-            }
-        }
+            const minimapCanvas = document.getElementById("minimapCanvas");
+            const minimapCtx = minimapCanvas.getContext("2d");
+            const gameContainer = document.getElementById("game-container");
 
-        createBoard();
-        placeMines();
-        countAdjacents();
-
-        const minimapCanvas = document.getElementById("minimapCanvas");
-        const minimapCtx = minimapCanvas.getContext("2d");
-        const gameContainer = document.getElementById("game-container");
-
-        function drawMinimap() {
-            const cellSize = 1;
-            minimapCtx.clearRect(0, 0, 100, 100);
-            for (let r = 0; r < rows; r++) {
-                for (let c = 0; c < cols; c++) {
-                    if (cells[r][c].revealed) {
-                        minimapCtx.fillStyle = cells[r][c].mine ? "red" : "#ccc";
-                    } else {
-                        minimapCtx.fillStyle = "#666";
+            function drawMinimap() {
+                const cellSize = 1;
+                minimapCtx.clearRect(0, 0, 100, 100);
+                for (let r = 0; r < rows; r++) {
+                    for (let c = 0; c < cols; c++) {
+                        if (cells[r][c].revealed) {
+                            minimapCtx.fillStyle = cells[r][c].mine ? "red" : "#ccc";
+                        } else {
+                            minimapCtx.fillStyle = "#666";
+                        }
+                        minimapCtx.fillRect(c * cellSize, r * cellSize, cellSize, cellSize);
                     }
-                    minimapCtx.fillRect(c * cellSize, r * cellSize, cellSize, cellSize);
                 }
+                const scrollTop = gameContainer.scrollTop;
+                const scrollLeft = gameContainer.scrollLeft;
+                const viewWidth = gameContainer.clientWidth;
+                const viewHeight = gameContainer.clientHeight;
+
+                const scaleX = 100 / (cols * 30 + (cols - 1) * 2);
+                const scaleY = 100 / (rows * 30 + (rows - 1) * 2);
+
+                minimapCtx.strokeStyle = "yellow";
+                minimapCtx.lineWidth = 1;
+                minimapCtx.strokeRect(scrollLeft * scaleX, scrollTop * scaleY, viewWidth * scaleX, viewHeight * scaleY);
             }
-            const scrollTop = gameContainer.scrollTop;
-            const scrollLeft = gameContainer.scrollLeft;
-            const viewWidth = gameContainer.clientWidth;
-            const viewHeight = gameContainer.clientHeight;
 
-            const scaleX = 100 / (cols * 30 + (cols - 1) * 2);
-            const scaleY = 100 / (rows * 30 + (rows - 1) * 2);
-
-            minimapCtx.strokeStyle = "yellow";
-            minimapCtx.lineWidth = 1;
-            minimapCtx.strokeRect(
-                scrollLeft * scaleX,
-                scrollTop * scaleY,
-                viewWidth * scaleX,
-                viewHeight * scaleY
-            );
-        }
-
-        gameContainer.addEventListener("scroll", drawMinimap);
-        const observer = new MutationObserver(drawMinimap);
-        observer.observe(game, {
-            childList: true,
-            subtree: true
-        });
-        setInterval(drawMinimap, 500);
-
-    </script>
-    <button style="margin-top: 20px; width: 90%; height: 60px; font-size: 16px; font-weight: bold; background-color: #888; cursor: pointer; border-radius: 6px; border: none;" onclick="window.location.href='/'">
+            gameContainer.addEventListener("scroll", drawMinimap);
+            const observer = new MutationObserver(drawMinimap);
+            observer.observe(game, {
+                childList: true,
+                subtree: true
+            });
+            setInterval(drawMinimap, 500);
+        </script>
+        <button
+            style="
+                margin-top: 20px;
+                width: 90%;
+                height: 60px;
+                font-size: 16px;
+                font-weight: bold;
+                background-color: #888;
+                cursor: pointer;
+                border-radius: 6px;
+                border: none;
+            "
+            onclick="window.location.href='/'">
             📂 Other Games
         </button>
-</body>
-
+    </body>
 </html>

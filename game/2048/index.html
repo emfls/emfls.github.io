@@ -1,160 +1,179 @@
 <!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+        <meta
+            name="description"
+            content="Play the classic 2048 puzzle game online for free! Merge tiles, reach 2048, and challenge your brain. Simple, fun, and mobile-optimized. No download needed." />
+        <meta
+            name="keywords"
+            content="2048, 2048 game, free 2048, play 2048 online, puzzle game, browser game, brain game, mobile game, addictive, simple game, classic 2048" />
+        <meta name="author" content="Itagi" />
+        <meta name="robots" content="index, follow" />
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="description" content="Play the classic 2048 puzzle game online for free! Merge tiles, reach 2048, and challenge your brain. Simple, fun, and mobile-optimized. No download needed.">
-    <meta name="keywords" content="2048, 2048 game, free 2048, play 2048 online, puzzle game, browser game, brain game, mobile game, addictive, simple game, classic 2048">
-    <meta name="author" content="Itagi">
-    <meta name="robots" content="index, follow">
+        <!-- Open Graph (SNS 미리보기) -->
+        <meta property="og:title" content="Play 2048 Game Online – Free, Simple & Addictive Puzzle!" />
+        <meta
+            property="og:description"
+            content="Enjoy 2048, the viral number puzzle. Merge tiles, challenge your score, and play anywhere online!" />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta property="og:url" content="https://emfls.github.io/2048" />
+        <meta property="og:type" content="website" />
 
-    <!-- Open Graph (SNS 미리보기) -->
-    <meta property="og:title" content="Play 2048 Game Online – Free, Simple & Addictive Puzzle!">
-    <meta property="og:description" content="Enjoy 2048, the viral number puzzle. Merge tiles, challenge your score, and play anywhere online!">
-    <meta property="og:image" content="https://emfls.github.io/thumbnail.png">
-    <meta property="og:url" content="https://emfls.github.io/2048">
-    <meta property="og:type" content="website">
+        <!-- 트위터 카드 -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Play 2048 Game Online – Free, Simple & Addictive Puzzle!" />
+        <meta name="twitter:description" content="Try the classic 2048 game for free. Mobile-friendly, fast & fun!" />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
-    <!-- 트위터 카드 -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Play 2048 Game Online – Free, Simple & Addictive Puzzle!">
-    <meta name="twitter:description" content="Try the classic 2048 game for free. Mobile-friendly, fast & fun!">
-    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png">
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
 
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
-    <title>2048 Game</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: #faf8ef;
-            align-items: flex-start;
-            padding-top: 40px;
-        }
-        
-        #game {
-            display: grid;
-            grid-template-columns: repeat(4, 70px);
-            grid-template-rows: repeat(4, 70px);
-            gap: 10px;
-            background: #bbada0;
-            padding: 10px;
-            border-radius: 10px;
-            margin-top: 80px;
-        }
-        
-        .tile {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-            border-radius: 5px;
-            background: #cdc1b4;
-            color: #776e65;
-        }
-        
-        div>button {
-            border: 0;
-            background: #cdc1b4;
-            color: #776e65;
-            border-radius: 5px;
-        }
-        
-        div>button:active {
-            background-color: #666;
-        }
-        
-        .tile-2 {
-            background: #eee4da;
-        }
-        
-        .tile-4 {
-            background: #ede0c8;
-        }
-        
-        .tile-8 {
-            background: #f2b179;
-            color: #f9f6f2;
-        }
-        
-        .tile-16 {
-            background: #f59563;
-            color: #f9f6f2;
-        }
-        
-        .tile-32 {
-            background: #f67c5f;
-            color: #f9f6f2;
-        }
-        
-        .tile-64 {
-            background: #f65e3b;
-            color: #f9f6f2;
-        }
-        
-        .tile-128 {
-            background: #edcf72;
-            color: #f9f6f2;
-            font-size: 20px;
-        }
-        
-        .tile-256 {
-            background: #edcc61;
-            color: #f9f6f2;
-            font-size: 20px;
-        }
-        
-        .tile-512 {
-            background: #edc850;
-            color: #f9f6f2;
-            font-size: 20px;
-        }
-        
-        .tile-1024 {
-            background: #edc53f;
-            color: #f9f6f2;
-            font-size: 16px;
-        }
-        
-        .tile-2048 {
-            background: #edc22e;
-            color: #f9f6f2;
-            font-size: 16px;
-        }
-        
-        button.menu {
-            position: absolute;
-            padding: 1rem;
-            margin-top: 1rem;
-            font-size: 1.1rem;
-            background-color: #776e65;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            width: 80%;
-            transition: background-color 0.2s ease;
-            cursor: pointer;
-        }
-        
-        button.menu:active {
-            background-color: #cdc1b4;
-        }
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+        <title>2048 Game</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+                background: #faf8ef;
+                align-items: flex-start;
+                padding-top: 40px;
+            }
 
-    </style>
-</head>
+            #game {
+                display: grid;
+                grid-template-columns: repeat(4, 70px);
+                grid-template-rows: repeat(4, 70px);
+                gap: 10px;
+                background: #bbada0;
+                padding: 10px;
+                border-radius: 10px;
+                margin-top: 80px;
+            }
 
-<body>
-    <div style="
+            .tile {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                font-weight: bold;
+                border-radius: 5px;
+                background: #cdc1b4;
+                color: #776e65;
+            }
+
+            div > button {
+                border: 0;
+                background: #cdc1b4;
+                color: #776e65;
+                border-radius: 5px;
+            }
+
+            div > button:active {
+                background-color: #666;
+            }
+
+            .tile-2 {
+                background: #eee4da;
+            }
+
+            .tile-4 {
+                background: #ede0c8;
+            }
+
+            .tile-8 {
+                background: #f2b179;
+                color: #f9f6f2;
+            }
+
+            .tile-16 {
+                background: #f59563;
+                color: #f9f6f2;
+            }
+
+            .tile-32 {
+                background: #f67c5f;
+                color: #f9f6f2;
+            }
+
+            .tile-64 {
+                background: #f65e3b;
+                color: #f9f6f2;
+            }
+
+            .tile-128 {
+                background: #edcf72;
+                color: #f9f6f2;
+                font-size: 20px;
+            }
+
+            .tile-256 {
+                background: #edcc61;
+                color: #f9f6f2;
+                font-size: 20px;
+            }
+
+            .tile-512 {
+                background: #edc850;
+                color: #f9f6f2;
+                font-size: 20px;
+            }
+
+            .tile-1024 {
+                background: #edc53f;
+                color: #f9f6f2;
+                font-size: 16px;
+            }
+
+            .tile-2048 {
+                background: #edc22e;
+                color: #f9f6f2;
+                font-size: 16px;
+            }
+
+            button.menu {
+                position: absolute;
+                padding: 1rem;
+                margin-top: 1rem;
+                font-size: 1.1rem;
+                background-color: #776e65;
+                color: white;
+                border: none;
+                border-radius: 10px;
+                width: 80%;
+                transition: background-color 0.2s ease;
+                cursor: pointer;
+            }
+
+            button.menu:active {
+                background-color: #cdc1b4;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div
+            style="
                 text-align: center;
                 margin-bottom: 10px;
                 position: absolute;
@@ -163,10 +182,12 @@
                 transform: translateX(-50%);
                 width: 100%;
             ">
-        <div style="font-size: 28px; font-weight: bold; color: #776e65">2048</div>
-        <div style="font-size: 14px; color: #8f7a66">Combine the numbers to reach 2048!</div>
-    </div>
-    <div id="score" style="
+            <div style="font-size: 28px; font-weight: bold; color: #776e65">2048</div>
+            <div style="font-size: 14px; color: #8f7a66">Combine the numbers to reach 2048!</div>
+        </div>
+        <div
+            id="score"
+            style="
                 position: absolute;
                 top: 80px;
                 left: 50%;
@@ -175,9 +196,12 @@
                 font-weight: bold;
                 color: #776e65;
             ">
-        Score: 0
-    </div>
-    <button id="start-button" onclick="startGame()" style="
+            Score: 0
+        </div>
+        <button
+            id="start-button"
+            onclick="startGame()"
+            style="
                 position: absolute;
                 top: 280px;
                 left: 50%;
@@ -192,8 +216,10 @@
             ">
             Start Game
         </button>
-    <div id="game"></div>
-    <div id="game-over" style="
+        <div id="game"></div>
+        <div
+            id="game-over"
+            style="
                 display: none;
                 position: absolute;
                 top: 280px;
@@ -207,8 +233,10 @@
                 font-weight: bold;
                 color: #776e65;
             ">
-        Game Over<br /><br />
-        <button onclick="shareScore()" style="
+            Game Over<br /><br />
+            <button
+                onclick="shareScore()"
+                style="
                     font-size: 16px;
                     padding: 8px 16px;
                     background: #f57c00;
@@ -233,137 +261,138 @@
                 ">
                 Restart
             </button>
-    </div>
-    <script>
-        const game = document.getElementById("game");
-        let board = Array(4)
-            .fill()
-            .map(() => Array(4).fill(0));
-        let score = 0;
-
-        function drawBoard() {
-            game.innerHTML = "";
-            board.flat().forEach((value) => {
-                const tile = document.createElement("div");
-                tile.className = "tile" + (value ? " tile-" + value : "");
-                tile.textContent = value ? value : "";
-                game.appendChild(tile);
-            });
-        }
-
-        function addRandomTile() {
-            let empty = [];
-            board.forEach((row, i) => {
-                row.forEach((val, j) => {
-                    if (val === 0) empty.push([i, j]);
-                });
-            });
-            if (empty.length > 0) {
-                let [i, j] = empty[Math.floor(Math.random() * empty.length)];
-                board[i][j] = Math.random() < 0.9 ? 2 : 4;
-            }
-        }
-
-        function moveLeft() {
-            let previousScore = score;
-
-            let moved = false;
-            for (let i = 0; i < 4; i++) {
-                let row = board[i].filter((val) => val);
-                for (let j = 0; j < row.length - 1; j++) {
-                    if (row[j] === row[j + 1]) {
-                        row[j] *= 2;
-                        score += row[j];
-                        row[j + 1] = 0;
-                        moved = true;
-                    }
-                }
-                row = row.filter((val) => val);
-                while (row.length < 4) row.push(0);
-                if (!board[i].every((val, j) => val === row[j])) moved = true;
-                board[i] = row;
-            }
-            return moved;
-        }
-
-        function rotateBoard() {
-            board = board[0].map((_, i) => board.map((row) => row[i]).reverse());
-        }
-
-        function isGameOver() {
-            for (let i = 0; i < 4; i++) {
-                for (let j = 0; j < 4; j++) {
-                    if (board[i][j] === 0) return false;
-                    if (j < 3 && board[i][j] === board[i][j + 1]) return false;
-                    if (i < 3 && board[i][j] === board[i + 1][j]) return false;
-                }
-            }
-            return true;
-        }
-
-        function handleKey(e) {
-            let moved = false;
-            if (e.key === "ArrowLeft") moved = moveLeft();
-            else if (e.key === "ArrowRight") {
-                board.forEach((row) => row.reverse());
-                moved = moveLeft();
-                board.forEach((row) => row.reverse());
-            } else if (e.key === "ArrowUp") {
-                rotateBoard();
-                rotateBoard();
-                rotateBoard();
-                moved = moveLeft();
-                rotateBoard();
-            } else if (e.key === "ArrowDown") {
-                rotateBoard();
-                moved = moveLeft();
-                rotateBoard();
-                rotateBoard();
-                rotateBoard();
-            }
-            if (moved) addRandomTile();
-            drawBoard();
-            document.getElementById("score").textContent = `Score: ${score}`;
-            if (isGameOver()) {
-                document.getElementById("game-over").style.display = "block";
-            }
-        }
-
-        function startGame() {
-            score = 0;
-            document.getElementById("score").textContent = "Score: 0";
-            document.getElementById("start-button").style.display = "none";
-            document.getElementById("game-over").style.display = "none";
-            board = Array(4)
+        </div>
+        <script>
+            const game = document.getElementById("game");
+            let board = Array(4)
                 .fill()
                 .map(() => Array(4).fill(0));
-            addRandomTile();
-            addRandomTile();
-            drawBoard();
-        }
-        document.addEventListener("keydown", handleKey);
+            let score = 0;
 
-        function shareScore() {
-            const text = `I just scored ${score} points in the 2048 Game! Can you beat me?`;
-            if (navigator.share) {
-                navigator
-                    .share({
-                        title: "2048 Game",
-                        text,
-                        url: window.location.href
-                    })
-                    .catch(console.error);
-            } else {
-                navigator.clipboard
-                    .writeText(`${text} ${window.location.href}`)
-                    .then(() => alert("Score copied to clipboard!"))
-                    .catch(() => alert("Failed to copy score."));
+            function drawBoard() {
+                game.innerHTML = "";
+                board.flat().forEach((value) => {
+                    const tile = document.createElement("div");
+                    tile.className = "tile" + (value ? " tile-" + value : "");
+                    tile.textContent = value ? value : "";
+                    game.appendChild(tile);
+                });
             }
-        }
 
-    </script>
-    <div id="mobile-controls" style="
-                position:absolute;
+            function addRandomTile() {
+                let empty = [];
+                board.forEach((row, i) => {
+                    row.forEach((val, j) => {
+                        if (val === 0) empty.push([i, j]);
+                    });
+                });
+                if (empty.length > 0) {
+                    let [i, j] = empty[Math.floor(Math.random() * empty.length)];
+                    board[i][j] = Math.random() < 0.9 ? 2 : 4;
+                }
+            }
+
+            function moveLeft() {
+                let previousScore = score;
+
+                let moved = false;
+                for (let i = 0; i < 4; i++) {
+                    let row = board[i].filter((val) => val);
+                    for (let j = 0; j < row.length - 1; j++) {
+                        if (row[j] === row[j + 1]) {
+                            row[j] *= 2;
+                            score += row[j];
+                            row[j + 1] = 0;
+                            moved = true;
+                        }
+                    }
+                    row = row.filter((val) => val);
+                    while (row.length < 4) row.push(0);
+                    if (!board[i].every((val, j) => val === row[j])) moved = true;
+                    board[i] = row;
+                }
+                return moved;
+            }
+
+            function rotateBoard() {
+                board = board[0].map((_, i) => board.map((row) => row[i]).reverse());
+            }
+
+            function isGameOver() {
+                for (let i = 0; i < 4; i++) {
+                    for (let j = 0; j < 4; j++) {
+                        if (board[i][j] === 0) return false;
+                        if (j < 3 && board[i][j] === board[i][j + 1]) return false;
+                        if (i < 3 && board[i][j] === board[i + 1][j]) return false;
+                    }
+                }
+                return true;
+            }
+
+            function handleKey(e) {
+                let moved = false;
+                if (e.key === "ArrowLeft") moved = moveLeft();
+                else if (e.key === "ArrowRight") {
+                    board.forEach((row) => row.reverse());
+                    moved = moveLeft();
+                    board.forEach((row) => row.reverse());
+                } else if (e.key === "ArrowUp") {
+                    rotateBoard();
+                    rotateBoard();
+                    rotateBoard();
+                    moved = moveLeft();
+                    rotateBoard();
+                } else if (e.key === "ArrowDown") {
+                    rotateBoard();
+                    moved = moveLeft();
+                    rotateBoard();
+                    rotateBoard();
+                    rotateBoard();
+                }
+                if (moved) addRandomTile();
+                drawBoard();
+                document.getElementById("score").textContent = `Score: ${score}`;
+                if (isGameOver()) {
+                    document.getElementById("game-over").style.display = "block";
+                }
+            }
+
+            function startGame() {
+                score = 0;
+                document.getElementById("score").textContent = "Score: 0";
+                document.getElementById("start-button").style.display = "none";
+                document.getElementById("game-over").style.display = "none";
+                board = Array(4)
+                    .fill()
+                    .map(() => Array(4).fill(0));
+                addRandomTile();
+                addRandomTile();
+                drawBoard();
+            }
+            document.addEventListener("keydown", handleKey);
+
+            function shareScore() {
+                const text = `I just scored ${score} points in the 2048 Game! Can you beat me?`;
+                if (navigator.share) {
+                    navigator
+                        .share({
+                            title: "2048 Game",
+                            text,
+                            url: window.location.href
+                        })
+                        .catch(console.error);
+                } else {
+                    navigator.clipboard
+                        .writeText(`${text} ${window.location.href}`)
+                        .then(() => alert("Score copied to clipboard!"))
+                        .catch(() => alert("Failed to copy score."));
+                }
+            }
+        </script>
+        <div
+            id="mobile-controls"
+            style="
+                position: absolute;
                 top: 465px;
                 bottom: 20px;
                 left: 50%;
@@ -373,23 +402,21 @@
                 grid-template-rows: repeat(3, 50px);
                 gap: 5px;
             ">
-        <div></div>
-        <button onclick="handleKey({ key: 'ArrowUp' })" style="font-size: 27px">▲</button>
-        <div></div>
-        <button onclick="handleKey({ key: 'ArrowLeft' })" style="font-size: 24px">◀</button>
-        <div></div>
-        <button onclick="handleKey({ key: 'ArrowRight' })" style="font-size: 24px">▶</button>
-        <div></div>
-        <button onclick="handleKey({ key: 'ArrowDown' })" style="font-size: 27px">▼</button>
-        <div></div>
-    </div>
-    <button style="position: absolute; top: 640px;" class="menu" onclick="goToMain()">📂 Other Games</button>
-    <script>
-        function goToMain() {
-            window.location.href = "/"; // or 'index.html'
-        }
-
-    </script>
-</body>
-
+            <div></div>
+            <button onclick="handleKey({ key: 'ArrowUp' })" style="font-size: 27px">▲</button>
+            <div></div>
+            <button onclick="handleKey({ key: 'ArrowLeft' })" style="font-size: 24px">◀</button>
+            <div></div>
+            <button onclick="handleKey({ key: 'ArrowRight' })" style="font-size: 24px">▶</button>
+            <div></div>
+            <button onclick="handleKey({ key: 'ArrowDown' })" style="font-size: 27px">▼</button>
+            <div></div>
+        </div>
+        <button style="position: absolute; top: 640px" class="menu" onclick="goToMain()">📂 Other Games</button>
+        <script>
+            function goToMain() {
+                window.location.href = "/"; // or 'index.html'
+            }
+        </script>
+    </body>
 </html>

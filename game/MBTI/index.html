@@ -1,445 +1,463 @@
 <!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="Take a quick and fun MBTI personality test based on real-life scenarios! Find your MBTI type instantly. Free, browser-based, and mobile-friendly." />
+        <meta
+            name="keywords"
+            content="MBTI test, personality quiz, quick MBTI, webgame, browser game, psychology test, free, online test, ENFP, INFP, INTJ, INFJ, MBTI types, social, self-discovery, fun quiz, instant result" />
+        <meta name="author" content="Itagi" />
+        <meta name="robots" content="index, follow" />
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Take a quick and fun MBTI personality test based on real-life scenarios! Find your MBTI type instantly. Free, browser-based, and mobile-friendly.">
-    <meta name="keywords" content="MBTI test, personality quiz, quick MBTI, webgame, browser game, psychology test, free, online test, ENFP, INFP, INTJ, INFJ, MBTI types, social, self-discovery, fun quiz, instant result">
-    <meta name="author" content="Itagi">
-    <meta name="robots" content="index, follow">
+        <!-- Canonical URL -->
+        <link rel="canonical" href="https://emfls.github.io/MBTI" />
 
-    <!-- Canonical URL -->
-    <link rel="canonical" href="https://emfls.github.io/MBTI">
+        <!-- Open Graph -->
+        <meta property="og:title" content="QuickTest: MBTI – Fun Personality Test Game" />
+        <meta
+            property="og:description"
+            content="Which MBTI type are you? Answer real-life questions and get your instant result! Free and mobile-friendly." />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta property="og:url" content="https://emfls.github.io/MBTI" />
+        <meta property="og:type" content="website" />
 
-    <!-- Open Graph -->
-    <meta property="og:title" content="QuickTest: MBTI – Fun Personality Test Game">
-    <meta property="og:description" content="Which MBTI type are you? Answer real-life questions and get your instant result! Free and mobile-friendly.">
-    <meta property="og:image" content="https://emfls.github.io/thumbnail.png">
-    <meta property="og:url" content="https://emfls.github.io/MBTI">
-    <meta property="og:type" content="website">
-
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="QuickTest: MBTI – Fun Personality Test Game">
-    <meta name="twitter:description" content="Take this quick MBTI test with real-life scenario questions! Find out your personality type in minutes.">
-    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
-    <title>QuickTest: MBTI</title>
-    <style>
-        body {
-            margin: 0;
-            background-color: #121212;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            justify-content: flex-start;
-        }
-        
-        #progress {
-            margin-top: 30px;
-            margin-bottom: 20px;
-            font-size: 16px;
-            color: #ccc;
-        }
-        
-        .fade {
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-        
-        .show {
-            opacity: 1;
-        }
-        
-        .card {
-            background: #1e1e1e;
-            padding-top: 30px;
-            padding-left: 10px;
-            padding-right: 10px;
-            padding-bottom: 30px;
-            border-radius: 10px;
-            max-width: 300px;
-            text-align: center;
-            box-shadow: 0 0 10px #5c5cff;
-            width: 90%;
-        }
-        
-        .option {
-            background-color: #3d3df7;
-            border: none;
-            color: white;
-            border-radius: 10px;
-            padding: 15px 20px;
-            margin: 10px;
-            font-size: 14px;
-            cursor: pointer;
-            width: 90%;
-            max-width: 290px;
-        }
-        
-        .option:hover {
-            background-color: #5c5cff;
-        }
-        
-        button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-        }
-        
-        .question {
-            font-weight: bold;
-            font-size: 20px;
-            color: #ffffff;
-            margin-bottom: 30px;
-        }
-        
-        #result {
-            color: #222;
-            /* 더 진하고 선명한 글씨 색상 */
-            font-weight: 600;
-            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.4);
-        }
-        
-        p.description {
-            margin-bottom: 1rem;
-            font-size: 0.85rem;
-            color: #ccc;
-            text-align: center;
-            padding: 0 1rem;
-        }
-        
-        h1 {
-            margin-bottom: 0.3rem;
-            font-size: 2rem;
-        }
-        
-        .mbti-bg-ENFP {
-            background-color: #ffeaa7;
-        }
-        
-        .mbti-bg-INFP {
-            background-color: #fab1a0;
-        }
-        
-        .mbti-bg-INFJ {
-            background-color: #a29bfe;
-        }
-        
-        .mbti-bg-INTJ {
-            background-color: #81ecec;
-        }
-        
-        .mbti-bg-ENTP {
-            background-color: #fdcb6e;
-        }
-        
-        .mbti-bg-ENFJ {
-            background-color: #ff7675;
-        }
-        
-        .mbti-bg-ENTJ {
-            background-color: #55efc4;
-        }
-        
-        .mbti-bg-INTP {
-            background-color: #74b9ff;
-        }
-        
-        .mbti-bg-ISTP {
-            background-color: #dfe6e9;
-        }
-        
-        .mbti-bg-ISFP {
-            background-color: #ffeaa7;
-        }
-        
-        .mbti-bg-ISTJ {
-            background-color: #b2bec3;
-        }
-        
-        .mbti-bg-ISFJ {
-            background-color: #dfe6e9;
-        }
-        
-        .mbti-bg-ESTP {
-            background-color: #fab1a0;
-        }
-        
-        .mbti-bg-ESFP {
-            background-color: #fd79a8;
-        }
-        
-        .mbti-bg-ESTJ {
-            background-color: #a29bfe;
-        }
-        
-        .mbti-bg-ESFJ {
-            background-color: #ffeaa7;
-        }
-        
-        h2 {
-            margin-bottom: 40px;
-        }
-        
-        button.menu,
-        button.share {
-            padding: 1rem;
-            margin-top: 40px;
-            font-size: 1.1rem;
-            background-color: #4e54c8;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 400px;
-            transition: background-color 0.2s ease;
-            cursor: pointer;
-        }
-        
-        button.menu:active,
-        button.share:active {
-            background-color: #6a72f8;
-        }
-
-    </style>
-</head>
-
-<body>
-    <h1><span style="color: #8f94fb">QuickTest:</span><span style="color: #6f6"> MBTI</span></h1>
-    <p class="description">Find out your MBTI type through quick and fun situational questions!</p>
-
-    <div id="progress"></div>
-    <div class="card fade show" id="quiz">
-        <div class="question" id="question"></div>
-        <div id="options"></div>
-    </div>
-
-    <div class="card fade" id="result" style="display: none">
-        <h2>
-            MBTI : <b><span id="mbti-type"></span></b>
-        </h2>
-        <p id="mbti-description"></p>
-        <button onclick="location.reload()"><b>Restart</b></button>
-        <button onclick="shareResult()"><b>Share Result</b></button>
-    </div>
-
-    <script>
-        const questions = [{
-                q: "You're at a company picnic surrounded by unfamiliar coworkers. What do you do?",
-                a: ["Start chatting and make friends!", "Stay quiet and observe first"],
-                t: ["E", "I"]
-            },
-            {
-                q: "It's Friday night and your friends suddenly invite you out for drinks!",
-                a: ["Of course! I'm in!", "I'd rather stay in and rest"],
-                t: ["E", "I"]
-            },
-            {
-                q: "You just bought a new gadget and need to assemble it.",
-                a: ["Read the manual carefully first", "Just wing it and figure it out"],
-                t: ["S", "N"]
-            },
-            {
-                q: "You're choosing between two outfits while shopping.",
-                a: ["Go with the one that's more comfortable and practical", "Pick the one that just feels right!"],
-                t: ["S", "N"]
-            },
-            {
-                q: "A teammate's mistake delayed your project. How do you react?",
-                a: ["Analyze the cause and find a solution", "Check if they’re okay first"],
-                t: ["T", "F"]
-            },
-            {
-                q: "A friend suddenly asks for an unreasonable favor.",
-                a: ["Explain logically why it’s hard to do", "Say it nicely to avoid hurting them"],
-                t: ["T", "F"]
-            },
-            {
-                q: "It's the night before a big trip. What are you doing?",
-                a: ["Packing with a checklist ready!", "I'll pack in the morning, no stress!"],
-                t: ["J", "P"]
-            },
-            {
-                q: "Your friend suddenly wants to change the meeting time and place.",
-                a: ["That's a bit frustrating", "Sounds fun! I’m flexible"],
-                t: ["J", "P"]
-            },
-            {
-                q: "You're in an elevator with a stranger. What do you do?",
-                a: ["Say hi or make small talk", "Stay silent comfortably"],
-                t: ["E", "I"]
-            },
-            {
-                q: "How do you usually plan your weekends?",
-                a: ["I prefer having a plan ahead of time", "Go with the flow on the day!"],
-                t: ["J", "P"]
-            },
-            {
-                q: "During a meeting, a new idea pops into your head.",
-                a: ["Speak up and share right away", "Write it down and wait for the right moment"],
-                t: ["E", "I"]
-            },
-            {
-                q: "How do you pick a restaurant?",
-                a: ["Read detailed reviews first", "Go wherever looks good on the spot"],
-                t: ["S", "N"]
-            },
-            {
-                q: "Someone comes to you for advice on a problem.",
-                a: ["Jump into problem-solving", "Listen and empathize first"],
-                t: ["T", "F"]
-            },
-            {
-                q: "You hear someone is upset with you. What’s your first thought?",
-                a: ["I want to understand exactly what went wrong", "Oh no, did I hurt their feelings?"],
-                t: ["T", "F"]
-            },
-            {
-                q: "A last-minute issue messes up your important schedule!",
-                a: ["Ugh, I hate when things go off plan", "Alright, let’s just adapt!"],
-                t: ["J", "P"]
-            },
-            {
-                q: "You and a friend get lost during a trip. What now?",
-                a: ["Check the map and get back on track", "This is kind of exciting!"],
-                t: ["S", "N"]
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="QuickTest: MBTI – Fun Personality Test Game" />
+        <meta
+            name="twitter:description"
+            content="Take this quick MBTI test with real-life scenario questions! Find out your personality type in minutes." />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
             }
-        ];
+            gtag("js", new Date());
 
-        const descriptions = {
-            ENFP: "You’re full of energy and creativity! You love exploring new ideas and connecting with people. The ultimate people magnet!",
-            INFP: "Idealistic and thoughtful, you seek meaning and authenticity in everything. Deep feeler, deep thinker.",
-            INFJ: "You’re a visionary and a quiet leader. Compassionate and insightful, you make a difference behind the scenes.",
-            INTJ: "Strategic and independent, you see the big picture clearly. The mastermind who always has a plan.",
-            ENTP: "Quick-witted and curious, you're a natural debater. You thrive on challenge and novelty.",
-            ENFJ: "Empathetic and inspiring, you’re the one who uplifts the group. People feel safe around you.",
-            ENTJ: "Bold and confident, you’re a natural leader who drives results and leads with vision.",
-            INTP: "Logical and inventive, you love solving complex problems and exploring how things work.",
-            ISTP: "Cool-headed and practical, you fix things fast and live in the moment. Action-oriented and effective.",
-            ISFP: "Quiet and artistic, you notice beauty in everything. Gentle soul with a creative streak.",
-            ISTJ: "Dependable and thorough, you get things done right. You're the rock people rely on.",
-            ISFJ: "Caring and detail-oriented, you support others with quiet strength. Always thinking of others.",
-            ESTP: "Energetic and bold, you love adventure and living on the edge. Born to move and make things happen.",
-            ESFP: "Vibrant and fun-loving, you're the life of the party. You enjoy life with full color!",
-            ESTJ: "Organized and driven, you bring structure to chaos. Born to manage and lead.",
-            ESFJ: "Warm and loyal, you take care of everyone’s needs. A true heart of any community."
-        };
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+        <title>QuickTest: MBTI</title>
+        <style>
+            body {
+                margin: 0;
+                background-color: #121212;
+                color: #ffffff;
+                font-family: Arial, sans-serif;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                justify-content: flex-start;
+            }
 
-        const resultCount = {
-            E: 0,
-            I: 0,
-            S: 0,
-            N: 0,
-            T: 0,
-            F: 0,
-            J: 0,
-            P: 0
-        };
-        let index = 0;
+            #progress {
+                margin-top: 30px;
+                margin-bottom: 20px;
+                font-size: 16px;
+                color: #ccc;
+            }
 
-        function showQuestion() {
-            const quizCard = document.getElementById("quiz");
-            quizCard.classList.remove("show");
-            setTimeout(() => {
-                const q = questions[index];
-                document.getElementById("question").innerText = q.q;
-                document.getElementById("progress").innerText = `Question ${index + 1} / ${questions.length}`;
-                const options = document.getElementById("options");
-                options.innerHTML = "";
-                q.a.forEach((text, i) => {
-                    const btn = document.createElement("button");
-                    btn.className = "option";
-                    btn.innerText = text;
-                    btn.onclick = () => {
-                        resultCount[q.t[i]]++;
-                        index++;
-                        if (index < questions.length) {
-                            showQuestion();
-                        } else {
-                            showResult();
-                        }
+            .fade {
+                opacity: 0;
+                transition: opacity 0.5s ease;
+            }
+
+            .show {
+                opacity: 1;
+            }
+
+            .card {
+                background: #1e1e1e;
+                padding-top: 30px;
+                padding-left: 10px;
+                padding-right: 10px;
+                padding-bottom: 30px;
+                border-radius: 10px;
+                max-width: 300px;
+                text-align: center;
+                box-shadow: 0 0 10px #5c5cff;
+                width: 90%;
+            }
+
+            .option {
+                background-color: #3d3df7;
+                border: none;
+                color: white;
+                border-radius: 10px;
+                padding: 15px 20px;
+                margin: 10px;
+                font-size: 14px;
+                cursor: pointer;
+                width: 90%;
+                max-width: 290px;
+            }
+
+            .option:hover {
+                background-color: #5c5cff;
+            }
+
+            button {
+                margin-top: 20px;
+                padding: 10px 20px;
+                font-size: 16px;
+                border-radius: 8px;
+                border: none;
+                cursor: pointer;
+            }
+
+            .question {
+                font-weight: bold;
+                font-size: 20px;
+                color: #ffffff;
+                margin-bottom: 30px;
+            }
+
+            #result {
+                color: #222;
+                /* 더 진하고 선명한 글씨 색상 */
+                font-weight: 600;
+                text-shadow: 0 1px 1px rgba(255, 255, 255, 0.4);
+            }
+
+            p.description {
+                margin-bottom: 1rem;
+                font-size: 0.85rem;
+                color: #ccc;
+                text-align: center;
+                padding: 0 1rem;
+            }
+
+            h1 {
+                margin-bottom: 0.3rem;
+                font-size: 2rem;
+            }
+
+            .mbti-bg-ENFP {
+                background-color: #ffeaa7;
+            }
+
+            .mbti-bg-INFP {
+                background-color: #fab1a0;
+            }
+
+            .mbti-bg-INFJ {
+                background-color: #a29bfe;
+            }
+
+            .mbti-bg-INTJ {
+                background-color: #81ecec;
+            }
+
+            .mbti-bg-ENTP {
+                background-color: #fdcb6e;
+            }
+
+            .mbti-bg-ENFJ {
+                background-color: #ff7675;
+            }
+
+            .mbti-bg-ENTJ {
+                background-color: #55efc4;
+            }
+
+            .mbti-bg-INTP {
+                background-color: #74b9ff;
+            }
+
+            .mbti-bg-ISTP {
+                background-color: #dfe6e9;
+            }
+
+            .mbti-bg-ISFP {
+                background-color: #ffeaa7;
+            }
+
+            .mbti-bg-ISTJ {
+                background-color: #b2bec3;
+            }
+
+            .mbti-bg-ISFJ {
+                background-color: #dfe6e9;
+            }
+
+            .mbti-bg-ESTP {
+                background-color: #fab1a0;
+            }
+
+            .mbti-bg-ESFP {
+                background-color: #fd79a8;
+            }
+
+            .mbti-bg-ESTJ {
+                background-color: #a29bfe;
+            }
+
+            .mbti-bg-ESFJ {
+                background-color: #ffeaa7;
+            }
+
+            h2 {
+                margin-bottom: 40px;
+            }
+
+            button.menu,
+            button.share {
+                padding: 1rem;
+                margin-top: 40px;
+                font-size: 1.1rem;
+                background-color: #4e54c8;
+                color: white;
+                border: none;
+                border-radius: 10px;
+                width: 90%;
+                max-width: 400px;
+                transition: background-color 0.2s ease;
+                cursor: pointer;
+            }
+
+            button.menu:active,
+            button.share:active {
+                background-color: #6a72f8;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1><span style="color: #8f94fb">QuickTest:</span><span style="color: #6f6"> MBTI</span></h1>
+        <p class="description">Find out your MBTI type through quick and fun situational questions!</p>
+
+        <div id="progress"></div>
+        <div class="card fade show" id="quiz">
+            <div class="question" id="question"></div>
+            <div id="options"></div>
+        </div>
+
+        <div class="card fade" id="result" style="display: none">
+            <h2>
+                MBTI : <b><span id="mbti-type"></span></b>
+            </h2>
+            <p id="mbti-description"></p>
+            <button onclick="location.reload()"><b>Restart</b></button>
+            <button onclick="shareResult()"><b>Share Result</b></button>
+        </div>
+
+        <script>
+            const questions = [
+                {
+                    q: "You're at a company picnic surrounded by unfamiliar coworkers. What do you do?",
+                    a: ["Start chatting and make friends!", "Stay quiet and observe first"],
+                    t: ["E", "I"]
+                },
+                {
+                    q: "It's Friday night and your friends suddenly invite you out for drinks!",
+                    a: ["Of course! I'm in!", "I'd rather stay in and rest"],
+                    t: ["E", "I"]
+                },
+                {
+                    q: "You just bought a new gadget and need to assemble it.",
+                    a: ["Read the manual carefully first", "Just wing it and figure it out"],
+                    t: ["S", "N"]
+                },
+                {
+                    q: "You're choosing between two outfits while shopping.",
+                    a: ["Go with the one that's more comfortable and practical", "Pick the one that just feels right!"],
+                    t: ["S", "N"]
+                },
+                {
+                    q: "A teammate's mistake delayed your project. How do you react?",
+                    a: ["Analyze the cause and find a solution", "Check if they’re okay first"],
+                    t: ["T", "F"]
+                },
+                {
+                    q: "A friend suddenly asks for an unreasonable favor.",
+                    a: ["Explain logically why it’s hard to do", "Say it nicely to avoid hurting them"],
+                    t: ["T", "F"]
+                },
+                {
+                    q: "It's the night before a big trip. What are you doing?",
+                    a: ["Packing with a checklist ready!", "I'll pack in the morning, no stress!"],
+                    t: ["J", "P"]
+                },
+                {
+                    q: "Your friend suddenly wants to change the meeting time and place.",
+                    a: ["That's a bit frustrating", "Sounds fun! I’m flexible"],
+                    t: ["J", "P"]
+                },
+                {
+                    q: "You're in an elevator with a stranger. What do you do?",
+                    a: ["Say hi or make small talk", "Stay silent comfortably"],
+                    t: ["E", "I"]
+                },
+                {
+                    q: "How do you usually plan your weekends?",
+                    a: ["I prefer having a plan ahead of time", "Go with the flow on the day!"],
+                    t: ["J", "P"]
+                },
+                {
+                    q: "During a meeting, a new idea pops into your head.",
+                    a: ["Speak up and share right away", "Write it down and wait for the right moment"],
+                    t: ["E", "I"]
+                },
+                {
+                    q: "How do you pick a restaurant?",
+                    a: ["Read detailed reviews first", "Go wherever looks good on the spot"],
+                    t: ["S", "N"]
+                },
+                {
+                    q: "Someone comes to you for advice on a problem.",
+                    a: ["Jump into problem-solving", "Listen and empathize first"],
+                    t: ["T", "F"]
+                },
+                {
+                    q: "You hear someone is upset with you. What’s your first thought?",
+                    a: ["I want to understand exactly what went wrong", "Oh no, did I hurt their feelings?"],
+                    t: ["T", "F"]
+                },
+                {
+                    q: "A last-minute issue messes up your important schedule!",
+                    a: ["Ugh, I hate when things go off plan", "Alright, let’s just adapt!"],
+                    t: ["J", "P"]
+                },
+                {
+                    q: "You and a friend get lost during a trip. What now?",
+                    a: ["Check the map and get back on track", "This is kind of exciting!"],
+                    t: ["S", "N"]
+                }
+            ];
+
+            const descriptions = {
+                ENFP: "You’re full of energy and creativity! You love exploring new ideas and connecting with people. The ultimate people magnet!",
+                INFP: "Idealistic and thoughtful, you seek meaning and authenticity in everything. Deep feeler, deep thinker.",
+                INFJ: "You’re a visionary and a quiet leader. Compassionate and insightful, you make a difference behind the scenes.",
+                INTJ: "Strategic and independent, you see the big picture clearly. The mastermind who always has a plan.",
+                ENTP: "Quick-witted and curious, you're a natural debater. You thrive on challenge and novelty.",
+                ENFJ: "Empathetic and inspiring, you’re the one who uplifts the group. People feel safe around you.",
+                ENTJ: "Bold and confident, you’re a natural leader who drives results and leads with vision.",
+                INTP: "Logical and inventive, you love solving complex problems and exploring how things work.",
+                ISTP: "Cool-headed and practical, you fix things fast and live in the moment. Action-oriented and effective.",
+                ISFP: "Quiet and artistic, you notice beauty in everything. Gentle soul with a creative streak.",
+                ISTJ: "Dependable and thorough, you get things done right. You're the rock people rely on.",
+                ISFJ: "Caring and detail-oriented, you support others with quiet strength. Always thinking of others.",
+                ESTP: "Energetic and bold, you love adventure and living on the edge. Born to move and make things happen.",
+                ESFP: "Vibrant and fun-loving, you're the life of the party. You enjoy life with full color!",
+                ESTJ: "Organized and driven, you bring structure to chaos. Born to manage and lead.",
+                ESFJ: "Warm and loyal, you take care of everyone’s needs. A true heart of any community."
+            };
+
+            const resultCount = {
+                E: 0,
+                I: 0,
+                S: 0,
+                N: 0,
+                T: 0,
+                F: 0,
+                J: 0,
+                P: 0
+            };
+            let index = 0;
+
+            function showQuestion() {
+                const quizCard = document.getElementById("quiz");
+                quizCard.classList.remove("show");
+                setTimeout(() => {
+                    const q = questions[index];
+                    document.getElementById("question").innerText = q.q;
+                    document.getElementById("progress").innerText = `Question ${index + 1} / ${questions.length}`;
+                    const options = document.getElementById("options");
+                    options.innerHTML = "";
+                    q.a.forEach((text, i) => {
+                        const btn = document.createElement("button");
+                        btn.className = "option";
+                        btn.innerText = text;
+                        btn.onclick = () => {
+                            resultCount[q.t[i]]++;
+                            index++;
+                            if (index < questions.length) {
+                                showQuestion();
+                            } else {
+                                showResult();
+                            }
+                        };
+                        options.appendChild(btn);
+                    });
+                    quizCard.classList.add("show");
+                }, 200);
+            }
+
+            function showResult() {
+                const resultCard = document.getElementById("result");
+                resultCard.classList.remove("show");
+                setTimeout(() => {
+                    document.getElementById("quiz").style.display = "none";
+                    const mbti =
+                        (resultCount.E >= resultCount.I ? "E" : "I") +
+                        (resultCount.S >= resultCount.N ? "S" : "N") +
+                        (resultCount.T >= resultCount.F ? "T" : "F") +
+                        (resultCount.J >= resultCount.P ? "J" : "P");
+                    const emojiMap = {
+                        ENFP: "💡🌈",
+                        INFP: "🌱📖",
+                        INFJ: "🧘‍♀️✨",
+                        INTJ: "🧠🛰️",
+                        ENTP: "🌀🎤",
+                        ENFJ: "🌟🤝",
+                        ENTJ: "📊🚀",
+                        INTP: "🔬🧩",
+                        ISTP: "🔧🛠️",
+                        ISFP: "🎨🎵",
+                        ISTJ: "📚🔒",
+                        ISFJ: "🧸🍪",
+                        ESTP: "🎮🚗",
+                        ESFP: "🎉📸",
+                        ESTJ: "📏📣",
+                        ESFJ: "🍰💬"
                     };
-                    options.appendChild(btn);
-                });
-                quizCard.classList.add("show");
-            }, 200);
-        }
-
-        function showResult() {
-            const resultCard = document.getElementById("result");
-            resultCard.classList.remove("show");
-            setTimeout(() => {
-                document.getElementById("quiz").style.display = "none";
-                const mbti =
-                    (resultCount.E >= resultCount.I ? "E" : "I") +
-                    (resultCount.S >= resultCount.N ? "S" : "N") +
-                    (resultCount.T >= resultCount.F ? "T" : "F") +
-                    (resultCount.J >= resultCount.P ? "J" : "P");
-                const emojiMap = {
-                    ENFP: "💡🌈",
-                    INFP: "🌱📖",
-                    INFJ: "🧘‍♀️✨",
-                    INTJ: "🧠🛰️",
-                    ENTP: "🌀🎤",
-                    ENFJ: "🌟🤝",
-                    ENTJ: "📊🚀",
-                    INTP: "🔬🧩",
-                    ISTP: "🔧🛠️",
-                    ISFP: "🎨🎵",
-                    ISTJ: "📚🔒",
-                    ISFJ: "🧸🍪",
-                    ESTP: "🎮🚗",
-                    ESFP: "🎉📸",
-                    ESTJ: "📏📣",
-                    ESFJ: "🍰💬"
-                };
-                const emoji = emojiMap[mbti] || "✨";
-                document.getElementById("mbti-type").innerText = `${mbti} ${emoji}`;
-                document.getElementById("mbti-description").innerText =
-                    descriptions[mbti] || "No description available.";
-                resultCard.className = "card fade mbti-bg-" + mbti;
-                resultCard.style.display = "block";
-                requestAnimationFrame(() => resultCard.classList.add("show"));
-            }, 300);
-        }
-
-        function shareResult() {
-            const mbti = document.getElementById("mbti-type").innerText;
-            const text = `📌 My MBTI type is ${mbti}!\n\nTake the test too`;
-            if (navigator.share) {
-                navigator
-                    .share({
-                        title: "My MBTI Result",
-                        text: text,
-                        url: window.location.href
-                    })
-                    .catch((err) => console.log("Share failed:", err));
-            } else {
-                navigator.clipboard
-                    .writeText(text)
-                    .then(() => alert("Result copied to clipboard!"))
-                    .catch(() => alert("Failed to copy. Please copy manually."));
+                    const emoji = emojiMap[mbti] || "✨";
+                    document.getElementById("mbti-type").innerText = `${mbti} ${emoji}`;
+                    document.getElementById("mbti-description").innerText =
+                        descriptions[mbti] || "No description available.";
+                    resultCard.className = "card fade mbti-bg-" + mbti;
+                    resultCard.style.display = "block";
+                    requestAnimationFrame(() => resultCard.classList.add("show"));
+                }, 300);
             }
-        }
 
-        showQuestion();
+            function shareResult() {
+                const mbti = document.getElementById("mbti-type").innerText;
+                const text = `📌 My MBTI type is ${mbti}!\n\nTake the test too`;
+                if (navigator.share) {
+                    navigator
+                        .share({
+                            title: "My MBTI Result",
+                            text: text,
+                            url: window.location.href
+                        })
+                        .catch((err) => console.log("Share failed:", err));
+                } else {
+                    navigator.clipboard
+                        .writeText(text)
+                        .then(() => alert("Result copied to clipboard!"))
+                        .catch(() => alert("Failed to copy. Please copy manually."));
+                }
+            }
 
-    </script>
-    <button class="menu" onclick="goToMain()">📂 Other Games</button>
-    <script>
-        function goToMain() {
-            window.location.href = "/"; // or 'index.html'
-        }
-
-    </script>
-</body>
-
+            showQuestion();
+        </script>
+        <button class="menu" onclick="goToMain()">📂 Other Games</button>
+        <script>
+            function goToMain() {
+                window.location.href = "/"; // or 'index.html'
+            }
+        </script>
+    </body>
 </html>

@@ -1,153 +1,269 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>CRC Generator – Online Checksum Calculator</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Quickly generate CRC checksums (CRC32, CRC16, CRC-CCITT, and more) for your text or hex data. 100% browser-based, private and free." />
-  <meta name="keywords" content="crc, checksum, crc32, crc16, crc-ccitt, hash, calculator, tool, browser, online" />
-  <meta name="author" content="Itagi" />
-  <meta name="language" content="en" />
-  <link rel="canonical" href="https://emfls.github.io/util/crc/index.html" />
-  <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-  <meta property="og:title" content="CRC Generator – Online Checksum Calculator" />
-  <meta property="og:description" content="Calculate CRC32, CRC16, and other checksums for any text or hex data in your browser, instantly." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://emfls.github.io/util/crc/index.html" />
-  <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="CRC Generator – Online Checksum Calculator" />
-  <meta name="twitter:description" content="Instantly calculate CRC checksums (CRC32, CRC16, and more) for any text or hex." />
-  <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+  <head>
+    <meta charset="UTF-8" />
+    <title>CRC Generator – Online Checksum Calculator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Quickly generate CRC checksums (CRC32, CRC16, CRC-CCITT, and more) for your text or hex data. 100% browser-based, private and free." />
+    <meta name="keywords" content="crc, checksum, crc32, crc16, crc-ccitt, hash, calculator, tool, browser, online" />
+    <meta name="author" content="Itagi" />
+    <meta name="language" content="en" />
+    <link rel="canonical" href="https://emfls.github.io/util/crc/index.html" />
+    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+    <meta property="og:title" content="CRC Generator – Online Checksum Calculator" />
+    <meta
+      property="og:description"
+      content="Calculate CRC32, CRC16, and other checksums for any text or hex data in your browser, instantly." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/util/crc/index.html" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CRC Generator – Online Checksum Calculator" />
+    <meta
+      name="twitter:description"
+      content="Instantly calculate CRC checksums (CRC32, CRC16, and more) for any text or hex." />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
-
-  <style>
-    :root { --main: #20477f; }
-    body { background: #f8fbff; font-family: 'Segoe UI', Arial, sans-serif; color: #223; margin: 0; }
-    .container { max-width: 440px; margin: 42px auto 0 auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 24px #1a305820; padding: 30px 16px 24px 16px; }
-    .logo { font-size: 1.32em; font-weight: bold; color: var(--main); text-align: center; margin-bottom: 10px; }
-    .desc { text-align: center; color: #286673; margin-bottom: 15px; font-size: 1.01em; }
-    .input-row { margin: 15px 0 8px 0; }
-    .input-row label { color: #234; font-size: 1.03em; }
-    textarea, input[type="text"], select {
-      width: 100%; font-size: 1.06em; border: 1.2px solid #b7d8f2;
-      border-radius: 8px; padding: 10px; margin-top: 4px; box-sizing: border-box;
-      background: #fafdff;
-    }
-    select { cursor: pointer; }
-    .action-btn {
-      background: var(--main); color: #fff; border: none; border-radius: 8px;
-      padding: 13px 0; width: 100%; font-size: 1.13em; font-weight: bold; cursor: pointer;
-      margin-top: 16px; margin-bottom: 10px; box-shadow: 0 2px 12px #20477f18; transition: background 0.15s;
-    }
-    .action-btn:active { background: #18335e; }
-    .result-area {
-      min-height: 36px; text-align: center; color: #234; background: #f2f8ff; border-radius: 7px; margin-top: 12px; font-size: 1.22em;
-      border: 1.2px solid #d5e6fa; padding: 12px 6px;
-      word-break: break-all;
-      font-family: 'Fira Mono', monospace;
-    }
-    .footer { color: #789; text-align: center; font-size: 0.94em; margin-top: 18px; }
-    #backBtn {
-      position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%);
-      background: var(--main); color: #fff; font-weight: 700; border: none;
-      border-radius: 2rem; padding: 0.58em 1.5em; box-shadow: 0 4px 16px #20477f22;
-      font-size: 1.09em; text-decoration: none; cursor: pointer; letter-spacing: 0.01em;
-      transition: background 0.15s, transform 0.12s; z-index: 2000;
-    }
-    #backBtn:hover { background: #18335e; transform: translateX(-50%) scale(1.04);}
-    @media (max-width:600px){ .container{max-width:99vw;padding:10px 2vw 12px 2vw;} #backBtn{bottom:18px;font-size:0.98em;padding:0.48em 1em;} }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="logo" id="logo">🔢 CRC Generator</div>
-    <div class="desc" id="desc">
-      Enter text or hex, select CRC type, and get the checksum instantly!<br>
-      <span style="color:#20477f; font-size:0.96em;">No data is sent or saved. Everything runs in your browser.</span>
-    </div>
-
-    <div class="input-row">
-      <label for="crcType" id="crcTypeLabel">CRC Type</label>
-      <select id="crcType">
-        <option value="crc32">CRC-32</option>
-        <option value="crc16">CRC-16-IBM</option>
-        <option value="crc16ccitt">CRC-16-CCITT</option>
-      </select>
-    </div>
-    <div class="input-row">
-      <label for="inputText" id="inputTextLabel">Input (Text or Hex)</label>
-      <textarea id="inputText" rows="4" placeholder="Enter your text or hex string"></textarea>
-    </div>
-    <button class="action-btn" id="calcBtn">Calculate CRC</button>
-
-    <div class="result-area" id="resultArea"></div>
-
-    <div class="footer" id="footer">
-      <b>Tip:</b> Use for firmware, network packets, files, etc.<br>
-      <span style="color: #20477f;">No data leaves your device.</span>
-    </div>
-  </div>
-  <a href="../index.html" id="backBtn">Other Util</a>
-
-  <script>
-    // CRC 계산 함수 (간단화)
-    function crc32(str) {
-      // (가장 널리 쓰이는 CRC32 구현, 텍스트용)
-      let crc = 0 ^ -1;
-      for (let i = 0; i < str.length; i++) {
-        crc = (crc >>> 8) ^ [
-          0x00000000,0x77073096,0xEE0E612C,0x990951BA,0x076DC419,0x706AF48F,0xE963A535,0x9E6495A3,
-          0x0EDB8832,0x79DCB8A4,0xE0D5E91E,0x97D2D988,0x09B64C2B,0x7EB17CBD,0xE7B82D07,0x90BF1D91
-        ][(crc ^ str.charCodeAt(i)) & 0x0F];
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
       }
-      return ((crc ^ -1) >>> 0).toString(16).toUpperCase().padStart(8, '0');
-    }
-    function crc16(str) {
-      let crc = 0xFFFF;
-      for (let i = 0; i < str.length; i++) {
-        crc ^= str.charCodeAt(i) << 8;
-        for (let j = 0; j < 8; j++) {
-          if (crc & 0x8000) crc = (crc << 1) ^ 0x8005;
-          else crc = crc << 1;
+      gtag("js", new Date());
+
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <style>
+      :root {
+        --main: #20477f;
+      }
+      body {
+        background: #f8fbff;
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: #223;
+        margin: 0;
+      }
+      .container {
+        max-width: 440px;
+        margin: 42px auto 0 auto;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px #1a305820;
+        padding: 30px 16px 24px 16px;
+      }
+      .logo {
+        font-size: 1.32em;
+        font-weight: bold;
+        color: var(--main);
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      .desc {
+        text-align: center;
+        color: #286673;
+        margin-bottom: 15px;
+        font-size: 1.01em;
+      }
+      .input-row {
+        margin: 15px 0 8px 0;
+      }
+      .input-row label {
+        color: #234;
+        font-size: 1.03em;
+      }
+      textarea,
+      input[type="text"],
+      select {
+        width: 100%;
+        font-size: 1.06em;
+        border: 1.2px solid #b7d8f2;
+        border-radius: 8px;
+        padding: 10px;
+        margin-top: 4px;
+        box-sizing: border-box;
+        background: #fafdff;
+      }
+      select {
+        cursor: pointer;
+      }
+      .action-btn {
+        background: var(--main);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 13px 0;
+        width: 100%;
+        font-size: 1.13em;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 16px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 12px #20477f18;
+        transition: background 0.15s;
+      }
+      .action-btn:active {
+        background: #18335e;
+      }
+      .result-area {
+        min-height: 36px;
+        text-align: center;
+        color: #234;
+        background: #f2f8ff;
+        border-radius: 7px;
+        margin-top: 12px;
+        font-size: 1.22em;
+        border: 1.2px solid #d5e6fa;
+        padding: 12px 6px;
+        word-break: break-all;
+        font-family: "Fira Mono", monospace;
+      }
+      .footer {
+        color: #789;
+        text-align: center;
+        font-size: 0.94em;
+        margin-top: 18px;
+      }
+      #backBtn {
+        position: fixed;
+        left: 50%;
+        bottom: 32px;
+        transform: translateX(-50%);
+        background: var(--main);
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 2rem;
+        padding: 0.58em 1.5em;
+        box-shadow: 0 4px 16px #20477f22;
+        font-size: 1.09em;
+        text-decoration: none;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+        transition:
+          background 0.15s,
+          transform 0.12s;
+        z-index: 2000;
+      }
+      #backBtn:hover {
+        background: #18335e;
+        transform: translateX(-50%) scale(1.04);
+      }
+      @media (max-width: 600px) {
+        .container {
+          max-width: 99vw;
+          padding: 10px 2vw 12px 2vw;
         }
-        crc &= 0xFFFF;
-      }
-      return crc.toString(16).toUpperCase().padStart(4, '0');
-    }
-    function crc16ccitt(str) {
-      let crc = 0xFFFF;
-      for (let i = 0; i < str.length; i++) {
-        crc ^= str.charCodeAt(i) << 8;
-        for (let j = 0; j < 8; j++) {
-          crc = (crc & 0x8000) ? (crc << 1) ^ 0x1021 : crc << 1;
+        #backBtn {
+          bottom: 18px;
+          font-size: 0.98em;
+          padding: 0.48em 1em;
         }
-        crc &= 0xFFFF;
       }
-      return crc.toString(16).toUpperCase().padStart(4, '0');
-    }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo" id="logo">🔢 CRC Generator</div>
+      <div class="desc" id="desc">
+        Enter text or hex, select CRC type, and get the checksum instantly!<br />
+        <span style="color: #20477f; font-size: 0.96em"
+          >No data is sent or saved. Everything runs in your browser.</span
+        >
+      </div>
 
-    document.getElementById('calcBtn').onclick = function () {
-      const type = document.getElementById('crcType').value;
-      let text = document.getElementById('inputText').value;
-      if (!text.trim()) {
-        document.getElementById('resultArea').textContent = "Please enter input text.";
-        return;
-      }
-      // Hex 입력 지원: 0x, 띄어쓰기 구분 허용
-      text = text.trim();
-      if (/^(0x)?[a-fA-F0-9\s]+$/.test(text)) {
-        text = text.replace(/0x/g, '').replace(/\s+/g, '');
-        text = text.match(/.{1,2}/g)?.map(byte => String.fromCharCode(parseInt(byte, 16))).join('') || "";
-      }
-      let result = '';
-      if (type === 'crc32') result = crc32(text);
-      else if (type === 'crc16') result = crc16(text);
-      else if (type === 'crc16ccitt') result = crc16ccitt(text);
-      document.getElementById('resultArea').textContent = result ? "CRC: " + result : "Error!";
-    };
+      <div class="input-row">
+        <label for="crcType" id="crcTypeLabel">CRC Type</label>
+        <select id="crcType">
+          <option value="crc32">CRC-32</option>
+          <option value="crc16">CRC-16-IBM</option>
+          <option value="crc16ccitt">CRC-16-CCITT</option>
+        </select>
+      </div>
+      <div class="input-row">
+        <label for="inputText" id="inputTextLabel">Input (Text or Hex)</label>
+        <textarea id="inputText" rows="4" placeholder="Enter your text or hex string"></textarea>
+      </div>
+      <button class="action-btn" id="calcBtn">Calculate CRC</button>
 
-  </script>
-</body>
+      <div class="result-area" id="resultArea"></div>
+
+      <div class="footer" id="footer">
+        <b>Tip:</b> Use for firmware, network packets, files, etc.<br />
+        <span style="color: #20477f">No data leaves your device.</span>
+      </div>
+    </div>
+    <a href="../index.html" id="backBtn">Other Util</a>
+
+    <script>
+      // CRC 계산 함수 (간단화)
+      function crc32(str) {
+        // (가장 널리 쓰이는 CRC32 구현, 텍스트용)
+        let crc = 0 ^ -1;
+        for (let i = 0; i < str.length; i++) {
+          crc =
+            (crc >>> 8) ^
+            [
+              0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3,
+              0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988, 0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91
+            ][(crc ^ str.charCodeAt(i)) & 0x0f];
+        }
+        return ((crc ^ -1) >>> 0).toString(16).toUpperCase().padStart(8, "0");
+      }
+      function crc16(str) {
+        let crc = 0xffff;
+        for (let i = 0; i < str.length; i++) {
+          crc ^= str.charCodeAt(i) << 8;
+          for (let j = 0; j < 8; j++) {
+            if (crc & 0x8000) crc = (crc << 1) ^ 0x8005;
+            else crc = crc << 1;
+          }
+          crc &= 0xffff;
+        }
+        return crc.toString(16).toUpperCase().padStart(4, "0");
+      }
+      function crc16ccitt(str) {
+        let crc = 0xffff;
+        for (let i = 0; i < str.length; i++) {
+          crc ^= str.charCodeAt(i) << 8;
+          for (let j = 0; j < 8; j++) {
+            crc = crc & 0x8000 ? (crc << 1) ^ 0x1021 : crc << 1;
+          }
+          crc &= 0xffff;
+        }
+        return crc.toString(16).toUpperCase().padStart(4, "0");
+      }
+
+      document.getElementById("calcBtn").onclick = function () {
+        const type = document.getElementById("crcType").value;
+        let text = document.getElementById("inputText").value;
+        if (!text.trim()) {
+          document.getElementById("resultArea").textContent = "Please enter input text.";
+          return;
+        }
+        // Hex 입력 지원: 0x, 띄어쓰기 구분 허용
+        text = text.trim();
+        if (/^(0x)?[a-fA-F0-9\s]+$/.test(text)) {
+          text = text.replace(/0x/g, "").replace(/\s+/g, "");
+          text =
+            text
+              .match(/.{1,2}/g)
+              ?.map((byte) => String.fromCharCode(parseInt(byte, 16)))
+              .join("") || "";
+        }
+        let result = "";
+        if (type === "crc32") result = crc32(text);
+        else if (type === "crc16") result = crc16(text);
+        else if (type === "crc16ccitt") result = crc16ccitt(text);
+        document.getElementById("resultArea").textContent = result ? "CRC: " + result : "Error!";
+      };
+    </script>
+  </body>
 </html>
