@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Text Shuffle & Sort Tool – Randomize, Sort, Reverse</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Randomly shuffle, sort, or reverse lines of text instantly in your browser. Perfect for making lists, drafts, or study tools. No upload, 100% private." />
+    <meta
+      name="keywords"
+      content="text shuffle, randomize, sort, reverse, line sorter, browser, free, 텍스트 셔플, 정렬, 랜덤, 역순, 줄바꿈" />
+    <meta name="author" content="Itagi" />
+    <meta name="language" content="en" />
+    <link rel="canonical" href="https://emfls.github.io/util/text-shuffle-sort/" />
+    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+    <!-- Open Graph / Twitter meta -->
+    <meta property="og:title" content="Text Shuffle & Sort Tool – Randomize, Sort, Reverse" />
+    <meta
+      property="og:description"
+      content="Shuffle, sort, or reverse any text list. Fast, free, and private – works in your browser." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/util/text-shuffle-sort/" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Text Shuffle & Sort Tool – Randomize, Sort, Reverse" />
+    <meta
+      name="twitter:description"
+      content="Easily randomize, sort, or reverse a list of lines. Everything runs in your browser." />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <!-- Google AdSense -->
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <style>
+      :root {
+        --main: #4671e8;
+        --main-dark: #29519b;
+        --bg: #f7f9fd;
+      }
+      body {
+        background: var(--bg);
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: #222;
+      }
+      .container {
+        max-width: 430px;
+        margin: 38px auto 0 auto;
+        background: #fff;
+        border-radius: 17px;
+        box-shadow: 0 4px 22px #4671e824;
+        padding: 29px 17px 22px 17px;
+      }
+      .logo {
+        font-size: 1.22em;
+        font-weight: bold;
+        text-align: center;
+        color: var(--main-dark);
+        margin-bottom: 8px;
+      }
+      .desc {
+        text-align: center;
+        color: #315ba7;
+        margin-bottom: 15px;
+        font-size: 1.03em;
+      }
+      textarea {
+        width: 100%;
+        min-height: 140px;
+        font-size: 1.09em;
+        border: 1.2px solid #a4c9fa;
+        border-radius: 9px;
+        padding: 12px;
+        background: #fafdff;
+        color: #222;
+        resize: vertical;
+        margin-bottom: 11px;
+        font-family: "Fira Mono", "Menlo", monospace;
+        transition: border 0.16s;
+      }
+      textarea:focus {
+        border-color: var(--main);
+      }
+      .btn-row {
+        display: flex;
+        gap: 10px;
+        justify-content: space-between;
+        margin-bottom: 11px;
+      }
+      .action-btn {
+        background: var(--main);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 0;
+        font-size: 1.09em;
+        font-weight: bold;
+        cursor: pointer;
+        flex: 1;
+        transition: background 0.15s;
+        box-shadow: 0 2px 12px #4671e81a;
+      }
+      .action-btn:active,
+      .action-btn:hover {
+        background: var(--main-dark);
+      }
+      .mini-btn {
+        background: #e4eefc;
+        color: #2759b0;
+        border: none;
+        border-radius: 7px;
+        font-size: 1em;
+        padding: 7px 15px;
+        cursor: pointer;
+        transition: background 0.12s;
+        font-weight: 500;
+        margin-left: 5px;
+      }
+      .mini-btn:active {
+        background: #bad0f8;
+      }
+      .footer {
+        color: #789;
+        text-align: center;
+        font-size: 0.95em;
+        margin-top: 16px;
+        opacity: 0.9;
+      }
+      #backBtn {
+        position: fixed;
+        left: 50%;
+        bottom: 32px;
+        transform: translateX(-50%);
+        background: #4671e8;
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 2rem;
+        padding: 0.58em 1.5em;
+        box-shadow: 0 4px 16px #4671e833;
+        font-size: 1.09em;
+        text-decoration: none;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+        transition:
+          background 0.15s,
+          transform 0.12s;
+        z-index: 2000;
+      }
+      #backBtn:hover {
+        background: #29519b;
+        transform: translateX(-50%) scale(1.04);
+      }
+      @media (max-width: 600px) {
+        .container {
+          max-width: 99vw;
+          padding: 12px 2vw 13px 2vw;
+        }
+        textarea {
+          font-size: 1em;
+        }
+        #backBtn {
+          bottom: 18px;
+          font-size: 0.98em;
+          padding: 0.48em 1em;
+        }
+      }
+      .status-msg {
+        color: #41823c;
+        font-size: 0.98em;
+        text-align: right;
+        min-height: 18px;
+        margin-bottom: 2px;
+        opacity: 0.8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">🔀 Text Shuffle & Sort Tool</div>
+      <div class="desc">
+        Enter or paste multiple lines of text.<br />
+        Instantly randomize (shuffle), sort (A→Z), or reverse (Z→A) your list!
+      </div>
+      <div class="status-msg" id="statusMsg"></div>
+      <textarea id="inputArea" placeholder="Type or paste your list here, one item per line..."></textarea>
+      <div class="btn-row">
+        <button class="action-btn" id="shuffleBtn">Shuffle</button>
+        <button class="action-btn" id="sortBtn">Sort (A→Z)</button>
+        <button class="action-btn" id="reverseBtn">Reverse (Z→A)</button>
+      </div>
+      <div style="text-align: right; margin-bottom: 10px">
+        <button class="mini-btn" id="copyBtn">Copy</button>
+        <button class="mini-btn" id="clearBtn">Clear</button>
+      </div>
+      <div class="footer">
+        Everything runs in your browser. No upload, 100% private.<br />
+        <b>Tip:</b> Use for random order, making quiz flashcards, list clean-up, and more!
+      </div>
+    </div>
+    <a href="../index.html" id="backBtn">Other Util</a>
+    <script>
+      const inputArea = document.getElementById("inputArea");
+      const statusMsg = document.getElementById("statusMsg");
+
+      // Utility: Fisher-Yates Shuffle
+      function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+          let j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      }
+
+      // Main Actions
+      document.getElementById("shuffleBtn").onclick = function () {
+        let lines = inputArea.value.split(/\r?\n/).filter((l) => l.trim().length > 0);
+        if (!lines.length) return;
+        shuffleArray(lines);
+        inputArea.value = lines.join("\n");
+        showStatus("Shuffled!");
+      };
+
+      document.getElementById("sortBtn").onclick = function () {
+        let lines = inputArea.value.split(/\r?\n/).filter((l) => l.trim().length > 0);
+        if (!lines.length) return;
+        lines.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
+        inputArea.value = lines.join("\n");
+        showStatus("Sorted A→Z!");
+      };
+
+      document.getElementById("reverseBtn").onclick = function () {
+        let lines = inputArea.value.split(/\r?\n/).filter((l) => l.trim().length > 0);
+        if (!lines.length) return;
+        lines.sort((a, b) => b.localeCompare(a, undefined, { sensitivity: "base" }));
+        inputArea.value = lines.join("\n");
+        showStatus("Reversed (Z→A)!");
+      };
+
+      // Copy & Clear
+      document.getElementById("copyBtn").onclick = function () {
+        const val = inputArea.value;
+        if (!val) return;
+        navigator.clipboard.writeText(val);
+        showStatus("Copied!");
+      };
+      document.getElementById("clearBtn").onclick = function () {
+        if (inputArea.value.length === 0) return;
+        if (confirm("Clear all text?")) {
+          inputArea.value = "";
+          showStatus("Cleared!");
+        }
+      };
+
+      // Show status message
+      function showStatus(msg) {
+        statusMsg.textContent = msg;
+        setTimeout(() => {
+          statusMsg.textContent = "";
+        }, 1200);
+      }
+    </script>
+  </body>
+</html>
