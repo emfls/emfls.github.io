@@ -47,6 +47,7 @@
       content="Convert English text to IPA-style pronunciation instantly. Rule-based, browser only, and free for education or fun!" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <style>
+      /* ... 기존 스타일 생략 ... */
       body {
         background: #f7f9fe;
         margin: 0;
@@ -122,6 +123,43 @@
         text-align: center;
         word-break: break-all;
       }
+      section#faq {
+        background: #f0f7fc;
+        border-radius: 15px;
+        padding: 18px 14px 13px 16px;
+        margin: 28px 0 0 0;
+        border: 1px solid #b9daf8;
+        font-size: 0.99em;
+      }
+      section#faq h3 {
+        font-weight: bold;
+        color: #1875d1;
+        margin-bottom: 6px;
+        font-size: 1.08em;
+        text-align: center;
+      }
+      section#faq dt {
+        color: #195269;
+        margin-top: 10px;
+        margin-bottom: 2px;
+        font-weight: 500;
+      }
+      section#faq dd {
+        color: #265a7a;
+        margin-left: 7px;
+        margin-bottom: 7px;
+      }
+      .ipa {
+        font-size: 1.35em;
+        color: #1974b8;
+        background: #e6f4fc;
+        border-radius: 6px;
+        padding: 5px 12px;
+        display: inline-block;
+        margin: 8px 0 5px 0;
+        font-family: "Segoe UI", "Arial", "Times New Roman", serif;
+        letter-spacing: 1px;
+      }
       .footer {
         color: #789;
         text-align: center;
@@ -164,17 +202,6 @@
           padding: 0.48em 1em;
         }
       }
-      .ipa {
-        font-size: 1.35em;
-        color: #1974b8;
-        background: #e6f4fc;
-        border-radius: 6px;
-        padding: 5px 12px;
-        display: inline-block;
-        margin: 8px 0 5px 0;
-        font-family: "Segoe UI", "Arial", "Times New Roman", serif;
-        letter-spacing: 1px;
-      }
     </style>
   </head>
   <body>
@@ -191,6 +218,21 @@
         <button type="submit" class="action-btn">Convert</button>
       </form>
       <div id="result"></div>
+      <section id="faq" aria-labelledby="faq-head">
+        <h3 id="faq-head">FAQ – English Pronunciation (IPA) Converter</h3>
+        <dl>
+          <dt>Is this real IPA?</dt>
+          <dd>No. This tool uses simplified rules to approximate English pronunciation. For study or fun, not for linguistics or exams.</dd>
+          <dt>Is my input sent to a server?</dt>
+          <dd>No. All conversion happens in your browser. Your text never leaves your device.</dd>
+          <dt>Which English accent is used?</dt>
+          <dd>It’s a mix of American and British English rules for simplicity. Not a perfect match to any real dialect.</dd>
+          <dt>Can I use sentences?</dt>
+          <dd>Yes! You can enter words or full sentences. Each word is converted separately.</dd>
+          <dt>Is this free?</dt>
+          <dd>Yes. This tool is 100% free and open to everyone.</dd>
+        </dl>
+      </section>
       <div class="footer">
         Converts English to an approximate IPA pronunciation, based on simplified rules.<br />
         For learning and entertainment only.<br />
@@ -199,7 +241,7 @@
     </div>
     <a href="../index.html" id="backBtn">Other Util</a>
     <script>
-      // 매우 단순화된 규칙 기반(실제 발음 X, 영국/미국 혼합 느낌)
+      // ... 기존 JS 그대로 ...
       function toIPA(word) {
         if (!word.trim()) return "";
         let w = word.toLowerCase();
@@ -288,7 +330,6 @@
           .join(" ");
         return output;
       }
-
       const form = document.getElementById("form");
       const input = document.getElementById("input");
       const result = document.getElementById("result");
@@ -299,7 +340,6 @@
         const ipa = toIPA(val);
         result.innerHTML = `<div class="ipa">${ipa}</div>`;
       };
-      // 예시 자동 변환
       input.addEventListener("input", () => {
         if (!input.value.trim()) {
           result.innerHTML = "";
@@ -308,8 +348,56 @@
         const ipa = toIPA(input.value);
         result.innerHTML = `<div class="ipa">${ipa}</div>`;
       });
-      // 포커스 자동
       input.focus();
+    </script>
+    <!-- FAQPage 구조화 데이터 (SEO/SGE/네이버/구글 리치 결과 대응) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is this real IPA?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. This tool uses simplified rules to approximate English pronunciation. For study or fun, not for linguistics or exams."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my input sent to a server?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. All conversion happens in your browser. Your text never leaves your device."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which English accent is used?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It’s a mix of American and British English rules for simplicity. Not a perfect match to any real dialect."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use sentences?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! You can enter words or full sentences. Each word is converted separately."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. This tool is 100% free and open to everyone."
+          }
+        }
+      ]
+    }
     </script>
   </body>
 </html>

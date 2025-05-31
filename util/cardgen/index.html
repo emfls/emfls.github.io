@@ -38,9 +38,9 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-
       gtag("config", "G-QP5Q67GE5B");
     </script>
+    <!-- Google AdSense -->
     <script
       async
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
@@ -146,6 +146,24 @@
         line-height: 1.6;
         opacity: 0.89;
       }
+      section#faq {
+        margin-top: 30px;
+      }
+      section#faq h2 {
+        margin-bottom: 13px;
+        color: #16b88a;
+        font-size: 1.15em;
+        text-align: center;
+      }
+      section#faq dt {
+        font-weight: bold;
+        margin-top: 8px;
+      }
+      section#faq dd {
+        margin: 0 0 7px 0;
+        font-size: 0.99em;
+        color: #23736d;
+      }
       #backBtn {
         position: fixed;
         left: 50%;
@@ -188,43 +206,63 @@
     </style>
   </head>
   <body>
-    <div class="container">
-      <div class="logo">🎨 Online Card Maker</div>
-      <div class="desc">
-        Instantly generate and download a business card, invitation, or wedding card.<br />
-        Select a template, enter your details, and save as an image!
+    <main>
+      <div class="container" itemscope itemtype="https://schema.org/WebApplication">
+        <h1 class="logo" itemprop="name">🎨 Online Card Maker</h1>
+        <p class="desc" itemprop="description">
+          Instantly generate and download a business card, invitation, or wedding card.<br />
+          Select a template, enter your details, and save as an image!
+        </p>
+        <form id="cardForm" autocomplete="off">
+          <div class="form-row">
+            <label for="template">Template</label>
+            <select id="template">
+              <option value="business">Business Card</option>
+              <option value="wedding">Wedding Invitation</option>
+              <option value="party">Party Invitation</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="name">Name / Title</label>
+            <input type="text" id="name" maxlength="32" required />
+          </div>
+          <div class="form-row">
+            <label for="subtitle">Subtitle</label>
+            <input type="text" id="subtitle" maxlength="32" />
+          </div>
+          <div class="form-row">
+            <label for="details">Details</label>
+            <textarea id="details" maxlength="120" placeholder="Contact, address, date, etc"></textarea>
+          </div>
+          <button type="button" class="action-btn" id="downloadBtn">Download Image</button>
+        </form>
+        <div class="card-preview-wrap">
+          <canvas id="cardCanvas" class="card-preview" width="380" height="210"></canvas>
+        </div>
+        <div class="footer">
+          No upload needed. Everything runs on your device.<br />
+          <b>Tip:</b> Click the card image to preview full size before download!
+        </div>
+        <!-- FAQ section for GEO/SGE/SEO -->
+        <section aria-labelledby="faq-head" id="faq">
+          <h2 id="faq-head">FAQ – Online Card Maker</h2>
+          <dl>
+            <dt>What types of cards can I make?</dt>
+            <dd>You can instantly create business cards, wedding invitations, and party invitations with this tool.</dd>
+            <dt>Do I need to sign up or install anything?</dt>
+            <dd>
+              No registration or installation is needed. Everything works in your browser and no data is uploaded.
+            </dd>
+            <dt>Can I download the card as an image?</dt>
+            <dd>Yes! After entering your details, simply click "Download Image" to save your card as a PNG file.</dd>
+            <dt>Is my information safe?</dt>
+            <dd>Yes, all data is processed in your browser. Nothing is uploaded to a server.</dd>
+            <dt>Can I preview my card before downloading?</dt>
+            <dd>Click the card image to open a full-size preview before you download.</dd>
+          </dl>
+        </section>
       </div>
-      <form id="cardForm" autocomplete="off">
-        <div class="form-row">
-          <label for="template">Template</label>
-          <select id="template">
-            <option value="business">Business Card</option>
-            <option value="wedding">Wedding Invitation</option>
-            <option value="party">Party Invitation</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <label for="name">Name / Title</label>
-          <input type="text" id="name" maxlength="32" required />
-        </div>
-        <div class="form-row">
-          <label for="subtitle">Subtitle</label>
-          <input type="text" id="subtitle" maxlength="32" />
-        </div>
-        <div class="form-row">
-          <label for="details">Details</label>
-          <textarea id="details" maxlength="120" placeholder="Contact, address, date, etc"></textarea>
-        </div>
-        <button type="button" class="action-btn" id="downloadBtn">Download Image</button>
-      </form>
-      <div class="card-preview-wrap">
-        <canvas id="cardCanvas" class="card-preview" width="380" height="210"></canvas>
-      </div>
-      <div class="footer">
-        No upload needed. Everything runs on your device.<br />
-        <b>Tip:</b> Click the card image to preview full size before download!
-      </div>
-    </div>
+    </main>
     <a href="../index.html" id="backBtn">Other Util</a>
     <script>
       const cardCanvas = document.getElementById("cardCanvas");
@@ -305,8 +343,6 @@
       }
 
       [template, nameInput, subtitleInput, detailsInput].forEach((inp) => inp.addEventListener("input", drawCard));
-
-      // Initial draw
       drawCard();
 
       // Download card as image
@@ -324,6 +360,55 @@
         const url = cardCanvas.toDataURL("image/png");
         window.open(url, "_blank");
       };
+    </script>
+    <!-- FAQPage Schema for SGE/GEO/SEO Rich Results -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What types of cards can I make?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "You can instantly create business cards, wedding invitations, and party invitations with this tool."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Do I need to sign up or install anything?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No registration or installation is needed. Everything works in your browser and no data is uploaded."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I download the card as an image?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes! After entering your details, simply click 'Download Image' to save your card as a PNG file."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is my information safe?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, all data is processed in your browser. Nothing is uploaded to a server."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I preview my card before downloading?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Click the card image to open a full-size preview before you download."
+            }
+          }
+        ]
+      }
     </script>
   </body>
 </html>

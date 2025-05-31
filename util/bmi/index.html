@@ -95,6 +95,10 @@
     }
     .bmi-table th { background: #e1eefe; color: #2274ba;}
     .bmi-table td { background: #fff;}
+    section#faq { margin-top: 26px; }
+    section#faq h2 { margin-bottom: 13px; color: #2e74d1; font-size: 1.14em; text-align: center;}
+    section#faq dt { font-weight: bold; margin-top: 9px;}
+    section#faq dd { margin: 0 0 7px 0; font-size: 0.99em; color: #24528a;}
     .footer { color: #789; text-align: center; font-size: 0.94em; margin-top: 16px;}
     #backBtn {
       position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%);
@@ -110,38 +114,57 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="title">🏃 BMI Calculator</div>
-    <div class="desc">
-      Instantly calculate your Body Mass Index.<br>
-      Just enter your height and weight!
+  <main>
+    <div class="container" itemscope itemtype="https://schema.org/HealthApplication">
+      <h1 class="title" itemprop="name">🏃 BMI Calculator</h1>
+      <p class="desc" itemprop="description">
+        Instantly calculate your Body Mass Index.<br>
+        Just enter your height and weight!
+      </p>
+      <form id="bmiForm" autocomplete="off">
+        <div class="form-row">
+          <label for="height">Height (cm)</label>
+          <input type="number" id="height" min="80" max="250" step="0.1" required placeholder="e.g. 170" />
+        </div>
+        <div class="form-row">
+          <label for="weight">Weight (kg)</label>
+          <input type="number" id="weight" min="20" max="250" step="0.1" required placeholder="e.g. 60" />
+        </div>
+        <button type="submit" class="btn">Calculate BMI</button>
+      </form>
+      <div class="result" id="bmiResult">Enter your height and weight above.</div>
+      <table class="bmi-table">
+        <tr><th>BMI</th><th>Category</th></tr>
+        <tr><td>&lt; 18.5</td><td>Underweight</td></tr>
+        <tr><td>18.5 ~ 24.9</td><td>Normal</td></tr>
+        <tr><td>25 ~ 29.9</td><td>Overweight</td></tr>
+        <tr><td>30 ~ 34.9</td><td>Obesity (Class 1)</td></tr>
+        <tr><td>35 ~ 39.9</td><td>Obesity (Class 2)</td></tr>
+        <tr><td>&ge; 40</td><td>Severe Obesity</td></tr>
+      </table>
+
+      <!-- FAQ section for GEO/SGE/SEO -->
+      <section aria-labelledby="faq-head" id="faq">
+        <h2 id="faq-head">FAQ – BMI &amp; Health</h2>
+        <dl>
+          <dt>What is BMI?</dt>
+          <dd>BMI (Body Mass Index) is a simple calculation using a person's height and weight. It estimates body fat and assesses health risk.</dd>
+          <dt>Is BMI accurate?</dt>
+          <dd>BMI is a general guideline. It may not reflect body composition (muscle vs fat), so athletes or very fit people may have high BMI but low body fat.</dd>
+          <dt>What is a normal BMI?</dt>
+          <dd>A BMI between 18.5 and 24.9 is considered normal for most adults.</dd>
+          <dt>Does BMI differ by age or gender?</dt>
+          <dd>BMI ranges are the same for adult men and women, but for children and teens, percentiles by age and sex are used.</dd>
+          <dt>How can I improve my BMI?</dt>
+          <dd>Healthy diet and regular exercise can help achieve a normal BMI. Always consult a medical professional for personalized advice.</dd>
+        </dl>
+      </section>
+      <footer class="footer">
+        BMI is a simple health indicator. For precise health, consider other factors.<br>
+        <b>Tip:</b> A BMI between 18.5 and 24.9 is considered normal for most adults.
+      </footer>
     </div>
-    <form id="bmiForm" autocomplete="off">
-      <div class="form-row">
-        <label for="height">Height (cm)</label>
-        <input type="number" id="height" min="80" max="250" step="0.1" required placeholder="e.g. 170" />
-      </div>
-      <div class="form-row">
-        <label for="weight">Weight (kg)</label>
-        <input type="number" id="weight" min="20" max="250" step="0.1" required placeholder="e.g. 60" />
-      </div>
-      <button type="submit" class="btn">Calculate BMI</button>
-    </form>
-    <div class="result" id="bmiResult">Enter your height and weight above.</div>
-    <table class="bmi-table">
-      <tr><th>BMI</th><th>Category</th></tr>
-      <tr><td>&lt; 18.5</td><td>Underweight</td></tr>
-      <tr><td>18.5 ~ 24.9</td><td>Normal</td></tr>
-      <tr><td>25 ~ 29.9</td><td>Overweight</td></tr>
-      <tr><td>30 ~ 34.9</td><td>Obesity (Class 1)</td></tr>
-      <tr><td>35 ~ 39.9</td><td>Obesity (Class 2)</td></tr>
-      <tr><td>≥ 40</td><td>Severe Obesity</td></tr>
-    </table>
-    <div class="footer">
-      BMI is a simple health indicator. For precise health, consider other factors.<br>
-      <b>Tip:</b> A BMI between 18.5 and 24.9 is considered normal for most adults.
-    </div>
-  </div>
+  </main>
   <a href="../index.html" id="backBtn">Other Util</a>
   <script>
     const bmiForm = document.getElementById('bmiForm');
@@ -166,6 +189,40 @@
       const cat = bmiCategory(bmi);
       bmiResult.innerHTML = `<b>BMI: ${bmi.toFixed(1)}</b> – <span style="color:#1c7b49;font-weight:600">${cat}</span>`;
     };
+  </script>
+  <!-- FAQPage Schema for SGE/GEO/SEO Rich Results -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is BMI?",
+        "acceptedAnswer": { "@type": "Answer", "text": "BMI (Body Mass Index) is a simple calculation using a person's height and weight. It estimates body fat and assesses health risk." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is BMI accurate?",
+        "acceptedAnswer": { "@type": "Answer", "text": "BMI is a general guideline. It may not reflect body composition (muscle vs fat), so athletes or very fit people may have high BMI but low body fat." }
+      },
+      {
+        "@type": "Question",
+        "name": "What is a normal BMI?",
+        "acceptedAnswer": { "@type": "Answer", "text": "A BMI between 18.5 and 24.9 is considered normal for most adults." }
+      },
+      {
+        "@type": "Question",
+        "name": "Does BMI differ by age or gender?",
+        "acceptedAnswer": { "@type": "Answer", "text": "BMI ranges are the same for adult men and women, but for children and teens, percentiles by age and sex are used." }
+      },
+      {
+        "@type": "Question",
+        "name": "How can I improve my BMI?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Healthy diet and regular exercise can help achieve a normal BMI. Always consult a medical professional for personalized advice." }
+      }
+    ]
+  }
   </script>
 </body>
 </html>

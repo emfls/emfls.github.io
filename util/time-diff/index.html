@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Time Difference & Countdown Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Calculate the time difference between two dates and see a live countdown to any date. Days, hours, minutes, seconds. Free, browser-based, mobile-friendly." />
+  <meta name="keywords" content="time difference, countdown, date calculator, timer, days, hours, minutes, seconds, 웹, 카운트다운, 날짜계산" />
+  <meta name="author" content="Itagi" />
+  <meta name="language" content="en" />
+  <meta name="theme-color" content="#1999c6" />
+  <link rel="canonical" href="https://emfls.github.io/util/time-diff/" />
+  <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+  <meta property="og:title" content="Time Difference & Countdown Calculator"/>
+  <meta property="og:description" content="See the time between any two moments, and a live countdown to any future date."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://emfls.github.io/util/time-diff/"/>
+  <meta property="og:image" content="https://emfls.github.io/thumbnail.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Time Difference & Countdown Calculator"/>
+  <meta name="twitter:description" content="Check the time interval or a live countdown. 100% browser, no upload."/>
+  <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png"/>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-QP5Q67GE5B");
+  </script>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+    crossorigin="anonymous"></script>
+  <style>
+    :root { --main: #1999c6; --bg: #f7fbfe;}
+    html, body { margin: 0; padding: 0; background: var(--bg);}
+    body { font-family: "Segoe UI", Arial, sans-serif; color: #234;}
+    .container {
+      max-width: 390px; margin: 38px auto 0 auto; background: #fff;
+      border-radius: 18px; box-shadow: 0 4px 22px #1999c61a;
+      padding: 25px 14px 22px 14px;
+    }
+    .title { text-align: center; font-size: 1.15em; color: var(--main); font-weight: bold; margin-bottom: 12px; }
+    .form-row { display: flex; flex-direction: column; gap: 5px; margin-bottom: 15px;}
+    .form-row label { font-size: 1em; color: #147399; font-weight: 500;}
+    .form-row input[type="datetime-local"] {
+      box-sizing: border-box; padding: 10px 10px; border-radius: 7px;
+      border: 1.2px solid #aee3f7; font-size: 1.08em; width: 100%;
+      background: #fafdff; color: #234; transition: border 0.15s;
+    }
+    .form-row input[type="datetime-local"]:focus { border-color: var(--main);}
+    .result, .countdown {
+      background: #e2f5fc;
+      border-radius: 12px;
+      color: #15748d;
+      font-size: 1.08em;
+      padding: 13px 11px 11px 11px;
+      text-align: center;
+      margin-bottom: 9px;
+      min-height: 38px;
+      font-weight: 500;
+      word-break: break-word;
+    }
+    .countdown {
+      background: #f7ebff;
+      color: #954fc9;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+    .footer { color: #789; text-align: center; font-size: 0.93em; margin-top: 15px;}
+    #backBtn {
+      position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%);
+      background: #1999c6; color: #fff; font-weight: 700; border: none; border-radius: 2rem;
+      padding: 0.58em 1.5em; box-shadow: 0 4px 16px #1999c633; font-size: 1.09em; text-decoration: none;
+      cursor: pointer; letter-spacing: 0.01em; transition: background 0.15s, transform 0.12s; z-index: 2000;
+    }
+    #backBtn:hover { background: #106d92; transform: translateX(-50%) scale(1.04);}
+    @media (max-width: 500px) {
+      .container { max-width: 98vw; padding: 10px 2vw 10px 2vw;}
+      #backBtn { bottom: 18px; font-size: 0.98em; padding: 0.48em 1em;}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="title">⏳ Time Difference & Countdown</div>
+    <form id="diffForm" autocomplete="off">
+      <div class="form-row">
+        <label for="startTime">Start Date &amp; Time</label>
+        <input type="datetime-local" id="startTime" />
+      </div>
+      <div class="form-row">
+        <label for="endTime">End Date &amp; Time</label>
+        <input type="datetime-local" id="endTime" />
+      </div>
+      <div class="result" id="diffResult"></div>
+    </form>
+    <div class="countdown" id="countdownBox"></div>
+    <div class="footer">
+      Calculate days, hours, minutes, seconds between dates, or see a live countdown.<br>
+      <b>Tip:</b> Pick only End Time for countdown from now.
+    </div>
+  </div>
+  <a href="../index.html" id="backBtn">Other Util</a>
+  <script>
+    const startInput = document.getElementById("startTime");
+    const endInput = document.getElementById("endTime");
+    const result = document.getElementById("diffResult");
+    const countdownBox = document.getElementById("countdownBox");
+    let countdownTimer = null;
+
+    function formatDiff(ms) {
+      let abs = Math.abs(ms);
+      const sign = ms >= 0 ? "" : "-";
+      const days = Math.floor(abs / 86400000);
+      const hours = Math.floor((abs % 86400000) / 3600000);
+      const mins = Math.floor((abs % 3600000) / 60000);
+      const secs = Math.floor((abs % 60000) / 1000);
+      return `<b>${sign}${days} days</b> &nbsp; <b>${hours} hours</b> &nbsp; <b>${mins} min</b> &nbsp; <b>${secs} sec</b>`;
+    }
+
+    function update() {
+      const start = startInput.value ? new Date(startInput.value) : null;
+      const end = endInput.value ? new Date(endInput.value) : null;
+      // Time difference
+      if (start && end) {
+        let ms = end - start;
+        if (isNaN(ms)) result.textContent = "Invalid date/time input.";
+        else result.innerHTML = formatDiff(ms);
+      } else {
+        result.textContent = "";
+      }
+      // Countdown (from now to end)
+      if (end) {
+        // If both start & end, only show countdown if start is now
+        let from = (!startInput.value || (startInput.value && new Date(startInput.value) < new Date())) ? new Date() : new Date(startInput.value);
+        if (isNaN(end - from)) { countdownBox.textContent = ""; return; }
+        function tick() {
+          let now = new Date();
+          let base = (!startInput.value || (startInput.value && new Date(startInput.value) < now)) ? now : new Date(startInput.value);
+          let ms = end - base;
+          if (isNaN(ms)) { countdownBox.textContent = ""; return; }
+          if (ms <= 0) {
+            countdownBox.innerHTML = `<b>Time is up!</b>`;
+            clearInterval(countdownTimer);
+            countdownTimer = null;
+            return;
+          }
+          countdownBox.innerHTML = `<b>Countdown: </b>` + formatDiff(ms);
+        }
+        if (countdownTimer) clearInterval(countdownTimer);
+        tick();
+        countdownTimer = setInterval(tick, 1000);
+      } else {
+        countdownBox.textContent = "";
+        if (countdownTimer) clearInterval(countdownTimer);
+        countdownTimer = null;
+      }
+    }
+
+    // Auto update on any input
+    startInput.addEventListener("input", update);
+    endInput.addEventListener("input", update);
+    // Also update immediately if page is loaded with value
+    window.addEventListener("DOMContentLoaded", update);
+  </script>
+</body>
+</html>

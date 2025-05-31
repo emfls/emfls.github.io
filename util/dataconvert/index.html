@@ -36,7 +36,6 @@
                 dataLayer.push(arguments);
             }
             gtag("js", new Date());
-
             gtag("config", "G-QP5Q67GE5B");
         </script>
         <script
@@ -217,42 +216,83 @@
                     padding: 0.48em 1em;
                 }
             }
+            section#faq {
+                margin-top: 30px;
+            }
+            section#faq h2 {
+                margin-bottom: 13px;
+                color: #3977bc;
+                font-size: 1.11em;
+                text-align: center;
+            }
+            section#faq dt {
+                font-weight: bold;
+                margin-top: 8px;
+            }
+            section#faq dd {
+                margin: 0 0 7px 0;
+                font-size: 0.99em;
+                color: #19788a;
+            }
         </style>
     </head>
     <body>
-        <div class="container">
-            <div class="logo">🔄 Data Format Converter</div>
-            <div class="desc">
-                Paste JSON, XML, or CSV. Convert between formats, view with color, and check for errors.<br />
-                100% browser-based, nothing uploaded.
+        <main>
+            <div class="container" itemscope itemtype="https://schema.org/WebApplication">
+                <h1 class="logo" itemprop="name">🔄 Data Format Converter</h1>
+                <p class="desc" itemprop="description">
+                    Paste JSON, XML, or CSV. Convert between formats, view with color, and check for errors.<br />
+                    100% browser-based, nothing uploaded.
+                </p>
+                <div class="format-select">
+                    <button class="format-btn active" id="jsonBtn">JSON</button>
+                    <button class="format-btn" id="xmlBtn">XML</button>
+                    <button class="format-btn" id="csvBtn">CSV</button>
+                </div>
+                <textarea id="inputArea" placeholder="Paste your data here (JSON, XML, CSV)..."></textarea>
+                <div class="action-row">
+                    <button class="action-mini" id="beautifyBtn">Beautify</button>
+                    <button class="action-mini" id="clearBtn">Clear</button>
+                </div>
+                <button class="convert-btn" id="convertBtn">Convert & View</button>
+                <div class="error-msg" id="errorMsg"></div>
+                <div class="format-select">
+                    <button class="format-btn active" id="jsonViewBtn">JSON</button>
+                    <button class="format-btn" id="xmlViewBtn">XML</button>
+                    <button class="format-btn" id="csvViewBtn">CSV</button>
+                </div>
+                <pre id="outputView" class="hljs"></pre>
+                <div class="action-row">
+                    <button class="action-mini" id="copyBtn">Copy</button>
+                    <button class="action-mini" id="downloadBtn">Download</button>
+                </div>
+                <div class="footer">
+                    Supports JSON, XML, and CSV. Detects errors, highlights your data.<br />
+                    No data is sent anywhere. Everything runs in your browser.
+                </div>
+                <!-- FAQ section for GEO/SGE/SEO -->
+                <section aria-labelledby="faq-head" id="faq">
+                    <h2 id="faq-head">FAQ – Data Format Converter</h2>
+                    <dl>
+                        <dt>Which formats are supported?</dt>
+                        <dd>This tool converts and views JSON, XML, and CSV formats, both ways.</dd>
+                        <dt>Is my data sent or stored anywhere?</dt>
+                        <dd>
+                            No. All conversions and processing are performed 100% in your browser. Nothing leaves your
+                            device.
+                        </dd>
+                        <dt>Can I use this for large files?</dt>
+                        <dd>
+                            It works best for small/medium data. For very large files, browser memory may be limited.
+                        </dd>
+                        <dt>Is color coding/highlight available?</dt>
+                        <dd>Yes, all outputs are color-highlighted for easier viewing using highlight.js.</dd>
+                        <dt>Can I download or copy the result?</dt>
+                        <dd>Yes! After conversion, use the Copy or Download buttons for the result.</dd>
+                    </dl>
+                </section>
             </div>
-            <div class="format-select">
-                <button class="format-btn active" id="jsonBtn">JSON</button>
-                <button class="format-btn" id="xmlBtn">XML</button>
-                <button class="format-btn" id="csvBtn">CSV</button>
-            </div>
-            <textarea id="inputArea" placeholder="Paste your data here (JSON, XML, CSV)..."></textarea>
-            <div class="action-row">
-                <button class="action-mini" id="beautifyBtn">Beautify</button>
-                <button class="action-mini" id="clearBtn">Clear</button>
-            </div>
-            <button class="convert-btn" id="convertBtn">Convert & View</button>
-            <div class="error-msg" id="errorMsg"></div>
-            <div class="format-select">
-                <button class="format-btn active" id="jsonViewBtn">JSON</button>
-                <button class="format-btn" id="xmlViewBtn">XML</button>
-                <button class="format-btn" id="csvViewBtn">CSV</button>
-            </div>
-            <pre id="outputView" class="hljs"></pre>
-            <div class="action-row">
-                <button class="action-mini" id="copyBtn">Copy</button>
-                <button class="action-mini" id="downloadBtn">Download</button>
-            </div>
-            <div class="footer">
-                Supports JSON, XML, and CSV. Detects errors, highlights your data.<br />
-                No data is sent anywhere. Everything runs in your browser.
-            </div>
-        </div>
+        </main>
         <a href="../index.html" id="backBtn">Other Util</a>
         <script>
             // ========== Format Select ==========
@@ -402,6 +442,55 @@
                     return str[0] === "\n" ? str.slice(1) : str;
                 }
             };
+        </script>
+        <!-- FAQPage Schema for SGE/GEO/SEO Rich Results -->
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": "Which formats are supported?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "This tool converts and views JSON, XML, and CSV formats, both ways."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Is my data sent or stored anywhere?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "No. All conversions and processing are performed 100% in your browser. Nothing leaves your device."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Can I use this for large files?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "It works best for small/medium data. For very large files, browser memory may be limited."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Is color coding/highlight available?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Yes, all outputs are color-highlighted for easier viewing using highlight.js."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Can I download or copy the result?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "Yes! After conversion, use the Copy or Download buttons for the result."
+                        }
+                    }
+                ]
+            }
         </script>
     </body>
 </html>

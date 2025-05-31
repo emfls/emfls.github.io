@@ -191,56 +191,78 @@
         box-shadow: 0 1px 8px #1875d118;
         display: block;
       }
+      section#faq { margin-top: 30px; }
+      section#faq h2 { margin-bottom: 13px; color: #1875d1; font-size: 1.11em; text-align: center;}
+      section#faq dt { font-weight: bold; margin-top: 8px;}
+      section#faq dd { margin: 0 0 7px 0; font-size: 0.99em; color: #1e589e;}
     </style>
   </head>
   <body>
-    <div class="container">
-      <div class="logo">📈 Compound vs Simple Interest Calculator</div>
-      <div class="desc">
-        Instantly compare investment growth for compound and simple interest.<br>
-        Supports monthly deposit (installment plan) and one-off principal.
+    <main>
+      <div class="container" itemscope itemtype="https://schema.org/WebApplication">
+        <h1 class="logo" itemprop="name">📈 Compound vs Simple Interest Calculator</h1>
+        <p class="desc" itemprop="description">
+          Instantly compare investment growth for compound and simple interest.<br>
+          Supports monthly deposit (installment plan) and one-off principal.
+        </p>
+        <form id="form" autocomplete="off">
+          <div class="form-row">
+            <label for="principal">Principal ($)</label>
+            <input type="number" id="principal" min="0" step="0.01" value="10000" required />
+          </div>
+          <div class="form-row">
+            <label for="monthly">Monthly Deposit ($)</label>
+            <input type="number" id="monthly" min="0" step="0.01" value="500" required />
+          </div>
+          <div class="form-row">
+            <label for="rate">Annual Interest Rate (%)</label>
+            <input type="number" id="rate" min="0" step="0.01" value="5.00" required />
+          </div>
+          <div class="form-row">
+            <label for="years">Years</label>
+            <input type="number" id="years" min="1" step="1" value="10" required />
+          </div>
+          <div class="form-row">
+            <label for="freq">Compound Frequency</label>
+            <select id="freq">
+              <option value="1">Yearly</option>
+              <option value="2">Semi-Annual</option>
+              <option value="4">Quarterly</option>
+              <option value="12" selected>Monthly</option>
+              <option value="365">Daily</option>
+            </select>
+          </div>
+          <button type="submit" class="action-btn">Calculate</button>
+        </form>
+        <div class="result-block" id="result"></div>
+        <canvas id="chart" width="420" height="230"></canvas>
+        <div class="legend">
+          <span style="background:#1975be"></span> Compound &nbsp;
+          <span style="background:#fc8642"></span> Simple
+        </div>
+        <div class="table-block" id="tableBlock"></div>
+        <div class="footer">
+          Compare compound and simple interest, with or without monthly deposits.<br>
+          100% browser-based. No login. No data sent anywhere.
+        </div>
+        <!-- FAQ section for GEO/SGE/SEO -->
+        <section aria-labelledby="faq-head" id="faq">
+          <h2 id="faq-head">FAQ – Compound vs Simple Interest Calculator</h2>
+          <dl>
+            <dt>What is the difference between compound and simple interest?</dt>
+            <dd>Compound interest earns interest on both your principal and previously earned interest. Simple interest earns interest only on your original principal.</dd>
+            <dt>Can I add monthly deposits in this calculator?</dt>
+            <dd>Yes, you can add a fixed monthly deposit. Both compound and simple interest results will include your monthly contributions.</dd>
+            <dt>Which compounding frequency is best?</dt>
+            <dd>More frequent compounding (e.g., monthly or daily) can increase total returns, especially for long-term investments.</dd>
+            <dt>Is my data uploaded or saved?</dt>
+            <dd>No. All calculations run entirely in your browser. No personal or financial data is stored or sent anywhere.</dd>
+            <dt>Is this calculator free to use?</dt>
+            <dd>Yes! It is 100% free, browser-only, and works on desktop and mobile devices.</dd>
+          </dl>
+        </section>
       </div>
-      <form id="form" autocomplete="off">
-        <div class="form-row">
-          <label for="principal">Principal ($)</label>
-          <input type="number" id="principal" min="0" step="0.01" value="10000" required />
-        </div>
-        <div class="form-row">
-          <label for="monthly">Monthly Deposit ($)</label>
-          <input type="number" id="monthly" min="0" step="0.01" value="500" required />
-        </div>
-        <div class="form-row">
-          <label for="rate">Annual Interest Rate (%)</label>
-          <input type="number" id="rate" min="0" step="0.01" value="5.00" required />
-        </div>
-        <div class="form-row">
-          <label for="years">Years</label>
-          <input type="number" id="years" min="1" step="1" value="10" required />
-        </div>
-        <div class="form-row">
-          <label for="freq">Compound Frequency</label>
-          <select id="freq">
-            <option value="1">Yearly</option>
-            <option value="2">Semi-Annual</option>
-            <option value="4">Quarterly</option>
-            <option value="12" selected>Monthly</option>
-            <option value="365">Daily</option>
-          </select>
-        </div>
-        <button type="submit" class="action-btn">Calculate</button>
-      </form>
-      <div class="result-block" id="result"></div>
-      <canvas id="chart" width="420" height="230"></canvas>
-      <div class="legend">
-        <span style="background:#1975be"></span> Compound &nbsp;
-        <span style="background:#fc8642"></span> Simple
-      </div>
-      <div class="table-block" id="tableBlock"></div>
-      <div class="footer">
-        Compare compound and simple interest, with or without monthly deposits.<br>
-        100% browser-based. No login. No data sent anywhere.
-      </div>
-    </div>
+    </main>
     <a href="../index.html" id="backBtn">Other Util</a>
     <script>
       const form = document.getElementById('form');
@@ -392,6 +414,55 @@
       };
       // Initial render
       form.onsubmit(new Event('submit'));
+    </script>
+    <!-- FAQPage Schema for SGE/GEO/SEO Rich Results -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the difference between compound and simple interest?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Compound interest earns interest on both your principal and previously earned interest. Simple interest earns interest only on your original principal."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I add monthly deposits in this calculator?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, you can add a fixed monthly deposit. Both compound and simple interest results will include your monthly contributions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which compounding frequency is best?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "More frequent compounding (e.g., monthly or daily) can increase total returns, especially for long-term investments."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my data uploaded or saved?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. All calculations run entirely in your browser. No personal or financial data is stored or sent anywhere."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this calculator free to use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! It is 100% free, browser-only, and works on desktop and mobile devices."
+          }
+        }
+      ]
+    }
     </script>
   </body>
 </html>

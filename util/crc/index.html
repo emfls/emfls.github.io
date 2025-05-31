@@ -25,7 +25,6 @@
       name="twitter:description"
       content="Instantly calculate CRC checksums (CRC32, CRC16, and more) for any text or hex." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
@@ -34,7 +33,6 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-
       gtag("config", "G-QP5Q67GE5B");
     </script>
     <script
@@ -167,41 +165,63 @@
           padding: 0.48em 1em;
         }
       }
+      section#faq { margin-top: 30px; }
+      section#faq h2 { margin-bottom: 13px; color: #20477f; font-size: 1.11em; text-align: center;}
+      section#faq dt { font-weight: bold; margin-top: 8px;}
+      section#faq dd { margin: 0 0 7px 0; font-size: 0.99em; color: #286673;}
     </style>
   </head>
   <body>
-    <div class="container">
-      <div class="logo" id="logo">🔢 CRC Generator</div>
-      <div class="desc" id="desc">
-        Enter text or hex, select CRC type, and get the checksum instantly!<br />
-        <span style="color: #20477f; font-size: 0.96em"
-          >No data is sent or saved. Everything runs in your browser.</span
-        >
-      </div>
+    <main>
+      <div class="container" itemscope itemtype="https://schema.org/WebApplication">
+        <h1 class="logo" itemprop="name">🔢 CRC Generator</h1>
+        <p class="desc" itemprop="description">
+          Enter text or hex, select CRC type, and get the checksum instantly!<br />
+          <span style="color: #20477f; font-size: 0.96em">
+            No data is sent or saved. Everything runs in your browser.
+          </span>
+        </p>
 
-      <div class="input-row">
-        <label for="crcType" id="crcTypeLabel">CRC Type</label>
-        <select id="crcType">
-          <option value="crc32">CRC-32</option>
-          <option value="crc16">CRC-16-IBM</option>
-          <option value="crc16ccitt">CRC-16-CCITT</option>
-        </select>
-      </div>
-      <div class="input-row">
-        <label for="inputText" id="inputTextLabel">Input (Text or Hex)</label>
-        <textarea id="inputText" rows="4" placeholder="Enter your text or hex string"></textarea>
-      </div>
-      <button class="action-btn" id="calcBtn">Calculate CRC</button>
+        <div class="input-row">
+          <label for="crcType" id="crcTypeLabel">CRC Type</label>
+          <select id="crcType">
+            <option value="crc32">CRC-32</option>
+            <option value="crc16">CRC-16-IBM</option>
+            <option value="crc16ccitt">CRC-16-CCITT</option>
+          </select>
+        </div>
+        <div class="input-row">
+          <label for="inputText" id="inputTextLabel">Input (Text or Hex)</label>
+          <textarea id="inputText" rows="4" placeholder="Enter your text or hex string"></textarea>
+        </div>
+        <button class="action-btn" id="calcBtn">Calculate CRC</button>
 
-      <div class="result-area" id="resultArea"></div>
+        <div class="result-area" id="resultArea"></div>
 
-      <div class="footer" id="footer">
-        <b>Tip:</b> Use for firmware, network packets, files, etc.<br />
-        <span style="color: #20477f">No data leaves your device.</span>
+        <div class="footer" id="footer">
+          <b>Tip:</b> Use for firmware, network packets, files, etc.<br />
+          <span style="color: #20477f">No data leaves your device.</span>
+        </div>
+
+        <!-- FAQ section for GEO/SGE/SEO -->
+        <section aria-labelledby="faq-head" id="faq">
+          <h2 id="faq-head">FAQ – CRC Generator & Checksums</h2>
+          <dl>
+            <dt>What is CRC?</dt>
+            <dd>CRC (Cyclic Redundancy Check) is a hash function used to detect accidental changes to raw data in communication or storage.</dd>
+            <dt>Which CRC types are supported?</dt>
+            <dd>This tool supports CRC-32, CRC-16-IBM, and CRC-16-CCITT. Other algorithms may be added in the future.</dd>
+            <dt>Can I input hexadecimal values?</dt>
+            <dd>Yes, you can enter hex strings (with or without "0x" prefix and spaces). For example: "0x12 34 56" or "123456".</dd>
+            <dt>Is my data uploaded or stored anywhere?</dt>
+            <dd>No. All calculations are performed in your browser. No data leaves your device.</dd>
+            <dt>What are CRCs used for?</dt>
+            <dd>CRCs are commonly used for checking the integrity of firmware, network packets, files, and data transfers.</dd>
+          </dl>
+        </section>
       </div>
-    </div>
+    </main>
     <a href="../index.html" id="backBtn">Other Util</a>
-
     <script>
       // CRC 계산 함수 (간단화)
       function crc32(str) {
@@ -264,6 +284,55 @@
         else if (type === "crc16ccitt") result = crc16ccitt(text);
         document.getElementById("resultArea").textContent = result ? "CRC: " + result : "Error!";
       };
+    </script>
+    <!-- FAQPage Schema for SGE/GEO/SEO Rich Results -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is CRC?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "CRC (Cyclic Redundancy Check) is a hash function used to detect accidental changes to raw data in communication or storage."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which CRC types are supported?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "This tool supports CRC-32, CRC-16-IBM, and CRC-16-CCITT. Other algorithms may be added in the future."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I input hexadecimal values?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, you can enter hex strings (with or without '0x' prefix and spaces). For example: '0x12 34 56' or '123456'."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my data uploaded or stored anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. All calculations are performed in your browser. No data leaves your device."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What are CRCs used for?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "CRCs are commonly used for checking the integrity of firmware, network packets, files, and data transfers."
+          }
+        }
+      ]
+    }
     </script>
   </body>
 </html>

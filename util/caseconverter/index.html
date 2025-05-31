@@ -12,6 +12,7 @@
       content="case converter, uppercase, lowercase, capitalize, title case, text tool, online, free" />
     <meta name="author" content="Itagi" />
     <meta name="language" content="en" />
+    <meta name="theme-color" content="#8e50f9" />
     <link rel="canonical" href="https://emfls.github.io/util/caseconverter/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
     <!-- Open Graph / Twitter meta -->
@@ -34,7 +35,6 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-
       gtag("config", "G-QP5Q67GE5B");
     </script>
     <script
@@ -156,6 +156,24 @@
         margin-top: 16px;
         opacity: 0.88;
       }
+      section#faq {
+        margin-top: 30px;
+      }
+      section#faq h2 {
+        margin-bottom: 13px;
+        color: #8e50f9;
+        font-size: 1.11em;
+        text-align: center;
+      }
+      section#faq dt {
+        font-weight: bold;
+        margin-top: 8px;
+      }
+      section#faq dd {
+        margin: 0 0 7px 0;
+        font-size: 0.99em;
+        color: #703bb0;
+      }
       #backBtn {
         position: fixed;
         left: 50%;
@@ -195,30 +213,51 @@
     </style>
   </head>
   <body>
-    <div class="container">
-      <div class="logo">🔠 Case Converter</div>
-      <div class="desc">
-        Paste or type any text and instantly convert its case.<br />
-        Supports: <b>UPPERCASE, lowercase, Capitalize, Title Case, Sentence case</b>.
+    <main>
+      <div class="container" itemscope itemtype="https://schema.org/WebApplication">
+        <h1 class="logo" itemprop="name">🔠 Case Converter</h1>
+        <p class="desc" itemprop="description">
+          Paste or type any text and instantly convert its case.<br />
+          Supports: <b>UPPERCASE, lowercase, Capitalize, Title Case, Sentence case</b>.
+        </p>
+        <textarea id="inputText" placeholder="Enter your text here..."></textarea>
+        <div class="btn-row">
+          <button class="case-btn" onclick="convert('upper')">UPPERCASE</button>
+          <button class="case-btn" onclick="convert('lower')">lowercase</button>
+          <button class="case-btn" onclick="convert('capitalize')">Capitalize Each Word</button>
+          <button class="case-btn" onclick="convert('sentence')">Sentence case</button>
+          <button class="case-btn" onclick="convert('toggle')">tOGGLE cASE</button>
+        </div>
+        <div class="output-label">Result</div>
+        <div class="output-area" id="outputArea">
+          <button class="copy-btn" onclick="copyOutput()">Copy</button>
+          <span id="outputText"></span>
+        </div>
+        <div class="footer">
+          100% browser-based. No uploads or tracking.<br />
+          <b>Tip:</b> Use to convert case for emails, code, captions, or articles!
+        </div>
+        <!-- FAQ section for GEO/SGE/SEO -->
+        <section aria-labelledby="faq-head" id="faq">
+          <h2 id="faq-head">FAQ – Case Converter</h2>
+          <dl>
+            <dt>What can I use this tool for?</dt>
+            <dd>
+              You can convert any text to UPPERCASE, lowercase, Capitalize Each Word, Sentence case, or toggle case
+              instantly.
+            </dd>
+            <dt>Is my text uploaded or stored?</dt>
+            <dd>No. All conversion happens 100% in your browser. Nothing is uploaded or saved.</dd>
+            <dt>Can I copy the result?</dt>
+            <dd>Yes, click the "Copy" button next to the output to copy your converted text to clipboard.</dd>
+            <dt>Is this tool free?</dt>
+            <dd>Yes, it's completely free and requires no registration or installation.</dd>
+            <dt>Does this work on mobile?</dt>
+            <dd>Absolutely! The tool is fully mobile-friendly and responsive.</dd>
+          </dl>
+        </section>
       </div>
-      <textarea id="inputText" placeholder="Enter your text here..."></textarea>
-      <div class="btn-row">
-        <button class="case-btn" onclick="convert('upper')">UPPERCASE</button>
-        <button class="case-btn" onclick="convert('lower')">lowercase</button>
-        <button class="case-btn" onclick="convert('capitalize')">Capitalize Each Word</button>
-        <button class="case-btn" onclick="convert('sentence')">Sentence case</button>
-        <button class="case-btn" onclick="convert('toggle')">tOGGLE cASE</button>
-      </div>
-      <div class="output-label">Result</div>
-      <div class="output-area" id="outputArea">
-        <button class="copy-btn" onclick="copyOutput()">Copy</button>
-        <span id="outputText"></span>
-      </div>
-      <div class="footer">
-        100% browser-based. No uploads or tracking.<br />
-        <b>Tip:</b> Use to convert case for emails, code, captions, or articles!
-      </div>
-    </div>
+    </main>
     <a href="../index.html" id="backBtn">Other Util</a>
     <script>
       const inputText = document.getElementById("inputText");
@@ -272,6 +311,55 @@
       });
       // Auto-clear result if input changes
       inputText.addEventListener("input", () => (outputText.textContent = ""));
+    </script>
+    <!-- FAQPage Schema for SGE/GEO/SEO Rich Results -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What can I use this tool for?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "You can convert any text to UPPERCASE, lowercase, Capitalize Each Word, Sentence case, or toggle case instantly."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is my text uploaded or stored?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. All conversion happens 100% in your browser. Nothing is uploaded or saved."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I copy the result?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, click the 'Copy' button next to the output to copy your converted text to clipboard."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is this tool free?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes, it's completely free and requires no registration or installation."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does this work on mobile?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Absolutely! The tool is fully mobile-friendly and responsive."
+            }
+          }
+        ]
+      }
     </script>
   </body>
 </html>

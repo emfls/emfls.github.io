@@ -90,6 +90,10 @@
       word-break: break-word;
     }
     .footer { color: #789; text-align: center; font-size: 0.94em; margin-top: 14px;}
+    section#faq { margin-top: 32px;}
+    section#faq h2 { margin-bottom: 13px; color: #198dae; font-size: 1.09em; text-align: center;}
+    section#faq dt { font-weight: bold; margin-top: 8px;}
+    section#faq dd { margin: 0 0 7px 0; font-size: 0.98em; color: #1882b4;}
     #backBtn {
       position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%);
       background: #198dae; color: #fff; font-weight: 700; border: none; border-radius: 2rem;
@@ -104,69 +108,88 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="title">💸 Simple Finance Calculator</div>
-    <div class="tab-row">
-      <button class="tab-btn active" id="tab1">Simple Interest</button>
-      <button class="tab-btn" id="tab2">Savings (Deposit)</button>
-      <button class="tab-btn" id="tab3">Installment</button>
+  <main>
+    <div class="container" itemscope itemtype="https://schema.org/WebApplication">
+      <div class="title" itemprop="name">💸 Simple Finance Calculator</div>
+      <div class="tab-row">
+        <button class="tab-btn active" id="tab1">Simple Interest</button>
+        <button class="tab-btn" id="tab2">Savings (Deposit)</button>
+        <button class="tab-btn" id="tab3">Installment</button>
+      </div>
+      <!-- 단리 -->
+      <form id="simpleForm">
+        <div class="form-row">
+          <label for="simple_principal">Principal (₩ or $)</label>
+          <input type="number" id="simple_principal" min="0" required />
+        </div>
+        <div class="form-row">
+          <label for="simple_rate">Interest Rate (% per year)</label>
+          <input type="number" id="simple_rate" min="0" max="100" step="0.01" required />
+        </div>
+        <div class="form-row">
+          <label for="simple_years">Period (years)</label>
+          <input type="number" id="simple_years" min="0.1" step="0.01" required />
+        </div>
+        <button type="submit" class="btn">Calculate</button>
+        <div class="result" id="simpleResult"></div>
+      </form>
+      <!-- 적금 -->
+      <form id="savingForm" style="display:none">
+        <div class="form-row">
+          <label for="save_monthly">Monthly Payment</label>
+          <input type="number" id="save_monthly" min="0" required />
+        </div>
+        <div class="form-row">
+          <label for="save_rate">Interest Rate (% per year)</label>
+          <input type="number" id="save_rate" min="0" max="100" step="0.01" required />
+        </div>
+        <div class="form-row">
+          <label for="save_years">Period (years)</label>
+          <input type="number" id="save_years" min="0.1" step="0.01" required />
+        </div>
+        <button type="submit" class="btn">Calculate</button>
+        <div class="result" id="savingResult"></div>
+      </form>
+      <!-- 할부 -->
+      <form id="instForm" style="display:none">
+        <div class="form-row">
+          <label for="inst_principal">Installment Principal</label>
+          <input type="number" id="inst_principal" min="0" required />
+        </div>
+        <div class="form-row">
+          <label for="inst_rate">Interest Rate (% per year)</label>
+          <input type="number" id="inst_rate" min="0" max="100" step="0.01" required />
+        </div>
+        <div class="form-row">
+          <label for="inst_months">Months</label>
+          <input type="number" id="inst_months" min="1" max="1200" required />
+        </div>
+        <button type="submit" class="btn">Calculate</button>
+        <div class="result" id="instResult"></div>
+      </form>
+      <div class="footer">
+        Supports simple deposit, savings (monthly), and installment (loan) calculation.<br>
+        <b>Tip:</b> No data is uploaded. Everything runs in your browser.
+      </div>
+      <section aria-labelledby="faq-head" id="faq">
+        <h2 id="faq-head">FAQ – Simple Finance Calculator</h2>
+        <dl>
+          <dt>What types of calculations can I do with this tool?</dt>
+          <dd>This calculator supports simple interest, monthly savings (deposit), and loan installment calculations.</dd>
+          <dt>How does the simple interest calculator work?</dt>
+          <dd>It calculates interest as <b>Principal × Rate × Years</b>, with the result showing both the interest and total amount.</dd>
+          <dt>How is the savings (deposit) calculation performed?</dt>
+          <dd>For monthly savings, it sums all monthly deposits and adds simple interest earned over the total period.</dd>
+          <dt>How does the installment calculator work?</dt>
+          <dd>The installment calculator splits total repayment (principal + simple interest) equally by the number of months.</dd>
+          <dt>Is my financial data sent anywhere?</dt>
+          <dd>No, all calculations are processed instantly in your browser. Nothing is uploaded or saved.</dd>
+          <dt>Is this calculator free to use?</dt>
+          <dd>Yes, this tool is 100% free, private, and does not require login or registration.</dd>
+        </dl>
+      </section>
     </div>
-    <!-- 단리 -->
-    <form id="simpleForm">
-      <div class="form-row">
-        <label for="simple_principal">Principal (₩ or $)</label>
-        <input type="number" id="simple_principal" min="0" required />
-      </div>
-      <div class="form-row">
-        <label for="simple_rate">Interest Rate (% per year)</label>
-        <input type="number" id="simple_rate" min="0" max="100" step="0.01" required />
-      </div>
-      <div class="form-row">
-        <label for="simple_years">Period (years)</label>
-        <input type="number" id="simple_years" min="0.1" step="0.01" required />
-      </div>
-      <button type="submit" class="btn">Calculate</button>
-      <div class="result" id="simpleResult"></div>
-    </form>
-    <!-- 적금 -->
-    <form id="savingForm" style="display:none">
-      <div class="form-row">
-        <label for="save_monthly">Monthly Payment</label>
-        <input type="number" id="save_monthly" min="0" required />
-      </div>
-      <div class="form-row">
-        <label for="save_rate">Interest Rate (% per year)</label>
-        <input type="number" id="save_rate" min="0" max="100" step="0.01" required />
-      </div>
-      <div class="form-row">
-        <label for="save_years">Period (years)</label>
-        <input type="number" id="save_years" min="0.1" step="0.01" required />
-      </div>
-      <button type="submit" class="btn">Calculate</button>
-      <div class="result" id="savingResult"></div>
-    </form>
-    <!-- 할부 -->
-    <form id="instForm" style="display:none">
-      <div class="form-row">
-        <label for="inst_principal">Installment Principal</label>
-        <input type="number" id="inst_principal" min="0" required />
-      </div>
-      <div class="form-row">
-        <label for="inst_rate">Interest Rate (% per year)</label>
-        <input type="number" id="inst_rate" min="0" max="100" step="0.01" required />
-      </div>
-      <div class="form-row">
-        <label for="inst_months">Months</label>
-        <input type="number" id="inst_months" min="1" max="1200" required />
-      </div>
-      <button type="submit" class="btn">Calculate</button>
-      <div class="result" id="instResult"></div>
-    </form>
-    <div class="footer">
-      Supports simple deposit, savings (monthly), and installment (loan) calculation.<br>
-      <b>Tip:</b> No data is uploaded. Everything runs in your browser.
-    </div>
-  </div>
+  </main>
   <a href="../index.html" id="backBtn">Other Util</a>
   <script>
     // Tab logic
@@ -205,8 +228,6 @@
       const y = +document.getElementById("save_years").value;
       if(m<=0||r<0||y<=0) return;
       const n = Math.round(y * 12);
-      // 단리 적금 공식 (원금합+이자) = m*n + m*n*(n+1)/2*(r/12)/12
-      // 하지만 실무에선 보통 매회 불입 후 남은기간만큼 이자, 아래는 월불입 단리 계산
       let sum = 0, interest = 0;
       for(let i=0; i<n; ++i) {
         sum += m;
@@ -224,13 +245,51 @@
       const r = +document.getElementById("inst_rate").value / 100;
       const n = +document.getElementById("inst_months").value;
       if(p<=0||r<0||n<=0) return;
-      // 단리 할부 공식: (원금 + 전체이자) / n
       const totalInterest = p * r * (n/12);
       const total = p + totalInterest;
       const monthly = total / n;
       document.getElementById("instResult").innerHTML =
         `Monthly: <b>${monthly.toLocaleString(undefined,{maximumFractionDigits:2})}</b><br>Total Interest: <b>${totalInterest.toLocaleString()}</b><br>Total Payment: <b>${total.toLocaleString()}</b>`;
     };
+  </script>
+  <!-- FAQPage Schema for SEO/SGE/GEO Rich Results -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What types of calculations can I do with this tool?",
+        "acceptedAnswer": { "@type": "Answer", "text": "This calculator supports simple interest, monthly savings (deposit), and loan installment calculations." }
+      },
+      {
+        "@type": "Question",
+        "name": "How does the simple interest calculator work?",
+        "acceptedAnswer": { "@type": "Answer", "text": "It calculates interest as Principal × Rate × Years, with the result showing both the interest and total amount." }
+      },
+      {
+        "@type": "Question",
+        "name": "How is the savings (deposit) calculation performed?",
+        "acceptedAnswer": { "@type": "Answer", "text": "For monthly savings, it sums all monthly deposits and adds simple interest earned over the total period." }
+      },
+      {
+        "@type": "Question",
+        "name": "How does the installment calculator work?",
+        "acceptedAnswer": { "@type": "Answer", "text": "The installment calculator splits total repayment (principal + simple interest) equally by the number of months." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my financial data sent anywhere?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No, all calculations are processed instantly in your browser. Nothing is uploaded or saved." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is this calculator free to use?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Yes, this tool is 100% free, private, and does not require login or registration." }
+      }
+    ]
+  }
   </script>
 </body>
 </html>
