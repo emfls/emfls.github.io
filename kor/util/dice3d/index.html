@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>3D Dice Roller – Realistic & Free Online Dice</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- SEO -->
+  <meta name="description" content="Roll a realistic 3D dice with animation in your browser! Free, fun, and works everywhere. Perfect for board games, classrooms, and quick luck decisions." />
+  <meta name="keywords" content="dice roller, 3D dice, online dice, roll dice, free dice, virtual dice, animated dice, browser dice, board game tool, luck, game tool" />
+  <meta name="author" content="Itagi" />
+  <meta name="language" content="en" />
+  <meta name="theme-color" content="#3b80d5" />
+  <link rel="canonical" href="https://emfls.github.io/util/dice3d/" />
+  <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+  <!-- Open Graph -->
+  <meta property="og:title" content="3D Dice Roller – Realistic & Free Online Dice" />
+  <meta property="og:description" content="Roll a true 3D dice in your browser with realistic animation. Free, fun, privacy-friendly, and works on all devices." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://emfls.github.io/util/dice3d/" />
+  <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="3D Dice Roller – Realistic & Free Online Dice" />
+  <meta name="twitter:description" content="Free 3D dice roller with animation. Fast, private, works everywhere." />
+  <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+
+  <!-- Google Analytics (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+          crossorigin="anonymous"></script>
+
+  <style>
+    body {
+      background: #f8fbff;
+      font-family: "Segoe UI", Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      margin-top: 60px;
+      text-align: center;
+    }
+    .dice-3d-wrap {
+      width: 140px; height: 140px;
+      perspective: 700px;
+      margin: 0 auto 24px auto;
+        margin-top: 80px;
+        margin-left: 30px;
+    }
+    .dice-3d {
+      width: 120px; height: 120px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 1s cubic-bezier(.36,2,.58,1);
+    }
+    .face {
+      position: absolute;
+      width: 120px; height: 120px;
+      background: #fff;
+      border: 1.8px solid #3b80d5;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px #cbe6ff66;
+      user-select: none;
+    }
+    /* 3D Face transforms */
+    .face1 { transform: rotateY(0deg) translateZ(60px); }
+    .face2 { transform: rotateY(180deg) translateZ(60px); }
+    .face3 { transform: rotateY(90deg) translateZ(60px); }
+    .face4 { transform: rotateY(-90deg) translateZ(60px); }
+    .face5 { transform: rotateX(90deg) translateZ(60px); }
+    .face6 { transform: rotateX(-90deg) translateZ(60px); }
+
+    /* Dice dots */
+    .dots {
+      width: 90px; height: 90px;
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+    .dot {
+      width: 19px; height: 19px;
+      background: #3b80d5;
+      border-radius: 50%;
+      position: absolute;
+      box-shadow: 0 2px 5px #1353a333;
+    }
+    .dots1 .dot1 { left: 50%; top: 50%; transform: translate(-50%, -50%);}
+    .dots2 .dot1 { left: 20%; top: 20%; }
+    .dots2 .dot2 { left: 80%; top: 80%; transform: translate(-100%,-100%);}
+    .dots3 .dot1 { left: 20%; top: 20%; }
+    .dots3 .dot2 { left: 50%; top: 50%; transform: translate(-50%, -50%);}
+    .dots3 .dot3 { left: 80%; top: 80%; transform: translate(-100%,-100%);}
+    .dots4 .dot1 { left: 20%; top: 20%; }
+    .dots4 .dot2 { left: 80%; top: 20%; transform: translate(-100%,0);}
+    .dots4 .dot3 { left: 20%; top: 80%; transform: translate(0,-100%);}
+    .dots4 .dot4 { left: 80%; top: 80%; transform: translate(-100%,-100%);}
+    .dots5 .dot1 { left: 20%; top: 20%; }
+    .dots5 .dot2 { left: 80%; top: 20%; transform: translate(-100%,0);}
+    .dots5 .dot3 { left: 50%; top: 50%; transform: translate(-50%, -50%);}
+    .dots5 .dot4 { left: 20%; top: 80%; transform: translate(0,-100%);}
+    .dots5 .dot5 { left: 80%; top: 80%; transform: translate(-100%,-100%);}
+    .dots6 .dot1 { left: 20%; top: 15%; }
+    .dots6 .dot2 { left: 80%; top: 15%; transform: translate(-100%,0);}
+    .dots6 .dot3 { left: 20%; top: 50%; transform: translateY(-50%);}
+    .dots6 .dot4 { left: 80%; top: 50%; transform: translate(-100%,-50%);}
+    .dots6 .dot5 { left: 20%; top: 85%; transform: translate(0,-100%);}
+    .dots6 .dot6 { left: 80%; top: 85%; transform: translate(-100%,-100%);}
+
+    .roll-btn {
+      background: #3b80d5;
+      color: #fff;
+      font-size: 1.25em;
+      border: none;
+      border-radius: 11px;
+      padding: 16px 40px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 4px 18px #7ab0eb1a;
+      margin-top: 30px;
+      transition: background 0.13s, transform 0.13s;
+    }
+    .roll-btn:active { background: #23507d; transform: scale(1.04); }
+
+    .result-label {
+      font-size: 1.05em;
+      color: #357;
+      margin-top: 22px;
+    }
+    #backBtn {
+      position: fixed;
+      left: 50%;
+      bottom: 32px;
+      transform: translateX(-50%);
+      background: #3b80d5;
+      color: #fff;
+      font-weight: 700;
+      border: none;
+      border-radius: 2rem;
+      padding: 0.58em 1.5em;
+      box-shadow: 0 4px 16px #3b80d566;
+      font-size: 1.09em;
+      text-decoration: none;
+      cursor: pointer;
+      letter-spacing: 0.01em;
+      transition: background 0.15s, transform 0.12s;
+      z-index: 2000;
+    }
+    #backBtn:hover {
+      background: #23507d;
+      transform: translateX(-50%) scale(1.04);
+    }
+    @media (max-width: 600px) {
+      .container {
+        margin-top: 25px;
+      }
+      .dice-3d-wrap {
+        width: 97vw; height: 97vw; max-width: 170px; max-height: 170px;
+      }
+      .dice-3d, .face {
+        width: 96vw; height: 96vw; max-width: 140px; max-height: 140px;
+      }
+      #backBtn {
+        bottom: 16px;
+        font-size: 0.97em;
+        padding: 0.48em 1em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🎲 3D Dice Roller</h2>
+    <div class="dice-3d-wrap">
+      <div class="dice-3d" id="dice">
+        <!-- 1~6 각 면의 도트 표시 -->
+        <div class="face face1"><div class="dots dots1"><div class="dot dot1"></div></div></div>
+        <div class="face face2"><div class="dots dots2"><div class="dot dot1"></div><div class="dot dot2"></div></div></div>
+        <div class="face face3"><div class="dots dots3"><div class="dot dot1"></div><div class="dot dot2"></div><div class="dot dot3"></div></div></div>
+        <div class="face face4"><div class="dots dots4"><div class="dot dot1"></div><div class="dot dot2"></div><div class="dot dot3"></div><div class="dot dot4"></div></div></div>
+        <div class="face face5"><div class="dots dots5"><div class="dot dot1"></div><div class="dot dot2"></div><div class="dot dot3"></div><div class="dot dot4"></div><div class="dot dot5"></div></div></div>
+        <div class="face face6"><div class="dots dots6"><div class="dot dot1"></div><div class="dot dot2"></div><div class="dot dot3"></div><div class="dot dot4"></div><div class="dot dot5"></div><div class="dot dot6"></div></div></div>
+      </div>
+    </div>
+    <button class="roll-btn" onclick="rollDice()">Roll!</button>
+    
+  </div>
+  <!-- AdSense Banner Example (remove if not wanted) -->
+  <div style="margin:30px 0 10px 0; text-align:center;">
+    <ins class="adsbygoogle"
+      style="display:block; text-align:center;"
+      data-ad-client="ca-pub-8830524482034754"
+      data-ad-slot="1598987855"
+      data-ad-format="auto"
+      data-full-width-responsive="true"></ins>
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+  <a href="../index.html" id="backBtn">Other Util</a>
+  <script>
+    // 각 숫자별 3D 회전
+    const rotations = [
+      [0, 0],     // 1
+      [0, 180],   // 2
+      [0, -90],   // 3
+      [0, 90],    // 4
+      [90, 0],    // 5
+      [-90, 0],   // 6
+    ];
+    const dice = document.getElementById('dice');
+    const result = document.getElementById('result');
+    let lastNum = 1;
+
+    function rollDice() {
+      let num = Math.floor(Math.random() * 6) + 1;
+      while(num === lastNum) num = Math.floor(Math.random() * 6) + 1;
+      lastNum = num;
+
+      // 랜덤한 추가 회전
+      const extraY = 360 * (Math.floor(Math.random() * 4) + 2);
+      const extraX = 360 * (Math.floor(Math.random() * 4) + 2);
+      const [rx, ry] = rotations[num - 1];
+      dice.style.transform =
+        `rotateX(${rx + extraX}deg) rotateY(${ry + extraY}deg)`;
+
+      result.innerHTML = `Result: <b>${num}</b>`;
+    }
+    dice.style.transform = `rotateX(0deg) rotateY(0deg)`;
+  </script>
+</body>
+</html>

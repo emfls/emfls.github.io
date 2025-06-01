@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Zombie Survival</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <!-- SEO & Social meta -->
+    <meta name="description" content="Survive as long as possible in a text-based Zombie Apocalypse! Random events, item management, and dangerous zombies. 100% free and browser-based." />
+    <meta name="keywords" content="zombie, survival, apocalypse, webgame, text game, browser game, 서바이벌, 좀비, 생존, 무료 게임, 웹게임, 브라우저 게임, 텍스트 게임, 영어 게임" />
+    <meta name="author" content="Itagi" />
+    <meta name="language" content="en" />
+    <meta name="theme-color" content="#191d22" />
+    <link rel="canonical" href="https://emfls.github.io/game/ZombieSurvival/index.html" />
+    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+    <!-- Open Graph (Facebook, Kakao, etc) -->
+    <meta property="og:title" content="Zombie Survival – Web Text Game" />
+    <meta property="og:description" content="How many days can you survive the zombie apocalypse? Manage items, explore, and avoid death! 100% browser game, no sign-up." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/game/ZombieSurvival/index.html" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Zombie Survival – Web Text Game" />
+    <meta name="twitter:description" content="Survive a zombie apocalypse. Browser-based, free, no download required." />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <style>
+      html,
+      body {
+        background: #191d22;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+      }
+      body {
+        font-family: "Segoe UI", "Pretendard", Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+      }
+      #container {
+        background: rgba(34, 39, 46, 0.99);
+        border-radius: 18px;
+        box-shadow: 0 6px 32px #1118;
+        width: 99vw;
+        max-width: 390px;
+        margin: 10px 0 20px 0;
+        padding: 14px 8px 18px 8px;
+        box-sizing: border-box;
+        min-height: 610px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      h2 {
+        color: #f6fa4e;
+        letter-spacing: 1.5px;
+        text-align: center;
+        margin: 0 0 6px 0;
+        font-size: 1.6em;
+        font-weight: 700;
+        text-shadow: 0 2px 12px #161;
+      }
+      #status {
+        background: #22262e;
+        border-radius: 12px;
+        padding: 9px 10px 7px 10px;
+        font-size: 1em;
+        margin-bottom: 2px;
+        line-height: 1.8em;
+        min-height: 49px;
+        color: #fff;
+        box-shadow: 0 2px 6px #0106;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      #barGroup {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 2px;
+      }
+      .bar {
+        flex: 1;
+        border-radius: 7px;
+        height: 13px;
+        background: #37445a;
+        margin-right: 1px;
+        overflow: hidden;
+        position: relative;
+      }
+      .fill-hp {
+        background: linear-gradient(90deg, #fd7f7e, #feefae);
+      }
+      .fill-hunger {
+        background: linear-gradient(90deg, #71e397, #f5f79e);
+      }
+      .fill-mental {
+        background: linear-gradient(90deg, #6ed9ef, #c9b0f4);
+      }
+      .bar > span {
+        display: block;
+        height: 100%;
+        transition: width 0.7s cubic-bezier(0.7, 1.3, 0.4, 1);
+      }
+      #inventory {
+        font-size: 0.98em;
+        color: #ffe;
+        word-break: break-all;
+        margin-bottom: 2px;
+      }
+      #log {
+        background: #2d3341;
+        border-radius: 11px;
+        min-height: 87px;
+        max-height: 140px;
+        overflow-y: auto;
+        font-size: 0.97em;
+        padding: 7px 7px 7px 10px;
+        color: #f4fffa;
+        line-height: 1.4em;
+        margin-bottom: 2px;
+        box-shadow: 0 1px 6px #1116;
+        scroll-behavior: smooth;
+      }
+      .event {
+        animation: eventFlash 0.5s;
+      }
+      @keyframes eventFlash {
+        0% {
+          background: #fec;
+          color: #111;
+        }
+        100% {
+          background: inherit;
+          color: inherit;
+        }
+      }
+      .zombie-anim {
+        animation: zombiePop 0.6s;
+      }
+      @keyframes zombiePop {
+        0% {
+          transform: scale(0.7);
+        }
+        40% {
+          transform: scale(1.2);
+        }
+        80% {
+          transform: scale(1);
+        }
+      }
+      .item-anim {
+        animation: itemPop 0.4s;
+      }
+      @keyframes itemPop {
+        0% {
+          transform: scale(0.5);
+        }
+        60% {
+          transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      #actions {
+        margin: 3px 0 0 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .actBtn,
+      .locBtn {
+        width: 100%;
+        font-size: 1.07em;
+        padding: 12px 2px;
+        border-radius: 8px;
+        border: none;
+        margin-bottom: 2px;
+        background: linear-gradient(90deg, #232d3d 70%, #2c374d 100%);
+        color: #ffe;
+        box-shadow: 0 2px 6px #1012;
+        font-weight: 700;
+        transition: background 0.18s;
+        letter-spacing: 0.02em;
+        cursor: pointer;
+        outline: none;
+      }
+      .actBtn:active,
+      .locBtn:active {
+        background: linear-gradient(90deg, #2c374d 20%, #232d3d 100%);
+      }
+      .emoji {
+        font-size: 1.3em;
+        vertical-align: middle;
+      }
+      #footer {
+        color: #99a;
+        font-size: 0.92em;
+        margin-top: 8px;
+        text-align: center;
+      }
+      /* 아이템 설명 모달 */
+      #itemDescBg {
+        display: none;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(8, 10, 19, 0.54);
+        z-index: 20;
+        align-items: center;
+        justify-content: center;
+      }
+      #itemDescModal {
+        background: #23293a;
+        border-radius: 14px;
+        color: #fff;
+        min-width: 210px;
+        max-width: 90vw;
+        padding: 21px 16px 18px 16px;
+        box-shadow: 0 8px 48px #000c;
+        font-size: 1.08em;
+        z-index: 21;
+        text-align: center;
+        position: relative;
+        animation: modalOpen 0.3s;
+      }
+      #itemDescModal b {
+        color: #fffa88;
+      }
+      #itemDescModal .close {
+        position: absolute;
+        right: 13px;
+        top: 8px;
+        font-size: 1.5em;
+        color: #7fd;
+        background: none;
+        border: none;
+        cursor: pointer;
+      }
+      .item-info-btn {
+        font-size: 0.93em;
+        margin-left: 5px;
+        background: none;
+        border: none;
+        color: #aef;
+        cursor: pointer;
+        vertical-align: middle;
+      }
+      @keyframes modalOpen {
+        0% {
+          transform: scale(0.85);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      @media (max-width: 400px) {
+        #container {
+          min-height: 480px;
+        }
+        #log {
+          font-size: 0.93em;
+          min-height: 66px;
+          max-height: 98px;
+        }
+        #status {
+          font-size: 0.93em;
+        }
+        .actBtn,
+        .locBtn {
+          font-size: 0.99em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <h2>🧟 Zombie Survival</h2>
+      <div id="status"></div>
+      <div id="inventory"></div>
+      <div id="log"></div>
+      <div id="actions"></div>
+    </div>
+    <!-- 아이템 설명 모달 -->
+    <div id="itemDescBg">
+      <div id="itemDescModal">
+        <button class="close" onclick="closeDesc()">&times;</button>
+        <div id="itemDescText"></div>
+      </div>
+    </div>
+    <script>
+      // 아이템 종류 및 효과 (이름, 이모지, 타입, 효과, 설명)
+      const ITEM_LIST = [
+        {
+          key: "🍞Bread",
+          type: "food",
+          effect: () => {
+            state.hunger = clamp(state.hunger - 22, 0, 100);
+          },
+          text: "(-22 Hunger)",
+          desc: "빵. 허기를 크게 줄여줍니다."
+        },
+        {
+          key: "💧Water",
+          type: "drink",
+          effect: () => {
+            state.hunger = clamp(state.hunger - 13, 0, 100);
+          },
+          text: "(-13 Hunger)",
+          desc: "물. 허기를 조금 줄여줍니다."
+        },
+        {
+          key: "🥪Sandwich",
+          type: "food",
+          effect: () => {
+            state.hunger = clamp(state.hunger - 35, 0, 100);
+          },
+          text: "(-35 Hunger)",
+          desc: "샌드위치. 허기를 많이 줄여줍니다."
+        },
+        {
+          key: "🥤Soda",
+          type: "drink",
+          effect: () => {
+            state.mental = clamp(state.mental + 7, 0, 100);
+            state.hunger = clamp(state.hunger - 7, 0, 100);
+          },
+          text: "(+7 Mental, -7 Hunger)",
+          desc: "탄산음료. 기분이 조금 나아지고, 허기도 살짝 줄어듭니다."
+        },
+        {
+          key: "🍫Snack",
+          type: "food",
+          effect: () => {
+            state.hunger = clamp(state.hunger - 12, 0, 100);
+          },
+          text: "(-12 Hunger)",
+          desc: "간식. 허기를 조금 줄여줍니다."
+        },
+        {
+          key: "🍏Apple",
+          type: "food",
+          effect: () => {
+            state.hunger = clamp(state.hunger - 11, 0, 100);
+          },
+          text: "(-11 Hunger)",
+          desc: "사과. 허기를 조금 줄여줍니다."
+        },
+        {
+          key: "💊Painkiller",
+          type: "heal",
+          effect: () => {
+            state.mental = clamp(state.mental + 22, 0, 100);
+          },
+          text: "(+22 Mental)",
+          desc: "진통제. 멘탈을 많이 회복합니다."
+        },
+        {
+          key: "🧰Bandage",
+          type: "heal",
+          effect: () => {
+            state.hp = clamp(state.hp + 17, 0, 100);
+          },
+          text: "(+17 HP)",
+          desc: "붕대. HP를 회복합니다."
+        },
+        {
+          key: "🔪Knife",
+          type: "weapon",
+          effect: () => {},
+          text: "Weapon",
+          desc: "칼. 좀비와 싸울 때 HP 감소를 줄여줍니다."
+        },
+        {
+          key: "🔧Wrench",
+          type: "weapon",
+          effect: () => {},
+          text: "Weapon",
+          desc: "렌치. 좀비와 싸울 때 HP 감소를 줄여줍니다."
+        },
+        {
+          key: "🔦Flashlight",
+          type: "tool",
+          effect: () => {
+            state.mental = clamp(state.mental + 5, 0, 100);
+          },
+          text: "(+5 Mental)",
+          desc: "손전등. 멘탈을 약간 회복합니다."
+        },
+        { key: "🪙Coin", type: "misc", effect: () => {}, text: "Just a coin", desc: "동전. 쓸모없어 보입니다." },
+        {
+          key: "📱Phone",
+          type: "misc",
+          effect: () => {},
+          text: "Doesn't work...",
+          desc: "스마트폰. 전원이 켜지지 않습니다."
+        }
+      ];
+      // 장소 데이터 (장소명, 아이템들, 좀비확률)
+      const LOC_POOL = [
+        { name: "🏠 House", item: ["🍞Bread", "🥤Soda", "📱Phone", "🔪Knife"], zombie: 18 },
+        { name: "🏪 Store", item: ["🥪Sandwich", "💧Water", "🍫Snack", "💊Painkiller", "🪙Coin"], zombie: 22 },
+        { name: "🚗 Alley", item: ["🔧Wrench", "🧰Bandage", "💧Water", "🍏Apple"], zombie: 33 },
+        { name: "🏢 Office", item: ["🍫Snack", "💊Painkiller", "🔦Flashlight"], zombie: 15 },
+        { name: "🏞 Park", item: ["🍏Apple", "💧Water", "🪙Coin"], zombie: 8 },
+        { name: "🏫 School", item: ["🍞Bread", "🍫Snack", "📱Phone"], zombie: 17 },
+        { name: "🏚 Abandoned", item: ["🔪Knife", "🧰Bandage"], zombie: 28 },
+        { name: "🏥 Clinic", item: ["💊Painkiller", "🧰Bandage", "🔦Flashlight"], zombie: 18 },
+        { name: "🏭 Factory", item: ["🔧Wrench", "🔦Flashlight"], zombie: 26 },
+        { name: "🚉 Subway", item: ["🍫Snack", "📱Phone"], zombie: 20 },
+        { name: "🍔 Fastfood", item: ["🍞Bread", "🥪Sandwich", "🥤Soda"], zombie: 19 },
+        { name: "⛽ Gas Station", item: ["🔧Wrench", "💧Water", "🪙Coin"], zombie: 23 },
+        { name: "🛒 Mart", item: ["🍞Bread", "🍏Apple", "🥤Soda", "💧Water"], zombie: 21 },
+        { name: "🏨 Hotel", item: ["🍫Snack", "💧Water", "🧰Bandage"], zombie: 18 },
+        { name: "🧑‍🔧 Garage", item: ["🔧Wrench", "🪙Coin"], zombie: 28 }
+      ];
+      function randomPlaces(n = 4) {
+        let arr = LOC_POOL.slice();
+        arr.sort(() => Math.random() - 0.5);
+        return arr.slice(0, n + Math.floor(Math.random() * 2)); // 4~5개
+      }
+
+      // 상태
+      let state = {
+        hp: 100,
+        hunger: 35,
+        mental: 55,
+        day: 1,
+        items: { "🍞Bread": 5, "💧Water": 5, "💊Painkiller": 5 },
+        alive: true,
+        searching: false,
+        locations: randomPlaces(),
+        died: false
+      };
+
+      // 가방 아이템 표기
+      function invStr(obj) {
+        let out = [];
+        for (let k of Object.keys(obj)) if (obj[k] > 0) out.push(`${k} x${obj[k]}`);
+        return out.length ? out.join(", ") : "None";
+      }
+      function clamp(val, min, max) {
+        return Math.max(min, Math.min(max, val));
+      }
+
+      const logEl = document.getElementById("log");
+      const statusEl = document.getElementById("status");
+      const inventoryEl = document.getElementById("inventory");
+      const actionsEl = document.getElementById("actions");
+      const itemDescBg = document.getElementById("itemDescBg");
+      const itemDescText = document.getElementById("itemDescText");
+
+      function render() {
+        statusEl.innerHTML = `<div style="font-size:1.09em;"><b>Day ${state.day}</b></div>
+         <div id="barGroup">
+           <div class="bar"><span class="fill-hp" style="width:${state.hp}%"></span></div>
+           <div class="bar"><span class="fill-hunger" style="width:${clamp(100 - state.hunger, 0, 100)}%"></span></div>
+           <div class="bar"><span class="fill-mental" style="width:${state.mental}%"></span></div>
+         </div>
+         <div style="font-size:0.97em; margin:0 2px 0 2px;">
+            ❤️HP ${state.hp} &nbsp;|&nbsp; 🍞Hunger ${state.hunger} &nbsp;|&nbsp; 🧠Mental ${state.mental}
+         </div>`;
+        inventoryEl.innerHTML = `<b>🎒Bag:</b> ${invStr(state.items)}`;
+        if (!state.alive) {
+          actionsEl.innerHTML = `<button class="actBtn" onclick="restart()">Restart</button>`;
+        } else if (state.searching) {
+          actionsEl.innerHTML =
+            state.locations
+              .map((loc, i) => `<button class="locBtn" onclick="searchPlace(${i})">${loc.name}</button>`)
+              .join("") + `<button class="actBtn" onclick="cancelSearch()">Cancel</button>`;
+        } else {
+          actionsEl.innerHTML = `
+          <button class="actBtn" onclick="startSearch()" ${state.locations.length == 0 ? 'disabled style="opacity:0.5;"' : ""}>🔍 Search</button>
+          <button class="actBtn" onclick="rest()">🛏 Rest</button>
+          <button class="actBtn" onclick="move()">➡️ Move</button>
+          <button class="actBtn" onclick="useItem()">🎒 Use Item</button>
+        `;
+        }
+      }
+
+      function log(msg, type = "") {
+        let d = document.createElement("div");
+        d.innerHTML = msg;
+        if (type) d.classList.add(type);
+        logEl.appendChild(d);
+        logEl.scrollTop = logEl.scrollHeight;
+        if (type) setTimeout(() => d.classList.remove(type), 400);
+      }
+
+      function nextDay() {
+        state.day++;
+        state.hunger += 10;
+        state.mental -= 4;
+        if (state.hunger >= 95) {
+          state.hp -= 15;
+          log("😖 <b>Starving!</b> (-15 HP)", "event");
+        }
+        if (state.hp <= 0 || state.mental <= 0) {
+          state.alive = false;
+          log(`<b>Game Over: You survived <span style="color:#e9f85b">${state.day - 1}</span> days!</b>`, "event");
+        }
+        render();
+      }
+
+      // ---- 액션 ----
+      function startSearch() {
+        state.searching = true;
+        render();
+        log("Choose a place to search...");
+      }
+      function cancelSearch() {
+        state.searching = false;
+        render();
+      }
+      function searchPlace(idx) {
+        let loc = state.locations[idx];
+        log(`🔍 Searching <b>${loc.name}</b>...`);
+        // 아이템 발견 52%, 좀비 등장 loc.zombie%
+        if (Math.random() * 100 < 52) {
+          let found = loc.item[Math.floor(Math.random() * loc.item.length)];
+          state.items[found] = (state.items[found] || 0) + 1;
+          let itemInfo = ITEM_LIST.find((x) => x.key === found);
+          log(
+            `<span class="item-anim">✨ Found: <b>${found}</b> <span style="font-size:0.88em;color:#ffd;">${itemInfo ? itemInfo.text : ""}</span></span>`,
+            "event"
+          );
+        } else if (Math.random() * 100 < loc.zombie) {
+          encounterZombie(loc.name); // 즉시 반영
+          // 게임오버 체크
+          if (!state.alive) return;
+        } else {
+          log("Nothing found.");
+        }
+        // 장소 삭제
+        state.locations.splice(idx, 1);
+        state.searching = false;
+        nextDay();
+      }
+      function rest() {
+        log("🛏 You rest. +13 🧠Mental, +12 ❤️HP, +9 Hunger");
+        state.mental = clamp(state.mental + 13, 0, 100);
+        state.hp = clamp(state.hp + 12, 0, 100);
+        state.hunger += 9;
+        nextDay();
+      }
+      function move() {
+        log("➡️ You move to a new area. -2 🧠Mental");
+        state.mental -= 2;
+        // 새로운 랜덤 장소 리셋
+        state.locations = randomPlaces();
+        if (Math.random() * 100 < 22) {
+          encounterZombie("street"); // 즉시 반영
+          if (!state.alive) return;
+        }
+        nextDay();
+      }
+      function useItem() {
+        let keys = Object.keys(state.items).filter((k) => state.items[k] > 0);
+        if (!keys.length) {
+          log("🎒 No items to use.");
+          return;
+        }
+        actionsEl.innerHTML =
+          keys
+            .map((item, i) => {
+              let info = ITEM_LIST.find((x) => x.key === item);
+              return `<button class="locBtn" onclick="chooseItem('${item}')">${item} x${state.items[item]} <span style="font-size:0.8em;color:#ffc;">${info ? info.text : ""}</span></button>`;
+            })
+            .join("") + `<button class="actBtn" onclick="render()">Cancel</button>`;
+      }
+      function chooseItem(item) {
+        state.items[item]--;
+        let info = ITEM_LIST.find((x) => x.key === item);
+        if (info) info.effect();
+        log(
+          `<span class="item-anim">${item} used! <span style="font-size:0.9em;color:#ffd;">${info ? info.text : ""}</span></span>`
+        );
+        render();
+      }
+      function encounterZombie(place) {
+        let baseHp = 14 + Math.floor(Math.random() * 12); // 14~25
+        let baseMental = 8 + Math.floor(Math.random() * 8); // 8~15
+        let weapon = Object.keys(state.items).find(
+          (x) => (x.includes("Knife") || x.includes("Wrench")) && state.items[x] > 0
+        );
+        let hpLoss = weapon ? Math.floor(baseHp * 0.5) : baseHp;
+        let mLoss = weapon ? Math.floor(baseMental * 0.7) : baseMental;
+        if (weapon) {
+          log(
+            `<span class="zombie-anim">🧟 <b>Zombie encounter!</b> (${place})<br>Fought off with ${weapon}! <span style="color:#fd7;">(-${hpLoss} HP, -${mLoss} Mental)</span></span>`,
+            "event"
+          );
+        } else {
+          log(
+            `<span class="zombie-anim">🧟 <b>Zombie encounter!</b> (${place})<br>Injured! <span style="color:#fd7;">(-${hpLoss} HP, -${mLoss} Mental)</span></span>`,
+            "event"
+          );
+        }
+        state.hp -= hpLoss;
+        state.mental -= mLoss;
+        // 즉시 게임오버 체크
+        if (state.hp <= 0 || state.mental <= 0) {
+          state.alive = false;
+          log(`<b>Game Over: You survived <span style="color:#e9f85b">${state.day}</span> days!</b>`, "event");
+          render();
+        }
+      }
+      // 아이템 설명 모달
+      function showDesc(item) {
+        let info = ITEM_LIST.find((x) => x.key === item);
+        if (!info) return;
+        itemDescText.innerHTML = `<b>${item}</b><br><span style="font-size:1.07em;color:#fe9;">${info.desc || ""}</span><br><span style="color:#ffec;">효과: ${info.text || ""}</span>`;
+        itemDescBg.style.display = "flex";
+      }
+      function closeDesc() {
+        itemDescBg.style.display = "none";
+      }
+
+      // -------- 초기화 --------
+      render();
+      log("A new survivor enters the city...");
+    </script>
+  </body>
+</html>

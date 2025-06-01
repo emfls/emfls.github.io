@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Compound vs Simple Interest Calculator (with Monthly Deposit)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag("js", new Date());
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <!-- Google AdSense -->
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <!-- SEO & Social meta -->
+    <meta name="description" content="Compare compound and simple interest growth with optional monthly deposit. See tables and interactive charts instantly." />
+    <meta name="keywords" content="compound interest, simple interest, monthly deposit, calculator, finance, investment, savings, 복리, 단리, 적립식, 온라인 계산기, compare, graph" />
+    <meta name="author" content="Itagi" />
+    <meta name="language" content="en" />
+    <meta name="theme-color" content="#1875d1" />
+    <link rel="canonical" href="https://emfls.github.io/util/compound-interest/" />
+    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+    <!-- Open Graph -->
+    <meta property="og:title" content="Compound Interest with Monthly Deposit Calculator" />
+    <meta property="og:description" content="Compare compound and simple interest with monthly deposits. Get tables and interactive charts instantly. Free, browser-based." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/util/compound-interest/" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Compound vs Simple Interest Calculator (with Monthly Deposit)" />
+    <meta name="twitter:description" content="Calculate and compare compound and simple interest growth, with or without monthly deposit. See results instantly." />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <style>
+      :root {
+        --main: #1875d1;
+        --main-dark: #0e4775;
+        --bg: #f8faff;
+      }
+      body {
+        background: var(--bg);
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: #234;
+      }
+      .container {
+        max-width: 480px;
+        margin: 42px auto 0 auto;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 22px #1875d133;
+        padding: 30px 18px 22px 18px;
+      }
+      .logo {
+        font-size: 1.25em;
+        font-weight: bold;
+        text-align: center;
+        color: var(--main-dark);
+        margin-bottom: 10px;
+      }
+      .desc {
+        text-align: center;
+        color: #1e589e;
+        margin-bottom: 17px;
+        font-size: 1.04em;
+      }
+      .form-row {
+        margin-bottom: 13px;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .form-row label {
+        font-size: 1em;
+        color: #186a9a;
+        font-weight: 500;
+      }
+      .form-row input,
+      .form-row select {
+        padding: 8px 10px;
+        font-size: 1.05em;
+        border: 1.1px solid #b6d5ef;
+        border-radius: 7px;
+        background: #fafdff;
+        color: #234;
+      }
+      .action-btn {
+        background: var(--main);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 13px 0;
+        width: 100%;
+        font-size: 1.13em;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 9px;
+        margin-bottom: 13px;
+        box-shadow: 0 2px 12px #1875d120;
+        transition: background 0.15s;
+      }
+      .action-btn:active { background: var(--main-dark);}
+      .result-block {
+        background: #f7fafd;
+        border: 1.2px solid #c2e1fa;
+        border-radius: 9px;
+        padding: 18px 13px 12px 13px;
+        margin-bottom: 7px;
+        color: #1975be;
+        font-size: 1.11em;
+        text-align: center;
+      }
+      .footer {
+        color: #789;
+        text-align: center;
+        font-size: 0.93em;
+        margin-top: 16px;
+      }
+      #backBtn {
+        position: fixed;
+        left: 50%;
+        bottom: 32px;
+        transform: translateX(-50%);
+        background: #1875d1;
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 2rem;
+        padding: 0.58em 1.5em;
+        box-shadow: 0 4px 16px #1875d133;
+        font-size: 1.09em;
+        text-decoration: none;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+        transition: background 0.15s, transform 0.12s;
+        z-index: 2000;
+      }
+      #backBtn:hover { background: #0e4775; transform: translateX(-50%) scale(1.04);}
+      @media (max-width: 600px) {
+        .container { max-width: 99vw; padding: 12px 2vw 14px 2vw;}
+        #backBtn { bottom: 18px; font-size: 0.98em; padding: 0.48em 1em;}
+      }
+      .table-block { margin: 15px 0 8px 0; overflow-x: auto;}
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.98em;
+        background: #fff;
+      }
+      th, td {
+        border: 1px solid #e3ecf8;
+        padding: 5px 8px;
+        text-align: right;
+      }
+      th {
+        background: #e9f3ff;
+        color: #1975be;
+        font-weight: 600;
+      }
+      td.year {
+        text-align: center;
+        color: #1975be;
+        font-weight: 500;
+      }
+      .legend {
+        text-align: right;
+        font-size: 0.98em;
+        margin: 5px 0 0 0;
+      }
+      .legend span {
+        display: inline-block;
+        width: 14px;
+        height: 11px;
+        margin-right: 5px;
+        border-radius: 3px;
+        vertical-align: middle;
+      }
+      /* Chart */
+      #chart {
+        width: 100%;
+        max-width: 450px;
+        height: 230px;
+        background: #fafdff;
+        border-radius: 13px;
+        margin: 16px auto 7px auto;
+        box-shadow: 0 1px 8px #1875d118;
+        display: block;
+      }
+      section#faq { margin-top: 30px; }
+      section#faq h2 { margin-bottom: 13px; color: #1875d1; font-size: 1.11em; text-align: center;}
+      section#faq dt { font-weight: bold; margin-top: 8px;}
+      section#faq dd { margin: 0 0 7px 0; font-size: 0.99em; color: #1e589e;}
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="container" itemscope itemtype="https://schema.org/WebApplication">
+        <h1 class="logo" itemprop="name">📈 Compound vs Simple Interest Calculator</h1>
+        <p class="desc" itemprop="description">
+          Instantly compare investment growth for compound and simple interest.<br>
+          Supports monthly deposit (installment plan) and one-off principal.
+        </p>
+        <form id="form" autocomplete="off">
+          <div class="form-row">
+            <label for="principal">Principal ($)</label>
+            <input type="number" id="principal" min="0" step="0.01" value="10000" required />
+          </div>
+          <div class="form-row">
+            <label for="monthly">Monthly Deposit ($)</label>
+            <input type="number" id="monthly" min="0" step="0.01" value="500" required />
+          </div>
+          <div class="form-row">
+            <label for="rate">Annual Interest Rate (%)</label>
+            <input type="number" id="rate" min="0" step="0.01" value="5.00" required />
+          </div>
+          <div class="form-row">
+            <label for="years">Years</label>
+            <input type="number" id="years" min="1" step="1" value="10" required />
+          </div>
+          <div class="form-row">
+            <label for="freq">Compound Frequency</label>
+            <select id="freq">
+              <option value="1">Yearly</option>
+              <option value="2">Semi-Annual</option>
+              <option value="4">Quarterly</option>
+              <option value="12" selected>Monthly</option>
+              <option value="365">Daily</option>
+            </select>
+          </div>
+          <button type="submit" class="action-btn">Calculate</button>
+        </form>
+        <div class="result-block" id="result"></div>
+        <canvas id="chart" width="420" height="230"></canvas>
+        <div class="legend">
+          <span style="background:#1975be"></span> Compound &nbsp;
+          <span style="background:#fc8642"></span> Simple
+        </div>
+        <div class="table-block" id="tableBlock"></div>
+        <div class="footer">
+          Compare compound and simple interest, with or without monthly deposits.<br>
+          100% browser-based. No login. No data sent anywhere.
+        </div>
+        <!-- FAQ section for GEO/SGE/SEO -->
+        <section aria-labelledby="faq-head" id="faq">
+          <h2 id="faq-head">FAQ – Compound vs Simple Interest Calculator</h2>
+          <dl>
+            <dt>What is the difference between compound and simple interest?</dt>
+            <dd>Compound interest earns interest on both your principal and previously earned interest. Simple interest earns interest only on your original principal.</dd>
+            <dt>Can I add monthly deposits in this calculator?</dt>
+            <dd>Yes, you can add a fixed monthly deposit. Both compound and simple interest results will include your monthly contributions.</dd>
+            <dt>Which compounding frequency is best?</dt>
+            <dd>More frequent compounding (e.g., monthly or daily) can increase total returns, especially for long-term investments.</dd>
+            <dt>Is my data uploaded or saved?</dt>
+            <dd>No. All calculations run entirely in your browser. No personal or financial data is stored or sent anywhere.</dd>
+            <dt>Is this calculator free to use?</dt>
+            <dd>Yes! It is 100% free, browser-only, and works on desktop and mobile devices.</dd>
+          </dl>
+        </section>
+      </div>
+    </main>
+    <a href="../index.html" id="backBtn">Other Util</a>
+    <script>
+      const form = document.getElementById('form');
+      const result = document.getElementById('result');
+      const tableBlock = document.getElementById('tableBlock');
+      const chart = document.getElementById('chart');
+      const ctx = chart.getContext('2d');
+
+      function formatMoney(v) {
+        return '$' + Number(v).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+      }
+      // 복리 계산(월 불입 포함)
+      function compoundWithDeposit(P, PMT, r, n, t) {
+        // P: 초기, PMT: 매월, r: 연이율(0.xx), n: 년간 복리주기, t: 년
+        // FV = P*(1+r/n)^(nt) + PMT*{[(1+r/n)^(nt)-1]/(r/n)}
+        let periods = n * t;
+        let i = r / n;
+        let fvP = P * Math.pow(1 + i, periods);
+        let fvPMT = PMT > 0 ? PMT * ((Math.pow(1 + i, periods) - 1) / i) * (i > 0 ? 1 : 0) : 0;
+        // PMT는 월불입이므로 월→주기에 맞게 변환 필요
+        // 예) 월불입인데 n=1(연1회), n=2(반기), n=4(분기)...
+        // PMT를 주기별로 합치려면: PMT_total_per_period = PMT * (12/n)
+        if (n !== 12 && PMT > 0) {
+          let m_per_period = 12 / n;
+          let fvPMT_adj = 0;
+          for (let i = 1; i <= periods; i++) {
+            // 각 기간별 월불입이 쌓이는 복리 효과 누적
+            fvPMT_adj += PMT * Math.pow(1 + r / n, periods - i + 1) * (m_per_period > 1 ? m_per_period : 1);
+          }
+          fvPMT = fvPMT_adj;
+        }
+        return fvP + fvPMT;
+      }
+      // 단리 계산(월 불입 포함)
+      function simpleWithDeposit(P, PMT, r, t) {
+        // FV = P*(1+rt) + PMT*12*t*(1 + r*t/2)
+        let fvP = P * (1 + r * t);
+        let fvPMT = PMT * 12 * t;
+        let interestPMT = fvPMT * r * t / 2;
+        return fvP + fvPMT + interestPMT;
+      }
+
+      function drawChart(years, compVals, simpVals) {
+        ctx.clearRect(0, 0, chart.width, chart.height);
+        let allVals = compVals.concat(simpVals);
+        let maxV = Math.max(...allVals) * 1.04;
+        let minV = Math.min(...allVals);
+        let W = chart.width - 40, H = chart.height - 35, ox = 35, oy = 18;
+        // Axes
+        ctx.strokeStyle = "#b3cae7";
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(ox, oy); ctx.lineTo(ox, oy+H); ctx.lineTo(ox+W, oy+H);
+        ctx.stroke();
+        // Y labels
+        ctx.fillStyle = "#3773b5";
+        ctx.font = "11px Segoe UI, Arial";
+        for (let i = 0; i <= 4; i++) {
+          let v = maxV - (maxV-minV)*i/4;
+          let y = oy + H * i/4;
+          ctx.fillText(formatMoney(v), 2, y+4);
+        }
+        // X labels
+        ctx.fillStyle = "#777";
+        for (let y = 1; y <= years; y++) {
+          let x = ox + (W) * (y-1) / (years-1);
+          ctx.fillText(y, x-4, oy+H+17);
+        }
+        // Line function
+        function drawLine(data, color) {
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 2.7;
+          ctx.beginPath();
+          for (let y = 1; y <= years; y++) {
+            let val = data[y-1];
+            let px = ox + (W) * (y-1) / (years-1);
+            let py = oy + H - ((val - minV) / (maxV-minV)) * H;
+            if (y === 1) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.stroke();
+          // Points
+          ctx.fillStyle = color;
+          for (let y = 1; y <= years; y++) {
+            let val = data[y-1];
+            let px = ox + (W) * (y-1) / (years-1);
+            let py = oy + H - ((val - minV) / (maxV-minV)) * H;
+            ctx.beginPath(); ctx.arc(px, py, 3.1, 0, Math.PI*2); ctx.fill();
+          }
+        }
+        // Draw lines
+        drawLine(compVals, "#1975be");
+        drawLine(simpVals, "#fc8642");
+      }
+
+      form.onsubmit = function(e) {
+        e.preventDefault();
+        let P = parseFloat(form.principal.value);
+        let PMT = parseFloat(form.monthly.value);
+        let r = parseFloat(form.rate.value) / 100;
+        let t = parseInt(form.years.value);
+        let n = parseInt(form.freq.value);
+        if (isNaN(P) || isNaN(PMT) || isNaN(r) || isNaN(t) || isNaN(n) || P < 0 || PMT < 0 || r < 0 || t < 1) {
+          result.innerHTML = '<span style="color:#d33;">Please enter valid values.</span>';
+          tableBlock.innerHTML = '';
+          ctx.clearRect(0,0,chart.width,chart.height);
+          return;
+        }
+        // 연도별 값 계산
+        let compArr = [], simpArr = [];
+        for(let y=1; y<=t; y++) {
+          compArr.push(compoundWithDeposit(P, PMT, r, n, y));
+          simpArr.push(simpleWithDeposit(P, PMT, r, y));
+        }
+        // 최종값
+        let FV = compArr[t-1], FVsimple = simpArr[t-1];
+        let totalPaid = P + PMT*12*t;
+        let interest = FV - totalPaid, interestSimple = FVsimple - totalPaid;
+        result.innerHTML =
+          `<b>Compound:</b> <span style="color:#1975be">${formatMoney(FV)}</span> (Total Interest: <b>${formatMoney(interest)}</b>)<br>
+           <b>Simple:</b> <span style="color:#fc8642">${formatMoney(FVsimple)}</span> (Total Interest: <b>${formatMoney(interestSimple)}</b>)<br>
+           <span style="color:#888;">Total Paid In: ${formatMoney(totalPaid)}</span>`;
+        // 표
+        let rows = '';
+        for(let y=1; y<=t; y++) {
+          rows += `<tr>
+            <td class="year">${y}</td>
+            <td>${formatMoney(compArr[y-1])}</td>
+            <td>${formatMoney(simpArr[y-1])}</td>
+            <td>${formatMoney(compArr[y-1] - (P + PMT*12*y))}</td>
+            <td>${formatMoney(simpArr[y-1] - (P + PMT*12*y))}</td>
+          </tr>`;
+        }
+        tableBlock.innerHTML =
+          `<table>
+            <thead>
+              <tr>
+                <th>Year</th>
+                <th>Compound Value</th>
+                <th>Simple Value</th>
+                <th>Compound Interest</th>
+                <th>Simple Interest</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>`;
+        // 그래프 그리기
+        drawChart(t, compArr, simpArr);
+      };
+      // Initial render
+      form.onsubmit(new Event('submit'));
+    </script>
+    <!-- FAQPage Schema for SGE/GEO/SEO Rich Results -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the difference between compound and simple interest?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Compound interest earns interest on both your principal and previously earned interest. Simple interest earns interest only on your original principal."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I add monthly deposits in this calculator?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, you can add a fixed monthly deposit. Both compound and simple interest results will include your monthly contributions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which compounding frequency is best?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "More frequent compounding (e.g., monthly or daily) can increase total returns, especially for long-term investments."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is my data uploaded or saved?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. All calculations run entirely in your browser. No personal or financial data is stored or sent anywhere."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this calculator free to use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes! It is 100% free, browser-only, and works on desktop and mobile devices."
+          }
+        }
+      ]
+    }
+    </script>
+  </body>
+</html>

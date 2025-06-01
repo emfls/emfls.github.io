@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Random Team Generator – Group Splitter Online</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Enter names, pick number of teams, and split into random groups! Instantly assign teams, 100% browser-only, no upload." />
+  <meta name="keywords" content="random team generator, group splitter, shuffle names, make teams, group, study group, classroom, class, 팀 편성, 조 짜기, 조 편성기, 랜덤 팀, 랜덤 조" />
+  <meta name="author" content="Itagi" />
+  <link rel="canonical" href="https://emfls.github.io/util/teamgen/" />
+  <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+  <meta property="og:title" content="Random Team Generator – Group Splitter Online" />
+  <meta property="og:description" content="Split names into random teams/groups. Shuffle instantly, works in your browser, no data upload." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://emfls.github.io/util/teamgen/" />
+  <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Random Team Generator – Group Splitter Online" />
+  <meta name="twitter:description" content="Randomly assign names to n teams. Fast, private, and browser-only!" />
+  <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag("js", new Date());
+    gtag("config", "G-QP5Q67GE5B");
+  </script>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+  <style>
+    body {
+      background: #f3f9fe;
+      margin: 0; padding: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: #182741;
+    }
+    .container {
+      max-width: 420px;
+      margin: 36px auto 0 auto;
+      background: #fff;
+      border-radius: 19px;
+      box-shadow: 0 5px 22px #0c7fc230;
+      padding: 30px 15px 20px 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .logo {
+      font-size: 1.25em;
+      font-weight: bold;
+      color: #1684e5;
+      text-align: center;
+      margin-bottom: 12px;
+      letter-spacing: -1px;
+    }
+    .desc {
+      text-align: center;
+      color: #1b6688;
+      margin-bottom: 19px;
+      font-size: 1.05em;
+    }
+    .input-row {
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .label {
+      color: #1684e5;
+      font-size: 0.99em;
+      margin-bottom: 2px;
+    }
+    textarea, input[type="number"] {
+      width: 100%;
+      border-radius: 7px;
+      border: 1.2px solid #c9e8fa;
+      padding: 10px 10px;
+      font-size: 1.06em;
+      background: #fafdff;
+      color: #203b59;
+      box-sizing: border-box;
+      margin-bottom: 2px;
+      resize: none;
+      transition: border 0.13s;
+    }
+    textarea:focus, input[type="number"]:focus {
+      border-color: #188cd4;
+      outline: none;
+    }
+    .control-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+    .team-num-input {
+      width: 85px;
+      font-size: 1.02em;
+    }
+    .gen-btn {
+      background: linear-gradient(90deg,#1684e5,#16b66e);
+      color: #fff;
+      border: none;
+      border-radius: 9px;
+      font-size: 1.09em;
+      font-weight: bold;
+      padding: 11px 18px;
+      cursor: pointer;
+      box-shadow: 0 2px 10px #1684e522;
+      letter-spacing: 0.01em;
+      transition: background 0.16s;
+    }
+    .gen-btn:active {
+      background: linear-gradient(90deg,#11608a,#17a964);
+    }
+    .result-list {
+      margin: 14px 0 15px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .team-block {
+      background: #f2faff;
+      border: 1.2px solid #b5dbf9;
+      border-radius: 12px;
+      padding: 13px 10px 10px 12px;
+      box-shadow: 0 2px 8px #1684e525;
+      font-size: 1.06em;
+      display: flex;
+      flex-direction: column;
+      min-height: 46px;
+      margin-bottom: 3px;
+    }
+    .team-title {
+      color: #1787e2;
+      font-weight: bold;
+      font-size: 1.09em;
+      margin-bottom: 7px;
+    }
+    .team-names {
+      color: #17658a;
+      font-size: 1em;
+      line-height: 1.7;
+    }
+    .hint {
+      color: #18b88a;
+      font-size: 0.97em;
+      margin: 5px 0 7px 0;
+      text-align: center;
+      min-height: 20px;
+    }
+    .adsense {
+      text-align: center;
+      margin: 8px 0 9px 0;
+    }
+    .footer {
+      color: #789;
+      text-align: center;
+      font-size: 0.93em;
+      margin-top: 11px;
+    }
+    @media (max-width: 600px) {
+      .container { max-width: 99vw; padding: 12px 2vw 9px 2vw;}
+      .result-row { font-size: 1em; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">🔀 Random Team/Group Generator</div>
+    <div class="desc">
+      Paste or type names (one per line),<br>
+      choose the number of teams,<br>
+      and split into random teams instantly!
+    </div>
+    <div class="input-row">
+      <label for="names" class="label">Names (one per line):</label>
+      <textarea id="names" rows="6" placeholder="Alice&#10;Bob&#10;Charlie&#10;..."></textarea>
+    </div>
+    <div class="control-row">
+      <label for="teamNum" class="label">Number of teams</label>
+      <input id="teamNum" class="team-num-input" type="number" min="2" max="20" value="2" />
+      <button class="gen-btn" id="genBtn" title="랜덤 팀 나누기">Split Teams</button>
+    </div>
+    <div class="hint" id="hint"></div>
+    <div class="result-list" id="resultList"></div>
+    <div class="adsense">
+      <!-- Google AdSense -->
+      <ins class="adsbygoogle"
+        style="display:block; text-align:center;"
+        data-ad-client="ca-pub-8830524482034754"
+        data-ad-slot="1234567890"
+        data-ad-format="auto"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+    <div class="footer">
+      100% browser-based. No tracking or upload.<br>
+      Made by Itagi – Free for all!
+    </div>
+  </div>
+  <script>
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+    document.getElementById("genBtn").onclick = function() {
+      const namesRaw = document.getElementById("names").value;
+      const teamNum = parseInt(document.getElementById("teamNum").value, 10);
+      const resultList = document.getElementById("resultList");
+      const hint = document.getElementById("hint");
+      resultList.innerHTML = "";
+      hint.textContent = "";
+      let names = namesRaw.split('\n').map(x=>x.trim()).filter(Boolean);
+      if (names.length < 2) {
+        hint.textContent = "Please enter at least 2 names!";
+        return;
+      }
+      if (teamNum < 2 || teamNum > 20) {
+        hint.textContent = "Number of teams must be between 2 and 20.";
+        return;
+      }
+      if (teamNum > names.length) {
+        hint.textContent = "Number of teams can't exceed number of names!";
+        return;
+      }
+      shuffle(names);
+      // Assign to teams
+      let teams = Array.from({length: teamNum}, ()=>[]);
+      names.forEach((name, i) => { teams[i % teamNum].push(name); });
+      // Output
+      teams.forEach((team, i) => {
+        const block = document.createElement("div");
+        block.className = "team-block";
+        block.innerHTML = `<div class="team-title">Team ${i+1}</div>
+          <div class="team-names">${team.join(", ")}</div>`;
+        resultList.appendChild(block);
+      });
+    };
+  </script>
+</body>
+</html>

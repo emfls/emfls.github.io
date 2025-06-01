@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Social Thumbnail Downloader (YouTube, X, TikTok)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Extract and download thumbnails from YouTube, X (Twitter), and TikTok. View and download in various qualities. Free, no login." />
+    <meta
+      name="keywords"
+      content="thumbnail downloader, youtube thumbnail, x thumbnail, tiktok thumbnail, free, online tool, social media image, extract, download" />
+    <meta name="author" content="Itagi" />
+    <meta name="language" content="en" />
+    <link rel="canonical" href="https://emfls.github.io/util/thumbnailgrabber/" />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/util/thumbnailgrabber/" />
+    <meta property="og:title" content="Social Thumbnail Downloader (YouTube, X, TikTok)" />
+    <meta
+      property="og:description"
+      content="Extract and download thumbnails from YouTube, X (Twitter), and TikTok. All qualities, free, no login." />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://emfls.github.io/util/thumbnailgrabber/" />
+    <meta name="twitter:title" content="Social Thumbnail Downloader (YouTube, X, TikTok)" />
+    <meta
+      name="twitter:description"
+      content="Extract and download thumbnails from YouTube, X (Twitter), and TikTok. No login required." />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <style>
+      :root {
+        --main: #e62e2d;
+        --main-dark: #ad2020;
+        --bg: #fff6f6;
+      }
+      body {
+        background: var(--bg);
+        font-family: "Segoe UI", Arial, sans-serif;
+        margin: 0;
+        color: #24262d;
+      }
+      .container {
+        max-width: 410px;
+        margin: 44px auto 0 auto;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 24px #e62e2d22;
+        padding: 28px 16px 22px 16px;
+      }
+      .logo {
+        font-size: 1.45em;
+        font-weight: bold;
+        color: var(--main-dark);
+        text-align: center;
+        margin-bottom: 11px;
+        letter-spacing: -1px;
+      }
+      .desc {
+        text-align: center;
+        color: #d03434;
+        margin-bottom: 22px;
+        font-size: 1.07em;
+      }
+      .url-input-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+      .url-input-row input {
+        flex: 1;
+        padding: 11px 10px;
+        border: 1.3px solid #e62e2d55;
+        border-radius: 7px;
+        font-size: 1.08em;
+        background: #fff5f5;
+        color: #303;
+        transition: border 0.2s;
+      }
+      .url-input-row input:focus {
+        border-color: var(--main-dark);
+        outline: none;
+      }
+      .url-input-row button {
+        background: var(--main);
+        color: #fff;
+        border: none;
+        border-radius: 7px;
+        font-size: 1.07em;
+        font-weight: bold;
+        padding: 0 22px;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .url-input-row button:active {
+        background: var(--main-dark);
+      }
+      .info-msg {
+        color: #ad2020;
+        text-align: center;
+        font-size: 1.02em;
+        margin: 10px 0 10px 0;
+        min-height: 26px;
+      }
+      .preview-area {
+        margin: 22px 0 0 0;
+        text-align: center;
+      }
+      .thumb-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px 12px;
+        justify-content: center;
+        margin-top: 10px;
+      }
+      .thumb-box {
+        background: #f5eaea;
+        border-radius: 12px;
+        padding: 10px 9px 12px 9px;
+        box-shadow: 0 2px 8px #e62e2d14;
+        max-width: 160px;
+      }
+      .thumb-img {
+        max-width: 130px;
+        max-height: 110px;
+        border-radius: 8px;
+        display: block;
+        margin: 0 auto 7px auto;
+        background: #fff;
+      }
+      .thumb-label {
+        color: #ad2020;
+        font-size: 0.99em;
+        margin-bottom: 2px;
+        text-align: center;
+        font-weight: bold;
+      }
+      .dl-btn {
+        display: block;
+        margin: 5px auto 0 auto;
+        padding: 6px 12px;
+        background: var(--main);
+        color: #fff;
+        border: none;
+        border-radius: 7px;
+        font-size: 0.99em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.15s;
+        text-decoration: none;
+      }
+      .dl-btn:active {
+        background: var(--main-dark);
+      }
+      .service-label {
+        margin-top: 10px;
+        font-size: 1.05em;
+        color: #19788a;
+        font-weight: bold;
+        letter-spacing: 0.01em;
+      }
+      .example-row {
+        font-size: 0.95em;
+        margin-top: 10px;
+        color: #494;
+        text-align: center;
+      }
+      .notice {
+        color: #ba2929;
+        background: #fff1f1;
+        border: 1px solid #f7c0c0;
+        border-radius: 9px;
+        padding: 12px 11px 9px 11px;
+        margin: 30px 0 0 0;
+        font-size: 0.99em;
+        text-align: center;
+        line-height: 1.55;
+      }
+      #backBtn {
+        position: fixed;
+        left: 50%;
+        bottom: 32px;
+        transform: translateX(-50%);
+        background: var(--main);
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 2rem;
+        padding: 0.58em 1.5em;
+        box-shadow: 0 4px 16px #e62e2d55;
+        font-size: 1.09em;
+        text-decoration: none;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+        transition:
+          background 0.15s,
+          transform 0.12s;
+        z-index: 2000;
+      }
+      #backBtn:hover {
+        background: #b72323;
+        transform: translateX(-50%) scale(1.04);
+      }
+      @media (max-width: 600px) {
+        .container {
+          max-width: 98vw;
+          padding: 12px 2vw 14px 2vw;
+        }
+        #backBtn {
+          bottom: 18px;
+          font-size: 0.98em;
+          padding: 0.48em 1em;
+        }
+        .thumb-img {
+          max-width: 98vw;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">📸 Social Thumbnail Downloader</div>
+      <div class="desc">
+        Paste a YouTube, X (formerly Twitter), or TikTok link to preview and download thumbnails in various
+        qualities.<br />
+        <span style="color: #1da1f2"><b>X (Twitter)</b></span> and
+        <span style="color: #ff0050"><b>TikTok</b></span> support is best-effort.
+      </div>
+      <div class="url-input-row">
+        <input id="urlInput" type="text" placeholder="Paste video or post URL here..." autocomplete="off" />
+        <button id="grabBtn">Grab</button>
+      </div>
+      <div class="info-msg" id="infoMsg"></div>
+      <div class="example-row">
+        Examples:<br />
+        <span style="color: #e62e2d">YouTube</span> – https://www.youtube.com/watch?v=xxxx<br />
+        <span style="color: #1da1f2">X (Twitter)</span> – https://x.com/username/status/xxxx or
+        https://twitter.com/user/status/xxxx<br />
+        <span style="color: #ff0050">TikTok</span> – https://www.tiktok.com/@user/video/xxxx
+      </div>
+      <div class="preview-area" id="previewArea"></div>
+      <div class="notice">
+        <b>Notice:</b>
+        <ul style="margin: 8px 0 0 18px; text-align: left">
+          <li>YouTube thumbnails are available in several quality levels.</li>
+          <li>
+            X (Twitter) and TikTok thumbnails depend on account privacy and platform restrictions – images may be
+            unavailable, blurry, or not found.
+          </li>
+          <li>This tool uses only public web data. Private/protected posts or videos will not work.</li>
+          <li>For X, try both x.com and twitter.com URLs.</li>
+        </ul>
+      </div>
+    </div>
+    <a href="../index.html" id="backBtn">Other Util</a>
+    <script>
+      // Quality: [label, urlSuffix]
+      const YT_THUMB_QUALITIES = [
+        ["Max Resolution", "maxresdefault.jpg"],
+        ["Standard (SD)", "sddefault.jpg"],
+        ["High Quality", "hqdefault.jpg"],
+        ["Medium", "mqdefault.jpg"],
+        ["Default", "default.jpg"]
+      ];
+      function getYoutubeThumbs(url) {
+        // Extract 11-char video ID
+        const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/))([\w\-]{11})/);
+        if (!match) return null;
+        const id = match[1];
+        return YT_THUMB_QUALITIES.map(([label, suffix]) => ({
+          label,
+          url: `https://img.youtube.com/vi/${id}/${suffix}`
+        }));
+      }
+      function getTiktokThumb(url) {
+        const match = url.match(/tiktok\.com\/.*\/video\/(\d+)/);
+        if (!match) return null;
+        return [
+          {
+            label: "TikTok Thumbnail",
+            url: `https://p16-sign-va.tiktokcdn.com/obj/tos-maliva-p-0068/${match[1]}_0.jpg`
+          }
+        ];
+      }
+      async function getXThumb(url) {
+        const match = url.match(/(?:twitter\.com|x\.com)\/(?:\w+)\/status\/(\d+)/);
+        if (!match) return null;
+        try {
+          const resp = await fetch("https://publish.twitter.com/oembed?url=" + encodeURIComponent(url));
+          const data = await resp.json();
+          const html = data.html;
+          const imgMatch = html && html.match(/<img[^>]+src="([^"]+)"/);
+          if (imgMatch) return [{ label: "X (Twitter) Thumbnail", url: imgMatch[1] }];
+        } catch (e) {}
+        return null;
+      }
+
+      function renderThumbs(label, thumbs) {
+        const area = document.getElementById("previewArea");
+        if (!thumbs || !thumbs.length) {
+          area.innerHTML = `<div class="info-msg">Could not extract thumbnail for this URL.</div>`;
+          return;
+        }
+        if (label === "YouTube") {
+          area.innerHTML = `<div class="service-label">${label} Thumbnails (All Qualities)</div>
+        <div class="thumb-list">${thumbs
+          .map(
+            (thumb) => `
+          <div class="thumb-box">
+            <div class="thumb-label">${thumb.label}</div>
+            <img src="${thumb.url}" class="thumb-img" alt="Thumbnail"/>
+            <a href="${thumb.url}" class="dl-btn" download>Download (${thumb.label})</a>
+          </div>`
+          )
+          .join("")}</div>`;
+        } else {
+          // Single thumbnail for X/TikTok
+          area.innerHTML = `<div class="service-label">${label} Thumbnail</div>
+          <div class="thumb-list"><div class="thumb-box">
+            <div class="thumb-label">${thumbs[0].label}</div>
+            <img src="${thumbs[0].url}" class="thumb-img" alt="Thumbnail"/>
+            <a href="${thumbs[0].url}" class="dl-btn" download>Download</a>
+          </div></div>`;
+        }
+      }
+
+      async function handleGrab() {
+        const url = document.getElementById("urlInput").value.trim();
+        document.getElementById("previewArea").innerHTML = "";
+        document.getElementById("infoMsg").textContent = "";
+        if (!url) {
+          document.getElementById("infoMsg").textContent = "Please enter a video or post URL!";
+          return;
+        }
+        // YouTube
+        if (/youtu\.?be/.test(url)) {
+          const thumbs = getYoutubeThumbs(url);
+          renderThumbs("YouTube", thumbs);
+          return;
+        }
+        // TikTok
+        if (/tiktok\.com/.test(url)) {
+          const thumbs = getTiktokThumb(url);
+          renderThumbs("TikTok", thumbs);
+          return;
+        }
+        // X (Twitter)
+        if (/twitter\.com|x\.com/.test(url)) {
+          document.getElementById("infoMsg").textContent = "Fetching thumbnail from X (may take a few seconds)...";
+          const thumbs = await getXThumb(url);
+          if (thumbs) {
+            renderThumbs("X (Twitter)", thumbs);
+          } else {
+            document.getElementById("infoMsg").textContent =
+              "Failed to extract X (Twitter) thumbnail. (Privacy settings may block browser scraping)";
+          }
+          return;
+        }
+        document.getElementById("infoMsg").textContent =
+          "Unsupported URL format. Please enter a valid YouTube, X, or TikTok link.";
+      }
+
+      document.getElementById("grabBtn").onclick = handleGrab;
+      document.getElementById("urlInput").addEventListener("keydown", function (e) {
+        if (e.key === "Enter") handleGrab();
+      });
+    </script>
+  </body>
+</html>

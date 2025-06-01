@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="Test your focus and reaction speed in GREEN Click! Tap only when the word says GREEN. Fast, fun, and mobile-friendly. Play free online!" />
+        <meta
+            name="keywords"
+            content="GREEN Click, reaction game, brain game, color game, fast game, focus, click challenge, free online game, mobile, browser game, quick game, casual" />
+        <meta name="author" content="Itagi" />
+        <meta name="robots" content="index, follow" />
+
+        <!-- 표준 주소 (canonical) -->
+        <link rel="canonical" href="https://emfls.github.io/GREENClick" />
+
+        <!-- Open Graph (SNS 공유) -->
+        <meta property="og:title" content="GREEN Click – Free Online Reaction Game!" />
+        <meta
+            property="og:description"
+            content="Tap only when you see the word GREEN! Test your brain and reaction speed in this addictive online game." />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta property="og:url" content="https://emfls.github.io/GREENClick" />
+        <meta property="og:type" content="website" />
+
+        <!-- Twitter 카드 -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="GREEN Click – Free Online Reaction Game!" />
+        <meta
+            name="twitter:description"
+            content="Only tap when you see GREEN! Try to beat your friends in this fast brain game – play for free online." />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+        <title>GREEN Click</title>
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+                user-select: none;
+            }
+
+            body {
+                font-family: "Segoe UI", sans-serif;
+                background-color: #1e1e1e;
+                color: white;
+                text-align: center;
+                padding: 10px;
+            }
+
+            h1 {
+                margin-bottom: 0.5rem;
+            }
+
+            #description {
+                margin-bottom: 20px;
+                font-size: 1rem;
+            }
+
+            #box {
+                width: 300px;
+                height: 300px;
+                margin: 10px auto;
+                border-radius: 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 2rem;
+                font-weight: bold;
+                background-color: #555;
+                transition: background-color 0.2s;
+                position: relative;
+                flex-direction: column;
+                cursor: pointer;
+            }
+
+            #word {
+                font-size: 2rem;
+                font-weight: bold;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            }
+
+            #score,
+            #message,
+            #finalScore {
+                font-size: 1.1rem;
+                margin: 10px;
+            }
+
+            #controls {
+                margin-top: 15px;
+                display: none;
+            }
+
+            .btn {
+                padding: 8px 16px;
+                margin: 5px;
+                border: solid;
+                border-radius: 6px;
+                border-color: white;
+                background-color: rgba(0, 0, 0, 0.7);
+                color: white;
+                font-size: 1rem;
+                cursor: pointer;
+            }
+
+            .btn:hover {
+                background-color: #45a045;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1><span style="color: green">GREEN</span> Click</h1>
+        <p id="description">Your eyes will lie.<br />Trust only the word: GREEN.</p>
+
+        <div id="box">
+            <div id="word">Click to Start</div>
+        </div>
+
+        <div id="score" style="font-size: x-large; font-weight: bold">Score: 0</div>
+        <div id="message"></div>
+        <div id="finalScore"></div>
+
+        <div id="controls">
+            <button class="btn" onclick="startGame()">Restart</button>
+            <button class="btn" onclick="shareScore()">Share</button>
+        </div>
+
+        <script>
+            const box = document.getElementById("box");
+            const wordDiv = document.getElementById("word");
+            const scoreDisplay = document.getElementById("score");
+            const message = document.getElementById("message");
+            const finalScore = document.getElementById("finalScore");
+            const controls = document.getElementById("controls");
+
+            const colors = ["GREEN", "RED", "BLUE", "YELLOW", "ORANGE", "PURPLE"];
+            const bgColors = ["green", "red", "blue", "yellow", "orange", "purple", "pink", "cyan", "lime", "gold"];
+
+            let currentText = "";
+            let score = 0;
+            let gameRunning = false;
+            let gameStarted = false;
+            let timeoutId = null;
+            let intervalId = null;
+
+            function getRandom(arr) {
+                return arr[Math.floor(Math.random() * arr.length)];
+            }
+
+            function updateBox() {
+                const bgColor = getRandom(bgColors);
+                box.style.backgroundColor = bgColor;
+
+                currentText = getRandom(colors);
+                wordDiv.textContent = currentText;
+
+                if (currentText === "GREEN") {
+                    timeoutId = setTimeout(() => {
+                        endGame("You missed GREEN!");
+                    }, 1000);
+                }
+            }
+
+            function startGame() {
+                clearInterval(intervalId);
+                clearTimeout(timeoutId);
+                score = 0;
+                gameRunning = true;
+                gameStarted = true;
+                message.textContent = "";
+                finalScore.textContent = "";
+                scoreDisplay.textContent = "Score: 0";
+                wordDiv.textContent = "";
+                box.style.pointerEvents = "auto";
+                controls.style.display = "none";
+
+                setTimeout(() => {
+                    updateBox();
+                    intervalId = setInterval(updateBox, 1200);
+                }, 500);
+            }
+
+            function endGame(reason) {
+                clearInterval(intervalId);
+                clearTimeout(timeoutId);
+                gameRunning = false;
+                box.style.backgroundColor = "#000";
+                wordDiv.textContent = "GAME OVER";
+                box.style.pointerEvents = "none";
+
+                message.textContent = reason;
+                controls.style.display = "block";
+            }
+
+            function shareScore() {
+                const shareText = `🎯 I scored ${score} points in the GREEN Click Challenge!\nTry to beat me 👉 ${window.location.href}`;
+                if (navigator.share) {
+                    navigator
+                        .share({
+                            title: "GREEN Click Challenge",
+                            text: shareText,
+                            url: window.location.href
+                        })
+                        .catch(() => {
+                            navigator.clipboard.writeText(shareText);
+                            alert("Link copied to clipboard! 📋");
+                        });
+                } else {
+                    navigator.clipboard.writeText(shareText);
+                    alert("Link copied to clipboard! 📋");
+                }
+            }
+
+            box.addEventListener("click", () => {
+                if (!gameStarted) {
+                    startGame();
+                    return;
+                }
+
+                if (!gameRunning) return;
+
+                clearTimeout(timeoutId);
+
+                if (currentText === "GREEN") {
+                    score++;
+                    scoreDisplay.textContent = `Score: ${score}`;
+                    // 속도 조절: 점수 오를수록 빨라짐
+                    intervalTime = Math.max(400, 1200 - score * 50); // 최소 400ms까지
+
+                    // 기존 인터벌 제거하고 새 인터벌 설정
+                    clearInterval(intervalId);
+                    intervalId = setInterval(updateBox, intervalTime);
+                } else {
+                    endGame("Wrong! That wasn't GREEN.");
+                }
+            });
+        </script>
+        <button
+            style="
+                margin-top: 20px;
+                width: 90%;
+                height: 60px;
+                font-size: 16px;
+                font-weight: bold;
+                background-color: #000;
+                cursor: pointer;
+                border-radius: 6px;
+                border: solid;
+                color: white;
+            "
+            onclick="window.location.href='/'">
+            📂 Other Games
+        </button>
+    </body>
+</html>

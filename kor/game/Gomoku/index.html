@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="Play Gomoku (Five in a Row) online! Challenge a friend or AI in this classic board game. Simple, fun, and mobile-friendly." />
+        <meta
+            name="keywords"
+            content="Gomoku, Five in a Row, omok, online game, AI, board game, free, browser game, mobile, classic, strategy, black and white, two player, puzzle" />
+        <meta name="author" content="Itagi" />
+        <meta name="robots" content="index, follow" />
+
+        <!-- 표준 주소 (canonical) -->
+        <link rel="canonical" href="https://emfls.github.io/Gomoku" />
+
+        <!-- Open Graph (SNS 공유) -->
+        <meta property="og:title" content="Gomoku – Free Online AI Gomoku Game!" />
+        <meta
+            property="og:description"
+            content="Play Gomoku against your friends or a smart AI. Who will be first to get five in a row? Try free in your browser!" />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta property="og:url" content="https://emfls.github.io/Gomoku" />
+        <meta property="og:type" content="website" />
+
+        <!-- Twitter 카드 -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Gomoku – Free Online AI Gomoku Game!" />
+        <meta
+            name="twitter:description"
+            content="Challenge a friend or AI in Gomoku! Play the classic Five in a Row board game online for free." />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+        <title>Gomoku</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap");
+            :root {
+                --board-size: min(90vw, 480px);
+                --cell-gap: calc(var(--board-size) / 13);
+                --stone-size: calc(var(--cell-gap) * 0.7);
+            }
+
+            body {
+                font-family: "Noto Sans", sans-serif;
+                text-align: center;
+                background: #f0ece3;
+                margin: 0;
+                padding: 0rem;
+            }
+
+            h1 {
+                margin-bottom: 1rem;
+                margin-top: 1rem;
+                font-size: 1.8rem;
+                color: #2c2c2c;
+            }
+
+            #board {
+                position: relative;
+                width: var(--board-size);
+                height: var(--board-size);
+                background-image: radial-gradient(#b88a44 20%, #deb887 80%);
+                border: 4px solid #333;
+                margin: 0 auto;
+                touch-action: manipulation;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+                border-radius: 10px;
+            }
+
+            .grid-line {
+                position: absolute;
+                background: #000;
+                pointer-events: none;
+            }
+
+            .h-line {
+                height: 2px;
+                width: 100%;
+                opacity: 0.75;
+            }
+
+            .v-line {
+                width: 2px;
+                height: 100%;
+                opacity: 0.75;
+            }
+
+            .cell {
+                position: absolute;
+                width: var(--cell-gap);
+                height: var(--cell-gap);
+                transform: translate(-50%, -50%);
+                cursor: pointer;
+            }
+
+            .stone {
+                width: var(--stone-size);
+                height: var(--stone-size);
+                border-radius: 50%;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                box-shadow:
+                    inset -2px -2px 4px rgba(0, 0, 0, 0.5),
+                    inset 2px 2px 4px rgba(255, 255, 255, 0.3),
+                    0 0 4px rgba(0, 0, 0, 0.4);
+                transition: transform 0.15s ease;
+            }
+
+            .stone:hover {
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+
+            .black {
+                background: radial-gradient(circle at 30% 30%, #444, #000);
+            }
+
+            .white {
+                background: radial-gradient(circle at 30% 30%, #fff, #ccc);
+                border: 1px solid #999;
+            }
+
+            .highlight {
+                box-shadow:
+                    0 0 10px 4px gold,
+                    0 0 10px 4px gold;
+                z-index: 2;
+            }
+
+            #message {
+                margin-top: 1rem;
+                font-size: 1.1rem;
+                color: #444;
+            }
+
+            button {
+                margin-top: 1rem;
+                padding: 10px 20px;
+                font-size: 1rem;
+                margin-right: 0.5rem;
+                border: none;
+                border-radius: 8px;
+                background: #444;
+                color: white;
+                cursor: pointer;
+                transition: background 0.2s ease;
+            }
+
+            button:hover {
+                background: #222;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>⚫Gomoku⚪</h1>
+        <div id="modeStatus" style="margin-top: -0.6rem; margin-bottom: 1rem; font-size: 1rem; color: #666"></div>
+        <div id="board"></div>
+
+        <div id="message"></div>
+        <div>
+            <button onclick="resetGame()" style="font-weight: bold">Restart</button>
+            <button
+                onclick="toggleMode()"
+                id="modeBtn"
+                style="position: absolute; top: 2rem; right: 0.5rem; padding: 10px 10px 10px 10px; font-weight: bold">
+                🤖 AI
+            </button>
+        </div>
+
+        <script>
+            const boardSize = 13;
+            const board = document.getElementById("board");
+            const message = document.getElementById("message");
+            const modeBtn = document.getElementById("modeBtn");
+            let currentPlayer = "black";
+            let gameOver = false;
+            let cells = [];
+            let aiMode = false;
+
+            function updateModeStatus() {
+                const modeStatus = document.getElementById("modeStatus");
+                modeStatus.textContent = aiMode ? "Player vs AI" : "Player vs Player";
+            }
+
+            function createBoard() {
+                board.innerHTML = "";
+                cells = [];
+                for (let i = 0; i < boardSize; i++) {
+                    const h = document.createElement("div");
+                    h.className = "grid-line h-line";
+                    h.style.top = `calc(${i} * var(--cell-gap) + var(--cell-gap) / 2)`;
+                    board.appendChild(h);
+                    const v = document.createElement("div");
+                    v.className = "grid-line v-line";
+                    v.style.left = `calc(${i} * var(--cell-gap) + var(--cell-gap) / 2)`;
+                    board.appendChild(v);
+                }
+                for (let y = 0; y < boardSize; y++) {
+                    const row = [];
+                    for (let x = 0; x < boardSize; x++) {
+                        const cell = document.createElement("div");
+                        cell.className = "cell";
+                        cell.dataset.x = x;
+                        cell.dataset.y = y;
+                        cell.style.left = `calc(${x} * var(--cell-gap) + var(--cell-gap) / 2)`;
+                        cell.style.top = `calc(${y} * var(--cell-gap) + var(--cell-gap) / 2)`;
+                        cell.addEventListener("click", handleClick);
+                        board.appendChild(cell);
+                        row.push(null);
+                    }
+                    cells.push(row);
+                }
+                message.textContent = "⚫ Black's turn";
+            }
+
+            function resetGame() {
+                currentPlayer = "black";
+                gameOver = false;
+                createBoard();
+                updateModeStatus(); // 추가
+            }
+
+            function toggleMode() {
+                aiMode = !aiMode;
+                modeBtn.textContent = aiMode ? "👥2P" : "🤖AI";
+                resetGame(); // 내부에서 updateModeStatus 호출됨
+            }
+
+            function handleClick(e) {
+                if (gameOver || (aiMode && currentPlayer === "white")) return;
+                const x = parseInt(e.target.dataset.x);
+                const y = parseInt(e.target.dataset.y);
+                if (cells[y][x]) return;
+                placeStone(x, y, currentPlayer);
+                const result = checkWin(x, y, currentPlayer);
+                if (result) {
+                    highlightWin(result);
+                    message.textContent = currentPlayer === "black" ? "⚫ Black wins!" : "⚪ White wins!";
+                    gameOver = true;
+                    return;
+                }
+                currentPlayer = currentPlayer === "black" ? "white" : "black";
+                message.textContent = currentPlayer === "black" ? "⚫ Black's turn" : "⚪ White's turn";
+                if (aiMode && currentPlayer === "white") {
+                    setTimeout(() => aiTurn(), 300);
+                }
+            }
+
+            function aiTurn() {
+                const [x, y] = getBestMove(cells, 2, -Infinity, Infinity, true);
+                placeStone(x, y, "white");
+                const result = checkWin(x, y, "white");
+                if (result) {
+                    highlightWin(result);
+                    message.textContent = "⚪ White wins!";
+                    gameOver = true;
+                    return;
+                }
+                currentPlayer = "black";
+                message.textContent = "⚫ Black's turn";
+            }
+
+            function placeStone(x, y, player) {
+                const cell = document.querySelector(`.cell[data-x="${x}"][data-y="${y}"]`);
+                const stone = document.createElement("div");
+                stone.className = `stone ${player}`;
+                cell.appendChild(stone);
+                cells[y][x] = player;
+            }
+
+            function highlightWin(positions) {
+                positions.forEach(([x, y]) => {
+                    const cell = document.querySelector(`.cell[data-x="${x}"][data-y="${y}"]`);
+                    const stone = cell.querySelector(".stone");
+                    if (stone) stone.classList.add("highlight");
+                });
+            }
+
+            function checkWin(x, y, player) {
+                const directions = [
+                    [1, 0],
+                    [0, 1],
+                    [1, 1],
+                    [1, -1]
+                ];
+                for (let [dx, dy] of directions) {
+                    const line = [[x, y]];
+                    line.push(...getLine(x, y, dx, dy, player));
+                    line.push(...getLine(x, y, -dx, -dy, player));
+                    if (line.length >= 5) return line;
+                }
+                return null;
+            }
+
+            function getLine(x, y, dx, dy, player) {
+                const result = [];
+                let nx = x + dx,
+                    ny = y + dy;
+                while (nx >= 0 && ny >= 0 && nx < boardSize && ny < boardSize && cells[ny][nx] === player) {
+                    result.push([nx, ny]);
+                    nx += dx;
+                    ny += dy;
+                }
+                return result;
+            }
+
+            function getBestMove(board, depth, alpha, beta, isAI) {
+                const player = isAI ? "white" : "black";
+                let bestScore = isAI ? -Infinity : Infinity;
+                let bestMove = [6, 6];
+                const candidates = getCandidateMoves(board);
+                for (let [x, y] of candidates) {
+                    board[y][x] = player;
+                    const score = minimax(board, depth - 1, alpha, beta, !isAI);
+                    board[y][x] = null;
+                    if (isAI && score > bestScore) {
+                        bestScore = score;
+                        bestMove = [x, y];
+                        alpha = Math.max(alpha, score);
+                    } else if (!isAI && score < bestScore) {
+                        bestScore = score;
+                        bestMove = [x, y];
+                        beta = Math.min(beta, score);
+                    }
+                    if (beta <= alpha) break;
+                }
+                return bestMove;
+            }
+
+            function minimax(board, depth, alpha, beta, isAI) {
+                if (depth === 0) return evaluateBoard(board);
+                const player = isAI ? "white" : "black";
+                let bestScore = isAI ? -Infinity : Infinity;
+                const candidates = getCandidateMoves(board);
+                for (let [x, y] of candidates) {
+                    board[y][x] = player;
+                    const score = minimax(board, depth - 1, alpha, beta, !isAI);
+                    board[y][x] = null;
+                    if (isAI) {
+                        bestScore = Math.max(bestScore, score);
+                        alpha = Math.max(alpha, bestScore);
+                    } else {
+                        bestScore = Math.min(bestScore, score);
+                        beta = Math.min(beta, bestScore);
+                    }
+                    if (beta <= alpha) break;
+                }
+                return bestScore;
+            }
+
+            function getCandidateMoves(board) {
+                const moves = new Set();
+                for (let y = 0; y < boardSize; y++) {
+                    for (let x = 0; x < boardSize; x++) {
+                        if (board[y][x]) {
+                            for (let dy = -2; dy <= 2; dy++) {
+                                for (let dx = -2; dx <= 2; dx++) {
+                                    const nx = x + dx,
+                                        ny = y + dy;
+                                    if (nx >= 0 && ny >= 0 && nx < boardSize && ny < boardSize && !board[ny][nx]) {
+                                        moves.add(`${nx},${ny}`);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return moves.size ? Array.from(moves).map((str) => str.split(",").map(Number)) : [[6, 6]];
+            }
+
+            function evaluateBoard(board) {
+                const lines = [
+                    [1, 0],
+                    [0, 1],
+                    [1, 1],
+                    [1, -1]
+                ];
+                let score = 0;
+
+                function countLine(x, y, dx, dy, player) {
+                    let count = 0;
+                    for (let i = 0; i < 5; i++) {
+                        const nx = x + i * dx,
+                            ny = y + i * dy;
+                        if (nx >= 0 && ny >= 0 && nx < boardSize && ny < boardSize && board[ny][nx] === player) count++;
+                        else if (board[ny] && board[ny][nx]) return -1;
+                    }
+                    return count;
+                }
+                for (let y = 0; y < boardSize; y++) {
+                    for (let x = 0; x < boardSize; x++) {
+                        for (let [dx, dy] of lines) {
+                            let ai = countLine(x, y, dx, dy, "white");
+                            let hu = countLine(x, y, dx, dy, "black");
+                            if (ai === 5) score += 100000;
+                            else if (ai === 4) score += 10000;
+                            else if (ai === 3) score += 1000;
+                            else if (ai === 2) score += 100;
+                            if (hu === 5) score -= 100000;
+                            else if (hu === 4) score -= 20000;
+                            else if (hu === 3) score -= 2000;
+                            else if (hu === 2) score -= 100;
+                        }
+                    }
+                }
+                return score;
+            }
+
+            resetGame();
+        </script>
+        <button
+            style="
+                margin-top: 20px;
+                width: 90%;
+                height: 60px;
+                font-size: 16px;
+                font-weight: bold;
+                background-color: #deb887;
+                cursor: pointer;
+                border-radius: 6px;
+                border: solid;
+                color: black;
+                border-color: black;
+            "
+            onclick="window.location.href='/'">
+            Other Games
+        </button>
+        <button
+            style="
+                margin-top: 10px;
+                width: 90%;
+                height: 60px;
+                font-size: 16px;
+                font-weight: bold;
+                background-color: #deb887;
+                cursor: pointer;
+                border-radius: 6px;
+                border: solid;
+                color: black;
+                border-color: black;
+            "
+            onclick="shareGame()">
+            Share
+        </button>
+        <script>
+            function shareGame() {
+                const shareData = {
+                    title: "Gomoku",
+                    text: "Try this awesome AI Gomoku game!",
+                    url: window.location.href
+                };
+
+                if (navigator.share) {
+                    navigator.share(shareData).catch((err) => console.log("Sharing failed", err));
+                } else {
+                    copyLink(); // 폴백: 클립보드 복사
+                }
+            }
+        </script>
+    </body>
+</html>

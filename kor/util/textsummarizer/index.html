@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Text Summarizer – Summarize any text quickly!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Easily summarize any long text, article, or essay. Free, private, and works in your browser!" />
+    <meta
+      name="keywords"
+      content="text summarizer, summarize, auto summary, article summary, free, online, browser, no upload" />
+    <meta name="author" content="Itagi" />
+    <meta name="language" content="en" />
+    <link rel="canonical" href="https://emfls.github.io/util/textsummarizer/" />
+    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+    <meta property="og:title" content="Text Summarizer – Summarize any text quickly!" />
+    <meta
+      property="og:description"
+      content="Summarize articles, documents, or essays instantly. No upload, free, and private." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/util/textsummarizer/" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Text Summarizer – Summarize any text quickly!" />
+    <meta name="twitter:description" content="Easily summarize any long text, article, or essay in your browser." />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <style>
+      body {
+        background: #f7fcff;
+        font-family: "Segoe UI", Arial, sans-serif;
+        margin: 0;
+        color: #223;
+      }
+      .container {
+        max-width: 420px;
+        margin: 30px auto 0 auto;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 22px #117c9a28;
+        padding: 22px 13px 18px 13px;
+      }
+      .logo {
+        font-size: 1.25em;
+        text-align: center;
+        color: #117c9a;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      .desc {
+        text-align: center;
+        color: #127080;
+        margin-bottom: 15px;
+        font-size: 1.07em;
+      }
+      textarea {
+        width: 100%;
+        min-height: 110px;
+        border: 1.2px solid #b9eaf8;
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 1.09em;
+        background: #fafdff;
+        margin-bottom: 11px;
+        font-family: inherit;
+      }
+      .input-row {
+        margin-bottom: 8px;
+      }
+      .slider-label {
+        color: #19788a;
+        font-size: 1.03em;
+        margin-right: 8px;
+      }
+      #summaryLength {
+        vertical-align: middle;
+      }
+      #lengthVal {
+        margin-left: 6px;
+        color: #127080;
+      }
+      .action-btn {
+        width: 100%;
+        background: #117c9a;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.17em;
+        font-weight: bold;
+        padding: 12px 0;
+        margin: 11px 0 10px 0;
+        cursor: pointer;
+      }
+      .action-btn:active {
+        background: #09506d;
+      }
+      .output-box {
+        min-height: 52px;
+        background: #f7fcff;
+        border: 1.1px solid #b2e0ee;
+        border-radius: 8px;
+        font-size: 1.07em;
+        padding: 12px 10px 10px 12px;
+        white-space: pre-wrap;
+      }
+      .footer {
+        color: #789;
+        text-align: center;
+        font-size: 0.93em;
+        margin-top: 14px;
+      }
+      #backBtn {
+        position: fixed;
+        left: 50%;
+        bottom: 32px;
+        transform: translateX(-50%);
+        background: #117c9a;
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 2rem;
+        padding: 0.58em 1.5em;
+        box-shadow: 0 4px 16px #117c9a22;
+        font-size: 1.09em;
+        text-decoration: none;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+        transition:
+          background 0.15s,
+          transform 0.12s;
+        z-index: 2000;
+      }
+      #backBtn:hover {
+        background: #09506d;
+        transform: translateX(-50%) scale(1.04);
+      }
+      @media (max-width: 600px) {
+        .container {
+          max-width: 99vw;
+          padding: 10px 2vw 13px 2vw;
+        }
+        #backBtn {
+          bottom: 18px;
+          font-size: 0.98em;
+          padding: 0.48em 1em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">📝 Text Summarizer</div>
+      <div class="desc">
+        Paste a long text or article below.<br />
+        Click <b>Summarize</b> to get a short summary!
+      </div>
+      <textarea id="inputText" placeholder="Paste your long text here..."></textarea>
+      <div class="input-row">
+        <label class="slider-label" for="summaryLength">Summary length:</label>
+        <input type="range" min="1" max="10" value="3" id="summaryLength" />
+        <span id="lengthVal">3</span> sentences
+      </div>
+      <button class="action-btn" id="summarizeBtn">Summarize</button>
+      <div class="output-box" id="summaryResult" style="margin-top: 8px"></div>
+      <div class="footer">
+        All processing is local. <b>No upload.</b> Free & private.<br />
+        <span style="color: #127080">Tip: Try news, Wikipedia, school essays, or any text!</span>
+      </div>
+    </div>
+    <a href="../index.html" id="backBtn">Other Util</a>
+    <script>
+      const inputText = document.getElementById("inputText");
+      const summaryResult = document.getElementById("summaryResult");
+      const summarizeBtn = document.getElementById("summarizeBtn");
+      const summaryLength = document.getElementById("summaryLength");
+      const lengthVal = document.getElementById("lengthVal");
+
+      summaryLength.oninput = function () {
+        lengthVal.textContent = summaryLength.value;
+      };
+
+      // Simple frequency-based summary (no AI)
+      function summarize(text, numSentences = 3) {
+        if (!text.trim()) return "Paste your text above and click Summarize.";
+        // Split text into sentences
+        const sentences = text.match(/[^\.!\?]+[\.!\?]+/g) || [text];
+        if (sentences.length <= numSentences) return text;
+        // Count word frequencies
+        const freq = {};
+        const words = text
+          .replace(/[^\w\s]/g, "")
+          .toLowerCase()
+          .split(/\s+/);
+        words.forEach((w) => {
+          if (w.length > 2) freq[w] = (freq[w] || 0) + 1;
+        });
+        // Score each sentence by sum of word frequencies
+        const scored = sentences.map((s) => {
+          const sw = s
+            .replace(/[^\w\s]/g, "")
+            .toLowerCase()
+            .split(/\s+/);
+          let score = 0;
+          sw.forEach((w) => {
+            if (freq[w]) score += freq[w];
+          });
+          return { sentence: s.trim(), score };
+        });
+        // Sort by score and pick top N, preserving original order
+        const top = scored
+          .sort((a, b) => b.score - a.score)
+          .slice(0, numSentences)
+          .sort((a, b) => sentences.indexOf(a.sentence + ".") - sentences.indexOf(b.sentence + "."));
+        return top.map((t) => t.sentence).join(" ");
+      }
+
+      summarizeBtn.onclick = function () {
+        const text = inputText.value;
+        const num = parseInt(summaryLength.value, 10);
+        const summary = summarize(text, num);
+        summaryResult.textContent = summary;
+      };
+    </script>
+  </body>
+</html>
