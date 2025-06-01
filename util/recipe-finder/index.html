@@ -1,195 +1,432 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Easy Recipe Finder – What Can I Cook?</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Find easy recipes by your ingredients. Kid-friendly, super simple, and shows YouTube recipe links!" />
-  <meta name="keywords" content="easy recipe, kids cooking, find recipe, what can I make, cooking for kids, recipe search" />
-  <meta name="author" content="Itagi" />
-  <meta name="language" content="en" />
-  <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-  <!-- SEO, Open Graph, Twitter, GA, AdSense 생략 없이 넣어둠 -->
-  <meta property="og:title" content="Easy Recipe Finder for Kids – What Can I Cook?" />
-  <meta property="og:description" content="Just type your ingredients and find easy recipes. Try it, super simple!" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://emfls.github.io/util/easy-recipe-finder/" />
-  <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Easy Recipe Finder – What Can I Cook?" />
-  <meta name="twitter:description" content="Find recipes with your ingredients, kid-friendly and fun!" />
-  <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-QP5Q67GE5B');
-  </script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
-    crossorigin="anonymous"></script>
-  <style>
-    body { background: #f9fafd; font-family: "Segoe UI", Arial, sans-serif; margin: 0;}
-    .container { max-width: 420px; margin: 32px auto 0 auto; background: #fff; border-radius: 14px; box-shadow: 0 4px 16px #36c1e420; padding: 18px 10px 22px 10px;}
-    .logo { font-size: 1.23em; font-weight: bold; color: #1f7cb8; text-align: center; margin-bottom: 8px;}
-    .desc { color: #22888a; text-align: center; margin-bottom: 15px; font-size: 1.05em;}
-    .input-label { font-size: 1.07em; color: #246; margin-bottom: 6px; margin-top: 7px; display: block;}
-    .ingredient-input-box { width: 100%; display: flex; flex-wrap: wrap; background: #f2f8fe; border-radius: 8px; border: 1.5px solid #bae1f6; padding: 7px 6px; min-height: 38px; }
-    .ingredient-chip { background: #e2eafd; color: #1761a8; border-radius: 11px; padding: 5px 12px; font-size: 1em; margin: 3px 3px 0 0; display: flex; align-items: center;}
-    .chip-remove { margin-left: 6px; cursor: pointer; color: #f54a4a; font-weight: bold; }
-    .ingredient-input { border: none; outline: none; background: transparent; font-size: 1em; min-width: 85px; flex: 1;}
-    .autocomplete-box { position: absolute; left: 0; right: 0; top: 44px; background: #fff; z-index: 100; border-radius: 0 0 8px 8px; box-shadow: 0 4px 12px #1f7cb820; border: 1px solid #bae1f6; font-size: 1em; max-height: 150px; overflow-y: auto; display: none;}
-    .autocomplete-item { padding: 9px 15px; cursor: pointer; color: #2c5b7d;}
-    .autocomplete-item.active, .autocomplete-item:hover { background: #e5f5ff; color: #1761a8;}
-    .search-btn { background: #1f7cb8; color: #fff; font-size: 1.18em; border: none; border-radius: 10px; padding: 10px 0; width: 100%; font-weight: bold; cursor: pointer; box-shadow: 0 2px 8px #9edbfc33; margin: 10px 0 14px 0;}
-    .recipes-list { margin-top: 9px;}
-    .recipe-card { background: #f1fcff; border-radius: 10px; margin-bottom: 15px; padding: 13px 10px; box-shadow: 0 2px 7px #22888a12; }
-    .recipe-title { font-weight: bold; color: #1f7cb8; font-size: 1.13em;}
-    .match-info { font-size: 1em; color: #1ea07a; margin-top: 4px; }
-    .all-ings { color: #757; font-size: 0.96em; margin-top: 3px;}
-    .yt-link-btn { background: #eb4437; color: #fff; border: none; border-radius: 9px; font-size: 1em; padding: 7px 16px; font-weight: bold; margin-top: 9px; cursor: pointer; box-shadow: 0 1px 7px #eb443726;}
-    .footer { color: #789; text-align: center; font-size: 0.95em; margin-top: 19px;}
-    #backBtn { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); background: #1761a8; color: #fff; font-weight: 700; border: none; border-radius: 2rem; padding: 0.52em 1.28em; font-size: 1em; text-decoration: none; cursor: pointer; letter-spacing: 0.01em; transition: background 0.15s, transform 0.12s; z-index: 2000;}
-    #backBtn:hover { background: #0e8078; transform: translateX(-50%) scale(1.04);}
-    @media (max-width: 600px) {
-      .container { max-width: 99vw; padding: 7px 2vw 10px 2vw;}
-      .logo { font-size: 1em;}
-      #backBtn { bottom: 11px; font-size: 0.93em; padding: 0.41em 0.85em;}
-    }
-  </style>
-  <script src="recipes.js"></script> <!-- 외부 DB 파일 불러오기 -->
-</head>
-<body>
-  <div class="container">
-    <div class="logo">🍳 Easy Recipe Finder</div>
-    <div class="desc">
-      What ingredients do you have? <br><b>Type or choose below!</b>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Easy Recipe Finder – What Can I Cook?</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Find easy recipes by your ingredients. Kid-friendly, super simple, and shows YouTube recipe links!" />
+    <meta
+      name="keywords"
+      content="easy recipe, kids cooking, find recipe, what can I make, cooking for kids, recipe search" />
+    <meta name="author" content="Itagi" />
+    <meta name="language" content="en" />
+    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+    <!-- SEO, Open Graph, Twitter, GA, AdSense 생략 없이 넣어둠 -->
+    <meta property="og:title" content="Easy Recipe Finder for Kids – What Can I Cook?" />
+    <meta property="og:description" content="Just type your ingredients and find easy recipes. Try it, super simple!" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/util/easy-recipe-finder/" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Easy Recipe Finder – What Can I Cook?" />
+    <meta name="twitter:description" content="Find recipes with your ingredients, kid-friendly and fun!" />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <style>
+      body {
+        background: #f9fafd;
+        font-family: "Segoe UI", Arial, sans-serif;
+        margin: 0;
+      }
+      .container {
+        max-width: 420px;
+        margin: 32px auto 0 auto;
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 4px 16px #36c1e420;
+        padding: 18px 10px 22px 10px;
+      }
+      .logo {
+        font-size: 1.23em;
+        font-weight: bold;
+        color: #1f7cb8;
+        text-align: center;
+        margin-bottom: 8px;
+      }
+      .desc {
+        color: #22888a;
+        text-align: center;
+        margin-bottom: 15px;
+        font-size: 1.05em;
+      }
+      .input-label {
+        font-size: 1.07em;
+        color: #246;
+        margin-bottom: 6px;
+        margin-top: 7px;
+        display: block;
+      }
+      .ingredient-input-box {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        background: #f2f8fe;
+        border-radius: 8px;
+        border: 1.5px solid #bae1f6;
+        padding: 7px 6px;
+        min-height: 38px;
+      }
+      .ingredient-chip {
+        background: #e2eafd;
+        color: #1761a8;
+        border-radius: 11px;
+        padding: 5px 12px;
+        font-size: 1em;
+        margin: 3px 3px 0 0;
+        display: flex;
+        align-items: center;
+      }
+      .chip-remove {
+        margin-left: 6px;
+        cursor: pointer;
+        color: #f54a4a;
+        font-weight: bold;
+      }
+      .ingredient-input {
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: 1em;
+        min-width: 85px;
+        flex: 1;
+      }
+      .autocomplete-box {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 44px;
+        background: #fff;
+        z-index: 100;
+        border-radius: 0 0 8px 8px;
+        box-shadow: 0 4px 12px #1f7cb820;
+        border: 1px solid #bae1f6;
+        font-size: 1em;
+        max-height: 150px;
+        overflow-y: auto;
+        display: none;
+      }
+      .autocomplete-item {
+        padding: 9px 15px;
+        cursor: pointer;
+        color: #2c5b7d;
+      }
+      .autocomplete-item.active,
+      .autocomplete-item:hover {
+        background: #e5f5ff;
+        color: #1761a8;
+      }
+      .search-btn {
+        background: #1f7cb8;
+        color: #fff;
+        font-size: 1.18em;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 0;
+        width: 100%;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 2px 8px #9edbfc33;
+        margin: 10px 0 14px 0;
+      }
+      .recipes-list {
+        margin-top: 9px;
+      }
+      .recipe-card {
+        background: #f1fcff;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        padding: 13px 10px;
+        box-shadow: 0 2px 7px #22888a12;
+      }
+      .recipe-title {
+        font-weight: bold;
+        color: #1f7cb8;
+        font-size: 1.13em;
+      }
+      .match-info {
+        font-size: 1em;
+        color: #1ea07a;
+        margin-top: 4px;
+      }
+      .all-ings {
+        color: #757;
+        font-size: 0.96em;
+        margin-top: 3px;
+      }
+      .yt-link-btn {
+        background: #eb4437;
+        color: #fff;
+        border: none;
+        border-radius: 9px;
+        font-size: 1em;
+        padding: 7px 16px;
+        font-weight: bold;
+        margin-top: 9px;
+        cursor: pointer;
+        box-shadow: 0 1px 7px #eb443726;
+      }
+      .footer {
+        color: #789;
+        text-align: center;
+        font-size: 0.95em;
+        margin-top: 19px;
+      }
+      #backBtn {
+        position: fixed;
+        left: 50%;
+        bottom: 22px;
+        transform: translateX(-50%);
+        background: #1761a8;
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 2rem;
+        padding: 0.52em 1.28em;
+        font-size: 1em;
+        text-decoration: none;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+        transition:
+          background 0.15s,
+          transform 0.12s;
+        z-index: 2000;
+      }
+      #backBtn:hover {
+        background: #0e8078;
+        transform: translateX(-50%) scale(1.04);
+      }
+      @media (max-width: 600px) {
+        .container {
+          max-width: 99vw;
+          padding: 7px 2vw 10px 2vw;
+        }
+        .logo {
+          font-size: 1em;
+        }
+        #backBtn {
+          bottom: 11px;
+          font-size: 0.93em;
+          padding: 0.41em 0.85em;
+        }
+      }
+    </style>
+    <script src="recipes.js"></script>
+    <!-- 외부 DB 파일 불러오기 -->
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">🍳 Easy Recipe Finder</div>
+      <div class="desc">What ingredients do you have? <br /><b>Type or choose below!</b></div>
+      <span class="input-label">Your Ingredients:</span>
+      <div class="ingredient-input-box" id="ingredientWrap" style="position: relative">
+        <input
+          type="text"
+          class="ingredient-input"
+          id="ingredientInput"
+          placeholder="E.g. egg, cheese, milk"
+          autocomplete="off" />
+        <div class="autocomplete-box" id="autocompleteBox"></div>
+      </div>
+      <button class="search-btn" id="searchBtn">Show Recipes</button>
+      <div class="recipes-list" id="recipesList"></div>
+      <div class="footer">
+        No upload. Kid-safe, simple and fun!<br />
+        Made by <b>Itagi</b>.
+      </div>
+      <a href="../index.html" id="backBtn">Other Util</a>
     </div>
-    <span class="input-label">Your Ingredients:</span>
-    <div class="ingredient-input-box" id="ingredientWrap" style="position:relative;">
-      <input type="text" class="ingredient-input" id="ingredientInput" placeholder="E.g. egg, cheese, milk" autocomplete="off" />
-      <div class="autocomplete-box" id="autocompleteBox"></div>
-    </div>
-    <button class="search-btn" id="searchBtn">Show Recipes</button>
-    <div class="recipes-list" id="recipesList"></div>
-    <div class="footer">
-      No upload. Kid-safe, simple and fun!<br>
-      Made by <b>Itagi</b>.
-    </div>
-    <a href="../index.html" id="backBtn">Other Util</a>
-  </div>
-  <script>
-    // DB는 recipes.js에서 window.RECIPES_DB, window.INGREDIENTS_DB로 불러옴!
-    const RECIPES = window.RECIPES_DB || [];
-    const INGREDIENTS = window.INGREDIENTS_DB || [];
-    const ingredientInput = document.getElementById('ingredientInput');
-    const ingredientWrap = document.getElementById('ingredientWrap');
-    const autocompleteBox = document.getElementById('autocompleteBox');
-    const searchBtn = document.getElementById('searchBtn');
-    const recipesList = document.getElementById('recipesList');
-    let selectedIngredients = [];
+    <script>
+      // DB는 recipes.js에서 window.RECIPES_DB, window.INGREDIENTS_DB로 불러옴!
+      const RECIPES = window.RECIPES_DB || [];
+      const INGREDIENTS = window.INGREDIENTS_DB || [];
+      const ingredientInput = document.getElementById("ingredientInput");
+      const ingredientWrap = document.getElementById("ingredientWrap");
+      const autocompleteBox = document.getElementById("autocompleteBox");
+      const searchBtn = document.getElementById("searchBtn");
+      const recipesList = document.getElementById("recipesList");
+      let selectedIngredients = [];
 
-    // 자동완성 (아주 심플하게)
-    function showAutocomplete(val) {
-      autocompleteBox.innerHTML = "";
-      if (!val) { autocompleteBox.style.display = "none"; return; }
-      const filtered = INGREDIENTS.filter(ing =>
-        ing.toLowerCase().startsWith(val.toLowerCase()) &&
-        !selectedIngredients.includes(ing)
-      ).slice(0,7);
-      if (filtered.length === 0) { autocompleteBox.style.display = "none"; return; }
-      filtered.forEach((item) => {
-        const div = document.createElement('div');
-        div.className = "autocomplete-item";
-        div.textContent = item;
-        div.onclick = () => {
-          addIngredient(item);
+      // 자동완성 (아주 심플하게)
+      function showAutocomplete(val) {
+        autocompleteBox.innerHTML = "";
+        if (!val) {
+          autocompleteBox.style.display = "none";
+          return;
+        }
+        const filtered = INGREDIENTS.filter(
+          (ing) => ing.toLowerCase().startsWith(val.toLowerCase()) && !selectedIngredients.includes(ing)
+        ).slice(0, 7);
+        if (filtered.length === 0) {
+          autocompleteBox.style.display = "none";
+          return;
+        }
+        filtered.forEach((item) => {
+          const div = document.createElement("div");
+          div.className = "autocomplete-item";
+          div.textContent = item;
+          div.onclick = () => {
+            addIngredient(item);
+            ingredientInput.value = "";
+            autocompleteBox.style.display = "none";
+            ingredientInput.focus();
+          };
+          autocompleteBox.appendChild(div);
+        });
+        autocompleteBox.style.display = "block";
+      }
+      ingredientInput.addEventListener("input", () => showAutocomplete(ingredientInput.value.trim()));
+      ingredientInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === ",") {
+          e.preventDefault();
+          const val = ingredientInput.value.trim().replace(/,+$/, "");
+          if (val) addIngredient(val);
           ingredientInput.value = "";
           autocompleteBox.style.display = "none";
-          ingredientInput.focus();
-        };
-        autocompleteBox.appendChild(div);
-      });
-      autocompleteBox.style.display = "block";
-    }
-    ingredientInput.addEventListener('input', () => showAutocomplete(ingredientInput.value.trim()));
-    ingredientInput.addEventListener('keydown', (e) => {
-      if (e.key === "Enter" || e.key === ",") {
-        e.preventDefault();
-        const val = ingredientInput.value.trim().replace(/,+$/, "");
-        if (val) addIngredient(val);
-        ingredientInput.value = "";
-        autocompleteBox.style.display = "none";
-      }
-    });
-    document.addEventListener('click', (e) => {
-      if (!ingredientWrap.contains(e.target)) autocompleteBox.style.display = "none";
-    });
-
-    function addIngredient(val) {
-      val = val.toLowerCase().replace(/[^a-z0-9\s]/g, '').trim();
-      if (!val || selectedIngredients.includes(val)) return;
-      selectedIngredients.push(val);
-      updateChips();
-    }
-    function removeIngredient(val) {
-      selectedIngredients = selectedIngredients.filter(v => v !== val);
-      updateChips();
-    }
-    function updateChips() {
-      // chip 제거
-      ingredientWrap.querySelectorAll('.ingredient-chip').forEach(el => el.remove());
-      selectedIngredients.forEach(ing => {
-        const chip = document.createElement('div');
-        chip.className = 'ingredient-chip';
-        chip.textContent = ing;
-        const rm = document.createElement('span');
-        rm.className = 'chip-remove'; rm.textContent = '×';
-        rm.onclick = () => removeIngredient(ing);
-        chip.appendChild(rm);
-        ingredientWrap.insertBefore(chip, ingredientInput);
-      });
-    }
-
-    // 3. 요리 매칭 및 출력 (YouTube 링크 포함)
-    function showRecipes() {
-      if (selectedIngredients.length === 0) {
-        recipesList.innerHTML = `<div style="color:#aaa;font-size:1.11em;text-align:center;">Type your ingredients above!</div>`;
-        return;
-      }
-      const matches = RECIPES.map(r => {
-        const matched = r.ingredients.filter(i => selectedIngredients.includes(i));
-        return {
-          name: r.name,
-          matchedCount: matched.length,
-          total: r.ingredients.length,
-          matched: matched,
-          ingredients: r.ingredients
         }
-      }).filter(r => r.matchedCount > 0)
-        .sort((a, b) => b.matchedCount - a.matchedCount || a.total - b.total);
-      if (matches.length === 0) {
-        recipesList.innerHTML = `<div style="color:#e57272;text-align:center;">No recipes found. Try different ingredients!</div>`;
-        return;
+      });
+      document.addEventListener("click", (e) => {
+        if (!ingredientWrap.contains(e.target)) autocompleteBox.style.display = "none";
+      });
+
+      function addIngredient(val) {
+        val = val
+          .toLowerCase()
+          .replace(/[^a-z0-9\s]/g, "")
+          .trim();
+        if (!val || selectedIngredients.includes(val)) return;
+        selectedIngredients.push(val);
+        updateChips();
       }
-      recipesList.innerHTML = matches.map(r => `
+      function removeIngredient(val) {
+        selectedIngredients = selectedIngredients.filter((v) => v !== val);
+        updateChips();
+      }
+      function updateChips() {
+        // chip 제거
+        ingredientWrap.querySelectorAll(".ingredient-chip").forEach((el) => el.remove());
+        selectedIngredients.forEach((ing) => {
+          const chip = document.createElement("div");
+          chip.className = "ingredient-chip";
+          chip.textContent = ing;
+          const rm = document.createElement("span");
+          rm.className = "chip-remove";
+          rm.textContent = "×";
+          rm.onclick = () => removeIngredient(ing);
+          chip.appendChild(rm);
+          ingredientWrap.insertBefore(chip, ingredientInput);
+        });
+      }
+
+      // 3. 요리 매칭 및 출력 (YouTube 링크 포함)
+      function showRecipes() {
+        if (selectedIngredients.length === 0) {
+          recipesList.innerHTML = `<div style="color:#aaa;font-size:1.11em;text-align:center;">Type your ingredients above!</div>`;
+          return;
+        }
+        const matches = RECIPES.map((r) => {
+          const matched = r.ingredients.filter((i) => selectedIngredients.includes(i));
+          return {
+            name: r.name,
+            matchedCount: matched.length,
+            total: r.ingredients.length,
+            matched: matched,
+            ingredients: r.ingredients
+          };
+        })
+          .filter((r) => r.matchedCount > 0)
+          .sort((a, b) => b.matchedCount - a.matchedCount || a.total - b.total);
+        if (matches.length === 0) {
+          recipesList.innerHTML = `<div style="color:#e57272;text-align:center;">No recipes found. Try different ingredients!</div>`;
+          return;
+        }
+        recipesList.innerHTML = matches
+          .map(
+            (r) => `
         <div class="recipe-card">
           <div class="recipe-title">${r.name}</div>
           <div class="match-info">Matching: <b>${r.matchedCount}</b> / ${r.total} ingredients</div>
-          <div class="all-ings">Ingredients: ${r.ingredients.map(i =>
-            r.matched.includes(i) ? `<b style="color:#228e6f">${i}</b>` : i
-          ).join(", ")}</div>
-          <button class="yt-link-btn" onclick="window.open('https://www.youtube.com/results?search_query=${encodeURIComponent(r.name + ' recipe')}', '_blank')">
+          <div class="all-ings">Ingredients: ${r.ingredients
+            .map((i) => (r.matched.includes(i) ? `<b style="color:#228e6f">${i}</b>` : i))
+            .join(", ")}</div>
+          <button class="yt-link-btn" onclick="window.open('https://www.youtube.com/results?search_query=${encodeURIComponent(r.name + " recipe")}', '_blank')">
             ▶ See on YouTube
           </button>
         </div>
-      `).join("");
-    }
-    searchBtn.onclick = showRecipes;
-    ingredientInput.addEventListener('blur', () => { if(selectedIngredients.length) showRecipes(); });
+      `
+          )
+          .join("");
+      }
+      searchBtn.onclick = showRecipes;
+      ingredientInput.addEventListener("blur", () => {
+        if (selectedIngredients.length) showRecipes();
+      });
 
-    // 첫 화면 안내
-    showRecipes();
-  </script>
-</body>
+      // 첫 화면 안내
+      showRecipes();
+    </script>
+    <section
+      style="
+        max-width: 320px;
+        margin: 48px auto 24px auto;
+        background: #1e1e1e;
+        border-radius: 18px;
+        box-shadow: 0 6px 24px #1236;
+        padding: 18px;
+      ">
+      <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 12px">
+        FAQ – Easy Recipe Finder
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">Q. Do I need to sign up or log in?</div>
+        <div style="color: #f0f0f0">
+          Nope! Everything works without login. Your ingredients and search results stay only in your browser.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">Q. Is this site safe for kids?</div>
+        <div style="color: #f0f0f0">
+          Yes! There is no personal data collection or external upload. All features are designed to be kid-friendly and
+          ad-light.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">Q. Where are the recipes from?</div>
+        <div style="color: #f0f0f0">
+          Recipe ideas are matched from a simple local database. YouTube links are generated based on recipe names for
+          easy video guides.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">Q. Can I request more recipes?</div>
+        <div style="color: #f0f0f0">
+          Currently, the list is fixed. But we may add a suggestion form in the future. Stay tuned!
+        </div>
+      </div>
+
+      <div>
+        <div style="color: #8f94fb; font-weight: bold">Q. Does it work offline?</div>
+        <div style="color: #f0f0f0">
+          Yes, it works once loaded. However, YouTube links require internet connection to open.
+        </div>
+      </div>
+    </section>
+  </body>
 </html>
