@@ -1,37 +1,33 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <meta
             name="description"
-            content="Land Grab: Expand your territory, avoid red balls, and level up! Fast, fun, and mobile-friendly web game – play free in your browser." />
+            content="Land Grab: 영토를 확장하고, 빨간 공을 피하며 레벨업하세요! 빠르고 재미있고 모바일 친화적인 웹 게임을 브라우저에서 무료로 플레이하세요." />
         <meta
             name="keywords"
-            content="Land Grab, webgame, territory capture, online, browser game, free, mobile, puzzle, action, arcade, addictive, ball game, casual, strategy" />
+            content="Land Grab, 웹 게임, 영토 점령, 온라인, 브라우저 게임, 무료, 모바일, 퍼즐, 액션, 아케이드, 중독성, 공 게임, 캐주얼, 전략" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
-        <!-- 표준 주소 (canonical) -->
-        <link rel="canonical" href="https://emfls.github.io/LandGrab" />
+        <link rel="canonical" href="https://emfls.github.io/kor/game/LandGrab" />
 
-        <!-- Open Graph (SNS) -->
-        <meta property="og:title" content="Land Grab – Free Addictive Area Capture Game" />
+        <meta property="og:title" content="Land Grab – 무료 중독성 영토 점령 게임" />
         <meta
             property="og:description"
-            content="Expand your land and dodge the red balls! Can you clear all the levels? Play free online." />
+            content="영토를 확장하고 빨간 공을 피하세요! 모든 레벨을 클리어할 수 있을까요? 온라인에서 무료로 플레이하세요." />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
-        <meta property="og:url" content="https://emfls.github.io/LandGrab" />
+        <meta property="og:url" content="https://emfls.github.io/kor/game/LandGrab" />
         <meta property="og:type" content="website" />
 
-        <!-- Twitter 카드 -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Land Grab – Free Addictive Area Capture Game" />
+        <meta name="twitter:title" content="Land Grab – 무료 중독성 영토 점령 게임" />
         <meta
             name="twitter:description"
-            content="Land Grab: Capture territory and avoid red balls! Free, browser-based, and mobile-friendly." />
+            content="Land Grab: 영토를 점령하고 빨간 공을 피하세요! 무료, 브라우저 기반, 모바일 친화적입니다." />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-        <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -273,11 +269,11 @@
         <div id="gameWrapper">
             <div class="game-header">
                 <div class="game-title">Land Grab</div>
-                <div class="game-desc">Expand your land and dodge the red balls!</div>
+                <div class="game-desc">영토를 확장하고 빨간 공을 피하세요!</div>
             </div>
             <div class="statbar">
-                <span id="level">Level: 1</span>
-                <span id="percent">Area: 0%</span>
+                <span id="level">레벨: 1</span>
+                <span id="percent">영역: 0%</span>
             </div>
             <canvas id="game"></canvas>
             <div id="dpad">
@@ -292,10 +288,10 @@
                 <button class="emptyBtn"></button>
             </div>
             <div class="ui btn-row">
-                <button class="btn" id="startBtn">Start Game</button>
-                <button class="btn" id="restartBtn" style="display: none">Restart</button>
-                <button class="btn" id="shareBtn" style="display: none">Share</button>
-                <a class="btn" href="../" id="otherBtn">Other Games</a>
+                <button class="btn" id="startBtn">게임 시작</button>
+                <button class="btn" id="restartBtn" style="display: none">재시작</button>
+                <button class="btn" id="shareBtn" style="display: none">공유</button>
+                <a class="btn" href="../kor/game/" id="otherBtn">다른 게임</a>
             </div>
             <div class="ui" id="gameover"></div>
         </div>
@@ -539,7 +535,7 @@
                 for (let y = 1; y < GRID_H - 1; ++y)
                     for (let x = 1; x < GRID_W - 1; ++x) if (field[y][x] === 1) filled++;
                 percent = Math.floor((filled / total) * 100);
-                document.getElementById("percent").innerText = `Area: ${percent}%`;
+                document.getElementById("percent").innerText = `영역: ${percent}%`;
                 if (percent >= 80) nextLevel();
             }
 
@@ -631,7 +627,7 @@
                 cancelAnimationFrame(anim);
                 level++;
                 document.getElementById("gameover").style.color = "#18a600";
-                document.getElementById("gameover").innerHTML = `Level up!<br>Proceeding to Level ${level}...`;
+                document.getElementById("gameover").innerHTML = `레벨업!<br>레벨 ${level}로 진행 중...`;
                 document.getElementById("gameover").style.display = "block";
                 setTimeout(() => {
                     document.getElementById("gameover").style.display = "none";
@@ -648,19 +644,19 @@
                 running = false;
                 cancelAnimationFrame(anim);
                 document.getElementById("gameover").style.color = "#d11";
-                document.getElementById("gameover").innerHTML = `Game Over<br>Level: ${level} | Area: ${percent}%`;
+                document.getElementById("gameover").innerHTML = `게임 오버<br>레벨: ${level} | 영역: ${percent}%`;
                 document.getElementById("gameover").style.display = "block";
                 document.getElementById("restartBtn").style.display = "";
                 document.getElementById("shareBtn").style.display = "";
             }
 
             function updateUI() {
-                document.getElementById("level").innerText = `Level: ${level}`;
-                document.getElementById("percent").innerText = `Area: ${percent}%`;
+                document.getElementById("level").innerText = `레벨: ${level}`;
+                document.getElementById("percent").innerText = `영역: ${percent}%`;
             }
 
             function share() {
-                let txt = `My best at Land Grab: Level ${level}, Area ${percent}%! Play now: ${location.href}`;
+                let txt = `Land Grab 최고 기록: 레벨 ${level}, 영역 ${percent}%! 지금 플레이하세요: ${location.href}`;
                 if (navigator.share) {
                     navigator.share({
                         title: "Land Grab",
@@ -669,7 +665,7 @@
                     });
                 } else {
                     navigator.clipboard.writeText(txt);
-                    alert("Link copied!");
+                    alert("링크가 복사되었습니다!");
                 }
             }
 
@@ -716,36 +712,36 @@
                 line-height: 1.65;
                 color: #2d3436;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #2577cf">❓ Frequently Asked Questions</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #2577cf">❓ 자주 묻는 질문</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. How do I play the Ladder Game?</strong><br />
-                A. Tap a number at the top to let the line flow down. See where you end up!
+                <strong>Q1. 랜드 그랩 게임은 어떻게 플레이하나요?</strong><br />
+                A. 화면을 이동하며 선을 긋고, 영토를 확장하세요. 모든 빈 공간을 채우고 다음 레벨로 나아가세요!
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. What does Level Up mean?</strong><br />
-                A. You passed the current stage and move to the next wave.
+                <strong>Q2. 레벨업은 무엇을 의미하나요?</strong><br />
+                A. 현재 스테이지를 성공적으로 클리어하고 다음 단계로 넘어가는 것을 의미합니다.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. What ends the game?</strong><br />
-                A. If your result is a red "X", it’s Game Over!
+                <strong>Q3. 게임은 언제 끝나나요?</strong><br />
+                A. 이동 중에 빨간 공에 부딪히거나, 이동 경로에 빨간 공이 닿으면 게임 오버입니다!
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. Is this a skill-based game?</strong><br />
-                A. Nope 😎 — the ladder is random every time. Just try your luck!
+                <strong>Q4. 이 게임은 운 기반 게임인가요?</strong><br />
+                A. 아니요 😎 — 이 게임은 당신의 전략과 컨트롤에 따라 달라집니다!
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. How can I retry?</strong><br />
-                A. Tap the <strong>Restart</strong> button after a Game Over to play again from Wave 1.
+                <strong>Q5. 다시 시작하려면 어떻게 해야 하나요?</strong><br />
+                A. 게임 오버 후 <strong>재시작</strong> 버튼을 탭하면 레벨 1부터 다시 플레이할 수 있습니다.
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. Can I share the game with friends?</strong><br />
-                A. Yes! Tap <strong>Share</strong> to copy the link or use mobile share features.
+                <strong>Q6. 친구들과 게임을 공유할 수 있나요?</strong><br />
+                A. 네! <strong>공유</strong> 버튼을 탭하여 링크를 복사하거나 모바일 공유 기능을 사용할 수 있습니다.
             </div>
         </section>
     </body>

@@ -1,32 +1,31 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content="Play Aero Jump, a free retro arcade jumping game! How high can you climb?" />
+        <meta name="description" content="무료 레트로 아케이드 점프 게임 에어로 점프를 플레이하세요! 얼마나 높이 올라갈 수 있을까요?" />
         <meta
             name="keywords"
-            content="Aero Jump, jump game, arcade, free online game, retro, browser, mobile, high score, platformer" />
+            content="에어로 점프, 점프 게임, 아케이드, 무료 온라인 게임, 레트로, 브라우저, 모바일, 최고 기록, 플랫폼 게임" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
-        <link rel="canonical" href="https://emfls.github.io/AeroJump" />
+        <link rel="canonical" href="https://emfls.github.io/kor/game/AeroJump" />
 
-        <meta property="og:title" content="Aero Jump – Free Online Game!" />
+        <meta property="og:title" content="에어로 점프 – 무료 온라인 게임!" />
         <meta
             property="og:description"
-            content="Play Aero Jump, a free retro arcade jumping game! How high can you climb?" />
+            content="무료 레트로 아케이드 점프 게임 에어로 점프를 플레이하세요! 얼마나 높이 올라갈 수 있을까요?" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
-        <meta property="og:url" content="https://emfls.github.io/AeroJump" />
+        <meta property="og:url" content="https://emfls.github.io/kor/game/AeroJump" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Aero Jump – Free Online Game!" />
+        <meta name="twitter:title" content="에어로 점프 – 무료 온라인 게임!" />
         <meta
             name="twitter:description"
-            content="Play Aero Jump, a free retro arcade jumping game! How high can you climb?" />
+            content="무료 레트로 아케이드 점프 게임 에어로 점프를 플레이하세요! 얼마나 높이 올라갈 수 있을까요?" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-        <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -41,7 +40,10 @@
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <title>Aero Jump</title>
+        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Hanna&display=swap" rel="stylesheet" />
+        <title>에어로 점프</title>
         <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
         <style>
             * {
@@ -53,7 +55,7 @@
             html,
             body {
                 background: linear-gradient(to bottom, #a1c4fd, #c2e9fb);
-                font-family: "Press Start 2P", cursive;
+                font-family: "Hanna", cursive;
                 height: 100%;
                 overflow-x: hidden;
                 overflow-y: auto;
@@ -211,25 +213,25 @@
 
     <body ondragstart="return false" onselectstart="return false">
         <header>
-            <h1>Aero Jump</h1>
+            <h1>에어로 점프</h1>
         </header>
         <div id="gameWrapper">
-            <div id="scoreDisplay">SCORE: 0</div>
+            <div id="scoreDisplay">점수: 0</div>
             <canvas id="gameCanvas"></canvas>
             <div id="touchControls">
                 <button id="leftBtn">◀</button>
                 <button id="rightBtn">▶</button>
             </div>
             <div id="gameOverOverlay">
-                <div id="finalScore">Score: 0</div>
+                <div id="finalScore">점수: 0</div>
                 <div>
-                    <button id="shareBtn">Share</button>
-                    <button id="restartBtn">Restart</button>
+                    <button id="shareBtn">공유</button>
+                    <button id="restartBtn">다시 시작</button>
                 </div>
             </div>
         </div>
         <footer id="otherGames">
-            <a href="window.location.href='../'">Other Games</a>
+            <a href="window.location.href='../../'">다른 게임</a>
         </footer>
         <script>
             // Disable drag, select, context menu within game area
@@ -356,9 +358,9 @@
                     while (nextPlatformY > -50) spawnRow();
                 }
                 platforms = platforms.filter((p) => p.y < height);
-                document.getElementById("scoreDisplay").innerText = "SCORE: " + Math.floor(score / 10);
+                document.getElementById("scoreDisplay").innerText = "점수: " + Math.floor(score / 10);
                 if (player.y > height) {
-                    document.getElementById("finalScore").innerText = "Score: " + Math.floor(score / 10);
+                    document.getElementById("finalScore").innerText = "점수: " + Math.floor(score / 10);
                     document.getElementById("gameOverOverlay").style.display = "flex";
                     return;
                 }
@@ -391,14 +393,14 @@
             };
             document.getElementById("shareBtn").onclick = async () => {
                 const data = {
-                    title: "Aero Jump",
-                    text: `My Score: ${Math.floor(score / 10)}!`,
+                    title: "에어로 점프",
+                    text: `내 점수: ${Math.floor(score / 10)}!`,
                     url: location.href
                 };
                 try {
                     navigator.share
                         ? await navigator.share(data)
-                        : (await navigator.clipboard.writeText(location.href)) && alert("Link copied!");
+                        : (await navigator.clipboard.writeText(location.href)) && alert("링크가 복사되었습니다!");
                 } catch {}
             };
 
@@ -421,37 +423,36 @@
                 line-height: 1.6;
                 font-size: 14px;
             ">
-            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ Frequently Asked Questions (FAQ)</h2>
+            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ 자주 묻는 질문 (FAQ)</h2>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q1. How do I play Aero Jump?</strong><br />
-                A. Use the left (◀) and right (▶) buttons or arrow keys to move. Land on platforms to bounce higher.
+                <strong>Q1. 에어로 점프는 어떻게 플레이하나요?</strong><br />
+                A. 왼쪽(◀) 및 오른쪽(▶) 버튼 또는 화살표 키를 사용하여 이동하세요. 플랫폼에 착지하여 더 높이 점프하세요.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q2. What's the goal of the game?</strong><br />
-                A. Keep bouncing on platforms and go as high as you can! Your score increases the higher you climb.
+                <strong>Q2. 게임의 목표는 무엇인가요?</strong><br />
+                A. 플랫폼에서 계속 점프하며 최대한 높이 올라가세요! 높이 올라갈수록 점수가 증가합니다.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q3. What happens when I fall?</strong><br />
-                A. If you fall below the screen and miss all platforms, it's game over. You can restart right away.
+                <strong>Q3. 떨어지면 어떻게 되나요?</strong><br />
+                A. 화면 아래로 떨어져 모든 플랫폼을 놓치면 게임 오버입니다. 바로 다시 시작할 수 있습니다.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q4. Can I play on mobile?</strong><br />
-                A. Yes! The game supports mobile touch controls. Use the green buttons at the bottom to move.
+                <strong>Q4. 모바일에서 플레이할 수 있나요?</strong><br />
+                A. 네! 이 게임은 모바일 터치 컨트롤을 지원합니다. 하단의 녹색 버튼을 사용하여 이동하세요.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q5. How do I share my score?</strong><br />
-                A. After the game ends, click the <strong>Share</strong> button. Your score will be shared via your
-                device's native sharing feature, or copied as a link.
+                <strong>Q5. 점수를 어떻게 공유하나요?</strong><br />
+                A. 게임이 끝나면 <strong>공유</strong> 버튼을 클릭하세요. 점수는 기기의 기본 공유 기능을 통해 공유되거나, 링크로 복사됩니다.
             </div>
 
             <div>
-                <strong>Q6. Where can I find more games?</strong><br />
-                A. Scroll down and click on <strong>📂 Other Games</strong> to explore the full collection.
+                <strong>Q6. 다른 게임은 어디서 찾을 수 있나요?</strong><br />
+                A. 아래로 스크롤하여 <strong>📂 다른 게임</strong>을 클릭하면 전체 컬렉션을 탐색할 수 있습니다.
             </div>
         </section>
     </body>

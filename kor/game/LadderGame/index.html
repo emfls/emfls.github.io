@@ -1,40 +1,35 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <title>Ladder Game</title>
+    <title>사다리 게임</title>
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
-    <!-- 기본 메타 -->
     <meta
       name="description"
-      content="Mobile Ladder Game - Pick a number and see your fate! Fast, fun, and luck-based web game optimized for iPhone SE and all smartphones." />
+      content="모바일 사다리 게임 - 숫자를 선택하고 운명을 확인하세요! 아이폰 SE 및 모든 스마트폰에 최적화된 빠르고 재미있는 운 기반 웹 게임입니다." />
     <meta
       name="keywords"
-      content="ladder game, mobile game, webgame, 사다리타기, luck game, 미니게임, mobile casual, 아이폰 게임, 아이폰 SE, 사다리, 랜덤 게임, browser game, 운 게임, pick a number, 소셜게임, html5 game" />
+      content="사다리 게임, 모바일 게임, 웹게임, 사다리타기, 운 게임, 미니게임, 모바일 캐주얼, 아이폰 게임, 아이폰 SE, 사다리, 랜덤 게임, 브라우저 게임, 운 게임, 숫자 선택, 소셜게임, html5 게임" />
     <meta name="author" content="Itagi" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- 오픈그래프 (SNS 썸네일 등) -->
-    <meta property="og:title" content="Ladder Game - Mobile Web Luck Game" />
+    <meta property="og:title" content="사다리 게임 - 모바일 웹 운 게임" />
     <meta
       property="og:description"
-      content="Pick a number and see your fate! Fun, quick, and mobile-optimized ladder game." />
+      content="숫자를 선택하고 운명을 확인하세요! 재미있고 빠르며 모바일에 최적화된 사다리 게임입니다." />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
-    <!-- 대표 썸네일 주소 -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://emfls.github.io/LadderGame" />
+    <meta property="og:url" content="https://emfls.github.io/kor/game/LadderGame" />
 
-    <!-- 트위터 카드 -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Ladder Game - Mobile Luck Game" />
-    <meta name="twitter:description" content="Mobile ladder game. Pick a number, watch your luck!" />
+    <meta name="twitter:title" content="사다리 게임 - 모바일 운 게임" />
+    <meta name="twitter:description" content="모바일 사다리 게임. 숫자를 선택하고 당신의 운을 확인하세요!" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
     <meta name="robots" content="index, follow" />
 
-    <link rel="canonical" href="https://emfls.github.io/LadderGame/" />
-    <!-- Google tag (gtag.js) -->
+    <link rel="canonical" href="https://emfls.github.io/kor/game/LadderGame" />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -209,8 +204,8 @@
   </head>
   <body>
     <div id="gameWrap">
-      <h1>Ladder Game</h1>
-      <div class="desc">Pick a number and see your fate in the ladder!</div>
+      <h1>사다리 게임</h1>
+      <div class="desc">숫자를 선택하고 사다리에서 당신의 운명을 확인하세요!</div>
       <div id="ladderBox">
         <div id="topChoices"></div>
         <canvas id="ladderCanvas" width="200" height="340"></canvas>
@@ -231,10 +226,10 @@
       </div>
       <div id="resultMsg"></div>
       <div id="btnRow">
-        <button class="btn" id="startBtn">Start Game</button>
-        <button class="btn hide" id="retryBtn">Restart</button>
-        <button class="btn" id="shareBtn">Share</button>
-        <button class="btn" id="otherBtn">Other Games</button>
+        <button class="btn" id="startBtn">게임 시작</button>
+        <button class="btn hide" id="retryBtn">재시작</button>
+        <button class="btn" id="shareBtn">공유</button>
+        <button class="btn" id="otherBtn">다른 게임</button>
       </div>
     </div>
     <script>
@@ -393,7 +388,7 @@
             setTimeout(() => {
               let endIdx = path[path.length - 1].col;
               let endRes = ladder.ends[endIdx];
-              resultMsg.innerHTML = endRes === "LEVELUP" ? "🎉 <b>Level Up!</b> Next Wave →" : "💀 <b>Game Over!</b>";
+              resultMsg.innerHTML = endRes === "LEVELUP" ? "🎉 <b>레벨 업!</b> 다음 웨이브 →" : "💀 <b>게임 오버!</b>";
               renderTopChoices();
               playing = endRes === "LEVELUP";
               busy = false;
@@ -444,11 +439,13 @@
         if (navigator.share) {
           navigator.share({ title: document.title, url: shareUrl });
         } else {
-          window.prompt("Copy this URL and share!", shareUrl);
+          window.prompt("이 URL을 복사하여 공유하세요!", shareUrl);
         }
       };
       otherBtn.onclick = function () {
-        window.location.href = "../";
+        // [2025-06-01] 내가 아까 이야기했던 kor/game/ 이거 적용하는거 기억해줘.
+        // `../` 대신 `kor/game/`을 사용합니다.
+        window.location.href = "kor/game/";
       };
 
       function resetUI() {
@@ -492,36 +489,36 @@
         line-height: 1.6;
         font-size: 14px;
       ">
-      <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e70c2">❓ Frequently Asked Questions (FAQ)</h2>
+      <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e70c2">❓ 자주 묻는 질문 (FAQ)</h2>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q1. How do I play the Ladder Game?</strong><br />
-        A. Tap a number at the top to start the ladder descent and see your result!
+        <strong>Q1. 사다리 게임은 어떻게 플레이하나요?</strong><br />
+        A. 상단의 숫자를 탭하여 사다리를 타고 내려가 결과를 확인하세요!
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q2. What does Level Up mean?</strong><br />
-        A. You pass the current wave and move on to a harder round.
+        <strong>Q2. '레벨 업'은 무엇을 의미하나요?</strong><br />
+        A. 현재 웨이브를 통과하고 더 어려운 다음 라운드로 넘어갑니다.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q3. What ends the game?</strong><br />
-        A. If your result is <strong>Game Over (X)</strong>, the game ends.
+        <strong>Q3. 게임은 언제 끝나나요?</strong><br />
+        A. 결과가 <strong>게임 오버 (X)</strong>이면 게임이 종료됩니다.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q4. Is it random?</strong><br />
-        A. Yes! The horizontal ladders and endings are shuffled every round.
+        <strong>Q4. 무작위인가요?</strong><br />
+        A. 네! 가로 사다리와 결과는 매 라운드마다 무작위로 섞입니다.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q5. How do I restart?</strong><br />
-        A. Tap <strong>Restart</strong> to play from Wave 1 again.
+        <strong>Q5. 어떻게 재시작하나요?</strong><br />
+        A. <strong>재시작</strong>을 탭하여 웨이브 1부터 다시 플레이할 수 있습니다.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q6. Can I share this game?</strong><br />
-        A. Yes! Tap <strong>Share</strong> to copy the link or use mobile share options.
+        <strong>Q6. 이 게임을 공유할 수 있나요?</strong><br />
+        A. 네! <strong>공유</strong>를 탭하여 링크를 복사하거나 모바일 공유 옵션을 사용하세요.
       </div>
     </section>
   </body>

@@ -1,37 +1,37 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="Test your geography knowledge! Guess the country by its flag in Flag Quest. Free, fun, and mobile-friendly browser quiz game." />
+            content="지리 지식을 시험해 보세요! '국기 퀘스트'에서 국기를 보고 나라를 맞춰보세요. 무료로 즐길 수 있는 재미있고 모바일 친화적인 브라우저 퀴즈 게임입니다."
+        />
         <meta
             name="keywords"
-            content="Flag Quest, flag quiz, geography, country quiz, flag game, free online game, trivia, browser game, mobile, world flags, education, quiz game" />
+            content="국기 퀘스트, 국기 퀴즈, 지리, 나라 퀴즈, 국기 게임, 무료 온라인 게임, 퀴즈, 브라우저 게임, 모바일, 세계 국기, 교육, 퀴즈 게임"
+        />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
-        <!-- 표준 주소 (canonical) -->
         <link rel="canonical" href="https://emfls.github.io/FlagQuest" />
 
-        <!-- Open Graph (SNS 공유) -->
-        <meta property="og:title" content="Flag Quest – Free Online Country Flag Quiz Game!" />
+        <meta property="og:title" content="국기 퀘스트 – 무료 온라인 국기 퀴즈 게임!" />
         <meta
             property="og:description"
-            content="How many flags can you guess? Test yourself in Flag Quest, the ultimate free flag quiz game!" />
+            content="몇 개의 국기를 맞출 수 있나요? 궁극의 무료 국기 퀴즈 게임, 국기 퀘스트에서 실력을 시험해 보세요!"
+        />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/FlagQuest" />
         <meta property="og:type" content="website" />
 
-        <!-- Twitter 카드 -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Flag Quest – Free Online Country Flag Quiz Game!" />
+        <meta name="twitter:title" content="국기 퀘스트 – 무료 온라인 국기 퀴즈 게임!" />
         <meta
             name="twitter:description"
-            content="Guess the country by its flag and challenge your friends! Play Flag Quest for free online." />
+            content="국기를 보고 나라를 맞추고 친구들에게 도전하세요! 국기 퀘스트를 온라인에서 무료로 플레이하세요."
+        />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-        <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -45,8 +45,9 @@
         <script
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
-            crossorigin="anonymous"></script>
-        <title>Flag Quest</title>
+            crossorigin="anonymous"
+        ></script>
+        <title>국기 퀘스트</title>
         <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet" />
         <style>
             * {
@@ -154,12 +155,12 @@
     </head>
 
     <body>
-        <h1>🏁Flag Quest</h1>
-        <p style="margin-top: 0rem">Guess the country by its flag!</p>
-        <img id="flag" src="" alt="Flag" />
+        <h1>🏁 국기 퀘스트</h1>
+        <p style="margin-top: 0rem">국기를 보고 나라를 맞춰보세요!</p>
+        <img id="flag" src="" alt="국기" />
         <div class="options" id="options"></div>
         <div id="feedback"></div>
-        <div id="score">Score: 0</div>
+        <div id="score">점수: 0</div>
 
         <div id="gameover">
             <div
@@ -173,11 +174,12 @@
                     font-size: 1.2rem;
                     font-weight: bold;
                     max-width: 90%;
-                "></div>
+                "
+            ></div>
 
             <div class="result">
-                <button onclick="restartGame()">Play Again</button>
-                <button onclick="shareScore()">Share</button>
+                <button onclick="restartGame()">다시 플레이</button>
+                <button onclick="shareScore()">공유</button>
             </div>
         </div>
 
@@ -193,7 +195,7 @@
 
             function loadQuestion() {
                 if (unusedFlags.length < 4) {
-                    endGame("🎉 You cleared all flags!");
+                    endGame("🎉 모든 국기를 클리어했습니다!");
                     return;
                 }
                 const questionSet = shuffle([...unusedFlags]).slice(0, 4);
@@ -216,20 +218,20 @@
 
             function checkAnswer(choice) {
                 if (choice === currentAnswer) {
-                    document.getElementById("feedback").textContent = "🌸 Correct!";
+                    document.getElementById("feedback").textContent = "🌸 정답입니다!";
                     unusedFlags = unusedFlags.filter((f) => f.country !== currentAnswer);
                     score++;
-                    document.getElementById("score").textContent = `Score: ${score}`;
+                    document.getElementById("score").textContent = `점수: ${score}`;
                     setTimeout(loadQuestion, 700);
                 } else {
-                    endGame(`😢 Oops! It was ${currentAnswer}.`);
+                    endGame(`😢 틀렸습니다! 정답은 ${currentAnswer} 입니다.`);
                 }
             }
 
             function endGame(message) {
                 document.getElementById("feedback").textContent = "";
                 document.getElementById("score").textContent = "";
-                document.getElementById("finalMessage").innerHTML = `${message}<br><br>You got ${score} right.`;
+                document.getElementById("finalMessage").innerHTML = `${message}<br><br>총 ${score}개를 맞췄습니다.`;
                 document.getElementById("gameover").style.display = "flex";
                 document.getElementById("options").innerHTML = "";
                 document.getElementById("flag").style.display = "none";
@@ -238,20 +240,20 @@
             function restartGame() {
                 score = 0;
                 unusedFlags = [...flags];
-                document.getElementById("score").textContent = `Score: 0`;
+                document.getElementById("score").textContent = `점수: 0`;
                 document.getElementById("gameover").style.display = "none";
                 document.getElementById("flag").style.display = "block";
                 loadQuestion();
             }
 
             function shareScore() {
-                const text = `🏁 I scored ${score} on Flag Quest – try it out!`;
+                const text = `🏁 국기 퀘스트에서 ${score}점 획득! 당신도 도전해보세요!`;
                 const url = window.location.href;
 
                 if (navigator.share) {
                     navigator
                         .share({
-                            title: "Flag Quest",
+                            title: "국기 퀘스트",
                             text: text,
                             url: url
                         })
@@ -260,7 +262,7 @@
                 } else {
                     // fallback (기존처럼 복사)
                     navigator.clipboard.writeText(`${text} ${url}`).then(() => {
-                        alert("Link copied to clipboard!");
+                        alert("링크가 클립보드에 복사되었습니다!");
                     });
                 }
             }
@@ -281,12 +283,13 @@
                 color: black;
                 border-color: black;
             "
-            onclick="window.location.href='/'">
-            Other Games
+            onclick="window.location.href='/'"
+        >
+            다른 게임들
         </button>
         <section
             style="
-                   width: 90%;
+                width: 90%;
                 max-width: 440px;
                 margin: 60px auto;
                 padding: 20px;
@@ -298,39 +301,38 @@
                 line-height: 1.7;
                 color: #333;
                 box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
-            ">
-            <h2 style="font-size: 18px; margin-bottom: 1rem; color: #6c63ff">❓ Frequently Asked Questions (FAQ)</h2>
+            "
+        >
+            <h2 style="font-size: 18px; margin-bottom: 1rem; color: #6c63ff">❓ 자주 묻는 질문 (FAQ)</h2>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q1. How do I play Flag Quest?</strong><br />
-                A. Look at the flag shown and choose the correct country from four options. One wrong answer ends the
-                game!
+                <strong>Q1. 국기 퀘스트는 어떻게 플레이하나요?</strong><br />
+                A. 표시된 국기를 보고 네 가지 보기 중에서 올바른 나라를 선택하세요. 한 번 틀리면 게임이 종료됩니다!
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q2. What happens when I answer correctly?</strong><br />
-                A. Your score increases by 1 and a new flag appears. You keep going until you make a mistake or clear
-                all flags!
+                <strong>Q2. 정답을 맞히면 어떻게 되나요?</strong><br />
+                A. 점수가 1점 오르고 새로운 국기가 나타납니다. 실수하거나 모든 국기를 클리어할 때까지 계속 진행됩니다!
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q3. How many flags are there?</strong><br />
-                A. The game includes over 250 national flags. New flags are randomly selected each round.
+                <strong>Q3. 국기는 몇 개가 있나요?</strong><br />
+                A. 이 게임에는 250개 이상의 국가 국기가 포함되어 있습니다. 매 라운드마다 새로운 국기가 무작위로 선택됩니다.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q4. Can I restart the game anytime?</strong><br />
-                A. Yes! If you lose or finish the game, click "Play Again" to reset and start from zero.
+                <strong>Q4. 언제든지 게임을 다시 시작할 수 있나요?</strong><br />
+                A. 네! 게임에서 지거나 게임을 완료한 후 "다시 플레이"를 클릭하면 점수가 초기화되고 처음부터 다시 시작할 수 있습니다.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q5. Is the game mobile-friendly?</strong><br />
-                A. Absolutely. The game is optimized for smartphones and tablets.
+                <strong>Q5. 이 게임은 모바일 친화적인가요?</strong><br />
+                A. 물론입니다. 이 게임은 스마트폰과 태블릿에 최적화되어 있습니다.
             </div>
 
             <div>
-                <strong>Q6. How do I share my score?</strong><br />
-                A. After game over, click the “Share” button to copy or send the game link with your score to friends!
+                <strong>Q6. 점수를 어떻게 공유하나요?</strong><br />
+                A. 게임이 끝난 후 "공유" 버튼을 클릭하여 게임 링크와 점수를 친구에게 복사하거나 보낼 수 있습니다!
             </div>
         </section>
     </body>
