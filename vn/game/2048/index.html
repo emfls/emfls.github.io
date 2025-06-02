@@ -1,37 +1,38 @@
 <!doctype html>
-<html lang="ko">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
-    <!-- 메타 정보 (한국어로 수정, author는 유지) -->
+    <!-- Meta thông tin (đã chuyển sang tiếng Việt, giữ author) -->
     <meta
       name="description"
-      content="클래식 2048 퍼즐 게임을 온라인에서 무료로 즐기세요! 타일을 합쳐서 2048을 달성해보세요. 간단하고 재미있는 숫자 퍼즐 게임!" />
+      content="Chơi trò chơi xếp số 2048 cổ điển miễn phí trực tuyến! Kết hợp các ô để đạt được 2048. Trò chơi số đơn giản và thú vị!" />
     <meta
       name="keywords"
-      content="2048, 2048 게임, 퍼즐 게임, 무료 게임, 브라우저 게임, 숫자 게임, 모바일 게임, 고전 게임" />
+      content="2048, trò chơi 2048, trò chơi xếp số, trò chơi miễn phí, trò chơi trên trình duyệt, trò chơi số, trò chơi di động, trò chơi cổ điển" />
     <meta name="author" content="Itagi" />
     <meta name="robots" content="index, follow" />
 
-    <!-- Open Graph (SNS 미리보기용 한국어 수정) -->
-    <meta property="og:title" content="2048 게임 온라인 플레이 – 중독성 있는 숫자 퍼즐!" />
+    <!-- Open Graph (SNS preview, tiếng Việt) -->
+    <meta property="og:title" content="Chơi 2048 trực tuyến – Trò chơi xếp số gây nghiện!" />
     <meta
       property="og:description"
-      content="2048 타일을 합쳐서 최고 점수를 도전하세요! 간단하고 중독성 있는 숫자 게임, 지금 바로 플레이!" />
+      content="Kết hợp các ô 2048 để thách thức điểm số cao nhất! Trò chơi số đơn giản và gây nghiện, chơi ngay bây giờ!" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
-    <meta property="og:url" content="https://emfls.github.io/kor/game/2048" />
+    <meta property="og:url" content="https://emfls.github.io/vn/game/2048" />
     <meta property="og:type" content="website" />
 
-    <!-- Twitter Card (한국어로 수정) -->
+    <!-- Twitter Card (tiếng Việt) -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="2048 게임 온라인 – 무료 플레이!" />
+    <meta name="twitter:title" content="Trò chơi 2048 trực tuyến – Chơi miễn phí!" />
     <meta
       name="twitter:description"
-      content="클래식 2048 숫자 퍼즐을 무료로! 모바일 친화적이며 누구나 쉽게 즐길 수 있어요!" />
+      content="Trò chơi số 2048 cổ điển miễn phí! Thân thiện với di động và dễ chơi cho mọi người!" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
@@ -47,7 +48,7 @@
       async
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
       crossorigin="anonymous"></script>
-    <title>2048 게임</title>
+    <title>Trò chơi 2048</title>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -186,7 +187,9 @@
         width: 100%;
       ">
       <div style="font-size: 28px; font-weight: bold; color: #776e65">2048</div>
-      <div style="font-size: 14px; color: #8f7a66">숫자를 합쳐서 2048을 만들어보세요!</div>
+      <div style="font-size: 14px; color: #8f7a66">
+        Kết hợp các ô để tạo ra 2048!
+      </div>
     </div>
     <div
       id="score"
@@ -199,7 +202,7 @@
         font-weight: bold;
         color: #776e65;
       ">
-      Score: 0
+      Điểm: 0
     </div>
     <button
       id="start-button"
@@ -217,7 +220,7 @@
         border-radius: 5px;
         cursor: pointer;
       ">
-      게임 시작
+      Bắt đầu trò chơi
     </button>
     <div id="game"></div>
     <div
@@ -236,7 +239,7 @@
         font-weight: bold;
         color: #776e65;
       ">
-      Game Over<br /><br />
+      Kết thúc trò chơi<br /><br />
       <button
         onclick="shareScore()"
         style="
@@ -249,7 +252,8 @@
           cursor: pointer;
           margin-bottom: 10px;
         ">
-        점수 공유</button
+        Chia sẻ điểm
+      </button
       ><br />
       <button
         onclick="startGame()"
@@ -262,7 +266,7 @@
           border-radius: 5px;
           cursor: pointer;
         ">
-        재시작
+        Chơi lại
       </button>
     </div>
     <script>
@@ -296,8 +300,6 @@
       }
 
       function moveLeft() {
-        let previousScore = score;
-
         let moved = false;
         for (let i = 0; i < 4; i++) {
           let row = board[i].filter((val) => val);
@@ -354,7 +356,7 @@
         }
         if (moved) addRandomTile();
         drawBoard();
-        document.getElementById("score").textContent = `점수: ${score}`;
+        document.getElementById("score").textContent = `Điểm: ${score}`;
         if (isGameOver()) {
           document.getElementById("game-over").style.display = "block";
         }
@@ -362,7 +364,7 @@
 
       function startGame() {
         score = 0;
-        document.getElementById("score").textContent = "점수: 0";
+        document.getElementById("score").textContent = "Điểm: 0";
         document.getElementById("start-button").style.display = "none";
         document.getElementById("game-over").style.display = "none";
         board = Array(4)
@@ -375,11 +377,11 @@
       document.addEventListener("keydown", handleKey);
 
       function shareScore() {
-        const text = `I just scored ${score} points in the 2048 Game! Can you beat me?`;
+        const text = `Tôi vừa đạt được ${score} điểm trong trò chơi 2048! Bạn có thể đánh bại tôi không?`;
         if (navigator.share) {
           navigator
             .share({
-              title: "2048 Game",
+              title: "Trò chơi 2048",
               text,
               url: window.location.href
             })
@@ -387,8 +389,8 @@
         } else {
           navigator.clipboard
             .writeText(`${text} ${window.location.href}`)
-            .then(() => alert("Score copied to clipboard!"))
-            .catch(() => alert("Failed to copy score."));
+            .then(() => alert("Điểm đã được sao chép vào clipboard!"))
+            .catch(() => alert("Không thể sao chép điểm."));
         }
       }
     </script>
@@ -415,7 +417,9 @@
       <button onclick="handleKey({ key: 'ArrowDown' })" style="font-size: 27px">▼</button>
       <div></div>
     </div>
-    <button style="position: absolute; top: 640px" class="menu" onclick="goToMain()">📂 다른 게임들</button>
+    <button style="position: absolute; top: 640px" class="menu" onclick="goToMain()">
+      📂 Các trò chơi khác
+    </button>
     <script>
       function goToMain() {
         window.location.href = "../../index.html"; // or 'index.html'
@@ -436,36 +440,38 @@
         position: absolute;
         margin-top: 44rem;
       ">
-      <h2 style="font-size: 20px; margin-bottom: 1rem; color: #8f7a66">❓ 자주 묻는 질문 (FAQ)</h2>
+      <h2 style="font-size: 20px; margin-bottom: 1rem; color: #8f7a66">
+        ❓ Câu hỏi thường gặp (FAQ)
+      </h2>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q1. 게임은 어떻게 시작하나요?</strong><br />
-        A. 중앙의 <strong>"게임 시작"</strong> 버튼을 클릭하면 게임이 시작됩니다. 두 개의 무작위 타일이 나타납니다.
+        <strong>Q1. Trò chơi bắt đầu như thế nào?</strong><br />
+        A. Nhấn nút <strong>"Bắt đầu trò chơi"</strong> ở giữa để bắt đầu. Hai ô ngẫu nhiên sẽ xuất hiện.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q2. 조작은 어떻게 하나요?</strong><br />
-        A. 데스크탑에서는 방향키(← ↑ → ↓)를, 모바일에서는 화면의 조작 버튼(▲ ◀ ▶ ▼)을 사용하세요.
+        <strong>Q2. Cách điều khiển như thế nào?</strong><br />
+        A. Trên máy tính dùng phím mũi tên (← ↑ → ↓), trên di động dùng các nút (▲ ◀ ▶ ▼) trên màn hình.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q3. 점수는 어떻게 계산되나요?</strong><br />
-        A. 동일한 숫자 타일을 합칠 때마다 점수가 올라갑니다. 큰 숫자일수록 점수도 더 많아져요.
+        <strong>Q3. Điểm số được tính như thế nào?</strong><br />
+        A. Mỗi khi hai ô cùng số được gộp, điểm số sẽ tăng. Số càng lớn thì điểm càng cao.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q4. 게임은 언제 종료되나요?</strong><br />
-        A. 빈 공간이 없고 더 이상 합칠 수 있는 타일이 없을 때 게임이 종료되며 "Game Over"가 표시됩니다.
+        <strong>Q4. Khi nào trò chơi kết thúc?</strong><br />
+        A. Khi không còn ô trống và không thể gộp được ô nào nữa, trò chơi kết thúc và sẽ hiển thị <strong>"Kết thúc trò chơi"</strong>.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q5. 점수는 어떻게 공유하나요?</strong><br />
-        A. 게임 종료 후 <strong>"점수 공유"</strong> 버튼을 눌러 기기 공유 기능을 이용하거나 링크를 복사할 수 있어요.
+        <strong>Q5. Làm thế nào để chia sẻ điểm?</strong><br />
+        A. Sau khi trò chơi kết thúc, nhấn nút <strong>"Chia sẻ điểm"</strong> để sử dụng chức năng chia sẻ hoặc sao chép liên kết.
       </div>
 
       <div>
-        <strong>Q6. 다른 게임도 있나요?</strong><br />
-        A. 네! 아래의 <strong>📂 다른 게임들</strong> 버튼을 눌러 전체 게임 목록을 확인해보세요.
+        <strong>Q6. Có trò chơi khác không?</strong><br />
+        A. Có! Nhấn nút <strong>📂 Các trò chơi khác</strong> bên dưới để xem danh sách trò chơi.
       </div>
     </section>
   </body>
