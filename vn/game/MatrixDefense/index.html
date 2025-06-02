@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="vi">
     <head>
         <meta charset="UTF-8" />
         <title>Matrix Defense</title>
@@ -9,23 +9,22 @@
 
         <meta
             name="description"
-            content="Defend against waves of robotic enemies in Matrix Defense! Upgrade your plasma cannon, survive as long as you can, and challenge friends to beat your high score. Play free in your browser on mobile or PC." />
+            content="Phòng thủ trước các đợt sóng robot trong Matrix Defense! Nâng cấp pháo plasma, sống sót càng lâu càng tốt và thách thức bạn bè đạt điểm cao. Chơi miễn phí ngay trên trình duyệt trên di động hoặc PC." />
         <meta
             name="keywords"
-            content="matrix defense, idle defense, webgame, browser game, plasma cannon, turret, laser defense, free, 디펜스 게임, 방치형, 무료 게임, 오락실, 모바일, 피씨게임, 온라인게임" />
-        <meta property="og:title" content="Matrix Defense | Idle Plasma Defense Web Game" />
+            content="matrix defense, phòng thủ nhàn rỗi, trò chơi web, trò chơi trình duyệt, pháo plasma, turret, phòng thủ laser, miễn phí, trò chơi phòng thủ, idle defense, arcade, di động, PC, trực tuyến" />
+        <meta property="og:title" content="Matrix Defense | Trò chơi phòng thủ Plasma Nhàn rỗi" />
         <meta
             property="og:description"
-            content="Defend your base from endless waves of robots in this stylish idle defense browser game! Upgrade your cannon and see how long you can survive." />
+            content="Phòng thủ căn cứ trước vô vàn robot trong trò chơi phòng thủ nhàn rỗi phong cách này! Nâng cấp pháo và xem bạn sống được bao lâu." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://emfls.github.io/vn/game/MatrixDefense/" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
-        <!-- 썸네일 이미지 경로, 수정가능 -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Matrix Defense | Idle Plasma Defense Web Game" />
+        <meta name="twitter:title" content="Matrix Defense | Trò chơi phòng thủ Plasma Nhàn rỗi" />
         <meta
             name="twitter:description"
-            content="Play Matrix Defense - the ultimate idle plasma turret defense game, free in your browser." />
+            content="Chơi Matrix Defense - trò chơi phòng thủ pháo Plasma nhàn rỗi đỉnh cao, miễn phí trên trình duyệt." />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <link rel="canonical" href="https://emfls.github.io/vn/game/MatrixDefense/" />
         <!-- Google tag (gtag.js) -->
@@ -248,9 +247,9 @@
         <div id="wrap">
             <div id="header">
                 <h1>Matrix Defense</h1>
-                <p>Idle Plasma Defense. Survive!</p>
+                <p>Phòng thủ Plasma Nhàn rỗi. Sống sót!</p>
                 <div id="topStatBar">
-                    Wave <span id="wave">1</span> Gold <span id="gold">0</span> Life <span id="life">10</span>
+                    Đợt <span id="wave">1</span> Vàng <span id="gold">0</span> Mạng <span id="life">10</span>
                 </div>
             </div>
             <canvas id="gameCanvas" width="400" height="380"></canvas>
@@ -273,13 +272,13 @@
                 </button>
             </div>
             <div id="buttonBar">
-                <button class="btn" id="restartBtn" style="display: none">Restart</button>
-                <button class="btn" id="shareBtn" style="display: none">Share</button>
-                <a href="../" class="btn other">Other Games</a>
+                <button class="btn" id="restartBtn" style="display: none">Chơi lại</button>
+                <button class="btn" id="shareBtn" style="display: none">Chia sẻ</button>
+                <a href="../" class="btn other">Trò chơi khác</a>
             </div>
         </div>
         <script>
-            // ---- drawPlasmaCannon, drawPlasmaShock, drawEnemy, drawHPBar ----
+            // ---- Hàm vẽ Pháo Plasma, Hiệu ứng Plasma Shock, Kẻ địch, Thanh HP ----
             const canvas = document.getElementById("gameCanvas");
             const ctx = canvas.getContext("2d");
             let W = canvas.width,
@@ -288,7 +287,7 @@
             let turret, upg, enemies, frame, spawnCD, wave, gold, kills, life, phase, gameover;
             let bossSpawnedInWave, normalSpawnedInWave;
 
-            // touchmove는 캔버스에만!
+            // Ngăn kéo trên di động chỉ tác dụng lên canvas
             canvas.addEventListener(
                 "touchmove",
                 (e) => {
@@ -440,7 +439,7 @@
                 gold = 500;
                 kills = 0;
                 life = 10;
-                phase = 0; // <-- life 10!
+                phase = 0;
                 bossSpawnedInWave = {};
                 normalSpawnedInWave = {};
                 gameover = false;
@@ -638,7 +637,7 @@
             function upgrade(type) {
                 if (upgrading) return;
                 upgrading = true;
-                setTimeout(() => (upgrading = false), 250); // 0.25초 잠금
+                setTimeout(() => (upgrading = false), 250); // khóa 0.25 giây
 
                 if (gameover) return;
                 let u = upg[type];
@@ -663,7 +662,7 @@
                 initGame();
             };
             document.getElementById("shareBtn").onclick = () => {
-                let shareTxt = `Try Matrix Defense Multi-Laser! I reached Wave ${wave}!`;
+                let shareTxt = `Thử Matrix Defense! Tôi đã đạt Đợt ${wave}!`;
                 if (navigator.share) {
                     navigator.share({
                         title: "Matrix Defense",
@@ -672,7 +671,7 @@
                     });
                 } else {
                     navigator.clipboard.writeText(shareTxt);
-                    alert("Link copied!");
+                    alert("Đã sao chép liên kết!");
                 }
             };
             document.body.addEventListener(
@@ -701,79 +700,83 @@
                 line-height: 1.65;
                 color: #2d3436;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #2577cf">❓ 자주 묻는 질문</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #2577cf">❓ Câu Hỏi Thường Gặp</h2>
 
-            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">게임 소개</h3>
+            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">Giới thiệu trò chơi</h3>
             <dl>
                 <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: "Matrix Defense"는 어떤 게임인가요?
+                    Q: "Matrix Defense" là trò chơi gì?
                 </dt>
                 <dd style="margin-bottom: 12px">
-                    A: "Matrix Defense"는 몰려오는 로봇 적들로부터 기지를 방어하는 유휴(Idle) 디펜스 웹 게임입니다.
-                    플라즈마 캐논을 업그레이드하여 최대한 오래 살아남는 것이 목표입니다.
+                    A: "Matrix Defense" là trò chơi phòng thủ nhàn rỗi, nơi bạn bảo vệ căn cứ khỏi vô vàn robot. 
+                    Nâng cấp pháo plasma để sống sót càng lâu càng tốt.
                 </dd>
 
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: 게임은 무료인가요?</dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: Trò chơi có miễn phí không?</dt>
                 <dd style="margin-bottom: 12px">
-                    A: 네, 완전히 무료로 즐길 수 있는 게임입니다. 별도의 다운로드나 설치 없이 웹 브라우저에서 바로
-                    플레이할 수 있습니다.
+                    A: Vâng, trò chơi hoàn toàn miễn phí. Bạn không cần tải xuống hay cài đặt, chỉ cần mở trình duyệt và chơi ngay.
                 </dd>
 
                 <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: 어떤 기기에서 플레이할 수 있나요?
+                    Q: Trò chơi có thể chơi trên thiết bị nào?
                 </dt>
-                <dd style="margin-bottom: 12px">A: 모바일과 PC 웹 브라우저 모두에서 플레이할 수 있습니다.</dd>
+                <dd style="margin-bottom: 12px">A: Bạn có thể chơi trên cả di động và máy tính bằng trình duyệt hỗ trợ.</dd>
             </dl>
 
-            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">게임 방법</h3>
+            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">Cách chơi</h3>
             <dl>
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: 게임의 목표는 무엇인가요?</dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: Mục tiêu của trò chơi là gì?</dt>
                 <dd style="margin-bottom: 12px">
-                    A: 적들이 화면 아래쪽 기지에 도달하기 전에 모두 파괴하여 WAVE를 진행하고, 라이프가 0이 되기 전까지
-                    최대한 오래 살아남는 것입니다.
+                    A: Mục tiêu là ngăn robot chạm vào căn cứ bằng cách bắn pháo Plasma. Tiến tới đợt tiếp theo và sống sót 
+                    cho đến khi mạng sống (Life) của bạn bằng 0.
                 </dd>
 
                 <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: 어떻게 하면 골드를 얻을 수 있나요?
+                    Q: Làm sao để kiếm vàng?
                 </dt>
                 <dd style="margin-bottom: 12px">
-                    A: 적 로봇을 파괴하면 골드를 얻을 수 있습니다. 골드는 캐논의 업그레이드에 사용됩니다.
+                    A: Khi bắn hạ robot, bạn sẽ nhận vàng. Vàng dùng để nâng cấp pháo Plasma của bạn.
                 </dd>
 
                 <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: 업그레이드는 어떤 종류가 있나요?
+                    Q: Có những nâng cấp nào?
                 </dt>
                 <dd style="margin-bottom: 12px">
-                    A: 공격력(ATK), 공격 속도(RATE), 사거리(RNG), 그리고 동시에 공격할 수 있는 적의 수(LASER)를
-                    업그레이드할 수 있습니다.
+                    A: Bạn có thể nâng cấp: 
+                    <strong>ATK</strong> (Sức mạnh tấn công), 
+                    <strong>RATE</strong> (Tốc độ bắn), 
+                    <strong>RNG</strong> (Tầm bắn), và 
+                    <strong>LASER</strong> (Số mục tiêu có thể bắn cùng lúc).
                 </dd>
 
                 <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: 라이프가 0이 되면 어떻게 되나요?
+                    Q: Khi nào trò chơi kết thúc?
                 </dt>
                 <dd style="margin-bottom: 12px">
-                    A: 라이프가 0이 되면 게임 오버가 됩니다. 'Restart' 버튼을 눌러 다시 시작할 수 있습니다.
+                    A: Trò chơi kết thúc khi mạng sống (Life) của bạn giảm về 0. Nhấn nút <strong>Chơi lại</strong> để bắt đầu 
+                    lại từ đầu.
                 </dd>
             </dl>
 
-            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">문제 해결 및 기타</h3>
+            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">Khắc phục sự cố và khác</h3>
             <dl>
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: 게임이 제대로 작동하지 않아요.</dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: Trò chơi không hoạt động đúng.</dt>
                 <dd style="margin-bottom: 12px">
-                    A: 브라우저를 새로고침하거나, 다른 브라우저를 사용해보세요. 인터넷 연결 상태도 확인해 주세요.
-                    지속적으로 문제가 발생하면 개발자에게 문의해 주세요.
+                    A: Hãy thử làm mới trang hoặc sử dụng một trình duyệt khác. Kiểm tra kết nối internet. Nếu vẫn gặp vấn đề, 
+                    vui lòng liên hệ với nhà phát triển.
                 </dd>
 
                 <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: 제 최고 점수를 친구들과 공유하고 싶어요.
+                    Q: Tôi muốn chia sẻ điểm số với bạn bè.
                 </dt>
                 <dd style="margin-bottom: 12px">
-                    A: 게임 오버 후 나타나는 'Share' 버튼을 클릭하여 현재 WAVE 기록을 공유할 수 있습니다.
+                    A: Sau khi trò chơi kết thúc, nhấn nút <strong>Chia sẻ</strong> để sao chép liên kết kèm thông tin đợt cao 
+                    nhất của bạn.
                 </dd>
 
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: 다른 게임도 있나요?</dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: Có trò chơi khác của bạn không?</dt>
                 <dd style="margin-bottom: 12px">
-                    A: 네, 'Other Games' 버튼을 클릭하시면 개발자의 다른 웹 게임들을 만나보실 수 있습니다.
+                    A: Có. Nhấn nút <strong>Trò chơi khác</strong> để khám phá các trò chơi web miễn phí khác của nhà phát triển.
                 </dd>
             </dl>
         </section>
