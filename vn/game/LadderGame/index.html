@@ -1,35 +1,33 @@
 <!doctype html>
-<html lang="ko">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <title>사다리 게임</title>
+    <title>Trò Chơi Thang Leo</title>
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
     <meta
       name="description"
-      content="모바일 사다리 게임 - 숫자를 선택하고 운명을 확인하세요! 아이폰 SE 및 모든 스마트폰에 최적화된 빠르고 재미있는 운 기반 웹 게임입니다." />
+      content="Chơi trò Thang Leo trên di động – chọn số và xem vận mệnh của bạn! Trò chơi web dựa trên may rủi, tối ưu cho iPhone SE và mọi smartphone, nhanh và thú vị." />
     <meta
       name="keywords"
-      content="사다리 게임, 모바일 게임, 웹게임, 사다리타기, 운 게임, 미니게임, 모바일 캐주얼, 아이폰 게임, 아이폰 SE, 사다리, 랜덤 게임, 브라우저 게임, 운 게임, 숫자 선택, 소셜게임, html5 게임" />
+      content="trò chơi thang leo, di động, webgame, leo thang, trò chơi may rủi, minigame, giải trí di động, iPhone SE, trò chơi thang, random, trình duyệt, HTML5, chọn số, xã hội" />
     <meta name="author" content="Itagi" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index, follow" />
 
-    <meta property="og:title" content="사다리 게임 - 모바일 웹 운 게임" />
+    <link rel="canonical" href="https://emfls.github.io/vn/game/LadderGame" />
+    <meta property="og:title" content="Trò Chơi Thang Leo – Trò chơi di động may rủi" />
     <meta
       property="og:description"
-      content="숫자를 선택하고 운명을 확인하세요! 재미있고 빠르며 모바일에 최적화된 사다리 게임입니다." />
+      content="Chọn một con số và khám phá vận mệnh! Trò Chơi Thang Leo nhanh, thú vị, được tối ưu cho di động." />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/vn/game/LadderGame" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="사다리 게임 - 모바일 운 게임" />
-    <meta name="twitter:description" content="모바일 사다리 게임. 숫자를 선택하고 당신의 운을 확인하세요!" />
+    <meta name="twitter:title" content="Trò Chơi Thang Leo – Trò chơi di động may rủi" />
+    <meta name="twitter:description" content="Thêm phần thú vị: chọn số và xem vận mệnh của bạn ngay trên di động!" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
-    <meta name="robots" content="index, follow" />
-
-    <link rel="canonical" href="https://emfls.github.io/vn/game/LadderGame" />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -204,8 +202,8 @@
   </head>
   <body>
     <div id="gameWrap">
-      <h1>사다리 게임</h1>
-      <div class="desc">숫자를 선택하고 사다리에서 당신의 운명을 확인하세요!</div>
+      <h1>Trò Chơi Thang Leo</h1>
+      <div class="desc">Chọn một số và khám phá vận mệnh của bạn!</div>
       <div id="ladderBox">
         <div id="topChoices"></div>
         <canvas id="ladderCanvas" width="200" height="340"></canvas>
@@ -226,10 +224,10 @@
       </div>
       <div id="resultMsg"></div>
       <div id="btnRow">
-        <button class="btn" id="startBtn">게임 시작</button>
-        <button class="btn hide" id="retryBtn">재시작</button>
-        <button class="btn" id="shareBtn">공유</button>
-        <button class="btn" id="otherBtn">다른 게임</button>
+        <button class="btn" id="startBtn">Bắt đầu</button>
+        <button class="btn hide" id="retryBtn">Chơi lại</button>
+        <button class="btn" id="shareBtn">Chia sẻ</button>
+        <button class="btn" id="otherBtn">Các trò chơi khác</button>
       </div>
     </div>
     <script>
@@ -247,9 +245,9 @@
       const shareBtn = document.getElementById("shareBtn");
       const otherBtn = document.getElementById("otherBtn");
 
-      // 세로선 기준 좌표(패딩 조정)
+      // Tính vị trí X dựa trên cột (điều chỉnh padding)
       function getX(idx) {
-        const sidePadding = 18; // 더 좁은 폭에 맞춰진 패딩
+        const sidePadding = 18; // Padding vừa với kích thước nhỏ hơn
         return sidePadding + idx * ((canvas.width - sidePadding * 2) / (ladderCols - 1));
       }
 
@@ -267,7 +265,7 @@
         arr = arr.sort(() => Math.random() - 0.5);
         let lines = [];
         const topMargin = 38;
-        const bottomMargin = 56; // 결과 원과 겹치지 않게
+        const bottomMargin = 56; // để không chồng lên kết quả
         for (let i = 0; i < cfg.hLines; ++i) {
           let pos, y;
           do {
@@ -356,7 +354,6 @@
       function startWave() {
         playing = true;
         busy = false;
-        result = null;
         ladder = genLadder(wave);
         resultMsg.innerText = "";
         drawLadder(ladder, true);
@@ -374,21 +371,22 @@
         showMask(true);
         const path = calcPath(idx, ladder);
         let t = 0,
-          animLen = path.length,
-          animId;
+          animLen = path.length;
         function animatePath() {
           if (t < animLen) {
             drawLadder(ladder, true, { path: path.slice(0, t + 1) });
             showMask(true);
             t++;
-            animId = requestAnimationFrame(animatePath);
+            requestAnimationFrame(animatePath);
           } else {
             drawLadder(ladder, true, { path: path });
             showMask(false);
             setTimeout(() => {
               let endIdx = path[path.length - 1].col;
               let endRes = ladder.ends[endIdx];
-              resultMsg.innerHTML = endRes === "LEVELUP" ? "🎉 <b>레벨 업!</b> 다음 웨이브 →" : "💀 <b>게임 오버!</b>";
+              resultMsg.innerHTML = endRes === "LEVELUP"
+                ? "🎉 <b>Thăng cấp!</b> Chuyển sang vòng tiếp theo →"
+                : "💀 <b>Game Over!</b>";
               renderTopChoices();
               playing = endRes === "LEVELUP";
               busy = false;
@@ -439,12 +437,11 @@
         if (navigator.share) {
           navigator.share({ title: document.title, url: shareUrl });
         } else {
-          window.prompt("이 URL을 복사하여 공유하세요!", shareUrl);
+          window.prompt("Sao chép URL này để chia sẻ:", shareUrl);
         }
       };
       otherBtn.onclick = function () {
-        // [2025-06-01] 내가 아까 이야기했던 kor/game/ 이거 적용하는거 기억해줘.
-        // `../` 대신 `kor/game/`을 사용합니다.
+        // [2025-06-01] Nhớ áp dụng kon/game/ như đã nói trước đó.
         window.location.href = "kor/game/";
       };
 
@@ -489,36 +486,36 @@
         line-height: 1.6;
         font-size: 14px;
       ">
-      <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e70c2">❓ 자주 묻는 질문 (FAQ)</h2>
+      <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e70c2">❓ Câu hỏi thường gặp (FAQ)</h2>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q1. 사다리 게임은 어떻게 플레이하나요?</strong><br />
-        A. 상단의 숫자를 탭하여 사다리를 타고 내려가 결과를 확인하세요!
+        <strong>Q1. Làm thế nào để chơi trò Thang Leo?</strong><br />
+        A. Chạm số ở trên cùng, sau đó đi theo đường thang để xem kết quả!
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q2. '레벨 업'은 무엇을 의미하나요?</strong><br />
-        A. 현재 웨이브를 통과하고 더 어려운 다음 라운드로 넘어갑니다.
+        <strong>Q2. "Thăng cấp" nghĩa là gì?</strong><br />
+        A. Bạn vượt qua vòng này và chuyển sang vòng khó hơn.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q3. 게임은 언제 끝나나요?</strong><br />
-        A. 결과가 <strong>게임 오버 (X)</strong>이면 게임이 종료됩니다.
+        <strong>Q3. Khi nào trò chơi kết thúc?</strong><br />
+        A. Nếu kết quả là <strong>Game Over (X)</strong>, trò chơi sẽ kết thúc.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q4. 무작위인가요?</strong><br />
-        A. 네! 가로 사다리와 결과는 매 라운드마다 무작위로 섞입니다.
+        <strong>Q4. Mọi thứ có ngẫu nhiên không?</strong><br />
+        A. Đúng vậy! Các thanh ngang và kết quả được làm mới ngẫu nhiên mỗi vòng.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q5. 어떻게 재시작하나요?</strong><br />
-        A. <strong>재시작</strong>을 탭하여 웨이브 1부터 다시 플레이할 수 있습니다.
+        <strong>Q5. Làm sao để chơi lại?</strong><br />
+        A. Chạm <strong>Chơi lại</strong> để bắt đầu lại từ vòng 1.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q6. 이 게임을 공유할 수 있나요?</strong><br />
-        A. 네! <strong>공유</strong>를 탭하여 링크를 복사하거나 모바일 공유 옵션을 사용하세요.
+        <strong>Q6. Tôi có thể chia sẻ trò chơi không?</strong><br />
+        A. Có! Nhấn <strong>Chia sẻ</strong> để sao chép liên kết hoặc sử dụng tính năng chia sẻ di động.
       </div>
     </section>
   </body>

@@ -1,32 +1,32 @@
 <!doctype html>
-<html lang="ko">
+<html lang="vi">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="온라인 오목 (다섯 줄) 게임을 즐겨보세요! 친구나 AI와 함께 이 고전 보드 게임에서 실력을 겨뤄보세요. 간단하고 재미있으며 모바일에서도 최적화되어 있습니다." />
+            content="Chơi Gomoku trực tuyến (Cờ Caro) ngay! Thách thức bạn bè hoặc AI trong trò chơi bảng cổ điển. Đơn giản, vui nhộn và tối ưu cho di động." />
         <meta
             name="keywords"
-            content="오목, 다섯 줄, omok, 온라인 게임, AI, 보드 게임, 무료, 브라우저 게임, 모바일, 고전, 전략, 흑백, 2인용, 퍼즐" />
+            content="gomoku, cờ caro, omok, trò chơi trực tuyến, AI, trò chơi bảng, miễn phí, trình duyệt, di động, cổ điển, chiến lược, đen trắng, 2 người, puzzle" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/vn/game/Gomoku" />
 
-        <meta property="og:title" content="오목 – 무료 온라인 AI 오목 게임!" />
+        <meta property="og:title" content="Gomoku – Trò chơi AI Gomoku miễn phí trực tuyến!" />
         <meta
             property="og:description"
-            content="친구 또는 똑똑한 AI와 오목을 두어보세요. 누가 먼저 다섯 줄을 완성할까요? 브라우저에서 무료로 즐겨보세요!" />
+            content="Chơi Gomoku cùng bạn bè hoặc AI thông minh. Ai sẽ là người nối được năm quân trước? Chơi miễn phí ngay trên trình duyệt!" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/vn/game/Gomoku" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="오목 – 무료 온라인 AI 오목 게임!" />
+        <meta name="twitter:title" content="Gomoku – Trò chơi AI Gomoku miễn phí trực tuyến!" />
         <meta
             name="twitter:description"
-            content="친구 또는 AI와 오목 게임을 즐겨보세요! 고전 다섯 줄 보드 게임을 온라인에서 무료로 플레이하세요." />
+            content="Thưởng thức trò chơi Gomoku cùng bạn bè hoặc AI! Chơi miễn phí trò chơi cờ năm hàng cổ điển ngay trên trình duyệt." />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
@@ -42,7 +42,7 @@
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <title>오목</title>
+        <title>Gomoku</title>
         <style>
             @import url("https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap");
             :root {
@@ -165,13 +165,13 @@
     </head>
 
     <body>
-        <h1>⚫ 오목⚪</h1>
+        <h1>⚫ Gomoku ⚪</h1>
         <div id="modeStatus" style="margin-top: -0.6rem; margin-bottom: 1rem; font-size: 1rem; color: #666"></div>
         <div id="board"></div>
 
         <div id="message"></div>
         <div>
-            <button onclick="resetGame()" style="font-weight: bold">재시작</button>
+            <button onclick="resetGame()" style="font-weight: bold">Chơi lại</button>
             <button
                 onclick="toggleMode()"
                 id="modeBtn"
@@ -192,7 +192,7 @@
 
             function updateModeStatus() {
                 const modeStatus = document.getElementById("modeStatus");
-                modeStatus.textContent = aiMode ? "플레이어 vs AI" : "플레이어 vs 플레이어";
+                modeStatus.textContent = aiMode ? "Người chơi vs AI" : "Người chơi vs Người chơi";
             }
 
             function createBoard() {
@@ -223,20 +223,20 @@
                     }
                     cells.push(row);
                 }
-                message.textContent = "⚫ 흑돌 차례";
+                message.textContent = "⚫ Đến lượt quân đen";
             }
 
             function resetGame() {
                 currentPlayer = "black";
                 gameOver = false;
                 createBoard();
-                updateModeStatus(); // 추가
+                updateModeStatus();
             }
 
             function toggleMode() {
                 aiMode = !aiMode;
-                modeBtn.textContent = aiMode ? "👥 2P" : "🤖 AI";
-                resetGame(); // 내부에서 updateModeStatus 호출됨
+                modeBtn.textContent = aiMode ? "👥 2 Người" : "🤖 AI";
+                resetGame();
             }
 
             function handleClick(e) {
@@ -248,12 +248,12 @@
                 const result = checkWin(x, y, currentPlayer);
                 if (result) {
                     highlightWin(result);
-                    message.textContent = currentPlayer === "black" ? "⚫ 흑돌 승리!" : "⚪ 백돌 승리!";
+                    message.textContent = currentPlayer === "black" ? "⚫ Đen thắng!" : "⚪ Trắng thắng!";
                     gameOver = true;
                     return;
                 }
                 currentPlayer = currentPlayer === "black" ? "white" : "black";
-                message.textContent = currentPlayer === "black" ? "⚫ 흑돌 차례" : "⚪ 백돌 차례";
+                message.textContent = currentPlayer === "black" ? "⚫ Đến lượt quân đen" : "⚪ Đến lượt quân trắng";
                 if (aiMode && currentPlayer === "white") {
                     setTimeout(() => aiTurn(), 300);
                 }
@@ -265,12 +265,12 @@
                 const result = checkWin(x, y, "white");
                 if (result) {
                     highlightWin(result);
-                    message.textContent = "⚪ 백돌 승리!";
+                    message.textContent = "⚪ Trắng thắng!";
                     gameOver = true;
                     return;
                 }
                 currentPlayer = "black";
-                message.textContent = "⚫ 흑돌 차례";
+                message.textContent = "⚫ Đến lượt quân đen";
             }
 
             function placeStone(x, y, player) {
@@ -436,7 +436,7 @@
                 border-color: black;
             "
             onclick="window.location.href='/'">
-            다른 게임
+            Các trò chơi khác
         </button>
         <button
             style="
@@ -453,21 +453,25 @@
                 border-color: black;
             "
             onclick="shareGame()">
-            공유
+            Chia sẻ
         </button>
         <script>
             function shareGame() {
                 const shareData = {
-                    title: "오목",
-                    text: "이 멋진 AI 오목 게임을 즐겨보세요!",
+                    title: "Gomoku",
+                    text: "Hãy trải nghiệm trò chơi AI Gomoku tuyệt vời này!",
                     url: window.location.href
                 };
 
                 if (navigator.share) {
-                    navigator.share(shareData).catch((err) => console.log("Sharing failed", err));
+                    navigator.share(shareData).catch((err) => console.log("Chia sẻ thất bại", err));
                 } else {
-                    copyLink(); // 폴백: 클립보드 복사
+                    copyLink();
                 }
+            }
+            function copyLink() {
+                const url = window.location.href;
+                navigator.clipboard.writeText(url).then(() => alert("Liên kết đã được sao chép!"));
             }
         </script>
         <section
@@ -484,36 +488,36 @@
                 line-height: 1.6;
                 font-size: 14px;
             ">
-            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ 자주 묻는 질문 (FAQ)</h2>
+            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ Câu hỏi thường gặp (FAQ)</h2>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q1. 오목이 무엇인가요?</strong><br />
-                A. 오목은 두 플레이어가 번갈아 돌을 놓아 다섯 개의 돌을 한 줄로 만드는 고전 전략 보드 게임입니다.
+                <strong>Q1. Gomoku là gì?</strong><br />
+                A. Gomoku (Cờ Caro) là trò chơi chiến lược cổ điển, hai người lần lượt đặt quân đen và trắng, người nối được năm quân thành một hàng trước sẽ chiến thắng.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q2. 어떻게 이기나요?</strong><br />
-                A. 당신의 돌 (흑 또는 백) 다섯 개를 가로, 세로, 또는 대각선으로 먼저 연결하면 승리합니다.
+                <strong>Q2. Làm sao để thắng?</strong><br />
+                A. Kết nối năm quân cùng màu (đen hoặc trắng) theo hàng ngang, dọc hoặc đường chéo sẽ giành chiến thắng.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q3. 게임 모드에는 어떤 것이 있나요?</strong><br />
-                A. 친구와 대결하거나 (2P 모드) AI와 실력을 겨룰 수 있습니다 (🤖 모드). 오른쪽 상단의 토글 버튼을 사용하여 전환하세요.
+                <strong>Q3. Có những chế độ chơi nào?</strong><br />
+                A. Bạn có thể chơi với bạn bè (2 người) hoặc thách thức AI (chế độ 🤖). Nhấn nút ở góc phải trên để chuyển đổi.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q4. 게임을 재시작할 수 있나요?</strong><br />
-                A. 네! 언제든지 보드 아래의 <strong>재시작</strong> 버튼을 클릭하여 새 게임을 시작할 수 있습니다.
+                <strong>Q4. Tôi có thể chơi lại không?</strong><br />
+                A. Có! Nhấn nút <strong>Chơi lại</strong> để bắt đầu một ván mới bất cứ khi nào bạn muốn.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q5. 이 게임은 모바일 친화적인가요?</strong><br />
-                A. 물론입니다. 오목은 PC와 모바일 브라우저 모두에서 원활하게 작동합니다.
+                <strong>Q5. Trò chơi có hỗ trợ di động không?</strong><br />
+                A. Đúng vậy. Gomoku hoạt động mượt mà trên cả trình duyệt PC và di động.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q6. 게임을 공유하려면 어떻게 해야 하나요?</strong><br />
-                A. <strong>공유</strong> 버튼을 탭하여 링크를 복사하거나 (기기에서 지원하는 경우) 공유 메뉴를 열 수 있습니다.
+                <strong>Q6. Làm sao để chia sẻ trò chơi?</strong><br />
+                A. Nhấn nút <strong>Chia sẻ</strong> để sao chép liên kết hoặc sử dụng tính năng chia sẻ của thiết bị (nếu có).
             </div>
         </section>
     </body>
