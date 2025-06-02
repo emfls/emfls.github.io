@@ -1,36 +1,37 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
 	<head>
 		<meta charset="UTF-8" />
-		<title>Smart Beautifier (HTML/CSS/JS, Tab Indent Only)</title>
+		<title>Smart Beautifier (HTML/CSS/JS, 탭 들여쓰기 전용)</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1.0" />
 
 		<meta
 			name="description"
-			content="Paste messy HTML, CSS, or JS and beautify instantly with tab indents. 100% client-side. No upload, no risk, no limits. Free web code formatter." />
+			content="지저분한 HTML, CSS 또는 JavaScript 코드를 붙여넣고 탭 들여쓰기로 즉시 정리하세요. 100% 클라이언트 측 처리, 업로드 불필요. 무료 웹 코드 포맷터." />
 		<meta
 			name="keywords"
-			content="beautify code, code formatter, js beautifier, css beautifier, html beautifier, online code beautifier, code prettify, tab indent, code clean, client-side, no upload, web tool, developer tool, open source, instant code beautifier" />
+			content="코드 정리, 코드 포맷터, js 뷰티파이어, css 뷰티파이어, html 뷰티파이어, 온라인 코드 포맷터, 탭 들여쓰기, 코드 깔끔하게, 클라이언트 측, 업로드 불필요, 웹 도구, 개발자 도구, 오픈 소스, 즉시 코드 정리" />
 		<meta name="author" content="Itagi" />
 
-		<!-- Open Graph (SNS, 카톡/페북/슬랙 등 공유) -->
-		<meta property="og:title" content="Smart Beautifier – Online HTML, CSS, JS Code Formatter" />
+		<!-- Open Graph (SNS 공유용) -->
+		<meta property="og:title" content="Smart Beautifier – 온라인 HTML/CSS/JS 코드 포맷터" />
 		<meta
 			property="og:description"
-			content="Paste and beautify your code with tabs, instantly in your browser. No upload, fully private. Free and open source." />
+			content="지저분한 코드를 붙여넣으면 탭 들여쓰기로 자동 정리. 브라우저에서만 처리하므로 안전합니다. 무료 오픈 소스." />
 		<meta property="og:type" content="website" />
 		<meta property="og:url" content="https://emfls.github.io/kor/util/SmartBeautifier/" />
 		<meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
 
 		<!-- Twitter Card (X/트위터 썸네일) -->
 		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:title" content="Smart Beautifier – Online HTML, CSS, JS Code Formatter" />
+		<meta name="twitter:title" content="Smart Beautifier – 온라인 HTML/CSS/JS 코드 포맷터" />
 		<meta
 			name="twitter:description"
-			content="Free, private, and instant code beautifier for HTML, CSS, JS. Tab indents only. No upload needed." />
+			content="지저분한 HTML, CSS, JS 코드를 붙여넣고 탭 들여쓰기로 깨끗하게 정리하세요. 클라이언트 측 100%, 업로드 불필요." />
 		<meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 		<link rel="icon" href="https://emfls.github.io/icon-192.png" />
-		<!-- Google tag (gtag.js) -->
+
+		<!-- Google 태그 (gtag.js) -->
 		<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
 		<script>
 			window.dataLayer = window.dataLayer || [];
@@ -45,6 +46,7 @@
 			async
 			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
 			crossorigin="anonymous"></script>
+
 		<style>
 			html,
 			body {
@@ -87,7 +89,6 @@
 			.output-area {
 				width: 100%;
 				box-sizing: border-box;
-				/* 핵심! */
 				min-height: 120px;
 				border: 1.2px solid #cce9ef;
 				border-radius: 9px;
@@ -148,6 +149,7 @@
 					font-size: 0.98em;
 				}
 			}
+
 			#backBtn {
 				position: fixed;
 				left: 50%;
@@ -164,9 +166,7 @@
 				text-decoration: none;
 				cursor: pointer;
 				letter-spacing: 0.01em;
-				transition:
-					background 0.15s,
-					transform 0.12s;
+				transition: background 0.15s, transform 0.12s;
 				z-index: 2000;
 			}
 			#backBtn:hover {
@@ -181,6 +181,7 @@
 				}
 			}
 		</style>
+
 		<!-- js-beautify (CDN) -->
 		<script src="https://cdn.jsdelivr.net/npm/js-beautify@1.15.0/js/lib/beautify.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/js-beautify@1.15.0/js/lib/beautify-css.min.js"></script>
@@ -191,28 +192,29 @@
 		<div class="container">
 			<div class="logo">✨ Smart Beautifier</div>
 			<div class="desc">
-				Paste any messy HTML, CSS, or JavaScript.<br />
-				It will auto-detect and prettify your code with <b>tab</b> indents.<br />
-				<span style="color: #19788a; font-size: 0.93em">100% client-side, no upload.</span>
+				지저분한 HTML, CSS 또는 JavaScript 코드를 붙여넣으세요.<br />
+				자동으로 <b>탭</b>으로 들여쓰기하여 깔끔하게 정리합니다.<br />
+				<span style="color: #19788a; font-size: 0.93em">100% 클라이언트 측, 업로드 불필요.</span>
 			</div>
-			<textarea id="inputArea" class="input-area" placeholder="Paste HTML, CSS, or JS here..."></textarea>
-			<button class="btn" id="beautifyBtn">Beautify</button>
-			<div style="margin-top: 8px; margin-bottom: 3px; font-size: 0.98em; color: #167088">Result:</div>
+			<textarea
+				id="inputArea"
+				class="input-area"
+				placeholder="여기에 HTML, CSS 또는 JS 코드를 붙여넣으세요..."></textarea>
+			<button class="btn" id="beautifyBtn">정리하기</button>
+			<div style="margin-top: 8px; margin-bottom: 3px; font-size: 0.98em; color: #167088">결과:</div>
 			<textarea
 				id="outputArea"
 				class="output-area"
 				readonly
-				placeholder="Beautified code will appear here"></textarea>
-			<button class="btn-copy" id="copyBtn">Copy</button>
+				placeholder="정리된 코드가 여기에 표시됩니다"></textarea>
+			<button class="btn-copy" id="copyBtn">복사하기</button>
 			<div class="info-msg" id="infoMsg"></div>
 			<div class="footer">
-				100% client-side, open source. Powered by
-				<a href="https://github.com/beautify-web/js-beautify" style="color: #1495c5" target="_blank"
-					>js-beautify</a
-				>.
+				100% 클라이언트 측, 오픈 소스. js-beautify로 구동됩니다.
 			</div>
-			<a href="../index.html" id="backBtn">Other Util</a>
+			<a href="../index.html" id="backBtn">다른 유틸 보기</a>
 		</div>
+
 		<script>
 			function detectType(code) {
 				// HTML 우선 감지
@@ -232,7 +234,7 @@
 					/^[\s\S]*?[\.\#a-zA-Z0-9\-]+\s*\{[\s\S]*?\}/.test(code)
 				)
 					return "css";
-				// JS (함수, 변수, 제어문, 익명함수, etc)
+				// JS (함수, 변수, 제어문, etc)
 				if (
 					/\b(function|var|let|const|=>|import |export |require\(|if\s*\(|for\s*\(|while\s*\(|console\.|window\.|document\.|class\s+\w+)/.test(
 						code
@@ -248,7 +250,7 @@
 				var outputArea = document.getElementById("outputArea");
 				var infoMsg = document.getElementById("infoMsg");
 				if (!code.trim()) {
-					infoMsg.textContent = "Please paste code first.";
+					infoMsg.textContent = "코드를 먼저 붙여넣어주세요.";
 					outputArea.value = "";
 					return;
 				}
@@ -280,9 +282,10 @@
 						});
 					}
 					outputArea.value = beautified;
-					infoMsg.textContent = "Beautified! (" + type.toUpperCase() + ", " + beautified.length + " chars)";
+					infoMsg.textContent =
+						"정리 완료! (" + type.toUpperCase() + ", " + beautified.length + "자)";
 				} catch (e) {
-					infoMsg.textContent = "Error: " + (e.message || e);
+					infoMsg.textContent = "오류: " + (e.message || e);
 					outputArea.value = "";
 				}
 			};
@@ -291,9 +294,10 @@
 				var outputArea = document.getElementById("outputArea");
 				outputArea.select();
 				document.execCommand("copy");
-				document.getElementById("infoMsg").textContent = "Copied!";
+				document.getElementById("infoMsg").textContent = "복사됨!";
 			};
 		</script>
+
 		<section
 			style="
 				max-width: 320px;
@@ -309,41 +313,37 @@
 			</div>
 
 			<div style="margin-bottom: 12px">
-				<div style="color: #8f94fb; font-weight: bold">Q. What kind of code does it support?</div>
+				<div style="color: #8f94fb; font-weight: bold">Q. 어떤 코드 언어를 지원하나요?</div>
 				<div style="color: #f0f0f0">
-					It supports HTML, CSS, and JavaScript. The tool automatically detects the language based on your
-					input.
+					HTML, CSS, JavaScript를 지원합니다. 입력에 따라 도구가 자동으로 언어를 감지합니다.
 				</div>
 			</div>
 
 			<div style="margin-bottom: 12px">
-				<div style="color: #8f94fb; font-weight: bold">Q. What kind of indentation does it use?</div>
+				<div style="color: #8f94fb; font-weight: bold">Q. 어떤 들여쓰기 방식을 사용하나요?</div>
 				<div style="color: #f0f0f0">
-					Tab only. This tool is designed to format code with tab characters instead of spaces for consistent
-					developer style.
+					탭 문자만 사용합니다. 이 도구는 스페이스 대신 탭으로 일관된 스타일을 유지하며 코드를 포맷합니다.
 				</div>
 			</div>
 
 			<div style="margin-bottom: 12px">
-				<div style="color: #8f94fb; font-weight: bold">Q. Is it safe to paste code here?</div>
+				<div style="color: #8f94fb; font-weight: bold">Q. 여기에 코드를 붙여넣어도 안전한가요?</div>
 				<div style="color: #f0f0f0">
-					Yes. All formatting is done locally in your browser. Nothing is uploaded or stored, ensuring full
-					privacy.
+					네. 모든 포맷팅은 브라우저에서 로컬로 처리됩니다. 업로드나 저장이 없으므로 개인정보가 완전히 보호됩니다.
 				</div>
 			</div>
 
 			<div style="margin-bottom: 12px">
-				<div style="color: #8f94fb; font-weight: bold">Q. How do I copy the beautified code?</div>
+				<div style="color: #8f94fb; font-weight: bold">Q. 정리된 코드를 어떻게 복사하나요?</div>
 				<div style="color: #f0f0f0">
-					After clicking “Beautify,” click the “Copy” button to instantly copy the result to your clipboard.
+					“정리하기”를 클릭한 후 “복사하기” 버튼을 눌러 결과를 클립보드에 즉시 복사할 수 있습니다.
 				</div>
 			</div>
 
 			<div style="margin-bottom: 0">
-				<div style="color: #8f94fb; font-weight: bold">Q. Can it format broken or partial code?</div>
+				<div style="color: #8f94fb; font-weight: bold">Q. 깨진 코드나 부분적인 코드도 포맷할 수 있나요?</div>
 				<div style="color: #f0f0f0">
-					Yes. While not a linter, it can clean and reindent even incomplete code blocks as long as the syntax
-					is valid enough to parse.
+					네. 문법이 파싱될 정도로 유효하다면 린터는 아니더라도 불완전한 코드 블록도 정리하고 재들여쓰기를 수행할 수 있습니다.
 				</div>
 			</div>
 		</section>

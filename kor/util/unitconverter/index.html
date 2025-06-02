@@ -1,32 +1,32 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
     <head>
         <meta charset="UTF-8" />
-        <title>Online Unit Converter – Length, Weight, Temperature & More</title>
+        <title>온라인 단위 변환기 – 길이, 무게, 온도 등</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="Convert between units of length, weight, temperature, speed, volume, and area instantly. 100% browser-based, no upload." />
+            content="길이, 무게, 온도, 속도, 부피, 면적 단위를 즉시 변환하세요. 100% 브라우저 기반, 업로드 불필요." />
         <meta
             name="keywords"
-            content="unit converter, online converter, length, weight, temperature, speed, volume, area, conversion, metric, imperial" />
+            content="단위 변환, 온라인 변환기, 길이, 무게, 온도, 속도, 부피, 면적, 변환, 미터법, 야드파운드" />
         <meta name="author" content="Itagi" />
         <link rel="canonical" href="https://emfls.github.io/kor/util/unitconverter/" />
         <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-        <meta property="og:title" content="Online Unit Converter – Length, Weight, Temperature & More" />
+        <meta property="og:title" content="온라인 단위 변환기 – 길이, 무게, 온도 등" />
         <meta
             property="og:description"
-            content="Convert between units of length, weight, temperature, speed, volume, and area instantly in your browser. Free and easy to use." />
+            content="브라우저에서 길이, 무게, 온도, 속도, 부피, 면적 단위를 즉시 변환하세요. 무료, 사용하기 쉬움." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://emfls.github.io/kor/util/unitconverter/" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Online Unit Converter – Length, Weight, Temperature & More" />
+        <meta name="twitter:title" content="온라인 단위 변환기 – 길이, 무게, 온도 등" />
         <meta
             name="twitter:description"
-            content="Convert between units of length, weight, temperature, speed, volume, and area instantly. No upload, free." />
+            content="브라우저에서 길이, 무게, 온도, 속도, 부피, 면적 단위를 즉시 변환하세요. 업로드 불필요, 무료." />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-        <!-- Google tag (gtag.js) -->
+        <!-- Google 태그 (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -178,123 +178,124 @@
     </head>
     <body>
         <div class="container">
-            <div class="logo">🔄 Unit Converter</div>
+            <div class="logo">🔄 단위 변환기</div>
             <div class="desc">
-                Instantly convert between length, weight, temperature, speed, volume, and area.<br />
-                100% browser-based. Free & private.
+                길이, 무게, 온도, 속도, 부피, 면적 단위를 즉시 변환하세요.<br />
+                100% 브라우저 기반. 무료 & 개인 정보 보호.
             </div>
             <div class="mode-toggle">
-                <button class="toggle-btn active" id="lenBtn">Length</button>
-                <button class="toggle-btn" id="weightBtn">Weight</button>
-                <button class="toggle-btn" id="tempBtn">Temp</button>
-                <button class="toggle-btn" id="speedBtn">Speed</button>
-                <button class="toggle-btn" id="volBtn">Volume</button>
-                <button class="toggle-btn" id="areaBtn">Area</button>
+                <button class="toggle-btn active" id="lenBtn">길이</button>
+                <button class="toggle-btn" id="weightBtn">무게</button>
+                <button class="toggle-btn" id="tempBtn">온도</button>
+                <button class="toggle-btn" id="speedBtn">속도</button>
+                <button class="toggle-btn" id="volBtn">부피</button>
+                <button class="toggle-btn" id="areaBtn">면적</button>
             </div>
             <form id="converterForm">
                 <div class="row">
-                    <label for="fromValue">Value</label>
+                    <label for="fromValue">값</label>
                     <input
                         type="number"
                         id="fromValue"
-                        placeholder="Enter value"
+                        placeholder="값을 입력하세요"
                         step="any"
                         required
                         autocomplete="off" />
                 </div>
                 <div class="row">
-                    <label for="fromUnit">From</label>
+                    <label for="fromUnit">단위 (출발)</label>
                     <select id="fromUnit"></select>
                 </div>
                 <div class="row">
-                    <label for="toUnit">To</label>
+                    <label for="toUnit">단위 (변환)</label>
                     <select id="toUnit"></select>
                 </div>
                 <div class="result-area" id="resultArea"></div>
             </form>
             <div class="footer">
-                All calculations are instant and private, performed entirely in your browser.<br />
-                Need more conversions? Suggest a feature!
+                모든 계산은 즉시 이루어지며 개인 정보 보호가 보장됩니다.<br />
+                브라우저에서 완전히 처리됩니다.<br />
+                더 많은 변환이 필요하다면, 의견을 남겨주세요!
             </div>
-            <a href="../index.html" id="backBtn">Other Util</a>
+            <a href="../index.html" id="backBtn">다른 유틸 보기</a>
         </div>
         <script>
-            // Conversion data
+            // 변환 데이터
             const units = {
                 length: {
-                    name: "Length",
+                    name: "길이",
                     list: {
-                        mm: { label: "Millimeter (mm)", toM: (v) => v / 1000, fromM: (v) => v * 1000 },
-                        cm: { label: "Centimeter (cm)", toM: (v) => v / 100, fromM: (v) => v * 100 },
-                        m: { label: "Meter (m)", toM: (v) => v, fromM: (v) => v },
-                        km: { label: "Kilometer (km)", toM: (v) => v * 1000, fromM: (v) => v / 1000 },
-                        in: { label: "Inch (in)", toM: (v) => v * 0.0254, fromM: (v) => v / 0.0254 },
-                        ft: { label: "Foot (ft)", toM: (v) => v * 0.3048, fromM: (v) => v / 0.3048 },
-                        yd: { label: "Yard (yd)", toM: (v) => v * 0.9144, fromM: (v) => v / 0.9144 },
-                        mi: { label: "Mile (mi)", toM: (v) => v * 1609.34, fromM: (v) => v / 1609.34 }
+                        mm: { label: "밀리미터 (mm)", toM: v => v / 1000, fromM: v => v * 1000 },
+                        cm: { label: "센티미터 (cm)", toM: v => v / 100, fromM: v => v * 100 },
+                        m: { label: "미터 (m)", toM: v => v, fromM: v => v },
+                        km: { label: "킬로미터 (km)", toM: v => v * 1000, fromM: v => v / 1000 },
+                        in: { label: "인치 (in)", toM: v => v * 0.0254, fromM: v => v / 0.0254 },
+                        ft: { label: "피트 (ft)", toM: v => v * 0.3048, fromM: v => v / 0.3048 },
+                        yd: { label: "야드 (yd)", toM: v => v * 0.9144, fromM: v => v / 0.9144 },
+                        mi: { label: "마일 (mi)", toM: v => v * 1609.34, fromM: v => v / 1609.34 }
                     }
                 },
                 weight: {
-                    name: "Weight",
+                    name: "무게",
                     list: {
-                        mg: { label: "Milligram (mg)", toKg: (v) => v / 1e6, fromKg: (v) => v * 1e6 },
-                        g: { label: "Gram (g)", toKg: (v) => v / 1000, fromKg: (v) => v * 1000 },
-                        kg: { label: "Kilogram (kg)", toKg: (v) => v, fromKg: (v) => v },
-                        t: { label: "Metric Ton (t)", toKg: (v) => v * 1000, fromKg: (v) => v / 1000 },
-                        oz: { label: "Ounce (oz)", toKg: (v) => v * 0.0283495, fromKg: (v) => v / 0.0283495 },
-                        lb: { label: "Pound (lb)", toKg: (v) => v * 0.453592, fromKg: (v) => v / 0.453592 }
+                        mg: { label: "밀리그램 (mg)", toKg: v => v / 1e6, fromKg: v => v * 1e6 },
+                        g: { label: "그램 (g)", toKg: v => v / 1000, fromKg: v => v * 1000 },
+                        kg: { label: "킬로그램 (kg)", toKg: v => v, fromKg: v => v },
+                        t: { label: "메트릭 톤 (t)", toKg: v => v * 1000, fromKg: v => v / 1000 },
+                        oz: { label: "온스 (oz)", toKg: v => v * 0.0283495, fromKg: v => v / 0.0283495 },
+                        lb: { label: "파운드 (lb)", toKg: v => v * 0.453592, fromKg: v => v / 0.453592 }
                     }
                 },
                 temp: {
-                    name: "Temperature",
+                    name: "온도",
                     list: {
-                        C: { label: "Celsius (°C)", toK: (v) => v + 273.15, fromK: (v) => v - 273.15 },
+                        C: { label: "섭씨 (°C)", toK: v => v + 273.15, fromK: v => v - 273.15 },
                         F: {
-                            label: "Fahrenheit (°F)",
-                            toK: (v) => ((v + 459.67) * 5) / 9,
-                            fromK: (v) => (v * 9) / 5 - 459.67
+                            label: "화씨 (°F)",
+                            toK: v => ((v + 459.67) * 5) / 9,
+                            fromK: v => (v * 9) / 5 - 459.67
                         },
-                        K: { label: "Kelvin (K)", toK: (v) => v, fromK: (v) => v }
+                        K: { label: "켈빈 (K)", toK: v => v, fromK: v => v }
                     }
                 },
                 speed: {
-                    name: "Speed",
+                    name: "속도",
                     list: {
-                        "m/s": { label: "Meter/sec (m/s)", toMS: (v) => v, fromMS: (v) => v },
-                        "km/h": { label: "Km/hour (km/h)", toMS: (v) => v / 3.6, fromMS: (v) => v * 3.6 },
-                        "mi/h": { label: "Mile/hour (mph)", toMS: (v) => v * 0.44704, fromMS: (v) => v / 0.44704 },
-                        "ft/s": { label: "Foot/sec (ft/s)", toMS: (v) => v * 0.3048, fromMS: (v) => v / 0.3048 },
-                        knot: { label: "Knot (kn)", toMS: (v) => v * 0.514444, fromMS: (v) => v / 0.514444 }
+                        "m/s": { label: "미터/초 (m/s)", toMS: v => v, fromMS: v => v },
+                        "km/h": { label: "킬로미터/시 (km/h)", toMS: v => v / 3.6, fromMS: v => v * 3.6 },
+                        "mi/h": { label: "마일/시 (mph)", toMS: v => v * 0.44704, fromMS: v => v / 0.44704 },
+                        "ft/s": { label: "피트/초 (ft/s)", toMS: v => v * 0.3048, fromMS: v => v / 0.3048 },
+                        knot: { label: "노트 (kn)", toMS: v => v * 0.514444, fromMS: v => v / 0.514444 }
                     }
                 },
                 vol: {
-                    name: "Volume",
+                    name: "부피",
                     list: {
-                        ml: { label: "Milliliter (ml)", toL: (v) => v / 1000, fromL: (v) => v * 1000 },
-                        l: { label: "Liter (l)", toL: (v) => v, fromL: (v) => v },
-                        m3: { label: "Cubic meter (m³)", toL: (v) => v * 1000, fromL: (v) => v / 1000 },
-                        in3: { label: "Cubic inch (in³)", toL: (v) => v * 0.0163871, fromL: (v) => v / 0.0163871 },
-                        ft3: { label: "Cubic foot (ft³)", toL: (v) => v * 28.3168, fromL: (v) => v / 28.3168 },
-                        gal: { label: "US Gallon (gal)", toL: (v) => v * 3.78541, fromL: (v) => v / 3.78541 }
+                        ml: { label: "밀리리터 (ml)", toL: v => v / 1000, fromL: v => v * 1000 },
+                        l: { label: "리터 (l)", toL: v => v, fromL: v => v },
+                        m3: { label: "세제곱미터 (m³)", toL: v => v * 1000, fromL: v => v / 1000 },
+                        in3: { label: "세제곱인치 (in³)", toL: v => v * 0.0163871, fromL: v => v / 0.0163871 },
+                        ft3: { label: "세제곱피트 (ft³)", toL: v => v * 28.3168, fromL: v => v / 28.3168 },
+                        gal: { label: "미국 갤런 (gal)", toL: v => v * 3.78541, fromL: v => v / 3.78541 }
                     }
                 },
                 area: {
-                    name: "Area",
+                    name: "면적",
                     list: {
-                        mm2: { label: "Sq. Millimeter (mm²)", toM2: (v) => v / 1e6, fromM2: (v) => v * 1e6 },
-                        cm2: { label: "Sq. Centimeter (cm²)", toM2: (v) => v / 10000, fromM2: (v) => v * 10000 },
-                        m2: { label: "Sq. Meter (m²)", toM2: (v) => v, fromM2: (v) => v },
-                        ha: { label: "Hectare (ha)", toM2: (v) => v * 10000, fromM2: (v) => v / 10000 },
-                        km2: { label: "Sq. Kilometer (km²)", toM2: (v) => v * 1e6, fromM2: (v) => v / 1e6 },
-                        in2: { label: "Sq. Inch (in²)", toM2: (v) => v * 0.00064516, fromM2: (v) => v / 0.00064516 },
-                        ft2: { label: "Sq. Foot (ft²)", toM2: (v) => v * 0.092903, fromM2: (v) => v / 0.092903 },
-                        yd2: { label: "Sq. Yard (yd²)", toM2: (v) => v * 0.836127, fromM2: (v) => v / 0.836127 },
-                        ac: { label: "Acre (ac)", toM2: (v) => v * 4046.86, fromM2: (v) => v / 4046.86 }
+                        mm2: { label: "제곱밀리미터 (mm²)", toM2: v => v / 1e6, fromM2: v => v * 1e6 },
+                        cm2: { label: "제곱센티미터 (cm²)", toM2: v => v / 10000, fromM2: v => v * 10000 },
+                        m2: { label: "제곱미터 (m²)", toM2: v => v, fromM2: v => v },
+                        ha: { label: "헥타르 (ha)", toM2: v => v * 10000, fromM2: v => v / 10000 },
+                        km2: { label: "제곱킬로미터 (km²)", toM2: v => v * 1e6, fromM2: v => v / 1e6 },
+                        in2: { label: "제곱인치 (in²)", toM2: v => v * 0.00064516, fromM2: v => v / 0.00064516 },
+                        ft2: { label: "제곱피트 (ft²)", toM2: v => v * 0.092903, fromM2: v => v / 0.092903 },
+                        yd2: { label: "제곱야드 (yd²)", toM2: v => v * 0.836127, fromM2: v => v / 0.836127 },
+                        ac: { label: "에이커 (ac)", toM2: v => v * 4046.86, fromM2: v => v / 4046.86 }
                     }
                 }
             };
 
-            // DOM
+            // DOM 요소 참조
             const btns = {
                 len: document.getElementById("lenBtn"),
                 weight: document.getElementById("weightBtn"),
@@ -309,10 +310,10 @@
             const resultArea = document.getElementById("resultArea");
             let currentType = "length";
 
-            // Mode switching
-            Object.keys(btns).forEach((type, idx) => {
+            // 모드 전환
+            Object.keys(btns).forEach((type) => {
                 btns[type].onclick = () => {
-                    Object.values(btns).forEach((b) => b.classList.remove("active"));
+                    Object.values(btns).forEach(b => b.classList.remove("active"));
                     btns[type].classList.add("active");
                     currentType = type === "len" ? "length" : type;
                     loadUnitOptions();
@@ -324,7 +325,7 @@
                 const u = units[currentType].list;
                 fromUnit.innerHTML = "";
                 toUnit.innerHTML = "";
-                Object.keys(u).forEach((key) => {
+                Object.keys(u).forEach(key => {
                     const opt1 = document.createElement("option");
                     opt1.value = key;
                     opt1.textContent = u[key].label;
@@ -342,32 +343,32 @@
             function convert(type, value, from, to) {
                 if (type === "length") {
                     const fromU = units.length.list[from],
-                        toU = units.length.list[to];
+                          toU = units.length.list[to];
                     return toU.fromM(fromU.toM(value));
                 }
                 if (type === "weight") {
                     const fromU = units.weight.list[from],
-                        toU = units.weight.list[to];
+                          toU = units.weight.list[to];
                     return toU.fromKg(fromU.toKg(value));
                 }
                 if (type === "temp") {
                     const fromU = units.temp.list[from],
-                        toU = units.temp.list[to];
+                          toU = units.temp.list[to];
                     return toU.fromK(fromU.toK(value));
                 }
                 if (type === "speed") {
                     const fromU = units.speed.list[from],
-                        toU = units.speed.list[to];
+                          toU = units.speed.list[to];
                     return toU.fromMS(fromU.toMS(value));
                 }
                 if (type === "vol") {
                     const fromU = units.vol.list[from],
-                        toU = units.vol.list[to];
+                          toU = units.vol.list[to];
                     return toU.fromL(fromU.toL(value));
                 }
                 if (type === "area") {
                     const fromU = units.area.list[from],
-                        toU = units.area.list[to];
+                          toU = units.area.list[to];
                     return toU.fromM2(fromU.toM2(value));
                 }
                 return value;
@@ -380,7 +381,7 @@
                     return;
                 }
                 const from = fromUnit.value,
-                    to = toUnit.value;
+                      to = toUnit.value;
                 let res = convert(currentType, v, from, to);
                 if (currentType === "temp") {
                     res = Math.round(res * 100) / 100;
@@ -389,12 +390,16 @@
                 } else {
                     res = Math.round(res * 100000) / 100000;
                 }
-                resultArea.textContent = `${fromValue.value} ${fromUnit.options[fromUnit.selectedIndex].text.split(" ")[0]} = ${res} ${toUnit.options[toUnit.selectedIndex].text.split(" ")[0]}`;
+                const fromLabel = fromUnit.options[fromUnit.selectedIndex].text.split(" ")[0];
+                const toLabel = toUnit.options[toUnit.selectedIndex].text.split(" ")[0];
+                resultArea.textContent = `${fromValue.value} ${fromLabel} = ${res} ${toLabel}`;
             }
+
             fromValue.addEventListener("input", updateResult);
             fromUnit.addEventListener("change", updateResult);
             toUnit.addEventListener("change", updateResult);
-            // Init with first example
+
+            // 초기 예시 값으로 결과 표시
             setTimeout(updateResult, 100);
         </script>
         <section
@@ -408,41 +413,41 @@
                 font-family: Arial, sans-serif;
             ">
             <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 14px">
-                ❓ FAQ – Unit Converter
+                ❓ FAQ – 단위 변환기
             </div>
 
             <div style="margin-bottom: 12px">
-                <div style="color: #8f94fb; font-weight: bold">Is this converter accurate?</div>
+                <div style="color: #8f94fb; font-weight: bold">이 변환기는 정확한가요?</div>
                 <div style="color: #f0f0f0">
-                    Yes. All formulas use standardized conversion rates based on international units.
+                    네. 모든 공식은 국제 표준 단위에 기반한 정확한 환산율을 사용합니다.
                 </div>
             </div>
 
             <div style="margin-bottom: 12px">
-                <div style="color: #8f94fb; font-weight: bold">Does it work offline?</div>
+                <div style="color: #8f94fb; font-weight: bold">오프라인에서도 작동하나요?</div>
                 <div style="color: #f0f0f0">
-                    Yes, after the page loads, it works fully offline. No server connection is needed.
+                    네. 페이지가 로드된 후에는 완전히 오프라인 상태에서도 작동합니다. 서버 연결이 필요하지 않습니다.
                 </div>
             </div>
 
             <div style="margin-bottom: 12px">
-                <div style="color: #8f94fb; font-weight: bold">Are there any usage limits?</div>
+                <div style="color: #8f94fb; font-weight: bold">사용 제한이 있나요?</div>
                 <div style="color: #f0f0f0">
-                    No. You can convert as much as you want, across all categories, with no limits.
+                    아니요. 모든 카테고리에서 무제한으로 변환할 수 있습니다.
                 </div>
             </div>
 
             <div style="margin-bottom: 12px">
-                <div style="color: #8f94fb; font-weight: bold">Why do I see exponential notation?</div>
+                <div style="color: #8f94fb; font-weight: bold">왜 지수 표기법이 보이나요?</div>
                 <div style="color: #f0f0f0">
-                    Large or very small values are shown in scientific format (e.g., 1.23e+6) for readability.
+                    매우 크거나 작은 값은 가독성을 위해 과학적 표기법(예: 1.23e+6)으로 표시됩니다.
                 </div>
             </div>
 
             <div style="margin-bottom: 0">
-                <div style="color: #8f94fb; font-weight: bold">Can I suggest new unit types?</div>
+                <div style="color: #8f94fb; font-weight: bold">새 단위 카테고리를 추가할 수 있나요?</div>
                 <div style="color: #f0f0f0">
-                    Yes! If you'd like to see more categories, let us know through the suggestion form.
+                    네! 새로운 카테고리가 필요하다면 의견을 남겨주세요.
                 </div>
             </div>
         </section>

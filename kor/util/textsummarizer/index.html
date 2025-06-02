@@ -1,31 +1,31 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <title>Text Summarizer – Summarize any text quickly!</title>
+    <title>텍스트 요약기 – 긴 텍스트를 빠르게 요약하세요!</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Easily summarize any long text, article, or essay. Free, private, and works in your browser!" />
+      content="긴 텍스트, 기사, 에세이를 간편하게 요약해보세요. 무료, 개인 정보 보호, 브라우저에서 즉시 작동!" />
     <meta
       name="keywords"
-      content="text summarizer, summarize, auto summary, article summary, free, online, browser, no upload" />
+      content="텍스트 요약기, 요약, 자동 요약, 기사 요약, 무료, 온라인, 브라우저, 업로드 불필요" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="en" />
+    <meta name="language" content="ko" />
     <link rel="canonical" href="https://emfls.github.io/kor/util/textsummarizer/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <meta property="og:title" content="Text Summarizer – Summarize any text quickly!" />
+    <meta property="og:title" content="텍스트 요약기 – 긴 텍스트를 빠르게 요약하세요!" />
     <meta
       property="og:description"
-      content="Summarize articles, documents, or essays instantly. No upload, free, and private." />
+      content="기사, 문서, 에세이를 즉시 요약하세요. 업로드 불필요, 무료, 개인 정보 보호." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/kor/util/textsummarizer/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Text Summarizer – Summarize any text quickly!" />
-    <meta name="twitter:description" content="Easily summarize any long text, article, or essay in your browser." />
+    <meta name="twitter:title" content="텍스트 요약기 – 긴 텍스트를 빠르게 요약하세요!" />
+    <meta name="twitter:description" content="긴 텍스트, 기사, 에세이를 브라우저에서 간편하게 요약하세요." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-    <!-- Google tag (gtag.js) -->
+    <!-- Google 태그 (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -164,25 +164,25 @@
   </head>
   <body>
     <div class="container">
-      <div class="logo">📝 Text Summarizer</div>
+      <div class="logo">📝 텍스트 요약기</div>
       <div class="desc">
-        Paste a long text or article below.<br />
-        Click <b>Summarize</b> to get a short summary!
+        긴 텍스트나 기사를 아래에 붙여넣으세요.<br />
+        <b>요약하기</b> 버튼을 눌러 간단한 요약을 얻으세요!
       </div>
-      <textarea id="inputText" placeholder="Paste your long text here..."></textarea>
+      <textarea id="inputText" placeholder="긴 텍스트를 여기에 붙여넣으세요..."></textarea>
       <div class="input-row">
-        <label class="slider-label" for="summaryLength">Summary length:</label>
+        <label class="slider-label" for="summaryLength">요약 분량:</label>
         <input type="range" min="1" max="10" value="3" id="summaryLength" />
-        <span id="lengthVal">3</span> sentences
+        <span id="lengthVal">3</span> 문장
       </div>
-      <button class="action-btn" id="summarizeBtn">Summarize</button>
+      <button class="action-btn" id="summarizeBtn">요약하기</button>
       <div class="output-box" id="summaryResult" style="margin-top: 8px"></div>
       <div class="footer">
-        All processing is local. <b>No upload.</b> Free & private.<br />
-        <span style="color: #127080">Tip: Try news, Wikipedia, school essays, or any text!</span>
+        모든 처리는 로컬에서 이루어집니다. <b>업로드 불필요</b>, 무료 & 개인 정보 보호.<br />
+        <span style="color: #127080">팁: 뉴스, 위키피디아, 학교 과제, 어떤 텍스트든 시도해보세요!</span>
       </div>
     </div>
-    <a href="../index.html" id="backBtn">Other Util</a>
+    <a href="../index.html" id="backBtn">다른 유틸 보기</a>
     <script>
       const inputText = document.getElementById("inputText");
       const summaryResult = document.getElementById("summaryResult");
@@ -194,13 +194,13 @@
         lengthVal.textContent = summaryLength.value;
       };
 
-      // Simple frequency-based summary (no AI)
+      // 간단한 빈도 기반 요약 (AI 미사용)
       function summarize(text, numSentences = 3) {
-        if (!text.trim()) return "Paste your text above and click Summarize.";
-        // Split text into sentences
+        if (!text.trim()) return "텍스트를 붙여넣고 '요약하기'를 클릭하세요.";
+        // 문장 단위로 분할
         const sentences = text.match(/[^\.!\?]+[\.!\?]+/g) || [text];
         if (sentences.length <= numSentences) return text;
-        // Count word frequencies
+        // 단어 빈도 계산
         const freq = {};
         const words = text
           .replace(/[^\w\s]/g, "")
@@ -209,7 +209,7 @@
         words.forEach((w) => {
           if (w.length > 2) freq[w] = (freq[w] || 0) + 1;
         });
-        // Score each sentence by sum of word frequencies
+        // 각 문장의 점수 계산 (단어 빈도 합)
         const scored = sentences.map((s) => {
           const sw = s
             .replace(/[^\w\s]/g, "")
@@ -221,11 +221,14 @@
           });
           return { sentence: s.trim(), score };
         });
-        // Sort by score and pick top N, preserving original order
+        // 점수가 높은 상위 N개 문장을 원본 순서대로 선택
         const top = scored
           .sort((a, b) => b.score - a.score)
           .slice(0, numSentences)
-          .sort((a, b) => sentences.indexOf(a.sentence + ".") - sentences.indexOf(b.sentence + "."));
+          .sort(
+            (a, b) =>
+              sentences.indexOf(a.sentence + ".") - sentences.indexOf(b.sentence + ".")
+          );
         return top.map((t) => t.sentence).join(" ");
       }
 
@@ -247,37 +250,41 @@
         font-family: Arial, sans-serif;
       ">
       <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 14px">
-        ❓ FAQ – Text Summarizer
+        ❓ FAQ – 텍스트 요약기
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Is this tool using AI or ChatGPT?</div>
+        <div style="color: #8f94fb; font-weight: bold">이 도구는 AI나 ChatGPT를 사용하나요?</div>
         <div style="color: #f0f0f0">
-          No. It uses a simple word frequency algorithm. Fast and private, but not as smart as AI-based summaries.
+          아닙니다. 단어 빈도 기반 알고리즘을 사용합니다. 빠르고 개인 정보 보호가 가능하지만 AI 요약보다는 단순합니다.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Is my text uploaded or stored?</div>
-        <div style="color: #f0f0f0">Never. All processing happens in your browser. Nothing is sent to any server.</div>
-      </div>
-
-      <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">What languages are supported?</div>
-        <div style="color: #f0f0f0">It works best with English. Other languages may work, but results could vary.</div>
-      </div>
-
-      <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">How accurate are the summaries?</div>
+        <div style="color: #8f94fb; font-weight: bold">내 텍스트가 업로드되거나 저장되나요?</div>
         <div style="color: #f0f0f0">
-          It picks the most "important" sentences based on word repetition. It’s basic but helpful for quick overviews.
+          절대 아닙니다. 모든 처리는 브라우저에서 이루어지며, 서버로 전송되지 않습니다.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">어떤 언어를 지원하나요?</div>
+        <div style="color: #f0f0f0">
+          주로 영어에 최적화되어 있습니다. 다른 언어도 동작할 수 있지만 결과가 다를 수 있습니다.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">요약 정확도는 어떤가요?</div>
+        <div style="color: #f0f0f0">
+          단어 반복 빈도를 바탕으로 “중요한” 문장을 선택합니다. 매우 간단하지만 빠르게 개요를 파악할 때 유용합니다.
         </div>
       </div>
 
       <div style="margin-bottom: 0">
-        <div style="color: #8f94fb; font-weight: bold">What can I use this for?</div>
+        <div style="color: #8f94fb; font-weight: bold">어디에 사용할 수 있나요?</div>
         <div style="color: #f0f0f0">
-          Summarizing news, blog posts, essays, research papers, or any long text without needing login or account.
+          뉴스, 블로그, 에세이, 논문 등 긴 텍스트를 로그인 없이 간편하게 요약할 때 사용하세요.
         </div>
       </div>
     </section>

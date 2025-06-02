@@ -1,30 +1,30 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <title>Time Difference & Countdown Calculator</title>
+    <title>시간 차이 & 카운트다운 계산기</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Calculate the time difference between two dates and see a live countdown to any date. Days, hours, minutes, seconds. Free, browser-based, mobile-friendly." />
+      content="두 날짜 간 시간 차이를 계산하고 원하는 날짜까지 실시간 카운트다운을 확인하세요. 일, 시간, 분, 초. 무료, 브라우저 기반, 모바일 친화적." />
     <meta
       name="keywords"
-      content="time difference, countdown, date calculator, timer, days, hours, minutes, seconds, 웹, 카운트다운, 날짜계산" />
+      content="시간 차이, 카운트다운, 날짜 계산기, 타이머, 일, 시간, 분, 초, 웹, 카운트다운, 날짜계산" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="en" />
+    <meta name="language" content="ko" />
     <meta name="theme-color" content="#1999c6" />
     <link rel="canonical" href="https://emfls.github.io/kor/util/time-diff/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <meta property="og:title" content="Time Difference & Countdown Calculator" />
+    <meta property="og:title" content="시간 차이 & 카운트다운 계산기" />
     <meta
       property="og:description"
-      content="See the time between any two moments, and a live countdown to any future date." />
+      content="두 순간 간의 시간을 확인하고, 원하는 미래 날짜까지 실시간 카운트다운을 보세요." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/kor/util/time-diff/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Time Difference & Countdown Calculator" />
-    <meta name="twitter:description" content="Check the time interval or a live countdown. 100% browser, no upload." />
+    <meta name="twitter:title" content="시간 차이 & 카운트다운 계산기" />
+    <meta name="twitter:description" content="간격 확인 또는 실시간 카운트다운. 100% 브라우저, 업로드 불필요." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -161,25 +161,25 @@
   </head>
   <body>
     <div class="container">
-      <div class="title">⏳ Time Difference & Countdown</div>
+      <div class="title">⏳ 시간 차이 & 카운트다운</div>
       <form id="diffForm" autocomplete="off">
         <div class="form-row">
-          <label for="startTime">Start Date &amp; Time</label>
+          <label for="startTime">시작 날짜 및 시간</label>
           <input type="datetime-local" id="startTime" />
         </div>
         <div class="form-row">
-          <label for="endTime">End Date &amp; Time</label>
+          <label for="endTime">종료 날짜 및 시간</label>
           <input type="datetime-local" id="endTime" />
         </div>
         <div class="result" id="diffResult"></div>
       </form>
       <div class="countdown" id="countdownBox"></div>
       <div class="footer">
-        Calculate days, hours, minutes, seconds between dates, or see a live countdown.<br />
-        <b>Tip:</b> Pick only End Time for countdown from now.
+        날짜 간 일, 시간, 분, 초를 계산하거나 실시간 카운트다운을 확인하세요.<br />
+        <b>팁:</b> 카운트다운을 원한다면 종료 시간만 설정하세요.
       </div>
     </div>
-    <a href="../index.html" id="backBtn">Other Util</a>
+    <a href="../index.html" id="backBtn">다른 유틸 보기</a>
     <script>
       const startInput = document.getElementById("startTime");
       const endInput = document.getElementById("endTime");
@@ -194,23 +194,22 @@
         const hours = Math.floor((abs % 86400000) / 3600000);
         const mins = Math.floor((abs % 3600000) / 60000);
         const secs = Math.floor((abs % 60000) / 1000);
-        return `<b>${sign}${days} days</b> &nbsp; <b>${hours} hours</b> &nbsp; <b>${mins} min</b> &nbsp; <b>${secs} sec</b>`;
+        return `<b>${sign}${days}일</b> &nbsp; <b>${hours}시간</b> &nbsp; <b>${mins}분</b> &nbsp; <b>${secs}초</b>`;
       }
 
       function update() {
         const start = startInput.value ? new Date(startInput.value) : null;
         const end = endInput.value ? new Date(endInput.value) : null;
-        // Time difference
+        // 시간 차이 계산
         if (start && end) {
           let ms = end - start;
-          if (isNaN(ms)) result.textContent = "Invalid date/time input.";
+          if (isNaN(ms)) result.textContent = "잘못된 날짜/시간 입력입니다.";
           else result.innerHTML = formatDiff(ms);
         } else {
           result.textContent = "";
         }
-        // Countdown (from now to end)
+        // 카운트다운 (현재 시각부터 종료까지)
         if (end) {
-          // If both start & end, only show countdown if start is now
           let from =
             !startInput.value || (startInput.value && new Date(startInput.value) < new Date())
               ? new Date()
@@ -231,12 +230,12 @@
               return;
             }
             if (ms <= 0) {
-              countdownBox.innerHTML = `<b>Time is up!</b>`;
+              countdownBox.innerHTML = `<b>시간 종료!</b>`;
               clearInterval(countdownTimer);
               countdownTimer = null;
               return;
             }
-            countdownBox.innerHTML = `<b>Countdown: </b>` + formatDiff(ms);
+            countdownBox.innerHTML = `<b>카운트다운: </b>` + formatDiff(ms);
           }
           if (countdownTimer) clearInterval(countdownTimer);
           tick();
@@ -248,10 +247,10 @@
         }
       }
 
-      // Auto update on any input
+      // 입력이 변경될 때마다 자동 업데이트
       startInput.addEventListener("input", update);
       endInput.addEventListener("input", update);
-      // Also update immediately if page is loaded with value
+      // 페이지 로드 시에도 즉시 업데이트
       window.addEventListener("DOMContentLoaded", update);
     </script>
     <section
@@ -265,40 +264,42 @@
         font-family: Arial, sans-serif;
       ">
       <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 14px">
-        ❓ FAQ – Time Difference & Countdown
+        ❓ FAQ – 시간 차이 & 카운트다운
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Does this tool require internet or uploading?</div>
+        <div style="color: #8f94fb; font-weight: bold">이 도구는 인터넷 연결이나 업로드가 필요한가요?</div>
         <div style="color: #f0f0f0">
-          No. Everything is computed locally in your browser. No data leaves your device.
+          아니요. 모든 계산은 브라우저에서 로컬로 이루어집니다. 데이터가 외부로 전송되지 않습니다.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">How do I use the countdown feature?</div>
+        <div style="color: #8f94fb; font-weight: bold">카운트다운 기능은 어떻게 사용하나요?</div>
         <div style="color: #f0f0f0">
-          Just set the “End Date & Time”. The countdown will show time remaining from now.
+          단순히 '종료 날짜 및 시간'만 설정하세요. 지금부터 남은 시간이 표시됩니다.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">What happens if I set both Start and End times?</div>
+        <div style="color: #8f94fb; font-weight: bold">시작 시간과 종료 시간을 모두 설정하면 어떻게 되나요?</div>
         <div style="color: #f0f0f0">
-          You’ll see both the time difference and a countdown (if the Start is now or earlier).
+          시간 차이와 카운트다운(시작 시간이 지금이거나 과거인 경우)을 모두 확인할 수 있습니다.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Can I calculate negative differences?</div>
+        <div style="color: #8f94fb; font-weight: bold">음수 차이를 계산할 수 있나요?</div>
         <div style="color: #f0f0f0">
-          Yes. If the End time is earlier than the Start, the result will be negative (with a “-” sign).
+          네. 종료 시간이 시작 시간보다 이전이면 결과가 음수(“-” 기호 포함)로 표시됩니다.
         </div>
       </div>
 
       <div style="margin-bottom: 0">
-        <div style="color: #8f94fb; font-weight: bold">Is this mobile-friendly?</div>
-        <div style="color: #f0f0f0">Yes! The tool is responsive and works on phones, tablets, and desktops.</div>
+        <div style="color: #8f94fb; font-weight: bold">모바일 친화적인가요?</div>
+        <div style="color: #f0f0f0">
+          네! 이 도구는 반응형이며 스마트폰, 태블릿, 데스크톱에서 모두 작동합니다.
+        </div>
       </div>
     </section>
   </body>

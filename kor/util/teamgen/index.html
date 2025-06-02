@@ -1,28 +1,30 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <title>Random Team Generator – Group Splitter Online</title>
+    <title>랜덤 팀 생성기 – 온라인 그룹 분할기</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Enter names, pick number of teams, and split into random groups! Instantly assign teams, 100% browser-only, no upload." />
+      content="이름을 입력하고 팀 수를 선택하면 즉시 랜덤 팀/그룹으로 나눠줍니다! 100% 브라우저 기반, 업로드 불필요." />
     <meta
       name="keywords"
-      content="random team generator, group splitter, shuffle names, make teams, group, study group, classroom, class, 팀 편성, 조 짜기, 조 편성기, 랜덤 팀, 랜덤 조" />
+      content="랜덤 팀 생성기, 그룹 분할기, 이름 섞기, 팀 만들기, 스터디 그룹, 교실, 클래스, 팀 편성, 조 짜기, 조 편성기, 랜덤 팀, 랜덤 조" />
     <meta name="author" content="Itagi" />
     <link rel="canonical" href="https://emfls.github.io/kor/util/teamgen/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <meta property="og:title" content="Random Team Generator – Group Splitter Online" />
+    <meta property="og:title" content="랜덤 팀 생성기 – 온라인 그룹 분할기" />
     <meta
       property="og:description"
-      content="Split names into random teams/groups. Shuffle instantly, works in your browser, no data upload." />
+      content="이름을 무작위로 팀/그룹에 나눕니다. 즉시 섞기, 브라우저에서만 실행, 데이터 업로드 불필요." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/kor/util/teamgen/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Random Team Generator – Group Splitter Online" />
-    <meta name="twitter:description" content="Randomly assign names to n teams. Fast, private, and browser-only!" />
+    <meta name="twitter:title" content="랜덤 팀 생성기 – 온라인 그룹 분할기" />
+    <meta
+      name="twitter:description"
+      content="이름을 무작위로 팀/그룹에 나눕니다. 빠르고 개인 정보 보호, 브라우저에서만 실행!" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -221,27 +223,29 @@
   </head>
   <body>
     <div class="container">
-      <div class="logo">🔀 Random Team/Group Generator</div>
+      <div class="logo">🔀 랜덤 팀/그룹 생성기</div>
       <div class="desc">
-        Paste or type names (one per line),<br />
-        choose the number of teams,<br />
-        and split into random teams instantly!
+        이름을 붙여넣거나 한 줄에 하나씩 입력하세요,<br />
+        팀 수를 선택한 후,<br />
+        즉시 랜덤 팀으로 나눠줍니다!
       </div>
       <div class="input-row">
-        <label for="names" class="label">Names (one per line):</label>
-        <textarea id="names" rows="6" placeholder="Alice&#10;Bob&#10;Charlie&#10;..."></textarea>
+        <label for="names" class="label">이름 (한 줄에 하나씩):</label>
+        <textarea
+          id="names"
+          rows="6"
+          placeholder="홍길동&#10;김철수&#10;이영희&#10;..."></textarea>
       </div>
       <div class="control-row">
-        <label for="teamNum" class="label">Number of teams</label>
+        <label for="teamNum" class="label">팀 수</label>
         <input id="teamNum" class="team-num-input" type="number" min="2" max="20" value="2" />
-        <button class="gen-btn" id="genBtn" title="랜덤 팀 나누기">Split Teams</button>
+        <button class="gen-btn" id="genBtn" title="랜덤 팀 나누기">팀 나누기</button>
       </div>
       <div class="hint" id="hint"></div>
       <div class="result-list" id="resultList"></div>
-      <a href="../index.html" id="backBtn">Other Util</a>
+      <a href="../index.html" id="backBtn">다른 유틸 보기</a>
       <div class="footer">
-        100% browser-based. No tracking or upload.<br />
-        Made by Itagi – Free for all!
+        100% 브라우저 기반. 추적 및 업로드 없음.<br />
       </div>
     </div>
     <script>
@@ -258,34 +262,37 @@
         const hint = document.getElementById("hint");
         resultList.innerHTML = "";
         hint.textContent = "";
+
         let names = namesRaw
           .split("\n")
           .map((x) => x.trim())
           .filter(Boolean);
+
         if (names.length < 2) {
-          hint.textContent = "Please enter at least 2 names!";
+          hint.textContent = "이름을 최소 2개 이상 입력해주세요!";
           return;
         }
         if (teamNum < 2 || teamNum > 20) {
-          hint.textContent = "Number of teams must be between 2 and 20.";
+          hint.textContent = "팀 수는 2부터 20 사이여야 합니다.";
           return;
         }
         if (teamNum > names.length) {
-          hint.textContent = "Number of teams can't exceed number of names!";
+          hint.textContent = "팀 수는 이름 수를 초과할 수 없습니다!";
           return;
         }
+
         shuffle(names);
-        // Assign to teams
+        // 팀에 할당
         let teams = Array.from({ length: teamNum }, () => []);
         names.forEach((name, i) => {
           teams[i % teamNum].push(name);
         });
-        // Output
+        // 결과 출력
         teams.forEach((team, i) => {
           const block = document.createElement("div");
           block.className = "team-block";
-          block.innerHTML = `<div class="team-title">Team ${i + 1}</div>
-          <div class="team-names">${team.join(", ")}</div>`;
+          block.innerHTML = `<div class="team-title">팀 ${i + 1}</div>
+            <div class="team-names">${team.join(", ")}</div>`;
           resultList.appendChild(block);
         });
       };
@@ -301,38 +308,42 @@
         font-family: Arial, sans-serif;
       ">
       <div style="color: #8f94fb; font-size: 1.15em; font-weight: bold; margin-bottom: 14px">
-        ❓ Frequently Asked Questions
+        ❓ 자주 묻는 질문
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Is my data uploaded or stored?</div>
-        <div style="color: #f0f0f0">No. Everything runs in your browser. Nothing is uploaded, saved, or tracked.</div>
-      </div>
-
-      <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Can I create more than 20 teams?</div>
+        <div style="color: #8f94fb; font-weight: bold">내 데이터가 업로드되거나 저장되나요?</div>
         <div style="color: #f0f0f0">
-          Currently, the maximum is 20 to keep things readable. You can split again if needed.
+          아니요. 모든 것이 브라우저에서 실행됩니다. 업로드, 저장, 추적되지 않습니다.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Can I copy or export the team results?</div>
+        <div style="color: #8f94fb; font-weight: bold">20개 이상의 팀을 만들 수 있나요?</div>
         <div style="color: #f0f0f0">
-          Yes! You can select and copy the results manually, or screenshot for quick sharing.
+          현재 최대 20개까지 가능합니다. 가독성을 위해 제한되어 있으며, 필요 시 다시 분할할 수 있습니다.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Can I control team balance or size?</div>
+        <div style="color: #8f94fb; font-weight: bold">팀 결과를 복사하거나 내보낼 수 있나요?</div>
         <div style="color: #f0f0f0">
-          No, the shuffle is random. Teams may vary in size when names don’t divide evenly.
+          네! 결과를 선택하여 복사하거나, 빠른 공유를 위해 스크린샷을 찍을 수 있습니다.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">팀 균형이나 크기를 제어할 수 있나요?</div>
+        <div style="color: #f0f0f0">
+          아니요. 무작위로 섞기 때문에 이름이 고르게 나누어지지 않을 경우 팀 크기가 달라질 수 있습니다.
         </div>
       </div>
 
       <div style="margin-bottom: 0">
-        <div style="color: #8f94fb; font-weight: bold">Will the shuffle change each time?</div>
-        <div style="color: #f0f0f0">Yes. Every click produces a fresh, randomized team distribution.</div>
+        <div style="color: #8f94fb; font-weight: bold">섞기는 매번 다르게 되나요?</div>
+        <div style="color: #f0f0f0">
+          네. 클릭할 때마다 새로운 무작위 팀 분배가 생성됩니다.
+        </div>
       </div>
     </section>
   </body>
