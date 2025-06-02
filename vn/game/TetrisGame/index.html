@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="클래식 테트리스 웹게임! 무료로 플레이하고 블록을 쌓아 줄을 삭제하며 최고 점수를 노려보세요. 모바일 및 데스크톱 지원." />
+        <meta
+            name="keywords"
+            content="tetris, 테트리스, 퍼즐, 블록 쌓기, 온라인 게임, 고전 아케이드, 무료 웹게임, 모바일 게임, 브라우저 게임, 테트리스 웹, 스택 게임, 낙하 블록" />
+        <meta name="author" content="Itagi" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://emfls.github.io/kor/game/TetrisGame" />
+
+        <!-- Open Graph / Facebook / Kakao / Discord -->
+        <meta property="og:title" content="퀵플레이: 테트리스 – 온라인 클래식 퍼즐" />
+        <meta
+            property="og:description"
+            content="스마트하게 쌓고, 빠르게 이동하며 줄을 삭제하세요. 무료 온라인 테트리스 게임을 즉시 플레이하세요—다운로드 불필요!" />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta property="og:url" content="https://emfls.github.io/kor/game/TetrisGame" />
+        <meta property="og:type" content="website" />
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="퀵플레이: 테트리스 – 온라인 클래식 퍼즐" />
+        <meta
+            name="twitter:description"
+            content="얼마나 높은 점수를 기록할 수 있나요? 모바일 혹은 PC에서 무료로 이 테트리스 브라우저 게임을 즐겨보세요!" />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+        <title>테트리스 게임</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js">
+            function onMobileInput(key) {
+                switch (key) {
+                    case 'ArrowLeft':
+                        heldKeys[LEFT_ARROW] = true;
+                        break;
+                    case 'ArrowRight':
+                        heldKeys[RIGHT_ARROW] = true;
+                        break;
+                    case 'ArrowDown':
+                        heldKeys[DOWN_ARROW] = true;
+                        break;
+                }
+            }
+
+            function offMobileInput(key) {
+                switch (key) {
+                    case 'ArrowLeft':
+                        delete heldKeys[LEFT_ARROW];
+                        break;
+                    case 'ArrowRight':
+                        delete heldKeys[RIGHT_ARROW];
+                        break;
+                    case 'ArrowDown':
+                        delete heldKeys[DOWN_ARROW];
+                        break;
+                }
+            }
+        </script>
+        <style>
+            body {
+                background-color: #111;
+                color: white;
+                font-family: "Inter", sans-serif;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 1rem;
+            }
+
+            canvas {
+                border: 2px solid #3b3bb3;
+                background: #000;
+            }
+
+            #startButton,
+            #resetButton,
+            #shareButton {
+                padding: 10px 20px;
+                font-size: 18px;
+                background-color: #3b3bb3;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-top: 10px;
+            }
+
+            #resetButton,
+            #shareButton {
+                top: 60px;
+                display: none;
+            }
+
+            #controls {
+                position: absolute;
+                top: 520px;
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                align-items: center;
+                justify-content: center;
+                z-index: 10;
+                width: 100%;
+            }
+
+            #controls .row {
+                display: flex;
+                gap: 10px;
+                justify-content: center;
+            }
+
+            .ctrl-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 18px;
+                border: none;
+                border-radius: 10px;
+                background-color: #3b3bb3;
+            }
+
+            .ctrl-btn:active {
+                background-color: #666;
+            }
+
+            button.restart {
+                padding: 1rem;
+                margin-top: 1rem;
+                font-size: 1.1rem;
+                background-color: #4e54c8;
+                color: white;
+                border: none;
+                border-radius: 10px;
+                width: 90%;
+                max-width: 400px;
+                transition: background-color 0.2s ease;
+                cursor: pointer;
+                position: absolute;
+            }
+
+            button.restart:active {
+                background-color: #6a72f8;
+            }
+
+            button.menu,
+            button.share {
+                padding: 1rem;
+                margin-top: 1rem;
+                font-size: 1.1rem;
+                background-color: #4e54c8;
+                color: white;
+                border: none;
+                border-radius: 10px;
+                width: 90%;
+                max-width: 400px;
+                transition: background-color 0.2s ease;
+                cursor: pointer;
+            }
+
+            button.menu:active,
+            button.share:active {
+                background-color: #6a72f8;
+            }
+
+            #ad-banner {
+                width: 100%;
+                height: 80px;
+                margin: 0.8rem 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: #00000044;
+                color: #aaa;
+                font-size: 0.9rem;
+                position: absolute;
+                top: 630px;
+            }
+
+            h1 {
+                margin-bottom: 0.3rem;
+                font-size: 2rem;
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+                user-select: none;
+            }
+
+            p.description {
+                margin-bottom: 1rem;
+                font-size: 0.85rem;
+                color: #ccc;
+                text-align: center;
+                padding: 0 1rem;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>
+            <span style="color: #8f94fb">퀵플레이:</span>
+            <span style="color: #00ffff">테</span>
+            <span style="color: #0000ff">트</span>
+            <span style="color: #ffa500">리</span>
+            <span style="color: #ffff00">스</span>
+        </h1>
+        <p class="description">스마트하게 쌓고, 빠르게 이동하며 줄을 삭제하세요. 행운을 빕니다!</p>
+        <button id="startButton" style="position: absolute; top: 290px; left: 50%; transform: translate(-50%, -50%)">
+            게임 시작
+        </button>
+        <button
+            id="resetButton"
+            style="position: absolute; top: 340px; left: 50%; transform: translate(-50%, -50%); display: none">
+            다시 시도
+        </button>
+        <button
+            id="shareButton"
+            style="position: absolute; top: 390px; left: 50%; transform: translate(-50%, -50%); display: none"
+            onclick="shareGame()">
+            공유하기
+        </button>
+        <script>
+            let cols = 10;
+            let rows = 20;
+            let board;
+            let resolution = 20;
+            let currentPiece;
+            let nextPiece;
+            let gameOver = false;
+            let score = 0;
+            let gameStarted = false;
+
+            const shapes = {
+                I: [[1, 1, 1, 1]],
+                J: [
+                    [1, 0, 0],
+                    [1, 1, 1]
+                ],
+                L: [
+                    [0, 0, 1],
+                    [1, 1, 1]
+                ],
+                O: [
+                    [1, 1],
+                    [1, 1]
+                ],
+                S: [
+                    [0, 1, 1],
+                    [1, 1, 0]
+                ],
+                T: [
+                    [0, 1, 0],
+                    [1, 1, 1]
+                ],
+                Z: [
+                    [1, 1, 0],
+                    [0, 1, 1]
+                ]
+            };
+
+            const colors = {
+                I: [0, 255, 255],
+                J: [0, 0, 255],
+                L: [255, 165, 0],
+                O: [255, 255, 0],
+                S: [0, 255, 0],
+                T: [160, 32, 240],
+                Z: [255, 0, 0]
+            };
+
+            function setup() {
+                let canvas = createCanvas(cols * resolution, rows * resolution);
+                canvas.parent(document.body);
+                board = createEmptyBoard();
+                currentPiece = randomPiece();
+                nextPiece = randomPiece();
+                frameRate(60);
+                noLoop();
+            }
+
+            function draw() {
+                handleHeldKeys();
+                background(0);
+                drawBoard();
+                fill(255);
+                textSize(16);
+                textAlign(LEFT, TOP);
+                text("점수: " + score, 10, 10);
+                if (!gameStarted) return;
+
+                if (!gameOver) {
+                    drawPiece(currentPiece);
+                    if (frameCount % 20 === 0) {
+                        movePiece(0, 1);
+                    }
+                } else {
+                    textSize(32);
+                    textAlign(CENTER, CENTER);
+                    fill(255, 0, 0);
+                    text("게임 오버", width / 2, height / 2);
+                    document.getElementById("resetButton").style.display = "inline-block";
+                    document.getElementById("shareButton").style.display = "inline-block";
+                    noLoop();
+                }
+            }
+
+            function createEmptyBoard() {
+                return Array.from(
+                    {
+                        length: rows
+                    },
+                    () => Array(cols).fill(0)
+                );
+            }
+
+            function drawBoard() {
+                for (let y = 0; y < rows; y++) {
+                    for (let x = 0; x < cols; x++) {
+                        if (board[y][x]) {
+                            fill(...board[y][x]);
+                            stroke(0);
+                            rect(x * resolution, y * resolution, resolution, resolution);
+                        }
+                    }
+                }
+            }
+
+            function drawPiece(piece) {
+                fill(...piece.color);
+                for (let y = 0; y < piece.shape.length; y++) {
+                    for (let x = 0; x < piece.shape[y].length; x++) {
+                        if (piece.shape[y][x]) {
+                            rect((piece.x + x) * resolution, (piece.y + y) * resolution, resolution, resolution);
+                        }
+                    }
+                }
+            }
+
+            function movePiece(dx, dy) {
+                let moved = { ...currentPiece, x: currentPiece.x + dx, y: currentPiece.y + dy };
+                if (!collides(moved)) {
+                    currentPiece = moved;
+                } else if (dy === 1) {
+                    merge(currentPiece);
+                    clearLines();
+                    currentPiece = nextPiece;
+                    nextPiece = randomPiece();
+                    if (collides(currentPiece)) {
+                        gameOver = true;
+                    }
+                }
+            }
+
+            function collides(piece) {
+                for (let y = 0; y < piece.shape.length; y++) {
+                    for (let x = 0; x < piece.shape[y].length; x++) {
+                        if (
+                            piece.shape[y][x] &&
+                            (piece.y + y >= rows ||
+                                piece.x + x < 0 ||
+                                piece.x + x >= cols ||
+                                board[piece.y + y][piece.x + x])
+                        ) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+            function merge(piece) {
+                for (let y = 0; y < piece.shape.length; y++) {
+                    for (let x = 0; x < piece.shape[y].length; x++) {
+                        if (piece.shape[y][x]) {
+                            board[piece.y + y][piece.x + x] = piece.color;
+                        }
+                    }
+                }
+            }
+
+            function clearLines() {
+                let linesCleared = 0;
+                for (let y = rows - 1; y >= 0; y--) {
+                    if (board[y].every((cell) => cell)) {
+                        board.splice(y, 1);
+                        board.unshift(Array(cols).fill(0));
+                        y++;
+                        linesCleared++;
+                    }
+                }
+                score += linesCleared;
+            }
+
+            function randomPiece() {
+                let keys = Object.keys(shapes);
+                let key = random(keys);
+                return {
+                    x: Math.floor(cols / 2) - 1,
+                    y: 0,
+                    shape: shapes[key],
+                    color: colors[key]
+                };
+            }
+
+            let heldKeys = {};
+
+            function keyPressed() {
+                heldKeys[keyCode] = true;
+                if (keyCode === UP_ARROW) rotatePiece();
+            }
+
+            function keyReleased() {
+                delete heldKeys[keyCode];
+            }
+
+            function handleHeldKeys() {
+                let now = millis();
+
+                if (!handleHeldKeys.lastTime) handleHeldKeys.lastTime = 0;
+                if (now - handleHeldKeys.lastTime > 100) {
+                    // 100ms 간격
+                    if (heldKeys[LEFT_ARROW]) movePiece(-1, 0);
+                    if (heldKeys[RIGHT_ARROW]) movePiece(1, 0);
+                    if (heldKeys[DOWN_ARROW]) movePiece(0, 1);
+                    handleHeldKeys.lastTime = now;
+                }
+            }
+
+            function rotatePiece() {
+                let rotated = currentPiece.shape[0].map((_, i) => currentPiece.shape.map((row) => row[i]).reverse());
+                let rotatedPiece = { ...currentPiece, shape: rotated };
+                if (!collides(rotatedPiece)) {
+                    currentPiece.shape = rotated;
+                }
+            }
+
+            // 버튼 핸들러 등록
+            document.getElementById("startButton").onclick = function () {
+                gameStarted = true;
+                this.style.display = "none";
+                loop();
+            };
+
+            document.getElementById("resetButton").onclick = function () {
+                this.style.display = "none";
+                document.getElementById("shareButton").style.display = "none";
+                score = 0;
+                board = createEmptyBoard();
+                currentPiece = randomPiece();
+                nextPiece = randomPiece();
+                gameOver = false;
+                gameStarted = true;
+                loop();
+            };
+
+            function onMobileInput(key) {
+                switch (key) {
+                    case "ArrowLeft":
+                        heldKeys[LEFT_ARROW] = true;
+                        break;
+                    case "ArrowRight":
+                        heldKeys[RIGHT_ARROW] = true;
+                        break;
+                    case "ArrowDown":
+                        heldKeys[DOWN_ARROW] = true;
+                        break;
+                }
+            }
+
+            function offMobileInput(key) {
+                switch (key) {
+                    case "ArrowLeft":
+                        delete heldKeys[LEFT_ARROW];
+                        break;
+                    case "ArrowRight":
+                        delete heldKeys[RIGHT_ARROW];
+                        break;
+                    case "ArrowDown":
+                        delete heldKeys[DOWN_ARROW];
+                        break;
+                }
+            }
+        </script>
+
+        <div id="controls">
+            <div class="row">
+                <button
+                    class="ctrl-btn"
+                    ontouchstart="onMobileInput('ArrowLeft')"
+                    ontouchend="offMobileInput('ArrowLeft')"
+                    onmousedown="onMobileInput('ArrowLeft')"
+                    onmouseup="offMobileInput('ArrowLeft')"
+                    style="font-size: 24px; padding-bottom: 2px; color: white">
+                    ◀
+                </button>
+                <button
+                    class="ctrl-btn"
+                    ontouchstart="rotatePiece()"
+                    style="font-size: 30px; font-weight: 900; padding-bottom: 2px; color: white">
+                    ↻
+                </button>
+                <button
+                    class="ctrl-btn"
+                    ontouchstart="onMobileInput('ArrowRight')"
+                    ontouchend="offMobileInput('ArrowRight')"
+                    onmousedown="onMobileInput('ArrowRight')"
+                    onmouseup="offMobileInput('ArrowRight')"
+                    style="font-size: 24px; padding-bottom: 2px; color: white">
+                    ▶
+                </button>
+            </div>
+            <div class="row">
+                <button
+                    class="ctrl-btn"
+                    ontouchstart="onMobileInput('ArrowDown')"
+                    ontouchend="offMobileInput('ArrowDown')"
+                    onmousedown="onMobileInput('ArrowDown')"
+                    onmouseup="offMobileInput('ArrowDown')"
+                    style="font-size: 26px; margin-top: 5px; color: white">
+                    ▼
+                </button>
+            </div>
+        </div>
+
+        <button style="position: absolute; top: 660px" class="menu" onclick="goToMain()">📂 다른 게임</button>
+
+        <script>
+            function goToMain() {
+                window.location.href = "/"; // or 'index.html'
+            }
+
+            function shareGame() {
+                const url = window.location.href;
+                const text = `🧱 퀵플레이 테트리스 - 내 점수: ${score}\n지금 플레이해보세요!`;
+                if (navigator.share) {
+                    navigator
+                        .share({
+                            title: "퀵플레이: 테트리스",
+                            text,
+                            url
+                        })
+                        .catch(() => alert("공유에 실패했습니다. 링크를 복사해보세요."));
+                } else {
+                    const full = `${text}\n${url}`;
+                    navigator.clipboard
+                        .writeText(full)
+                        .then(() => alert("점수와 링크가 클립보드에 복사되었습니다!"))
+                        .catch(() => alert(`이 링크를 복사하세요:\n${full}`));
+                }
+            }
+        </script>
+        <section
+            style="
+                position: absolute;
+                max-width: 320px;
+                width: 100%;
+                margin: 772px auto 24px auto;
+                font-family: 'Arial', sans-serif;
+                font-size: 14px;
+                background: #1e1e1e;
+                border-radius: 18px;
+                box-shadow: 0 6px 24px #1236;
+                padding: 20px;
+                line-height: 1.6;
+                color: #f0f0f0;
+            ">
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ 자주 묻는 질문</h2>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q1. 이 테트리스 게임은 어떻게 플레이하나요?</strong><br />
+                A. 방향키 또는 화면 버튼을 사용해 블록을 이동하세요. 줄을 완전히 채우면 삭제됩니다.
+            </div>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q2. 어떤 컨트롤을 사용할 수 있나요?</strong><br />
+                A. ◀ ▶ ▼ 버튼으로 이동하거나 내리고, ↻ 버튼으로 회전하세요. 터치와 마우스 입력도 지원됩니다.
+            </div>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q3. 게임이 언제 종료되나요?</strong><br />
+                A. 블록이 최상단까지 쌓여 더 이상 새 조각을 배치할 수 없으면 게임이 종료됩니다.
+            </div>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q4. 게임을 다시 시작할 수 있나요?</strong><br />
+                A. 네! 게임 오버 후 ‘다시 시도’ 버튼을 눌러 언제든지 게임을 재시작할 수 있습니다.
+            </div>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q5. 점수를 공유할 수 있나요?</strong><br />
+                A. 물론입니다. ‘공유하기’ 버튼을 사용해 점수와 링크를 복사하거나 전송하세요.
+            </div>
+
+            <div style="margin-bottom: 0">
+                <strong>Q6. 이 게임은 모바일에서도 잘 작동하나요?</strong><br />
+                A. 네! 휴대폰과 데스크톱 모두에서 온스크린 컨트롤로 원활하게 플레이할 수 있습니다.
+            </div>
+        </section>
+    </body>
+</html>

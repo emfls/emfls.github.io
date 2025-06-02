@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>스탑 앳 5</title>
+        <meta name="robots" content="index, follow" />
+
+        <!-- Canonical URL -->
+        <link rel="canonical" href="https://emfls.github.io/kor/game/STOPat5" />
+
+        <!-- SEO Meta -->
+        <meta
+            name="description"
+            content="당신의 시간 감각은 얼마나 정확한가요? 타이머를 5.000초에 최대한 가깝게 멈춰보세요! 레벨 업하고 친구들에게 도전하세요. 무료, 모바일 최적화 웹게임." />
+        <meta
+            name="keywords"
+            content="스탑 앳 5, 타이머 게임, 반응 게임, 타이밍 챌린지, 레벨 업, 웹게임, 무료 게임, 브라우저 게임" />
+        <meta name="author" content="Itagi" />
+
+        <!-- Open Graph (Facebook, Kakao, Discord) -->
+        <meta property="og:title" content="스탑 앳 5 – 타이밍 챌린지 게임" />
+        <meta
+            property="og:description"
+            content="5.000초에 최대한 가깝게 멈춰보세요! 성공하면 레벨 업. 무료, 모바일 최적화 웹게임입니다." />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta property="og:url" content="https://emfls.github.io/kor/game/STOPat5" />
+        <meta property="og:type" content="website" />
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="스탑 앳 5 – 타이밍 챌린지 게임" />
+        <meta
+            name="twitter:description"
+            content="정확히 5초에 멈출 수 있나요? 스탑 앳 5를 플레이하고 친구에게 도전해보세요!" />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+        <style>
+            * {
+                box-sizing: border-box;
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            }
+
+            body {
+                background: linear-gradient(135deg, #f0f4ff, #dbe6ff);
+                height: 100vh;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding: 1rem;
+            }
+
+            #game-container {
+                background: white;
+                padding: 0px 20px 20px 20px;
+                border-radius: 20px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+                text-align: center;
+                width: 90%;
+                max-width: 400px;
+                position: relative;
+            }
+
+            h1 {
+                margin-bottom: 1rem;
+                line-height: 1.2;
+            }
+
+            #mainTitle {
+                font-size: 3.2rem;
+                font-weight: 800;
+                color: #4e89ff;
+                text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+                letter-spacing: 2px;
+            }
+
+            #subTitle {
+                font-size: 2rem;
+                font-weight: 500;
+                color: #333;
+                background: linear-gradient(to right, #4e89ff, #9b59b6);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            #levelBox {
+                padding: 0.7rem 1rem;
+                margin-bottom: 1.2rem;
+                margin-top: 10px;
+                border-radius: 10px;
+                display: inline-block;
+                text-align: left;
+                transition:
+                    background-color 0.3s ease,
+                    border-left 0.3s ease;
+            }
+
+            #levelLabel {
+                font-size: 1.2rem;
+                font-weight: bold;
+                display: block;
+            }
+
+            #toleranceInfo {
+                font-size: 0.9rem;
+                color: #555;
+                margin-top: 2px;
+                display: block;
+            }
+
+            #timer {
+                font-size: 3.5rem;
+                font-weight: bold;
+                color: #3a3a3a;
+                margin-bottom: 1.2rem;
+            }
+
+            button {
+                padding: 1rem 2rem;
+                font-size: 1.2rem;
+                background-color: #4e89ff;
+                color: white;
+                border: none;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(78, 137, 255, 0.3);
+                cursor: pointer;
+                transition: background-color 0.2s ease;
+                margin: 0.5rem;
+            }
+
+            button:hover {
+                background-color: #3a6edc;
+            }
+
+            #result {
+                margin-top: 1.5rem;
+                font-size: 1.2rem;
+                color: #444;
+            }
+
+            #gameOverArea {
+                display: none;
+                margin-top: 2rem;
+                background: #ffeaea;
+                border: 2px solid #ff4d4f;
+                padding: 1.5rem;
+                border-radius: 15px;
+                color: #c0392b;
+                animation: fadeIn 0.3s ease-in;
+            }
+
+            #gameOverArea p {
+                font-size: 1.3rem;
+                margin-bottom: 1rem;
+            }
+
+            #finalLevelBox {
+                margin-top: 0.5rem;
+                font-size: 1.1rem;
+                background: #ff4d4f;
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 30px;
+                font-weight: bold;
+                display: inline-block;
+            }
+
+            #finalDiff {
+                font-size: 1rem;
+                color: #333;
+                margin-top: 0.5rem;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            #levelUpBanner {
+                position: absolute;
+                top: -10px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #fff8c5;
+                border: 2px solid #f5c518;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-size: 1rem;
+                font-weight: bold;
+                color: #b38f00;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                pointer-events: none;
+            }
+
+            .animate {
+                animation: scaleUp 0.4s ease-in-out;
+            }
+
+            @keyframes scaleUp {
+                0% {
+                    transform: scale(1);
+                }
+                50% {
+                    transform: scale(1.15);
+                }
+                100% {
+                    transform: scale(1);
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="game-container">
+            <h1>
+                <span id="mainTitle">스탑</span><br />
+                <span id="subTitle">앳 5</span>
+            </h1>
+            <div id="mainUI">
+                <div id="levelBox">
+                    <span id="levelLabel">레벨 1</span>
+                    <span id="toleranceInfo">±0.5초 허용 범위</span>
+                </div>
+                <div id="timer">0.000초</div>
+                <button id="startBtn">시작</button>
+                <div id="result"></div>
+            </div>
+            <div id="levelUpBanner">레벨 업!</div>
+            <div id="gameOverArea">
+                <p><strong style="font-size: 1.6rem">❌ 게임 오버</strong></p>
+                <div id="finalLevelBox">획득 레벨: <span id="finalLevel">1</span></div>
+                <div id="finalDiff">오차: <span id="finalDiffValue">0.000초</span></div>
+                <div style="margin-top: 1.5rem">
+                    <button onclick="restartGame()">다시 시작</button>
+                    <button onclick="shareResult()">공유하기</button>
+                </div>
+            </div>
+        </div>
+        <script>
+            let startTime, animationFrame;
+            const timerEl = document.getElementById("timer");
+            const resultEl = document.getElementById("result");
+            const btn = document.getElementById("startBtn");
+            const levelLabel = document.getElementById("levelLabel");
+            const toleranceInfo = document.getElementById("toleranceInfo");
+            const levelBox = document.getElementById("levelBox");
+            const banner = document.getElementById("levelUpBanner");
+            const gameOverArea = document.getElementById("gameOverArea");
+            const finalLevel = document.getElementById("finalLevel");
+            const finalDiffValue = document.getElementById("finalDiffValue");
+            const mainUI = document.getElementById("mainUI");
+            let running = false;
+            let level = 1;
+            let isGameOver = false;
+
+            const toleranceByLevel = (lvl) => {
+                if (lvl === 1) return 0.5;
+                if (lvl === 2) return 0.3;
+                if (lvl === 3) return 0.1;
+                if (lvl === 4) return 0.05;
+                if (lvl === 5) return 0.02;
+                return 0.01;
+            };
+
+            const colorByLevel = (lvl) => {
+                const colors = [
+                    {
+                        bg: "#e8f0ff",
+                        border: "#4e89ff",
+                        text: "#2a5bd7"
+                    },
+                    {
+                        bg: "#e5ffe8",
+                        border: "#2ecc71",
+                        text: "#219653"
+                    },
+                    {
+                        bg: "#fff2cc",
+                        border: "#f1c40f",
+                        text: "#d4a600"
+                    },
+                    {
+                        bg: "#ffe6e6",
+                        border: "#ff6b6b",
+                        text: "#c0392b"
+                    },
+                    {
+                        bg: "#f0e8ff",
+                        border: "#9b59b6",
+                        text: "#71368a"
+                    },
+                    {
+                        bg: "#eeeeee",
+                        border: "#777",
+                        text: "#333"
+                    }
+                ];
+                return colors[(lvl - 1) % colors.length];
+            };
+
+            function updateTimer() {
+                const elapsed = (performance.now() - startTime) / 1000;
+                timerEl.textContent = `${elapsed.toFixed(3)}초`;
+                animationFrame = requestAnimationFrame(updateTimer);
+            }
+
+            function updateLevelUI() {
+                const tolerance = toleranceByLevel(level);
+                const colors = colorByLevel(level);
+                levelLabel.textContent = `레벨 ${level}`;
+                toleranceInfo.textContent = `±${tolerance}초 허용 범위`;
+                levelBox.style.background = colors.bg;
+                levelBox.style.borderLeft = `6px solid ${colors.border}`;
+                levelLabel.style.color = colors.text;
+                levelBox.classList.remove("animate");
+                void levelBox.offsetWidth;
+                levelBox.classList.add("animate");
+            }
+
+            function showBanner() {
+                banner.style.opacity = 1;
+                setTimeout(() => (banner.style.opacity = 0), 1500);
+            }
+
+            function gameOver(diff) {
+                isGameOver = true;
+                btn.disabled = true;
+                mainUI.style.display = "none";
+                gameOverArea.style.display = "block";
+                finalLevel.textContent = level;
+                finalDiffValue.textContent = `${diff.toFixed(3)}초`;
+            }
+
+            function restartGame() {
+                level = 1;
+                isGameOver = false;
+                btn.disabled = false;
+                btn.textContent = "시작";
+                resultEl.innerHTML = "";
+                gameOverArea.style.display = "none";
+                mainUI.style.display = "block";
+                updateLevelUI();
+                timerEl.textContent = "0.000초";
+            }
+
+            function shareResult() {
+                const text = `🎮 스탑 앳 5 게임\n획득 레벨: ${level}\n도전해보세요 👉 https://emfls.github.io/kor/game/STOPat5`;
+                if (navigator.share) {
+                    navigator.share({
+                        title: "스탑 앳 5",
+                        text
+                    });
+                } else {
+                    navigator.clipboard.writeText(text);
+                    alert("📋 결과가 클립보드에 복사되었습니다!");
+                }
+            }
+
+            btn.addEventListener("click", () => {
+                if (isGameOver) return;
+                if (!running) {
+                    startTime = performance.now();
+                    updateTimer();
+                    btn.textContent = "멈춰!";
+                    resultEl.textContent = "";
+                    running = true;
+                } else {
+                    cancelAnimationFrame(animationFrame);
+                    const finalTime = (performance.now() - startTime) / 1000;
+                    const formattedTime = finalTime.toFixed(3);
+                    const diff = Math.abs(finalTime - 5);
+                    const tolerance = toleranceByLevel(level);
+                    timerEl.textContent = `${formattedTime}초`;
+                    if (diff <= tolerance) {
+                        resultEl.innerHTML = `🎉 <b>성공!</b> ${formattedTime}초에 멈추셨습니다<br>🎯 오차: ±${diff.toFixed(3)}초`;
+                        level++;
+                        showBanner();
+                    } else {
+                        resultEl.innerHTML = `❌ <b>실패!</b> ${formattedTime}초에 멈추셨습니다<br>오차: ±${diff.toFixed(3)}초`;
+                        gameOver(diff);
+                    }
+                    updateLevelUI();
+                    btn.textContent = "다시 시도";
+                    running = false;
+                }
+            });
+
+            updateLevelUI();
+        </script>
+
+        <button
+            style="
+                background: white;
+                padding: 19px 20px 20px 20px;
+                border-radius: 20px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+                text-align: center;
+                width: 90%;
+                max-width: 400px;
+                color: black;
+                font-weight: bold;
+                border: none;
+                cursor: pointer;
+            "
+            onclick="window.location.href='/'">
+            📂 다른 게임
+        </button>
+        <section
+            style="
+                max-width: 320px;
+                width: 100%;
+                margin: 48px auto 24px auto;
+                font-family: 'Arial', sans-serif;
+                font-size: 14px;
+                background: #1e1e1e;
+                border-radius: 18px;
+                box-shadow: 0 6px 24px #1236;
+                padding: 20px;
+                line-height: 1.6;
+                color: #f0f0f0;
+            ">
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ 자주 묻는 질문</h2>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q1. 스탑 앳 5는 어떻게 플레이하나요?</strong><br />
+                A. “시작” 버튼을 누른 뒤, “멈춰!” 버튼을 눌러 5.000초에 최대한 가깝게 타이머를 멈추세요.
+            </div>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q2. 레벨 시스템은 무엇인가요?</strong><br />
+                A. 레벨이 올라갈수록 허용 오차가 줄어듭니다. 더 높은 레벨에서는 5.000초에 더 가까워야 합니다.
+            </div>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q3. 게임이 언제 종료되나요?</strong><br />
+                A. 허용 오차 범위를 벗어나면 게임이 종료되고 최종 레벨이 표시됩니다.
+            </div>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q4. 실패 후 재시도할 수 있나요?</strong><br />
+                A. 네! “다시 시도” 버튼을 눌러 언제든 레벨 1부터 다시 시작할 수 있습니다.
+            </div>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q5. 모바일에서도 플레이할 수 있나요?</strong><br />
+                A. 네! 이 게임은 모바일과 데스크톱 모두 최적화되어 있습니다.
+            </div>
+
+            <div style="margin-bottom: 0">
+                <strong>Q6. 결과를 공유할 수 있나요?</strong><br />
+                A. 물론입니다! 게임 종료 후 “공유하기” 버튼을 눌러 최종 레벨과 링크를 복사하거나 전송하세요.
+            </div>
+        </section>
+    </body>
+</html>

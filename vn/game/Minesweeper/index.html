@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="ko">
+       
+    <head>
+               
+        <meta charset="UTF-8" />
+               
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                       
+        <meta
+            name="description"
+            content="브라우저에서 고전 지뢰찾기 게임을 플레이하세요! 안전한 칸을 드러내고 지뢰를 피하며 최고 점수에 도전하세요. 무료, 빠르고 모바일 친화적입니다." />
+               
+        <meta
+            name="keywords"
+            content="minesweeper, webgame, browser game, puzzle, mine game, free, logic, classic, 모바일 게임, 지뢰찾기, no download, instant play, 온라인, 웹게임, 무료 게임, 퍼즐" />
+               
+        <meta name="author" content="Itagi" />
+               
+        <meta name="robots" content="index, follow" />
+
+                       
+        <link rel="canonical" href="https://emfls.github.io/kor/game/Minesweeper" />
+
+                       
+        <meta property="og:title" content="퀵플레이: 지뢰찾기 – 고전 퍼즐 웹 게임" />
+               
+        <meta
+            property="og:description"
+            content="브라우저용 고전 지뢰찾기! 안전한 칸을 드러내고 폭탄을 피하세요. 무료, 모바일 최적화, 모두를 위한 즐거움!" />
+               
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+               
+        <meta property="og:url" content="https://emfls.github.io/kor/game/Minesweeper" />
+               
+        <meta property="og:type" content="website" />
+
+                       
+        <meta name="twitter:card" content="summary_large_image" />
+               
+        <meta name="twitter:title" content="퀵플레이: 지뢰찾기 – 고전 퍼즐 웹 게임" />
+               
+        <meta name="twitter:description" content="지뢰찾기로 논리와 행운을 시험해보세요 – 다운로드 없이 바로 플레이!" />
+               
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+        <title>퀵플레이: 지뢰찾기</title>
+        <style>
+            html,
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #333;
+                color: #fff;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 10px;
+            }
+
+            #game-container {
+                margin-top: 150px;
+                width: 352px;
+                height: 384px;
+                overflow: auto;
+                border: 1px solid #555;
+            }
+
+            #game {
+                display: grid;
+                grid-template-columns: repeat(100, 30px);
+                gap: 2px;
+                width: max-content;
+            }
+
+            .cell {
+                width: 30px;
+                height: 30px;
+                background-color: #888;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                font-weight: bold;
+                user-select: none;
+            }
+
+            .revealed {
+                background-color: #ccc;
+                cursor: default;
+            }
+
+            .mine {
+                background-color: red;
+            }
+
+            #overlay {
+                position: fixed;
+                margin-top: 240px;
+                width: 320px;
+                height: 320px;
+                background-color: rgba(0, 0, 0, 0.7);
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                z-index: 10;
+            }
+
+            #overlay h2 {
+                color: #fff;
+                font-size: 32px;
+                margin-bottom: 10px;
+            }
+
+            #overlay p {
+                margin: 5px 0 20px;
+                font-size: 18px;
+            }
+
+            #overlay button {
+                padding: 10px 20px;
+                font-size: 16px;
+                margin: 5px;
+                cursor: pointer;
+            }
+
+            #minimap {
+                top: 95px;
+                width: 120px;
+                height: 120px;
+                background: rgba(255, 255, 255, 0.1);
+                border: 1px solid #888;
+                z-index: 5;
+                margin-bottom: -8rem;
+            }
+
+            #minimap canvas {
+                width: 100%;
+                height: 100%;
+                display: block;
+                background: #222;
+                border-radius: 4px;
+                pointer-events: none;
+            }
+
+            body > button:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1
+            style="
+                font-family: &quot;Arial Black&quot;, sans-serif;
+                font-size: 28px;
+                margin-bottom: 0px;
+                margin-top: 0px;
+            ">
+            지뢰찾기
+        </h1>
+        <p style="font-size: 14px; color: white; margin-bottom: 30px">
+            지뢰를 터뜨리지 않고 모든 안전한 칸을 드러내세요.
+        </p>
+        <div id="minimap">
+            <canvas id="minimapCanvas" width="100" height="100"></canvas>
+        </div>
+        <div id="game-container">
+            <div id="game"></div>
+        </div>
+        <div id="overlay">
+            <h2>Game Over!</h2>
+            <p id="scoreDisplay">점수: 0</p>
+            <button onclick="resetGame()">다시 시작</button>
+            <button onclick="shareScore()">공유</button>
+        </div>
+
+        <script>
+                        const rows = 100;
+                        const cols = 100;
+                        const mineCount = rows * cols * 0.2;
+                        const game = document.getElementById("game");
+                        const overlay = document.getElementById("overlay");
+                        const scoreDisplay = document.getElementById("scoreDisplay");
+                        const cells = [];
+                        let gameEnded = false;
+
+                        function createBoard() {
+                            game.innerHTML = "";
+                            for (let r = 0; r < rows; r++) {
+                                cells[r] = [];
+                                for (let c = 0; c < cols; c++) {
+                                    const cell = document.createElement("div");
+                                    cell.classList.add("cell");
+                                    cell.dataset.row = r;
+                                    cell.dataset.col = c;
+                                    cell.addEventListener("click", () => revealCell(r, c));
+                                    game.appendChild(cell);
+                                    cells[r][c] = {
+                                        element: cell,
+                                        mine: false,
+                                        revealed: false,
+                                        adjacent: 0
+                                    };
+                                }
+                            }
+                        }
+
+                        function placeMines() {
+                            let placed = 0;
+                            while (placed < mineCount) {
+                                const r = Math.floor(Math.random() * rows);
+                                const c = Math.floor(Math.random() * cols);
+                                if (!cells[r][c].mine) {
+                                    cells[r][c].mine = true;
+                                    placed++;
+                                }
+                            }
+                        }
+
+                        function countAdjacents() {
+                            for (let r = 0; r < rows; r++) {
+                                for (let c = 0; c < cols; c++) {
+                                    if (cells[r][c].mine) continue;
+                                    let count = 0;
+                                    for (let i = -1; i <= 1; i++) {
+                                        for (let j = -1; j <= 1; j++) {
+                                            const nr = r + i;
+                                            const nc = c + j;
+                                            if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && cells[nr][nc].mine) count++;
+                                        }
+                                    }
+                                    cells[r][c].adjacent = count;
+                                }
+                            }
+                        }
+
+                        function revealCell(r, c) {
+                            if (gameEnded || cells[r][c].revealed) return;
+
+                            const cell = cells[r][c];
+                            cell.revealed = true;
+                            cell.element.classList.add("revealed");
+
+                            if (cell.mine) {
+                                cell.element.classList.add("mine");
+                                cell.element.textContent = "💣";
+                                gameEnded = true;
+                                const score = calculateScore();
+                                scoreDisplay.textContent = `점수: ${score}`;
+                                overlay.style.display = "flex";
+                                return;
+                            }
+
+                            if (cell.adjacent > 0) {
+                                cell.element.textContent = cell.adjacent;
+                                return;
+                            }
+
+                            // flood fill only in 4 directions (up/down/left/right)
+                            const directions = [
+                                [-1, 0],
+                                [1, 0],
+                                [0, -1],
+                                [0, 1]
+                            ];
+                            for (const [dr, dc] of directions) {
+                                const nr = r + dr;
+                                const nc = c + dc;
+                                if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && !cells[nr][nc].revealed) {
+                                    revealCell(nr, nc);
+                                }
+                            }
+                        }
+
+                        function calculateScore() {
+                            let revealedCount = 0;
+                            for (let r = 0; r < rows; r++) {
+                                for (let c = 0; c < cols; c++) {
+                                    if (cells[r][c].revealed && !cells[r][c].mine) revealedCount++;
+                                }
+                            }
+                            return revealedCount;
+                        }
+
+                        function resetGame() {
+                            gameEnded = false;
+                            overlay.style.display = "none";
+                            createBoard();
+                            placeMines();
+                            countAdjacents();
+                        }
+
+                        ffunction shareScore() {
+                            const url = window.location.href;
+                            const score = calculateScore();
+                            const text = `🐤 지뢰찾기에서 ${score}점 획득! 당신도 이길 수 있나요?`;
+                            if (navigator.share) {
+                                navigator
+                                    .share({
+                                        title: "퀵플레이: 지뢰찾기",
+                                        text,
+                                        url
+                                    })
+                                    .catch(() => alert("공유에 실패했습니다. 링크를 복사해 보세요."));
+                            } else {
+                                const full = `${text}\n${url}`;
+                                navigator.clipboard
+                                    .writeText(full)
+                                    .then(() => alert("점수가 포함된 링크가 클립보드에 복사되었습니다!"))
+                                    .catch(() => alert(`이 링크를 복사하세요:\n${full}`));
+                            }
+                        }
+
+                        createBoard();
+                        placeMines();
+                        countAdjacents();
+
+                        const minimapCanvas = document.getElementById("minimapCanvas");
+                        const minimapCtx = minimapCanvas.getContext("2d");
+                        const gameContainer = document.getElementById("game-container");
+
+                        function drawMinimap() {
+                            const cellSize = 1;
+                            minimapCtx.clearRect(0, 0, 100, 100);
+                            for (let r = 0; r < rows; r++) {
+                                for (let c = 0; c < cols; c++) {
+                                    if (cells[r][c].revealed) {
+                                        minimapCtx.fillStyle = cells[r][c].mine ? "red" : "#ccc";
+                                    } else {
+                                        minimapCtx.fillStyle = "#666";
+                                    }
+                                    minimapCtx.fillRect(c * cellSize, r * cellSize, cellSize, cellSize);
+                                }
+                            }
+                            const scrollTop = gameContainer.scrollTop;
+                            const scrollLeft = gameContainer.scrollLeft;
+                            const viewWidth = gameContainer.clientWidth;
+                            const viewHeight = gameContainer.clientHeight;
+
+                            const scaleX = 100 / (cols * 30 + (cols - 1) * 2);
+                            const scaleY = 100 / (rows * 30 + (rows - 1) * 2);
+
+                            minimapCtx.strokeStyle = "yellow";
+                            minimapCtx.lineWidth = 1;
+                            minimapCtx.strokeRect(scrollLeft * scaleX, scrollTop * scaleY, viewWidth * scaleX, viewHeight * scaleY);
+                        }
+
+                        gameContainer.addEventListener("scroll", drawMinimap);
+                        const observer = new MutationObserver(drawMinimap);
+                        observer.observe(game, {
+                            childList: true,
+                            subtree: true
+                        });
+                        setInterval(drawMinimap, 500);
+        </script>
+        <button
+            style="
+                margin-top: 20px;
+                width: 90%;
+                height: 60px;
+                font-size: 16px;
+                font-weight: bold;
+                background-color: #888;
+                cursor: pointer;
+                border-radius: 6px;
+                border: none;
+            "
+            onclick="window.location.href='/'">
+            📂 다른 게임
+        </button>
+        <section
+            style="
+                max-width: 320px;
+                width: 100%;
+                margin: 48px auto 24px auto;
+                font-family: &quot;Arial&quot;, sans-serif;
+                font-size: 14px;
+                background: #1e1e1e;
+                border-radius: 18px;
+                box-shadow: 0 6px 24px #1236;
+                padding: 20px;
+                line-height: 1.6;
+                color: #f0f0f0;
+            ">
+             
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #6a72f8">❓ 자주 묻는 질문</h2>
+
+             
+            <div style="margin-bottom: 12px">
+                    <strong>Q1. 지뢰찾기는 어떻게 플레이하나요?</strong><br />
+                    A. 아무 칸이나 탭하여 드러내세요. 지뢰를 피하고 가능한 한 많은 안전한 칸을 찾으세요.  
+            </div>
+
+             
+            <div style="margin-bottom: 12px">
+                    <strong>Q2. 지뢰를 탭하면 어떻게 되나요?</strong><br />
+                    A. 게임이 즉시 종료되고, 점수(드러낸 안전한 칸의 수)가 표시됩니다.  
+            </div>
+
+             
+            <div style="margin-bottom: 12px">
+                    <strong>Q3. 게임을 다시 시작할 수 있나요?</strong><br />
+                    A. 네! 게임 오버 화면에서 <strong>다시 시작</strong> 버튼을 탭하여 다시 시작할 수 있습니다.  
+            </div>
+
+             
+            <div style="margin-bottom: 12px">
+                    <strong>Q4. 구석에 있는 미니맵은 무엇인가요?</strong><br />
+                    A. 넓은 그리드에서 전반적인 진행 상황과 현재 보고 있는 영역을 확인하는 데 도움이 됩니다.  
+            </div>
+
+             
+            <div style="margin-bottom: 12px">
+                    <strong>Q5. 점수를 어떻게 공유하나요?</strong><br />
+                    A. 게임 오버 화면에서 <strong>공유</strong> 버튼을 탭하여 점수와 링크를 복사하거나 공유할 수
+                있습니다.  
+            </div>
+
+             
+            <div style="margin-bottom: 0">
+                    <strong>Q6. 모바일로 플레이할 수 있나요?</strong><br />
+                    A. 물론입니다! 이 게임은 모바일 장치에 완벽하게 최적화되어 있으며 모든 브라우저에서 작동합니다.  
+            </div>
+        </section>
+    </body>
+</html>

@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <title>데이터 형식 변환기 – JSON, XML, CSV 뷰어 및 변환</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <meta
+            name="description"
+            content="JSON, XML, CSV 간 즉시 변환. 색상 강조 뷰어, 오류 확인, 무료 브라우저 기반 변환기." />
+        <meta
+            name="keywords"
+            content="json, xml, csv, 변환기, 데이터, 뷰어, 온라인, 형식, 변환, 강조, 브라우저, 무료" />
+        <meta name="author" content="Itagi" />
+        <meta name="language" content="ko" />
+        <link rel="canonical" href="https://emfls.github.io/kor/util/dataconvert/" />
+        <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+        <!-- Open Graph / Twitter meta -->
+        <meta property="og:title" content="데이터 형식 변환기 – JSON, XML, CSV" />
+        <meta
+            property="og:description"
+            content="브라우저에서 JSON, XML, CSV를 변환하고 뷰어로 확인하세요. 무료, 빠르며 색상 강조 제공." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://emfls.github.io/kor/util/dataconvert/" />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="데이터 형식 변환기 – JSON, XML, CSV" />
+        <meta
+            name="twitter:description"
+            content="JSON, XML, CSV를 클릭 한번에 변환 및 뷰어로 확인하세요. 색상 강조, 무료, 브라우저 전용." />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+        <!-- External: highlight.js (for code coloring) -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.8.0/styles/github.min.css" />
+        <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.8.0/lib/highlight.min.js"></script>
+        <!-- External: xml-js, papaparse -->
+        <script src="https://cdn.jsdelivr.net/npm/xml-js@1.6.11/dist/xml-js.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+        <style>
+            :root {
+                --main: #3977bc;
+                --main-dark: #1c4274;
+                --bg: #f8fbff;
+            }
+            body {
+                background: var(--bg);
+                margin: 0;
+                font-family: "Segoe UI", Arial, sans-serif;
+                color: #234;
+            }
+            .container {
+                max-width: 600px;
+                margin: 38px auto 0 auto;
+                background: #fff;
+                border-radius: 18px;
+                box-shadow: 0 4px 22px #3977bc24;
+                padding: 28px 18px 22px 18px;
+            }
+            .logo {
+                font-size: 1.19em;
+                font-weight: bold;
+                text-align: center;
+                color: var(--main-dark);
+                margin-bottom: 10px;
+            }
+            .desc {
+                text-align: center;
+                color: #19788a;
+                margin-bottom: 15px;
+                font-size: 1.03em;
+            }
+            .format-select {
+                display: flex;
+                gap: 9px;
+                justify-content: center;
+                margin-bottom: 7px;
+            }
+            .format-btn {
+                padding: 7px 15px;
+                border: none;
+                border-radius: 7px;
+                background: #eaf3fa;
+                color: var(--main-dark);
+                font-weight: 500;
+                cursor: pointer;
+                font-size: 1.01em;
+                transition:
+                    background 0.16s,
+                    color 0.12s;
+            }
+            .format-btn.active {
+                background: var(--main);
+                color: #fff;
+                box-shadow: 0 2px 8px #3977bc2a;
+            }
+            textarea,
+            pre {
+                width: 100%;
+                box-sizing: border-box;
+                min-height: 120px;
+                font-size: 1.08em;
+                font-family: "Fira Mono", "Menlo", monospace;
+                border: 1.2px solid #b0c4d5;
+                border-radius: 8px;
+                padding: 11px;
+                margin-bottom: 8px;
+                background: #fafdff;
+                line-height: 1.62;
+                resize: vertical;
+                transition: border 0.18s;
+            }
+            textarea:focus {
+                border-color: var(--main);
+            }
+            pre {
+                background: #f4f9fe;
+                margin: 0 0 8px 0;
+                overflow: auto;
+            }
+            .convert-btn {
+                background: var(--main);
+                color: #fff;
+                border: none;
+                border-radius: 8px;
+                padding: 12px 0;
+                width: 100%;
+                font-size: 1.13em;
+                font-weight: bold;
+                cursor: pointer;
+                margin: 8px 0 12px 0;
+                box-shadow: 0 2px 12px #3977bc16;
+                transition: background 0.15s;
+            }
+            .convert-btn:active {
+                background: var(--main-dark);
+            }
+            .action-row {
+                display: flex;
+                gap: 9px;
+                justify-content: flex-end;
+                margin-bottom: 6px;
+            }
+            .action-mini {
+                background: #eaf3fa;
+                color: var(--main-dark);
+                border: none;
+                border-radius: 7px;
+                font-size: 1em;
+                padding: 4px 12px;
+                cursor: pointer;
+            }
+            .action-mini:active {
+                background: var(--main);
+            }
+            .error-msg {
+                color: #c12929;
+                font-size: 0.97em;
+                text-align: center;
+                margin-bottom: 8px;
+            }
+            .footer {
+                color: #789;
+                text-align: center;
+                font-size: 0.93em;
+                margin-top: 17px;
+            }
+            #backBtn {
+                position: fixed;
+                left: 50%;
+                bottom: 32px;
+                transform: translateX(-50%);
+                background: #3977bc;
+                color: #fff;
+                font-weight: 700;
+                border: none;
+                border-radius: 2rem;
+                padding: 0.58em 1.5em;
+                box-shadow: 0 4px 16px #3977bc33;
+                font-size: 1.09em;
+                text-decoration: none;
+                cursor: pointer;
+                letter-spacing: 0.01em;
+                transition:
+                    background 0.15s,
+                    transform 0.12s;
+                z-index: 2000;
+            }
+            #backBtn:hover {
+                background: #1c4274;
+                transform: translateX(-50%) scale(1.04);
+            }
+            @media (max-width: 700px) {
+                .container {
+                    max-width: 99vw;
+                    padding: 10px 2vw 12px 2vw;
+                }
+                textarea,
+                pre {
+                    font-size: 1em;
+                }
+                #backBtn {
+                    bottom: 18px;
+                    font-size: 0.98em;
+                    padding: 0.48em 1em;
+                }
+            }
+            section#faq {
+                margin-top: 30px;
+            }
+            section#faq h2 {
+                margin-bottom: 13px;
+                color: #3977bc;
+                font-size: 1.11em;
+                text-align: center;
+            }
+            section#faq dt {
+                font-weight: bold;
+                margin-top: 8px;
+            }
+            section#faq dd {
+                margin: 0 0 7px 0;
+                font-size: 0.99em;
+                color: #19788a;
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <div class="container" itemscope itemtype="https://schema.org/WebApplication">
+                <h1 class="logo" itemprop="name">🔄 데이터 형식 변환기</h1>
+                <p class="desc" itemprop="description">
+                    JSON, XML, CSV를 붙여넣으세요. 형식 간 즉시 변환, 색상 강조, 오류 확인.<br />
+                    100% 브라우저 기반, 데이터는 어디로도 전송되지 않습니다.
+                </p>
+                <div class="format-select">
+                    <button class="format-btn active" id="jsonBtn">JSON</button>
+                    <button class="format-btn" id="xmlBtn">XML</button>
+                    <button class="format-btn" id="csvBtn">CSV</button>
+                </div>
+                <textarea id="inputArea" placeholder="데이터를 여기에 붙여넣으세요 (JSON, XML, CSV)..."></textarea>
+                <div class="action-row">
+                    <button class="action-mini" id="beautifyBtn">가독성 정리</button>
+                    <button class="action-mini" id="clearBtn">지우기</button>
+                </div>
+                <button class="convert-btn" id="convertBtn">변환 및 보기</button>
+                <div class="error-msg" id="errorMsg"></div>
+                <div class="format-select">
+                    <button class="format-btn active" id="jsonViewBtn">JSON</button>
+                    <button class="format-btn" id="xmlViewBtn">XML</button>
+                    <button class="format-btn" id="csvViewBtn">CSV</button>
+                </div>
+                <pre id="outputView" class="hljs"></pre>
+                <div class="action-row">
+                    <button class="action-mini" id="copyBtn">복사</button>
+                    <button class="action-mini" id="downloadBtn">다운로드</button>
+                </div>
+                <div class="footer">
+                    JSON, XML, CSV 지원. 오류 감지 및 하이라이트 제공.<br />
+                    데이터는 어디에도 전송되지 않습니다. 모든 처리는 브라우저에서만 이루어집니다.
+                </div>
+                <!-- FAQ 섹션 (SEO/SGE 용) -->
+                <section aria-labelledby="faq-head" id="faq">
+                    <h2 id="faq-head">FAQ – 데이터 형식 변환기</h2>
+                    <dl>
+                        <dt>어떤 형식을 지원하나요?</dt>
+                        <dd>이 도구는 JSON, XML, CSV 형식 간 변환 및 뷰어 기능을 지원합니다.</dd>
+                        <dt>내 데이터가 전송되거나 저장되나요?</dt>
+                        <dd>
+                            아니요. 모든 변환 및 처리는 브라우저 내에서만 수행되며, 데이터는 외부로 전송되지 않습니다.
+                        </dd>
+                        <dt>큰 파일도 사용할 수 있나요?</dt>
+                        <dd>
+                            소규모/중규모 데이터에 최적화되어 있습니다. 매우 큰 파일의 경우 브라우저 메모리 한계가 있을 수 있습니다.
+                        </dd>
+                        <dt>색상 강조 기능이 있나요?</dt>
+                        <dd>네, 모든 출력 결과는 highlight.js를 사용하여 색상 강조됩니다.</dd>
+                        <dt>결과를 다운로드하거나 복사할 수 있나요?</dt>
+                        <dd>네! 변환 후 복사 또는 다운로드 버튼을 사용하세요.</dd>
+                    </dl>
+                </section>
+            </div>
+        </main>
+        <a href="../index.html" id="backBtn">다른 유틸리티</a>
+        <script>
+            // ========== Format Select ==========
+            let inputFormat = "json";
+            document.getElementById("jsonBtn").onclick = () => setInputFormat("json");
+            document.getElementById("xmlBtn").onclick = () => setInputFormat("xml");
+            document.getElementById("csvBtn").onclick = () => setInputFormat("csv");
+            function setInputFormat(fmt) {
+                inputFormat = fmt;
+                ["jsonBtn", "xmlBtn", "csvBtn"].forEach((id) => document.getElementById(id).classList.remove("active"));
+                document.getElementById(fmt + "Btn").classList.add("active");
+                document.getElementById("inputArea").placeholder = `데이터를 여기에 붙여넣으세요 (${fmt.toUpperCase()})...`;
+            }
+            // ========== Output Format Select ==========
+            let outputFormat = "json";
+            document.getElementById("jsonViewBtn").onclick = () => showOutputFormat("json");
+            document.getElementById("xmlViewBtn").onclick = () => showOutputFormat("xml");
+            document.getElementById("csvViewBtn").onclick = () => showOutputFormat("csv");
+            function showOutputFormat(fmt) {
+                outputFormat = fmt;
+                ["jsonViewBtn", "xmlViewBtn", "csvViewBtn"].forEach((id) =>
+                    document.getElementById(id).classList.remove("active")
+                );
+                document.getElementById(fmt + "ViewBtn").classList.add("active");
+                displayOutput();
+            }
+            // ========== Convert & Beautify ==========
+            let dataObject = null,
+                lastRawInput = "";
+            document.getElementById("convertBtn").onclick = convertInput;
+            document.getElementById("beautifyBtn").onclick = beautifyInput;
+            document.getElementById("clearBtn").onclick = () => {
+                document.getElementById("inputArea").value = "";
+                document.getElementById("errorMsg").textContent = "";
+            };
+            document.getElementById("inputArea").addEventListener("input", () => {
+                document.getElementById("errorMsg").textContent = "";
+            });
+            function convertInput() {
+                const raw = document.getElementById("inputArea").value.trim();
+                lastRawInput = raw;
+                let obj;
+                try {
+                    if (inputFormat === "json") obj = JSON.parse(raw);
+                    else if (inputFormat === "xml") obj = xml2js(raw, { compact: true, alwaysChildren: true });
+                    else if (inputFormat === "csv") obj = Papa.parse(raw, { header: true, skipEmptyLines: true }).data;
+                    else throw "잘못된 입력 형식입니다";
+                    dataObject = obj;
+                    document.getElementById("errorMsg").textContent = "";
+                    displayOutput();
+                } catch (e) {
+                    dataObject = null;
+                    document.getElementById("outputView").textContent = "";
+                    document.getElementById("errorMsg").textContent = "파싱 오류: " + (e.message || e);
+                }
+            }
+            function beautifyInput() {
+                const raw = document.getElementById("inputArea").value.trim();
+                let pretty = "";
+                try {
+                    if (inputFormat === "json") pretty = JSON.stringify(JSON.parse(raw), null, 2);
+                    else if (inputFormat === "xml") pretty = vkbeautify.xml(raw);
+                    else if (inputFormat === "csv")
+                        pretty = Papa.unparse(Papa.parse(raw, { header: true, skipEmptyLines: true }).data);
+                    document.getElementById("inputArea").value = pretty;
+                    document.getElementById("errorMsg").textContent = "";
+                } catch (e) {
+                    document.getElementById("errorMsg").textContent = "가독성 정리 실패: " + (e.message || e);
+                }
+            }
+            // ========== Display Output ==========
+            function displayOutput() {
+                if (!dataObject) {
+                    document.getElementById("outputView").textContent = "";
+                    return;
+                }
+                let out = "";
+                try {
+                    if (outputFormat === "json") out = JSON.stringify(dataObject, null, 2);
+                    else if (outputFormat === "xml") out = js2xml(dataObject, { compact: true, spaces: 2 });
+                    else if (outputFormat === "csv") out = Papa.unparse(dataObject);
+                    document.getElementById("outputView").textContent = out;
+                    hljs.highlightElement(document.getElementById("outputView"));
+                } catch (e) {
+                    document.getElementById("outputView").textContent = "변환 오류: " + (e.message || e);
+                }
+            }
+            // ========== Copy & Download ==========
+            document.getElementById("copyBtn").onclick = function () {
+                const txt = document.getElementById("outputView").textContent;
+                if (!txt) return;
+                navigator.clipboard.writeText(txt);
+            };
+            document.getElementById("downloadBtn").onclick = function () {
+                const txt = document.getElementById("outputView").textContent;
+                if (!txt) return;
+                const blob = new Blob([txt], { type: "text/plain" });
+                const a = document.createElement("a");
+                a.href = URL.createObjectURL(blob);
+                a.download = "converted." + outputFormat;
+                a.click();
+                setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+            };
+            // ========== Utility: vkbeautify for XML pretty print ==========
+            // https://github.com/vkiryukhin/vkBeautify
+            // Only the xml function needed for demo
+            window.vkbeautify = {
+                xml: function (text) {
+                    var shift = "\n          ".split("");
+                    var ar = text
+                            .replace(/>\s{0,}</g, "><")
+                            .replace(/</g, "~::~<")
+                            .split("~::~"),
+                        inComment = false,
+                        deep = 0,
+                        str = "",
+                        ix = 0;
+                    for (var i = 0; i < ar.length; i++) {
+                        if (ar[i].search(/<!/) > -1) {
+                            str += shift[deep] + ar[i];
+                            inComment = true;
+                            if (ar[i].search(/-->/) > -1 || ar[i].search(/!DOCTYPE/) > -1) inComment = false;
+                        } else if (ar[i].search(/-->/) > -1) {
+                            str += ar[i];
+                            inComment = false;
+                        } else if (
+                            /<\w/.test(ar[i - 1]) &&
+                            /<\/\w/.test(ar[i]) &&
+                            /<[\w\:]+\>/.test(ar[i - 1]) &&
+                            /<\/[\w\:]+\>/.test(ar[i])
+                        ) {
+                            str += ar[i];
+                        } else if (ar[i].search(/<\w/) > -1 && ar[i].search(/<\//) == -1 && ar[i].search(/\/>/) == -1) {
+                            str += shift[deep++] + ar[i];
+                        } else if (ar[i].search(/<\//) > -1) {
+                            str += shift[--deep] + ar[i];
+                        } else if (ar[i].search(/\/>/) > -1) {
+                            str += shift[deep] + ar[i];
+                        } else if (ar[i].search(/<\?/) > -1) {
+                            str += shift[deep] + ar[i];
+                        } else if (ar[i].search(/xmlns\:/) > -1 || ar[i].search(/xmlns\=/) > -1) {
+                            str += shift[deep] + ar[i];
+                        } else {
+                            str += ar[i];
+                        }
+                    }
+                    return str[0] === "\n" ? str.slice(1) : str;
+                }
+            };
+        </script>
+        <!-- FAQPage Schema for SGE/GEO/SEO Rich Results -->
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": "어떤 형식을 지원하나요?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "이 도구는 JSON, XML, CSV 형식 간 변환 및 뷰어 기능을 지원합니다."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "내 데이터가 전송되거나 저장되나요?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "아니요. 모든 변환 및 처리는 브라우저 내에서만 수행되며, 데이터는 외부로 전송되지 않습니다."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "큰 파일도 사용할 수 있나요?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "소규모/중규모 데이터에 최적화되어 있습니다. 매우 큰 파일의 경우 브라우저 메모리 한계가 있을 수 있습니다."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "색상 강조 기능이 있나요?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "네, 모든 출력 결과는 highlight.js를 사용하여 색상 강조됩니다."
+                        }
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "결과를 다운로드하거나 복사할 수 있나요?",
+                        "acceptedAnswer": {
+                            "@type": "Answer",
+                            "text": "네! 변환 후 복사 또는 다운로드 버튼을 사용하세요."
+                        }
+                    }
+                ]
+            }
+        </script>
+    </body>
+</html>

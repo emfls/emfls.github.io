@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>텍스트 셔플 & 정렬 도구 – 무작위, 정렬, 역순</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta
+      name="description"
+      content="브라우저에서 즉시 텍스트 줄을 랜덤 셔플, 정렬 또는 역순으로 바꿔보세요. 목록, 초안, 학습 도구에 최적화. 업로드 불필요, 100% 개인 정보 보호." />
+    <meta
+      name="keywords"
+      content="텍스트 셔플, 무작위, 정렬, 역순, 줄 정렬기, 브라우저, 무료, 텍스트 셔플, 정렬, 랜덤, 역순, 줄바꿈" />
+    <meta name="author" content="Itagi" />
+    <meta name="language" content="ko" />
+    <link rel="canonical" href="https://emfls.github.io/kor/util/text-shuffle-sort/" />
+    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+    <!-- Open Graph / Twitter meta -->
+    <meta property="og:title" content="텍스트 셔플 & 정렬 도구 – 무작위, 정렬, 역순" />
+    <meta
+      property="og:description"
+      content="텍스트 목록을 셔플, 정렬 또는 역순으로 바꿔보세요. 빠르고 무료, 개인 정보 보호. 브라우저에서 작동." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/kor/util/text-shuffle-sort/" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="텍스트 셔플 & 정렬 도구 – 무작위, 정렬, 역순" />
+    <meta
+      name="twitter:description"
+      content="텍스트 줄 목록을 쉽게 무작위화, 정렬 또는 역순으로 만드세요. 모든 작업이 브라우저에서 이루어집니다." />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <style>
+      :root {
+        --main: #4671e8;
+        --main-dark: #29519b;
+        --bg: #f7f9fd;
+      }
+      body {
+        background: var(--bg);
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: #222;
+      }
+      .container {
+        max-width: 430px;
+        margin: 38px auto 0 auto;
+        background: #fff;
+        border-radius: 17px;
+        box-shadow: 0 4px 22px #4671e824;
+        padding: 29px 17px 22px 17px;
+      }
+      .logo {
+        font-size: 1.22em;
+        font-weight: bold;
+        text-align: center;
+        color: var(--main-dark);
+        margin-bottom: 8px;
+      }
+      .desc {
+        text-align: center;
+        color: #315ba7;
+        margin-bottom: 15px;
+        font-size: 1.03em;
+      }
+      textarea {
+        width: 100%;
+        min-height: 140px;
+        font-size: 1.09em;
+        border: 1.2px solid #a4c9fa;
+        border-radius: 9px;
+        padding: 12px;
+        background: #fafdff;
+        color: #222;
+        resize: vertical;
+        margin-bottom: 11px;
+        font-family: "Fira Mono", "Menlo", monospace;
+        transition: border 0.16s;
+      }
+      textarea:focus {
+        border-color: var(--main);
+      }
+      .btn-row {
+        display: flex;
+        gap: 10px;
+        justify-content: space-between;
+        margin-bottom: 11px;
+      }
+      .action-btn {
+        background: var(--main);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 0;
+        font-size: 1.09em;
+        font-weight: bold;
+        cursor: pointer;
+        flex: 1;
+        transition: background 0.15s;
+        box-shadow: 0 2px 12px #4671e81a;
+      }
+      .action-btn:active,
+      .action-btn:hover {
+        background: var(--main-dark);
+      }
+      .mini-btn {
+        background: #e4eefc;
+        color: #2759b0;
+        border: none;
+        border-radius: 7px;
+        font-size: 1em;
+        padding: 7px 15px;
+        cursor: pointer;
+        transition: background 0.12s;
+        font-weight: 500;
+        margin-left: 5px;
+      }
+      .mini-btn:active {
+        background: #bad0f8;
+      }
+      .footer {
+        color: #789;
+        text-align: center;
+        font-size: 0.95em;
+        margin-top: 16px;
+        opacity: 0.9;
+      }
+      #backBtn {
+        position: fixed;
+        left: 50%;
+        bottom: 32px;
+        transform: translateX(-50%);
+        background: #4671e8;
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 2rem;
+        padding: 0.58em 1.5em;
+        box-shadow: 0 4px 16px #4671e833;
+        font-size: 1.09em;
+        text-decoration: none;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+        transition:
+          background 0.15s,
+          transform 0.12s;
+        z-index: 2000;
+      }
+      #backBtn:hover {
+        background: #29519b;
+        transform: translateX(-50%) scale(1.04);
+      }
+      @media (max-width: 600px) {
+        .container {
+          max-width: 99vw;
+          padding: 12px 2vw 13px 2vw;
+        }
+        textarea {
+          font-size: 1em;
+        }
+        #backBtn {
+          bottom: 18px;
+          font-size: 0.98em;
+          padding: 0.48em 1em;
+        }
+      }
+      .status-msg {
+        color: #41823c;
+        font-size: 0.98em;
+        text-align: right;
+        min-height: 18px;
+        margin-bottom: 2px;
+        opacity: 0.8;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">🔀 텍스트 셔플 & 정렬 도구</div>
+      <div class="desc">
+        여러 줄의 텍스트를 입력하거나 붙여넣으세요.<br />
+        즉시 무작위(셔플), 정렬(A→Z), 역순(Z→A)으로 바꿔보세요!
+      </div>
+      <div class="status-msg" id="statusMsg"></div>
+      <textarea id="inputArea" placeholder="목록을 입력하거나 붙여넣으세요. 한 줄에 하나씩..."></textarea>
+      <div class="btn-row">
+        <button class="action-btn" id="shuffleBtn">셔플</button>
+        <button class="action-btn" id="sortBtn">정렬 (A→Z)</button>
+        <button class="action-btn" id="reverseBtn">역순 (Z→A)</button>
+      </div>
+      <div style="text-align: right; margin-bottom: 10px">
+        <button class="mini-btn" id="copyBtn">복사하기</button>
+        <button class="mini-btn" id="clearBtn">지우기</button>
+      </div>
+      <div class="footer">
+        모든 작업이 브라우저에서 이루어집니다. 업로드 불필요, 100% 개인 정보 보호.<br />
+        <b>팁:</b> 무작위 순서 만들기, 퀴즈 플래시카드 제작, 목록 정리 등에 유용합니다!
+      </div>
+    </div>
+    <a href="../index.html" id="backBtn">다른 유틸 보기</a>
+    <script>
+      const inputArea = document.getElementById("inputArea");
+      const statusMsg = document.getElementById("statusMsg");
+
+      // Fisher-Yates 셔플 알고리즘
+      function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+          let j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      }
+
+      // 주요 기능
+      document.getElementById("shuffleBtn").onclick = function () {
+        let lines = inputArea.value.split(/\r?\n/).filter((l) => l.trim().length > 0);
+        if (!lines.length) return;
+        shuffleArray(lines);
+        inputArea.value = lines.join("\n");
+        showStatus("셔플 완료!");
+      };
+
+      document.getElementById("sortBtn").onclick = function () {
+        let lines = inputArea.value.split(/\r?\n/).filter((l) => l.trim().length > 0);
+        if (!lines.length) return;
+        lines.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
+        inputArea.value = lines.join("\n");
+        showStatus("정렬 완료! (A→Z)");
+      };
+
+      document.getElementById("reverseBtn").onclick = function () {
+        let lines = inputArea.value.split(/\r?\n/).filter((l) => l.trim().length > 0);
+        if (!lines.length) return;
+        lines.sort((a, b) => b.localeCompare(a, undefined, { sensitivity: "base" }));
+        inputArea.value = lines.join("\n");
+        showStatus("역순 완료! (Z→A)");
+      };
+
+      // 복사 & 지우기
+      document.getElementById("copyBtn").onclick = function () {
+        const val = inputArea.value;
+        if (!val) return;
+        navigator.clipboard.writeText(val);
+        showStatus("복사됨!");
+      };
+      document.getElementById("clearBtn").onclick = function () {
+        if (inputArea.value.length === 0) return;
+        if (confirm("모든 텍스트를 지우시겠습니까?")) {
+          inputArea.value = "";
+          showStatus("지워짐!");
+        }
+      };
+
+      // 상태 메시지 표시
+      function showStatus(msg) {
+        statusMsg.textContent = msg;
+        setTimeout(() => {
+          statusMsg.textContent = "";
+        }, 1200);
+      }
+    </script>
+    <section
+      style="
+        max-width: 320px;
+        margin: 48px auto 24px auto;
+        background: #1e1e1e;
+        border-radius: 18px;
+        box-shadow: 0 6px 24px #1236;
+        padding: 24px;
+      ">
+      <div style="margin-bottom: 12px">
+        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">이 도구는 무엇을 하나요?</h3>
+        <p style="color: #f0f0f0; font-family: Arial, sans-serif">
+          이 도구를 사용하면 텍스트 줄 목록을 브라우저에서 즉시 무작위(셔플), 정렬(A→Z), 또는 역순(Z→A)으로 변환할 수 있습니다.
+        </p>
+      </div>
+      <div style="margin-bottom: 12px">
+        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">어떻게 사용하나요?</h3>
+        <p style="color: #f0f0f0; font-family: Arial, sans-serif">
+          여러 줄의 텍스트를 입력하거나 붙여넣으세요. 버튼 클릭만으로 셔플, 정렬 또는 역순으로 변환됩니다. 결과를 복사하거나 지울 수 있습니다.
+        </p>
+      </div>
+      <div style="margin-bottom: 12px">
+        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">오프라인에서도 작동하나요?</h3>
+        <p style="color: #f0f0f0; font-family: Arial, sans-serif">
+          예. 모든 작업이 브라우저 내에서 즉시 이루어지므로 별도 인터넷 연결이나 업로드가 필요 없습니다.
+        </p>
+      </div>
+      <div style="margin-bottom: 12px">
+        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">내 텍스트는 안전한가요?</h3>
+        <p style="color: #f0f0f0; font-family: Arial, sans-serif">
+          절대! 입력한 텍스트는 장치 외부로 절대 전송되지 않으며, 모든 처리가 로컬에서 이루어집니다.
+        </p>
+      </div>
+      <div style="margin-bottom: 0">
+        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">어떤 용도로 활용할 수 있나요?</h3>
+        <p style="color: #f0f0f0; font-family: Arial, sans-serif">
+          퀴즈 문제 섞기, 학생 이름 무작위화, 쇼핑 목록 정리, 로그나 대본 역순 보기 등 다양한 용도로 사용 가능합니다.
+        </p>
+      </div>
+    </section>
+  </body>
+</html>

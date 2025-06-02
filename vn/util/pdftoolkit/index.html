@@ -1,0 +1,1025 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <title>PDF 도구 모음 – 병합, 압축, 분할, 암호화, 회전, 이미지→PDF</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="PDF 파일을 병합, 압축, 분할, 암호화, 회전하거나 이미지를 PDF로 변환하세요. 모두 브라우저에서 즉시 처리됩니다. 100% 무료, 워터마크 없음." />
+        <meta
+            name="keywords"
+            content="PDF 병합, 압축, 분할, 암호화, 회전, 이미지→PDF, PDF 도구, 브라우저 PDF, 업로드 없음, 개인 정보 보호, 무료" />
+        <meta name="author" content="Itagi" />
+        <meta name="language" content="ko" />
+        <link rel="canonical" href="https://emfls.github.io/kor/util/pdftoolkit/" />
+        <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+
+        <!-- Open Graph & Twitter -->
+        <meta property="og:title" content="PDF 도구 모음 – 병합, 압축, 분할, 암호화, 회전, 이미지→PDF" />
+        <meta
+            property="og:description"
+            content="PDF 파일을 병합, 압축, 분할, 암호화, 회전하거나 이미지를 PDF로 변환하세요. 모두 브라우저에서 즉시 처리됩니다. 워터마크 없음." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://emfls.github.io/kor/util/pdftoolkit/" />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="twitter:title" content="PDF 도구 모음 – 병합, 압축, 분할, 암호화, 회전, 이미지→PDF" />
+        <meta
+            property="twitter:description"
+            content="PDF 도구를 하나로: 병합, 압축, 분할, 암호화, 회전 및 이미지→PDF. 100% 브라우저 기반, 업로드 없음." />
+        <meta property="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+
+        <!-- pdf-lib (PDF 처리 라이브러리) -->
+        <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
+        <!-- browser-image-compression (이미지→PDF 변환용) -->
+        <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
+
+        <style>
+            :root {
+                --main: #236de4;
+                --main-dark: #153e73;
+                --accent: #1fd6ba;
+                --bg: #f7fbff;
+            }
+            body {
+                background: var(--bg);
+                margin: 0;
+                font-family: "Segoe UI", Arial, sans-serif;
+                color: #234;
+            }
+            .container {
+                max-width: 470px;
+                margin: 38px auto 0 auto;
+                background: #fff;
+                border-radius: 18px;
+                box-shadow: 0 4px 26px #236de420;
+                padding: 30px 18px 22px 18px;
+                min-height: 600px;
+                position: relative;
+            }
+            .logo {
+                font-size: 1.35em;
+                font-weight: bold;
+                text-align: center;
+                color: var(--main-dark);
+                margin-bottom: 7px;
+                letter-spacing: -1px;
+            }
+            .mode-toggle {
+                display: flex;
+                gap: 8px;
+                margin: 18px 0 18px 0;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            .toggle-btn {
+                flex: 1 1 90px;
+                background: #f4f8fe;
+                color: var(--main-dark);
+                border: 1.4px solid #d1e2fc;
+                border-radius: 8px;
+                font-size: 1.01em;
+                font-weight: 600;
+                padding: 0.69em 0;
+                cursor: pointer;
+                transition:
+                    background 0.15s,
+                    color 0.13s;
+                outline: none;
+                margin-bottom: 2px;
+            }
+            .toggle-btn.active {
+                background: var(--main);
+                color: #fff;
+                border-color: var(--main);
+                box-shadow: 0 3px 14px #236de420;
+            }
+            .desc {
+                text-align: center;
+                color: #286673;
+                margin-bottom: 16px;
+                font-size: 1.05em;
+            }
+            .uploader {
+                margin: 0 auto 20px auto;
+                border: 2px dashed #c3d9f9;
+                border-radius: 11px;
+                background: #f7fbff;
+                text-align: center;
+                padding: 30px 12px;
+                font-size: 1.05em;
+                color: #356;
+                cursor: pointer;
+                transition:
+                    border 0.2s,
+                    background 0.15s;
+                position: relative;
+            }
+            .uploader.dragover {
+                border-color: var(--main);
+                background: #ecf4ff;
+            }
+            .uploader input[type="file"] {
+                display: none;
+            }
+            .file-list {
+                margin: 8px 0 12px 0;
+                padding: 0;
+                list-style: none;
+                font-size: 0.98em;
+            }
+            .file-list li {
+                margin: 0 0 7px 0;
+                display: flex;
+                align-items: center;
+                gap: 7px;
+                padding: 4px 0 4px 0;
+                border-bottom: 1px solid #e7eefa;
+            }
+            .file-list .move-btn {
+                background: #dbe9fa;
+                border: none;
+                border-radius: 4px;
+                font-size: 1.1em;
+                cursor: pointer;
+                padding: 2px 6px;
+                color: var(--main-dark);
+                transition: background 0.13s;
+            }
+            .file-list .move-btn:active {
+                background: #bdd2f9;
+            }
+            .input-row {
+                display: flex;
+                align-items: center;
+                gap: 7px;
+                margin: 10px 0 10px 0;
+            }
+            .input-row label {
+                font-size: 0.98em;
+                color: #356;
+                min-width: 98px;
+            }
+            .input-row input[type="text"],
+            .input-row input[type="number"],
+            .input-row input[type="password"] {
+                flex: 1;
+                padding: 7px 8px;
+                font-size: 1.05em;
+                border: 1.3px solid #b5d2fa;
+                border-radius: 7px;
+                background: #fafdff;
+                color: #234;
+            }
+            .input-row input[type="range"] {
+                width: 100%;
+                accent-color: var(--main);
+            }
+            .input-hint {
+                color: #29b48a;
+                font-size: 0.97em;
+                margin-left: 7px;
+                font-style: italic;
+                opacity: 0.95;
+            }
+            .split-mode-row {
+                margin-bottom: 10px;
+                display: flex;
+                gap: 15px;
+                align-items: center;
+                font-size: 0.99em;
+            }
+            .split-mode-row label {
+                cursor: pointer;
+            }
+            .action-btn {
+                background: var(--main);
+                color: #fff;
+                border: none;
+                border-radius: 8px;
+                padding: 12px 0;
+                width: 100%;
+                font-size: 1.15em;
+                font-weight: bold;
+                cursor: pointer;
+                margin-top: 17px;
+                margin-bottom: 12px;
+                transition: background 0.16s;
+                box-shadow: 0 2px 12px #236de416;
+            }
+            .action-btn:active {
+                background: var(--main-dark);
+            }
+            .download-link {
+                display: block;
+                margin: 18px auto 0 auto;
+                text-align: center;
+                font-size: 1.09em;
+                font-weight: 500;
+                color: #19788a;
+                background: #e1f7fb;
+                border-radius: 7px;
+                padding: 10px 2px;
+                width: 96%;
+                text-decoration: none;
+                word-break: break-all;
+                transition: background 0.15s;
+            }
+            .download-link:hover {
+                background: #b7e9ee;
+            }
+            #faq {
+                margin: 38px 0 0 0;
+                background: #f7fbff;
+                border-radius: 13px;
+                border: 1.2px solid #dde7fc;
+                padding: 22px 17px 17px 17px;
+                font-size: 1.04em;
+            }
+            #faq dl { margin:0; }
+            #faq dt {
+                font-weight: bold;
+                margin-top: 11px;
+                color: #2462a8;
+            }
+            #faq dd {
+                margin: 2px 0 9px 0;
+                color: #154185;
+                margin-left: 7px;
+            }
+            .footer {
+                color: #789;
+                text-align: center;
+                font-size: 0.95em;
+                margin-top: 23px;
+                line-height: 1.6;
+                opacity: 0.88;
+            }
+            @media (max-width: 700px) {
+                .container {
+                    max-width: 99vw;
+                    padding: 12px 2vw 16px 2vw;
+                }
+                .logo {
+                    font-size: 1.1em;
+                }
+                .action-btn {
+                    font-size: 1.01em;
+                }
+                .mode-toggle {
+                    gap: 5px;
+                }
+                .input-row label {
+                    min-width: 60px;
+                }
+            }
+            #backBtn {
+                position: fixed;
+                left: 50%;
+                bottom: 32px;
+                transform: translateX(-50%);
+                background: #236de4;
+                color: #fff;
+                font-weight: 700;
+                border: none;
+                border-radius: 2rem;
+                padding: 0.58em 1.5em;
+                box-shadow: 0 4px 16px #13d2b066;
+                font-size: 1.09em;
+                text-decoration: none;
+                cursor: pointer;
+                letter-spacing: 0.01em;
+                transition:
+                    background 0.15s,
+                    transform 0.12s;
+                z-index: 2000;
+            }
+            #backBtn:hover {
+                background: #0e8078;
+                transform: translateX(-50%) scale(1.04);
+            }
+            @media (max-width: 600px) {
+                #backBtn {
+                    bottom: 18px;
+                    font-size: 0.98em;
+                    padding: 0.48em 1em;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="logo">📄 PDF 도구 모음</div>
+            <div class="desc">
+                PDF 파일을 병합, 압축, 분할, 암호화, 회전하거나 이미지를 PDF로 변환하세요.<br />
+                모든 처리는 브라우저 내에서 이루어집니다. 업로드나 워터마크 없음.
+            </div>
+            <div class="mode-toggle">
+                <button class="toggle-btn active" id="mergeModeBtn">병합</button>
+                <button class="toggle-btn" id="compressModeBtn">압축</button>
+                <button class="toggle-btn" id="splitModeBtn">분할</button>
+                <button class="toggle-btn" id="encryptModeBtn">암호화</button>
+                <button class="toggle-btn" id="rotateModeBtn">회전</button>
+                <button class="toggle-btn" id="img2pdfModeBtn">이미지→PDF</button>
+            </div>
+
+            <!-- 병합 모드 -->
+            <form id="mergeForm" style="display: block">
+                <div class="uploader" id="mergeDrop">
+                    <input type="file" id="mergeFiles" accept="application/pdf" multiple />
+                    <span>PDF 파일을 드래그하거나<br /><b>클릭하여 선택</b>하세요 (최소 2개).</span>
+                </div>
+                <ul class="file-list" id="mergeFileList"></ul>
+                <div class="input-row">
+                    <label for="mergeFilename">파일 이름</label>
+                    <input type="text" id="mergeFilename" placeholder="merged" autocomplete="off" />
+                    <span class="input-hint" id="mergeFilenameHint">결과: merged.pdf</span>
+                </div>
+                <button type="submit" class="action-btn">PDF 병합</button>
+                <a id="mergeDownload" class="download-link" style="display: none" href="#">다운로드</a>
+            </form>
+
+            <!-- 압축 모드 -->
+            <form id="compressForm" style="display: none">
+                <div class="uploader" id="compressDrop">
+                    <input type="file" id="compressFile" accept="application/pdf" />
+                    <span>PDF 파일을 드래그하거나<br /><b>클릭하여 선택</b>하세요.</span>
+                </div>
+                <ul class="file-list" id="compressFileList"></ul>
+                <div class="input-row">
+                    <label for="compressQuality">품질</label>
+                    <input type="range" id="compressQuality" min="30" max="100" value="80" />
+                    <span class="input-hint" id="compressQualityVal">80%</span>
+                </div>
+                <div class="input-row">
+                    <label for="compressFilename">파일 이름</label>
+                    <input type="text" id="compressFilename" placeholder="compressed" autocomplete="off" />
+                    <span class="input-hint" id="compressFilenameHint">결과: compressed.pdf</span>
+                </div>
+                <button type="submit" class="action-btn">PDF 압축</button>
+                <a id="compressDownload" class="download-link" style="display: none" href="#">다운로드</a>
+                <div style="font-size: 0.96em; color: #da671e; margin-top: 9px; text-align: center">
+                    참고: 브라우저 기반 압축은 제한적입니다. PDF 내 이미지 재압축을 지원하지 않아 용량 감소가 작을 수 있습니다.
+                </div>
+            </form>
+
+            <!-- 분할 모드 -->
+            <form id="splitForm" style="display: none">
+                <div class="uploader" id="splitDrop">
+                    <input type="file" id="splitFile" accept="application/pdf" />
+                    <span>PDF 파일을 드래그하거나<br /><b>클릭하여 선택</b>하세요.</span>
+                </div>
+                <ul class="file-list" id="splitFileList"></ul>
+                <div class="split-mode-row">
+                    <label><input type="radio" name="splitMode" value="all" checked /> 모든 페이지 분할</label>
+                    <label><input type="radio" name="splitMode" value="range" /> 특정 페이지 추출</label>
+                </div>
+                <div class="input-row" id="splitRangeRow" style="display: none">
+                    <label>시작</label>
+                    <input type="number" id="splitRangeFrom" min="1" value="1" style="max-width: 55px" />
+                    <label>종료</label>
+                    <input type="number" id="splitRangeTo" min="1" value="1" style="max-width: 55px" />
+                </div>
+                <div class="input-row">
+                    <label for="splitFilename">파일 이름</label>
+                    <input type="text" id="splitFilename" placeholder="split_page" autocomplete="off" />
+                    <span class="input-hint" id="splitFilenameHint">결과: split_page1.pdf, …</span>
+                </div>
+                <button type="submit" class="action-btn">PDF 분할</button>
+                <a id="splitDownload" class="download-link" style="display: none" href="#">다운로드</a>
+            </form>
+
+            <!-- 암호화 모드 -->
+            <form id="encryptForm" style="display: none">
+                <div class="uploader" id="encryptDrop">
+                    <input type="file" id="encryptFile" accept="application/pdf" />
+                    <span>PDF 파일을 드래그하거나<br /><b>클릭하여 선택</b>하세요.</span>
+                </div>
+                <ul class="file-list" id="encryptFileList"></ul>
+                <div class="input-row">
+                    <label for="encryptPassword">비밀번호</label>
+                    <input type="password" id="encryptPassword" autocomplete="off" />
+                </div>
+                <div class="input-row">
+                    <label for="encryptFilename">파일 이름</label>
+                    <input type="text" id="encryptFilename" placeholder="encrypted" autocomplete="off" />
+                    <span class="input-hint" id="encryptFilenameHint">결과: encrypted.pdf</span>
+                </div>
+                <button type="submit" class="action-btn">PDF 암호화</button>
+                <a id="encryptDownload" class="download-link" style="display: none" href="#">다운로드</a>
+                <div style="font-size: 0.96em; color: #da671e; margin-top: 9px; text-align: center">
+                    참고: 기본 암호화(owner password)만 지원하며, 세부 권한 설정은 불가능합니다.
+                </div>
+            </form>
+
+            <!-- 회전 모드 -->
+            <form id="rotateForm" style="display: none">
+                <div class="uploader" id="rotateDrop">
+                    <input type="file" id="rotateFile" accept="application/pdf" />
+                    <span>PDF 파일을 드래그하거나<br /><b>클릭하여 선택</b>하세요.</span>
+                </div>
+                <ul class="file-list" id="rotateFileList"></ul>
+                <div class="input-row">
+                    <label for="rotateDegrees">회전 각도</label>
+                    <select id="rotateDegrees">
+                        <option value="90">90°</option>
+                        <option value="180">180°</option>
+                        <option value="270">270°</option>
+                    </select>
+                </div>
+                <div class="input-row">
+                    <label for="rotateFilename">파일 이름</label>
+                    <input type="text" id="rotateFilename" placeholder="rotated" autocomplete="off" />
+                    <span class="input-hint" id="rotateFilenameHint">결과: rotated.pdf</span>
+                </div>
+                <button type="submit" class="action-btn">PDF 회전</button>
+                <a id="rotateDownload" class="download-link" style="display: none" href="#">다운로드</a>
+            </form>
+
+            <!-- 이미지→PDF 모드 -->
+            <form id="img2pdfForm" style="display: none">
+                <div class="uploader" id="img2pdfDrop">
+                    <input type="file" id="img2pdfFiles" accept="image/*" multiple />
+                    <span>이미지를 드래그하거나<br /><b>클릭하여 선택</b>하세요 (JPG, PNG, WebP 등).</span>
+                </div>
+                <ul class="file-list" id="img2pdfFileList"></ul>
+                <div class="input-row">
+                    <label for="img2pdfFilename">파일 이름</label>
+                    <input type="text" id="img2pdfFilename" placeholder="images" autocomplete="off" />
+                    <span class="input-hint" id="img2pdfFilenameHint">결과: images.pdf</span>
+                </div>
+                <button type="submit" class="action-btn">PDF로 변환</button>
+                <a id="img2pdfDownload" class="download-link" style="display: none" href="#">다운로드</a>
+            </form>
+
+            <!-- FAQ SECTION -->
+            <section id="faq" aria-labelledby="faq-head">
+                <h3 id="faq-head" style="color:#236de4; text-align:center; margin-bottom:9px;">자주 묻는 질문 – PDF 도구 모음</h3>
+                <dl>
+                    <dt>PDF 파일이 서버에 업로드되거나 저장되나요?</dt>
+                    <dd>아니요. 모든 처리는 100% 브라우저 내에서 이루어집니다. 파일은 절대 업로드되거나 저장되지 않습니다.</dd>
+                    <dt>PDF 도구 모음은 무료로 사용할 수 있나요?</dt>
+                    <dd>네! 모든 도구는 무료이며 워터마크나 회원가입이 필요 없습니다.</dd>
+                    <dt>파일 크기나 페이지 수 제한이 있나요?</dt>
+                    <dd>제한은 브라우저 메모리나 기기 성능에 따라 다르지만, 별도의 인위적 제한은 없습니다.</dd>
+                    <dt>화질이 저하되나요?</dt>
+                    <dd>병합, 분할, 회전 시 품질은 유지됩니다. 압축은 브라우저 방식이므로 효과가 제한적입니다.</dd>
+                    <dt>기밀 문서를 안전하게 처리할 수 있나요?</dt>
+                    <dd>네. 모든 처리가 로컬 브라우저 내에서 이루어지므로 기밀 문서도 안전하게 유지됩니다.</dd>
+                </dl>
+            </section>
+            <div class="footer">
+                100% 브라우저 기반. 파일 업로드 없음.<br>
+                모두를 위한 개인 정보 보호 친화적 PDF 도구.
+            </div>
+            <a href="../index.html" id="backBtn">Other Util</a>
+        </div>
+
+        <!-- FAQPage 구조화 데이터 -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "PDF 파일이 서버에 업로드되거나 저장되나요?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "아니요. 모든 처리는 100% 브라우저 내에서 이루어집니다. 파일은 절대 업로드되거나 저장되지 않습니다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "PDF 도구 모음은 무료로 사용할 수 있나요?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "네! 모든 도구는 무료이며 워터마크나 회원가입이 필요 없습니다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "파일 크기나 페이지 수 제한이 있나요?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "제한은 브라우저 메모리나 기기 성능에 따라 다르지만, 별도의 인위적 제한은 없습니다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "화질이 저하되나요?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "병합, 분할, 회전 시 품질은 유지됩니다. 압축은 브라우저 방식이므로 효과가 제한적입니다."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "기밀 문서를 안전하게 처리할 수 있나요?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "네. 모든 처리가 로컬 브라우저 내에서 이루어지므로 기밀 문서도 안전하게 유지됩니다."
+              }
+            }
+          ]
+        }
+        </script>
+
+        <!-- SCRIPT: 모든 기능용 JS -->
+        <script>
+        /* --------------- 모드 토글 --------------- */
+        const forms = {
+            merge: document.getElementById("mergeForm"),
+            compress: document.getElementById("compressForm"),
+            split: document.getElementById("splitForm"),
+            encrypt: document.getElementById("encryptForm"),
+            rotate: document.getElementById("rotateForm"),
+            img2pdf: document.getElementById("img2pdfForm")
+        };
+        const btns = {
+            merge: document.getElementById("mergeModeBtn"),
+            compress: document.getElementById("compressModeBtn"),
+            split: document.getElementById("splitModeBtn"),
+            encrypt: document.getElementById("encryptModeBtn"),
+            rotate: document.getElementById("rotateModeBtn"),
+            img2pdf: document.getElementById("img2pdfModeBtn")
+        };
+        function showMode(mode) {
+            Object.keys(forms).forEach((k) => {
+                forms[k].style.display = k === mode ? "block" : "none";
+                btns[k].classList.toggle("active", k === mode);
+            });
+        }
+        btns.merge.onclick = () => showMode("merge");
+        btns.compress.onclick = () => showMode("compress");
+        btns.split.onclick = () => showMode("split");
+        btns.encrypt.onclick = () => showMode("encrypt");
+        btns.rotate.onclick = () => showMode("rotate");
+        btns.img2pdf.onclick = () => showMode("img2pdf");
+        showMode("merge");
+
+        /* --------------- 유틸리티: 파일 이름 --------------- */
+        function getPdfFileName(user, fallback) {
+            user = (user || "").replace(/[^a-zA-Z0-9_\-\.]/g, "").replace(/\.pdf$/i, "");
+            return (user ? user : fallback.replace(/\.pdf$/i, "")) + ".pdf";
+        }
+        function downloadBlob(bytes, fname, linkId) {
+            const blob = new Blob([bytes], { type: "application/pdf" });
+            const url = URL.createObjectURL(blob);
+            const a = document.getElementById(linkId);
+            a.href = url;
+            a.download = fname;
+            a.textContent = "다운로드: " + fname;
+            a.style.display = "block";
+        }
+
+        /* --------------- PDF 병합 --------------- */
+        let mergeFiles = [];
+        const mergeDrop = document.getElementById("mergeDrop");
+        const mergeFilesInput = document.getElementById("mergeFiles");
+        const mergeFileList = document.getElementById("mergeFileList");
+        const mergeFilename = document.getElementById("mergeFilename");
+        const mergeFilenameHint = document.getElementById("mergeFilenameHint");
+        mergeDrop.onclick = () => mergeFilesInput.click();
+        mergeDrop.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            mergeDrop.classList.add("dragover");
+        });
+        mergeDrop.addEventListener("dragleave", (e) => {
+            e.preventDefault();
+            mergeDrop.classList.remove("dragover");
+        });
+        mergeDrop.addEventListener("drop", (e) => {
+            e.preventDefault();
+            mergeDrop.classList.remove("dragover");
+            handleMergeFiles(e.dataTransfer.files);
+        });
+        mergeFilesInput.addEventListener("change", (e) => handleMergeFiles(e.target.files));
+        function handleMergeFiles(files) {
+            mergeFiles = Array.from(files).filter((f) => f.type === "application/pdf");
+            updateMergeFileList();
+        }
+        function updateMergeFileList() {
+            mergeFileList.innerHTML = "";
+            mergeFiles.forEach((f, i) => {
+                const li = document.createElement("li");
+                li.textContent = f.name;
+                const up = document.createElement("button");
+                up.textContent = "↑";
+                up.className = "move-btn";
+                up.onclick = () => {
+                    if (i > 0) {
+                        [mergeFiles[i - 1], mergeFiles[i]] = [mergeFiles[i], mergeFiles[i - 1]];
+                        updateMergeFileList();
+                    }
+                };
+                li.appendChild(up);
+                const down = document.createElement("button");
+                down.textContent = "↓";
+                down.className = "move-btn";
+                down.onclick = () => {
+                    if (i < mergeFiles.length - 1) {
+                        [mergeFiles[i], mergeFiles[i + 1]] = [mergeFiles[i + 1], mergeFiles[i]];
+                        updateMergeFileList();
+                    }
+                };
+                li.appendChild(down);
+                mergeFileList.appendChild(li);
+            });
+        }
+        mergeFilename.addEventListener("input", () => {
+            mergeFilenameHint.textContent = "결과: " + getPdfFileName(mergeFilename.value, "merged.pdf");
+        });
+        mergeFilenameHint.textContent = "결과: merged.pdf";
+        document.getElementById("mergeForm").onsubmit = async function (e) {
+            e.preventDefault();
+            if (!mergeFiles.length || mergeFiles.length < 2) return alert("PDF 파일을 최소 2개 선택하세요.");
+            try {
+                const mergedPdf = await PDFLib.PDFDocument.create();
+                for (let file of mergeFiles) {
+                    const bytes = await file.arrayBuffer();
+                    const srcPdf = await PDFLib.PDFDocument.load(bytes);
+                    const copiedPages = await mergedPdf.copyPages(srcPdf, srcPdf.getPageIndices());
+                    copiedPages.forEach((p) => mergedPdf.addPage(p));
+                }
+                const mergedBytes = await mergedPdf.save();
+                downloadBlob(mergedBytes, getPdfFileName(mergeFilename.value, "merged.pdf"), "mergeDownload");
+            } catch (err) {
+                alert("병합 실패: " + err);
+            }
+        };
+
+        /* --------------- PDF 압축 --------------- */
+        let compressFile = null;
+        const compressDrop = document.getElementById("compressDrop");
+        const compressFileInput = document.getElementById("compressFile");
+        const compressFileList = document.getElementById("compressFileList");
+        const compressFilename = document.getElementById("compressFilename");
+        const compressFilenameHint = document.getElementById("compressFilenameHint");
+        const compressQuality = document.getElementById("compressQuality");
+        const compressQualityVal = document.getElementById("compressQualityVal");
+        compressDrop.onclick = () => compressFileInput.click();
+        compressDrop.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            compressDrop.classList.add("dragover");
+        });
+        compressDrop.addEventListener("dragleave", (e) => {
+            e.preventDefault();
+            compressDrop.classList.remove("dragover");
+        });
+        compressDrop.addEventListener("drop", (e) => {
+            e.preventDefault();
+            compressDrop.classList.remove("dragover");
+            handleCompressFile(e.dataTransfer.files);
+        });
+        compressFileInput.addEventListener("change", (e) => handleCompressFile(e.target.files));
+        function handleCompressFile(files) {
+            compressFile = Array.from(files).find((f) => f.type === "application/pdf");
+            updateCompressFileList();
+        }
+        function updateCompressFileList() {
+            compressFileList.innerHTML = compressFile ? `<li>${compressFile.name}</li>` : "";
+        }
+        compressQuality.addEventListener("input", () => {
+            compressQualityVal.textContent = compressQuality.value + "%";
+        });
+        compressFilename.addEventListener("input", () => {
+            compressFilenameHint.textContent =
+                "결과: " + getPdfFileName(compressFilename.value, "compressed.pdf");
+        });
+        compressFilenameHint.textContent = "결과: compressed.pdf";
+        document.getElementById("compressForm").onsubmit = async function (e) {
+            e.preventDefault();
+            if (!compressFile) return alert("PDF 파일을 선택하세요.");
+            try {
+                const srcBytes = await compressFile.arrayBuffer();
+                const srcPdf = await PDFLib.PDFDocument.load(srcBytes);
+                const outPdf = await PDFLib.PDFDocument.create();
+                for (let i = 0; i < srcPdf.getPageCount(); i++) {
+                    const [p] = await outPdf.copyPages(srcPdf, [i]);
+                    outPdf.addPage(p);
+                }
+                const outBytes = await outPdf.save();
+                downloadBlob(
+                    outBytes,
+                    getPdfFileName(compressFilename.value, "compressed.pdf"),
+                    "compressDownload"
+                );
+                alert(
+                    "참고: 브라우저 기반 압축은 제한적입니다. 대부분의 PDF에서 용량 감소 효과가 작습니다 (이미지는 재압축되지 않음)."
+                );
+            } catch (err) {
+                alert("압축 실패: " + err);
+            }
+        };
+
+        /* --------------- PDF 분할 --------------- */
+        let splitFile = null;
+        const splitDrop = document.getElementById("splitDrop");
+        const splitFileInput = document.getElementById("splitFile");
+        const splitFileList = document.getElementById("splitFileList");
+        const splitFilename = document.getElementById("splitFilename");
+        const splitFilenameHint = document.getElementById("splitFilenameHint");
+        const splitRangeRow = document.getElementById("splitRangeRow");
+        const splitRangeFrom = document.getElementById("splitRangeFrom");
+        const splitRangeTo = document.getElementById("splitRangeTo");
+        let splitMode = "all", fromPage = 1, toPage = 1;
+        splitDrop.onclick = () => splitFileInput.click();
+        splitDrop.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            splitDrop.classList.add("dragover");
+        });
+        splitDrop.addEventListener("dragleave", (e) => {
+            e.preventDefault();
+            splitDrop.classList.remove("dragover");
+        });
+        splitDrop.addEventListener("drop", (e) => {
+            e.preventDefault();
+            splitDrop.classList.remove("dragover");
+            handleSplitFile(e.dataTransfer.files);
+        });
+        splitFileInput.addEventListener("change", (e) => handleSplitFile(e.target.files));
+        function handleSplitFile(files) {
+            splitFile = Array.from(files).find((f) => f.type === "application/pdf");
+            updateSplitFileList();
+        }
+        function updateSplitFileList() {
+            splitFileList.innerHTML = splitFile ? `<li>${splitFile.name}</li>` : "";
+        }
+        document.getElementsByName("splitMode").forEach((radio) => {
+            radio.addEventListener("change", (e) => {
+                splitMode = e.target.value;
+                splitRangeRow.style.display = splitMode === "range" ? "flex" : "none";
+                splitFilenameHint.textContent =
+                    splitMode === "all"
+                        ? `결과: ${(splitFilename.value || "split_page")}1.pdf, …`
+                        : `결과: ${(splitFilename.value || "split_page")}_extract.pdf`;
+            });
+        });
+        splitRangeFrom.addEventListener("input", (e) => (fromPage = parseInt(e.target.value, 10) || 1));
+        splitRangeTo.addEventListener("input", (e) => (toPage = parseInt(e.target.value, 10) || 1));
+        splitFilename.addEventListener("input", () => {
+            splitFilenameHint.textContent =
+                splitMode === "all"
+                    ? `결과: ${(splitFilename.value || "split_page")}1.pdf, …`
+                    : `결과: ${(splitFilename.value || "split_page")}_extract.pdf`;
+        });
+        splitFilenameHint.textContent = "결과: split_page1.pdf, …";
+        document.getElementById("splitForm").onsubmit = async function (e) {
+            e.preventDefault();
+            if (!splitFile) return alert("PDF 파일을 선택하세요.");
+            try {
+                const srcBytes = await splitFile.arrayBuffer();
+                const srcPdf = await PDFLib.PDFDocument.load(srcBytes);
+                if (splitMode === "all") {
+                    for (let i = 0; i < srcPdf.getPageCount(); i++) {
+                        const outPdf = await PDFLib.PDFDocument.create();
+                        const [page] = await outPdf.copyPages(srcPdf, [i]);
+                        outPdf.addPage(page);
+                        const outBytes = await outPdf.save();
+                        const fname = getPdfFileName(
+                            (splitFilename.value || "split_page") + (i + 1),
+                            "split_page" + (i + 1) + ".pdf"
+                        );
+                        const a = document.createElement("a");
+                        a.href = URL.createObjectURL(new Blob([outBytes], { type: "application/pdf" }));
+                        a.download = fname;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+                    }
+                    alert("완료되었습니다! 각 페이지가 별도 PDF로 다운로드되었습니다.");
+                } else {
+                    fromPage = Math.max(1, Math.min(fromPage, srcPdf.getPageCount()));
+                    toPage = Math.max(fromPage, Math.min(toPage, srcPdf.getPageCount()));
+                    const outPdf = await PDFLib.PDFDocument.create();
+                    const indices = [];
+                    for (let i = fromPage - 1; i < toPage; i++) indices.push(i);
+                    const pages = await outPdf.copyPages(srcPdf, indices);
+                    pages.forEach((p) => outPdf.addPage(p));
+                    const outBytes = await outPdf.save();
+                    downloadBlob(
+                        outBytes,
+                        (splitFilename.value || "split_page") + "_extract.pdf",
+                        "splitDownload"
+                    );
+                }
+            } catch (err) {
+                alert("분할 실패: " + err);
+            }
+        };
+
+        /* --------------- PDF 암호화 --------------- */
+        let encryptFile = null;
+        const encryptDrop = document.getElementById("encryptDrop");
+        const encryptFileInput = document.getElementById("encryptFile");
+        const encryptFileList = document.getElementById("encryptFileList");
+        const encryptPassword = document.getElementById("encryptPassword");
+        const encryptFilename = document.getElementById("encryptFilename");
+        const encryptFilenameHint = document.getElementById("encryptFilenameHint");
+        encryptDrop.onclick = () => encryptFileInput.click();
+        encryptDrop.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            encryptDrop.classList.add("dragover");
+        });
+        encryptDrop.addEventListener("dragleave", (e) => {
+            e.preventDefault();
+            encryptDrop.classList.remove("dragover");
+        });
+        encryptDrop.addEventListener("drop", (e) => {
+            e.preventDefault();
+            encryptDrop.classList.remove("dragover");
+            handleEncryptFile(e.dataTransfer.files);
+        });
+        encryptFileInput.addEventListener("change", (e) => handleEncryptFile(e.target.files));
+        function handleEncryptFile(files) {
+            encryptFile = Array.from(files).find((f) => f.type === "application/pdf");
+            updateEncryptFileList();
+        }
+        function updateEncryptFileList() {
+            encryptFileList.innerHTML = encryptFile ? `<li>${encryptFile.name}</li>` : "";
+        }
+        encryptFilename.addEventListener("input", () => {
+            encryptFilenameHint.textContent =
+                "결과: " + getPdfFileName(encryptFilename.value, "encrypted.pdf");
+        });
+        encryptFilenameHint.textContent = "결과: encrypted.pdf";
+        document.getElementById("encryptForm").onsubmit = async function (e) {
+            e.preventDefault();
+            if (!encryptFile) return alert("PDF 파일을 선택하세요.");
+            if (!encryptPassword.value) return alert("비밀번호를 입력하세요.");
+            try {
+                const srcBytes = await encryptFile.arrayBuffer();
+                const srcPdf = await PDFLib.PDFDocument.load(srcBytes);
+                const outPdf = await PDFLib.PDFDocument.create();
+                const copiedPages = await outPdf.copyPages(srcPdf, srcPdf.getPageIndices());
+                copiedPages.forEach((p) => outPdf.addPage(p));
+                outPdf.setTitle(srcPdf.getTitle() || "");
+                const encryptedBytes = await outPdf.save({
+                    passwords: { owner: encryptPassword.value, user: encryptPassword.value }
+                });
+                downloadBlob(
+                    encryptedBytes,
+                    getPdfFileName(encryptFilename.value, "encrypted.pdf"),
+                    "encryptDownload"
+                );
+                alert("기본 암호화(owner password)만 지원됩니다. 고급 권한 설정은 불가능합니다.");
+            } catch (err) {
+                alert("암호화 실패: " + err);
+            }
+        };
+
+        /* --------------- PDF 회전 --------------- */
+        let rotateFile = null;
+        const rotateDrop = document.getElementById("rotateDrop");
+        const rotateFileInput = document.getElementById("rotateFile");
+        const rotateFileList = document.getElementById("rotateFileList");
+        const rotateDegrees = document.getElementById("rotateDegrees");
+        const rotateFilename = document.getElementById("rotateFilename");
+        const rotateFilenameHint = document.getElementById("rotateFilenameHint");
+        rotateDrop.onclick = () => rotateFileInput.click();
+        rotateDrop.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            rotateDrop.classList.add("dragover");
+        });
+        rotateDrop.addEventListener("dragleave", (e) => {
+            e.preventDefault();
+            rotateDrop.classList.remove("dragover");
+        });
+        rotateDrop.addEventListener("drop", (e) => {
+            e.preventDefault();
+            rotateDrop.classList.remove("dragover");
+            handleRotateFile(e.dataTransfer.files);
+        });
+        rotateFileInput.addEventListener("change", (e) => handleRotateFile(e.target.files));
+        function handleRotateFile(files) {
+            rotateFile = Array.from(files).find((f) => f.type === "application/pdf");
+            updateRotateFileList();
+        }
+        function updateRotateFileList() {
+            rotateFileList.innerHTML = rotateFile ? `<li>${rotateFile.name}</li>` : "";
+        }
+        rotateFilename.addEventListener("input", () => {
+            rotateFilenameHint.textContent = "결과: " + getPdfFileName(rotateFilename.value, "rotated.pdf");
+        });
+        rotateFilenameHint.textContent = "결과: rotated.pdf";
+        document.getElementById("rotateForm").onsubmit = async function (e) {
+            e.preventDefault();
+            if (!rotateFile) return alert("PDF 파일을 선택하세요.");
+            try {
+                const degrees = parseInt(rotateDegrees.value, 10) || 0;
+                const srcBytes = await rotateFile.arrayBuffer();
+                const srcPdf = await PDFLib.PDFDocument.load(srcBytes);
+                const outPdf = await PDFLib.PDFDocument.create();
+                const copiedPages = await outPdf.copyPages(srcPdf, srcPdf.getPageIndices());
+                copiedPages.forEach((p) => {
+                    p.setRotation(degrees);
+                    outPdf.addPage(p);
+                });
+                const outBytes = await outPdf.save();
+                downloadBlob(outBytes, getPdfFileName(rotateFilename.value, "rotated.pdf"), "rotateDownload");
+            } catch (err) {
+                alert("회전 실패: " + err);
+            }
+        };
+
+        /* --------------- 이미지→PDF --------------- */
+        let img2pdfFiles = [];
+        const img2pdfDrop = document.getElementById("img2pdfDrop");
+        const img2pdfFilesInput = document.getElementById("img2pdfFiles");
+        const img2pdfFileList = document.getElementById("img2pdfFileList");
+        const img2pdfFilename = document.getElementById("img2pdfFilename");
+        const img2pdfFilenameHint = document.getElementById("img2pdfFilenameHint");
+        img2pdfDrop.onclick = () => img2pdfFilesInput.click();
+        img2pdfDrop.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            img2pdfDrop.classList.add("dragover");
+        });
+        img2pdfDrop.addEventListener("dragleave", (e) => {
+            e.preventDefault();
+            img2pdfDrop.classList.remove("dragover");
+        });
+        img2pdfDrop.addEventListener("drop", (e) => {
+            e.preventDefault();
+            img2pdfDrop.classList.remove("dragover");
+            handleImg2pdfFiles(e.dataTransfer.files);
+        });
+        img2pdfFilesInput.addEventListener("change", (e) => handleImg2pdfFiles(e.target.files));
+        function handleImg2pdfFiles(files) {
+            img2pdfFiles = Array.from(files).filter((f) => f.type.startsWith("image/"));
+            updateImg2pdfFileList();
+        }
+        function updateImg2pdfFileList() {
+            img2pdfFileList.innerHTML = "";
+            img2pdfFiles.forEach((f, i) => {
+                const li = document.createElement("li");
+                li.textContent = f.name;
+                const up = document.createElement("button");
+                up.textContent = "↑";
+                up.className = "move-btn";
+                up.onclick = () => {
+                    if (i > 0) {
+                        [img2pdfFiles[i - 1], img2pdfFiles[i]] = [img2pdfFiles[i], img2pdfFiles[i - 1]];
+                        updateImg2pdfFileList();
+                    }
+                };
+                li.appendChild(up);
+                const down = document.createElement("button");
+                down.textContent = "↓";
+                down.className = "move-btn";
+                down.onclick = () => {
+                    if (i < img2pdfFiles.length - 1) {
+                        [img2pdfFiles[i], img2pdfFiles[i + 1]] = [img2pdfFiles[i + 1], img2pdfFiles[i]];
+                        updateImg2pdfFileList();
+                    }
+                };
+                li.appendChild(down);
+                img2pdfFileList.appendChild(li);
+            });
+        }
+        img2pdfFilename.addEventListener("input", () => {
+            img2pdfFilenameHint.textContent = "결과: " + getPdfFileName(img2pdfFilename.value, "images.pdf");
+        });
+        img2pdfFilenameHint.textContent = "결과: images.pdf";
+        document.getElementById("img2pdfForm").onsubmit = async function (e) {
+            e.preventDefault();
+            if (!img2pdfFiles.length) return alert("이미지를 선택하세요.");
+            try {
+                const pdfDoc = await PDFLib.PDFDocument.create();
+                for (let file of img2pdfFiles) {
+                    const imageBytes = await file.arrayBuffer();
+                    let image, ext = file.name.split(".").pop().toLowerCase();
+                    if (ext === "jpg" || ext === "jpeg") {
+                        image = await pdfDoc.embedJpg(imageBytes);
+                    } else {
+                        image = await pdfDoc.embedPng(imageBytes);
+                    }
+                    const page = pdfDoc.addPage([image.width, image.height]);
+                    page.drawImage(image, { x: 0, y: 0, width: image.width, height: image.height });
+                }
+                const outBytes = await pdfDoc.save();
+                downloadBlob(outBytes, getPdfFileName(img2pdfFilename.value, "images.pdf"), "img2pdfDownload");
+            } catch (err) {
+                alert("이미지→PDF 변환 실패: " + err);
+            }
+        };
+        </script>
+    </body>
+</html>

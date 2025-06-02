@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>영어 발음 (IPA) 변환기</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Google 태그 (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <!-- Google AdSense -->
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <!-- SEO -->
+    <meta
+      name="description"
+      content="영어 단어와 문장을 간단한 IPA 스타일 발음으로 변환합니다. 규칙 기반이며, 무료로 브라우저에서 즉시 사용 가능합니다. 업로드 없이 100% 브라우저 내에서 실행됩니다." />
+    <meta
+      name="keywords"
+      content="english, ipa, pronunciation, converter, phonetic, phonics, pronunciation tool, phonetic transcription, online, study, education, 영어 발음기호 변환, ipa 도구, 무료, 브라우저, 영어 발음, english pronunciation, phoneme" />
+    <meta name="author" content="Itagi" />
+    <meta name="language" content="ko" />
+    <meta name="theme-color" content="#1875d1" />
+    <link rel="canonical" href="https://emfls.github.io/kor/util/ipa-convert/" />
+    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+    <!-- Open Graph -->
+    <meta property="og:title" content="영어 IPA 발음 변환기 – 간단 규칙 기반 도구" />
+    <meta
+      property="og:description"
+      content="영어 단어와 문장을 간단한 IPA 스타일 발음 기호로 변환합니다. 브라우저만 있으면 무료로 즉시 사용 가능." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/kor/util/ipa-convert/" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="영어 IPA 발음 변환기 – 간단 규칙 기반 도구" />
+    <meta
+      name="twitter:description"
+      content="영어 텍스트를 IPA 스타일 발음으로 즉시 변환하세요. 규칙 기반이며, 브라우저 내에서 무료로 사용 가능합니다." />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <style>
+      /* ... 기존 스타일 생략 ... */
+      body {
+        background: #f7f9fe;
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: #234;
+      }
+      .container {
+        max-width: 430px;
+        margin: 40px auto 0 auto;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px #2238;
+        padding: 30px 20px 18px 20px;
+      }
+      .logo {
+        font-size: 1.21em;
+        font-weight: bold;
+        text-align: center;
+        color: #154185;
+        margin-bottom: 10px;
+        letter-spacing: 0.02em;
+      }
+      .desc {
+        text-align: center;
+        color: #2262b3;
+        margin-bottom: 15px;
+        font-size: 1.03em;
+      }
+      .form-row {
+        margin-bottom: 14px;
+      }
+      input[type="text"] {
+        padding: 10px 11px;
+        border-radius: 7px;
+        border: 1.2px solid #bfd8ff;
+        font-size: 1.08em;
+        width: 100%;
+        background: #fafdff;
+        color: #234;
+        transition: border 0.15s;
+        box-sizing: border-box;
+      }
+      input[type="text"]:focus {
+        border-color: #2278d4;
+        outline: none;
+      }
+      .action-btn {
+        background: #1875d1;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 0;
+        width: 100%;
+        font-size: 1.13em;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 7px;
+        margin-bottom: 11px;
+        box-shadow: 0 2px 12px #1875d120;
+        transition: background 0.15s;
+      }
+      .action-btn:active {
+        background: #0e4775;
+      }
+      .result-block {
+        background: #f4f7fd;
+        border: 1.2px solid #bfe1fa;
+        border-radius: 9px;
+        padding: 18px 11px 13px 11px;
+        margin-bottom: 7px;
+        color: #194f9e;
+        font-size: 1.14em;
+        text-align: center;
+        word-break: break-all;
+      }
+      section#faq {
+        background: #f0f7fc;
+        border-radius: 15px;
+        padding: 18px 14px 13px 16px;
+        margin: 28px 0 0 0;
+        border: 1px solid #b9daf8;
+        font-size: 0.99em;
+      }
+      section#faq h3 {
+        font-weight: bold;
+        color: #1875d1;
+        margin-bottom: 6px;
+        font-size: 1.08em;
+        text-align: center;
+      }
+      section#faq dt {
+        color: #195269;
+        margin-top: 10px;
+        margin-bottom: 2px;
+        font-weight: 500;
+      }
+      section#faq dd {
+        color: #265a7a;
+        margin-left: 7px;
+        margin-bottom: 7px;
+      }
+      .ipa {
+        font-size: 1.35em;
+        color: #1974b8;
+        background: #e6f4fc;
+        border-radius: 6px;
+        padding: 5px 12px;
+        display: inline-block;
+        margin: 8px 0 5px 0;
+        font-family: "Segoe UI", "Arial", "Times New Roman", serif;
+        letter-spacing: 1px;
+      }
+      .footer {
+        color: #789;
+        text-align: center;
+        font-size: 0.96em;
+        margin-top: 18px;
+      }
+      #backBtn {
+        position: fixed;
+        left: 50%;
+        bottom: 32px;
+        transform: translateX(-50%);
+        background: #1875d1;
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 2rem;
+        padding: 0.58em 1.5em;
+        box-shadow: 0 4px 16px #1875d133;
+        font-size: 1.09em;
+        text-decoration: none;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+        transition:
+          background 0.15s,
+          transform 0.12s;
+        z-index: 2000;
+      }
+      #backBtn:hover {
+        background: #0e4775;
+        transform: translateX(-50%) scale(1.04);
+      }
+      @media (max-width: 600px) {
+        .container {
+          max-width: 99vw;
+          padding: 12px 2vw 14px 2vw;
+        }
+        #backBtn {
+          bottom: 18px;
+          font-size: 0.98em;
+          padding: 0.48em 1em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">🔤 영어 발음 변환기</div>
+      <div class="desc">
+        영어 단어 또는 문장을 입력하세요.<br />
+        간단한 IPA 스타일 발음으로 변환됩니다.<br />
+        <b>규칙 기반 학습 및 재미용 (공식 IPA 아님!)</b>
+      </div>
+      <form id="form" autocomplete="off">
+        <div class="form-row">
+          <input type="text" id="input" placeholder="영어 단어를 입력하세요 (예: enough, school, photo)" required />
+        </div>
+        <button type="submit" class="action-btn">변환</button>
+      </form>
+      <div id="result"></div>
+      <section id="faq" aria-labelledby="faq-head">
+        <h3 id="faq-head">FAQ – 영어 발음 (IPA) 변환기</h3>
+        <dl>
+          <dt>이것이 진짜 IPA인가요?</dt>
+          <dd>아니요. 이 도구는 간단한 규칙으로 영어 발음을 대략 표기합니다. 언어학 또는 시험용이 아닌 학습 및 재미용입니다.</dd>
+          <dt>입력한 텍스트가 서버로 전송되나요?</dt>
+          <dd>아니요. 모든 변환은 브라우저 내에서 이루어집니다. 텍스트가 밖으로 나가지 않습니다.</dd>
+          <dt>어떤 영어 억양을 사용하나요?</dt>
+          <dd>미국식과 영국식 규칙을 혼합하여 단순화했습니다. 어떤 실제 방언에도 완전히 일치하지 않습니다.</dd>
+          <dt>문장도 사용할 수 있나요?</dt>
+          <dd>네. 단어든 전체 문장이든 입력할 수 있습니다. 각 단어가 개별적으로 변환됩니다.</dd>
+          <dt>이 도구는 무료인가요?</dt>
+          <dd>예. 이 도구는 100% 무료로 누구나 자유롭게 사용할 수 있습니다.</dd>
+        </dl>
+      </section>
+      <div class="footer">
+        영어를 단순화된 규칙에 따라 대략적인 IPA 발음으로 변환합니다.<br />
+        학습 및 재미용입니다.<br />
+        <span style="color: #bbb">100% 브라우저 내 실행, 데이터 업로드 없음.</span>
+      </div>
+    </div>
+    <a href="../index.html" id="backBtn">Other Util</a>
+    <script>
+      // ... 기존 JS 그대로 ...
+      function toIPA(word) {
+        if (!word.trim()) return "";
+        let w = word.toLowerCase();
+        // 대표 패턴 우선 치환 (긴 것 → 짧은 것 순)
+        const rules = [
+          // ch, sh, th, ph, wh, qu
+          [/(sch)/g, "sk"],
+          [/ch/g, "tʃ"],
+          [/sh/g, "ʃ"],
+          [/th/g, "θ"],
+          [/ph/g, "f"],
+          [/wh/g, "w"],
+          [/qu/g, "kw"],
+          // 이중모음/장모음
+          [/oo/g, "uː"],
+          [/ee/g, "iː"],
+          [/ea/g, "iː"],
+          [/ou/g, "aʊ"],
+          [/ow/g, "aʊ"],
+          [/ai/g, "eɪ"],
+          [/ay/g, "eɪ"],
+          [/oa/g, "oʊ"],
+          [/ie/g, "aɪ"],
+          [/igh/g, "aɪ"],
+          [/ei/g, "iː"],
+          [/oy/g, "ɔɪ"],
+          [/oi/g, "ɔɪ"],
+          // gn, kn, wr, mb
+          [/gn/g, "n"],
+          [/kn/g, "n"],
+          [/wr/g, "r"],
+          [/mb\b/g, "m"],
+          // 끝 silent e
+          [/e\b/g, ""],
+          // 자주 쓰이는 단어 (불규칙)
+          [/\bthe\b/g, "ðə"],
+          [/\band\b/g, "ænd"],
+          [/\bof\b/g, "ʌv"],
+          [/\ba\b/g, "ə"],
+          [/\bto\b/g, "tuː"],
+          [/\bis\b/g, "ɪz"],
+          [/\byou\b/g, "juː"],
+          [/\bi\b/g, "aɪ"]
+        ];
+        // 한글자(알파벳) 규칙
+        const letters = {
+          a: "æ",
+          b: "b",
+          c: "k",
+          d: "d",
+          e: "ɛ",
+          f: "f",
+          g: "g",
+          h: "h",
+          i: "ɪ",
+          j: "dʒ",
+          k: "k",
+          l: "l",
+          m: "m",
+          n: "n",
+          o: "ɒ",
+          p: "p",
+          q: "k",
+          r: "r",
+          s: "s",
+          t: "t",
+          u: "ʌ",
+          v: "v",
+          w: "w",
+          x: "ks",
+          y: "j",
+          z: "z"
+        };
+        // 규칙 적용
+        for (const [pattern, rep] of rules) w = w.replace(pattern, rep);
+        // 알파벳→IPA 단순 치환
+        let ipa = "";
+        for (let i = 0; i < w.length; ++i) {
+          const ch = w[i];
+          ipa += letters[ch] !== undefined ? letters[ch] : ch;
+        }
+        // 단어 구분
+        let output = ipa
+          .split(/\s+/)
+          .map((x) => (x ? "/" + x + "/" : ""))
+          .join(" ");
+        return output;
+      }
+      const form = document.getElementById("form");
+      const input = document.getElementById("input");
+      const result = document.getElementById("result");
+      form.onsubmit = function (e) {
+        e.preventDefault();
+        const val = input.value.trim();
+        if (!val) return;
+        const ipa = toIPA(val);
+        result.innerHTML = `<div class="ipa">${ipa}</div>`;
+      };
+      input.addEventListener("input", () => {
+        if (!input.value.trim()) {
+          result.innerHTML = "";
+          return;
+        }
+        const ipa = toIPA(input.value);
+        result.innerHTML = `<div class="ipa">${ipa}</div>`;
+      });
+      input.focus();
+    </script>
+    <!-- FAQPage 구조화 데이터 (SEO/SGE/네이버/구글 리치 결과 대응) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "이것이 진짜 IPA인가요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "아니요. 이 도구는 간단한 규칙으로 영어 발음을 대략 표기합니다. 언어학 또는 시험용이 아닌 학습 및 재미용입니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "입력한 텍스트가 서버로 전송되나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "아니요. 모든 변환은 브라우저 내에서 이루어집니다. 텍스트가 밖으로 나가지 않습니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "어떤 영어 억양을 사용하나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "미국식과 영국식 규칙을 혼합하여 단순화했습니다. 어떤 실제 방언에도 완전히 일치하지 않습니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "문장도 사용할 수 있나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "네. 단어든 전체 문장이든 입력할 수 있습니다. 각 단어가 개별적으로 변환됩니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "이 도구는 무료인가요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "예. 이 도구는 100% 무료로 누구나 자유롭게 사용할 수 있습니다."
+          }
+        }
+      ]
+    }
+    </script>
+  </body>
+</html>

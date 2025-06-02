@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>시간 차이 & 카운트다운 계산기</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="두 날짜 간 시간 차이를 계산하고 원하는 날짜까지 실시간 카운트다운을 확인하세요. 일, 시간, 분, 초. 무료, 브라우저 기반, 모바일 친화적." />
+    <meta
+      name="keywords"
+      content="시간 차이, 카운트다운, 날짜 계산기, 타이머, 일, 시간, 분, 초, 웹, 카운트다운, 날짜계산" />
+    <meta name="author" content="Itagi" />
+    <meta name="language" content="ko" />
+    <meta name="theme-color" content="#1999c6" />
+    <link rel="canonical" href="https://emfls.github.io/kor/util/time-diff/" />
+    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+    <meta property="og:title" content="시간 차이 & 카운트다운 계산기" />
+    <meta
+      property="og:description"
+      content="두 순간 간의 시간을 확인하고, 원하는 미래 날짜까지 실시간 카운트다운을 보세요." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/kor/util/time-diff/" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="시간 차이 & 카운트다운 계산기" />
+    <meta name="twitter:description" content="간격 확인 또는 실시간 카운트다운. 100% 브라우저, 업로드 불필요." />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <!-- Google AdSense -->
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <style>
+      :root {
+        --main: #1999c6;
+        --bg: #f7fbfe;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--bg);
+      }
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: #234;
+      }
+      .container {
+        max-width: 390px;
+        margin: 38px auto 0 auto;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 22px #1999c61a;
+        padding: 25px 14px 22px 14px;
+      }
+      .title {
+        text-align: center;
+        font-size: 1.15em;
+        color: var(--main);
+        font-weight: bold;
+        margin-bottom: 12px;
+      }
+      .form-row {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin-bottom: 15px;
+      }
+      .form-row label {
+        font-size: 1em;
+        color: #147399;
+        font-weight: 500;
+      }
+      .form-row input[type="datetime-local"] {
+        box-sizing: border-box;
+        padding: 10px 10px;
+        border-radius: 7px;
+        border: 1.2px solid #aee3f7;
+        font-size: 1.08em;
+        width: 100%;
+        background: #fafdff;
+        color: #234;
+        transition: border 0.15s;
+      }
+      .form-row input[type="datetime-local"]:focus {
+        border-color: var(--main);
+      }
+      .result,
+      .countdown {
+        background: #e2f5fc;
+        border-radius: 12px;
+        color: #15748d;
+        font-size: 1.08em;
+        padding: 13px 11px 11px 11px;
+        text-align: center;
+        margin-bottom: 9px;
+        min-height: 38px;
+        font-weight: 500;
+        word-break: break-word;
+      }
+      .countdown {
+        background: #f7ebff;
+        color: #954fc9;
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
+      .footer {
+        color: #789;
+        text-align: center;
+        font-size: 0.93em;
+        margin-top: 15px;
+      }
+      #backBtn {
+        position: fixed;
+        left: 50%;
+        bottom: 32px;
+        transform: translateX(-50%);
+        background: #1999c6;
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 2rem;
+        padding: 0.58em 1.5em;
+        box-shadow: 0 4px 16px #1999c633;
+        font-size: 1.09em;
+        text-decoration: none;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+        transition:
+          background 0.15s,
+          transform 0.12s;
+        z-index: 2000;
+      }
+      #backBtn:hover {
+        background: #106d92;
+        transform: translateX(-50%) scale(1.04);
+      }
+      @media (max-width: 500px) {
+        .container {
+          max-width: 98vw;
+          padding: 10px 2vw 10px 2vw;
+        }
+        #backBtn {
+          bottom: 18px;
+          font-size: 0.98em;
+          padding: 0.48em 1em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="title">⏳ 시간 차이 & 카운트다운</div>
+      <form id="diffForm" autocomplete="off">
+        <div class="form-row">
+          <label for="startTime">시작 날짜 및 시간</label>
+          <input type="datetime-local" id="startTime" />
+        </div>
+        <div class="form-row">
+          <label for="endTime">종료 날짜 및 시간</label>
+          <input type="datetime-local" id="endTime" />
+        </div>
+        <div class="result" id="diffResult"></div>
+      </form>
+      <div class="countdown" id="countdownBox"></div>
+      <div class="footer">
+        날짜 간 일, 시간, 분, 초를 계산하거나 실시간 카운트다운을 확인하세요.<br />
+        <b>팁:</b> 카운트다운을 원한다면 종료 시간만 설정하세요.
+      </div>
+    </div>
+    <a href="../index.html" id="backBtn">다른 유틸 보기</a>
+    <script>
+      const startInput = document.getElementById("startTime");
+      const endInput = document.getElementById("endTime");
+      const result = document.getElementById("diffResult");
+      const countdownBox = document.getElementById("countdownBox");
+      let countdownTimer = null;
+
+      function formatDiff(ms) {
+        let abs = Math.abs(ms);
+        const sign = ms >= 0 ? "" : "-";
+        const days = Math.floor(abs / 86400000);
+        const hours = Math.floor((abs % 86400000) / 3600000);
+        const mins = Math.floor((abs % 3600000) / 60000);
+        const secs = Math.floor((abs % 60000) / 1000);
+        return `<b>${sign}${days}일</b> &nbsp; <b>${hours}시간</b> &nbsp; <b>${mins}분</b> &nbsp; <b>${secs}초</b>`;
+      }
+
+      function update() {
+        const start = startInput.value ? new Date(startInput.value) : null;
+        const end = endInput.value ? new Date(endInput.value) : null;
+        // 시간 차이 계산
+        if (start && end) {
+          let ms = end - start;
+          if (isNaN(ms)) result.textContent = "잘못된 날짜/시간 입력입니다.";
+          else result.innerHTML = formatDiff(ms);
+        } else {
+          result.textContent = "";
+        }
+        // 카운트다운 (현재 시각부터 종료까지)
+        if (end) {
+          let from =
+            !startInput.value || (startInput.value && new Date(startInput.value) < new Date())
+              ? new Date()
+              : new Date(startInput.value);
+          if (isNaN(end - from)) {
+            countdownBox.textContent = "";
+            return;
+          }
+          function tick() {
+            let now = new Date();
+            let base =
+              !startInput.value || (startInput.value && new Date(startInput.value) < now)
+                ? now
+                : new Date(startInput.value);
+            let ms = end - base;
+            if (isNaN(ms)) {
+              countdownBox.textContent = "";
+              return;
+            }
+            if (ms <= 0) {
+              countdownBox.innerHTML = `<b>시간 종료!</b>`;
+              clearInterval(countdownTimer);
+              countdownTimer = null;
+              return;
+            }
+            countdownBox.innerHTML = `<b>카운트다운: </b>` + formatDiff(ms);
+          }
+          if (countdownTimer) clearInterval(countdownTimer);
+          tick();
+          countdownTimer = setInterval(tick, 1000);
+        } else {
+          countdownBox.textContent = "";
+          if (countdownTimer) clearInterval(countdownTimer);
+          countdownTimer = null;
+        }
+      }
+
+      // 입력이 변경될 때마다 자동 업데이트
+      startInput.addEventListener("input", update);
+      endInput.addEventListener("input", update);
+      // 페이지 로드 시에도 즉시 업데이트
+      window.addEventListener("DOMContentLoaded", update);
+    </script>
+    <section
+      style="
+        max-width: 320px;
+        margin: 48px auto 24px auto;
+        background: #1e1e1e;
+        border-radius: 18px;
+        box-shadow: 0 6px 24px #1236;
+        padding: 24px;
+        font-family: Arial, sans-serif;
+      ">
+      <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 14px">
+        ❓ FAQ – 시간 차이 & 카운트다운
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">이 도구는 인터넷 연결이나 업로드가 필요한가요?</div>
+        <div style="color: #f0f0f0">
+          아니요. 모든 계산은 브라우저에서 로컬로 이루어집니다. 데이터가 외부로 전송되지 않습니다.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">카운트다운 기능은 어떻게 사용하나요?</div>
+        <div style="color: #f0f0f0">
+          단순히 '종료 날짜 및 시간'만 설정하세요. 지금부터 남은 시간이 표시됩니다.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">시작 시간과 종료 시간을 모두 설정하면 어떻게 되나요?</div>
+        <div style="color: #f0f0f0">
+          시간 차이와 카운트다운(시작 시간이 지금이거나 과거인 경우)을 모두 확인할 수 있습니다.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">음수 차이를 계산할 수 있나요?</div>
+        <div style="color: #f0f0f0">
+          네. 종료 시간이 시작 시간보다 이전이면 결과가 음수(“-” 기호 포함)로 표시됩니다.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 0">
+        <div style="color: #8f94fb; font-weight: bold">모바일 친화적인가요?</div>
+        <div style="color: #f0f0f0">
+          네! 이 도구는 반응형이며 스마트폰, 태블릿, 데스크톱에서 모두 작동합니다.
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

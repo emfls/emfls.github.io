@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>CRC 생성기 – 온라인 체크섬 계산기</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="텍스트 또는 헥스 데이터를 위한 CRC 체크섬(CRC32, CRC16, CRC-CCITT 등)을 빠르게 생성하세요. 100% 브라우저 기반, 개인 정보 보호 및 무료입니다." />
+    <meta name="keywords" content="crc, 체크섬, crc32, crc16, crc-ccitt, 해시, 계산기, 도구, 브라우저, 온라인" />
+    <meta name="author" content="Itagi" />
+    <meta name="language" content="ko" />
+    <link rel="canonical" href="https://emfls.github.io/kor/util/crc/index.html" />
+    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+    <meta property="og:title" content="CRC 생성기 – 온라인 체크섬 계산기" />
+    <meta
+      property="og:description"
+      content="브라우저에서 즉시 텍스트 또는 헥스 데이터의 CRC32, CRC16 등 체크섬을 계산하세요." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/kor/util/crc/index.html" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CRC 생성기 – 온라인 체크섬 계산기" />
+    <meta
+      name="twitter:description"
+      content="즉시 CRC 체크섬(CRC32, CRC16 등)을 계산하세요. 텍스트 또는 헥스 데이터 모두 지원합니다." />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <style>
+      :root {
+        --main: #20477f;
+      }
+      body {
+        background: #f8fbff;
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: #223;
+        margin: 0;
+      }
+      .container {
+        max-width: 440px;
+        margin: 42px auto 0 auto;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 24px #1a305820;
+        padding: 30px 16px 24px 16px;
+      }
+      .logo {
+        font-size: 1.32em;
+        font-weight: bold;
+        color: var(--main);
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      .desc {
+        text-align: center;
+        color: #286673;
+        margin-bottom: 15px;
+        font-size: 1.01em;
+      }
+      .input-row {
+        margin: 15px 0 8px 0;
+      }
+      .input-row label {
+        color: #234;
+        font-size: 1.03em;
+      }
+      textarea,
+      input[type="text"],
+      select {
+        width: 100%;
+        font-size: 1.06em;
+        border: 1.2px solid #b7d8f2;
+        border-radius: 8px;
+        padding: 10px;
+        margin-top: 4px;
+        box-sizing: border-box;
+        background: #fafdff;
+      }
+      select {
+        cursor: pointer;
+      }
+      .action-btn {
+        background: var(--main);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 13px 0;
+        width: 100%;
+        font-size: 1.13em;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 16px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 12px #20477f18;
+        transition: background 0.15s;
+      }
+      .action-btn:active {
+        background: #18335e;
+      }
+      .result-area {
+        min-height: 36px;
+        text-align: center;
+        color: #234;
+        background: #f2f8ff;
+        border-radius: 7px;
+        margin-top: 12px;
+        font-size: 1.22em;
+        border: 1.2px solid #d5e6fa;
+        padding: 12px 6px;
+        word-break: break-all;
+        font-family: "Fira Mono", monospace;
+      }
+      .footer {
+        color: #789;
+        text-align: center;
+        font-size: 0.94em;
+        margin-top: 18px;
+      }
+      #backBtn {
+        position: fixed;
+        left: 50%;
+        bottom: 32px;
+        transform: translateX(-50%);
+        background: var(--main);
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 2rem;
+        padding: 0.58em 1.5em;
+        box-shadow: 0 4px 16px #20477f22;
+        font-size: 1.09em;
+        text-decoration: none;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+        transition:
+          background 0.15s,
+          transform 0.12s;
+        z-index: 2000;
+      }
+      #backBtn:hover {
+        background: #18335e;
+        transform: translateX(-50%) scale(1.04);
+      }
+      @media (max-width: 600px) {
+        .container {
+          max-width: 99vw;
+          padding: 10px 2vw 12px 2vw;
+        }
+        #backBtn {
+          bottom: 18px;
+          font-size: 0.98em;
+          padding: 0.48em 1em;
+        }
+      }
+      section#faq { margin-top: 30px; }
+      section#faq h2 { margin-bottom: 13px; color: #20477f; font-size: 1.11em; text-align: center;}
+      section#faq dt { font-weight: bold; margin-top: 8px;}
+      section#faq dd { margin: 0 0 7px 0; font-size: 0.99em; color: #286673;}
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="container" itemscope itemtype="https://schema.org/WebApplication">
+        <h1 class="logo" itemprop="name">🔢 CRC 생성기</h1>
+        <p class="desc" itemprop="description">
+          텍스트 또는 헥스를 입력하고 CRC 유형을 선택한 후 즉시 체크섬을 확인하세요!<br />
+          <span style="color: #20477f; font-size: 0.96em">
+            데이터는 사용자의 브라우저를 벗어나지 않습니다.
+          </span>
+        </p>
+
+        <div class="input-row">
+          <label for="crcType" id="crcTypeLabel">CRC 종류</label>
+          <select id="crcType">
+            <option value="crc32">CRC-32</option>
+            <option value="crc16">CRC-16-IBM</option>
+            <option value="crc16ccitt">CRC-16-CCITT</option>
+          </select>
+        </div>
+        <div class="input-row">
+          <label for="inputText" id="inputTextLabel">입력 (텍스트 또는 헥스)</label>
+          <textarea id="inputText" rows="4" placeholder="텍스트나 헥스 문자열을 입력하세요"></textarea>
+        </div>
+        <button class="action-btn" id="calcBtn">CRC 계산</button>
+
+        <div class="result-area" id="resultArea"></div>
+
+        <div class="footer" id="footer">
+          <b>팁:</b> 펌웨어, 네트워크 패킷, 파일 검증 등에 사용하세요.<br />
+          <span style="color: #20477f">데이터는 절대 외부로 전송되지 않습니다.</span>
+        </div>
+
+        <!-- FAQ 섹션 (SEO/SGE 용) -->
+        <section aria-labelledby="faq-head" id="faq">
+          <h2 id="faq-head">FAQ – CRC 생성기 & 체크섬</h2>
+          <dl>
+            <dt>CRC란 무엇인가요?</dt>
+            <dd>CRC(순환 중복 검사)는 통신 또는 저장 중 데이터의 우발적 오류를 검출하기 위해 사용되는 해시 함수입니다.</dd>
+            <dt>어떤 CRC 유형을 지원하나요?</dt>
+            <dd>이 도구는 CRC-32, CRC-16-IBM, CRC-16-CCITT를 지원합니다. 향후 추가 알고리즘이 추가될 수 있습니다.</dd>
+            <dt>헥스 값을 입력할 수 있나요?</dt>
+            <dd>네, "0x" 접두어나 공백이 포함된 헥스 문자열을 입력할 수 있습니다. 예: "0x12 34 56" 또는 "123456".</dd>
+            <dt>내 데이터가 업로드되거나 저장되나요?</dt>
+            <dd>아니요. 모든 계산은 브라우저에서만 이루어집니다. 데이터는 기기를 벗어나지 않습니다.</dd>
+            <dt>CRC는 어디에 사용되나요?</dt>
+            <dd>CRC는 펌웨어 무결성 확인, 네트워크 패킷 검증, 파일 무결성 검사 등에 널리 사용됩니다.</dd>
+          </dl>
+        </section>
+      </div>
+    </main>
+    <a href="../index.html" id="backBtn">다른 유틸리티</a>
+    <script>
+      // CRC 계산 함수 (간단 구현)
+      function crc32(str) {
+        let crc = 0 ^ -1;
+        for (let i = 0; i < str.length; i++) {
+          crc =
+            (crc >>> 8) ^
+            [
+              0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3,
+              0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988, 0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91
+            ][(crc ^ str.charCodeAt(i)) & 0x0f];
+        }
+        return ((crc ^ -1) >>> 0).toString(16).toUpperCase().padStart(8, "0");
+      }
+      function crc16(str) {
+        let crc = 0xffff;
+        for (let i = 0; i < str.length; i++) {
+          crc ^= str.charCodeAt(i) << 8;
+          for (let j = 0; j < 8; j++) {
+            if (crc & 0x8000) crc = (crc << 1) ^ 0x8005;
+            else crc = crc << 1;
+          }
+          crc &= 0xffff;
+        }
+        return crc.toString(16).toUpperCase().padStart(4, "0");
+      }
+      function crc16ccitt(str) {
+        let crc = 0xffff;
+        for (let i = 0; i < str.length; i++) {
+          crc ^= str.charCodeAt(i) << 8;
+          for (let j = 0; j < 8; j++) {
+            crc = crc & 0x8000 ? (crc << 1) ^ 0x1021 : crc << 1;
+          }
+          crc &= 0xffff;
+        }
+        return crc.toString(16).toUpperCase().padStart(4, "0");
+      }
+
+      document.getElementById("calcBtn").onclick = function () {
+        const type = document.getElementById("crcType").value;
+        let text = document.getElementById("inputText").value;
+        if (!text.trim()) {
+          document.getElementById("resultArea").textContent = "입력된 텍스트가 없습니다.";
+          return;
+        }
+        // 헥스 입력 지원: 0x 접두어, 공백 허용
+        text = text.trim();
+        if (/^(0x)?[a-fA-F0-9\s]+$/.test(text)) {
+          text = text.replace(/0x/g, "").replace(/\s+/g, "");
+          text =
+            text
+              .match(/.{1,2}/g)
+              ?.map((byte) => String.fromCharCode(parseInt(byte, 16)))
+              .join("") || "";
+        }
+        let result = "";
+        if (type === "crc32") result = crc32(text);
+        else if (type === "crc16") result = crc16(text);
+        else if (type === "crc16ccitt") result = crc16ccitt(text);
+        document.getElementById("resultArea").textContent = result ? "CRC: " + result : "오류가 발생했습니다.";
+      };
+    </script>
+    <!-- FAQPage Schema for SGE/GEO/SEO Rich Results -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "CRC란 무엇인가요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "CRC(순환 중복 검사)는 통신 또는 저장 중 데이터의 오류를 검출하기 위해 사용되는 해시 함수입니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "어떤 CRC 유형을 지원하나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "이 도구는 CRC-32, CRC-16-IBM, CRC-16-CCITT를 지원합니다. 향후 추가 알고리즘이 추가될 수 있습니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "헥스 값을 입력할 수 있나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "네, \"0x\" 접두어 또는 공백이 포함된 헥스 문자열을 입력할 수 있습니다. 예: \"0x12 34 56\" 또는 \"123456\"."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "내 데이터가 업로드되거나 저장되나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "아니요. 모든 계산은 브라우저에서만 이루어집니다. 데이터는 기기를 벗어나지 않습니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "CRC는 어디에 사용되나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "CRC는 펌웨어 무결성 검사, 네트워크 패킷 검증, 파일 무결성 확인 등에 널리 사용됩니다."
+          }
+        }
+      ]
+    }
+    </script>
+  </body>
+</html>

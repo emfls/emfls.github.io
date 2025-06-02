@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>BMI 계산기 – 체질량지수 & 신체 측정</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="키와 몸무게를 입력하여 즉시 BMI(체질량지수)를 계산하세요. BMI 수치, 분류, 권장 범위를 확인할 수 있습니다. 100% 무료, 브라우저 기반, 모바일 친화적입니다." />
+  <meta name="keywords" content="bmi, 체질량지수, 건강, 계산기, 체중, 키, 비만도, 몸, 피트니스, 측정" />
+  <meta name="author" content="Itagi" />
+  <meta name="language" content="ko" />
+  <meta name="theme-color" content="#2e74d1" />
+  <link rel="canonical" href="https://emfls.github.io/kor/util/bmi/" />
+  <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+  <meta property="og:title" content="BMI 계산기 – 체질량지수 & 신체 측정"/>
+  <meta property="og:description" content="키와 몸무게를 입력하여 몇 초 만에 BMI(체질량지수)를 확인하세요! 즉시 결과를 제공합니다."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://emfls.github.io/kor/util/bmi/"/>
+  <meta property="og:image" content="https://emfls.github.io/thumbnail.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="BMI 계산기 – 체질량지수 & 신체 측정"/>
+  <meta name="twitter:description" content="키와 몸무게를 입력하여 즉시 BMI를 계산하세요. 건강한 체중 범위를 확인할 수 있습니다. 업로드 불필요, 100% 브라우저 기반."/>
+  <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png"/>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag("js", new Date());
+    gtag("config", "G-QP5Q67GE5B");
+  </script>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+    crossorigin="anonymous"></script>
+  <style>
+    :root { --main: #2e74d1; --bg: #f7fafd; }
+    html, body { margin: 0; padding: 0; background: var(--bg); }
+    body { font-family: "Segoe UI", Arial, sans-serif; color: #234; }
+    .container {
+      max-width: 370px;
+      margin: 34px auto 0 auto;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 4px 22px #2e74d111;
+      padding: 28px 16px 21px 16px;
+    }
+    .title { text-align: center; font-size: 1.25em; color: var(--main); font-weight: bold; margin-bottom: 8px; }
+    .desc { text-align: center; color: #4a73a5; font-size: 1.02em; margin-bottom: 20px; }
+    .form-row {
+      display: flex; flex-direction: column; gap: 7px; margin-bottom: 13px;
+    }
+    .form-row label { font-size: 1em; color: #2264c3; font-weight: 500; }
+    .form-row input[type="number"] {
+      box-sizing: border-box;
+      padding: 10px 10px;
+      border-radius: 7px;
+      border: 1.2px solid #bfd8ff;
+      font-size: 1.09em;
+      width: 100%;
+      background: #fafdff;
+      color: #234;
+      transition: border 0.15s;
+    }
+    .form-row input[type="number"]:focus { border-color: var(--main); }
+    .btn {
+      background: var(--main); color: #fff; border: none; border-radius: 8px;
+      padding: 13px 0; width: 100%; font-size: 1.13em; font-weight: bold; cursor: pointer;
+      margin-top: 7px; margin-bottom: 9px; box-shadow: 0 2px 12px #2e74d122;
+      transition: background 0.16s;
+    }
+    .btn:active { background: #194e99; }
+    .result {
+      background: #eaf3ff;
+      border-radius: 12px;
+      color: #144c91;
+      font-size: 1.07em;
+      padding: 13px 11px 9px 11px;
+      text-align: center;
+      margin-bottom: 9px;
+      min-height: 44px;
+      font-weight: 500;
+      word-break: break-word;
+    }
+    .bmi-table {
+      margin: 15px auto 5px auto;
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 0.98em;
+      background: #fafdff;
+      box-shadow: 0 2px 8px #bbe7ff24;
+    }
+    .bmi-table th, .bmi-table td {
+      border: 1px solid #c5e1fa;
+      padding: 6px 4px;
+      text-align: center;
+    }
+    .bmi-table th { background: #e1eefe; color: #2274ba; }
+    .bmi-table td { background: #fff; }
+    section#faq { margin-top: 26px; }
+    section#faq h2 { margin-bottom: 13px; color: #2e74d1; font-size: 1.14em; text-align: center; }
+    section#faq dt { font-weight: bold; margin-top: 9px; }
+    section#faq dd { margin: 0 0 7px 0; font-size: 0.99em; color: #24528a; }
+    .footer { color: #789; text-align: center; font-size: 0.94em; margin-top: 16px; }
+    #backBtn {
+      position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%);
+      background: #2e74d1; color: #fff; font-weight: 700; border: none; border-radius: 2rem;
+      padding: 0.58em 1.5em; box-shadow: 0 4px 16px #2e74d166; font-size: 1.09em; text-decoration: none;
+      cursor: pointer; letter-spacing: 0.01em; transition: background 0.15s, transform 0.12s; z-index: 2000;
+    }
+    #backBtn:hover { background: #144c91; transform: translateX(-50%) scale(1.04); }
+    @media (max-width: 520px) {
+      .container { max-width: 98vw; padding: 11px 2vw 10px 2vw; }
+      #backBtn { bottom: 18px; font-size: 0.98em; padding: 0.48em 1em; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="container" itemscope itemtype="https://schema.org/HealthApplication">
+      <h1 class="title" itemprop="name">🏃 BMI 계산기</h1>
+      <p class="desc" itemprop="description">
+        체질량지수(BMI)를 즉시 계산하세요.<br>
+        키(cm)와 몸무게(kg)를 입력하면 결과가 바로 표시됩니다!
+      </p>
+      <form id="bmiForm" autocomplete="off">
+        <div class="form-row">
+          <label for="height">키 (cm)</label>
+          <input type="number" id="height" min="80" max="250" step="0.1" required placeholder="예: 170" />
+        </div>
+        <div class="form-row">
+          <label for="weight">몸무게 (kg)</label>
+          <input type="number" id="weight" min="20" max="250" step="0.1" required placeholder="예: 60" />
+        </div>
+        <button type="submit" class="btn">BMI 계산하기</button>
+      </form>
+      <div class="result" id="bmiResult">키와 몸무게를 입력해주세요.</div>
+      <table class="bmi-table">
+        <tr><th>BMI 범위</th><th>분류</th></tr>
+        <tr><td>&lt; 18.5</td><td>저체중</td></tr>
+        <tr><td>18.5 ~ 24.9</td><td>정상</td></tr>
+        <tr><td>25 ~ 29.9</td><td>과체중</td></tr>
+        <tr><td>30 ~ 34.9</td><td>비만 (1단계)</td></tr>
+        <tr><td>35 ~ 39.9</td><td>비만 (2단계)</td></tr>
+        <tr><td>&ge; 40</td><td>고도비만</td></tr>
+      </table>
+
+      <!-- FAQ 섹션 (SEO/SGE 용) -->
+      <section aria-labelledby="faq-head" id="faq">
+        <h2 id="faq-head">FAQ – BMI & 건강</h2>
+        <dl>
+          <dt>BMI란 무엇인가요?</dt>
+          <dd>BMI(체질량지수)는 키와 몸무게를 이용해 계산하는 지표로, 체지방량을 추정하여 건강 위험을 평가하는 데 사용됩니다.</dd>
+          <dt>BMI는 정확한가요?</dt>
+          <dd>BMI는 일반적인 기준으로, 근육량이 많거나 매우 운동량이 많은 사람의 경우 실제 체지방과 다를 수 있습니다.</dd>
+          <dt>정상 BMI 범위는?</dt>
+          <dd>대부분 성인의 경우 BMI가 18.5에서 24.9 사이가 정상 범위로 간주됩니다.</dd>
+          <dt>나이 또는 성별에 따라 BMI가 달라지나요?</dt>
+          <dd>성인 남녀의 BMI 기준은 동일하지만, 어린이나 청소년의 경우 나이와 성별에 따른 백분위수를 사용합니다.</dd>
+          <dt>BMI를 개선하려면 어떻게 해야 하나요?</dt>
+          <dd>건강한 식단과 규칙적인 운동으로 정상 범위에 접근할 수 있습니다. 전문 의료진과 상담하는 것이 좋습니다.</dd>
+        </dl>
+      </section>
+      <footer class="footer">
+        BMI는 간단한 건강 지표입니다.<br>
+        자기 상태에 맞는 자세한 건강 관리는 의료 전문가의 상담을 권장합니다.
+      </footer>
+    </div>
+  </main>
+  <a href="../index.html" id="backBtn">다른 유틸리티</a>
+  <script>
+    const bmiForm = document.getElementById('bmiForm');
+    const bmiResult = document.getElementById('bmiResult');
+    function bmiCategory(bmi) {
+      if (bmi < 18.5) return "저체중";
+      if (bmi < 25) return "정상";
+      if (bmi < 30) return "과체중";
+      if (bmi < 35) return "비만 (1단계)";
+      if (bmi < 40) return "비만 (2단계)";
+      return "고도비만";
+    }
+    bmiForm.onsubmit = function(e) {
+      e.preventDefault();
+      const h = parseFloat(document.getElementById('height').value) / 100.0;
+      const w = parseFloat(document.getElementById('weight').value);
+      if (!h || !w || h < 0.8 || w < 20) {
+        bmiResult.textContent = "올바른 키와 몸무게를 입력해주세요.";
+        return;
+      }
+      const bmi = w / (h * h);
+      const cat = bmiCategory(bmi);
+      bmiResult.innerHTML = `<b>BMI: ${bmi.toFixed(1)}</b> – <span style="color:#1c7b49;font-weight:600">${cat}</span>`;
+    };
+  </script>
+  <!-- FAQPage Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "BMI란 무엇인가요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "BMI(체질량지수)는 키와 몸무게를 이용해 계산하는 지표로, 체지방량을 추정하여 건강 위험을 평가하는 데 사용됩니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "BMI는 정확한가요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "BMI는 일반적인 기준으로, 근육량이 많거나 매우 운동량이 많은 사람의 경우 실제 체지방과 다를 수 있습니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "정상 BMI 범위는?",
+        "acceptedAnswer": { "@type": "Answer", "text": "대부분 성인의 경우 BMI가 18.5에서 24.9 사이가 정상 범위로 간주됩니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "나이 또는 성별에 따라 BMI가 달라지나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "성인 남녀의 BMI 기준은 동일하지만, 어린이나 청소년의 경우 나이와 성별에 따른 백분위수를 사용합니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "BMI를 개선하려면 어떻게 해야 하나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "건강한 식단과 규칙적인 운동으로 정상 범위에 접근할 수 있습니다. 전문 의료진과 상담하는 것이 좋습니다." }
+      }
+    ]
+  }
+  </script>
+</body>
+</html>

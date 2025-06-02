@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="Flappy Dot에서 폭탄을 피하며 최대한 멀리 날아보세요! 간단하고 중독성 있는 모바일 친화적인 브라우저 게임을 무료로 즐기세요." />
+        <meta
+            name="keywords"
+            content="플래피 닷, 플래피 버드, 퀵플레이, 아케이드, 비행 게임, 폭탄 피하기, 무료 게임, 온라인, 브라우저, 모바일, 최고 점수, 스킬 게임, 캐주얼" />
+        <meta name="author" content="Itagi" />
+        <meta name="robots" content="index, follow" />
+
+        <link rel="canonical" href="https://emfls.github.io/kor/game/FlappyDot" />
+
+        <meta property="og:title" content="플래피 닷 – 무료 온라인 퀵플레이 게임!" />
+        <meta
+            property="og:description"
+            content="최고 점수에 도전해 보세요! 플래피 닷에서 비행하고, 폭탄을 피하고, 친구들에게 도전하세요." />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta property="og:url" content="https://emfls.github.io/kor/game/FlappyDot" />
+        <meta property="og:type" content="website" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="플래피 닷 – 무료 온라인 퀵플레이 게임!" />
+        <meta
+            name="twitter:description"
+            content="폭탄을 피하며 최대한 멀리 날아보세요! 플래피 닷을 온라인에서 무료로 플레이하고 최고 점수를 위해 경쟁하세요." />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+        <title>퀵플레이: 플래피 닷</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                background: #70c5ce;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                height: 100vh;
+                flex-direction: column;
+            }
+
+            canvas {
+                background: #70c5ce;
+                display: block;
+                border: 2px solid #333;
+                margin-top: 20px;
+            }
+
+            .overlay {
+                position: absolute;
+                top: 20px;
+                display: flex;
+                gap: 10px;
+            }
+
+            button {
+                padding: 10px 18px;
+                font-size: 16px;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                background-color: #ffffffcc;
+                font-weight: bold;
+                margin-top: 350px;
+            }
+
+            button:hover {
+                background-color: #fff;
+            }
+
+            h1 {
+                margin-top: 10px;
+            }
+
+            #jumpButtonWrapper {
+                margin-top: 0px;
+            }
+
+            #jumpButton {
+                font-size: 18px;
+                font-weight: bold;
+                background-color: #ffcc00;
+                color: #333;
+                border: none;
+                border-radius: 30px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+                cursor: pointer;
+                height: 70px;
+            }
+
+            #jumpButton:active {
+                transform: scale(0.95);
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1 style="font-family: &quot;Arial Black&quot;, sans-serif; font-size: 28px; margin-bottom: 6px">플래피 닷</h1>
+        <p style="font-size: 14px; color: white; margin-bottom: 12px">폭탄을 피하며 최대한 멀리 날아보세요!</p>
+
+        <canvas id="gameCanvas" width="300" height="450"></canvas>
+        <div class="overlay" id="menu">
+            <button onclick="startGame()">게임 시작</button>
+        </div>
+        <div class="overlay" id="gameoverMenu" style="display: none">
+            <button onclick="resetGame()">다시 시작</button>
+            <button onclick="shareScore()">공유</button>
+        </div>
+
+        <script>
+            const canvas = document.getElementById("gameCanvas");
+            const ctx = canvas.getContext("2d");
+            const menu = document.getElementById("menu");
+            const gameoverMenu = document.getElementById("gameoverMenu");
+
+            const bird = {
+                x: 60,
+                y: 200,
+                width: 20,
+                height: 20,
+                gravity: 0.6,
+                lift: -7,
+                velocity: 0
+            };
+
+            const bombs = [];
+            const explosions = [];
+            const clouds = [
+                {
+                    x: 100,
+                    y: 50
+                },
+                {
+                    x: 250,
+                    y: 120
+                },
+                {
+                    x: 400,
+                    y: 80
+                }
+            ];
+
+            let score = 0;
+            let gameOver = false;
+            let frames = 0;
+            let gameStarted = false;
+            let requestId = null;
+            let lastTime = 0;
+
+            function drawClouds() {
+                ctx.fillStyle = "rgba(255,255,255,0.8)";
+                clouds.forEach((cloud) => {
+                    ctx.beginPath();
+                    ctx.arc(cloud.x, cloud.y, 20, 0, Math.PI * 2);
+                    ctx.arc(cloud.x + 25, cloud.y + 5, 25, 0, Math.PI * 2);
+                    ctx.arc(cloud.x + 50, cloud.y, 20, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            }
+
+            function updateClouds() {
+                clouds.forEach((cloud) => {
+                    cloud.x -= 0.3;
+                    if (cloud.x < -60) cloud.x = canvas.width + Math.random() * 100;
+                });
+            }
+
+            function drawBird() {
+                const centerX = bird.x + bird.width / 2;
+                const centerY = bird.y + bird.height / 2;
+                const radius = bird.width * 0.8;
+                const flapOffset = Math.sin(frames / 5) * 4;
+
+                ctx.beginPath();
+                ctx.fillStyle = "#fcdc3c";
+                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.fillStyle = "#e6b800";
+                ctx.arc(centerX - 10, centerY + 5 + flapOffset, radius * 0.4, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.fillStyle = "white";
+                ctx.arc(centerX + 6, centerY - 6, 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.fillStyle = "black";
+                ctx.arc(centerX + 6, centerY - 6, 2, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.fillStyle = "#ff9900";
+                ctx.moveTo(centerX + radius, centerY);
+                ctx.lineTo(centerX + radius + 8, centerY - 5);
+                ctx.lineTo(centerX + radius + 8, centerY + 5);
+                ctx.fill();
+            }
+
+            function drawBombs() {
+                for (let bomb of bombs) {
+                    ctx.beginPath();
+                    ctx.fillStyle = "black";
+                    ctx.arc(bomb.x + 10, bomb.y + 10, 10, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.strokeStyle = "white";
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(bomb.x + 4, bomb.y + 4);
+                    ctx.lineTo(bomb.x + 16, bomb.y + 16);
+                    ctx.moveTo(bomb.x + 16, bomb.y + 4);
+                    ctx.lineTo(bomb.x + 4, bomb.y + 16);
+                    ctx.stroke();
+                }
+            }
+
+            function drawExplosions() {
+                for (let i = explosions.length - 1; i >= 0; i--) {
+                    const exp = explosions[i];
+                    ctx.beginPath();
+                    ctx.fillStyle = `rgba(255, 100, 0, ${exp.alpha})`;
+                    ctx.arc(exp.x, exp.y, exp.radius, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    exp.radius += 1;
+                    exp.alpha -= 0.02;
+
+                    if (exp.alpha <= 0) explosions.splice(i, 1);
+                }
+            }
+
+            function update(delta) {
+                if (!gameStarted || gameOver) return;
+
+                bird.velocity += bird.gravity * delta * 60;
+                bird.y += bird.velocity * delta * 60;
+
+                if (bird.y + bird.height > canvas.height || bird.y < 0) gameOver = true;
+
+                if (frames % 40 === 0) {
+                    const bombCount = Math.min(1 + Math.floor(score / 5), 6);
+                    for (let i = 0; i < bombCount; i++) {
+                        const bombY = Math.random() * (canvas.height - 40);
+                        bombs.push({
+                            x: canvas.width,
+                            y: bombY
+                        });
+                    }
+                }
+
+                for (let bomb of bombs) {
+                    bomb.x -= (2 + Math.min(score / 20, 3)) * delta * 60;
+                    if (
+                        bird.x < bomb.x + 20 &&
+                        bird.x + bird.width > bomb.x &&
+                        bird.y < bomb.y + 20 &&
+                        bird.y + bird.height > bomb.y
+                    ) {
+                        explosions.push({
+                            x: bomb.x + 10,
+                            y: bomb.y + 10,
+                            radius: 10,
+                            alpha: 1
+                        });
+                        gameOver = true;
+                    }
+                }
+
+                if (bombs.length && bombs[0].x + 20 < 0) bombs.shift();
+                updateClouds();
+
+                if (frames % 60 === 0) score++;
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawClouds();
+                drawBird();
+                drawBombs();
+                drawExplosions();
+
+                ctx.fillStyle = "black";
+                ctx.font = "20px Arial";
+                ctx.fillText("Score: " + score, 10, 30);
+
+                if (gameOver) {
+                    ctx.fillStyle = "red";
+                    ctx.font = "32px Arial";
+                    ctx.fillText("Game Over", canvas.width / 2 - 80, canvas.height / 2 - 100);
+                    gameoverMenu.style.display = "flex";
+                }
+            }
+
+            function gameLoop(timestamp) {
+                if (!lastTime) lastTime = timestamp;
+                const delta = (timestamp - lastTime) / 1000;
+                lastTime = timestamp;
+
+                update(delta);
+                draw();
+                frames++;
+
+                if (!gameOver || explosions.length > 0) {
+                    requestId = requestAnimationFrame(gameLoop);
+                }
+            }
+
+            function startGame() {
+                bird.velocity = 0;
+                gameStarted = true;
+                menu.style.display = "none";
+                lastTime = performance.now();
+                requestAnimationFrame(gameLoop);
+            }
+
+            function resetGame() {
+                bird.y = 200;
+                bird.velocity = 0;
+                bombs.length = 0;
+                explosions.length = 0;
+                score = 0;
+                frames = 0;
+                gameOver = false;
+                gameStarted = true;
+                gameoverMenu.style.display = "none";
+                menu.style.display = "none";
+                lastTime = performance.now();
+                requestAnimationFrame(gameLoop);
+            }
+
+            function shareScore() {
+                const url = window.location.href;
+                const text = `🐤 플래피 닷에서 ${score}점 획득! 당신도 도전해보세요!`; // 점수 공유 메시지 한글화
+                if (navigator.share) {
+                    navigator
+                        .share({
+                            title: "퀵플레이: 플래피 닷", // 타이틀 한글화
+                            text,
+                            url
+                        })
+                        .catch(() => alert("공유에 실패했습니다. 링크를 복사해 보세요.")); // 에러 메시지 한글화
+                } else {
+                    const full = `${text}\n${url}`;
+                    navigator.clipboard
+                        .writeText(full)
+                        .then(() => alert("점수가 포함된 링크가 클립보드에 복사되었습니다!")) // 성공 메시지 한글화
+                        .catch(() => alert(`이 링크를 복사하세요:\n${full}`)); // 에러 메시지 한글화
+                }
+            }
+
+            function flap() {
+                if (gameOver) return;
+                bird.velocity = bird.lift;
+            }
+
+            document.addEventListener("keydown", (e) => {
+                if (e.code === "Space") {
+                    if (!gameStarted) startGame();
+                    flap();
+                }
+            });
+
+            canvas.addEventListener("mousedown", flap);
+            canvas.addEventListener(
+                "touchstart",
+                (e) => {
+                    e.preventDefault();
+                    flap();
+                },
+                {
+                    passive: false
+                }
+            );
+        </script>
+
+        <button style="margin-top: 20px; width: 90%; height: 60px" onclick="window.location.href='/'">
+            📂 다른 게임들
+        </button>
+        <section
+            style="
+                width: 95%;
+                max-width: 420px;
+                margin: 60px auto;
+                padding: 20px;
+                font-family: &quot;Segoe UI&quot;, sans-serif;
+                background: #fffbea;
+                color: #2d3436;
+                border-radius: 10px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                line-height: 1.6;
+                font-size: 14px;
+            ">
+            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ 자주 묻는 질문 (FAQ)</h2>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q1. 플래피 닷은 어떤 게임인가요?</strong><br />
+                A. 플래피 닷은 화면을 탭하거나 스페이스바를 눌러 점프하고 폭탄을 피하며 최대한 멀리 비행하는 캐주얼 비행
+                게임입니다.
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q2. 게임은 어떻게 조작하나요?</strong><br />
+                A. 모바일에서는 화면을 탭하고, PC에서는 스페이스바를 눌러 점프하며 공중에 머무르세요.
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q3. 게임은 언제 끝나나요?</strong><br />
+                A. 점이 폭탄에 맞거나 화면 밖으로 나가면 게임이 종료됩니다. 폭발이 게임 오버를 나타냅니다.
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q4. 점수를 더 얻을수록 게임이 어려워지나요?</strong><br />
+                A. 네! 점수가 높아질수록 폭탄의 수와 속도가 증가하여 계속 도전적인 재미를 선사합니다.
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q5. 모바일 기기에서도 플레이할 수 있나요?</strong><br />
+                A. 물론입니다. 플래피 닷은 모바일 친화적이며 다운로드 없이 즐길 수 있습니다.
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q6. 점수를 어떻게 공유하나요?</strong><br />
+                A. 게임이 끝난 후 <strong>공유</strong> 버튼을 탭하여 기기를 통해 점수와 게임 링크를 공유하거나
+                클립보드에 복사할 수 있습니다.
+            </div>
+        </section>
+    </body>
+</html>

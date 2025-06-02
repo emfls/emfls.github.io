@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="무료 온라인 4목 게임을 플레이하세요! 친구나 컴퓨터와 함께 이 클래식 2인 전략 게임을 즐겨보세요. 간단하고 빠르며 모바일 친화적입니다."
+        />
+        <meta
+            name="keywords"
+            content="4목, 커넥트 포, 온라인 게임, 무료 게임, 2인용, AI 대전, 전략 게임, 보드 게임, 브라우저, 모바일, 퍼즐, 고전"
+        />
+        <meta name="author" content="Itagi" />
+        <meta name="robots" content="index, follow" />
+
+        <link rel="canonical" href="https://emfls.github.io/kor/game/ConnectFour" />
+
+        <meta property="og:title" content="4목 – 무료 온라인 2인 게임!" />
+        <meta
+            property="og:description"
+            content="브라우저에서 4목을 무료로 플레이하세요! 친구나 AI를 상대로 가로, 세로, 대각선으로 4개를 연결하여 승리하세요."
+        />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta property="og:url" content="https://emfls.github.io/kor/game/ConnectFour" />
+        <meta property="og:type" content="website" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="4목 – 무료 온라인 2인 게임!" />
+        <meta
+            name="twitter:description"
+            content="온라인 4목 게임을 플레이하세요 – 친구와 경쟁하거나 AI를 이겨보세요! 다운로드 필요 없음."
+        />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"
+        ></script>
+        <title>4목</title>
+        <style>
+            * {
+                box-sizing: border-box;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                background: #f5f7fa;
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                user-select: none;
+                -webkit-user-select: none;
+            }
+
+            #wrapper {
+                width: 90vw;
+                max-width: 400px;
+                margin: 24px auto;
+                text-align: center;
+            }
+
+            h1 {
+                margin: 0 0 6px 0;
+                font-size: 2rem;
+                font-weight: 900;
+                letter-spacing: 0.02em;
+            }
+
+            .desc {
+                font-size: 1.04rem;
+                margin-bottom: 12px;
+                color: #666;
+                white-space: nowrap;
+            }
+
+            #modeSel {
+                margin-bottom: 10px;
+                display: flex;
+                gap: 8px;
+                justify-content: center;
+            }
+
+            .modebtn {
+                padding: 0.45em 1.2em;
+                border-radius: 1.5em;
+                font-size: 1rem;
+                font-weight: bold;
+                border: none;
+                cursor: pointer;
+                background: #e4eaf7;
+                color: #284c7b;
+                transition:
+                    background 0.12s,
+                    color 0.12s;
+            }
+
+            .modebtn.active {
+                background: #467be6;
+                color: #fff;
+            }
+
+            #board {
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                grid-template-rows: repeat(6, 1fr);
+                gap: 4px;
+                background: #3050a0;
+                border-radius: 12px;
+                padding: 6px;
+                width: 100%;
+                aspect-ratio: 7/6;
+                margin: 0 auto 12px auto;
+                touch-action: manipulation;
+            }
+
+            .cell {
+                background: #e4eaf7;
+                border-radius: 50%;
+                width: 100%;
+                aspect-ratio: 1/1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 2rem;
+                cursor: pointer;
+                transition: background 0.12s;
+            }
+
+            .cell.filled {
+                cursor: default;
+            }
+
+            #turn {
+                margin-bottom: 10px;
+                font-weight: bold;
+                font-size: 1.1rem;
+                letter-spacing: 0.02em;
+            }
+
+            #overMsg {
+                font-size: 1.14rem;
+                font-weight: bold;
+                color: #e24a4a;
+                margin: 18px 0 10px 0;
+            }
+
+            .btns {
+                display: flex;
+                gap: 8px;
+                margin: 0 auto 0 auto;
+                justify-content: center;
+                flex-wrap: wrap;
+                width: 100%;
+            }
+
+            .btn {
+                flex: 1 1 42%;
+                min-width: 98px;
+                max-width: 180px;
+                background: #467be6;
+                color: #fff;
+                border: none;
+                border-radius: 1.5em;
+                padding: 0.68em 0;
+                font-size: 1rem;
+                font-weight: 600;
+                box-shadow: 0 2px 8px #17448c12;
+                margin-bottom: 8px;
+                cursor: pointer;
+                transition: background 0.12s;
+            }
+
+            .btn:active {
+                background: #2856ad;
+            }
+
+            #otherGames {
+                width: 90%;
+                max-width: 400px;
+                margin: 20px auto 0 auto;
+                background: #e6e8f2;
+                border-radius: 1.4em;
+                color: #365ca0;
+                border: none;
+                padding: 0.82em 0;
+                font-size: 1rem;
+                font-weight: bold;
+                text-decoration: none;
+                display: block;
+                box-shadow: 0 1px 5px #bccbe822;
+                letter-spacing: 0.03em;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="wrapper">
+            <h1>4목</h1>
+            <div class="desc">가로, 세로, 대각선으로 4개 연결하면 승리!</div>
+            <div id="modeSel">
+                <button class="modebtn active" id="mode2p" onclick="setMode('2p')">2인 플레이어</button>
+                <button class="modebtn" id="modeai" onclick="setMode('ai')">AI와 대결</button>
+            </div>
+            <div id="turn"></div>
+            <div id="board"></div>
+            <div id="overMsg"></div>
+            <div class="btns" id="gameBtns" style="display: none">
+                <button class="btn" onclick="restart()">다시 시작</button>
+                <button class="btn" onclick="share()">공유</button>
+            </div>
+            <a id="otherGames" href="../" style="margin-top: 22px">다른 게임들</a>
+        </div>
+        <script>
+            // Prevent selection/drag on mobile
+            document.addEventListener(
+                "touchmove",
+                (e) => {
+                    if (e.scale !== 1) e.preventDefault();
+                },
+                {
+                    passive: false
+                }
+            );
+            document.body.addEventListener("dragstart", (e) => e.preventDefault());
+            document.body.addEventListener("selectstart", (e) => e.preventDefault());
+
+            const ROWS = 6,
+                COLS = 7;
+            let board, turn, over, winner;
+            let mode = "2p"; // "2p" or "ai"
+            const COLORS = ["🔵", "🟡"];
+
+            function emptyBoard() {
+                return Array.from(
+                    {
+                        length: ROWS
+                    },
+                    () => Array(COLS).fill(null)
+                );
+            }
+
+            function render() {
+                const boardDiv = document.getElementById("board");
+                boardDiv.innerHTML = "";
+                for (let r = 0; r < ROWS; r++) {
+                    for (let c = 0; c < COLS; c++) {
+                        let cell = document.createElement("div");
+                        cell.className = "cell" + (board[r][c] !== null ? " filled" : "");
+                        cell.dataset.col = c;
+                        cell.style.pointerEvents = over ? "none" : "";
+                        cell.innerHTML = board[r][c] !== null ? COLORS[board[r][c]] : "";
+                        cell.onclick = () => {
+                            if (over) return;
+                            if (mode === "ai" && turn === 1) return; // AI 차례엔 클릭 무효
+                            if (playerMove(c)) {
+                                render();
+                                if (mode === "ai" && !over && turn === 1) {
+                                    setTimeout(aiMove, 350); // 약간의 지연
+                                }
+                            }
+                        };
+                        boardDiv.appendChild(cell);
+                    }
+                }
+                let msg = "";
+                if (!over) {
+                    msg = COLORS[turn] + (mode === "ai" ? (turn === 0 ? " (당신)" : " (AI)") : "") + " 차례";
+                } else if (winner !== null)
+                    msg = COLORS[winner] + (mode === "ai" ? (winner === 0 ? " (당신)" : " (AI)") : "") + " 승리!";
+                else msg = "무승부!";
+                document.getElementById("turn").textContent = msg;
+                document.getElementById("overMsg").textContent = over && winner !== null ? msg : over ? "무승부!" : "";
+                document.getElementById("gameBtns").style.display = over ? "flex" : "none";
+                document.getElementById("mode2p").classList.toggle("active", mode === "2p");
+                document.getElementById("modeai").classList.toggle("active", mode === "ai");
+            }
+
+            // 플레이어(또는 2P)가 실제 돌을 두는 함수 (실제 상태 갱신)
+            function playerMove(col) {
+                if (over) return false;
+                for (let r = ROWS - 1; r >= 0; r--) {
+                    if (board[r][col] === null) {
+                        board[r][col] = turn;
+                        // 실제 승리/무승부 판정은 여기서만!
+                        if (checkWin(r, col, turn)) {
+                            over = true;
+                            winner = turn;
+                        } else if (board.flat().every((cell) => cell !== null)) {
+                            over = true;
+                            winner = null;
+                        } else {
+                            turn = 1 - turn;
+                        }
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            // AI, 시뮬레이션 등에서 임시로 놓아보는 함수 (over/winner 상태 영향 X)
+            function tryMove(col, whichTurn) {
+                for (let r = ROWS - 1; r >= 0; r--) {
+                    if (board[r][col] === null) {
+                        board[r][col] = whichTurn;
+                        return r;
+                    }
+                }
+                return -1;
+            }
+
+            function undoMove(col) {
+                for (let r = 0; r < ROWS; r++) {
+                    if (board[r][col] !== null) {
+                        board[r][col] = null;
+                        break;
+                    }
+                }
+            }
+
+            function checkWin(r, c, color) {
+                return (
+                    count(r, c, 0, 1, color) + count(r, c, 0, -1, color) > 2 ||
+                    count(r, c, 1, 0, color) + count(r, c, -1, 0, color) > 2 ||
+                    count(r, c, 1, 1, color) + count(r, c, -1, -1, color) > 2 ||
+                    count(r, c, 1, -1, color) + count(r, c, -1, 1, color) > 2
+                );
+            }
+
+            function count(r, c, dr, dc, color) {
+                let cnt = 0;
+                for (let i = 1; i < 4; i++) {
+                    let nr = r + dr * i,
+                        nc = c + dc * i;
+                    if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) break;
+                    if (board[nr][nc] === color) cnt++;
+                    else break;
+                }
+                return cnt;
+            }
+
+            function restart() {
+                board = emptyBoard();
+                turn = 0;
+                over = false;
+                winner = null;
+                render();
+            }
+
+            function setMode(m) {
+                if (mode !== m) {
+                    mode = m;
+                    restart();
+                }
+            }
+
+            function aiMove() {
+                if (over || turn !== 1) return;
+
+                let validCols = [];
+                for (let c = 0; c < COLS; c++) if (board[0][c] === null) validCols.push(c);
+
+                // 1. AI가 이길 수 있는 곳 찾기
+                for (let ci of validCols) {
+                    let row = tryMove(ci, 1);
+                    if (row !== -1 && checkWin(row, ci, 1)) {
+                        undoMove(ci);
+                        playerMove(ci); // 실제로 둠 (AI 차례에)
+                        render();
+                        return;
+                    }
+                    if (row !== -1) undoMove(ci);
+                }
+                // 2. 플레이어가 이길 수 있는 곳 막기
+                for (let ci of validCols) {
+                    let row = tryMove(ci, 0);
+                    if (row !== -1 && checkWin(row, ci, 0)) {
+                        undoMove(ci);
+                        playerMove(ci); // 막기 위해 둠
+                        render();
+                        return;
+                    }
+                    if (row !== -1) undoMove(ci);
+                }
+                // 3. 중앙 우선
+                let bestCols = [3, 2, 4, 1, 5, 0, 6].filter((c) => validCols.includes(c));
+                let col = bestCols.length > 0 ? bestCols[0] : validCols[Math.floor(Math.random() * validCols.length)];
+                playerMove(col); // 랜덤(중앙 우선)
+                render();
+            }
+
+            function share() {
+                const url = location.href;
+                if (navigator.share) {
+                    navigator.share({
+                        title: "4목",
+                        url
+                    });
+                } else {
+                    navigator.clipboard.writeText(url);
+                    alert("링크가 복사되었습니다!");
+                }
+            }
+            // init
+            restart();
+        </script>
+        <section
+            style="
+                width: 90%;
+                max-width: 420px;
+                margin: 40px auto 80px auto;
+                padding: 20px;
+                background: #ffffff;
+                border: 1px solid #ccc;
+                border-radius: 12px;
+                font-family: &quot;Segoe UI&quot;, sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+                color: #2e2e2e;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            "
+        >
+            <h2 style="font-size: 18px; margin-bottom: 1rem; color: #365ca0">❓ 자주 묻는 질문 (FAQ)</h2>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q1. 4목은 어떻게 플레이하나요?</strong><br />
+                A. 열을 탭하여 토큰을 떨어뜨리세요. 가로, 세로 또는 대각선으로 4개를 먼저 연결하는 플레이어가 승리합니다.
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q2. 게임 모드에는 어떤 것이 있나요?</strong><br />
+                A. 친구와 함께 플레이하는 "2인 플레이어" 모드 또는 컴퓨터와 대결하는 "AI와 대결" 모드 중에서 선택할 수 있습니다.
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q3. AI는 얼마나 똑똑한가요?</strong><br />
+                A. AI는 승리할 수 있는 수를 확인하고, 당신의 잠재적인 승리 경로를 막습니다. 또한 더 나은 전략을 위해 중앙 열을 선호합니다.
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q4. 게임 중간에 모드를 전환할 수 있나요?</strong><br />
+                A. 네! 상단의 모드 버튼을 탭하면 언제든지 다른 모드로 다시 시작할 수 있습니다.
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q5. 무승부일 때는 어떻게 되나요?</strong><br />
+                A. 보드가 가득 찼는데 승자가 없는 경우, 게임은 무승부로 끝나고 다시 시작할 수 있습니다.
+            </div>
+
+            <div>
+                <strong>Q6. 게임을 어떻게 공유하나요?</strong><br />
+                A. 게임 후 <strong>공유</strong> 버튼을 탭하여 게임 링크를 복사하거나 친구에게 보낼 수 있습니다.
+            </div>
+        </section>
+    </body>
+</html>

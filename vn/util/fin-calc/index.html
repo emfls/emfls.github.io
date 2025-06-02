@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>단리, 적금, 할부 계산기</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta
+    name="description"
+    content="단리 이자, 적금(월 납입) 예상, 할부(월 납입) 계산을 즉시 수행하세요. 무료, 브라우저 기반, 모바일 친화적, 데이터 업로드 없음." />
+  <meta
+    name="keywords"
+    content="금융 계산기, 단리 계산, 적금 계산, 할부 계산, 이자 계산기, 저축, 할부 납입, 금융, 단리, 적금, 할부" />
+  <meta name="author" content="Itagi" />
+  <meta name="language" content="ko" />
+  <meta name="theme-color" content="#198dae" />
+  <link rel="canonical" href="https://emfls.github.io/kor/util/fin-calc/" />
+  <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+  <meta property="og:title" content="단리, 적금, 할부 계산기"/>
+  <meta
+    property="og:description"
+    content="단리 이자, 적금 저축, 할부 납입액을 즉시 계산합니다. 100% 무료, 회원가입 불필요."/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="https://emfls.github.io/kor/util/fin-calc/"/>
+  <meta property="og:image" content="https://emfls.github.io/thumbnail.png"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="단리, 적금, 할부 계산기"/>
+  <meta
+    name="twitter:description"
+    content="단리 이자 계산, 적금 저축 계산, 할부 납입액 계산을 간편하게 수행하세요. 업로드 없음, 브라우저 내에서 작동."/>
+  <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png"/>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag("js", new Date());
+    gtag("config", "G-QP5Q67GE5B");
+  </script>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+    crossorigin="anonymous"></script>
+  <style>
+    :root { --main: #198dae; --bg: #f8fcff;}
+    html, body { margin: 0; padding: 0; background: var(--bg);}
+    body { font-family: "Segoe UI", Arial, sans-serif; color: #234;}
+    .container {
+      max-width: 390px; margin: 38px auto 0 auto; background: #fff;
+      border-radius: 18px; box-shadow: 0 4px 22px #198dae18;
+      padding: 25px 14px 20px 14px;
+    }
+    .title { text-align: center; font-size: 1.19em; color: var(--main); font-weight: bold; margin-bottom: 8px; }
+    .tab-row { display: flex; gap: 6px; margin-bottom: 12px; justify-content: center;}
+    .tab-btn {
+      flex:1;
+      background: #e4f6fb; color: #1882b4; border:none;
+      border-radius: 7px 7px 0 0; padding: 10px 3px;
+      font-size: 1.05em; font-weight: 600; cursor: pointer;
+      transition: background 0.14s, color 0.11s;
+      box-shadow: 0 2px 7px #1882b40b;
+    }
+    .tab-btn.active {
+      background: var(--main);
+      color: #fff;
+      box-shadow: 0 2px 9px #1882b438;
+    }
+    form { margin-bottom: 0; }
+    .form-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 13px;}
+    .form-row label { font-size: 1em; color: #146078; font-weight: 500;}
+    .form-row input[type="number"] {
+      box-sizing: border-box;
+      padding: 10px 10px;
+      border-radius: 7px;
+      border: 1.2px solid #b9e6f7;
+      font-size: 1.09em;
+      width: 100%;
+      background: #fafdff;
+      color: #234;
+      transition: border 0.15s;
+    }
+    .form-row input[type="number"]:focus { border-color: var(--main);}
+    .btn {
+      background: var(--main); color: #fff; border: none; border-radius: 8px;
+      padding: 13px 0; width: 100%; font-size: 1.13em; font-weight: bold; cursor: pointer;
+      margin-top: 7px; margin-bottom: 9px; box-shadow: 0 2px 12px #198dae22;
+      transition: background 0.16s;
+    }
+    .btn:active { background: #115b73; }
+    .result {
+      background: #e5f7fa;
+      border-radius: 12px;
+      color: #1882b4;
+      font-size: 1.07em;
+      padding: 13px 11px 10px 11px;
+      text-align: center;
+      margin-bottom: 9px;
+      min-height: 38px;
+      font-weight: 500;
+      word-break: break-word;
+    }
+    .footer { color: #789; text-align: center; font-size: 0.94em; margin-top: 14px;}
+    section#faq { margin-top: 32px;}
+    section#faq h2 { margin-bottom: 13px; color: #198dae; font-size: 1.09em; text-align: center;}
+    section#faq dt { font-weight: bold; margin-top: 8px;}
+    section#faq dd { margin: 0 0 7px 0; font-size: 0.98em; color: #1882b4;}
+    #backBtn {
+      position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%);
+      background: #198dae; color: #fff; font-weight: 700; border: none; border-radius: 2rem;
+      padding: 0.58em 1.5em; box-shadow: 0 4px 16px #198dae33; font-size: 1.09em; text-decoration: none;
+      cursor: pointer; letter-spacing: 0.01em; transition: background 0.15s, transform 0.12s; z-index: 2000;
+    }
+    #backBtn:hover { background: #115b73; transform: translateX(-50%) scale(1.04);}
+    @media (max-width: 500px) {
+      .container { max-width: 98vw; padding: 10px 2vw 10px 2vw;}
+      #backBtn { bottom: 18px; font-size: 0.98em; padding: 0.48em 1em;}
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="container" itemscope itemtype="https://schema.org/WebApplication">
+      <div class="title" itemprop="name">💸 간편 금융 계산기</div>
+      <div class="tab-row">
+        <button class="tab-btn active" id="tab1">단리 계산</button>
+        <button class="tab-btn" id="tab2">적금 계산</button>
+        <button class="tab-btn" id="tab3">할부 계산</button>
+      </div>
+      <!-- 단리 -->
+      <form id="simpleForm">
+        <div class="form-row">
+          <label for="simple_principal">원금 (₩ 또는 $)</label>
+          <input type="number" id="simple_principal" min="0" required />
+        </div>
+        <div class="form-row">
+          <label for="simple_rate">이자율 (% 연)</label>
+          <input type="number" id="simple_rate" min="0" max="100" step="0.01" required />
+        </div>
+        <div class="form-row">
+          <label for="simple_years">기간 (년)</label>
+          <input type="number" id="simple_years" min="0.1" step="0.01" required />
+        </div>
+        <button type="submit" class="btn">계산하기</button>
+        <div class="result" id="simpleResult"></div>
+      </form>
+      <!-- 적금 -->
+      <form id="savingForm" style="display:none">
+        <div class="form-row">
+          <label for="save_monthly">월 납입금</label>
+          <input type="number" id="save_monthly" min="0" required />
+        </div>
+        <div class="form-row">
+          <label for="save_rate">이자율 (% 연)</label>
+          <input type="number" id="save_rate" min="0" max="100" step="0.01" required />
+        </div>
+        <div class="form-row">
+          <label for="save_years">기간 (년)</label>
+          <input type="number" id="save_years" min="0.1" step="0.01" required />
+        </div>
+        <button type="submit" class="btn">계산하기</button>
+        <div class="result" id="savingResult"></div>
+      </form>
+      <!-- 할부 -->
+      <form id="instForm" style="display:none">
+        <div class="form-row">
+          <label for="inst_principal">할부 원금</label>
+          <input type="number" id="inst_principal" min="0" required />
+        </div>
+        <div class="form-row">
+          <label for="inst_rate">이자율 (% 연)</label>
+          <input type="number" id="inst_rate" min="0" max="100" step="0.01" required />
+        </div>
+        <div class="form-row">
+          <label for="inst_months">개월 수</label>
+          <input type="number" id="inst_months" min="1" max="1200" required />
+        </div>
+        <button type="submit" class="btn">계산하기</button>
+        <div class="result" id="instResult"></div>
+      </form>
+      <div class="footer">
+        단리 계산, 적금 저축 계산, 할부 납입 계산을 지원합니다.<br>
+        <b>팁:</b> 모든 계산은 브라우저 내에서 이루어지며, 데이터가 업로드되지 않습니다.
+      </div>
+      <section aria-labelledby="faq-head" id="faq">
+        <h2 id="faq-head">FAQ – 간편 금융 계산기</h2>
+        <dl>
+          <dt>어떤 계산을 할 수 있나요?</dt>
+          <dd>단리 이자 계산, 월 납입 적금 계산, 할부(원금+이자) 계산을 지원합니다.</dd>
+          <dt>단리 계산기는 어떻게 동작하나요?</dt>
+          <dd>단리 이자는 <b>원금 × 이자율 × 기간</b>으로 계산되며, 계산 결과로 이자 금액과 원리금을 함께 보여줍니다.</dd>
+          <dt>적금(월 납입) 계산은 어떻게 이루어지나요?</dt>
+          <dd>매달 납입된 금액을 합산한 뒤, 전체 기간 동안 발생한 단리 이자를 합산하여 총액을 구합니다.</dd>
+          <dt>할부 계산기는 어떻게 동작하나요?</dt>
+          <dd>총 상환액(원금 + 발생 이자)을 입력한 개월 수로 나누어 매달 동일한 금액을 납부하는 방식입니다.</dd>
+          <dt>내 금융 데이터가 외부로 전송되나요?</dt>
+          <dd>아니요. 모든 계산은 브라우저 내에서 처리되며, 어떠한 데이터도 업로드되거나 저장되지 않습니다.</dd>
+          <dt>이 도구는 무료인가요?</dt>
+          <dd>네. 이 계산기는 100% 무료이며, 별도의 로그인이나 회원가입이 필요 없습니다.</dd>
+        </dl>
+      </section>
+    </div>
+  </main>
+  <a href="../index.html" id="backBtn">다른 유틸리티</a>
+  <script>
+    // 탭 전환 로직
+    const tabs = [
+      { btn: document.getElementById("tab1"), form: document.getElementById("simpleForm") },
+      { btn: document.getElementById("tab2"), form: document.getElementById("savingForm") },
+      { btn: document.getElementById("tab3"), form: document.getElementById("instForm") }
+    ];
+    tabs.forEach((t, i) => {
+      t.btn.onclick = () => {
+        tabs.forEach((tt, j) => {
+          tt.btn.classList.toggle("active", i === j);
+          tt.form.style.display = i === j ? "" : "none";
+        });
+      }
+    });
+
+    // 단리 계산
+    document.getElementById("simpleForm").onsubmit = function(e){
+      e.preventDefault();
+      const p = +document.getElementById("simple_principal").value;
+      const r = +document.getElementById("simple_rate").value / 100;
+      const t = +document.getElementById("simple_years").value;
+      if(p <= 0 || r < 0 || t <= 0) return;
+      const interest = p * r * t;
+      const total = p + interest;
+      document.getElementById("simpleResult").innerHTML =
+        `이자: <b>${interest.toLocaleString()}</b><br>원리금 합계: <b>${total.toLocaleString()}</b>`;
+    };
+
+    // 적금(월 납입) 계산
+    document.getElementById("savingForm").onsubmit = function(e){
+      e.preventDefault();
+      const m = +document.getElementById("save_monthly").value;
+      const r = +document.getElementById("save_rate").value / 100;
+      const y = +document.getElementById("save_years").value;
+      if(m <= 0 || r < 0 || y <= 0) return;
+      const n = Math.round(y * 12);
+      let sum = 0, interest = 0;
+      for(let i = 0; i < n; i++) {
+        sum += m;
+        interest += m * r * ((n - i) / 12);
+      }
+      const total = sum + interest;
+      document.getElementById("savingResult").innerHTML =
+        `납입 합계: <b>${sum.toLocaleString()}</b><br>발생 이자: <b>${interest.toLocaleString()}</b><br>총액: <b>${total.toLocaleString()}</b>`;
+    };
+
+    // 할부 계산 (단리 이자 기준)
+    document.getElementById("instForm").onsubmit = function(e){
+      e.preventDefault();
+      const p = +document.getElementById("inst_principal").value;
+      const r = +document.getElementById("inst_rate").value / 100;
+      const n = +document.getElementById("inst_months").value;
+      if(p <= 0 || r < 0 || n <= 0) return;
+      const totalInterest = p * r * (n / 12);
+      const total = p + totalInterest;
+      const monthly = total / n;
+      document.getElementById("instResult").innerHTML =
+        `월 납입액: <b>${monthly.toLocaleString(undefined, {maximumFractionDigits:2})}</b><br>총 이자: <b>${totalInterest.toLocaleString()}</b><br>총 납부액: <b>${total.toLocaleString()}</b>`;
+    };
+  </script>
+  <!-- FAQPage Schema for SEO/SGE/GEO Rich Results -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "어떤 계산을 할 수 있나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "단리 이자 계산, 월 납입 적금 계산, 할부(원금+이자) 계산을 지원합니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "단리 계산기는 어떻게 동작하나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "단리 이자는 원금 × 이자율 × 기간으로 계산되며, 계산 결과로 이자 금액과 원리금을 함께 보여줍니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "적금(월 납입) 계산은 어떻게 이루어지나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "매달 납입된 금액을 합산한 뒤, 전체 기간 동안 발생한 단리 이자를 합산하여 총액을 구합니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "할부 계산기는 어떻게 동작하나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "총 상환액(원금 + 발생 이자)을 입력한 개월 수로 나누어 매달 동일한 금액을 납부하는 방식입니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "내 금융 데이터가 외부로 전송되나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "아니요. 모든 계산은 브라우저 내에서 처리되며, 데이터가 업로드되거나 저장되지 않습니다." }
+      },
+      {
+        "@type": "Question",
+        "name": "이 도구는 무료인가요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "네. 이 계산기는 100% 무료이며, 별도 로그인이나 회원가입이 필요 없습니다." }
+      }
+    ]
+  }
+  </script>
+</body>
+</html>

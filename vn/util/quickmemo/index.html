@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>빠른 메모 – 온라인 메모장 & 빠른 스티키 노트</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta
+      name="description"
+      content="빠르고 개인적인 온라인 메모장 – 브라우저에서 즉시 메모를 작성하고 저장하세요. 로그인 없이 100% 무료, 로컬 스토리지로 오프라인에서도 작동합니다." />
+    <meta
+      name="keywords"
+      content="온라인 메모, 메모장, 빠른 노트, 로컬스토리지, 스티키 노트, 텍스트 저장, 브라우저, 개인용, 무료, 메모, 노트, 임시저장" />
+    <meta name="author" content="Itagi" />
+    <meta name="language" content="ko" />
+    <link rel="canonical" href="https://emfls.github.io/kor/util/quickmemo/" />
+    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+    <meta property="og:title" content="빠른 메모 – 온라인 메모장 & 빠른 스티키 노트" />
+    <meta
+      property="og:description"
+      content="브라우저에서 즉시 메모, 투두, 아이디어 또는 초안을 작성하고 저장하세요. 모두 로컬 스토리지에 저장되며 절대 업로드되지 않습니다. 무료, 빠르고 간단합니다." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/kor/util/quickmemo/" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="빠른 메모 – 온라인 메모장 & 빠른 스티키 노트" />
+    <meta
+      name="twitter:description"
+      content="브라우저에서 즉시 메모, 투두, 아이디어 또는 초안을 작성하고 저장하세요. 로컬 스토리지, 무료, 로그인 불필요." />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <!-- Google 태그 (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <style>
+      :root {
+        --main: #36ba7c;
+        --main-dark: #219f65;
+        --bg: #f6faf7;
+      }
+      body {
+        background: var(--bg);
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: #244;
+      }
+      .container {
+        max-width: 410px;
+        margin: 38px auto 0 auto;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 22px #36ba7c24;
+        padding: 30px 16px 20px 16px;
+      }
+      .logo {
+        font-size: 1.21em;
+        font-weight: bold;
+        text-align: center;
+        color: var(--main-dark);
+        margin-bottom: 7px;
+      }
+      .desc {
+        text-align: center;
+        color: #1a8751;
+        font-size: 1.01em;
+        margin-bottom: 14px;
+      }
+      textarea {
+        width: 100%;
+        min-height: 210px;
+        font-size: 1.11em;
+        border: 1.4px solid #97e7c7;
+        border-radius: 10px;
+        padding: 13px;
+        background: #fafdff;
+        color: #244;
+        resize: vertical;
+        margin-bottom: 14px;
+        font-family: "Fira Mono", "Menlo", monospace;
+        transition: border 0.18s;
+      }
+      textarea:focus {
+        border-color: var(--main);
+      }
+      .action-row {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        margin-bottom: 10px;
+      }
+      .mini-btn {
+        background: #e7f8f2;
+        color: #1b8055;
+        border: none;
+        border-radius: 7px;
+        font-size: 1em;
+        padding: 7px 16px;
+        cursor: pointer;
+        transition: background 0.12s;
+        font-weight: 500;
+      }
+      .mini-btn:active {
+        background: #bff2da;
+      }
+      .footer {
+        color: #789;
+        text-align: center;
+        font-size: 0.95em;
+        margin-top: 18px;
+        opacity: 0.9;
+      }
+      #backBtn {
+        position: fixed;
+        left: 50%;
+        bottom: 32px;
+        transform: translateX(-50%);
+        background: #36ba7c;
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 2rem;
+        padding: 0.58em 1.5em;
+        box-shadow: 0 4px 16px #36ba7c33;
+        font-size: 1.09em;
+        text-decoration: none;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+        transition:
+          background 0.15s,
+          transform 0.12s;
+        z-index: 2000;
+      }
+      #backBtn:hover {
+        background: #219f65;
+        transform: translateX(-50%) scale(1.04);
+      }
+      @media (max-width: 600px) {
+        .container {
+          max-width: 99vw;
+          padding: 13px 2vw 11px 2vw;
+        }
+        textarea {
+          font-size: 1em;
+        }
+        #backBtn {
+          bottom: 18px;
+          font-size: 0.98em;
+          padding: 0.48em 1em;
+        }
+      }
+      .autosave {
+        color: #4eb983;
+        font-size: 0.98em;
+        margin-bottom: 6px;
+        min-height: 18px;
+        text-align: right;
+        opacity: 0.78;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">📝 빠른 메모</div>
+      <div class="desc">
+        빠르게 메모, 투두, 아이디어, 초안을 작성하세요.<br />
+        <b>자동으로 저장됨</b> (브라우저 로컬 스토리지).<br />
+        업로드나 로그인 없이 100% 개인적으로 사용 가능합니다.
+      </div>
+      <div class="autosave" id="autosaveMsg"></div>
+      <textarea id="memoArea" placeholder="여기에 메모나 임시 노트를 입력하세요..."></textarea>
+      <div class="action-row">
+        <button class="mini-btn" id="clearBtn">지우기</button>
+        <button class="mini-btn" id="copyBtn">복사</button>
+        <button class="mini-btn" id="downloadBtn">다운로드</button>
+      </div>
+      <div class="footer">
+        모든 내용은 기기에만 저장됩니다.<br />
+        <b>팁:</b> 초안 작성, 빠른 작업 또는 알림에 유용합니다!
+      </div>
+    </div>
+    <a href="../index.html" id="backBtn">기타 도구</a>
+    <script>
+      const memoArea = document.getElementById("memoArea");
+      const autosaveMsg = document.getElementById("autosaveMsg");
+      const LS_KEY = "quickMemoNote";
+
+      // 저장된 메모 불러오기
+      memoArea.value = localStorage.getItem(LS_KEY) || "";
+
+      // 자동 저장
+      let saveTimer;
+      memoArea.addEventListener("input", function () {
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(() => {
+          localStorage.setItem(LS_KEY, memoArea.value);
+          showAutosaveMsg();
+        }, 300);
+      });
+
+      function showAutosaveMsg() {
+        autosaveMsg.textContent = "저장됨!";
+        setTimeout(() => {
+          autosaveMsg.textContent = "";
+        }, 1200);
+      }
+
+      // 클립보드로 복사
+      document.getElementById("copyBtn").onclick = function () {
+        const val = memoArea.value;
+        if (!val) return;
+        navigator.clipboard.writeText(val);
+        autosaveMsg.textContent = "복사됨!";
+        setTimeout(() => {
+          autosaveMsg.textContent = "";
+        }, 1000);
+      };
+
+      // 텍스트 파일로 다운로드
+      document.getElementById("downloadBtn").onclick = function () {
+        const val = memoArea.value;
+        if (!val) return;
+        const blob = new Blob([val], { type: "text/plain" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "quick_memo.txt";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+          URL.revokeObjectURL(a.href);
+          a.remove();
+        }, 500);
+      };
+
+      // 메모 지우기
+      document.getElementById("clearBtn").onclick = function () {
+        if (memoArea.value.length === 0) return;
+        if (confirm("메모 내용을 모두 지우시겠습니까?")) {
+          memoArea.value = "";
+          localStorage.removeItem(LS_KEY);
+          autosaveMsg.textContent = "지워졌습니다!";
+          setTimeout(() => {
+            autosaveMsg.textContent = "";
+          }, 900);
+        }
+      };
+    </script>
+    <section
+      style="
+        max-width: 320px;
+        margin: 48px auto 24px auto;
+        background: #1e1e1e;
+        border-radius: 18px;
+        box-shadow: 0 6px 24px #1236;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+      ">
+      <div style="margin-bottom: 12px">
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📝 이 도구는 무엇인가요?</h3>
+        <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
+          빠른 메모는 로그인 없이 브라우저에서 메모를 작성하고 저장할 수 있는 개인용 온라인 메모장입니다. 오프라인 상태에서도 로컬 스토리지를 이용해 동작합니다.
+        </p>
+      </div>
+      <div style="margin-bottom: 12px">
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">💾 메모는 어떻게 저장되나요?</h3>
+        <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
+          입력할 때마다 내용이 자동으로 브라우저 로컬 스토리지에 저장됩니다. 모든 데이터는 기기에만 남습니다.
+        </p>
+      </div>
+      <div style="margin-bottom: 12px">
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📋 메모를 복사하거나 다운로드할 수 있나요?</h3>
+        <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
+          네. “복사” 버튼을 누르면 메모 내용을 클립보드로 복사할 수 있고, “다운로드” 버튼을 누르면 .txt 파일로 저장됩니다.
+        </p>
+      </div>
+      <div style="margin-bottom: 12px">
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🧹 메모를 삭제하려면 어떻게 하나요?</h3>
+        <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
+          “지우기” 버튼을 누르고 확인하면 메모가 모두 삭제됩니다. 로컬 스토리지의 저장 데이터도 함께 지워집니다.
+        </p>
+      </div>
+      <div style="margin-bottom: 0">
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔐 이 도구는 안전한가요?</h3>
+        <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
+          100% 안전합니다. 모든 메모는 브라우저에서만 처리되며 절대 외부로 업로드되지 않습니다. 개인정보를 철저히 보호합니다.
+        </p>
+      </div>
+    </section>
+  </body>
+</html>

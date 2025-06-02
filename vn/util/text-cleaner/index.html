@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <title>텍스트 클리너 – 공백 및 줄바꿈 제거 (즉시!)</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="텍스트를 즉시 깨끗하게 정리하세요! 불필요한 공백, 줄바꿈, 앞뒤 공백을 제거합니다. 여러 정리 모드 지원. 100% 브라우저 기반, 무료, 업로드 불필요." />
+        <meta
+            name="keywords"
+            content="텍스트 클리너, 즉시 클리너, 공백 제거, 줄바꿈 제거기, 화이트스페이스 도구, 온라인 텍스트 포맷터, 무료, 업로드 불필요" />
+        <meta name="author" content="Itagi" />
+        <meta name="language" content="ko" />
+        <link rel="canonical" href="https://emfls.github.io/kor/util/text-cleaner/" />
+        <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+        <!-- Open Graph & Twitter -->
+        <meta property="og:title" content="텍스트 클리너 – 공백 및 줄바꿈 제거 (즉시!)" />
+        <meta
+            property="og:description"
+            content="불필요한 공백과 줄바꿈을 즉시 제거하세요. 붙여넣고 정리한 후 결과를 복사하세요. 100% 브라우저, 무료, 업로드 불필요." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://emfls.github.io/kor/util/text-cleaner/" />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="텍스트 클리너 – 공백 및 줄바꿈 제거 (즉시!)" />
+        <meta
+            name="twitter:description"
+            content="텍스트를 즉시 정리하세요: 불필요한 공백, 연속 줄바꿈, 앞뒤 공백 등을 제거합니다." />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <!-- Google AdSense -->
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+        <style>
+            body {
+                background: #f7fbff;
+                margin: 0;
+                font-family: "Segoe UI", Arial, sans-serif;
+                color: #234;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                min-height: 100vh;
+            }
+            .container {
+                margin: 42px auto 0 auto;
+                max-width: 480px;
+                background: #fff;
+                border-radius: 18px;
+                box-shadow: 0 4px 22px #13d2b033;
+                padding: 28px 15px 18px 15px;
+                width: 95vw;
+                min-width: 270px;
+            }
+            .logo {
+                font-size: 1.22em;
+                font-weight: bold;
+                text-align: center;
+                color: #1763a8;
+                margin-bottom: 9px;
+                letter-spacing: 0.01em;
+            }
+            .desc {
+                text-align: center;
+                color: #2172a2;
+                margin-bottom: 17px;
+                font-size: 1.04em;
+            }
+            textarea {
+                width: 100%;
+                min-height: 90px;
+                border-radius: 8px;
+                border: 1.2px solid #bde0fc;
+                padding: 11px;
+                font-size: 1.07em;
+                background: #fafdff;
+                color: #234;
+                resize: vertical;
+                margin-bottom: 10px;
+                box-sizing: border-box;
+            }
+            .options {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 13px;
+                align-items: center;
+                flex-wrap: wrap;
+            }
+            .options label {
+                font-size: 1em;
+                color: #206589;
+                background: #eef8fd;
+                border-radius: 6px;
+                padding: 5px 13px 5px 8px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                font-weight: 500;
+                border: 1px solid #bde0fc;
+                transition:
+                    background 0.13s,
+                    border 0.13s;
+            }
+            .options input[type="radio"] {
+                margin-right: 6px;
+                accent-color: #1763a8;
+            }
+            .result-block {
+                background: #f4f7fd;
+                border: 1.2px solid #bfe1fa;
+                border-radius: 9px;
+                padding: 15px 10px 11px 10px;
+                margin-bottom: 8px;
+                color: #185490;
+                font-size: 1.11em;
+                min-height: 44px;
+                word-break: break-all;
+                position: relative;
+            }
+            .copy-btn {
+                position: absolute;
+                top: 8px;
+                right: 14px;
+                background: #19b16e;
+                color: #fff;
+                border: none;
+                border-radius: 6px;
+                padding: 6px 13px;
+                cursor: pointer;
+                font-size: 0.97em;
+                font-weight: bold;
+                box-shadow: 0 2px 8px #14b26e11;
+                transition: background 0.13s;
+            }
+            .copy-btn:active {
+                background: #116847;
+            }
+            .footer {
+                color: #789;
+                text-align: center;
+                font-size: 0.93em;
+                margin-top: 19px;
+            }
+            #backBtn {
+                position: fixed;
+                left: 50%;
+                bottom: 32px;
+                transform: translateX(-50%);
+                background: #1763a8;
+                color: #fff;
+                font-weight: 700;
+                border: none;
+                border-radius: 2rem;
+                padding: 0.58em 1.5em;
+                box-shadow: 0 4px 16px #13d2b066;
+                font-size: 1.09em;
+                text-decoration: none;
+                cursor: pointer;
+                letter-spacing: 0.01em;
+                transition:
+                    background 0.15s,
+                    transform 0.12s;
+                z-index: 2000;
+            }
+            #backBtn:hover {
+                background: #0f3e66;
+                transform: translateX(-50%) scale(1.04);
+            }
+            @media (max-width: 600px) {
+                .container {
+                    padding: 11px 2vw 11px 2vw;
+                }
+                .logo {
+                    font-size: 1.08em;
+                }
+                #backBtn {
+                    bottom: 18px;
+                    font-size: 0.98em;
+                    padding: 0.48em 1em;
+                }
+                .result-block {
+                    font-size: 0.99em;
+                }
+                .options label {
+                    font-size: 0.98em;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="logo">🧹 텍스트 클리너</div>
+            <div class="desc">
+                아래에 텍스트를 붙여넣거나 입력하세요.<br />
+                모든 변경이 즉시 적용됩니다. 정리 모드를 선택하세요!
+            </div>
+            <div class="options">
+                <label><input type="radio" name="mode" value="full" checked /> 전체 (공백 & 줄바꿈)</label>
+                <label><input type="radio" name="mode" value="breaks" /> 모든 줄바꿈 제거</label>
+                <label><input type="radio" name="mode" value="spaces" /> 여분 공백만 제거</label>
+                <label><input type="radio" name="mode" value="trimline" /> 각 줄 앞뒤 정리</label>
+            </div>
+            <textarea id="input" placeholder="여기에 텍스트를 붙여넣으세요..."></textarea>
+            <div class="result-block" id="resultBlock" style="display: none">
+                <button class="copy-btn" id="copyBtn" style="display: none">복사하기</button>
+                <span id="result"></span>
+            </div>
+            <div class="footer">
+                업로드 없음. 모든 정리가 브라우저에서 즉시 이루어집니다.<br />
+                무료 및 비공개, <b>Itagi</b> 제작.
+            </div>
+            <a href="../index.html" id="backBtn">다른 유틸 보기</a>
+        </div>
+        <script>
+            const input = document.getElementById("input");
+            const resultBlock = document.getElementById("resultBlock");
+            const result = document.getElementById("result");
+            const copyBtn = document.getElementById("copyBtn");
+            const radios = document.querySelectorAll('input[name="mode"]');
+
+            function cleanText(txt, mode) {
+                if (!txt) return "";
+                switch (mode) {
+                    case "breaks":
+                        // 모든 줄바꿈 제거, 공백은 하나로
+                        return txt
+                            .replace(/[\r\n]+/g, " ")
+                            .replace(/ +/g, " ")
+                            .trim();
+                    case "spaces":
+                        // 연속 공백을 한 칸으로, 줄바꿈 유지하면서 빈 줄은 하나로
+                        return txt
+                            .replace(/[ \t]+/g, " ")
+                            .replace(/\n{2,}/g, "\n")
+                            .split("\n")
+                            .map((l) => l.trim())
+                            .join("\n")
+                            .trim();
+                    case "trimline":
+                        // 각 줄의 앞뒤 공백만 제거
+                        return txt
+                            .split(/[\r\n]/)
+                            .map((l) => l.trim())
+                            .join("\n")
+                            .trim();
+                    case "full":
+                    default:
+                        // 기본: 줄바꿈/공백 전부 정리
+                        txt = txt.replace(/\r\n?/g, "\n");
+                        txt = txt.replace(/[ \t]+/g, " ");
+                        txt = txt.replace(/\n{2,}/g, "\n");
+                        txt = txt
+                            .split("\n")
+                            .map((line) => line.trim())
+                            .join("\n");
+                        return txt.trim();
+                }
+            }
+
+            function updateResult() {
+                const raw = input.value;
+                const mode = document.querySelector('input[name="mode"]:checked').value;
+                const cleaned = cleanText(raw, mode);
+                result.textContent = cleaned;
+                resultBlock.style.display = cleaned ? "block" : "none";
+                copyBtn.style.display = cleaned ? "block" : "none";
+            }
+
+            // 즉시 정리: 입력/옵션 변경 시마다 적용
+            input.addEventListener("input", updateResult);
+            radios.forEach((r) => r.addEventListener("change", updateResult));
+            // 초기 적용
+            updateResult();
+
+            copyBtn.onclick = () => {
+                const txt = result.textContent;
+                if (!txt) return;
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(txt);
+                } else {
+                    const ta = document.createElement("textarea");
+                    ta.value = txt;
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(ta);
+                }
+                copyBtn.textContent = "복사됨!";
+                setTimeout(() => (copyBtn.textContent = "복사하기"), 1200);
+            };
+        </script>
+        <section
+            style="
+                max-width: 320px;
+                margin: 48px auto 24px auto;
+                background: #1e1e1e;
+                border-radius: 18px;
+                box-shadow: 0 6px 24px #1236;
+                font-family: Arial, sans-serif;
+            ">
+            <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; padding: 16px 16px 0 16px">
+                ❓ FAQ – 텍스트 클리너
+            </div>
+
+            <div style="margin-bottom: 12px; padding: 12px 16px 0 16px">
+                <div style="color: #8f94fb; font-weight: bold">“전체 (공백 및 줄바꿈)” 모드는 무엇을 정리하나요?</div>
+                <div style="color: #f0f0f0">
+                    여러 공백을 제거하고, 각 줄의 앞뒤 공백을 다듬으며, 연속된 줄바꿈을 하나로 줄입니다.
+                </div>
+            </div>
+
+            <div style="margin-bottom: 12px; padding: 0 16px">
+                <div style="color: #8f94fb; font-weight: bold">내 데이터가 업로드되나요?</div>
+                <div style="color: #f0f0f0">
+                    절대 아닙니다. 모든 처리는 브라우저에서 이루어지며, 입력 내용이 외부로 나가지 않습니다.
+                </div>
+            </div>
+
+            <div style="margin-bottom: 12px; padding: 0 16px">
+                <div style="color: #8f94fb; font-weight: bold">각 모드별 차이점은 무엇인가요?</div>
+                <div style="color: #f0f0f0">
+                    <ul style="padding-left: 20px; margin: 0">
+                        <li><b>전체:</b> 공백과 줄바꿈을 모두 정리합니다.</li>
+                        <li><b>모든 줄바꿈 제거:</b> 모든 줄을 하나로 합칩니다.</li>
+                        <li><b>여분 공백만 제거:</b> 여분 공백만 제거하며, 줄바꿈은 유지합니다.</li>
+                        <li><b>각 줄 앞뒤 정리:</b> 각 줄의 앞뒤 공백만 제거합니다.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 12px; padding: 0 16px">
+                <div style="color: #8f94fb; font-weight: bold">긴 텍스트도 붙여넣을 수 있나요?</div>
+                <div style="color: #f0f0f0">
+                    예. 대용량 텍스트도 붙여넣을 수 있으며, 처리 속도는 빠르고 즉시 반영됩니다.
+                </div>
+            </div>
+
+            <div style="margin-bottom: 0; padding: 0 16px 16px 16px">
+                <div style="color: #8f94fb; font-weight: bold">다른 언어도 지원하나요?</div>
+                <div style="color: #f0f0f0">
+                    네. 한국어, 일본어, 이모지 등 모든 언어와 문자를 지원합니다.
+                </div>
+            </div>
+        </section>
+    </body>
+</html>

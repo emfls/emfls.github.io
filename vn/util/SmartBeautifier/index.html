@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Smart Beautifier (HTML/CSS/JS, 탭 들여쓰기 전용)</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+		<meta
+			name="description"
+			content="지저분한 HTML, CSS 또는 JavaScript 코드를 붙여넣고 탭 들여쓰기로 즉시 정리하세요. 100% 클라이언트 측 처리, 업로드 불필요. 무료 웹 코드 포맷터." />
+		<meta
+			name="keywords"
+			content="코드 정리, 코드 포맷터, js 뷰티파이어, css 뷰티파이어, html 뷰티파이어, 온라인 코드 포맷터, 탭 들여쓰기, 코드 깔끔하게, 클라이언트 측, 업로드 불필요, 웹 도구, 개발자 도구, 오픈 소스, 즉시 코드 정리" />
+		<meta name="author" content="Itagi" />
+
+		<!-- Open Graph (SNS 공유용) -->
+		<meta property="og:title" content="Smart Beautifier – 온라인 HTML/CSS/JS 코드 포맷터" />
+		<meta
+			property="og:description"
+			content="지저분한 코드를 붙여넣으면 탭 들여쓰기로 자동 정리. 브라우저에서만 처리하므로 안전합니다. 무료 오픈 소스." />
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="https://emfls.github.io/kor/util/SmartBeautifier/" />
+		<meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+
+		<!-- Twitter Card (X/트위터 썸네일) -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="Smart Beautifier – 온라인 HTML/CSS/JS 코드 포맷터" />
+		<meta
+			name="twitter:description"
+			content="지저분한 HTML, CSS, JS 코드를 붙여넣고 탭 들여쓰기로 깨끗하게 정리하세요. 클라이언트 측 100%, 업로드 불필요." />
+		<meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+		<link rel="icon" href="https://emfls.github.io/icon-192.png" />
+
+		<!-- Google 태그 (gtag.js) -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag() {
+				dataLayer.push(arguments);
+			}
+			gtag("js", new Date());
+
+			gtag("config", "G-QP5Q67GE5B");
+		</script>
+		<script
+			async
+			src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+			crossorigin="anonymous"></script>
+
+		<style>
+			html,
+			body {
+				margin: 0;
+				padding: 0;
+				background: #f6fcff;
+				min-height: 100%;
+			}
+
+			body {
+				font-family: "Segoe UI", Arial, sans-serif;
+				min-height: 100vh;
+			}
+
+			.container {
+				max-width: 620px;
+				margin: 38px auto 0 auto;
+				background: #fff;
+				border-radius: 18px;
+				box-shadow: 0 4px 22px #13d2b033;
+				padding: 28px 18px 22px 18px;
+			}
+
+			.logo {
+				font-size: 1.25em;
+				color: #19788a;
+				font-weight: bold;
+				margin-bottom: 6px;
+				text-align: center;
+			}
+
+			.desc {
+				color: #357890;
+				text-align: center;
+				margin-bottom: 18px;
+				font-size: 0.98em;
+			}
+
+			.input-area,
+			.output-area {
+				width: 100%;
+				box-sizing: border-box;
+				min-height: 120px;
+				border: 1.2px solid #cce9ef;
+				border-radius: 9px;
+				padding: 11px;
+				font-size: 1em;
+				background: #fafdff;
+				font-family: "Fira Mono", "Menlo", monospace;
+				resize: vertical;
+				margin-bottom: 8px;
+				line-height: 1.6;
+				overflow-x: auto;
+			}
+
+			.output-area {
+				background: #e7f9f3;
+			}
+
+			.btn,
+			.btn-copy {
+				background: #1495c5;
+				color: #fff;
+				border: none;
+				border-radius: 7px;
+				padding: 10px 18px;
+				margin: 10px 8px 0 0;
+				cursor: pointer;
+				font-size: 1.03em;
+				transition: background 0.18s;
+			}
+
+			.btn:active,
+			.btn-copy:active {
+				background: #0b6180;
+			}
+
+			.info-msg {
+				color: #1c9b56;
+				font-size: 0.95em;
+				margin: 6px 0 10px 0;
+				text-align: center;
+			}
+
+			.footer {
+				color: #789;
+				text-align: center;
+				font-size: 0.94em;
+				margin-top: 22px;
+			}
+
+			@media (max-width: 700px) {
+				.container {
+					max-width: 98vw;
+					padding: 12px 2vw 14px 2vw;
+				}
+
+				.input-area,
+				.output-area {
+					font-size: 0.98em;
+				}
+			}
+
+			#backBtn {
+				position: fixed;
+				left: 50%;
+				bottom: 32px;
+				transform: translateX(-50%);
+				background: #13b6a7;
+				color: #fff;
+				font-weight: 700;
+				border: none;
+				border-radius: 2rem;
+				padding: 0.58em 1.5em;
+				box-shadow: 0 4px 16px #13d2b066;
+				font-size: 1.09em;
+				text-decoration: none;
+				cursor: pointer;
+				letter-spacing: 0.01em;
+				transition: background 0.15s, transform 0.12s;
+				z-index: 2000;
+			}
+			#backBtn:hover {
+				background: #0e8078;
+				transform: translateX(-50%) scale(1.04);
+			}
+			@media (max-width: 600px) {
+				#backBtn {
+					bottom: 18px;
+					font-size: 0.98em;
+					padding: 0.48em 1em;
+				}
+			}
+		</style>
+
+		<!-- js-beautify (CDN) -->
+		<script src="https://cdn.jsdelivr.net/npm/js-beautify@1.15.0/js/lib/beautify.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/js-beautify@1.15.0/js/lib/beautify-css.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/js-beautify@1.15.0/js/lib/beautify-html.min.js"></script>
+	</head>
+
+	<body>
+		<div class="container">
+			<div class="logo">✨ Smart Beautifier</div>
+			<div class="desc">
+				지저분한 HTML, CSS 또는 JavaScript 코드를 붙여넣으세요.<br />
+				자동으로 <b>탭</b>으로 들여쓰기하여 깔끔하게 정리합니다.<br />
+				<span style="color: #19788a; font-size: 0.93em">100% 클라이언트 측, 업로드 불필요.</span>
+			</div>
+			<textarea
+				id="inputArea"
+				class="input-area"
+				placeholder="여기에 HTML, CSS 또는 JS 코드를 붙여넣으세요..."></textarea>
+			<button class="btn" id="beautifyBtn">정리하기</button>
+			<div style="margin-top: 8px; margin-bottom: 3px; font-size: 0.98em; color: #167088">결과:</div>
+			<textarea
+				id="outputArea"
+				class="output-area"
+				readonly
+				placeholder="정리된 코드가 여기에 표시됩니다"></textarea>
+			<button class="btn-copy" id="copyBtn">복사하기</button>
+			<div class="info-msg" id="infoMsg"></div>
+			<div class="footer">
+				100% 클라이언트 측, 오픈 소스. js-beautify로 구동됩니다.
+			</div>
+			<a href="../index.html" id="backBtn">다른 유틸 보기</a>
+		</div>
+
+		<script>
+			function detectType(code) {
+				// HTML 우선 감지
+				if (
+					/^\s*<!DOCTYPE html/i.test(code) ||
+					/<html[\s>]/i.test(code) ||
+					/<body[\s>]/i.test(code) ||
+					/<head[\s>]/i.test(code) ||
+					/<div[\s>]/i.test(code) ||
+					/<style[\s>]/i.test(code) ||
+					/<script[\s>]/i.test(code)
+				)
+					return "html";
+				// CSS 감지
+				if (
+					/^[\s\S]*?\{[\s\S]*?\}[\s;]*$/.test(code) && // 중괄호 블럭 있음
+					/^[\s\S]*?[\.\#a-zA-Z0-9\-]+\s*\{[\s\S]*?\}/.test(code)
+				)
+					return "css";
+				// JS (함수, 변수, 제어문, etc)
+				if (
+					/\b(function|var|let|const|=>|import |export |require\(|if\s*\(|for\s*\(|while\s*\(|console\.|window\.|document\.|class\s+\w+)/.test(
+						code
+					)
+				)
+					return "js";
+				// 기본은 html
+				return "html";
+			}
+
+			document.getElementById("beautifyBtn").onclick = function () {
+				var code = document.getElementById("inputArea").value;
+				var outputArea = document.getElementById("outputArea");
+				var infoMsg = document.getElementById("infoMsg");
+				if (!code.trim()) {
+					infoMsg.textContent = "코드를 먼저 붙여넣어주세요.";
+					outputArea.value = "";
+					return;
+				}
+				// 항상 탭(\t)으로 들여쓰기
+				let indent_char = "\t",
+					indent_size = 1;
+				var type = detectType(code);
+				var beautified = "";
+				try {
+					if (type === "html") {
+						beautified = html_beautify(code, {
+							indent_size: indent_size,
+							indent_char: indent_char,
+							wrap_line_length: 120,
+							unformatted: [],
+							preserve_newlines: true,
+							content_unformatted: []
+						});
+					} else if (type === "css") {
+						beautified = css_beautify(code, {
+							indent_size: indent_size,
+							indent_char: indent_char
+						});
+					} else if (type === "js") {
+						beautified = js_beautify(code, {
+							indent_size: indent_size,
+							indent_char: indent_char,
+							max_preserve_newlines: 2
+						});
+					}
+					outputArea.value = beautified;
+					infoMsg.textContent =
+						"정리 완료! (" + type.toUpperCase() + ", " + beautified.length + "자)";
+				} catch (e) {
+					infoMsg.textContent = "오류: " + (e.message || e);
+					outputArea.value = "";
+				}
+			};
+
+			document.getElementById("copyBtn").onclick = function () {
+				var outputArea = document.getElementById("outputArea");
+				outputArea.select();
+				document.execCommand("copy");
+				document.getElementById("infoMsg").textContent = "복사됨!";
+			};
+		</script>
+
+		<section
+			style="
+				max-width: 320px;
+				margin: 48px auto 24px auto;
+				background: #1e1e1e;
+				border-radius: 18px;
+				box-shadow: 0 6px 24px #1236;
+				padding: 20px;
+				font-family: Arial, sans-serif;
+			">
+			<div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 12px">
+				FAQ – Smart Beautifier
+			</div>
+
+			<div style="margin-bottom: 12px">
+				<div style="color: #8f94fb; font-weight: bold">Q. 어떤 코드 언어를 지원하나요?</div>
+				<div style="color: #f0f0f0">
+					HTML, CSS, JavaScript를 지원합니다. 입력에 따라 도구가 자동으로 언어를 감지합니다.
+				</div>
+			</div>
+
+			<div style="margin-bottom: 12px">
+				<div style="color: #8f94fb; font-weight: bold">Q. 어떤 들여쓰기 방식을 사용하나요?</div>
+				<div style="color: #f0f0f0">
+					탭 문자만 사용합니다. 이 도구는 스페이스 대신 탭으로 일관된 스타일을 유지하며 코드를 포맷합니다.
+				</div>
+			</div>
+
+			<div style="margin-bottom: 12px">
+				<div style="color: #8f94fb; font-weight: bold">Q. 여기에 코드를 붙여넣어도 안전한가요?</div>
+				<div style="color: #f0f0f0">
+					네. 모든 포맷팅은 브라우저에서 로컬로 처리됩니다. 업로드나 저장이 없으므로 개인정보가 완전히 보호됩니다.
+				</div>
+			</div>
+
+			<div style="margin-bottom: 12px">
+				<div style="color: #8f94fb; font-weight: bold">Q. 정리된 코드를 어떻게 복사하나요?</div>
+				<div style="color: #f0f0f0">
+					“정리하기”를 클릭한 후 “복사하기” 버튼을 눌러 결과를 클립보드에 즉시 복사할 수 있습니다.
+				</div>
+			</div>
+
+			<div style="margin-bottom: 0">
+				<div style="color: #8f94fb; font-weight: bold">Q. 깨진 코드나 부분적인 코드도 포맷할 수 있나요?</div>
+				<div style="color: #f0f0f0">
+					네. 문법이 파싱될 정도로 유효하다면 린터는 아니더라도 불완전한 코드 블록도 정리하고 재들여쓰기를 수행할 수 있습니다.
+				</div>
+			</div>
+		</section>
+	</body>
+</html>
