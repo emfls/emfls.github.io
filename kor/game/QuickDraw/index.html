@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="Test your reflexes in Quick Draw Duel! Wait for DRAW, then shoot faster than your enemy. Fun, fast-paced, mobile-optimized webgame." />
+            content="반응 속도를 테스트해보세요! 퀵 드로우 듀얼! DRAW 신호 후 상대보다 빠르게 사격하세요. 재미있고 빠른 모바일 최적화 웹게임입니다." />
         <meta
             name="keywords"
-            content="quick draw, cowboy duel, reaction game, western game, reflex game, webgame, instant game, 브라우저 게임, 카우보이, 서부 대결, 반응속도, 모바일게임, 무료 게임" />
+            content="퀵 드로우, 카우보이 결투, 반응 게임, 서부 게임, 웹게임, 즉시 게임, 브라우저 게임, 모바일게임, 무료 게임" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
@@ -16,20 +16,20 @@
         <link rel="canonical" href="https://emfls.github.io/kor/game/QuickDraw" />
 
         <!-- Open Graph (Facebook, Kakao, Discord) -->
-        <meta property="og:title" content="Quick Draw Duel – Cowboy Reflex Web Game" />
+        <meta property="og:title" content="퀵 드로우 듀얼 – 카우보이 반응 웹게임" />
         <meta
             property="og:description"
-            content="Can you shoot faster than your enemy? Try this free cowboy reflex game! Play on mobile or PC, no download." />
+            content="상대보다 빠르게 사격해보세요! 무료 카우보이 반응 게임을 플레이하세요. 모바일 또는 PC에서 다운로드 없이 즐길 수 있습니다." />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/kor/game/QuickDraw" />
         <meta property="og:type" content="website" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Quick Draw Duel – Cowboy Reflex Web Game" />
+        <meta name="twitter:title" content="퀵 드로우 듀얼 – 카우보이 반응 웹게임" />
         <meta
             name="twitter:description"
-            content="Challenge your friends: see who has the fastest draw in this fun, instant western game!" />
+            content="친구에게 도전하세요: 이 재미있고 즉시 실행되는 서부 게임에서 누가 가장 빠른지 확인해보세요!" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -46,7 +46,7 @@
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <title>Quick Draw</title>
+        <title>퀵 드로우 듀얼</title>
         <link
             href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;700&display=swap"
             rel="stylesheet" />
@@ -151,30 +151,30 @@
     </head>
 
     <body>
-        <h1>Quick Draw</h1>
-        <p>Draw, then shoot faster than your enemy!</p>
+        <h1>퀵 드로우 듀얼</h1>
+        <p>신호를 기다렸다가 상대보다 빠르게 사격하세요!</p>
         <div class="arena">
             <div class="cowboy" id="enemy">
                 <div id="enemyFace">🤠</div>
                 <div id="enemyGun" class="gun">🔫</div>
-                <span>ENEMY</span>
+                <span>적</span>
             </div>
             <div class="cowboy" id="player">
                 <div id="playerFace">😐</div>
                 <div id="playerGun" class="gun">🔫</div>
-                <span>YOU</span>
+                <span>당신</span>
             </div>
         </div>
 
-        <div id="message">Click "Start" to begin.</div>
+        <div id="message">“시작”을 눌러 게임을 시작하세요.</div>
 
         <div class="btn-group">
-            <button class="btn" id="startBtn" onclick="startGame()">Start</button>
+            <button class="btn" id="startBtn" onclick="startGame()">시작</button>
             <button class="btn" id="shootBtn" onclick="handlePlayerShoot()" style="display: none; background: red">
-                SHOOT!
+                사격!
             </button>
-            <button class="btn" id="restartBtn" onclick="restartGame()" style="display: none">Play Again</button>
-            <button class="btn" id="shareBtn" onclick="shareResult()" style="display: none">Share</button>
+            <button class="btn" id="restartBtn" onclick="restartGame()" style="display: none">다시 플레이</button>
+            <button class="btn" id="shareBtn" onclick="shareResult()" style="display: none">공유하기</button>
         </div>
 
         <script>
@@ -211,13 +211,13 @@
                 restartBtn.style.display = "none";
                 shareBtn.style.display = "none";
                 shootBtn.style.display = "inline-block";
-                message.textContent = "Wait for DRAW...";
+                message.textContent = "DRAW 신호를 기다리세요...";
 
                 drawTimeout = setTimeout(
                     () => {
                         readyToShoot = true;
                         drawTime = performance.now();
-                        message.textContent = "DRAW! 🔫";
+                        message.textContent = "발사! 🔫";
                         enemyFace.textContent = "😠";
                         playerFace.textContent = "😠";
 
@@ -226,7 +226,7 @@
                             if (!playerReacted) {
                                 enemyGun.classList.add("show");
                                 playerFace.textContent = "💀";
-                                endGame("You were too slow!");
+                                endGame("너무 느려서 졌어요!");
                             }
                         }, enemyReactTime);
                     },
@@ -256,8 +256,8 @@
 
                 if (!readyToShoot) {
                     playerFace.textContent = "😵";
-                    message.textContent = "Too early! You lose.";
-                    endGame("Too early!");
+                    message.textContent = "너무 일찍 쏘셨습니다! 패배!";
+                    endGame("너무 일찍!");
                     return;
                 }
 
@@ -269,10 +269,10 @@
 
                 if (enemyGun.classList.contains("show")) {
                     playerFace.textContent = "💀";
-                    endGame("Too late!");
+                    endGame("너무 늦었어요!");
                 } else {
                     enemyFace.textContent = "💀";
-                    endGame(`You win! (${lastReaction}ms)`);
+                    endGame(`당신이 승리했습니다! (${lastReaction}ms)`);
                 }
             }
 
@@ -282,13 +282,13 @@
 
             function shareResult() {
                 const baseUrl = "https://emfls.github.io/QuickDraw/index.html";
-                let text = "🔥 I just played Quick Draw!";
+                let text = "🔥 방금 퀵 드로우 듀얼을 플레이했어요!";
                 if (lastReaction !== null) {
-                    text = `🤠 I won the Quick Draw Duel in ${lastReaction}ms! Think you’re faster?`;
+                    text = `🤠 저는 퀵 드로우 듀얼에서 ${lastReaction}ms에 승리했어요! 당신도 도전해보세요!`;
                 }
 
                 const shareData = {
-                    title: "Quick Draw",
+                    title: "퀵 드로우 듀얼",
                     text: text,
                     url: baseUrl
                 };
@@ -304,7 +304,7 @@
 
             function fallbackCopy(text) {
                 navigator.clipboard.writeText(text).then(() => {
-                    alert("Result copied to clipboard! Now go paste it somewhere 😎");
+                    alert("결과가 클립보드에 복사되었습니다! 공유할 곳에 붙여넣어보세요 😎");
                 });
             }
 
@@ -328,41 +328,41 @@
                 color: white;
             "
             onclick="window.location.href='/'">
-            📂 Other Games
+            📂 다른 게임
         </button>
         <section style="max-width: 320px; width: 100%; margin: 48px auto 24px auto; font-family: 'Arial', sans-serif; font-size: 14px; background: #fff8e0; border-radius: 18px; box-shadow: 0 6px 24px #aa8844; padding: 20px; line-height: 1.6; color: #3e2c00;">
-  <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #5a3e1b;">❓ Frequently Asked Questions</h2>
+          <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #5a3e1b;">❓ 자주 묻는 질문</h2>
 
-  <div style="margin-bottom: 12px;">
-    <strong>Q1. How do I play?</strong><br/>
-    A. Wait for the “DRAW!” signal, then tap the screen or press SHOOT! before your enemy shoots.
-  </div>
+          <div style="margin-bottom: 12px;">
+            <strong>Q1. 게임 방법이 어떻게 되나요?</strong><br/>
+            A. “발사(DRAW)!” 신호가 나오면 화면을 탭하거나 “사격!” 버튼을 눌러 상대보다 먼저 사격하세요.
+          </div>
 
-  <div style="margin-bottom: 12px;">
-    <strong>Q2. What happens if I shoot too early?</strong><br/>
-    A. You'll lose immediately. Only shoot after “DRAW” appears!
-  </div>
+          <div style="margin-bottom: 12px;">
+            <strong>Q2. 너무 일찍 쏘면 어떻게 되나요?</strong><br/>
+            A. “발사” 신호 전에 사격하면 즉시 패배합니다. 신호가 나올 때까지 기다리세요!
+          </div>
 
-  <div style="margin-bottom: 12px;">
-    <strong>Q3. Can I play on mobile?</strong><br/>
-    A. Yes! Just tap the screen anywhere to shoot — no need to press the button.
-  </div>
+          <div style="margin-bottom: 12px;">
+            <strong>Q3. 모바일에서도 플레이할 수 있나요?</strong><br/>
+            A. 네! 화면 아무 곳이나 탭해도 사격됩니다. 버튼을 누를 필요 없이 즐기세요!
+          </div>
 
-  <div style="margin-bottom: 12px;">
-    <strong>Q4. What’s a good reaction time?</strong><br/>
-    A. Anything under 300ms is great. Elite cowboys get below 200ms!
-  </div>
+          <div style="margin-bottom: 12px;">
+            <strong>Q4. 좋은 반응 속도는 어느 정도인가요?</strong><br/>
+            A. 300ms 이하면 좋습니다. 프로 카우보이들은 200ms 이하를 기록하기도 해요!
+          </div>
 
-  <div style="margin-bottom: 12px;">
-    <strong>Q5. Can I share my score?</strong><br/>
-    A. Yes! Use the Share button after your duel to show off your reflexes.
-  </div>
+          <div style="margin-bottom: 12px;">
+            <strong>Q5. 내 기록을 공유할 수 있나요?</strong><br/>
+            A. 네! 듀얼 후 “공유하기” 버튼을 사용해 반응 속도를 자랑하세요.
+          </div>
 
-  <div style="margin-bottom: 0;">
-    <strong>Q6. Is it fair every time?</strong><br/>
-    A. Yes — the timing and AI reaction are randomized to keep it unpredictable.
-  </div>
-</section>
+          <div style="margin-bottom: 0;">
+            <strong>Q6. 매번 공정한 게임인가요?</strong><br/>
+            A. 네. 신호 타이밍과 AI 반응이 매번 무작위로 설정되어 예측하기 어렵습니다.
+          </div>
+        </section>
 
     </body>
 </html>

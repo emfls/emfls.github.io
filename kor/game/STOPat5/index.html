@@ -1,36 +1,40 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta
-            name="description"
-            content="How accurate is your sense of time? Stop the timer as close to 5.000 seconds as you can! Level up, challenge your friends, and test your precision." />
-        <meta
-            name="keywords"
-            content="stop at 5, timer game, reaction game, timing challenge, level up, reflex game, 웹게임, 반응속도, 타이머게임, 무료게임, 브라우저게임" />
-        <meta name="author" content="Itagi" />
+        <title>스탑 앳 5</title>
         <meta name="robots" content="index, follow" />
 
         <!-- Canonical URL -->
         <link rel="canonical" href="https://emfls.github.io/kor/game/STOPat5" />
 
+        <!-- SEO Meta -->
+        <meta
+            name="description"
+            content="당신의 시간 감각은 얼마나 정확한가요? 타이머를 5.000초에 최대한 가깝게 멈춰보세요! 레벨 업하고 친구들에게 도전하세요. 무료, 모바일 최적화 웹게임." />
+        <meta
+            name="keywords"
+            content="스탑 앳 5, 타이머 게임, 반응 게임, 타이밍 챌린지, 레벨 업, 웹게임, 무료 게임, 브라우저 게임" />
+        <meta name="author" content="Itagi" />
+
         <!-- Open Graph (Facebook, Kakao, Discord) -->
-        <meta property="og:title" content="Stop at 5 – Timing Challenge Game" />
+        <meta property="og:title" content="스탑 앳 5 – 타이밍 챌린지 게임" />
         <meta
             property="og:description"
-            content="Test your timing: stop as close to 5.000 seconds as possible! Level up if you succeed. Free, mobile-friendly webgame." />
+            content="5.000초에 최대한 가깝게 멈춰보세요! 성공하면 레벨 업. 무료, 모바일 최적화 웹게임입니다." />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/kor/game/STOPat5" />
         <meta property="og:type" content="website" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Stop at 5 – Timing Challenge Game" />
+        <meta name="twitter:title" content="스탑 앳 5 – 타이밍 챌린지 게임" />
         <meta
             name="twitter:description"
-            content="Can you hit 5 seconds exactly? Play Stop at 5 and challenge your friends!" />
+            content="정확히 5초에 멈출 수 있나요? 스탑 앳 5를 플레이하고 친구에게 도전해보세요!" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
@@ -39,14 +43,12 @@
                 dataLayer.push(arguments);
             }
             gtag("js", new Date());
-
             gtag("config", "G-QP5Q67GE5B");
         </script>
         <script
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <title>Stop at 5</title>
         <style>
             * {
                 box-sizing: border-box;
@@ -233,24 +235,27 @@
 
     <body>
         <div id="game-container">
-            <h1><span id="mainTitle">STOP</span><br /><span id="subTitle">at 5</span></h1>
+            <h1>
+                <span id="mainTitle">스탑</span><br />
+                <span id="subTitle">앳 5</span>
+            </h1>
             <div id="mainUI">
                 <div id="levelBox">
-                    <span id="levelLabel">LEVEL 1</span>
-                    <span id="toleranceInfo">±0.5s tolerance</span>
+                    <span id="levelLabel">레벨 1</span>
+                    <span id="toleranceInfo">±0.5초 허용 범위</span>
                 </div>
-                <div id="timer">0.000s</div>
-                <button id="startBtn">Start</button>
+                <div id="timer">0.000초</div>
+                <button id="startBtn">시작</button>
                 <div id="result"></div>
             </div>
-            <div id="levelUpBanner">Level Up!</div>
+            <div id="levelUpBanner">레벨 업!</div>
             <div id="gameOverArea">
-                <p><strong style="font-size: 1.6rem">❌ GAME OVER</strong></p>
-                <div id="finalLevelBox">Level Reached: <span id="finalLevel">1</span></div>
-                <div id="finalDiff">Off by: <span id="finalDiffValue">0.000s</span></div>
+                <p><strong style="font-size: 1.6rem">❌ 게임 오버</strong></p>
+                <div id="finalLevelBox">획득 레벨: <span id="finalLevel">1</span></div>
+                <div id="finalDiff">오차: <span id="finalDiffValue">0.000초</span></div>
                 <div style="margin-top: 1.5rem">
-                    <button onclick="restartGame()">Restart</button>
-                    <button onclick="shareResult()">Share</button>
+                    <button onclick="restartGame()">다시 시작</button>
+                    <button onclick="shareResult()">공유하기</button>
                 </div>
             </div>
         </div>
@@ -318,15 +323,15 @@
 
             function updateTimer() {
                 const elapsed = (performance.now() - startTime) / 1000;
-                timerEl.textContent = `${elapsed.toFixed(3)}s`;
+                timerEl.textContent = `${elapsed.toFixed(3)}초`;
                 animationFrame = requestAnimationFrame(updateTimer);
             }
 
             function updateLevelUI() {
                 const tolerance = toleranceByLevel(level);
                 const colors = colorByLevel(level);
-                levelLabel.textContent = `LEVEL ${level}`;
-                toleranceInfo.textContent = `±${tolerance}s tolerance`;
+                levelLabel.textContent = `레벨 ${level}`;
+                toleranceInfo.textContent = `±${tolerance}초 허용 범위`;
                 levelBox.style.background = colors.bg;
                 levelBox.style.borderLeft = `6px solid ${colors.border}`;
                 levelLabel.style.color = colors.text;
@@ -346,31 +351,31 @@
                 mainUI.style.display = "none";
                 gameOverArea.style.display = "block";
                 finalLevel.textContent = level;
-                finalDiffValue.textContent = `${diff.toFixed(3)}s`;
+                finalDiffValue.textContent = `${diff.toFixed(3)}초`;
             }
 
             function restartGame() {
                 level = 1;
                 isGameOver = false;
                 btn.disabled = false;
-                btn.textContent = "Start";
+                btn.textContent = "시작";
                 resultEl.innerHTML = "";
                 gameOverArea.style.display = "none";
                 mainUI.style.display = "block";
                 updateLevelUI();
-                timerEl.textContent = "0.000s";
+                timerEl.textContent = "0.000초";
             }
 
             function shareResult() {
-                const text = `🎮 Stop at 5 Game\nFinal Reached Level: ${level}\nTry it out 👉 https://emfls.github.io/STOPat5/`;
+                const text = `🎮 스탑 앳 5 게임\n획득 레벨: ${level}\n도전해보세요 👉 https://emfls.github.io/kor/game/STOPat5`;
                 if (navigator.share) {
                     navigator.share({
-                        title: "Stop at 5",
+                        title: "스탑 앳 5",
                         text
                     });
                 } else {
                     navigator.clipboard.writeText(text);
-                    alert("📋 Result copied to clipboard!");
+                    alert("📋 결과가 클립보드에 복사되었습니다!");
                 }
             }
 
@@ -379,7 +384,7 @@
                 if (!running) {
                     startTime = performance.now();
                     updateTimer();
-                    btn.textContent = "Stop!";
+                    btn.textContent = "멈춰!";
                     resultEl.textContent = "";
                     running = true;
                 } else {
@@ -388,17 +393,17 @@
                     const formattedTime = finalTime.toFixed(3);
                     const diff = Math.abs(finalTime - 5);
                     const tolerance = toleranceByLevel(level);
-                    timerEl.textContent = `${formattedTime}s`;
+                    timerEl.textContent = `${formattedTime}초`;
                     if (diff <= tolerance) {
-                        resultEl.innerHTML = `🎉 <b>Success!</b> You stopped at <b>${formattedTime}s</b><br>🎯 Off by <b>±${diff.toFixed(3)}s</b>`;
+                        resultEl.innerHTML = `🎉 <b>성공!</b> ${formattedTime}초에 멈추셨습니다<br>🎯 오차: ±${diff.toFixed(3)}초`;
                         level++;
                         showBanner();
                     } else {
-                        resultEl.innerHTML = `❌ <b>Miss!</b> You stopped at <b>${formattedTime}s</b><br>Off by <b>±${diff.toFixed(3)}s</b>`;
+                        resultEl.innerHTML = `❌ <b>실패!</b> ${formattedTime}초에 멈추셨습니다<br>오차: ±${diff.toFixed(3)}초`;
                         gameOver(diff);
                     }
                     updateLevelUI();
-                    btn.textContent = "Try Again";
+                    btn.textContent = "다시 시도";
                     running = false;
                 }
             });
@@ -415,19 +420,20 @@
                 text-align: center;
                 width: 90%;
                 max-width: 400px;
-                position: relative;
                 color: black;
                 font-weight: bold;
+                border: none;
+                cursor: pointer;
             "
             onclick="window.location.href='/'">
-            📂 Other Games
+            📂 다른 게임
         </button>
         <section
             style="
                 max-width: 320px;
                 width: 100%;
                 margin: 48px auto 24px auto;
-                font-family: &quot;Arial&quot;, sans-serif;
+                font-family: 'Arial', sans-serif;
                 font-size: 14px;
                 background: #1e1e1e;
                 border-radius: 18px;
@@ -436,36 +442,36 @@
                 line-height: 1.6;
                 color: #f0f0f0;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ Frequently Asked Questions</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ 자주 묻는 질문</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. How do I play Stop at 5?</strong><br />
-                A. Tap "Start", then stop the timer as close to 5.000 seconds as possible by pressing "Stop!".
+                <strong>Q1. 스탑 앳 5는 어떻게 플레이하나요?</strong><br />
+                A. “시작” 버튼을 누른 뒤, “멈춰!” 버튼을 눌러 5.000초에 최대한 가깝게 타이머를 멈추세요.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. What does the level system mean?</strong><br />
-                A. Each level tightens the time tolerance. You must stop closer to 5.000s as you progress.
+                <strong>Q2. 레벨 시스템은 무엇인가요?</strong><br />
+                A. 레벨이 올라갈수록 허용 오차가 줄어듭니다. 더 높은 레벨에서는 5.000초에 더 가까워야 합니다.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. When does the game end?</strong><br />
-                A. If your timing is outside the allowed tolerance, the game ends and your final level is shown.
+                <strong>Q3. 게임이 언제 종료되나요?</strong><br />
+                A. 허용 오차 범위를 벗어나면 게임이 종료되고 최종 레벨이 표시됩니다.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. Can I retry after failing?</strong><br />
-                A. Yes! Press "Try Again" to restart from Level 1 anytime.
+                <strong>Q4. 실패 후 재시도할 수 있나요?</strong><br />
+                A. 네! “다시 시도” 버튼을 눌러 언제든 레벨 1부터 다시 시작할 수 있습니다.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. Is the game mobile-friendly?</strong><br />
-                A. Yes! The game is fully optimized for both mobile and desktop devices.
+                <strong>Q5. 모바일에서도 플레이할 수 있나요?</strong><br />
+                A. 네! 이 게임은 모바일과 데스크톱 모두 최적화되어 있습니다.
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. Can I share my final result?</strong><br />
-                A. Absolutely! Tap the "Share" button after the game to copy or share your final level.
+                <strong>Q6. 결과를 공유할 수 있나요?</strong><br />
+                A. 물론입니다! 게임 종료 후 “공유하기” 버튼을 눌러 최종 레벨과 링크를 복사하거나 전송하세요.
             </div>
         </section>
     </body>

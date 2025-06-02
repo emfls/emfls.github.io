@@ -1,35 +1,31 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="Play PONG vs AI – A retro-style Pong game! Beat the AI to 10 points. Mobile and PC friendly, free to play in your browser." />
+            content="AI와 대결하는 PONG 게임! 레트로 스타일의 퐁 게임에서 AI를 상대로 10점을 먼저 획득하세요. 모바일과 PC에서 모두 무료로 즐길 수 있습니다." />
         <meta
             name="keywords"
-            content="pong, pong ai, pong webgame, browser game, classic arcade, ai pong, pingpong, table tennis, 무료 게임, 웹게임, 모바일 게임, instant play, 오락실" />
+            content="퐁, 퐁 AI, 퐁 웹게임, 브라우저 게임, 고전 아케이드, AI 퐁, 핑퐁, 탁구, 무료 게임, 웹게임, 모바일 게임, 즉시 플레이, 오락실" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
-        <!-- Canonical URL -->
         <link rel="canonical" href="https://emfls.github.io/kor/game/PONGvsAI" />
 
-        <!-- Open Graph (Facebook, Kakao, Discord) -->
-        <meta property="og:title" content="PONG vs AI – Classic Pong Web Game" />
+        <meta property="og:title" content="PONG vs AI – 클래식 퐁 웹 게임" />
         <meta
             property="og:description"
-            content="Challenge the AI and be the first to 10 points! Enjoy retro Pong in your browser. No download, just play." />
+            content="AI에 도전하여 먼저 10점을 획득하세요! 브라우저에서 레트로 퐁을 즐겨보세요. 다운로드 없이 바로 플레이!" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/kor/game/PONGvsAI" />
         <meta property="og:type" content="website" />
 
-        <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="PONG vs AI – Classic Pong Web Game" />
-        <meta name="twitter:description" content="Classic Pong with smart AI. Play instantly and share your score!" />
+        <meta name="twitter:title" content="PONG vs AI – 클래식 퐁 웹 게임" />
+        <meta name="twitter:description" content="스마트 AI와 함께하는 클래식 퐁. 바로 플레이하고 점수를 공유하세요!" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-        <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -212,20 +208,20 @@
     <body>
         <div id="container">
             <div id="gameTitle">PONG vs AI</div>
-            <div id="desc">First to 10 wins!</div>
+            <div id="desc">10점 먼저 내면 승리!</div>
             <div id="scoreBoard"></div>
             <canvas id="pong" width="400" height="260"></canvas>
-            <button id="startBtn" onclick="startGame()">Start Game</button>
+            <button id="startBtn" onclick="startGame()">게임 시작</button>
             <div id="winMsg"></div>
             <div class="gameOverBtns" style="display: none">
-                <button onclick="restartGame()">Restart</button>
-                <button onclick="shareScore()">Share</button>
+                <button onclick="restartGame()">재시작</button>
+                <button onclick="shareScore()">공유</button>
             </div>
             <div class="desc-ctrl">
-                Controls: W/S (Left, You) &middot; Right paddle is AI. <br />On mobile, drag left side.
+                조작법: W/S (왼쪽, 당신) &middot; 오른쪽 패들은 AI입니다. <br />모바일에서는 왼쪽을 드래그하세요.
             </div>
         </div>
-        <button id="otherGames" onclick="window.location.href='../'">Other Games</button>
+        <button id="otherGames" onclick="window.location.href='../'">다른 게임</button>
         <script>
             // --- 변수 선언 ---
             const canvas = document.getElementById("pong");
@@ -264,7 +260,7 @@
                         vy: Math.sin(angle) * speed,
                         alpha: 1.1,
                         life: 12 + Math.random() * 5,
-                        color
+                        color,
                     });
                 }
             }
@@ -364,7 +360,7 @@
                     sparkAt = {
                         x: ballX + ballSize / 2,
                         y: ballY + ballSize / 2,
-                        color: "#ffe287"
+                        color: "#ffe287",
                     };
                 }
                 if (
@@ -379,7 +375,7 @@
                     sparkAt = {
                         x: ballX + ballSize / 2,
                         y: ballY + ballSize / 2,
-                        color: "#86f4ff"
+                        color: "#86f4ff",
                     };
                 }
                 if (sparkAt) spawnSpark(sparkAt.x, sparkAt.y, sparkAt.color);
@@ -439,20 +435,20 @@
                 gameRunning = false;
                 inGame = false;
                 cancelAnimationFrame(rafId);
-                winMsgDiv.textContent = playerWin ? "You Win! 🎉" : "AI Wins! 🤖";
+                winMsgDiv.textContent = playerWin ? "당신이 이겼습니다! 🎉" : "AI 승리! 🤖";
                 gameOverBtns.style.display = "block";
             }
             // 공유 버튼
             function shareScore() {
-                let text = `[Pong vs AI]\n${winMsgDiv.textContent}\nMy Score: ${leftScore}, AI: ${rightScore}\n\nTry it here:\n${window.location.href}`;
+                let text = `[Pong vs AI]\n${winMsgDiv.textContent}\n내 점수: ${leftScore}, AI: ${rightScore}\n\n여기서 플레이해보세요:\n${window.location.href}`;
                 if (navigator.share) {
                     navigator.share({
                         title: "Pong vs AI",
-                        text
+                        text,
                     });
                 } else {
                     navigator.clipboard.writeText(text);
-                    alert("Copied result to clipboard!\n\n" + text);
+                    alert("결과가 클립보드에 복사되었습니다!\n\n" + text);
                 }
             }
             // 키보드 조작
@@ -497,7 +493,7 @@
                     if (inGame) e.preventDefault();
                 },
                 {
-                    passive: false
+                    passive: false,
                 }
             );
             // 최초 화면 준비
@@ -522,37 +518,36 @@
                 line-height: 1.6;
                 color: #f0f0f0;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #f9bc60">❓ Frequently Asked Questions</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #f9bc60">❓ 자주 묻는 질문</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. How do I play?</strong><br />
-                A. Control the left paddle and try to reach 10 points before the AI. Use W/S keys or drag on mobile.
+                <strong>Q1. 어떻게 플레이하나요?</strong><br />
+                A. 왼쪽 패들을 조종하여 AI보다 먼저 10점을 획득하세요. W/S 키를 사용하거나 모바일에서는 드래그하여 조작할 수 있습니다.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. What are the controls?</strong><br />
-                A. On PC, use the W (up) and S (down) keys. On mobile, drag your finger on the left side of the screen.
+                <strong>Q2. 조작법은 무엇인가요?</strong><br />
+                A. PC에서는 W (위로) 및 S (아래로) 키를 사용하세요. 모바일에서는 화면 왼쪽을 손가락으로 드래그하여 조작합니다.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. How does the AI work?</strong><br />
-                A. The AI tracks the ball and moves automatically to defend its side. The higher the speed, the harder
-                it becomes.
+                <strong>Q3. AI는 어떻게 작동하나요?</strong><br />
+                A. AI는 공을 추적하고 자동으로 자신의 영역을 방어합니다. 공의 속도가 빠를수록 AI의 난이도도 높아집니다.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. What happens when I win or lose?</strong><br />
-                A. You’ll see a victory or defeat message. You can then choose to restart or share your score.
+                <strong>Q4. 승리하거나 패배하면 어떻게 되나요?</strong><br />
+                A. 승리 또는 패배 메시지가 표시됩니다. 그 후 재시작하거나 점수를 공유할 수 있습니다.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. Can I share my result?</strong><br />
-                A. Yes! Tap the <strong>Share</strong> button to copy or share your score with friends.
+                <strong>Q5. 결과를 공유할 수 있나요?</strong><br />
+                A. 네! **공유** 버튼을 눌러 점수를 복사하거나 친구들과 공유할 수 있습니다.
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. Is it mobile-friendly?</strong><br />
-                A. Yes, fully optimized for mobile and desktop browsers.
+                <strong>Q6. 모바일 친화적인가요?</strong><br />
+                A. 네, 모바일 및 데스크톱 브라우저 모두에 최적화되어 있습니다.
             </div>
         </section>
     </body>

@@ -1,27 +1,27 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <title>Easy Recipe Finder – What Can I Cook?</title>
+    <title>간단 레시피 찾기 – 무엇을 요리할까?</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Find easy recipes by your ingredients. Kid-friendly, super simple, and shows YouTube recipe links!" />
+      content="재료만 입력하면 간단 레시피를 찾아줍니다. 아이들도 쉽게, 유튜브 레시피 링크까지 보여줘요!" />
     <meta
       name="keywords"
-      content="easy recipe, kids cooking, find recipe, what can I make, cooking for kids, recipe search" />
+      content="간단 레시피, 아이들 요리, 레시피 찾기, 집에 있는 재료, 요리 검색, 키즈 쿠킹" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="en" />
+    <meta name="language" content="ko" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <!-- SEO, Open Graph, Twitter, GA, AdSense 생략 없이 넣어둠 -->
-    <meta property="og:title" content="Easy Recipe Finder for Kids – What Can I Cook?" />
-    <meta property="og:description" content="Just type your ingredients and find easy recipes. Try it, super simple!" />
+    <!-- SEO, Open Graph, Twitter, GA, AdSense 포함 -->
+    <meta property="og:title" content="아이들을 위한 간단 레시피 찾기 – 무엇을 요리할까?" />
+    <meta property="og:description" content="재료를 입력하면 간단 레시피를 찾아줘요. 정말 쉬워요!" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://emfls.github.io/util/easy-recipe-finder/" />
+    <meta property="og:url" content="https://emfls.github.io/kor/util/recipe-finder/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Easy Recipe Finder – What Can I Cook?" />
-    <meta name="twitter:description" content="Find recipes with your ingredients, kid-friendly and fun!" />
+    <meta name="twitter:title" content="간단 레시피 찾기 – 무엇을 요리할까?" />
+    <meta name="twitter:description" content="재료로 요리법 찾기, 아이들도 쉽게!" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
@@ -79,6 +79,7 @@
         border: 1.5px solid #bae1f6;
         padding: 7px 6px;
         min-height: 38px;
+        position: relative;
       }
       .ingredient-chip {
         background: #e2eafd;
@@ -224,33 +225,31 @@
         }
       }
     </style>
+    <!-- 외부 레시피 DB: recipes.js에서 window.RECIPES_DB, window.INGREDIENTS_DB 로드 -->
     <script src="recipes.js"></script>
-    <!-- 외부 DB 파일 불러오기 -->
   </head>
   <body>
     <div class="container">
-      <div class="logo">🍳 Easy Recipe Finder</div>
-      <div class="desc">What ingredients do you have? <br /><b>Type or choose below!</b></div>
-      <span class="input-label">Your Ingredients:</span>
-      <div class="ingredient-input-box" id="ingredientWrap" style="position: relative">
+      <div class="logo">🍳 간단 레시피 찾기</div>
+      <div class="desc">어떤 재료가 있나요?<br /><b>아래에 입력해 보세요!</b></div>
+      <span class="input-label">보유 재료:</span>
+      <div class="ingredient-input-box" id="ingredientWrap">
         <input
           type="text"
           class="ingredient-input"
           id="ingredientInput"
-          placeholder="E.g. egg, cheese, milk"
+          placeholder="예: 달걀, 치즈, 우유"
           autocomplete="off" />
         <div class="autocomplete-box" id="autocompleteBox"></div>
       </div>
-      <button class="search-btn" id="searchBtn">Show Recipes</button>
+      <button class="search-btn" id="searchBtn">레시피 보여주기</button>
       <div class="recipes-list" id="recipesList"></div>
       <div class="footer">
-        No upload. Kid-safe, simple and fun!<br />
-        Made by <b>Itagi</b>.
       </div>
-      <a href="../index.html" id="backBtn">Other Util</a>
+      <a href="../index.html" id="backBtn">기타 도구</a>
     </div>
     <script>
-      // DB는 recipes.js에서 window.RECIPES_DB, window.INGREDIENTS_DB로 불러옴!
+      // recipes.js 에서 window.RECIPES_DB, window.INGREDIENTS_DB 로딩
       const RECIPES = window.RECIPES_DB || [];
       const INGREDIENTS = window.INGREDIENTS_DB || [];
       const ingredientInput = document.getElementById("ingredientInput");
@@ -260,7 +259,7 @@
       const recipesList = document.getElementById("recipesList");
       let selectedIngredients = [];
 
-      // 자동완성 (아주 심플하게)
+      // 자동완성 표시
       function showAutocomplete(val) {
         autocompleteBox.innerHTML = "";
         if (!val) {
@@ -305,7 +304,7 @@
       function addIngredient(val) {
         val = val
           .toLowerCase()
-          .replace(/[^a-z0-9\s]/g, "")
+          .replace(/[^가-힣\s]/g, "")
           .trim();
         if (!val || selectedIngredients.includes(val)) return;
         selectedIngredients.push(val);
@@ -316,7 +315,7 @@
         updateChips();
       }
       function updateChips() {
-        // chip 제거
+        // 기존 칩 제거
         ingredientWrap.querySelectorAll(".ingredient-chip").forEach((el) => el.remove());
         selectedIngredients.forEach((ing) => {
           const chip = document.createElement("div");
@@ -331,10 +330,10 @@
         });
       }
 
-      // 3. 요리 매칭 및 출력 (YouTube 링크 포함)
+      // 레시피 매칭 및 표시 (YouTube 링크 포함)
       function showRecipes() {
         if (selectedIngredients.length === 0) {
-          recipesList.innerHTML = `<div style="color:#aaa;font-size:1.11em;text-align:center;">Type your ingredients above!</div>`;
+          recipesList.innerHTML = `<div style="color:#aaa;font-size:1.11em;text-align:center;">재료를 입력해 주세요!</div>`;
           return;
         }
         const matches = RECIPES.map((r) => {
@@ -350,7 +349,7 @@
           .filter((r) => r.matchedCount > 0)
           .sort((a, b) => b.matchedCount - a.matchedCount || a.total - b.total);
         if (matches.length === 0) {
-          recipesList.innerHTML = `<div style="color:#e57272;text-align:center;">No recipes found. Try different ingredients!</div>`;
+          recipesList.innerHTML = `<div style="color:#e57272;text-align:center;">해당 재료로 찾은 레시피가 없습니다. 다른 재료를 시도해 보세요!</div>`;
           return;
         }
         recipesList.innerHTML = matches
@@ -358,12 +357,12 @@
             (r) => `
         <div class="recipe-card">
           <div class="recipe-title">${r.name}</div>
-          <div class="match-info">Matching: <b>${r.matchedCount}</b> / ${r.total} ingredients</div>
-          <div class="all-ings">Ingredients: ${r.ingredients
+          <div class="match-info">일치 재료: <b>${r.matchedCount}</b> / ${r.total}</div>
+          <div class="all-ings">재료: ${r.ingredients
             .map((i) => (r.matched.includes(i) ? `<b style="color:#228e6f">${i}</b>` : i))
             .join(", ")}</div>
-          <button class="yt-link-btn" onclick="window.open('https://www.youtube.com/results?search_query=${encodeURIComponent(r.name + " recipe")}', '_blank')">
-            ▶ See on YouTube
+          <button class="yt-link-btn" onclick="window.open('https://www.youtube.com/results?search_query=${encodeURIComponent(r.name + " 레시피")}', '_blank')">
+            ▶ 유튜브에서 보기
           </button>
         </div>
       `
@@ -375,7 +374,7 @@
         if (selectedIngredients.length) showRecipes();
       });
 
-      // 첫 화면 안내
+      // 첫 로드 시 안내 문구 표시
       showRecipes();
     </script>
     <section
@@ -388,43 +387,41 @@
         padding: 18px;
       ">
       <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 12px">
-        FAQ – Easy Recipe Finder
+        FAQ – 간단 레시피 찾기
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Q. Do I need to sign up or log in?</div>
+        <div style="color: #8f94fb; font-weight: bold">Q. 가입이나 로그인이 필요한가요?</div>
         <div style="color: #f0f0f0">
-          Nope! Everything works without login. Your ingredients and search results stay only in your browser.
+          아니요! 로그인 없이 모두 브라우저 내에서 처리됩니다. 입력한 재료와 결과는 기기에만 남습니다.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Q. Is this site safe for kids?</div>
+        <div style="color: #8f94fb; font-weight: bold">Q. 아이들도 안전하게 사용할 수 있나요?</div>
         <div style="color: #f0f0f0">
-          Yes! There is no personal data collection or external upload. All features are designed to be kid-friendly and
-          ad-light.
+          네! 개인 정보 수집이나 외부 업로드가 없고, 광고도 최소화하여 아이들도 안심하고 사용할 수 있습니다.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Q. Where are the recipes from?</div>
+        <div style="color: #8f94fb; font-weight: bold">Q. 레시피 데이터는 어디서 가져오나요?</div>
         <div style="color: #f0f0f0">
-          Recipe ideas are matched from a simple local database. YouTube links are generated based on recipe names for
-          easy video guides.
+          간단한 로컬 데이터베이스에서 레시피를 매칭합니다. 유튜브 링크는 레시피 이름으로 검색된 영상으로 연결됩니다.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Q. Can I request more recipes?</div>
+        <div style="color: #8f94fb; font-weight: bold">Q. 더 많은 레시피를 요청할 수 있나요?</div>
         <div style="color: #f0f0f0">
-          Currently, the list is fixed. But we may add a suggestion form in the future. Stay tuned!
+          현재는 목록이 고정되어 있습니다. 향후 제안 기능을 추가할 수 있으니 기대해 주세요!
         </div>
       </div>
 
       <div>
-        <div style="color: #8f94fb; font-weight: bold">Q. Does it work offline?</div>
+        <div style="color: #8f94fb; font-weight: bold">Q. 오프라인에서도 작동하나요?</div>
         <div style="color: #f0f0f0">
-          Yes, it works once loaded. However, YouTube links require internet connection to open.
+          네, 한 번 페이지가 로드되면 인터넷 연결 없이도 재료 입력과 레시피 매칭이 가능하지만, 유튜브 영상은 인터넷이 필요합니다.
         </div>
       </div>
     </section>

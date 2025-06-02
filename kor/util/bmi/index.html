@@ -1,24 +1,24 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <title>BMI Calculator – Body Mass Index & Body Measurements</title>
+  <title>BMI 계산기 – 체질량지수 & 신체 측정</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="Calculate your BMI (Body Mass Index) instantly. Enter height and weight, get your BMI, category, and recommended range. 100% free, browser-based, mobile friendly." />
-  <meta name="keywords" content="bmi, body mass index, health, calculator, weight, height, obesity, fat, body, fitness, measure, 신체질량지수, 체질량지수, 비만도, 건강" />
+  <meta name="description" content="키와 몸무게를 입력하여 즉시 BMI(체질량지수)를 계산하세요. BMI 수치, 분류, 권장 범위를 확인할 수 있습니다. 100% 무료, 브라우저 기반, 모바일 친화적입니다." />
+  <meta name="keywords" content="bmi, 체질량지수, 건강, 계산기, 체중, 키, 비만도, 몸, 피트니스, 측정" />
   <meta name="author" content="Itagi" />
-  <meta name="language" content="en" />
+  <meta name="language" content="ko" />
   <meta name="theme-color" content="#2e74d1" />
-  <link rel="canonical" href="https://emfls.github.io/util/bmi/" />
+  <link rel="canonical" href="https://emfls.github.io/kor/util/bmi/" />
   <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-  <meta property="og:title" content="BMI Calculator – Body Mass Index & Body Measurements"/>
-  <meta property="og:description" content="Check your BMI (Body Mass Index) in seconds! Enter your height and weight to get instant results."/>
+  <meta property="og:title" content="BMI 계산기 – 체질량지수 & 신체 측정"/>
+  <meta property="og:description" content="키와 몸무게를 입력하여 몇 초 만에 BMI(체질량지수)를 확인하세요! 즉시 결과를 제공합니다."/>
   <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://emfls.github.io/util/bmi/"/>
+  <meta property="og:url" content="https://emfls.github.io/kor/util/bmi/"/>
   <meta property="og:image" content="https://emfls.github.io/thumbnail.png"/>
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="BMI Calculator – Body Mass Index & Body Measurements"/>
-  <meta name="twitter:description" content="Calculate your BMI instantly. Find your healthy weight range. No upload, 100% browser."/>
+  <meta name="twitter:title" content="BMI 계산기 – 체질량지수 & 신체 측정"/>
+  <meta name="twitter:description" content="키와 몸무게를 입력하여 즉시 BMI를 계산하세요. 건강한 체중 범위를 확인할 수 있습니다. 업로드 불필요, 100% 브라우저 기반."/>
   <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png"/>
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -33,8 +33,8 @@
     crossorigin="anonymous"></script>
   <style>
     :root { --main: #2e74d1; --bg: #f7fafd; }
-    html, body { margin: 0; padding: 0; background: var(--bg);}
-    body { font-family: "Segoe UI", Arial, sans-serif; color: #234;}
+    html, body { margin: 0; padding: 0; background: var(--bg); }
+    body { font-family: "Segoe UI", Arial, sans-serif; color: #234; }
     .container {
       max-width: 370px;
       margin: 34px auto 0 auto;
@@ -48,7 +48,7 @@
     .form-row {
       display: flex; flex-direction: column; gap: 7px; margin-bottom: 13px;
     }
-    .form-row label { font-size: 1em; color: #2264c3; font-weight: 500;}
+    .form-row label { font-size: 1em; color: #2264c3; font-weight: 500; }
     .form-row input[type="number"] {
       box-sizing: border-box;
       padding: 10px 10px;
@@ -60,7 +60,7 @@
       color: #234;
       transition: border 0.15s;
     }
-    .form-row input[type="number"]:focus { border-color: var(--main);}
+    .form-row input[type="number"]:focus { border-color: var(--main); }
     .btn {
       background: var(--main); color: #fff; border: none; border-radius: 8px;
       padding: 13px 0; width: 100%; font-size: 1.13em; font-weight: bold; cursor: pointer;
@@ -93,96 +93,96 @@
       padding: 6px 4px;
       text-align: center;
     }
-    .bmi-table th { background: #e1eefe; color: #2274ba;}
-    .bmi-table td { background: #fff;}
+    .bmi-table th { background: #e1eefe; color: #2274ba; }
+    .bmi-table td { background: #fff; }
     section#faq { margin-top: 26px; }
-    section#faq h2 { margin-bottom: 13px; color: #2e74d1; font-size: 1.14em; text-align: center;}
-    section#faq dt { font-weight: bold; margin-top: 9px;}
-    section#faq dd { margin: 0 0 7px 0; font-size: 0.99em; color: #24528a;}
-    .footer { color: #789; text-align: center; font-size: 0.94em; margin-top: 16px;}
+    section#faq h2 { margin-bottom: 13px; color: #2e74d1; font-size: 1.14em; text-align: center; }
+    section#faq dt { font-weight: bold; margin-top: 9px; }
+    section#faq dd { margin: 0 0 7px 0; font-size: 0.99em; color: #24528a; }
+    .footer { color: #789; text-align: center; font-size: 0.94em; margin-top: 16px; }
     #backBtn {
       position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%);
       background: #2e74d1; color: #fff; font-weight: 700; border: none; border-radius: 2rem;
       padding: 0.58em 1.5em; box-shadow: 0 4px 16px #2e74d166; font-size: 1.09em; text-decoration: none;
       cursor: pointer; letter-spacing: 0.01em; transition: background 0.15s, transform 0.12s; z-index: 2000;
     }
-    #backBtn:hover { background: #144c91; transform: translateX(-50%) scale(1.04);}
+    #backBtn:hover { background: #144c91; transform: translateX(-50%) scale(1.04); }
     @media (max-width: 520px) {
-      .container { max-width: 98vw; padding: 11px 2vw 10px 2vw;}
-      #backBtn { bottom: 18px; font-size: 0.98em; padding: 0.48em 1em;}
+      .container { max-width: 98vw; padding: 11px 2vw 10px 2vw; }
+      #backBtn { bottom: 18px; font-size: 0.98em; padding: 0.48em 1em; }
     }
   </style>
 </head>
 <body>
   <main>
     <div class="container" itemscope itemtype="https://schema.org/HealthApplication">
-      <h1 class="title" itemprop="name">🏃 BMI Calculator</h1>
+      <h1 class="title" itemprop="name">🏃 BMI 계산기</h1>
       <p class="desc" itemprop="description">
-        Instantly calculate your Body Mass Index.<br>
-        Just enter your height and weight!
+        체질량지수(BMI)를 즉시 계산하세요.<br>
+        키(cm)와 몸무게(kg)를 입력하면 결과가 바로 표시됩니다!
       </p>
       <form id="bmiForm" autocomplete="off">
         <div class="form-row">
-          <label for="height">Height (cm)</label>
-          <input type="number" id="height" min="80" max="250" step="0.1" required placeholder="e.g. 170" />
+          <label for="height">키 (cm)</label>
+          <input type="number" id="height" min="80" max="250" step="0.1" required placeholder="예: 170" />
         </div>
         <div class="form-row">
-          <label for="weight">Weight (kg)</label>
-          <input type="number" id="weight" min="20" max="250" step="0.1" required placeholder="e.g. 60" />
+          <label for="weight">몸무게 (kg)</label>
+          <input type="number" id="weight" min="20" max="250" step="0.1" required placeholder="예: 60" />
         </div>
-        <button type="submit" class="btn">Calculate BMI</button>
+        <button type="submit" class="btn">BMI 계산하기</button>
       </form>
-      <div class="result" id="bmiResult">Enter your height and weight above.</div>
+      <div class="result" id="bmiResult">키와 몸무게를 입력해주세요.</div>
       <table class="bmi-table">
-        <tr><th>BMI</th><th>Category</th></tr>
-        <tr><td>&lt; 18.5</td><td>Underweight</td></tr>
-        <tr><td>18.5 ~ 24.9</td><td>Normal</td></tr>
-        <tr><td>25 ~ 29.9</td><td>Overweight</td></tr>
-        <tr><td>30 ~ 34.9</td><td>Obesity (Class 1)</td></tr>
-        <tr><td>35 ~ 39.9</td><td>Obesity (Class 2)</td></tr>
-        <tr><td>&ge; 40</td><td>Severe Obesity</td></tr>
+        <tr><th>BMI 범위</th><th>분류</th></tr>
+        <tr><td>&lt; 18.5</td><td>저체중</td></tr>
+        <tr><td>18.5 ~ 24.9</td><td>정상</td></tr>
+        <tr><td>25 ~ 29.9</td><td>과체중</td></tr>
+        <tr><td>30 ~ 34.9</td><td>비만 (1단계)</td></tr>
+        <tr><td>35 ~ 39.9</td><td>비만 (2단계)</td></tr>
+        <tr><td>&ge; 40</td><td>고도비만</td></tr>
       </table>
 
-      <!-- FAQ section for GEO/SGE/SEO -->
+      <!-- FAQ 섹션 (SEO/SGE 용) -->
       <section aria-labelledby="faq-head" id="faq">
-        <h2 id="faq-head">FAQ – BMI &amp; Health</h2>
+        <h2 id="faq-head">FAQ – BMI & 건강</h2>
         <dl>
-          <dt>What is BMI?</dt>
-          <dd>BMI (Body Mass Index) is a simple calculation using a person's height and weight. It estimates body fat and assesses health risk.</dd>
-          <dt>Is BMI accurate?</dt>
-          <dd>BMI is a general guideline. It may not reflect body composition (muscle vs fat), so athletes or very fit people may have high BMI but low body fat.</dd>
-          <dt>What is a normal BMI?</dt>
-          <dd>A BMI between 18.5 and 24.9 is considered normal for most adults.</dd>
-          <dt>Does BMI differ by age or gender?</dt>
-          <dd>BMI ranges are the same for adult men and women, but for children and teens, percentiles by age and sex are used.</dd>
-          <dt>How can I improve my BMI?</dt>
-          <dd>Healthy diet and regular exercise can help achieve a normal BMI. Always consult a medical professional for personalized advice.</dd>
+          <dt>BMI란 무엇인가요?</dt>
+          <dd>BMI(체질량지수)는 키와 몸무게를 이용해 계산하는 지표로, 체지방량을 추정하여 건강 위험을 평가하는 데 사용됩니다.</dd>
+          <dt>BMI는 정확한가요?</dt>
+          <dd>BMI는 일반적인 기준으로, 근육량이 많거나 매우 운동량이 많은 사람의 경우 실제 체지방과 다를 수 있습니다.</dd>
+          <dt>정상 BMI 범위는?</dt>
+          <dd>대부분 성인의 경우 BMI가 18.5에서 24.9 사이가 정상 범위로 간주됩니다.</dd>
+          <dt>나이 또는 성별에 따라 BMI가 달라지나요?</dt>
+          <dd>성인 남녀의 BMI 기준은 동일하지만, 어린이나 청소년의 경우 나이와 성별에 따른 백분위수를 사용합니다.</dd>
+          <dt>BMI를 개선하려면 어떻게 해야 하나요?</dt>
+          <dd>건강한 식단과 규칙적인 운동으로 정상 범위에 접근할 수 있습니다. 전문 의료진과 상담하는 것이 좋습니다.</dd>
         </dl>
       </section>
       <footer class="footer">
-        BMI is a simple health indicator. For precise health, consider other factors.<br>
-        <b>Tip:</b> A BMI between 18.5 and 24.9 is considered normal for most adults.
+        BMI는 간단한 건강 지표입니다.<br>
+        자기 상태에 맞는 자세한 건강 관리는 의료 전문가의 상담을 권장합니다.
       </footer>
     </div>
   </main>
-  <a href="../index.html" id="backBtn">Other Util</a>
+  <a href="../index.html" id="backBtn">다른 유틸리티</a>
   <script>
     const bmiForm = document.getElementById('bmiForm');
     const bmiResult = document.getElementById('bmiResult');
     function bmiCategory(bmi) {
-      if (bmi < 18.5) return "Underweight";
-      if (bmi < 25) return "Normal";
-      if (bmi < 30) return "Overweight";
-      if (bmi < 35) return "Obesity (Class 1)";
-      if (bmi < 40) return "Obesity (Class 2)";
-      return "Severe Obesity";
+      if (bmi < 18.5) return "저체중";
+      if (bmi < 25) return "정상";
+      if (bmi < 30) return "과체중";
+      if (bmi < 35) return "비만 (1단계)";
+      if (bmi < 40) return "비만 (2단계)";
+      return "고도비만";
     }
     bmiForm.onsubmit = function(e) {
       e.preventDefault();
       const h = parseFloat(document.getElementById('height').value) / 100.0;
       const w = parseFloat(document.getElementById('weight').value);
       if (!h || !w || h < 0.8 || w < 20) {
-        bmiResult.textContent = "Please enter valid numbers for height and weight.";
+        bmiResult.textContent = "올바른 키와 몸무게를 입력해주세요.";
         return;
       }
       const bmi = w / (h * h);
@@ -190,7 +190,7 @@
       bmiResult.innerHTML = `<b>BMI: ${bmi.toFixed(1)}</b> – <span style="color:#1c7b49;font-weight:600">${cat}</span>`;
     };
   </script>
-  <!-- FAQPage Schema for SGE/GEO/SEO Rich Results -->
+  <!-- FAQPage Schema.org JSON-LD -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -198,28 +198,28 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "What is BMI?",
-        "acceptedAnswer": { "@type": "Answer", "text": "BMI (Body Mass Index) is a simple calculation using a person's height and weight. It estimates body fat and assesses health risk." }
+        "name": "BMI란 무엇인가요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "BMI(체질량지수)는 키와 몸무게를 이용해 계산하는 지표로, 체지방량을 추정하여 건강 위험을 평가하는 데 사용됩니다." }
       },
       {
         "@type": "Question",
-        "name": "Is BMI accurate?",
-        "acceptedAnswer": { "@type": "Answer", "text": "BMI is a general guideline. It may not reflect body composition (muscle vs fat), so athletes or very fit people may have high BMI but low body fat." }
+        "name": "BMI는 정확한가요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "BMI는 일반적인 기준으로, 근육량이 많거나 매우 운동량이 많은 사람의 경우 실제 체지방과 다를 수 있습니다." }
       },
       {
         "@type": "Question",
-        "name": "What is a normal BMI?",
-        "acceptedAnswer": { "@type": "Answer", "text": "A BMI between 18.5 and 24.9 is considered normal for most adults." }
+        "name": "정상 BMI 범위는?",
+        "acceptedAnswer": { "@type": "Answer", "text": "대부분 성인의 경우 BMI가 18.5에서 24.9 사이가 정상 범위로 간주됩니다." }
       },
       {
         "@type": "Question",
-        "name": "Does BMI differ by age or gender?",
-        "acceptedAnswer": { "@type": "Answer", "text": "BMI ranges are the same for adult men and women, but for children and teens, percentiles by age and sex are used." }
+        "name": "나이 또는 성별에 따라 BMI가 달라지나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "성인 남녀의 BMI 기준은 동일하지만, 어린이나 청소년의 경우 나이와 성별에 따른 백분위수를 사용합니다." }
       },
       {
         "@type": "Question",
-        "name": "How can I improve my BMI?",
-        "acceptedAnswer": { "@type": "Answer", "text": "Healthy diet and regular exercise can help achieve a normal BMI. Always consult a medical professional for personalized advice." }
+        "name": "BMI를 개선하려면 어떻게 해야 하나요?",
+        "acceptedAnswer": { "@type": "Answer", "text": "건강한 식단과 규칙적인 운동으로 정상 범위에 접근할 수 있습니다. 전문 의료진과 상담하는 것이 좋습니다." }
       }
     ]
   }

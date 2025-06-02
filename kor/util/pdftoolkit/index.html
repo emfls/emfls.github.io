@@ -1,34 +1,34 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
     <head>
         <meta charset="UTF-8" />
-        <title>PDF Toolkit – Merge, Compress, Split, Encrypt, Rotate, Image to PDF</title>
+        <title>PDF 도구 모음 – 병합, 압축, 분할, 암호화, 회전, 이미지→PDF</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="Merge, compress, split, encrypt, rotate, or convert images to PDF instantly. 100% free, browser-based, no upload or watermark." />
+            content="PDF 파일을 병합, 압축, 분할, 암호화, 회전하거나 이미지를 PDF로 변환하세요. 모두 브라우저에서 즉시 처리됩니다. 100% 무료, 워터마크 없음." />
         <meta
             name="keywords"
-            content="pdf merge, compress, split, encrypt, rotate, image to pdf, pdf toolkit, browser pdf, no upload, privacy, free" />
+            content="PDF 병합, 압축, 분할, 암호화, 회전, 이미지→PDF, PDF 도구, 브라우저 PDF, 업로드 없음, 개인 정보 보호, 무료" />
         <meta name="author" content="Itagi" />
-        <meta name="language" content="en" />
-        <link rel="canonical" href="https://emfls.github.io/util/pdftoolkit/" />
+        <meta name="language" content="ko" />
+        <link rel="canonical" href="https://emfls.github.io/kor/util/pdftoolkit/" />
         <link rel="icon" href="https://emfls.github.io/icon-192.png" />
 
         <!-- Open Graph & Twitter -->
-        <meta property="og:title" content="PDF Toolkit – Merge, Compress, Split, Encrypt, Rotate, Image to PDF" />
+        <meta property="og:title" content="PDF 도구 모음 – 병합, 압축, 분할, 암호화, 회전, 이미지→PDF" />
         <meta
             property="og:description"
-            content="Merge, compress, split, encrypt, rotate, or convert images to PDF. All in your browser, free, secure, no upload." />
+            content="PDF 파일을 병합, 압축, 분할, 암호화, 회전하거나 이미지를 PDF로 변환하세요. 모두 브라우저에서 즉시 처리됩니다. 워터마크 없음." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://emfls.github.io/util/pdftoolkit/" />
+        <meta property="og:url" content="https://emfls.github.io/kor/util/pdftoolkit/" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="PDF Toolkit – Merge, Compress, Split, Encrypt, Rotate, Image to PDF" />
+        <meta property="twitter:title" content="PDF 도구 모음 – 병합, 압축, 분할, 암호화, 회전, 이미지→PDF" />
         <meta
-            name="twitter:description"
-            content="All PDF tools in one: merge, compress, split, encrypt, rotate, image2pdf. 100% browser-based, no upload." />
-        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+            property="twitter:description"
+            content="PDF 도구를 하나로: 병합, 압축, 분할, 암호화, 회전 및 이미지→PDF. 100% 브라우저 기반, 업로드 없음." />
+        <meta property="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -45,9 +45,9 @@
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
 
-        <!-- pdf-lib (PDF processing) -->
+        <!-- pdf-lib (PDF 처리 라이브러리) -->
         <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
-        <!-- browser-image-compression (for image→PDF) -->
+        <!-- browser-image-compression (이미지→PDF 변환용) -->
         <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.2/dist/browser-image-compression.js"></script>
 
         <style>
@@ -325,118 +325,118 @@
     </head>
     <body>
         <div class="container">
-            <div class="logo">📄 PDF Toolkit</div>
+            <div class="logo">📄 PDF 도구 모음</div>
             <div class="desc">
-                Merge, compress, split, encrypt, rotate, or convert images to PDF.<br />
-                All processing is 100% in your browser. No upload, no watermark.
+                PDF 파일을 병합, 압축, 분할, 암호화, 회전하거나 이미지를 PDF로 변환하세요.<br />
+                모든 처리는 브라우저 내에서 이루어집니다. 업로드나 워터마크 없음.
             </div>
             <div class="mode-toggle">
-                <button class="toggle-btn active" id="mergeModeBtn">Merge</button>
-                <button class="toggle-btn" id="compressModeBtn">Compress</button>
-                <button class="toggle-btn" id="splitModeBtn">Split</button>
-                <button class="toggle-btn" id="encryptModeBtn">Encrypt</button>
-                <button class="toggle-btn" id="rotateModeBtn">Rotate</button>
-                <button class="toggle-btn" id="img2pdfModeBtn">Image→PDF</button>
+                <button class="toggle-btn active" id="mergeModeBtn">병합</button>
+                <button class="toggle-btn" id="compressModeBtn">압축</button>
+                <button class="toggle-btn" id="splitModeBtn">분할</button>
+                <button class="toggle-btn" id="encryptModeBtn">암호화</button>
+                <button class="toggle-btn" id="rotateModeBtn">회전</button>
+                <button class="toggle-btn" id="img2pdfModeBtn">이미지→PDF</button>
             </div>
 
-            <!-- Merge PDF -->
+            <!-- 병합 모드 -->
             <form id="mergeForm" style="display: block">
                 <div class="uploader" id="mergeDrop">
                     <input type="file" id="mergeFiles" accept="application/pdf" multiple />
-                    <span>Drag & drop PDF files here,<br />or <b>click to select</b> (min 2 PDFs)</span>
+                    <span>PDF 파일을 드래그하거나<br /><b>클릭하여 선택</b>하세요 (최소 2개).</span>
                 </div>
                 <ul class="file-list" id="mergeFileList"></ul>
                 <div class="input-row">
-                    <label for="mergeFilename">File name</label>
+                    <label for="mergeFilename">파일 이름</label>
                     <input type="text" id="mergeFilename" placeholder="merged" autocomplete="off" />
-                    <span class="input-hint" id="mergeFilenameHint">Result: merged.pdf</span>
+                    <span class="input-hint" id="mergeFilenameHint">결과: merged.pdf</span>
                 </div>
-                <button type="submit" class="action-btn">Merge PDFs</button>
-                <a id="mergeDownload" class="download-link" style="display: none" href="#">Download</a>
+                <button type="submit" class="action-btn">PDF 병합</button>
+                <a id="mergeDownload" class="download-link" style="display: none" href="#">다운로드</a>
             </form>
 
-            <!-- Compress PDF -->
+            <!-- 압축 모드 -->
             <form id="compressForm" style="display: none">
                 <div class="uploader" id="compressDrop">
                     <input type="file" id="compressFile" accept="application/pdf" />
-                    <span>Drag & drop a PDF here,<br />or <b>click to select</b></span>
+                    <span>PDF 파일을 드래그하거나<br /><b>클릭하여 선택</b>하세요.</span>
                 </div>
                 <ul class="file-list" id="compressFileList"></ul>
                 <div class="input-row">
-                    <label for="compressQuality">Quality</label>
+                    <label for="compressQuality">품질</label>
                     <input type="range" id="compressQuality" min="30" max="100" value="80" />
                     <span class="input-hint" id="compressQualityVal">80%</span>
                 </div>
                 <div class="input-row">
-                    <label for="compressFilename">File name</label>
+                    <label for="compressFilename">파일 이름</label>
                     <input type="text" id="compressFilename" placeholder="compressed" autocomplete="off" />
-                    <span class="input-hint" id="compressFilenameHint">Result: compressed.pdf</span>
+                    <span class="input-hint" id="compressFilenameHint">결과: compressed.pdf</span>
                 </div>
-                <button type="submit" class="action-btn">Compress PDF</button>
-                <a id="compressDownload" class="download-link" style="display: none" href="#">Download</a>
+                <button type="submit" class="action-btn">PDF 압축</button>
+                <a id="compressDownload" class="download-link" style="display: none" href="#">다운로드</a>
                 <div style="font-size: 0.96em; color: #da671e; margin-top: 9px; text-align: center">
-                    Note: Browser PDF compression has limited effect. Images are not recompressed.
+                    참고: 브라우저 기반 압축은 제한적입니다. PDF 내 이미지 재압축을 지원하지 않아 용량 감소가 작을 수 있습니다.
                 </div>
             </form>
 
-            <!-- Split PDF -->
+            <!-- 분할 모드 -->
             <form id="splitForm" style="display: none">
                 <div class="uploader" id="splitDrop">
                     <input type="file" id="splitFile" accept="application/pdf" />
-                    <span>Drag & drop a PDF here,<br />or <b>click to select</b></span>
+                    <span>PDF 파일을 드래그하거나<br /><b>클릭하여 선택</b>하세요.</span>
                 </div>
                 <ul class="file-list" id="splitFileList"></ul>
                 <div class="split-mode-row">
-                    <label><input type="radio" name="splitMode" value="all" checked /> Split all pages</label>
-                    <label><input type="radio" name="splitMode" value="range" /> Extract page range</label>
+                    <label><input type="radio" name="splitMode" value="all" checked /> 모든 페이지 분할</label>
+                    <label><input type="radio" name="splitMode" value="range" /> 특정 페이지 추출</label>
                 </div>
                 <div class="input-row" id="splitRangeRow" style="display: none">
-                    <label>From</label>
+                    <label>시작</label>
                     <input type="number" id="splitRangeFrom" min="1" value="1" style="max-width: 55px" />
-                    <label>To</label>
+                    <label>종료</label>
                     <input type="number" id="splitRangeTo" min="1" value="1" style="max-width: 55px" />
                 </div>
                 <div class="input-row">
-                    <label for="splitFilename">File name</label>
+                    <label for="splitFilename">파일 이름</label>
                     <input type="text" id="splitFilename" placeholder="split_page" autocomplete="off" />
-                    <span class="input-hint" id="splitFilenameHint">Result: split_page1.pdf, ...</span>
+                    <span class="input-hint" id="splitFilenameHint">결과: split_page1.pdf, …</span>
                 </div>
-                <button type="submit" class="action-btn">Split PDF</button>
-                <a id="splitDownload" class="download-link" style="display: none" href="#">Download</a>
+                <button type="submit" class="action-btn">PDF 분할</button>
+                <a id="splitDownload" class="download-link" style="display: none" href="#">다운로드</a>
             </form>
 
-            <!-- Encrypt PDF -->
+            <!-- 암호화 모드 -->
             <form id="encryptForm" style="display: none">
                 <div class="uploader" id="encryptDrop">
                     <input type="file" id="encryptFile" accept="application/pdf" />
-                    <span>Drag & drop a PDF here,<br />or <b>click to select</b></span>
+                    <span>PDF 파일을 드래그하거나<br /><b>클릭하여 선택</b>하세요.</span>
                 </div>
                 <ul class="file-list" id="encryptFileList"></ul>
                 <div class="input-row">
-                    <label for="encryptPassword">Password</label>
+                    <label for="encryptPassword">비밀번호</label>
                     <input type="password" id="encryptPassword" autocomplete="off" />
                 </div>
                 <div class="input-row">
-                    <label for="encryptFilename">File name</label>
+                    <label for="encryptFilename">파일 이름</label>
                     <input type="text" id="encryptFilename" placeholder="encrypted" autocomplete="off" />
-                    <span class="input-hint" id="encryptFilenameHint">Result: encrypted.pdf</span>
+                    <span class="input-hint" id="encryptFilenameHint">결과: encrypted.pdf</span>
                 </div>
-                <button type="submit" class="action-btn">Encrypt PDF</button>
-                <a id="encryptDownload" class="download-link" style="display: none" href="#">Download</a>
+                <button type="submit" class="action-btn">PDF 암호화</button>
+                <a id="encryptDownload" class="download-link" style="display: none" href="#">다운로드</a>
                 <div style="font-size: 0.96em; color: #da671e; margin-top: 9px; text-align: center">
-                    Note: Encryption is basic (owner password), advanced permissions not supported.
+                    참고: 기본 암호화(owner password)만 지원하며, 세부 권한 설정은 불가능합니다.
                 </div>
             </form>
 
-            <!-- Rotate PDF -->
+            <!-- 회전 모드 -->
             <form id="rotateForm" style="display: none">
                 <div class="uploader" id="rotateDrop">
                     <input type="file" id="rotateFile" accept="application/pdf" />
-                    <span>Drag & drop a PDF here,<br />or <b>click to select</b></span>
+                    <span>PDF 파일을 드래그하거나<br /><b>클릭하여 선택</b>하세요.</span>
                 </div>
                 <ul class="file-list" id="rotateFileList"></ul>
                 <div class="input-row">
-                    <label for="rotateDegrees">Degrees</label>
+                    <label for="rotateDegrees">회전 각도</label>
                     <select id="rotateDegrees">
                         <option value="90">90°</option>
                         <option value="180">180°</option>
@@ -444,54 +444,54 @@
                     </select>
                 </div>
                 <div class="input-row">
-                    <label for="rotateFilename">File name</label>
+                    <label for="rotateFilename">파일 이름</label>
                     <input type="text" id="rotateFilename" placeholder="rotated" autocomplete="off" />
-                    <span class="input-hint" id="rotateFilenameHint">Result: rotated.pdf</span>
+                    <span class="input-hint" id="rotateFilenameHint">결과: rotated.pdf</span>
                 </div>
-                <button type="submit" class="action-btn">Rotate PDF</button>
-                <a id="rotateDownload" class="download-link" style="display: none" href="#">Download</a>
+                <button type="submit" class="action-btn">PDF 회전</button>
+                <a id="rotateDownload" class="download-link" style="display: none" href="#">다운로드</a>
             </form>
 
-            <!-- Image to PDF -->
+            <!-- 이미지→PDF 모드 -->
             <form id="img2pdfForm" style="display: none">
                 <div class="uploader" id="img2pdfDrop">
                     <input type="file" id="img2pdfFiles" accept="image/*" multiple />
-                    <span>Drag & drop images here,<br />or <b>click to select</b> (JPG, PNG, WebP, ...)</span>
+                    <span>이미지를 드래그하거나<br /><b>클릭하여 선택</b>하세요 (JPG, PNG, WebP 등).</span>
                 </div>
                 <ul class="file-list" id="img2pdfFileList"></ul>
                 <div class="input-row">
-                    <label for="img2pdfFilename">File name</label>
+                    <label for="img2pdfFilename">파일 이름</label>
                     <input type="text" id="img2pdfFilename" placeholder="images" autocomplete="off" />
-                    <span class="input-hint" id="img2pdfFilenameHint">Result: images.pdf</span>
+                    <span class="input-hint" id="img2pdfFilenameHint">결과: images.pdf</span>
                 </div>
-                <button type="submit" class="action-btn">Convert to PDF</button>
-                <a id="img2pdfDownload" class="download-link" style="display: none" href="#">Download</a>
+                <button type="submit" class="action-btn">PDF로 변환</button>
+                <a id="img2pdfDownload" class="download-link" style="display: none" href="#">다운로드</a>
             </form>
 
-            <!-- FAQ SECTION: SEO/SGE/FAQ Rich Results 대응 -->
+            <!-- FAQ SECTION -->
             <section id="faq" aria-labelledby="faq-head">
-                <h3 id="faq-head" style="color:#236de4; text-align:center; margin-bottom:9px;">FAQ – PDF Toolkit</h3>
+                <h3 id="faq-head" style="color:#236de4; text-align:center; margin-bottom:9px;">자주 묻는 질문 – PDF 도구 모음</h3>
                 <dl>
-                    <dt>Are my PDF files uploaded or stored on a server?</dt>
-                    <dd>No. All processing is done 100% in your browser. Files are never uploaded or saved online.</dd>
-                    <dt>Is the PDF Toolkit free to use?</dt>
-                    <dd>Yes! All tools are free, with no watermarks or registration required.</dd>
-                    <dt>Is there a file size or page limit?</dt>
-                    <dd>Limits depend on your device/browser memory, but there is no artificial size/page limit set by the tool.</dd>
-                    <dt>Will my file quality be reduced?</dt>
-                    <dd>For merging, splitting, and rotating: quality is preserved. For compression, only minimal compression is done in-browser.</dd>
-                    <dt>Can I merge, split, compress, and encrypt confidential documents safely?</dt>
-                    <dd>Yes. Since everything is processed locally in your browser, your confidential files remain private and secure.</dd>
+                    <dt>PDF 파일이 서버에 업로드되거나 저장되나요?</dt>
+                    <dd>아니요. 모든 처리는 100% 브라우저 내에서 이루어집니다. 파일은 절대 업로드되거나 저장되지 않습니다.</dd>
+                    <dt>PDF 도구 모음은 무료로 사용할 수 있나요?</dt>
+                    <dd>네! 모든 도구는 무료이며 워터마크나 회원가입이 필요 없습니다.</dd>
+                    <dt>파일 크기나 페이지 수 제한이 있나요?</dt>
+                    <dd>제한은 브라우저 메모리나 기기 성능에 따라 다르지만, 별도의 인위적 제한은 없습니다.</dd>
+                    <dt>화질이 저하되나요?</dt>
+                    <dd>병합, 분할, 회전 시 품질은 유지됩니다. 압축은 브라우저 방식이므로 효과가 제한적입니다.</dd>
+                    <dt>기밀 문서를 안전하게 처리할 수 있나요?</dt>
+                    <dd>네. 모든 처리가 로컬 브라우저 내에서 이루어지므로 기밀 문서도 안전하게 유지됩니다.</dd>
                 </dl>
             </section>
             <div class="footer">
-                100% browser-based. No file upload.<br>
-                Privacy-friendly PDF tools for everyone.
+                100% 브라우저 기반. 파일 업로드 없음.<br>
+                모두를 위한 개인 정보 보호 친화적 PDF 도구.
             </div>
             <a href="../index.html" id="backBtn">Other Util</a>
         </div>
 
-        <!-- FAQPage 구조화 데이터 (Google SGE/FAQ Rich Results 대응) -->
+        <!-- FAQPage 구조화 데이터 -->
         <script type="application/ld+json">
         {
           "@context": "https://schema.org",
@@ -499,51 +499,51 @@
           "mainEntity": [
             {
               "@type": "Question",
-              "name": "Are my PDF files uploaded or stored on a server?",
+              "name": "PDF 파일이 서버에 업로드되거나 저장되나요?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "No. All processing is done 100% in your browser. Files are never uploaded or saved online."
+                "text": "아니요. 모든 처리는 100% 브라우저 내에서 이루어집니다. 파일은 절대 업로드되거나 저장되지 않습니다."
               }
             },
             {
               "@type": "Question",
-              "name": "Is the PDF Toolkit free to use?",
+              "name": "PDF 도구 모음은 무료로 사용할 수 있나요?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Yes! All tools are free, with no watermarks or registration required."
+                "text": "네! 모든 도구는 무료이며 워터마크나 회원가입이 필요 없습니다."
               }
             },
             {
               "@type": "Question",
-              "name": "Is there a file size or page limit?",
+              "name": "파일 크기나 페이지 수 제한이 있나요?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Limits depend on your device/browser memory, but there is no artificial size/page limit set by the tool."
+                "text": "제한은 브라우저 메모리나 기기 성능에 따라 다르지만, 별도의 인위적 제한은 없습니다."
               }
             },
             {
               "@type": "Question",
-              "name": "Will my file quality be reduced?",
+              "name": "화질이 저하되나요?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "For merging, splitting, and rotating: quality is preserved. For compression, only minimal compression is done in-browser."
+                "text": "병합, 분할, 회전 시 품질은 유지됩니다. 압축은 브라우저 방식이므로 효과가 제한적입니다."
               }
             },
             {
               "@type": "Question",
-              "name": "Can I merge, split, compress, and encrypt confidential documents safely?",
+              "name": "기밀 문서를 안전하게 처리할 수 있나요?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Yes. Since everything is processed locally in your browser, your confidential files remain private and secure."
+                "text": "네. 모든 처리가 로컬 브라우저 내에서 이루어지므로 기밀 문서도 안전하게 유지됩니다."
               }
             }
           ]
         }
         </script>
 
-        <!-- SCRIPT: 모든 기능용 JS (기존과 동일) -->
+        <!-- SCRIPT: 모든 기능용 JS -->
         <script>
-        /* --------------- Mode Toggle --------------- */
+        /* --------------- 모드 토글 --------------- */
         const forms = {
             merge: document.getElementById("mergeForm"),
             compress: document.getElementById("compressForm"),
@@ -574,7 +574,7 @@
         btns.img2pdf.onclick = () => showMode("img2pdf");
         showMode("merge");
 
-        /* --------------- Helper: FileName --------------- */
+        /* --------------- 유틸리티: 파일 이름 --------------- */
         function getPdfFileName(user, fallback) {
             user = (user || "").replace(/[^a-zA-Z0-9_\-\.]/g, "").replace(/\.pdf$/i, "");
             return (user ? user : fallback.replace(/\.pdf$/i, "")) + ".pdf";
@@ -585,11 +585,11 @@
             const a = document.getElementById(linkId);
             a.href = url;
             a.download = fname;
-            a.textContent = "Download: " + fname;
+            a.textContent = "다운로드: " + fname;
             a.style.display = "block";
         }
 
-        /* --------------- Merge PDF --------------- */
+        /* --------------- PDF 병합 --------------- */
         let mergeFiles = [];
         const mergeDrop = document.getElementById("mergeDrop");
         const mergeFilesInput = document.getElementById("mergeFiles");
@@ -620,7 +620,6 @@
             mergeFiles.forEach((f, i) => {
                 const li = document.createElement("li");
                 li.textContent = f.name;
-                // Move Up/Down
                 const up = document.createElement("button");
                 up.textContent = "↑";
                 up.className = "move-btn";
@@ -645,12 +644,12 @@
             });
         }
         mergeFilename.addEventListener("input", () => {
-            mergeFilenameHint.textContent = "Result: " + getPdfFileName(mergeFilename.value, "merged.pdf");
+            mergeFilenameHint.textContent = "결과: " + getPdfFileName(mergeFilename.value, "merged.pdf");
         });
-        mergeFilenameHint.textContent = "Result: merged.pdf";
+        mergeFilenameHint.textContent = "결과: merged.pdf";
         document.getElementById("mergeForm").onsubmit = async function (e) {
             e.preventDefault();
-            if (!mergeFiles.length || mergeFiles.length < 2) return alert("Select at least 2 PDF files.");
+            if (!mergeFiles.length || mergeFiles.length < 2) return alert("PDF 파일을 최소 2개 선택하세요.");
             try {
                 const mergedPdf = await PDFLib.PDFDocument.create();
                 for (let file of mergeFiles) {
@@ -661,12 +660,12 @@
                 }
                 const mergedBytes = await mergedPdf.save();
                 downloadBlob(mergedBytes, getPdfFileName(mergeFilename.value, "merged.pdf"), "mergeDownload");
-            } catch (e) {
-                alert("Merge failed: " + e);
+            } catch (err) {
+                alert("병합 실패: " + err);
             }
         };
 
-        /* --------------- Compress PDF --------------- */
+        /* --------------- PDF 압축 --------------- */
         let compressFile = null;
         const compressDrop = document.getElementById("compressDrop");
         const compressFileInput = document.getElementById("compressFile");
@@ -702,12 +701,12 @@
         });
         compressFilename.addEventListener("input", () => {
             compressFilenameHint.textContent =
-                "Result: " + getPdfFileName(compressFilename.value, "compressed.pdf");
+                "결과: " + getPdfFileName(compressFilename.value, "compressed.pdf");
         });
-        compressFilenameHint.textContent = "Result: compressed.pdf";
+        compressFilenameHint.textContent = "결과: compressed.pdf";
         document.getElementById("compressForm").onsubmit = async function (e) {
             e.preventDefault();
-            if (!compressFile) return alert("Select a PDF file.");
+            if (!compressFile) return alert("PDF 파일을 선택하세요.");
             try {
                 const srcBytes = await compressFile.arrayBuffer();
                 const srcPdf = await PDFLib.PDFDocument.load(srcBytes);
@@ -723,14 +722,14 @@
                     "compressDownload"
                 );
                 alert(
-                    "Note: Compression is limited due to browser technology. For most PDFs, size reduction is minimal (images are not recompressed)."
+                    "참고: 브라우저 기반 압축은 제한적입니다. 대부분의 PDF에서 용량 감소 효과가 작습니다 (이미지는 재압축되지 않음)."
                 );
-            } catch (e) {
-                alert("Compress failed: " + e);
+            } catch (err) {
+                alert("압축 실패: " + err);
             }
         };
 
-        /* --------------- Split PDF --------------- */
+        /* --------------- PDF 분할 --------------- */
         let splitFile = null;
         const splitDrop = document.getElementById("splitDrop");
         const splitFileInput = document.getElementById("splitFile");
@@ -740,9 +739,7 @@
         const splitRangeRow = document.getElementById("splitRangeRow");
         const splitRangeFrom = document.getElementById("splitRangeFrom");
         const splitRangeTo = document.getElementById("splitRangeTo");
-        let splitMode = "all",
-            fromPage = 1,
-            toPage = 1;
+        let splitMode = "all", fromPage = 1, toPage = 1;
         splitDrop.onclick = () => splitFileInput.click();
         splitDrop.addEventListener("dragover", (e) => {
             e.preventDefault();
@@ -771,8 +768,8 @@
                 splitRangeRow.style.display = splitMode === "range" ? "flex" : "none";
                 splitFilenameHint.textContent =
                     splitMode === "all"
-                        ? `Result: ${splitFilename.value || "split_page"}1.pdf, ...`
-                        : `Result: ${splitFilename.value || "split_page"}_extract.pdf`;
+                        ? `결과: ${(splitFilename.value || "split_page")}1.pdf, …`
+                        : `결과: ${(splitFilename.value || "split_page")}_extract.pdf`;
             });
         });
         splitRangeFrom.addEventListener("input", (e) => (fromPage = parseInt(e.target.value, 10) || 1));
@@ -780,13 +777,13 @@
         splitFilename.addEventListener("input", () => {
             splitFilenameHint.textContent =
                 splitMode === "all"
-                    ? `Result: ${splitFilename.value || "split_page"}1.pdf, ...`
-                    : `Result: ${splitFilename.value || "split_page"}_extract.pdf`;
+                    ? `결과: ${(splitFilename.value || "split_page")}1.pdf, …`
+                    : `결과: ${(splitFilename.value || "split_page")}_extract.pdf`;
         });
-        splitFilenameHint.textContent = "Result: split_page1.pdf, ...";
+        splitFilenameHint.textContent = "결과: split_page1.pdf, …";
         document.getElementById("splitForm").onsubmit = async function (e) {
             e.preventDefault();
-            if (!splitFile) return alert("Select a PDF file.");
+            if (!splitFile) return alert("PDF 파일을 선택하세요.");
             try {
                 const srcBytes = await splitFile.arrayBuffer();
                 const srcPdf = await PDFLib.PDFDocument.load(srcBytes);
@@ -808,7 +805,7 @@
                         document.body.removeChild(a);
                         setTimeout(() => URL.revokeObjectURL(a.href), 1000);
                     }
-                    alert("Done! Each page was downloaded as a separate PDF.");
+                    alert("완료되었습니다! 각 페이지가 별도 PDF로 다운로드되었습니다.");
                 } else {
                     fromPage = Math.max(1, Math.min(fromPage, srcPdf.getPageCount()));
                     toPage = Math.max(fromPage, Math.min(toPage, srcPdf.getPageCount()));
@@ -824,12 +821,12 @@
                         "splitDownload"
                     );
                 }
-            } catch (e) {
-                alert("Split failed: " + e);
+            } catch (err) {
+                alert("분할 실패: " + err);
             }
         };
 
-        /* --------------- Encrypt PDF (owner password) --------------- */
+        /* --------------- PDF 암호화 --------------- */
         let encryptFile = null;
         const encryptDrop = document.getElementById("encryptDrop");
         const encryptFileInput = document.getElementById("encryptFile");
@@ -861,20 +858,19 @@
         }
         encryptFilename.addEventListener("input", () => {
             encryptFilenameHint.textContent =
-                "Result: " + getPdfFileName(encryptFilename.value, "encrypted.pdf");
+                "결과: " + getPdfFileName(encryptFilename.value, "encrypted.pdf");
         });
-        encryptFilenameHint.textContent = "Result: encrypted.pdf";
+        encryptFilenameHint.textContent = "결과: encrypted.pdf";
         document.getElementById("encryptForm").onsubmit = async function (e) {
             e.preventDefault();
-            if (!encryptFile) return alert("Select a PDF file.");
-            if (!encryptPassword.value) return alert("Enter a password.");
+            if (!encryptFile) return alert("PDF 파일을 선택하세요.");
+            if (!encryptPassword.value) return alert("비밀번호를 입력하세요.");
             try {
                 const srcBytes = await encryptFile.arrayBuffer();
                 const srcPdf = await PDFLib.PDFDocument.load(srcBytes);
                 const outPdf = await PDFLib.PDFDocument.create();
                 const copiedPages = await outPdf.copyPages(srcPdf, srcPdf.getPageIndices());
                 copiedPages.forEach((p) => outPdf.addPage(p));
-                // Set owner password (basic protection)
                 outPdf.setTitle(srcPdf.getTitle() || "");
                 const encryptedBytes = await outPdf.save({
                     passwords: { owner: encryptPassword.value, user: encryptPassword.value }
@@ -884,13 +880,13 @@
                     getPdfFileName(encryptFilename.value, "encrypted.pdf"),
                     "encryptDownload"
                 );
-                alert("Encryption is basic (owner/user password). Advanced permissions not supported.");
-            } catch (e) {
-                alert("Encrypt failed: " + e);
+                alert("기본 암호화(owner password)만 지원됩니다. 고급 권한 설정은 불가능합니다.");
+            } catch (err) {
+                alert("암호화 실패: " + err);
             }
         };
 
-        /* --------------- Rotate PDF --------------- */
+        /* --------------- PDF 회전 --------------- */
         let rotateFile = null;
         const rotateDrop = document.getElementById("rotateDrop");
         const rotateFileInput = document.getElementById("rotateFile");
@@ -921,12 +917,12 @@
             rotateFileList.innerHTML = rotateFile ? `<li>${rotateFile.name}</li>` : "";
         }
         rotateFilename.addEventListener("input", () => {
-            rotateFilenameHint.textContent = "Result: " + getPdfFileName(rotateFilename.value, "rotated.pdf");
+            rotateFilenameHint.textContent = "결과: " + getPdfFileName(rotateFilename.value, "rotated.pdf");
         });
-        rotateFilenameHint.textContent = "Result: rotated.pdf";
+        rotateFilenameHint.textContent = "결과: rotated.pdf";
         document.getElementById("rotateForm").onsubmit = async function (e) {
             e.preventDefault();
-            if (!rotateFile) return alert("Select a PDF file.");
+            if (!rotateFile) return alert("PDF 파일을 선택하세요.");
             try {
                 const degrees = parseInt(rotateDegrees.value, 10) || 0;
                 const srcBytes = await rotateFile.arrayBuffer();
@@ -939,12 +935,12 @@
                 });
                 const outBytes = await outPdf.save();
                 downloadBlob(outBytes, getPdfFileName(rotateFilename.value, "rotated.pdf"), "rotateDownload");
-            } catch (e) {
-                alert("Rotate failed: " + e);
+            } catch (err) {
+                alert("회전 실패: " + err);
             }
         };
 
-        /* --------------- Image to PDF --------------- */
+        /* --------------- 이미지→PDF --------------- */
         let img2pdfFiles = [];
         const img2pdfDrop = document.getElementById("img2pdfDrop");
         const img2pdfFilesInput = document.getElementById("img2pdfFiles");
@@ -975,7 +971,6 @@
             img2pdfFiles.forEach((f, i) => {
                 const li = document.createElement("li");
                 li.textContent = f.name;
-                // Move Up/Down
                 const up = document.createElement("button");
                 up.textContent = "↑";
                 up.className = "move-btn";
@@ -1000,18 +995,17 @@
             });
         }
         img2pdfFilename.addEventListener("input", () => {
-            img2pdfFilenameHint.textContent = "Result: " + getPdfFileName(img2pdfFilename.value, "images.pdf");
+            img2pdfFilenameHint.textContent = "결과: " + getPdfFileName(img2pdfFilename.value, "images.pdf");
         });
-        img2pdfFilenameHint.textContent = "Result: images.pdf";
+        img2pdfFilenameHint.textContent = "결과: images.pdf";
         document.getElementById("img2pdfForm").onsubmit = async function (e) {
             e.preventDefault();
-            if (!img2pdfFiles.length) return alert("Select images.");
+            if (!img2pdfFiles.length) return alert("이미지를 선택하세요.");
             try {
                 const pdfDoc = await PDFLib.PDFDocument.create();
                 for (let file of img2pdfFiles) {
                     const imageBytes = await file.arrayBuffer();
-                    let image,
-                        ext = file.name.split(".").pop().toLowerCase();
+                    let image, ext = file.name.split(".").pop().toLowerCase();
                     if (ext === "jpg" || ext === "jpeg") {
                         image = await pdfDoc.embedJpg(imageBytes);
                     } else {
@@ -1022,8 +1016,8 @@
                 }
                 const outBytes = await pdfDoc.save();
                 downloadBlob(outBytes, getPdfFileName(img2pdfFilename.value, "images.pdf"), "img2pdfDownload");
-            } catch (e) {
-                alert("Image2PDF failed: " + e);
+            } catch (err) {
+                alert("이미지→PDF 변환 실패: " + err);
             }
         };
         </script>
