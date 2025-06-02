@@ -1,32 +1,32 @@
 <!doctype html>
-<html lang="ko">
+<html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <title>단리, 적금, 할부 계산기</title>
+  <title>Máy Tính Lãi Suất Đơn, Tiết Kiệm & Trả Góp</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta
     name="description"
-    content="단리 이자, 적금(월 납입) 예상, 할부(월 납입) 계산을 즉시 수행하세요. 무료, 브라우저 기반, 모바일 친화적, 데이터 업로드 없음." />
+    content="Tính lãi suất đơn, dự tính tiết kiệm (gửi hàng tháng), tính trả góp (gửi hàng tháng) ngay lập tức. Miễn phí, chạy trong trình duyệt, thân thiện di động, không upload dữ liệu." />
   <meta
     name="keywords"
-    content="금융 계산기, 단리 계산, 적금 계산, 할부 계산, 이자 계산기, 저축, 할부 납입, 금융, 단리, 적금, 할부" />
+    content="máy tính tài chính, tính lãi đơn, tính tiết kiệm, tính trả góp, máy tính lãi, tiết kiệm, trả góp, tài chính, lãi suất đơn, tiết kiệm, trả góp" />
   <meta name="author" content="Itagi" />
-  <meta name="language" content="ko" />
+  <meta name="language" content="vi" />
   <meta name="theme-color" content="#198dae" />
   <link rel="canonical" href="https://emfls.github.io/vn/util/fin-calc/" />
   <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-  <meta property="og:title" content="단리, 적금, 할부 계산기"/>
+  <meta property="og:title" content="Máy Tính Lãi Suất Đơn, Tiết Kiệm & Trả Góp"/>
   <meta
     property="og:description"
-    content="단리 이자, 적금 저축, 할부 납입액을 즉시 계산합니다. 100% 무료, 회원가입 불필요."/>
+    content="Tính lãi suất đơn, tiết kiệm, trả góp ngay lập tức. 100% miễn phí, không cần đăng ký."/>
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://emfls.github.io/vn/util/fin-calc/"/>
   <meta property="og:image" content="https://emfls.github.io/thumbnail.png"/>
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="단리, 적금, 할부 계산기"/>
+  <meta name="twitter:title" content="Máy Tính Lãi Suất Đơn, Tiết Kiệm & Trả Góp"/>
   <meta
     name="twitter:description"
-    content="단리 이자 계산, 적금 저축 계산, 할부 납입액 계산을 간편하게 수행하세요. 업로드 없음, 브라우저 내에서 작동."/>
+    content="Công cụ tính lãi suất đơn, tính tiết kiệm và tính trả góp nhanh chóng. Không upload dữ liệu, chạy trong trình duyệt."/>
   <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png"/>
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -118,89 +118,89 @@
 <body>
   <main>
     <div class="container" itemscope itemtype="https://schema.org/WebApplication">
-      <div class="title" itemprop="name">💸 간편 금융 계산기</div>
+      <div class="title" itemprop="name">💸 Máy Tính Tài Chính Đơn Giản</div>
       <div class="tab-row">
-        <button class="tab-btn active" id="tab1">단리 계산</button>
-        <button class="tab-btn" id="tab2">적금 계산</button>
-        <button class="tab-btn" id="tab3">할부 계산</button>
+        <button class="tab-btn active" id="tab1">Tính Lãi Đơn</button>
+        <button class="tab-btn" id="tab2">Tính Tiết Kiệm</button>
+        <button class="tab-btn" id="tab3">Tính Trả Góp</button>
       </div>
-      <!-- 단리 -->
+      <!-- Lãi Suất Đơn -->
       <form id="simpleForm">
         <div class="form-row">
-          <label for="simple_principal">원금 (₩ 또는 $)</label>
+          <label for="simple_principal">Số Tiền Gốc</label>
           <input type="number" id="simple_principal" min="0" required />
         </div>
         <div class="form-row">
-          <label for="simple_rate">이자율 (% 연)</label>
+          <label for="simple_rate">Lãi Suất (%/năm)</label>
           <input type="number" id="simple_rate" min="0" max="100" step="0.01" required />
         </div>
         <div class="form-row">
-          <label for="simple_years">기간 (년)</label>
+          <label for="simple_years">Thời Gian (năm)</label>
           <input type="number" id="simple_years" min="0.1" step="0.01" required />
         </div>
-        <button type="submit" class="btn">계산하기</button>
+        <button type="submit" class="btn">Tính Ngay</button>
         <div class="result" id="simpleResult"></div>
       </form>
-      <!-- 적금 -->
+      <!-- Tiết Kiệm -->
       <form id="savingForm" style="display:none">
         <div class="form-row">
-          <label for="save_monthly">월 납입금</label>
+          <label for="save_monthly">Số Tiền Gửi Hàng Tháng</label>
           <input type="number" id="save_monthly" min="0" required />
         </div>
         <div class="form-row">
-          <label for="save_rate">이자율 (% 연)</label>
+          <label for="save_rate">Lãi Suất (%/năm)</label>
           <input type="number" id="save_rate" min="0" max="100" step="0.01" required />
         </div>
         <div class="form-row">
-          <label for="save_years">기간 (년)</label>
+          <label for="save_years">Thời Gian (năm)</label>
           <input type="number" id="save_years" min="0.1" step="0.01" required />
         </div>
-        <button type="submit" class="btn">계산하기</button>
+        <button type="submit" class="btn">Tính Ngay</button>
         <div class="result" id="savingResult"></div>
       </form>
-      <!-- 할부 -->
+      <!-- Trả Góp -->
       <form id="instForm" style="display:none">
         <div class="form-row">
-          <label for="inst_principal">할부 원금</label>
+          <label for="inst_principal">Số Tiền Trả Góp</label>
           <input type="number" id="inst_principal" min="0" required />
         </div>
         <div class="form-row">
-          <label for="inst_rate">이자율 (% 연)</label>
+          <label for="inst_rate">Lãi Suất (%/năm)</label>
           <input type="number" id="inst_rate" min="0" max="100" step="0.01" required />
         </div>
         <div class="form-row">
-          <label for="inst_months">개월 수</label>
+          <label for="inst_months">Số Tháng Trả</label>
           <input type="number" id="inst_months" min="1" max="1200" required />
         </div>
-        <button type="submit" class="btn">계산하기</button>
+        <button type="submit" class="btn">Tính Ngay</button>
         <div class="result" id="instResult"></div>
       </form>
       <div class="footer">
-        단리 계산, 적금 저축 계산, 할부 납입 계산을 지원합니다.<br>
-        <b>팁:</b> 모든 계산은 브라우저 내에서 이루어지며, 데이터가 업로드되지 않습니다.
+        Hỗ trợ tính lãi suất đơn, tiết kiệm hàng tháng và trả góp.<br>
+        <b>Mẹo:</b> Mọi tính toán đều thực hiện trong trình duyệt, không upload dữ liệu.
       </div>
       <section aria-labelledby="faq-head" id="faq">
-        <h2 id="faq-head">FAQ – 간편 금융 계산기</h2>
+        <h2 id="faq-head">FAQ – Máy Tính Tài Chính Đơn Giản</h2>
         <dl>
-          <dt>어떤 계산을 할 수 있나요?</dt>
-          <dd>단리 이자 계산, 월 납입 적금 계산, 할부(원금+이자) 계산을 지원합니다.</dd>
-          <dt>단리 계산기는 어떻게 동작하나요?</dt>
-          <dd>단리 이자는 <b>원금 × 이자율 × 기간</b>으로 계산되며, 계산 결과로 이자 금액과 원리금을 함께 보여줍니다.</dd>
-          <dt>적금(월 납입) 계산은 어떻게 이루어지나요?</dt>
-          <dd>매달 납입된 금액을 합산한 뒤, 전체 기간 동안 발생한 단리 이자를 합산하여 총액을 구합니다.</dd>
-          <dt>할부 계산기는 어떻게 동작하나요?</dt>
-          <dd>총 상환액(원금 + 발생 이자)을 입력한 개월 수로 나누어 매달 동일한 금액을 납부하는 방식입니다.</dd>
-          <dt>내 금융 데이터가 외부로 전송되나요?</dt>
-          <dd>아니요. 모든 계산은 브라우저 내에서 처리되며, 어떠한 데이터도 업로드되거나 저장되지 않습니다.</dd>
-          <dt>이 도구는 무료인가요?</dt>
-          <dd>네. 이 계산기는 100% 무료이며, 별도의 로그인이나 회원가입이 필요 없습니다.</dd>
+          <dt>Tôi có thể tính gì ở đây?</dt>
+          <dd>Công cụ hỗ trợ tính lãi suất đơn, tiết kiệm hàng tháng và trả góp (gốc + lãi).</dd>
+          <dt>Lãi suất đơn tính như thế nào?</dt>
+          <dd>Lãi suất đơn = <b>Số tiền gốc × Lãi suất × Thời gian</b>. Kết quả hiển thị cả tiền lãi và tổng tiền (gốc + lãi).</dd>
+          <dt>Tính tiết kiệm hàng tháng thế nào?</dt>
+          <dd>Cộng dồn số tiền gửi mỗi tháng, sau đó tính tổng lãi trong toàn bộ thời gian theo lãi suất đơn để ra tổng.</dd>
+          <dt>Tính trả góp thế nào?</dt>
+          <dd>Tổng tiền cần trả = gốc + lãi phát sinh. Sau đó chia đều cho số tháng để ra số tiền trả hằng tháng.</dd>
+          <dt>Dữ liệu có được gửi ra ngoài không?</dt>
+          <dd>Không. Mọi tính toán diễn ra trong trình duyệt, không upload hoặc lưu dữ liệu nào.</dd>
+          <dt>Công cụ này có miễn phí không?</dt>
+          <dd>Có. Hoàn toàn miễn phí, không yêu cầu đăng nhập hay đăng ký tài khoản.</dd>
         </dl>
       </section>
     </div>
   </main>
-  <a href="../index.html" id="backBtn">다른 유틸리티</a>
+  <a href="../index.html" id="backBtn">Các công cụ khác</a>
   <script>
-    // 탭 전환 로직
+    // Chuyển tab
     const tabs = [
       { btn: document.getElementById("tab1"), form: document.getElementById("simpleForm") },
       { btn: document.getElementById("tab2"), form: document.getElementById("savingForm") },
@@ -215,7 +215,7 @@
       }
     });
 
-    // 단리 계산
+    // Tính lãi suất đơn
     document.getElementById("simpleForm").onsubmit = function(e){
       e.preventDefault();
       const p = +document.getElementById("simple_principal").value;
@@ -225,10 +225,10 @@
       const interest = p * r * t;
       const total = p + interest;
       document.getElementById("simpleResult").innerHTML =
-        `이자: <b>${interest.toLocaleString()}</b><br>원리금 합계: <b>${total.toLocaleString()}</b>`;
+        `Tiền lãi: <b>${interest.toLocaleString()}</b><br>Tổng (gốc + lãi): <b>${total.toLocaleString()}</b>`;
     };
 
-    // 적금(월 납입) 계산
+    // Tính tiết kiệm hàng tháng
     document.getElementById("savingForm").onsubmit = function(e){
       e.preventDefault();
       const m = +document.getElementById("save_monthly").value;
@@ -243,10 +243,10 @@
       }
       const total = sum + interest;
       document.getElementById("savingResult").innerHTML =
-        `납입 합계: <b>${sum.toLocaleString()}</b><br>발생 이자: <b>${interest.toLocaleString()}</b><br>총액: <b>${total.toLocaleString()}</b>`;
+        `Tổng gửi: <b>${sum.toLocaleString()}</b><br>Tiền lãi: <b>${interest.toLocaleString()}</b><br>Tổng cộng: <b>${total.toLocaleString()}</b>`;
     };
 
-    // 할부 계산 (단리 이자 기준)
+    // Tính trả góp
     document.getElementById("instForm").onsubmit = function(e){
       e.preventDefault();
       const p = +document.getElementById("inst_principal").value;
@@ -257,7 +257,7 @@
       const total = p + totalInterest;
       const monthly = total / n;
       document.getElementById("instResult").innerHTML =
-        `월 납입액: <b>${monthly.toLocaleString(undefined, {maximumFractionDigits:2})}</b><br>총 이자: <b>${totalInterest.toLocaleString()}</b><br>총 납부액: <b>${total.toLocaleString()}</b>`;
+        `Số tiền trả/tháng: <b>${monthly.toLocaleString(undefined, {maximumFractionDigits:2})}</b><br>Tổng tiền lãi: <b>${totalInterest.toLocaleString()}</b><br>Tổng thanh toán: <b>${total.toLocaleString()}</b>`;
     };
   </script>
   <!-- FAQPage Schema for SEO/SGE/GEO Rich Results -->
@@ -268,33 +268,33 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "어떤 계산을 할 수 있나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "단리 이자 계산, 월 납입 적금 계산, 할부(원금+이자) 계산을 지원합니다." }
+        "name": "Tôi có thể tính gì ở đây?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Công cụ hỗ trợ tính lãi suất đơn, tiết kiệm hàng tháng và trả góp (gốc + lãi)." }
       },
       {
         "@type": "Question",
-        "name": "단리 계산기는 어떻게 동작하나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "단리 이자는 원금 × 이자율 × 기간으로 계산되며, 계산 결과로 이자 금액과 원리금을 함께 보여줍니다." }
+        "name": "Lãi suất đơn tính như thế nào?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Lãi suất đơn = Số tiền gốc × Lãi suất × Thời gian. Kết quả hiển thị cả tiền lãi và tổng tiền (gốc + lãi)." }
       },
       {
         "@type": "Question",
-        "name": "적금(월 납입) 계산은 어떻게 이루어지나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "매달 납입된 금액을 합산한 뒤, 전체 기간 동안 발생한 단리 이자를 합산하여 총액을 구합니다." }
+        "name": "Tính tiết kiệm hàng tháng thế nào?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Cộng dồn số tiền gửi mỗi tháng, sau đó tính tổng lãi trong toàn bộ thời gian theo lãi suất đơn để ra tổng." }
       },
       {
         "@type": "Question",
-        "name": "할부 계산기는 어떻게 동작하나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "총 상환액(원금 + 발생 이자)을 입력한 개월 수로 나누어 매달 동일한 금액을 납부하는 방식입니다." }
+        "name": "Tính trả góp thế nào?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Tổng tiền cần trả = gốc + lãi phát sinh. Sau đó chia đều cho số tháng để ra số tiền trả hàng tháng." }
       },
       {
         "@type": "Question",
-        "name": "내 금융 데이터가 외부로 전송되나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "아니요. 모든 계산은 브라우저 내에서 처리되며, 데이터가 업로드되거나 저장되지 않습니다." }
+        "name": "Dữ liệu có được gửi ra ngoài không?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Không. Mọi tính toán diễn ra trong trình duyệt, không upload hoặc lưu dữ liệu nào." }
       },
       {
         "@type": "Question",
-        "name": "이 도구는 무료인가요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "네. 이 계산기는 100% 무료이며, 별도 로그인이나 회원가입이 필요 없습니다." }
+        "name": "Công cụ này có miễn phí không?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Có. Hoàn toàn miễn phí, không yêu cầu đăng nhập hay đăng ký tài khoản." }
       }
     ]
   }

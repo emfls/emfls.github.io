@@ -1,25 +1,25 @@
 <!doctype html>
-<html lang="ko">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
-    <title>텍스트 비교 도구 (Diff)</title>
+    <title>Công cụ So sánh Văn bản (Diff)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="두 블록의 텍스트를 빠르게 비교하고 차이점을 강조 표시하세요. 모두 브라우저 내에서 실행되며, 무료이고 개인정보 보호가 완벽합니다." />
-    <meta name="keywords" content="diff, 텍스트 비교, 차이점 확인, 온라인, 파일 비교, 변경 사항 강조, 브라우저 기반, 개인정보 보호" />
+    <meta name="description" content="So sánh nhanh hai khối văn bản và làm nổi bật sự khác biệt. Mọi thao tác chạy trong trình duyệt, hoàn toàn miễn phí và bảo mật." />
+    <meta name="keywords" content="diff, so sánh văn bản, kiểm tra khác biệt, trực tuyến, so sánh tệp, đánh dấu thay đổi, dựa trên trình duyệt, bảo mật" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ko" />
+    <meta name="language" content="vi" />
     <link rel="canonical" href="https://emfls.github.io/vn/util/diff/" />
-    <meta property="og:title" content="텍스트 비교 도구 (Diff)" />
-    <meta property="og:description" content="두 텍스트를 쉽게 비교하고 차이점을 확인하세요. 모두 브라우저에서 처리됩니다. 업로드 불필요, 100% 개인 정보 보호." />
+    <meta property="og:title" content="Công cụ So sánh Văn bản (Diff)" />
+    <meta property="og:description" content="So sánh hai văn bản dễ dàng và xem sự khác biệt. Tất cả xử lý trong trình duyệt, không cần tải lên, bảo mật 100%." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/vn/util/diff/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="텍스트 비교 도구 (Diff)" />
-    <meta name="twitter:description" content="두 텍스트를 비교하고 차이점을 강조 표시하세요. 브라우저에서 바로 실행됩니다." />
+    <meta name="twitter:title" content="Công cụ So sánh Văn bản (Diff)" />
+    <meta name="twitter:description" content="So sánh hai văn bản và làm nổi bật khác biệt. Chạy trực tiếp trong trình duyệt." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <!-- Google 태그 (gtag.js) -->
+    <!-- Google Tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -28,78 +28,78 @@
       gtag("config", "G-QP5Q67GE5B");
     </script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
-    <!-- jsdiff (브라우저용, minified) -->
+    <!-- jsdiff (phiên bản thu gọn cho trình duyệt) -->
     <script src="https://cdn.jsdelivr.net/npm/diff@5.2.0/dist/diff.min.js"></script>
     <style>
-      :root { --main: #117c9a; --main-dark: #0c4d60; --bg: #f8fbff;}
-      body { background: var(--bg); margin: 0; font-family: "Segoe UI", Arial, sans-serif; color: #234;}
-      .container { max-width: 610px; margin: 38px auto 0 auto; background: #fff; border-radius: 18px; box-shadow: 0 4px 22px #117c9a33; padding: 28px 18px 22px 18px;}
-      .logo { font-size: 1.25em; font-weight: bold; text-align: center; color: var(--main-dark); margin-bottom: 10px;}
-      .desc { text-align: center; color: #19788a; margin-bottom: 16px; font-size: 1.03em;}
-      .textarea-wrap { display: flex; gap: 12px; margin-bottom: 10px; flex-wrap: wrap;}
-      textarea { flex: 1; min-width: 210px; min-height: 110px; border: 1.3px solid #afdbe6; border-radius: 8px; padding: 11px; font-size: 1.06em; background: #fafdff; font-family: "Fira Mono", "Menlo", monospace; resize: vertical; transition: border 0.18s;}
-      textarea:focus { border-color: var(--main);}
-      .label-row { display: flex; gap: 12px; justify-content: space-between; margin-bottom: 4px; font-size: 0.98em;}
-      .label-row label { color: #127080;}
-      .action-btn { background: var(--main); color: #fff; border: none; border-radius: 8px; padding: 11px 0; width: 100%; font-size: 1.13em; font-weight: bold; cursor: pointer; margin-top: 8px; margin-bottom: 13px; box-shadow: 0 2px 12px #117c9a28; transition: background 0.15s;}
-      .action-btn:active { background: var(--main-dark);}
-      .diff-result { min-height: 42px; background: #f7fcff; border: 1.1px solid #b2e0ee; border-radius: 7px; font-family: "Fira Mono", "Menlo", monospace; font-size: 1.06em; padding: 14px; white-space: pre-wrap; word-break: break-all; margin-bottom: 10px;}
-      .footer { color: #789; text-align: center; font-size: 0.93em; margin-top: 15px;}
-      .ins { background: #c6ffd8; color: #22843a; border-radius: 3px; padding: 1px 2px;}
-      .del { background: #ffe3e3; color: #c13a3a; border-radius: 3px; padding: 1px 2px;}
-      #backBtn { position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%); background: #117c9a; color: #fff; font-weight: 700; border: none; border-radius: 2rem; padding: 0.58em 1.5em; box-shadow: 0 4px 16px #13d2b066; font-size: 1.09em; text-decoration: none; cursor: pointer; letter-spacing: 0.01em; transition: background 0.15s, transform 0.12s; z-index: 2000;}
-      #backBtn:hover { background: #0c4d60; transform: translateX(-50%) scale(1.04);}
+      :root { --main: #117c9a; --main-dark: #0c4d60; --bg: #f8fbff; }
+      body { background: var(--bg); margin: 0; font-family: "Segoe UI", Arial, sans-serif; color: #234; }
+      .container { max-width: 610px; margin: 38px auto 0 auto; background: #fff; border-radius: 18px; box-shadow: 0 4px 22px #117c9a33; padding: 28px 18px 22px 18px; }
+      .logo { font-size: 1.25em; font-weight: bold; text-align: center; color: var(--main-dark); margin-bottom: 10px; }
+      .desc { text-align: center; color: #19788a; margin-bottom: 16px; font-size: 1.03em; }
+      .textarea-wrap { display: flex; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+      textarea { flex: 1; min-width: 210px; min-height: 110px; border: 1.3px solid #afdbe6; border-radius: 8px; padding: 11px; font-size: 1.06em; background: #fafdff; font-family: "Fira Mono", "Menlo", monospace; resize: vertical; transition: border 0.18s; }
+      textarea:focus { border-color: var(--main); }
+      .label-row { display: flex; gap: 12px; justify-content: space-between; margin-bottom: 4px; font-size: 0.98em; }
+      .label-row label { color: #127080; }
+      .action-btn { background: var(--main); color: #fff; border: none; border-radius: 8px; padding: 11px 0; width: 100%; font-size: 1.13em; font-weight: bold; cursor: pointer; margin-top: 8px; margin-bottom: 13px; box-shadow: 0 2px 12px #117c9a28; transition: background 0.15s; }
+      .action-btn:active { background: var(--main-dark); }
+      .diff-result { min-height: 42px; background: #f7fcff; border: 1.1px solid #b2e0ee; border-radius: 7px; font-family: "Fira Mono", "Menlo", monospace; font-size: 1.06em; padding: 14px; white-space: pre-wrap; word-break: break-all; margin-bottom: 10px; }
+      .footer { color: #789; text-align: center; font-size: 0.93em; margin-top: 15px; }
+      .ins { background: #c6ffd8; color: #22843a; border-radius: 3px; padding: 1px 2px; }
+      .del { background: #ffe3e3; color: #c13a3a; border-radius: 3px; padding: 1px 2px; }
+      #backBtn { position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%); background: #117c9a; color: #fff; font-weight: 700; border: none; border-radius: 2rem; padding: 0.58em 1.5em; box-shadow: 0 4px 16px #13d2b066; font-size: 1.09em; text-decoration: none; cursor: pointer; letter-spacing: 0.01em; transition: background 0.15s, transform 0.12s; z-index: 2000; }
+      #backBtn:hover { background: #0c4d60; transform: translateX(-50%) scale(1.04); }
       @media (max-width: 700px) {
-        .container { max-width: 99vw; padding: 11px 2vw 14px 2vw;}
-        textarea { font-size: 1em;}
-        #backBtn { bottom: 18px; font-size: 0.98em; padding: 0.48em 1em;}
+        .container { max-width: 99vw; padding: 11px 2vw 14px 2vw; }
+        textarea { font-size: 1em; }
+        #backBtn { bottom: 18px; font-size: 0.98em; padding: 0.48em 1em; }
       }
-      section#faq { margin-top: 30px;}
-      section#faq h2 { margin-bottom: 13px; color: #117c9a; font-size: 1.11em; text-align: center;}
-      section#faq dt { font-weight: bold; margin-top: 8px;}
-      section#faq dd { margin: 0 0 7px 0; font-size: 0.99em; color: #19788a;}
+      section#faq { margin-top: 30px; }
+      section#faq h2 { margin-bottom: 13px; color: #117c9a; font-size: 1.11em; text-align: center; }
+      section#faq dt { font-weight: bold; margin-top: 8px; }
+      section#faq dd { margin: 0 0 7px 0; font-size: 0.99em; color: #19788a; }
     </style>
   </head>
   <body>
     <main>
       <div class="container" itemscope itemtype="https://schema.org/WebApplication">
-        <h1 class="logo" itemprop="name">🔎 텍스트 비교 도구 (Diff)</h1>
+        <h1 class="logo" itemprop="name">🔎 Công cụ So sánh Văn bản (Diff)</h1>
         <p class="desc" itemprop="description">
-          두 개의 텍스트를 아래 두 칸에 붙여넣고 “비교”를 클릭하세요.<br />
-          추가된 부분, 삭제된 부분, 변경된 부분이 강조 표시됩니다.
+          Dán hai khối văn bản vào hai ô bên dưới rồi nhấp “So sánh”.<br />
+          Phần thêm sẽ được bôi xanh, phần xóa sẽ bôi đỏ.
         </p>
         <div class="label-row">
-          <label for="leftInput">왼쪽 텍스트</label>
-          <label for="rightInput">오른쪽 텍스트</label>
+          <label for="leftInput">Văn bản bên trái</label>
+          <label for="rightInput">Văn bản bên phải</label>
         </div>
         <div class="textarea-wrap">
-          <textarea id="leftInput" placeholder="원본 또는 이전 버전을 입력하세요"></textarea>
-          <textarea id="rightInput" placeholder="수정된 또는 새로운 버전을 입력하세요"></textarea>
+          <textarea id="leftInput" placeholder="Nhập phiên bản gốc hoặc trước đó"></textarea>
+          <textarea id="rightInput" placeholder="Nhập phiên bản đã sửa hoặc mới"></textarea>
         </div>
-        <button class="action-btn" id="compareBtn">비교</button>
+        <button class="action-btn" id="compareBtn">So sánh</button>
         <div class="diff-result" id="diffResult"></div>
         <div class="footer">
-          데이터는 어디에도 업로드되지 않습니다. 모든 처리는 브라우저 내에서 즉시 이루어집니다.<br />
-          <b>팁:</b> 코드, 논문, 에세이, 텍스트 문서 등 모든 플레인 텍스트에 사용해 보세요.
+          Dữ liệu không được gửi đi đâu. Mọi xử lý diễn ra trên trình duyệt.<br />
+          <b>Mẹo:</b> Sử dụng cho so sánh mã nguồn, bài luận, tài liệu văn bản, v.v.
         </div>
         <section aria-labelledby="faq-head" id="faq">
-          <h2 id="faq-head">자주 묻는 질문 – 텍스트 비교 도구</h2>
+          <h2 id="faq-head">Câu hỏi Thường Gặp – Công cụ So sánh Văn bản</h2>
           <dl>
-            <dt>이 텍스트 비교 도구는 어떻게 작동하나요?</dt>
-            <dd>두 텍스트 블록을 즉시 비교하여 브라우저 내에서 색상으로 차이점을 강조 표시합니다.</dd>
-            <dt>내 텍스트는 어디에 저장되나요?</dt>
-            <dd>전혀 저장되지 않습니다. 모든 처리는 로컬 브라우저에서 이루어집니다.</dd>
-            <dt>강조 색상은 무엇인가요?</dt>
-            <dd>녹색은 <b>추가된</b> 텍스트, 빨간색은 <b>삭제된</b> 텍스트를 나타내며, 변경되지 않은 텍스트는 평소대로 표시됩니다.</dd>
-            <dt>이 도구를 어디에 사용할 수 있나요?</dt>
-            <dd>코드 리뷰, 논문 비교, 버전 추적, 교정 편집 등 모든 텍스트 비교 작업에 사용할 수 있습니다.</dd>
-            <dt>이 도구는 무료인가요?</dt>
-            <dd>예. 이 도구는 100% 무료이며 브라우저 기반으로 로그인이나 회원 가입이 필요 없습니다.</dd>
+            <dt>Công cụ này hoạt động thế nào?</dt>
+            <dd>Nó so sánh hai khối văn bản và làm nổi bật khác biệt ngay trong trình duyệt.</dd>
+            <dt>Dữ liệu của tôi được lưu ở đâu?</dt>
+            <dd>Không có gì được lưu. Tất cả đều chạy cục bộ trên trình duyệt của bạn.</dd>
+            <dt>Màu sắc làm nổi bật nghĩa là gì?</dt>
+            <dd>Màu xanh lá biểu thị văn bản <b>thêm</b>, màu đỏ biểu thị văn bản <b>xóa</b>, phần còn lại giữ nguyên màu bình thường.</dd>
+            <dt>Tôi có thể dùng để làm gì?</dt>
+            <dd>Dùng cho xem lại mã nguồn, so sánh tài liệu, theo dõi bản vá, hiệu đính văn bản, v.v.</dd>
+            <dt>Công cụ có miễn phí không?</dt>
+            <dd>Có. Hoàn toàn miễn phí, chạy ngay trong trình duyệt, không cần đăng nhập.</dd>
           </dl>
         </section>
       </div>
     </main>
-    <a href="../index.html" id="backBtn">다른 유틸리티</a>
+    <a href="../index.html" id="backBtn">Các công cụ khác</a>
     <script>
       const leftInput = document.getElementById("leftInput");
       const rightInput = document.getElementById("rightInput");
@@ -121,7 +121,7 @@
         const left = leftInput.value;
         const right = rightInput.value;
         if (!left && !right) {
-          diffResult.innerHTML = '<span style="color:#888;">비교할 텍스트를 입력하세요.</span>';
+          diffResult.innerHTML = '<span style="color:#888;">Vui lòng nhập văn bản để so sánh.</span>';
           return;
         }
         const diff = Diff.diffWordsWithSpace(left, right);
@@ -130,40 +130,6 @@
       leftInput.addEventListener("input", updateDiff);
       rightInput.addEventListener("input", updateDiff);
       updateDiff();
-    </script>
-    <!-- FAQPage Schema for SGE/GEO/SEO Rich Results -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
-        {
-          "@type": "Question",
-          "name": "이 텍스트 비교 도구는 어떻게 작동하나요?",
-          "acceptedAnswer": { "@type": "Answer", "text": "두 텍스트 블록을 즉시 비교하여 브라우저 내에서 색상으로 차이점을 강조 표시합니다." }
-        },
-        {
-          "@type": "Question",
-          "name": "내 텍스트는 어디에 저장되나요?",
-          "acceptedAnswer": { "@type": "Answer", "text": "전혀 저장되지 않습니다. 모든 처리는 로컬 브라우저에서 이루어집니다." }
-        },
-        {
-          "@type": "Question",
-          "name": "강조 색상은 무엇인가요?",
-          "acceptedAnswer": { "@type": "Answer", "text": "녹색은 추가된 텍스트, 빨간색은 삭제된 텍스트를 나타내며, 변경되지 않은 텍스트는 평소대로 표시됩니다." }
-        },
-        {
-          "@type": "Question",
-          "name": "이 도구를 어디에 사용할 수 있나요?",
-          "acceptedAnswer": { "@type": "Answer", "text": "코드 리뷰, 논문 비교, 버전 추적, 교정 편집 등 모든 텍스트 비교 작업에 사용할 수 있습니다." }
-        },
-        {
-          "@type": "Question",
-          "name": "이 도구는 무료인가요?",
-          "acceptedAnswer": { "@type": "Answer", "text": "예. 이 도구는 100% 무료이며 브라우저 기반으로 로그인이나 회원 가입이 필요 없습니다." }
-        }
-      ]
-    }
     </script>
   </body>
 </html>
