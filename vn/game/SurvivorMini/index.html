@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="ko">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
-    <title>서바이버 미니</title>
+    <title>Survivor Mini</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -22,29 +22,31 @@
     <!-- SEO & Social meta -->
     <meta
       name="description"
-      content="서바이버 미니는 빠른 속도의 브라우저 서바이벌 게임입니다. 몬스터를 피하고 레벨 업하며 가능한 오래 살아남으세요! 무료로 플레이 가능, 별도 다운로드 필요 없습니다." />
+      content="Survivor Mini là trò chơi sinh tồn tốc độ cao trên trình duyệt. Né quái vật, lên cấp và sống sót càng lâu càng tốt! Miễn phí, không cần tải xuống." />
     <meta
       name="keywords"
-      content="서바이버, 미니 게임, 액션 게임, 생존, 슈터, 아케이드, 브라우저 게임, 무료, 서바이브, 웨이브, 슈팅게임, 서바이벌, 좀비, 아케이드, 웹게임" />
+      content="Survivor, mini game, game hành động, sinh tồn, shooter, arcade, game trình duyệt, miễn phí, survive, wave, shooting game, zombie, arcade, webgame" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ko" />
+    <meta name="language" content="vi" />
     <meta name="theme-color" content="#181a20" />
     <link rel="canonical" href="https://emfls.github.io/vn/game/SurvivorMini/index.html" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
     <!-- Open Graph (Facebook, Kakao, etc) -->
-    <meta property="og:title" content="서바이버 미니 – 액션 웹 게임" />
+    <meta property="og:title" content="Survivor Mini – Game Hành Động Trên Web" />
     <meta
       property="og:description"
-      content="끝없이 몰려오는 웨이브에서 얼마나 오래 살아남을 수 있나요? 빠른 액션 브라우저 게임에서 레벨 업하며 최고 점수를 노려보세요!" />
+      content="Bạn có thể sống sót bao lâu giữa các đợt tấn công không ngừng? Thử thách điểm số cao nhất trong trò chơi hành động trên trình duyệt đầy kịch tính!" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/vn/game/SurvivorMini/index.html" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="서바이버 미니 – 액션 웹 게임" />
+    <meta
+      name="twitter:title"
+      content="Survivor Mini – Game Hành Động Trên Web" />
     <meta
       name="twitter:description"
-      content="웨이브를 버티고 최고 점수를 경쟁하세요! 100% 무료, 브라우저 기반 액션 게임입니다." />
+      content="Chiến đấu qua từng đợt sóng và cạnh tranh điểm số cao nhất! 100% miễn phí, trò chơi hành động trên trình duyệt." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <style>
       html,
@@ -144,7 +146,7 @@
         letter-spacing: 0.2px;
         text-shadow: 0 2px 8px #000a;
       }
-      /* === 중앙 팝업창 디자인 === */
+      /* === Popup Giữa Màn Hình === */
       .centerPopup {
         display: none;
         position: absolute;
@@ -197,7 +199,7 @@
       .popupBtn:active {
         background: #1a75ff;
       }
-      /* === 조이스틱 UI 개선 === */
+      /* === Giao Diện Joystick === */
       #joystickWrap {
         position: absolute;
         bottom: 24px;
@@ -255,8 +257,8 @@
       <canvas id="game" width="375" height="500"></canvas>
       <div id="hud">
         <div id="stats">
-          <span id="score">점수:0</span>
-          <span id="wave">웨이브:1</span>
+          <span id="score">Điểm:0</span>
+          <span id="wave">Đợt:1</span>
           <span id="time">0:00</span>
         </div>
         <div id="barwrap">
@@ -288,7 +290,7 @@
         cursor: pointer;
       "
       onclick="window.location.href='/'">
-      📂 다른 게임
+      📂 Trò Chơi Khác
     </button>
     <script>
       const W = 375,
@@ -344,9 +346,8 @@
       }
       reset();
 
-      // ====== 원형 터치 조이스틱 + 키보드 지원 ======
-      let dragging = false,
-        joyCenter = { x: 70, y: 70 };
+      // ====== Joystick Cảm Ứng + Hỗ Trợ Bàn Phím ======
+      let dragging = false;
       function setJoystickActive(active) {
         if (active) {
           joystickWrap.classList.remove("inactive");
@@ -402,7 +403,7 @@
         }
       };
 
-      // PC 키보드도 지원(팝업 켜져있으면 입력 차단)
+      // Hỗ trợ bàn phím PC
       window.addEventListener("keydown", (e) => {
         if (state.pause || state.gameover) return;
         if (e.key === "ArrowUp") state.input.y = -1;
@@ -415,7 +416,7 @@
         if (["ArrowLeft", "ArrowRight"].includes(e.key)) state.input.x = 0;
       });
 
-      // ========== 메인루프 ==========
+      // ========== Vòng Lặp Chính ==========
       function loop() {
         if (!state.gameover && !state.pause) update();
         draw();
@@ -423,11 +424,11 @@
       }
       loop();
 
-      // ========== 업데이트 ==========
+      // ========== CẬP NHẬT ==========
       function update() {
         state.tick++;
         state.time = (state.tick / 60) | 0;
-        // 이동
+        // Di chuyển người chơi
         let dx = state.input.x + state.joy.x,
           dy = state.input.y + state.joy.y;
         let len = Math.hypot(dx, dy);
@@ -437,7 +438,7 @@
           state.player.x = Math.max(state.player.r, Math.min(W - state.player.r, state.player.x));
           state.player.y = Math.max(state.player.r, Math.min(H - state.player.r, state.player.y));
         }
-        // 총알: 가장 가까운 적 방향 자동 유도
+        // Tự động bắn đạn
         state.player.fire++;
         if (state.player.fire >= state.player.fireRate) {
           for (let i = 0; i < state.player.bullets; i++) {
@@ -464,7 +465,7 @@
           }
           state.player.fire = 0;
         }
-        // 총알 이동/적중
+        // Di chuyển đạn và kiểm tra trúng
         state.bullets = state.bullets.filter((b) => {
           b.x += b.vx;
           b.y += b.vy;
@@ -484,7 +485,7 @@
           }
           return true;
         });
-        // 몹 스폰
+        // Sinh quái
         if (state.tick % Math.max(11, 42 - state.wave * 2) === 0) {
           let t = state.wave,
             r = 14 + Math.random() * 8,
@@ -503,7 +504,7 @@
             boss: 0
           });
         }
-        // 보스(1분마다)
+        // Boss xuất hiện mỗi phút
         if (--state.bosscool <= 0) {
           state.bosscool = 870 + Math.random() * 90;
           let hp = 17 + state.wave * 4;
@@ -521,7 +522,7 @@
             boss: 1
           });
         }
-        // 몹 이동/충돌
+        // Di chuyển quái và kiểm tra va chạm
         for (let m of state.mobs) {
           if (m.dead) continue;
           let dx = state.player.x - m.x,
@@ -538,7 +539,7 @@
           }
         }
         state.mobs = state.mobs.filter((m) => !m.dead);
-        // 아이템
+        // Xử lý vật phẩm
         state.items = state.items.filter((it) => {
           if (Math.hypot(state.player.x - it.x, state.player.y - it.y) < state.player.r + it.r + 7) {
             if (it.type === "heal") state.player.hp = Math.min(state.player.maxhp, state.player.hp + 2);
@@ -559,14 +560,14 @@
           }
           return true;
         });
-        // 경험치/레벨업
+        // Kiểm tra kinh nghiệm và lên cấp
         while (state.player.xp >= state.player.xpNext) {
           state.player.xp -= state.player.xpNext;
           state.player.lv++;
           state.player.xpNext = 8 + Math.floor(state.player.lv * 1.6);
           showLevelUp();
         }
-        // 웨이브
+        // Cập nhật đợt
         state.wave = Math.floor(state.time / 18) + 1;
       }
       function dropExp(m) {
@@ -588,56 +589,54 @@
         }
       }
 
-      // ===== 레벨업 선택 =====
+      // ===== Chọn nâng cấp khi lên cấp =====
       function showLevelUp() {
-        // 조이스틱 비활성화(투명도, 입력 차단)
         setJoystickActive(false);
         let upgrades = [
           {
-            name: "발사 속도↑",
-            desc: "더 빠르게 사격",
+            name: "Tốc độ bắn↑",
+            desc: "Bắn nhanh hơn",
             act: () => {
               state.player.fireRate = Math.max(13, state.player.fireRate - 6);
             }
           },
           {
-            name: "탄환 수↑",
-            desc: "탄환 개수 추가",
+            name: "Số đạn↑",
+            desc: "Thêm số đạn mỗi lần bắn",
             act: () => {
               state.player.bullets = Math.min(6, state.player.bullets + 1);
             }
           },
           {
-            name: "속도↑",
-            desc: "이동 속도 증가",
+            name: "Tốc độ di chuyển↑",
+            desc: "Nhanh hơn khi di chuyển",
             act: () => {
               state.player.spd += 0.7;
             }
           },
           {
-            name: "공격력↑",
-            desc: "공격력 증가",
+            name: "Sát thương↑",
+            desc: "Tăng sát thương",
             act: () => {
               state.player.atk += 1;
             }
           },
           {
-            name: "최대 체력↑",
-            desc: "최대 체력+1 및 회복",
+            name: "Máu tối đa↑",
+            desc: "Tăng 1 máu tối đa và hồi máu",
             act: () => {
               state.player.maxhp += 1;
               state.player.hp = Math.min(state.player.hp + 1, state.player.maxhp);
             }
           }
         ];
-        // 랜덤 3개 선택
         let pick = [];
         while (pick.length < 3) {
           let i = Math.floor(Math.random() * upgrades.length);
           if (!pick.includes(i)) pick.push(i);
         }
         levelup.innerHTML =
-          `<b>레벨 업!<br>업그레이드를 선택하세요</b>
+          `<b>Lên Cấp!<br>Chọn nâng cấp</b>
     <div class='popupButtons'>` +
           pick
             .map(
@@ -673,7 +672,7 @@
         setJoystickActive(true);
       };
 
-      // ===== 게임오버 =====
+      // ===== Game Over =====
       function gameOver() {
         setJoystickActive(false);
         state.gameover = true;
@@ -681,12 +680,12 @@
           hiscore = state.score;
           localStorage.surv_hi = hiscore;
         }
-        gameover.innerHTML = `<b>게임 오버</b><br>
-    점수: <b>${state.score}</b><br>
-    웨이브: <b>${state.wave}</b><br>
-    시간: <b>${Math.floor(state.time / 60)}:${("0" + (state.time % 60)).slice(-2)}</b><br>
-    <span style="font-size:0.9em;color:#bbf;">최고 점수: ${hiscore}</span><br>
-    <div class="popupButtons"><button class="popupBtn" onclick="restart()">다시 시작</button></div>`;
+        gameover.innerHTML = `<b>Trò Chơi Kết Thúc</b><br>
+    Điểm: <b>${state.score}</b><br>
+    Đợt: <b>${state.wave}</b><br>
+    Thời gian: <b>${Math.floor(state.time / 60)}:${("0" + (state.time % 60)).slice(-2)}</b><br>
+    <span style="font-size:0.9em;color:#bbf;">Điểm cao nhất: ${hiscore}</span><br>
+    <div class="popupButtons"><button class="popupBtn" onclick="restart()">Chơi Lại</button></div>`;
         gameover.style.display = "block";
       }
       window.restart = () => {
@@ -694,10 +693,10 @@
         setJoystickActive(true);
       };
 
-      // ========== 그리기 ==========
+      // ========== VẼ TRONG GAME ==========
       function draw() {
         ctx.clearRect(0, 0, W, H);
-        // 배경 원
+        // Vẽ vòng tròn nền
         ctx.save();
         for (let i = 0; i < 7; i++) {
           ctx.beginPath();
@@ -707,7 +706,7 @@
           ctx.stroke();
         }
         ctx.restore();
-        // 아이템
+        // Vẽ vật phẩm
         for (let it of state.items) {
           if (it.type === "exp") {
             ctx.beginPath();
@@ -741,7 +740,7 @@
             ctx.fillText("🧲", it.x - 8, it.y + 6);
           }
         }
-        // 몹
+        // Vẽ quái vật
         for (let m of state.mobs) {
           ctx.beginPath();
           ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
@@ -753,9 +752,9 @@
             ctx.stroke();
             ctx.font = "bold 12px sans-serif";
             ctx.fillStyle = "#fff";
-            ctx.fillText("보스", m.x - 16, m.y + 4);
+            ctx.fillText("Boss", m.x - 16, m.y + 4);
           }
-          // HP바
+          // Thanh HP
           if (m.hp < m.maxhp) {
             ctx.fillStyle = "#aaa";
             ctx.fillRect(m.x - m.r, m.y - m.r - 8, m.r * 2, 4);
@@ -763,7 +762,7 @@
             ctx.fillRect(m.x - m.r, m.y - m.r - 8, (m.r * 2 * m.hp) / m.maxhp, 4);
           }
         }
-        // 플레이어
+        // Vẽ người chơi
         ctx.beginPath();
         ctx.arc(state.player.x, state.player.y, state.player.r, 0, Math.PI * 2);
         ctx.fillStyle = "#fff";
@@ -771,7 +770,7 @@
         ctx.strokeStyle = "#27e";
         ctx.lineWidth = 4;
         ctx.stroke();
-        // 총알
+        // Vẽ đạn
         for (let b of state.bullets) {
           ctx.beginPath();
           ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
@@ -781,12 +780,12 @@
           ctx.lineWidth = 1.5;
           ctx.stroke();
         }
-        // HUD
-        scoreEl.textContent = "점수:" + state.score;
-        waveEl.textContent = "웨이브:" + state.wave;
+        // Cập nhật HUD
+        scoreEl.textContent = "Điểm:" + state.score;
+        waveEl.textContent = "Đợt:" + state.wave;
         timeEl.textContent = `${Math.floor(state.time / 60)}:${("0" + (state.time % 60)).slice(-2)}`;
         levelEl.textContent = `Lv.${state.player.lv}`;
-        // HP, XP 바
+        // Thanh HP, XP
         hpbar.style.width = (100 * state.player.hp) / state.player.maxhp + "%";
         xpbar.style.width = (100 * state.player.xp) / state.player.xpNext + "%";
       }
@@ -802,33 +801,33 @@
         font-family: Arial, sans-serif;
       ">
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">❓ 게임 소개</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">❓ Giới Thiệu Trò Chơi</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          서바이버 미니는 빠른 속도의 액션 슈터 게임으로, 좀비를 피하면서 레벨 업하고 가능한 오래 살아남는 것이 목표입니다. 끊임없이 몰려오는 적을 물리치고 강력한 업그레이드를 선택해 생존하세요!
+          Survivor Mini là game hành động sinh tồn tốc độ cao, nơi bạn phải né zombie và quái vật, lên cấp và cố gắng sống sót càng lâu càng tốt. Hãy tiêu diệt kẻ thù và chọn nâng cấp để trở nên mạnh mẽ hơn!
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🕹️ 조작 방법</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🕹️ Cách Điều Khiển</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          모바일에서는 화면 하단의 조이스틱을 사용하세요. PC에서는 화살표 키(← ↑ ↓ →)로 이동할 수 있습니다. 터치 기기에서는 조이스틱이 자동으로 나타납니다.
+          Trên di động, sử dụng joystick ảo ở dưới cùng màn hình. Trên PC, sử dụng phím mũi tên (← ↑ ↓ →) để di chuyển. Joystick sẽ tự động xuất hiện với màn hình cảm ứng.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔫 자동 사격?</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔫 Tự Động Bắn?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          네! 플레이어는 가장 가까운 적을 자동으로 조준하여 사격합니다. 이동과 생존에 집중하세요.
+          Có! Người chơi sẽ tự động nhắm bắn kẻ thù gần nhất. Hãy tập trung vào di chuyển và sinh tồn.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📈 레벨업 시스템</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📈 Hệ Thống Lên Cấp</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          적을 처치하면 경험치를 얻습니다. 경험치를 충분히 모으면 레벨업하며, 세 가지 랜덤 업그레이드 중 하나를 선택하여 캐릭터를 강화할 수 있습니다.
+          Tiêu diệt kẻ thù để kiếm điểm kinh nghiệm. Khi đủ kinh nghiệm, bạn sẽ lên cấp và chọn một trong ba nâng cấp ngẫu nhiên để tăng sức mạnh.
         </p>
       </div>
       <div style="margin-bottom: 0">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">💾 기록 저장</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">💾 Lưu Điểm Cao Nhất</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          최고 점수는 브라우저에 자동으로 저장되며, 게임 오버 화면에서 확인할 수 있습니다.
+          Điểm cao nhất của bạn sẽ được lưu tự động trong trình duyệt và hiển thị ở màn hình game over.
         </p>
       </div>
     </section>

@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ko">
+<html lang="vi">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>스네이크 게임</title>
+        <title>Trò Chơi Rắn Săn Mồi</title>
         <meta name="robots" content="index, follow" />
 
         <!-- Canonical URL -->
@@ -11,25 +11,25 @@
         <!-- SEO Meta -->
         <meta
             name="description"
-            content="클래식 스네이크 게임을 온라인에서 플레이하세요. 먹이를 먹고 길어지며 충돌하지 않도록 주의하세요! 별도 다운로드 없이 바로 즐길 수 있습니다." />
-        <meta name="keywords" content="스네이크 게임, 퀵플레이 아케이드, 무료 웹게임, 스네이크 플레이, 모바일 스네이크 게임" />
+            content="Chơi game Rắn Săn Mồi cổ điển ngay trong trình duyệt. Ăn mồi, dài ra và tránh va chạm! Không cần tải về, chơi ngay lập tức." />
+        <meta name="keywords" content="trò chơi rắn, quickplay arcade, webgame miễn phí, chơi rắn, game rắn di động" />
         <meta name="author" content="Itagi" />
 
-        <!-- Open Graph (Facebook, Kakao, etc) -->
-        <meta property="og:title" content="스네이크 게임 – 퀵플레이 아케이드" />
+        <!-- Open Graph -->
+        <meta property="og:title" content="Rắn Săn Mồi – QuickPlay Arcade" />
         <meta
             property="og:description"
-            content="먹고. 성장하고. 충돌을 피하세요. 브라우저에서 즉시 플레이 가능한 클래식 스네이크 게임!" />
+            content="Ăn, lớn lên và tránh va chạm. Trò chơi Rắn Săn Mồi cổ điển có thể chơi ngay trong trình duyệt!" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/vn/game/SnakeGame" />
         <meta property="og:type" content="website" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="스네이크 게임 플레이 – 퀵플레이" />
+        <meta name="twitter:title" content="Chơi Rắn Săn Mồi – QuickPlay" />
         <meta
             name="twitter:description"
-            content="빠르고 재미있는 스네이크 게임을 지금 바로 온라인에서 플레이해보세요 – 로그인 불필요!" />
+            content="Chơi game Rắn Săn Mồi nhanh và thú vị ngay lập tức trong trình duyệt – không cần đăng nhập!" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
@@ -217,15 +217,12 @@
     </head>
 
     <body>
-        <h1>
-            <span style="color: #8f94fb">퀵플레이:</span>
-            <span style="color: #0a0">스</span><span style="color: #6f6">네이크</span>
-        </h1>
-        <p class="description">먹고. 성장하고. 충돌을 피하세요. 행운을 빕니다!</p>
+        <h1>QuickPlay: Rắn Săn Mồi</h1>
+        <p class="description">Ăn, lớn lên và tránh va chạm. Chúc bạn may mắn!</p>
 
         <div class="game-container">
             <canvas id="game" width="300" height="300"></canvas>
-            <button id="start-btn">시작</button>
+            <button id="start-btn">BẮT ĐẦU</button>
             <div id="game-over"></div>
         </div>
 
@@ -240,7 +237,7 @@
             <button class="btn down" onclick="setDirection('ArrowDown')" style="font-size: 26px">▼</button>
         </div>
         <div style="margin: 10px"></div>
-        <button class="menu" onclick="goToMain()">📂 다른 게임</button>
+        <button class="menu" onclick="goToMain()">📂 Trò Chơi Khác</button>
 
         <script>
             const canvas = document.getElementById("game");
@@ -352,10 +349,10 @@
                 gameOverDiv.innerHTML = "";
 
                 const msg = document.createElement("p");
-                msg.textContent = `당신의 점수: ${score}`;
+                msg.textContent = `Điểm của bạn: ${score}`;
 
                 const retry = document.createElement("button");
-                retry.textContent = "다시 도전";
+                retry.textContent = "Chơi Lại";
                 retry.className = "restart";
                 retry.style.width = "100px";
                 retry.style.height = "50px";
@@ -368,7 +365,7 @@
                 };
 
                 const share = document.createElement("button");
-                share.textContent = "공유하기";
+                share.textContent = "Chia Sẻ";
                 share.className = "share";
                 share.style.marginTop = "10px";
                 share.style.width = "100px";
@@ -388,21 +385,21 @@
 
             function shareGame() {
                 const url = window.location.href;
-                const text = `🐍 퀵플레이 스네이크 - 내 점수: ${lastScore}\n지금 플레이하세요!`;
+                const text = `🐍 QuickPlay Rắn Săn Mồi – Điểm của tôi: ${lastScore}\nChơi ngay:`;
                 if (navigator.share) {
                     navigator
                         .share({
-                            title: "퀵플레이: 스네이크",
+                            title: "QuickPlay: Rắn Săn Mồi",
                             text,
                             url
                         })
-                        .catch(() => alert("공유에 실패했습니다. 링크를 복사해보세요."));
+                        .catch(() => alert("Chia sẻ thất bại, vui lòng sao chép liên kết."));
                 } else {
-                    const full = `${text}\n${url}`;
+                    const full = `${text} ${url}`;
                     navigator.clipboard
                         .writeText(full)
-                        .then(() => alert("점수와 함께 링크가 클립보드에 복사되었습니다!"))
-                        .catch(() => alert(`이 링크를 복사하세요:\n${full}`));
+                        .then(() => alert("Đã sao chép liên kết kèm điểm vào clipboard!"))
+                        .catch(() => alert(`Vui lòng sao chép liên kết:\n${full}`));
                 }
             }
         </script>
@@ -420,36 +417,36 @@
                 line-height: 1.6;
                 color: #f0f0f0;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ 자주 묻는 질문</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ Câu Hỏi Thường Gặp</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. 스네이크 게임은 어떻게 하나요?</strong><br />
-                A. 방향키(또는 화면 버튼)를 사용해 뱀을 이동하세요. 빨간 사각형을 먹으면 길어집니다!
+                <strong>Q1. Làm sao để chơi Rắn Săn Mồi?</strong><br />
+                A. Dùng phím mũi tên (hoặc các nút trên màn hình) để điều khiển rắn. Ăn ô thức ăn màu đỏ để rắn dài ra!
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. 게임이 종료되는 경우는 무엇인가요?</strong><br />
-                A. 벽에 부딪히거나 자신의 몸통과 충돌하면 게임이 종료됩니다.
+                <strong>Q2. Khi nào trò chơi kết thúc?</strong><br />
+                A. Trò chơi kết thúc khi rắn va vào tường hoặc cắn phải chính mình.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. 게임을 다시 시작할 수 있나요?</strong><br />
-                A. 네! 게임이 끝난 후 '다시 도전' 버튼을 탭하면 즉시 재시작할 수 있습니다.
+                <strong>Q3. Có thể chơi lại không?</strong><br />
+                A. Có! Sau khi kết thúc, nhấn nút “Chơi Lại” để bắt đầu mới ngay lập tức.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. 내 점수를 공유할 수 있나요?</strong><br />
-                A. 네! 게임이 끝난 후 '공유하기' 버튼을 탭하면 점수를 복사하거나 공유할 수 있습니다.
+                <strong>Q4. Tôi có thể chia sẻ điểm không?</strong><br />
+                A. Có! Khi trò chơi kết thúc, nhấn “Chia Sẻ” để sao chép điểm và liên kết trò chơi.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. 모바일에 최적화되어 있나요?</strong><br />
-                A. 물론입니다. 화면에 표시된 화살표를 사용해 휴대폰과 태블릿에서 플레이할 수 있습니다.
+                <strong>Q5. Có chơi được trên điện thoại không?</strong><br />
+                A. Chắc chắn rồi. Sử dụng các nút điều hướng trên màn hình để chơi trên điện thoại và máy tính bảng.
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. 게임 속도는 어떻게 변하나요?</strong><br />
-                A. 현재 속도는 고정되어 있지만, 향후 업데이트에서는 성장에 따라 속도가 증가할 수 있습니다.
+                <strong>Q6. Tốc độ trò chơi có thay đổi không?</strong><br />
+                A. Hiện tại tốc độ cố định, nhưng trong các bản cập nhật sau, tốc độ có thể tăng khi rắn càng dài.
             </div>
         </section>
     </body>
