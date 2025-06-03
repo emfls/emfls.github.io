@@ -1,32 +1,32 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ja">
     <head>
         <meta charset="UTF-8" />
-        <title>데이터 형식 변환기 – JSON, XML, CSV 뷰어 및 변환</title>
+        <title>データ形式コンバーター – JSON、XML、CSV ビューア＆コンバート</title>
         <meta name="viewport" content="width=device-width,initial-scale=1.0" />
         <meta
             name="description"
-            content="JSON, XML, CSV 간 즉시 변환. 색상 강조 뷰어, 오류 확인, 무료 브라우저 기반 변환기." />
+            content="JSON、XML、CSV 間を即座に変換。色分けハイライトビューア、エラー検出、無料ブラウザベースの変換ツール。" />
         <meta
             name="keywords"
-            content="json, xml, csv, 변환기, 데이터, 뷰어, 온라인, 형식, 변환, 강조, 브라우저, 무료" />
+            content="json, xml, csv, コンバーター, データ, ビューア, オンライン, 形式, 変換, ハイライト, ブラウザ, 無料" />
         <meta name="author" content="Itagi" />
-        <meta name="language" content="ko" />
+        <meta name="language" content="ja" />
         <link rel="canonical" href="https://emfls.github.io/jp/util/dataconvert/" />
         <link rel="icon" href="https://emfls.github.io/icon-192.png" />
         <!-- Open Graph / Twitter meta -->
-        <meta property="og:title" content="데이터 형식 변환기 – JSON, XML, CSV" />
+        <meta property="og:title" content="データ形式コンバーター – JSON、XML、CSV" />
         <meta
             property="og:description"
-            content="브라우저에서 JSON, XML, CSV를 변환하고 뷰어로 확인하세요. 무료, 빠르며 색상 강조 제공." />
+            content="ブラウザ上で JSON、XML、CSV を変換＆ビューアで確認。無料、迅速、色分けハイライトあり。" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://emfls.github.io/jp/util/dataconvert/" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="데이터 형식 변환기 – JSON, XML, CSV" />
+        <meta name="twitter:title" content="データ形式コンバーター – JSON、XML、CSV" />
         <meta
             name="twitter:description"
-            content="JSON, XML, CSV를 클릭 한번에 변환 및 뷰어로 확인하세요. 색상 강조, 무료, 브라우저 전용." />
+            content="JSON、XML、CSV をクリック一つで変換＆ビューア確認。色分けハイライト、無料、ブラウザ専用。" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -42,7 +42,7 @@
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <!-- External: highlight.js (for code coloring) -->
+        <!-- External: highlight.js -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.8.0/styles/github.min.css" />
         <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.8.0/lib/highlight.min.js"></script>
         <!-- External: xml-js, papaparse -->
@@ -163,6 +163,7 @@
             }
             .action-mini:active {
                 background: var(--main);
+                color: #fff;
             }
             .error-msg {
                 color: #c12929;
@@ -239,22 +240,22 @@
     <body>
         <main>
             <div class="container" itemscope itemtype="https://schema.org/WebApplication">
-                <h1 class="logo" itemprop="name">🔄 데이터 형식 변환기</h1>
+                <h1 class="logo" itemprop="name">🔄 データ形式コンバーター</h1>
                 <p class="desc" itemprop="description">
-                    JSON, XML, CSV를 붙여넣으세요. 형식 간 즉시 변환, 색상 강조, 오류 확인.<br />
-                    100% 브라우저 기반, 데이터는 어디로도 전송되지 않습니다.
+                    JSON、XML、CSV を貼り付けてください。形式間を即座に変換し、色分けハイライトで表示。<br />
+                    100% ブラウザベースで、データは外部に送信されません。
                 </p>
                 <div class="format-select">
                     <button class="format-btn active" id="jsonBtn">JSON</button>
                     <button class="format-btn" id="xmlBtn">XML</button>
                     <button class="format-btn" id="csvBtn">CSV</button>
                 </div>
-                <textarea id="inputArea" placeholder="데이터를 여기에 붙여넣으세요 (JSON, XML, CSV)..."></textarea>
+                <textarea id="inputArea" placeholder="データをここに貼り付け（JSON、XML、CSV）…"></textarea>
                 <div class="action-row">
-                    <button class="action-mini" id="beautifyBtn">가독성 정리</button>
-                    <button class="action-mini" id="clearBtn">지우기</button>
+                    <button class="action-mini" id="beautifyBtn">整形</button>
+                    <button class="action-mini" id="clearBtn">クリア</button>
                 </div>
-                <button class="convert-btn" id="convertBtn">변환 및 보기</button>
+                <button class="convert-btn" id="convertBtn">変換して表示</button>
                 <div class="error-msg" id="errorMsg"></div>
                 <div class="format-select">
                     <button class="format-btn active" id="jsonViewBtn">JSON</button>
@@ -263,38 +264,38 @@
                 </div>
                 <pre id="outputView" class="hljs"></pre>
                 <div class="action-row">
-                    <button class="action-mini" id="copyBtn">복사</button>
-                    <button class="action-mini" id="downloadBtn">다운로드</button>
+                    <button class="action-mini" id="copyBtn">コピー</button>
+                    <button class="action-mini" id="downloadBtn">ダウンロード</button>
                 </div>
                 <div class="footer">
-                    JSON, XML, CSV 지원. 오류 감지 및 하이라이트 제공.<br />
-                    데이터는 어디에도 전송되지 않습니다. 모든 처리는 브라우저에서만 이루어집니다.
+                    JSON、XML、CSV をサポート。エラー検出とハイライト機能あり。<br />
+                    データはどこにも送信されません。すべてブラウザで処理されます。
                 </div>
-                <!-- FAQ 섹션 (SEO/SGE 용) -->
+                <!-- FAQ セクション (SEO/SGE 用) -->
                 <section aria-labelledby="faq-head" id="faq">
-                    <h2 id="faq-head">FAQ – 데이터 형식 변환기</h2>
+                    <h2 id="faq-head">FAQ – データ形式コンバーター</h2>
                     <dl>
-                        <dt>어떤 형식을 지원하나요?</dt>
-                        <dd>이 도구는 JSON, XML, CSV 형식 간 변환 및 뷰어 기능을 지원합니다.</dd>
-                        <dt>내 데이터가 전송되거나 저장되나요?</dt>
+                        <dt>どの形式をサポートしていますか？</dt>
+                        <dd>本ツールは JSON、XML、CSV 形式間の変換およびビューア機能をサポートします。</dd>
+                        <dt>私のデータは送信または保存されますか？</dt>
                         <dd>
-                            아니요. 모든 변환 및 처리는 브라우저 내에서만 수행되며, 데이터는 외부로 전송되지 않습니다.
+                            いいえ。すべての変換および処理はブラウザ上でのみ行われ、データは外部へ送信されません。
                         </dd>
-                        <dt>큰 파일도 사용할 수 있나요?</dt>
+                        <dt>大きなファイルでも使用できますか？</dt>
                         <dd>
-                            소규모/중규모 데이터에 최적화되어 있습니다. 매우 큰 파일의 경우 브라우저 메모리 한계가 있을 수 있습니다.
+                            小規模～中規模データに最適化されています。非常に大きなファイルではブラウザのメモリ制限がある場合があります。
                         </dd>
-                        <dt>색상 강조 기능이 있나요?</dt>
-                        <dd>네, 모든 출력 결과는 highlight.js를 사용하여 색상 강조됩니다.</dd>
-                        <dt>결과를 다운로드하거나 복사할 수 있나요?</dt>
-                        <dd>네! 변환 후 복사 또는 다운로드 버튼을 사용하세요.</dd>
+                        <dt>色分けハイライト機能はありますか？</dt>
+                        <dd>はい、出力結果はすべて highlight.js を使用して色分けハイライトされます。</dd>
+                        <dt>結果をダウンロードまたはコピーできますか？</dt>
+                        <dd>はい！変換後にコピーまたはダウンロードボタンをご利用ください。</dd>
                     </dl>
                 </section>
             </div>
         </main>
-        <a href="../index.html" id="backBtn">다른 유틸리티</a>
+        <a href="../index.html" id="backBtn">他のユーティリティ</a>
         <script>
-            // ========== Format Select ==========
+            // ========== 入力形式選択 ==========
             let inputFormat = "json";
             document.getElementById("jsonBtn").onclick = () => setInputFormat("json");
             document.getElementById("xmlBtn").onclick = () => setInputFormat("xml");
@@ -303,9 +304,9 @@
                 inputFormat = fmt;
                 ["jsonBtn", "xmlBtn", "csvBtn"].forEach((id) => document.getElementById(id).classList.remove("active"));
                 document.getElementById(fmt + "Btn").classList.add("active");
-                document.getElementById("inputArea").placeholder = `데이터를 여기에 붙여넣으세요 (${fmt.toUpperCase()})...`;
+                document.getElementById("inputArea").placeholder = `データをここに貼り付け（${fmt.toUpperCase()}）…`;
             }
-            // ========== Output Format Select ==========
+            // ========== 出力形式選択 ==========
             let outputFormat = "json";
             document.getElementById("jsonViewBtn").onclick = () => showOutputFormat("json");
             document.getElementById("xmlViewBtn").onclick = () => showOutputFormat("xml");
@@ -318,7 +319,7 @@
                 document.getElementById(fmt + "ViewBtn").classList.add("active");
                 displayOutput();
             }
-            // ========== Convert & Beautify ==========
+            // ========== 変換・整形 ==========
             let dataObject = null,
                 lastRawInput = "";
             document.getElementById("convertBtn").onclick = convertInput;
@@ -338,14 +339,14 @@
                     if (inputFormat === "json") obj = JSON.parse(raw);
                     else if (inputFormat === "xml") obj = xml2js(raw, { compact: true, alwaysChildren: true });
                     else if (inputFormat === "csv") obj = Papa.parse(raw, { header: true, skipEmptyLines: true }).data;
-                    else throw "잘못된 입력 형식입니다";
+                    else throw "無効な入力形式です";
                     dataObject = obj;
                     document.getElementById("errorMsg").textContent = "";
                     displayOutput();
                 } catch (e) {
                     dataObject = null;
                     document.getElementById("outputView").textContent = "";
-                    document.getElementById("errorMsg").textContent = "파싱 오류: " + (e.message || e);
+                    document.getElementById("errorMsg").textContent = "解析エラー: " + (e.message || e);
                 }
             }
             function beautifyInput() {
@@ -359,10 +360,10 @@
                     document.getElementById("inputArea").value = pretty;
                     document.getElementById("errorMsg").textContent = "";
                 } catch (e) {
-                    document.getElementById("errorMsg").textContent = "가독성 정리 실패: " + (e.message || e);
+                    document.getElementById("errorMsg").textContent = "整形失敗: " + (e.message || e);
                 }
             }
-            // ========== Display Output ==========
+            // ========== 出力表示 ==========
             function displayOutput() {
                 if (!dataObject) {
                     document.getElementById("outputView").textContent = "";
@@ -376,10 +377,10 @@
                     document.getElementById("outputView").textContent = out;
                     hljs.highlightElement(document.getElementById("outputView"));
                 } catch (e) {
-                    document.getElementById("outputView").textContent = "변환 오류: " + (e.message || e);
+                    document.getElementById("outputView").textContent = "変換エラー: " + (e.message || e);
                 }
             }
-            // ========== Copy & Download ==========
+            // ========== コピー＆ダウンロード ==========
             document.getElementById("copyBtn").onclick = function () {
                 const txt = document.getElementById("outputView").textContent;
                 if (!txt) return;
@@ -395,9 +396,7 @@
                 a.click();
                 setTimeout(() => URL.revokeObjectURL(a.href), 1000);
             };
-            // ========== Utility: vkbeautify for XML pretty print ==========
-            // https://github.com/vkiryukhin/vkBeautify
-            // Only the xml function needed for demo
+            // ========== ユーティリティ: vkbeautify for XML整形 ==========
             window.vkbeautify = {
                 xml: function (text) {
                     var shift = "\n          ".split("");
@@ -450,42 +449,42 @@
                 "mainEntity": [
                     {
                         "@type": "Question",
-                        "name": "어떤 형식을 지원하나요?",
+                        "name": "どの形式をサポートしていますか？",
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "이 도구는 JSON, XML, CSV 형식 간 변환 및 뷰어 기능을 지원합니다."
+                            "text": "本ツールは JSON、XML、CSV 形式間の変換およびビューア機能をサポートします。"
                         }
                     },
                     {
                         "@type": "Question",
-                        "name": "내 데이터가 전송되거나 저장되나요?",
+                        "name": "私のデータは送信または保存されますか？",
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "아니요. 모든 변환 및 처리는 브라우저 내에서만 수행되며, 데이터는 외부로 전송되지 않습니다."
+                            "text": "いいえ。すべての変換および処理はブラウザ上でのみ行われ、データは外部へ送信されません。"
                         }
                     },
                     {
                         "@type": "Question",
-                        "name": "큰 파일도 사용할 수 있나요?",
+                        "name": "大きなファイルでも使用できますか？",
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "소규모/중규모 데이터에 최적화되어 있습니다. 매우 큰 파일의 경우 브라우저 메모리 한계가 있을 수 있습니다."
+                            "text": "小規模～中規模データに最適化されています。非常に大きなファイルではブラウザのメモリ制限がある場合があります。"
                         }
                     },
                     {
                         "@type": "Question",
-                        "name": "색상 강조 기능이 있나요?",
+                        "name": "色分けハイライト機能はありますか？",
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "네, 모든 출력 결과는 highlight.js를 사용하여 색상 강조됩니다."
+                            "text": "はい、出力結果はすべて highlight.js を使用して色分けハイライトされます。"
                         }
                     },
                     {
                         "@type": "Question",
-                        "name": "결과를 다운로드하거나 복사할 수 있나요?",
+                        "name": "結果をダウンロードまたはコピーできますか？",
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "네! 변환 후 복사 또는 다운로드 버튼을 사용하세요."
+                            "text": "はい！変換後にコピーまたはダウンロードボタンをご利用ください。"
                         }
                     }
                 ]

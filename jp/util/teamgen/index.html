@@ -1,30 +1,30 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ja">
   <head>
     <meta charset="UTF-8" />
-    <title>랜덤 팀 생성기 – 온라인 그룹 분할기</title>
+    <title>ランダムチームジェネレーター – オンライングループ分け</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="이름을 입력하고 팀 수를 선택하면 즉시 랜덤 팀/그룹으로 나눠줍니다! 100% 브라우저 기반, 업로드 불필요." />
+      content="名前を入力してチーム数を選ぶだけで、すぐにランダムなチームやグループに分けられます！100％ブラウザ上で完結、アップロード不要。" />
     <meta
       name="keywords"
-      content="랜덤 팀 생성기, 그룹 분할기, 이름 섞기, 팀 만들기, 스터디 그룹, 교실, 클래스, 팀 편성, 조 짜기, 조 편성기, 랜덤 팀, 랜덤 조" />
+      content="ランダムチーム, グループ分け, 名前シャッフル, チーム作成, スタディグループ, クラス, チーム編成, グループメーカー, チーム分け, ランダム分け" />
     <meta name="author" content="Itagi" />
     <link rel="canonical" href="https://emfls.github.io/jp/util/teamgen/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <meta property="og:title" content="랜덤 팀 생성기 – 온라인 그룹 분할기" />
+    <meta property="og:title" content="ランダムチームジェネレーター – オンライングループ分け" />
     <meta
       property="og:description"
-      content="이름을 무작위로 팀/그룹에 나눕니다. 즉시 섞기, 브라우저에서만 실행, 데이터 업로드 불필요." />
+      content="名前をランダムにチーム/グループへ分けます。即シャッフル、ブラウザのみ、データアップロード不要。" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/jp/util/teamgen/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="랜덤 팀 생성기 – 온라인 그룹 분할기" />
+    <meta name="twitter:title" content="ランダムチームジェネレーター – オンライングループ分け" />
     <meta
       name="twitter:description"
-      content="이름을 무작위로 팀/그룹에 나눕니다. 빠르고 개인 정보 보호, 브라우저에서만 실행!" />
+      content="名前をランダムでグループ分け。高速かつプライバシー重視、完全ブラウザ処理！" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -223,29 +223,29 @@
   </head>
   <body>
     <div class="container">
-      <div class="logo">🔀 랜덤 팀/그룹 생성기</div>
+      <div class="logo">🔀 ランダムチーム／グループ作成</div>
       <div class="desc">
-        이름을 붙여넣거나 한 줄에 하나씩 입력하세요,<br />
-        팀 수를 선택한 후,<br />
-        즉시 랜덤 팀으로 나눠줍니다!
+        名前を貼り付けるか、1行に1人ずつ入力してください。<br />
+        チーム数を選んで、<br />
+        すぐにランダムなチームに分けます！
       </div>
       <div class="input-row">
-        <label for="names" class="label">이름 (한 줄에 하나씩):</label>
+        <label for="names" class="label">名前（1行に1人）:</label>
         <textarea
           id="names"
           rows="6"
-          placeholder="홍길동&#10;김철수&#10;이영희&#10;..."></textarea>
+          placeholder="山田太郎&#10;田中花子&#10;佐藤一郎&#10;..."></textarea>
       </div>
       <div class="control-row">
-        <label for="teamNum" class="label">팀 수</label>
+        <label for="teamNum" class="label">チーム数</label>
         <input id="teamNum" class="team-num-input" type="number" min="2" max="20" value="2" />
-        <button class="gen-btn" id="genBtn" title="랜덤 팀 나누기">팀 나누기</button>
+        <button class="gen-btn" id="genBtn" title="ランダムチーム分け">チーム分け</button>
       </div>
       <div class="hint" id="hint"></div>
       <div class="result-list" id="resultList"></div>
-      <a href="../index.html" id="backBtn">다른 유틸 보기</a>
+      <a href="../index.html" id="backBtn">その他ツール</a>
       <div class="footer">
-        100% 브라우저 기반. 추적 및 업로드 없음.<br />
+        100％ブラウザのみ。追跡やアップロード一切なし。<br />
       </div>
     </div>
     <script>
@@ -269,29 +269,27 @@
           .filter(Boolean);
 
         if (names.length < 2) {
-          hint.textContent = "이름을 최소 2개 이상 입력해주세요!";
+          hint.textContent = "名前を最低2人以上入力してください！";
           return;
         }
         if (teamNum < 2 || teamNum > 20) {
-          hint.textContent = "팀 수는 2부터 20 사이여야 합니다.";
+          hint.textContent = "チーム数は2から20の間で指定してください。";
           return;
         }
         if (teamNum > names.length) {
-          hint.textContent = "팀 수는 이름 수를 초과할 수 없습니다!";
+          hint.textContent = "チーム数は名前の数を超えることはできません！";
           return;
         }
 
         shuffle(names);
-        // 팀에 할당
         let teams = Array.from({ length: teamNum }, () => []);
         names.forEach((name, i) => {
           teams[i % teamNum].push(name);
         });
-        // 결과 출력
         teams.forEach((team, i) => {
           const block = document.createElement("div");
           block.className = "team-block";
-          block.innerHTML = `<div class="team-title">팀 ${i + 1}</div>
+          block.innerHTML = `<div class="team-title">チーム${i + 1}</div>
             <div class="team-names">${team.join(", ")}</div>`;
           resultList.appendChild(block);
         });
@@ -308,41 +306,41 @@
         font-family: Arial, sans-serif;
       ">
       <div style="color: #8f94fb; font-size: 1.15em; font-weight: bold; margin-bottom: 14px">
-        ❓ 자주 묻는 질문
+        ❓ よくある質問
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">내 데이터가 업로드되거나 저장되나요?</div>
+        <div style="color: #8f94fb; font-weight: bold">データがアップロードされたり保存されますか？</div>
         <div style="color: #f0f0f0">
-          아니요. 모든 것이 브라우저에서 실행됩니다. 업로드, 저장, 추적되지 않습니다.
+          いいえ。すべてブラウザ内だけで処理されます。アップロード、保存、追跡は一切ありません。
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">20개 이상의 팀을 만들 수 있나요?</div>
+        <div style="color: #8f94fb; font-weight: bold">20以上のチームを作れますか？</div>
         <div style="color: #f0f0f0">
-          현재 최대 20개까지 가능합니다. 가독성을 위해 제한되어 있으며, 필요 시 다시 분할할 수 있습니다.
+          現在、最大20チームまでです。見やすさ重視で制限しており、必要に応じて再分割してください。
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">팀 결과를 복사하거나 내보낼 수 있나요?</div>
+        <div style="color: #8f94fb; font-weight: bold">チーム結果をコピーやエクスポートできますか？</div>
         <div style="color: #f0f0f0">
-          네! 결과를 선택하여 복사하거나, 빠른 공유를 위해 스크린샷을 찍을 수 있습니다.
+          はい！結果を選択してコピーしたり、手軽に共有するためにスクリーンショットも撮影できます。
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">팀 균형이나 크기를 제어할 수 있나요?</div>
+        <div style="color: #8f94fb; font-weight: bold">チームのバランスや人数を調整できますか？</div>
         <div style="color: #f0f0f0">
-          아니요. 무작위로 섞기 때문에 이름이 고르게 나누어지지 않을 경우 팀 크기가 달라질 수 있습니다.
+          いいえ。完全ランダム分けなので、人数が均等にならない場合もあります。
         </div>
       </div>
 
       <div style="margin-bottom: 0">
-        <div style="color: #8f94fb; font-weight: bold">섞기는 매번 다르게 되나요?</div>
+        <div style="color: #8f94fb; font-weight: bold">毎回結果は違いますか？</div>
         <div style="color: #f0f0f0">
-          네. 클릭할 때마다 새로운 무작위 팀 분배가 생성됩니다.
+          はい。クリックするたびに新しいランダム分け結果になります。
         </div>
       </div>
     </section>

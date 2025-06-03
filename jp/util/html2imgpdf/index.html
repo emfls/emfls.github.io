@@ -1,39 +1,39 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ja">
 <head>
     <meta charset="UTF-8" />
-    <title>HTML → 이미지/ PDF 변환기</title>
+    <title>HTML → 画像/PDF 変換ツール</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <meta
         name="description"
-        content="웹 페이지나 직접 작성한 HTML을 고품질 이미지 또는 PDF로 즉시 변환합니다. 100% 무료, 개인정보 걱정 없이 브라우저에서 바로 이용하세요." />
+        content="ウェブページや自作のHTMLを高品質な画像またはPDFに即座に変換します。100%無料、プライバシー配慮でブラウザ内で完結。" />
     <meta
         name="keywords"
-        content="html 이미지 변환, html PDF 변환, 웹 페이지 스크린샷, html 변환, html2canvas, jsPDF, 브라우저 도구, 무료" />
+        content="html 画像 変換, html PDF 変換, ウェブページ スクリーンショット, html2canvas, jsPDF, ブラウザ ツール, 無料" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ko" />
+    <meta name="language" content="ja" />
     <meta name="theme-color" content="#4653ce" />
     <link rel="canonical" href="https://emfls.github.io/jp/util/html2imgpdf/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
 
-    <!-- Open Graph / Facebook / Kakao -->
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="HTML → 이미지 & PDF 변환기" />
+    <meta property="og:title" content="HTML → 画像 & PDF 変換ツール" />
     <meta
         property="og:description"
-        content="웹 페이지나 HTML 코드를 PNG, JPG 또는 PDF로 무료로 변환하세요. 100% 브라우저 내에서, 개인정보 안전 보장." />
+        content="ウェブページやHTMLコードをPNG、JPG、PDFに無料で変換します。100%ブラウザ内で動作、プライバシー保護。" />
     <meta property="og:url" content="https://emfls.github.io/jp/util/html2imgpdf/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="HTML → 이미지 & PDF 변환기" />
+    <meta name="twitter:title" content="HTML → 画像 & PDF 変換ツール" />
     <meta
         name="twitter:description"
-        content="웹 페이지나 HTML 코드를 브라우저에서 바로 이미지 또는 PDF로 변환하세요. 업로드 불필요." />
+        content="ウェブページやHTMLコードをブラウザから直接画像やPDFに変換できます。アップロード不要。" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
-    <!-- Google tag (gtag.js) -->
+    <!-- Google タグ (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -47,7 +47,7 @@
         async
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
         crossorigin="anonymous"></script>
-    <!-- 라이브러리 -->
+    <!-- ライブラリ -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.4/dist/purify.min.js"></script>
@@ -226,73 +226,73 @@
 </head>
 <body>
     <div class="container" itemscope itemtype="https://schema.org/WebApplication">
-        <div class="logo" itemprop="name">🖼️ HTML → 이미지/PDF 변환기</div>
+        <div class="logo" itemprop="name">🖼️ HTML → 画像/PDF 変換ツール</div>
         <div class="desc">
-            웹 페이지나 직접 작성한 HTML 코드를 PNG/JPG 혹은 PDF로 변환하세요. 브라우저 내에서 100% 실행됩니다.<br />업로드나 워터마크 없이 무료로 이용 가능.
+            ウェブページや自作のHTMLコードをPNG/JPGまたはPDFに変換できます。ブラウザ内で100%動作します。<br />アップロードやウォーターマークなしで無料利用可能。
         </div>
         <div class="tab-row">
-            <button class="tab-btn active" id="urlTabBtn">URL로 변환</button>
-            <button class="tab-btn" id="htmlTabBtn">HTML 입력</button>
+            <button class="tab-btn active" id="urlTabBtn">URLで変換</button>
+            <button class="tab-btn" id="htmlTabBtn">HTMLコード入力</button>
         </div>
-        <!-- URL 입력 탭 -->
+        <!-- URL入力タブ -->
         <div id="urlTab" style="display: block">
             <div class="input-row">
-                <label for="urlInput">페이지 URL</label>
+                <label for="urlInput">ページURL</label>
                 <input type="text" id="urlInput" placeholder="https://example.com" />
             </div>
-            <button class="action-btn" id="fetchUrlBtn">불러와서 미리보기</button>
+            <button class="action-btn" id="fetchUrlBtn">読み込んでプレビュー</button>
             <div id="urlRenderBox" style="display: none; margin-top: 13px">
                 <div
                     id="urlRender"
                     style="background: #fafcff; border: 1px solid #ddd; border-radius: 10px; overflow: auto; padding: 19px;"></div>
                 <div class="result-row" id="urlResultRow" style="display: none">
-                    <button class="download-btn" id="downloadUrlImg">PNG로 저장</button>
-                    <button class="download-btn" id="downloadUrlPdf">PDF로 저장</button>
+                    <button class="download-btn" id="downloadUrlImg">PNGで保存</button>
+                    <button class="download-btn" id="downloadUrlPdf">PDFで保存</button>
                 </div>
             </div>
         </div>
-        <!-- HTML 입력 탭 -->
+        <!-- HTML入力タブ -->
         <div id="htmlTab" style="display: none">
             <div class="input-row">
-                <label for="htmlInput">HTML 코드</label>
-                <textarea id="htmlInput" placeholder="&lt;div&gt;안녕하세요&lt;/div&gt;"></textarea>
+                <label for="htmlInput">HTMLコード</label>
+                <textarea id="htmlInput" placeholder="&lt;div&gt;こんにちは&lt;/div&gt;"></textarea>
             </div>
-            <button class="action-btn" id="renderHtmlBtn">미리보기 & 변환</button>
+            <button class="action-btn" id="renderHtmlBtn">プレビュー & 変換</button>
             <div id="htmlRenderBox" style="display: none; margin-top: 13px">
                 <div
                     id="htmlRender"
                     style="background: #fafcff; border: 1px solid #ddd; border-radius: 10px; overflow: auto; padding: 19px;"></div>
                 <div class="result-row" id="htmlResultRow" style="display: none">
-                    <button class="download-btn" id="downloadHtmlImg">PNG로 저장</button>
-                    <button class="download-btn" id="downloadHtmlPdf">PDF로 저장</button>
+                    <button class="download-btn" id="downloadHtmlImg">PNGで保存</button>
+                    <button class="download-btn" id="downloadHtmlPdf">PDFで保存</button>
                 </div>
             </div>
         </div>
         <div class="footer">
-            <b>참고:</b> 외부 URL은 CORS 정책에 따라 로드가 제한될 수 있으며, 동적 JS가 적용된 사이트는 제대로 렌더링되지 않을 수 있습니다.<br />
-            HTML 렌더링은 안전을 위해 제한됩니다. 결과가 잘리지 않게 HTML 코드를 단순화해 보세요.
+            <b>注意:</b> 外部URLはCORSポリシーにより読み込みが制限される場合があり、動的なJavaScriptを含むサイトは正しくレンダリングされない可能性があります。<br />
+            HTMLレンダリングは安全のため制約があります。結果が切れないようにHTMLをシンプルにしてください。
         </div>
         <section id="faq" aria-labelledby="faq-head">
-            <h2 id="faq-head">FAQ – HTML → 이미지/PDF 변환기</h2>
+            <h2 id="faq-head">FAQ – HTML → 画像/PDF 変換ツール</h2>
             <dl>
-                <dt>이 도구는 무엇을 하나요?</dt>
-                <dd>웹 페이지(URL)나 사용자가 작성한 HTML 코드를 브라우저에서 직접 고품질 PNG 이미지 또는 PDF 파일로 변환해 줍니다.</dd>
-                <dt>데이터가 업로드되거나 저장되나요?</dt>
-                <dd>아니요. 모든 작업이 클라이언트(브라우저) 쪽에서 이루어지며, 데이터나 코드가 외부로 전송되지 않습니다.</dd>
-                <dt>모든 사이트에서 사용할 수 있나요?</dt>
-                <dd>공개된 웹사이트라면 시도해 볼 수 있지만, 일부 사이트는 CORS 제한이나 동적 JS 로딩 때문에 제대로 수집되지 않을 수 있습니다.</dd>
-                <dt>어떤 형식으로 내보낼 수 있나요?</dt>
-                <dd>PNG 이미지 또는 PDF 파일로 저장할 수 있으며, 두 포맷 모두 브라우저에서 즉시 생성됩니다.</dd>
-                <dt>실제 웹사이트와 렌더링 결과가 다른 이유는 무엇인가요?</dt>
-                <dd>동적 JavaScript, 외부 폰트 또는 스타일이 제대로 반영되지 않거나 CORS 문제로 일부 리소스가 로드되지 않기 때문입니다. 완벽한 결과를 원한다면 HTML을 직접 입력하고 CSS를 조정해 보세요.</dd>
-                <dt>무료로 사용할 수 있나요?</dt>
-                <dd>네! 회원가입 없이 누구나 100% 무료, 워터마크 없이 사용할 수 있습니다.</dd>
+                <dt>このツールは何をしますか？</dt>
+                <dd>ウェブページ(URL)やユーザーが作成したHTMLコードをブラウザ上で高品質なPNG画像またはPDFファイルに変換します。</dd>
+                <dt>データはアップロードまたは保存されますか？</dt>
+                <dd>いいえ。すべての処理はクライアント側(ブラウザ)で行われ、データやコードは外部に送信されません。</dd>
+                <dt>すべてのサイトで使用できますか？</dt>
+                <dd>公開されているウェブサイトであれば試せますが、一部のサイトはCORS制限や動的JSの読み込みにより正常に表示されない場合があります。</dd>
+                <dt>どの形式で出力できますか？</dt>
+                <dd>PNG画像またはPDFファイルとして保存できます。両形式ともブラウザ上で即座に生成されます。</dd>
+                <dt>実際のサイトとレンダリング結果が異なるのはなぜですか？</dt>
+                <dd>動的なJavaScript、外部フォントやスタイルの読み込み、CORS制限などにより、一部リソースが正しく表示されないためです。完璧な結果を得たい場合は、HTMLを直接入力しCSSを調整してください。</dd>
+                <dt>無料で使えますか？</dt>
+                <dd>はい！会員登録不要で誰でも100%無料、ウォーターマークなしで利用できます。</dd>
             </dl>
         </section>
     </div>
-    <a href="../index.html" id="backBtn">다른 유틸리티</a>
+    <a href="../index.html" id="backBtn">他のユーティリティ</a>
     <script>
-        // 탭 전환 로직
+        // タブ切り替えロジック
         const urlTabBtn = document.getElementById("urlTabBtn");
         const htmlTabBtn = document.getElementById("htmlTabBtn");
         const urlTab = document.getElementById("urlTab");
@@ -310,10 +310,10 @@
             urlTabBtn.classList.remove("active");
         };
 
-        // URL로 변환
+        // URLから変換
         document.getElementById("fetchUrlBtn").onclick = async function () {
             const url = document.getElementById("urlInput").value.trim();
-            if (!url) return alert("유효한 URL을 입력하세요.");
+            if (!url) return alert("有効なURLを入力してください。");
             try {
                 const res = await fetch(url);
                 const text = await res.text();
@@ -322,7 +322,7 @@
                 document.getElementById("urlRenderBox").style.display = "block";
                 document.getElementById("urlResultRow").style.display = "flex";
             } catch {
-                alert("페이지를 불러오거나 렌더링하는 데 실패했습니다. (CORS 또는 동적 JS 제한)");
+                alert("ページの読み込みまたはレンダリングに失敗しました。(CORSまたは動的JSの制限)");
             }
         };
         document.getElementById("downloadUrlImg").onclick = () => {
@@ -344,7 +344,7 @@
             });
         };
 
-        // HTML 입력 변환
+        // HTML入力から変換
         document.getElementById("renderHtmlBtn").onclick = () => {
             const html = document.getElementById("htmlInput").value;
             const clean = DOMPurify.sanitize(html);
@@ -371,7 +371,7 @@
             });
         };
     </script>
-    <!-- FAQPage 구조화 데이터 -->
+    <!-- FAQPage 構造化データ -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -379,33 +379,33 @@
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "이 도구는 무엇을 하나요?",
-          "acceptedAnswer": { "@type": "Answer", "text": "웹 페이지(URL)나 사용자가 작성한 HTML 코드를 브라우저에서 직접 고품질 PNG 이미지 또는 PDF 파일로 변환해 줍니다." }
+          "name": "このツールは何をしますか？",
+          "acceptedAnswer": { "@type": "Answer", "text": "ウェブページ(URL)やユーザーが作成したHTMLコードをブラウザ上で高品質なPNG画像またはPDFファイルに変換します。" }
         },
         {
           "@type": "Question",
-          "name": "데이터가 업로드되거나 저장되나요?",
-          "acceptedAnswer": { "@type": "Answer", "text": "아니요. 모든 작업이 클라이언트(브라우저) 쪽에서 이루어지며, 데이터나 코드가 외부로 전송되지 않습니다." }
+          "name": "データはアップロードまたは保存されますか？",
+          "acceptedAnswer": { "@type": "Answer", "text": "いいえ。すべての処理はクライアント側(ブラウザ)で行われ、データやコードは外部に送信されません。" }
         },
         {
           "@type": "Question",
-          "name": "모든 사이트에서 사용할 수 있나요?",
-          "acceptedAnswer": { "@type": "Answer", "text": "공개된 웹사이트라면 시도해 볼 수 있지만, 일부 사이트는 CORS 제한이나 동적 JS 로딩 때문에 제대로 렌더링되지 않을 수 있습니다." }
+          "name": "すべてのサイトで使用できますか？",
+          "acceptedAnswer": { "@type": "Answer", "text": "公開されているウェブサイトなら試せますが、一部のサイトはCORS制限や動的JSの読み込みによって正常にレンダリングされない場合があります。" }
         },
         {
           "@type": "Question",
-          "name": "어떤 형식으로 내보낼 수 있나요?",
-          "acceptedAnswer": { "@type": "Answer", "text": "PNG 이미지 또는 PDF 파일로 저장할 수 있으며, 두 포맷 모두 브라우저에서 즉시 생성됩니다." }
+          "name": "どの形式で出力できますか？",
+          "acceptedAnswer": { "@type": "Answer", "text": "PNG画像またはPDFファイルとして保存できます。両方の形式ともブラウザ上で即座に生成されます。" }
         },
         {
           "@type": "Question",
-          "name": "실제 웹사이트와 렌더링 결과가 다른 이유는 무엇인가요?",
-          "acceptedAnswer": { "@type": "Answer", "text": "동적 JavaScript, 외부 폰트 또는 스타일이 제대로 반영되지 않거나 CORS 문제로 일부 리소스가 로드되지 않기 때문입니다. 완벽한 결과를 원한다면 HTML을 직접 입력하고 CSS를 조정해 보세요." }
+          "name": "実際のサイトとレンダリング結果が異なるのはなぜですか？",
+          "acceptedAnswer": { "@type": "Answer", "text": "動的JavaScript、外部フォントやスタイルの読み込み、CORS制限などが影響し、一部のリソースが正しく表示されないためです。完璧な結果を得たい場合は、HTMLを直接入力し、CSSを調整してください。" }
         },
         {
           "@type": "Question",
-          "name": "무료로 사용할 수 있나요?",
-          "acceptedAnswer": { "@type": "Answer", "text": "네! 회원가입 없이 누구나 100% 무료, 워터마크 없이 사용할 수 있습니다." }
+          "name": "無料で使えますか？",
+          "acceptedAnswer": { "@type": "Answer", "text": "はい！会員登録なしで誰でも100%無料、ウォーターマークなしでご利用いただけます。" }
         }
       ]
     }

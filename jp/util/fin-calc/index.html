@@ -1,32 +1,32 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <title>단리, 적금, 할부 계산기</title>
+  <title>単利、積立、分割払い計算機</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta
     name="description"
-    content="단리 이자, 적금(월 납입) 예상, 할부(월 납입) 계산을 즉시 수행하세요. 무료, 브라우저 기반, 모바일 친화적, 데이터 업로드 없음." />
+    content="単利利息、積立（毎月入金）予測、分割払い（毎月入金）計算を即座に行えます。無料、ブラウザベース、モバイル対応、データアップロード不要。" />
   <meta
     name="keywords"
-    content="금융 계산기, 단리 계산, 적금 계산, 할부 계산, 이자 계산기, 저축, 할부 납입, 금융, 단리, 적금, 할부" />
+    content="金融計算機, 単利計算, 積立計算, 分割払い計算, 利息計算機, 貯蓄, 分割払い, 金融, 単利, 積立, 分割払い" />
   <meta name="author" content="Itagi" />
-  <meta name="language" content="ko" />
+  <meta name="language" content="ja" />
   <meta name="theme-color" content="#198dae" />
   <link rel="canonical" href="https://emfls.github.io/jp/util/fin-calc/" />
   <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-  <meta property="og:title" content="단리, 적금, 할부 계산기"/>
+  <meta property="og:title" content="単利、積立、分割払い計算機"/>
   <meta
     property="og:description"
-    content="단리 이자, 적금 저축, 할부 납입액을 즉시 계산합니다. 100% 무료, 회원가입 불필요."/>
+    content="単利利息、積立貯蓄、分割払いの月額計算を簡単に行えます。100%無料、会員登録不要。" />
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://emfls.github.io/jp/util/fin-calc/"/>
   <meta property="og:image" content="https://emfls.github.io/thumbnail.png"/>
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="단리, 적금, 할부 계산기"/>
+  <meta name="twitter:title" content="単利、積立、分割払い計算機"/>
   <meta
     name="twitter:description"
-    content="단리 이자 계산, 적금 저축 계산, 할부 납입액 계산을 간편하게 수행하세요. 업로드 없음, 브라우저 내에서 작동."/>
+    content="単利利息計算、積立貯蓄計算、分割払い月額計算を簡単に行いましょう。アップロード不要、ブラウザ内で動作。" />
   <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png"/>
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -118,89 +118,89 @@
 <body>
   <main>
     <div class="container" itemscope itemtype="https://schema.org/WebApplication">
-      <div class="title" itemprop="name">💸 간편 금융 계산기</div>
+      <div class="title" itemprop="name">💸 簡単金融計算機</div>
       <div class="tab-row">
-        <button class="tab-btn active" id="tab1">단리 계산</button>
-        <button class="tab-btn" id="tab2">적금 계산</button>
-        <button class="tab-btn" id="tab3">할부 계산</button>
+        <button class="tab-btn active" id="tab1">単利計算</button>
+        <button class="tab-btn" id="tab2">積立計算</button>
+        <button class="tab-btn" id="tab3">分割払い計算</button>
       </div>
-      <!-- 단리 -->
+      <!-- 単利 -->
       <form id="simpleForm">
         <div class="form-row">
-          <label for="simple_principal">원금 (₩ 또는 $)</label>
+          <label for="simple_principal">元金 (¥ または $)</label>
           <input type="number" id="simple_principal" min="0" required />
         </div>
         <div class="form-row">
-          <label for="simple_rate">이자율 (% 연)</label>
+          <label for="simple_rate">利率 (% 年)</label>
           <input type="number" id="simple_rate" min="0" max="100" step="0.01" required />
         </div>
         <div class="form-row">
-          <label for="simple_years">기간 (년)</label>
+          <label for="simple_years">期間 (年)</label>
           <input type="number" id="simple_years" min="0.1" step="0.01" required />
         </div>
-        <button type="submit" class="btn">계산하기</button>
+        <button type="submit" class="btn">計算する</button>
         <div class="result" id="simpleResult"></div>
       </form>
-      <!-- 적금 -->
+      <!-- 積立 -->
       <form id="savingForm" style="display:none">
         <div class="form-row">
-          <label for="save_monthly">월 납입금</label>
+          <label for="save_monthly">月々の入金額</label>
           <input type="number" id="save_monthly" min="0" required />
         </div>
         <div class="form-row">
-          <label for="save_rate">이자율 (% 연)</label>
+          <label for="save_rate">利率 (% 年)</label>
           <input type="number" id="save_rate" min="0" max="100" step="0.01" required />
         </div>
         <div class="form-row">
-          <label for="save_years">기간 (년)</label>
+          <label for="save_years">期間 (年)</label>
           <input type="number" id="save_years" min="0.1" step="0.01" required />
         </div>
-        <button type="submit" class="btn">계산하기</button>
+        <button type="submit" class="btn">計算する</button>
         <div class="result" id="savingResult"></div>
       </form>
-      <!-- 할부 -->
+      <!-- 分割払い -->
       <form id="instForm" style="display:none">
         <div class="form-row">
-          <label for="inst_principal">할부 원금</label>
+          <label for="inst_principal">分割払い元金</label>
           <input type="number" id="inst_principal" min="0" required />
         </div>
         <div class="form-row">
-          <label for="inst_rate">이자율 (% 연)</label>
+          <label for="inst_rate">利率 (% 年)</label>
           <input type="number" id="inst_rate" min="0" max="100" step="0.01" required />
         </div>
         <div class="form-row">
-          <label for="inst_months">개월 수</label>
+          <label for="inst_months">月数</label>
           <input type="number" id="inst_months" min="1" max="1200" required />
         </div>
-        <button type="submit" class="btn">계산하기</button>
+        <button type="submit" class="btn">計算する</button>
         <div class="result" id="instResult"></div>
       </form>
       <div class="footer">
-        단리 계산, 적금 저축 계산, 할부 납입 계산을 지원합니다.<br>
-        <b>팁:</b> 모든 계산은 브라우저 내에서 이루어지며, 데이터가 업로드되지 않습니다.
+        単利計算、積立貯蓄計算、分割払い月額計算をサポートします。<br>
+        <b>ヒント:</b> すべての計算はブラウザ内で行われ、データがアップロードされることはありません。
       </div>
       <section aria-labelledby="faq-head" id="faq">
-        <h2 id="faq-head">FAQ – 간편 금융 계산기</h2>
+        <h2 id="faq-head">FAQ – 簡単金融計算機</h2>
         <dl>
-          <dt>어떤 계산을 할 수 있나요?</dt>
-          <dd>단리 이자 계산, 월 납입 적금 계산, 할부(원금+이자) 계산을 지원합니다.</dd>
-          <dt>단리 계산기는 어떻게 동작하나요?</dt>
-          <dd>단리 이자는 <b>원금 × 이자율 × 기간</b>으로 계산되며, 계산 결과로 이자 금액과 원리금을 함께 보여줍니다.</dd>
-          <dt>적금(월 납입) 계산은 어떻게 이루어지나요?</dt>
-          <dd>매달 납입된 금액을 합산한 뒤, 전체 기간 동안 발생한 단리 이자를 합산하여 총액을 구합니다.</dd>
-          <dt>할부 계산기는 어떻게 동작하나요?</dt>
-          <dd>총 상환액(원금 + 발생 이자)을 입력한 개월 수로 나누어 매달 동일한 금액을 납부하는 방식입니다.</dd>
-          <dt>내 금융 데이터가 외부로 전송되나요?</dt>
-          <dd>아니요. 모든 계산은 브라우저 내에서 처리되며, 어떠한 데이터도 업로드되거나 저장되지 않습니다.</dd>
-          <dt>이 도구는 무료인가요?</dt>
-          <dd>네. 이 계산기는 100% 무료이며, 별도의 로그인이나 회원가입이 필요 없습니다.</dd>
+          <dt>どんな計算ができますか？</dt>
+          <dd>単利利息計算、毎月入金の積立計算、分割払い（元金＋利息）の計算をサポートします。</dd>
+          <dt>単利計算機はどう動作しますか？</dt>
+          <dd>単利利息は <b>元金 × 利率 × 期間</b> で計算し、利息額と元利合計を表示します。</dd>
+          <dt>積立（毎月入金）計算はどうなっていますか？</dt>
+          <dd>毎月入金された金額を合算し、総期間にわたる単利利息を合算して総額を求めます。</dd>
+          <dt>分割払い計算機はどう動作しますか？</dt>
+          <dd>元金に発生する利息を加えた総返済額を、指定した月数で均等に分割して毎月払う方式です。</dd>
+          <dt>私の金融データは外部に送信されますか？</dt>
+          <dd>いいえ。すべての計算はブラウザ内で処理され、データがアップロードまたは保存されることはありません。</dd>
+          <dt>このツールは無料ですか？</dt>
+          <dd>はい。この計算機は100%無料で、ログインや会員登録は不要です。</dd>
         </dl>
       </section>
     </div>
   </main>
-  <a href="../index.html" id="backBtn">다른 유틸리티</a>
+  <a href="../index.html" id="backBtn">他のユーティリティ</a>
   <script>
-    // 탭 전환 로직
+    // タブ切り替えロジック
     const tabs = [
       { btn: document.getElementById("tab1"), form: document.getElementById("simpleForm") },
       { btn: document.getElementById("tab2"), form: document.getElementById("savingForm") },
@@ -215,7 +215,7 @@
       }
     });
 
-    // 단리 계산
+    // 単利計算
     document.getElementById("simpleForm").onsubmit = function(e){
       e.preventDefault();
       const p = +document.getElementById("simple_principal").value;
@@ -225,10 +225,10 @@
       const interest = p * r * t;
       const total = p + interest;
       document.getElementById("simpleResult").innerHTML =
-        `이자: <b>${interest.toLocaleString()}</b><br>원리금 합계: <b>${total.toLocaleString()}</b>`;
+        `利息: <b>${interest.toLocaleString()}</b><br>元利合計: <b>${total.toLocaleString()}</b>`;
     };
 
-    // 적금(월 납입) 계산
+    // 積立（毎月入金）計算
     document.getElementById("savingForm").onsubmit = function(e){
       e.preventDefault();
       const m = +document.getElementById("save_monthly").value;
@@ -243,10 +243,10 @@
       }
       const total = sum + interest;
       document.getElementById("savingResult").innerHTML =
-        `납입 합계: <b>${sum.toLocaleString()}</b><br>발생 이자: <b>${interest.toLocaleString()}</b><br>총액: <b>${total.toLocaleString()}</b>`;
+        `入金合計: <b>${sum.toLocaleString()}</b><br>発生利息: <b>${interest.toLocaleString()}</b><br>総額: <b>${total.toLocaleString()}</b>`;
     };
 
-    // 할부 계산 (단리 이자 기준)
+    // 分割払い計算（単利利息基準）
     document.getElementById("instForm").onsubmit = function(e){
       e.preventDefault();
       const p = +document.getElementById("inst_principal").value;
@@ -257,7 +257,7 @@
       const total = p + totalInterest;
       const monthly = total / n;
       document.getElementById("instResult").innerHTML =
-        `월 납입액: <b>${monthly.toLocaleString(undefined, {maximumFractionDigits:2})}</b><br>총 이자: <b>${totalInterest.toLocaleString()}</b><br>총 납부액: <b>${total.toLocaleString()}</b>`;
+        `月々支払額: <b>${monthly.toLocaleString(undefined, {maximumFractionDigits:2})}</b><br>総利息: <b>${totalInterest.toLocaleString()}</b><br>総支払額: <b>${total.toLocaleString()}</b>`;
     };
   </script>
   <!-- FAQPage Schema for SEO/SGE/GEO Rich Results -->
@@ -268,33 +268,33 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "어떤 계산을 할 수 있나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "단리 이자 계산, 월 납입 적금 계산, 할부(원금+이자) 계산을 지원합니다." }
+        "name": "どんな計算ができますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "単利利息計算、毎月入金の積立計算、分割払い（元金＋利息）計算をサポートします。" }
       },
       {
         "@type": "Question",
-        "name": "단리 계산기는 어떻게 동작하나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "단리 이자는 원금 × 이자율 × 기간으로 계산되며, 계산 결과로 이자 금액과 원리금을 함께 보여줍니다." }
+        "name": "単利計算機はどう動作しますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "単利利息は 元金 × 利率 × 期間で計算し、利息額と元利合計を表示します。" }
       },
       {
         "@type": "Question",
-        "name": "적금(월 납입) 계산은 어떻게 이루어지나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "매달 납입된 금액을 합산한 뒤, 전체 기간 동안 발생한 단리 이자를 합산하여 총액을 구합니다." }
+        "name": "積立（毎月入金）計算はどうなっていますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "毎月入金された金額を合算し、全期間にわたって発生する単利利息を合算して総額を求めます。" }
       },
       {
         "@type": "Question",
-        "name": "할부 계산기는 어떻게 동작하나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "총 상환액(원금 + 발생 이자)을 입력한 개월 수로 나누어 매달 동일한 금액을 납부하는 방식입니다." }
+        "name": "分割払い計算機はどう動作しますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "総返済額（元金＋発生利息）を指定した月数で均等に分割して毎月支払う方式です。" }
       },
       {
         "@type": "Question",
-        "name": "내 금융 데이터가 외부로 전송되나요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "아니요. 모든 계산은 브라우저 내에서 처리되며, 데이터가 업로드되거나 저장되지 않습니다." }
+        "name": "私の金融データは外部に送信されますか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "いいえ。すべての計算はブラウザ内で処理され、データはアップロードまたは保存されません。" }
       },
       {
         "@type": "Question",
-        "name": "이 도구는 무료인가요?",
-        "acceptedAnswer": { "@type": "Answer", "text": "네. 이 계산기는 100% 무료이며, 별도 로그인이나 회원가입이 필요 없습니다." }
+        "name": "このツールは無料ですか？",
+        "acceptedAnswer": { "@type": "Answer", "text": "はい。この計算機は100%無料で、ログインや会員登録は不要です。" }
       }
     ]
   }

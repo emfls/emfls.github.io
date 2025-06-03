@@ -1,31 +1,31 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ja">
   <head>
     <meta charset="UTF-8" />
-    <title>텍스트 요약기 – 긴 텍스트를 빠르게 요약하세요!</title>
+    <title>テキスト要約ツール – 長文をすばやく要約！</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="긴 텍스트, 기사, 에세이를 간편하게 요약해보세요. 무료, 개인 정보 보호, 브라우저에서 즉시 작동!" />
+      content="長文や記事、エッセイを簡単に要約しましょう。無料・プライバシー保護・ブラウザですぐ使える！" />
     <meta
       name="keywords"
-      content="텍스트 요약기, 요약, 자동 요약, 기사 요약, 무료, 온라인, 브라우저, 업로드 불필요" />
+      content="テキスト要約, 要約, 自動要約, 記事要約, 無料, オンライン, ブラウザ, アップロード不要" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ko" />
+    <meta name="language" content="ja" />
     <link rel="canonical" href="https://emfls.github.io/jp/util/textsummarizer/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <meta property="og:title" content="텍스트 요약기 – 긴 텍스트를 빠르게 요약하세요!" />
+    <meta property="og:title" content="テキスト要約ツール – 長文をすばやく要約！" />
     <meta
       property="og:description"
-      content="기사, 문서, 에세이를 즉시 요약하세요. 업로드 불필요, 무료, 개인 정보 보호." />
+      content="記事やドキュメント、エッセイをすぐに要約。アップロード不要・無料・プライバシー保護。" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/jp/util/textsummarizer/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="텍스트 요약기 – 긴 텍스트를 빠르게 요약하세요!" />
-    <meta name="twitter:description" content="긴 텍스트, 기사, 에세이를 브라우저에서 간편하게 요약하세요." />
+    <meta name="twitter:title" content="テキスト要約ツール – 長文をすばやく要約！" />
+    <meta name="twitter:description" content="長文や記事、エッセイをブラウザで手軽に要約しましょう。" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-    <!-- Google 태그 (gtag.js) -->
+    <!-- Google タグ (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -33,7 +33,6 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-
       gtag("config", "G-QP5Q67GE5B");
     </script>
     <script
@@ -164,25 +163,25 @@
   </head>
   <body>
     <div class="container">
-      <div class="logo">📝 텍스트 요약기</div>
+      <div class="logo">📝 テキスト要約ツール</div>
       <div class="desc">
-        긴 텍스트나 기사를 아래에 붙여넣으세요.<br />
-        <b>요약하기</b> 버튼을 눌러 간단한 요약을 얻으세요!
+        長文や記事を下の欄に貼り付けてください。<br />
+        <b>要約する</b> ボタンをクリックすると、かんたんに要約が得られます！
       </div>
-      <textarea id="inputText" placeholder="긴 텍스트를 여기에 붙여넣으세요..."></textarea>
+      <textarea id="inputText" placeholder="長いテキストをここに貼り付けてください..."></textarea>
       <div class="input-row">
-        <label class="slider-label" for="summaryLength">요약 분량:</label>
+        <label class="slider-label" for="summaryLength">要約文の長さ:</label>
         <input type="range" min="1" max="10" value="3" id="summaryLength" />
-        <span id="lengthVal">3</span> 문장
+        <span id="lengthVal">3</span> 文
       </div>
-      <button class="action-btn" id="summarizeBtn">요약하기</button>
+      <button class="action-btn" id="summarizeBtn">要約する</button>
       <div class="output-box" id="summaryResult" style="margin-top: 8px"></div>
       <div class="footer">
-        모든 처리는 로컬에서 이루어집니다. <b>업로드 불필요</b>, 무료 & 개인 정보 보호.<br />
-        <span style="color: #127080">팁: 뉴스, 위키피디아, 학교 과제, 어떤 텍스트든 시도해보세요!</span>
+        すべての処理はローカルで実行されます。 <b>アップロード不要</b>・無料＆プライバシー保護。<br />
+        <span style="color: #127080">ヒント: ニュース、Wikipedia、レポート、どんなテキストでも試せます！</span>
       </div>
     </div>
-    <a href="../index.html" id="backBtn">다른 유틸 보기</a>
+    <a href="../index.html" id="backBtn">その他ツール</a>
     <script>
       const inputText = document.getElementById("inputText");
       const summaryResult = document.getElementById("summaryResult");
@@ -194,13 +193,13 @@
         lengthVal.textContent = summaryLength.value;
       };
 
-      // 간단한 빈도 기반 요약 (AI 미사용)
+      // シンプルな頻度ベース要約（AI非使用）
       function summarize(text, numSentences = 3) {
-        if (!text.trim()) return "텍스트를 붙여넣고 '요약하기'를 클릭하세요.";
-        // 문장 단위로 분할
+        if (!text.trim()) return "テキストを貼り付け、「要約する」をクリックしてください。";
+        // 文ごとに分割
         const sentences = text.match(/[^\.!\?]+[\.!\?]+/g) || [text];
         if (sentences.length <= numSentences) return text;
-        // 단어 빈도 계산
+        // 単語の頻度計算
         const freq = {};
         const words = text
           .replace(/[^\w\s]/g, "")
@@ -209,7 +208,7 @@
         words.forEach((w) => {
           if (w.length > 2) freq[w] = (freq[w] || 0) + 1;
         });
-        // 각 문장의 점수 계산 (단어 빈도 합)
+        // 各文のスコア計算（単語頻度合計）
         const scored = sentences.map((s) => {
           const sw = s
             .replace(/[^\w\s]/g, "")
@@ -221,7 +220,7 @@
           });
           return { sentence: s.trim(), score };
         });
-        // 점수가 높은 상위 N개 문장을 원본 순서대로 선택
+        // スコアが高い上位N文を元の順序で選択
         const top = scored
           .sort((a, b) => b.score - a.score)
           .slice(0, numSentences)
@@ -250,41 +249,41 @@
         font-family: Arial, sans-serif;
       ">
       <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 14px">
-        ❓ FAQ – 텍스트 요약기
+        ❓ FAQ – テキスト要約ツール
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">이 도구는 AI나 ChatGPT를 사용하나요?</div>
+        <div style="color: #8f94fb; font-weight: bold">このツールはAIやChatGPTを使っていますか？</div>
         <div style="color: #f0f0f0">
-          아닙니다. 단어 빈도 기반 알고리즘을 사용합니다. 빠르고 개인 정보 보호가 가능하지만 AI 요약보다는 단순합니다.
+          いいえ。単語の頻度に基づくアルゴリズムを使用しています。高速かつプライバシー保護ですが、AI要約ほど高性能ではありません。
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">내 텍스트가 업로드되거나 저장되나요?</div>
+        <div style="color: #8f94fb; font-weight: bold">私のテキストがアップロードまたは保存されますか？</div>
         <div style="color: #f0f0f0">
-          절대 아닙니다. 모든 처리는 브라우저에서 이루어지며, 서버로 전송되지 않습니다.
+          絶対にありません。すべての処理はブラウザ内で行われ、サーバーに送信されることはありません。
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">어떤 언어를 지원하나요?</div>
+        <div style="color: #8f94fb; font-weight: bold">どの言語に対応していますか？</div>
         <div style="color: #f0f0f0">
-          주로 영어에 최적화되어 있습니다. 다른 언어도 동작할 수 있지만 결과가 다를 수 있습니다.
+          主に英語に最適化されています。他の言語でも動作しますが、結果が異なる場合があります。
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">요약 정확도는 어떤가요?</div>
+        <div style="color: #8f94fb; font-weight: bold">要約の精度はどうですか？</div>
         <div style="color: #f0f0f0">
-          단어 반복 빈도를 바탕으로 “중요한” 문장을 선택합니다. 매우 간단하지만 빠르게 개요를 파악할 때 유용합니다.
+          単語の繰り返し頻度から「重要な」文を選出します。とてもシンプルですが、ざっと内容を把握したい時に便利です。
         </div>
       </div>
 
       <div style="margin-bottom: 0">
-        <div style="color: #8f94fb; font-weight: bold">어디에 사용할 수 있나요?</div>
+        <div style="color: #8f94fb; font-weight: bold">どんな場面で使えますか？</div>
         <div style="color: #f0f0f0">
-          뉴스, 블로그, 에세이, 논문 등 긴 텍스트를 로그인 없이 간편하게 요약할 때 사용하세요.
+          ニュース、ブログ、エッセイ、論文など長文テキストを手軽に要約したいときにご利用ください。
         </div>
       </div>
     </section>

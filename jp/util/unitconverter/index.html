@@ -1,32 +1,32 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ja">
     <head>
         <meta charset="UTF-8" />
-        <title>온라인 단위 변환기 – 길이, 무게, 온도 등</title>
+        <title>オンライン単位変換ツール – 長さ、重さ、温度など</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="길이, 무게, 온도, 속도, 부피, 면적 단위를 즉시 변환하세요. 100% 브라우저 기반, 업로드 불필요." />
+            content="長さ、重さ、温度、速度、体積、面積の単位を即座に変換。100%ブラウザ完結、アップロード不要。" />
         <meta
             name="keywords"
-            content="단위 변환, 온라인 변환기, 길이, 무게, 온도, 속도, 부피, 면적, 변환, 미터법, 야드파운드" />
+            content="単位変換, オンライン変換, 長さ, 重さ, 温度, 速度, 体積, 面積, 変換, メートル法, インチ, ポンド" />
         <meta name="author" content="Itagi" />
         <link rel="canonical" href="https://emfls.github.io/jp/util/unitconverter/" />
         <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-        <meta property="og:title" content="온라인 단위 변환기 – 길이, 무게, 온도 등" />
+        <meta property="og:title" content="オンライン単位変換ツール – 長さ、重さ、温度など" />
         <meta
             property="og:description"
-            content="브라우저에서 길이, 무게, 온도, 속도, 부피, 면적 단위를 즉시 변환하세요. 무료, 사용하기 쉬움." />
+            content="ブラウザで長さ、重さ、温度、速度、体積、面積の単位を即座に変換。無料で使いやすい。" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://emfls.github.io/jp/util/unitconverter/" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="온라인 단위 변환기 – 길이, 무게, 온도 등" />
+        <meta name="twitter:title" content="オンライン単位変換ツール – 長さ、重さ、温度など" />
         <meta
             name="twitter:description"
-            content="브라우저에서 길이, 무게, 온도, 속도, 부피, 면적 단위를 즉시 변환하세요. 업로드 불필요, 무료." />
+            content="長さ、重さ、温度、速度、体積、面積の単位を即座に変換。アップロード不要、無料。" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-        <!-- Google 태그 (gtag.js) -->
+        <!-- Googleタグ (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -34,7 +34,6 @@
                 dataLayer.push(arguments);
             }
             gtag("js", new Date());
-
             gtag("config", "G-QP5Q67GE5B");
         </script>
         <script
@@ -68,7 +67,7 @@
                 color: #286673;
                 text-align: center;
                 margin-bottom: 17px;
-                font-size: 1.04em;
+                font-size: 0.74em;
             }
             .mode-toggle {
                 display: flex;
@@ -178,124 +177,123 @@
     </head>
     <body>
         <div class="container">
-            <div class="logo">🔄 단위 변환기</div>
+            <div class="logo">🔄 単位変換ツール</div>
             <div class="desc">
-                길이, 무게, 온도, 속도, 부피, 면적 단위를 즉시 변환하세요.<br />
-                100% 브라우저 기반. 무료 & 개인 정보 보호.
+                長さ、重さ、温度、速度、体積、面積の単位を即座に変換できます。<br />
+                100%ブラウザ完結。無料・プライバシー保護。
             </div>
             <div class="mode-toggle">
-                <button class="toggle-btn active" id="lenBtn">길이</button>
-                <button class="toggle-btn" id="weightBtn">무게</button>
-                <button class="toggle-btn" id="tempBtn">온도</button>
-                <button class="toggle-btn" id="speedBtn">속도</button>
-                <button class="toggle-btn" id="volBtn">부피</button>
-                <button class="toggle-btn" id="areaBtn">면적</button>
+                <button class="toggle-btn active" id="lenBtn">長さ</button>
+                <button class="toggle-btn" id="weightBtn">重さ</button>
+                <button class="toggle-btn" id="tempBtn">温度</button>
+                <button class="toggle-btn" id="speedBtn">速度</button>
+                <button class="toggle-btn" id="volBtn">体積</button>
+                <button class="toggle-btn" id="areaBtn">面積</button>
             </div>
             <form id="converterForm">
                 <div class="row">
-                    <label for="fromValue">값</label>
+                    <label for="fromValue">値</label>
                     <input
                         type="number"
                         id="fromValue"
-                        placeholder="값을 입력하세요"
+                        placeholder="値を入力してください"
                         step="any"
                         required
                         autocomplete="off" />
                 </div>
                 <div class="row">
-                    <label for="fromUnit">단위 (출발)</label>
+                    <label for="fromUnit">単位（元）</label>
                     <select id="fromUnit"></select>
                 </div>
                 <div class="row">
-                    <label for="toUnit">단위 (변환)</label>
+                    <label for="toUnit">単位（変換先）</label>
                     <select id="toUnit"></select>
                 </div>
                 <div class="result-area" id="resultArea"></div>
             </form>
             <div class="footer">
-                모든 계산은 즉시 이루어지며 개인 정보 보호가 보장됩니다.<br />
-                브라우저에서 완전히 처리됩니다.<br />
-                더 많은 변환이 필요하다면, 의견을 남겨주세요!
+                すべての計算は即座に行われ、個人情報は保護されます。<br />
+                完全にブラウザ内で処理されます。<br />
+                他に追加したい単位やご意見があれば、ぜひお知らせください！
             </div>
-            <a href="../index.html" id="backBtn">다른 유틸 보기</a>
+            <a href="../index.html" id="backBtn">他のツールを見る</a>
         </div>
         <script>
-            // 변환 데이터
+            // 単位データ（日本語ラベル）
             const units = {
                 length: {
-                    name: "길이",
+                    name: "長さ",
                     list: {
-                        mm: { label: "밀리미터 (mm)", toM: v => v / 1000, fromM: v => v * 1000 },
-                        cm: { label: "센티미터 (cm)", toM: v => v / 100, fromM: v => v * 100 },
-                        m: { label: "미터 (m)", toM: v => v, fromM: v => v },
-                        km: { label: "킬로미터 (km)", toM: v => v * 1000, fromM: v => v / 1000 },
-                        in: { label: "인치 (in)", toM: v => v * 0.0254, fromM: v => v / 0.0254 },
-                        ft: { label: "피트 (ft)", toM: v => v * 0.3048, fromM: v => v / 0.3048 },
-                        yd: { label: "야드 (yd)", toM: v => v * 0.9144, fromM: v => v / 0.9144 },
-                        mi: { label: "마일 (mi)", toM: v => v * 1609.34, fromM: v => v / 1609.34 }
+                        mm: { label: "ミリメートル (mm)", toM: v => v / 1000, fromM: v => v * 1000 },
+                        cm: { label: "センチメートル (cm)", toM: v => v / 100, fromM: v => v * 100 },
+                        m: { label: "メートル (m)", toM: v => v, fromM: v => v },
+                        km: { label: "キロメートル (km)", toM: v => v * 1000, fromM: v => v / 1000 },
+                        in: { label: "インチ (in)", toM: v => v * 0.0254, fromM: v => v / 0.0254 },
+                        ft: { label: "フィート (ft)", toM: v => v * 0.3048, fromM: v => v / 0.3048 },
+                        yd: { label: "ヤード (yd)", toM: v => v * 0.9144, fromM: v => v / 0.9144 },
+                        mi: { label: "マイル (mi)", toM: v => v * 1609.34, fromM: v => v / 1609.34 }
                     }
                 },
                 weight: {
-                    name: "무게",
+                    name: "重さ",
                     list: {
-                        mg: { label: "밀리그램 (mg)", toKg: v => v / 1e6, fromKg: v => v * 1e6 },
-                        g: { label: "그램 (g)", toKg: v => v / 1000, fromKg: v => v * 1000 },
-                        kg: { label: "킬로그램 (kg)", toKg: v => v, fromKg: v => v },
-                        t: { label: "메트릭 톤 (t)", toKg: v => v * 1000, fromKg: v => v / 1000 },
-                        oz: { label: "온스 (oz)", toKg: v => v * 0.0283495, fromKg: v => v / 0.0283495 },
-                        lb: { label: "파운드 (lb)", toKg: v => v * 0.453592, fromKg: v => v / 0.453592 }
+                        mg: { label: "ミリグラム (mg)", toKg: v => v / 1e6, fromKg: v => v * 1e6 },
+                        g: { label: "グラム (g)", toKg: v => v / 1000, fromKg: v => v * 1000 },
+                        kg: { label: "キログラム (kg)", toKg: v => v, fromKg: v => v },
+                        t: { label: "トン (t)", toKg: v => v * 1000, fromKg: v => v / 1000 },
+                        oz: { label: "オンス (oz)", toKg: v => v * 0.0283495, fromKg: v => v / 0.0283495 },
+                        lb: { label: "ポンド (lb)", toKg: v => v * 0.453592, fromKg: v => v / 0.453592 }
                     }
                 },
                 temp: {
-                    name: "온도",
+                    name: "温度",
                     list: {
-                        C: { label: "섭씨 (°C)", toK: v => v + 273.15, fromK: v => v - 273.15 },
+                        C: { label: "摂氏 (°C)", toK: v => v + 273.15, fromK: v => v - 273.15 },
                         F: {
-                            label: "화씨 (°F)",
+                            label: "華氏 (°F)",
                             toK: v => ((v + 459.67) * 5) / 9,
                             fromK: v => (v * 9) / 5 - 459.67
                         },
-                        K: { label: "켈빈 (K)", toK: v => v, fromK: v => v }
+                        K: { label: "ケルビン (K)", toK: v => v, fromK: v => v }
                     }
                 },
                 speed: {
-                    name: "속도",
+                    name: "速度",
                     list: {
-                        "m/s": { label: "미터/초 (m/s)", toMS: v => v, fromMS: v => v },
-                        "km/h": { label: "킬로미터/시 (km/h)", toMS: v => v / 3.6, fromMS: v => v * 3.6 },
-                        "mi/h": { label: "마일/시 (mph)", toMS: v => v * 0.44704, fromMS: v => v / 0.44704 },
-                        "ft/s": { label: "피트/초 (ft/s)", toMS: v => v * 0.3048, fromMS: v => v / 0.3048 },
-                        knot: { label: "노트 (kn)", toMS: v => v * 0.514444, fromMS: v => v / 0.514444 }
+                        "m/s": { label: "メートル毎秒 (m/s)", toMS: v => v, fromMS: v => v },
+                        "km/h": { label: "キロメートル毎時 (km/h)", toMS: v => v / 3.6, fromMS: v => v * 3.6 },
+                        "mi/h": { label: "マイル毎時 (mph)", toMS: v => v * 0.44704, fromMS: v => v / 0.44704 },
+                        "ft/s": { label: "フィート毎秒 (ft/s)", toMS: v => v * 0.3048, fromMS: v => v / 0.3048 },
+                        knot: { label: "ノット (kn)", toMS: v => v * 0.514444, fromMS: v => v / 0.514444 }
                     }
                 },
                 vol: {
-                    name: "부피",
+                    name: "体積",
                     list: {
-                        ml: { label: "밀리리터 (ml)", toL: v => v / 1000, fromL: v => v * 1000 },
-                        l: { label: "리터 (l)", toL: v => v, fromL: v => v },
-                        m3: { label: "세제곱미터 (m³)", toL: v => v * 1000, fromL: v => v / 1000 },
-                        in3: { label: "세제곱인치 (in³)", toL: v => v * 0.0163871, fromL: v => v / 0.0163871 },
-                        ft3: { label: "세제곱피트 (ft³)", toL: v => v * 28.3168, fromL: v => v / 28.3168 },
-                        gal: { label: "미국 갤런 (gal)", toL: v => v * 3.78541, fromL: v => v / 3.78541 }
+                        ml: { label: "ミリリットル (ml)", toL: v => v / 1000, fromL: v => v * 1000 },
+                        l: { label: "リットル (l)", toL: v => v, fromL: v => v },
+                        m3: { label: "立方メートル (m³)", toL: v => v * 1000, fromL: v => v / 1000 },
+                        in3: { label: "立方インチ (in³)", toL: v => v * 0.0163871, fromL: v => v / 0.0163871 },
+                        ft3: { label: "立方フィート (ft³)", toL: v => v * 28.3168, fromL: v => v / 28.3168 },
+                        gal: { label: "米ガロン (gal)", toL: v => v * 3.78541, fromL: v => v / 3.78541 }
                     }
                 },
                 area: {
-                    name: "면적",
+                    name: "面積",
                     list: {
-                        mm2: { label: "제곱밀리미터 (mm²)", toM2: v => v / 1e6, fromM2: v => v * 1e6 },
-                        cm2: { label: "제곱센티미터 (cm²)", toM2: v => v / 10000, fromM2: v => v * 10000 },
-                        m2: { label: "제곱미터 (m²)", toM2: v => v, fromM2: v => v },
-                        ha: { label: "헥타르 (ha)", toM2: v => v * 10000, fromM2: v => v / 10000 },
-                        km2: { label: "제곱킬로미터 (km²)", toM2: v => v * 1e6, fromM2: v => v / 1e6 },
-                        in2: { label: "제곱인치 (in²)", toM2: v => v * 0.00064516, fromM2: v => v / 0.00064516 },
-                        ft2: { label: "제곱피트 (ft²)", toM2: v => v * 0.092903, fromM2: v => v / 0.092903 },
-                        yd2: { label: "제곱야드 (yd²)", toM2: v => v * 0.836127, fromM2: v => v / 0.836127 },
-                        ac: { label: "에이커 (ac)", toM2: v => v * 4046.86, fromM2: v => v / 4046.86 }
+                        mm2: { label: "平方ミリメートル (mm²)", toM2: v => v / 1e6, fromM2: v => v * 1e6 },
+                        cm2: { label: "平方センチメートル (cm²)", toM2: v => v / 10000, fromM2: v => v * 10000 },
+                        m2: { label: "平方メートル (m²)", toM2: v => v, fromM2: v => v },
+                        ha: { label: "ヘクタール (ha)", toM2: v => v * 10000, fromM2: v => v / 10000 },
+                        km2: { label: "平方キロメートル (km²)", toM2: v => v * 1e6, fromM2: v => v / 1e6 },
+                        in2: { label: "平方インチ (in²)", toM2: v => v * 0.00064516, fromM2: v => v / 0.00064516 },
+                        ft2: { label: "平方フィート (ft²)", toM2: v => v * 0.092903, fromM2: v => v / 0.092903 },
+                        yd2: { label: "平方ヤード (yd²)", toM2: v => v * 0.836127, fromM2: v => v / 0.836127 },
+                        ac: { label: "エーカー (ac)", toM2: v => v * 4046.86, fromM2: v => v / 4046.86 }
                     }
                 }
             };
 
-            // DOM 요소 참조
             const btns = {
                 len: document.getElementById("lenBtn"),
                 weight: document.getElementById("weightBtn"),
@@ -310,7 +308,7 @@
             const resultArea = document.getElementById("resultArea");
             let currentType = "length";
 
-            // 모드 전환
+            // モード切替
             Object.keys(btns).forEach((type) => {
                 btns[type].onclick = () => {
                     Object.values(btns).forEach(b => b.classList.remove("active"));
@@ -399,7 +397,7 @@
             fromUnit.addEventListener("change", updateResult);
             toUnit.addEventListener("change", updateResult);
 
-            // 초기 예시 값으로 결과 표시
+            // 初期値で自動表示
             setTimeout(updateResult, 100);
         </script>
         <section
@@ -413,41 +411,36 @@
                 font-family: Arial, sans-serif;
             ">
             <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 14px">
-                ❓ FAQ – 단위 변환기
+                ❓ FAQ – 単位変換ツール
             </div>
-
             <div style="margin-bottom: 12px">
-                <div style="color: #8f94fb; font-weight: bold">이 변환기는 정확한가요?</div>
+                <div style="color: #8f94fb; font-weight: bold">この変換は正確ですか？</div>
                 <div style="color: #f0f0f0">
-                    네. 모든 공식은 국제 표준 단위에 기반한 정확한 환산율을 사용합니다.
+                    はい。すべての計算は国際基準の換算率を使用しています。
                 </div>
             </div>
-
             <div style="margin-bottom: 12px">
-                <div style="color: #8f94fb; font-weight: bold">오프라인에서도 작동하나요?</div>
+                <div style="color: #8f94fb; font-weight: bold">オフラインでも使えますか？</div>
                 <div style="color: #f0f0f0">
-                    네. 페이지가 로드된 후에는 완전히 오프라인 상태에서도 작동합니다. 서버 연결이 필요하지 않습니다.
+                    はい。ページがロードされた後は完全にオフラインで利用できます。サーバー接続は不要です。
                 </div>
             </div>
-
             <div style="margin-bottom: 12px">
-                <div style="color: #8f94fb; font-weight: bold">사용 제한이 있나요?</div>
+                <div style="color: #8f94fb; font-weight: bold">使用制限はありますか？</div>
                 <div style="color: #f0f0f0">
-                    아니요. 모든 카테고리에서 무제한으로 변환할 수 있습니다.
+                    いいえ。全カテゴリで無制限に変換できます。
                 </div>
             </div>
-
             <div style="margin-bottom: 12px">
-                <div style="color: #8f94fb; font-weight: bold">왜 지수 표기법이 보이나요?</div>
+                <div style="color: #8f94fb; font-weight: bold">なぜ指数表記（例: 1.23e+6）が表示されるのですか？</div>
                 <div style="color: #f0f0f0">
-                    매우 크거나 작은 값은 가독성을 위해 과학적 표기법(예: 1.23e+6)으로 표시됩니다.
+                    非常に大きい/小さい数値は見やすさのために科学的記法で表示します。
                 </div>
             </div>
-
             <div style="margin-bottom: 0">
-                <div style="color: #8f94fb; font-weight: bold">새 단위 카테고리를 추가할 수 있나요?</div>
+                <div style="color: #8f94fb; font-weight: bold">新しいカテゴリを追加できますか？</div>
                 <div style="color: #f0f0f0">
-                    네! 새로운 카테고리가 필요하다면 의견을 남겨주세요.
+                    はい！追加したいカテゴリがあればご意見をお寄せください。
                 </div>
             </div>
         </section>
