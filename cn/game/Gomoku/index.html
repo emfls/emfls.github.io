@@ -1,32 +1,36 @@
 <!doctype html>
-<html lang="ja">
+<html lang="zh">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="オンライン五目並べ（Gomoku）ゲームを楽しもう！友達やAIとこのクラシックボードゲームで腕試し。シンプルで楽しく、モバイルにも最適化。" />
+            content="在线五子棋（Gomoku）游戏，随时与好友或 AI 一较高下！经典棋盘游戏，简单有趣，移动端友好。"
+        />
         <meta
             name="keywords"
-            content="五目並べ, GOMOKU, オンラインゲーム, AI, ボードゲーム, 無料, ブラウザゲーム, モバイル, クラシック, 戦略, 黒白, 2人対戦, パズル" />
+            content="五子棋, GOMOKU, 在线游戏, AI, 棋盘游戏, 免费, 浏览器游戏, 移动端, 经典, 策略, 黑白, 双人对战, 益智"
+        />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/cn/game/Gomoku" />
 
-        <meta property="og:title" content="五目並べ – 無料オンラインAI五目並べゲーム！" />
+        <meta property="og:title" content="五子棋 – 免费在线 AI 五子棋游戏！" />
         <meta
             property="og:description"
-            content="友達または賢いAIと五目並べを対戦しよう。どちらが先に五つ並べるか？ブラウザで無料プレイ！" />
+            content="与好友或聪明的 AI 对战五子棋，谁先连成五子即获胜？在浏览器中免费畅玩！"
+        />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/cn/game/Gomoku" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="五目並べ – 無料オンラインAI五目並べゲーム！" />
+        <meta name="twitter:title" content="五子棋 – 免费在线 AI 五子棋游戏！" />
         <meta
             name="twitter:description"
-            content="友達またはAIと五目並べを楽しもう！クラシックな五目ボードゲームをオンラインで無料プレイ。" />
+            content="与好友或 AI 一起享受五子棋！经典棋盘游戏，在线免费畅玩。"
+        />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
@@ -41,8 +45,9 @@
         <script
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
-            crossorigin="anonymous"></script>
-        <title>五目並べ</title>
+            crossorigin="anonymous"
+        ></script>
+        <title>五子棋</title>
         <style>
             @import url("https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap");
             :root {
@@ -165,13 +170,13 @@
     </head>
 
     <body>
-        <h1>⚫ 五目並べ ⚪</h1>
+        <h1>⚫ 五子棋 ⚪</h1>
         <div id="modeStatus" style="margin-top: -0.6rem; margin-bottom: 1rem; font-size: 1rem; color: #666"></div>
         <div id="board"></div>
 
         <div id="message"></div>
         <div>
-            <button onclick="resetGame()" style="font-weight: bold">再スタート</button>
+            <button onclick="resetGame()" style="font-weight: bold">重新开始</button>
             <button
                 onclick="toggleMode()"
                 id="modeBtn"
@@ -192,7 +197,7 @@
 
             function updateModeStatus() {
                 const modeStatus = document.getElementById("modeStatus");
-                modeStatus.textContent = aiMode ? "プレイヤー vs AI" : "プレイヤー対プレイヤー";
+                modeStatus.textContent = aiMode ? "玩家 vs AI" : "玩家 vs 玩家";
             }
 
             function createBoard() {
@@ -223,7 +228,7 @@
                     }
                     cells.push(row);
                 }
-                message.textContent = "⚫ 黒番の番です";
+                message.textContent = "⚫ 黑方先行";
             }
 
             function resetGame() {
@@ -235,7 +240,7 @@
 
             function toggleMode() {
                 aiMode = !aiMode;
-                modeBtn.textContent = aiMode ? "👥 2人" : "🤖 AI";
+                modeBtn.textContent = aiMode ? "👥 双人" : "🤖 AI";
                 resetGame();
             }
 
@@ -248,12 +253,12 @@
                 const result = checkWin(x, y, currentPlayer);
                 if (result) {
                     highlightWin(result);
-                    message.textContent = currentPlayer === "black" ? "⚫ 黒の勝ち！" : "⚪ 白の勝ち！";
+                    message.textContent = currentPlayer === "black" ? "⚫ 黑方胜利！" : "⚪ 白方胜利！";
                     gameOver = true;
                     return;
                 }
                 currentPlayer = currentPlayer === "black" ? "white" : "black";
-                message.textContent = currentPlayer === "black" ? "⚫ 黒番の番です" : "⚪ 白番の番です";
+                message.textContent = currentPlayer === "black" ? "⚫ 黑方回合" : "⚪ 白方回合";
                 if (aiMode && currentPlayer === "white") {
                     setTimeout(() => aiTurn(), 300);
                 }
@@ -265,12 +270,12 @@
                 const result = checkWin(x, y, "white");
                 if (result) {
                     highlightWin(result);
-                    message.textContent = "⚪ 白の勝ち！";
+                    message.textContent = "⚪ 白方胜利！";
                     gameOver = true;
                     return;
                 }
                 currentPlayer = "black";
-                message.textContent = "⚫ 黒番の番です";
+                message.textContent = "⚫ 黑方回合";
             }
 
             function placeStone(x, y, player) {
@@ -436,7 +441,7 @@
                 border-color: black;
             "
             onclick="window.location.href='/'">
-            他のゲーム
+            更多游戏
         </button>
         <button
             style="
@@ -453,21 +458,21 @@
                 border-color: black;
             "
             onclick="shareGame()">
-            共有
+            分享
         </button>
         <script>
             function shareGame() {
                 const shareData = {
-                    title: "五目並べ",
-                    text: "この素晴らしいAI五目並べゲームを楽しもう！",
+                    title: "五子棋",
+                    text: "来玩这款精彩的 AI 五子棋游戏吧！",
                     url: window.location.href
                 };
 
                 if (navigator.share) {
-                    navigator.share(shareData).catch((err) => console.log("Sharing failed", err));
+                    navigator.share(shareData).catch((err) => console.log("分享失败", err));
                 } else {
                     navigator.clipboard.writeText(window.location.href);
-                    alert("リンクがクリップボードにコピーされました！");
+                    alert("链接已复制到剪贴板！");
                 }
             }
         </script>
@@ -485,36 +490,36 @@
                 line-height: 1.6;
                 font-size: 14px;
             ">
-            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ よくある質問 (FAQ)</h2>
+            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ 常见问题 (FAQ)</h2>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q1. 五目並べとは何ですか？</strong><br />
-                A. 五目並べは、二人のプレイヤーが交互に石を置き、五つの石を一列に並べた方が勝つ古典的な戦略ボードゲームです。
+                <strong>Q1. 什么是五子棋？</strong><br />
+                A. 五子棋是一种经典的策略棋盘游戏，两个玩家交替在棋盘上放置黑白棋子，率先在横、竖或斜线上连成五子的一方获胜。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q2. どうやって勝ちますか？</strong><br />
-                A. 自分の石（黒または白）が横、縦、または斜めに五つ連続すると勝利です。
+                <strong>Q2. 如何获胜？</strong><br />
+                A. 将自己的棋子（黑或白）连续排列成五个，横向、纵向或对角线皆可，即可获胜。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q3. ゲームモードには何がありますか？</strong><br />
-                A. 友達と対戦する「2人プレイ」モードと、AIと競う「AIプレイ」モードがあります。右上の切り替えボタンで変更できます。
+                <strong>Q3. 游戏模式有哪些？</strong><br />
+                A. 有“玩家 vs 玩家”和“玩家 vs AI”两种模式。点击右上角切换按钮即可更改模式。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q4. ゲームを再スタートできますか？</strong><br />
-                A. はい！いつでもボード下の<strong>再スタート</strong>ボタンをクリックして新しいゲームを開始できます。
+                <strong>Q4. 如何重新开始游戏？</strong><br />
+                A. 点击底部的<strong>重新开始</strong>按钮即可重置棋盘并开始新游戏。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q5. このゲームはモバイル対応ですか？</strong><br />
-                A. もちろんです。五目並べはPCとモバイルのブラウザの両方で快適に動作します。
+                <strong>Q5. 这个游戏支持移动端吗？</strong><br />
+                A. 当然支持！五子棋在 PC 和移动端浏览器上都能流畅运行。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q6. ゲームをどうやって共有しますか？</strong><br />
-                A. 「共有」ボタンをタップしてリンクをコピーするか（デバイスが対応していれば）共有メニューを開くことができます。
+                <strong>Q6. 如何分享游戏？</strong><br />
+                A. 点击“分享”按钮可复制链接或调用分享菜单，与好友一同挑战！
             </div>
         </section>
     </body>

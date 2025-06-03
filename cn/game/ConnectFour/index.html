@@ -1,35 +1,35 @@
 <!doctype html>
-<html lang="ja">
+<html lang="zh">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="無料でオンライン四目並べをプレイしよう！友達やコンピュータと一緒にこのクラシック２人用戦略ゲームを楽しもう。シンプルで高速、モバイル対応です。"
+            content="免费在线玩四子棋！和朋友或电脑一起享受这款经典双人策略游戏。简洁、快捷、移动端兼容。"
         />
         <meta
             name="keywords"
-            content="四目並べ, コネクトフォー, オンラインゲーム, 無料ゲーム, ２人用, AI対戦, 戦略ゲーム, ボードゲーム, ブラウザ, モバイル, パズル, クラシック"
+            content="四子棋, 连接四, 在线游戏, 免费游戏, 双人游戏, AI对战, 策略游戏, 棋盘游戏, 浏览器, 移动端, 益智, 经典"
         />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/cn/game/ConnectFour" />
 
-        <meta property="og:title" content="四目並べ – 無料オンライン２人用ゲーム!" />
+        <meta property="og:title" content="四子棋 – 免费在线双人游戏！" />
         <meta
             property="og:description"
-            content="ブラウザで四目並べを無料でプレイしよう！友達やAIを相手に、横・縦・斜めに４つ並べて勝利しよう。"
+            content="通过浏览器免费玩四子棋！与朋友或AI对战，横、竖或斜向连接四个棋子即可获胜。"
         />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/cn/game/ConnectFour" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="四目並べ – 無料オンライン２人用ゲーム!" />
+        <meta name="twitter:title" content="四子棋 – 免费在线双人游戏！" />
         <meta
             name="twitter:description"
-            content="オンライン四目並べをプレイしよう – 友達と対戦するかAIに勝負を挑もう！ダウンロード不要。"
+            content="在线玩四子棋，和朋友或AI对战！无需下载。"
         />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -47,7 +47,7 @@
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"
         ></script>
-        <title>四目並べ</title>
+        <title>四子棋</title>
         <style>
             * {
                 box-sizing: border-box;
@@ -207,23 +207,23 @@
 
     <body>
         <div id="wrapper">
-            <h1>四目並べ</h1>
-            <div class="desc">横・縦・斜めに４つつなげて勝利！</div>
+            <h1>四子棋</h1>
+            <div class="desc">横向、纵向或斜向连接四个棋子即可获胜！</div>
             <div id="modeSel">
-                <button class="modebtn active" id="mode2p" onclick="setMode('2p')">２人プレイ</button>
-                <button class="modebtn" id="modeai" onclick="setMode('ai')">AI対戦</button>
+                <button class="modebtn active" id="mode2p" onclick="setMode('2p')">双人游戏</button>
+                <button class="modebtn" id="modeai" onclick="setMode('ai')">AI对战</button>
             </div>
             <div id="turn"></div>
             <div id="board"></div>
             <div id="overMsg"></div>
             <div class="btns" id="gameBtns" style="display: none">
-                <button class="btn" onclick="restart()">再スタート</button>
-                <button class="btn" onclick="share()">共有</button>
+                <button class="btn" onclick="restart()">重新开始</button>
+                <button class="btn" onclick="share()">分享</button>
             </div>
-            <a id="otherGames" href="../" style="margin-top: 22px">他のゲーム</a>
+            <a id="otherGames" href="../" style="margin-top: 22px">更多游戏</a>
         </div>
         <script>
-            // モバイル上での選択/ドラッグを無効化
+            // 禁用移动端的选取/拖拽
             document.addEventListener(
                 "touchmove",
                 (e) => {
@@ -239,7 +239,7 @@
             const ROWS = 6,
                   COLS = 7;
             let board, turn, over, winner;
-            let mode = "2p"; // "2p" または "ai"
+            let mode = "2p"; // "2p" 或者 "ai"
             const COLORS = ["🔵", "🟡"];
 
             function emptyBoard() {
@@ -261,11 +261,11 @@
                         cell.innerHTML = board[r][c] !== null ? COLORS[board[r][c]] : "";
                         cell.onclick = () => {
                             if (over) return;
-                            if (mode === "ai" && turn === 1) return; // AIの番のときは無効
+                            if (mode === "ai" && turn === 1) return; // AI回合时禁用
                             if (playerMove(c)) {
                                 render();
                                 if (mode === "ai" && !over && turn === 1) {
-                                    setTimeout(aiMove, 350); // 少し遅延してAIを動かす
+                                    setTimeout(aiMove, 350); // AI稍作延迟
                                 }
                             }
                         };
@@ -274,34 +274,38 @@
                 }
                 let msg = "";
                 if (!over) {
-                    msg = COLORS[turn]
-                        + (mode === "ai" ? (turn === 0 ? " (あなた)" : " (AI)") : "")
-                        + " の番";
+                    if (mode === "ai") {
+                        msg = COLORS[turn] + (turn === 0 ? " (你)" : " (AI)") + " 的回合";
+                    } else {
+                        msg = COLORS[turn] + " 的回合";
+                    }
                 } else if (winner !== null) {
-                    msg = COLORS[winner]
-                        + (mode === "ai" ? (winner === 0 ? " (あなた)" : " (AI)") : "")
-                        + " の勝利！";
+                    if (mode === "ai") {
+                        msg = COLORS[winner] + (winner === 0 ? " (你)" : " (AI)") + " 获胜！";
+                    } else {
+                        msg = COLORS[winner] + " 获胜！";
+                    }
                 } else {
-                    msg = "引き分け！";
+                    msg = "平局！";
                 }
                 document.getElementById("turn").textContent = msg;
                 document.getElementById("overMsg").textContent = over && winner !== null
                     ? msg
                     : over
-                        ? "引き分け！"
+                        ? "平局！"
                         : "";
                 document.getElementById("gameBtns").style.display = over ? "flex" : "none";
                 document.getElementById("mode2p").classList.toggle("active", mode === "2p");
                 document.getElementById("modeai").classList.toggle("active", mode === "ai");
             }
 
-            // プレイヤーまたは２Pの手を実際に置く（状態の更新）
+            // 玩家或双人游戏下落棋子并更新状态
             function playerMove(col) {
                 if (over) return false;
                 for (let r = ROWS - 1; r >= 0; r--) {
                     if (board[r][col] === null) {
                         board[r][col] = turn;
-                        // 勝利／引き分け判定
+                        // 检查胜利/平局
                         if (checkWin(r, col, turn)) {
                             over = true;
                             winner = turn;
@@ -317,7 +321,7 @@
                 return false;
             }
 
-            // AIやシミュレーション用に仮に置く（over/winner状態には影響しない）
+            // AI或模拟用：临时落子，不影响 over/winner
             function tryMove(col, whichTurn) {
                 for (let r = ROWS - 1; r >= 0; r--) {
                     if (board[r][col] === null) {
@@ -379,29 +383,29 @@
                 let validCols = [];
                 for (let c = 0; c < COLS; c++) if (board[0][c] === null) validCols.push(c);
 
-                // 1. AIが勝利できる手を探す
+                // 1. 找到AI可赢的落子
                 for (let ci of validCols) {
                     let row = tryMove(ci, 1);
                     if (row !== -1 && checkWin(row, ci, 1)) {
                         undoMove(ci);
-                        playerMove(ci); // 実際にAIの手を置く
+                        playerMove(ci);
                         render();
                         return;
                     }
                     if (row !== -1) undoMove(ci);
                 }
-                // 2. プレイヤーが勝利できる手をブロック
+                // 2. 阻挡玩家的必胜棋步
                 for (let ci of validCols) {
                     let row = tryMove(ci, 0);
                     if (row !== -1 && checkWin(row, ci, 0)) {
                         undoMove(ci);
-                        playerMove(ci); // ブロックのために置く
+                        playerMove(ci);
                         render();
                         return;
                     }
                     if (row !== -1) undoMove(ci);
                 }
-                // 3. 中央優先
+                // 3. 优先中间列
                 let bestCols = [3, 2, 4, 1, 5, 0, 6].filter((c) => validCols.includes(c));
                 let col = bestCols.length > 0
                     ? bestCols[0]
@@ -414,16 +418,16 @@
                 const url = location.href;
                 if (navigator.share) {
                     navigator.share({
-                        title: "四目並べ",
+                        title: "四子棋",
                         url
                     });
                 } else {
                     navigator.clipboard.writeText(url);
-                    alert("リンクがコピーされました！");
+                    alert("链接已复制！");
                 }
             }
 
-            // 初期化
+            // 初始化
             restart();
         </script>
         <section
@@ -442,36 +446,36 @@
                 box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             "
         >
-            <h2 style="font-size: 18px; margin-bottom: 1rem; color: #365ca0">❓ よくある質問 (FAQ)</h2>
+            <h2 style="font-size: 18px; margin-bottom: 1rem; color: #365ca0">❓ 常见问题 (FAQ)</h2>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q1. 四目並べはどうプレイするの？</strong><br />
-                A. 列をタップしてトークンを落とします。横・縦・斜めに４つつなげたプレイヤーが勝ちです。
+                <strong>Q1. 四子棋怎么玩？</strong><br />
+                A. 点击列来落子。先横向、纵向或斜向连续连接四个棋子的一方获胜。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q2. ゲームモードには何があるの？</strong><br />
-                A. 友達と遊ぶ「２人プレイ」モードまたはコンピュータと対戦する「AI対戦」モードが選べます。
+                <strong>Q2. 游戏模式有哪些？</strong><br />
+                A. 可以选择“多人游戏”模式或者“AI对战”模式。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q3. AIはどれくらい強いの？</strong><br />
-                A. AIは勝てる手を見つけ、自分の潜在的な勝利を阻止します。また、より有利な中央の列を優先します。
+                <strong>Q3. AI的强度如何？</strong><br />
+                A. AI会寻找能稳赢的落子并阻挡你的获胜，同时优先占据中间列。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q4. ゲーム途中でモードを切り替えられる？</strong><br />
-                A. はい！画面上部のモードボタンをタップすると、別のモードで再スタートします。
+                <strong>Q4. 游戏过程中可以切换模式吗？</strong><br />
+                A. 可以！点击页面顶部的模式按钮即可重新开始并切换到另一模式。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q5. 引き分けのときはどうなる？</strong><br />
-                A. ボードがいっぱいになっても勝者がいない場合、ゲームは引き分けとして終了し、再スタートできます。
+                <strong>Q5. 如果平局会怎样？</strong><br />
+                A. 当棋盘填满且无人获胜时，游戏判定为平局，可以点击重新开始。
             </div>
 
             <div>
-                <strong>Q6. ゲームはどうやって共有するの？</strong><br />
-                A. ゲーム終了後に「共有」ボタンをタップし、リンクをコピーして友達に送ってください！
+                <strong>Q6. 如何分享游戏？</strong><br />
+                A. 游戏结束后点击“分享”按钮，复制链接并发送给朋友！
             </div>
         </section>
     </body>

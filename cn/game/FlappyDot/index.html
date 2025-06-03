@@ -1,32 +1,36 @@
 <!doctype html>
-<html lang="ja">
+<html lang="zh">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="Flappy Dot で爆弾を避けながらできるだけ遠くへ飛んでみよう！シンプルで中毒性のあるモバイルフレンドリーなブラウザゲームを無料で楽しめます。" />
+            content="在 Flappy Dot 中躲避炸弹，尽可能飞得更远！这是一款简洁且上瘾的移动端友好型浏览器免费游戏。"
+        />
         <meta
             name="keywords"
-            content="Flappy Dot, Flappy Bird, QuickPlay, アーケード, 飛行ゲーム, 爆弾回避, 無料ゲーム, オンライン, ブラウザ, モバイル, ハイスコア, スキルゲーム, カジュアル" />
+            content="Flappy Dot, Flappy Bird, QuickPlay, 街机, 飞行游戏, 躲避炸弹, 免费游戏, 在线, 浏览器, 移动, 高分, 技能游戏, 休闲"
+        />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/cn/game/FlappyDot" />
 
-        <meta property="og:title" content="QuickPlay: Flappy Dot – 無料オンラインゲーム!" />
+        <meta property="og:title" content="QuickPlay: Flappy Dot – 免费在线游戏!" />
         <meta
             property="og:description"
-            content="ハイスコアに挑戦しよう！Flappy Dot で飛んで爆弾を避け、友達に挑戦しよう。" />
+            content="挑战高分！在 Flappy Dot 中飞行并躲避炸弹，向朋友发起挑战。"
+        />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/cn/game/FlappyDot" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Flappy Dot – 無料オンラインQuickPlayゲーム!" />
+        <meta name="twitter:title" content="Flappy Dot – 免费在线 QuickPlay 游戏!" />
         <meta
             name="twitter:description"
-            content="爆弾を避けながらできるだけ遠くまで飛んでみよう！Flappy Dot をオンラインで無料プレイしてハイスコアを競おう。" />
+            content="躲避炸弹，飞得越远越好！在线免费玩 Flappy Dot，争夺高分。"
+        />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
@@ -41,7 +45,8 @@
         <script
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
-            crossorigin="anonymous"></script>
+            crossorigin="anonymous"
+        ></script>
         <title>QuickPlay: Flappy Dot</title>
         <style>
             * {
@@ -116,15 +121,15 @@
 
     <body>
         <h1 style="font-family: 'Arial Black', sans-serif; font-size: 28px; margin-bottom: 6px">Flappy Dot</h1>
-        <p style="font-size: 14px; color: white; margin-bottom: 12px">爆弾を避けながらできるだけ遠くまで飛ぼう！</p>
+        <p style="font-size: 14px; color: white; margin-bottom: 12px">躲避炸弹，尽可能飞得更远！</p>
 
         <canvas id="gameCanvas" width="300" height="450"></canvas>
         <div class="overlay" id="menu">
-            <button onclick="startGame()">ゲーム開始</button>
+            <button onclick="startGame()">开始游戏</button>
         </div>
         <div class="overlay" id="gameoverMenu" style="display: none">
-            <button onclick="resetGame()">再スタート</button>
-            <button onclick="shareScore()">共有</button>
+            <button onclick="resetGame()">重新开始</button>
+            <button onclick="shareScore()">分享</button>
         </div>
 
         <script>
@@ -287,12 +292,12 @@
 
                 ctx.fillStyle = "black";
                 ctx.font = "20px Arial";
-                ctx.fillText("スコア: " + score, 10, 30);
+                ctx.fillText("得分: " + score, 10, 30);
 
                 if (gameOver) {
                     ctx.fillStyle = "red";
                     ctx.font = "32px Arial";
-                    ctx.fillText("ゲームオーバー", canvas.width / 2 - 80, canvas.height / 2 - 100);
+                    ctx.fillText("游戏结束", canvas.width / 2 - 80, canvas.height / 2 - 100);
                     gameoverMenu.style.display = "flex";
                 }
             }
@@ -336,17 +341,17 @@
 
             function shareScore() {
                 const url = window.location.href;
-                const text = `🐤 Flappy Dot で ${score} 点獲得！あなたも挑戦してみて！`;
+                const text = `🐤 Flappy Dot 得分 ${score}！快来挑战吧！`;
                 if (navigator.share) {
                     navigator
                         .share({ title: "QuickPlay: Flappy Dot", text, url })
-                        .catch(() => alert("共有に失敗しました。リンクをコピーしてください。"));
+                        .catch(() => alert("共享失败，请手动复制链接。"));
                 } else {
                     const full = `${text}\n${url}`;
                     navigator.clipboard
                         .writeText(full)
-                        .then(() => alert("スコアを含むリンクがクリップボードにコピーされました！"))
-                        .catch(() => alert(`このリンクをコピーしてください:\n${full}`));
+                        .then(() => alert("分数与链接已复制到剪贴板！"))
+                        .catch(() => alert(`请复制以下链接：\n${full}`));
                 }
             }
 
@@ -374,7 +379,7 @@
         </script>
 
         <button style="margin-top: 20px; width: 90%; height: 60px" onclick="window.location.href='/'">
-            📂 他のゲーム
+            📂 更多游戏
         </button>
         <section
             style="
@@ -390,36 +395,36 @@
                 line-height: 1.6;
                 font-size: 14px;
             ">
-            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ よくある質問 (FAQ)</h2>
+            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ 常见问题 (FAQ)</h2>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q1. Flappy Dot はどのようなゲームですか？</strong><br />
-                A. Flappy Dot は画面をタップするかスペースキーを押してジャンプし、爆弾を避けながらできるだけ遠くまで飛ぶカジュアルな飛行ゲームです。
+                <strong>Q1. Flappy Dot 是什么游戏？</strong><br />
+                A. Flappy Dot 是一款休闲飞行游戏，通过点击屏幕或按空格键跳跃，躲避炸弹并尽可能飞得更远。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q2. 操作方法は？</strong><br />
-                A. モバイルでは画面をタップし、PC ではスペースキーを押してジャンプします。
+                <strong>Q2. 操作方式？</strong><br />
+                A. 在移动设备上点击屏幕，在电脑上按空格键进行跳跃。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q3. ゲームはいつ終わりますか？</strong><br />
-                A. ドットが爆弾にぶつかるか画面外に出るとゲームオーバーになります。爆発エフェクトがゲーム終了を示します。
+                <strong>Q3. 游戏何时结束？</strong><br />
+                A. 当小圆点碰到炸弹或飞出屏幕时，游戏结束，爆炸特效表示游戏结束。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q4. スコアが上がると難易度は上がりますか？</strong><br />
-                A. はい。スコアが高くなるほど爆弾の出現数とスピードが増し、より挑戦的になります。
+                <strong>Q4. 分数提升会增加难度吗？</strong><br />
+                A. 是的。得分越高，出现的炸弹数量和速度会增加，挑战性会更高。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q5. モバイルでもプレイできますか？</strong><br />
-                A. もちろんです。Flappy Dot はモバイルフレンドリーで、ダウンロード不要で楽しめます。
+                <strong>Q5. 可以在移动端玩吗？</strong><br />
+                A. 当然可以。Flappy Dot 对移动设备友好，无需下载即可畅玩。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q6. スコアはどう共有できますか？</strong><br />
-                A. ゲーム終了後、「共有」ボタンをタップしてスコアとリンクを共有するか、クリップボードにコピーできます。
+                <strong>Q6. 如何分享分数？</strong><br />
+                A. 在游戏结束后，点击“分享”按钮即可分享分数和链接，或复制到剪贴板。
             </div>
         </section>
     </body>
