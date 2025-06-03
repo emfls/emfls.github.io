@@ -1,28 +1,31 @@
 <!doctype html>
-<html lang="ko">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
-    <title>간단 레시피 찾기 – 무엇을 요리할까?</title>
+    <title>Tìm công thức đơn giản – Nấu món gì?</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="재료만 입력하면 간단 레시피를 찾아줍니다. 아이들도 쉽게, 유튜브 레시피 링크까지 보여줘요!" />
+      content="Chỉ cần nhập nguyên liệu, chúng tôi sẽ tìm công thức đơn giản cho bạn. Trẻ con cũng dễ dàng, còn hiển thị cả liên kết công thức trên YouTube!" />
     <meta
       name="keywords"
-      content="간단 레시피, 아이들 요리, 레시피 찾기, 집에 있는 재료, 요리 검색, 키즈 쿠킹" />
+      content="công thức đơn giản, nấu ăn cho trẻ em, tìm công thức, nguyên liệu có sẵn, tìm kiếm công thức, nấu ăn cho trẻ" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ko" />
+    <meta name="language" content="vi" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <!-- SEO, Open Graph, Twitter, GA, AdSense 포함 -->
-    <meta property="og:title" content="아이들을 위한 간단 레시피 찾기 – 무엇을 요리할까?" />
-    <meta property="og:description" content="재료를 입력하면 간단 레시피를 찾아줘요. 정말 쉬워요!" />
+    <!-- SEO, Open Graph & Twitter -->
+    <meta property="og:title" content="Tìm công thức đơn giản cho trẻ em – Nấu món gì?" />
+    <meta
+      property="og:description"
+      content="Nhập nguyên liệu, chúng tôi sẽ tìm công thức đơn giản cho bạn. Thật dễ sử dụng!" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/vn/util/recipe-finder/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="간단 레시피 찾기 – 무엇을 요리할까?" />
-    <meta name="twitter:description" content="재료로 요리법 찾기, 아이들도 쉽게!" />
+    <meta name="twitter:title" content="Tìm công thức đơn giản – Nấu món gì?" />
+    <meta name="twitter:description" content="Tìm công thức từ nguyên liệu, ai cũng dùng được!" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <!-- Google Analytics & AdSense -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -225,31 +228,31 @@
         }
       }
     </style>
-    <!-- 외부 레시피 DB: recipes.js에서 window.RECIPES_DB, window.INGREDIENTS_DB 로드 -->
+    <!-- Dữ liệu công thức từ recipes.js kích hoạt window.RECIPES_DB, window.INGREDIENTS_DB -->
     <script src="recipes.js"></script>
   </head>
   <body>
     <div class="container">
-      <div class="logo">🍳 간단 레시피 찾기</div>
-      <div class="desc">어떤 재료가 있나요?<br /><b>아래에 입력해 보세요!</b></div>
-      <span class="input-label">보유 재료:</span>
+      <div class="logo">🍳 Tìm công thức đơn giản</div>
+      <div class="desc">Bạn có nguyên liệu gì?<br /><b>Hãy nhập vào bên dưới!</b></div>
+      <span class="input-label">Nguyên liệu bạn có:</span>
       <div class="ingredient-input-box" id="ingredientWrap">
         <input
           type="text"
           class="ingredient-input"
           id="ingredientInput"
-          placeholder="예: 달걀, 치즈, 우유"
+          placeholder="Ví dụ: trứng, phô mai, sữa"
           autocomplete="off" />
         <div class="autocomplete-box" id="autocompleteBox"></div>
       </div>
-      <button class="search-btn" id="searchBtn">레시피 보여주기</button>
+      <button class="search-btn" id="searchBtn">Hiển thị công thức</button>
       <div class="recipes-list" id="recipesList"></div>
       <div class="footer">
       </div>
-      <a href="../index.html" id="backBtn">기타 도구</a>
+      <a href="../index.html" id="backBtn">Công cụ khác</a>
     </div>
     <script>
-      // recipes.js 에서 window.RECIPES_DB, window.INGREDIENTS_DB 로딩
+      // recipes.js cung cấp window.RECIPES_DB, window.INGREDIENTS_DB
       const RECIPES = window.RECIPES_DB || [];
       const INGREDIENTS = window.INGREDIENTS_DB || [];
       const ingredientInput = document.getElementById("ingredientInput");
@@ -259,7 +262,7 @@
       const recipesList = document.getElementById("recipesList");
       let selectedIngredients = [];
 
-      // 자동완성 표시
+      // Hiển thị danh sách đề xuất tự động
       function showAutocomplete(val) {
         autocompleteBox.innerHTML = "";
         if (!val) {
@@ -304,7 +307,7 @@
       function addIngredient(val) {
         val = val
           .toLowerCase()
-          .replace(/[^가-힣\s]/g, "")
+          .replace(/[^A-Za-zÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠƯàáâãèéêìíòóôõùúăđĩũơưỲỴỶỸýỳỷỹẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪỬữỬữỰỲỴỶỸ\s]/g, "")
           .trim();
         if (!val || selectedIngredients.includes(val)) return;
         selectedIngredients.push(val);
@@ -315,7 +318,7 @@
         updateChips();
       }
       function updateChips() {
-        // 기존 칩 제거
+        // Xóa tất cả chip cũ
         ingredientWrap.querySelectorAll(".ingredient-chip").forEach((el) => el.remove());
         selectedIngredients.forEach((ing) => {
           const chip = document.createElement("div");
@@ -330,10 +333,10 @@
         });
       }
 
-      // 레시피 매칭 및 표시 (YouTube 링크 포함)
+      // Tìm và hiển thị công thức (kèm liên kết YouTube)
       function showRecipes() {
         if (selectedIngredients.length === 0) {
-          recipesList.innerHTML = `<div style="color:#aaa;font-size:1.11em;text-align:center;">재료를 입력해 주세요!</div>`;
+          recipesList.innerHTML = `<div style="color:#aaa;font-size:1.11em;text-align:center;">Vui lòng nhập nguyên liệu!</div>`;
           return;
         }
         const matches = RECIPES.map((r) => {
@@ -349,7 +352,7 @@
           .filter((r) => r.matchedCount > 0)
           .sort((a, b) => b.matchedCount - a.matchedCount || a.total - b.total);
         if (matches.length === 0) {
-          recipesList.innerHTML = `<div style="color:#e57272;text-align:center;">해당 재료로 찾은 레시피가 없습니다. 다른 재료를 시도해 보세요!</div>`;
+          recipesList.innerHTML = `<div style="color:#e57272;text-align:center;">Không tìm thấy công thức phù hợp với nguyên liệu này. Hãy thử nguyên liệu khác!</div>`;
           return;
         }
         recipesList.innerHTML = matches
@@ -357,12 +360,12 @@
             (r) => `
         <div class="recipe-card">
           <div class="recipe-title">${r.name}</div>
-          <div class="match-info">일치 재료: <b>${r.matchedCount}</b> / ${r.total}</div>
-          <div class="all-ings">재료: ${r.ingredients
+          <div class="match-info">Nguyên liệu khớp: <b>${r.matchedCount}</b> / ${r.total}</div>
+          <div class="all-ings">Nguyên liệu: ${r.ingredients
             .map((i) => (r.matched.includes(i) ? `<b style="color:#228e6f">${i}</b>` : i))
             .join(", ")}</div>
           <button class="yt-link-btn" onclick="window.open('https://www.youtube.com/results?search_query=${encodeURIComponent(r.name + " 레시피")}', '_blank')">
-            ▶ 유튜브에서 보기
+            ▶ Xem YouTube
           </button>
         </div>
       `
@@ -374,7 +377,7 @@
         if (selectedIngredients.length) showRecipes();
       });
 
-      // 첫 로드 시 안내 문구 표시
+      // Khi tải trang, hiển thị hướng dẫn
       showRecipes();
     </script>
     <section
@@ -387,41 +390,41 @@
         padding: 18px;
       ">
       <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 12px">
-        FAQ – 간단 레시피 찾기
+        FAQ – Tìm công thức đơn giản
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Q. 가입이나 로그인이 필요한가요?</div>
+        <div style="color: #8f94fb; font-weight: bold">Q. Có cần đăng ký hoặc đăng nhập không?</div>
         <div style="color: #f0f0f0">
-          아니요! 로그인 없이 모두 브라우저 내에서 처리됩니다. 입력한 재료와 결과는 기기에만 남습니다.
+          Không! Mọi thao tác đều thực hiện ngay trong trình duyệt mà không cần đăng nhập. Nguyên liệu và kết quả chỉ lưu trên thiết bị của bạn.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Q. 아이들도 안전하게 사용할 수 있나요?</div>
+        <div style="color: #8f94fb; font-weight: bold">Q. Trẻ em có thể sử dụng an toàn không?</div>
         <div style="color: #f0f0f0">
-          네! 개인 정보 수집이나 외부 업로드가 없고, 광고도 최소화하여 아이들도 안심하고 사용할 수 있습니다.
+          Có! Không thu thập thông tin cá nhân hay tải dữ liệu lên bên ngoài, quảng cáo cũng rất ít để trẻ em có thể sử dụng an tâm.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Q. 레시피 데이터는 어디서 가져오나요?</div>
+        <div style="color: #8f94fb; font-weight: bold">Q. Dữ liệu công thức lấy từ đâu?</div>
         <div style="color: #f0f0f0">
-          간단한 로컬 데이터베이스에서 레시피를 매칭합니다. 유튜브 링크는 레시피 이름으로 검색된 영상으로 연결됩니다.
+          Dữ liệu công thức được khớp từ cơ sở dữ liệu cục bộ đơn giản. Liên kết YouTube sẽ dẫn đến video tìm kiếm theo tên công thức.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Q. 더 많은 레시피를 요청할 수 있나요?</div>
+        <div style="color: #8f94fb; font-weight: bold">Q. Có thể yêu cầu thêm công thức không?</div>
         <div style="color: #f0f0f0">
-          현재는 목록이 고정되어 있습니다. 향후 제안 기능을 추가할 수 있으니 기대해 주세요!
+          Hiện tại danh sách là cố định. Trong tương lai có thể thêm chức năng đề xuất, mong bạn chờ đợi!
         </div>
       </div>
 
       <div>
-        <div style="color: #8f94fb; font-weight: bold">Q. 오프라인에서도 작동하나요?</div>
+        <div style="color: #8f94fb; font-weight: bold">Q. Có hoạt động ngoại tuyến không?</div>
         <div style="color: #f0f0f0">
-          네, 한 번 페이지가 로드되면 인터넷 연결 없이도 재료 입력과 레시피 매칭이 가능하지만, 유튜브 영상은 인터넷이 필요합니다.
+          Có, sau khi trang đã tải, bạn có thể nhập nguyên liệu và khớp công thức mà không cần kết nối internet, nhưng video YouTube vẫn cần internet.
         </div>
       </div>
     </section>

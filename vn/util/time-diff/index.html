@@ -1,30 +1,30 @@
 <!doctype html>
-<html lang="ko">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
-    <title>시간 차이 & 카운트다운 계산기</title>
+    <title>Máy tính khoảng thời gian & Đếm ngược</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="두 날짜 간 시간 차이를 계산하고 원하는 날짜까지 실시간 카운트다운을 확인하세요. 일, 시간, 분, 초. 무료, 브라우저 기반, 모바일 친화적." />
+      content="Tính khoảng thời gian giữa hai ngày và xem đếm ngược thời gian thực đến ngày bạn muốn. Ngày, giờ, phút, giây. Miễn phí, chạy trên trình duyệt, thân thiện với di động." />
     <meta
       name="keywords"
-      content="시간 차이, 카운트다운, 날짜 계산기, 타이머, 일, 시간, 분, 초, 웹, 카운트다운, 날짜계산" />
+      content="khoảng thời gian, đếm ngược, máy tính ngày giờ, bộ đếm thời gian, ngày, giờ, phút, giây, web, đếm ngược, tính toán ngày" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ko" />
+    <meta name="language" content="vi" />
     <meta name="theme-color" content="#1999c6" />
     <link rel="canonical" href="https://emfls.github.io/vn/util/time-diff/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <meta property="og:title" content="시간 차이 & 카운트다운 계산기" />
+    <meta property="og:title" content="Máy tính khoảng thời gian & Đếm ngược" />
     <meta
       property="og:description"
-      content="두 순간 간의 시간을 확인하고, 원하는 미래 날짜까지 실시간 카운트다운을 보세요." />
+      content="Xem thời gian giữa hai thời điểm và theo dõi đếm ngược đến ngày tương lai bạn muốn." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/vn/util/time-diff/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="시간 차이 & 카운트다운 계산기" />
-    <meta name="twitter:description" content="간격 확인 또는 실시간 카운트다운. 100% 브라우저, 업로드 불필요." />
+    <meta name="twitter:title" content="Máy tính khoảng thời gian & Đếm ngược" />
+    <meta name="twitter:description" content="Kiểm tra khoảng cách hoặc xem đếm ngược thời gian thực. 100% trên trình duyệt, không cần tải lên." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -161,25 +161,25 @@
   </head>
   <body>
     <div class="container">
-      <div class="title">⏳ 시간 차이 & 카운트다운</div>
+      <div class="title">⏳ Khoảng thời gian & Đếm ngược</div>
       <form id="diffForm" autocomplete="off">
         <div class="form-row">
-          <label for="startTime">시작 날짜 및 시간</label>
+          <label for="startTime">Ngày & Giờ bắt đầu</label>
           <input type="datetime-local" id="startTime" />
         </div>
         <div class="form-row">
-          <label for="endTime">종료 날짜 및 시간</label>
+          <label for="endTime">Ngày & Giờ kết thúc</label>
           <input type="datetime-local" id="endTime" />
         </div>
         <div class="result" id="diffResult"></div>
       </form>
       <div class="countdown" id="countdownBox"></div>
       <div class="footer">
-        날짜 간 일, 시간, 분, 초를 계산하거나 실시간 카운트다운을 확인하세요.<br />
-        <b>팁:</b> 카운트다운을 원한다면 종료 시간만 설정하세요.
+        Tính số ngày, giờ, phút, giây giữa các ngày hoặc xem đếm ngược thời gian thực.<br />
+        <b>Mẹo:</b> Nếu chỉ muốn đếm ngược, hãy chỉ đặt "Ngày & Giờ kết thúc".
       </div>
     </div>
-    <a href="../index.html" id="backBtn">다른 유틸 보기</a>
+    <a href="../index.html" id="backBtn">Xem công cụ khác</a>
     <script>
       const startInput = document.getElementById("startTime");
       const endInput = document.getElementById("endTime");
@@ -194,21 +194,21 @@
         const hours = Math.floor((abs % 86400000) / 3600000);
         const mins = Math.floor((abs % 3600000) / 60000);
         const secs = Math.floor((abs % 60000) / 1000);
-        return `<b>${sign}${days}일</b> &nbsp; <b>${hours}시간</b> &nbsp; <b>${mins}분</b> &nbsp; <b>${secs}초</b>`;
+        return `<b>${sign}${days} ngày</b> &nbsp; <b>${hours} giờ</b> &nbsp; <b>${mins} phút</b> &nbsp; <b>${secs} giây</b>`;
       }
 
       function update() {
         const start = startInput.value ? new Date(startInput.value) : null;
         const end = endInput.value ? new Date(endInput.value) : null;
-        // 시간 차이 계산
+        // Tính khoảng cách
         if (start && end) {
           let ms = end - start;
-          if (isNaN(ms)) result.textContent = "잘못된 날짜/시간 입력입니다.";
+          if (isNaN(ms)) result.textContent = "Nhập ngày/giờ không hợp lệ.";
           else result.innerHTML = formatDiff(ms);
         } else {
           result.textContent = "";
         }
-        // 카운트다운 (현재 시각부터 종료까지)
+        // Đếm ngược (từ bây giờ đến cuối)
         if (end) {
           let from =
             !startInput.value || (startInput.value && new Date(startInput.value) < new Date())
@@ -230,12 +230,12 @@
               return;
             }
             if (ms <= 0) {
-              countdownBox.innerHTML = `<b>시간 종료!</b>`;
+              countdownBox.innerHTML = `<b>Thời gian đã kết thúc!</b>`;
               clearInterval(countdownTimer);
               countdownTimer = null;
               return;
             }
-            countdownBox.innerHTML = `<b>카운트다운: </b>` + formatDiff(ms);
+            countdownBox.innerHTML = `<b>Đếm ngược: </b>` + formatDiff(ms);
           }
           if (countdownTimer) clearInterval(countdownTimer);
           tick();
@@ -247,10 +247,10 @@
         }
       }
 
-      // 입력이 변경될 때마다 자동 업데이트
+      // Cập nhật ngay khi nhập thay đổi
       startInput.addEventListener("input", update);
       endInput.addEventListener("input", update);
-      // 페이지 로드 시에도 즉시 업데이트
+      // Cập nhật khi tải trang
       window.addEventListener("DOMContentLoaded", update);
     </script>
     <section
@@ -264,41 +264,41 @@
         font-family: Arial, sans-serif;
       ">
       <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 14px">
-        ❓ FAQ – 시간 차이 & 카운트다운
+        ❓ FAQ – Khoảng thời gian & Đếm ngược
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">이 도구는 인터넷 연결이나 업로드가 필요한가요?</div>
+        <div style="color: #8f94fb; font-weight: bold">Công cụ này có cần kết nối Internet hoặc tải lên không?</div>
         <div style="color: #f0f0f0">
-          아니요. 모든 계산은 브라우저에서 로컬로 이루어집니다. 데이터가 외부로 전송되지 않습니다.
+          Không. Mọi tính toán diễn ra cục bộ trong trình duyệt. Không có dữ liệu nào được gửi đi.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">카운트다운 기능은 어떻게 사용하나요?</div>
+        <div style="color: #8f94fb; font-weight: bold">Làm sao sử dụng chức năng đếm ngược?</div>
         <div style="color: #f0f0f0">
-          단순히 '종료 날짜 및 시간'만 설정하세요. 지금부터 남은 시간이 표시됩니다.
+          Chỉ cần đặt "Ngày & Giờ kết thúc" mà không cần nhập "Ngày & Giờ bắt đầu". Đếm ngược từ thời điểm hiện tại đến giá trị đó.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">시작 시간과 종료 시간을 모두 설정하면 어떻게 되나요?</div>
+        <div style="color: #8f94fb; font-weight: bold">Nếu đặt cả thời gian bắt đầu và kết thúc thì sao?</div>
         <div style="color: #f0f0f0">
-          시간 차이와 카운트다운(시작 시간이 지금이거나 과거인 경우)을 모두 확인할 수 있습니다.
+          Bạn sẽ thấy cả khoảng thời gian giữa hai thời điểm và (nếu thời gian bắt đầu ≤ hiện tại) đếm ngược đến kết thúc.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">음수 차이를 계산할 수 있나요?</div>
+        <div style="color: #8f94fb; font-weight: bold">Có hiển thị kết quả âm không?</div>
         <div style="color: #f0f0f0">
-          네. 종료 시간이 시작 시간보다 이전이면 결과가 음수(“-” 기호 포함)로 표시됩니다.
+          Có. Nếu "Ngày & Giờ kết thúc" sớm hơn "Ngày & Giờ bắt đầu", kết quả sẽ có dấu “-” trước.
         </div>
       </div>
 
       <div style="margin-bottom: 0">
-        <div style="color: #8f94fb; font-weight: bold">모바일 친화적인가요?</div>
+        <div style="color: #8f94fb; font-weight: bold">Công cụ này có thân thiện với di động không?</div>
         <div style="color: #f0f0f0">
-          네! 이 도구는 반응형이며 스마트폰, 태블릿, 데스크톱에서 모두 작동합니다.
+          Có! Công cụ đáp ứng mọi kích thước màn hình, hoạt động tốt trên điện thoại, máy tính bảng và máy tính để bàn.
         </div>
       </div>
     </section>

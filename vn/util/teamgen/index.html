@@ -1,30 +1,30 @@
 <!doctype html>
-<html lang="ko">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
-    <title>랜덤 팀 생성기 – 온라인 그룹 분할기</title>
+    <title>Trình Tạo Đội Ngẫu Nhiên – Công Cụ Chia Nhóm Trực Tuyến</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="이름을 입력하고 팀 수를 선택하면 즉시 랜덤 팀/그룹으로 나눠줍니다! 100% 브라우저 기반, 업로드 불필요." />
+      content="Nhập tên và chọn số nhóm, ngay lập tức sẽ chia ngẫu nhiên thành các đội/nhóm! 100% xử lý trong trình duyệt, không cần tải lên." />
     <meta
       name="keywords"
-      content="랜덤 팀 생성기, 그룹 분할기, 이름 섞기, 팀 만들기, 스터디 그룹, 교실, 클래스, 팀 편성, 조 짜기, 조 편성기, 랜덤 팀, 랜덤 조" />
+      content="trình tạo đội ngẫu nhiên, chia nhóm, trộn tên, tạo đội, nhóm học tập, lớp học, chia đội, phân nhóm, chia nhóm ngẫu nhiên" />
     <meta name="author" content="Itagi" />
     <link rel="canonical" href="https://emfls.github.io/vn/util/teamgen/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <meta property="og:title" content="랜덤 팀 생성기 – 온라인 그룹 분할기" />
+    <meta property="og:title" content="Trình Tạo Đội Ngẫu Nhiên – Công Cụ Chia Nhóm Trực Tuyến" />
     <meta
       property="og:description"
-      content="이름을 무작위로 팀/그룹에 나눕니다. 즉시 섞기, 브라우저에서만 실행, 데이터 업로드 불필요." />
+      content="Chia tên ngẫu nhiên thành đội/nhóm. Trộn ngay, chạy trong trình duyệt, không cần tải dữ liệu." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/vn/util/teamgen/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="랜덤 팀 생성기 – 온라인 그룹 분할기" />
+    <meta name="twitter:title" content="Trình Tạo Đội Ngẫu Nhiên – Công Cụ Chia Nhóm Trực Tuyến" />
     <meta
       name="twitter:description"
-      content="이름을 무작위로 팀/그룹에 나눕니다. 빠르고 개인 정보 보호, 브라우저에서만 실행!" />
+      content="Chia tên ngẫu nhiên thành đội/nhóm. Nhanh chóng, bảo mật, chỉ chạy trong trình duyệt!" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -223,29 +223,29 @@
   </head>
   <body>
     <div class="container">
-      <div class="logo">🔀 랜덤 팀/그룹 생성기</div>
+      <div class="logo">🔀 Trình Tạo Đội/ Nhóm Ngẫu Nhiên</div>
       <div class="desc">
-        이름을 붙여넣거나 한 줄에 하나씩 입력하세요,<br />
-        팀 수를 선택한 후,<br />
-        즉시 랜덤 팀으로 나눠줍니다!
+        Dán hoặc nhập tên mỗi dòng một người,<br />
+        Chọn số nhóm,<br />
+        Ngay lập tức chia ngẫu nhiên thành các đội!
       </div>
       <div class="input-row">
-        <label for="names" class="label">이름 (한 줄에 하나씩):</label>
+        <label for="names" class="label">Tên (mỗi dòng một người):</label>
         <textarea
           id="names"
           rows="6"
-          placeholder="홍길동&#10;김철수&#10;이영희&#10;..."></textarea>
+          placeholder="Nguyễn Văn A&#10;Trần Thị B&#10;Lê Văn C&#10;..."></textarea>
       </div>
       <div class="control-row">
-        <label for="teamNum" class="label">팀 수</label>
+        <label for="teamNum" class="label">Số nhóm</label>
         <input id="teamNum" class="team-num-input" type="number" min="2" max="20" value="2" />
-        <button class="gen-btn" id="genBtn" title="랜덤 팀 나누기">팀 나누기</button>
+        <button class="gen-btn" id="genBtn" title="Chia nhóm ngẫu nhiên">Chia Nhóm</button>
       </div>
       <div class="hint" id="hint"></div>
       <div class="result-list" id="resultList"></div>
-      <a href="../index.html" id="backBtn">다른 유틸 보기</a>
+      <a href="../index.html" id="backBtn">Xem công cụ khác</a>
       <div class="footer">
-        100% 브라우저 기반. 추적 및 업로드 없음.<br />
+        100% chạy trong trình duyệt. Không theo dõi hay tải dữ liệu.<br />
       </div>
     </div>
     <script>
@@ -269,29 +269,29 @@
           .filter(Boolean);
 
         if (names.length < 2) {
-          hint.textContent = "이름을 최소 2개 이상 입력해주세요!";
+          hint.textContent = "Vui lòng nhập ít nhất 2 tên!";
           return;
         }
         if (teamNum < 2 || teamNum > 20) {
-          hint.textContent = "팀 수는 2부터 20 사이여야 합니다.";
+          hint.textContent = "Số nhóm phải từ 2 đến 20.";
           return;
         }
         if (teamNum > names.length) {
-          hint.textContent = "팀 수는 이름 수를 초과할 수 없습니다!";
+          hint.textContent = "Số nhóm không được vượt quá số tên!";
           return;
         }
 
         shuffle(names);
-        // 팀에 할당
+        // Phân vào nhóm
         let teams = Array.from({ length: teamNum }, () => []);
         names.forEach((name, i) => {
           teams[i % teamNum].push(name);
         });
-        // 결과 출력
+        // Hiển thị kết quả
         teams.forEach((team, i) => {
           const block = document.createElement("div");
           block.className = "team-block";
-          block.innerHTML = `<div class="team-title">팀 ${i + 1}</div>
+          block.innerHTML = `<div class="team-title">Nhóm ${i + 1}</div>
             <div class="team-names">${team.join(", ")}</div>`;
           resultList.appendChild(block);
         });
@@ -308,41 +308,41 @@
         font-family: Arial, sans-serif;
       ">
       <div style="color: #8f94fb; font-size: 1.15em; font-weight: bold; margin-bottom: 14px">
-        ❓ 자주 묻는 질문
+        ❓ Câu hỏi thường gặp
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">내 데이터가 업로드되거나 저장되나요?</div>
+        <div style="color: #8f94fb; font-weight: bold">Dữ liệu của tôi có bị tải lên hoặc lưu trữ không?</div>
         <div style="color: #f0f0f0">
-          아니요. 모든 것이 브라우저에서 실행됩니다. 업로드, 저장, 추적되지 않습니다.
+          Không. Tất cả xử lý đều diễn ra trong trình duyệt. Không có dữ liệu nào bị tải lên hoặc lưu trữ.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">20개 이상의 팀을 만들 수 있나요?</div>
+        <div style="color: #8f94fb; font-weight: bold">Có thể tạo hơn 20 nhóm không?</div>
         <div style="color: #f0f0f0">
-          현재 최대 20개까지 가능합니다. 가독성을 위해 제한되어 있으며, 필요 시 다시 분할할 수 있습니다.
+          Hiện tại tối đa 20 nhóm. Giới hạn này để đảm bảo tính dễ đọc; nếu cần, hãy chia tiếp mỗi nhóm thành con.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">팀 결과를 복사하거나 내보낼 수 있나요?</div>
+        <div style="color: #8f94fb; font-weight: bold">Có thể sao chép hoặc xuất kết quả nhóm không?</div>
         <div style="color: #f0f0f0">
-          네! 결과를 선택하여 복사하거나, 빠른 공유를 위해 스크린샷을 찍을 수 있습니다.
+          Có. Bạn có thể chọn văn bản kết quả để sao chép, hoặc chụp ảnh màn hình để chia sẻ nhanh.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">팀 균형이나 크기를 제어할 수 있나요?</div>
+        <div style="color: #8f94fb; font-weight: bold">Có thể kiểm soát kích thước hoặc cân bằng nhóm không?</div>
         <div style="color: #f0f0f0">
-          아니요. 무작위로 섞기 때문에 이름이 고르게 나누어지지 않을 경우 팀 크기가 달라질 수 있습니다.
+          Không. Vì trộn ngẫu nhiên, số thành viên mỗi nhóm có thể khác nhau nếu không chia đều được.
         </div>
       </div>
 
       <div style="margin-bottom: 0">
-        <div style="color: #8f94fb; font-weight: bold">섞기는 매번 다르게 되나요?</div>
+        <div style="color: #8f94fb; font-weight: bold">Mỗi lần trộn có khác nhau không?</div>
         <div style="color: #f0f0f0">
-          네. 클릭할 때마다 새로운 무작위 팀 분배가 생성됩니다.
+          Có. Mỗi lần nhấn nút “Chia Nhóm” sẽ tạo phân chia ngẫu nhiên mới.
         </div>
       </div>
     </section>
