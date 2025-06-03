@@ -1,33 +1,33 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ja">
     <head>
-        <!-- SEO 최적화 완료 -->
+        <!-- SEO最適化済み -->
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="보안 모드로 온라인에서 틱택토 (XO)를 플레이하세요! 이 스타일리시한 복고풍 아케이드 게임에서 AI에게 도전해보세요 – 모바일 최적화, 빠른 로딩." />
+            content="セキュアモードでオンラインで○×（ティックタックトー）をプレイ！スタイリッシュなレトロ風アーケードゲームでAIに挑戦しよう。モバイル最適化で高速ロード。" />
         <meta
             name="keywords"
-            content="Tic Tac Toe, TicTacToe, 틱택토, XO, 틱택토, 온라인 게임, 무료 웹게임, 보드 게임, AI 게임, 복고풍 게임, 모바일 게임, 퍼즐게임, 오목" />
+            content="Tic Tac Toe, TicTacToe, ○×, ティックタックトー, オンラインゲーム, 無料ウェブゲーム, ボードゲーム, AIゲーム, レトロゲーム, モバイルゲーム, パズルゲーム, 五目並べ" />
 
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://emfls.github.io/jp/game/TicTacToe" />
 
-        <!-- Open Graph (SNS, 카톡, 트위터 등에서 썸네일/미리보기용) -->
-        <meta property="og:title" content="틱택토 (Tic Tac Toe)" />
+        <!-- Open Graph (SNS などでのサムネイル/プレビュー用) -->
+        <meta property="og:title" content="○×（Tic Tac Toe）" />
         <meta
             property="og:description"
-            content="복고풍 틱택토로 AI에게 도전하세요! 즉시 플레이 가능, 모바일 최적화, 회원 가입 불필요." />
+            content="レトロ風○×でAIに挑戦！すぐにプレイ可能、モバイル最適化、サインアップ不要。" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://emfls.github.io/jp/game/TicTacToe" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="틱택토 (Tic Tac Toe)" />
-        <meta name="twitter:description" content="보안 모드로 틱택토 온라인 플레이 – 모바일, 빠르고 재미있습니다!" />
+        <meta name="twitter:title" content="○×（Tic Tac Toe）" />
+        <meta name="twitter:description" content="セキュアモードで○×をオンラインプレイ – モバイル対応で速くて楽しい！" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -44,7 +44,7 @@
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <title>틱택토 (Tic Tac Toe)</title>
+        <title>○×（Tic Tac Toe）</title>
         <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
         <style>
             * {
@@ -153,15 +153,15 @@
     </head>
 
     <body oncontextmenu="return false">
-        <h1>틱택토 (Tic Tac Toe)</h1>
-        <div class="status" id="status">당신 차례: ❌</div>
+        <h1>○×（Tic Tac Toe）</h1>
+        <div class="status" id="status">あなたの番: ❌</div>
         <div class="board" id="board"></div>
         <div class="button-container">
-            <button onclick="resetGame()">재시작</button>
+            <button onclick="resetGame()">リスタート</button>
         </div>
 
         <script>
-            // 스크랩 방지 JS
+            // スクリーンショット防止 JS
             document.addEventListener("keydown", function (e) {
                 if (
                     (e.ctrlKey && (e.key === "u" || e.key === "U" || e.key === "c" || e.key === "C")) ||
@@ -210,19 +210,19 @@
 
                 cells[index].textContent = PLAYER;
                 if (checkWin(PLAYER)) {
-                    statusDiv.textContent = `당신이 승리!`;
+                    statusDiv.textContent = `あなたの勝ち！`;
                     gameActive = false;
                     return;
                 }
 
                 if (isBoardFull()) {
-                    statusDiv.textContent = `무승부!`;
+                    statusDiv.textContent = `引き分け！`;
                     gameActive = false;
                     return;
                 }
 
                 playerTurn = false;
-                statusDiv.textContent = `AI 생각 중...`;
+                statusDiv.textContent = `AIが考え中...`;
                 setTimeout(() => {
                     aiMove();
                 }, 500);
@@ -233,24 +233,24 @@
                 if (bestMove !== null) {
                     cells[bestMove].textContent = AI;
                     if (checkWin(AI)) {
-                        statusDiv.textContent = `AI가 승리!`;
+                        statusDiv.textContent = `AIの勝ち！`;
                         gameActive = false;
                         return;
                     }
 
                     if (isBoardFull()) {
-                        statusDiv.textContent = `무승부!`;
+                        statusDiv.textContent = `引き分け！`;
                         gameActive = false;
                         return;
                     }
 
-                    statusDiv.textContent = `당신 차례: ${PLAYER}`;
+                    statusDiv.textContent = `あなたの番: ${PLAYER}`;
                     playerTurn = true;
                 }
             }
 
             function getBestMove() {
-                // AI 즉시 승리 가능한지 확인
+                // AIが即勝利できるか確認
                 for (let i = 0; i < cells.length; i++) {
                     if (!cells[i].textContent) {
                         cells[i].textContent = AI;
@@ -259,7 +259,7 @@
                     }
                 }
 
-                // 플레이어 즉시 승리 차단
+                // プレイヤーが即勝利する手をブロック
                 for (let i = 0; i < cells.length; i++) {
                     if (!cells[i].textContent) {
                         cells[i].textContent = PLAYER;
@@ -271,16 +271,16 @@
                     }
                 }
 
-                // 중앙 선택
+                // 中央を選ぶ
                 if (!cells[4].textContent) return 4;
 
-                // 모서리 선택
+                // 角を選ぶ
                 const corners = [0, 2, 6, 8];
                 for (let i of corners) {
                     if (!cells[i].textContent) return i;
                 }
 
-                // 그 외
+                // それ以外
                 for (let i = 0; i < cells.length; i++) {
                     if (!cells[i].textContent) return i;
                 }
@@ -299,7 +299,7 @@
             function resetGame() {
                 gameActive = true;
                 playerTurn = true;
-                statusDiv.textContent = `당신 차례: ${PLAYER}`;
+                statusDiv.textContent = `あなたの番: ${PLAYER}`;
                 createBoard();
             }
 
@@ -321,7 +321,7 @@
                 cursor: pointer;
             "
             onclick="window.location.href='/'">
-            다른 게임
+            他のゲーム
         </button>
         <section
             style="
@@ -338,36 +338,36 @@
                 color: #f0f0f0;
                 align-content: center;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ 자주 묻는 질문</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ よくある質問</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. 틱택토는 어떻게 플레이하나요?</strong><br />
-                A. 빈 칸을 탭하여 ❌를 놓으세요. AI는 ⭕️로 플레이합니다.
+                <strong>Q1. ○×はどうやってプレイしますか？</strong><br />
+                A. 空いているマスをタップして ❌ を置いてください。AIは ⭕️ でプレイします。
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. 어떻게 이기나요?</strong><br />
-                A. 가로, 세로, 대각선으로 세 개의 ❌를 먼저 맞추면 이깁니다.
+                <strong>Q2. どうやって勝ちますか？</strong><br />
+                A. 横・縦・斜めに三つの ❌ を揃えると勝利です。
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. 무승부는 어떻게 되나요?</strong><br />
-                A. 모든 칸이 채워졌지만 승자가 없으면 게임이 무승부로 끝납니다.
+                <strong>Q3. 引き分けはどうなりますか？</strong><br />
+                A. 全てのマスが埋まって勝者がいない場合、引き分けになります。
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. 언제든 재시작할 수 있나요?</strong><br />
-                A. 네! <strong>재시작</strong> 버튼을 눌러 처음부터 다시 플레이할 수 있습니다.
+                <strong>Q4. いつでも再スタートできますか？</strong><br />
+                A. はい！「リスタート」ボタンを押すと最初から再プレイできます。
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. 모바일에서도 잘 작동하나요?</strong><br />
-                A. 물론입니다! 모바일 기기와 데스크톱에서 모두 최적화되어 있습니다.
+                <strong>Q5. モバイルでも問題なく動作しますか？</strong><br />
+                A. もちろんです！モバイルとデスクトップの両方で最適化されています。
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. 이 게임은 누가 만들었나요?</strong><br />
-                A. 이 게임은 Itagi가 제작했습니다 – <strong>다른 게임</strong> 버튼을 눌러 더 많은 게임을 확인해보세요.
+                <strong>Q6. このゲームは誰が作りましたか？</strong><br />
+                A. Itagiが制作しました—「他のゲーム」ボタンで他のゲームもチェックしてください。
             </div>
         </section>
     </body>

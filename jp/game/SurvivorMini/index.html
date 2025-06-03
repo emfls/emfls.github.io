@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ja">
   <head>
     <meta charset="UTF-8" />
-    <title>서바이버 미니</title>
+    <title>サバイバーミニ</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -22,29 +22,29 @@
     <!-- SEO & Social meta -->
     <meta
       name="description"
-      content="서바이버 미니는 빠른 속도의 브라우저 서바이벌 게임입니다. 몬스터를 피하고 레벨 업하며 가능한 오래 살아남으세요! 무료로 플레이 가능, 별도 다운로드 필요 없습니다." />
+      content="サバイバーミニは高速アクションブラウザゲームです。モンスターをかわし、レベルアップしてできるだけ長く生き延びましょう！無料でプレイでき、ダウンロード不要です。" />
     <meta
       name="keywords"
-      content="서바이버, 미니 게임, 액션 게임, 생존, 슈터, 아케이드, 브라우저 게임, 무료, 서바이브, 웨이브, 슈팅게임, 서바이벌, 좀비, 아케이드, 웹게임" />
+      content="サバイバー, ミニゲーム, アクションゲーム, サバイバル, シューター, アーケード, ブラウザゲーム, 無料, サバイブ, ウェーブ, シューティングゲーム, ゾンビ, アーケード, ウェブゲーム" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ko" />
+    <meta name="language" content="ja" />
     <meta name="theme-color" content="#181a20" />
     <link rel="canonical" href="https://emfls.github.io/jp/game/SurvivorMini/index.html" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
     <!-- Open Graph (Facebook, Kakao, etc) -->
-    <meta property="og:title" content="서바이버 미니 – 액션 웹 게임" />
+    <meta property="og:title" content="サバイバーミニ – アクションウェブゲーム" />
     <meta
       property="og:description"
-      content="끝없이 몰려오는 웨이브에서 얼마나 오래 살아남을 수 있나요? 빠른 액션 브라우저 게임에서 레벨 업하며 최고 점수를 노려보세요!" />
+      content="次々と押し寄せるウェーブの中、どれだけ長く生き延びられますか？高速アクションブラウザゲームでレベルアップし、ハイスコアを目指しましょう！" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/jp/game/SurvivorMini/index.html" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="서바이버 미니 – 액션 웹 게임" />
+    <meta name="twitter:title" content="サバイバーミニ – アクションウェブゲーム" />
     <meta
       name="twitter:description"
-      content="웨이브를 버티고 최고 점수를 경쟁하세요! 100% 무료, 브라우저 기반 액션 게임입니다." />
+      content="ウェーブを耐え抜き、ハイスコアを競おう！100%無料のブラウザアクションゲームです。" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <style>
       html,
@@ -144,7 +144,7 @@
         letter-spacing: 0.2px;
         text-shadow: 0 2px 8px #000a;
       }
-      /* === 중앙 팝업창 디자인 === */
+      /* === 中央ポップアップデザイン === */
       .centerPopup {
         display: none;
         position: absolute;
@@ -197,7 +197,7 @@
       .popupBtn:active {
         background: #1a75ff;
       }
-      /* === 조이스틱 UI 개선 === */
+      /* === ジョイスティックUI改善 === */
       #joystickWrap {
         position: absolute;
         bottom: 24px;
@@ -255,8 +255,8 @@
       <canvas id="game" width="375" height="500"></canvas>
       <div id="hud">
         <div id="stats">
-          <span id="score">점수:0</span>
-          <span id="wave">웨이브:1</span>
+          <span id="score">得点:0</span>
+          <span id="wave">ウェーブ:1</span>
           <span id="time">0:00</span>
         </div>
         <div id="barwrap">
@@ -288,7 +288,7 @@
         cursor: pointer;
       "
       onclick="window.location.href='/'">
-      📂 다른 게임
+      📂 他のゲーム
     </button>
     <script>
       const W = 375,
@@ -344,9 +344,8 @@
       }
       reset();
 
-      // ====== 원형 터치 조이스틱 + 키보드 지원 ======
-      let dragging = false,
-        joyCenter = { x: 70, y: 70 };
+      // ====== 円形タッチジョイスティック＋キーボード対応 ======
+      let dragging = false;
       function setJoystickActive(active) {
         if (active) {
           joystickWrap.classList.remove("inactive");
@@ -402,7 +401,7 @@
         }
       };
 
-      // PC 키보드도 지원(팝업 켜져있으면 입력 차단)
+      // PCのキーボードも対応（ポップアップ表示中は入力無効）
       window.addEventListener("keydown", (e) => {
         if (state.pause || state.gameover) return;
         if (e.key === "ArrowUp") state.input.y = -1;
@@ -415,7 +414,7 @@
         if (["ArrowLeft", "ArrowRight"].includes(e.key)) state.input.x = 0;
       });
 
-      // ========== 메인루프 ==========
+      // ========== メインループ ==========
       function loop() {
         if (!state.gameover && !state.pause) update();
         draw();
@@ -423,11 +422,11 @@
       }
       loop();
 
-      // ========== 업데이트 ==========
+      // ========== 更新 ==========
       function update() {
         state.tick++;
         state.time = (state.tick / 60) | 0;
-        // 이동
+        // 移動
         let dx = state.input.x + state.joy.x,
           dy = state.input.y + state.joy.y;
         let len = Math.hypot(dx, dy);
@@ -437,7 +436,7 @@
           state.player.x = Math.max(state.player.r, Math.min(W - state.player.r, state.player.x));
           state.player.y = Math.max(state.player.r, Math.min(H - state.player.r, state.player.y));
         }
-        // 총알: 가장 가까운 적 방향 자동 유도
+        // 弾丸：最も近い敵に自動誘導
         state.player.fire++;
         if (state.player.fire >= state.player.fireRate) {
           for (let i = 0; i < state.player.bullets; i++) {
@@ -464,7 +463,7 @@
           }
           state.player.fire = 0;
         }
-        // 총알 이동/적중
+        // 弾丸移動／命中判定
         state.bullets = state.bullets.filter((b) => {
           b.x += b.vx;
           b.y += b.vy;
@@ -484,7 +483,7 @@
           }
           return true;
         });
-        // 몹 스폰
+        // 敵のスポーン
         if (state.tick % Math.max(11, 42 - state.wave * 2) === 0) {
           let t = state.wave,
             r = 14 + Math.random() * 8,
@@ -503,7 +502,7 @@
             boss: 0
           });
         }
-        // 보스(1분마다)
+        // ボス（1分ごと）
         if (--state.bosscool <= 0) {
           state.bosscool = 870 + Math.random() * 90;
           let hp = 17 + state.wave * 4;
@@ -521,7 +520,7 @@
             boss: 1
           });
         }
-        // 몹 이동/충돌
+        // 敵の移動／衝突判定
         for (let m of state.mobs) {
           if (m.dead) continue;
           let dx = state.player.x - m.x,
@@ -538,7 +537,7 @@
           }
         }
         state.mobs = state.mobs.filter((m) => !m.dead);
-        // 아이템
+        // アイテム処理
         state.items = state.items.filter((it) => {
           if (Math.hypot(state.player.x - it.x, state.player.y - it.y) < state.player.r + it.r + 7) {
             if (it.type === "heal") state.player.hp = Math.min(state.player.maxhp, state.player.hp + 2);
@@ -559,14 +558,14 @@
           }
           return true;
         });
-        // 경험치/레벨업
+        // 経験値／レベルアップ
         while (state.player.xp >= state.player.xpNext) {
           state.player.xp -= state.player.xpNext;
           state.player.lv++;
           state.player.xpNext = 8 + Math.floor(state.player.lv * 1.6);
           showLevelUp();
         }
-        // 웨이브
+        // ウェーブ更新
         state.wave = Math.floor(state.time / 18) + 1;
       }
       function dropExp(m) {
@@ -588,56 +587,54 @@
         }
       }
 
-      // ===== 레벨업 선택 =====
+      // ===== レベルアップ選択 =====
       function showLevelUp() {
-        // 조이스틱 비활성화(투명도, 입력 차단)
         setJoystickActive(false);
         let upgrades = [
           {
-            name: "발사 속도↑",
-            desc: "더 빠르게 사격",
+            name: "発射速度↑",
+            desc: "より速く射撃",
             act: () => {
               state.player.fireRate = Math.max(13, state.player.fireRate - 6);
             }
           },
           {
-            name: "탄환 수↑",
-            desc: "탄환 개수 추가",
+            name: "弾丸数↑",
+            desc: "弾丸数を増やす",
             act: () => {
               state.player.bullets = Math.min(6, state.player.bullets + 1);
             }
           },
           {
-            name: "속도↑",
-            desc: "이동 속도 증가",
+            name: "移動速度↑",
+            desc: "移動速度を上げる",
             act: () => {
               state.player.spd += 0.7;
             }
           },
           {
-            name: "공격력↑",
-            desc: "공격력 증가",
+            name: "攻撃力↑",
+            desc: "攻撃力を上げる",
             act: () => {
               state.player.atk += 1;
             }
           },
           {
-            name: "최대 체력↑",
-            desc: "최대 체력+1 및 회복",
+            name: "最大体力↑",
+            desc: "最大体力+1かつ回復",
             act: () => {
               state.player.maxhp += 1;
               state.player.hp = Math.min(state.player.hp + 1, state.player.maxhp);
             }
           }
         ];
-        // 랜덤 3개 선택
         let pick = [];
         while (pick.length < 3) {
           let i = Math.floor(Math.random() * upgrades.length);
           if (!pick.includes(i)) pick.push(i);
         }
         levelup.innerHTML =
-          `<b>레벨 업!<br>업그레이드를 선택하세요</b>
+          `<b>レベルアップ！<br>アップグレードを選択してください</b>
     <div class='popupButtons'>` +
           pick
             .map(
@@ -673,7 +670,7 @@
         setJoystickActive(true);
       };
 
-      // ===== 게임오버 =====
+      // ===== ゲームオーバー =====
       function gameOver() {
         setJoystickActive(false);
         state.gameover = true;
@@ -681,12 +678,12 @@
           hiscore = state.score;
           localStorage.surv_hi = hiscore;
         }
-        gameover.innerHTML = `<b>게임 오버</b><br>
-    점수: <b>${state.score}</b><br>
-    웨이브: <b>${state.wave}</b><br>
-    시간: <b>${Math.floor(state.time / 60)}:${("0" + (state.time % 60)).slice(-2)}</b><br>
-    <span style="font-size:0.9em;color:#bbf;">최고 점수: ${hiscore}</span><br>
-    <div class="popupButtons"><button class="popupBtn" onclick="restart()">다시 시작</button></div>`;
+        gameover.innerHTML = `<b>ゲームオーバー</b><br>
+    得点: <b>${state.score}</b><br>
+    ウェーブ: <b>${state.wave}</b><br>
+    時間: <b>${Math.floor(state.time / 60)}:${("0" + (state.time % 60)).slice(-2)}</b><br>
+    <span style="font-size:0.9em;color:#bbf;">ハイスコア: ${hiscore}</span><br>
+    <div class="popupButtons"><button class="popupBtn" onclick="restart()">再スタート</button></div>`;
         gameover.style.display = "block";
       }
       window.restart = () => {
@@ -694,10 +691,10 @@
         setJoystickActive(true);
       };
 
-      // ========== 그리기 ==========
+      // ========== 描画 ==========
       function draw() {
         ctx.clearRect(0, 0, W, H);
-        // 배경 원
+        // 背景の円
         ctx.save();
         for (let i = 0; i < 7; i++) {
           ctx.beginPath();
@@ -707,7 +704,7 @@
           ctx.stroke();
         }
         ctx.restore();
-        // 아이템
+        // アイテム
         for (let it of state.items) {
           if (it.type === "exp") {
             ctx.beginPath();
@@ -741,7 +738,7 @@
             ctx.fillText("🧲", it.x - 8, it.y + 6);
           }
         }
-        // 몹
+        // 敵
         for (let m of state.mobs) {
           ctx.beginPath();
           ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
@@ -753,9 +750,9 @@
             ctx.stroke();
             ctx.font = "bold 12px sans-serif";
             ctx.fillStyle = "#fff";
-            ctx.fillText("보스", m.x - 16, m.y + 4);
+            ctx.fillText("ボス", m.x - 16, m.y + 4);
           }
-          // HP바
+          // HPバー
           if (m.hp < m.maxhp) {
             ctx.fillStyle = "#aaa";
             ctx.fillRect(m.x - m.r, m.y - m.r - 8, m.r * 2, 4);
@@ -763,7 +760,7 @@
             ctx.fillRect(m.x - m.r, m.y - m.r - 8, (m.r * 2 * m.hp) / m.maxhp, 4);
           }
         }
-        // 플레이어
+        // プレイヤー
         ctx.beginPath();
         ctx.arc(state.player.x, state.player.y, state.player.r, 0, Math.PI * 2);
         ctx.fillStyle = "#fff";
@@ -771,7 +768,7 @@
         ctx.strokeStyle = "#27e";
         ctx.lineWidth = 4;
         ctx.stroke();
-        // 총알
+        // 弾丸
         for (let b of state.bullets) {
           ctx.beginPath();
           ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
@@ -782,11 +779,11 @@
           ctx.stroke();
         }
         // HUD
-        scoreEl.textContent = "점수:" + state.score;
-        waveEl.textContent = "웨이브:" + state.wave;
+        scoreEl.textContent = "得点:" + state.score;
+        waveEl.textContent = "ウェーブ:" + state.wave;
         timeEl.textContent = `${Math.floor(state.time / 60)}:${("0" + (state.time % 60)).slice(-2)}`;
         levelEl.textContent = `Lv.${state.player.lv}`;
-        // HP, XP 바
+        // HP, XPバー
         hpbar.style.width = (100 * state.player.hp) / state.player.maxhp + "%";
         xpbar.style.width = (100 * state.player.xp) / state.player.xpNext + "%";
       }
@@ -802,33 +799,33 @@
         font-family: Arial, sans-serif;
       ">
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">❓ 게임 소개</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">❓ ゲーム紹介</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          서바이버 미니는 빠른 속도의 액션 슈터 게임으로, 좀비를 피하면서 레벨 업하고 가능한 오래 살아남는 것이 목표입니다. 끊임없이 몰려오는 적을 물리치고 강력한 업그레이드를 선택해 생존하세요!
+          サバイバーミニは高速アクションシューティングゲームです。ゾンビをかわしながらレベルアップし、できるだけ長く生き延びましょう。次々と襲い来る敵を倒し、強力なアップグレードを選択して生存を目指してください！
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🕹️ 조작 방법</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🕹️ 操作方法</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          모바일에서는 화면 하단의 조이스틱을 사용하세요. PC에서는 화살표 키(← ↑ ↓ →)로 이동할 수 있습니다. 터치 기기에서는 조이스틱이 자동으로 나타납니다.
+          モバイルでは画面下部のジョイスティックを使って移動します。PCでは矢印キー（← ↑ ↓ →）を使用してください。タッチデバイスではジョイスティックが自動表示されます。
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔫 자동 사격?</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔫 自動射撃？</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          네! 플레이어는 가장 가까운 적을 자동으로 조준하여 사격합니다. 이동과 생존에 집중하세요.
+          はい！プレイヤーは最も近い敵を自動で狙い、射撃します。移動と生存に集中してください。
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📈 레벨업 시스템</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📈 レベルアップシステム</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          적을 처치하면 경험치를 얻습니다. 경험치를 충분히 모으면 레벨업하며, 세 가지 랜덤 업그레이드 중 하나를 선택하여 캐릭터를 강화할 수 있습니다.
+          敵を倒すと経験値を獲得します。十分な経験値を得るとレベルアップし、3つのランダムアップグレードから1つを選んでキャラクターを強化できます。
         </p>
       </div>
       <div style="margin-bottom: 0">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">💾 기록 저장</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">💾 記録保存</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          최고 점수는 브라우저에 자동으로 저장되며, 게임 오버 화면에서 확인할 수 있습니다.
+          ハイスコアはブラウザに自動で保存され、ゲームオーバー画面で確認できます。
         </p>
       </div>
     </section>

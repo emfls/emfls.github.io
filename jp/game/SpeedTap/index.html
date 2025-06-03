@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ja">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>스피드 탭</title>
+        <title>スピードタップ</title>
         <meta name="robots" content="index, follow" />
 
         <!-- Canonical URL -->
@@ -12,27 +12,27 @@
         <!-- SEO Meta -->
         <meta
             name="description"
-            content="당신의 손가락 속도는 얼마나 빠른가요? 단 5초 동안 최대한 빨리 탭하세요! 친구에게 도전하고 리더보드에 올라보세요. 무료, 모바일 최적화 웹게임." />
+            content="あなたの指の速さはどれくらい？わずか5秒間でできるだけ速くタップしよう！友達に挑戦してリーダーボードに載ろう。無料でモバイル最適化されたウェブゲームです。" />
         <meta
             name="keywords"
-            content="스피드 탭, 탭 게임, 반응 속도 게임, 5초 챌린지, 클릭 게임, 모바일 게임, 무료 웹게임, 브라우저 게임, 속도 테스트" />
+            content="スピードタップ, タップゲーム, 反応速度ゲーム, 5秒チャレンジ, クリックゲーム, モバイルゲーム, 無料ウェブゲーム, ブラウザゲーム, 速度テスト" />
         <meta name="author" content="Itagi" />
 
         <!-- Open Graph (Facebook, Kakao, Discord) -->
-        <meta property="og:title" content="스피드 탭" />
+        <meta property="og:title" content="スピードタップ" />
         <meta
             property="og:description"
-            content="단 5초 동안 가능한 한 빠르게 탭하세요! 몇 번 탭할 수 있나요? 무료 웹게임 – 친구에게 도전해보세요!" />
+            content="わずか5秒間でできるだけ速くタップしよう！友達に挑戦してみてね。無料のウェブゲームです！" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/jp/game/SpeedTap" />
         <meta property="og:type" content="website" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="스피드 탭" />
+        <meta name="twitter:title" content="スピードタップ" />
         <meta
             name="twitter:description"
-            content="친구에게 이겨보세요! 5초 동안 가능한 한 빠르게 탭하세요!" />
+            content="友達に勝とう！5秒間でできるだけ速くタップしよう！" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
         <!-- Google tag (gtag.js) -->
@@ -130,7 +130,7 @@
                 background: #16a085;
             }
 
-            /* 숫자 팝 효과 */
+            /* 数字ポップ効果 */
             .pop {
                 animation: pop 0.2s ease;
             }
@@ -200,16 +200,16 @@
     </head>
 
     <body>
-        <h1>스피드 탭</h1>
-        <p style="margin-top: -10px; margin-bottom: 30px">단 5초 동안 가능한 한 빨리 탭하세요!</p>
+        <h1>スピードタップ</h1>
+        <p style="margin-top: -10px; margin-bottom: 30px">わずか5秒間でできるだけ速くタップしよう！</p>
 
-        <div id="tapZone">탭하여 시작</div>
+        <div id="tapZone">タップして開始</div>
 
         <div id="result"></div>
 
         <div class="button-group" id="afterButtons" style="display: none">
-            <button id="restartBtn">다시 시작</button>
-            <button id="shareBtn">공유하기</button>
+            <button id="restartBtn">再スタート</button>
+            <button id="shareBtn">共有する</button>
         </div>
 
         <script>
@@ -244,11 +244,11 @@
 
                 timer = setTimeout(() => {
                     isPlaying = false;
-                    tapZone.textContent = "⏰ 시간이 끝났습니다!";
+                    tapZone.textContent = "⏰ 時間切れ！";
                     tapZone.style.pointerEvents = "none";
-                    tapZone.style.fontSize = "2rem"; // 크기 초기화
-                    tapZone.classList.remove("pop"); // 애니메이션 제거
-                    result.textContent = `5초 동안 ${taps}번 탭했습니다!`;
+                    tapZone.style.fontSize = "2rem"; // サイズリセット
+                    tapZone.classList.remove("pop"); // アニメーション解除
+                    result.textContent = `5秒間に ${taps} 回タップしました！`;
                     afterButtons.style.display = "flex";
                 }, 5000);
             }
@@ -261,15 +261,15 @@
                     tapZone.textContent = `${taps}`;
                     updateFontSize();
 
-                    // 애니메이션 재적용
+                    // アニメーション再適用
                     tapZone.classList.remove("pop");
-                    void tapZone.offsetWidth; // 강제 리플로우
+                    void tapZone.offsetWidth; // 強制リフロー
                     tapZone.classList.add("pop");
                 }
             });
 
             restartBtn.addEventListener("click", () => {
-                tapZone.textContent = "탭하여 시작";
+                tapZone.textContent = "タップして開始";
                 result.textContent = "";
                 tapZone.style.fontSize = "2rem";
                 tapZone.classList.remove("pop");
@@ -278,20 +278,20 @@
             });
 
             shareBtn.addEventListener("click", async () => {
-                const shareText = `💥 5초 동안 ${taps}번 탭했어요!\n도전해보세요: ${window.location.href}`;
+                const shareText = `💥 5秒間に ${taps} 回タップしました！\n挑戦してみてね: ${window.location.href}`;
                 if (navigator.share) {
                     try {
                         await navigator.share({
-                            title: "스피드 탭 챌린지",
+                            title: "スピードタップチャレンジ",
                             text: shareText,
                             url: window.location.href
                         });
                     } catch {
-                        alert("공유가 취소되었거나 실패했습니다.");
+                        alert("共有がキャンセルされたか失敗しました。");
                     }
                 } else {
                     await navigator.clipboard.writeText(shareText);
-                    alert("점수와 링크가 클립보드에 복사되었습니다!");
+                    alert("スコアとリンクがクリップボードにコピーされました！");
                 }
             });
         </script>
@@ -312,40 +312,40 @@
                 cursor: pointer;
             "
             onclick="window.location.href='/'">
-            📂 다른 게임
+            📂 他のゲーム
         </button>
 
         <section style="max-width: 320px; width: 100%; margin: 48px auto 24px auto; font-family: 'Arial', sans-serif; font-size: 14px; background: #1e1e1e; border-radius: 18px; box-shadow: 0 6px 24px #1236; padding: 20px; line-height: 1.6; color: #f0f0f0;">
-          <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb;">❓ 자주 묻는 질문</h2>
+          <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb;">❓ よくある質問</h2>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q1. 스피드 탭은 어떻게 플레이하나요?</strong><br/>
-            A. 초록색 박스를 5초 동안 가능한 한 빠르게 탭하세요. 탭할 때마다 점수가 올라갑니다.
+            <strong>Q1. スピードタップはどう遊びますか？</strong><br/>
+            A. 緑のゾーンを5秒間できるだけ速くタップしてください。タップ数がスコアになります。
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q2. 한 라운드는 얼마나 지속되나요?</strong><br/>
-            A. 정확히 5초 동안 진행됩니다. 시간이 지나면 즉시 결과가 표시됩니다.
+            <strong>Q2. 一ラウンドはどれくらい続きますか？</strong><br/>
+            A. 正確に5秒間続きます。時間が来るとすぐに結果が表示されます。
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q3. 게임을 다시 시작하려면 어떻게 해야 하나요?</strong><br/>
-            A. ‘다시 시작’ 버튼을 눌러 즉시 재도전할 수 있습니다.
+            <strong>Q3. ゲームを再スタートするにはどうすればいいですか？</strong><br/>
+            A. 「再スタート」ボタンを押すとすぐにもう一度挑戦できます。
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q4. 내 점수를 공유할 수 있나요?</strong><br/>
-            A. 네! ‘공유하기’ 버튼을 눌러 점수와 링크를 복사하거나 다른 사람에게 보낼 수 있습니다.
+            <strong>Q4. スコアを共有できますか？</strong><br/>
+            A. はい！「共有する」ボタンを押すとスコアとリンクをコピーして友達に送れます。
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q5. 탭 속도가 표시에 영향을 주나요?</strong><br/>
-            A. 네! 탭할 때마다 글자가 살짝 커지면서 시각적 피드백을 제공합니다.
+            <strong>Q5. タップ速度は表示に影響しますか？</strong><br/>
+            A. はい！タップするたびに文字が少し大きくなり、視覚的なフィードバックが得られます。
           </div>
 
           <div style="margin-bottom: 0;">
-            <strong>Q6. 모바일에서도 원활하게 플레이할 수 있나요?</strong><br/>
-            A. 물론입니다. 터치 입력을 지원하므로 스마트폰과 태블릿에서도 문제없이 실행됩니다.
+            <strong>Q6. モバイルでもスムーズに遊べますか？</strong><br/>
+            A. もちろんです。タッチ入力に対応しているのでスマホやタブレットでも問題なく動作します。
           </div>
         </section>
     </body>
