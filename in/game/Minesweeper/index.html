@@ -1,30 +1,30 @@
 <!doctype html>
-<html lang="ja">
+<html lang="hi">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="ブラウザでクラシックなマインスイーパーをプレイしましょう！安全なマスを開いて地雷を避け、ハイスコアに挑戦してください。無料、迅速、モバイル対応です。" />
+            content="ब्राउज़र में क्लासिक माइनस्वीपर खेलें! सुरक्षित खानों को खोलें और बमों से बचें, उच्च अंक प्राप्त करने की चुनौती लें। मुफ्त, तेज़, और मोबाइल-मैत्रीपूर्ण।" />
         <meta
             name="keywords"
-            content="minesweeper, webgame, browser game, puzzle, mine game, free, logic, classic, モバイルゲーム, マインスイーパー, no download, instant play, オンライン, ウェブゲーム, 無料ゲーム, パズル" />
+            content="मुखेशिक्षक, माइनस्वीपर, वेबगेम, ब्राउज़र गेम, पहेली, माइन गेम, मुफ्त, लॉजिक, क्लासिक, मोबाइल गेम, तत्काल प्ले, ऑनलाइन, हिंदी" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/in/game/Minesweeper" />
 
-        <meta property="og:title" content="クイックプレイ: マインスイーパー – クラシックパズルウェブゲーム" />
+        <meta property="og:title" content="क्विक प्ले: माइनस्वीपर – क्लासिक पहेली वेब गेम" />
         <meta
             property="og:description"
-            content="ブラウザで遊べるクラシックなマインスイーパー！安全なマスを開き、爆弾を避けましょう。無料、モバイル最適化、みんなで楽しめます！" />
+            content="ब्राउज़र में क्लासिक माइनस्वीपर खेलें! सुरक्षित खानों को खोलें और बमों से बचें। मुफ्त, मोबाइल-अनुकूल, और सभी के लिए मज़ेदार!" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/in/game/Minesweeper" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="クイックプレイ: マインスイーパー – クラシックパズルウェブゲーム" />
-        <meta name="twitter:description" content="マインスイーパーで論理と運を試そう – ダウンロード不要ですぐにプレイ！" />
+        <meta name="twitter:title" content="क्विक प्ले: माइनस्वीपर – क्लासिक पहेली वेब गेम" />
+        <meta name="twitter:description" content="माइनस्वीपर में तर्क और भाग्य की परीक्षा लें – डाउनलोड की आवश्यकता नहीं, तुरंत खेलें!" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -41,7 +41,7 @@
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <title>クイックプレイ: マインスイーパー</title>
+        <title>क्विक प्ले: माइनस्वीपर</title>
         <style>
             html,
             body {
@@ -159,10 +159,10 @@
                 margin-bottom: 0px;
                 margin-top: 0px;
             ">
-            マインスイーパー
+            माइनस्वीपर
         </h1>
         <p style="font-size: 14px; color: white; margin-bottom: 30px">
-            地雷を爆発させずにすべての安全なマスを明らかにしてください。
+            बिना किसी बम को फटे, सभी सुरक्षित खानों को खोलें।
         </p>
         <div id="minimap">
             <canvas id="minimapCanvas" width="100" height="100"></canvas>
@@ -171,189 +171,189 @@
             <div id="game"></div>
         </div>
         <div id="overlay">
-            <h2>ゲームオーバー！</h2>
-            <p id="scoreDisplay">スコア: 0</p>
-            <button onclick="resetGame()">もう一度</button>
-            <button onclick="shareScore()">共有</button>
+            <h2>गेम ओवर!</h2>
+            <p id="scoreDisplay">स्कोर: 0</p>
+            <button onclick="resetGame()">फिर से</button>
+            <button onclick="shareScore()">शेयर</button>
         </div>
 
         <script>
-                        const rows = 100;
-                        const cols = 100;
-                        const mineCount = rows * cols * 0.2;
-                        const game = document.getElementById("game");
-                        const overlay = document.getElementById("overlay");
-                        const scoreDisplay = document.getElementById("scoreDisplay");
-                        const cells = [];
-                        let gameEnded = false;
+            const rows = 100;
+            const cols = 100;
+            const mineCount = rows * cols * 0.2;
+            const game = document.getElementById("game");
+            const overlay = document.getElementById("overlay");
+            const scoreDisplay = document.getElementById("scoreDisplay");
+            const cells = [];
+            let gameEnded = false;
 
-                        function createBoard() {
-                            game.innerHTML = "";
-                            for (let r = 0; r < rows; r++) {
-                                cells[r] = [];
-                                for (let c = 0; c < cols; c++) {
-                                    const cell = document.createElement("div");
-                                    cell.classList.add("cell");
-                                    cell.dataset.row = r;
-                                    cell.dataset.col = c;
-                                    cell.addEventListener("click", () => revealCell(r, c));
-                                    game.appendChild(cell);
-                                    cells[r][c] = {
-                                        element: cell,
-                                        mine: false,
-                                        revealed: false,
-                                        adjacent: 0
-                                    };
-                                }
+            function createBoard() {
+                game.innerHTML = "";
+                for (let r = 0; r < rows; r++) {
+                    cells[r] = [];
+                    for (let c = 0; c < cols; c++) {
+                        const cell = document.createElement("div");
+                        cell.classList.add("cell");
+                        cell.dataset.row = r;
+                        cell.dataset.col = c;
+                        cell.addEventListener("click", () => revealCell(r, c));
+                        game.appendChild(cell);
+                        cells[r][c] = {
+                            element: cell,
+                            mine: false,
+                            revealed: false,
+                            adjacent: 0
+                        };
+                    }
+                }
+            }
+
+            function placeMines() {
+                let placed = 0;
+                while (placed < mineCount) {
+                    const r = Math.floor(Math.random() * rows);
+                    const c = Math.floor(Math.random() * cols);
+                    if (!cells[r][c].mine) {
+                        cells[r][c].mine = true;
+                        placed++;
+                    }
+                }
+            }
+
+            function countAdjacents() {
+                for (let r = 0; r < rows; r++) {
+                    for (let c = 0; c < cols; c++) {
+                        if (cells[r][c].mine) continue;
+                        let count = 0;
+                        for (let i = -1; i <= 1; i++) {
+                            for (let j = -1; j <= 1; j++) {
+                                const nr = r + i;
+                                const nc = c + j;
+                                if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && cells[nr][nc].mine) count++;
                             }
                         }
+                        cells[r][c].adjacent = count;
+                    }
+                }
+            }
 
-                        function placeMines() {
-                            let placed = 0;
-                            while (placed < mineCount) {
-                                const r = Math.floor(Math.random() * rows);
-                                const c = Math.floor(Math.random() * cols);
-                                if (!cells[r][c].mine) {
-                                    cells[r][c].mine = true;
-                                    placed++;
-                                }
-                            }
+            function revealCell(r, c) {
+                if (gameEnded || cells[r][c].revealed) return;
+
+                const cell = cells[r][c];
+                cell.revealed = true;
+                cell.element.classList.add("revealed");
+
+                if (cell.mine) {
+                    cell.element.classList.add("mine");
+                    cell.element.textContent = "💣";
+                    gameEnded = true;
+                    const score = calculateScore();
+                    scoreDisplay.textContent = `स्कोर: ${score}`;
+                    overlay.style.display = "flex";
+                    return;
+                }
+
+                if (cell.adjacent > 0) {
+                    cell.element.textContent = cell.adjacent;
+                    return;
+                }
+
+                // केवल चार दिशाओं में फ़्लड-फ़िल (ऊपर/नीचे/बाएँ/दाएँ)
+                const directions = [
+                    [-1, 0],
+                    [1, 0],
+                    [0, -1],
+                    [0, 1]
+                ];
+                for (const [dr, dc] of directions) {
+                    const nr = r + dr;
+                    const nc = c + dc;
+                    if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && !cells[nr][nc].revealed) {
+                        revealCell(nr, nc);
+                    }
+                }
+            }
+
+            function calculateScore() {
+                let revealedCount = 0;
+                for (let r = 0; r < rows; r++) {
+                    for (let c = 0; c < cols; c++) {
+                        if (cells[r][c].revealed && !cells[r][c].mine) revealedCount++;
+                    }
+                }
+                return revealedCount;
+            }
+
+            function resetGame() {
+                gameEnded = false;
+                overlay.style.display = "none";
+                createBoard();
+                placeMines();
+                countAdjacents();
+            }
+
+            function shareScore() {
+                const url = window.location.href;
+                const score = calculateScore();
+                const text = `🎖️ माइनस्वीपर में ${score} अंक प्राप्त किए! आप भी चुनौती लें! ${url}`;
+                if (navigator.share) {
+                    navigator
+                        .share({
+                            title: "क्विक प्ले: माइनस्वीपर",
+                            text,
+                            url
+                        })
+                        .catch(() => alert("साझा करने में विफल, कृपया लिंक कॉपी करें।"));
+                } else {
+                    navigator.clipboard
+                        .writeText(text)
+                        .then(() => alert("अंक के साथ लिंक क्लिपबोर्ड में कॉपी हो गया!"))
+                        .catch(() => alert(`कृपया इस लिंक को कॉपी करें:\n${text}`));
+                }
+            }
+
+            createBoard();
+            placeMines();
+            countAdjacents();
+
+            const minimapCanvas = document.getElementById("minimapCanvas");
+            const minimapCtx = minimapCanvas.getContext("2d");
+            const gameContainer = document.getElementById("game-container");
+
+            function drawMinimap() {
+                const cellSize = 1;
+                minimapCtx.clearRect(0, 0, 100, 100);
+                for (let r = 0; r < rows; r++) {
+                    for (let c = 0; c < cols; c++) {
+                        if (cells[r][c].revealed) {
+                            minimapCtx.fillStyle = cells[r][c].mine ? "red" : "#ccc";
+                        } else {
+                            minimapCtx.fillStyle = "#666";
                         }
+                        minimapCtx.fillRect(c * cellSize, r * cellSize, cellSize, cellSize);
+                    }
+                }
+                const scrollTop = gameContainer.scrollTop;
+                const scrollLeft = gameContainer.scrollLeft;
+                const viewWidth = gameContainer.clientWidth;
+                const viewHeight = gameContainer.clientHeight;
 
-                        function countAdjacents() {
-                            for (let r = 0; r < rows; r++) {
-                                for (let c = 0; c < cols; c++) {
-                                    if (cells[r][c].mine) continue;
-                                    let count = 0;
-                                    for (let i = -1; i <= 1; i++) {
-                                        for (let j = -1; j <= 1; j++) {
-                                            const nr = r + i;
-                                            const nc = c + j;
-                                            if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && cells[nr][nc].mine) count++;
-                                        }
-                                    }
-                                    cells[r][c].adjacent = count;
-                                }
-                            }
-                        }
+                const scaleX = 100 / (cols * 30 + (cols - 1) * 2);
+                const scaleY = 100 / (rows * 30 + (rows - 1) * 2);
 
-                        function revealCell(r, c) {
-                            if (gameEnded || cells[r][c].revealed) return;
+                minimapCtx.strokeStyle = "yellow";
+                minimapCtx.lineWidth = 1;
+                minimapCtx.strokeRect(scrollLeft * scaleX, scrollTop * scaleY, viewWidth * scaleX, viewHeight * scaleY);
+            }
 
-                            const cell = cells[r][c];
-                            cell.revealed = true;
-                            cell.element.classList.add("revealed");
-
-                            if (cell.mine) {
-                                cell.element.classList.add("mine");
-                                cell.element.textContent = "💣";
-                                gameEnded = true;
-                                const score = calculateScore();
-                                scoreDisplay.textContent = `スコア: ${score}`;
-                                overlay.style.display = "flex";
-                                return;
-                            }
-
-                            if (cell.adjacent > 0) {
-                                cell.element.textContent = cell.adjacent;
-                                return;
-                            }
-
-                            // flood fill only in 4 directions (up/down/left/right)
-                            const directions = [
-                                [-1, 0],
-                                [1, 0],
-                                [0, -1],
-                                [0, 1]
-                            ];
-                            for (const [dr, dc] of directions) {
-                                const nr = r + dr;
-                                const nc = c + dc;
-                                if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && !cells[nr][nc].revealed) {
-                                    revealCell(nr, nc);
-                                }
-                            }
-                        }
-
-                        function calculateScore() {
-                            let revealedCount = 0;
-                            for (let r = 0; r < rows; r++) {
-                                for (let c = 0; c < cols; c++) {
-                                    if (cells[r][c].revealed && !cells[r][c].mine) revealedCount++;
-                                }
-                            }
-                            return revealedCount;
-                        }
-
-                        function resetGame() {
-                            gameEnded = false;
-                            overlay.style.display = "none";
-                            createBoard();
-                            placeMines();
-                            countAdjacents();
-                        }
-
-                        function shareScore() {
-                            const url = window.location.href;
-                            const score = calculateScore();
-                            const text = `🎖️ マインスイーパーで ${score} 点獲得！あなたも挑戦してみて！ ${url}`;
-                            if (navigator.share) {
-                                navigator
-                                    .share({
-                                        title: "クイックプレイ: マインスイーパー",
-                                        text,
-                                        url
-                                    })
-                                    .catch(() => alert("共有に失敗しました。リンクをコピーしてください。"));
-                            } else {
-                                navigator.clipboard
-                                    .writeText(text)
-                                    .then(() => alert("スコア付きリンクがクリップボードにコピーされました！"))
-                                    .catch(() => alert(`このリンクをコピーしてください：\n${text}`));
-                            }
-                        }
-
-                        createBoard();
-                        placeMines();
-                        countAdjacents();
-
-                        const minimapCanvas = document.getElementById("minimapCanvas");
-                        const minimapCtx = minimapCanvas.getContext("2d");
-                        const gameContainer = document.getElementById("game-container");
-
-                        function drawMinimap() {
-                            const cellSize = 1;
-                            minimapCtx.clearRect(0, 0, 100, 100);
-                            for (let r = 0; r < rows; r++) {
-                                for (let c = 0; c < cols; c++) {
-                                    if (cells[r][c].revealed) {
-                                        minimapCtx.fillStyle = cells[r][c].mine ? "red" : "#ccc";
-                                    } else {
-                                        minimapCtx.fillStyle = "#666";
-                                    }
-                                    minimapCtx.fillRect(c * cellSize, r * cellSize, cellSize, cellSize);
-                                }
-                            }
-                            const scrollTop = gameContainer.scrollTop;
-                            const scrollLeft = gameContainer.scrollLeft;
-                            const viewWidth = gameContainer.clientWidth;
-                            const viewHeight = gameContainer.clientHeight;
-
-                            const scaleX = 100 / (cols * 30 + (cols - 1) * 2);
-                            const scaleY = 100 / (rows * 30 + (rows - 1) * 2);
-
-                            minimapCtx.strokeStyle = "yellow";
-                            minimapCtx.lineWidth = 1;
-                            minimapCtx.strokeRect(scrollLeft * scaleX, scrollTop * scaleY, viewWidth * scaleX, viewHeight * scaleY);
-                        }
-
-                        gameContainer.addEventListener("scroll", drawMinimap);
-                        const observer = new MutationObserver(drawMinimap);
-                        observer.observe(game, {
-                            childList: true,
-                            subtree: true
-                        });
-                        setInterval(drawMinimap, 500);
+            gameContainer.addEventListener("scroll", drawMinimap);
+            const observer = new MutationObserver(drawMinimap);
+            observer.observe(game, {
+                childList: true,
+                subtree: true
+            });
+            setInterval(drawMinimap, 500);
         </script>
         <button
             style="
@@ -368,7 +368,7 @@
                 border: none;
             "
             onclick="window.location.href='/'">
-            📂 他のゲーム
+            📂 अन्य गेम्स
         </button>
         <section
             style="
@@ -384,36 +384,36 @@
                 line-height: 1.6;
                 color: #f0f0f0;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #6a72f8">❓ よくある質問</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #6a72f8">❓ अक्सर पूछे जाने वाले प्रश्न</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. マインスイーパーはどのようにプレイしますか？</strong><br />
-                A. 任意のマスをタップして開きます。地雷を避け、できるだけ多くの安全なマスを見つけましょう。
+                <strong>Q1. माइनस्वीपर कैसे खेलें?</strong><br />
+                A. किसी भी खानों पर क्लिक करके उसे खोलें। बम वाले खानों से बचें और जितना हो सके उतने सुरक्षित खानों को खोलें।
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. 地雷をタップするとどうなりますか？</strong><br />
-                A. ゲームは直ちに終了し、スコア（開いた安全なマスの数）が表示されます。
+                <strong>Q2. यदि मैं बम पर क्लिक कर दूँ तो क्या होगा?</strong><br />
+                A. गेम तुरंत समाप्त हो जाएगा और आपका स्कोर (खुले हुए सुरक्षित खानों की संख्या) प्रदर्शित होगा।
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. ゲームを再開できますか？</strong><br />
-                A. はい！ゲームオーバー画面で <strong>もう一度</strong> ボタンをタップして再開できます。
+                <strong>Q3. क्या मैं फिर से खेल सकता/सकती हूँ?</strong><br />
+                A. हाँ! गेम ओवर स्क्रीन पर <strong>फिर से</strong> बटन दबाकर आप पुनः आरंभ कर सकते/सकती हैं।
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. 画面の隅にあるミニマップは何ですか？</strong><br />
-                A. 広いグリッドで、全体の進行状況と現在見ている領域を確認するのに役立ちます。
+                <strong>Q4. स्क्रीन के कोने में मिनीमैप क्या है?</strong><br />
+                A. बड़ी ग्रिड में आपका प्रगति और वर्तमान देखने वाला क्षेत्र दिखाता है, जिससे नेविगेशन आसान होता है।
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. スコアをどのように共有しますか？</strong><br />
-                A. ゲームオーバー画面で <strong>共有</strong> ボタンをタップして、スコアとリンクをコピーまたは共有できます。
+                <strong>Q5. स्कोर कैसे साझा करें?</strong><br />
+                A. गेम ओवर स्क्रीन पर <strong>शेयर</strong> बटन दबाएँ, जिससे आपका स्कोर और लिंक कॉपी या साझा किया जा सके।
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. モバイルでプレイできますか？</strong><br />
-                A. もちろんです！このゲームはモバイルデバイスに完全に最適化されており、すべてのブラウザで動作します。
+                <strong>Q6. क्या मैं इसे मोबाइल पर खेल सकता/सकती हूँ?</strong><br />
+                A. बिल्कुल! यह गेम मोबाइल डिवाइसों के लिए पूरी तरह से अनुकूलित है और सभी ब्राउज़र पर काम करता है।
             </div>
         </section>
     </body>
