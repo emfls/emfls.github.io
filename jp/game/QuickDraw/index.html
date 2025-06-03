@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="반응 속도를 테스트해보세요! 퀵 드로우 듀얼! DRAW 신호 후 상대보다 빠르게 사격하세요. 재미있고 빠른 모바일 최적화 웹게임입니다." />
+        <meta
+            name="keywords"
+            content="퀵 드로우, 카우보이 결투, 반응 게임, 서부 게임, 웹게임, 즉시 게임, 브라우저 게임, 모바일게임, 무료 게임" />
+        <meta name="author" content="Itagi" />
+        <meta name="robots" content="index, follow" />
+
+        <!-- Canonical URL -->
+        <link rel="canonical" href="https://emfls.github.io/jp/game/QuickDraw" />
+
+        <!-- Open Graph (Facebook, Kakao, Discord) -->
+        <meta property="og:title" content="퀵 드로우 듀얼 – 카우보이 반응 웹게임" />
+        <meta
+            property="og:description"
+            content="상대보다 빠르게 사격해보세요! 무료 카우보이 반응 게임을 플레이하세요. 모바일 또는 PC에서 다운로드 없이 즐길 수 있습니다." />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta property="og:url" content="https://emfls.github.io/jp/game/QuickDraw" />
+        <meta property="og:type" content="website" />
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="퀵 드로우 듀얼 – 카우보이 반응 웹게임" />
+        <meta
+            name="twitter:description"
+            content="친구에게 도전하세요: 이 재미있고 즉시 실행되는 서부 게임에서 누가 가장 빠른지 확인해보세요!" />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+        <title>퀵 드로우 듀얼</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;700&display=swap"
+            rel="stylesheet" />
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                background: linear-gradient(to top, #fbeec1, #e0c097);
+                font-family: "Inter", sans-serif;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                text-align: center;
+                position: relative;
+            }
+
+            h1 {
+                font-family: "Bangers", cursive;
+                font-size: 3em;
+                margin-bottom: 10px;
+                margin-top: 10px;
+                color: #5a3e1b;
+                text-shadow: 2px 2px #fff0c4;
+            }
+
+            .arena {
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                width: 90%;
+                max-width: 400px;
+                margin: 10px 0;
+                font-size: 4em;
+                background: #fffef4;
+                border-radius: 20px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                padding: 30px 10px;
+                border: 3px solid #d2b48c;
+            }
+
+            .cowboy {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                transition: all 0.3s ease;
+            }
+
+            .cowboy span {
+                font-size: 1.1rem;
+                margin-top: 10px;
+                font-weight: bold;
+                color: #444;
+            }
+
+            #message {
+                font-size: 1.3em;
+                min-height: 2em;
+                margin-top: 10px;
+                color: #222;
+            }
+
+            .btn-group {
+                display: flex;
+                gap: 10px;
+                margin-top: 10px;
+            }
+
+            .btn {
+                padding: 12px 28px;
+                font-size: 1.1em;
+                cursor: pointer;
+                border: none;
+                border-radius: 12px;
+                background: #5a3e1b;
+                color: white;
+                font-weight: bold;
+                transition:
+                    transform 0.2s,
+                    background 0.2s;
+            }
+
+            .btn:hover {
+                background: #7b5633;
+                transform: scale(1.05);
+            }
+
+            .gun {
+                font-size: 1.2em;
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+
+            .gun.show {
+                opacity: 1;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>퀵 드로우 듀얼</h1>
+        <p>신호를 기다렸다가 상대보다 빠르게 사격하세요!</p>
+        <div class="arena">
+            <div class="cowboy" id="enemy">
+                <div id="enemyFace">🤠</div>
+                <div id="enemyGun" class="gun">🔫</div>
+                <span>적</span>
+            </div>
+            <div class="cowboy" id="player">
+                <div id="playerFace">😐</div>
+                <div id="playerGun" class="gun">🔫</div>
+                <span>당신</span>
+            </div>
+        </div>
+
+        <div id="message">“시작”을 눌러 게임을 시작하세요.</div>
+
+        <div class="btn-group">
+            <button class="btn" id="startBtn" onclick="startGame()">시작</button>
+            <button class="btn" id="shootBtn" onclick="handlePlayerShoot()" style="display: none; background: red">
+                사격!
+            </button>
+            <button class="btn" id="restartBtn" onclick="restartGame()" style="display: none">다시 플레이</button>
+            <button class="btn" id="shareBtn" onclick="shareResult()" style="display: none">공유하기</button>
+        </div>
+
+        <script>
+            const message = document.getElementById("message");
+            const startBtn = document.getElementById("startBtn");
+            const restartBtn = document.getElementById("restartBtn");
+            const shootBtn = document.getElementById("shootBtn");
+            const shareBtn = document.getElementById("shareBtn");
+
+            const playerFace = document.getElementById("playerFace");
+            const playerGun = document.getElementById("playerGun");
+            const enemyFace = document.getElementById("enemyFace");
+            const enemyGun = document.getElementById("enemyGun");
+
+            let drawTimeout = null;
+            let enemyShotTimeout = null;
+            let drawTime = 0;
+            let gameStarted = false;
+            let readyToShoot = false;
+            let playerReacted = false;
+            let lastReaction = null;
+
+            function startGame() {
+                clearTimeout(drawTimeout);
+                clearTimeout(enemyShotTimeout);
+
+                resetCharacters();
+                gameStarted = true;
+                readyToShoot = false;
+                playerReacted = false;
+                lastReaction = null;
+
+                startBtn.style.display = "none";
+                restartBtn.style.display = "none";
+                shareBtn.style.display = "none";
+                shootBtn.style.display = "inline-block";
+                message.textContent = "DRAW 신호를 기다리세요...";
+
+                drawTimeout = setTimeout(
+                    () => {
+                        readyToShoot = true;
+                        drawTime = performance.now();
+                        message.textContent = "발사! 🔫";
+                        enemyFace.textContent = "😠";
+                        playerFace.textContent = "😠";
+
+                        const enemyReactTime = Math.random() * 400 + 200;
+                        enemyShotTimeout = setTimeout(() => {
+                            if (!playerReacted) {
+                                enemyGun.classList.add("show");
+                                playerFace.textContent = "💀";
+                                endGame("너무 느려서 졌어요!");
+                            }
+                        }, enemyReactTime);
+                    },
+                    Math.random() * 3000 + 2000
+                );
+            }
+
+            function endGame(result) {
+                message.textContent = result;
+                gameStarted = false;
+                restartBtn.style.display = "inline-block";
+                shareBtn.style.display = "inline-block";
+                shootBtn.style.display = "none";
+                clearTimeout(drawTimeout);
+                clearTimeout(enemyShotTimeout);
+            }
+
+            function resetCharacters() {
+                playerFace.textContent = "😐";
+                enemyFace.textContent = "🤠";
+                playerGun.classList.remove("show");
+                enemyGun.classList.remove("show");
+            }
+
+            function handlePlayerShoot() {
+                if (!gameStarted || playerReacted) return;
+
+                if (!readyToShoot) {
+                    playerFace.textContent = "😵";
+                    message.textContent = "너무 일찍 쏘셨습니다! 패배!";
+                    endGame("너무 일찍!");
+                    return;
+                }
+
+                const reactionTime = performance.now() - drawTime;
+                lastReaction = Math.round(reactionTime);
+                playerReacted = true;
+                playerGun.classList.add("show");
+                shootBtn.style.display = "none";
+
+                if (enemyGun.classList.contains("show")) {
+                    playerFace.textContent = "💀";
+                    endGame("너무 늦었어요!");
+                } else {
+                    enemyFace.textContent = "💀";
+                    endGame(`당신이 승리했습니다! (${lastReaction}ms)`);
+                }
+            }
+
+            function restartGame() {
+                startGame();
+            }
+
+            function shareResult() {
+                const baseUrl = "https://emfls.github.io/QuickDraw/index.html";
+                let text = "🔥 방금 퀵 드로우 듀얼을 플레이했어요!";
+                if (lastReaction !== null) {
+                    text = `🤠 저는 퀵 드로우 듀얼에서 ${lastReaction}ms에 승리했어요! 당신도 도전해보세요!`;
+                }
+
+                const shareData = {
+                    title: "퀵 드로우 듀얼",
+                    text: text,
+                    url: baseUrl
+                };
+
+                if (navigator.share) {
+                    navigator.share(shareData).catch(() => {
+                        fallbackCopy(`${text} ${baseUrl}`);
+                    });
+                } else {
+                    fallbackCopy(`${text} ${baseUrl}`);
+                }
+            }
+
+            function fallbackCopy(text) {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert("결과가 클립보드에 복사되었습니다! 공유할 곳에 붙여넣어보세요 😎");
+                });
+            }
+
+            document.body.addEventListener("click", (e) => {
+                if (e.target.classList.contains("btn")) return;
+                handlePlayerShoot();
+            });
+        </script>
+
+        <button
+            style="
+                margin-top: 20px;
+                width: 90%;
+                height: 60px;
+                font-size: 16px;
+                font-weight: bold;
+                background-color: #5a3e1b;
+                cursor: pointer;
+                border-radius: 6px;
+                border: none;
+                color: white;
+            "
+            onclick="window.location.href='/'">
+            📂 다른 게임
+        </button>
+        <section style="max-width: 320px; width: 100%; margin: 48px auto 24px auto; font-family: 'Arial', sans-serif; font-size: 14px; background: #fff8e0; border-radius: 18px; box-shadow: 0 6px 24px #aa8844; padding: 20px; line-height: 1.6; color: #3e2c00;">
+          <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #5a3e1b;">❓ 자주 묻는 질문</h2>
+
+          <div style="margin-bottom: 12px;">
+            <strong>Q1. 게임 방법이 어떻게 되나요?</strong><br/>
+            A. “발사(DRAW)!” 신호가 나오면 화면을 탭하거나 “사격!” 버튼을 눌러 상대보다 먼저 사격하세요.
+          </div>
+
+          <div style="margin-bottom: 12px;">
+            <strong>Q2. 너무 일찍 쏘면 어떻게 되나요?</strong><br/>
+            A. “발사” 신호 전에 사격하면 즉시 패배합니다. 신호가 나올 때까지 기다리세요!
+          </div>
+
+          <div style="margin-bottom: 12px;">
+            <strong>Q3. 모바일에서도 플레이할 수 있나요?</strong><br/>
+            A. 네! 화면 아무 곳이나 탭해도 사격됩니다. 버튼을 누를 필요 없이 즐기세요!
+          </div>
+
+          <div style="margin-bottom: 12px;">
+            <strong>Q4. 좋은 반응 속도는 어느 정도인가요?</strong><br/>
+            A. 300ms 이하면 좋습니다. 프로 카우보이들은 200ms 이하를 기록하기도 해요!
+          </div>
+
+          <div style="margin-bottom: 12px;">
+            <strong>Q5. 내 기록을 공유할 수 있나요?</strong><br/>
+            A. 네! 듀얼 후 “공유하기” 버튼을 사용해 반응 속도를 자랑하세요.
+          </div>
+
+          <div style="margin-bottom: 0;">
+            <strong>Q6. 매번 공정한 게임인가요?</strong><br/>
+            A. 네. 신호 타이밍과 AI 반응이 매번 무작위로 설정되어 예측하기 어렵습니다.
+          </div>
+        </section>
+
+    </body>
+</html>

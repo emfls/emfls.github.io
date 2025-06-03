@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="ko">
+       
+    <head>
+               
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="숫자 사냥꾼에서 당신의 반사 신경을 시험해보세요! 1부터 50까지 숫자를 최대한 빨리 탭하고 기록을 깨보세요. 모바일이나 데스크탑에서 즉시 무료로 플레이하세요." />
+        <meta
+            name="keywords"
+            content="숫자 사냥꾼, 숫자 게임, 웹게임, 브라우저 게임, 반응 속도 게임, 스피드 게임, 반사 신경, 모바일 게임, 두뇌 게임, 무료, 오락, 퍼즐, 타임어택, 즉시 플레이" />
+        <meta name="author" content="Itagi" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://emfls.github.io/jp/game/NumberHunt" />
+        <meta property="og:title" content="숫자 사냥꾼 – 빠른 반응 속도 웹 게임" />
+        <meta
+            property="og:description"
+            content="1부터 50까지 얼마나 빨리 탭할 수 있나요? 숫자 사냥꾼에서 당신의 반사 신경에 도전하세요. 무료, 빠르고 다운로드 필요 없음!" />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta property="og:url" content="https://emfls.github.io/jp/game/NumberHunt" />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="숫자 사냥꾼 – 빠른 반응 속도 웹 게임" />
+        <meta
+            name="twitter:description"
+            content="숫자 사냥꾼에서 1부터 50까지 숫자를 빠르게 탭하세요. 당신의 반사 신경을 시험하고 가장 빠른 시간을 공유하세요!" />
+         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+        <title>숫자 사냥꾼</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&display=swap" rel="stylesheet" />
+        <style>
+            * {
+                box-sizing: border-box;
+                user-select: none;
+            }
+
+            body {
+                font-family: "Inter", sans-serif;
+                margin: 0;
+                background: #fefefe;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                height: 100vh;
+                padding-top: 0px;
+                overflow-x: hidden;
+            }
+
+            h1 {
+                font-size: 2rem;
+                background: linear-gradient(90deg, #4caf50, #81c784);
+                color: white;
+                padding: 10px 20px;
+                border-radius: 15px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                margin-bottom: 15px;
+                letter-spacing: 1px;
+            }
+
+            #timer {
+                font-size: 1.2rem;
+                background: #eee;
+                padding: 8px 16px;
+                border-radius: 20px;
+                color: #222;
+                font-weight: bold;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+                margin-bottom: 20px;
+            }
+
+            #game-container {
+                position: relative;
+                width: 320px;
+                max-width: 90vw;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            #grid {
+                display: grid;
+                grid-template-columns: repeat(5, 60px);
+                gap: 10px;
+                justify-content: center;
+            }
+
+            .cell {
+                width: 60px;
+                height: 60px;
+                background: white;
+                border: 2px solid #ccc;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.2rem;
+                font-weight: bold;
+                border-radius: 10px;
+                transition:
+                    background 0.3s,
+                    transform 0.2s,
+                    color 0.3s;
+                cursor: pointer;
+            }
+
+            .cell.clicked {
+                animation: flashGreenSmooth 0.9s ease-in-out;
+            }
+
+            @keyframes flashGreenSmooth {
+                0% {
+                    background-color: #4caf50;
+                    color: white;
+                    transform: scale(1);
+                }
+                30% {
+                    background-color: #4caf50;
+                    color: white;
+                    transform: scale(1.03);
+                }
+                70% {
+                    background-color: #e6ffe6;
+                    color: black;
+                    transform: scale(1);
+                }
+                100% {
+                    background-color: white;
+                    color: black;
+                    transform: scale(1);
+                }
+            }
+
+            .cell.spawned {
+                animation: fadeInNumber 0.25s ease;
+            }
+
+            @keyframes fadeInNumber {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+
+            .cell.correct {
+                background: #4caf50;
+                color: white;
+                pointer-events: none;
+            }
+
+            .cell.final-correct {
+                animation: fadeGreenSlow 1s ease forwards;
+            }
+
+            @keyframes fadeGreenSlow {
+                0% {
+                    background-color: white;
+                    color: black;
+                }
+                100% {
+                    background-color: #4caf50;
+                    color: white;
+                }
+            }
+
+            #start-btn {
+                position: absolute;
+                top: 40%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                padding: 12px 24px;
+                font-size: 1rem;
+                background: #333;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                z-index: 2;
+            }
+
+            #restart-btn,
+            #share-btn {
+                margin-top: 10px;
+                transform: none;
+                position: static;
+                padding: 12px 24px;
+                font-size: 1rem;
+                background: #333;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                z-index: 2;
+            }
+
+            #message {
+                margin-top: 1rem;
+                font-weight: bold;
+                font-size: 1rem;
+                color: #333;
+            }
+
+            #buttons {
+                margin-top: 1rem;
+                display: none;
+                flex-direction: row;
+                align-items: center;
+                gap: 10px;
+            }
+
+            #shareText {
+                font-size: 0.9rem;
+                color: #777;
+                word-break: break-word;
+                margin-top: 0.5rem;
+                text-align: center;
+            }
+
+            .firework {
+                position: absolute;
+                top: 20%;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 10px;
+                height: 10px;
+                background: transparent;
+                border-radius: 50%;
+                animation: explode 1s ease-out forwards;
+                pointer-events: none;
+            }
+
+            @keyframes explode {
+                0% {
+                    box-shadow:
+                        0 0 #ff0,
+                        0 0 #f00,
+                        0 0 #0ff;
+                    opacity: 1;
+                }
+                100% {
+                    box-shadow:
+                        30px 0 #ff0,
+                        -30px 0 #f0f,
+                        0 30px #0ff,
+                        0 -30px #f00,
+                        20px 20px #0f0,
+                        -20px -20px #00f;
+                    opacity: 0;
+                    transform: scale(2);
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>숫자 사냥꾼</h1>
+        <div id="timer">시간: 0.00초</div>
+        <div id="game-container">
+            <button id="start-btn">시작</button>
+            <div id="grid"></div>
+            <div id="message"></div>
+            <div id="buttons">
+                <button id="restart-btn">다시 시작</button>
+                <button id="share-btn">공유</button>
+                <div id="shareText"></div>
+            </div>
+        </div>
+
+        <script>
+            let current = 1;
+            let nextNumber = 26;
+            let startTime, endTime, timerInterval;
+            const grid = document.getElementById("grid");
+            const timerDisplay = document.getElementById("timer");
+            const startBtn = document.getElementById("start-btn");
+            const message = document.getElementById("message");
+            const buttons = document.getElementById("buttons");
+            const shareText = document.getElementById("shareText");
+
+            function shuffle(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+            }
+
+            function updateTimer() {
+                const now = new Date();
+                const diff = ((now - startTime) / 1000).toFixed(2);
+                timerDisplay.textContent = `시간: ${diff}초`;
+            }
+
+            function showFirework() {
+                const fw = document.createElement("div");
+                fw.classList.add("firework");
+                document.body.appendChild(fw);
+                setTimeout(() => fw.remove(), 1500);
+            }
+
+            function startGame() {
+                current = 1;
+                nextNumber = 26;
+                startBtn.style.display = "none";
+                grid.style.display = "grid";
+                message.textContent = "";
+                buttons.style.display = "none";
+                shareText.textContent = "";
+                createGrid();
+                startTime = new Date();
+                timerDisplay.textContent = "시간: 0.00초";
+                timerInterval = setInterval(updateTimer, 50);
+            }
+
+            function createGrid() {
+                grid.innerHTML = "";
+                const numbers = Array.from(
+                    {
+                        length: 25
+                    },
+                    (_, i) => i + 1
+                );
+                shuffle(numbers);
+
+                for (let i = 0; i < 25; i++) {
+                    const cell = document.createElement("div");
+                    cell.classList.add("cell");
+                    cell.dataset.value = numbers[i];
+                    cell.textContent = startBtn.style.display === "none" ? numbers[i] : "";
+
+                    cell.addEventListener("click", function handler() {
+                        const clicked = parseInt(cell.dataset.value);
+                        if (clicked === current) {
+                            const nextToShow = nextNumber;
+
+                            cell.classList.add("clicked");
+                            setTimeout(() => {
+                                cell.classList.remove("clicked");
+
+                                if (nextToShow <= 50) {
+                                    cell.textContent = nextToShow;
+                                    cell.dataset.value = nextToShow;
+                                    cell.classList.add("spawned");
+                                    setTimeout(() => cell.classList.remove("spawned"), 300);
+                                }
+
+                                if (nextToShow > 50) {
+                                    // 마지막 숫자 눌렀을 때: 새 숫자 없이 천천히 초록색으로만
+                                    cell.classList.add("final-correct");
+                                }
+                            }, 500);
+
+                            current++;
+                            nextNumber++;
+
+                            if (current > 50) {
+                                updateTimer();
+                                endTime = new Date();
+                                clearInterval(timerInterval);
+                                const timeTaken = ((endTime - startTime) / 1000).toFixed(2);
+                                message.textContent = `🎉 클리어! 시간: ${timeTaken}초`;
+                                buttons.style.display = "flex";
+                                showFirework();
+                            }
+                        }
+                    });
+                    grid.appendChild(cell);
+                }
+            }
+            startBtn.addEventListener("click", startGame);
+
+            document.getElementById("restart-btn").addEventListener("click", () => {
+                clearInterval(timerInterval);
+                startGame();
+            });
+
+            document.getElementById("share-btn").addEventListener("click", () => {
+                const timeTaken = ((endTime - startTime) / 1000).toFixed(2);
+                const text = `숫자 사냥꾼을 ${timeTaken}초 만에 클리어했어요! 직접 해보세요: ${window.location.href}`;
+                navigator.clipboard.writeText(text).then(() => {
+                    shareText.textContent = "복사됨: " + text;
+                });
+            });
+
+            window.onload = () => {
+                grid.innerHTML = "";
+                for (let i = 0; i < 25; i++) {
+                    const cell = document.createElement("div");
+                    cell.classList.add("cell");
+                    cell.textContent = "";
+                    grid.appendChild(cell);
+                }
+            };
+        </script>
+        <button
+            style="
+                background: #4caf50;
+                padding: 19px 20px 20px 20px;
+                border-radius: 10px;
+                margin-top: 30px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+                text-align: center;
+                width: 90%;
+                max-width: 400px;
+                position: relative;
+                color: white;
+                font-weight: bold;
+                font-size: large;
+            "
+            onclick="window.location.href='/'">
+            📂 다른 게임
+        </button>
+        <section
+            style="
+                max-width: 320px;
+                width: 100%;
+                margin: 48px auto 24px auto;
+                font-family: &quot;Arial&quot;, sans-serif;
+                font-size: 14px;
+                background: #1e1e1e;
+                border-radius: 18px;
+                box-shadow: 0 6px 24px #1236;
+                padding: 20px;
+                line-height: 1.6;
+                color: #f0f0f0;
+            ">
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #6a72f8">❓ 자주 묻는 질문</h2>
+            <div style="margin-bottom: 12px">
+                <strong>Q1. 숫자 사냥꾼은 어떻게 플레이하나요?</strong><br />
+                A. 1부터 50까지 숫자를 최대한 빨리 순서대로 탭하세요. 빠를수록 좋습니다!
+            </div>
+            <div style="margin-bottom: 12px">
+                <strong>Q2. 25 다음에는 어떻게 되나요?</strong><br />
+                A. 25에 도달하면 다음 숫자(26~50)가 탭한 타일을 대체하며 나타납니다.
+            </div>
+            <div style="margin-bottom: 12px">
+                <strong>Q3. 게임을 다시 시작할 수 있나요?</strong><br />
+                A. 네! 게임을 마친 후나 플레이 중에 <strong>다시 시작</strong> 버튼을 탭하세요.
+            </div>
+            <div style="margin-bottom: 12px">
+                <strong>Q4. 제 결과를 어떻게 공유할 수 있나요?</strong><br />
+                A. 게임을 마친 후 <strong>공유</strong> 버튼을 탭하여 점수와 게임 링크를 복사하세요.
+            </div>
+            <div style="margin-bottom: 12px">
+                <strong>Q5. 시간 제한이 있나요?</strong><br />
+                A. 시간 제한은 없습니다. 오직 당신의 개인적인 속도와 반사 신경에 달려있습니다.
+            </div>
+            <div style="margin-bottom: 0">
+                <strong>Q6. 이 게임은 모바일 친화적인가요?</strong><br />
+                A. 네! 이 게임은 데스크탑 및 모바일 브라우저 모두에서 잘 작동합니다.            
+            </div>
+        </section>
+    </body>
+</html>

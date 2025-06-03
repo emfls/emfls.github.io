@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>간편 텍스트 잠금 & 잠금 해제</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="비밀번호나 Base64로 텍스트를 간단히 잠그거나 풀어보세요. 업로드 없이 브라우저에서 즉시 작동합니다." />
+    <meta
+      name="keywords"
+      content="텍스트 잠금, 텍스트 잠금 해제, 간편 암호화, 간편 복호화, 비밀번호, 초보자, 온라인, 안전, 개인 정보 보호" />
+    <meta name="author" content="Itagi" />
+    <link rel="canonical" href="https://emfls.github.io/jp/util/textcrypto/index.html" />
+    <meta property="og:title" content="간편 텍스트 잠금 & 잠금 해제" />
+    <meta
+      property="og:description"
+      content="브라우저에서 즉시 작동하는 슈퍼 간편 텍스트 잠금/잠금 해제 도구입니다. 비공개로 메시지를 숨기거나 복원하세요." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/jp/util/textcrypto/index.html" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="간편 텍스트 잠금 & 잠금 해제" />
+    <meta
+      name="twitter:description"
+      content="비밀번호 또는 Base64로 비밀 메시지를 간단히 잠그거나 풀어보세요. 초보자 친화적, 안전, 개인 정보 보호." />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <!-- CryptoJS (AES/BASE64) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+      :root {
+        --main: #56b1dd;
+        --main-dark: #307093;
+        --bg: #f3faff;
+        --btn: #56b1dd;
+        --btn-hover: #399ac8;
+      }
+      body {
+        background: var(--bg);
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: #224;
+      }
+      .container {
+        max-width: 400px;
+        margin: 38px auto 0 auto;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 18px #56b1dd22;
+        padding: 28px 18px 17px 18px;
+      }
+      .title {
+        text-align: center;
+        font-size: 1.32em;
+        color: var(--main-dark);
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+      .subtitle {
+        text-align: center;
+        color: #3686a7;
+        font-size: 1.01em;
+        margin-bottom: 17px;
+      }
+      .step {
+        margin-bottom: 14px;
+      }
+      label {
+        font-weight: 600;
+        margin-bottom: 3px;
+        display: block;
+        color: #2874a4;
+        font-size: 1em;
+      }
+      .hint {
+        color: #319a6c;
+        font-size: 0.96em;
+        margin-bottom: 7px;
+        margin-top: -2px;
+      }
+      select,
+      input[type="password"] {
+        width: 100%;
+        padding: 8px 9px;
+        border-radius: 7px;
+        border: 1.2px solid #cbe0ee;
+        font-size: 1.05em;
+        margin-bottom: 4px;
+        background: #fafdff;
+        color: #224;
+        box-sizing: border-box;
+      }
+      textarea {
+        width: 100%;
+        min-height: 88px;
+        border-radius: 8px;
+        border: 1.2px solid #bee0ee;
+        padding: 10px;
+        font-size: 1.08em;
+        background: #fafdff;
+        font-family: "Fira Mono", "Menlo", monospace;
+        box-sizing: border-box;
+        margin-bottom: 4px;
+      }
+      .btn {
+        width: 100%;
+        background: var(--btn);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 13px 0;
+        font-size: 1.11em;
+        font-weight: bold;
+        margin: 14px 0 12px 0;
+        cursor: pointer;
+        box-shadow: 0 2px 10px #56b1dd2a;
+        transition: background 0.13s;
+      }
+      .btn:active,
+      .btn:hover {
+        background: var(--btn-hover);
+      }
+      .btn-copy {
+        width: 100%;
+        background: #319a6c;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 9px 0;
+        font-size: 1em;
+        margin-bottom: 3px;
+        cursor: pointer;
+        transition: background 0.12s;
+      }
+      .btn-copy:active,
+      .btn-copy:hover {
+        background: #247251;
+      }
+      .result-label {
+        font-weight: 600;
+        margin-top: 12px;
+        margin-bottom: 2px;
+        color: #2874a4;
+      }
+      .footer {
+        color: #789;
+        text-align: center;
+        font-size: 0.94em;
+        margin-top: 15px;
+        opacity: 0.89;
+      }
+      .msg {
+        color: #2a964b;
+        font-size: 0.99em;
+        text-align: center;
+        min-height: 1.4em;
+        margin-bottom: 4px;
+      }
+      .warn {
+        color: #c74321;
+        font-size: 0.97em;
+        text-align: center;
+        margin-top: 12px;
+      }
+      #backBtn {
+        position: fixed;
+        left: 50%;
+        bottom: 32px;
+        transform: translateX(-50%);
+        background: #56b1dd;
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 2rem;
+        padding: 0.58em 1.5em;
+        box-shadow: 0 4px 16px #56b1dd66;
+        font-size: 1.09em;
+        text-decoration: none;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+        transition:
+          background 0.15s,
+          transform 0.12s;
+        z-index: 2000;
+      }
+      #backBtn:hover {
+        background: #399ac8;
+        transform: translateX(-50%) scale(1.04);
+      }
+      @media (max-width: 540px) {
+        .container {
+          max-width: 99vw;
+          padding: 9px 2vw 10px 2vw;
+        }
+        .title {
+          font-size: 1.09em;
+        }
+        .btn {
+          font-size: 0.98em;
+        }
+        .btn-copy {
+          font-size: 0.97em;
+        }
+        #backBtn {
+          bottom: 18px;
+          font-size: 0.98em;
+          padding: 0.48em 1em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="title">🔒 간편 텍스트 잠금 & 잠금 해제</div>
+      <div class="subtitle">
+        비밀 메시지를 간단히 숨기거나 복원하세요.<br />
+        (모든 작업이 브라우저에서 즉시 이루어집니다. 업로드 없음!)
+      </div>
+      <div class="step">
+        <label for="modeSelect">무엇을 하시겠습니까?</label>
+        <select id="modeSelect">
+          <option value="encrypt">🔑 메시지 잠금 (숨기기)</option>
+          <option value="decrypt">🔓 메시지 잠금 해제 (보이기)</option>
+        </select>
+      </div>
+      <div class="step">
+        <label for="algoSelect">어떻게 잠그거나 해제할까요?</label>
+        <select id="algoSelect">
+          <option value="aes">🔑 비밀번호로 잠금 (가장 강력)</option>
+          <option value="base64">📦 숨기기만 (Base64)</option>
+        </select>
+        <div class="hint">가장 안전하게 잠그려면 "비밀번호로 잠금"을 선택하세요.</div>
+      </div>
+      <div class="step" id="passwordRow">
+        <label for="password">비밀번호 <span style="font-weight: 400">(AES 전용)</span></label>
+        <input type="password" id="password" autocomplete="off" placeholder="AES용 비밀번호를 입력하세요" />
+        <div class="hint">영문/숫자를 혼합해 더 강력하게 설정하세요.</div>
+      </div>
+      <div class="step">
+        <label for="inputArea">메시지</label>
+        <textarea id="inputArea" placeholder="잠그거나 해제할 텍스트를 입력하거나 붙여넣으세요!"></textarea>
+      </div>
+      <button class="btn" id="runBtn">메시지 잠그기</button>
+      <div class="result-label">결과</div>
+      <textarea id="outputArea" readonly placeholder="잠긴 또는 해제된 메시지가 여기에 표시됩니다."></textarea>
+      <button class="btn-copy" id="copyBtn">결과 복사하기</button>
+      <div class="msg" id="msg"></div>
+      <div class="warn">
+        <b>팁:</b> 비밀번호 잠금을 사용할 경우 비밀번호를 잊지 마세요!<br />
+        “숨기기만” 방식은 보안이 취약하지만, 간편하게 사용할 수 있습니다.
+      </div>
+      <div class="footer">
+        100% 브라우저 내 실행, 오픈 소스.<br />
+        <b>업로드 없음, 숨은 추적 없음.</b><br />
+        모두를 위해 영구 무료 제공!
+      </div>
+    </div>
+    <a href="../index.html" id="backBtn">다른 유틸 보기</a>
+    <script>
+      // 요소 참조
+      const modeSelect = document.getElementById("modeSelect");
+      const algoSelect = document.getElementById("algoSelect");
+      const passwordRow = document.getElementById("passwordRow");
+      const password = document.getElementById("password");
+      const inputArea = document.getElementById("inputArea");
+      const outputArea = document.getElementById("outputArea");
+      const runBtn = document.getElementById("runBtn");
+      const copyBtn = document.getElementById("copyBtn");
+      const msg = document.getElementById("msg");
+
+      // 비밀번호 입력 창 표시/숨기기
+      function updateAlgo() {
+        passwordRow.style.display = algoSelect.value === "aes" ? "block" : "none";
+      }
+      algoSelect.onchange = updateAlgo;
+      updateAlgo();
+
+      // 모드 변경 시 버튼 텍스트 및 필드 초기화
+      function clearTextFields() {
+        inputArea.value = "";
+        outputArea.value = "";
+        msg.textContent = "";
+      }
+      modeSelect.onchange = function () {
+        clearTextFields();
+        runBtn.textContent =
+          modeSelect.value === "encrypt" ? "메시지 잠그기" : "메시지 잠금 해제";
+      };
+      modeSelect.dispatchEvent(new Event("change"));
+
+      // 잠금/해제 실행
+      runBtn.onclick = function () {
+        const mode = modeSelect.value;
+        const algo = algoSelect.value;
+        const text = inputArea.value;
+        const key = password.value;
+        outputArea.value = "";
+        msg.textContent = "";
+
+        if (!text) {
+          msg.textContent = "메시지를 입력해주세요!";
+          return;
+        }
+        if (algo === "aes") {
+          if (!key) {
+            msg.textContent = "비밀번호를 입력해주세요!";
+            return;
+          }
+          try {
+            if (mode === "encrypt") {
+              const encrypted = CryptoJS.AES.encrypt(text, key).toString();
+              outputArea.value = encrypted;
+              msg.textContent = "메시지가 잠겼습니다! (AES)";
+            } else {
+              const decrypted = CryptoJS.AES.decrypt(text, key);
+              const plain = decrypted.toString(CryptoJS.enc.Utf8);
+              if (!plain) {
+                msg.textContent = "잠금 해제 실패. (비밀번호나 텍스트를 확인하세요.)";
+                outputArea.value = "";
+                return;
+              }
+              outputArea.value = plain;
+              msg.textContent = "성공! 메시지가 해제되었습니다!";
+            }
+          } catch (e) {
+            msg.textContent = "오류: " + e;
+          }
+        } else if (algo === "base64") {
+          try {
+            if (mode === "encrypt") {
+              const encoded = btoa(unescape(encodeURIComponent(text)));
+              outputArea.value = encoded;
+              msg.textContent = "메시지가 숨겨졌습니다! (Base64)";
+            } else {
+              try {
+                const decoded = decodeURIComponent(escape(atob(text)));
+                outputArea.value = decoded;
+                msg.textContent = "복원 완료! 원본 메시지입니다.";
+              } catch (err) {
+                msg.textContent = "해제할 수 없습니다 (잘못된 형식일 수 있음).";
+                outputArea.value = "";
+              }
+            }
+          } catch (e) {
+            msg.textContent = "오류: " + e;
+          }
+        }
+      };
+
+      // 결과 복사
+      copyBtn.onclick = function () {
+        if (!outputArea.value) {
+          msg.textContent = "복사할 내용이 없습니다!";
+          return;
+        }
+        outputArea.select();
+        document.execCommand("copy");
+        msg.textContent = "복사되었습니다!";
+      };
+    </script>
+    <section
+      style="
+        max-width: 320px;
+        margin: 48px auto 24px auto;
+        background: #1e1e1e;
+        border-radius: 18px;
+        box-shadow: 0 6px 24px #1236;
+        padding: 24px;
+        font-family: Arial, sans-serif;
+      ">
+      <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 14px">
+        ❓ FAQ – 텍스트 잠금 & 잠금 해제
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">내 메시지가 업로드되나요?</div>
+        <div style="color: #f0f0f0">
+          아니요. 모든 암호화 및 복호화는 브라우저에서 즉시 이루어집니다. 아무 것도 업로드되거나 저장되지 않습니다.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">어떤 모드를 선택해야 하나요?</div>
+        <div style="color: #f0f0f0">
+          <b>비밀번호 사용(AES):</b> 강력한 암호화. 잠금 해제 시 비밀번호가 필요합니다.<br />
+          <b>숨기기만(Base64):</b> 간단한 은닉. 쉽게 복호화할 수 있어 보안은 취약합니다.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">비밀번호를 잊으면 어떻게 되나요?</div>
+        <div style="color: #f0f0f0">
+          정확한 비밀번호 없이는 AES 잠금 메시지를 복구할 수 없습니다. 비밀번호를 안전하게 보관하세요!
+        </div>
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">이모지, 기호 또는 다른 언어도 잠글 수 있나요?</div>
+        <div style="color: #f0f0f0">
+          네. 이 도구는 이모지, 한글, 일본어 등의 모든 문자와 기호를 지원합니다.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 0">
+        <div style="color: #8f94fb; font-weight: bold">이 도구는 안전한가요?</div>
+        <div style="color: #f0f0f0">
+          예. 오픈 소스이며 오프라인에서 작동하고, 데이터가 서버로 전송되지 않습니다.
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

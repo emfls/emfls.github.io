@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>복리 vs 단리 계산기 (월 불입 포함)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag("js", new Date());
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <!-- Google AdSense -->
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <!-- SEO & Social meta -->
+    <meta name="description" content="월 불입을 포함한 복리와 단리 성장 비교. 즉시 표와 인터랙티브 차트 확인 가능." />
+    <meta
+      name="keywords"
+      content="복리, 단리, 월 불입, 계산기, 재무, 투자, 저축, 온라인 계산기, 비교, 그래프" />
+    <meta name="author" content="Itagi" />
+    <meta name="language" content="ko" />
+    <meta name="theme-color" content="#1875d1" />
+    <link rel="canonical" href="https://emfls.github.io/jp/util/compound-interest/" />
+    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+    <!-- Open Graph -->
+    <meta property="og:title" content="월 불입 복리 계산기" />
+    <meta property="og:description" content="월 불입을 포함한 복리와 단리 비교. 즉시 결과 확인 가능. 무료, 브라우저 기반." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/jp/util/compound-interest/" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="복리 vs 단리 계산기 (월 불입 포함)" />
+    <meta name="twitter:description" content="복리와 단리 성장 비교 계산기, 월 불입 포함. 즉시 결과 확인 가능." />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <style>
+      :root {
+        --main: #1875d1;
+        --main-dark: #0e4775;
+        --bg: #f8faff;
+      }
+      body {
+        background: var(--bg);
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: #234;
+      }
+      .container {
+        max-width: 480px;
+        margin: 42px auto 0 auto;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 22px #1875d133;
+        padding: 30px 18px 22px 18px;
+      }
+      .logo {
+        font-size: 1.25em;
+        font-weight: bold;
+        text-align: center;
+        color: var(--main-dark);
+        margin-bottom: 10px;
+      }
+      .desc {
+        text-align: center;
+        color: #1e589e;
+        margin-bottom: 17px;
+        font-size: 1.04em;
+      }
+      .form-row {
+        margin-bottom: 13px;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .form-row label {
+        font-size: 1em;
+        color: #186a9a;
+        font-weight: 500;
+      }
+      .form-row input,
+      .form-row select {
+        padding: 8px 10px;
+        font-size: 1.05em;
+        border: 1.1px solid #b6d5ef;
+        border-radius: 7px;
+        background: #fafdff;
+        color: #234;
+      }
+      .action-btn {
+        background: var(--main);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 13px 0;
+        width: 100%;
+        font-size: 1.13em;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 9px;
+        margin-bottom: 13px;
+        box-shadow: 0 2px 12px #1875d120;
+        transition: background 0.15s;
+      }
+      .action-btn:active { background: var(--main-dark); }
+      .result-block {
+        background: #f7fafd;
+        border: 1.2px solid #c2e1fa;
+        border-radius: 9px;
+        padding: 18px 13px 12px 13px;
+        margin-bottom: 7px;
+        color: #1975be;
+        font-size: 1.11em;
+        text-align: center;
+      }
+      .footer {
+        color: #789;
+        text-align: center;
+        font-size: 0.93em;
+        margin-top: 16px;
+      }
+      #backBtn {
+        position: fixed;
+        left: 50%;
+        bottom: 32px;
+        transform: translateX(-50%);
+        background: #1875d1;
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 2rem;
+        padding: 0.58em 1.5em;
+        box-shadow: 0 4px 16px #1875d133;
+        font-size: 1.09em;
+        text-decoration: none;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+        transition: background 0.15s, transform 0.12s;
+        z-index: 2000;
+      }
+      #backBtn:hover { background: #0e4775; transform: translateX(-50%) scale(1.04); }
+      @media (max-width: 600px) {
+        .container { max-width: 99vw; padding: 12px 2vw 14px 2vw; }
+        #backBtn { bottom: 18px; font-size: 0.98em; padding: 0.48em 1em; }
+      }
+      .table-block { margin: 15px 0 8px 0; overflow-x: auto; }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.98em;
+        background: #fff;
+      }
+      th, td {
+        border: 1px solid #e3ecf8;
+        padding: 5px 8px;
+        text-align: right;
+      }
+      th {
+        background: #e9f3ff;
+        color: #1975be;
+        font-weight: 600;
+      }
+      td.year {
+        text-align: center;
+        color: #1975be;
+        font-weight: 500;
+      }
+      .legend {
+        text-align: right;
+        font-size: 0.98em;
+        margin: 5px 0 0 0;
+      }
+      .legend span {
+        display: inline-block;
+        width: 14px;
+        height: 11px;
+        margin-right: 5px;
+        border-radius: 3px;
+        vertical-align: middle;
+      }
+      /* Chart */
+      #chart {
+        width: 100%;
+        max-width: 450px;
+        height: 230px;
+        background: #fafdff;
+        border-radius: 13px;
+        margin: 16px auto 7px auto;
+        box-shadow: 0 1px 8px #1875d118;
+        display: block;
+      }
+      section#faq { margin-top: 30px; }
+      section#faq h2 { margin-bottom: 13px; color: #1875d1; font-size: 1.11em; text-align: center; }
+      section#faq dt { font-weight: bold; margin-top: 8px; }
+      section#faq dd { margin: 0 0 7px 0; font-size: 0.99em; color: #1e589e; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="container" itemscope itemtype="https://schema.org/WebApplication">
+        <h1 class="logo" itemprop="name">📈 복리 vs 단리 계산기</h1>
+        <p class="desc" itemprop="description">
+          복리와 단리 성장 비교를 즉시 확인하세요.<br />
+          월 불입(적립식) 또는 일시불 원금 모두 지원합니다.
+        </p>
+        <form id="form" autocomplete="off">
+          <div class="form-row">
+            <label for="principal">원금 ($)</label>
+            <input type="number" id="principal" min="0" step="0.01" value="10000" required />
+          </div>
+          <div class="form-row">
+            <label for="monthly">월 불입 ($)</label>
+            <input type="number" id="monthly" min="0" step="0.01" value="500" required />
+          </div>
+          <div class="form-row">
+            <label for="rate">연이율 (%)</label>
+            <input type="number" id="rate" min="0" step="0.01" value="5.00" required />
+          </div>
+          <div class="form-row">
+            <label for="years">기간 (년)</label>
+            <input type="number" id="years" min="1" step="1" value="10" required />
+          </div>
+          <div class="form-row">
+            <label for="freq">복리 빈도</label>
+            <select id="freq">
+              <option value="1">연간</option>
+              <option value="2">반기별</option>
+              <option value="4">분기별</option>
+              <option value="12" selected>월간</option>
+              <option value="365">일간</option>
+            </select>
+          </div>
+          <button type="submit" class="action-btn">계산하기</button>
+        </form>
+        <div class="result-block" id="result"></div>
+        <canvas id="chart" width="420" height="230"></canvas>
+        <div class="legend">
+          <span style="background:#1975be"></span> 복리 &nbsp;
+          <span style="background:#fc8642"></span> 단리
+        </div>
+        <div class="table-block" id="tableBlock"></div>
+        <div class="footer">
+          월 불입을 포함한 복리와 단리 비교를 제공합니다.<br />
+          100% 브라우저 기반. 로그인 불필요. 데이터 전송 없음.
+        </div>
+        <!-- FAQ 섹션 (SEO/SGE 용) -->
+        <section aria-labelledby="faq-head" id="faq">
+          <h2 id="faq-head">FAQ – 복리 vs 단리 계산기</h2>
+          <dl>
+            <dt>복리와 단리의 차이는 무엇인가요?</dt>
+            <dd>복리는 원금과 이전에 적립된 이자에 이자가 붙습니다. 단리는 원금에만 이자가 붙습니다.</dd>
+            <dt>월 불입을 추가할 수 있나요?</dt>
+            <dd>네, 고정 월 불입을 추가할 수 있습니다. 복리와 단리 결과 모두 월 불입금을 포함합니다.</dd>
+            <dt>어떤 복리 빈도가 가장 유리한가요?</dt>
+            <dd>복리 빈도가 잦을수록(예: 월간 또는 일간) 장기 투자 시 총 수익이 높아질 수 있습니다.</dd>
+            <dt>내 데이터가 업로드되거나 저장되나요?</dt>
+            <dd>아니요. 모든 계산은 브라우저에서만 이루어집니다. 개인 금융 정보는 저장되거나 전송되지 않습니다.</dd>
+            <dt>이 계산기는 무료인가요?</dt>
+            <dd>네! 100% 무료이며 데스크톱과 모바일 기기에서 모두 사용 가능합니다.</dd>
+          </dl>
+        </section>
+      </div>
+    </main>
+    <a href="../index.html" id="backBtn">다른 유틸리티</a>
+    <script>
+      const form = document.getElementById('form');
+      const result = document.getElementById('result');
+      const tableBlock = document.getElementById('tableBlock');
+      const chart = document.getElementById('chart');
+      const ctx = chart.getContext('2d');
+
+      function formatMoney(v) {
+        return '$' + Number(v).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+      }
+      // 복리 계산 (월 불입 포함)
+      function compoundWithDeposit(P, PMT, r, n, t) {
+        let periods = n * t;
+        let i = r / n;
+        let fvP = P * Math.pow(1 + i, periods);
+        let fvPMT = PMT > 0 ? PMT * ((Math.pow(1 + i, periods) - 1) / i) * (i > 0 ? 1 : 0) : 0;
+        if (n !== 12 && PMT > 0) {
+          let m_per_period = 12 / n;
+          let fvPMT_adj = 0;
+          for (let k = 1; k <= periods; k++) {
+            fvPMT_adj += PMT * Math.pow(1 + r / n, periods - k + 1) * (m_per_period > 1 ? m_per_period : 1);
+          }
+          fvPMT = fvPMT_adj;
+        }
+        return fvP + fvPMT;
+      }
+      // 단리 계산 (월 불입 포함)
+      function simpleWithDeposit(P, PMT, r, t) {
+        let fvP = P * (1 + r * t);
+        let fvPMT = PMT * 12 * t;
+        let interestPMT = fvPMT * r * t / 2;
+        return fvP + fvPMT + interestPMT;
+      }
+
+      function drawChart(years, compVals, simpVals) {
+        ctx.clearRect(0, 0, chart.width, chart.height);
+        let allVals = compVals.concat(simpVals);
+        let maxV = Math.max(...allVals) * 1.04;
+        let minV = Math.min(...allVals);
+        let W = chart.width - 40, H = chart.height - 35, ox = 35, oy = 18;
+        // 축 그리기
+        ctx.strokeStyle = "#b3cae7";
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(ox, oy); ctx.lineTo(ox, oy+H); ctx.lineTo(ox+W, oy+H);
+        ctx.stroke();
+        // Y 레이블
+        ctx.fillStyle = "#3773b5";
+        ctx.font = "11px Segoe UI, Arial";
+        for (let i = 0; i <= 4; i++) {
+          let v = maxV - (maxV-minV)*i/4;
+          let y = oy + H * i/4;
+          ctx.fillText(formatMoney(v), 2, y+4);
+        }
+        // X 레이블
+        ctx.fillStyle = "#777";
+        for (let y = 1; y <= years; y++) {
+          let x = ox + (W) * (y-1) / (years-1);
+          ctx.fillText(y, x-4, oy+H+17);
+        }
+        // 선 그리기 함수
+        function drawLine(data, color) {
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 2.7;
+          ctx.beginPath();
+          for (let y = 1; y <= years; y++) {
+            let val = data[y-1];
+            let px = ox + (W) * (y-1) / (years-1);
+            let py = oy + H - ((val - minV) / (maxV-minV)) * H;
+            if (y === 1) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.stroke();
+          // 점 표시
+          ctx.fillStyle = color;
+          for (let y = 1; y <= years; y++) {
+            let val = data[y-1];
+            let px = ox + (W) * (y-1) / (years-1);
+            let py = oy + H - ((val - minV) / (maxV-minV)) * H;
+            ctx.beginPath(); ctx.arc(px, py, 3.1, 0, Math.PI*2); ctx.fill();
+          }
+        }
+        // 복리, 단리 선 그리기
+        drawLine(compVals, "#1975be");
+        drawLine(simpVals, "#fc8642");
+      }
+
+      form.onsubmit = function(e) {
+        e.preventDefault();
+        let P = parseFloat(form.principal.value);
+        let PMT = parseFloat(form.monthly.value);
+        let r = parseFloat(form.rate.value) / 100;
+        let t = parseInt(form.years.value);
+        let n = parseInt(form.freq.value);
+        if (isNaN(P) || isNaN(PMT) || isNaN(r) || isNaN(t) || isNaN(n) || P < 0 || PMT < 0 || r < 0 || t < 1) {
+          result.innerHTML = '<span style="color:#d33;">유효한 값을 입력해주세요.</span>';
+          tableBlock.innerHTML = '';
+          ctx.clearRect(0,0,chart.width,chart.height);
+          return;
+        }
+        // 연도별 계산
+        let compArr = [], simpArr = [];
+        for(let y=1; y<=t; y++) {
+          compArr.push(compoundWithDeposit(P, PMT, r, n, y));
+          simpArr.push(simpleWithDeposit(P, PMT, r, y));
+        }
+        // 최종값 표시
+        let FV = compArr[t-1], FVsimple = simpArr[t-1];
+        let totalPaid = P + PMT*12*t;
+        let interest = FV - totalPaid, interestSimple = FVsimple - totalPaid;
+        result.innerHTML =
+          `<b>복리:</b> <span style="color:#1975be">${formatMoney(FV)}</span> (총 이자: <b>${formatMoney(interest)}</b>)<br>
+           <b>단리:</b> <span style="color:#fc8642">${formatMoney(FVsimple)}</span> (총 이자: <b>${formatMoney(interestSimple)}</b>)<br>
+           <span style="color:#888;">총 납입액: ${formatMoney(totalPaid)}</span>`;
+        // 년도별 표 만들기
+        let rows = '';
+        for(let y=1; y<=t; y++) {
+          rows += `<tr>
+            <td class="year">${y}</td>
+            <td>${formatMoney(compArr[y-1])}</td>
+            <td>${formatMoney(simpArr[y-1])}</td>
+            <td>${formatMoney(compArr[y-1] - (P + PMT*12*y))}</td>
+            <td>${formatMoney(simpArr[y-1] - (P + PMT*12*y))}</td>
+          </tr>`;
+        }
+        tableBlock.innerHTML =
+          `<table>
+            <thead>
+              <tr>
+                <th>년차</th>
+                <th>복리 가치</th>
+                <th>단리 가치</th>
+                <th>복리 이자</th>
+                <th>단리 이자</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>`;
+        // 차트 그리기
+        drawChart(t, compArr, simpArr);
+      };
+      // 초기 실행
+      form.onsubmit(new Event('submit'));
+    </script>
+    <!-- FAQPage Schema for SGE/GEO/SEO Rich Results -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "복리와 단리의 차이는 무엇인가요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "복리는 원금과 이전에 적립된 이자에 이자가 붙습니다. 단리는 원금에만 이자가 붙습니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "월 불입을 추가할 수 있나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "네, 고정 월 불입을 추가할 수 있습니다. 복리와 단리 결과 모두 월 불입금을 포함합니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "어떤 복리 빈도가 가장 유리한가요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "복리 빈도가 잦을수록(예: 월간 또는 일간) 장기 투자 시 총 수익이 높아질 수 있습니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "내 데이터가 업로드되거나 저장되나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "아니요. 모든 계산은 브라우저에서만 이루어집니다. 개인 금융 정보는 저장되거나 전송되지 않습니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "이 계산기는 무료인가요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "네! 100% 무료이며 데스크톱과 모바일 기기에서 모두 사용 가능합니다."
+          }
+        }
+      ]
+    }
+    </script>
+  </body>
+</html>
