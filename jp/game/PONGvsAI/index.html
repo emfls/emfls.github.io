@@ -1,31 +1,32 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ja">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="AI와 대결하는 PONG 게임! 레트로 스타일의 퐁 게임에서 AI를 상대로 10점을 먼저 획득하세요. 모바일과 PC에서 모두 무료로 즐길 수 있습니다." />
+            content="AIと対戦するPONGゲーム！レトロスタイルのPONGでAIに挑戦し、先に10点を獲得しましょう。モバイルとPCで無料で楽しめます。" />
         <meta
             name="keywords"
-            content="퐁, 퐁 AI, 퐁 웹게임, 브라우저 게임, 고전 아케이드, AI 퐁, 핑퐁, 탁구, 무료 게임, 웹게임, 모바일 게임, 즉시 플레이, 오락실" />
+            content="PONG, PONG AI, PONG ウェブゲーム, ブラウザゲーム, クラシックアーケード, AI PONG, ピンポン, 卓球, 無料ゲーム, ウェブゲーム, モバイルゲーム, 即プレイ, アーケード" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/jp/game/PONGvsAI" />
 
-        <meta property="og:title" content="PONG vs AI – 클래식 퐁 웹 게임" />
+        <meta property="og:title" content="PONG vs AI – クラシックPONGウェブゲーム" />
         <meta
             property="og:description"
-            content="AI에 도전하여 먼저 10점을 획득하세요! 브라우저에서 레트로 퐁을 즐겨보세요. 다운로드 없이 바로 플레이!" />
+            content="AIに挑戦して先に10点を獲得しよう！ブラウザでレトロなPONGを楽しんでください。ダウンロード不要で即プレイ！" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/jp/game/PONGvsAI" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="PONG vs AI – 클래식 퐁 웹 게임" />
-        <meta name="twitter:description" content="스마트 AI와 함께하는 클래식 퐁. 바로 플레이하고 점수를 공유하세요!" />
+        <meta name="twitter:title" content="PONG vs AI – クラシックPONGウェブゲーム" />
+        <meta name="twitter:description" content="スマートなAIと対戦するクラシックPONG。今すぐプレイしてスコアを共有しよう！" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -49,7 +50,6 @@
                 background: #151a23;
                 min-height: 100vh;
                 width: 100vw;
-                /* 화면에 꼭 맞게 */
                 overflow-x: hidden;
             }
 
@@ -64,7 +64,6 @@
                 box-sizing: border-box;
                 width: 100vw;
                 max-width: 400px;
-                min-width: 0;
                 margin: 0 auto;
                 display: flex;
                 flex-direction: column;
@@ -208,22 +207,22 @@
     <body>
         <div id="container">
             <div id="gameTitle">PONG vs AI</div>
-            <div id="desc">10점 먼저 내면 승리!</div>
+            <div id="desc">先に10点取った方が勝ち！</div>
             <div id="scoreBoard"></div>
             <canvas id="pong" width="400" height="260"></canvas>
-            <button id="startBtn" onclick="startGame()">게임 시작</button>
+            <button id="startBtn" onclick="startGame()">ゲーム開始</button>
             <div id="winMsg"></div>
             <div class="gameOverBtns" style="display: none">
-                <button onclick="restartGame()">재시작</button>
-                <button onclick="shareScore()">공유</button>
+                <button onclick="restartGame()">再スタート</button>
+                <button onclick="shareScore()">共有</button>
             </div>
             <div class="desc-ctrl">
-                조작법: W/S (왼쪽, 당신) &middot; 오른쪽 패들은 AI입니다. <br />모바일에서는 왼쪽을 드래그하세요.
+                操作方法: W/S (左側あなた) ・ 右パドルはAIが操作<br />モバイルでは左側をドラッグしてください。
             </div>
         </div>
-        <button id="otherGames" onclick="window.location.href='../'">다른 게임</button>
+        <button id="otherGames" onclick="window.location.href='../'">他のゲーム</button>
         <script>
-            // --- 변수 선언 ---
+            // --- 変数宣言 ---
             const canvas = document.getElementById("pong");
             const ctx = canvas.getContext("2d");
             const scoreBoard = document.getElementById("scoreBoard");
@@ -246,7 +245,7 @@
             let aiLevel = 0.15;
             let rafId;
 
-            // Spark 파티클 시스템
+            // スパークパーティクルシステム
             let particles = [];
 
             function spawnSpark(x, y, color = "#ffe287", count = 15) {
@@ -282,7 +281,7 @@
                 for (const p of particles) {
                     ctx.globalAlpha = Math.max(p.alpha, 0);
                     ctx.beginPath();
-                    ctx.arc(p.x, p.y, 2.1, 0, 2 * Math.PI);
+                    ctx.arc(p.x, p.y, 2.1, 0, Math.PI * 2);
                     ctx.fillStyle = p.color;
                     ctx.fill();
                 }
@@ -340,28 +339,24 @@
             function stepGame() {
                 leftY += leftMove * paddleSpeed;
                 leftY = Math.max(0, Math.min(canvas.height - paddleHeight, leftY));
-                // AI (오른쪽)
+                // AI (右側)
                 let targetY = ballY - (paddleHeight - ballSize) / 2;
                 rightY += (targetY - rightY) * aiLevel;
                 rightY = Math.max(0, Math.min(canvas.height - paddleHeight, rightY));
-                // 공 이동
+                // ボール移動
                 ballX += ballVelX;
                 ballY += ballVelY;
 
-                // 벽 반사
+                // 壁反射
                 if (ballY <= 0 || ballY + ballSize >= canvas.height) ballVelY *= -1;
-                // Paddle 충돌
+                // パドル衝突
                 let sparkAt = null;
                 if (ballX <= 10 + paddleWidth && ballY + ballSize >= leftY && ballY <= leftY + paddleHeight) {
                     ballX = 10 + paddleWidth;
                     ballVelX *= -1.07;
                     let hit = (ballY + ballSize / 2 - (leftY + paddleHeight / 2)) / (paddleHeight / 2);
                     ballVelY += hit * 2.0;
-                    sparkAt = {
-                        x: ballX + ballSize / 2,
-                        y: ballY + ballSize / 2,
-                        color: "#ffe287",
-                    };
+                    sparkAt = { x: ballX + ballSize / 2, y: ballY + ballSize / 2, color: "#ffe287" };
                 }
                 if (
                     ballX + ballSize >= canvas.width - 10 - paddleWidth &&
@@ -372,15 +367,11 @@
                     ballVelX *= -1.07;
                     let hit = (ballY + ballSize / 2 - (rightY + paddleHeight / 2)) / (paddleHeight / 2);
                     ballVelY += hit * 2.0;
-                    sparkAt = {
-                        x: ballX + ballSize / 2,
-                        y: ballY + ballSize / 2,
-                        color: "#86f4ff",
-                    };
+                    sparkAt = { x: ballX + ballSize / 2, y: ballY + ballSize / 2, color: "#86f4ff" };
                 }
                 if (sparkAt) spawnSpark(sparkAt.x, sparkAt.y, sparkAt.color);
 
-                // 점수 및 게임 오버 체크
+                // 得点およびゲームオーバーチェック
                 if (ballX < 0) {
                     rightScore++;
                     updateScore();
@@ -435,23 +426,27 @@
                 gameRunning = false;
                 inGame = false;
                 cancelAnimationFrame(rafId);
-                winMsgDiv.textContent = playerWin ? "당신이 이겼습니다! 🎉" : "AI 승리! 🤖";
+                winMsgDiv.textContent = playerWin ? "あなたの勝ち！ 🎉" : "AIの勝利！ 🤖";
                 gameOverBtns.style.display = "block";
             }
-            // 공유 버튼
+
+            // 共有ボタン
             function shareScore() {
-                let text = `[Pong vs AI]\n${winMsgDiv.textContent}\n내 점수: ${leftScore}, AI: ${rightScore}\n\n여기서 플레이해보세요:\n${window.location.href}`;
+                let text = `[PONG vs AI]\n${winMsgDiv.textContent}\nあなたのスコア: ${leftScore}, AI: ${rightScore}\n\nここでプレイ: ${window.location.href}`;
                 if (navigator.share) {
-                    navigator.share({
-                        title: "Pong vs AI",
-                        text,
-                    });
+                    navigator.share({ title: "PONG vs AI", text })
+                        .catch(() => {
+                            navigator.clipboard.writeText(text);
+                            alert("結果がクリップボードにコピーされました！\n\n" + text);
+                        });
                 } else {
-                    navigator.clipboard.writeText(text);
-                    alert("결과가 클립보드에 복사되었습니다!\n\n" + text);
+                    navigator.clipboard.writeText(text).then(() => {
+                        alert("結果がクリップボードにコピーされました！\n\n" + text);
+                    });
                 }
             }
-            // 키보드 조작
+
+            // キーボード操作
             document.addEventListener("keydown", (e) => {
                 if (!inGame) return;
                 if (e.key === "w" || e.key === "W") leftMove = -1;
@@ -462,7 +457,8 @@
                 if (e.key === "w" || e.key === "W") leftMove = 0;
                 if (e.key === "s" || e.key === "S") leftMove = 0;
             });
-            // 모바일 터치(왼쪽 패들만)
+
+            // モバイルタッチ（左パドルのみ）
             canvas.addEventListener("touchstart", function (e) {
                 if (!inGame) return;
                 const rect = canvas.getBoundingClientRect();
@@ -486,7 +482,8 @@
                 }
                 e.preventDefault();
             });
-            // Prevent scroll on mobile
+
+            // モバイルでのスクロール防止
             document.body.addEventListener(
                 "touchmove",
                 function (e) {
@@ -496,7 +493,8 @@
                     passive: false,
                 }
             );
-            // 최초 화면 준비
+
+            // 初期表示
             updateScore();
             resetVars();
             draw();
@@ -509,7 +507,7 @@
                 max-width: 320px;
                 width: 100%;
                 margin: 48px auto 24px auto;
-                font-family: &quot;Arial&quot;, sans-serif;
+                font-family: 'Arial', sans-serif;
                 font-size: 14px;
                 background: #1e1e1e;
                 border-radius: 18px;
@@ -518,36 +516,36 @@
                 line-height: 1.6;
                 color: #f0f0f0;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #f9bc60">❓ 자주 묻는 질문</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #f9bc60">❓ よくある質問</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. 어떻게 플레이하나요?</strong><br />
-                A. 왼쪽 패들을 조종하여 AI보다 먼저 10점을 획득하세요. W/S 키를 사용하거나 모바일에서는 드래그하여 조작할 수 있습니다.
+                <strong>Q1. どのようにプレイしますか？</strong><br />
+                A. 左側のパドルを操作し、AIより先に10点を獲得しましょう。W/Sキーを使うか、モバイルではドラッグで操作できます。
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. 조작법은 무엇인가요?</strong><br />
-                A. PC에서는 W (위로) 및 S (아래로) 키를 사용하세요. 모바일에서는 화면 왼쪽을 손가락으로 드래그하여 조작합니다.
+                <strong>Q2. 操作方法は何ですか？</strong><br />
+                A. PCではWキー（上）とSキー（下）を使用します。モバイルでは画面左側を指でドラッグしてください。
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. AI는 어떻게 작동하나요?</strong><br />
-                A. AI는 공을 추적하고 자동으로 자신의 영역을 방어합니다. 공의 속도가 빠를수록 AI의 난이도도 높아집니다.
+                <strong>Q3. AIはどのように動作しますか？</strong><br />
+                A. AIはボールを追跡し、自動でパドルを操作します。ボール速度が速くなるほどAIの難易度も上がります。
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. 승리하거나 패배하면 어떻게 되나요?</strong><br />
-                A. 승리 또는 패배 메시지가 표시됩니다. 그 후 재시작하거나 점수를 공유할 수 있습니다.
+                <strong>Q4. 勝利または敗北したらどうなりますか？</strong><br />
+                A. 勝利または敗北のメッセージが表示されます。その後、再スタートしたりスコアを共有したりできます。
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. 결과를 공유할 수 있나요?</strong><br />
-                A. 네! **공유** 버튼을 눌러 점수를 복사하거나 친구들과 공유할 수 있습니다.
+                <strong>Q5. 結果をどうやって共有できますか？</strong><br />
+                A. 「共有」ボタンを押すとスコアがコピーされ、友達と共有できます。
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. 모바일 친화적인가요?</strong><br />
-                A. 네, 모바일 및 데스크톱 브라우저 모두에 최적화되어 있습니다.
+                <strong>Q6. モバイル対応ですか？</strong><br />
+                A. はい、モバイルおよびデスクトップのブラウザ両方に最適化されています。
             </div>
         </section>
     </body>
