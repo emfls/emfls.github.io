@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <!-- SEO最適化済み -->
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="セキュアモードでオンラインで○×（ティックタックトー）をプレイ！スタイリッシュなレトロ風アーケードゲームでAIに挑戦しよう。モバイル最適化で高速ロード。" />
+        <meta
+            name="keywords"
+            content="Tic Tac Toe, TicTacToe, ○×, ティックタックトー, オンラインゲーム, 無料ウェブゲーム, ボードゲーム, AIゲーム, レトロゲーム, モバイルゲーム, パズルゲーム, 五目並べ" />
+
+        <meta name="author" content="Itagi" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://emfls.github.io/ru/game/TicTacToe" />
+
+        <!-- Open Graph (SNS などでのサムネイル/プレビュー用) -->
+        <meta property="og:title" content="○×（Tic Tac Toe）" />
+        <meta
+            property="og:description"
+            content="レトロ風○×でAIに挑戦！すぐにプレイ可能、モバイル最適化、サインアップ不要。" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://emfls.github.io/ru/game/TicTacToe" />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="○×（Tic Tac Toe）" />
+        <meta name="twitter:description" content="セキュアモードで○×をオンラインプレイ – モバイル対応で速くて楽しい！" />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+        <title>○×（Tic Tac Toe）</title>
+        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+        <style>
+            * {
+                user-select: none;
+                -webkit-user-select: none;
+                -ms-user-select: none;
+            }
+
+            body {
+                margin: 0;
+                font-family: "Press Start 2P", cursive;
+                background: radial-gradient(circle at center, #111, #000);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                height: 100vh;
+                color: #fff;
+                text-align: center;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+                margin-bottom: 2rem;
+                margin-top: 2rem;
+                color: #00ffff;
+                text-shadow:
+                    0 0 5px #0ff,
+                    0 0 10px #0ff;
+            }
+
+            .status {
+                font-size: 1rem;
+                margin-bottom: 2rem;
+                color: #ffeb3b;
+                text-shadow:
+                    0 0 5px #fdd835,
+                    0 0 10px #fbc02d;
+            }
+
+            .board {
+                display: grid;
+                grid-template-columns: repeat(3, 80px);
+                grid-template-rows: repeat(3, 80px);
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+
+            .cell {
+                background: #222;
+                border: 2px solid #00e5ff;
+                font-size: 2rem;
+                color: #fff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 8px;
+                cursor: pointer;
+                box-shadow:
+                    0 0 5px #00e5ff,
+                    inset 0 0 8px #00e5ff;
+                transition:
+                    transform 0.1s,
+                    box-shadow 0.2s;
+            }
+
+            .cell:hover {
+                box-shadow:
+                    0 0 10px #ff4081,
+                    inset 0 0 10px #ff4081;
+                transform: scale(1.05);
+            }
+
+            .cell:active {
+                transform: scale(0.95);
+            }
+
+            .button-container {
+                margin-top: 1rem;
+            }
+
+            button {
+                background-color: #1a237e;
+                color: #fff;
+                font-family: "Press Start 2P", cursive;
+                font-size: 0.8rem;
+                padding: 20px 20px;
+                border: 2px solid #03a9f4;
+                border-radius: 10px;
+                box-shadow: 0 0 10px #03a9f4;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            button:hover {
+                background-color: #0d47a1;
+                box-shadow:
+                    0 0 20px #03a9f4,
+                    0 0 40px #03a9f4;
+            }
+
+            button:active {
+                transform: scale(0.95);
+            }
+        </style>
+    </head>
+
+    <body oncontextmenu="return false">
+        <h1>○×（Tic Tac Toe）</h1>
+        <div class="status" id="status">あなたの番: ❌</div>
+        <div class="board" id="board"></div>
+        <div class="button-container">
+            <button onclick="resetGame()">リスタート</button>
+        </div>
+
+        <script>
+            // スクリーンショット防止 JS
+            document.addEventListener("keydown", function (e) {
+                if (
+                    (e.ctrlKey && (e.key === "u" || e.key === "U" || e.key === "c" || e.key === "C")) ||
+                    e.key === "F12"
+                ) {
+                    e.preventDefault();
+                }
+            });
+
+            const board = document.getElementById("board");
+            const statusDiv = document.getElementById("status");
+            let cells = [];
+            let gameActive = true;
+            let playerTurn = true;
+
+            const PLAYER = "❌";
+            const AI = "⭕️";
+
+            const winCombos = [
+                [0, 1, 2],
+                [3, 4, 5],
+                [6, 7, 8],
+                [0, 3, 6],
+                [1, 4, 7],
+                [2, 5, 8],
+                [0, 4, 8],
+                [2, 4, 6]
+            ];
+
+            function createBoard() {
+                cells = [];
+                board.innerHTML = "";
+                for (let i = 0; i < 9; i++) {
+                    const cell = document.createElement("div");
+                    cell.classList.add("cell");
+                    cell.dataset.index = i;
+                    cell.addEventListener("click", handlePlayerClick);
+                    board.appendChild(cell);
+                    cells.push(cell);
+                }
+            }
+
+            function handlePlayerClick(e) {
+                const index = e.target.dataset.index;
+                if (!gameActive || !playerTurn || cells[index].textContent) return;
+
+                cells[index].textContent = PLAYER;
+                if (checkWin(PLAYER)) {
+                    statusDiv.textContent = `あなたの勝ち！`;
+                    gameActive = false;
+                    return;
+                }
+
+                if (isBoardFull()) {
+                    statusDiv.textContent = `引き分け！`;
+                    gameActive = false;
+                    return;
+                }
+
+                playerTurn = false;
+                statusDiv.textContent = `AIが考え中...`;
+                setTimeout(() => {
+                    aiMove();
+                }, 500);
+            }
+
+            function aiMove() {
+                const bestMove = getBestMove();
+                if (bestMove !== null) {
+                    cells[bestMove].textContent = AI;
+                    if (checkWin(AI)) {
+                        statusDiv.textContent = `AIの勝ち！`;
+                        gameActive = false;
+                        return;
+                    }
+
+                    if (isBoardFull()) {
+                        statusDiv.textContent = `引き分け！`;
+                        gameActive = false;
+                        return;
+                    }
+
+                    statusDiv.textContent = `あなたの番: ${PLAYER}`;
+                    playerTurn = true;
+                }
+            }
+
+            function getBestMove() {
+                // AIが即勝利できるか確認
+                for (let i = 0; i < cells.length; i++) {
+                    if (!cells[i].textContent) {
+                        cells[i].textContent = AI;
+                        if (checkWin(AI)) return i;
+                        cells[i].textContent = "";
+                    }
+                }
+
+                // プレイヤーが即勝利する手をブロック
+                for (let i = 0; i < cells.length; i++) {
+                    if (!cells[i].textContent) {
+                        cells[i].textContent = PLAYER;
+                        if (checkWin(PLAYER)) {
+                            cells[i].textContent = "";
+                            return i;
+                        }
+                        cells[i].textContent = "";
+                    }
+                }
+
+                // 中央を選ぶ
+                if (!cells[4].textContent) return 4;
+
+                // 角を選ぶ
+                const corners = [0, 2, 6, 8];
+                for (let i of corners) {
+                    if (!cells[i].textContent) return i;
+                }
+
+                // それ以外
+                for (let i = 0; i < cells.length; i++) {
+                    if (!cells[i].textContent) return i;
+                }
+
+                return null;
+            }
+
+            function checkWin(player) {
+                return winCombos.some((combo) => combo.every((index) => cells[index].textContent === player));
+            }
+
+            function isBoardFull() {
+                return cells.every((cell) => cell.textContent);
+            }
+
+            function resetGame() {
+                gameActive = true;
+                playerTurn = true;
+                statusDiv.textContent = `あなたの番: ${PLAYER}`;
+                createBoard();
+            }
+
+            createBoard();
+        </script>
+        <button
+            style="
+                padding: 19px 20px 20px 20px;
+                border-radius: 10px;
+                margin-top: 30px;
+                text-align: center;
+                width: 90%;
+                max-width: 400px;
+                position: relative;
+                color: white;
+                font-weight: bold;
+                background-color: #1a237e;
+                border: none;
+                cursor: pointer;
+            "
+            onclick="window.location.href='/'">
+            他のゲーム
+        </button>
+        <section
+            style="
+                max-width: 320px;
+                width: 100%;
+                margin: 48px auto 24px auto;
+                font-family: 'Arial', sans-serif;
+                font-size: 14px;
+                background: #1e1e1e;
+                border-radius: 18px;
+                box-shadow: 0 6px 24px #1236;
+                padding: 20px;
+                line-height: 1.6;
+                color: #f0f0f0;
+                align-content: center;
+            ">
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ よくある質問</h2>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q1. ○×はどうやってプレイしますか？</strong><br />
+                A. 空いているマスをタップして ❌ を置いてください。AIは ⭕️ でプレイします。
+            </div>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q2. どうやって勝ちますか？</strong><br />
+                A. 横・縦・斜めに三つの ❌ を揃えると勝利です。
+            </div>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q3. 引き分けはどうなりますか？</strong><br />
+                A. 全てのマスが埋まって勝者がいない場合、引き分けになります。
+            </div>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q4. いつでも再スタートできますか？</strong><br />
+                A. はい！「リスタート」ボタンを押すと最初から再プレイできます。
+            </div>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q5. モバイルでも問題なく動作しますか？</strong><br />
+                A. もちろんです！モバイルとデスクトップの両方で最適化されています。
+            </div>
+
+            <div style="margin-bottom: 0">
+                <strong>Q6. このゲームは誰が作りましたか？</strong><br />
+                A. Itagiが制作しました—「他のゲーム」ボタンで他のゲームもチェックしてください。
+            </div>
+        </section>
+    </body>
+</html>

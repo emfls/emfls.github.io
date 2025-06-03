@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>ラダーゲーム</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
+    <meta
+      name="description"
+      content="モバイル用ラダーゲーム - 数字を選んで運命を確認しよう！iPhone SEを含むすべてのスマートフォンに最適化された、速くて楽しい運ゲーウェブゲームです。" />
+    <meta
+      name="keywords"
+      content="ラダーゲーム, モバイルゲーム, ウェブゲーム, ラダーくじ, 運ゲーム, ミニゲーム, モバイルカジュアル, iPhoneゲーム, iPhone SE, ラダー, ランダムゲーム, ブラウザゲーム, 運試し, 数字選択, ソーシャルゲーム, HTML5ゲーム" />
+    <meta name="author" content="Itagi" />
+    <meta name="robots" content="index, follow" />
+
+    <meta property="og:title" content="ラダーゲーム - モバイル用運ゲーム" />
+    <meta
+      property="og:description"
+      content="数字を選んで運命を確認しよう！楽しくて速い、モバイルに最適化されたラダーゲームです。" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/es/game/LadderGame" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="ラダーゲーム - モバイル用運ゲーム" />
+    <meta
+      name="twitter:description"
+      content="モバイル用ラダーゲーム。数字を選んであなたの運命を確認しよう！" />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+
+    <link rel="canonical" href="https://emfls.github.io/es/game/LadderGame" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        background: linear-gradient(120deg, #85f, #6cf, #fff 70%);
+        font-family: "Jua", "Segoe UI", Arial, sans-serif;
+        user-select: none;
+        color: #232323;
+        box-sizing: border-box;
+        width: 100vw;
+        overflow-x: hidden;
+      }
+      #gameWrap {
+        width: 100vw;
+        max-width: 320px;
+        min-width: 220px;
+        margin: 0 auto;
+        margin-top: 3vw;
+        background: #fff8;
+        border-radius: 22px;
+        box-shadow: 0 8px 32px #2465a344;
+        padding: 3vw 2vw 1.3vw 2vw;
+        min-height: 670px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow: hidden;
+      }
+      h1 {
+        font-size: 2rem;
+        letter-spacing: 1px;
+        margin-bottom: 0.4em;
+        background: linear-gradient(90deg, #7f53ac, #657ced, #43e7fe);
+        color: transparent;
+        background-clip: text;
+        -webkit-background-clip: text;
+        font-weight: bold;
+      }
+      .desc {
+        color: #3777b8;
+        font-size: 1.05rem;
+        text-align: center;
+        margin-bottom: 8px;
+        margin-top: 2px;
+        letter-spacing: 0.01em;
+      }
+      .btn {
+        font-family: inherit;
+        font-size: 1.02rem;
+        padding: 9px 16px;
+        border: none;
+        border-radius: 16px;
+        margin: 6px;
+        box-shadow: 0 2px 8px #85f3;
+        cursor: pointer;
+        background: linear-gradient(90deg, #7f53ac, #43e7fe);
+        color: #fff;
+        font-weight: 700;
+        transition: 0.15s;
+      }
+      .btn:active {
+        transform: scale(0.96);
+      }
+      #ladderBox {
+        position: relative;
+        margin: 10px 0 10px 0;
+        width: 100%;
+        max-width: 240px;
+        min-width: 140px;
+        height: 340px;
+        background: #e8f2fe;
+        border-radius: 14px;
+        box-shadow: 0 3px 12px #2579ab1a;
+        overflow: hidden;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+      }
+      canvas {
+        display: block;
+        width: 100%;
+        height: 340px;
+      }
+      #topChoices {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 20;
+        display: flex;
+        justify-content: space-between;
+        pointer-events: none;
+        height: 46px;
+      }
+      #topChoices button.numBtn {
+        pointer-events: all;
+        background: linear-gradient(90deg, #fff, #cce7ff);
+        border: 2px solid #4786e9;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        font-size: 1.08rem;
+        margin: 0;
+        color: #2561b2;
+        font-weight: bold;
+        box-shadow: 0 2px 8px #90cdfa99;
+        cursor: pointer;
+        transition: 0.12s;
+        outline: none;
+        position: absolute;
+        top: 4px;
+        left: 0;
+        transform: translateX(-50%);
+      }
+      #resultMsg {
+        min-height: 30px;
+        font-size: 1.09rem;
+        margin-bottom: 5px;
+        color: #437fea;
+        font-weight: bold;
+        text-align: center;
+        letter-spacing: 1px;
+      }
+      #btnRow {
+        margin-top: 6px;
+        margin-bottom: 6px;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
+      }
+      .hide {
+        display: none !important;
+      }
+      @media (max-width: 340px) {
+        #gameWrap {
+          max-width: 98vw;
+          min-width: 170px;
+        }
+        #ladderBox {
+          max-width: 94vw;
+          min-width: 110px;
+        }
+        canvas {
+          height: 56vw !important;
+        }
+        #topChoices button.numBtn {
+          width: 27px;
+          height: 27px;
+          font-size: 0.93rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="gameWrap">
+      <h1>ラダーゲーム</h1>
+      <div class="desc">数字を選んでラダー（はしご）で運命を確認しよう！</div>
+      <div id="ladderBox">
+        <div id="topChoices"></div>
+        <canvas id="ladderCanvas" width="200" height="340"></canvas>
+        <canvas
+          id="ladderMask"
+          width="200"
+          height="340"
+          style="
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            display: none;
+            pointer-events: none;
+          "></canvas>
+      </div>
+      <div id="resultMsg"></div>
+      <div id="btnRow">
+        <button class="btn" id="startBtn">ゲーム開始</button>
+        <button class="btn hide" id="retryBtn">再スタート</button>
+        <button class="btn" id="shareBtn">共有</button>
+        <button class="btn" id="otherBtn">他のゲーム</button>
+      </div>
+    </div>
+    <script>
+      const ladderCols = 4;
+      let wave = 1;
+      let ladder, playing, busy, result, showTimeout;
+      const canvas = document.getElementById("ladderCanvas");
+      const ctx = canvas.getContext("2d");
+      const maskCanvas = document.getElementById("ladderMask");
+      const maskCtx = maskCanvas.getContext("2d");
+      const topChoices = document.getElementById("topChoices");
+      const resultMsg = document.getElementById("resultMsg");
+      const startBtn = document.getElementById("startBtn");
+      const retryBtn = document.getElementById("retryBtn");
+      const shareBtn = document.getElementById("shareBtn");
+      const otherBtn = document.getElementById("otherBtn");
+
+      // 세로선 기준 좌표(패딩 조정)
+      function getX(idx) {
+        const sidePadding = 18; // 더 좁은 폭에 맞춰진 패딩
+        return sidePadding + idx * ((canvas.width - sidePadding * 2) / (ladderCols - 1));
+      }
+
+      function getWaveConfig(wave) {
+        const minGameOver = Math.min(3, Math.floor((wave - 1) / 3));
+        const gameOver = Math.min(ladderCols, 1 + minGameOver);
+        const levelUp = ladderCols - gameOver;
+        const hLines = Math.min(10, 3 + Math.floor(wave * 1.1));
+        return { levelUp, gameOver, hLines };
+      }
+
+      function genLadder(wave) {
+        const cfg = getWaveConfig(wave);
+        let arr = Array(cfg.levelUp).fill("LEVELUP").concat(Array(cfg.gameOver).fill("GAMEOVER"));
+        arr = arr.sort(() => Math.random() - 0.5);
+        let lines = [];
+        const topMargin = 38;
+        const bottomMargin = 56; // 결과 원과 겹치지 않게
+        for (let i = 0; i < cfg.hLines; ++i) {
+          let pos, y;
+          do {
+            pos = Math.floor(Math.random() * (ladderCols - 1));
+            y = Math.round(topMargin + (i * (canvas.height - topMargin - bottomMargin)) / (cfg.hLines - 1));
+          } while (lines.length && Math.abs(lines[lines.length - 1].pos - pos) < 1);
+          lines.push({ y, pos });
+        }
+        return { lines, ends: arr, cfg };
+      }
+
+      function drawLadder(ladder, showEnds = true, highlightPath = null) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#e8f2fe";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < ladderCols; i++) {
+          ctx.beginPath();
+          ctx.strokeStyle = "#3272ed";
+          ctx.lineWidth = 3.2;
+          ctx.moveTo(getX(i), 32);
+          ctx.lineTo(getX(i), canvas.height - 42);
+          ctx.stroke();
+        }
+        for (let l of ladder.lines) {
+          const x = getX(l.pos);
+          ctx.beginPath();
+          ctx.strokeStyle = "#f3a922";
+          ctx.lineWidth = 5.1;
+          ctx.moveTo(x, l.y);
+          ctx.lineTo(x + (canvas.width - 36) / (ladderCols - 1), l.y);
+          ctx.stroke();
+        }
+        if (highlightPath) {
+          ctx.save();
+          ctx.strokeStyle = "#6afc91";
+          ctx.lineWidth = 8;
+          ctx.shadowColor = "#6afc91cc";
+          ctx.shadowBlur = 11;
+          ctx.beginPath();
+          let { path } = highlightPath;
+          ctx.moveTo(path[0].x, path[0].y);
+          for (let pt of path) ctx.lineTo(pt.x, pt.y);
+          ctx.stroke();
+          ctx.restore();
+        }
+        if (showEnds) {
+          for (let i = 0; i < ladderCols; i++) {
+            ctx.beginPath();
+            ctx.arc(getX(i), canvas.height - 30, 16, 0, 2 * Math.PI);
+            ctx.fillStyle = ladder.ends[i] === "LEVELUP" ? "#b2ffd6" : "#ffb6b6";
+            ctx.shadowColor = ladder.ends[i] === "LEVELUP" ? "#6afc9170" : "#e97e7e70";
+            ctx.shadowBlur = 2;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            ctx.fillStyle = ladder.ends[i] === "LEVELUP" ? "#10b369" : "#b91414";
+            ctx.font = "bold 1.05rem Jua,sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText(ladder.ends[i] === "LEVELUP" ? "Lv↑" : "X", getX(i), canvas.height - 24);
+          }
+        }
+      }
+
+      function renderTopChoices() {
+        topChoices.innerHTML = "";
+        if (!playing || busy) return;
+        for (let i = 0; i < ladderCols; i++) {
+          let btn = document.createElement("button");
+          btn.className = "numBtn";
+          btn.innerText = i + 1;
+          btn.style.left = `${(getX(i) / canvas.width) * 100}%`;
+          btn.onclick = () => chooseStart(i);
+          topChoices.appendChild(btn);
+        }
+      }
+
+      function showMask(show) {
+        maskCtx.clearRect(0, 0, maskCanvas.width, maskCanvas.height);
+        maskCanvas.style.display = show ? "block" : "none";
+        if (show) {
+          maskCtx.globalAlpha = 1.0;
+          maskCtx.fillStyle = "#e8f2fe";
+          maskCtx.fillRect(0, 32, maskCanvas.width, maskCanvas.height - 68);
+        }
+      }
+
+      function startWave() {
+        playing = true;
+        busy = false;
+        result = null;
+        ladder = genLadder(wave);
+        resultMsg.innerText = "";
+        drawLadder(ladder, true);
+        showMask(false);
+        renderTopChoices();
+        showTimeout && clearTimeout(showTimeout);
+        showTimeout = setTimeout(() => {
+          showMask(true);
+        }, 2200);
+      }
+
+      function chooseStart(idx) {
+        if (!playing || busy) return;
+        busy = true;
+        showMask(true);
+        const path = calcPath(idx, ladder);
+        let t = 0,
+          animLen = path.length,
+          animId;
+        function animatePath() {
+          if (t < animLen) {
+            drawLadder(ladder, true, { path: path.slice(0, t + 1) });
+            showMask(true);
+            t++;
+            animId = requestAnimationFrame(animatePath);
+          } else {
+            drawLadder(ladder, true, { path: path });
+            showMask(false);
+            setTimeout(() => {
+              let endIdx = path[path.length - 1].col;
+              let endRes = ladder.ends[endIdx];
+              resultMsg.innerHTML = endRes === "LEVELUP"
+                ? "🎉 <b>レベルアップ！</b> 次のウェーブ →"
+                : "💀 <b>ゲームオーバー！</b>";
+              renderTopChoices();
+              playing = endRes === "LEVELUP";
+              busy = false;
+              if (endRes === "LEVELUP") {
+                wave++;
+                setTimeout(startWave, 1000);
+              } else {
+                retryBtn.classList.remove("hide");
+                startBtn.classList.add("hide");
+              }
+            }, 420);
+          }
+        }
+        animatePath();
+      }
+
+      function calcPath(startIdx, ladder) {
+        let path = [{ x: getX(startIdx), y: 32, col: startIdx }];
+        let col = startIdx;
+        for (let l of ladder.lines) {
+          path.push({ x: getX(col), y: l.y, col });
+          if (col < ladderCols - 1 && l.pos === col) {
+            col++;
+            path.push({ x: getX(col), y: l.y, col });
+          } else if (col > 0 && l.pos === col - 1) {
+            col--;
+            path.push({ x: getX(col), y: l.y, col });
+          }
+        }
+        path.push({ x: getX(col), y: canvas.height - 42, col });
+        return path;
+      }
+
+      startBtn.onclick = function () {
+        wave = 1;
+        retryBtn.classList.add("hide");
+        startBtn.classList.add("hide");
+        startWave();
+      };
+      retryBtn.onclick = function () {
+        wave = 1;
+        retryBtn.classList.add("hide");
+        startBtn.classList.add("hide");
+        startWave();
+      };
+      shareBtn.onclick = function () {
+        const shareUrl = window.location.href;
+        if (navigator.share) {
+          navigator.share({ title: document.title, url: shareUrl });
+        } else {
+          window.prompt("このURLをコピーして友達に送ろう！", shareUrl);
+        }
+      };
+      otherBtn.onclick = function () {
+        window.location.href = "kor/game/";
+      };
+
+      function resetUI() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        maskCtx.clearRect(0, 0, maskCanvas.width, maskCanvas.height);
+        showMask(false);
+        resultMsg.innerText = "";
+        topChoices.innerHTML = "";
+        startBtn.classList.remove("hide");
+        retryBtn.classList.add("hide");
+      }
+      resetUI();
+
+      function resizeAll() {
+        const ladderBox = document.getElementById("ladderBox");
+        let w = ladderBox.clientWidth;
+        canvas.width = w;
+        canvas.height = ladderBox.clientHeight;
+        maskCanvas.width = w;
+        maskCanvas.height = ladderBox.clientHeight;
+        if (ladder) {
+          drawLadder(ladder, true);
+          renderTopChoices();
+          showMask(maskCanvas.style.display === "block");
+        }
+      }
+      window.addEventListener("resize", resizeAll);
+      setTimeout(resizeAll, 100);
+    </script>
+    <section
+      style="
+        width: 80%;
+        max-width: 420px;
+        margin: 60px auto;
+        padding: 20px;
+        font-family: 'Segoe UI', sans-serif;
+        background: #f0f8ff;
+        color: #2d3436;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        line-height: 1.6;
+        font-size: 14px;
+      ">
+      <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e70c2">❓ よくある質問 (FAQ)</h2>
+
+      <div style="margin-bottom: 1rem">
+        <strong>Q1. ラダーゲームはどのようにプレイしますか？</strong><br />
+        A. 画面上部の数字をタップしてラダーを下り、結果を確認してください！
+      </div>
+
+      <div style="margin-bottom: 1rem">
+        <strong>Q2. 「レベルアップ」は何を意味しますか？</strong><br />
+        A. 現在のウェーブをクリアして、より難しい次のラウンドに進みます。
+      </div>
+
+      <div style="margin-bottom: 1rem">
+        <strong>Q3. ゲームはいつ終わりますか？</strong><br />
+        A. 結果が<strong>ゲームオーバー（X）</strong>になるとゲームが終了します。
+      </div>
+
+      <div style="margin-bottom: 1rem">
+        <strong>Q4. 完全にランダムですか？</strong><br />
+        A. はい！ラダーの横線と結果は毎ラウンドランダムにシャッフルされます。
+      </div>
+
+      <div style="margin-bottom: 1rem">
+        <strong>Q5. どうやって再スタートしますか？</strong><br />
+        A. <strong>再スタート</strong>をタップしてウェーブ1から再プレイできます。
+      </div>
+
+      <div style="margin-bottom: 1rem">
+        <strong>Q6. このゲームを共有できますか？</strong><br />
+        A. はい！<strong>共有</strong>をタップしてリンクをコピーするか、モバイルの共有機能を使用してください。
+      </div>
+    </section>
+  </body>
+</html>

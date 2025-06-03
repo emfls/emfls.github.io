@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="GREEN Click で集中力と反射速度を試そう！単語が緑色のときだけタップしてください。シンプルで中毒性があり、モバイルにも最適化された無料オンラインゲーム！" />
+        <meta
+            name="keywords"
+            content="GREEN Click, 反応ゲーム, 脳トレゲーム, 色ゲーム, 速いゲーム, 集中力, クリックチャレンジ, 無料オンラインゲーム, モバイル, ブラウザゲーム, 反射神経ゲーム, カジュアル" />
+        <meta name="author" content="Itagi" />
+        <meta name="robots" content="index, follow" />
+
+        <link rel="canonical" href="https://emfls.github.io/es/game/GREENClick" />
+
+        <meta property="og:title" content="GREEN Click – 無料オンライン反応ゲーム！" />
+        <meta
+            property="og:description"
+            content="緑色の単語だけをタップしよう！この中毒性のあるオンラインゲームであなたの脳と反射速度を試してみて。" />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta property="og:url" content="https://emfls.github.io/es/game/GREENClick" />
+        <meta property="og:type" content="website" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="GREEN Click – 無料オンライン反応ゲーム！" />
+        <meta
+            name="twitter:description"
+            content="緑色のときだけタップ！この速い脳トレゲームで友達に差をつけよう – オンラインで無料プレイ可能。" />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+        <title>GREEN Click – 無料オンライン反応ゲーム！</title>
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+                user-select: none;
+            }
+
+            body {
+                font-family: "Segoe UI", sans-serif;
+                background-color: #1e1e1e;
+                color: white;
+                text-align: center;
+                padding: 10px;
+            }
+
+            h1 {
+                margin-bottom: 0.5rem;
+            }
+
+            #description {
+                margin-bottom: 20px;
+                font-size: 1rem;
+            }
+
+            #box {
+                width: 300px;
+                height: 300px;
+                margin: 10px auto;
+                border-radius: 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 2rem;
+                font-weight: bold;
+                background-color: #555;
+                transition: background-color 0.2s;
+                position: relative;
+                flex-direction: column;
+                cursor: pointer;
+            }
+
+            #word {
+                font-size: 2rem;
+                font-weight: bold;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            }
+
+            #score,
+            #message,
+            #finalScore {
+                font-size: 1.1rem;
+                margin: 10px;
+            }
+
+            #controls {
+                margin-top: 15px;
+                display: none;
+            }
+
+            .btn {
+                padding: 8px 16px;
+                margin: 5px;
+                border: solid;
+                border-radius: 6px;
+                border-color: white;
+                background-color: rgba(0, 0, 0, 0.7);
+                color: white;
+                font-size: 1rem;
+                cursor: pointer;
+            }
+
+            .btn:hover {
+                background-color: #45a045;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1><span style="color: green">GREEN</span> Click</h1>
+        <p id="description">目はあなたを騙します。<br />言葉だけを信じてください：GREEN。</p>
+
+        <div id="box">
+            <div id="word">クリックして開始</div>
+        </div>
+
+        <div id="score" style="font-size: x-large; font-weight: bold">スコア：0</div>
+        <div id="message"></div>
+        <div id="finalScore"></div>
+
+        <div id="controls">
+            <button class="btn" onclick="startGame()">再スタート</button>
+            <button class="btn" onclick="shareScore()">共有</button>
+        </div>
+
+        <script>
+            const box = document.getElementById("box");
+            const wordDiv = document.getElementById("word");
+            const scoreDisplay = document.getElementById("score");
+            const message = document.getElementById("message");
+            const finalScore = document.getElementById("finalScore");
+            const controls = document.getElementById("controls");
+
+            const colors = ["GREEN", "RED", "BLUE", "YELLOW", "ORANGE", "PURPLE"];
+            const bgColors = ["green", "red", "blue", "yellow", "orange", "purple", "pink", "cyan", "lime", "gold"];
+
+            let currentText = "";
+            let score = 0;
+            let gameRunning = false;
+            let gameStarted = false;
+            let timeoutId = null;
+            let intervalId = null;
+
+            function getRandom(arr) {
+                return arr[Math.floor(Math.random() * arr.length)];
+            }
+
+            function updateBox() {
+                const bgColor = getRandom(bgColors);
+                box.style.backgroundColor = bgColor;
+
+                currentText = getRandom(colors);
+                wordDiv.textContent = currentText;
+
+                if (currentText === "GREEN") {
+                    timeoutId = setTimeout(() => {
+                        endGame("GREENを見逃しました！");
+                    }, 1000);
+                }
+            }
+
+            function startGame() {
+                clearInterval(intervalId);
+                clearTimeout(timeoutId);
+                score = 0;
+                gameRunning = true;
+                gameStarted = true;
+                message.textContent = "";
+                finalScore.textContent = "";
+                scoreDisplay.textContent = "スコア：0";
+                wordDiv.textContent = "";
+                box.style.pointerEvents = "auto";
+                controls.style.display = "none";
+
+                setTimeout(() => {
+                    updateBox();
+                    intervalId = setInterval(updateBox, 1200);
+                }, 500);
+            }
+
+            function endGame(reason) {
+                clearInterval(intervalId);
+                clearTimeout(timeoutId);
+                gameRunning = false;
+                box.style.backgroundColor = "#000";
+                wordDiv.textContent = "ゲームオーバー";
+                box.style.pointerEvents = "none";
+
+                message.textContent = reason;
+                controls.style.display = "block";
+            }
+
+            function shareScore() {
+                const shareText = `🎯 GREEN Click チャレンジで ${score} 点獲得！\nあなたも挑戦 👉 ${window.location.href}`;
+                if (navigator.share) {
+                    navigator
+                        .share({
+                            title: "GREEN Click チャレンジ",
+                            text: shareText,
+                            url: window.location.href
+                        })
+                        .catch(() => {
+                            navigator.clipboard.writeText(shareText);
+                            alert("リンクがクリップボードにコピーされました！ 📋");
+                        });
+                } else {
+                    navigator.clipboard.writeText(shareText);
+                    alert("リンクがクリップボードにコピーされました！ 📋");
+                }
+            }
+
+            box.addEventListener("click", () => {
+                if (!gameStarted) {
+                    startGame();
+                    return;
+                }
+
+                if (!gameRunning) return;
+
+                clearTimeout(timeoutId);
+
+                if (currentText === "GREEN") {
+                    score++;
+                    scoreDisplay.textContent = `スコア：${score}`;
+                    let intervalTime = Math.max(400, 1200 - score * 50);
+
+                    clearInterval(intervalId);
+                    intervalId = setInterval(updateBox, intervalTime);
+                } else {
+                    endGame("間違いです！GREENではありませんでした。");
+                }
+            });
+        </script>
+        <button
+            style="
+                margin-top: 20px;
+                width: 90%;
+                height: 60px;
+                font-size: 16px;
+                font-weight: bold;
+                background-color: #000;
+                cursor: pointer;
+                border-radius: 6px;
+                border: solid;
+                color: white;
+                border-color: white;
+            "
+            onclick="window.location.href='/'">
+            📂 他のゲーム
+        </button>
+        <section
+            style="
+                width: 90%;
+                max-width: 420px;
+                margin: 60px auto;
+                padding: 20px;
+                font-family: 'Segoe UI', sans-serif;
+                background: #f0fff4;
+                color: #2d3436;
+                border-radius: 10px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                line-height: 1.6;
+                font-size: 14px;
+            ">
+            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #006400">❓ よくある質問 (FAQ)</h2>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q1. GREEN Click はどのようにプレイしますか？</strong><br />
+                A. 単語が <strong>GREEN</strong> と表示されたときだけボックスをタップしてください – 背景色は気にしないでください！
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q2. ゲームはいつ終了しますか？</strong><br />
+                A. GREEN ではない単語をタップするか、GREEN が表示されたときに制限時間内にタップできないとゲーム終了です。
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q3. 時間制限はありますか？</strong><br />
+                A. はい！GREEN が表示されたときに約1秒以内にタップしないとゲーム終了です。
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q4. ゲームは難しくなりますか？</strong><br />
+                A. はい！スコアが上がるほど速度が速くなります。
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q5. ゲームを再スタートできますか？</strong><br />
+                A. もちろんです。<strong>再スタート</strong>をタップしていつでも再プレイできます。
+            </div>
+
+            <div>
+                <strong>Q6. スコアを共有するにはどうすればいいですか？</strong><br />
+                A. <strong>共有</strong>をタップしてゲームリンクとスコアをコピーし、友達に挑戦させましょう！
+            </div>
+        </section>
+    </body>
+</html>

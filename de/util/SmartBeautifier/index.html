@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Smart Beautifier（HTML/CSS/JS、タブインデント専用）</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+
+    <meta
+      name="description"
+      content="乱雑なHTML、CSS、JavaScriptコードを貼り付けてタブインデントですぐに整形します。100％クライアントサイド処理、アップロード不要。無料ウェブコードフォーマッター。" />
+    <meta
+      name="keywords"
+      content="コード整形, コードフォーマッター, js beautifier, css beautifier, html beautifier, オンライン コードフォーマット, タブインデント, コードクリーン, クライアントサイド, アップロード不要, ウェブツール, 開発者ツール, オープンソース, 即時コード整形" />
+    <meta name="author" content="Itagi" />
+
+    <!-- Open Graph (SNS共有用) -->
+    <meta property="og:title" content="Smart Beautifier – オンラインHTML/CSS/JSコードフォーマッター" />
+    <meta
+      property="og:description"
+      content="乱雑なコードを貼り付けるだけでタブインデントで自動整形。ブラウザ内のみで処理されるため安全です。無料・オープンソース。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/de/util/SmartBeautifier/" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Smart Beautifier – オンラインHTML/CSS/JSコードフォーマッター" />
+    <meta
+      name="twitter:description"
+      content="乱雑なHTML、CSS、JSコードを貼り付けてタブインデントできれいに整形します。完全クライアントサイド、アップロード不要。" />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+
+    <!-- Googleタグ (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+
+    <style>
+      html, body { margin: 0; padding: 0; background: #f6fcff; min-height: 100%; }
+      body { font-family: "Segoe UI", Arial, sans-serif; min-height: 100vh; }
+      .container {
+        max-width: 620px;
+        margin: 38px auto 0 auto;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 22px #13d2b033;
+        padding: 28px 18px 22px 18px;
+      }
+      .logo {
+        font-size: 1.25em;
+        color: #19788a;
+        font-weight: bold;
+        margin-bottom: 6px;
+        text-align: center;
+      }
+      .desc {
+        color: #357890;
+        text-align: center;
+        margin-bottom: 18px;
+        font-size: 0.98em;
+      }
+      .input-area,
+      .output-area {
+        width: 100%;
+        box-sizing: border-box;
+        min-height: 120px;
+        border: 1.2px solid #cce9ef;
+        border-radius: 9px;
+        padding: 11px;
+        font-size: 1em;
+        background: #fafdff;
+        font-family: "Fira Mono", "Menlo", monospace;
+        resize: vertical;
+        margin-bottom: 8px;
+        line-height: 1.6;
+        overflow-x: auto;
+      }
+      .output-area { background: #e7f9f3; }
+      .btn, .btn-copy {
+        background: #1495c5;
+        color: #fff;
+        border: none;
+        border-radius: 7px;
+        padding: 10px 18px;
+        margin: 10px 8px 0 0;
+        cursor: pointer;
+        font-size: 1.03em;
+        transition: background 0.18s;
+      }
+      .btn:active, .btn-copy:active { background: #0b6180; }
+      .info-msg {
+        color: #1c9b56;
+        font-size: 0.95em;
+        margin: 6px 0 10px 0;
+        text-align: center;
+      }
+      .footer {
+        color: #789;
+        text-align: center;
+        font-size: 0.94em;
+        margin-top: 22px;
+      }
+      @media (max-width: 700px) {
+        .container { max-width: 98vw; padding: 12px 2vw 14px 2vw; }
+        .input-area, .output-area { font-size: 0.98em; }
+      }
+      #backBtn {
+        position: fixed;
+        left: 50%;
+        bottom: 32px;
+        transform: translateX(-50%);
+        background: #13b6a7;
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 2rem;
+        padding: 0.58em 1.5em;
+        box-shadow: 0 4px 16px #13d2b066;
+        font-size: 1.09em;
+        text-decoration: none;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+        transition: background 0.15s, transform 0.12s;
+        z-index: 2000;
+      }
+      #backBtn:hover { background: #0e8078; transform: translateX(-50%) scale(1.04);}
+      @media (max-width: 600px) {
+        #backBtn { bottom: 18px; font-size: 0.98em; padding: 0.48em 1em; }
+      }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/js-beautify@1.15.0/js/lib/beautify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-beautify@1.15.0/js/lib/beautify-css.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-beautify@1.15.0/js/lib/beautify-html.min.js"></script>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="logo">✨ Smart Beautifier</div>
+      <div class="desc">
+        乱雑なHTML、CSSまたはJavaScriptコードを貼り付けてください。<br />
+        自動で<b>タブ</b>でインデントし、きれいに整形します。<br />
+        <span style="color: #19788a; font-size: 0.93em">100％クライアントサイド、アップロード不要。</span>
+      </div>
+      <textarea
+        id="inputArea"
+        class="input-area"
+        placeholder="ここにHTML、CSS、JSコードを貼り付けてください..."></textarea>
+      <button class="btn" id="beautifyBtn">整形する</button>
+      <div style="margin-top: 8px; margin-bottom: 3px; font-size: 0.98em; color: #167088">結果:</div>
+      <textarea
+        id="outputArea"
+        class="output-area"
+        readonly
+        placeholder="整形されたコードがここに表示されます"></textarea>
+      <button class="btn-copy" id="copyBtn">コピー</button>
+      <div class="info-msg" id="infoMsg"></div>
+      <div class="footer">
+        100％クライアントサイド、オープンソース。js-beautifyによって動作しています。
+      </div>
+      <a href="../index.html" id="backBtn">その他ツール</a>
+    </div>
+
+    <script>
+      function detectType(code) {
+        if (
+          /^\s*<!DOCTYPE html/i.test(code) ||
+          /<html[\s>]/i.test(code) ||
+          /<body[\s>]/i.test(code) ||
+          /<head[\s>]/i.test(code) ||
+          /<div[\s>]/i.test(code) ||
+          /<style[\s>]/i.test(code) ||
+          /<script[\s>]/i.test(code)
+        )
+          return "html";
+        if (
+          /^[\s\S]*?\{[\s\S]*?\}[\s;]*$/.test(code) &&
+          /^[\s\S]*?[\.\#a-zA-Z0-9\-]+\s*\{[\s\S]*?\}/.test(code)
+        )
+          return "css";
+        if (
+          /\b(function|var|let|const|=>|import |export |require\(|if\s*\(|for\s*\(|while\s*\(|console\.|window\.|document\.|class\s+\w+)/.test(
+            code
+          )
+        )
+          return "js";
+        return "html";
+      }
+
+      document.getElementById("beautifyBtn").onclick = function () {
+        var code = document.getElementById("inputArea").value;
+        var outputArea = document.getElementById("outputArea");
+        var infoMsg = document.getElementById("infoMsg");
+        if (!code.trim()) {
+          infoMsg.textContent = "まずコードを貼り付けてください。";
+          outputArea.value = "";
+          return;
+        }
+        let indent_char = "\t",
+          indent_size = 1;
+        var type = detectType(code);
+        var beautified = "";
+        try {
+          if (type === "html") {
+            beautified = html_beautify(code, {
+              indent_size: indent_size,
+              indent_char: indent_char,
+              wrap_line_length: 120,
+              unformatted: [],
+              preserve_newlines: true,
+              content_unformatted: []
+            });
+          } else if (type === "css") {
+            beautified = css_beautify(code, {
+              indent_size: indent_size,
+              indent_char: indent_char
+            });
+          } else if (type === "js") {
+            beautified = js_beautify(code, {
+              indent_size: indent_size,
+              indent_char: indent_char,
+              max_preserve_newlines: 2
+            });
+          }
+          outputArea.value = beautified;
+          infoMsg.textContent =
+            "整形完了！ (" + type.toUpperCase() + ", " + beautified.length + "文字)";
+        } catch (e) {
+          infoMsg.textContent = "エラー: " + (e.message || e);
+          outputArea.value = "";
+        }
+      };
+
+      document.getElementById("copyBtn").onclick = function () {
+        var outputArea = document.getElementById("outputArea");
+        outputArea.select();
+        document.execCommand("copy");
+        document.getElementById("infoMsg").textContent = "コピーしました！";
+      };
+    </script>
+
+    <section
+      style="
+        max-width: 320px;
+        margin: 48px auto 24px auto;
+        background: #1e1e1e;
+        border-radius: 18px;
+        box-shadow: 0 6px 24px #1236;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+      ">
+      <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 12px">
+        FAQ – Smart Beautifier
+      </div>
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">Q. どのコード言語をサポートしていますか？</div>
+        <div style="color: #f0f0f0">
+          HTML、CSS、JavaScriptをサポートしています。入力内容によって自動で言語を判別します。
+        </div>
+      </div>
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">Q. どのインデント方式を使いますか？</div>
+        <div style="color: #f0f0f0">
+          タブ文字のみを使用します。本ツールはスペースではなくタブで統一してコードを整形します。
+        </div>
+      </div>
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">Q. ここにコードを貼り付けても安全ですか？</div>
+        <div style="color: #f0f0f0">
+          はい。すべての整形処理はブラウザ内でローカル実行されます。アップロードや保存はされず、個人情報は完全に保護されます。
+        </div>
+      </div>
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">Q. 整形後のコードをどうやってコピーしますか？</div>
+        <div style="color: #f0f0f0">
+          「整形する」ボタンのあと「コピー」ボタンを押すと、結果がクリップボードにコピーされます。
+        </div>
+      </div>
+      <div style="margin-bottom: 0">
+        <div style="color: #8f94fb; font-weight: bold">Q. 壊れたコードや部分的なコードでも整形できますか？</div>
+        <div style="color: #f0f0f0">
+          はい。文法的に解析できる範囲であれば、リントツールでなくても不完全なコードブロックも整形・再インデントが可能です。
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

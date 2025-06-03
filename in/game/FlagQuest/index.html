@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="hi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="अपने भूगोल ज्ञान को आज़माएँ! 'झंडा क्वेस्ट' में झंडा देखकर देश का नाम चुनें। यह मज़ेदार, फ्री, मोबाइल-फ्रेंडली ब्राउज़र क्विज़ गेम है।"
+        />
+        <meta
+            name="keywords"
+            content="झंडा क्वेस्ट, झंडा क्विज़, भूगोल, देश क्विज़, झंडा गेम, फ्री ऑनलाइन गेम, क्विज़, ब्राउज़र गेम, मोबाइल, विश्व के झंडे, शिक्षा, क्विज़ गेम"
+        />
+        <meta name="author" content="Itagi" />
+        <meta name="robots" content="index, follow" />
+
+        <link rel="canonical" href="https://emfls.github.io/in/game/FlagQuest" />
+
+        <meta property="og:title" content="झंडा क्वेस्ट – फ्री ऑनलाइन देश झंडा क्विज़ गेम!" />
+        <meta
+            property="og:description"
+            content="आप कितने झंडे पहचान सकते हैं? फ्री अल्टीमेट झंडा क्विज़ गेम 'झंडा क्वेस्ट' में अपना ज्ञान आज़माएँ!"
+        />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta property="og:url" content="https://emfls.github.io/in/game/FlagQuest" />
+        <meta property="og:type" content="website" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="झंडा क्वेस्ट – फ्री ऑनलाइन देश झंडा क्विज़ गेम!" />
+        <meta
+            name="twitter:description"
+            content="झंडा देखो और देश का नाम चुनो, दोस्तों को चैलेंज करो! 'झंडा क्वेस्ट' ऑनलाइन फ्री खेलो।"
+        />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"
+        ></script>
+        <title>झंडा क्वेस्ट</title>
+        <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet" />
+        <style>
+            * { box-sizing: border-box; }
+            body {
+                margin: 0;
+                font-family: "Quicksand", sans-serif;
+                background: linear-gradient(to bottom right, #fef6e4, #e0f2f1);
+                color: #333;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 0rem;
+            }
+            h1 {
+                font-size: 2.2rem;
+                margin-bottom: 1rem;
+                margin-top: 1rem;
+                color: #6c63ff;
+                text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+            }
+            #flag {
+                width: 280px;
+                height: 180px;
+                object-fit: contain;
+                border: 4px solid #fff;
+                border-radius: 16px;
+                background: #fff;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+                margin: 1.6rem 0;
+            }
+            .options {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                margin-bottom: 0.5rem;
+                gap: 1rem;
+            }
+            button {
+                background: #ffd6e0;
+                color: #333;
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
+                border: none;
+                border-radius: 12px;
+                box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+                font-weight: 600;
+                transition: all 0.25s ease;
+                cursor: pointer;
+            }
+            button:hover {
+                background: #ffcad4;
+                transform: scale(1.05);
+            }
+            #feedback {
+                font-weight: 700;
+                font-size: 1.1rem;
+                color: #222;
+                min-height: 1.5rem;
+            }
+            #score {
+                font-size: 1.1rem;
+                margin-top: 1rem;
+            }
+            #gameover {
+                display: none;
+                flex-direction: column;
+                gap: 1rem;
+                margin-top: 0rem;
+                align-items: center;
+            }
+            #finalMessage {
+                font-size: 1.3rem;
+                font-weight: bold;
+                color: #6c63ff;
+            }
+            .result {
+                display: flex;
+                gap: 1rem;
+                justify-content: center;
+                margin-top: 1rem;
+            }
+            .result button { background: #bae6fd; }
+            .result button:hover { background: #7dd3fc; }
+        </style>
+    </head>
+
+    <body>
+        <h1>🏁 झंडा क्वेस्ट</h1>
+        <p style="margin-top:0rem">झंडा देखिए और सही देश चुनें!</p>
+        <img id="flag" src="" alt="देश का झंडा" />
+        <div class="options" id="options"></div>
+        <div id="feedback"></div>
+        <div id="score">स्कोर: 0</div>
+
+        <div id="gameover">
+            <div
+                id="finalMessage"
+                style="
+                    background: #fff0f6;
+                    color: #6b21a8;
+                    padding: 1rem 1.5rem;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                    font-size: 1.2rem;
+                    font-weight: bold;
+                    max-width: 90%;
+                "
+            ></div>
+            <div class="result">
+                <button onclick="restartGame()">फिर से खेलें</button>
+                <button onclick="shareScore()">शेयर करें</button>
+            </div>
+        </div>
+
+        <script src="flag_data_full_254_svg.js"></script>
+        <script>
+            let unusedFlags = [...flags];
+            let currentAnswer = "";
+            let score = 0;
+
+            function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
+            function loadQuestion() {
+                if (unusedFlags.length < 4) {
+                    endGame("🎉 आपने सभी झंडे पहचान लिए!");
+                    return;
+                }
+                const questionSet = shuffle([...unusedFlags]).slice(0, 4);
+                const answer = questionSet[Math.floor(Math.random() * 4)];
+                currentAnswer = answer.country;
+                document.getElementById("flag").src = answer.img;
+                const optionsDiv = document.getElementById("options");
+                optionsDiv.innerHTML = "";
+                questionSet.forEach((item) => {
+                    const btn = document.createElement("button");
+                    btn.textContent = item.country;
+                    btn.onclick = () => checkAnswer(item.country);
+                    optionsDiv.appendChild(btn);
+                });
+                document.getElementById("feedback").textContent = "";
+            }
+            function checkAnswer(choice) {
+                if (choice === currentAnswer) {
+                    document.getElementById("feedback").textContent = "✅ सही जवाब!";
+                    unusedFlags = unusedFlags.filter((f) => f.country !== currentAnswer);
+                    score++;
+                    document.getElementById("score").textContent = `स्कोर: ${score}`;
+                    setTimeout(loadQuestion, 700);
+                } else {
+                    endGame(`❌ गलत! सही उत्तर: ${currentAnswer}`);
+                }
+            }
+            function endGame(message) {
+                document.getElementById("feedback").textContent = "";
+                document.getElementById("score").textContent = "";
+                document.getElementById("finalMessage").innerHTML = `${message}<br><br>कुल ${score} सही उत्तर!`;
+                document.getElementById("gameover").style.display = "flex";
+                document.getElementById("options").innerHTML = "";
+                document.getElementById("flag").style.display = "none";
+            }
+            function restartGame() {
+                score = 0;
+                unusedFlags = [...flags];
+                document.getElementById("score").textContent = `स्कोर: 0`;
+                document.getElementById("gameover").style.display = "none";
+                document.getElementById("flag").style.display = "block";
+                loadQuestion();
+            }
+            function shareScore() {
+                const text = `🏁 मैंने झंडा क्वेस्ट में ${score} अंक बनाए! क्या आप मुझसे बेहतर कर सकते हैं?`;
+                const url = window.location.href;
+                if (navigator.share) {
+                    navigator
+                        .share({
+                            title: "झंडा क्वेस्ट",
+                            text: text,
+                            url: url
+                        })
+                        .then(() => console.log("Shared successfully!"))
+                        .catch((error) => console.error("Sharing failed:", error));
+                } else {
+                    navigator.clipboard.writeText(`${text} ${url}`).then(() => {
+                        alert("लिंक क्लिपबोर्ड में कॉपी हो गया है!");
+                    });
+                }
+            }
+            loadQuestion();
+        </script>
+        <button
+            style="
+                margin-top: 20px;
+                width: 90%;
+                height: 60px;
+                font-size: 16px;
+                font-weight: bold;
+                background-color: #fff;
+                cursor: pointer;
+                border-radius: 6px;
+                border: solid;
+                color: black;
+                border-color: black;
+            "
+            onclick="window.location.href='/'"
+        >
+            अन्य गेम्स
+        </button>
+        <section
+            style="
+                width: 90%;
+                max-width: 440px;
+                margin: 60px auto;
+                padding: 20px;
+                background: #fff;
+                border: 2px solid #e5e5e5;
+                border-radius: 14px;
+                font-family: &quot;Quicksand&quot;, sans-serif;
+                font-size: 14px;
+                line-height: 1.7;
+                color: #333;
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+            "
+        >
+            <h2 style="font-size: 18px; margin-bottom: 1rem; color: #6c63ff">❓ अक्सर पूछे जाने वाले सवाल (FAQ)</h2>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q1. झंडा क्वेस्ट कैसे खेलें?</strong><br />
+                A. दिखाए गए झंडे को देखिए और 4 विकल्पों में से सही देश चुनिए। एक बार भी गलती हो गई तो गेम खत्म!
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q2. सही जवाब देने पर क्या होगा?</strong><br />
+                A. आपका स्कोर 1 बढ़ेगा और अगला झंडा दिखेगा। तब तक खेलें जब तक सब झंडे खत्म न हों या आप गलत न हो जाएँ!
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q3. इसमें कितने देश के झंडे हैं?</strong><br />
+                A. इस गेम में 250+ देश के झंडे शामिल हैं। हर राउंड में नए-नए झंडे रैंडम आते हैं।
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q4. क्या मैं कभी भी रीस्टार्ट कर सकता हूँ?</strong><br />
+                A. हाँ! गेम हारने या क्लियर करने के बाद "फिर से खेलें" पर क्लिक करें — स्कोर रीसेट होकर शुरुआत से।
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q5. क्या यह गेम मोबाइल पर चलता है?</strong><br />
+                A. बिल्कुल! यह गेम स्मार्टफोन और टैबलेट दोनों के लिए पूरी तरह अनुकूलित है।
+            </div>
+
+            <div>
+                <strong>Q6. स्कोर कैसे शेयर करें?</strong><br />
+                A. गेम के अंत में "शेयर करें" बटन पर क्लिक करें — लिंक और स्कोर दोस्तों को भेजें!
+            </div>
+        </section>
+    </body>
+</html>

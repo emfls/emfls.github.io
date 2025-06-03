@@ -1,0 +1,793 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta
+      name="description"
+      content="高速でシンプルなオンラインフリックボードゲーム、マーブルフリックを遊ぼう！友達やAIとモバイルで対戦できる。楽しくて速くて完全無料。ダウンロード不要。" />
+    <meta
+      name="keywords"
+      content="マーブルフリック, フリックゲーム, ウェブボードゲーム, モバイル, オンラインゲーム, 無料, 2人対戦, AI, フリックゲーム, ブラウザ, カジュアル, ダウンロード不要" />
+    <meta name="author" content="Itagi" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://emfls.github.io/ru/game/MarbleFlick/" />
+
+    <meta property="og:title" content="マーブルフリック - 無料モバイルウェブゲーム" />
+    <meta
+      property="og:description"
+      content="速くて楽しいモバイルボードゲーム、マーブルフリックを楽しもう。オンラインで1対1かAIと無料でプレイ！" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <meta property="og:url" content="https://emfls.github.io/ru/game/MarbleFlick/" />
+    <meta property="og:type" content="website" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="マーブルフリック - 無料モバイルウェブゲーム" />
+    <meta
+      name="twitter:description"
+      content="この無料モバイルフリックゲームで友達やAIに挑戦しよう。ダウンロード不要ですぐ遊べます！" />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"
+    ></script>
+    <title>マーブルフリック</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background: #f6f8fb;
+      }
+      body {
+        min-height: 100vh;
+        font-family: "Jua", "Segoe UI", Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+      }
+      #gameWrap {
+        margin: 0 auto;
+        margin-top: 5vw;
+        background: #fff;
+        border-radius: 24px;
+        box-shadow: 0 6px 32px #1233;
+        padding: 2.5vw 4vw 3vw 4vw;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 94vw;
+        max-width: 470px;
+      }
+      h2 {
+        font-size: 2rem;
+        margin: 1vw 0 2vw 0;
+        color: #335;
+        letter-spacing: 2px;
+        text-shadow: 0 2px 12px #beeb;
+      }
+      #winnerBanner {
+        display: none;
+        font-size: 1.8rem;
+        font-weight: bold;
+        background: linear-gradient(90deg, #4aacee 40%, #fdd56b 100%);
+        color: #20314f;
+        border-radius: 16px;
+        box-shadow: 0 4px 22px #1476;
+        padding: 13px 22px;
+        margin-bottom: 12px;
+        text-align: center;
+        letter-spacing: 2px;
+        z-index: 2;
+        position: relative;
+      }
+      #aiBar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 8px;
+        font-size: 1.12rem;
+      }
+      .ai-btn {
+        border: none;
+        outline: none;
+        border-radius: 10px;
+        background: #e8eefa;
+        color: #334;
+        padding: 8px 27px;
+        font-size: 1.14rem;
+        font-weight: bold;
+        box-shadow: 0 1.5px 7px #cdf3;
+        cursor: pointer;
+        transition: 0.1s;
+        margin: 0 2px;
+      }
+      .ai-btn.active {
+        background: linear-gradient(90deg, #447ee1 40%, #34c1ea 100%);
+        color: #fff;
+        box-shadow: 0 2px 12px #1355;
+      }
+      #info {
+        font-size: 1.09rem;
+        color: #236adc;
+        margin-bottom: 1vw;
+        letter-spacing: 1px;
+        text-align: center;
+      }
+      #turn {
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin-bottom: 0.7vw;
+        margin-top: 0.2vw;
+        color: #233;
+        background: #f0f6ff;
+        border-radius: 14px;
+        padding: 7px 18px;
+        box-shadow: 0 2px 8px #bbf5;
+        display: inline-block;
+      }
+      #board {
+        display: block;
+        width: 86vw;
+        height: 86vw;
+        max-width: 360px;
+        max-height: 360px;
+        background: transparent;
+        margin: 2vw auto;
+        touch-action: none;
+        user-select: none;
+        border-radius: 50%;
+        box-shadow: 0 2px 12px #1234;
+      }
+      .btn-group {
+        display: flex;
+        justify-content: center;
+        gap: 1vw;
+        margin-top: 1vw;
+      }
+      button {
+        font-family: inherit;
+        background: linear-gradient(90deg, #447ee1 40%, #34c1ea 100%);
+        color: #fff;
+        border: none;
+        border-radius: 12px;
+        padding: 10px 22px;
+        font-size: 1.18rem;
+        font-weight: bold;
+        letter-spacing: 2px;
+        margin: 0.5vw 2vw 0.5vw 0;
+        box-shadow: 0 2px 12px #1355;
+        cursor: pointer;
+        transition: background 0.13s;
+      }
+      button:active {
+        background: #1b4d8b;
+      }
+      @media (max-width: 460px) {
+        #gameWrap {
+          margin-top: 3vw;
+        }
+        h2 {
+          font-size: 6.5vw;
+        }
+        #info,
+        #turn {
+          font-size: 1.1rem;
+        }
+        #board {
+          width: 98vw;
+          height: 98vw;
+          max-width: 370px;
+          max-height: 370px;
+        }
+        #winnerBanner {
+          font-size: 1.3rem;
+          padding: 10px 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="gameWrap">
+      <h2>マーブルフリック</h2>
+      <div id="aiBar">
+        <button class="ai-btn active" id="modeHuman">2人モード</button>
+        <button class="ai-btn" id="modeAI">AIモード</button>
+      </div>
+      <div id="info">
+        <span id="descHuman">両者とも手動プレイ。円の中でドラッグ！</span>
+        <span id="descAI" style="display: none">あなた（黒）、AI（白）。円の中でドラッグ！</span>
+      </div>
+      <div id="turn">黒の番 ●</div>
+      <canvas id="board" width="360" height="360"></canvas>
+      <div id="winnerBanner"></div>
+      <div class="btn-group">
+        <button id="restartBtn">再スタート</button>
+        <button id="otherGamesBtn" onclick="window.location.href='../'">他のゲーム</button>
+      </div>
+    </div>
+    <script>
+      // ===== Variables & Setup =====
+      const canvas = document.getElementById("board");
+      const ctx = canvas.getContext("2d");
+      let size = canvas.width;
+      let center = size / 2;
+      let radius = size / 2 - 8;
+      let pieceRadius = 22;
+      let pieces = [];
+      let turn = 0;
+      let dragging = false,
+        dragPiece = null,
+        dragFrom = null,
+        dragTo = null;
+      let animation = false;
+      let aiMode = false;
+      let particles = [];
+      let aiTimeout = null;
+      let winner = null;
+      let lastSurvivorColor = null;
+
+      function resizeCanvas() {
+        let minEdge = Math.min(window.innerWidth * 0.94, 360);
+        canvas.width = canvas.height = minEdge;
+        size = minEdge;
+        center = size / 2;
+        radius = size / 2 - 8;
+        pieceRadius = size / 16.2;
+        draw();
+      }
+      window.addEventListener("resize", resizeCanvas);
+
+      function resetGame() {
+        let anglesBlack = [0, 45, 90, 135];
+        let anglesWhite = [180, 225, 270, 315];
+        let gap = radius - pieceRadius - 70;
+        pieces = [];
+        for (let i = 0; i < 4; i++) {
+          let rad = (anglesBlack[i] * Math.PI) / 180;
+          pieces.push({
+            x: center + gap * Math.cos(rad),
+            y: center + gap * Math.sin(rad),
+            color: "black",
+            alive: true,
+          });
+          rad = (anglesWhite[i] * Math.PI) / 180;
+          pieces.push({
+            x: center + gap * Math.cos(rad),
+            y: center + gap * Math.sin(rad),
+            color: "white",
+            alive: true,
+          });
+        }
+        turn = 0;
+        dragging = animation = false;
+        dragPiece = dragFrom = dragTo = null;
+        clearParticles();
+        if (aiTimeout) clearTimeout(aiTimeout);
+        winner = null;
+        lastSurvivorColor = null;
+        document.getElementById("winnerBanner").style.display = "none";
+        updateTurnText();
+        draw();
+        setTimeout(aiAuto, 600);
+      }
+
+      function updateTurnText() {
+        document.getElementById("turn").textContent = turn === 0 ? "黒の番 ●" : "白の番 ○";
+        document.getElementById("turn").style.background = turn === 0 ? "#f0f6ff" : "#fff8f7";
+        document.getElementById("turn").style.color = turn === 0 ? "#1b304e" : "#bb302f";
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, size, size);
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(center, center, radius, 0, 2 * Math.PI);
+        ctx.fillStyle = "#fff";
+        ctx.shadowColor = "#bbe0f5";
+        ctx.shadowBlur = 9;
+        ctx.fill();
+        ctx.restore();
+
+        ctx.beginPath();
+        ctx.arc(center, center, radius, 0, 2 * Math.PI);
+        ctx.lineWidth = size / 48;
+        ctx.strokeStyle = "#b6d1e8";
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(center, center, size / 9, 0, 2 * Math.PI);
+        ctx.lineWidth = 2.1;
+        ctx.strokeStyle = "#c7e0f7";
+        ctx.stroke();
+
+        for (let p of particles) {
+          ctx.save();
+          ctx.globalAlpha = p.alpha;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, 2 * Math.PI);
+          ctx.fillStyle = p.color;
+          ctx.shadowColor = p.color;
+          ctx.shadowBlur = 5;
+          ctx.fill();
+          ctx.restore();
+        }
+        for (const p of pieces) {
+          if (!p.alive) continue;
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, pieceRadius, 0, 2 * Math.PI);
+          ctx.fillStyle = p.color === "black" ? "#232537" : "#f8fafc";
+          ctx.shadowColor = p.color === "black" ? "#3336" : "#aaa8";
+          ctx.shadowBlur = animation && dragPiece === p ? 18 : 6;
+          ctx.fill();
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = p.color === "black" ? "#fff" : "#bababa";
+          ctx.stroke();
+          ctx.restore();
+          if (animation && dragPiece === p) {
+            ctx.save();
+            ctx.globalAlpha = 0.36;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, pieceRadius + 7, 0, 2 * Math.PI);
+            ctx.fillStyle = p.color === "black" ? "#2b75ff" : "#f2c301";
+            ctx.shadowColor = ctx.fillStyle;
+            ctx.shadowBlur = 13;
+            ctx.fill();
+            ctx.restore();
+          }
+        }
+        if (dragging && dragFrom && dragTo) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.moveTo(dragFrom.x, dragFrom.y);
+          ctx.lineTo(dragTo.x, dragTo.y);
+          ctx.lineWidth = 6;
+          ctx.strokeStyle = "#1ebae2";
+          ctx.shadowColor = "#0af";
+          ctx.shadowBlur = 8;
+          ctx.stroke();
+          ctx.restore();
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(dragFrom.x, dragFrom.y, pieceRadius / 1.6, 0, 2 * Math.PI);
+          ctx.fillStyle = "#39f5f7";
+          ctx.globalAlpha = 0.23;
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      function getPieceAt(x, y) {
+        for (const p of pieces) {
+          if (!p.alive) continue;
+          if (Math.hypot(p.x - x, p.y - y) < pieceRadius) return p;
+        }
+        return null;
+      }
+
+      function isInsideBoard(x, y) {
+        return Math.hypot(x - center, y - center) <= radius - pieceRadius / 1.2;
+      }
+
+      function clampInBoard(x, y) {
+        let dx = x - center,
+          dy = y - center;
+        let dist = Math.hypot(dx, dy);
+        if (dist > radius - pieceRadius) {
+          let scale = (radius - pieceRadius) / dist;
+          return {
+            x: center + dx * scale,
+            y: center + dy * scale,
+          };
+        }
+        return { x, y };
+      }
+
+      function addParticle(x, y, color, n = 18) {
+        for (let i = 0; i < n; i++) {
+          particles.push({
+            x,
+            y,
+            vx: (Math.random() - 0.5) * 6,
+            vy: (Math.random() - 0.5) * 6,
+            size: Math.random() * 3 + 2,
+            alpha: 1,
+            color,
+          });
+        }
+      }
+
+      function clearParticles() {
+        particles = [];
+      }
+
+      function updateParticles() {
+        for (let i = particles.length - 1; i >= 0; i--) {
+          let p = particles[i];
+          p.x += p.vx;
+          p.y += p.vy;
+          p.alpha *= 0.92;
+          p.size *= 0.97;
+          if (p.alpha < 0.08 || p.size < 0.9) particles.splice(i, 1);
+        }
+      }
+
+      function flickPiece(piece, dx, dy) {
+        let vx = dx * 0.39,
+          vy = dy * 0.39;
+        let running = true;
+        dragPiece = piece;
+        animation = true;
+
+        function animate() {
+          updateParticles();
+          piece.x += vx;
+          piece.y += vy;
+          vx *= 0.92;
+          vy *= 0.92;
+          for (const other of pieces) {
+            if (other === piece || !other.alive) continue;
+            const dist = Math.hypot(piece.x - other.x, piece.y - other.y);
+            if (dist < pieceRadius * 2) {
+              const angle = Math.atan2(other.y - piece.y, other.x - piece.x);
+              const overlap = pieceRadius * 2 - dist;
+              piece.x -= (Math.cos(angle) * overlap) / 2;
+              piece.y -= (Math.sin(angle) * overlap) / 2;
+              other.x += (Math.cos(angle) * overlap) / 2;
+              other.y += (Math.sin(angle) * overlap) / 2;
+              let power = Math.sqrt(vx * vx + vy * vy) * 0.92;
+              let transmitVx = Math.cos(angle) * power;
+              let transmitVy = Math.sin(angle) * power;
+              vx *= 0.22;
+              vy *= 0.22;
+              addParticle(other.x, other.y, other.color === "black" ? "#2b75ff" : "#f2c301", 14);
+              setTimeout(() => flickPiece(other, transmitVx, transmitVy), 8);
+            }
+          }
+          if (!isInsideBoard(piece.x, piece.y)) {
+            piece.alive = false;
+            addParticle(piece.x, piece.y, piece.color === "black" ? "#3058ff" : "#ffcc00", 26);
+            running = false;
+          }
+          let aliveColors = [...new Set(pieces.filter((p) => p.alive).map((p) => p.color))];
+          if (aliveColors.length === 1) {
+            lastSurvivorColor = aliveColors[0];
+          }
+          draw();
+
+          if (Math.abs(vx) < 0.5 && Math.abs(vy) < 0.5) {
+            running = false;
+          }
+          if (running) {
+            requestAnimationFrame(animate);
+          } else {
+            dragPiece = null;
+            animation = false;
+            clearParticles();
+            draw();
+            checkWin();
+            setTimeout(aiAuto, 550);
+          }
+        }
+        animate();
+      }
+
+      function showWinner(winnerColor) {
+        const banner = document.getElementById("winnerBanner");
+        if (winnerColor === "white") {
+          banner.textContent = "白の勝利！ 🎉";
+          banner.style.background = "linear-gradient(90deg,#fceabb,#f8b500 100%)";
+          banner.style.color = "#2b2323";
+        } else if (winnerColor === "black") {
+          banner.textContent = "黒の勝利！ 🎉";
+          banner.style.background = "linear-gradient(90deg,#5aaaff,#232942 100%)";
+          banner.style.color = "#f5f8fc";
+        } else {
+          banner.textContent = "引き分け 🤝";
+          banner.style.background = "#eee";
+          banner.style.color = "#2b2323";
+        }
+        banner.style.display = "block";
+        winner = winnerColor;
+      }
+
+      function checkWin() {
+        const blacks = pieces.filter((p) => p.alive && p.color === "black").length;
+        const whites = pieces.filter((p) => p.alive && p.color === "white").length;
+        if (blacks === 0 || whites === 0) {
+          setTimeout(() => {
+            if (lastSurvivorColor) {
+              showWinner(lastSurvivorColor);
+            } else {
+              showWinner(null);
+            }
+          }, 350);
+        }
+      }
+
+      document.getElementById("modeHuman").onclick = () => {
+        aiMode = false;
+        document.getElementById("modeHuman").classList.add("active");
+        document.getElementById("modeAI").classList.remove("active");
+        document.getElementById("descHuman").style.display = "";
+        document.getElementById("descAI").style.display = "none";
+        setTimeout(aiAuto, 300);
+      };
+      document.getElementById("modeAI").onclick = () => {
+        aiMode = true;
+        document.getElementById("modeHuman").classList.remove("active");
+        document.getElementById("modeAI").classList.add("active");
+        document.getElementById("descHuman").style.display = "none";
+        document.getElementById("descAI").style.display = "";
+        setTimeout(aiAuto, 300);
+      };
+
+      function simulateShot(sel, angle, power, my, op) {
+        let victims = [];
+        for (const p of [...my, ...op]) {
+          if (p === sel) continue;
+          let toP = Math.atan2(p.y - sel.y, p.x - sel.x);
+          let angleDiff = Math.abs((angle - toP + Math.PI * 2) % (Math.PI * 2));
+          let dist = Math.hypot(p.x - sel.x, p.y - sel.y);
+          if (angleDiff < 0.19 && dist < power + pieceRadius * 1.2) {
+            let px = sel.x + Math.cos(angle) * power;
+            let py = sel.y + Math.sin(angle) * power;
+            let outDist = Math.hypot(px - center, py - center);
+            if (outDist > radius - pieceRadius * 0.7) {
+              victims.push(p.color);
+            }
+          }
+        }
+        let selfToEdge = Math.hypot(
+          sel.x + Math.cos(angle) * power - center,
+          sel.y + Math.sin(angle) * power - center
+        );
+        if (selfToEdge > radius - pieceRadius * 0.7) {
+          victims.push(sel.color);
+        }
+        return victims;
+      }
+
+      function aiAuto() {
+        if (animation || dragging || !aiMode || turn === 0 || winner) return;
+        if (aiTimeout) clearTimeout(aiTimeout);
+        aiTimeout = setTimeout(() => {
+          let my = pieces.filter((p) => p.alive && p.color === "white");
+          let op = pieces.filter((p) => p.alive && p.color === "black");
+          if (my.length == 0 || op.length == 0) return;
+
+          let bestShot = null,
+            bestScore = -99999;
+          for (const sel of my) {
+            for (const tgt of op) {
+              let angle = Math.atan2(tgt.y - sel.y, tgt.x - sel.x);
+              let dist = Math.hypot(tgt.x - sel.x, tgt.y - sel.y);
+              let minPower = Math.max(radius * 0.62, dist + pieceRadius * 1.1);
+              let power = Math.max(minPower, Math.min(dist + 55, radius * 0.97));
+              let victims = simulateShot(sel, angle, power, my, op);
+
+              let score = 0;
+              score += 120 * victims.filter((x) => x === "black").length;
+              score -= 190 * victims.filter((x) => x === "white").length;
+              let doubleHit = op.filter((other) => {
+                if (other === tgt) return false;
+                let predX = sel.x + Math.cos(angle) * (pieceRadius * 2);
+                let predY = sel.y + Math.sin(angle) * (pieceRadius * 2);
+                return Math.hypot(other.x - predX, other.y - predY) < pieceRadius * 2.1;
+              }).length;
+              score += doubleHit * 40;
+              let edgeScore = -Math.abs(
+                Math.hypot(sel.x - center, sel.y - center) - (radius - pieceRadius - 6)
+              );
+              score += edgeScore * 0.5;
+              if (dist > radius * 0.7) score += 12;
+
+              if (score > bestScore) {
+                bestScore = score;
+                bestShot = { sel, tgt, angle, power };
+              }
+            }
+          }
+          if (!bestShot) {
+            bestShot = {
+              sel: my[Math.floor(Math.random() * my.length)],
+              tgt: op[Math.floor(Math.random() * op.length)],
+              angle: Math.atan2(op[0].y - my[0].y, op[0].x - my[0].x),
+              power: radius * 0.7,
+            };
+          }
+          let sel = bestShot.sel,
+            tgt = bestShot.tgt,
+            angle = bestShot.angle,
+            power = bestShot.power;
+          let edgeDist = Math.hypot(sel.x - center, sel.y - center);
+          if (edgeDist > radius - pieceRadius - 14) {
+            angle = Math.atan2(center - sel.y, center - sel.x);
+            power = Math.max(radius * 0.63, radius / 1.4);
+          }
+          angle += (Math.random() - 0.5) * 0.04;
+          let dragX = sel.x - Math.cos(angle) * power;
+          let dragY = sel.y - Math.sin(angle) * power;
+          let start = clampInBoard(sel.x, sel.y);
+          let end = clampInBoard(dragX, dragY);
+          flickPiece(sel, start.x - end.x, start.y - end.y);
+          turn = 0;
+          updateTurnText();
+        }, 700);
+      }
+
+      function pointerPos(e) {
+        const rect = canvas.getBoundingClientRect();
+        if (e.touches) {
+          return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+        } else {
+          return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+        }
+      }
+      canvas.addEventListener("mousedown", onPointerDown);
+      canvas.addEventListener("mousemove", onPointerMove);
+      canvas.addEventListener("mouseup", onPointerUp);
+      canvas.addEventListener("mouseleave", onPointerUp);
+      canvas.addEventListener("touchstart", onPointerDown, { passive: false });
+      canvas.addEventListener("touchmove", onPointerMove, { passive: false });
+      canvas.addEventListener("touchend", onPointerUp, { passive: false });
+
+      function onPointerDown(e) {
+        if (dragging || animation || (aiMode && turn === 1) || winner) return;
+        let { x, y } = pointerPos(e);
+        if (!isInsideBoard(x, y)) return;
+        let p = getPieceAt(x, y);
+        if (p && p.color === (turn === 0 ? "black" : "white") && p.alive) {
+          dragging = true;
+          dragPiece = p;
+          dragFrom = { x: p.x, y: p.y };
+          dragTo = { x: p.x, y: p.y };
+          draw();
+          e.preventDefault();
+        }
+      }
+      function onPointerMove(e) {
+        if (!dragging || !dragPiece) return;
+        let { x, y } = pointerPos(e);
+        let c = clampInBoard(x, y);
+        dragTo = { x: c.x, y: c.y };
+        draw();
+        e.preventDefault();
+      }
+      function onPointerUp(e) {
+        if (!dragging || !dragPiece) return;
+        let dx = dragFrom.x - dragTo.x,
+          dy = dragFrom.y - dragTo.y;
+        let dragLen = Math.hypot(dx, dy);
+        if (dragLen > 18) {
+          let maxPow = radius * 0.98;
+          if (dragLen > maxPow) {
+            dx *= maxPow / dragLen;
+            dy *= maxPow / dragLen;
+          }
+          flickPiece(dragPiece, dx, dy);
+          turn = 1 - turn;
+          updateTurnText();
+        }
+        dragPiece = null;
+        dragging = false;
+        dragFrom = null;
+        dragTo = null;
+        draw();
+        e.preventDefault();
+      }
+
+      document.getElementById("restartBtn").onclick = resetGame;
+
+      resizeCanvas();
+      resetGame();
+    </script>
+    <section
+      style="
+        max-width: 320px;
+        width: 100%;
+        margin: 48px auto 24px auto;
+        font-family: 'Jua', sans-serif;
+        font-size: 14px;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 6px 24px #1232;
+        padding: 20px;
+        line-height: 1.65;
+        color: #2d3436;
+      ">
+      <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #2577cf">❓ よくある質問</h2>
+
+      <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">ゲーム紹介</h3>
+      <dl>
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: "Marble Flick"とは何ですか？</dt>
+        <dd style="margin-bottom: 12px">
+          A: "Marble Flick"はビー玉を弾いて相手のビー玉をボード外に押し出すシンプルで高速なウェブボードゲームです。1対1で対戦、またはAIと対戦できます。
+        </dd>
+
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ゲームは無料ですか？</dt>
+        <dd style="margin-bottom: 12px">
+          A: はい、完全無料で楽しめます。ダウンロードやインストールは不要で、ブラウザからすぐにプレイ可能です。
+        </dd>
+
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: どのデバイスでプレイできますか？</dt>
+        <dd style="margin-bottom: 12px">
+          A: モバイルウェブに最適化されていますが、対応ブラウザがあればどの端末でもプレイできます。
+        </dd>
+      </dl>
+
+      <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">ゲーム方法</h3>
+      <dl>
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ゲームの目的は何ですか？</dt>
+        <dd style="margin-bottom: 12px">
+          A: 自分のビー玉をすべてボード上に残し、相手のビー玉をすべてボード外に押し出せば勝利です。
+        </dd>
+
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: どのようにビー玉を動かしますか？</dt>
+        <dd style="margin-bottom: 12px">
+          A: 自分のターンでビー玉を長押し＆ドラッグして、好きな方向と強さで弾きます。ドラッグの長さに応じて強さが増します。
+        </dd>
+
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ビー玉がボード外に出たらどうなりますか？</dt>
+        <dd style="margin-bottom: 12px">
+          A: ボード外に出たビー玉は除去されます。相手のビー玉を除去することが目的ですが、自分のビー玉が除去されると不利になります。
+        </dd>
+
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ゲームが終了する条件は何ですか？</dt>
+        <dd style="margin-bottom: 12px">
+          A: どちらかのプレイヤーのすべてのビー玉がボード外に出るとゲーム終了し、残った色のプレイヤーの勝利です。両方とも同時に全部出た場合は引き分けになります。
+        </dd>
+      </dl>
+
+      <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">ゲームモード</h3>
+      <dl>
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: AIモードはどうプレイしますか？</dt>
+        <dd style="margin-bottom: 12px">
+          A: AIモードではあなた（黒）がAI（白）と対戦します。AIは自動で自分のターンにビー玉を弾きます。
+        </dd>
+
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: 2人モードとは何ですか？</dt>
+        <dd style="margin-bottom: 12px">
+          A: 2人モードでは二人のプレイヤーが同じ端末で交互にプレイします。友達と楽しめます。
+        </dd>
+      </dl>
+
+      <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">トラブルシューティング</h3>
+      <dl>
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ゲームが正常に動きません。</dt>
+        <dd style="margin-bottom: 12px">
+          A: ブラウザをリロードするか、他のブラウザを試してください。ネットワーク状況も確認してください。問題が続く場合は開発者にお問い合わせください。
+        </dd>
+
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ラグがひどいです。</dt>
+        <dd style="margin-bottom: 12px">
+          A: デバイスの性能やバックグラウンドで動作している他アプリ/タブの影響かもしれません。不要なアプリ/タブを閉じるか、ネットワーク環境を確認してください。
+        </dd>
+      </dl>
+
+      <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">その他</h3>
+      <dl>
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ゲームへのフィードバックやアイデアを送りたいです。</dt>
+        <dd style="margin-bottom: 12px">
+          A: ありがとうございます！ゲーム内のお問い合わせ先または開発者連絡先から自由にご意見をお送りください。
+        </dd>
+      </dl>
+    </section>
+  </body>
+</html>

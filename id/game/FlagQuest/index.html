@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="地理の知識を試そう！『国旗クエスト』で国旗を見て国名を当てよう。無料で楽しめる、楽しくモバイル対応のブラウザクイズゲームです。"
+        />
+        <meta
+            name="keywords"
+            content="国旗クエスト, 国旗クイズ, 地理, 国クイズ, 国旗ゲーム, 無料オンラインゲーム, クイズ, ブラウザゲーム, モバイル, 世界の国旗, 教育, クイズゲーム"
+        />
+        <meta name="author" content="Itagi" />
+        <meta name="robots" content="index, follow" />
+
+        <link rel="canonical" href="https://emfls.github.io/id/game/FlagQuest" />
+
+        <meta property="og:title" content="国旗クエスト – 無料オンライン国旗クイズゲーム!" />
+        <meta
+            property="og:description"
+            content="いくつ国旗を当てられる？究極の無料国旗クイズゲーム、国旗クエストで実力を試そう！"
+        />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta property="og:url" content="https://emfls.github.io/id/game/FlagQuest" />
+        <meta property="og:type" content="website" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="国旗クエスト – 無料オンライン国旗クイズゲーム!" />
+        <meta
+            name="twitter:description"
+            content="国旗を見て国名を当て、友達に挑戦しよう！ 国旗クエストをオンラインで無料プレイしよう。"
+        />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"
+        ></script>
+        <title>国旗クエスト</title>
+        <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet" />
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                font-family: "Quicksand", sans-serif;
+                background: linear-gradient(to bottom right, #fef6e4, #e0f2f1);
+                color: #333;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 0rem;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+                margin-bottom: 1rem;
+                margin-top: 1rem;
+                color: #6c63ff;
+                text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+            }
+
+            #flag {
+                width: 280px;
+                height: 180px;
+                object-fit: contain;
+                border: 4px solid #fff;
+                border-radius: 16px;
+                background: #fff;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+                margin: 1.6rem 0;
+            }
+
+            .options {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                margin-bottom: 0.5rem;
+                gap: 1rem;
+            }
+
+            button {
+                background: #ffd6e0;
+                color: #333;
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
+                border: none;
+                border-radius: 12px;
+                box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+                font-weight: 600;
+                transition: all 0.25s ease;
+                cursor: pointer;
+            }
+
+            button:hover {
+                background: #ffcad4;
+                transform: scale(1.05);
+            }
+
+            #feedback {
+                font-weight: 700;
+                font-size: 1.1rem;
+                color: #222;
+                min-height: 1.5rem;
+            }
+
+            #score {
+                font-size: 1.1rem;
+                margin-top: 1rem;
+            }
+
+            #gameover {
+                display: none;
+                flex-direction: column;
+                gap: 1rem;
+                margin-top: 0rem;
+                align-items: center;
+            }
+
+            #finalMessage {
+                font-size: 1.3rem;
+                font-weight: bold;
+                color: #6c63ff;
+            }
+
+            .result {
+                display: flex;
+                gap: 1rem;
+                justify-content: center;
+                margin-top: 1rem;
+            }
+
+            .result button {
+                background: #bae6fd;
+            }
+
+            .result button:hover {
+                background: #7dd3fc;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>🏁 国旗クエスト</h1>
+        <p style="margin-top: 0rem">国旗を見て国名を当てよう！</p>
+        <img id="flag" src="" alt="国旗" />
+        <div class="options" id="options"></div>
+        <div id="feedback"></div>
+        <div id="score">スコア: 0</div>
+
+        <div id="gameover">
+            <div
+                id="finalMessage"
+                style="
+                    background: #fff0f6;
+                    color: #6b21a8;
+                    padding: 1rem 1.5rem;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                    font-size: 1.2rem;
+                    font-weight: bold;
+                    max-width: 90%;
+                "
+            ></div>
+
+            <div class="result">
+                <button onclick="restartGame()">もう一度プレイ</button>
+                <button onclick="shareScore()">共有</button>
+            </div>
+        </div>
+
+        <script src="flag_data_full_254_svg.js"></script>
+        <script>
+            let unusedFlags = [...flags];
+            let currentAnswer = "";
+            let score = 0;
+
+            function shuffle(array) {
+                return array.sort(() => Math.random() - 0.5);
+            }
+
+            function loadQuestion() {
+                if (unusedFlags.length < 4) {
+                    endGame("🎉 すべての国旗をクリアしました！");
+                    return;
+                }
+                const questionSet = shuffle([...unusedFlags]).slice(0, 4);
+                const answer = questionSet[Math.floor(Math.random() * 4)];
+                currentAnswer = answer.country;
+
+                document.getElementById("flag").src = answer.img;
+                const optionsDiv = document.getElementById("options");
+                optionsDiv.innerHTML = "";
+
+                questionSet.forEach((item) => {
+                    const btn = document.createElement("button");
+                    btn.textContent = item.country;
+                    btn.onclick = () => checkAnswer(item.country);
+                    optionsDiv.appendChild(btn);
+                });
+
+                document.getElementById("feedback").textContent = "";
+            }
+
+            function checkAnswer(choice) {
+                if (choice === currentAnswer) {
+                    document.getElementById("feedback").textContent = "🌸 正解です！";
+                    unusedFlags = unusedFlags.filter((f) => f.country !== currentAnswer);
+                    score++;
+                    document.getElementById("score").textContent = `スコア: ${score}`;
+                    setTimeout(loadQuestion, 700);
+                } else {
+                    endGame(`😢 不正解！正解は ${currentAnswer} です。`);
+                }
+            }
+
+            function endGame(message) {
+                document.getElementById("feedback").textContent = "";
+                document.getElementById("score").textContent = "";
+                document.getElementById("finalMessage").innerHTML = `${message}<br><br>合計で ${score} 問正解しました。`;
+                document.getElementById("gameover").style.display = "flex";
+                document.getElementById("options").innerHTML = "";
+                document.getElementById("flag").style.display = "none";
+            }
+
+            function restartGame() {
+                score = 0;
+                unusedFlags = [...flags];
+                document.getElementById("score").textContent = `スコア: 0`;
+                document.getElementById("gameover").style.display = "none";
+                document.getElementById("flag").style.display = "block";
+                loadQuestion();
+            }
+
+            function shareScore() {
+                const text = `🏁 国旗クエストで ${score} 点獲得！あなたも挑戦してみて！`;
+                const url = window.location.href;
+
+                if (navigator.share) {
+                    navigator
+                        .share({
+                            title: "国旗クエスト",
+                            text: text,
+                            url: url
+                        })
+                        .then(() => console.log("Shared successfully!"))
+                        .catch((error) => console.error("Sharing failed:", error));
+                } else {
+                    navigator.clipboard.writeText(`${text} ${url}`).then(() => {
+                        alert("リンクがクリップボードにコピーされました！");
+                    });
+                }
+            }
+
+            loadQuestion();
+        </script>
+        <button
+            style="
+                margin-top: 20px;
+                width: 90%;
+                height: 60px;
+                font-size: 16px;
+                font-weight: bold;
+                background-color: #fff;
+                cursor: pointer;
+                border-radius: 6px;
+                border: solid;
+                color: black;
+                border-color: black;
+            "
+            onclick="window.location.href='/'"
+        >
+            他のゲーム
+        </button>
+        <section
+            style="
+                width: 90%;
+                max-width: 440px;
+                margin: 60px auto;
+                padding: 20px;
+                background: #fff;
+                border: 2px solid #e5e5e5;
+                border-radius: 14px;
+                font-family: &quot;Quicksand&quot;, sans-serif;
+                font-size: 14px;
+                line-height: 1.7;
+                color: #333;
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+            "
+        >
+            <h2 style="font-size: 18px; margin-bottom: 1rem; color: #6c63ff">❓ よくある質問 (FAQ)</h2>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q1. 国旗クエストはどうプレイしますか？</strong><br />
+                A. 表示された国旗を見て、4つの選択肢から正しい国を選んでください。一度間違えるとゲームは終了です！
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q2. 正解するとどうなりますか？</strong><br />
+                A. スコアが1点増え、新しい国旗が表示されます。間違えるか全ての国旗をクリアするまで続きます！
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q3. 国旗は何種類ありますか？</strong><br />
+                A. このゲームには250以上の国旗が含まれています。各ラウンドで新しい国旗がランダムに選ばれます。
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q4. いつでもゲームをリスタートできますか？</strong><br />
+                A. はい！ゲームに負けるかゲームをクリアした後、「もう一度プレイ」をクリックすると、スコアがリセットされ最初から再スタートできます。
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q5. このゲームはモバイル対応ですか？</strong><br />
+                A. もちろんです。このゲームはスマートフォンとタブレットに最適化されています。
+            </div>
+
+            <div>
+                <strong>Q6. スコアはどう共有できますか？</strong><br />
+                A. ゲーム終了後、「共有」ボタンをクリックしてゲームのリンクとスコアを友達にコピーまたは送信できます！
+            </div>
+        </section>
+    </body>
+</html>

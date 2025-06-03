@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="hi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- मेटा जानकारी (हिंदी में, author वही रखें) -->
+    <meta
+      name="description"
+      content="ब्राउज़र में क्लासिक 2048 पज़ल गेम मुफ्त में खेलें! टाइल्स को जोड़कर 2048 तक पहुँचें। आसान और मज़ेदार नंबर पज़ल गेम!" />
+    <meta
+      name="keywords"
+      content="2048, 2048 गेम, पज़ल गेम, फ्री गेम, ब्राउज़र गेम, नंबर गेम, मोबाइल गेम, क्लासिक गेम" />
+    <meta name="author" content="Itagi" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph (हिंदी में, SNS प्रिव्यू के लिए) -->
+    <meta property="og:title" content="2048 गेम ऑनलाइन खेलें – मज़ेदार नंबर पज़ल!" />
+    <meta
+      property="og:description"
+      content="2048 टाइल्स जोड़ें और हाई स्कोर बनाएं! सरल और मज़ेदार नंबर गेम, अभी खेलें!" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <meta property="og:url" content="https://emfls.github.io/in/game/2048" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card (हिंदी में) -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="2048 गेम ऑनलाइन – फ्री में खेलें!" />
+    <meta
+      name="twitter:description"
+      content="क्लासिक 2048 नंबर पज़ल फ्री में खेलें! मोबाइल सपोर्टेड, कोई भी आसानी से मज़ा ले सकता है!" />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <title>2048 गेम</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background: #faf8ef;
+        align-items: flex-start;
+        padding-top: 40px;
+      }
+      #game {
+        display: grid;
+        grid-template-columns: repeat(4, 70px);
+        grid-template-rows: repeat(4, 70px);
+        gap: 10px;
+        background: #bbada0;
+        padding: 10px;
+        border-radius: 10px;
+        margin-top: 80px;
+      }
+      .tile {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: bold;
+        border-radius: 5px;
+        background: #cdc1b4;
+        color: #776e65;
+      }
+      div > button {
+        border: 0;
+        background: #cdc1b4;
+        color: #776e65;
+        border-radius: 5px;
+      }
+      div > button:active {
+        background-color: #666;
+      }
+      .tile-2 { background: #eee4da; }
+      .tile-4 { background: #ede0c8; }
+      .tile-8 { background: #f2b179; color: #f9f6f2; }
+      .tile-16 { background: #f59563; color: #f9f6f2; }
+      .tile-32 { background: #f67c5f; color: #f9f6f2; }
+      .tile-64 { background: #f65e3b; color: #f9f6f2; }
+      .tile-128 { background: #edcf72; color: #f9f6f2; font-size: 20px; }
+      .tile-256 { background: #edcc61; color: #f9f6f2; font-size: 20px; }
+      .tile-512 { background: #edc850; color: #f9f6f2; font-size: 20px; }
+      .tile-1024 { background: #edc53f; color: #f9f6f2; font-size: 16px; }
+      .tile-2048 { background: #edc22e; color: #f9f6f2; font-size: 16px; }
+      button.menu {
+        position: absolute;
+        padding: 1rem;
+        margin-top: 1rem;
+        font-size: 1.1rem;
+        background-color: #776e65;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        width: 80%;
+        transition: background-color 0.2s ease;
+        cursor: pointer;
+      }
+      button.menu:active {
+        background-color: #cdc1b4;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div
+      style="
+        text-align: center;
+        margin-bottom: 10px;
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+      ">
+      <div style="font-size: 28px; font-weight: bold; color: #776e65">2048</div>
+      <div style="font-size: 14px; color: #8f7a66">नंबर मिलाकर 2048 बनाएं!</div>
+    </div>
+    <div
+      id="score"
+      style="
+        position: absolute;
+        top: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 20px;
+        font-weight: bold;
+        color: #776e65;
+      ">
+      स्कोर: 0
+    </div>
+    <button
+      id="start-button"
+      onclick="startGame()"
+      style="
+        position: absolute;
+        top: 280px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 18px;
+        padding: 10px 20px;
+        background: #8f7a66;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      ">
+      खेल शुरू करें
+    </button>
+    <div id="game"></div>
+    <div
+      id="game-over"
+      style="
+        display: none;
+        position: absolute;
+        top: 280px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(255, 255, 255, 0.9);
+        padding: 20px 30px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        color: #776e65;
+      ">
+      गेम ओवर<br /><br />
+      <button
+        onclick="shareScore()"
+        style="
+          font-size: 16px;
+          padding: 8px 16px;
+          background: #f57c00;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          margin-bottom: 10px;
+        ">
+        स्कोर साझा करें
+      </button
+      ><br />
+      <button
+        onclick="startGame()"
+        style="
+          font-size: 16px;
+          padding: 8px 16px;
+          background: #8f7a66;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+        ">
+        फिर से शुरू करें
+      </button>
+    </div>
+    <script>
+      const game = document.getElementById("game");
+      let board = Array(4)
+        .fill()
+        .map(() => Array(4).fill(0));
+      let score = 0;
+
+      function drawBoard() {
+        game.innerHTML = "";
+        board.flat().forEach((value) => {
+          const tile = document.createElement("div");
+          tile.className = "tile" + (value ? " tile-" + value : "");
+          tile.textContent = value ? value : "";
+          game.appendChild(tile);
+        });
+      }
+
+      function addRandomTile() {
+        let empty = [];
+        board.forEach((row, i) => {
+          row.forEach((val, j) => {
+            if (val === 0) empty.push([i, j]);
+          });
+        });
+        if (empty.length > 0) {
+          let [i, j] = empty[Math.floor(Math.random() * empty.length)];
+          board[i][j] = Math.random() < 0.9 ? 2 : 4;
+        }
+      }
+
+      function moveLeft() {
+        let moved = false;
+        for (let i = 0; i < 4; i++) {
+          let row = board[i].filter((val) => val);
+          for (let j = 0; j < row.length - 1; j++) {
+            if (row[j] === row[j + 1]) {
+              row[j] *= 2;
+              score += row[j];
+              row[j + 1] = 0;
+              moved = true;
+            }
+          }
+          row = row.filter((val) => val);
+          while (row.length < 4) row.push(0);
+          if (!board[i].every((val, j) => val === row[j])) moved = true;
+          board[i] = row;
+        }
+        return moved;
+      }
+
+      function rotateBoard() {
+        board = board[0].map((_, i) => board.map((row) => row[i]).reverse());
+      }
+
+      function isGameOver() {
+        for (let i = 0; i < 4; i++) {
+          for (let j = 0; j < 4; j++) {
+            if (board[i][j] === 0) return false;
+            if (j < 3 && board[i][j] === board[i][j + 1]) return false;
+            if (i < 3 && board[i][j] === board[i + 1][j]) return false;
+          }
+        }
+        return true;
+      }
+
+      function handleKey(e) {
+        let moved = false;
+        if (e.key === "ArrowLeft") moved = moveLeft();
+        else if (e.key === "ArrowRight") {
+          board.forEach((row) => row.reverse());
+          moved = moveLeft();
+          board.forEach((row) => row.reverse());
+        } else if (e.key === "ArrowUp") {
+          rotateBoard();
+          rotateBoard();
+          rotateBoard();
+          moved = moveLeft();
+          rotateBoard();
+        } else if (e.key === "ArrowDown") {
+          rotateBoard();
+          moved = moveLeft();
+          rotateBoard();
+          rotateBoard();
+          rotateBoard();
+        }
+        if (moved) addRandomTile();
+        drawBoard();
+        document.getElementById("score").textContent = `स्कोर: ${score}`;
+        if (isGameOver()) {
+          document.getElementById("game-over").style.display = "block";
+        }
+      }
+
+      function startGame() {
+        score = 0;
+        document.getElementById("score").textContent = "स्कोर: 0";
+        document.getElementById("start-button").style.display = "none";
+        document.getElementById("game-over").style.display = "none";
+        board = Array(4)
+          .fill()
+          .map(() => Array(4).fill(0));
+        addRandomTile();
+        addRandomTile();
+        drawBoard();
+      }
+      document.addEventListener("keydown", handleKey);
+
+      function shareScore() {
+        const text = `मैंने अभी 2048 गेम में ${score} अंक बनाए! क्या आप मुझे हरा सकते हैं?`;
+        if (navigator.share) {
+          navigator
+            .share({
+              title: "2048 गेम",
+              text,
+              url: window.location.href
+            })
+            .catch(console.error);
+        } else {
+          navigator.clipboard
+            .writeText(`${text} ${window.location.href}`)
+            .then(() => alert("स्कोर क्लिपबोर्ड पर कॉपी हो गया!"))
+            .catch(() => alert("कॉपी करने में विफल।"));
+        }
+      }
+    </script>
+    <div
+      id="mobile-controls"
+      style="
+        position: absolute;
+        top: 465px;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: grid;
+        grid-template-columns: repeat(3, 50px);
+        grid-template-rows: repeat(3, 50px);
+        gap: 5px;
+      ">
+      <div></div>
+      <button onclick="handleKey({ key: 'ArrowUp' })" style="font-size: 27px">▲</button>
+      <div></div>
+      <button onclick="handleKey({ key: 'ArrowLeft' })" style="font-size: 24px">◀</button>
+      <div></div>
+      <button onclick="handleKey({ key: 'ArrowRight' })" style="font-size: 24px">▶</button>
+      <div></div>
+      <button onclick="handleKey({ key: 'ArrowDown' })" style="font-size: 27px">▼</button>
+      <div></div>
+    </div>
+    <button style="position: absolute; top: 640px" class="menu" onclick="goToMain()">📂 अन्य गेम्स</button>
+    <script>
+      function goToMain() {
+        window.location.href = "../../index.html";
+      }
+    </script>
+    <section
+      style="
+        width: 90%;
+        max-width: 420px;
+        margin: 40px auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        color: #333;
+        background: #fffbea;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        box-sizing: border-box;
+        position: absolute;
+        margin-top: 44rem;
+      ">
+      <h2 style="font-size: 20px; margin-bottom: 1rem; color: #8f7a66">❓ अक्सर पूछे जाने वाले प्रश्न (FAQ)</h2>
+
+      <div style="margin-bottom: 1rem">
+        <strong>Q1. खेल कैसे शुरू करें?</strong><br />
+        A. बीच में <strong>"खेल शुरू करें"</strong> बटन पर क्लिक करें, खेल शुरू हो जाएगा और दो रैंडम टाइल्स दिखेंगी।
+      </div>
+
+      <div style="margin-bottom: 1rem">
+        <strong>Q2. संचालन कैसे करें?</strong><br />
+        A. डेस्कटॉप पर तीर कुंजी (← ↑ → ↓) और मोबाइल पर ऊपर दिए गए बटन (▲ ◀ ▶ ▼) का उपयोग करें।
+      </div>
+
+      <div style="margin-bottom: 1rem">
+        <strong>Q3. स्कोर कैसे गिना जाता है?</strong><br />
+        A. एक जैसे नंबर मिलाने पर आपका स्कोर बढ़ता है। बड़े नंबर मिलाने पर अधिक अंक मिलते हैं।
+      </div>
+
+      <div style="margin-bottom: 1rem">
+        <strong>Q4. खेल कब खत्म होता है?</strong><br />
+        A. जब कोई खाली जगह या मिलाने योग्य टाइल नहीं बचती, तब "गेम ओवर" लिखा आएगा।
+      </div>
+
+      <div style="margin-bottom: 1rem">
+        <strong>Q5. स्कोर कैसे साझा करें?</strong><br />
+        A. खेल समाप्त होने पर <strong>"स्कोर साझा करें"</strong> बटन से स्कोर शेयर या कॉपी कर सकते हैं।
+      </div>
+
+      <div>
+        <strong>Q6. क्या अन्य गेम्स भी हैं?</strong><br />
+        A. हाँ! नीचे दिए <strong>"📂 अन्य गेम्स"</strong> बटन से सभी गेम्स की सूची देख सकते हैं।
+      </div>
+    </section>
+  </body>
+</html>

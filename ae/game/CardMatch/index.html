@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="カードをめくって記憶力を試し、時間と競い合おう！カードマッチを無料でプレイしよう—楽しく、スピーディーで、モバイル対応です。" />
+        <meta
+            name="keywords"
+            content="カードマッチ, 記憶力ゲーム, 神経衰弱, 脳トレゲーム, カードめくり, 集中力, パズルゲーム, 無料オンラインゲーム, モバイル, 高速ゲーム, 子供向け, 絵文字, マッチングゲーム" />
+        <meta name="author" content="Itagi" />
+        <meta name="robots" content="index, follow" />
+
+        <link rel="canonical" href="https://emfls.github.io/ae/game/CardMatch" />
+
+        <meta property="og:title" content="カードマッチ – 無料オンライン記憶力ゲーム！" />
+        <meta
+            property="og:description"
+            content="カードをめくって記憶力を試し、時間と競い合おう！ブラウザでカードマッチを無料でプレイしよう。" />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta property="og:url" content="https://emfls.github.io/ae/game/CardMatch" />
+        <meta property="og:type" content="website" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="カードマッチ – 無料オンライン記憶力ゲーム！" />
+        <meta
+            name="twitter:description"
+            content="中毒性のある記憶力ゲームでカードをめくり、ペアを合わせ、時間と競おう。今すぐ無料でプレイしよう！" />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+        <title>カードマッチ</title>
+        <style>
+            :root {
+                --primary: #4caf50;
+                --bg: #f5f7fa;
+                --card-front: #ffffff;
+                --card-back: #ccc;
+                --card-match: #81c784;
+                --text-dark: #2e2e2e;
+                --shadow: rgba(0, 0, 0, 0.1);
+                --highlight: #e8f5e9;
+                --alert-bg: #fff3cd;
+                --alert-border: #ffeeba;
+                --alert-text: #856404;
+            }
+
+            * {
+                box-sizing: border-box;
+                user-select: none;
+                -webkit-user-select: none;
+                font-family: "Segoe UI", sans-serif;
+            }
+
+            body {
+                background: var(--bg);
+                margin: 0;
+                padding: 0.6rem;
+                color: var(--text-dark);
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                overflow-x: hidden;
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                -webkit-user-drag: none;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 0.5rem;
+                margin-top: 0rem;
+            }
+
+            #level,
+            #timer {
+                display: inline-block;
+                font-size: 1.2rem;
+                font-weight: bold;
+                background: var(--highlight);
+                border: 2px solid var(--primary);
+                border-radius: 8px;
+                padding: 0.5rem 1rem;
+                margin: 0.4rem;
+                box-shadow: 0 2px 4px var(--shadow);
+            }
+
+            .info-container {
+                display: flex;
+                gap: 1rem;
+                margin-top: 0.5rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .board {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+                gap: 0.75rem;
+                max-width: 350px;
+                margin-top: 1.2rem;
+                width: 100%;
+            }
+
+            .card {
+                width: 100%;
+                padding-top: 100%;
+                position: relative;
+                background: var(--card-back);
+                border-radius: 10px;
+                box-shadow: 0 2px 6px var(--shadow);
+                cursor: pointer;
+                transition: transform 0.2s ease;
+            }
+
+            .card.open {
+                background: var(--card-front);
+                transform: scale(1.05);
+            }
+
+            .card.matched {
+                background: var(--card-match);
+                color: white;
+                cursor: default;
+            }
+
+            .card span {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: clamp(1.5rem, 5vw, 2rem);
+            }
+
+            .btn {
+                margin-top: 1.5rem;
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
+                background: var(--primary);
+                color: white;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                box-shadow: 0 2px 4px var(--shadow);
+            }
+
+            .btn + .btn {
+                margin-left: 0.5rem;
+            }
+
+            #game-over,
+            #start-screen {
+                margin-top: 2rem;
+                text-align: center;
+            }
+
+            #game-over {
+                background-color: var(--alert-bg);
+                border: 1px solid var(--alert-border);
+                border-radius: 10px;
+                padding: 1.5rem;
+                box-shadow: 0 2px 6px var(--shadow);
+                max-width: 300px;
+            }
+
+            #game-over p {
+                font-size: 1.2rem;
+                color: var(--alert-text);
+                margin-bottom: 1.2rem;
+            }
+
+            .confetti {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                overflow: hidden;
+                z-index: 9999;
+            }
+
+            .confetti span {
+                position: absolute;
+                font-size: 1.5rem;
+                animation: fall 2s linear infinite;
+            }
+
+            @keyframes fall {
+                0% {
+                    transform: translateY(-100%) rotate(0deg);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(100vh) rotate(360deg);
+                    opacity: 0;
+                }
+            }
+        </style>
+    </head>
+
+    <body ondragstart="return false" onselectstart="return false">
+        <h1
+            style="
+                font-size: 2.4rem;
+                color: #2e7d32;
+                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+                margin-bottom: 0.2rem;
+            ">
+            🧠カードマッチ
+        </h1>
+        <p style="font-size: 1rem; color: #555; margin-top: 0; margin-bottom: 1.2rem">
+            カードをめくって、ペアを合わせ、時間と競おう！
+        </p>
+        <div id="start-screen">
+            <button class="btn" onclick="startGame(1)">スタート</button>
+        </div>
+
+        <div class="info-container" id="info-container" style="display: none">
+            <div id="level">レベル: 1</div>
+            <div id="timer">時間: <span id="time">--</span>秒</div>
+        </div>
+
+        <div class="board" id="board" style="display: none"></div>
+
+        <div id="game-over" style="display: none">
+            <p>⛔ 時間切れです！もう一度挑戦しよう。</p>
+            <button class="btn" onclick="startGame(1)">再挑戦</button>
+            <button class="btn" onclick="share()">共有</button>
+        </div>
+
+        <div class="confetti" id="confetti"></div>
+
+        <script>
+            const emojis = ["🍎", "🍌", "🍇", "🍓", "🍍", "🍒", "🥝", "🥕", "🍉", "🍑", "🫐", "🥥", "🥑", "🍋", "🍈"];
+            let board = document.getElementById("board");
+            let levelText = document.getElementById("level");
+            let timerDisplay = document.getElementById("timer");
+            let timerText = document.getElementById("time");
+            let gameOverDiv = document.getElementById("game-over");
+            let startScreen = document.getElementById("start-screen");
+            let confettiContainer = document.getElementById("confetti");
+            let infoContainer = document.getElementById("info-container");
+
+            let cards = [],
+                openedCards = [];
+            let totalPairs = 4,
+                previewing = false,
+                level = 1;
+            let timerInterval, timeLeft, timeLimit;
+
+            function shuffle(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+            }
+
+            function startGame(newLevel = 1) {
+                level = newLevel;
+                levelText.innerText = `レベル: ${level}`;
+                gameOverDiv.style.display = "none";
+                startScreen.style.display = "none";
+                infoContainer.style.display = "flex";
+                board.style.display = "grid";
+                confettiContainer.innerHTML = "";
+
+                totalPairs = 3 + level;
+                timeLimit = Math.max(5, 20 - level * 2);
+                timeLeft = timeLimit;
+                timerText.innerText = timeLeft.toFixed(2);
+                openedCards = [];
+                previewing = true;
+
+                clearInterval(timerInterval);
+                board.innerHTML = "";
+
+                let pairEmojis = emojis.slice(0, totalPairs);
+                let pair = [...pairEmojis, ...pairEmojis];
+                shuffle(pair);
+
+                cards = pair.map((emoji) => {
+                    const card = document.createElement("div");
+                    card.classList.add("card", "open");
+                    card.dataset.emoji = emoji;
+                    card.innerHTML = `<span>${emoji}</span>`;
+                    card.addEventListener("click", onCardClick);
+                    board.appendChild(card);
+                    return card;
+                });
+
+                setTimeout(() => {
+                    cards.forEach((card) => {
+                        card.classList.remove("open");
+                        card.innerHTML = "";
+                    });
+                    previewing = false;
+                    startTimer();
+                }, 1000);
+            }
+
+            function startTimer() {
+                timeLeft = timeLimit;
+                timerText.innerText = timeLeft.toFixed(2);
+                timerInterval = setInterval(() => {
+                    timeLeft -= 0.1;
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        timerText.innerText = "0.00";
+                        endGame();
+                    } else {
+                        timerText.innerText = timeLeft.toFixed(2);
+                    }
+                }, 100);
+            }
+
+            function endGame() {
+                gameOverDiv.style.display = "block";
+                board.innerHTML = "";
+                board.style.display = "none";
+                infoContainer.style.display = "none";
+            }
+
+            function share() {
+                const url = `${window.location.href}`;
+                const message = `カードマッチでレベル${level}に到達しました！`;
+                if (navigator.share) {
+                    navigator
+                        .share({
+                            title: "カードマッチ",
+                            text: message,
+                            url: url
+                        })
+                        .catch(() => alert("共有がキャンセルされたか失敗しました。"));
+                } else {
+                    navigator.clipboard.writeText(url).then(() => alert("リンクがクリップボードにコピーされました！"));
+                }
+            }
+
+            function onCardClick(e) {
+                const card = e.currentTarget;
+                if (
+                    previewing ||
+                    card.classList.contains("open") ||
+                    card.classList.contains("matched") ||
+                    openedCards.length >= 2
+                )
+                    return;
+
+                card.classList.add("open");
+                card.innerHTML = `<span>${card.dataset.emoji}</span>`;
+                openedCards.push(card);
+
+                if (openedCards.length === 2) {
+                    const [first, second] = openedCards;
+                    if (first.dataset.emoji === second.dataset.emoji) {
+                        first.classList.add("matched");
+                        second.classList.add("matched");
+                        openedCards = [];
+
+                        if ([...document.querySelectorAll(".card")].every((c) => c.classList.contains("matched"))) {
+                            clearInterval(timerInterval);
+                            launchConfetti();
+                            setTimeout(() => startGame(level + 1), 2000);
+                        }
+                    } else {
+                        setTimeout(() => {
+                            first.classList.remove("open");
+                            second.classList.remove("open");
+                            first.innerHTML = "";
+                            second.innerHTML = "";
+                            openedCards = [];
+                        }, 700);
+                    }
+                }
+            }
+
+            function launchConfetti() {
+                for (let i = 0; i < 30; i++) {
+                    const conf = document.createElement("span");
+                    conf.textContent = ["🎉", "✨", "🎊"][Math.floor(Math.random() * 3)];
+                    conf.style.left = Math.random() * 100 + "%";
+                    conf.style.animationDuration = 1.5 + Math.random() + "s";
+                    confettiContainer.appendChild(conf);
+                }
+            }
+        </script>
+        <button
+            style="
+                margin-top: 80px;
+                width: 90%;
+                height: 60px;
+                font-size: 16px;
+                font-weight: bold;
+                background-color: var(--alert-bg);
+                cursor: pointer;
+                border-radius: 10px;
+                border: solid;
+                color: black;
+                border-color: black;
+                box-shadow: 0 2px 6px var(--shadow);
+                max-width: 400px;
+            "
+            onclick="window.location.href='/'">
+            他のゲーム
+        </button>
+        <section
+            style="
+                width: 90%;
+                max-width: 420px;
+                margin: 60px auto;
+                padding: 20px;
+                background: var(--alert-bg);
+                border: 1px solid var(--alert-border);
+                border-radius: 12px;
+                font-family: &quot;Segoe UI&quot;, sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+                color: var(--text-dark);
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            ">
+            <h2 style="font-size: 18px; margin-bottom: 1rem; color: var(--alert-text)">
+                ❓ よくある質問 (FAQ)
+            </h2>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q1. カードマッチはどう遊ぶの？</strong><br />
+                A. 一度に2枚のカードをめくろう。ペアが合えばめくったままになるよ。
+                時間切れになる前にすべてのペアを見つけよう！
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q2. レベルをクリアするとどうなる？</strong><br />
+                A. 花火が上がり🎉 次のレベルに進むよ。レベルが進むごとにカードが増えて難しくなるよ。
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q3. 時間はどう計測される？</strong><br />
+                A. 最初は20秒から始まり、レベルごとに少しずつ時間が減っていくよ。素早く行動しよう！
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q4. モバイルでプレイできる？</strong><br />
+                A. もちろん！このゲームは完全にレスポンシブで、
+                スマホやタブレットでも快適に動作するよ。
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q5. 時間切れになったらどうなる？</strong><br />
+                A. ゲームは「⛔時間切れです！」というメッセージとともに終了するよ。
+                レベル1から再スタートして再挑戦できる。
+            </div>
+
+            <div>
+                <strong>Q6. ゲームはどうやって共有するの？</strong><br />
+                A. ゲーム終了後に<strong>「共有」</strong>ボタンをクリックして、
+                友達にリンクを送ろう！
+            </div>
+        </section>
+    </body>
+</html>

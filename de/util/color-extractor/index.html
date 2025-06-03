@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>カラー抽出＆変換ツール</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="画像から主要な色を抽出し、HEX、RGB、HSL形式に即座に変換できます。無料、ブラウザベース、アップロード不要。" />
+    <meta
+      name="keywords"
+      content="カラー抽出, カラーパレット, hex rgb hsl, 色変換ツール, 画像の色, ウェブデザイン, 無料, パレット生成" />
+    <meta name="author" content="Itagi" />
+    <meta name="language" content="ja" />
+    <meta name="theme-color" content="#3b70e4" />
+    <link rel="canonical" href="https://emfls.github.io/de/util/color-extractor/index.html" />
+    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+    <!-- Open Graph / Twitter meta -->
+    <meta property="og:title" content="カラー抽出＆変換ツール" />
+    <meta
+      property="og:description"
+      content="画像から主要な色を抽出し、HEX、RGB、HSL形式に即座に変換します。ウェブデザイン向けパレット生成。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/de/util/color-extractor/index.html" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="カラー抽出＆変換ツール" />
+    <meta
+      name="twitter:description"
+      content="画像からパレットを抽出し、HEX、RGB、HSLに即座に変換します。値をコピーする機能付き。" />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <!-- Color Thief -->
+    <script src="https://cdn.jsdelivr.net/npm/colorthief@2.3.2/dist/color-thief.umd.js"></script>
+    <style>
+      :root {
+        --main: #3b70e4;
+        --main-dark: #254285;
+        --accent: #d1e5ff;
+        --bg: #f6faff;
+      }
+      body {
+        background: var(--bg);
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: #222;
+      }
+      .container {
+        max-width: 470px;
+        margin: 38px auto 0 auto;
+        background: #fff;
+        border-radius: 17px;
+        box-shadow: 0 4px 20px #3b70e41a;
+        padding: 27px 17px 20px 17px;
+      }
+      .title {
+        text-align: center;
+        font-size: 1.25em;
+        color: var(--main-dark);
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+      .desc {
+        text-align: center;
+        color: #366088;
+        font-size: 1.01em;
+        margin-bottom: 20px;
+      }
+      .upload-area {
+        border: 2px dashed #b9d3ff;
+        border-radius: 12px;
+        background: #f8faff;
+        text-align: center;
+        padding: 30px 9px;
+        cursor: pointer;
+        margin-bottom: 16px;
+        font-size: 1.04em;
+        color: #336;
+        transition:
+          border 0.19s,
+          background 0.18s;
+      }
+      .upload-area.dragover {
+        border-color: var(--main);
+        background: #eaf3ff;
+      }
+      .img-preview {
+        display: block;
+        max-width: 96%;
+        margin: 9px auto 8px auto;
+        border-radius: 10px;
+        box-shadow: 0 2px 12px #cbe1ff44;
+      }
+      .palette-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        margin-bottom: 11px;
+      }
+      .color-block {
+        border-radius: 7px;
+        min-width: 62px;
+        min-height: 62px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0 0 5px 0;
+        cursor: pointer;
+        position: relative;
+        box-shadow: 0 2px 8px #3b70e417;
+        border: 2px solid #fff;
+        transition: border 0.12s;
+      }
+      .color-block.active,
+      .color-block:active {
+        border: 2.3px solid var(--main);
+      }
+      .color-label {
+        color: #222;
+        background: rgba(255, 255, 255, 0.86);
+        border-radius: 4px;
+        font-size: 0.97em;
+        padding: 2px 4px;
+        margin-top: 4px;
+        box-shadow: 0 2px 8px #fff2;
+      }
+      .convert-row {
+        margin: 18px 0 12px 0;
+      }
+      .convert-input-wrap {
+        display: flex;
+        gap: 9px;
+        margin-bottom: 8px;
+      }
+      .convert-input-wrap input {
+        flex: 1;
+        padding: 7px;
+        border-radius: 7px;
+        border: 1.2px solid #b4cdf3;
+        font-size: 1.07em;
+      }
+      .convert-input-wrap select {
+        padding: 6px 8px;
+        border-radius: 7px;
+        border: 1.2px solid #b4cdf3;
+      }
+      .btn {
+        background: var(--main);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 0;
+        font-size: 1em;
+        font-weight: bold;
+        cursor: pointer;
+        margin-bottom: 4px;
+        transition: background 0.14s;
+      }
+      .btn:active,
+      .btn:hover {
+        background: var(--main-dark);
+      }
+      .copy-btn {
+        background: #36a373;
+      }
+      .copy-btn:active {
+        background: #217251;
+      }
+      .result-palette {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin: 8px 0 0 0;
+      }
+      .result-palette .color-block {
+        min-width: 36px;
+        min-height: 36px;
+        font-size: 0.96em;
+      }
+      .footer {
+        color: #789;
+        text-align: center;
+        font-size: 0.95em;
+        margin-top: 16px;
+        opacity: 0.88;
+      }
+      section#faq {
+        margin-top: 30px;
+      }
+      section#faq h2 {
+        margin-bottom: 13px;
+        color: #3b70e4;
+        font-size: 1.11em;
+        text-align: center;
+      }
+      section#faq dt {
+        font-weight: bold;
+        margin-top: 8px;
+      }
+      section#faq dd {
+        margin: 0 0 7px 0;
+        font-size: 0.99em;
+        color: #366088;
+      }
+      #backBtn {
+        position: fixed;
+        left: 50%;
+        bottom: 32px;
+        transform: translateX(-50%);
+        background: #3b70e4;
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 2rem;
+        padding: 0.58em 1.5em;
+        box-shadow: 0 4px 16px #3b70e466;
+        font-size: 1.09em;
+        text-decoration: none;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+        transition:
+          background 0.15s,
+          transform 0.12s;
+        z-index: 2000;
+      }
+      #backBtn:hover {
+        background: #254285;
+        transform: translateX(-50%) scale(1.04);
+      }
+      @media (max-width: 600px) {
+        .container {
+          max-width: 99vw;
+          padding: 10px 2vw 10px 2vw;
+        }
+        .img-preview {
+          max-width: 99vw;
+        }
+        #backBtn {
+          bottom: 18px;
+          font-size: 0.98em;
+          padding: 0.48em 1em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="container" itemscope itemtype="https://schema.org/WebApplication">
+        <h1 class="title" itemprop="name">🎨 カラー抽出＆変換ツール</h1>
+        <p class="desc" itemprop="description">
+          画像をアップロードして主要な色のパレットを即座に取得できます。<br />
+          HEX、RGB、HSL間のリアルタイム変換およびクリックで値をコピー可能！
+        </p>
+        <div class="upload-area" id="uploadArea">
+          <input type="file" id="imgInput" accept="image/*" style="display: none" />
+          <span id="uploadText">画像をドラッグ＆ドロップするか、<b>クリックして選択</b>してください。</span>
+        </div>
+        <img id="previewImg" class="img-preview" style="display: none" alt="画像プレビュー" />
+        <div id="palette" class="palette-row"></div>
+
+        <div class="convert-row">
+          <label for="colorInput" style="font-weight: 600">色変換</label>
+          <div class="convert-input-wrap">
+            <input
+              type="text"
+              id="colorInput"
+              placeholder="例：#3498db または rgb(52,152,219)"
+              autocomplete="off"
+            />
+            <select id="convertType">
+              <option value="hex">HEX</option>
+              <option value="rgb">RGB</option>
+              <option value="hsl">HSL</option>
+            </select>
+            <button class="btn" id="convertBtn" style="min-width: 78px">変換</button>
+          </div>
+          <div id="convertResult"></div>
+        </div>
+        <div class="footer">
+          100% ブラウザベースです。アップロードや解析は一切行いません。<br />
+          <b>ヒント：</b>抽出した色をウェブデザイン、ブランディング、インスピレーションにご活用ください！
+        </div>
+        <!-- FAQ セクション (SEO/SGE 用) -->
+        <section aria-labelledby="faq-head" id="faq">
+          <h2 id="faq-head">FAQ – カラー抽出＆変換ツール</h2>
+          <dl>
+            <dt>画像からの色抽出はどのように動作しますか？</dt>
+            <dd>
+              このツールはユーザーのブラウザ上で画像を解析し、主要な色を抽出します（アップロード不要）。
+            </dd>
+            <dt>どの形式に色を変換できますか？</dt>
+            <dd>HEX、RGB、HSL形式に即座に変換できます。</dd>
+            <dt>画像やデータはアップロードされますか？</dt>
+            <dd>いいえ。すべての処理はユーザーのブラウザでローカルに行われ、サーバーにアップロードされません。</dd>
+            <dt>色の値をコピーできますか？</dt>
+            <dd>はい！抽出されたカラーブロックをクリックすると、その色のHEXコードがクリップボードにコピーされます。</dd>
+            <dt>無料で利用でき、モバイルでも使えますか？</dt>
+            <dd>はい、100%無料で、モバイルを含むすべてのデバイスで動作します。</dd>
+          </dl>
+        </section>
+      </div>
+    </main>
+    <a href="../index.html" id="backBtn">他のユーティリティ</a>
+    <script>
+      // 要素を取得
+      const uploadArea = document.getElementById("uploadArea");
+      const imgInput = document.getElementById("imgInput");
+      const uploadText = document.getElementById("uploadText");
+      const previewImg = document.getElementById("previewImg");
+      const palette = document.getElementById("palette");
+      const colorInput = document.getElementById("colorInput");
+      const convertBtn = document.getElementById("convertBtn");
+      const convertType = document.getElementById("convertType");
+      const convertResult = document.getElementById("convertResult");
+
+      // ドラッグ＆ドロップおよびクリックでファイル選択
+      uploadArea.onclick = () => imgInput.click();
+      uploadArea.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        uploadArea.classList.add("dragover");
+      });
+      uploadArea.addEventListener("dragleave", (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove("dragover");
+      });
+      uploadArea.addEventListener("drop", (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove("dragover");
+        if (e.dataTransfer.files.length) handleImage(e.dataTransfer.files[0]);
+      });
+      imgInput.addEventListener("change", () => {
+        if (imgInput.files.length) handleImage(imgInput.files[0]);
+      });
+
+      // 画像処理および色抽出
+      function handleImage(file) {
+        if (!file.type.startsWith("image/")) {
+          uploadText.textContent = "画像ファイルをアップロードしてください。";
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = function (ev) {
+          previewImg.src = ev.target.result;
+          previewImg.style.display = "block";
+          setTimeout(extractColors, 120); // 画像レンダリング後に色を抽出
+        };
+        reader.readAsDataURL(file);
+      }
+
+      // Color Thiefで主要な色を抽出
+      function extractColors() {
+        try {
+          const colorThief = new ColorThief();
+          let main, paletteArr;
+          if (previewImg.complete && previewImg.naturalHeight !== 0) {
+            main = colorThief.getColor(previewImg);
+            paletteArr = colorThief.getPalette(previewImg, 6);
+          }
+          const allColors = [main, ...(paletteArr || [])];
+          showPalette(allColors);
+        } catch (e) {
+          palette.innerHTML = '<span style="color:#d00;">色抽出に失敗しました。別の画像をお試しください！</span>';
+        }
+      }
+
+      function rgbToHex(rgb) {
+        return "#" + rgb.map((x) => x.toString(16).padStart(2, "0")).join("");
+      }
+      function rgbToHsl(rgb) {
+        let [r, g, b] = rgb.map((x) => x / 255),
+          max = Math.max(r, g, b),
+          min = Math.min(r, g, b);
+        let h, s, l = (max + min) / 2;
+        if (max == min) {
+          h = s = 0;
+        } else {
+          let d = max - min;
+          s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+          switch (max) {
+            case r:
+              h = (g - b) / d + (g < b ? 6 : 0);
+              break;
+            case g:
+              h = (b - r) / d + 2;
+              break;
+            case b:
+              h = (r - g) / d + 4;
+              break;
+          }
+          h = h / 6;
+        }
+        return (
+          "hsl(" +
+          Math.round(h * 360) +
+          ", " +
+          Math.round(s * 100) +
+          "%, " +
+          Math.round(l * 100) +
+          "%)"
+        );
+      }
+      function showPalette(colors) {
+        palette.innerHTML = "";
+        if (!colors || !colors.length) return;
+        colors.forEach((rgb) => {
+          if (!rgb) return;
+          const hex = rgbToHex(rgb);
+          const hsl = rgbToHsl(rgb);
+          const rgbStr = `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+          const colorBlock = document.createElement("div");
+          colorBlock.className = "color-block";
+          colorBlock.style.background = hex;
+          colorBlock.title = `${hex}\n${rgbStr}\n${hsl}`;
+          colorBlock.innerHTML = `
+            <div class="color-label" style="margin-bottom:2px">${hex}</div>
+            <div class="color-label" style="font-size:0.96em;">${rgbStr}</div>
+            <div class="color-label" style="font-size:0.91em;">${hsl}</div>
+          `;
+          colorBlock.onclick = () => {
+            navigator.clipboard.writeText(hex).then(() => {
+              colorBlock.classList.add("active");
+              setTimeout(() => colorBlock.classList.remove("active"), 600);
+            });
+          };
+          palette.appendChild(colorBlock);
+        });
+      }
+
+      // 色変換機能
+      function parseColor(str) {
+        str = str.trim();
+        // HEX
+        if (/^#?([0-9a-f]{3}|[0-9a-f]{6})$/i.test(str)) {
+          let hex = str.replace("#", "");
+          if (hex.length === 3)
+            hex = hex
+              .split("")
+              .map((x) => x + x)
+              .join("");
+          let num = parseInt(hex, 16);
+          return [(num >> 16) & 255, (num >> 8) & 255, num & 255];
+        }
+        // rgb(r,g,b)
+        let m = str.match(/^rgb\s*\(\s*(\d+),\s*(\d+),\s*(\d+)\s*\)$/i);
+        if (m) return [+m[1], +m[2], +m[3]];
+        // hsl(h,s%,l%)
+        m = str.match(/^hsl\s*\(\s*(\d+),\s*(\d+)%?,\s*(\d+)%?\s*\)$/i);
+        if (m) return hslToRgb(+m[1], +m[2], +m[3]);
+        return null;
+      }
+      function hslToRgb(h, s, l) {
+        h /= 360;
+        s /= 100;
+        l /= 100;
+        let r, g, b;
+        if (s == 0) {
+          r = g = b = l;
+        } else {
+          function f(n) {
+            let k = (n + h * 12) % 12,
+              a = s * Math.min(l, 1 - l),
+              x = l - a * Math.max(-1, Math.min(Math.min(k - 3, 9 - k), 1));
+            return Math.round(255 * x);
+          }
+          r = f(0);
+          g = f(8);
+          b = f(4);
+        }
+        return [r, g, b];
+      }
+      convertBtn.onclick = function () {
+        let rgb = parseColor(colorInput.value);
+        if (!rgb) {
+          convertResult.innerHTML = '<span style="color:#d00;">有効な色形式ではありません。</span>';
+          return;
+        }
+        let hex = rgbToHex(rgb),
+          rgbStr = `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`,
+          hsl = rgbToHsl(rgb);
+        if (convertType.value == "hex")
+          convertResult.innerHTML =
+            `<b>HEX:</b> <span style="background:${hex};color:#fff;padding:2px 7px;border-radius:6px;">${hex}</span>`;
+        else if (convertType.value == "rgb")
+          convertResult.innerHTML = `<b>RGB:</b> ${rgbStr}`;
+        else convertResult.innerHTML = `<b>HSL:</b> ${hsl}`;
+      };
+    </script>
+    <!-- FAQPage Schema for SGE/GEO/SEO Rich Results -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "画像からの色抽出はどのように動作しますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "このツールはユーザーのブラウザ上で画像を解析し、主要な色を抽出します（アップロード不要）。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "どの形式に色を変換できますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "HEX、RGB、HSL形式に即座に変換できます。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "画像やデータはアップロードされますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "いいえ。すべての処理はユーザーのブラウザでローカルに行われ、サーバーにアップロードされません。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "色の値をコピーできますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "はい！抽出されたカラーブロックをクリックすると、その色のHEXコードがクリップボードにコピーされます。"
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "無料で利用でき、モバイルでも使えますか？",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "はい、100%無料で、モバイルを含むすべてのデバイスで動作します。"
+            }
+          }
+        ]
+      }
+    </script>
+  </body>
+</html>

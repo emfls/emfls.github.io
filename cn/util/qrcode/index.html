@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <title>QRコード生成・読み取り – 無料オンラインツール</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+        <meta
+            name="description"
+            content="QRコードを即座に作成＆スキャンできます。すべてブラウザ上で処理され、アップロード不要。ダウンロード、カスタマイズ、読み取りなど多機能QRツール。" />
+        <meta
+            name="keywords"
+            content="QRコード, QR生成, QRスキャナー, オンラインQR, 無料QRツール, QRリーダー, ウェブカメラQR, 画像QR, プライバシー保護" />
+        <meta name="author" content="Itagi" />
+        <meta name="language" content="ja" />
+        <link rel="canonical" href="https://emfls.github.io/cn/util/qrcode/" />
+        <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+        <meta property="og:title" content="QRコード生成・読み取り – 無料オンラインツール" />
+        <meta
+            property="og:description"
+            content="テキスト、URL、連絡先などのQRコードを作成＆スキャン。すべてブラウザで処理、アップロード不要。" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://emfls.github.io/cn/util/qrcode/" />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="QRコード生成・読み取り – 無料オンラインツール" />
+        <meta
+            name="twitter:description"
+            content="QRコードを即座に生成＆スキャン。すべてブラウザ内で処理され、個人情報は漏れません。" />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+
+        <!-- qrcode.js (生成) -->
+        <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+        <!-- html5-qrcode (スキャン) -->
+        <script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
+
+        <style>
+            body {
+                background: #f6fcff;
+                margin: 0;
+                font-family: "Segoe UI", Arial, sans-serif;
+            }
+            .container {
+                max-width: 470px;
+                margin: 40px auto 0 auto;
+                background: #fff;
+                border-radius: 16px;
+                box-shadow: 0 4px 22px #13d2b033;
+                padding: 30px 16px 24px 16px;
+            }
+            .logo {
+                font-size: 1.28em;
+                color: #1558b3;
+                font-weight: bold;
+                text-align: center;
+                margin-bottom: 12px;
+            }
+            .desc {
+                color: #227088;
+                text-align: center;
+                margin-bottom: 22px;
+                font-size: 1.01em;
+            }
+            .tab-toggle {
+                display: flex;
+                gap: 8px;
+                margin-bottom: 20px;
+                justify-content: center;
+            }
+            .tab-btn {
+                flex: 1 1 120px;
+                background: #e9f1fa;
+                color: #1558b3;
+                border: 1.2px solid #b8d6fa;
+                border-radius: 8px;
+                font-size: 1.05em;
+                font-weight: 600;
+                padding: 0.7em 0;
+                cursor: pointer;
+                transition:
+                    background 0.13s,
+                    color 0.13s;
+                outline: none;
+                margin-bottom: 2px;
+            }
+            .tab-btn.active {
+                background: #1558b3;
+                color: #fff;
+                border-color: #1558b3;
+                box-shadow: 0 2px 10px #1558b311;
+            }
+            .section {
+                display: none;
+            }
+            .section.active {
+                display: block;
+            }
+            .label {
+                font-size: 0.98em;
+                color: #266;
+                margin-bottom: 7px;
+                margin-top: 11px;
+                display: block;
+            }
+            .input-area {
+                width: 100%;
+                min-height: 44px;
+                border: 1.2px solid #bad1ec;
+                border-radius: 8px;
+                padding: 10px;
+                font-size: 1em;
+                background: #fafdff;
+                margin-bottom: 14px;
+            }
+            #qrCode {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 16px auto 9px auto;
+            }
+            .qr-options {
+                text-align: center;
+                margin-bottom: 12px;
+            }
+            .qr-options label {
+                margin-right: 9px;
+                font-size: 0.98em;
+                color: #277;
+            }
+            .qr-btn {
+                background: #19b16e;
+                color: #fff;
+                border: none;
+                border-radius: 8px;
+                padding: 10px 20px;
+                font-size: 1.06em;
+                font-weight: bold;
+                cursor: pointer;
+                margin-top: 6px;
+                margin-left: 35%;
+                transition: background 0.13s;
+            }
+            .qr-btn:active {
+                background: #0e8051;
+            }
+            .qr-download {
+                display: block;
+                color: #1664a7;
+                margin: 11px auto 0 auto;
+                text-align: center;
+                font-size: 1.02em;
+                text-decoration: underline;
+            }
+            #reader {
+                margin-top: 17px;
+                margin-bottom: 18px;
+            }
+            #reader > div {
+                border-radius: 12px;
+                overflow: hidden;
+            }
+            .or {
+                text-align: center;
+                color: #bbb;
+                font-size: 0.98em;
+                margin: 16px 0 7px 0;
+            }
+            .output-box {
+                text-align: center;
+                margin-top: 15px;
+                word-break: break-all;
+                font-size: 1.06em;
+                color: #146a3b;
+            }
+            .footer {
+                color: #888;
+                text-align: center;
+                font-size: 0.93em;
+                margin-top: 16px;
+            }
+            #backBtn {
+                position: fixed;
+                left: 50%;
+                bottom: 32px;
+                transform: translateX(-50%);
+                background: #13b6a7;
+                color: #fff;
+                font-weight: 700;
+                border: none;
+                border-radius: 2rem;
+                padding: 0.58em 1.5em;
+                box-shadow: 0 4px 16px #13d2b066;
+                font-size: 1.09em;
+                text-decoration: none;
+                cursor: pointer;
+                letter-spacing: 0.01em;
+                transition:
+                    background 0.15s,
+                    transform 0.12s;
+                z-index: 2000;
+            }
+            #backBtn:hover {
+                background: #0e8078;
+                transform: translateX(-50%) scale(1.04);
+            }
+            @media (max-width: 600px) {
+                .container {
+                    max-width: 99vw;
+                    padding: 9px 2vw 10px 2vw;
+                }
+                .tab-btn {
+                    font-size: 0.97em;
+                }
+                #backBtn {
+                    bottom: 18px;
+                    font-size: 0.98em;
+                    padding: 0.48em 1em;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="logo">🔳 QRコード生成・読み取り</div>
+            <div class="desc">
+                テキストやリンクでQRコードを生成し、<br />
+                カメラまたは画像からQRコードをスキャンしましょう。<br />
+                <span style="color: #199aac; font-size: 0.97em">すべての機能はブラウザ内で完結します。</span>
+            </div>
+            <div class="tab-toggle">
+                <button class="tab-btn active" id="genTab">生成する</button>
+                <button class="tab-btn" id="readTab">スキャンする</button>
+            </div>
+
+            <!-- 生成セクション -->
+            <div class="section active" id="genSection">
+                <span class="label">テキスト、リンク、またはデータを入力してください：</span>
+                <textarea id="qrInput" class="input-area" placeholder="テキストまたはURLを入力..."></textarea>
+                <div class="qr-options">
+                    <label>
+                        サイズ
+                        <select id="qrSize">
+                            <option value="160">160×160</option>
+                            <option value="240" selected>240×240</option>
+                            <option value="320">320×320</option>
+                            <option value="400">400×400</option>
+                        </select>
+                    </label>
+                    <label>
+                        誤り訂正レベル
+                        <select id="qrLevel">
+                            <option value="L">L (7%)</option>
+                            <option value="M" selected>M (15%)</option>
+                            <option value="Q">Q (25%)</option>
+                            <option value="H">H (30%)</option>
+                        </select>
+                    </label>
+                </div>
+                <button class="qr-btn" id="qrGenBtn">QR生成</button>
+                <div id="qrCode"></div>
+                <a id="qrDownload" class="qr-download" style="display: none" download="qrcode.png"
+                    >PNGでダウンロード</a
+                >
+            </div>
+
+            <!-- スキャンセクション -->
+            <div class="section" id="readSection">
+                <div class="qr-options">
+                    <button class="qr-btn" id="startCamBtn">カメラでスキャン</button>
+                    <button class="qr-btn" id="stopCamBtn" style="display: none">カメラを停止</button>
+                </div>
+                <div id="reader" style="width: 100%; max-width: 370px; margin: auto; display: none"></div>
+                <div class="or">または</div>
+                <input type="file" id="imgUpload" accept="image/*" style="display: block; margin: auto" />
+                <div id="scanResult" class="output-box"></div>
+            </div>
+            <div class="footer">
+                アップロードや追跡なし、すべてブラウザ上で処理されます。<br />
+                <a href="https://github.com/davidshimjs/qrcodejs" target="_blank" style="color: #1664a7">QRCode.js</a>
+                と
+                <a href="https://github.com/mebjas/html5-qrcode" target="_blank" style="color: #1664a7">html5-qrcode</a>
+                を使用しています。
+            </div>
+            <a href="../index.html" id="backBtn">他のツール</a>
+        </div>
+        <script>
+            // タブ切り替え
+            const genTab = document.getElementById("genTab");
+            const readTab = document.getElementById("readTab");
+            const genSection = document.getElementById("genSection");
+            const readSection = document.getElementById("readSection");
+            genTab.onclick = () => {
+                genTab.classList.add("active");
+                readTab.classList.remove("active");
+                genSection.classList.add("active");
+                readSection.classList.remove("active");
+            };
+            readTab.onclick = () => {
+                readTab.classList.add("active");
+                genTab.classList.remove("active");
+                readSection.classList.add("active");
+                genSection.classList.remove("active");
+            };
+
+            // QRコード生成
+            let qrObj = null;
+            function updateQR() {
+                const text = document.getElementById("qrInput").value.trim();
+                const size = parseInt(document.getElementById("qrSize").value, 10);
+                const level = document.getElementById("qrLevel").value;
+                const qrCodeDiv = document.getElementById("qrCode");
+                qrCodeDiv.innerHTML = "";
+                if (!text) return;
+                qrObj = new QRCode(qrCodeDiv, {
+                    text: text,
+                    width: size,
+                    height: size,
+                    correctLevel: QRCode.CorrectLevel[level]
+                });
+                setTimeout(() => {
+                    // ダウンロードリンク表示
+                    const canvas = qrCodeDiv.querySelector("canvas");
+                    if (canvas) {
+                        const url = canvas.toDataURL();
+                        const dl = document.getElementById("qrDownload");
+                        dl.href = url;
+                        dl.download = "qrcode.png";
+                        dl.style.display = "";
+                    }
+                }, 300);
+            }
+            document.getElementById("qrGenBtn").onclick = updateQR;
+            document.getElementById("qrInput").addEventListener("keyup", (e) => {
+                if (e.key === "Enter" && !e.shiftKey) updateQR();
+            });
+            document.getElementById("qrSize").onchange = updateQR;
+            document.getElementById("qrLevel").onchange = updateQR;
+
+            // QRコード読み取り（カメラ＆画像）
+            let html5Qr = null;
+            const readerDiv = document.getElementById("reader");
+            const startCamBtn = document.getElementById("startCamBtn");
+            const stopCamBtn = document.getElementById("stopCamBtn");
+            const scanResult = document.getElementById("scanResult");
+            let camActive = false;
+            startCamBtn.onclick = () => {
+                readerDiv.style.display = "";
+                scanResult.textContent = "";
+                startCamBtn.style.display = "none";
+                stopCamBtn.style.display = "";
+                html5Qr = new Html5Qrcode("reader");
+                html5Qr.start(
+                    { facingMode: "environment" },
+                    { fps: 10, qrbox: 240 },
+                    (code) => {
+                        scanResult.innerHTML = `<b>結果：</b> ${escapeHtml(code)}`;
+                        html5Qr.stop();
+                        camActive = false;
+                        startCamBtn.style.display = "";
+                        stopCamBtn.style.display = "none";
+                    },
+                    (err) => {}
+                );
+                camActive = true;
+            };
+            stopCamBtn.onclick = () => {
+                if (html5Qr && camActive) {
+                    html5Qr.stop().then(() => {
+                        readerDiv.style.display = "none";
+                        startCamBtn.style.display = "";
+                        stopCamBtn.style.display = "none";
+                    });
+                }
+            };
+            window.addEventListener("beforeunload", () => {
+                if (html5Qr && camActive) html5Qr.stop();
+            });
+
+            // 画像からQRコード読み取り
+            document.getElementById("imgUpload").onchange = function (e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                scanResult.textContent = "スキャン中...";
+                Html5Qrcode.getCameras().then(() => {
+                    Html5Qrcode.scanFile(file, true)
+                        .then((code) => {
+                            scanResult.innerHTML = `<b>結果：</b> ${escapeHtml(code)}`;
+                        })
+                        .catch(() => {
+                            scanResult.textContent = "この画像からQRコードを検出できません。";
+                        });
+                });
+            };
+
+            // 簡単なHTMLエスケープ（結果表示用）
+            function escapeHtml(text) {
+                if (!text) return "";
+                return text.replace(
+                    /[&<>"']/g,
+                    (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[ch]
+                );
+            }
+        </script>
+        <section
+            style="
+                max-width: 320px;
+                margin: 48px auto 24px auto;
+                background: #1e1e1e;
+                border-radius: 18px;
+                box-shadow: 0 6px 24px #1236;
+                padding: 20px;
+                font-family: Arial, sans-serif;
+            ">
+            <div style="margin-bottom: 12px">
+                <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔳 このツールで何ができますか？</h3>
+                <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
+                    テキストやURLでQRコードをリアルタイム生成し、カメラまたは画像からQRコードをスキャンできます。すべての処理はブラウザ内で行われます。
+                </p>
+            </div>
+            <div style="margin-bottom: 12px">
+                <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📷 QRコードはどうやってスキャンしますか？</h3>
+                <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
+                    「スキャンする」タブを選択し、「カメラでスキャン」または画像をアップロードしてください。スキャナーがQRコードを検出すると結果が即座に表示されます。
+                </p>
+            </div>
+            <div style="margin-bottom: 12px">
+                <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">💾 生成したQRコードは保存できますか？</h3>
+                <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
+                    はい。QRコードを生成すると「PNGでダウンロード」リンクが表示されます。クリックして端末に保存してください。
+                </p>
+            </div>
+            <div style="margin-bottom: 12px">
+                <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">⚙️ サイズと誤り訂正レベルとは？</h3>
+                <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
+                    サイズはQR画像の幅×高さ（ピクセル）を指定します。誤り訂正レベルは、QRコードが部分的に破損しても読み取れるようにする復元率です。高いほど復元性が増します。
+                </p>
+            </div>
+            <div style="margin-bottom: 0">
+                <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔐 私のデータは安全ですか？</h3>
+                <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
+                    はい。すべての生成およびスキャン作業はブラウザ内で完結し、いかなるデータもアップロードされません。プライバシーは完全に保護されます。
+                </p>
+            </div>
+        </section>
+    </body>
+</html>

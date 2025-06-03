@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="hi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="ऑनलाइन फ्री कनेक्ट 4 (Connect Four) खेलें! दोस्तों या कंप्यूटर के साथ इस क्लासिक 2-खिलाड़ी रणनीति गेम का आनंद लें। सिंपल, तेज़ और मोबाइल-फ्रेंडली।"
+        />
+        <meta
+            name="keywords"
+            content="कनेक्ट फोर, चार जोड़ो, ऑनलाइन गेम, फ्री गेम, दो खिलाड़ी, AI, रणनीति गेम, बोर्ड गेम, ब्राउज़र, मोबाइल, पहेली, क्लासिक"
+        />
+        <meta name="author" content="Itagi" />
+        <meta name="robots" content="index, follow" />
+
+        <link rel="canonical" href="https://emfls.github.io/in/game/ConnectFour" />
+
+        <meta property="og:title" content="कनेक्ट फोर – फ्री ऑनलाइन दो-खिलाड़ी गेम!" />
+        <meta
+            property="og:description"
+            content="ब्राउज़र में कनेक्ट फोर मुफ्त में खेलें! दोस्त या AI के साथ खेलें, क्षैतिज/ऊर्ध्वाधर/तिरछी पंक्ति में 4 टोकन लगाएँ और जीतें।"
+        />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta property="og:url" content="https://emfls.github.io/in/game/ConnectFour" />
+        <meta property="og:type" content="website" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="कनेक्ट फोर – फ्री ऑनलाइन दो-खिलाड़ी गेम!" />
+        <meta
+            name="twitter:description"
+            content="ऑनलाइन कनेक्ट फोर खेलें – दोस्त के साथ या AI के खिलाफ! डाउनलोड की ज़रूरत नहीं।"
+        />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"
+        ></script>
+        <title>कनेक्ट फोर</title>
+        <style>
+            * {
+                box-sizing: border-box;
+                -webkit-tap-highlight-color: transparent;
+            }
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                background: #f5f7fa;
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                user-select: none;
+                -webkit-user-select: none;
+            }
+            #wrapper {
+                width: 90vw;
+                max-width: 400px;
+                margin: 24px auto;
+                text-align: center;
+            }
+            h1 {
+                margin: 0 0 6px 0;
+                font-size: 2rem;
+                font-weight: 900;
+                letter-spacing: 0.02em;
+            }
+            .desc {
+                font-size: 1.04rem;
+                margin-bottom: 12px;
+                color: #666;
+                white-space: nowrap;
+            }
+            #modeSel {
+                margin-bottom: 10px;
+                display: flex;
+                gap: 8px;
+                justify-content: center;
+            }
+            .modebtn {
+                padding: 0.45em 1.2em;
+                border-radius: 1.5em;
+                font-size: 1rem;
+                font-weight: bold;
+                border: none;
+                cursor: pointer;
+                background: #e4eaf7;
+                color: #284c7b;
+                transition:
+                    background 0.12s,
+                    color 0.12s;
+            }
+            .modebtn.active {
+                background: #467be6;
+                color: #fff;
+            }
+            #board {
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                grid-template-rows: repeat(6, 1fr);
+                gap: 4px;
+                background: #3050a0;
+                border-radius: 12px;
+                padding: 6px;
+                width: 100%;
+                aspect-ratio: 7/6;
+                margin: 0 auto 12px auto;
+                touch-action: manipulation;
+            }
+            .cell {
+                background: #e4eaf7;
+                border-radius: 50%;
+                width: 100%;
+                aspect-ratio: 1/1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 2rem;
+                cursor: pointer;
+                transition: background 0.12s;
+            }
+            .cell.filled {
+                cursor: default;
+            }
+            #turn {
+                margin-bottom: 10px;
+                font-weight: bold;
+                font-size: 1.1rem;
+                letter-spacing: 0.02em;
+            }
+            #overMsg {
+                font-size: 1.14rem;
+                font-weight: bold;
+                color: #e24a4a;
+                margin: 18px 0 10px 0;
+            }
+            .btns {
+                display: flex;
+                gap: 8px;
+                margin: 0 auto 0 auto;
+                justify-content: center;
+                flex-wrap: wrap;
+                width: 100%;
+            }
+            .btn {
+                flex: 1 1 42%;
+                min-width: 98px;
+                max-width: 180px;
+                background: #467be6;
+                color: #fff;
+                border: none;
+                border-radius: 1.5em;
+                padding: 0.68em 0;
+                font-size: 1rem;
+                font-weight: 600;
+                box-shadow: 0 2px 8px #17448c12;
+                margin-bottom: 8px;
+                cursor: pointer;
+                transition: background 0.12s;
+            }
+            .btn:active {
+                background: #2856ad;
+            }
+            #otherGames {
+                width: 90%;
+                max-width: 400px;
+                margin: 20px auto 0 auto;
+                background: #e6e8f2;
+                border-radius: 1.4em;
+                color: #365ca0;
+                border: none;
+                padding: 0.82em 0;
+                font-size: 1rem;
+                font-weight: bold;
+                text-decoration: none;
+                display: block;
+                box-shadow: 0 1px 5px #bccbe822;
+                letter-spacing: 0.03em;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="wrapper">
+            <h1>कनेक्ट फोर</h1>
+            <div class="desc">4 को क्षैतिज, ऊर्ध्वाधर या तिरछी पंक्ति में जोड़ें और जीतें!</div>
+            <div id="modeSel">
+                <button class="modebtn active" id="mode2p" onclick="setMode('2p')">2 खिलाड़ी</button>
+                <button class="modebtn" id="modeai" onclick="setMode('ai')">AI के साथ</button>
+            </div>
+            <div id="turn"></div>
+            <div id="board"></div>
+            <div id="overMsg"></div>
+            <div class="btns" id="gameBtns" style="display: none">
+                <button class="btn" onclick="restart()">फिर से शुरू करें</button>
+                <button class="btn" onclick="share()">साझा करें</button>
+            </div>
+            <a id="otherGames" href="../" style="margin-top: 22px">अन्य गेम्स</a>
+        </div>
+        <script>
+            // मोबाइल पर ड्रैग/चयन अक्षम
+            document.addEventListener(
+                "touchmove",
+                (e) => {
+                    if (e.scale !== 1) e.preventDefault();
+                },
+                {
+                    passive: false
+                }
+            );
+            document.body.addEventListener("dragstart", (e) => e.preventDefault());
+            document.body.addEventListener("selectstart", (e) => e.preventDefault());
+
+            const ROWS = 6,
+                  COLS = 7;
+            let board, turn, over, winner;
+            let mode = "2p"; // "2p" या "ai"
+            const COLORS = ["🔵", "🟡"];
+
+            function emptyBoard() {
+                return Array.from(
+                    { length: ROWS },
+                    () => Array(COLS).fill(null)
+                );
+            }
+
+            function render() {
+                const boardDiv = document.getElementById("board");
+                boardDiv.innerHTML = "";
+                for (let r = 0; r < ROWS; r++) {
+                    for (let c = 0; c < COLS; c++) {
+                        let cell = document.createElement("div");
+                        cell.className = "cell" + (board[r][c] !== null ? " filled" : "");
+                        cell.dataset.col = c;
+                        cell.style.pointerEvents = over ? "none" : "";
+                        cell.innerHTML = board[r][c] !== null ? COLORS[board[r][c]] : "";
+                        cell.onclick = () => {
+                            if (over) return;
+                            if (mode === "ai" && turn === 1) return; // AI की बारी
+                            if (playerMove(c)) {
+                                render();
+                                if (mode === "ai" && !over && turn === 1) {
+                                    setTimeout(aiMove, 350);
+                                }
+                            }
+                        };
+                        boardDiv.appendChild(cell);
+                    }
+                }
+                let msg = "";
+                if (!over) {
+                    msg = COLORS[turn]
+                        + (mode === "ai" ? (turn === 0 ? " (आप)" : " (AI)") : "")
+                        + " की बारी";
+                } else if (winner !== null) {
+                    msg = COLORS[winner]
+                        + (mode === "ai" ? (winner === 0 ? " (आप)" : " (AI)") : "")
+                        + " जीते!";
+                } else {
+                    msg = "ड्रा!";
+                }
+                document.getElementById("turn").textContent = msg;
+                document.getElementById("overMsg").textContent = over && winner !== null
+                    ? msg
+                    : over
+                        ? "ड्रा!"
+                        : "";
+                document.getElementById("gameBtns").style.display = over ? "flex" : "none";
+                document.getElementById("mode2p").classList.toggle("active", mode === "2p");
+                document.getElementById("modeai").classList.toggle("active", mode === "ai");
+            }
+
+            function playerMove(col) {
+                if (over) return false;
+                for (let r = ROWS - 1; r >= 0; r--) {
+                    if (board[r][col] === null) {
+                        board[r][col] = turn;
+                        if (checkWin(r, col, turn)) {
+                            over = true;
+                            winner = turn;
+                        } else if (board.flat().every((cell) => cell !== null)) {
+                            over = true;
+                            winner = null;
+                        } else {
+                            turn = 1 - turn;
+                        }
+                        return true;
+                    }
+                }
+                return false;
+            }
+            function tryMove(col, whichTurn) {
+                for (let r = ROWS - 1; r >= 0; r--) {
+                    if (board[r][col] === null) {
+                        board[r][col] = whichTurn;
+                        return r;
+                    }
+                }
+                return -1;
+            }
+            function undoMove(col) {
+                for (let r = 0; r < ROWS; r++) {
+                    if (board[r][col] !== null) {
+                        board[r][col] = null;
+                        break;
+                    }
+                }
+            }
+            function checkWin(r, c, color) {
+                return (
+                    count(r, c, 0, 1, color) + count(r, c, 0, -1, color) > 2 ||
+                    count(r, c, 1, 0, color) + count(r, c, -1, 0, color) > 2 ||
+                    count(r, c, 1, 1, color) + count(r, c, -1, -1, color) > 2 ||
+                    count(r, c, 1, -1, color) + count(r, c, -1, 1, color) > 2
+                );
+            }
+            function count(r, c, dr, dc, color) {
+                let cnt = 0;
+                for (let i = 1; i < 4; i++) {
+                    let nr = r + dr * i,
+                        nc = c + dc * i;
+                    if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) break;
+                    if (board[nr][nc] === color) cnt++;
+                    else break;
+                }
+                return cnt;
+            }
+            function restart() {
+                board = emptyBoard();
+                turn = 0;
+                over = false;
+                winner = null;
+                render();
+            }
+            function setMode(m) {
+                if (mode !== m) {
+                    mode = m;
+                    restart();
+                }
+            }
+            function aiMove() {
+                if (over || turn !== 1) return;
+                let validCols = [];
+                for (let c = 0; c < COLS; c++) if (board[0][c] === null) validCols.push(c);
+                // 1. जीतने वाला कदम
+                for (let ci of validCols) {
+                    let row = tryMove(ci, 1);
+                    if (row !== -1 && checkWin(row, ci, 1)) {
+                        undoMove(ci);
+                        playerMove(ci);
+                        render();
+                        return;
+                    }
+                    if (row !== -1) undoMove(ci);
+                }
+                // 2. खिलाड़ी की जीत रोकना
+                for (let ci of validCols) {
+                    let row = tryMove(ci, 0);
+                    if (row !== -1 && checkWin(row, ci, 0)) {
+                        undoMove(ci);
+                        playerMove(ci);
+                        render();
+                        return;
+                    }
+                    if (row !== -1) undoMove(ci);
+                }
+                // 3. केंद्र को प्राथमिकता
+                let bestCols = [3, 2, 4, 1, 5, 0, 6].filter((c) => validCols.includes(c));
+                let col = bestCols.length > 0
+                    ? bestCols[0]
+                    : validCols[Math.floor(Math.random() * validCols.length)];
+                playerMove(col);
+                render();
+            }
+            function share() {
+                const url = location.href;
+                if (navigator.share) {
+                    navigator.share({
+                        title: "कनेक्ट फोर",
+                        url
+                    });
+                } else {
+                    navigator.clipboard.writeText(url);
+                    alert("लिंक क्लिपबोर्ड पर कॉपी हो गया!");
+                }
+            }
+            restart();
+        </script>
+        <section
+            style="
+                width: 90%;
+                max-width: 420px;
+                margin: 40px auto 80px auto;
+                padding: 20px;
+                background: #ffffff;
+                border: 1px solid #ccc;
+                border-radius: 12px;
+                font-family: &quot;Segoe UI&quot;, sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+                color: #2e2e2e;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            "
+        >
+            <h2 style="font-size: 18px; margin-bottom: 1rem; color: #365ca0">❓ अक्सर पूछे जाने वाले प्रश्न (FAQ)</h2>
+            <div style="margin-bottom: 1rem">
+                <strong>Q1. कनेक्ट फोर कैसे खेलें?</strong><br />
+                A. किसी भी कॉलम पर टैप करें — आपकी डिस्क नीचे गिरेगी। जो खिलाड़ी क्षैतिज, ऊर्ध्वाधर या तिरछी पंक्ति में 4 जोड़ेगा, वही जीतता है।
+            </div>
+            <div style="margin-bottom: 1rem">
+                <strong>Q2. कौन-कौन से गेम मोड्स हैं?</strong><br />
+                A. "2 खिलाड़ी" मोड में दोस्त के साथ खेलें या "AI के साथ" मोड चुनकर कंप्यूटर के खिलाफ खेलें।
+            </div>
+            <div style="margin-bottom: 1rem">
+                <strong>Q3. AI कितना स्मार्ट है?</strong><br />
+                A. AI जीतने वाले कदम उठाएगा, आपकी जीत रोकने की कोशिश करेगा और केंद्र कॉलम को प्राथमिकता देगा।
+            </div>
+            <div style="margin-bottom: 1rem">
+                <strong>Q4. क्या मैं गेम के दौरान मोड बदल सकता हूँ?</strong><br />
+                A. हाँ! ऊपर दिए गए मोड बटन पर टैप करें — नया मोड चुनते ही खेल रीसेट हो जाएगा।
+            </div>
+            <div style="margin-bottom: 1rem">
+                <strong>Q5. अगर गेम ड्रा हो जाए तो?</strong><br />
+                A. अगर पूरा बोर्ड भर गया और कोई विजेता नहीं है तो गेम ड्रा मान लिया जाएगा। आप फिर से शुरू कर सकते हैं।
+            </div>
+            <div>
+                <strong>Q6. गेम लिंक कैसे साझा करें?</strong><br />
+                A. "साझा करें" बटन पर टैप करें — लिंक कॉपी करें और दोस्तों को भेजें!
+            </div>
+        </section>
+    </body>
+</html>

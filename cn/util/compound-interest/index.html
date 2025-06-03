@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>複利 vs 単利 計算機（毎月の入金含む）</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag("js", new Date());
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <!-- Google AdSense -->
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <!-- SEO & Social meta -->
+    <meta
+      name="description"
+      content="毎月の入金を含む複利と単利の成長を比較できます。即時に表とインタラクティブなチャートで確認可能。" />
+    <meta
+      name="keywords"
+      content="複利, 単利, 毎月入金, 計算機, 金融, 投資, 貯蓄, オンライン計算機, 比較, グラフ" />
+    <meta name="author" content="Itagi" />
+    <meta name="language" content="ja" />
+    <meta name="theme-color" content="#1875d1" />
+    <link rel="canonical" href="https://emfls.github.io/cn/util/compound-interest/" />
+    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+    <!-- Open Graph -->
+    <meta property="og:title" content="毎月入金複利計算機" />
+    <meta
+      property="og:description"
+      content="毎月の入金を含む複利と単利を比較できます。即時に結果を確認可能。無料、ブラウザベース。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/cn/util/compound-interest/" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="複利 vs 単利 計算機（毎月の入金含む）" />
+    <meta
+      name="twitter:description"
+      content="複利と単利の成長を比較できる計算機、毎月の入金を含みます。即時に結果を確認可能。" />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <style>
+      :root {
+        --main: #1875d1;
+        --main-dark: #0e4775;
+        --bg: #f8faff;
+      }
+      body {
+        background: var(--bg);
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: #234;
+      }
+      .container {
+        max-width: 480px;
+        margin: 42px auto 0 auto;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 22px #1875d133;
+        padding: 30px 18px 22px 18px;
+      }
+      .logo {
+        font-size: 1.25em;
+        font-weight: bold;
+        text-align: center;
+        color: var(--main-dark);
+        margin-bottom: 10px;
+      }
+      .desc {
+        text-align: center;
+        color: #1e589e;
+        margin-bottom: 17px;
+        font-size: 1.04em;
+      }
+      .form-row {
+        margin-bottom: 13px;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .form-row label {
+        font-size: 1em;
+        color: #186a9a;
+        font-weight: 500;
+      }
+      .form-row input,
+      .form-row select {
+        padding: 8px 10px;
+        font-size: 1.05em;
+        border: 1.1px solid #b6d5ef;
+        border-radius: 7px;
+        background: #fafdff;
+        color: #234;
+      }
+      .action-btn {
+        background: var(--main);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 13px 0;
+        width: 100%;
+        font-size: 1.13em;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 9px;
+        margin-bottom: 13px;
+        box-shadow: 0 2px 12px #1875d120;
+        transition: background 0.15s;
+      }
+      .action-btn:active { background: var(--main-dark); }
+      .result-block {
+        background: #f7fafd;
+        border: 1.2px solid #c2e1fa;
+        border-radius: 9px;
+        padding: 18px 13px 12px 13px;
+        margin-bottom: 7px;
+        color: #1975be;
+        font-size: 1.11em;
+        text-align: center;
+      }
+      .footer {
+        color: #789;
+        text-align: center;
+        font-size: 0.93em;
+        margin-top: 16px;
+      }
+      #backBtn {
+        position: fixed;
+        left: 50%;
+        bottom: 32px;
+        transform: translateX(-50%);
+        background: #1875d1;
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 2rem;
+        padding: 0.58em 1.5em;
+        box-shadow: 0 4px 16px #1875d133;
+        font-size: 1.09em;
+        text-decoration: none;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+        transition: background 0.15s, transform 0.12s;
+        z-index: 2000;
+      }
+      #backBtn:hover { background: #0e4775; transform: translateX(-50%) scale(1.04); }
+      @media (max-width: 600px) {
+        .container { max-width: 99vw; padding: 12px 2vw 14px 2vw; }
+        #backBtn { bottom: 18px; font-size: 0.98em; padding: 0.48em 1em; }
+      }
+      .table-block { margin: 15px 0 8px 0; overflow-x: auto; }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.98em;
+        background: #fff;
+      }
+      th, td {
+        border: 1px solid #e3ecf8;
+        padding: 5px 8px;
+        text-align: right;
+      }
+      th {
+        background: #e9f3ff;
+        color: #1975be;
+        font-weight: 600;
+      }
+      td.year {
+        text-align: center;
+        color: #1975be;
+        font-weight: 500;
+      }
+      .legend {
+        text-align: right;
+        font-size: 0.98em;
+        margin: 5px 0 0 0;
+      }
+      .legend span {
+        display: inline-block;
+        width: 14px;
+        height: 11px;
+        margin-right: 5px;
+        border-radius: 3px;
+        vertical-align: middle;
+      }
+      /* Chart */
+      #chart {
+        width: 100%;
+        max-width: 450px;
+        height: 230px;
+        background: #fafdff;
+        border-radius: 13px;
+        margin: 16px auto 7px auto;
+        box-shadow: 0 1px 8px #1875d118;
+        display: block;
+      }
+      section#faq { margin-top: 30px; }
+      section#faq h2 { margin-bottom: 13px; color: #1875d1; font-size: 1.11em; text-align: center; }
+      section#faq dt { font-weight: bold; margin-top: 8px; }
+      section#faq dd { margin: 0 0 7px 0; font-size: 0.99em; color: #1e589e; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="container" itemscope itemtype="https://schema.org/WebApplication">
+        <h1 class="logo" itemprop="name">📈 複利 vs 単利 計算機</h1>
+        <p class="desc" itemprop="description">
+          複利と単利の成長を即座に比較できます。<br />
+          毎月の入金（積立式）または一括入金の元本にも対応します。
+        </p>
+        <form id="form" autocomplete="off">
+          <div class="form-row">
+            <label for="principal">元本 (¥)</label>
+            <input type="number" id="principal" min="0" step="0.01" value="10000" required />
+          </div>
+          <div class="form-row">
+            <label for="monthly">毎月の入金 (¥)</label>
+            <input type="number" id="monthly" min="0" step="0.01" value="500" required />
+          </div>
+          <div class="form-row">
+            <label for="rate">年利 (%)</label>
+            <input type="number" id="rate" min="0" step="0.01" value="5.00" required />
+          </div>
+          <div class="form-row">
+            <label for="years">期間 (年)</label>
+            <input type="number" id="years" min="1" step="1" value="10" required />
+          </div>
+          <div class="form-row">
+            <label for="freq">複利頻度</label>
+            <select id="freq">
+              <option value="1">年1回</option>
+              <option value="2">半年ごと</option>
+              <option value="4">四半期ごと</option>
+              <option value="12" selected>月1回</option>
+              <option value="365">日1回</option>
+            </select>
+          </div>
+          <button type="submit" class="action-btn">計算する</button>
+        </form>
+        <div class="result-block" id="result"></div>
+        <canvas id="chart" width="420" height="230"></canvas>
+        <div class="legend">
+          <span style="background:#1975be"></span> 複利 &nbsp;
+          <span style="background:#fc8642"></span> 単利
+        </div>
+        <div class="table-block" id="tableBlock"></div>
+        <div class="footer">
+          毎月の入金を含む複利と単利の比較を提供します。<br />
+          100% ブラウザベース。ログイン不要。データ送信なし。
+        </div>
+        <!-- FAQ セクション (SEO/SGE 用) -->
+        <section aria-labelledby="faq-head" id="faq">
+          <h2 id="faq-head">FAQ – 複利 vs 単利 計算機</h2>
+          <dl>
+            <dt>複利と単利の違いは何ですか？</dt>
+            <dd>複利は元本および過去に生じた利息に利息がつきます。単利は元本にのみ利息がつきます。</dd>
+            <dt>毎月の入金を追加できますか？</dt>
+            <dd>はい、固定の毎月入金を追加できます。複利および単利の結果に毎月入金額が含まれます。</dd>
+            <dt>どの複利頻度が最も有利ですか？</dt>
+            <dd>複利頻度が高いほど（例：月1回または日1回）、長期投資では総利回りが高くなる可能性があります。</dd>
+            <dt>私のデータはアップロードまたは保存されますか？</dt>
+            <dd>いいえ。すべての計算はブラウザ上でのみ行われます。個人の金融情報は保存も送信もされません。</dd>
+            <dt>この計算機は無料ですか？</dt>
+            <dd>はい！100% 無料で、デスクトップおよびモバイル端末の両方で使用できます。</dd>
+          </dl>
+        </section>
+      </div>
+    </main>
+    <a href="../index.html" id="backBtn">他のユーティリティ</a>
+    <script>
+      const form = document.getElementById('form');
+      const result = document.getElementById('result');
+      const tableBlock = document.getElementById('tableBlock');
+      const chart = document.getElementById('chart');
+      const ctx = chart.getContext('2d');
+
+      function formatMoney(v) {
+        return '¥' + Number(v).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
+      }
+      // 複利計算（毎月入金含む）
+      function compoundWithDeposit(P, PMT, r, n, t) {
+        let periods = n * t;
+        let i = r / n;
+        let fvP = P * Math.pow(1 + i, periods);
+        let fvPMT = PMT > 0 ? PMT * ((Math.pow(1 + i, periods) - 1) / i) * (i > 0 ? 1 : 0) : 0;
+        if (n !== 12 && PMT > 0) {
+          let m_per_period = 12 / n;
+          let fvPMT_adj = 0;
+          for (let k = 1; k <= periods; k++) {
+            fvPMT_adj += PMT * Math.pow(1 + r / n, periods - k + 1) * (m_per_period > 1 ? m_per_period : 1);
+          }
+          fvPMT = fvPMT_adj;
+        }
+        return fvP + fvPMT;
+      }
+      // 単利計算（毎月入金含む）
+      function simpleWithDeposit(P, PMT, r, t) {
+        let fvP = P * (1 + r * t);
+        let fvPMT = PMT * 12 * t;
+        let interestPMT = fvPMT * r * t / 2;
+        return fvP + fvPMT + interestPMT;
+      }
+
+      function drawChart(years, compVals, simpVals) {
+        ctx.clearRect(0, 0, chart.width, chart.height);
+        let allVals = compVals.concat(simpVals);
+        let maxV = Math.max(...allVals) * 1.04;
+        let minV = Math.min(...allVals);
+        let W = chart.width - 40, H = chart.height - 35, ox = 35, oy = 18;
+        // 軸描画
+        ctx.strokeStyle = "#b3cae7";
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(ox, oy); ctx.lineTo(ox, oy+H); ctx.lineTo(ox+W, oy+H);
+        ctx.stroke();
+        // Y ラベル
+        ctx.fillStyle = "#3773b5";
+        ctx.font = "11px Segoe UI, Arial";
+        for (let i = 0; i <= 4; i++) {
+          let v = maxV - (maxV-minV)*i/4;
+          let y = oy + H * i/4;
+          ctx.fillText(formatMoney(v), 2, y+4);
+        }
+        // X ラベル
+        ctx.fillStyle = "#777";
+        for (let y = 1; y <= years; y++) {
+          let x = ox + (W) * (y-1) / (years-1);
+          ctx.fillText(y, x-4, oy+H+17);
+        }
+        // 線描画関数
+        function drawLine(data, color) {
+          ctx.strokeStyle = color;
+          ctx.lineWidth = 2.7;
+          ctx.beginPath();
+          for (let y = 1; y <= years; y++) {
+            let val = data[y-1];
+            let px = ox + (W) * (y-1) / (years-1);
+            let py = oy + H - ((val - minV) / (maxV-minV)) * H;
+            if (y === 1) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.stroke();
+          // 点描画
+          ctx.fillStyle = color;
+          for (let y = 1; y <= years; y++) {
+            let val = data[y-1];
+            let px = ox + (W) * (y-1) / (years-1);
+            let py = oy + H - ((val - minV) / (maxV-minV)) * H;
+            ctx.beginPath(); ctx.arc(px, py, 3.1, 0, Math.PI*2); ctx.fill();
+          }
+        }
+        // 複利、単利の線を描く
+        drawLine(compVals, "#1975be");
+        drawLine(simpVals, "#fc8642");
+      }
+
+      form.onsubmit = function(e) {
+        e.preventDefault();
+        let P = parseFloat(form.principal.value);
+        let PMT = parseFloat(form.monthly.value);
+        let r = parseFloat(form.rate.value) / 100;
+        let t = parseInt(form.years.value);
+        let n = parseInt(form.freq.value);
+        if (isNaN(P) || isNaN(PMT) || isNaN(r) || isNaN(t) || isNaN(n) || P < 0 || PMT < 0 || r < 0 || t < 1) {
+          result.innerHTML = '<span style="color:#d33;">有効な値を入力してください。</span>';
+          tableBlock.innerHTML = '';
+          ctx.clearRect(0,0,chart.width,chart.height);
+          return;
+        }
+        // 年ごとの計算
+        let compArr = [], simpArr = [];
+        for(let y=1; y<=t; y++) {
+          compArr.push(compoundWithDeposit(P, PMT, r, n, y));
+          simpArr.push(simpleWithDeposit(P, PMT, r, y));
+        }
+        // 最終値を表示
+        let FV = compArr[t-1], FVsimple = simpArr[t-1];
+        let totalPaid = P + PMT*12*t;
+        let interest = FV - totalPaid, interestSimple = FVsimple - totalPaid;
+        result.innerHTML =
+          `<b>複利：</b> <span style="color:#1975be">${formatMoney(FV)}</span>（合計利息：<b>${formatMoney(interest)}</b>）<br>
+           <b>単利：</b> <span style="color:#fc8642">${formatMoney(FVsimple)}</span>（合計利息：<b>${formatMoney(interestSimple)}</b>）<br>
+           <span style="color:#888;">総入金額： ${formatMoney(totalPaid)}</span>`;
+        // 年ごとの表を作成
+        let rows = '';
+        for(let y=1; y<=t; y++) {
+          rows += `<tr>
+            <td class="year">${y}</td>
+            <td>${formatMoney(compArr[y-1])}</td>
+            <td>${formatMoney(simpArr[y-1])}</td>
+            <td>${formatMoney(compArr[y-1] - (P + PMT*12*y))}</td>
+            <td>${formatMoney(simpArr[y-1] - (P + PMT*12*y))}</td>
+          </tr>`;
+        }
+        tableBlock.innerHTML =
+          `<table>
+            <thead>
+              <tr>
+                <th>年目</th>
+                <th>複利価値</th>
+                <th>単利価値</th>
+                <th>複利利息</th>
+                <th>単利利息</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>`;
+        // チャートを描画
+        drawChart(t, compArr, simpArr);
+      };
+      // 初期計算実行
+      form.onsubmit(new Event('submit'));
+    </script>
+    <!-- FAQPage Schema for SGE/GEO/SEO Rich Results -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "複利と単利の違いは何ですか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "複利は元本および過去に生じた利息に利息がつきます。単利は元本にのみ利息がつきます。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "毎月の入金を追加できますか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "はい、固定の毎月入金を追加できます。複利および単利の結果に毎月入金額が含まれます。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "どの複利頻度が最も有利ですか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "複利頻度が高いほど（例：月1回または日1回）、長期投資では総利回りが高くなる可能性があります。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "私のデータはアップロードまたは保存されますか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "いいえ。すべての計算はブラウザ上でのみ行われます。個人の金融情報は保存も送信もされません。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "この計算機は無料ですか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "はい！100% 無料で、デスクトップおよびモバイル端末の両方で使用できます。"
+          }
+        }
+      ]
+    }
+    </script>
+  </body>
+</html>

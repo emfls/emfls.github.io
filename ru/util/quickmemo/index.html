@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>クイックメモ – オンラインメモ帳＆スティッキーノート</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta
+      name="description"
+      content="素早く個人的に使えるオンラインメモ帳。ブラウザですぐにメモを書いて保存できます。ログイン不要・完全無料・ローカルストレージ対応でオフラインでも利用可能です。" />
+    <meta
+      name="keywords"
+      content="オンラインメモ, メモ帳, クイックノート, ローカルストレージ, スティッキーノート, テキスト保存, ブラウザ, 個人用, 無料, メモ, ノート, 一時保存" />
+    <meta name="author" content="Itagi" />
+    <meta name="language" content="ja" />
+    <link rel="canonical" href="https://emfls.github.io/ru/util/quickmemo/" />
+    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+    <meta property="og:title" content="クイックメモ – オンラインメモ帳＆スティッキーノート" />
+    <meta
+      property="og:description"
+      content="ブラウザですぐにメモ・ToDo・アイデアや下書きを作成＆保存できます。すべてローカルストレージに保存され、絶対にアップロードされません。無料・シンプル・高速。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/ru/util/quickmemo/" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="クイックメモ – オンラインメモ帳＆スティッキーノート" />
+    <meta
+      name="twitter:description"
+      content="ブラウザですぐにメモ・ToDo・アイデア・下書きを作成して保存できます。ローカルストレージ・無料・ログイン不要。" />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <!-- Googleタグ (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <style>
+      :root {
+        --main: #36ba7c;
+        --main-dark: #219f65;
+        --bg: #f6faf7;
+      }
+      body {
+        background: var(--bg);
+        margin: 0;
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: #244;
+      }
+      .container {
+        max-width: 410px;
+        margin: 38px auto 0 auto;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 22px #36ba7c24;
+        padding: 30px 16px 20px 16px;
+      }
+      .logo {
+        font-size: 1.21em;
+        font-weight: bold;
+        text-align: center;
+        color: var(--main-dark);
+        margin-bottom: 7px;
+      }
+      .desc {
+        text-align: center;
+        color: #1a8751;
+        font-size: 0.77em;
+        margin-bottom: 14px;
+      }
+      textarea {
+        width: 100%;
+        min-height: 210px;
+        font-size: 1.11em;
+        border: 1.4px solid #97e7c7;
+        border-radius: 10px;
+        padding: 13px;
+        background: #fafdff;
+        color: #244;
+        resize: vertical;
+        margin-bottom: 14px;
+        font-family: "Fira Mono", "Menlo", monospace;
+        transition: border 0.18s;
+      }
+      textarea:focus {
+        border-color: var(--main);
+      }
+      .action-row {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        margin-bottom: 10px;
+      }
+      .mini-btn {
+        background: #e7f8f2;
+        color: #1b8055;
+        border: none;
+        border-radius: 7px;
+        font-size: 1em;
+        padding: 7px 16px;
+        cursor: pointer;
+        transition: background 0.12s;
+        font-weight: 500;
+      }
+      .mini-btn:active {
+        background: #bff2da;
+      }
+      .footer {
+        color: #789;
+        text-align: center;
+        font-size: 0.95em;
+        margin-top: 18px;
+        opacity: 0.9;
+      }
+      #backBtn {
+        position: fixed;
+        left: 50%;
+        bottom: 32px;
+        transform: translateX(-50%);
+        background: #36ba7c;
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 2rem;
+        padding: 0.58em 1.5em;
+        box-shadow: 0 4px 16px #36ba7c33;
+        font-size: 1.09em;
+        text-decoration: none;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+        transition:
+          background 0.15s,
+          transform 0.12s;
+        z-index: 2000;
+      }
+      #backBtn:hover {
+        background: #219f65;
+        transform: translateX(-50%) scale(1.04);
+      }
+      @media (max-width: 600px) {
+        .container {
+          max-width: 99vw;
+          padding: 13px 2vw 11px 2vw;
+        }
+        textarea {
+          font-size: 1em;
+        }
+        #backBtn {
+          bottom: 18px;
+          font-size: 0.98em;
+          padding: 0.48em 1em;
+        }
+      }
+      .autosave {
+        color: #4eb983;
+        font-size: 0.98em;
+        margin-bottom: 6px;
+        min-height: 18px;
+        text-align: right;
+        opacity: 0.78;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">📝 クイックメモ</div>
+      <div class="desc">
+        すばやくメモ・ToDo・アイデア・下書きを書きましょう。<br />
+        <b>自動保存</b>（ブラウザのローカルストレージ）。<br />
+        アップロードもログインも不要、100%プライベートで使えます。
+      </div>
+      <div class="autosave" id="autosaveMsg"></div>
+      <textarea id="memoArea" placeholder="ここにメモや一時ノートを入力してください..."></textarea>
+      <div class="action-row">
+        <button class="mini-btn" id="clearBtn">消去</button>
+        <button class="mini-btn" id="copyBtn">コピー</button>
+        <button class="mini-btn" id="downloadBtn">ダウンロード</button>
+      </div>
+      <div class="footer">
+        すべての内容はご自身の端末にのみ保存されます。<br />
+        <b>ヒント:</b> 下書き・クイック作業・リマインダーに便利です！
+      </div>
+    </div>
+    <a href="../index.html" id="backBtn">他のツール</a>
+    <script>
+      const memoArea = document.getElementById("memoArea");
+      const autosaveMsg = document.getElementById("autosaveMsg");
+      const LS_KEY = "quickMemoNote";
+
+      // 保存済みメモの読み込み
+      memoArea.value = localStorage.getItem(LS_KEY) || "";
+
+      // 自動保存
+      let saveTimer;
+      memoArea.addEventListener("input", function () {
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(() => {
+          localStorage.setItem(LS_KEY, memoArea.value);
+          showAutosaveMsg();
+        }, 300);
+      });
+
+      function showAutosaveMsg() {
+        autosaveMsg.textContent = "保存しました！";
+        setTimeout(() => {
+          autosaveMsg.textContent = "";
+        }, 1200);
+      }
+
+      // クリップボードへコピー
+      document.getElementById("copyBtn").onclick = function () {
+        const val = memoArea.value;
+        if (!val) return;
+        navigator.clipboard.writeText(val);
+        autosaveMsg.textContent = "コピーしました！";
+        setTimeout(() => {
+          autosaveMsg.textContent = "";
+        }, 1000);
+      };
+
+      // テキストファイルとしてダウンロード
+      document.getElementById("downloadBtn").onclick = function () {
+        const val = memoArea.value;
+        if (!val) return;
+        const blob = new Blob([val], { type: "text/plain" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "quick_memo.txt";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+          URL.revokeObjectURL(a.href);
+          a.remove();
+        }, 500);
+      };
+
+      // メモを消去
+      document.getElementById("clearBtn").onclick = function () {
+        if (memoArea.value.length === 0) return;
+        if (confirm("メモ内容をすべて消去しますか？")) {
+          memoArea.value = "";
+          localStorage.removeItem(LS_KEY);
+          autosaveMsg.textContent = "消去しました！";
+          setTimeout(() => {
+            autosaveMsg.textContent = "";
+          }, 900);
+        }
+      };
+    </script>
+    <section
+      style="
+        max-width: 320px;
+        margin: 48px auto 24px auto;
+        background: #1e1e1e;
+        border-radius: 18px;
+        box-shadow: 0 6px 24px #1236;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+      ">
+      <div style="margin-bottom: 12px">
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📝 このツールは何ですか？</h3>
+        <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
+          クイックメモは、ログイン不要でブラウザ上でメモを作成・保存できる個人用オンラインメモ帳です。オフライン状態でもローカルストレージで動作します。
+        </p>
+      </div>
+      <div style="margin-bottom: 12px">
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">💾 メモはどうやって保存されますか？</h3>
+        <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
+          入力するたびに内容が自動的にブラウザのローカルストレージに保存されます。すべてのデータはご自身の端末内にのみ残ります。
+        </p>
+      </div>
+      <div style="margin-bottom: 12px">
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📋 メモをコピーやダウンロードできますか？</h3>
+        <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
+          はい。「コピー」ボタンでメモ内容をクリップボードにコピー、「ダウンロード」で.txtファイルとして保存できます。
+        </p>
+      </div>
+      <div style="margin-bottom: 12px">
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🧹 メモを消去するには？</h3>
+        <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
+          「消去」ボタンを押して確認すると、メモがすべて消えます。ローカルストレージ内のデータも削除されます。
+        </p>
+      </div>
+      <div style="margin-bottom: 0">
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔐 このツールは安全ですか？</h3>
+        <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
+          100%安全です。すべてのメモはブラウザ内だけで処理され、絶対に外部にアップロードされません。個人情報はしっかり守られます。
+        </p>
+      </div>
+    </section>
+  </body>
+</html>

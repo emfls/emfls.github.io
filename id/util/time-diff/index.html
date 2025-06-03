@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>時間差＆カウントダウン計算機</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="2つの日付間の時間差を計算し、指定した日時までのリアルタイムカウントダウンを確認できます。日・時・分・秒。無料、ブラウザベース、モバイル対応。" />
+    <meta
+      name="keywords"
+      content="時間差, カウントダウン, 日付計算, タイマー, 日, 時間, 分, 秒, ウェブ, カウントダウン, 日付計算機" />
+    <meta name="author" content="Itagi" />
+    <meta name="language" content="ja" />
+    <meta name="theme-color" content="#1999c6" />
+    <link rel="canonical" href="https://emfls.github.io/id/util/time-diff/" />
+    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+    <meta property="og:title" content="時間差＆カウントダウン計算機" />
+    <meta
+      property="og:description"
+      content="2つの日時の差を計算し、希望の未来日時までリアルタイムでカウントダウンします。" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/id/util/time-diff/" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="時間差＆カウントダウン計算機" />
+    <meta name="twitter:description" content="間隔計算やリアルタイムカウントダウン。100%ブラウザ内、アップロード不要。" />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <!-- Google AdSense -->
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <style>
+      :root {
+        --main: #1999c6;
+        --bg: #f7fbfe;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--bg);
+      }
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: #234;
+      }
+      .container {
+        max-width: 390px;
+        margin: 38px auto 0 auto;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 22px #1999c61a;
+        padding: 25px 14px 22px 14px;
+      }
+      .title {
+        text-align: center;
+        font-size: 1.15em;
+        color: var(--main);
+        font-weight: bold;
+        margin-bottom: 12px;
+      }
+      .form-row {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin-bottom: 15px;
+      }
+      .form-row label {
+        font-size: 1em;
+        color: #147399;
+        font-weight: 500;
+      }
+      .form-row input[type="datetime-local"] {
+        box-sizing: border-box;
+        padding: 10px 10px;
+        border-radius: 7px;
+        border: 1.2px solid #aee3f7;
+        font-size: 1.08em;
+        width: 100%;
+        background: #fafdff;
+        color: #234;
+        transition: border 0.15s;
+      }
+      .form-row input[type="datetime-local"]:focus {
+        border-color: var(--main);
+      }
+      .result,
+      .countdown {
+        background: #e2f5fc;
+        border-radius: 12px;
+        color: #15748d;
+        font-size: 1.08em;
+        padding: 13px 11px 11px 11px;
+        text-align: center;
+        margin-bottom: 9px;
+        min-height: 38px;
+        font-weight: 500;
+        word-break: break-word;
+      }
+      .countdown {
+        background: #f7ebff;
+        color: #954fc9;
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
+      .footer {
+        color: #789;
+        text-align: center;
+        font-size: 0.93em;
+        margin-top: 15px;
+      }
+      #backBtn {
+        position: fixed;
+        left: 50%;
+        bottom: 32px;
+        transform: translateX(-50%);
+        background: #1999c6;
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 2rem;
+        padding: 0.58em 1.5em;
+        box-shadow: 0 4px 16px #1999c633;
+        font-size: 1.09em;
+        text-decoration: none;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+        transition:
+          background 0.15s,
+          transform 0.12s;
+        z-index: 2000;
+      }
+      #backBtn:hover {
+        background: #106d92;
+        transform: translateX(-50%) scale(1.04);
+      }
+      @media (max-width: 500px) {
+        .container {
+          max-width: 98vw;
+          padding: 10px 2vw 10px 2vw;
+        }
+        #backBtn {
+          bottom: 18px;
+          font-size: 0.98em;
+          padding: 0.48em 1em;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="title">⏳ 時間差＆カウントダウン</div>
+      <form id="diffForm" autocomplete="off">
+        <div class="form-row">
+          <label for="startTime">開始日時</label>
+          <input type="datetime-local" id="startTime" />
+        </div>
+        <div class="form-row">
+          <label for="endTime">終了日時</label>
+          <input type="datetime-local" id="endTime" />
+        </div>
+        <div class="result" id="diffResult"></div>
+      </form>
+      <div class="countdown" id="countdownBox"></div>
+      <div class="footer">
+        日付間の日・時・分・秒を計算したり、リアルタイムのカウントダウンを確認できます。<br />
+        <b>ヒント:</b> カウントダウンだけなら「終了日時」だけ入力してください。
+      </div>
+    </div>
+    <a href="../index.html" id="backBtn">他のツールを見る</a>
+    <script>
+      const startInput = document.getElementById("startTime");
+      const endInput = document.getElementById("endTime");
+      const result = document.getElementById("diffResult");
+      const countdownBox = document.getElementById("countdownBox");
+      let countdownTimer = null;
+
+      function formatDiff(ms) {
+        let abs = Math.abs(ms);
+        const sign = ms >= 0 ? "" : "-";
+        const days = Math.floor(abs / 86400000);
+        const hours = Math.floor((abs % 86400000) / 3600000);
+        const mins = Math.floor((abs % 3600000) / 60000);
+        const secs = Math.floor((abs % 60000) / 1000);
+        return `<b>${sign}${days}日</b> &nbsp; <b>${hours}時間</b> &nbsp; <b>${mins}分</b> &nbsp; <b>${secs}秒</b>`;
+      }
+
+      function update() {
+        const start = startInput.value ? new Date(startInput.value) : null;
+        const end = endInput.value ? new Date(endInput.value) : null;
+        // 差分計算
+        if (start && end) {
+          let ms = end - start;
+          if (isNaN(ms)) result.textContent = "無効な日付・時刻です。";
+          else result.innerHTML = formatDiff(ms);
+        } else {
+          result.textContent = "";
+        }
+        // カウントダウン（現在時刻から終了まで）
+        if (end) {
+          let from =
+            !startInput.value || (startInput.value && new Date(startInput.value) < new Date())
+              ? new Date()
+              : new Date(startInput.value);
+          if (isNaN(end - from)) {
+            countdownBox.textContent = "";
+            return;
+          }
+          function tick() {
+            let now = new Date();
+            let base =
+              !startInput.value || (startInput.value && new Date(startInput.value) < now)
+                ? now
+                : new Date(startInput.value);
+            let ms = end - base;
+            if (isNaN(ms)) {
+              countdownBox.textContent = "";
+              return;
+            }
+            if (ms <= 0) {
+              countdownBox.innerHTML = `<b>時間終了！</b>`;
+              clearInterval(countdownTimer);
+              countdownTimer = null;
+              return;
+            }
+            countdownBox.innerHTML = `<b>カウントダウン: </b>` + formatDiff(ms);
+          }
+          if (countdownTimer) clearInterval(countdownTimer);
+          tick();
+          countdownTimer = setInterval(tick, 1000);
+        } else {
+          countdownBox.textContent = "";
+          if (countdownTimer) clearInterval(countdownTimer);
+          countdownTimer = null;
+        }
+      }
+
+      // 入力時に自動更新
+      startInput.addEventListener("input", update);
+      endInput.addEventListener("input", update);
+      // ページロード時も即時更新
+      window.addEventListener("DOMContentLoaded", update);
+    </script>
+    <section
+      style="
+        max-width: 320px;
+        margin: 48px auto 24px auto;
+        background: #1e1e1e;
+        border-radius: 18px;
+        box-shadow: 0 6px 24px #1236;
+        padding: 24px;
+        font-family: Arial, sans-serif;
+      ">
+      <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 14px">
+        ❓ FAQ – 時間差＆カウントダウン
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">このツールはインターネット接続やアップロードが必要ですか？</div>
+        <div style="color: #f0f0f0">
+          いいえ。すべての計算はブラウザ内でローカルに行われます。データは外部に送信されません。
+        </div>
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">カウントダウン機能の使い方は？</div>
+        <div style="color: #f0f0f0">
+          「終了日時」だけ入力してください。今から残り時間が表示されます。
+        </div>
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">開始時刻と終了時刻を両方入力した場合は？</div>
+        <div style="color: #f0f0f0">
+          時間差とカウントダウン（開始時刻が現在または過去の場合）が両方表示されます。
+        </div>
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">マイナス（負）の差も計算できますか？</div>
+        <div style="color: #f0f0f0">
+          はい。終了日時が開始日時より前なら、結果はマイナス（“-”記号付き）で表示されます。
+        </div>
+      </div>
+
+      <div style="margin-bottom: 0">
+        <div style="color: #8f94fb; font-weight: bold">モバイルでも使えますか？</div>
+        <div style="color: #f0f0f0">
+          はい！このツールはレスポンシブ対応で、スマホ・タブレット・PCすべてで利用できます。
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

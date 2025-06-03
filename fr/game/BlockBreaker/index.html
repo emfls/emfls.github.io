@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="ブラウザで無料のブロックブレイカーをプレイしよう！すべてのブロックを壊し、パワーアップを集め、新しいハイスコアを目指そう。シンプルで高速、モバイルでも快適に遊べます。" />
+        <meta
+            name="keywords"
+            content="ブロックブレイカー, ブロック崩し, ブレイクアウト, 無料ゲーム, ブラウザゲーム, アーケード, パドルゲーム, モバイルゲーム, ブロック, ボール, ハイスコア, オンラインゲーム" />
+        <meta name="author" content="Itagi" />
+        <meta name="robots" content="index, follow" />
+
+        <link rel="canonical" href="https://emfls.github.io/fr/game/BlockBreaker" />
+
+        <meta property="og:title" content="ブロックブレイカー – 無料オンラインブロック崩しゲーム！" />
+        <meta
+            property="og:description"
+            content="無料でブロックブレイカーをプレイしよう！すべてのブロックを壊し、パワーアップを獲得し、友達と競おう。ダウンロード不要。" />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta property="og:url" content="https://emfls.github.io/fr/game/BlockBreaker" />
+        <meta property="og:type" content="website" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="ブロックブレイカー – 無料オンラインブロック崩しゲーム！" />
+        <meta
+            name="twitter:description"
+            content="この中毒性のあるオンラインブロック崩しゲームで、すべてのブロックを壊そう！今すぐハイスコアを目指そう。" />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+        <title>ブロックブレイカー</title>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet" />
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                user-select: none;
+            }
+
+            body,
+            html {
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(to bottom, #232526, #414345);
+                font-family: "Noto Sans KR", "Segoe UI", Tahoma, sans-serif; /* 日本語環境でも問題ないフォントスタック */
+            }
+
+            #gameContainer {
+                position: relative;
+                width: 100%;
+                max-width: 600px;
+                margin: 20px auto;
+                border-radius: 10px;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+                overflow: hidden;
+                background: #111;
+            }
+
+            #header {
+                text-align: center;
+                padding: 10px;
+                color: #fff;
+            }
+
+            #header h1 {
+                font-size: 28px;
+            }
+
+            #header p {
+                font-size: 16px;
+                color: #ddd;
+            }
+
+            #gameCanvas {
+                display: block;
+                width: 100%;
+                height: auto;
+            }
+
+            #scoreUI {
+                position: absolute;
+                top: 10px;
+                left: 0px;
+                background: rgba(0, 0, 0, 0.5);
+                padding: 6px 12px;
+                border-radius: 6px;
+                color: #fff;
+                font-size: 18px;
+                font-weight: bold;
+            }
+
+            #gameOverUI {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(0, 0, 0, 0.8);
+                padding: 20px;
+                border-radius: 10px;
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+                color: #fff;
+            }
+
+            #gameOverMsg {
+                font-size: 22px;
+                font-weight: bold;
+            }
+
+            #gameOverUI button {
+                width: 120px;
+                background: linear-gradient(135deg, #ff6b6b, #f06595);
+                color: #fff;
+                border: none;
+                padding: 11px;
+                border-radius: 6px;
+                font-size: 16px;
+                cursor: pointer;
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+
+            #gameOverUI button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            }
+
+            #otherBtn {
+                display: block;
+                margin: 20px auto;
+                background: linear-gradient(135deg, #4facfe, #00f2fe);
+                color: #fff;
+                border: none;
+                padding: 20px 20px;
+                border-radius: 6px;
+                font-size: 16px;
+                cursor: pointer;
+                width: 90%;
+                max-width: 400px;
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+
+            #otherBtn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            }
+
+            /* FAQ セクション フォント再定義 */
+            section {
+                width: 90%;
+                max-width: 600px;
+                margin: 60px auto;
+                padding: 20px;
+                background: #1e1e1e;
+                color: #f1f1f1;
+                font-family: "Noto Sans KR", sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+                border-radius: 10px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            }
+
+            section h2 {
+                font-size: 20px;
+                margin-bottom: 1rem;
+                color: #4facfe;
+                font-family: "Noto Sans KR", sans-serif;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="gameContainer">
+            <div id="header">
+                <h1>ブロックブレイカー</h1>
+                <p>ボールで全てのブロックを壊そう！</p>
+            </div>
+            <canvas id="gameCanvas"></canvas>
+            <div id="scoreUI"></div>
+            <div id="gameOverUI">
+                <div id="gameOverMsg"></div>
+                <button id="restartBtn">再スタート</button>
+                <button id="shareBtn">共有</button>
+            </div>
+        </div>
+        <button id="otherBtn" onclick="window.location.href='../'">他のゲーム</button>
+        <script>
+            (function () {
+                const canvas = document.getElementById("gameCanvas");
+                const ctx = canvas.getContext("2d");
+                const scoreUI = document.getElementById("scoreUI");
+                const gameOverUI = document.getElementById("gameOverUI");
+                const gameOverMsg = document.getElementById("gameOverMsg");
+                const restartBtn = document.getElementById("restartBtn");
+                const shareBtn = document.getElementById("shareBtn");
+                let animationId,
+                    dragging = false,
+                    dragOffset = 0;
+
+                let paddle, bricks, items, balls;
+                let rows = 5,
+                    cols = 7,
+                    brickW,
+                    brickH;
+                let score, clearedCount;
+                const brickEdge = 3;
+
+                function resize() {
+                    const W = document.getElementById("gameContainer").clientWidth;
+                    const H = W * 1.2;
+                    canvas.width = W;
+                    canvas.height = H;
+                    init();
+                }
+                window.addEventListener("resize", resize);
+
+                function init() {
+                    const W = canvas.width,
+                        H = canvas.height;
+                    paddle = {
+                        w: W / 5,
+                        h: H / 30,
+                        x: W / 2 - W / 10,
+                        y: H - H / 12,
+                        speed: W / 150
+                    };
+                    brickW = W / cols;
+                    brickH = H / 20;
+                    clearedCount = 0;
+                    bricks = Array.from(
+                        {
+                            length: rows
+                        },
+                        (_, r) =>
+                            Array.from(
+                                {
+                                    length: cols
+                                },
+                                (_, c) => ({
+                                    x: c * brickW,
+                                    y: r * brickH + 60,
+                                    status: 1,
+                                    color: `hsl(${(r * 60) % 360},70%,50%)`
+                                })
+                            )
+                    );
+                    items = [];
+                    balls = [
+                        {
+                            x: W / 2,
+                            y: H / 2,
+                            r: W / 40,
+                            speed: W / 200,
+                            dx: W / 200,
+                            dy: -W / 200
+                        }
+                    ];
+                    score = 0;
+                    updateScoreUI();
+                    scoreUI.style.display = "block";
+                    gameOverUI.style.display = "none";
+                }
+
+                function drawPaddle() {
+                    ctx.fillStyle = "#4facfe";
+                    ctx.shadowColor = "#67e8f9";
+                    ctx.shadowBlur = 8;
+                    ctx.fillRect(paddle.x, paddle.y, paddle.w, paddle.h);
+                    ctx.shadowBlur = 0;
+                }
+
+                function drawBalls() {
+                    balls.forEach((b) => {
+                        ctx.beginPath();
+                        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+                        ctx.fillStyle = "#f6d860";
+                        ctx.shadowColor = "#fcd34d";
+                        ctx.shadowBlur = 8;
+                        ctx.fill();
+                        ctx.closePath();
+                        ctx.shadowBlur = 0;
+                    });
+                }
+
+                function drawBricks() {
+                    for (let r = 0; r < bricks.length; r++) {
+                        for (let c = 0; c < bricks[r].length; c++) {
+                            const b = bricks[r][c];
+                            if (b.status) {
+                                ctx.fillStyle = "#777";
+                                ctx.fillRect(b.x, b.y, brickW, brickH);
+                                ctx.fillStyle = b.color;
+                                ctx.fillRect(
+                                    b.x + brickEdge,
+                                    b.y + brickEdge,
+                                    brickW - 2 * brickEdge,
+                                    brickH - 2 * brickEdge
+                                );
+                            }
+                        }
+                    }
+                }
+
+                function drawItems() {
+                    for (let it of items) {
+                        ctx.beginPath();
+                        ctx.arc(it.x, it.y, it.size, 0, Math.PI * 2);
+                        ctx.fillStyle = "#ffeb3b";
+                        ctx.shadowColor = "#fdd835";
+                        ctx.shadowBlur = 6;
+                        ctx.fill();
+                        ctx.closePath();
+                        ctx.shadowBlur = 0;
+                    }
+                }
+
+                function updateScoreUI() {
+                    scoreUI.textContent = `スコア: ${score}`;
+                }
+
+                function spawnNewRow() {
+                    const newHue = Math.floor(Math.random() * 360);
+                    const newRow = Array.from(
+                        {
+                            length: cols
+                        },
+                        (_, c) => ({
+                            x: c * brickW,
+                            y: 0,
+                            status: 1,
+                            color: `hsl(${newHue},70%,50%)`
+                        })
+                    );
+                    bricks.unshift(newRow);
+                    for (let r = 0; r < bricks.length; r++) {
+                        for (let c = 0; c < bricks[r].length; c++) {
+                            bricks[r][c].y = r * brickH + 60;
+                        }
+                    }
+                }
+
+                function collisionBall(ball) {
+                    const W = canvas.width,
+                        H = canvas.height;
+                    if (ball.x + ball.r > W || ball.x - ball.r < 0) ball.dx *= -1;
+                    if (ball.y - ball.r < 0) ball.dy *= -1;
+                    if (ball.y + ball.r > H) return;
+                    if (ball.y + ball.r > paddle.y && ball.x > paddle.x && ball.x < paddle.x + paddle.w) {
+                        ball.dy *= -1;
+                        ball.dx = ((ball.x - (paddle.x + paddle.w / 2)) / (paddle.w / 2)) * ball.speed;
+                    }
+                    for (let r = 0; r < bricks.length; r++) {
+                        for (let c = 0; c < bricks[r].length; c++) {
+                            const b = bricks[r][c];
+                            if (
+                                b.status &&
+                                ball.x + ball.r > b.x &&
+                                ball.x - ball.r < b.x + brickW &&
+                                ball.y + ball.r > b.y &&
+                                ball.y - ball.r < b.y + brickH
+                            ) {
+                                b.status = 0;
+                                ball.dy *= -1;
+                                score++;
+                                clearedCount++;
+                                if (clearedCount % 8 === 0) {
+                                    spawnNewRow();
+                                }
+                                balls.forEach((bb) => {
+                                    bb.dx *= 1.02;
+                                    bb.dy *= 1.02;
+                                    bb.speed *= 1.02;
+                                });
+                                updateScoreUI();
+                                if (Math.random() < 0.05) {
+                                    items.push({
+                                        x: b.x + brickW / 2,
+                                        y: b.y,
+                                        size: brickW / 8,
+                                        dy: H / 300
+                                    });
+                                }
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                function update() {
+                    const H = canvas.height;
+                    for (let i = 0; i < balls.length; i++) {
+                        const ball = balls[i];
+                        const steps = Math.max(
+                            1,
+                            Math.ceil(Math.max(Math.abs(ball.dx), Math.abs(ball.dy)) / brickH)
+                        );
+                        const stepX = ball.dx / steps;
+                        const stepY = ball.dy / steps;
+                        for (let s = 0; s < steps; s++) {
+                            ball.x += stepX;
+                            ball.y += stepY;
+                            collisionBall(ball);
+                        }
+                        if (ball.y - ball.r > H) {
+                            balls.splice(i, 1);
+                            i--;
+                        }
+                    }
+                    if (balls.length === 0) return endGame(false);
+                    for (let i = 0; i < items.length; i++) {
+                        const it = items[i];
+                        it.y += it.dy;
+                        if (it.y + it.size > paddle.y && it.x > paddle.x && it.x < paddle.x + paddle.w) {
+                            balls.push({
+                                x: paddle.x + paddle.w / 2,
+                                y: paddle.y - paddle.h,
+                                r: canvas.width / 40,
+                                speed: canvas.width / 200,
+                                dx: canvas.width / 200,
+                                dy: -canvas.width / 200
+                            });
+                            items.splice(i, 1);
+                            updateScoreUI();
+                            i--;
+                        } else if (it.y - it.size > H) {
+                            items.splice(i, 1);
+                            i--;
+                        }
+                    }
+                }
+
+                function draw() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    drawPaddle();
+                    drawBricks();
+                    drawBalls();
+                    drawItems();
+                }
+
+                function loop() {
+                    update();
+                    draw();
+                    animationId = requestAnimationFrame(loop);
+                }
+
+                function endGame(won) {
+                    cancelAnimationFrame(animationId);
+                    scoreUI.style.display = "none";
+                    gameOverMsg.textContent = won
+                        ? `勝利！スコア: ${score}`
+                        : `ゲームオーバー！スコア: ${score}`;
+                    gameOverUI.style.display = "flex";
+                }
+
+                ["mousedown", "touchstart"].forEach((evt) =>
+                    canvas.addEventListener(evt, (e) => {
+                        const rect = canvas.getBoundingClientRect();
+                        const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+                        const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+                        if (y > paddle.y && y < paddle.y + paddle.h && x > paddle.x && x < paddle.x + paddle.w) {
+                            dragging = true;
+                            dragOffset = x - paddle.x;
+                        }
+                    })
+                );
+                ["mousemove", "touchmove"].forEach((evt) =>
+                    canvas.addEventListener(evt, (e) => {
+                        if (dragging) {
+                            const rect = canvas.getBoundingClientRect();
+                            const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+                            paddle.x = Math.max(0, Math.min(canvas.width - paddle.w, x - dragOffset));
+                            e.preventDefault();
+                        }
+                    })
+                );
+                ["mouseup", "touchend", "touchcancel"].forEach((evt) =>
+                    document.addEventListener(evt, () => (dragging = false))
+                );
+
+                restartBtn.addEventListener("click", () => {
+                    init();
+                    loop();
+                });
+                shareBtn.addEventListener("click", () => {
+                    const url = encodeURIComponent(window.location.href);
+                    const message = encodeURIComponent(`私のスコア: ${score}点！`);
+                    if (navigator.share) {
+                        navigator
+                            .share({
+                                title: "ブロックブレイカー",
+                                text: message,
+                                url: url
+                            })
+                            .catch(() => alert("共有がキャンセルされたか失敗しました。"));
+                    } else {
+                        navigator.clipboard.writeText(url).then(() => alert("リンクがクリップボードにコピーされました！"));
+                    }
+                });
+                canvas.addEventListener("contextmenu", (e) => e.preventDefault());
+
+                resize();
+                loop();
+            })();
+        </script>
+        <section
+            style="
+                width: 90%;
+                max-width: 600px;
+                margin: 60px auto;
+                padding: 20px;
+                background: #1e1e1e;
+                color: #f1f1f1;
+                font-family: &quot;Noto Sans KR&quot;, sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+                border-radius: 10px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            ">
+            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #4facfe; font-family: &quot;Noto Sans KR&quot;, sans-serif;">
+                ❓ よくある質問 (FAQ)
+            </h2>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q1. ブロックブレイカーはどう遊ぶの？</strong><br />
+                A. パドルをドラッグしてボールを跳ね返し、すべてのブロックを壊そう！ボールを落とさないように注意しよう。
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q2. パドルの操作方法は？</strong><br />
+                A. マウスや指でパドルを左右にドラッグして操作します。PCでもモバイルでも快適に動作します。
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q3. 黄色い丸いものは何？</strong><br />
+                A. パワーアップです！パドルでキャッチして、追加のボールを生成したりスコアを上げたりしよう。
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q4. ゲームはいつ終了するの？</strong><br />
+                A. すべてのボールを失うとゲームオーバーです。スコアが表示され、再スタートや共有ができます。
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q5. スコアはどう共有するの？</strong><br />
+                A. ゲームオーバー後に<strong>「共有」</strong>ボタンを押します。リンクをコピーするか、デバイスの共有機能を使えます。
+            </div>
+
+            <div>
+                <strong>Q6. 他のゲームはどこで探せるの？</strong><br />
+                A. 上にスクロールして<strong>「他のゲーム」</strong>をクリックすると、ブラウザ用ゲームの一覧が表示されます！
+            </div>
+        </section>
+    </body>
+</html>

@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="Flappy Dot で爆弾を避けながらできるだけ遠くへ飛んでみよう！シンプルで中毒性のあるモバイルフレンドリーなブラウザゲームを無料で楽しめます。" />
+        <meta
+            name="keywords"
+            content="Flappy Dot, Flappy Bird, QuickPlay, アーケード, 飛行ゲーム, 爆弾回避, 無料ゲーム, オンライン, ブラウザ, モバイル, ハイスコア, スキルゲーム, カジュアル" />
+        <meta name="author" content="Itagi" />
+        <meta name="robots" content="index, follow" />
+
+        <link rel="canonical" href="https://emfls.github.io/cn/game/FlappyDot" />
+
+        <meta property="og:title" content="QuickPlay: Flappy Dot – 無料オンラインゲーム!" />
+        <meta
+            property="og:description"
+            content="ハイスコアに挑戦しよう！Flappy Dot で飛んで爆弾を避け、友達に挑戦しよう。" />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta property="og:url" content="https://emfls.github.io/cn/game/FlappyDot" />
+        <meta property="og:type" content="website" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Flappy Dot – 無料オンラインQuickPlayゲーム!" />
+        <meta
+            name="twitter:description"
+            content="爆弾を避けながらできるだけ遠くまで飛んでみよう！Flappy Dot をオンラインで無料プレイしてハイスコアを競おう。" />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+        <title>QuickPlay: Flappy Dot</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                background: #70c5ce;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                height: 100vh;
+                flex-direction: column;
+            }
+
+            canvas {
+                background: #70c5ce;
+                display: block;
+                border: 2px solid #333;
+                margin-top: 20px;
+            }
+
+            .overlay {
+                position: absolute;
+                top: 20px;
+                display: flex;
+                gap: 10px;
+            }
+
+            button {
+                padding: 10px 18px;
+                font-size: 16px;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                background-color: #ffffffcc;
+                font-weight: bold;
+                margin-top: 350px;
+            }
+
+            button:hover {
+                background-color: #fff;
+            }
+
+            h1 {
+                margin-top: 10px;
+            }
+
+            #jumpButtonWrapper {
+                margin-top: 0px;
+            }
+
+            #jumpButton {
+                font-size: 18px;
+                font-weight: bold;
+                background-color: #ffcc00;
+                color: #333;
+                border: none;
+                border-radius: 30px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+                cursor: pointer;
+                height: 70px;
+            }
+
+            #jumpButton:active {
+                transform: scale(0.95);
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1 style="font-family: 'Arial Black', sans-serif; font-size: 28px; margin-bottom: 6px">Flappy Dot</h1>
+        <p style="font-size: 14px; color: white; margin-bottom: 12px">爆弾を避けながらできるだけ遠くまで飛ぼう！</p>
+
+        <canvas id="gameCanvas" width="300" height="450"></canvas>
+        <div class="overlay" id="menu">
+            <button onclick="startGame()">ゲーム開始</button>
+        </div>
+        <div class="overlay" id="gameoverMenu" style="display: none">
+            <button onclick="resetGame()">再スタート</button>
+            <button onclick="shareScore()">共有</button>
+        </div>
+
+        <script>
+            const canvas = document.getElementById("gameCanvas");
+            const ctx = canvas.getContext("2d");
+            const menu = document.getElementById("menu");
+            const gameoverMenu = document.getElementById("gameoverMenu");
+
+            const bird = {
+                x: 60,
+                y: 200,
+                width: 20,
+                height: 20,
+                gravity: 0.6,
+                lift: -7,
+                velocity: 0
+            };
+
+            const bombs = [];
+            const explosions = [];
+            const clouds = [
+                { x: 100, y: 50 },
+                { x: 250, y: 120 },
+                { x: 400, y: 80 }
+            ];
+
+            let score = 0;
+            let gameOver = false;
+            let frames = 0;
+            let gameStarted = false;
+            let requestId = null;
+            let lastTime = 0;
+
+            function drawClouds() {
+                ctx.fillStyle = "rgba(255,255,255,0.8)";
+                clouds.forEach((cloud) => {
+                    ctx.beginPath();
+                    ctx.arc(cloud.x, cloud.y, 20, 0, Math.PI * 2);
+                    ctx.arc(cloud.x + 25, cloud.y + 5, 25, 0, Math.PI * 2);
+                    ctx.arc(cloud.x + 50, cloud.y, 20, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+            }
+
+            function updateClouds() {
+                clouds.forEach((cloud) => {
+                    cloud.x -= 0.3;
+                    if (cloud.x < -60) cloud.x = canvas.width + Math.random() * 100;
+                });
+            }
+
+            function drawBird() {
+                const centerX = bird.x + bird.width / 2;
+                const centerY = bird.y + bird.height / 2;
+                const radius = bird.width * 0.8;
+                const flapOffset = Math.sin(frames / 5) * 4;
+
+                ctx.beginPath();
+                ctx.fillStyle = "#fcdc3c";
+                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.fillStyle = "#e6b800";
+                ctx.arc(centerX - 10, centerY + 5 + flapOffset, radius * 0.4, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.fillStyle = "white";
+                ctx.arc(centerX + 6, centerY - 6, 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.fillStyle = "black";
+                ctx.arc(centerX + 6, centerY - 6, 2, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.fillStyle = "#ff9900";
+                ctx.moveTo(centerX + radius, centerY);
+                ctx.lineTo(centerX + radius + 8, centerY - 5);
+                ctx.lineTo(centerX + radius + 8, centerY + 5);
+                ctx.fill();
+            }
+
+            function drawBombs() {
+                for (let bomb of bombs) {
+                    ctx.beginPath();
+                    ctx.fillStyle = "black";
+                    ctx.arc(bomb.x + 10, bomb.y + 10, 10, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    ctx.strokeStyle = "white";
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(bomb.x + 4, bomb.y + 4);
+                    ctx.lineTo(bomb.x + 16, bomb.y + 16);
+                    ctx.moveTo(bomb.x + 16, bomb.y + 4);
+                    ctx.lineTo(bomb.x + 4, bomb.y + 16);
+                    ctx.stroke();
+                }
+            }
+
+            function drawExplosions() {
+                for (let i = explosions.length - 1; i >= 0; i--) {
+                    const exp = explosions[i];
+                    ctx.beginPath();
+                    ctx.fillStyle = `rgba(255, 100, 0, ${exp.alpha})`;
+                    ctx.arc(exp.x, exp.y, exp.radius, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    exp.radius += 1;
+                    exp.alpha -= 0.02;
+
+                    if (exp.alpha <= 0) explosions.splice(i, 1);
+                }
+            }
+
+            function update(delta) {
+                if (!gameStarted || gameOver) return;
+
+                bird.velocity += bird.gravity * delta * 60;
+                bird.y += bird.velocity * delta * 60;
+
+                if (bird.y + bird.height > canvas.height || bird.y < 0) gameOver = true;
+
+                if (frames % 40 === 0) {
+                    const bombCount = Math.min(1 + Math.floor(score / 5), 6);
+                    for (let i = 0; i < bombCount; i++) {
+                        const bombY = Math.random() * (canvas.height - 40);
+                        bombs.push({ x: canvas.width, y: bombY });
+                    }
+                }
+
+                for (let bomb of bombs) {
+                    bomb.x -= (2 + Math.min(score / 20, 3)) * delta * 60;
+                    if (
+                        bird.x < bomb.x + 20 &&
+                        bird.x + bird.width > bomb.x &&
+                        bird.y < bomb.y + 20 &&
+                        bird.y + bird.height > bomb.y
+                    ) {
+                        explosions.push({ x: bomb.x + 10, y: bomb.y + 10, radius: 10, alpha: 1 });
+                        gameOver = true;
+                    }
+                }
+
+                if (bombs.length && bombs[0].x + 20 < 0) bombs.shift();
+                updateClouds();
+
+                if (frames % 60 === 0) score++;
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawClouds();
+                drawBird();
+                drawBombs();
+                drawExplosions();
+
+                ctx.fillStyle = "black";
+                ctx.font = "20px Arial";
+                ctx.fillText("スコア: " + score, 10, 30);
+
+                if (gameOver) {
+                    ctx.fillStyle = "red";
+                    ctx.font = "32px Arial";
+                    ctx.fillText("ゲームオーバー", canvas.width / 2 - 80, canvas.height / 2 - 100);
+                    gameoverMenu.style.display = "flex";
+                }
+            }
+
+            function gameLoop(timestamp) {
+                if (!lastTime) lastTime = timestamp;
+                const delta = (timestamp - lastTime) / 1000;
+                lastTime = timestamp;
+
+                update(delta);
+                draw();
+                frames++;
+
+                if (!gameOver || explosions.length > 0) {
+                    requestId = requestAnimationFrame(gameLoop);
+                }
+            }
+
+            function startGame() {
+                bird.velocity = 0;
+                gameStarted = true;
+                menu.style.display = "none";
+                lastTime = performance.now();
+                requestAnimationFrame(gameLoop);
+            }
+
+            function resetGame() {
+                bird.y = 200;
+                bird.velocity = 0;
+                bombs.length = 0;
+                explosions.length = 0;
+                score = 0;
+                frames = 0;
+                gameOver = false;
+                gameStarted = true;
+                gameoverMenu.style.display = "none";
+                menu.style.display = "none";
+                lastTime = performance.now();
+                requestAnimationFrame(gameLoop);
+            }
+
+            function shareScore() {
+                const url = window.location.href;
+                const text = `🐤 Flappy Dot で ${score} 点獲得！あなたも挑戦してみて！`;
+                if (navigator.share) {
+                    navigator
+                        .share({ title: "QuickPlay: Flappy Dot", text, url })
+                        .catch(() => alert("共有に失敗しました。リンクをコピーしてください。"));
+                } else {
+                    const full = `${text}\n${url}`;
+                    navigator.clipboard
+                        .writeText(full)
+                        .then(() => alert("スコアを含むリンクがクリップボードにコピーされました！"))
+                        .catch(() => alert(`このリンクをコピーしてください:\n${full}`));
+                }
+            }
+
+            function flap() {
+                if (gameOver) return;
+                bird.velocity = bird.lift;
+            }
+
+            document.addEventListener("keydown", (e) => {
+                if (e.code === "Space") {
+                    if (!gameStarted) startGame();
+                    flap();
+                }
+            });
+
+            canvas.addEventListener("mousedown", flap);
+            canvas.addEventListener(
+                "touchstart",
+                (e) => {
+                    e.preventDefault();
+                    flap();
+                },
+                { passive: false }
+            );
+        </script>
+
+        <button style="margin-top: 20px; width: 90%; height: 60px" onclick="window.location.href='/'">
+            📂 他のゲーム
+        </button>
+        <section
+            style="
+                width: 95%;
+                max-width: 420px;
+                margin: 60px auto;
+                padding: 20px;
+                font-family: 'Segoe UI', sans-serif;
+                background: #fffbea;
+                color: #2d3436;
+                border-radius: 10px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                line-height: 1.6;
+                font-size: 14px;
+            ">
+            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ よくある質問 (FAQ)</h2>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q1. Flappy Dot はどのようなゲームですか？</strong><br />
+                A. Flappy Dot は画面をタップするかスペースキーを押してジャンプし、爆弾を避けながらできるだけ遠くまで飛ぶカジュアルな飛行ゲームです。
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q2. 操作方法は？</strong><br />
+                A. モバイルでは画面をタップし、PC ではスペースキーを押してジャンプします。
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q3. ゲームはいつ終わりますか？</strong><br />
+                A. ドットが爆弾にぶつかるか画面外に出るとゲームオーバーになります。爆発エフェクトがゲーム終了を示します。
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q4. スコアが上がると難易度は上がりますか？</strong><br />
+                A. はい。スコアが高くなるほど爆弾の出現数とスピードが増し、より挑戦的になります。
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q5. モバイルでもプレイできますか？</strong><br />
+                A. もちろんです。Flappy Dot はモバイルフレンドリーで、ダウンロード不要で楽しめます。
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q6. スコアはどう共有できますか？</strong><br />
+                A. ゲーム終了後、「共有」ボタンをタップしてスコアとリンクを共有するか、クリップボードにコピーできます。
+            </div>
+        </section>
+    </body>
+</html>

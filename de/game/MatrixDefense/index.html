@@ -1,0 +1,777 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <title>マトリックスディフェンス</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="author" content="Itagi" />
+        <meta name="robots" content="index, follow" />
+
+        <meta
+            name="description"
+            content="Matrix Defenseでロボットのウェーブから基地を守ろう！プラズマキャノンをアップグレードし、できるだけ長く生き残り、友達にハイスコアを挑戦しよう。PCやモバイルのブラウザで無料でプレイ！" />
+        <meta
+            name="keywords"
+            content="マトリックスディフェンス, アイデルディフェンス, ウェブゲーム, ブラウザゲーム, プラズマキャノン, タレット, レーザー防衛, 無料, 防衛ゲーム, 放置ゲーム, モバイル, PC, オンラインゲーム" />
+        <meta property="og:title" content="マトリックスディフェンス | プラズマ防衛アイドルゲーム" />
+        <meta
+            property="og:description"
+            content="ロボットの無限ウェーブから基地を守るスタイリッシュな放置防衛ブラウザゲーム！キャノンをアップグレードし、どれだけ長く生き残れるか挑戦しよう。" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://emfls.github.io/de/game/MatrixDefense/" />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="twitter:title" content="マトリックスディフェンス | プラズマ防衛アイドルゲーム" />
+        <meta
+            property="twitter:description"
+            content="Matrix Defenseをプレイしよう—究極のプラズマターレット防衛ゲームをブラウザで無料プレイ！" />
+        <meta property="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+        <link rel="canonical" href="https://emfls.github.io/de/game/MatrixDefense/" />
+
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+        <style>
+            html,
+            body {
+                background: #151c22;
+                margin: 0;
+                height: 100vh;
+            }
+
+            @font-face {
+                font-family: "VT323";
+                src: url("https://fonts.gstatic.com/s/vt323/v17/pxiKyp0ihIEF2hsY.woff2");
+            }
+
+            #wrap {
+                max-width: 430px;
+                margin: 0 auto;
+                min-height: 10vh;
+                display: flex;
+                flex-direction: column;
+            }
+
+            #header {
+                text-align: center;
+                margin-top: 14px;
+                letter-spacing: 2px;
+                text-shadow: 0 0 6px #11ffde88;
+            }
+
+            #header h1 {
+                font-family: "VT323", monospace;
+                font-size: 2.2rem;
+                color: #45ffe6;
+                margin: 0;
+            }
+
+            #header p {
+                color: #ff5c70;
+                font-size: 1.1em;
+                margin-top: 7px;
+                margin-bottom: 2px;
+            }
+
+            #topStatBar {
+                font-family: "VT323", monospace;
+                font-size: 1.13em;
+                color: #57e3ff;
+                letter-spacing: 1px;
+                margin: 7px 0 4px 0;
+                text-align: left;
+                width: 95vw;
+                max-width: 430px;
+                display: flex;
+                justify-content: center;
+                gap: 16px;
+            }
+
+            #topStatBar span {
+                color: #ffe175;
+                min-width: 22px;
+                display: inline-block;
+                text-align: right;
+                margin-right: 8px;
+            }
+
+            #gameCanvas {
+                display: block;
+                margin: 0 auto;
+                background: linear-gradient(180deg, #161a1f 55%, #3d4d57 100%);
+                border-radius: 18px;
+                box-shadow:
+                    0 7px 30px #01e7e6a0,
+                    0 1px 0px #000c;
+                border: 3px solid #232e38;
+                image-rendering: pixelated;
+                max-width: 98vw;
+                height: 400px !important;
+            }
+
+            #upgrades {
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 4px;
+                margin: 8px auto 7px auto;
+                max-width: 420px;
+                width: 99vw;
+            }
+
+            .upBtn {
+                background: #282f38;
+                color: #4cf7ff;
+                border: 2px solid #3eead3;
+                border-radius: 0.6em;
+                font-family: "VT323", monospace;
+                font-size: 0.95em;
+                padding: 5px 7px;
+                cursor: pointer;
+                letter-spacing: 1px;
+                min-width: 60px;
+                max-width: 84px;
+                text-align: center;
+                box-shadow: 0 1px 6px #01e6fa38 inset;
+                transition: background 0.2s;
+                margin-bottom: 0px;
+            }
+
+            .upBtn:hover {
+                background: #31adc6;
+                color: #fff;
+            }
+
+            #buttonBar {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 7px;
+                flex-wrap: wrap;
+                margin-bottom: 15px;
+                margin-top: 15px;
+                width: 100%;
+                max-width: 99vw;
+            }
+
+            .btn {
+                background: #23ffdb;
+                color: #111;
+                border: none;
+                border-radius: 1em;
+                font-family: "VT323", monospace;
+                font-weight: bold;
+                font-size: 1.05em;
+                padding: 10px 14px;
+                cursor: pointer;
+                margin: 4px 1px;
+                letter-spacing: 1px;
+                min-width: 88px;
+                max-width: 160px;
+                text-align: center;
+                box-sizing: border-box;
+                white-space: nowrap;
+            }
+
+            .btn:hover {
+                background: #08ad9f;
+            }
+
+            .btn.other {
+                background: #212d3a;
+                color: #fff;
+                text-decoration: none;
+            }
+
+            .upBtn:focus,
+            .upBtn:active,
+            .btn:focus,
+            .btn:active {
+                outline: none !important;
+                box-shadow: none !important;
+                background: #282f38 !important;
+                color: #4cf7ff !important;
+            }
+
+            .btn.other:focus,
+            .btn.other:active {
+                background: #212d3a !important;
+                color: #fff !important;
+            }
+
+            @media (max-width: 430px) {
+                #wrap {
+                    max-width: 100vw;
+                }
+                #gameCanvas {
+                    width: 99vw !important;
+                    height: 400px !important;
+                }
+                #upgrades,
+                #buttonBar,
+                #topStatBar {
+                    max-width: 99vw;
+                }
+                .btn,
+                .upBtn {
+                    min-width: 68px;
+                    font-size: 0.95em;
+                    padding: 6px 7px;
+                }
+            }
+
+            @media (max-width: 370px) {
+                .btn,
+                .upBtn {
+                    font-size: 0.89em;
+                }
+                #gameCanvas {
+                    height: 400px !important;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="wrap">
+            <div id="header">
+                <h1>マトリックスディフェンス</h1>
+                <p>アイドルプラズマ防衛。生き残れ！</p>
+                <div id="topStatBar">
+                    WAVE <span id="wave">1</span> ゴールド <span id="gold">0</span> ライフ <span id="life">10</span>
+                </div>
+            </div>
+            <canvas id="gameCanvas" width="400" height="380"></canvas>
+            <div id="upgrades">
+                <button class="upBtn" id="upDmg">
+                    攻撃力<br />
+                    +<span id="dmgC">65</span>
+                </button>
+                <button class="upBtn" id="upSpd">
+                    連射速度<br />
+                    +<span id="spdC">80</span>
+                </button>
+                <button class="upBtn" id="upRng">
+                    射程<br />
+                    +<span id="rngC">80</span>
+                </button>
+                <button class="upBtn" id="upLaser">
+                    レーザー数<br />
+                    +<span id="laserC">150</span>
+                </button>
+            </div>
+            <div id="buttonBar">
+                <button class="btn" id="restartBtn" style="display: none">再スタート</button>
+                <button class="btn" id="shareBtn" style="display: none">シェア</button>
+                <a href="../" class="btn other">他のゲーム</a>
+            </div>
+        </div>
+        <script>
+            // ---- drawPlasmaCannon, drawPlasmaShock, drawEnemy, drawHPBar ----
+            const canvas = document.getElementById("gameCanvas");
+            const ctx = canvas.getContext("2d");
+            let W = canvas.width,
+                H = canvas.height;
+
+            let turret, upg, enemies, frame, spawnCD, wave, gold, kills, life, phase, gameover;
+            let bossSpawnedInWave, normalSpawnedInWave;
+
+            // touchmoveはキャンバス上のみ！
+            canvas.addEventListener(
+                "touchmove",
+                (e) => {
+                    e.preventDefault();
+                },
+                {
+                    passive: false
+                }
+            );
+
+            function drawPlasmaCannon(ctx, x, y, w, h, t) {
+                ctx.save();
+                ctx.translate(x, y);
+                for (let i = 0; i < 3; i++) {
+                    ctx.save();
+                    let scale = 1 + 0.04 * Math.sin(t / 15 + i * 2);
+                    ctx.globalAlpha = 0.13 + 0.07 * Math.sin(t / 23 + i * 2);
+                    ctx.beginPath();
+                    ctx.roundRect((-w / 2) * scale, -h * scale, w * scale, h * scale, 18 - i * 4);
+                    ctx.strokeStyle = "#32fff6";
+                    ctx.lineWidth = 7 - i * 2.5;
+                    ctx.shadowColor = "#1affff";
+                    ctx.shadowBlur = 8 - i * 2;
+                    ctx.stroke();
+                    ctx.restore();
+                }
+                ctx.globalAlpha = 1.0;
+                ctx.beginPath();
+                ctx.arc(0, 0, 17, 0, 2 * Math.PI);
+                ctx.fillStyle = "#42fff9";
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(0, 0, 8, 0, 2 * Math.PI);
+                ctx.fillStyle = "#fc4b8b";
+                ctx.shadowColor = "#fc4b8b";
+                ctx.shadowBlur = 16;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                ctx.fillStyle = "#fc4b8b";
+                ctx.fillRect(-5, -30, 10, 30);
+                ctx.restore();
+            }
+
+            function drawPlasmaShock(ctx, x, y, t, isBoss) {
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, 0.22 - t / 22);
+                ctx.beginPath();
+                ctx.arc(x, y, (isBoss ? 26 : 15) + t * 2, 0, 2 * Math.PI);
+                ctx.strokeStyle = "#41f6ff";
+                ctx.lineWidth = 2 + 0.9 * Math.sin(t / 2);
+                ctx.shadowColor = "#21ffe0";
+                ctx.shadowBlur = 13;
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            function drawEnemy(ctx, x, y, t, phase, hp, maxHp, dmgText, dmgTimer, shockEffect, isBoss) {
+                ctx.save();
+                ctx.translate(x, y);
+                let scale = isBoss ? 2 : 1;
+                if (dmgTimer > 0) ctx.globalAlpha = 0.5 + 0.3 * Math.sin(dmgTimer / 2);
+                ctx.fillStyle = isBoss ? "#ffe735" : ["#e54b6a", "#8df1e2", "#b6a2ff"][t % 3];
+                ctx.fillRect(-14 * scale, -14 * scale, 28 * scale, 28 * scale);
+                ctx.fillStyle = "#fff";
+                ctx.fillRect(-7 * scale, -6 * scale, 14 * scale, 8 * scale);
+                ctx.fillStyle = "#222";
+                ctx.fillRect(-3 * scale, -5 * scale, 6 * scale, 5 * scale);
+                ctx.restore();
+                if (shockEffect && shockEffect > 0) {
+                    drawPlasmaShock(ctx, x, y, shockEffect, isBoss);
+                }
+                drawHPBar(ctx, x, y - 19 * scale, 30 * scale, 7 * scale, hp, maxHp);
+                if (dmgTimer > 0 && dmgText > 0) {
+                    ctx.save();
+                    ctx.font = `bold ${isBoss ? 30 : 18}px VT323,monospace`;
+                    ctx.globalAlpha = Math.max(0, dmgTimer / 20);
+                    ctx.fillStyle = "#ffe935";
+                    ctx.strokeStyle = "#fff";
+                    ctx.lineWidth = 2.2;
+                    ctx.textAlign = "center";
+                    ctx.strokeText("-" + dmgText, x, y - 27 * scale - dmgTimer / 2);
+                    ctx.fillText("-" + dmgText, x, y - 27 * scale - dmgTimer / 2);
+                    ctx.restore();
+                }
+            }
+
+            function drawHPBar(ctx, x, y, w, h, value, max) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = "#444";
+                ctx.lineWidth = h;
+                ctx.moveTo(x - w / 2, y);
+                ctx.lineTo(x + w / 2, y);
+                ctx.stroke();
+                ctx.beginPath();
+                let pct = Math.max(0, value / max);
+                let grd = ctx.createLinearGradient(x - w / 2, y, x + w / 2, y);
+                grd.addColorStop(0, "#5f5");
+                grd.addColorStop(0.7, "#ffe935");
+                grd.addColorStop(1, "#f55");
+                ctx.strokeStyle = grd;
+                ctx.lineWidth = h - 2;
+                ctx.moveTo(x - w / 2 + 1, y);
+                ctx.lineTo(x - w / 2 + 1 + pct * (w - 2), y);
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            function initGame() {
+                turret = {
+                    x: W / 2,
+                    y: H - 36,
+                    r: 22,
+                    dmg: 8,
+                    rate: 2.4,
+                    rng: 180,
+                    heat: 0,
+                    laserCount: 1
+                };
+                upg = {
+                    dmg: {
+                        cost: 65,
+                        inc: 3.5,
+                        scale: 1.35
+                    },
+                    spd: {
+                        cost: 80,
+                        inc: 0.35,
+                        scale: 1.37,
+                        max: 7.2
+                    },
+                    rng: {
+                        cost: 80,
+                        inc: 26,
+                        scale: 1.4,
+                        max: (H - 70) * 2
+                    },
+                    laser: {
+                        cost: 150,
+                        inc: 1,
+                        scale: 1.45,
+                        max: 10
+                    }
+                };
+                enemies = [];
+                frame = 0;
+                spawnCD = 0;
+                wave = 1;
+                gold = 500;
+                kills = 0;
+                life = 10;
+                phase = 0;
+                bossSpawnedInWave = {};
+                normalSpawnedInWave = {};
+                gameover = false;
+                updateUI();
+            }
+
+            function enemyStat(wave) {
+                return {
+                    hp: Math.round((38 + wave * 12) * 0.5),
+                    spd: (0.35 + wave * 0.028) * 0.8,
+                    gold: 11 + Math.floor(wave / 2),
+                    type: wave % 3
+                };
+            }
+
+            function spawnEnemy() {
+                let n = wave == 1 ? 1 : wave == 2 ? 2 : 2 + Math.floor(wave / 2);
+                if (!normalSpawnedInWave[wave]) {
+                    for (let i = 0; i < n; i++) {
+                        let st = enemyStat(wave);
+                        let ex = 30 + Math.random() * (W - 60);
+                        let t = Math.floor(Math.random() * 3);
+                        enemies.push({
+                            x: ex,
+                            y: -24,
+                            hp: st.hp,
+                            maxHp: st.hp,
+                            spd: st.spd + Math.random() * 0.18,
+                            gold: st.gold,
+                            t: t,
+                            phase: Math.floor(Math.random() * 10),
+                            damageText: 0,
+                            damageTimer: 0,
+                            shockEffect: 0,
+                            isBoss: false
+                        });
+                    }
+                    normalSpawnedInWave[wave] = true;
+                }
+                if (!bossSpawnedInWave[wave]) {
+                    let bossStat = enemyStat(wave);
+                    enemies.push({
+                        x: 50 + Math.random() * (W - 100),
+                        y: -30,
+                        hp: bossStat.hp * 2,
+                        maxHp: bossStat.hp * 2,
+                        spd: bossStat.spd * 0.8,
+                        gold: bossStat.gold * 3,
+                        t: 0,
+                        phase: 0,
+                        damageText: 0,
+                        damageTimer: 0,
+                        shockEffect: 0,
+                        isBoss: true
+                    });
+                    bossSpawnedInWave[wave] = true;
+                }
+            }
+
+            function getTargets() {
+                let box = {
+                    left: 0,
+                    right: W,
+                    top: turret.y - turret.rng,
+                    bottom: turret.y
+                };
+                let arr = [];
+                for (let e of enemies) {
+                    if (e.x >= box.left && e.x <= box.right && e.y >= box.top && e.y <= box.bottom) {
+                        arr.push(e);
+                    }
+                }
+                arr.sort((a, b) => b.y - a.y);
+                return arr.slice(0, turret.laserCount);
+            }
+
+            function update() {
+                if (gameover) return;
+                frame++;
+                phase++;
+                if (spawnCD-- <= 0) {
+                    spawnEnemy();
+                    spawnCD = Math.max(120 - 5 * wave, 38);
+                }
+                for (let e of enemies) {
+                    e.y += e.spd;
+                    e.phase += Math.floor(Math.random() * 2);
+                    if (e.y > turret.y - turret.r + 12 * (e.isBoss ? 2 : 1)) {
+                        life--;
+                        e.hp = -999;
+                        if (life <= 0) gameover = true;
+                    }
+                    if (e.damageTimer > 0) e.damageTimer--;
+                    if (e.shockEffect > 0) e.shockEffect--;
+                }
+                enemies = enemies.filter((e) => e.hp > 0);
+
+                let targets = getTargets();
+                let now = performance.now();
+                if (targets.length) {
+                    if (!turret._lastHit || now - turret._lastHit > 1000 / turret.rate) {
+                        let dmg = Math.round(turret.dmg);
+                        for (let target of targets) {
+                            target.hp -= dmg;
+                            target.damageText = dmg;
+                            target.damageTimer = 18;
+                            target.shockEffect = 16;
+                            if (target.hp <= 0) {
+                                gold += target.gold;
+                                kills++;
+                            }
+                        }
+                        turret._lastHit = now;
+                    }
+                }
+                if (frame % 700 == 0) {
+                    wave++;
+                    updateUI();
+                }
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, W, H);
+                ctx.fillStyle = "#262e39";
+                ctx.fillRect(0, H - 28, W, 28);
+                ctx.strokeStyle = "#2ae4ffaa";
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(18, H - 29);
+                ctx.lineTo(W - 18, H - 29);
+                ctx.stroke();
+                drawPlasmaCannon(ctx, turret.x, turret.y, W, turret.rng, frame);
+                for (let e of enemies)
+                    drawEnemy(
+                        ctx,
+                        e.x,
+                        e.y,
+                        e.t,
+                        e.phase,
+                        e.hp,
+                        e.maxHp,
+                        e.damageText,
+                        e.damageTimer,
+                        e.shockEffect,
+                        e.isBoss
+                    );
+
+                let targets = getTargets();
+                for (let target of targets) {
+                    ctx.save();
+                    ctx.globalAlpha = 0.8;
+                    ctx.beginPath();
+                    ctx.moveTo(turret.x, turret.y - 30);
+                    ctx.lineTo(target.x, target.y);
+                    ctx.strokeStyle = "#12ffe0";
+                    ctx.lineWidth = target.isBoss ? 12 : 6;
+                    ctx.shadowColor = "#ffe935";
+                    ctx.shadowBlur = target.isBoss ? 22 : 12;
+                    ctx.stroke();
+                    ctx.globalAlpha = 1.0;
+                    ctx.restore();
+                }
+                if (gameover) {
+                    ctx.font = "32px VT323,monospace";
+                    ctx.fillStyle = "#ff63a5";
+                    ctx.textAlign = "center";
+                    ctx.shadowColor = "#fef";
+                    ctx.shadowBlur = 9;
+                    ctx.fillText("ゲームオーバー！", W / 2, H / 2 - 22);
+                    ctx.shadowBlur = 0;
+                }
+            }
+
+            function loop() {
+                update();
+                draw();
+                updateUI();
+                requestAnimationFrame(loop);
+            }
+
+            function updateUI() {
+                document.getElementById("wave").innerText = wave;
+                document.getElementById("gold").innerText = gold;
+                document.getElementById("life").innerText = life;
+                document.getElementById("dmgC").innerText = upg.dmg.cost;
+                document.getElementById("spdC").innerText = upg.spd.cost;
+                document.getElementById("rngC").innerText = upg.rng.cost;
+                document.getElementById("laserC").innerText = upg.laser.cost;
+                document.getElementById("restartBtn").style.display = gameover ? "inline-block" : "none";
+                document.getElementById("shareBtn").style.display = gameover ? "inline-block" : "none";
+            }
+
+            let upgrading = false;
+
+            function upgrade(type) {
+                if (upgrading) return;
+                upgrading = true;
+                setTimeout(() => (upgrading = false), 250); // 0.25秒ロック
+
+                if (gameover) return;
+                let u = upg[type];
+                if (type === "spd" && turret.rate >= u.max) return;
+                if (type === "rng" && turret.rng >= u.max) return;
+                if (type === "laser" && turret.laserCount >= u.max) return;
+                if (gold < u.cost) return;
+                gold -= u.cost;
+                if (type == "dmg") turret.dmg += u.inc;
+                if (type == "spd") turret.rate = Math.min(u.max, turret.rate + u.inc);
+                if (type == "rng") turret.rng = Math.min(u.max, turret.rng + u.inc);
+                if (type == "laser") turret.laserCount = Math.min(u.max, turret.laserCount + u.inc);
+                u.cost = Math.ceil(u.cost * u.scale);
+                updateUI();
+            }
+            document.getElementById("upDmg").onclick = () => upgrade("dmg");
+            document.getElementById("upSpd").onclick = () => upgrade("spd");
+            document.getElementById("upRng").onclick = () => upgrade("rng");
+            document.getElementById("upLaser").onclick = () => upgrade("laser");
+
+            document.getElementById("restartBtn").onclick = () => {
+                initGame();
+            };
+            document.getElementById("shareBtn").onclick = () => {
+                let shareTxt = `Matrix Defenseをプレイしよう！私はWave ${wave}に到達しました！`;
+                if (navigator.share) {
+                    navigator.share({
+                        title: "マトリックスディフェンス",
+                        text: shareTxt,
+                        url: location.href
+                    });
+                } else {
+                    navigator.clipboard.writeText(shareTxt);
+                    alert("リンクがクリップボードにコピーされました！");
+                }
+            };
+            document.body.addEventListener(
+                "touchmove",
+                (e) => {
+                    e.preventDefault();
+                },
+                {
+                    passive: false
+                }
+            );
+            initGame();
+            loop();
+        </script>
+        <section
+            style="
+                max-width: 320px;
+                width: 100%;
+                margin: 48px auto 24px auto;
+                font-family: 'Jua', sans-serif;
+                font-size: 14px;
+                background: #fff;
+                border-radius: 18px;
+                box-shadow: 0 6px 24px #1232;
+                padding: 20px;
+                line-height: 1.65;
+                color: #2d3436;
+            ">
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #2577cf">❓ よくある質問</h2>
+
+            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">ゲーム紹介</h3>
+            <dl>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
+                    Q: 「マトリックスディフェンス」とは何ですか？
+                </dt>
+                <dd style="margin-bottom: 12px">
+                    A: 「マトリックスディフェンス」は放置型の防衛ブラウザゲームで、迫りくるロボットのウェーブから基地を守ります。
+                    プラズマキャノンをアップグレードして、できるだけ長く生き残ることが目標です。
+                </dd>
+
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ゲームは無料ですか？</dt>
+                <dd style="margin-bottom: 12px">
+                    A: はい、完全に無料で楽しめます。ダウンロードやインストールは不要で、ウェブブラウザでそのままプレイ可能です。
+                </dd>
+
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
+                    Q: どのデバイスでプレイできますか？
+                </dt>
+                <dd style="margin-bottom: 12px">A: モバイルとPCの両方のウェブブラウザでプレイできます。</dd>
+            </dl>
+
+            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">ゲーム方法</h3>
+            <dl>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ゲームの目的は何ですか？</dt>
+                <dd style="margin-bottom: 12px">
+                    A: 敵ロボットが画面下部の基地に到達する前にすべて撃破し、ウェーブを進めて、ライフが0になるまでできるだけ長く生き残ることです。
+                </dd>
+
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
+                    Q: ゴールドはどうやって獲得しますか？
+                </dt>
+                <dd style="margin-bottom: 12px">
+                    A: 敵ロボットを撃破するとゴールドが手に入ります。ゴールドはキャノンのアップグレードに使用します。
+                </dd>
+
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
+                    Q: どんなアップグレードがありますか？
+                </dt>
+                <dd style="margin-bottom: 12px">
+                    A: 「攻撃力 (ATK)」「連射速度 (RATE)」「射程 (RNG)」「レーザー数 (LASER)」の4種類をアップグレードできます。
+                </dd>
+
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
+                    Q: ライフが0になるとどうなりますか？
+                </dt>
+                <dd style="margin-bottom: 12px">
+                    A: ライフが0になるとゲームオーバーです。「再スタート」ボタンを押して最初からやり直せます。
+                </dd>
+            </dl>
+
+            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">トラブルシューティング・その他</h3>
+            <dl>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ゲームが正しく動作しません。</dt>
+                <dd style="margin-bottom: 12px">
+                    A: ブラウザを再読み込みするか、別のブラウザを試してください。また、インターネット接続を確認してください。
+                    続けて問題が発生する場合は、開発者までお問い合わせください。
+                </dd>
+
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
+                    Q: 最高記録を友達と共有したいです。
+                </dt>
+                <dd style="margin-bottom: 12px">
+                    A: ゲームオーバー後に表示される「シェア」ボタンをクリックすると、現在のWAVE記録を共有できます。
+                </dd>
+
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: 他のゲームはありますか？</dt>
+                <dd style="margin-bottom: 12px">
+                    A: はい、「他のゲーム」ボタンをクリックすると、開発者の他のウェブゲームをご覧いただけます。
+                </dd>
+            </dl>
+        </section>
+    </body>
+</html>

@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <!-- Googleタグ (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quick Util – シンプルWebユーティリティ集</title>
+    <!-- ✨ SEO -->
+    <meta
+      name="description"
+      content="QuickUtil Hubは無料かつ高速な便利ウェブユーティリティを提供します。ログインやインストール不要で今すぐ使えます！" />
+    <meta
+      name="keywords"
+      content="ウェブユーティリティ, オンラインツール, 無料ユーティリティ, 生産性, ブラウザツール, クイックツール, シンプルツール" />
+    <meta name="author" content="Itagi" />
+    <!-- ✨ Open Graph: SNS共有 -->
+    <meta property="og:title" content="QuickUtil Hub – シンプルWebユーティリティ集" />
+    <meta
+      property="og:description"
+      content="高速で簡単なオンラインツールで生産性を向上。登録不要ですぐに利用できます。" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <meta property="og:url" content="https://emfls.github.io/in/util/" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#4e54c8" />
+    <link rel="apple-touch-icon" href="https://emfls.github.io/icon-192.png" />
+    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="canonical" href="https://emfls.github.io/in/util/"/>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+      body {
+        margin: 0;
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(to bottom, #1c1c1c, #111);
+        color: #f5f5f5;
+        -webkit-tap-highlight-color: transparent;
+      }
+      header {
+        text-align: center;
+        padding: 2.5rem 1rem 2rem;
+        background: linear-gradient(90deg, #4e54c8, #8f94fb);
+        color: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        position: relative;
+      }
+      header h1 {
+        font-size: 2.2rem;
+        margin: 0;
+      }
+      header p {
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+        opacity: 0.92;
+      }
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+      }
+      h2 {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+        padding-left: 0.6rem;
+        border-left: 4px solid #8f94fb;
+      }
+      #searchInput {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        margin-bottom: 1.5rem;
+        font-size: 1rem;
+        border-radius: 8px;
+        border: none;
+        background-color: #2b2b2b;
+        color: #eee;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      }
+      #searchInput::placeholder {
+        color: #aaa;
+      }
+      ul {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1.5rem;
+        padding: 0;
+        list-style: none;
+        margin: 0;
+      }
+      li {
+        background: #1f1f1f;
+        border-radius: 12px;
+        padding: 1.2rem;
+        transition: transform 0.15s, box-shadow 0.2s;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        position: relative;
+      }
+      li:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      }
+      li:active {
+        transform: scale(0.98);
+        background: #2a2a2a;
+      }
+      li a {
+        font-size: 1.1rem;
+        font-weight: 700;
+        text-decoration: none;
+        color: #a0a8ff;
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+      li p {
+        font-size: 0.93rem;
+        color: #bbb;
+        line-height: 1.4;
+      }
+      #noResultMessage {
+        display: none;
+        text-align: center;
+        font-size: 1rem;
+        color: #999;
+        margin-top: 1rem;
+        animation: fadeIn 0.3s;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      footer {
+        text-align: center;
+        padding: 2rem 1rem;
+        font-size: 0.85rem;
+        color: #aaa;
+        background: #181818;
+        border-top: 1px solid #333;
+      }
+      #gotoGameBtn {
+        top: 18px;
+        right: 22px;
+        background: #601ed6;
+        color: #fff;
+        font-weight: 700;
+        padding: 0.55rem 1.2rem;
+        border: 2px solid #fff;
+        border-radius: 2rem;
+        box-shadow: 0 2px 8px #0002;
+        font-size: 1rem;
+        cursor: pointer;
+        text-decoration: none;
+        transition:
+          background 0.15s,
+          transform 0.1s;
+        z-index: 99;
+      }
+      #gotoGameBtn:hover {
+        background: #4e54c8;
+        transform: scale(1.04);
+      }
+      header {
+        position: relative;
+      }
+      @media (max-width: 600px) {
+        #gotoGameBtn {
+          top: 12px;
+          right: 10px;
+          padding: 0.45rem 1rem;
+          font-size: 0.93rem;
+        }
+      }
+    </style>
+    <script>
+      function launchUtil(url) {
+        window.location.href = url;
+      }
+      function filterUtils() {
+        const input = document.getElementById("searchInput").value.toLowerCase();
+        const items = document.querySelectorAll("ul li");
+        const noResult = document.getElementById("noResultMessage");
+        let anyVisible = false;
+        items.forEach((item) => {
+          const text = item.textContent.toLowerCase();
+          if (text.includes(input)) {
+            item.style.display = "block";
+            anyVisible = true;
+          } else {
+            item.style.display = "none";
+          }
+        });
+        noResult.style.display = anyVisible ? "none" : "block";
+      }
+    </script>
+  </head>
+  <body>
+    <header>
+      <h1>Quick Util</h1>
+      <p>便利なWebユーティリティをまとめてご提供。インストールやログイン不要ですぐに利用できます。</p>
+      <a href="https://emfls.github.io/in/game/index.html" id="gotoGameBtn">ゲーム一覧へ</a>
+    </header>
+    <main>
+      <section>
+        <h2>概要</h2>
+        <p>
+          いつでもどこでも手軽に使えるオンラインツール集です。<br />
+          高速＆無料、スマホやパソコンでも快適にご利用いただけます。
+        </p>
+      </section>
+      <section>
+        <h2>ユーティリティ一覧</h2>
+        <input type="text" id="searchInput" placeholder="ツール検索..." oninput="filterUtils()" />
+        <ul>
+          <li onclick="launchUtil('EasyLetterWordCounter/index.html')">
+            <a href="EasyLetterWordCounter/index.html">📝 文字数・単語数カウンター</a>
+            <p>テキストを入力または貼り付けるだけで、文字数や単語数をすぐに確認！</p>
+          </li>
+          <li onclick="launchUtil('ImageCompressor/index.html')">
+            <a href="ImageCompressor/index.html">🪄 画像圧縮ツール</a>
+            <p>画像ファイルを素早く圧縮＆サイズ変更します。</p>
+          </li>
+          <li onclick="launchUtil('SmartBeautifier/index.html')">
+            <a href="SmartBeautifier/index.html">✨ コード整形ツール</a>
+            <p>HTML/CSS/JSコードを美しいインデント付きで自動整形します。</p>
+          </li>
+          <li onclick="launchUtil('UniversalCodeMinifier/index.html')">
+            <a href="UniversalCodeMinifier/index.html">🧹 コード最小化ツール</a>
+            <p>すべてのコメントを削除し、JS・CSS・HTMLコードを圧縮＆最小化。</p>
+          </li>
+          <li onclick="launchUtil('pdftoolkit/index.html')">
+            <a href="pdftoolkit/index.html">📄 PDFツールキット</a>
+            <p>PDFの結合・圧縮・分割・暗号化・回転・画像→PDF変換に対応。</p>
+          </li>
+          <li onclick="launchUtil('passwordgen/index.html')">
+            <a href="passwordgen/index.html">🔐 パスワードジェネレーター</a>
+            <p>すぐに強力なパスワードを生成。任意の単語も組み込めます！</p>
+          </li>
+          <li onclick="launchUtil('qrcode/index.html')">
+            <a href="qrcode/index.html">🔳 QRコード生成・読み取り</a>
+            <p>リンクやテキストからQRコードを作成、カメラ/画像で読み取りも可能。</p>
+          </li>
+          <li onclick="launchUtil('unitconverter/index.html')">
+            <a href="unitconverter/index.html">🔄 単位変換ツール</a>
+            <p>長さ・重さ・温度・速度・体積・面積を即座に変換します。</p>
+          </li>
+          <li onclick="launchUtil('thumbnailgrabber/index.html')">
+            <a href="thumbnailgrabber/index.html">📸 サムネイルダウンローダー</a>
+            <p>
+              YouTubeやX(旧Twitter)、TikTokのリンクから複数サイズのサムネイルをプレビュー＆保存。
+            </p>
+          </li>
+          <li onclick="launchUtil('barcode/index.html')">
+            <a href="barcode/index.html">📦 バーコード・ISBN・UPC生成</a>
+            <p>ISBN、UPC、EAN、Code128など多様なバーコードを即作成。</p>
+          </li>
+          <li onclick="launchUtil('diff/index.html')">
+            <a href="diff/index.html">🔎 テキスト差分チェッカー</a>
+            <p>
+              2つのテキストを比較して、追加/削除/変更箇所をハイライト表示します。
+            </p>
+          </li>
+          <li onclick="launchUtil('textcrypto/index.html')">
+            <a href="textcrypto/index.html">🔒 テキスト簡単ロック・解除</a>
+            <p>
+              パスワードやBase64でテキストを簡単に暗号化または復号化。<br />
+              すべてブラウザ内処理で安心。
+            </p>
+          </li>
+          <li onclick="launchUtil('color-extractor/index.html')">
+            <a href="color-extractor/index.html">🎨 カラーパレット抽出＆変換</a>
+            <p>
+              画像アップロードで主要カラー抽出、HEX・RGB・HSL変換もワンクリックコピー！
+            </p>
+          </li>
+          <li onclick="launchUtil('dataconvert/index.html')">
+            <a href="dataconvert/index.html">🔄 データフォーマット変換</a>
+            <p>JSON、XML、CSV間の変換と色付き表示、エラーも自動検出。</p>
+          </li>
+          <li onclick="launchUtil('html2imgpdf/index.html')">
+            <a href="html2imgpdf/index.html">🖼️ HTML→画像/PDF変換</a>
+            <p>ウェブページやHTMLをPNG/JPG/PDFに変換。すべてブラウザで完結。</p>
+          </li>
+          <li onclick="launchUtil('cardgen/index.html')">
+            <a href="cardgen/index.html">🎨 オンラインカード作成</a>
+            <p>
+              名刺、招待状、ウェディングカードなどを即生成。テンプレ選択＆情報入力→画像保存！
+            </p>
+          </li>
+          <li onclick="launchUtil('tts/index.html')">
+            <a href="tts/index.html">🔊 テキスト音声変換 (TTS)</a>
+            <p>テキストや記事、文書を自然な音声に変換。再生・MP3保存も可能。</p>
+          </li>
+          <li onclick="launchUtil('imageformatconverter/index.html')">
+            <a href="imageformatconverter/index.html">🖼️ 画像形式変換ツール</a>
+            <p>画像をPNG/JPG/JPEG/GIF/BMP/WebPなどへ変換します。</p>
+          </li>
+          <li onclick="launchUtil('imagetool/index.html')">
+            <a href="imagetool/index.html">🖼️ かんたん画像編集</a>
+            <p>数秒で画像のリサイズ・トリミング・透かし追加などができます。</p>
+          </li>
+          <li onclick="launchUtil('textsummarizer/index.html')">
+            <a href="textsummarizer/index.html">📝 テキスト要約ツール</a>
+            <p>長文や記事を貼り付けて要約ボタンで短い要約を作成！</p>
+          </li>
+          <li onclick="launchUtil('crc/index.html')">
+            <a href="crc/index.html">🔢 CRCジェネレーター</a>
+            <p>テキストや16進入力でCRC値を即計算！</p>
+          </li>
+          <li onclick="launchUtil('caseconverter/index.html')">
+            <a href="caseconverter/index.html">🔠 文字ケース変換</a>
+            <p>
+              テキストを貼り付けて即時に大文字・小文字・単語頭大文字・タイトルケース・文頭大文字などに変換。
+            </p>
+          </li>
+          <li onclick="launchUtil('quickmemo/index.html')">
+            <a href="quickmemo/index.html">📝 クイックメモ</a>
+            <p>
+              素早くメモやToDo、アイディアを保存。<br />
+              <b>ブラウザのローカルストレージに自動保存</b>。
+            </p>
+          </li>
+          <li onclick="launchUtil('text-shuffle-sort/index.html')">
+            <a href="text-shuffle-sort/index.html">🔀 テキストシャッフル・並べ替え</a>
+            <p>
+              複数行テキストを貼り付けて、ランダムシャッフル・昇順・降順を即実行！
+            </p>
+          </li>
+          <li onclick="launchUtil('compound-interest/index.html')">
+            <a href="compound-interest/index.html">📈 複利計算機</a>
+            <p>
+              金額・利率・期間を入力すると、複利運用でどれだけ増えるか即計算。
+            </p>
+          </li>
+          <li onclick="launchUtil('ipa-convert/index.html')">
+            <a href="ipa-convert/index.html">🔤 英語発音記号変換</a>
+            <p>
+              英単語や英文を入力すると、IPA風発音記号へ変換。<br />
+              <b>独自ルールベース変換（公式IPAではありません）</b>
+            </p>
+          </li>
+          <li onclick="launchUtil('bmi/index.html')">
+            <a href="bmi/index.html">🏃 BMI計算機</a>
+            <p>
+              身長と体重を入力してBMI（体格指数）を即計算。
+            </p>
+          </li>
+          <li onclick="launchUtil('fin-calc/index.html')">
+            <a href="fin-calc/index.html">💸 シンプル金融計算</a>
+            <p>単利、預金成長、ローン返済額などを計算。</p>
+          </li>
+          <li onclick="launchUtil('time-diff/index.html')">
+            <a href="time-diff/index.html">⏳ 時間差・カウントダウン</a>
+            <p>
+              2つの日付の間の日・時・分・秒を計算＆リアルタイムカウントダウン！<br />
+              <b>ヒント:</b> カウントダウンだけなら終了日だけ設定してください。
+            </p>
+          </li>
+          <li onclick="launchUtil('age/index.html')">
+            <a href="age/index.html">🎂 年齢＆誕生日計算</a>
+            <p>
+              生年月日で正確な年齢や次の誕生日までの残り時間を表示。<br />
+              年齢から生年の逆算も可能です。
+            </p>
+          </li>
+          <li onclick="launchUtil('nicknamegen/index.html')">
+            <a href="nicknamegen/index.html">✨ ランダムニックネーム作成</a>
+            <p>一度に<b>5つのランダムニックネーム</b>を生成。気に入ったものをコピー！</p>
+          </li>
+          <li onclick="launchUtil('teamgen/index.html')">
+            <a href="teamgen/index.html">🔀 チーム・グループランダム分け</a>
+            <p>
+              名前を入力してチーム数を選ぶと、ランダムでチーム分け！
+            </p>
+          </li>
+          <li onclick="launchUtil('fortune/index.html')">
+            <a href="fortune/index.html">🔮 今日の運勢占い</a>
+            <p>今日の運勢をチェック！(お楽しみ機能)</p>
+          </li>
+          <li onclick="launchUtil('dice3d/index.html')">
+            <a href="dice3d/index.html">🎲 3Dサイコロ</a>
+            <p>リアルな3Dサイコロをブラウザ上で振ってみよう。</p>
+          </li>
+          <li onclick="launchUtil('text-cleaner/index.html')">
+            <a href="text-cleaner/index.html">🧹 テキストクリーナー</a>
+            <p>余分な空白や改行を削除し、テキストをクリーンアップ。</p>
+          </li>
+          <li onclick="launchUtil('recipe-finder/index.html')">
+            <a href="recipe-finder/index.html">🍳 レシピ検索</a>
+            <p>材料を入力または選択するだけで、簡単レシピを提案！</p>
+          </li>
+        </ul>
+        <div id="noResultMessage">該当するユーティリティは見つかりません。</div>
+      </section>
+    </main>
+    <footer>
+      © 2025 Quick Util · 制作：Itagi<br />
+      メール: emfls24777@daum.net
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="hi">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="GREEN Click के साथ अपनी एकाग्रता और प्रतिक्रिया की गति को आज़माएं! केवल तभी टैप करें जब शब्द हरा हो। सिंपल, मज़ेदार और मोबाइल के लिए उपयुक्त फ्री ऑनलाइन गेम!" />
+        <meta
+            name="keywords"
+            content="GREEN Click, प्रतिक्रिया खेल, दिमागी खेल, रंग गेम, तेज़ गेम, फोकस, क्लिक चैलेंज, मुफ्त ऑनलाइन गेम, मोबाइल, ब्राउज़र गेम, रिफ्लेक्स गेम, कैज़ुअल" />
+        <meta name="author" content="Itagi" />
+        <meta name="robots" content="index, follow" />
+
+        <link rel="canonical" href="https://emfls.github.io/in/game/GREENClick" />
+
+        <meta property="og:title" content="GREEN Click – मुफ्त ऑनलाइन रिफ्लेक्स गेम!" />
+        <meta
+            property="og:description"
+            content="केवल हरे शब्द पर टैप करें! इस मज़ेदार ऑनलाइन गेम में अपनी प्रतिक्रिया और दिमाग को आज़माएं।" />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta property="og:url" content="https://emfls.github.io/in/game/GREENClick" />
+        <meta property="og:type" content="website" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="GREEN Click – मुफ्त ऑनलाइन रिफ्लेक्स गेम!" />
+        <meta
+            name="twitter:description"
+            content="केवल GREEN आने पर टैप करें! इस तेज़ रिफ्लेक्स गेम में दोस्तों को पीछे छोड़ें – ऑनलाइन मुफ्त में खेलें।" />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+        <title>GREEN Click – मुफ्त ऑनलाइन रिफ्लेक्स गेम!</title>
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+                user-select: none;
+            }
+            body {
+                font-family: "Segoe UI", sans-serif;
+                background-color: #1e1e1e;
+                color: white;
+                text-align: center;
+                padding: 10px;
+            }
+            h1 {
+                margin-bottom: 0.5rem;
+            }
+            #description {
+                margin-bottom: 20px;
+                font-size: 1rem;
+            }
+            #box {
+                width: 300px;
+                height: 300px;
+                margin: 10px auto;
+                border-radius: 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 2rem;
+                font-weight: bold;
+                background-color: #555;
+                transition: background-color 0.2s;
+                position: relative;
+                flex-direction: column;
+                cursor: pointer;
+            }
+            #word {
+                font-size: 2rem;
+                font-weight: bold;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            }
+            #score,
+            #message,
+            #finalScore {
+                font-size: 1.1rem;
+                margin: 10px;
+            }
+            #controls {
+                margin-top: 15px;
+                display: none;
+            }
+            .btn {
+                padding: 8px 16px;
+                margin: 5px;
+                border: solid;
+                border-radius: 6px;
+                border-color: white;
+                background-color: rgba(0, 0, 0, 0.7);
+                color: white;
+                font-size: 1rem;
+                cursor: pointer;
+            }
+            .btn:hover {
+                background-color: #45a045;
+            }
+        </style>
+    </head>
+    <body>
+        <h1><span style="color: green">GREEN</span> Click</h1>
+        <p id="description">आंखें आपको धोखा देंगी।<br />सिर्फ शब्द पर ध्यान दें: <b>GREEN</b>।</p>
+
+        <div id="box">
+            <div id="word">शुरू करने के लिए क्लिक करें</div>
+        </div>
+
+        <div id="score" style="font-size: x-large; font-weight: bold">स्कोर: 0</div>
+        <div id="message"></div>
+        <div id="finalScore"></div>
+
+        <div id="controls">
+            <button class="btn" onclick="startGame()">फिर से शुरू करें</button>
+            <button class="btn" onclick="shareScore()">शेयर करें</button>
+        </div>
+
+        <script>
+            const box = document.getElementById("box");
+            const wordDiv = document.getElementById("word");
+            const scoreDisplay = document.getElementById("score");
+            const message = document.getElementById("message");
+            const finalScore = document.getElementById("finalScore");
+            const controls = document.getElementById("controls");
+
+            const colors = ["GREEN", "RED", "BLUE", "YELLOW", "ORANGE", "PURPLE"];
+            const bgColors = ["green", "red", "blue", "yellow", "orange", "purple", "pink", "cyan", "lime", "gold"];
+
+            let currentText = "";
+            let score = 0;
+            let gameRunning = false;
+            let gameStarted = false;
+            let timeoutId = null;
+            let intervalId = null;
+
+            function getRandom(arr) {
+                return arr[Math.floor(Math.random() * arr.length)];
+            }
+
+            function updateBox() {
+                const bgColor = getRandom(bgColors);
+                box.style.backgroundColor = bgColor;
+
+                currentText = getRandom(colors);
+                wordDiv.textContent = currentText;
+
+                if (currentText === "GREEN") {
+                    timeoutId = setTimeout(() => {
+                        endGame("आपने GREEN मिस कर दिया!");
+                    }, 1000);
+                }
+            }
+
+            function startGame() {
+                clearInterval(intervalId);
+                clearTimeout(timeoutId);
+                score = 0;
+                gameRunning = true;
+                gameStarted = true;
+                message.textContent = "";
+                finalScore.textContent = "";
+                scoreDisplay.textContent = "स्कोर: 0";
+                wordDiv.textContent = "";
+                box.style.pointerEvents = "auto";
+                controls.style.display = "none";
+
+                setTimeout(() => {
+                    updateBox();
+                    intervalId = setInterval(updateBox, 1200);
+                }, 500);
+            }
+
+            function endGame(reason) {
+                clearInterval(intervalId);
+                clearTimeout(timeoutId);
+                gameRunning = false;
+                box.style.backgroundColor = "#000";
+                wordDiv.textContent = "गेम ओवर";
+                box.style.pointerEvents = "none";
+
+                message.textContent = reason;
+                controls.style.display = "block";
+            }
+
+            function shareScore() {
+                const shareText = `🎯 GREEN Click चैलेंज में मैंने ${score} अंक हासिल किए!\nआप भी आज़माएं 👉 ${window.location.href}`;
+                if (navigator.share) {
+                    navigator
+                        .share({
+                            title: "GREEN Click Challenge",
+                            text: shareText,
+                            url: window.location.href
+                        })
+                        .catch(() => {
+                            navigator.clipboard.writeText(shareText);
+                            alert("लिंक क्लिपबोर्ड में कॉपी कर दिया गया है! 📋");
+                        });
+                } else {
+                    navigator.clipboard.writeText(shareText);
+                    alert("लिंक क्लिपबोर्ड में कॉपी कर दिया गया है! 📋");
+                }
+            }
+
+            box.addEventListener("click", () => {
+                if (!gameStarted) {
+                    startGame();
+                    return;
+                }
+
+                if (!gameRunning) return;
+
+                clearTimeout(timeoutId);
+
+                if (currentText === "GREEN") {
+                    score++;
+                    scoreDisplay.textContent = `स्कोर: ${score}`;
+                    let intervalTime = Math.max(400, 1200 - score * 50);
+
+                    clearInterval(intervalId);
+                    intervalId = setInterval(updateBox, intervalTime);
+                } else {
+                    endGame("गलत! वह GREEN नहीं था।");
+                }
+            });
+        </script>
+        <button
+            style="
+                margin-top: 20px;
+                width: 90%;
+                height: 60px;
+                font-size: 16px;
+                font-weight: bold;
+                background-color: #000;
+                cursor: pointer;
+                border-radius: 6px;
+                border: solid;
+                color: white;
+                border-color: white;
+            "
+            onclick="window.location.href='/'">
+            📂 अन्य गेम्स
+        </button>
+        <section
+            style="
+                width: 90%;
+                max-width: 420px;
+                margin: 60px auto;
+                padding: 20px;
+                font-family: 'Segoe UI', sans-serif;
+                background: #f0fff4;
+                color: #2d3436;
+                border-radius: 10px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                line-height: 1.6;
+                font-size: 14px;
+            ">
+            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #006400">❓ अक्सर पूछे जाने वाले सवाल (FAQ)</h2>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q1. GREEN Click कैसे खेलें?</strong><br />
+                A. जब बॉक्स में <strong>GREEN</strong> शब्द दिखे तब ही टैप करें – बैकग्राउंड रंग पर ध्यान न दें!
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q2. गेम कब खत्म होता है?</strong><br />
+                A. यदि आप ग़लत शब्द पर टैप करते हैं या GREEN आने पर समय रहते टैप नहीं करते तो गेम ओवर।
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q3. क्या इसमें टाइम लिमिट है?</strong><br />
+                A. हां! GREEN शब्द आते ही करीब 1 सेकंड में टैप न किया तो गेम ओवर।
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q4. क्या गेम तेज़ होता जाता है?</strong><br />
+                A. हां! आपका स्कोर बढ़ने पर स्पीड भी बढ़ती है।
+            </div>
+
+            <div style="margin-bottom: 1rem">
+                <strong>Q5. क्या गेम को दोबारा शुरू कर सकते हैं?</strong><br />
+                A. बिल्कुल! "फिर से शुरू करें" पर टैप करके कभी भी फिर से खेलें।
+            </div>
+
+            <div>
+                <strong>Q6. स्कोर कैसे शेयर करें?</strong><br />
+                A. "शेयर करें" पर टैप करके अपना स्कोर और गेम लिंक दोस्तों को भेजें!
+            </div>
+        </section>
+    </body>
+</html>

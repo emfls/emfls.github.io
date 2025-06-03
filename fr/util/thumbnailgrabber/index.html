@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ソーシャルサムネイルダウンローダー (YouTube, X, TikTok)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="YouTube、X(Twitter)、TikTokのサムネイル画像を抽出してダウンロードできます。様々な画質で閲覧・保存が可能。無料・ログイン不要。" />
+    <meta
+      name="keywords"
+      content="サムネイルダウンローダー, YouTubeサムネイル, Xサムネイル, TikTokサムネイル, 無料, オンラインツール, ソーシャルメディア画像, 抽出, ダウンロード" />
+    <meta name="author" content="Itagi" />
+    <meta name="language" content="ja" />
+    <link rel="canonical" href="https://emfls.github.io/fr/util/thumbnailgrabber/" />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/fr/util/thumbnailgrabber/" />
+    <meta property="og:title" content="ソーシャルサムネイルダウンローダー (YouTube, X, TikTok)" />
+    <meta
+      property="og:description"
+      content="YouTube、X(Twitter)、TikTokのサムネイル画像を抽出してダウンロードできます。全画質・無料・ログイン不要。" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://emfls.github.io/fr/util/thumbnailgrabber/" />
+    <meta name="twitter:title" content="ソーシャルサムネイルダウンローダー (YouTube, X, TikTok)" />
+    <meta
+      name="twitter:description"
+      content="YouTube、X(Twitter)、TikTokのサムネイル画像を抽出してダウンロード。ログイン不要。" />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+    <!-- Googleタグ (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <style>
+      :root {
+        --main: #e62e2d;
+        --main-dark: #ad2020;
+        --bg: #fff6f6;
+      }
+      body {
+        background: var(--bg);
+        font-family: "Segoe UI", Arial, sans-serif;
+        margin: 0;
+        color: #24262d;
+      }
+      .container {
+        max-width: 410px;
+        margin: 44px auto 0 auto;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 24px #e62e2d22;
+        padding: 28px 16px 22px 16px;
+      }
+      .logo {
+        font-size: 1.45em;
+        font-weight: bold;
+        color: var(--main-dark);
+        text-align: center;
+        margin-bottom: 11px;
+        letter-spacing: -1px;
+      }
+      .desc {
+        text-align: center;
+        color: #d03434;
+        margin-bottom: 22px;
+        font-size: 0.87em;
+      }
+      .url-input-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+      .url-input-row input {
+        flex: 1;
+        padding: 11px 10px;
+        border: 1.3px solid #e62e2d55;
+        border-radius: 7px;
+        font-size: 1.08em;
+        background: #fff5f5;
+        color: #303;
+        transition: border 0.2s;
+      }
+      .url-input-row input:focus {
+        border-color: var(--main-dark);
+        outline: none;
+      }
+      .url-input-row button {
+        background: var(--main);
+        color: #fff;
+        border: none;
+        border-radius: 7px;
+        font-size: 1.07em;
+        font-weight: bold;
+        padding: 0 22px;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .url-input-row button:active {
+        background: var(--main-dark);
+      }
+      .info-msg {
+        color: #ad2020;
+        text-align: center;
+        font-size: 1.02em;
+        margin: 10px 0 10px 0;
+        min-height: 26px;
+      }
+      .preview-area {
+        margin: 22px 0 0 0;
+        text-align: center;
+      }
+      .thumb-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px 12px;
+        justify-content: center;
+        margin-top: 10px;
+      }
+      .thumb-box {
+        background: #f5eaea;
+        border-radius: 12px;
+        padding: 10px 9px 12px 9px;
+        box-shadow: 0 2px 8px #e62e2d14;
+        max-width: 160px;
+      }
+      .thumb-img {
+        max-width: 130px;
+        max-height: 110px;
+        border-radius: 8px;
+        display: block;
+        margin: 0 auto 7px auto;
+        background: #fff;
+      }
+      .thumb-label {
+        color: #ad2020;
+        font-size: 0.99em;
+        margin-bottom: 2px;
+        text-align: center;
+        font-weight: bold;
+      }
+      .dl-btn {
+        display: block;
+        margin: 5px auto 0 auto;
+        padding: 6px 12px;
+        background: var(--main);
+        color: #fff;
+        border: none;
+        border-radius: 7px;
+        font-size: 0.99em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.15s;
+        text-decoration: none;
+      }
+      .dl-btn:active {
+        background: var(--main-dark);
+      }
+      .service-label {
+        margin-top: 10px;
+        font-size: 1.05em;
+        color: #19788a;
+        font-weight: bold;
+        letter-spacing: 0.01em;
+      }
+      .example-row {
+        font-size: 0.95em;
+        margin-top: 10px;
+        color: #494;
+        text-align: center;
+      }
+      .notice {
+        color: #ba2929;
+        background: #fff1f1;
+        border: 1px solid #f7c0c0;
+        border-radius: 9px;
+        padding: 12px 11px 9px 11px;
+        margin: 30px 0 0 0;
+        font-size: 0.99em;
+        text-align: center;
+        line-height: 1.55;
+      }
+      #backBtn {
+        position: fixed;
+        left: 50%;
+        bottom: 32px;
+        transform: translateX(-50%);
+        background: var(--main);
+        color: #fff;
+        font-weight: 700;
+        border: none;
+        border-radius: 2rem;
+        padding: 0.58em 1.5em;
+        box-shadow: 0 4px 16px #e62e2d55;
+        font-size: 1.09em;
+        text-decoration: none;
+        cursor: pointer;
+        letter-spacing: 0.01em;
+        transition:
+          background 0.15s,
+          transform 0.12s;
+        z-index: 2000;
+      }
+      #backBtn:hover {
+        background: #b72323;
+        transform: translateX(-50%) scale(1.04);
+      }
+      @media (max-width: 600px) {
+        .container {
+          max-width: 98vw;
+          padding: 12px 2vw 14px 2vw;
+        }
+        #backBtn {
+          bottom: 18px;
+          font-size: 0.98em;
+          padding: 0.48em 1em;
+        }
+        .thumb-img {
+          max-width: 98vw;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">📸 ソーシャルサムネイルダウンローダー</div>
+      <div class="desc">
+        YouTube、X(Twitter)、TikTokのリンクを貼り付け、様々な画質のサムネイルをプレビューしてダウンロードできます。<br />
+        <span style="color: #1da1f2"><b>X (Twitter)</b></span> と
+        <span style="color: #ff0050"><b>TikTok</b></span> のサポートもご利用いただけます。
+      </div>
+      <div class="url-input-row">
+        <input id="urlInput" type="text" placeholder="動画や投稿のURLをここに貼り付けてください..." autocomplete="off" />
+        <button id="grabBtn">取得</button>
+      </div>
+      <div class="info-msg" id="infoMsg"></div>
+      <div class="example-row">
+        例:<br />
+        <span style="color: #e62e2d">YouTube</span> – https://www.youtube.com/watch?v=xxxx<br />
+        <span style="color: #1da1f2">X (Twitter)</span> – https://x.com/username/status/xxxx または
+        https://twitter.com/user/status/xxxx<br />
+        <span style="color: #ff0050">TikTok</span> – https://www.tiktok.com/@user/video/xxxx
+      </div>
+      <div class="preview-area" id="previewArea"></div>
+      <div class="notice">
+        <b>お知らせ:</b>
+        <ul style="margin: 8px 0 0 18px; text-align: left">
+          <li>YouTubeのサムネイルは複数の画質が提供されます。</li>
+          <li>
+            X (Twitter) および TikTokのサムネイルはアカウント設定やプラットフォームの制限により表示できない場合や、低解像度の場合があります。
+          </li>
+          <li>このツールは公開されたWebデータのみ利用します。非公開/保護された投稿や動画は利用できません。</li>
+          <li>Xの場合、x.comとtwitter.comの両方のURLをお試しください。</li>
+        </ul>
+      </div>
+    </div>
+    <a href="../index.html" id="backBtn">他のツールを見る</a>
+    <script>
+      // 品質: [ラベル, URLサフィックス]
+      const YT_THUMB_QUALITIES = [
+        ["最高画質", "maxresdefault.jpg"],
+        ["標準 (SD)", "sddefault.jpg"],
+        ["高画質", "hqdefault.jpg"],
+        ["中画質", "mqdefault.jpg"],
+        ["基本", "default.jpg"]
+      ];
+      function getYoutubeThumbs(url) {
+        // 11桁の動画IDを抽出
+        const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/))([\w\-]{11})/);
+        if (!match) return null;
+        const id = match[1];
+        return YT_THUMB_QUALITIES.map(([label, suffix]) => ({
+          label,
+          url: `https://img.youtube.com/vi/${id}/${suffix}`
+        }));
+      }
+      function getTiktokThumb(url) {
+        const match = url.match(/tiktok\.com\/.*\/video\/(\d+)/);
+        if (!match) return null;
+        return [
+          {
+            label: "TikTok サムネイル",
+            url: `https://p16-sign-va.tiktokcdn.com/obj/tos-maliva-p-0068/${match[1]}_0.jpg`
+          }
+        ];
+      }
+      async function getXThumb(url) {
+        const match = url.match(/(?:twitter\.com|x\.com)\/(?:\w+)\/status\/(\d+)/);
+        if (!match) return null;
+        try {
+          const resp = await fetch("https://publish.twitter.com/oembed?url=" + encodeURIComponent(url));
+          const data = await resp.json();
+          const html = data.html;
+          const imgMatch = html && html.match(/<img[^>]+src="([^"]+)"/);
+          if (imgMatch) return [{ label: "X (Twitter) サムネイル", url: imgMatch[1] }];
+        } catch (e) {}
+        return null;
+      }
+
+      function renderThumbs(label, thumbs) {
+        const area = document.getElementById("previewArea");
+        if (!thumbs || !thumbs.length) {
+          area.innerHTML = `<div class="info-msg">このURLからサムネイルを取得できません。</div>`;
+          return;
+        }
+        if (label === "YouTube") {
+          area.innerHTML = `<div class="service-label">${label} サムネイル（全画質）</div>
+        <div class="thumb-list">${thumbs
+          .map(
+            (thumb) => `
+          <div class="thumb-box">
+            <div class="thumb-label">${thumb.label}</div>
+            <img src="${thumb.url}" class="thumb-img" alt="サムネイル"/>
+            <a href="${thumb.url}" class="dl-btn" download>ダウンロード (${thumb.label})</a>
+          </div>`
+          )
+          .join("")}</div>`;
+        } else {
+          // X/TikTok 単一サムネイル
+          area.innerHTML = `<div class="service-label">${label} サムネイル</div>
+          <div class="thumb-list"><div class="thumb-box">
+            <div class="thumb-label">${thumbs[0].label}</div>
+            <img src="${thumbs[0].url}" class="thumb-img" alt="サムネイル"/>
+            <a href="${thumbs[0].url}" class="dl-btn" download>ダウンロード</a>
+          </div></div>`;
+        }
+      }
+
+      async function handleGrab() {
+        const url = document.getElementById("urlInput").value.trim();
+        document.getElementById("previewArea").innerHTML = "";
+        document.getElementById("infoMsg").textContent = "";
+        if (!url) {
+          document.getElementById("infoMsg").textContent = "動画や投稿のURLを入力してください！";
+          return;
+        }
+        // YouTube
+        if (/youtu\.?be/.test(url)) {
+          const thumbs = getYoutubeThumbs(url);
+          renderThumbs("YouTube", thumbs);
+          return;
+        }
+        // TikTok
+        if (/tiktok\.com/.test(url)) {
+          const thumbs = getTiktokThumb(url);
+          renderThumbs("TikTok", thumbs);
+          return;
+        }
+        // X (Twitter)
+        if (/twitter\.com|x\.com/.test(url)) {
+          document.getElementById("infoMsg").textContent = "X(Twitter) のサムネイルを取得中です（数秒かかる場合があります）...";
+          const thumbs = await getXThumb(url);
+          if (thumbs) {
+            renderThumbs("X (Twitter)", thumbs);
+          } else {
+            document.getElementById("infoMsg").textContent =
+              "X(Twitter) のサムネイルを取得できませんでした。（プライバシー設定などで取得できない場合があります）";
+          }
+          return;
+        }
+        document.getElementById("infoMsg").textContent =
+          "サポートされていないURL形式です。有効なYouTube、X、TikTokのリンクを入力してください。";
+      }
+
+      document.getElementById("grabBtn").onclick = handleGrab;
+      document.getElementById("urlInput").addEventListener("keydown", function (e) {
+        if (e.key === "Enter") handleGrab();
+      });
+    </script>
+    <section
+      style="
+        max-width: 320px;
+        margin: 48px auto 24px auto;
+        background: #1e1e1e;
+        border-radius: 18px;
+        box-shadow: 0 6px 24px #1236;
+        padding: 24px;
+        font-family: Arial, sans-serif;
+      ">
+      <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 14px">
+        ❓ FAQ – ソーシャルサムネイルダウンローダー
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">このツールはURLを保存したりアップロードしますか？</div>
+        <div style="color: #f0f0f0">いいえ。すべての処理はブラウザ上でローカルに行われます。データは送信・保存されません。</div>
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">どのプラットフォームに対応していますか？</div>
+        <div style="color: #f0f0f0">
+          YouTube（全てのサムネイル）、X（Twitter）、TikTok。XおよびTikTokは非公開投稿では取得できない場合があります。
+        </div>
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">TikTokやXのサムネイルが取得できないのはなぜですか？</div>
+        <div style="color: #f0f0f0">
+          一部の投稿は非公開、削除済み、またはプレビューが制限されている場合があります。このツールは公開コンテンツのみ対応します。
+        </div>
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">ログインは必要ですか？</div>
+        <div style="color: #f0f0f0">いいえ。このツールは完全無料でアカウントも不要です。</div>
+      </div>
+
+      <div style="margin-bottom: 0">
+        <div style="color: #8f94fb; font-weight: bold">サムネイルの画質は選べますか？</div>
+        <div style="color: #f0f0f0">
+          はい、YouTubeの場合は画質を選んでダウンロード可能です。他のプラットフォームは1つの画像のみです。
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

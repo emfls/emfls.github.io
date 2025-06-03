@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="クラシックテトリスのウェブゲーム！無料でプレイしてブロックを積み上げ、ラインを消して高得点を目指しましょう。モバイルおよびデスクトップ対応。" />
+        <meta
+            name="keywords"
+            content="tetris, テトリス, パズル, ブロック積み, オンラインゲーム, クラシックアーケード, 無料ウェブゲーム, モバイルゲーム, ブラウザゲーム, テトリスウェブ, スタックゲーム, 落下ブロック" />
+        <meta name="author" content="Itagi" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://emfls.github.io/cn/game/TetrisGame" />
+
+        <!-- Open Graph / Facebook / Kakao / Discord -->
+        <meta property="og:title" content="クイックプレイ: テトリス – オンラインクラシックパズル" />
+        <meta
+            property="og:description"
+            content="スマートに積み上げ、素早く操作してラインを消そう。無料のオンラインテトリスゲームをすぐにプレイ—ダウンロード不要！" />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta property="og:url" content="https://emfls.github.io/cn/game/TetrisGame" />
+        <meta property="og:type" content="website" />
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="クイックプレイ: テトリス – オンラインクラシックパズル" />
+        <meta
+            name="twitter:description"
+            content="どれだけ高得点を出せますか？モバイルまたはPCで無料のこのテトリスブラウザゲームを楽しもう！" />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+        <title>テトリスゲーム</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js">
+            function onMobileInput(key) {
+                switch (key) {
+                    case 'ArrowLeft':
+                        heldKeys[LEFT_ARROW] = true;
+                        break;
+                    case 'ArrowRight':
+                        heldKeys[RIGHT_ARROW] = true;
+                        break;
+                    case 'ArrowDown':
+                        heldKeys[DOWN_ARROW] = true;
+                        break;
+                }
+            }
+
+            function offMobileInput(key) {
+                switch (key) {
+                    case 'ArrowLeft':
+                        delete heldKeys[LEFT_ARROW];
+                        break;
+                    case 'ArrowRight':
+                        delete heldKeys[RIGHT_ARROW];
+                        break;
+                    case 'ArrowDown':
+                        delete heldKeys[DOWN_ARROW];
+                        break;
+                }
+            }
+        </script>
+        <style>
+            body {
+                background-color: #111;
+                color: white;
+                font-family: "Inter", sans-serif;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 1rem;
+            }
+
+            canvas {
+                border: 2px solid #3b3bb3;
+                background: #000;
+            }
+
+            #startButton,
+            #resetButton,
+            #shareButton {
+                padding: 10px 20px;
+                font-size: 18px;
+                background-color: #3b3bb3;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-top: 10px;
+            }
+
+            #resetButton,
+            #shareButton {
+                top: 60px;
+                display: none;
+            }
+
+            #controls {
+                position: absolute;
+                top: 520px;
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                align-items: center;
+                justify-content: center;
+                z-index: 10;
+                width: 100%;
+            }
+
+            #controls .row {
+                display: flex;
+                gap: 10px;
+                justify-content: center;
+            }
+
+            .ctrl-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 18px;
+                border: none;
+                border-radius: 10px;
+                background-color: #3b3bb3;
+            }
+
+            .ctrl-btn:active {
+                background-color: #666;
+            }
+
+            button.restart {
+                padding: 1rem;
+                margin-top: 1rem;
+                font-size: 1.1rem;
+                background-color: #4e54c8;
+                color: white;
+                border: none;
+                border-radius: 10px;
+                width: 90%;
+                max-width: 400px;
+                transition: background-color 0.2s ease;
+                cursor: pointer;
+                position: absolute;
+            }
+
+            button.restart:active {
+                background-color: #6a72f8;
+            }
+
+            button.menu,
+            button.share {
+                padding: 1rem;
+                margin-top: 1rem;
+                font-size: 1.1rem;
+                background-color: #4e54c8;
+                color: white;
+                border: none;
+                border-radius: 10px;
+                width: 90%;
+                max-width: 400px;
+                transition: background-color 0.2s ease;
+                cursor: pointer;
+            }
+
+            button.menu:active,
+            button.share:active {
+                background-color: #6a72f8;
+            }
+
+            #ad-banner {
+                width: 100%;
+                height: 80px;
+                margin: 0.8rem 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: #00000044;
+                color: #aaa;
+                font-size: 0.9rem;
+                position: absolute;
+                top: 630px;
+            }
+
+            h1 {
+                margin-bottom: 0.3rem;
+                font-size: 1.3rem;
+            }
+
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+                user-select: none;
+            }
+
+            p.description {
+                margin-bottom: 1rem;
+                font-size: 0.85rem;
+                color: #ccc;
+                text-align: center;
+                padding: 0 1rem;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>
+            <span style="color: #8f94fb">クイックプレイ:</span>
+            <span style="color: #00ffff">テ</span>
+            <span style="color: #0000ff">ト</span>
+            <span style="color: #ffa500">リ</span>
+            <span style="color: #ffff00">ス</span>
+        </h1>
+        <p class="description">スマートに積み上げ、素早く操作してラインを消そう。健闘を祈ります！</p>
+        <button id="startButton" style="position: absolute; top: 290px; left: 50%; transform: translate(-50%, -50%)">
+            ゲーム開始
+        </button>
+        <button
+            id="resetButton"
+            style="position: absolute; top: 340px; left: 50%; transform: translate(-50%, -50%); display: none">
+            再挑戦
+        </button>
+        <button
+            id="shareButton"
+            style="position: absolute; top: 390px; left: 50%; transform: translate(-50%, -50%); display: none"
+            onclick="shareGame()">
+            共有する
+        </button>
+        <script>
+            let cols = 10;
+            let rows = 20;
+            let board;
+            let resolution = 20;
+            let currentPiece;
+            let nextPiece;
+            let gameOver = false;
+            let score = 0;
+            let gameStarted = false;
+
+            const shapes = {
+                I: [[1, 1, 1, 1]],
+                J: [
+                    [1, 0, 0],
+                    [1, 1, 1]
+                ],
+                L: [
+                    [0, 0, 1],
+                    [1, 1, 1]
+                ],
+                O: [
+                    [1, 1],
+                    [1, 1]
+                ],
+                S: [
+                    [0, 1, 1],
+                    [1, 1, 0]
+                ],
+                T: [
+                    [0, 1, 0],
+                    [1, 1, 1]
+                ],
+                Z: [
+                    [1, 1, 0],
+                    [0, 1, 1]
+                ]
+            };
+
+            const colors = {
+                I: [0, 255, 255],
+                J: [0, 0, 255],
+                L: [255, 165, 0],
+                O: [255, 255, 0],
+                S: [0, 255, 0],
+                T: [160, 32, 240],
+                Z: [255, 0, 0]
+            };
+
+            function setup() {
+                let canvas = createCanvas(cols * resolution, rows * resolution);
+                canvas.parent(document.body);
+                board = createEmptyBoard();
+                currentPiece = randomPiece();
+                nextPiece = randomPiece();
+                frameRate(60);
+                noLoop();
+            }
+
+            function draw() {
+                handleHeldKeys();
+                background(0);
+                drawBoard();
+                fill(255);
+                textSize(16);
+                textAlign(LEFT, TOP);
+                text("得点: " + score, 10, 10);
+                if (!gameStarted) return;
+
+                if (!gameOver) {
+                    drawPiece(currentPiece);
+                    if (frameCount % 20 === 0) {
+                        movePiece(0, 1);
+                    }
+                } else {
+                    textSize(32);
+                    textAlign(CENTER, CENTER);
+                    fill(255, 0, 0);
+                    text("ゲームオーバー", width / 2, height / 2);
+                    document.getElementById("resetButton").style.display = "inline-block";
+                    document.getElementById("shareButton").style.display = "inline-block";
+                    noLoop();
+                }
+            }
+
+            function createEmptyBoard() {
+                return Array.from(
+                    {
+                        length: rows
+                    },
+                    () => Array(cols).fill(0)
+                );
+            }
+
+            function drawBoard() {
+                for (let y = 0; y < rows; y++) {
+                    for (let x = 0; x < cols; x++) {
+                        if (board[y][x]) {
+                            fill(...board[y][x]);
+                            stroke(0);
+                            rect(x * resolution, y * resolution, resolution, resolution);
+                        }
+                    }
+                }
+            }
+
+            function drawPiece(piece) {
+                fill(...piece.color);
+                for (let y = 0; y < piece.shape.length; y++) {
+                    for (let x = 0; x < piece.shape[y].length; x++) {
+                        if (piece.shape[y][x]) {
+                            rect((piece.x + x) * resolution, (piece.y + y) * resolution, resolution, resolution);
+                        }
+                    }
+                }
+            }
+
+            function movePiece(dx, dy) {
+                let moved = { ...currentPiece, x: currentPiece.x + dx, y: currentPiece.y + dy };
+                if (!collides(moved)) {
+                    currentPiece = moved;
+                } else if (dy === 1) {
+                    merge(currentPiece);
+                    clearLines();
+                    currentPiece = nextPiece;
+                    nextPiece = randomPiece();
+                    if (collides(currentPiece)) {
+                        gameOver = true;
+                    }
+                }
+            }
+
+            function collides(piece) {
+                for (let y = 0; y < piece.shape.length; y++) {
+                    for (let x = 0; x < piece.shape[y].length; x++) {
+                        if (
+                            piece.shape[y][x] &&
+                            (piece.y + y >= rows ||
+                                piece.x + x < 0 ||
+                                piece.x + x >= cols ||
+                                board[piece.y + y][piece.x + x])
+                        ) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+
+            function merge(piece) {
+                for (let y = 0; y < piece.shape.length; y++) {
+                    for (let x = 0; x < piece.shape[y].length; x++) {
+                        if (piece.shape[y][x]) {
+                            board[piece.y + y][piece.x + x] = piece.color;
+                        }
+                    }
+                }
+            }
+
+            function clearLines() {
+                let linesCleared = 0;
+                for (let y = rows - 1; y >= 0; y--) {
+                    if (board[y].every((cell) => cell)) {
+                        board.splice(y, 1);
+                        board.unshift(Array(cols).fill(0));
+                        y++;
+                        linesCleared++;
+                    }
+                }
+                score += linesCleared;
+            }
+
+            function randomPiece() {
+                let keys = Object.keys(shapes);
+                let key = random(keys);
+                return {
+                    x: Math.floor(cols / 2) - 1,
+                    y: 0,
+                    shape: shapes[key],
+                    color: colors[key]
+                };
+            }
+
+            let heldKeys = {};
+
+            function keyPressed() {
+                heldKeys[keyCode] = true;
+                if (keyCode === UP_ARROW) rotatePiece();
+            }
+
+            function keyReleased() {
+                delete heldKeys[keyCode];
+            }
+
+            function handleHeldKeys() {
+                let now = millis();
+
+                if (!handleHeldKeys.lastTime) handleHeldKeys.lastTime = 0;
+                if (now - handleHeldKeys.lastTime > 100) {
+                    // 100ms 間隔
+                    if (heldKeys[LEFT_ARROW]) movePiece(-1, 0);
+                    if (heldKeys[RIGHT_ARROW]) movePiece(1, 0);
+                    if (heldKeys[DOWN_ARROW]) movePiece(0, 1);
+                    handleHeldKeys.lastTime = now;
+                }
+            }
+
+            function rotatePiece() {
+                let rotated = currentPiece.shape[0].map((_, i) => currentPiece.shape.map((row) => row[i]).reverse());
+                let rotatedPiece = { ...currentPiece, shape: rotated };
+                if (!collides(rotatedPiece)) {
+                    currentPiece.shape = rotated;
+                }
+            }
+
+            // ボタンハンドラ登録
+            document.getElementById("startButton").onclick = function () {
+                gameStarted = true;
+                this.style.display = "none";
+                loop();
+            };
+
+            document.getElementById("resetButton").onclick = function () {
+                this.style.display = "none";
+                document.getElementById("shareButton").style.display = "none";
+                score = 0;
+                board = createEmptyBoard();
+                currentPiece = randomPiece();
+                nextPiece = randomPiece();
+                gameOver = false;
+                gameStarted = true;
+                loop();
+            };
+
+            function onMobileInput(key) {
+                switch (key) {
+                    case "ArrowLeft":
+                        heldKeys[LEFT_ARROW] = true;
+                        break;
+                    case "ArrowRight":
+                        heldKeys[RIGHT_ARROW] = true;
+                        break;
+                    case "ArrowDown":
+                        heldKeys[DOWN_ARROW] = true;
+                        break;
+                }
+            }
+
+            function offMobileInput(key) {
+                switch (key) {
+                    case "ArrowLeft":
+                        delete heldKeys[LEFT_ARROW];
+                        break;
+                    case "ArrowRight":
+                        delete heldKeys[RIGHT_ARROW];
+                        break;
+                    case "ArrowDown":
+                        delete heldKeys[DOWN_ARROW];
+                        break;
+                }
+            }
+        </script>
+
+        <div id="controls">
+            <div class="row">
+                <button
+                    class="ctrl-btn"
+                    ontouchstart="onMobileInput('ArrowLeft')"
+                    ontouchend="offMobileInput('ArrowLeft')"
+                    onmousedown="onMobileInput('ArrowLeft')"
+                    onmouseup="offMobileInput('ArrowLeft')"
+                    style="font-size: 24px; padding-bottom: 2px; color: white">
+                    ◀
+                </button>
+                <button
+                    class="ctrl-btn"
+                    ontouchstart="rotatePiece()"
+                    style="font-size: 30px; font-weight: 900; padding-bottom: 2px; color: white">
+                    ↻
+                </button>
+                <button
+                    class="ctrl-btn"
+                    ontouchstart="onMobileInput('ArrowRight')"
+                    ontouchend="offMobileInput('ArrowRight')"
+                    onmousedown="onMobileInput('ArrowRight')"
+                    onmouseup="offMobileInput('ArrowRight')"
+                    style="font-size: 24px; padding-bottom: 2px; color: white">
+                    ▶
+                </button>
+            </div>
+            <div class="row">
+                <button
+                    class="ctrl-btn"
+                    ontouchstart="onMobileInput('ArrowDown')"
+                    ontouchend="offMobileInput('ArrowDown')"
+                    onmousedown="onMobileInput('ArrowDown')"
+                    onmouseup="offMobileInput('ArrowDown')"
+                    style="font-size: 26px; margin-top: 5px; color: white">
+                    ▼
+                </button>
+            </div>
+        </div>
+
+        <button style="position: absolute; top: 660px" class="menu" onclick="goToMain()">📂 他のゲーム</button>
+
+        <script>
+            function goToMain() {
+                window.location.href = "/"; // or 'index.html'
+            }
+
+            function shareGame() {
+                const url = window.location.href;
+                const text = `🧱 クイックプレイテトリス - 私のスコア: ${score}\n今すぐプレイ！`;
+                if (navigator.share) {
+                    navigator
+                        .share({
+                            title: "クイックプレイ: テトリス",
+                            text,
+                            url
+                        })
+                        .catch(() => alert("共有に失敗しました。リンクをコピーしてください。"));
+                } else {
+                    const full = `${text}\n${url}`;
+                    navigator.clipboard
+                        .writeText(full)
+                        .then(() => alert("スコアとリンクがクリップボードにコピーされました！"))
+                        .catch(() => alert(`このリンクをコピーしてください:\n${full}`));
+                }
+            }
+        </script>
+        <section
+            style="
+                position: absolute;
+                max-width: 320px;
+                width: 100%;
+                margin: 772px auto 24px auto;
+                font-family: 'Arial', sans-serif;
+                font-size: 14px;
+                background: #1e1e1e;
+                border-radius: 18px;
+                box-shadow: 0 6px 24px #1236;
+                padding: 20px;
+                line-height: 1.6;
+                color: #f0f0f0;
+            ">
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ よくある質問</h2>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q1. このテトリスゲームはどうプレイしますか？</strong><br />
+                A. 矢印キーまたは画面上のボタンでブロックを操作し、ラインを完成させて消去しましょう。
+            </div>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q2. どのような操作が使えますか？</strong><br />
+                A. ◀ ▶ ▼ ボタンで左右移動・下降、↻ ボタンで回転します。タッチやマウス入力もサポートしています。
+            </div>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q3. ゲームはいつ終了しますか？</strong><br />
+                A. ブロックが上部まで積み上がり、新しいピースを配置できなくなったときにゲームオーバーになります。
+            </div>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q4. ゲームを再スタートできますか？</strong><br />
+                A. はい！ゲームオーバー後に「再挑戦」ボタンを押すと、いつでもゲームを再スタートできます。
+            </div>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q5. スコアを共有できますか？</strong><br />
+                A. もちろんです。「共有する」ボタンを使って、スコアとリンクをクリップボードにコピーまたは送信できます。
+            </div>
+
+            <div style="margin-bottom: 0">
+                <strong>Q6. このゲームはモバイルでも快適にプレイできますか？</strong><br />
+                A. はい！スマートフォンやデスクトップのどちらでも、オンスクリーンコントロールで快適にプレイできます。
+            </div>
+        </section>
+    </body>
+</html>

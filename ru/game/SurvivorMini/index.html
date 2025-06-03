@@ -1,0 +1,833 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>サバイバーミニ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    <!-- SEO & Social meta -->
+    <meta
+      name="description"
+      content="サバイバーミニは高速アクションブラウザゲームです。モンスターをかわし、レベルアップしてできるだけ長く生き延びましょう！無料でプレイでき、ダウンロード不要です。" />
+    <meta
+      name="keywords"
+      content="サバイバー, ミニゲーム, アクションゲーム, サバイバル, シューター, アーケード, ブラウザゲーム, 無料, サバイブ, ウェーブ, シューティングゲーム, ゾンビ, アーケード, ウェブゲーム" />
+    <meta name="author" content="Itagi" />
+    <meta name="language" content="ja" />
+    <meta name="theme-color" content="#181a20" />
+    <link rel="canonical" href="https://emfls.github.io/ru/game/SurvivorMini/index.html" />
+    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+    <!-- Open Graph (Facebook, Kakao, etc) -->
+    <meta property="og:title" content="サバイバーミニ – アクションウェブゲーム" />
+    <meta
+      property="og:description"
+      content="次々と押し寄せるウェーブの中、どれだけ長く生き延びられますか？高速アクションブラウザゲームでレベルアップし、ハイスコアを目指しましょう！" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://emfls.github.io/ru/game/SurvivorMini/index.html" />
+    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="サバイバーミニ – アクションウェブゲーム" />
+    <meta
+      name="twitter:description"
+      content="ウェーブを耐え抜き、ハイスコアを競おう！100%無料のブラウザアクションゲームです。" />
+    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #181a20;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        font-family: "Segoe UI", "Inter", Arial, sans-serif;
+        background: radial-gradient(ellipse at center, #23243a 60%, #0e1020 100%);
+      }
+      #wrap {
+        position: relative;
+        width: 100vw;
+        max-width: 375px;
+        height: 90vh;
+        max-height: 650px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      canvas {
+        background: #191c27;
+        border-radius: 24px;
+        box-shadow: 0 10px 48px #001a, 0 0 12px #000a inset;
+        width: 100vw;
+        max-width: 375px;
+        height: 75vh;
+        max-height: 500px;
+        display: block;
+        touch-action: none;
+      }
+      #hud {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 8px;
+        padding: 0 20px;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        pointer-events: none;
+      }
+      #stats {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 700;
+        font-size: 1.18em;
+        color: #fff;
+        text-shadow: 0 2px 6px #000d;
+        margin-bottom: 7px;
+      }
+      #barwrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 5px;
+      }
+      .bar {
+        background: #232950;
+        border-radius: 9px;
+        height: 14px;
+        box-shadow: 0 1px 8px #23e4, 0 1px 2px #1119 inset;
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+      }
+      .barfill {
+        background: linear-gradient(90deg, #28e 70%, #3ff);
+        height: 100%;
+        border-radius: 9px;
+        transition: 0.18s cubic-bezier(0.65, 1, 0.5, 1);
+      }
+      .bar.hp {
+        background: #39242e;
+      }
+      .bar.hp .barfill {
+        background: linear-gradient(90deg, #fd475d 60%, #fff);
+      }
+      #level {
+        font-size: 0.92em;
+        color: #ffecb0;
+        font-weight: 600;
+        background: #302e15cc;
+        border-radius: 7px;
+        padding: 3px 10px;
+        margin-left: 8px;
+        letter-spacing: 0.2px;
+        text-shadow: 0 2px 8px #000a;
+      }
+      /* === 中央ポップアップデザイン === */
+      .centerPopup {
+        display: none;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        min-width: 70%;
+        max-width: 95vw;
+        background: #212433ee;
+        color: #fff;
+        border-radius: 18px;
+        padding: 32px 16px 24px 16px;
+        z-index: 30;
+        box-shadow: 0 12px 48px #0009, 0 2px 14px #31ffeb17;
+        font-size: 1.19em;
+        text-align: center;
+        animation: fadein 0.32s cubic-bezier(0.4, 1.7, 0.6, 1);
+      }
+      @keyframes fadein {
+        from {
+          opacity: 0;
+          transform: scale(0.8) translate(-50%, -50%);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) translate(-50%, -50%);
+        }
+      }
+      .popupButtons {
+        margin-top: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 13px;
+      }
+      .popupBtn {
+        padding: 18px 6px 14px 6px;
+        font-size: 1.09em;
+        border-radius: 11px;
+        border: none;
+        background: #1f39fb;
+        color: #fff;
+        font-family: inherit;
+        font-weight: 700;
+        box-shadow: 0 2px 12px #001a;
+        cursor: pointer;
+        transition: 0.11s;
+        width: 100%;
+        outline: none;
+      }
+      .popupBtn:active {
+        background: #1a75ff;
+      }
+      /* === ジョイスティックUI改善 === */
+      #joystickWrap {
+        position: absolute;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 140px;
+        height: 140px;
+        z-index: 10;
+        pointer-events: auto;
+        touch-action: none;
+        user-select: none;
+        opacity: 1;
+        transition: 0.19s;
+      }
+      #joystickWrap.inactive {
+        opacity: 0.2;
+        pointer-events: none;
+      }
+      #joystickBG {
+        width: 100%;
+        height: 100%;
+        background: none;
+        border-radius: 50%;
+        border: 2.7px solid #1cc8cc67;
+        position: absolute;
+        left: 0;
+        top: 0;
+        box-shadow: 0 6px 24px #10e7;
+        background: radial-gradient(circle at 65% 30%, #35396980 40%, #191c2760 80%);
+      }
+      #joystickKnob {
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        position: absolute;
+        left: 41px;
+        top: 41px;
+        background: radial-gradient(circle, #41b6fd 65%, #174f77 100%);
+        border: 3px solid #aef9;
+        box-shadow: 0 2px 12px #10e6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.1em;
+        color: #fff;
+        touch-action: none;
+        cursor: pointer;
+        user-select: none;
+        transition: 0.07s cubic-bezier(0.4, 2, 0.7, 1.3);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="wrap">
+      <canvas id="game" width="375" height="500"></canvas>
+      <div id="hud">
+        <div id="stats">
+          <span id="score">得点:0</span>
+          <span id="wave">ウェーブ:1</span>
+          <span id="time">0:00</span>
+        </div>
+        <div id="barwrap">
+          <div class="bar hp"><div class="barfill" id="hpbar"></div></div>
+          <div class="bar"><div class="barfill" id="xpbar"></div></div>
+          <span id="level">Lv.1</span>
+        </div>
+      </div>
+      <div id="levelup" class="centerPopup"></div>
+      <div id="gameover" class="centerPopup"></div>
+      <div id="joystickWrap">
+        <div id="joystickBG"></div>
+        <div id="joystickKnob">🕹️</div>
+      </div>
+    </div>
+    <button
+      style="
+        background: white;
+        padding: 19px 20px 20px 20px;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 90%;
+        max-width: 400px;
+        position: relative;
+        color: black;
+        font-weight: bold;
+        border: none;
+        cursor: pointer;
+      "
+      onclick="window.location.href='/'">
+      📂 他のゲーム
+    </button>
+    <script>
+      const W = 375,
+        H = 500;
+      const cvs = document.getElementById("game"),
+        ctx = cvs.getContext("2d");
+      const scoreEl = document.getElementById("score");
+      const waveEl = document.getElementById("wave");
+      const timeEl = document.getElementById("time");
+      const hpbar = document.getElementById("hpbar");
+      const xpbar = document.getElementById("xpbar");
+      const levelEl = document.getElementById("level");
+      const levelup = document.getElementById("levelup");
+      const gameover = document.getElementById("gameover");
+      const joystickWrap = document.getElementById("joystickWrap");
+      const joystickBG = document.getElementById("joystickBG");
+      const joystickKnob = document.getElementById("joystickKnob");
+      let hiscore = +(localStorage.surv_hi || 0);
+
+      let state = {};
+      function reset() {
+        state = {
+          player: {
+            x: W / 2,
+            y: H / 2,
+            r: 18,
+            spd: 2.9,
+            hp: 7,
+            maxhp: 7,
+            atk: 1,
+            fireRate: 37,
+            fire: 0,
+            bullets: 1,
+            xp: 0,
+            lv: 1,
+            xpNext: 8
+          },
+          mobs: [],
+          items: [],
+          bullets: [],
+          tick: 0,
+          time: 0,
+          score: 0,
+          wave: 1,
+          gameover: false,
+          pause: 0,
+          bosscool: 900,
+          joy: { x: 0, y: 0 },
+          input: { x: 0, y: 0 }
+        };
+        levelup.style.display = gameover.style.display = "none";
+        joystickWrap.classList.remove("inactive");
+      }
+      reset();
+
+      // ====== 円形タッチジョイスティック＋キーボード対応 ======
+      let dragging = false;
+      function setJoystickActive(active) {
+        if (active) {
+          joystickWrap.classList.remove("inactive");
+        } else {
+          joystickWrap.classList.add("inactive");
+        }
+      }
+      joystickKnob.ontouchstart = (e) => {
+        if (!state.pause && !state.gameover) {
+          e.preventDefault();
+          dragging = true;
+        }
+      };
+      joystickKnob.ontouchend = (e) => {
+        if (!state.pause && !state.gameover) {
+          e.preventDefault();
+          dragging = false;
+          joystickKnob.style.left = "41px";
+          joystickKnob.style.top = "41px";
+          state.joy.x = 0;
+          state.joy.y = 0;
+        }
+      };
+      joystickBG.ontouchstart = (e) => {
+        if (!state.pause && !state.gameover) e.preventDefault();
+      };
+      joystickBG.ontouchmove = joystickKnob.ontouchmove = (e) => {
+        if (state.pause || state.gameover) return;
+        e.preventDefault();
+        let t = e.touches[0];
+        let rect = joystickBG.getBoundingClientRect();
+        let x = t.clientX - rect.left - 70,
+          y = t.clientY - rect.top - 70;
+        let d = Math.hypot(x, y),
+          maxD = 45;
+        if (d > maxD) {
+          x *= maxD / d;
+          y *= maxD / d;
+        }
+        joystickKnob.style.left = 41 + x + "px";
+        joystickKnob.style.top = 41 + y + "px";
+        state.joy.x = x / maxD;
+        state.joy.y = y / maxD;
+      };
+      joystickBG.ontouchend = (e) => {
+        if (!state.pause && !state.gameover) {
+          e.preventDefault();
+          dragging = false;
+          joystickKnob.style.left = "41px";
+          joystickKnob.style.top = "41px";
+          state.joy.x = 0;
+          state.joy.y = 0;
+        }
+      };
+
+      // PCのキーボードも対応（ポップアップ表示中は入力無効）
+      window.addEventListener("keydown", (e) => {
+        if (state.pause || state.gameover) return;
+        if (e.key === "ArrowUp") state.input.y = -1;
+        if (e.key === "ArrowDown") state.input.y = 1;
+        if (e.key === "ArrowLeft") state.input.x = -1;
+        if (e.key === "ArrowRight") state.input.x = 1;
+      });
+      window.addEventListener("keyup", (e) => {
+        if (["ArrowUp", "ArrowDown"].includes(e.key)) state.input.y = 0;
+        if (["ArrowLeft", "ArrowRight"].includes(e.key)) state.input.x = 0;
+      });
+
+      // ========== メインループ ==========
+      function loop() {
+        if (!state.gameover && !state.pause) update();
+        draw();
+        requestAnimationFrame(loop);
+      }
+      loop();
+
+      // ========== 更新 ==========
+      function update() {
+        state.tick++;
+        state.time = (state.tick / 60) | 0;
+        // 移動
+        let dx = state.input.x + state.joy.x,
+          dy = state.input.y + state.joy.y;
+        let len = Math.hypot(dx, dy);
+        if (len) {
+          state.player.x += (state.player.spd * dx) / Math.max(len, 1);
+          state.player.y += (state.player.spd * dy) / Math.max(len, 1);
+          state.player.x = Math.max(state.player.r, Math.min(W - state.player.r, state.player.x));
+          state.player.y = Math.max(state.player.r, Math.min(H - state.player.r, state.player.y));
+        }
+        // 弾丸：最も近い敵に自動誘導
+        state.player.fire++;
+        if (state.player.fire >= state.player.fireRate) {
+          for (let i = 0; i < state.player.bullets; i++) {
+            let target = state.mobs.length
+              ? state.mobs.reduce((a, b) =>
+                  Math.hypot(a.x - state.player.x, a.y - state.player.y) <
+                  Math.hypot(b.x - state.player.x, b.y - state.player.y)
+                    ? a
+                    : b
+                )
+              : null;
+            let angle = target
+              ? Math.atan2(target.y - state.player.y, target.x - state.player.x)
+              : Math.random() * Math.PI * 2;
+            angle += (-0.16 + 0.32 * (i / (state.player.bullets - 1 || 1))) * !!(state.player.bullets - 1);
+            state.bullets.push({
+              x: state.player.x,
+              y: state.player.y,
+              vx: Math.cos(angle) * 7,
+              vy: Math.sin(angle) * 7,
+              r: 7,
+              dmg: state.player.atk
+            });
+          }
+          state.player.fire = 0;
+        }
+        // 弾丸移動／命中判定
+        state.bullets = state.bullets.filter((b) => {
+          b.x += b.vx;
+          b.y += b.vy;
+          if (b.x < 0 || b.x > W || b.y < 0 || b.y > H) return false;
+          for (let m of state.mobs) {
+            if (!m.dead && Math.hypot(b.x - m.x, b.y - m.y) < b.r + m.r) {
+              m.hp -= b.dmg;
+              b.r = 0;
+              if (m.hp <= 0) {
+                m.dead = 1;
+                state.score += m.score;
+                dropExp(m);
+                dropItem(m);
+              }
+              return false;
+            }
+          }
+          return true;
+        });
+        // 敵のスポーン
+        if (state.tick % Math.max(11, 42 - state.wave * 2) === 0) {
+          let t = state.wave,
+            r = 14 + Math.random() * 8,
+            hp = 1 + Math.floor(t / 1.4);
+          let ang = Math.random() * Math.PI * 2,
+            d = W / 2 + 60;
+          state.mobs.push({
+            x: W / 2 + Math.cos(ang) * d,
+            y: H / 2 + Math.sin(ang) * d,
+            r,
+            hp,
+            maxhp: hp,
+            spd: 1 + t * 0.08 + Math.random() * 0.12,
+            score: 1,
+            dead: 0,
+            boss: 0
+          });
+        }
+        // ボス（1分ごと）
+        if (--state.bosscool <= 0) {
+          state.bosscool = 870 + Math.random() * 90;
+          let hp = 17 + state.wave * 4;
+          let ang = Math.random() * Math.PI * 2,
+            d = W / 2 + 60;
+          state.mobs.push({
+            x: W / 2 + Math.cos(ang) * d,
+            y: H / 2 + Math.sin(ang) * d,
+            r: 32,
+            hp,
+            maxhp: hp,
+            spd: 1.2 + state.wave * 0.12,
+            score: 9,
+            dead: 0,
+            boss: 1
+          });
+        }
+        // 敵の移動／衝突判定
+        for (let m of state.mobs) {
+          if (m.dead) continue;
+          let dx = state.player.x - m.x,
+            dy = state.player.y - m.y,
+            dd = Math.hypot(dx, dy);
+          if (dd > 1) {
+            m.x += (m.spd * dx) / dd;
+            m.y += (m.spd * dy) / dd;
+          }
+          if (dd < m.r + state.player.r) {
+            state.player.hp--;
+            m.dead = 1;
+            if (state.player.hp <= 0) return gameOver();
+          }
+        }
+        state.mobs = state.mobs.filter((m) => !m.dead);
+        // アイテム処理
+        state.items = state.items.filter((it) => {
+          if (Math.hypot(state.player.x - it.x, state.player.y - it.y) < state.player.r + it.r + 7) {
+            if (it.type === "heal") state.player.hp = Math.min(state.player.maxhp, state.player.hp + 2);
+            if (it.type === "magnet") {
+              for (let e of state.items) if (e.type === "exp") e.magnet = 1;
+            }
+            if (it.type === "exp") {
+              state.player.xp++;
+            }
+            return false;
+          }
+          if (it.magnet) {
+            let dx = state.player.x - it.x,
+              dy = state.player.y - it.y,
+              dd = Math.hypot(dx, dy);
+            it.x += (dx / Math.max(dd, 2)) * 4;
+            it.y += (dy / Math.max(dd, 2)) * 4;
+          }
+          return true;
+        });
+        // 経験値／レベルアップ
+        while (state.player.xp >= state.player.xpNext) {
+          state.player.xp -= state.player.xpNext;
+          state.player.lv++;
+          state.player.xpNext = 8 + Math.floor(state.player.lv * 1.6);
+          showLevelUp();
+        }
+        // ウェーブ更新
+        state.wave = Math.floor(state.time / 18) + 1;
+      }
+      function dropExp(m) {
+        let cnt = m.boss ? 10 : 2;
+        for (let i = 0; i < cnt; i++) {
+          state.items.push({
+            x: m.x + (Math.random() - 0.5) * m.r * 1.2,
+            y: m.y + (Math.random() - 0.5) * m.r * 1.2,
+            r: 6,
+            type: "exp"
+          });
+        }
+      }
+      function dropItem(m) {
+        if (Math.random() < 0.12) {
+          state.items.push({ x: m.x, y: m.y, r: 11, type: "heal" });
+        } else if (Math.random() < 0.16) {
+          state.items.push({ x: m.x, y: m.y, r: 11, type: "magnet" });
+        }
+      }
+
+      // ===== レベルアップ選択 =====
+      function showLevelUp() {
+        setJoystickActive(false);
+        let upgrades = [
+          {
+            name: "発射速度↑",
+            desc: "より速く射撃",
+            act: () => {
+              state.player.fireRate = Math.max(13, state.player.fireRate - 6);
+            }
+          },
+          {
+            name: "弾丸数↑",
+            desc: "弾丸数を増やす",
+            act: () => {
+              state.player.bullets = Math.min(6, state.player.bullets + 1);
+            }
+          },
+          {
+            name: "移動速度↑",
+            desc: "移動速度を上げる",
+            act: () => {
+              state.player.spd += 0.7;
+            }
+          },
+          {
+            name: "攻撃力↑",
+            desc: "攻撃力を上げる",
+            act: () => {
+              state.player.atk += 1;
+            }
+          },
+          {
+            name: "最大体力↑",
+            desc: "最大体力+1かつ回復",
+            act: () => {
+              state.player.maxhp += 1;
+              state.player.hp = Math.min(state.player.hp + 1, state.player.maxhp);
+            }
+          }
+        ];
+        let pick = [];
+        while (pick.length < 3) {
+          let i = Math.floor(Math.random() * upgrades.length);
+          if (!pick.includes(i)) pick.push(i);
+        }
+        levelup.innerHTML =
+          `<b>レベルアップ！<br>アップグレードを選択してください</b>
+    <div class='popupButtons'>` +
+          pick
+            .map(
+              (i) =>
+                `<button class="popupBtn" onclick="upgrade(${i})">${upgrades[i].name}<br><span style='font-size:0.93em;color:#aad;'>${upgrades[i].desc}</span></button>`
+            )
+            .join("") +
+          `</div>`;
+        levelup.style.display = "block";
+        state.pause = 1;
+      }
+      window.upgrade = function (i) {
+        [
+          () => {
+            state.player.fireRate = Math.max(13, state.player.fireRate - 6);
+          },
+          () => {
+            state.player.bullets = Math.min(6, state.player.bullets + 1);
+          },
+          () => {
+            state.player.spd += 0.7;
+          },
+          () => {
+            state.player.atk += 1;
+          },
+          () => {
+            state.player.maxhp += 1;
+            state.player.hp = Math.min(state.player.hp + 1, state.player.maxhp);
+          }
+        ][i]();
+        levelup.style.display = "none";
+        state.pause = 0;
+        setJoystickActive(true);
+      };
+
+      // ===== ゲームオーバー =====
+      function gameOver() {
+        setJoystickActive(false);
+        state.gameover = true;
+        if (state.score > hiscore) {
+          hiscore = state.score;
+          localStorage.surv_hi = hiscore;
+        }
+        gameover.innerHTML = `<b>ゲームオーバー</b><br>
+    得点: <b>${state.score}</b><br>
+    ウェーブ: <b>${state.wave}</b><br>
+    時間: <b>${Math.floor(state.time / 60)}:${("0" + (state.time % 60)).slice(-2)}</b><br>
+    <span style="font-size:0.9em;color:#bbf;">ハイスコア: ${hiscore}</span><br>
+    <div class="popupButtons"><button class="popupBtn" onclick="restart()">再スタート</button></div>`;
+        gameover.style.display = "block";
+      }
+      window.restart = () => {
+        reset();
+        setJoystickActive(true);
+      };
+
+      // ========== 描画 ==========
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        // 背景の円
+        ctx.save();
+        for (let i = 0; i < 7; i++) {
+          ctx.beginPath();
+          ctx.arc(W / 2, H / 2, 200 - i * 22, 0, Math.PI * 2);
+          ctx.strokeStyle = `rgba(60,90,180,${0.07 - i * 0.009})`;
+          ctx.lineWidth = 3;
+          ctx.stroke();
+        }
+        ctx.restore();
+        // アイテム
+        for (let it of state.items) {
+          if (it.type === "exp") {
+            ctx.beginPath();
+            ctx.arc(it.x, it.y, it.r, 0, Math.PI * 2);
+            ctx.fillStyle = "#3be8fa";
+            ctx.fill();
+            ctx.strokeStyle = "#fff8";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          } else if (it.type === "heal") {
+            ctx.beginPath();
+            ctx.arc(it.x, it.y, it.r, 0, Math.PI * 2);
+            ctx.fillStyle = "#fa559a";
+            ctx.fill();
+            ctx.strokeStyle = "#fff";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.fillStyle = "#fff";
+            ctx.font = "bold 14px sans-serif";
+            ctx.fillText("❤", it.x - 7, it.y + 5);
+          } else if (it.type === "magnet") {
+            ctx.beginPath();
+            ctx.arc(it.x, it.y, it.r, 0, Math.PI * 2);
+            ctx.fillStyle = "#ffc828";
+            ctx.fill();
+            ctx.strokeStyle = "#fff";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.fillStyle = "#fff";
+            ctx.font = "bold 12px sans-serif";
+            ctx.fillText("🧲", it.x - 8, it.y + 6);
+          }
+        }
+        // 敵
+        for (let m of state.mobs) {
+          ctx.beginPath();
+          ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
+          ctx.fillStyle = m.boss ? "#f24a9d" : "#e34";
+          ctx.fill();
+          if (m.boss) {
+            ctx.strokeStyle = "#fff9";
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            ctx.font = "bold 12px sans-serif";
+            ctx.fillStyle = "#fff";
+            ctx.fillText("ボス", m.x - 16, m.y + 4);
+          }
+          // HPバー
+          if (m.hp < m.maxhp) {
+            ctx.fillStyle = "#aaa";
+            ctx.fillRect(m.x - m.r, m.y - m.r - 8, m.r * 2, 4);
+            ctx.fillStyle = "#2ff";
+            ctx.fillRect(m.x - m.r, m.y - m.r - 8, (m.r * 2 * m.hp) / m.maxhp, 4);
+          }
+        }
+        // プレイヤー
+        ctx.beginPath();
+        ctx.arc(state.player.x, state.player.y, state.player.r, 0, Math.PI * 2);
+        ctx.fillStyle = "#fff";
+        ctx.fill();
+        ctx.strokeStyle = "#27e";
+        ctx.lineWidth = 4;
+        ctx.stroke();
+        // 弾丸
+        for (let b of state.bullets) {
+          ctx.beginPath();
+          ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+          ctx.fillStyle = "#ffe76a";
+          ctx.fill();
+          ctx.strokeStyle = "#fff8";
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        }
+        // HUD
+        scoreEl.textContent = "得点:" + state.score;
+        waveEl.textContent = "ウェーブ:" + state.wave;
+        timeEl.textContent = `${Math.floor(state.time / 60)}:${("0" + (state.time % 60)).slice(-2)}`;
+        levelEl.textContent = `Lv.${state.player.lv}`;
+        // HP, XPバー
+        hpbar.style.width = (100 * state.player.hp) / state.player.maxhp + "%";
+        xpbar.style.width = (100 * state.player.xp) / state.player.xpNext + "%";
+      }
+    </script>
+    <section
+      style="
+        max-width: 320px;
+        margin: 48px auto 24px auto;
+        background: #1e1e1e;
+        border-radius: 18px;
+        box-shadow: 0 6px 24px #1236;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+      ">
+      <div style="margin-bottom: 12px">
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">❓ ゲーム紹介</h3>
+        <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
+          サバイバーミニは高速アクションシューティングゲームです。ゾンビをかわしながらレベルアップし、できるだけ長く生き延びましょう。次々と襲い来る敵を倒し、強力なアップグレードを選択して生存を目指してください！
+        </p>
+      </div>
+      <div style="margin-bottom: 12px">
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🕹️ 操作方法</h3>
+        <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
+          モバイルでは画面下部のジョイスティックを使って移動します。PCでは矢印キー（← ↑ ↓ →）を使用してください。タッチデバイスではジョイスティックが自動表示されます。
+        </p>
+      </div>
+      <div style="margin-bottom: 12px">
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔫 自動射撃？</h3>
+        <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
+          はい！プレイヤーは最も近い敵を自動で狙い、射撃します。移動と生存に集中してください。
+        </p>
+      </div>
+      <div style="margin-bottom: 12px">
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📈 レベルアップシステム</h3>
+        <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
+          敵を倒すと経験値を獲得します。十分な経験値を得るとレベルアップし、3つのランダムアップグレードから1つを選んでキャラクターを強化できます。
+        </p>
+      </div>
+      <div style="margin-bottom: 0">
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">💾 記録保存</h3>
+        <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
+          ハイスコアはブラウザに自動で保存され、ゲームオーバー画面で確認できます。
+        </p>
+      </div>
+    </section>
+  </body>
+</html>

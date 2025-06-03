@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>スネークゲーム</title>
+        <meta name="robots" content="index, follow" />
+
+        <!-- Canonical URL -->
+        <link rel="canonical" href="https://emfls.github.io/ru/game/SnakeGame" />
+        <!-- SEO Meta -->
+        <meta
+            name="description"
+            content="クラシックなスネークゲームをオンラインでプレイしよう。エサを食べて長くなり、衝突しないよう気をつけて進めてね！ダウンロード不要ですぐ遊べます。" />
+        <meta name="keywords" content="スネークゲーム, クイックプレイアーケード, 無料ウェブゲーム, スネークプレイ, モバイルスネークゲーム" />
+        <meta name="author" content="Itagi" />
+
+        <!-- Open Graph (Facebook, Kakao, etc) -->
+        <meta property="og:title" content="スネークゲーム – クイックプレイアーケード" />
+        <meta
+            property="og:description"
+            content="食べて成長、衝突を避けよう。ブラウザですぐ遊べるクラシックスネークゲーム！" />
+        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+        <meta property="og:url" content="https://emfls.github.io/ru/game/SnakeGame" />
+        <meta property="og:type" content="website" />
+
+        <!-- Twitter Card -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="スネークゲーム – クイックプレイ" />
+        <meta
+            name="twitter:description"
+            content="高速で楽しいスネークゲームを今すぐオンラインでプレイしよう – ログイン不要！" />
+        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+                user-select: none;
+            }
+
+            body {
+                background-color: #111;
+                color: white;
+                font-family: "Inter", sans-serif;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 1rem;
+            }
+
+            h1 {
+                margin-bottom: 0.3rem;
+                font-size: 1.8rem;
+            }
+
+            p.description {
+                margin-bottom: 1rem;
+                font-size: 0.85rem;
+                color: #ccc;
+                text-align: center;
+                padding: 0 1rem;
+            }
+
+            .game-container {
+                position: relative;
+            }
+
+            canvas {
+                background-color: #222;
+                border: 2px solid #4e54c8;
+                touch-action: none;
+            }
+
+            #start-btn {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 10;
+                font-size: 20px;
+                background-color: #4e54c8;
+                border: none;
+                border-radius: 8px;
+                color: white;
+                cursor: pointer;
+                width: 100px;
+                height: 50px;
+                padding-top: 2px;
+                font-weight: 400;
+            }
+
+            .controls {
+                display: grid;
+                grid-template-areas: ". up ." "left . right" ". down .";
+                grid-template-columns: 50px 50px 50px;
+                grid-template-rows: 50px 50px 50px;
+                gap: 0.4rem;
+                margin: 1.2rem 0 0.5rem;
+            }
+
+            .btn {
+                background: #4e54c8;
+                color: white;
+                border: none;
+                font-size: 1.2rem;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: background-color 0.2s ease;
+            }
+
+            .btn:active {
+                background-color: #6a72f8;
+            }
+
+            .btn.up {
+                grid-area: up;
+            }
+
+            .btn.down {
+                grid-area: down;
+            }
+
+            .btn.left {
+                grid-area: left;
+            }
+
+            .btn.right {
+                grid-area: right;
+            }
+
+            #game-over {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.6);
+                color: white;
+                display: none;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                z-index: 20;
+            }
+
+            #game-over p {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+
+            button.restart {
+                margin-top: 1rem;
+                font-size: 1.1rem;
+                background-color: #4e54c8;
+                color: white;
+                border: none;
+                border-radius: 10px;
+                width: 90%;
+                max-width: 400px;
+                transition: background-color 0.2s ease;
+                cursor: pointer;
+            }
+
+            button.menu,
+            button.share {
+                padding: 1rem;
+                margin-top: 1rem;
+                font-size: 1.1rem;
+                background-color: #4e54c8;
+                color: white;
+                border: none;
+                border-radius: 10px;
+                width: 90%;
+                max-width: 400px;
+                transition: background-color 0.2s ease;
+                cursor: pointer;
+            }
+
+            button.restart:active,
+            button.menu:active,
+            button.share:active {
+                background-color: #6a72f8;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>
+            <span style="color: #8f94fb">クイックプレイ:</span>
+            <span style="color: #0a0">ス</span><span style="color: #6f6">ネーク</span>
+        </h1>
+        <p class="description">食べて、成長し、衝突を避けよう！行こう！</p>
+
+        <div class="game-container">
+            <canvas id="game" width="300" height="300"></canvas>
+            <button id="start-btn">開始</button>
+            <div id="game-over"></div>
+        </div>
+
+        <div class="controls">
+            <button class="btn up" onclick="setDirection('ArrowUp')" style="font-size: 26px">▲</button>
+            <button class="btn left" onclick="setDirection('ArrowLeft')" style="font-size: 24px; padding-bottom: 2px">
+                ◀
+            </button>
+            <button class="btn right" onclick="setDirection('ArrowRight')" style="font-size: 24px; padding-bottom: 2px">
+                ▶
+            </button>
+            <button class="btn down" onclick="setDirection('ArrowDown')" style="font-size: 26px">▼</button>
+        </div>
+
+        <button class="menu" onclick="goToMain()">📂 他のゲーム</button>
+
+        <script>
+            const canvas = document.getElementById("game");
+            const ctx = canvas.getContext("2d");
+            const box = 15;
+            let snake = [];
+            let food = {};
+            let dir = "ArrowRight";
+            let score = 0;
+            let running = false;
+            let interval;
+            let lastScore = 0;
+
+            const startBtn = document.getElementById("start-btn");
+            const gameOverDiv = document.getElementById("game-over");
+
+            startBtn.onclick = () => {
+                resetGame();
+                running = true;
+                interval = setInterval(loop, 150);
+                startBtn.style.display = "none";
+            };
+
+            document.addEventListener("keydown", (e) => {
+                if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.key)) {
+                    setDirection(e.key);
+                }
+            });
+
+            function setDirection(newDir) {
+                const opposites = {
+                    ArrowLeft: "ArrowRight",
+                    ArrowRight: "ArrowLeft",
+                    ArrowUp: "ArrowDown",
+                    ArrowDown: "ArrowUp"
+                };
+                if (newDir !== opposites[dir]) dir = newDir;
+            }
+
+            function spawnFood() {
+                return {
+                    x: Math.floor(Math.random() * (canvas.width / box)),
+                    y: Math.floor(Math.random() * (canvas.height / box))
+                };
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "red";
+                ctx.fillRect(food.x * box, food.y * box, box, box);
+
+                snake.forEach((s, index) => {
+                    ctx.fillStyle = index === 0 ? "#0a0" : "#6f6";
+                    ctx.fillRect(s.x * box, s.y * box, box, box);
+                });
+            }
+
+            function update() {
+                const head = { ...snake[0] };
+                if (dir === "ArrowLeft") head.x--;
+                if (dir === "ArrowRight") head.x++;
+                if (dir === "ArrowUp") head.y--;
+                if (dir === "ArrowDown") head.y++;
+
+                if (
+                    head.x < 0 ||
+                    head.x >= canvas.width / box ||
+                    head.y < 0 ||
+                    head.y >= canvas.height / box ||
+                    snake.some((seg) => seg.x === head.x && seg.y === head.y)
+                ) {
+                    running = false;
+                    clearInterval(interval);
+                    showGameOver();
+                    return;
+                }
+
+                snake.unshift(head);
+                if (head.x === food.x && head.y === food.y) {
+                    score++;
+                    food = spawnFood();
+                } else {
+                    snake.pop();
+                }
+            }
+
+            function loop() {
+                if (!running) return;
+                update();
+                draw();
+            }
+
+            function resetGame() {
+                snake = [
+                    {
+                        x: 5,
+                        y: 5
+                    }
+                ];
+                food = spawnFood();
+                dir = "ArrowRight";
+                score = 0;
+                running = true;
+                gameOverDiv.style.display = "none";
+            }
+
+            function showGameOver() {
+                lastScore = score;
+                gameOverDiv.innerHTML = "";
+
+                const msg = document.createElement("p");
+                msg.textContent = `あなたのスコア: ${score}`;
+
+                const retry = document.createElement("button");
+                retry.textContent = "再挑戦";
+                retry.className = "restart";
+                retry.style.width = "100px";
+                retry.style.height = "50px";
+                retry.onclick = () => {
+                    resetGame();
+                    running = true;
+                    interval = setInterval(loop, 150);
+                    gameOverDiv.style.display = "none";
+                    startBtn.style.display = "none";
+                };
+
+                const share = document.createElement("button");
+                share.textContent = "共有";
+                share.className = "share";
+                share.style.marginTop = "10px";
+                share.style.width = "100px";
+                share.style.height = "50px";
+                share.onclick = shareGame;
+
+                gameOverDiv.appendChild(msg);
+                gameOverDiv.appendChild(retry);
+                gameOverDiv.appendChild(share);
+
+                gameOverDiv.style.display = "flex";
+            }
+
+            function goToMain() {
+                window.location.href = "/"; // または 'index.html'
+            }
+
+            function shareGame() {
+                const url = window.location.href;
+                const text = `🐍 クイックプレイスネーク - 私のスコア: ${lastScore}\n今すぐプレイ！`;
+                if (navigator.share) {
+                    navigator
+                        .share({
+                            title: "クイックプレイ: スネーク",
+                            text,
+                            url
+                        })
+                        .catch(() => alert("共有に失敗しました。リンクをコピーしてください。"));
+                } else {
+                    const full = `${text}\n${url}`;
+                    navigator.clipboard
+                        .writeText(full)
+                        .then(() => alert("スコアとリンクがクリップボードにコピーされました！"))
+                        .catch(() => alert(`次のリンクをコピーしてください:\n${full}`));
+                }
+            }
+        </script>
+        <section
+            style="
+                max-width: 320px;
+                width: 100%;
+                margin: 48px auto 24px auto;
+                font-family: 'Arial', sans-serif;
+                font-size: 14px;
+                background: #1e1e1e;
+                border-radius: 18px;
+                box-shadow: 0 6px 24px #1236;
+                padding: 20px;
+                line-height: 1.6;
+                color: #f0f0f0;
+            ">
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ よくある質問</h2>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q1. スネークゲームはどう遊びますか？</strong><br />
+                A. 矢印キー（または画面のボタン）でヘビを動かし、赤いエサを食べると長くなります！
+            </div>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q2. ゲームオーバーになる条件は何ですか？</strong><br />
+                A. 壁にぶつかるか、自分の体に衝突するとゲームオーバーになります。
+            </div>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q3. 再スタートできますか？</strong><br />
+                A. はい！ゲーム終了後、「再挑戦」ボタンを押せばすぐに再開できます。
+            </div>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q4. スコアを共有できますか？</strong><br />
+                A. はい！ゲーム終了後、「共有」ボタンを押してスコアをコピーまたは共有できます。
+            </div>
+
+            <div style="margin-bottom: 12px">
+                <strong>Q5. モバイルにも最適化されていますか？</strong><br />
+                A. もちろんです。画面に表示される矢印ボタンでスマホやタブレットでもプレイできます。
+            </div>
+
+            <div style="margin-bottom: 0">
+                <strong>Q6. ゲームスピードは変わりますか？</strong><br />
+                A. 現在は固定速度ですが、将来的なアップデートでヘビの長さに応じて速くなる可能性があります。
+            </div>
+        </section>
+    </body>
+</html>
