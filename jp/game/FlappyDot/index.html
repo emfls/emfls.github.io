@@ -1,32 +1,32 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ja">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="Flappy Dot에서 폭탄을 피하며 최대한 멀리 날아보세요! 간단하고 중독성 있는 모바일 친화적인 브라우저 게임을 무료로 즐기세요." />
+            content="Flappy Dot で爆弾を避けながらできるだけ遠くへ飛んでみよう！シンプルで中毒性のあるモバイルフレンドリーなブラウザゲームを無料で楽しめます。" />
         <meta
             name="keywords"
-            content="플래피 닷, 플래피 버드, 퀵플레이, 아케이드, 비행 게임, 폭탄 피하기, 무료 게임, 온라인, 브라우저, 모바일, 최고 점수, 스킬 게임, 캐주얼" />
+            content="Flappy Dot, Flappy Bird, QuickPlay, アーケード, 飛行ゲーム, 爆弾回避, 無料ゲーム, オンライン, ブラウザ, モバイル, ハイスコア, スキルゲーム, カジュアル" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/jp/game/FlappyDot" />
 
-        <meta property="og:title" content="플래피 닷 – 무료 온라인 퀵플레이 게임!" />
+        <meta property="og:title" content="QuickPlay: Flappy Dot – 無料オンラインゲーム!" />
         <meta
             property="og:description"
-            content="최고 점수에 도전해 보세요! 플래피 닷에서 비행하고, 폭탄을 피하고, 친구들에게 도전하세요." />
+            content="ハイスコアに挑戦しよう！Flappy Dot で飛んで爆弾を避け、友達に挑戦しよう。" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/jp/game/FlappyDot" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="플래피 닷 – 무료 온라인 퀵플레이 게임!" />
+        <meta name="twitter:title" content="Flappy Dot – 無料オンラインQuickPlayゲーム!" />
         <meta
             name="twitter:description"
-            content="폭탄을 피하며 최대한 멀리 날아보세요! 플래피 닷을 온라인에서 무료로 플레이하고 최고 점수를 위해 경쟁하세요." />
+            content="爆弾を避けながらできるだけ遠くまで飛んでみよう！Flappy Dot をオンラインで無料プレイしてハイスコアを競おう。" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
@@ -42,7 +42,7 @@
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <title>퀵플레이: 플래피 닷</title>
+        <title>QuickPlay: Flappy Dot</title>
         <style>
             * {
                 margin: 0;
@@ -115,16 +115,16 @@
     </head>
 
     <body>
-        <h1 style="font-family: &quot;Arial Black&quot;, sans-serif; font-size: 28px; margin-bottom: 6px">플래피 닷</h1>
-        <p style="font-size: 14px; color: white; margin-bottom: 12px">폭탄을 피하며 최대한 멀리 날아보세요!</p>
+        <h1 style="font-family: 'Arial Black', sans-serif; font-size: 28px; margin-bottom: 6px">Flappy Dot</h1>
+        <p style="font-size: 14px; color: white; margin-bottom: 12px">爆弾を避けながらできるだけ遠くまで飛ぼう！</p>
 
         <canvas id="gameCanvas" width="300" height="450"></canvas>
         <div class="overlay" id="menu">
-            <button onclick="startGame()">게임 시작</button>
+            <button onclick="startGame()">ゲーム開始</button>
         </div>
         <div class="overlay" id="gameoverMenu" style="display: none">
-            <button onclick="resetGame()">다시 시작</button>
-            <button onclick="shareScore()">공유</button>
+            <button onclick="resetGame()">再スタート</button>
+            <button onclick="shareScore()">共有</button>
         </div>
 
         <script>
@@ -146,18 +146,9 @@
             const bombs = [];
             const explosions = [];
             const clouds = [
-                {
-                    x: 100,
-                    y: 50
-                },
-                {
-                    x: 250,
-                    y: 120
-                },
-                {
-                    x: 400,
-                    y: 80
-                }
+                { x: 100, y: 50 },
+                { x: 250, y: 120 },
+                { x: 400, y: 80 }
             ];
 
             let score = 0;
@@ -264,10 +255,7 @@
                     const bombCount = Math.min(1 + Math.floor(score / 5), 6);
                     for (let i = 0; i < bombCount; i++) {
                         const bombY = Math.random() * (canvas.height - 40);
-                        bombs.push({
-                            x: canvas.width,
-                            y: bombY
-                        });
+                        bombs.push({ x: canvas.width, y: bombY });
                     }
                 }
 
@@ -279,12 +267,7 @@
                         bird.y < bomb.y + 20 &&
                         bird.y + bird.height > bomb.y
                     ) {
-                        explosions.push({
-                            x: bomb.x + 10,
-                            y: bomb.y + 10,
-                            radius: 10,
-                            alpha: 1
-                        });
+                        explosions.push({ x: bomb.x + 10, y: bomb.y + 10, radius: 10, alpha: 1 });
                         gameOver = true;
                     }
                 }
@@ -304,12 +287,12 @@
 
                 ctx.fillStyle = "black";
                 ctx.font = "20px Arial";
-                ctx.fillText("Score: " + score, 10, 30);
+                ctx.fillText("スコア: " + score, 10, 30);
 
                 if (gameOver) {
                     ctx.fillStyle = "red";
                     ctx.font = "32px Arial";
-                    ctx.fillText("Game Over", canvas.width / 2 - 80, canvas.height / 2 - 100);
+                    ctx.fillText("ゲームオーバー", canvas.width / 2 - 80, canvas.height / 2 - 100);
                     gameoverMenu.style.display = "flex";
                 }
             }
@@ -353,21 +336,17 @@
 
             function shareScore() {
                 const url = window.location.href;
-                const text = `🐤 플래피 닷에서 ${score}점 획득! 당신도 도전해보세요!`; // 점수 공유 메시지 한글화
+                const text = `🐤 Flappy Dot で ${score} 点獲得！あなたも挑戦してみて！`;
                 if (navigator.share) {
                     navigator
-                        .share({
-                            title: "퀵플레이: 플래피 닷", // 타이틀 한글화
-                            text,
-                            url
-                        })
-                        .catch(() => alert("공유에 실패했습니다. 링크를 복사해 보세요.")); // 에러 메시지 한글화
+                        .share({ title: "QuickPlay: Flappy Dot", text, url })
+                        .catch(() => alert("共有に失敗しました。リンクをコピーしてください。"));
                 } else {
                     const full = `${text}\n${url}`;
                     navigator.clipboard
                         .writeText(full)
-                        .then(() => alert("점수가 포함된 링크가 클립보드에 복사되었습니다!")) // 성공 메시지 한글화
-                        .catch(() => alert(`이 링크를 복사하세요:\n${full}`)); // 에러 메시지 한글화
+                        .then(() => alert("スコアを含むリンクがクリップボードにコピーされました！"))
+                        .catch(() => alert(`このリンクをコピーしてください:\n${full}`));
                 }
             }
 
@@ -390,14 +369,12 @@
                     e.preventDefault();
                     flap();
                 },
-                {
-                    passive: false
-                }
+                { passive: false }
             );
         </script>
 
         <button style="margin-top: 20px; width: 90%; height: 60px" onclick="window.location.href='/'">
-            📂 다른 게임들
+            📂 他のゲーム
         </button>
         <section
             style="
@@ -405,7 +382,7 @@
                 max-width: 420px;
                 margin: 60px auto;
                 padding: 20px;
-                font-family: &quot;Segoe UI&quot;, sans-serif;
+                font-family: 'Segoe UI', sans-serif;
                 background: #fffbea;
                 color: #2d3436;
                 border-radius: 10px;
@@ -413,38 +390,36 @@
                 line-height: 1.6;
                 font-size: 14px;
             ">
-            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ 자주 묻는 질문 (FAQ)</h2>
+            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ よくある質問 (FAQ)</h2>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q1. 플래피 닷은 어떤 게임인가요?</strong><br />
-                A. 플래피 닷은 화면을 탭하거나 스페이스바를 눌러 점프하고 폭탄을 피하며 최대한 멀리 비행하는 캐주얼 비행
-                게임입니다.
+                <strong>Q1. Flappy Dot はどのようなゲームですか？</strong><br />
+                A. Flappy Dot は画面をタップするかスペースキーを押してジャンプし、爆弾を避けながらできるだけ遠くまで飛ぶカジュアルな飛行ゲームです。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q2. 게임은 어떻게 조작하나요?</strong><br />
-                A. 모바일에서는 화면을 탭하고, PC에서는 스페이스바를 눌러 점프하며 공중에 머무르세요.
+                <strong>Q2. 操作方法は？</strong><br />
+                A. モバイルでは画面をタップし、PC ではスペースキーを押してジャンプします。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q3. 게임은 언제 끝나나요?</strong><br />
-                A. 점이 폭탄에 맞거나 화면 밖으로 나가면 게임이 종료됩니다. 폭발이 게임 오버를 나타냅니다.
+                <strong>Q3. ゲームはいつ終わりますか？</strong><br />
+                A. ドットが爆弾にぶつかるか画面外に出るとゲームオーバーになります。爆発エフェクトがゲーム終了を示します。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q4. 점수를 더 얻을수록 게임이 어려워지나요?</strong><br />
-                A. 네! 점수가 높아질수록 폭탄의 수와 속도가 증가하여 계속 도전적인 재미를 선사합니다.
+                <strong>Q4. スコアが上がると難易度は上がりますか？</strong><br />
+                A. はい。スコアが高くなるほど爆弾の出現数とスピードが増し、より挑戦的になります。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q5. 모바일 기기에서도 플레이할 수 있나요?</strong><br />
-                A. 물론입니다. 플래피 닷은 모바일 친화적이며 다운로드 없이 즐길 수 있습니다.
+                <strong>Q5. モバイルでもプレイできますか？</strong><br />
+                A. もちろんです。Flappy Dot はモバイルフレンドリーで、ダウンロード不要で楽しめます。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q6. 점수를 어떻게 공유하나요?</strong><br />
-                A. 게임이 끝난 후 <strong>공유</strong> 버튼을 탭하여 기기를 통해 점수와 게임 링크를 공유하거나
-                클립보드에 복사할 수 있습니다.
+                <strong>Q6. スコアはどう共有できますか？</strong><br />
+                A. ゲーム終了後、「共有」ボタンをタップしてスコアとリンクを共有するか、クリップボードにコピーできます。
             </div>
         </section>
     </body>

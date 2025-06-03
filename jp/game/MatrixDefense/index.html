@@ -1,34 +1,33 @@
 <!doctype html>
-<html lang="en">
+<html lang="ja">
     <head>
         <meta charset="UTF-8" />
-        <title>Matrix Defense</title>
+        <title>マトリックスディフェンス</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <meta
             name="description"
-            content="Defend against waves of robotic enemies in Matrix Defense! Upgrade your plasma cannon, survive as long as you can, and challenge friends to beat your high score. Play free in your browser on mobile or PC." />
+            content="Matrix Defenseでロボットのウェーブから基地を守ろう！プラズマキャノンをアップグレードし、できるだけ長く生き残り、友達にハイスコアを挑戦しよう。PCやモバイルのブラウザで無料でプレイ！" />
         <meta
             name="keywords"
-            content="matrix defense, idle defense, webgame, browser game, plasma cannon, turret, laser defense, free, 디펜스 게임, 방치형, 무료 게임, 오락실, 모바일, 피씨게임, 온라인게임" />
-        <meta property="og:title" content="Matrix Defense | Idle Plasma Defense Web Game" />
+            content="マトリックスディフェンス, アイデルディフェンス, ウェブゲーム, ブラウザゲーム, プラズマキャノン, タレット, レーザー防衛, 無料, 防衛ゲーム, 放置ゲーム, モバイル, PC, オンラインゲーム" />
+        <meta property="og:title" content="マトリックスディフェンス | プラズマ防衛アイドルゲーム" />
         <meta
             property="og:description"
-            content="Defend your base from endless waves of robots in this stylish idle defense browser game! Upgrade your cannon and see how long you can survive." />
+            content="ロボットの無限ウェーブから基地を守るスタイリッシュな放置防衛ブラウザゲーム！キャノンをアップグレードし、どれだけ長く生き残れるか挑戦しよう。" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://emfls.github.io/jp/game/MatrixDefense/" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
-        <!-- 썸네일 이미지 경로, 수정가능 -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Matrix Defense | Idle Plasma Defense Web Game" />
+        <meta property="twitter:title" content="マトリックスディフェンス | プラズマ防衛アイドルゲーム" />
         <meta
-            name="twitter:description"
-            content="Play Matrix Defense - the ultimate idle plasma turret defense game, free in your browser." />
-        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+            property="twitter:description"
+            content="Matrix Defenseをプレイしよう—究極のプラズマターレット防衛ゲームをブラウザで無料プレイ！" />
+        <meta property="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <link rel="canonical" href="https://emfls.github.io/jp/game/MatrixDefense/" />
-        <!-- Google tag (gtag.js) -->
+
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -247,35 +246,35 @@
     <body>
         <div id="wrap">
             <div id="header">
-                <h1>Matrix Defense</h1>
-                <p>Idle Plasma Defense. Survive!</p>
+                <h1>マトリックスディフェンス</h1>
+                <p>アイドルプラズマ防衛。生き残れ！</p>
                 <div id="topStatBar">
-                    Wave <span id="wave">1</span> Gold <span id="gold">0</span> Life <span id="life">10</span>
+                    WAVE <span id="wave">1</span> ゴールド <span id="gold">0</span> ライフ <span id="life">10</span>
                 </div>
             </div>
             <canvas id="gameCanvas" width="400" height="380"></canvas>
             <div id="upgrades">
                 <button class="upBtn" id="upDmg">
-                    ATK<br />
+                    攻撃力<br />
                     +<span id="dmgC">65</span>
                 </button>
                 <button class="upBtn" id="upSpd">
-                    RATE<br />
+                    連射速度<br />
                     +<span id="spdC">80</span>
                 </button>
                 <button class="upBtn" id="upRng">
-                    RNG<br />
+                    射程<br />
                     +<span id="rngC">80</span>
                 </button>
                 <button class="upBtn" id="upLaser">
-                    LASER<br />
+                    レーザー数<br />
                     +<span id="laserC">150</span>
                 </button>
             </div>
             <div id="buttonBar">
-                <button class="btn" id="restartBtn" style="display: none">Restart</button>
-                <button class="btn" id="shareBtn" style="display: none">Share</button>
-                <a href="../" class="btn other">Other Games</a>
+                <button class="btn" id="restartBtn" style="display: none">再スタート</button>
+                <button class="btn" id="shareBtn" style="display: none">シェア</button>
+                <a href="../" class="btn other">他のゲーム</a>
             </div>
         </div>
         <script>
@@ -288,7 +287,7 @@
             let turret, upg, enemies, frame, spawnCD, wave, gold, kills, life, phase, gameover;
             let bossSpawnedInWave, normalSpawnedInWave;
 
-            // touchmove는 캔버스에만!
+            // touchmoveはキャンバス上のみ！
             canvas.addEventListener(
                 "touchmove",
                 (e) => {
@@ -440,7 +439,7 @@
                 gold = 500;
                 kills = 0;
                 life = 10;
-                phase = 0; // <-- life 10!
+                phase = 0;
                 bossSpawnedInWave = {};
                 normalSpawnedInWave = {};
                 gameover = false;
@@ -609,7 +608,7 @@
                     ctx.textAlign = "center";
                     ctx.shadowColor = "#fef";
                     ctx.shadowBlur = 9;
-                    ctx.fillText("GAME OVER!", W / 2, H / 2 - 22);
+                    ctx.fillText("ゲームオーバー！", W / 2, H / 2 - 22);
                     ctx.shadowBlur = 0;
                 }
             }
@@ -638,7 +637,7 @@
             function upgrade(type) {
                 if (upgrading) return;
                 upgrading = true;
-                setTimeout(() => (upgrading = false), 250); // 0.25초 잠금
+                setTimeout(() => (upgrading = false), 250); // 0.25秒ロック
 
                 if (gameover) return;
                 let u = upg[type];
@@ -663,16 +662,16 @@
                 initGame();
             };
             document.getElementById("shareBtn").onclick = () => {
-                let shareTxt = `Try Matrix Defense Multi-Laser! I reached Wave ${wave}!`;
+                let shareTxt = `Matrix Defenseをプレイしよう！私はWave ${wave}に到達しました！`;
                 if (navigator.share) {
                     navigator.share({
-                        title: "Matrix Defense",
+                        title: "マトリックスディフェンス",
                         text: shareTxt,
                         url: location.href
                     });
                 } else {
                     navigator.clipboard.writeText(shareTxt);
-                    alert("Link copied!");
+                    alert("リンクがクリップボードにコピーされました！");
                 }
             };
             document.body.addEventListener(
@@ -692,7 +691,7 @@
                 max-width: 320px;
                 width: 100%;
                 margin: 48px auto 24px auto;
-                font-family: &quot;Jua&quot;, sans-serif;
+                font-family: 'Jua', sans-serif;
                 font-size: 14px;
                 background: #fff;
                 border-radius: 18px;
@@ -701,79 +700,76 @@
                 line-height: 1.65;
                 color: #2d3436;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #2577cf">❓ 자주 묻는 질문</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #2577cf">❓ よくある質問</h2>
 
-            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">게임 소개</h3>
+            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">ゲーム紹介</h3>
             <dl>
                 <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: "Matrix Defense"는 어떤 게임인가요?
+                    Q: 「マトリックスディフェンス」とは何ですか？
                 </dt>
                 <dd style="margin-bottom: 12px">
-                    A: "Matrix Defense"는 몰려오는 로봇 적들로부터 기지를 방어하는 유휴(Idle) 디펜스 웹 게임입니다.
-                    플라즈마 캐논을 업그레이드하여 최대한 오래 살아남는 것이 목표입니다.
+                    A: 「マトリックスディフェンス」は放置型の防衛ブラウザゲームで、迫りくるロボットのウェーブから基地を守ります。
+                    プラズマキャノンをアップグレードして、できるだけ長く生き残ることが目標です。
                 </dd>
 
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: 게임은 무료인가요?</dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ゲームは無料ですか？</dt>
                 <dd style="margin-bottom: 12px">
-                    A: 네, 완전히 무료로 즐길 수 있는 게임입니다. 별도의 다운로드나 설치 없이 웹 브라우저에서 바로
-                    플레이할 수 있습니다.
+                    A: はい、完全に無料で楽しめます。ダウンロードやインストールは不要で、ウェブブラウザでそのままプレイ可能です。
                 </dd>
 
                 <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: 어떤 기기에서 플레이할 수 있나요?
+                    Q: どのデバイスでプレイできますか？
                 </dt>
-                <dd style="margin-bottom: 12px">A: 모바일과 PC 웹 브라우저 모두에서 플레이할 수 있습니다.</dd>
+                <dd style="margin-bottom: 12px">A: モバイルとPCの両方のウェブブラウザでプレイできます。</dd>
             </dl>
 
-            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">게임 방법</h3>
+            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">ゲーム方法</h3>
             <dl>
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: 게임의 목표는 무엇인가요?</dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ゲームの目的は何ですか？</dt>
                 <dd style="margin-bottom: 12px">
-                    A: 적들이 화면 아래쪽 기지에 도달하기 전에 모두 파괴하여 WAVE를 진행하고, 라이프가 0이 되기 전까지
-                    최대한 오래 살아남는 것입니다.
+                    A: 敵ロボットが画面下部の基地に到達する前にすべて撃破し、ウェーブを進めて、ライフが0になるまでできるだけ長く生き残ることです。
                 </dd>
 
                 <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: 어떻게 하면 골드를 얻을 수 있나요?
+                    Q: ゴールドはどうやって獲得しますか？
                 </dt>
                 <dd style="margin-bottom: 12px">
-                    A: 적 로봇을 파괴하면 골드를 얻을 수 있습니다. 골드는 캐논의 업그레이드에 사용됩니다.
+                    A: 敵ロボットを撃破するとゴールドが手に入ります。ゴールドはキャノンのアップグレードに使用します。
                 </dd>
 
                 <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: 업그레이드는 어떤 종류가 있나요?
+                    Q: どんなアップグレードがありますか？
                 </dt>
                 <dd style="margin-bottom: 12px">
-                    A: 공격력(ATK), 공격 속도(RATE), 사거리(RNG), 그리고 동시에 공격할 수 있는 적의 수(LASER)를
-                    업그레이드할 수 있습니다.
+                    A: 「攻撃力 (ATK)」「連射速度 (RATE)」「射程 (RNG)」「レーザー数 (LASER)」の4種類をアップグレードできます。
                 </dd>
 
                 <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: 라이프가 0이 되면 어떻게 되나요?
+                    Q: ライフが0になるとどうなりますか？
                 </dt>
                 <dd style="margin-bottom: 12px">
-                    A: 라이프가 0이 되면 게임 오버가 됩니다. 'Restart' 버튼을 눌러 다시 시작할 수 있습니다.
+                    A: ライフが0になるとゲームオーバーです。「再スタート」ボタンを押して最初からやり直せます。
                 </dd>
             </dl>
 
-            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">문제 해결 및 기타</h3>
+            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">トラブルシューティング・その他</h3>
             <dl>
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: 게임이 제대로 작동하지 않아요.</dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ゲームが正しく動作しません。</dt>
                 <dd style="margin-bottom: 12px">
-                    A: 브라우저를 새로고침하거나, 다른 브라우저를 사용해보세요. 인터넷 연결 상태도 확인해 주세요.
-                    지속적으로 문제가 발생하면 개발자에게 문의해 주세요.
+                    A: ブラウザを再読み込みするか、別のブラウザを試してください。また、インターネット接続を確認してください。
+                    続けて問題が発生する場合は、開発者までお問い合わせください。
                 </dd>
 
                 <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: 제 최고 점수를 친구들과 공유하고 싶어요.
+                    Q: 最高記録を友達と共有したいです。
                 </dt>
                 <dd style="margin-bottom: 12px">
-                    A: 게임 오버 후 나타나는 'Share' 버튼을 클릭하여 현재 WAVE 기록을 공유할 수 있습니다.
+                    A: ゲームオーバー後に表示される「シェア」ボタンをクリックすると、現在のWAVE記録を共有できます。
                 </dd>
 
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: 다른 게임도 있나요?</dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: 他のゲームはありますか？</dt>
                 <dd style="margin-bottom: 12px">
-                    A: 네, 'Other Games' 버튼을 클릭하시면 개발자의 다른 웹 게임들을 만나보실 수 있습니다.
+                    A: はい、「他のゲーム」ボタンをクリックすると、開発者の他のウェブゲームをご覧いただけます。
                 </dd>
             </dl>
         </section>

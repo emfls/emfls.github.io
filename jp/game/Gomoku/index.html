@@ -1,32 +1,32 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ja">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="온라인 오목 (다섯 줄) 게임을 즐겨보세요! 친구나 AI와 함께 이 고전 보드 게임에서 실력을 겨뤄보세요. 간단하고 재미있으며 모바일에서도 최적화되어 있습니다." />
+            content="オンライン五目並べ（Gomoku）ゲームを楽しもう！友達やAIとこのクラシックボードゲームで腕試し。シンプルで楽しく、モバイルにも最適化。" />
         <meta
             name="keywords"
-            content="오목, 다섯 줄, omok, 온라인 게임, AI, 보드 게임, 무료, 브라우저 게임, 모바일, 고전, 전략, 흑백, 2인용, 퍼즐" />
+            content="五目並べ, GOMOKU, オンラインゲーム, AI, ボードゲーム, 無料, ブラウザゲーム, モバイル, クラシック, 戦略, 黒白, 2人対戦, パズル" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/jp/game/Gomoku" />
 
-        <meta property="og:title" content="오목 – 무료 온라인 AI 오목 게임!" />
+        <meta property="og:title" content="五目並べ – 無料オンラインAI五目並べゲーム！" />
         <meta
             property="og:description"
-            content="친구 또는 똑똑한 AI와 오목을 두어보세요. 누가 먼저 다섯 줄을 완성할까요? 브라우저에서 무료로 즐겨보세요!" />
+            content="友達または賢いAIと五目並べを対戦しよう。どちらが先に五つ並べるか？ブラウザで無料プレイ！" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/jp/game/Gomoku" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="오목 – 무료 온라인 AI 오목 게임!" />
+        <meta name="twitter:title" content="五目並べ – 無料オンラインAI五目並べゲーム！" />
         <meta
             name="twitter:description"
-            content="친구 또는 AI와 오목 게임을 즐겨보세요! 고전 다섯 줄 보드 게임을 온라인에서 무료로 플레이하세요." />
+            content="友達またはAIと五目並べを楽しもう！クラシックな五目ボードゲームをオンラインで無料プレイ。" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
@@ -42,7 +42,7 @@
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <title>오목</title>
+        <title>五目並べ</title>
         <style>
             @import url("https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap");
             :root {
@@ -56,7 +56,7 @@
                 text-align: center;
                 background: #f0ece3;
                 margin: 0;
-                padding: 0rem;
+                padding: 0;
             }
 
             h1 {
@@ -165,17 +165,17 @@
     </head>
 
     <body>
-        <h1>⚫ 오목⚪</h1>
+        <h1>⚫ 五目並べ ⚪</h1>
         <div id="modeStatus" style="margin-top: -0.6rem; margin-bottom: 1rem; font-size: 1rem; color: #666"></div>
         <div id="board"></div>
 
         <div id="message"></div>
         <div>
-            <button onclick="resetGame()" style="font-weight: bold">재시작</button>
+            <button onclick="resetGame()" style="font-weight: bold">再スタート</button>
             <button
                 onclick="toggleMode()"
                 id="modeBtn"
-                style="position: absolute; top: 2rem; right: 0.5rem; padding: 10px 10px 10px 10px; font-weight: bold">
+                style="position: absolute; top: 2rem; right: 0.5rem; padding: 10px 10px; font-weight: bold">
                 🤖 AI
             </button>
         </div>
@@ -192,7 +192,7 @@
 
             function updateModeStatus() {
                 const modeStatus = document.getElementById("modeStatus");
-                modeStatus.textContent = aiMode ? "플레이어 vs AI" : "플레이어 vs 플레이어";
+                modeStatus.textContent = aiMode ? "プレイヤー vs AI" : "プレイヤー対プレイヤー";
             }
 
             function createBoard() {
@@ -223,20 +223,20 @@
                     }
                     cells.push(row);
                 }
-                message.textContent = "⚫ 흑돌 차례";
+                message.textContent = "⚫ 黒番の番です";
             }
 
             function resetGame() {
                 currentPlayer = "black";
                 gameOver = false;
                 createBoard();
-                updateModeStatus(); // 추가
+                updateModeStatus();
             }
 
             function toggleMode() {
                 aiMode = !aiMode;
-                modeBtn.textContent = aiMode ? "👥 2P" : "🤖 AI";
-                resetGame(); // 내부에서 updateModeStatus 호출됨
+                modeBtn.textContent = aiMode ? "👥 2人" : "🤖 AI";
+                resetGame();
             }
 
             function handleClick(e) {
@@ -248,12 +248,12 @@
                 const result = checkWin(x, y, currentPlayer);
                 if (result) {
                     highlightWin(result);
-                    message.textContent = currentPlayer === "black" ? "⚫ 흑돌 승리!" : "⚪ 백돌 승리!";
+                    message.textContent = currentPlayer === "black" ? "⚫ 黒の勝ち！" : "⚪ 白の勝ち！";
                     gameOver = true;
                     return;
                 }
                 currentPlayer = currentPlayer === "black" ? "white" : "black";
-                message.textContent = currentPlayer === "black" ? "⚫ 흑돌 차례" : "⚪ 백돌 차례";
+                message.textContent = currentPlayer === "black" ? "⚫ 黒番の番です" : "⚪ 白番の番です";
                 if (aiMode && currentPlayer === "white") {
                     setTimeout(() => aiTurn(), 300);
                 }
@@ -265,12 +265,12 @@
                 const result = checkWin(x, y, "white");
                 if (result) {
                     highlightWin(result);
-                    message.textContent = "⚪ 백돌 승리!";
+                    message.textContent = "⚪ 白の勝ち！";
                     gameOver = true;
                     return;
                 }
                 currentPlayer = "black";
-                message.textContent = "⚫ 흑돌 차례";
+                message.textContent = "⚫ 黒番の番です";
             }
 
             function placeStone(x, y, player) {
@@ -307,8 +307,7 @@
 
             function getLine(x, y, dx, dy, player) {
                 const result = [];
-                let nx = x + dx,
-                    ny = y + dy;
+                let nx = x + dx, ny = y + dy;
                 while (nx >= 0 && ny >= 0 && nx < boardSize && ny < boardSize && cells[ny][nx] === player) {
                     result.push([nx, ny]);
                     nx += dx;
@@ -368,8 +367,7 @@
                         if (board[y][x]) {
                             for (let dy = -2; dy <= 2; dy++) {
                                 for (let dx = -2; dx <= 2; dx++) {
-                                    const nx = x + dx,
-                                        ny = y + dy;
+                                    const nx = x + dx, ny = y + dy;
                                     if (nx >= 0 && ny >= 0 && nx < boardSize && ny < boardSize && !board[ny][nx]) {
                                         moves.add(`${nx},${ny}`);
                                     }
@@ -393,10 +391,12 @@
                 function countLine(x, y, dx, dy, player) {
                     let count = 0;
                     for (let i = 0; i < 5; i++) {
-                        const nx = x + i * dx,
-                            ny = y + i * dy;
-                        if (nx >= 0 && ny >= 0 && nx < boardSize && ny < boardSize && board[ny][nx] === player) count++;
-                        else if (board[ny] && board[ny][nx]) return -1;
+                        const nx = x + i * dx, ny = y + i * dy;
+                        if (nx >= 0 && ny >= 0 && nx < boardSize && ny < boardSize && board[ny][nx] === player) {
+                            count++;
+                        } else if (board[ny] && board[ny][nx]) {
+                            return -1;
+                        }
                     }
                     return count;
                 }
@@ -436,7 +436,7 @@
                 border-color: black;
             "
             onclick="window.location.href='/'">
-            다른 게임
+            他のゲーム
         </button>
         <button
             style="
@@ -453,20 +453,21 @@
                 border-color: black;
             "
             onclick="shareGame()">
-            공유
+            共有
         </button>
         <script>
             function shareGame() {
                 const shareData = {
-                    title: "오목",
-                    text: "이 멋진 AI 오목 게임을 즐겨보세요!",
+                    title: "五目並べ",
+                    text: "この素晴らしいAI五目並べゲームを楽しもう！",
                     url: window.location.href
                 };
 
                 if (navigator.share) {
                     navigator.share(shareData).catch((err) => console.log("Sharing failed", err));
                 } else {
-                    copyLink(); // 폴백: 클립보드 복사
+                    navigator.clipboard.writeText(window.location.href);
+                    alert("リンクがクリップボードにコピーされました！");
                 }
             }
         </script>
@@ -476,7 +477,7 @@
                 max-width: 420px;
                 margin: 60px auto;
                 padding: 20px;
-                font-family: &quot;Segoe UI&quot;, sans-serif;
+                font-family: 'Segoe UI', sans-serif;
                 background: #fffbea;
                 color: #2d3436;
                 border-radius: 10px;
@@ -484,36 +485,36 @@
                 line-height: 1.6;
                 font-size: 14px;
             ">
-            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ 자주 묻는 질문 (FAQ)</h2>
+            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ よくある質問 (FAQ)</h2>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q1. 오목이 무엇인가요?</strong><br />
-                A. 오목은 두 플레이어가 번갈아 돌을 놓아 다섯 개의 돌을 한 줄로 만드는 고전 전략 보드 게임입니다.
+                <strong>Q1. 五目並べとは何ですか？</strong><br />
+                A. 五目並べは、二人のプレイヤーが交互に石を置き、五つの石を一列に並べた方が勝つ古典的な戦略ボードゲームです。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q2. 어떻게 이기나요?</strong><br />
-                A. 당신의 돌 (흑 또는 백) 다섯 개를 가로, 세로, 또는 대각선으로 먼저 연결하면 승리합니다.
+                <strong>Q2. どうやって勝ちますか？</strong><br />
+                A. 自分の石（黒または白）が横、縦、または斜めに五つ連続すると勝利です。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q3. 게임 모드에는 어떤 것이 있나요?</strong><br />
-                A. 친구와 대결하거나 (2P 모드) AI와 실력을 겨룰 수 있습니다 (🤖 모드). 오른쪽 상단의 토글 버튼을 사용하여 전환하세요.
+                <strong>Q3. ゲームモードには何がありますか？</strong><br />
+                A. 友達と対戦する「2人プレイ」モードと、AIと競う「AIプレイ」モードがあります。右上の切り替えボタンで変更できます。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q4. 게임을 재시작할 수 있나요?</strong><br />
-                A. 네! 언제든지 보드 아래의 <strong>재시작</strong> 버튼을 클릭하여 새 게임을 시작할 수 있습니다.
+                <strong>Q4. ゲームを再スタートできますか？</strong><br />
+                A. はい！いつでもボード下の<strong>再スタート</strong>ボタンをクリックして新しいゲームを開始できます。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q5. 이 게임은 모바일 친화적인가요?</strong><br />
-                A. 물론입니다. 오목은 PC와 모바일 브라우저 모두에서 원활하게 작동합니다.
+                <strong>Q5. このゲームはモバイル対応ですか？</strong><br />
+                A. もちろんです。五目並べはPCとモバイルのブラウザの両方で快適に動作します。
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q6. 게임을 공유하려면 어떻게 해야 하나요?</strong><br />
-                A. <strong>공유</strong> 버튼을 탭하여 링크를 복사하거나 (기기에서 지원하는 경우) 공유 메뉴를 열 수 있습니다.
+                <strong>Q6. ゲームをどうやって共有しますか？</strong><br />
+                A. 「共有」ボタンをタップしてリンクをコピーするか（デバイスが対応していれば）共有メニューを開くことができます。
             </div>
         </section>
     </body>

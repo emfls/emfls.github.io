@@ -1,33 +1,33 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ja">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <title>사다리 게임</title>
+    <title>ラダーゲーム</title>
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
     <meta
       name="description"
-      content="모바일 사다리 게임 - 숫자를 선택하고 운명을 확인하세요! 아이폰 SE 및 모든 스마트폰에 최적화된 빠르고 재미있는 운 기반 웹 게임입니다." />
+      content="モバイル用ラダーゲーム - 数字を選んで運命を確認しよう！iPhone SEを含むすべてのスマートフォンに最適化された、速くて楽しい運ゲーウェブゲームです。" />
     <meta
       name="keywords"
-      content="사다리 게임, 모바일 게임, 웹게임, 사다리타기, 운 게임, 미니게임, 모바일 캐주얼, 아이폰 게임, 아이폰 SE, 사다리, 랜덤 게임, 브라우저 게임, 운 게임, 숫자 선택, 소셜게임, html5 게임" />
+      content="ラダーゲーム, モバイルゲーム, ウェブゲーム, ラダーくじ, 運ゲーム, ミニゲーム, モバイルカジュアル, iPhoneゲーム, iPhone SE, ラダー, ランダムゲーム, ブラウザゲーム, 運試し, 数字選択, ソーシャルゲーム, HTML5ゲーム" />
     <meta name="author" content="Itagi" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index, follow" />
 
-    <meta property="og:title" content="사다리 게임 - 모바일 웹 운 게임" />
+    <meta property="og:title" content="ラダーゲーム - モバイル用運ゲーム" />
     <meta
       property="og:description"
-      content="숫자를 선택하고 운명을 확인하세요! 재미있고 빠르며 모바일에 최적화된 사다리 게임입니다." />
+      content="数字を選んで運命を確認しよう！楽しくて速い、モバイルに最適化されたラダーゲームです。" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/jp/game/LadderGame" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="사다리 게임 - 모바일 운 게임" />
-    <meta name="twitter:description" content="모바일 사다리 게임. 숫자를 선택하고 당신의 운을 확인하세요!" />
+    <meta name="twitter:title" content="ラダーゲーム - モバイル用運ゲーム" />
+    <meta
+      name="twitter:description"
+      content="モバイル用ラダーゲーム。数字を選んであなたの運命を確認しよう！" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-
-    <meta name="robots" content="index, follow" />
 
     <link rel="canonical" href="https://emfls.github.io/jp/game/LadderGame" />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -204,8 +204,8 @@
   </head>
   <body>
     <div id="gameWrap">
-      <h1>사다리 게임</h1>
-      <div class="desc">숫자를 선택하고 사다리에서 당신의 운명을 확인하세요!</div>
+      <h1>ラダーゲーム</h1>
+      <div class="desc">数字を選んでラダー（はしご）で運命を確認しよう！</div>
       <div id="ladderBox">
         <div id="topChoices"></div>
         <canvas id="ladderCanvas" width="200" height="340"></canvas>
@@ -226,10 +226,10 @@
       </div>
       <div id="resultMsg"></div>
       <div id="btnRow">
-        <button class="btn" id="startBtn">게임 시작</button>
-        <button class="btn hide" id="retryBtn">재시작</button>
-        <button class="btn" id="shareBtn">공유</button>
-        <button class="btn" id="otherBtn">다른 게임</button>
+        <button class="btn" id="startBtn">ゲーム開始</button>
+        <button class="btn hide" id="retryBtn">再スタート</button>
+        <button class="btn" id="shareBtn">共有</button>
+        <button class="btn" id="otherBtn">他のゲーム</button>
       </div>
     </div>
     <script>
@@ -388,7 +388,9 @@
             setTimeout(() => {
               let endIdx = path[path.length - 1].col;
               let endRes = ladder.ends[endIdx];
-              resultMsg.innerHTML = endRes === "LEVELUP" ? "🎉 <b>레벨 업!</b> 다음 웨이브 →" : "💀 <b>게임 오버!</b>";
+              resultMsg.innerHTML = endRes === "LEVELUP"
+                ? "🎉 <b>レベルアップ！</b> 次のウェーブ →"
+                : "💀 <b>ゲームオーバー！</b>";
               renderTopChoices();
               playing = endRes === "LEVELUP";
               busy = false;
@@ -439,12 +441,10 @@
         if (navigator.share) {
           navigator.share({ title: document.title, url: shareUrl });
         } else {
-          window.prompt("이 URL을 복사하여 공유하세요!", shareUrl);
+          window.prompt("このURLをコピーして友達に送ろう！", shareUrl);
         }
       };
       otherBtn.onclick = function () {
-        // [2025-06-01] 내가 아까 이야기했던 kor/game/ 이거 적용하는거 기억해줘.
-        // `../` 대신 `kor/game/`을 사용합니다.
         window.location.href = "kor/game/";
       };
 
@@ -481,7 +481,7 @@
         max-width: 420px;
         margin: 60px auto;
         padding: 20px;
-        font-family: &quot;Segoe UI&quot;, sans-serif;
+        font-family: 'Segoe UI', sans-serif;
         background: #f0f8ff;
         color: #2d3436;
         border-radius: 10px;
@@ -489,36 +489,36 @@
         line-height: 1.6;
         font-size: 14px;
       ">
-      <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e70c2">❓ 자주 묻는 질문 (FAQ)</h2>
+      <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e70c2">❓ よくある質問 (FAQ)</h2>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q1. 사다리 게임은 어떻게 플레이하나요?</strong><br />
-        A. 상단의 숫자를 탭하여 사다리를 타고 내려가 결과를 확인하세요!
+        <strong>Q1. ラダーゲームはどのようにプレイしますか？</strong><br />
+        A. 画面上部の数字をタップしてラダーを下り、結果を確認してください！
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q2. '레벨 업'은 무엇을 의미하나요?</strong><br />
-        A. 현재 웨이브를 통과하고 더 어려운 다음 라운드로 넘어갑니다.
+        <strong>Q2. 「レベルアップ」は何を意味しますか？</strong><br />
+        A. 現在のウェーブをクリアして、より難しい次のラウンドに進みます。
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q3. 게임은 언제 끝나나요?</strong><br />
-        A. 결과가 <strong>게임 오버 (X)</strong>이면 게임이 종료됩니다.
+        <strong>Q3. ゲームはいつ終わりますか？</strong><br />
+        A. 結果が<strong>ゲームオーバー（X）</strong>になるとゲームが終了します。
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q4. 무작위인가요?</strong><br />
-        A. 네! 가로 사다리와 결과는 매 라운드마다 무작위로 섞입니다.
+        <strong>Q4. 完全にランダムですか？</strong><br />
+        A. はい！ラダーの横線と結果は毎ラウンドランダムにシャッフルされます。
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q5. 어떻게 재시작하나요?</strong><br />
-        A. <strong>재시작</strong>을 탭하여 웨이브 1부터 다시 플레이할 수 있습니다.
+        <strong>Q5. どうやって再スタートしますか？</strong><br />
+        A. <strong>再スタート</strong>をタップしてウェーブ1から再プレイできます。
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q6. 이 게임을 공유할 수 있나요?</strong><br />
-        A. 네! <strong>공유</strong>를 탭하여 링크를 복사하거나 모바일 공유 옵션을 사용하세요.
+        <strong>Q6. このゲームを共有できますか？</strong><br />
+        A. はい！<strong>共有</strong>をタップしてリンクをコピーするか、モバイルの共有機能を使用してください。
       </div>
     </section>
   </body>
