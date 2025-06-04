@@ -1,35 +1,35 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ar" dir="rtl">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="クラシックテトリスのウェブゲーム！無料でプレイしてブロックを積み上げ、ラインを消して高得点を目指しましょう。モバイルおよびデスクトップ対応。" />
+            content="لعبة Tetris الكلاسيكية على الويب! العب مجانًا وقم بتكديس القطع، امحِ الصفوف لتحقيق أعلى نقاط. متوافقة مع الجوال وسطح المكتب." />
         <meta
             name="keywords"
-            content="tetris, テトリス, パズル, ブロック積み, オンラインゲーム, クラシックアーケード, 無料ウェブゲーム, モバイルゲーム, ブラウザゲーム, テトリスウェブ, スタックゲーム, 落下ブロック" />
+            content="tetris, تيتريس, أحجية, تكديس قطع, لعبة أونلاين, آركيد كلاسيكي, لعبة ويب مجانية, لعبة موبايل, لعبة في المتصفح, تيتريس ويب, لعبة تكديس, قطع متساقطة" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://emfls.github.io/ae/game/TetrisGame" />
 
         <!-- Open Graph / Facebook / Kakao / Discord -->
-        <meta property="og:title" content="クイックプレイ: テトリス – オンラインクラシックパズル" />
+        <meta property="og:title" content="اللعب السريع: تيتريس – الأحجية الكلاسيكية أونلاين" />
         <meta
             property="og:description"
-            content="スマートに積み上げ、素早く操作してラインを消そう。無料のオンラインテトリスゲームをすぐにプレイ—ダウンロード不要！" />
+            content="قم بالتكديس بذكاء وحرك القطع بسرعة لمسح الصفوف. العب تيتريس مجانًا فورًا – لا حاجة للتنزيل!" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/ae/game/TetrisGame" />
         <meta property="og:type" content="website" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="クイックプレイ: テトリス – オンラインクラシックパズル" />
+        <meta name="twitter:title" content="اللعب السريع: تيتريس – الأحجية الكلاسيكية أونلاين" />
         <meta
             name="twitter:description"
-            content="どれだけ高得点を出せますか？モバイルまたはPCで無料のこのテトリスブラウザゲームを楽しもう！" />
+            content="كم يمكنك تحقيق من نقاط؟ استمتع بلعبة تيتريس في المتصفح مجانًا على الجوال أو الحاسوب!" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-        <title>テトリスゲーム</title>
+        <title>لعبة تيتريس</title>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -135,6 +135,7 @@
                 border: none;
                 border-radius: 10px;
                 background-color: #3b3bb3;
+                color: white;
             }
 
             .ctrl-btn:active {
@@ -218,26 +219,28 @@
 
     <body>
         <h1>
-            <span style="color: #8f94fb">クイックプレイ:</span>
-            <span style="color: #00ffff">テ</span>
-            <span style="color: #0000ff">ト</span>
-            <span style="color: #ffa500">リ</span>
-            <span style="color: #ffff00">ス</span>
+            <span style="color: #8f94fb">اللعب السريع:</span>
+            <span style="color: #00ffff">ت</span>
+            <span style="color: #0000ff">ي</span>
+            <span style="color: #ffa500">ت</span>
+            <span style="color: #ffff00">ر</span>
+            <span style="color: #ff00ff">ي</span>
+            <span style="color: #00ff00">س</span>
         </h1>
-        <p class="description">スマートに積み上げ、素早く操作してラインを消そう。健闘を祈ります！</p>
+        <p class="description">قم بالتكديس بذكاء وحرك القطع بسرعة لمسح الصفوف. حظًا موفقًا!</p>
         <button id="startButton" style="position: absolute; top: 290px; left: 50%; transform: translate(-50%, -50%)">
-            ゲーム開始
+            بدء اللعبة
         </button>
         <button
             id="resetButton"
             style="position: absolute; top: 340px; left: 50%; transform: translate(-50%, -50%); display: none">
-            再挑戦
+            إعادة المحاولة
         </button>
         <button
             id="shareButton"
             style="position: absolute; top: 390px; left: 50%; transform: translate(-50%, -50%); display: none"
             onclick="shareGame()">
-            共有する
+            مشاركة
         </button>
         <script>
             let cols = 10;
@@ -304,8 +307,8 @@
                 drawBoard();
                 fill(255);
                 textSize(16);
-                textAlign(LEFT, TOP);
-                text("得点: " + score, 10, 10);
+                textAlign(RIGHT, TOP);
+                text("النقاط: " + score, width - 10, 10);
                 if (!gameStarted) return;
 
                 if (!gameOver) {
@@ -317,7 +320,7 @@
                     textSize(32);
                     textAlign(CENTER, CENTER);
                     fill(255, 0, 0);
-                    text("ゲームオーバー", width / 2, height / 2);
+                    text("انتهت اللعبة", width / 2, height / 2);
                     document.getElementById("resetButton").style.display = "inline-block";
                     document.getElementById("shareButton").style.display = "inline-block";
                     noLoop();
@@ -438,7 +441,7 @@
 
                 if (!handleHeldKeys.lastTime) handleHeldKeys.lastTime = 0;
                 if (now - handleHeldKeys.lastTime > 100) {
-                    // 100ms 間隔
+                    // بفاصل 100 مللي ثانية
                     if (heldKeys[LEFT_ARROW]) movePiece(-1, 0);
                     if (heldKeys[RIGHT_ARROW]) movePiece(1, 0);
                     if (heldKeys[DOWN_ARROW]) movePiece(0, 1);
@@ -454,7 +457,7 @@
                 }
             }
 
-            // ボタンハンドラ登録
+            // معالج الأزرار
             document.getElementById("startButton").onclick = function () {
                 gameStarted = true;
                 this.style.display = "none";
@@ -510,13 +513,13 @@
                     ontouchend="offMobileInput('ArrowLeft')"
                     onmousedown="onMobileInput('ArrowLeft')"
                     onmouseup="offMobileInput('ArrowLeft')"
-                    style="font-size: 24px; padding-bottom: 2px; color: white">
+                    style="font-size: 24px; padding-bottom: 2px;">
                     ◀
                 </button>
                 <button
                     class="ctrl-btn"
                     ontouchstart="rotatePiece()"
-                    style="font-size: 30px; font-weight: 900; padding-bottom: 2px; color: white">
+                    style="font-size: 30px; font-weight: 900; padding-bottom: 2px;">
                     ↻
                 </button>
                 <button
@@ -525,7 +528,7 @@
                     ontouchend="offMobileInput('ArrowRight')"
                     onmousedown="onMobileInput('ArrowRight')"
                     onmouseup="offMobileInput('ArrowRight')"
-                    style="font-size: 24px; padding-bottom: 2px; color: white">
+                    style="font-size: 24px; padding-bottom: 2px;">
                     ▶
                 </button>
             </div>
@@ -536,36 +539,36 @@
                     ontouchend="offMobileInput('ArrowDown')"
                     onmousedown="onMobileInput('ArrowDown')"
                     onmouseup="offMobileInput('ArrowDown')"
-                    style="font-size: 26px; margin-top: 5px; color: white">
+                    style="font-size: 26px; margin-top: 5px;">
                     ▼
                 </button>
             </div>
         </div>
 
-        <button style="position: absolute; top: 660px" class="menu" onclick="goToMain()">📂 他のゲーム</button>
+        <button style="position: absolute; top: 660px" class="menu" onclick="goToMain()">📂 ألعاب أخرى</button>
 
         <script>
             function goToMain() {
-                window.location.href = "/"; // or 'index.html'
+                window.location.href = "/"; // أو 'index.html'
             }
 
             function shareGame() {
                 const url = window.location.href;
-                const text = `🧱 クイックプレイテトリス - 私のスコア: ${score}\n今すぐプレイ！`;
+                const text = `🧱 اللعب السريع تيتريس - نقاطي: ${score}\nالعب الآن!`;
                 if (navigator.share) {
                     navigator
                         .share({
-                            title: "クイックプレイ: テトリス",
+                            title: "اللعب السريع: تيتريس",
                             text,
                             url
                         })
-                        .catch(() => alert("共有に失敗しました。リンクをコピーしてください。"));
+                        .catch(() => alert("فشل المشاركة. يرجى نسخ الرابط يدويًا."));
                 } else {
                     const full = `${text}\n${url}`;
                     navigator.clipboard
                         .writeText(full)
-                        .then(() => alert("スコアとリンクがクリップボードにコピーされました！"))
-                        .catch(() => alert(`このリンクをコピーしてください:\n${full}`));
+                        .then(() => alert("تم نسخ النقاط والرابط إلى الحافظة!"))
+                        .catch(() => alert(`يرجى نسخ الرابط التالي:\n${full}`));
                 }
             }
         </script>
@@ -584,36 +587,36 @@
                 line-height: 1.6;
                 color: #f0f0f0;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ よくある質問</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ الأسئلة الشائعة</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. このテトリスゲームはどうプレイしますか？</strong><br />
-                A. 矢印キーまたは画面上のボタンでブロックを操作し、ラインを完成させて消去しましょう。
+                <strong>س1. كيف ألعب لعبة تيتريس هذه؟</strong><br />
+                ج. استخدم مفاتيح الأسهم أو أزرار الشاشة لتحريك القطع وإسقاطها، وأكمل الصفوف لمسحها.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. どのような操作が使えますか？</strong><br />
-                A. ◀ ▶ ▼ ボタンで左右移動・下降、↻ ボタンで回転します。タッチやマウス入力もサポートしています。
+                <strong>س2. ما هي الأزرار المتاحة؟</strong><br />
+                ج. الأزرار ◀ ▶ لإزاحة القطعة، ▼ للإسقاط السريع، ↻ للدوران. تدعم اللمس والفأرة أيضًا.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. ゲームはいつ終了しますか？</strong><br />
-                A. ブロックが上部まで積み上がり、新しいピースを配置できなくなったときにゲームオーバーになります。
+                <strong>س3. متى تنتهي اللعبة؟</strong><br />
+                ج. تنتهي عند امتلاء اللوحة بحيث لا يمكن وضع قطعة جديدة.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. ゲームを再スタートできますか？</strong><br />
-                A. はい！ゲームオーバー後に「再挑戦」ボタンを押すと、いつでもゲームを再スタートできます。
+                <strong>س4. هل يمكن إعادة البدء؟</strong><br />
+                ج. نعم! بعد انتهاء اللعبة، انقر على زر "إعادة المحاولة" للبدء من جديد.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. スコアを共有できますか？</strong><br />
-                A. もちろんです。「共有する」ボタンを使って、スコアとリンクをクリップボードにコピーまたは送信できます。
+                <strong>س5. هل يمكن مشاركة النقاط؟</strong><br />
+                ج. بالتأكيد! استخدم زر "مشاركة" لنسخ النقاط والرابط إلى الحافظة أو مشاركتها مباشرة.
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. このゲームはモバイルでも快適にプレイできますか？</strong><br />
-                A. はい！スマートフォンやデスクトップのどちらでも、オンスクリーンコントロールで快適にプレイできます。
+                <strong>س6. هل اللعبة تعمل جيدًا على الموبايل؟</strong><br />
+                ج. نعم! يمكنك اللعب بصورة مريحة على الهاتف الذكي أو الحاسوب باستخدام عناصر التحكم على الشاشة.
             </div>
         </section>
     </body>

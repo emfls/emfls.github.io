@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ar" dir="rtl">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>スピードタップ</title>
+        <title>نقر السرعة</title>
         <meta name="robots" content="index, follow" />
 
         <!-- Canonical URL -->
@@ -12,27 +12,27 @@
         <!-- SEO Meta -->
         <meta
             name="description"
-            content="あなたの指の速さはどれくらい？わずか5秒間でできるだけ速くタップしよう！友達に挑戦してリーダーボードに載ろう。無料でモバイル最適化されたウェブゲームです。" />
+            content="ما مدى سرعة أصابعك؟ انقر بأسرع ما يمكنك خلال 5 ثوانٍ! تحدَّ أصدقائك وارتق إلى ترتيب المتصدرين. لعبة ويب مجانية مُحسّنة للجوال." />
         <meta
             name="keywords"
-            content="スピードタップ, タップゲーム, 反応速度ゲーム, 5秒チャレンジ, クリックゲーム, モバイルゲーム, 無料ウェブゲーム, ブラウザゲーム, 速度テスト" />
+            content="نقر السرعة, لعبة النقر, لعبة رد الفعل, تحدي 5 ثوانٍ, لعبة الضغط, لعبة جوال, لعبة ويب مجانية, لعبة متصفح, اختبار السرعة" />
         <meta name="author" content="Itagi" />
 
         <!-- Open Graph (Facebook, Kakao, Discord) -->
-        <meta property="og:title" content="スピードタップ" />
+        <meta property="og:title" content="نقر السرعة" />
         <meta
             property="og:description"
-            content="わずか5秒間でできるだけ速くタップしよう！友達に挑戦してみてね。無料のウェブゲームです！" />
+            content="انقر بأسرع ما يمكنك في 5 ثوانٍ! تحدَّ أصدقائك الآن. لعبة ويب مجانية!" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/ae/game/SpeedTap" />
         <meta property="og:type" content="website" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="スピードタップ" />
+        <meta name="twitter:title" content="نقر السرعة" />
         <meta
             name="twitter:description"
-            content="友達に勝とう！5秒間でできるだけ速くタップしよう！" />
+            content="تفوق على أصدقائك! انقر بأسرع ما يمكنك خلال 5 ثوانٍ!" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
         <!-- Google tag (gtag.js) -->
@@ -130,7 +130,7 @@
                 background: #16a085;
             }
 
-            /* 数字ポップ効果 */
+            /* تأثير النقر المتصاعد */
             .pop {
                 animation: pop 0.2s ease;
             }
@@ -200,16 +200,16 @@
     </head>
 
     <body>
-        <h1>スピードタップ</h1>
-        <p style="margin-top: -10px; margin-bottom: 30px">わずか5秒間でできるだけ速くタップしよう！</p>
+        <h1>نقر السرعة</h1>
+        <p style="margin-top: -10px; margin-bottom: 30px">انقر بأسرع ما يمكنك خلال 5 ثوانٍ!</p>
 
-        <div id="tapZone">タップして開始</div>
+        <div id="tapZone">انقر للبدء</div>
 
         <div id="result"></div>
 
         <div class="button-group" id="afterButtons" style="display: none">
-            <button id="restartBtn">再スタート</button>
-            <button id="shareBtn">共有する</button>
+            <button id="restartBtn">إعادة البدء</button>
+            <button id="shareBtn">مشاركة</button>
         </div>
 
         <script>
@@ -236,7 +236,7 @@
                 taps = 0;
                 isPlaying = true;
                 result.textContent = "";
-                tapZone.textContent = "Go!";
+                tapZone.textContent = "انطلق!";
                 tapZone.style.pointerEvents = "auto";
                 tapZone.style.fontSize = "2rem";
                 tapZone.classList.remove("pop");
@@ -244,11 +244,11 @@
 
                 timer = setTimeout(() => {
                     isPlaying = false;
-                    tapZone.textContent = "⏰ 時間切れ！";
+                    tapZone.textContent = "⏰ انتهى الوقت!";
                     tapZone.style.pointerEvents = "none";
-                    tapZone.style.fontSize = "2rem"; // サイズリセット
-                    tapZone.classList.remove("pop"); // アニメーション解除
-                    result.textContent = `5秒間に ${taps} 回タップしました！`;
+                    tapZone.style.fontSize = "2rem"; // إعادة الضبط
+                    tapZone.classList.remove("pop"); // إزالة التأثير
+                    result.textContent = `لقد نقرت ${taps} مرة في 5 ثوانٍ!`;
                     afterButtons.style.display = "flex";
                 }, 5000);
             }
@@ -261,15 +261,15 @@
                     tapZone.textContent = `${taps}`;
                     updateFontSize();
 
-                    // アニメーション再適用
+                    // إعادة إضافة تأثير النقر
                     tapZone.classList.remove("pop");
-                    void tapZone.offsetWidth; // 強制リフロー
+                    void tapZone.offsetWidth; // فرض إعادة تدفق
                     tapZone.classList.add("pop");
                 }
             });
 
             restartBtn.addEventListener("click", () => {
-                tapZone.textContent = "タップして開始";
+                tapZone.textContent = "انقر للبدء";
                 result.textContent = "";
                 tapZone.style.fontSize = "2rem";
                 tapZone.classList.remove("pop");
@@ -278,20 +278,20 @@
             });
 
             shareBtn.addEventListener("click", async () => {
-                const shareText = `💥 5秒間に ${taps} 回タップしました！\n挑戦してみてね: ${window.location.href}`;
+                const shareText = `💥 نقرت ${taps} مرة في 5 ثوانٍ! تحدَّك الآن: ${window.location.href}`;
                 if (navigator.share) {
                     try {
                         await navigator.share({
-                            title: "スピードタップチャレンジ",
+                            title: "تحدي نقر السرعة",
                             text: shareText,
                             url: window.location.href
                         });
                     } catch {
-                        alert("共有がキャンセルされたか失敗しました。");
+                        alert("تم إلغاء المشاركة أو فشل.");
                     }
                 } else {
                     await navigator.clipboard.writeText(shareText);
-                    alert("スコアとリンクがクリップボードにコピーされました！");
+                    alert("تم نسخ النقاط والرابط إلى الحافظة!");
                 }
             });
         </script>
@@ -312,40 +312,40 @@
                 cursor: pointer;
             "
             onclick="window.location.href='/'">
-            📂 他のゲーム
+            📂 ألعاب أخرى
         </button>
 
         <section style="max-width: 320px; width: 100%; margin: 48px auto 24px auto; font-family: 'Arial', sans-serif; font-size: 14px; background: #1e1e1e; border-radius: 18px; box-shadow: 0 6px 24px #1236; padding: 20px; line-height: 1.6; color: #f0f0f0;">
-          <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb;">❓ よくある質問</h2>
+          <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb;">❓ الأسئلة الشائعة</h2>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q1. スピードタップはどう遊びますか？</strong><br/>
-            A. 緑のゾーンを5秒間できるだけ速くタップしてください。タップ数がスコアになります。
+            <strong>س1. كيف ألعب نقر السرعة؟</strong><br/>
+            ج. اضغط داخل المنطقة الخضراء بأسرع ما يمكنك لمدة 5 ثوانٍ. عدد النقرات هو نتيجتك.
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q2. 一ラウンドはどれくらい続きますか？</strong><br/>
-            A. 正確に5秒間続きます。時間が来るとすぐに結果が表示されます。
+            <strong>س2. كم تستمر الجولة الواحدة؟</strong><br/>
+            ج. تستمر الجولة لمدة 5 ثوانٍ بالضبط. عند انتهاء الوقت، تظهر النتائج فورًا.
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q3. ゲームを再スタートするにはどうすればいいですか？</strong><br/>
-            A. 「再スタート」ボタンを押すとすぐにもう一度挑戦できます。
+            <strong>س3. كيف أعيد تشغيل اللعبة؟</strong><br/>
+            ج. اضغط على زر "إعادة البدء" بمجرد انتهاء الجولة لبدء تحدٍ جديد فورًا.
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q4. スコアを共有できますか？</strong><br/>
-            A. はい！「共有する」ボタンを押すとスコアとリンクをコピーして友達に送れます。
+            <strong>س4. هل يمكنني مشاركة نتيجتي؟</strong><br/>
+            ج. نعم! اضغط على زر "مشاركة" لنسخ نتيجتك والرابط وإرساله لأصدقائك.
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q5. タップ速度は表示に影響しますか？</strong><br/>
-            A. はい！タップするたびに文字が少し大きくなり、視覚的なフィードバックが得られます。
+            <strong>س5. هل يؤثر النقر السريع على العرض؟</strong><br/>
+            ج. نعم، في كل مرة تنقر، يكبر النص قليلًا لتقديم استجابة بصرية سريعة.
           </div>
 
           <div style="margin-bottom: 0;">
-            <strong>Q6. モバイルでもスムーズに遊べますか？</strong><br/>
-            A. もちろんです。タッチ入力に対応しているのでスマホやタブレットでも問題なく動作します。
+            <strong>س6. هل تعمل اللعبة بشكل جيد على الجوال؟</strong><br/>
+            ج. بالطبع! تدعم اللمس، لذا يمكنك اللعب بسهولة على هاتفك أو جهازك اللوحي.
           </div>
         </section>
     </body>

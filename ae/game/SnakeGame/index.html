@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ar" dir="rtl">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>スネークゲーム</title>
+        <title>لعبة الثعبان</title>
         <meta name="robots" content="index, follow" />
 
         <!-- Canonical URL -->
@@ -11,25 +11,25 @@
         <!-- SEO Meta -->
         <meta
             name="description"
-            content="クラシックなスネークゲームをオンラインでプレイしよう。エサを食べて長くなり、衝突しないよう気をつけて進めてね！ダウンロード不要ですぐ遊べます。" />
-        <meta name="keywords" content="スネークゲーム, クイックプレイアーケード, 無料ウェブゲーム, スネークプレイ, モバイルスネークゲーム" />
+            content="العب لعبة الثعبان الكلاسيكية عبر الإنترنت. كل الطعام لتنمو وتجنب الاصطدام! لا حاجة للتنزيل، العب فورًا." />
+        <meta name="keywords" content="لعبة الثعبان, QuickPlay أركيد, لعبة ويب مجانية, لعب الثعبان, لعبة ثعبان للجوال" />
         <meta name="author" content="Itagi" />
 
         <!-- Open Graph (Facebook, Kakao, etc) -->
-        <meta property="og:title" content="スネークゲーム – クイックプレイアーケード" />
+        <meta property="og:title" content="لعبة الثعبان – QuickPlay أركيد" />
         <meta
             property="og:description"
-            content="食べて成長、衝突を避けよう。ブラウザですぐ遊べるクラシックスネークゲーム！" />
+            content="كل لتطول وتجنب الاصطدام. العب لعبة الثعبان الكلاسيكية في المتصفح فورًا!" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/ae/game/SnakeGame" />
         <meta property="og:type" content="website" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="スネークゲーム – クイックプレイ" />
+        <meta name="twitter:title" content="لعبة الثعبان – QuickPlay" />
         <meta
             name="twitter:description"
-            content="高速で楽しいスネークゲームを今すぐオンラインでプレイしよう – ログイン不要！" />
+            content="العب لعبة الثعبان السريعة والممتعة عبر الإنترنت الآن – لا حاجة لتسجيل الدخول!" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
@@ -206,14 +206,14 @@
 
     <body>
         <h1>
-            <span style="color: #8f94fb">クイックプレイ:</span>
-            <span style="color: #0a0">ス</span><span style="color: #6f6">ネーク</span>
+            <span style="color: #8f94fb">اللعب السريع:</span>
+            <span style="color: #0a0">الثعبان</span>
         </h1>
-        <p class="description">食べて、成長し、衝突を避けよう！行こう！</p>
+        <p class="description">كل، وتنمو، وتجنب الاصطدام! هيا!</p>
 
         <div class="game-container">
             <canvas id="game" width="300" height="300"></canvas>
-            <button id="start-btn">開始</button>
+            <button id="start-btn">ابدأ</button>
             <div id="game-over"></div>
         </div>
 
@@ -228,7 +228,7 @@
             <button class="btn down" onclick="setDirection('ArrowDown')" style="font-size: 26px">▼</button>
         </div>
 
-        <button class="menu" onclick="goToMain()">📂 他のゲーム</button>
+        <button class="menu" onclick="goToMain()">📂 ألعاب أخرى</button>
 
         <script>
             const canvas = document.getElementById("game");
@@ -340,10 +340,10 @@
                 gameOverDiv.innerHTML = "";
 
                 const msg = document.createElement("p");
-                msg.textContent = `あなたのスコア: ${score}`;
+                msg.textContent = `نقاطك: ${score}`;
 
                 const retry = document.createElement("button");
-                retry.textContent = "再挑戦";
+                retry.textContent = "أعد المحاولة";
                 retry.className = "restart";
                 retry.style.width = "100px";
                 retry.style.height = "50px";
@@ -356,7 +356,7 @@
                 };
 
                 const share = document.createElement("button");
-                share.textContent = "共有";
+                share.textContent = "مشاركة";
                 share.className = "share";
                 share.style.marginTop = "10px";
                 share.style.width = "100px";
@@ -371,26 +371,26 @@
             }
 
             function goToMain() {
-                window.location.href = "/"; // または 'index.html'
+                window.location.href = "/"; // أو 'index.html'
             }
 
             function shareGame() {
                 const url = window.location.href;
-                const text = `🐍 クイックプレイスネーク - 私のスコア: ${lastScore}\n今すぐプレイ！`;
+                const text = `🐍 اللعب السريع: الثعبان - نقاطي: ${lastScore}\n العب الآن!`;
                 if (navigator.share) {
                     navigator
                         .share({
-                            title: "クイックプレイ: スネーク",
+                            title: "اللعب السريع: الثعبان",
                             text,
                             url
                         })
-                        .catch(() => alert("共有に失敗しました。リンクをコピーしてください。"));
+                        .catch(() => alert("فشل المشاركة. الرجاء نسخ الرابط."));
                 } else {
                     const full = `${text}\n${url}`;
                     navigator.clipboard
                         .writeText(full)
-                        .then(() => alert("スコアとリンクがクリップボードにコピーされました！"))
-                        .catch(() => alert(`次のリンクをコピーしてください:\n${full}`));
+                        .then(() => alert("تم نسخ النقاط والرابط إلى الحافظة!"))
+                        .catch(() => alert(`يرجى نسخ الرابط التالي:\n${full}`));
                 }
             }
         </script>
@@ -408,36 +408,36 @@
                 line-height: 1.6;
                 color: #f0f0f0;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ よくある質問</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ الأسئلة الشائعة</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. スネークゲームはどう遊びますか？</strong><br />
-                A. 矢印キー（または画面のボタン）でヘビを動かし、赤いエサを食べると長くなります！
+                <strong>س1. كيف ألعب لعبة الثعبان؟</strong><br />
+                ج. استخدم مفاتيح الأسهم (أو أزرار الشاشة) لتحريك الثعبان وأكله للطعام الأحمر ليصبح أطول!
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. ゲームオーバーになる条件は何ですか？</strong><br />
-                A. 壁にぶつかるか、自分の体に衝突するとゲームオーバーになります。
+                <strong>س2. متى تنتهي اللعبة؟</strong><br />
+                ج. تنتهي اللعبة إذا اصطدمت بالحائط أو إذا اصطدمت بنفسك.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. 再スタートできますか？</strong><br />
-                A. はい！ゲーム終了後、「再挑戦」ボタンを押せばすぐに再開できます。
+                <strong>س3. هل يمكنني إعادة اللعب؟</strong><br />
+                ج. نعم! بعد انتهاء اللعبة، اضغط زر "أعد المحاولة" للبدء من جديد فورًا.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. スコアを共有できますか？</strong><br />
-                A. はい！ゲーム終了後、「共有」ボタンを押してスコアをコピーまたは共有できます。
+                <strong>س4. هل يمكنني مشاركة نتيجتي؟</strong><br />
+                ج. نعم! بعد انتهاء اللعبة، اضغط زر "مشاركة" لنسخ نتيجتك أو مشاركتها.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. モバイルにも最適化されていますか？</strong><br />
-                A. もちろんです。画面に表示される矢印ボタンでスマホやタブレットでもプレイできます。
+                <strong>س5. هل اللعبة محسّنة للجوال؟</strong><br />
+                ج. بالطبع! يمكنك اللعب على الهاتف أو الجهاز اللوحي باستخدام أزرار الأسهم على الشاشة.
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. ゲームスピードは変わりますか？</strong><br />
-                A. 現在は固定速度ですが、将来的なアップデートでヘビの長さに応じて速くなる可能性があります。
+                <strong>س6. هل سرعة اللعبة تتغير؟</strong><br />
+                ج. حاليًا السرعة ثابتة، لكن في التحديثات القادمة قد تصبح أسرع مع طول الثعبان.
             </div>
         </section>
     </body>
