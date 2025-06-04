@@ -1,32 +1,32 @@
 <!doctype html>
-<html lang="ja">
+<html lang="zh">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <meta
             name="description"
-            content="Land Grab：領土を広げ、赤いボールを避けてレベルアップしよう！速くて楽しく、モバイル対応のウェブゲームをブラウザで無料プレイ。" />
+            content="Land Grab：扩张领土，躲避红色球体，提升关卡！快速且有趣，支持移动设备，在浏览器中免费游玩。" />
         <meta
             name="keywords"
-            content="Land Grab, ウェブゲーム, 領土獲得, オンライン, ブラウザゲーム, 無料, モバイル, パズル, アクション, アーケード, 中毒性, ボールゲーム, カジュアル, 戦略" />
+            content="Land Grab, 网页游戏, 领土获取, 在线, 浏览器游戏, 免费, 移动, 益智, 动作, 街机, 上瘾, 球游戏, 休闲, 策略" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/cn/game/LandGrab" />
 
-        <meta property="og:title" content="Land Grab – 無料中毒性領土獲得ゲーム" />
+        <meta property="og:title" content="Land Grab – 免费上瘾领土获取游戏" />
         <meta
             property="og:description"
-            content="領土を拡張し、赤いボールを避けよう！すべてのレベルをクリアできるかな？オンラインで無料プレイ。" />
+            content="扩张领土，躲避红色球体！能否通关所有关卡？在线免费游玩。" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/cn/game/LandGrab" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Land Grab – 無料中毒性領土獲得ゲーム" />
+        <meta name="twitter:title" content="Land Grab – 免费上瘾领土获取游戏" />
         <meta
             name="twitter:description"
-            content="Land Grab：領土を獲得し、赤いボールを避けよう！無料、ブラウザ対応、モバイルフレンドリー。" />
+            content="Land Grab：扩张领土，躲避红色球体！免费，支持浏览器，移动友好。" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
@@ -269,11 +269,11 @@
         <div id="gameWrapper">
             <div class="game-header">
                 <div class="game-title">Land Grab <span class="game-title-emoji">⚽</span></div>
-                <div class="game-desc">領土を拡張し、赤いボールを避けよう！</div>
+                <div class="game-desc">扩张领土，躲避红色球体！</div>
             </div>
             <div class="statbar">
-                <span id="level">レベル: 1</span>
-                <span id="percent">領域: 0%</span>
+                <span id="level">关卡: 1</span>
+                <span id="percent">领地: 0%</span>
             </div>
             <canvas id="game"></canvas>
             <div id="dpad">
@@ -288,10 +288,10 @@
                 <button class="emptyBtn"></button>
             </div>
             <div class="ui btn-row">
-                <button class="btn" id="startBtn">ゲーム開始</button>
-                <button class="btn" id="restartBtn" style="display: none">再スタート</button>
-                <button class="btn" id="shareBtn" style="display: none">共有</button>
-                <a class="btn" href="../cn/game/" id="otherBtn">他のゲーム</a>
+                <button class="btn" id="startBtn">开始游戏</button>
+                <button class="btn" id="restartBtn" style="display: none">重新开始</button>
+                <button class="btn" id="shareBtn" style="display: none">分享</button>
+                <a class="btn" href="../cn/game/" id="otherBtn">其他游戏</a>
             </div>
             <div class="ui" id="gameover"></div>
         </div>
@@ -527,7 +527,7 @@
                 for (let y = 1; y < GRID_H - 1; ++y)
                     for (let x = 1; x < GRID_W - 1; ++x) if (field[y][x] === 1) filled++;
                 percent = Math.floor((filled / total) * 100);
-                document.getElementById("percent").innerText = `領域: ${percent}%`;
+                document.getElementById("percent").innerText = `领地: ${percent}%`;
                 if (percent >= 80) nextLevel();
             }
 
@@ -619,7 +619,7 @@
                 cancelAnimationFrame(anim);
                 level++;
                 document.getElementById("gameover").style.color = "#18a600";
-                document.getElementById("gameover").innerHTML = `レベルアップ!<br>レベル ${level} へ進行中...`;
+                document.getElementById("gameover").innerHTML = `升级！<br>正在进入关卡 ${level}...`;
                 document.getElementById("gameover").style.display = "block";
                 setTimeout(() => {
                     document.getElementById("gameover").style.display = "none";
@@ -636,19 +636,19 @@
                 running = false;
                 cancelAnimationFrame(anim);
                 document.getElementById("gameover").style.color = "#d11";
-                document.getElementById("gameover").innerHTML = `ゲームオーバー<br>レベル: ${level} | 領域: ${percent}%`;
+                document.getElementById("gameover").innerHTML = `游戏结束<br>关卡: ${level} | 领地: ${percent}%`;
                 document.getElementById("gameover").style.display = "block";
                 document.getElementById("restartBtn").style.display = "";
                 document.getElementById("shareBtn").style.display = "";
             }
 
             function updateUI() {
-                document.getElementById("level").innerText = `レベル: ${level}`;
-                document.getElementById("percent").innerText = `領域: ${percent}%`;
+                document.getElementById("level").innerText = `关卡: ${level}`;
+                document.getElementById("percent").innerText = `领地: ${percent}%`;
             }
 
             function share() {
-                let txt = `Land Grab 最高記録: レベル ${level}, 領域 ${percent}%！今すぐプレイ: ${location.href}`;
+                let txt = `Land Grab 最高记录: 关卡 ${level}, 领地 ${percent}%！立即试玩: ${location.href}`;
                 if (navigator.share) {
                     navigator.share({
                         title: "Land Grab",
@@ -657,7 +657,7 @@
                     });
                 } else {
                     navigator.clipboard.writeText(txt);
-                    alert("リンクがコピーされました！");
+                    alert("链接已复制！");
                 }
             }
 
@@ -703,36 +703,36 @@
                 line-height: 1.65;
                 color: #2d3436;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #2577cf">❓ よくある質問</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #2577cf">❓ 常见问题</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. Land Grab はどうやってプレイしますか？</strong><br />
-                A. 画面上を移動してラインを引き、領土を拡張します。空白をすべて埋めて次のレベルに進みましょう！
+                <strong>Q1. 如何玩 Land Grab？</strong><br />
+                A. 在屏幕上移动并画线，扩张领地。填满空白区域以进入下一关！
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. レベルアップとは何ですか？</strong><br />
-                A. 現在のステージをクリアし、より難しい次のステージに進むことを意味します。
+                <strong>Q2. 什么是升级？</strong><br />
+                A. 通关当前关卡后进入更难的下一个关卡。
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. ゲームはいつ終わりますか？</strong><br />
-                A. 移動中に赤いボールに当たるか、移動経路に赤いボールが触れるとゲームオーバーになります。
+                <strong>Q3. 游戏什么时候结束？</strong><br />
+                A. 当移动时碰到红色球体，或移动路径被红色球体碰到时，游戏结束。
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. このゲームは運ゲーですか？</strong><br />
-                A. いいえ 😎 — このゲームはあなたの戦略と操作によって結果が変わります！
+                <strong>Q4. 这个游戏是靠运气的吗？</strong><br />
+                A. 不 😎 — 这个游戏的结果取决于你的策略和操作！
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. 再スタートするにはどうすればいいですか？</strong><br />
-                A. ゲームオーバー後に <strong>再スタート</strong> をタップすると、レベル1から再プレイできます。
+                <strong>Q5. 如何重新开始？</strong><br />
+                A. 游戏结束后点击 <strong>重新开始</strong>，即可从关卡1重新开始游戏。
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. 友達とシェアできますか？</strong><br />
-                A. はい！ <strong>共有</strong> をタップしてリンクをコピーするか、モバイル共有機能を利用してください。
+                <strong>Q6. 可以与朋友分享吗？</strong><br />
+                A. 可以！点击 <strong>分享</strong> 复制链接，或使用手机的分享功能。
             </div>
         </section>
     </body>

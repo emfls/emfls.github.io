@@ -1,30 +1,30 @@
 <!doctype html>
-<html lang="ja">
+<html lang="zh">
     <head>
         <meta charset="UTF-8" />
-        <title>マトリックスディフェンス</title>
+        <title>矩阵防御</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <meta
             name="description"
-            content="Matrix Defenseでロボットのウェーブから基地を守ろう！プラズマキャノンをアップグレードし、できるだけ長く生き残り、友達にハイスコアを挑戦しよう。PCやモバイルのブラウザで無料でプレイ！" />
+            content="在 Matrix Defense 中保卫基地免受机器人波次攻击！升级等离子加农炮，尽可能生存更久，并邀请朋友挑战你的高分。在 PC 或移动浏览器上免费畅玩！" />
         <meta
             name="keywords"
-            content="マトリックスディフェンス, アイデルディフェンス, ウェブゲーム, ブラウザゲーム, プラズマキャノン, タレット, レーザー防衛, 無料, 防衛ゲーム, 放置ゲーム, モバイル, PC, オンラインゲーム" />
-        <meta property="og:title" content="マトリックスディフェンス | プラズマ防衛アイドルゲーム" />
+            content="矩阵防御, 放置防御, 网页游戏, 浏览器游戏, 等离子加农炮, 炮塔, 激光防御, 免费, 防御游戏, 放置游戏, 手机, 电脑, 在线游戏" />
+        <meta property="og:title" content="矩阵防御 | 等离子防御放置游戏" />
         <meta
             property="og:description"
-            content="ロボットの無限ウェーブから基地を守るスタイリッシュな放置防衛ブラウザゲーム！キャノンをアップグレードし、どれだけ長く生き残れるか挑戦しよう。" />
+            content="在这款时尚的放置防御浏览器游戏中抵御机器人无尽波次的进攻！升级加农炮，挑战自己能坚持多久。" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://emfls.github.io/cn/game/MatrixDefense/" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta property="twitter:title" content="マトリックスディフェンス | プラズマ防衛アイドルゲーム" />
+        <meta property="twitter:title" content="矩阵防御 | 等离子防御放置游戏" />
         <meta
             property="twitter:description"
-            content="Matrix Defenseをプレイしよう—究極のプラズマターレット防衛ゲームをブラウザで無料プレイ！" />
+            content="快来试玩 Matrix Defense——终极等离子炮塔防御游戏，免费在浏览器上畅玩！" />
         <meta property="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <link rel="canonical" href="https://emfls.github.io/cn/game/MatrixDefense/" />
 
@@ -246,20 +246,20 @@
     <body>
         <div id="wrap">
             <div id="header">
-                <h1>マトリックスディフェンス</h1>
-                <p>アイドルプラズマ防衛。生き残れ！</p>
+                <h1>矩阵防御</h1>
+                <p>等离子防御放置游戏。坚持生存！</p>
                 <div id="topStatBar">
-                    WAVE <span id="wave">1</span> ゴールド <span id="gold">0</span> ライフ <span id="life">10</span>
+                    波次 <span id="wave">1</span> 黄金 <span id="gold">0</span> 生命 <span id="life">10</span>
                 </div>
             </div>
             <canvas id="gameCanvas" width="400" height="380"></canvas>
             <div id="upgrades">
                 <button class="upBtn" id="upDmg">
-                    攻撃力<br />
+                    攻击力<br />
                     +<span id="dmgC">65</span>
                 </button>
                 <button class="upBtn" id="upSpd">
-                    連射速度<br />
+                    射速<br />
                     +<span id="spdC">80</span>
                 </button>
                 <button class="upBtn" id="upRng">
@@ -267,14 +267,14 @@
                     +<span id="rngC">80</span>
                 </button>
                 <button class="upBtn" id="upLaser">
-                    レーザー数<br />
+                    激光数量<br />
                     +<span id="laserC">150</span>
                 </button>
             </div>
             <div id="buttonBar">
-                <button class="btn" id="restartBtn" style="display: none">再スタート</button>
-                <button class="btn" id="shareBtn" style="display: none">シェア</button>
-                <a href="../" class="btn other">他のゲーム</a>
+                <button class="btn" id="restartBtn" style="display: none">重新开始</button>
+                <button class="btn" id="shareBtn" style="display: none">分享</button>
+                <a href="../" class="btn other">其他游戏</a>
             </div>
         </div>
         <script>
@@ -287,7 +287,7 @@
             let turret, upg, enemies, frame, spawnCD, wave, gold, kills, life, phase, gameover;
             let bossSpawnedInWave, normalSpawnedInWave;
 
-            // touchmoveはキャンバス上のみ！
+            // touchmove 仅在画布上阻止默认行为
             canvas.addEventListener(
                 "touchmove",
                 (e) => {
@@ -608,7 +608,7 @@
                     ctx.textAlign = "center";
                     ctx.shadowColor = "#fef";
                     ctx.shadowBlur = 9;
-                    ctx.fillText("ゲームオーバー！", W / 2, H / 2 - 22);
+                    ctx.fillText("游戏结束！", W / 2, H / 2 - 22);
                     ctx.shadowBlur = 0;
                 }
             }
@@ -637,7 +637,7 @@
             function upgrade(type) {
                 if (upgrading) return;
                 upgrading = true;
-                setTimeout(() => (upgrading = false), 250); // 0.25秒ロック
+                setTimeout(() => (upgrading = false), 250); // 锁定0.25秒
 
                 if (gameover) return;
                 let u = upg[type];
@@ -662,16 +662,16 @@
                 initGame();
             };
             document.getElementById("shareBtn").onclick = () => {
-                let shareTxt = `Matrix Defenseをプレイしよう！私はWave ${wave}に到達しました！`;
+                let shareTxt = `快来玩 Matrix Defense！我达到了第 ${wave} 波！`;
                 if (navigator.share) {
                     navigator.share({
-                        title: "マトリックスディフェンス",
+                        title: "矩阵防御",
                         text: shareTxt,
                         url: location.href
                     });
                 } else {
                     navigator.clipboard.writeText(shareTxt);
-                    alert("リンクがクリップボードにコピーされました！");
+                    alert("链接已复制到剪贴板！");
                 }
             };
             document.body.addEventListener(
@@ -700,76 +700,66 @@
                 line-height: 1.65;
                 color: #2d3436;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #2577cf">❓ よくある質問</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #2577cf">❓ 常见问题</h2>
 
-            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">ゲーム紹介</h3>
+            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">游戏介绍</h3>
             <dl>
                 <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: 「マトリックスディフェンス」とは何ですか？
+                    Q: “矩阵防御” 是什么？
                 </dt>
                 <dd style="margin-bottom: 12px">
-                    A: 「マトリックスディフェンス」は放置型の防衛ブラウザゲームで、迫りくるロボットのウェーブから基地を守ります。
-                    プラズマキャノンをアップグレードして、できるだけ長く生き残ることが目標です。
+                    A: “矩阵防御” 是一款放置型防御浏览器游戏，你需要抵御源源不断的机器人波次攻击来保卫基地。升级等离子加农炮，以尽可能久地生存下去。
                 </dd>
 
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ゲームは無料ですか？</dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: 游戏免费吗？</dt>
                 <dd style="margin-bottom: 12px">
-                    A: はい、完全に無料で楽しめます。ダウンロードやインストールは不要で、ウェブブラウザでそのままプレイ可能です。
+                    A: 是的，完全免费，无需下载或安装，可直接在浏览器中畅玩。
                 </dd>
 
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: どのデバイスでプレイできますか？
-                </dt>
-                <dd style="margin-bottom: 12px">A: モバイルとPCの両方のウェブブラウザでプレイできます。</dd>
-            </dl>
-
-            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">ゲーム方法</h3>
-            <dl>
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ゲームの目的は何ですか？</dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: 哪些设备可以游玩？</dt>
                 <dd style="margin-bottom: 12px">
-                    A: 敵ロボットが画面下部の基地に到達する前にすべて撃破し、ウェーブを進めて、ライフが0になるまでできるだけ長く生き残ることです。
-                </dd>
-
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: ゴールドはどうやって獲得しますか？
-                </dt>
-                <dd style="margin-bottom: 12px">
-                    A: 敵ロボットを撃破するとゴールドが手に入ります。ゴールドはキャノンのアップグレードに使用します。
-                </dd>
-
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: どんなアップグレードがありますか？
-                </dt>
-                <dd style="margin-bottom: 12px">
-                    A: 「攻撃力 (ATK)」「連射速度 (RATE)」「射程 (RNG)」「レーザー数 (LASER)」の4種類をアップグレードできます。
-                </dd>
-
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: ライフが0になるとどうなりますか？
-                </dt>
-                <dd style="margin-bottom: 12px">
-                    A: ライフが0になるとゲームオーバーです。「再スタート」ボタンを押して最初からやり直せます。
+                    A: 支持 PC 和移动端浏览器，任何兼容的浏览器都能运行。
                 </dd>
             </dl>
 
-            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">トラブルシューティング・その他</h3>
+            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">游戏玩法</h3>
             <dl>
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ゲームが正しく動作しません。</dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: 游戏目标是什么？</dt>
                 <dd style="margin-bottom: 12px">
-                    A: ブラウザを再読み込みするか、別のブラウザを試してください。また、インターネット接続を確認してください。
-                    続けて問題が発生する場合は、開発者までお問い合わせください。
+                    A: 在敌人到达基地之前，将所有机器人击败，逐波推进。生命值降至 0 时游戏结束，挑战能坚持到第几波。
                 </dd>
 
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: 最高記録を友達と共有したいです。
-                </dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: 如何获得黄金？</dt>
                 <dd style="margin-bottom: 12px">
-                    A: ゲームオーバー後に表示される「シェア」ボタンをクリックすると、現在のWAVE記録を共有できます。
+                    A: 击败机器人后可获得黄金，用于购买加农炮的升级。
                 </dd>
 
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: 他のゲームはありますか？</dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: 有哪些升级选项？</dt>
                 <dd style="margin-bottom: 12px">
-                    A: はい、「他のゲーム」ボタンをクリックすると、開発者の他のウェブゲームをご覧いただけます。
+                    A: 可升级“攻击力（ATK）”、“射速（RATE）”、“射程（RNG）”和“激光数量（LASER）”四种属性。
+                </dd>
+
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: 生命值为 0 会怎样？</dt>
+                <dd style="margin-bottom: 12px">
+                    A: 生命值为 0 时游戏结束。点击“重新开始”按钮可从头开始游戏。
+                </dd>
+            </dl>
+
+            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">疑难解答及其他</h3>
+            <dl>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: 游戏无法正常运行。</dt>
+                <dd style="margin-bottom: 12px">
+                    A: 你可以尝试刷新页面或更换其他浏览器，并确保网络连接正常。如果问题持续，请联系开发者反馈。
+                </dd>
+
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: 如何分享最高记录？</dt>
+                <dd style="margin-bottom: 12px">
+                    A: 游戏结束后，点击“分享”按钮即可将当前波次记录复制或分享到社交平台。
+                </dd>
+
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: 是否有其他游戏？</dt>
+                <dd style="margin-bottom: 12px">
+                    A: 点击“其他游戏”按钮，查看开发者的其他网页游戏作品。
                 </dd>
             </dl>
         </section>

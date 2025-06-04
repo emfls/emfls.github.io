@@ -1,32 +1,36 @@
 <!doctype html>
-<html lang="ja">
+<html lang="zh">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <title>ラダーゲーム</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>阶梯游戏</title>
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
     <meta
       name="description"
-      content="モバイル用ラダーゲーム - 数字を選んで運命を確認しよう！iPhone SEを含むすべてのスマートフォンに最適化された、速くて楽しい運ゲーウェブゲームです。" />
+      content="移动端阶梯游戏 - 选择数字来验证你的命运！适配所有智能手机（包括 iPhone SE），快速且有趣的运气小游戏。"
+    />
     <meta
       name="keywords"
-      content="ラダーゲーム, モバイルゲーム, ウェブゲーム, ラダーくじ, 運ゲーム, ミニゲーム, モバイルカジュアル, iPhoneゲーム, iPhone SE, ラダー, ランダムゲーム, ブラウザゲーム, 運試し, 数字選択, ソーシャルゲーム, HTML5ゲーム" />
+      content="阶梯游戏, 移动游戏, 网页游戏, 阶梯抽签, 运气游戏, 迷你游戏, 移动休闲, iPhone 游戏, iPhone SE, 阶梯, 随机游戏, 浏览器游戏, 运气测试, 数字选择, 社交游戏, HTML5 游戏"
+    />
     <meta name="author" content="Itagi" />
     <meta name="robots" content="index, follow" />
 
-    <meta property="og:title" content="ラダーゲーム - モバイル用運ゲーム" />
+    <meta property="og:title" content="阶梯游戏 - 移动端运气游戏" />
     <meta
       property="og:description"
-      content="数字を選んで運命を確認しよう！楽しくて速い、モバイルに最適化されたラダーゲームです。" />
+      content="选择一个数字，从阶梯上验证你的命运！又快又好玩的移动端优化阶梯游戏。"
+    />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/cn/game/LadderGame" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="ラダーゲーム - モバイル用運ゲーム" />
+    <meta name="twitter:title" content="阶梯游戏 - 移动端运气游戏" />
     <meta
       name="twitter:description"
-      content="モバイル用ラダーゲーム。数字を選んであなたの運命を確認しよう！" />
+      content="移动端阶梯游戏。选择一个数字，查看你的运气！"
+    />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
     <link rel="canonical" href="https://emfls.github.io/cn/game/LadderGame" />
@@ -204,8 +208,8 @@
   </head>
   <body>
     <div id="gameWrap">
-      <h1>ラダーゲーム</h1>
-      <div class="desc">数字を選んでラダー（はしご）で運命を確認しよう！</div>
+      <h1>阶梯游戏</h1>
+      <div class="desc">选择一个数字，从阶梯上查看你的运气！</div>
       <div id="ladderBox">
         <div id="topChoices"></div>
         <canvas id="ladderCanvas" width="200" height="340"></canvas>
@@ -226,10 +230,10 @@
       </div>
       <div id="resultMsg"></div>
       <div id="btnRow">
-        <button class="btn" id="startBtn">ゲーム開始</button>
-        <button class="btn hide" id="retryBtn">再スタート</button>
-        <button class="btn" id="shareBtn">共有</button>
-        <button class="btn" id="otherBtn">他のゲーム</button>
+        <button class="btn" id="startBtn">开始游戏</button>
+        <button class="btn hide" id="retryBtn">重新开始</button>
+        <button class="btn" id="shareBtn">分享</button>
+        <button class="btn" id="otherBtn">更多游戏</button>
       </div>
     </div>
     <script>
@@ -247,9 +251,9 @@
       const shareBtn = document.getElementById("shareBtn");
       const otherBtn = document.getElementById("otherBtn");
 
-      // 세로선 기준 좌표(패딩 조정)
+      // 计算每一列垂直线的 x 坐标（考虑左右留白）
       function getX(idx) {
-        const sidePadding = 18; // 더 좁은 폭에 맞춰진 패딩
+        const sidePadding = 18; // 在小屏幕上适当缩小的留白
         return sidePadding + idx * ((canvas.width - sidePadding * 2) / (ladderCols - 1));
       }
 
@@ -267,7 +271,7 @@
         arr = arr.sort(() => Math.random() - 0.5);
         let lines = [];
         const topMargin = 38;
-        const bottomMargin = 56; // 결과 원과 겹치지 않게
+        const bottomMargin = 56; // 避免与结束圆重叠
         for (let i = 0; i < cfg.hLines; ++i) {
           let pos, y;
           do {
@@ -283,6 +287,7 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = "#e8f2fe";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // 绘制竖线
         for (let i = 0; i < ladderCols; i++) {
           ctx.beginPath();
           ctx.strokeStyle = "#3272ed";
@@ -291,6 +296,7 @@
           ctx.lineTo(getX(i), canvas.height - 42);
           ctx.stroke();
         }
+        // 绘制横线
         for (let l of ladder.lines) {
           const x = getX(l.pos);
           ctx.beginPath();
@@ -300,6 +306,7 @@
           ctx.lineTo(x + (canvas.width - 36) / (ladderCols - 1), l.y);
           ctx.stroke();
         }
+        // 如果有高亮路径，则绘制
         if (highlightPath) {
           ctx.save();
           ctx.strokeStyle = "#6afc91";
@@ -313,6 +320,7 @@
           ctx.stroke();
           ctx.restore();
         }
+        // 如果需要显示底部结果
         if (showEnds) {
           for (let i = 0; i < ladderCols; i++) {
             ctx.beginPath();
@@ -325,7 +333,7 @@
             ctx.fillStyle = ladder.ends[i] === "LEVELUP" ? "#10b369" : "#b91414";
             ctx.font = "bold 1.05rem Jua,sans-serif";
             ctx.textAlign = "center";
-            ctx.fillText(ladder.ends[i] === "LEVELUP" ? "Lv↑" : "X", getX(i), canvas.height - 24);
+            ctx.fillText(ladder.ends[i] === "LEVELUP" ? "晋级" : "结束", getX(i), canvas.height - 24);
           }
         }
       }
@@ -389,8 +397,8 @@
               let endIdx = path[path.length - 1].col;
               let endRes = ladder.ends[endIdx];
               resultMsg.innerHTML = endRes === "LEVELUP"
-                ? "🎉 <b>レベルアップ！</b> 次のウェーブ →"
-                : "💀 <b>ゲームオーバー！</b>";
+                ? "🎉 <b>晋级成功！</b> 下一关 →"
+                : "💀 <b>游戏结束！</b>";
               renderTopChoices();
               playing = endRes === "LEVELUP";
               busy = false;
@@ -441,7 +449,7 @@
         if (navigator.share) {
           navigator.share({ title: document.title, url: shareUrl });
         } else {
-          window.prompt("このURLをコピーして友達に送ろう！", shareUrl);
+          window.prompt("复制此链接并发送给朋友！", shareUrl);
         }
       };
       otherBtn.onclick = function () {
@@ -489,36 +497,36 @@
         line-height: 1.6;
         font-size: 14px;
       ">
-      <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e70c2">❓ よくある質問 (FAQ)</h2>
+      <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e70c2">❓ 常见问题 (FAQ)</h2>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q1. ラダーゲームはどのようにプレイしますか？</strong><br />
-        A. 画面上部の数字をタップしてラダーを下り、結果を確認してください！
+        <strong>Q1. 如何玩阶梯游戏？</strong><br />
+        A. 点击屏幕顶部的数字，从阶梯上向下查看结果！
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q2. 「レベルアップ」は何を意味しますか？</strong><br />
-        A. 現在のウェーブをクリアして、より難しい次のラウンドに進みます。
+        <strong>Q2. “晋级”是什么意思？</strong><br />
+        A. 表示你成功走到底部且到达“晋级”格，将进入下一轮更高难度的挑战。
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q3. ゲームはいつ終わりますか？</strong><br />
-        A. 結果が<strong>ゲームオーバー（X）</strong>になるとゲームが終了します。
+        <strong>Q3. 游戏何时结束？</strong><br />
+        A. 如果到达底部显示为“游戏结束”，则本轮游戏失败，需要重新开始。
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q4. 完全にランダムですか？</strong><br />
-        A. はい！ラダーの横線と結果は毎ラウンドランダムにシャッフルされます。
+        <strong>Q4. 结果是随机的吗？</strong><br />
+        A. 是的！每轮的阶梯横线和底部结果都是随机生成的，确保每次都有不同体验。
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q5. どうやって再スタートしますか？</strong><br />
-        A. <strong>再スタート</strong>をタップしてウェーブ1から再プレイできます。
+        <strong>Q5. 如何重新开始游戏？</strong><br />
+        A. 点击“重新开始”按钮，即可回到第一轮重新挑战。
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q6. このゲームを共有できますか？</strong><br />
-        A. はい！<strong>共有</strong>をタップしてリンクをコピーするか、モバイルの共有機能を使用してください。
+        <strong>Q6. 可以分享这款游戏吗？</strong><br />
+        A. 可以！点击“分享”按钮，将游戏链接复制或调用手机的分享功能，邀请好友一起玩。
       </div>
     </section>
   </body>
