@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ja">
+<html lang="zh">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>スピードタップ</title>
+        <title>极速点击</title>
         <meta name="robots" content="index, follow" />
 
         <!-- Canonical URL -->
@@ -12,27 +12,27 @@
         <!-- SEO Meta -->
         <meta
             name="description"
-            content="あなたの指の速さはどれくらい？わずか5秒間でできるだけ速くタップしよう！友達に挑戦してリーダーボードに載ろう。無料でモバイル最適化されたウェブゲームです。" />
+            content="你的手指有多快？在短短5秒内尽可能快速点击！挑战朋友并登上排行榜。免费移动端优化的网页游戏。" />
         <meta
             name="keywords"
-            content="スピードタップ, タップゲーム, 反応速度ゲーム, 5秒チャレンジ, クリックゲーム, モバイルゲーム, 無料ウェブゲーム, ブラウザゲーム, 速度テスト" />
+            content="极速点击, 点击游戏, 反应速度游戏, 5秒挑战, 点击测试, 手机游戏, 免费网页游戏, 浏览器游戏, 速度测试" />
         <meta name="author" content="Itagi" />
 
         <!-- Open Graph (Facebook, Kakao, Discord) -->
-        <meta property="og:title" content="スピードタップ" />
+        <meta property="og:title" content="极速点击" />
         <meta
             property="og:description"
-            content="わずか5秒間でできるだけ速くタップしよう！友達に挑戦してみてね。無料のウェブゲームです！" />
+            content="在仅有的5秒内尽可能快速点击！挑战你的朋友吧。免费在线网页游戏！" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/cn/game/SpeedTap" />
         <meta property="og:type" content="website" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="スピードタップ" />
+        <meta name="twitter:title" content="极速点击" />
         <meta
             name="twitter:description"
-            content="友達に勝とう！5秒間でできるだけ速くタップしよう！" />
+            content="在5秒内比朋友点击得更快！" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
         <!-- Google tag (gtag.js) -->
@@ -130,7 +130,7 @@
                 background: #16a085;
             }
 
-            /* 数字ポップ効果 */
+            /* 数字弹跳效果 */
             .pop {
                 animation: pop 0.2s ease;
             }
@@ -200,16 +200,16 @@
     </head>
 
     <body>
-        <h1>スピードタップ</h1>
-        <p style="margin-top: -10px; margin-bottom: 30px">わずか5秒間でできるだけ速くタップしよう！</p>
+        <h1>极速点击</h1>
+        <p style="margin-top: -10px; margin-bottom: 30px">在短短5秒内尽可能快速点击！</p>
 
-        <div id="tapZone">タップして開始</div>
+        <div id="tapZone">点击开始</div>
 
         <div id="result"></div>
 
         <div class="button-group" id="afterButtons" style="display: none">
-            <button id="restartBtn">再スタート</button>
-            <button id="shareBtn">共有する</button>
+            <button id="restartBtn">再开始</button>
+            <button id="shareBtn">分享</button>
         </div>
 
         <script>
@@ -236,7 +236,7 @@
                 taps = 0;
                 isPlaying = true;
                 result.textContent = "";
-                tapZone.textContent = "Go!";
+                tapZone.textContent = "开始！";
                 tapZone.style.pointerEvents = "auto";
                 tapZone.style.fontSize = "2rem";
                 tapZone.classList.remove("pop");
@@ -244,11 +244,11 @@
 
                 timer = setTimeout(() => {
                     isPlaying = false;
-                    tapZone.textContent = "⏰ 時間切れ！";
+                    tapZone.textContent = "⏰ 时间到！";
                     tapZone.style.pointerEvents = "none";
-                    tapZone.style.fontSize = "2rem"; // サイズリセット
-                    tapZone.classList.remove("pop"); // アニメーション解除
-                    result.textContent = `5秒間に ${taps} 回タップしました！`;
+                    tapZone.style.fontSize = "2rem"; // 重置字号
+                    tapZone.classList.remove("pop"); // 移除动画
+                    result.textContent = `5秒内你点击了 ${taps} 次！`;
                     afterButtons.style.display = "flex";
                 }, 5000);
             }
@@ -261,15 +261,15 @@
                     tapZone.textContent = `${taps}`;
                     updateFontSize();
 
-                    // アニメーション再適用
+                    // 重新触发弹跳动画
                     tapZone.classList.remove("pop");
-                    void tapZone.offsetWidth; // 強制リフロー
+                    void tapZone.offsetWidth; // 强制重绘
                     tapZone.classList.add("pop");
                 }
             });
 
             restartBtn.addEventListener("click", () => {
-                tapZone.textContent = "タップして開始";
+                tapZone.textContent = "点击开始";
                 result.textContent = "";
                 tapZone.style.fontSize = "2rem";
                 tapZone.classList.remove("pop");
@@ -278,20 +278,20 @@
             });
 
             shareBtn.addEventListener("click", async () => {
-                const shareText = `💥 5秒間に ${taps} 回タップしました！\n挑戦してみてね: ${window.location.href}`;
+                const shareText = `💥 5秒内我点击了 ${taps} 次！\n快来挑战我: ${window.location.href}`;
                 if (navigator.share) {
                     try {
                         await navigator.share({
-                            title: "スピードタップチャレンジ",
+                            title: "极速点击挑战",
                             text: shareText,
                             url: window.location.href
                         });
                     } catch {
-                        alert("共有がキャンセルされたか失敗しました。");
+                        alert("分享已取消或失败。");
                     }
                 } else {
                     await navigator.clipboard.writeText(shareText);
-                    alert("スコアとリンクがクリップボードにコピーされました！");
+                    alert("分数和链接已复制到剪贴板！");
                 }
             });
         </script>
@@ -312,40 +312,40 @@
                 cursor: pointer;
             "
             onclick="window.location.href='/'">
-            📂 他のゲーム
+            📂 其他游戏
         </button>
 
         <section style="max-width: 320px; width: 100%; margin: 48px auto 24px auto; font-family: 'Arial', sans-serif; font-size: 14px; background: #1e1e1e; border-radius: 18px; box-shadow: 0 6px 24px #1236; padding: 20px; line-height: 1.6; color: #f0f0f0;">
-          <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb;">❓ よくある質問</h2>
+          <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb;">❓ 常见问题</h2>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q1. スピードタップはどう遊びますか？</strong><br/>
-            A. 緑のゾーンを5秒間できるだけ速くタップしてください。タップ数がスコアになります。
+            <strong>Q1. 极速点击怎么玩？</strong><br/>
+            A. 在绿色区域的5秒内尽可能快速点击，点击次数就是你的得分。
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q2. 一ラウンドはどれくらい続きますか？</strong><br/>
-            A. 正確に5秒間続きます。時間が来るとすぐに結果が表示されます。
+            <strong>Q2. 每局持续多长时间？</strong><br/>
+            A. 精确5秒，时间结束后会立即显示结果。
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q3. ゲームを再スタートするにはどうすればいいですか？</strong><br/>
-            A. 「再スタート」ボタンを押すとすぐにもう一度挑戦できます。
+            <strong>Q3. 如何重新开始游戏？</strong><br/>
+            A. 点击“再开始”按钮即可立即重新挑战。
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q4. スコアを共有できますか？</strong><br/>
-            A. はい！「共有する」ボタンを押すとスコアとリンクをコピーして友達に送れます。
+            <strong>Q4. 怎么分享我的成绩？</strong><br/>
+            A. 点击“分享”按钮会复制成绩和链接，你可以粘贴到社交平台与朋友分享。
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q5. タップ速度は表示に影響しますか？</strong><br/>
-            A. はい！タップするたびに文字が少し大きくなり、視覚的なフィードバックが得られます。
+            <strong>Q5. 点击时有视觉反馈吗？</strong><br/>
+            A. 有！每次点击数字会稍微变大，给你更好的反馈。
           </div>
 
           <div style="margin-bottom: 0;">
-            <strong>Q6. モバイルでもスムーズに遊べますか？</strong><br/>
-            A. もちろんです。タッチ入力に対応しているのでスマホやタブレットでも問題なく動作します。
+            <strong>Q6. 手机上也能流畅玩？</strong><br/>
+            A. 当然！支持触摸输入，手机和平板都能顺畅进行游戏。
           </div>
         </section>
     </body>

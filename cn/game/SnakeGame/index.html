@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ja">
+<html lang="zh">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>スネークゲーム</title>
+        <title>贪吃蛇游戏</title>
         <meta name="robots" content="index, follow" />
 
         <!-- Canonical URL -->
@@ -11,25 +11,25 @@
         <!-- SEO Meta -->
         <meta
             name="description"
-            content="クラシックなスネークゲームをオンラインでプレイしよう。エサを食べて長くなり、衝突しないよう気をつけて進めてね！ダウンロード不要ですぐ遊べます。" />
-        <meta name="keywords" content="スネークゲーム, クイックプレイアーケード, 無料ウェブゲーム, スネークプレイ, モバイルスネークゲーム" />
+            content="在线玩经典贪吃蛇游戏。吃食物让身体变长，小心避免碰撞！无需下载，立即开始游戏。" />
+        <meta name="keywords" content="贪吃蛇游戏, 快速游玩街机, 免费网页游戏, 蛇吃食物, 手机贪吃蛇" />
         <meta name="author" content="Itagi" />
 
         <!-- Open Graph (Facebook, Kakao, etc) -->
-        <meta property="og:title" content="スネークゲーム – クイックプレイアーケード" />
+        <meta property="og:title" content="贪吃蛇游戏 – 快速游玩街机" />
         <meta
             property="og:description"
-            content="食べて成長、衝突を避けよう。ブラウザですぐ遊べるクラシックスネークゲーム！" />
+            content="吃食物成长，避免碰撞。浏览器中即可玩经典贪吃蛇游戏！" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/cn/game/SnakeGame" />
         <meta property="og:type" content="website" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="スネークゲーム – クイックプレイ" />
+        <meta name="twitter:title" content="贪吃蛇游戏 – 快速游玩" />
         <meta
             name="twitter:description"
-            content="高速で楽しいスネークゲームを今すぐオンラインでプレイしよう – ログイン不要！" />
+            content="极速有趣的贪吃蛇游戏，立即在线畅玩 – 无需登录！" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
@@ -206,14 +206,14 @@
 
     <body>
         <h1>
-            <span style="color: #8f94fb">クイックプレイ:</span>
-            <span style="color: #0a0">ス</span><span style="color: #6f6">ネーク</span>
+            <span style="color: #8f94fb">快速游玩:</span>
+            <span style="color: #0a0">贪吃蛇</span>
         </h1>
-        <p class="description">食べて、成長し、衝突を避けよう！行こう！</p>
+        <p class="description">吃食物，成长，避开碰撞！开始吧！</p>
 
         <div class="game-container">
             <canvas id="game" width="300" height="300"></canvas>
-            <button id="start-btn">開始</button>
+            <button id="start-btn">开始</button>
             <div id="game-over"></div>
         </div>
 
@@ -228,7 +228,7 @@
             <button class="btn down" onclick="setDirection('ArrowDown')" style="font-size: 26px">▼</button>
         </div>
 
-        <button class="menu" onclick="goToMain()">📂 他のゲーム</button>
+        <button class="menu" onclick="goToMain()">📂 其他游戏</button>
 
         <script>
             const canvas = document.getElementById("game");
@@ -340,10 +340,10 @@
                 gameOverDiv.innerHTML = "";
 
                 const msg = document.createElement("p");
-                msg.textContent = `あなたのスコア: ${score}`;
+                msg.textContent = `你的分数: ${score}`;
 
                 const retry = document.createElement("button");
-                retry.textContent = "再挑戦";
+                retry.textContent = "再来一次";
                 retry.className = "restart";
                 retry.style.width = "100px";
                 retry.style.height = "50px";
@@ -356,7 +356,7 @@
                 };
 
                 const share = document.createElement("button");
-                share.textContent = "共有";
+                share.textContent = "分享";
                 share.className = "share";
                 share.style.marginTop = "10px";
                 share.style.width = "100px";
@@ -371,26 +371,26 @@
             }
 
             function goToMain() {
-                window.location.href = "/"; // または 'index.html'
+                window.location.href = "/"; // 或者 'index.html'
             }
 
             function shareGame() {
                 const url = window.location.href;
-                const text = `🐍 クイックプレイスネーク - 私のスコア: ${lastScore}\n今すぐプレイ！`;
+                const text = `🐍 快速游玩贪吃蛇 – 我的分数: ${lastScore}\n立即挑战！`;
                 if (navigator.share) {
                     navigator
                         .share({
-                            title: "クイックプレイ: スネーク",
+                            title: "快速游玩: 贪吃蛇",
                             text,
                             url
                         })
-                        .catch(() => alert("共有に失敗しました。リンクをコピーしてください。"));
+                        .catch(() => alert("分享失败，请复制链接。"));
                 } else {
                     const full = `${text}\n${url}`;
                     navigator.clipboard
                         .writeText(full)
-                        .then(() => alert("スコアとリンクがクリップボードにコピーされました！"))
-                        .catch(() => alert(`次のリンクをコピーしてください:\n${full}`));
+                        .then(() => alert("分数和链接已复制到剪贴板！"))
+                        .catch(() => alert(`请复制以下链接：\n${full}`));
                 }
             }
         </script>
@@ -408,36 +408,36 @@
                 line-height: 1.6;
                 color: #f0f0f0;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ よくある質問</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ 常见问题</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. スネークゲームはどう遊びますか？</strong><br />
-                A. 矢印キー（または画面のボタン）でヘビを動かし、赤いエサを食べると長くなります！
+                <strong>Q1. 如何游玩贪吃蛇？</strong><br />
+                A. 使用箭头键（或画面按钮）移动蛇，吃掉红色食物后变长！
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. ゲームオーバーになる条件は何ですか？</strong><br />
-                A. 壁にぶつかるか、自分の体に衝突するとゲームオーバーになります。
+                <strong>Q2. 什么情况下游戏会结束？</strong><br />
+                A. 撞到墙壁或撞到自己的身体时，会立即结束游戏。
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. 再スタートできますか？</strong><br />
-                A. はい！ゲーム終了後、「再挑戦」ボタンを押せばすぐに再開できます。
+                <strong>Q3. 可以重新开始吗？</strong><br />
+                A. 可以！游戏结束后点击“再来一次”按钮即可重新开始。
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. スコアを共有できますか？</strong><br />
-                A. はい！ゲーム終了後、「共有」ボタンを押してスコアをコピーまたは共有できます。
+                <strong>Q4. 怎么分享分数？</strong><br />
+                A. 点击“分享”按钮会复制分数和链接，可粘贴到社交平台与朋友分享。
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. モバイルにも最適化されていますか？</strong><br />
-                A. もちろんです。画面に表示される矢印ボタンでスマホやタブレットでもプレイできます。
+                <strong>Q5. 这个游戏手机端能玩吗？</strong><br />
+                A. 当然！屏幕上的箭头按钮可以在手机或平板上操作。
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. ゲームスピードは変わりますか？</strong><br />
-                A. 現在は固定速度ですが、将来的なアップデートでヘビの長さに応じて速くなる可能性があります。
+                <strong>Q6. 游戏速度会改变吗？</strong><br />
+                A. 目前速度固定，但将来可能会根据蛇的长度加快速度。
             </div>
         </section>
     </body>

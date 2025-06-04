@@ -1,30 +1,30 @@
 <!doctype html>
-<html lang="ja">
+<html lang="zh">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="AIと対戦するPONGゲーム！レトロスタイルのPONGでAIに挑戦し、先に10点を獲得しましょう。モバイルとPCで無料で楽しめます。" />
+            content="与 AI 对战的 PONG 游戏！在复古风格的 PONG 中挑战 AI，先获得 10 分即可获胜。移动端和 PC 免费畅玩。" />
         <meta
             name="keywords"
-            content="PONG, PONG AI, PONG ウェブゲーム, ブラウザゲーム, クラシックアーケード, AI PONG, ピンポン, 卓球, 無料ゲーム, ウェブゲーム, モバイルゲーム, 即プレイ, アーケード" />
+            content="PONG, PONG AI, PONG 网页游戏, 浏览器游戏, 经典街机, AI PONG, 乒乓球, 免费游戏, 网页游戏, 手机游戏, 即点即玩, 街机" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/cn/game/PONGvsAI" />
 
-        <meta property="og:title" content="PONG vs AI – クラシックPONGウェブゲーム" />
+        <meta property="og:title" content="PONG 对战 AI – 经典 PONG 网页游戏" />
         <meta
             property="og:description"
-            content="AIに挑戦して先に10点を獲得しよう！ブラウザでレトロなPONGを楽しんでください。ダウンロード不要で即プレイ！" />
+            content="挑战 AI，先得 10 分赢得比赛！在浏览器中享受复古 PONG，免下载，立即开始！" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/cn/game/PONGvsAI" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="PONG vs AI – クラシックPONGウェブゲーム" />
-        <meta name="twitter:description" content="スマートなAIと対戦するクラシックPONG。今すぐプレイしてスコアを共有しよう！" />
+        <meta name="twitter:title" content="PONG 对战 AI – 经典 PONG 网页游戏" />
+        <meta name="twitter:description" content="与智能 AI 对战的经典 PONG。立即游玩并分享你的分数！" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -41,7 +41,7 @@
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <title>PONG vs AI</title>
+        <title>PONG 对战 AI</title>
         <style>
             html,
             body {
@@ -206,23 +206,23 @@
 
     <body>
         <div id="container">
-            <div id="gameTitle">PONG vs AI</div>
-            <div id="desc">先に10点取った方が勝ち！</div>
+            <div id="gameTitle">PONG 对战 AI</div>
+            <div id="desc">先得 10 分者胜！</div>
             <div id="scoreBoard"></div>
             <canvas id="pong" width="400" height="260"></canvas>
-            <button id="startBtn" onclick="startGame()">ゲーム開始</button>
+            <button id="startBtn" onclick="startGame()">开始游戏</button>
             <div id="winMsg"></div>
             <div class="gameOverBtns" style="display: none">
-                <button onclick="restartGame()">再スタート</button>
-                <button onclick="shareScore()">共有</button>
+                <button onclick="restartGame()">再来一次</button>
+                <button onclick="shareScore()">分享</button>
             </div>
             <div class="desc-ctrl">
-                操作方法: W/S (左側あなた) ・ 右パドルはAIが操作<br />モバイルでは左側をドラッグしてください。
+                操作说明：W/S (左侧玩家) · 右边球拍由 AI 控制<br />移动端请拖动左侧区域进行操作。
             </div>
         </div>
-        <button id="otherGames" onclick="window.location.href='../'">他のゲーム</button>
+        <button id="otherGames" onclick="window.location.href='../'">其他游戏</button>
         <script>
-            // --- 変数宣言 ---
+            // --- 变量声明 ---
             const canvas = document.getElementById("pong");
             const ctx = canvas.getContext("2d");
             const scoreBoard = document.getElementById("scoreBoard");
@@ -245,7 +245,7 @@
             let aiLevel = 0.15;
             let rafId;
 
-            // スパークパーティクルシステム
+            // 粒子系统（火花效果）
             let particles = [];
 
             function spawnSpark(x, y, color = "#ffe287", count = 15) {
@@ -337,19 +337,20 @@
             }
 
             function stepGame() {
+                // 左侧球拍移动
                 leftY += leftMove * paddleSpeed;
                 leftY = Math.max(0, Math.min(canvas.height - paddleHeight, leftY));
-                // AI (右側)
+                // AI 控制右侧球拍
                 let targetY = ballY - (paddleHeight - ballSize) / 2;
                 rightY += (targetY - rightY) * aiLevel;
                 rightY = Math.max(0, Math.min(canvas.height - paddleHeight, rightY));
-                // ボール移動
+                // 球移动
                 ballX += ballVelX;
                 ballY += ballVelY;
 
-                // 壁反射
+                // 撞墙反弹
                 if (ballY <= 0 || ballY + ballSize >= canvas.height) ballVelY *= -1;
-                // パドル衝突
+                // 撞左侧球拍
                 let sparkAt = null;
                 if (ballX <= 10 + paddleWidth && ballY + ballSize >= leftY && ballY <= leftY + paddleHeight) {
                     ballX = 10 + paddleWidth;
@@ -358,6 +359,7 @@
                     ballVelY += hit * 2.0;
                     sparkAt = { x: ballX + ballSize / 2, y: ballY + ballSize / 2, color: "#ffe287" };
                 }
+                // 撞右侧球拍
                 if (
                     ballX + ballSize >= canvas.width - 10 - paddleWidth &&
                     ballY + ballSize >= rightY &&
@@ -371,7 +373,7 @@
                 }
                 if (sparkAt) spawnSpark(sparkAt.x, sparkAt.y, sparkAt.color);
 
-                // 得点およびゲームオーバーチェック
+                // 得分和游戏结束检测
                 if (ballX < 0) {
                     rightScore++;
                     updateScore();
@@ -426,27 +428,27 @@
                 gameRunning = false;
                 inGame = false;
                 cancelAnimationFrame(rafId);
-                winMsgDiv.textContent = playerWin ? "あなたの勝ち！ 🎉" : "AIの勝利！ 🤖";
+                winMsgDiv.textContent = playerWin ? "你赢了！ 🎉" : "AI 获胜！ 🤖";
                 gameOverBtns.style.display = "block";
             }
 
-            // 共有ボタン
+            // 分享分数
             function shareScore() {
-                let text = `[PONG vs AI]\n${winMsgDiv.textContent}\nあなたのスコア: ${leftScore}, AI: ${rightScore}\n\nここでプレイ: ${window.location.href}`;
+                let text = `[PONG 对战 AI]\n${winMsgDiv.textContent}\n你的分数: ${leftScore}, AI: ${rightScore}\n\n在此游玩: ${window.location.href}`;
                 if (navigator.share) {
-                    navigator.share({ title: "PONG vs AI", text })
+                    navigator.share({ title: "PONG 对战 AI", text })
                         .catch(() => {
                             navigator.clipboard.writeText(text);
-                            alert("結果がクリップボードにコピーされました！\n\n" + text);
+                            alert("结果已复制到剪贴板！\n\n" + text);
                         });
                 } else {
                     navigator.clipboard.writeText(text).then(() => {
-                        alert("結果がクリップボードにコピーされました！\n\n" + text);
+                        alert("结果已复制到剪贴板！\n\n" + text);
                     });
                 }
             }
 
-            // キーボード操作
+            // 键盘操作
             document.addEventListener("keydown", (e) => {
                 if (!inGame) return;
                 if (e.key === "w" || e.key === "W") leftMove = -1;
@@ -458,7 +460,7 @@
                 if (e.key === "s" || e.key === "S") leftMove = 0;
             });
 
-            // モバイルタッチ（左パドルのみ）
+            // 移动端触摸（仅控制左侧球拍）
             canvas.addEventListener("touchstart", function (e) {
                 if (!inGame) return;
                 const rect = canvas.getBoundingClientRect();
@@ -483,7 +485,7 @@
                 e.preventDefault();
             });
 
-            // モバイルでのスクロール防止
+            // 移动端滚动阻止
             document.body.addEventListener(
                 "touchmove",
                 function (e) {
@@ -494,7 +496,7 @@
                 }
             );
 
-            // 初期表示
+            // 初始化显示
             updateScore();
             resetVars();
             draw();
@@ -516,36 +518,36 @@
                 line-height: 1.6;
                 color: #f0f0f0;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #f9bc60">❓ よくある質問</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #f9bc60">❓ 常见问题</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. どのようにプレイしますか？</strong><br />
-                A. 左側のパドルを操作し、AIより先に10点を獲得しましょう。W/Sキーを使うか、モバイルではドラッグで操作できます。
+                <strong>Q1. 如何游玩？</strong><br />
+                A. 操作左侧球拍，比 AI 先得到 10 分获胜。使用键盘 W/S 键或移动端拖动左侧区域操作。
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. 操作方法は何ですか？</strong><br />
-                A. PCではWキー（上）とSキー（下）を使用します。モバイルでは画面左側を指でドラッグしてください。
+                <strong>Q2. 操作方法是什么？</strong><br />
+                A. PC 使用 W 键（上）和 S 键（下）。移动端请在画面左侧区域拖动。
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. AIはどのように動作しますか？</strong><br />
-                A. AIはボールを追跡し、自動でパドルを操作します。ボール速度が速くなるほどAIの難易度も上がります。
+                <strong>Q3. AI 如何行动？</strong><br />
+                A. AI 会跟踪球的位置并自动控制球拍。随着球速加快，AI 难度也会提升。
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. 勝利または敗北したらどうなりますか？</strong><br />
-                A. 勝利または敗北のメッセージが表示されます。その後、再スタートしたりスコアを共有したりできます。
+                <strong>Q4. 赢或输时会发生什么？</strong><br />
+                A. 显示胜利或失败信息，然后可以选择再来一次或分享分数。
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. 結果をどうやって共有できますか？</strong><br />
-                A. 「共有」ボタンを押すとスコアがコピーされ、友達と共有できます。
+                <strong>Q5. 如何分享结果？</strong><br />
+                A. 点击“分享”按钮可以复制分数文本，然后粘贴或分享到社交平台。
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. モバイル対応ですか？</strong><br />
-                A. はい、モバイルおよびデスクトップのブラウザ両方に最適化されています。
+                <strong>Q6. 支持移动设备吗？</strong><br />
+                A. 是的，本游戏针对移动端和桌面端浏览器进行了优化，可流畅运行。
             </div>
         </section>
     </body>

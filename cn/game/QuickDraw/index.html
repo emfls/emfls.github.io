@@ -1,32 +1,32 @@
 <!doctype html>
-<html lang="ja">
+<html lang="zh">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="反射神経をテストしよう！クイックドロー・デュエル！DRAW信号の後、相手より早く撃とう。楽しくて高速なモバイル最適化ウェブゲームです。" />
+            content="测试你的反应速度！快速拔枪对决！在DRAW信号后比对方更快地射击。这款有趣且高速的移动端优化网页游戏。" />
         <meta
             name="keywords"
-            content="クイックドロー, カウボーイ決闘, 反応ゲーム, ウェブゲーム, 即プレイ, ブラウザゲーム, モバイルゲーム, 無料ゲーム" />
+            content="快速拔枪, 牛仔对决, 反应游戏, 网页游戏, 即点即玩, 浏览器游戏, 手机游戏,免费游戏" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/cn/game/QuickDraw" />
 
-        <meta property="og:title" content="クイックドロー・デュエル – カウボーイ反応ウェブゲーム" />
+        <meta property="og:title" content="快速拔枪对决 – 牛仔反应网页游戏" />
         <meta
             property="og:description"
-            content="相手より早く撃とう！無料のカウボーイ反応ゲームをプレイしよう。モバイルやPCでダウンロード不要で楽しめます。" />
+            content="比对方更快地射击！来玩免费的牛仔反应游戏。在移动端或 PC 上无需下载即可体验。" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/cn/game/QuickDraw" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="クイックドロー・デュエル – カウボーイ反応ウェブゲーム" />
+        <meta name="twitter:title" content="快速拔枪对决 – 牛仔反应网页游戏" />
         <meta
             name="twitter:description"
-            content="友達に挑戦しよう！この楽しくて即プレイ可能な西部劇ゲームで誰が一番速いか確かめよう！" />
+            content="挑战好友！在这款有趣且即点即玩的西部牛仔游戏中看看谁是最快的！" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -43,7 +43,7 @@
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <title>クイックドロー・デュエル</title>
+        <title>快速拔枪对决</title>
         <link
             href="https://fonts.googleapis.com/css2?family=Bangers&family=Inter:wght@400;700&display=swap"
             rel="stylesheet" />
@@ -148,30 +148,30 @@
     </head>
 
     <body>
-        <h1>クイックドロー・デュエル</h1>
-        <p>相手より早く撃とう！</p>
+        <h1>快速拔枪对决</h1>
+        <p>比对方更快地射击！</p>
         <div class="arena">
             <div class="cowboy" id="enemy">
                 <div id="enemyFace">🤠</div>
                 <div id="enemyGun" class="gun">🔫</div>
-                <span>敵</span>
+                <span>敌人</span>
             </div>
             <div class="cowboy" id="player">
                 <div id="playerFace">😐</div>
                 <div id="playerGun" class="gun">🔫</div>
-                <span>あなた</span>
+                <span>你</span>
             </div>
         </div>
 
-        <div id="message">「開始」を押してゲームをスタートしてください。</div>
+        <div id="message">点击“开始”按钮以开始游戏。</div>
 
         <div class="btn-group">
-            <button class="btn" id="startBtn" onclick="startGame()">開始</button>
+            <button class="btn" id="startBtn" onclick="startGame()">开始</button>
             <button class="btn" id="shootBtn" onclick="handlePlayerShoot()" style="display: none; background: red">
-                撃て！
+                射击！
             </button>
-            <button class="btn" id="restartBtn" onclick="restartGame()" style="display: none">再プレイ</button>
-            <button class="btn" id="shareBtn" onclick="shareResult()" style="display: none">共有</button>
+            <button class="btn" id="restartBtn" onclick="restartGame()" style="display: none">再玩一局</button>
+            <button class="btn" id="shareBtn" onclick="shareResult()" style="display: none">分享</button>
         </div>
 
         <script>
@@ -208,13 +208,13 @@
                 restartBtn.style.display = "none";
                 shareBtn.style.display = "none";
                 shootBtn.style.display = "inline-block";
-                message.textContent = "DRAWの合図を待ってください...";
+                message.textContent = "请等待‘DRAW’信号...";
 
                 drawTimeout = setTimeout(
                     () => {
                         readyToShoot = true;
                         drawTime = performance.now();
-                        message.textContent = "撃て！🔫";
+                        message.textContent = "射击！🔫";
                         enemyFace.textContent = "😠";
                         playerFace.textContent = "😠";
 
@@ -223,7 +223,7 @@
                             if (!playerReacted) {
                                 enemyGun.classList.add("show");
                                 playerFace.textContent = "💀";
-                                endGame("遅すぎる…あなたの負け！");
+                                endGame("太慢了...你输了！");
                             }
                         }, enemyReactTime);
                     },
@@ -253,8 +253,8 @@
 
                 if (!readyToShoot) {
                     playerFace.textContent = "😵";
-                    message.textContent = "早すぎる…敗北！";
-                    endGame("早すぎた！");
+                    message.textContent = "太早了...你输了！";
+                    endGame("出手太早！");
                     return;
                 }
 
@@ -266,10 +266,10 @@
 
                 if (enemyGun.classList.contains("show")) {
                     playerFace.textContent = "💀";
-                    endGame("遅すぎる…あなたの負け！");
+                    endGame("太慢了...你输了！");
                 } else {
                     enemyFace.textContent = "💀";
-                    endGame(`あなたの勝ち！ (${lastReaction}ms)`);
+                    endGame(`你赢了！（${lastReaction}ms）`);
                 }
             }
 
@@ -279,13 +279,13 @@
 
             function shareResult() {
                 const baseUrl = "https://emfls.github.io/QuickDraw/index.html";
-                let text = "🔥 さっきクイックドロー・デュエルをプレイしたよ！";
+                let text = "🔥 刚才我玩了《快速拔枪对决》！";
                 if (lastReaction !== null) {
-                    text = `🤠 私の反応速度は ${lastReaction}ms だったよ！あなたも挑戦してみてね！`;
+                    text = `🤠 我的反应速度是 ${lastReaction}ms！快来试试吧！`;
                 }
 
                 const shareData = {
-                    title: "クイックドロー・デュエル",
+                    title: "快速拔枪对决",
                     text: text,
                     url: baseUrl
                 };
@@ -301,7 +301,7 @@
 
             function fallbackCopy(text) {
                 navigator.clipboard.writeText(text).then(() => {
-                    alert("結果がクリップボードにコピーされました！共有したい場所に貼り付けてください 😎");
+                    alert("结果已复制到剪贴板！请粘贴到想分享的地方 😎");
                 });
             }
 
@@ -325,39 +325,39 @@
                 color: white;
             "
             onclick="window.location.href='/'">
-            📂 他のゲーム
+            📂 其他游戏
         </button>
         <section style="max-width: 320px; width: 100%; margin: 48px auto 24px auto; font-family: 'Arial', sans-serif; font-size: 14px; background: #fff8e0; border-radius: 18px; box-shadow: 0 6px 24px #aa8844; padding: 20px; line-height: 1.6; color: #3e2c00;">
-          <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #5a3e1b;">❓ よくある質問</h2>
+          <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #5a3e1b;">❓ 常见问题</h2>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q1. このゲームはどう遊びますか？</strong><br/>
-            A. 「開始」の後、DRAWの合図が出たら画面をタップするか「撃て！」ボタンを押して相手より先に撃ちましょう。
+            <strong>Q1. 如何游玩？</strong><br/>
+            A. 点击“开始”后，等待“DRAW”信号出现，一旦出现，点击屏幕或按“射击！”按钮，争取比对手更快地射击。
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q2. 合図が来る前に撃ったらどうなりますか？</strong><br/>
-            A. 合図が出る前に撃つと即敗北になります。合図が来るまでじっと待ってください！
+            <strong>Q2. 在信号出现前就射击会怎样？</strong><br/>
+            A. 提前射击会立即失败。请务必等到信号出现后再行动！
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q3. モバイルでもプレイできますか？</strong><br/>
-            A. はい！画面をタップするだけで撃つことができます。ボタンを押さなくても遊べます！
+            <strong>Q3. 可以在移动端游玩吗？</strong><br/>
+            A. 可以！只需点击屏幕即可射击，游戏无需点击按钮即可进行。
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q4. どれくらいの反応速度が良いですか？</strong><br/>
-            A. 300ms以下なら優秀です。プロのカウボーイは200ms以下を記録することもあります！
+            <strong>Q4. 什么反应速度算优秀？</strong><br/>
+            A. 如果能在 300ms 以内响应就很出色了。专业牛仔有时能做到 200ms 以下！
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q5. 結果を共有できますか？</strong><br/>
-            A. はい！デュエル後に「共有」ボタンを使って反応速度を自慢しましょう。
+            <strong>Q5. 如何分享结果？</strong><br/>
+            A. 游戏结束后点击“分享”按钮即可分享到社交媒体，展示你的反应速度。
           </div>
 
           <div style="margin-bottom: 0;">
-            <strong>Q6. 毎回フェアなゲームですか？</strong><br/>
-            A. はい。合図のタイミングとAIの反応は毎回ランダムで設定されるため、予測できません。
+            <strong>Q6. 游戏每次都公平吗？</strong><br/>
+            A. 是的。信号时间和 AI 反应均随机生成，无法事先预测，保证公平对决。
           </div>
         </section>
 

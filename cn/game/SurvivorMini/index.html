@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="ja">
+<html lang="zh">
   <head>
     <meta charset="UTF-8" />
-    <title>サバイバーミニ</title>
+    <title>生存迷你</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -22,29 +22,29 @@
     <!-- SEO & Social meta -->
     <meta
       name="description"
-      content="サバイバーミニは高速アクションブラウザゲームです。モンスターをかわし、レベルアップしてできるだけ長く生き延びましょう！無料でプレイでき、ダウンロード不要です。" />
+      content="生存迷你是一款高速动作浏览器游戏。躲避怪物，升级并尽可能长时间生存！免费游玩，无需下载。" />
     <meta
       name="keywords"
-      content="サバイバー, ミニゲーム, アクションゲーム, サバイバル, シューター, アーケード, ブラウザゲーム, 無料, サバイブ, ウェーブ, シューティングゲーム, ゾンビ, アーケード, ウェブゲーム" />
+      content="生存者, 迷你游戏, 动作游戏, 生存, 射击, 街机, 浏览器游戏, 免费, 波次, 射击游戏, 僵尸, 网页游戏" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ja" />
+    <meta name="language" content="zh" />
     <meta name="theme-color" content="#181a20" />
     <link rel="canonical" href="https://emfls.github.io/cn/game/SurvivorMini/index.html" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
     <!-- Open Graph (Facebook, Kakao, etc) -->
-    <meta property="og:title" content="サバイバーミニ – アクションウェブゲーム" />
+    <meta property="og:title" content="生存迷你 – 动作网页游戏" />
     <meta
       property="og:description"
-      content="次々と押し寄せるウェーブの中、どれだけ長く生き延びられますか？高速アクションブラウザゲームでレベルアップし、ハイスコアを目指しましょう！" />
+      content="在不断到来的敌浪中，你能活多久？在这款高速动作浏览器游戏中升级，追求最高分！" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/cn/game/SurvivorMini/index.html" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="サバイバーミニ – アクションウェブゲーム" />
+    <meta name="twitter:title" content="生存迷你 – 动作网页游戏" />
     <meta
       name="twitter:description"
-      content="ウェーブを耐え抜き、ハイスコアを競おう！100%無料のブラウザアクションゲームです。" />
+      content="在不断到来的敌浪中，你能活多久？在这款高速动作浏览器游戏中升级，追求最高分！" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <style>
       html,
@@ -144,7 +144,7 @@
         letter-spacing: 0.2px;
         text-shadow: 0 2px 8px #000a;
       }
-      /* === 中央ポップアップデザイン === */
+      /* === 中央弹窗设计 === */
       .centerPopup {
         display: none;
         position: absolute;
@@ -197,7 +197,7 @@
       .popupBtn:active {
         background: #1a75ff;
       }
-      /* === ジョイスティックUI改善 === */
+      /* === 摇杆 UI 改善 === */
       #joystickWrap {
         position: absolute;
         bottom: 24px;
@@ -255,8 +255,8 @@
       <canvas id="game" width="375" height="500"></canvas>
       <div id="hud">
         <div id="stats">
-          <span id="score">得点:0</span>
-          <span id="wave">ウェーブ:1</span>
+          <span id="score">得分:0</span>
+          <span id="wave">波次:1</span>
           <span id="time">0:00</span>
         </div>
         <div id="barwrap">
@@ -288,7 +288,7 @@
         cursor: pointer;
       "
       onclick="window.location.href='/'">
-      📂 他のゲーム
+      📂 其他游戏
     </button>
     <script>
       const W = 375,
@@ -344,7 +344,7 @@
       }
       reset();
 
-      // ====== 円形タッチジョイスティック＋キーボード対応 ======
+      // ====== 圆形触摸摇杆＋键盘支持 ======
       let dragging = false;
       function setJoystickActive(active) {
         if (active) {
@@ -401,7 +401,7 @@
         }
       };
 
-      // PCのキーボードも対応（ポップアップ表示中は入力無効）
+      // PC 键盘也支持（弹窗显示时输入无效）
       window.addEventListener("keydown", (e) => {
         if (state.pause || state.gameover) return;
         if (e.key === "ArrowUp") state.input.y = -1;
@@ -414,7 +414,7 @@
         if (["ArrowLeft", "ArrowRight"].includes(e.key)) state.input.x = 0;
       });
 
-      // ========== メインループ ==========
+      // ========== 主循环 ==========
       function loop() {
         if (!state.gameover && !state.pause) update();
         draw();
@@ -426,7 +426,7 @@
       function update() {
         state.tick++;
         state.time = (state.tick / 60) | 0;
-        // 移動
+        // 移动
         let dx = state.input.x + state.joy.x,
           dy = state.input.y + state.joy.y;
         let len = Math.hypot(dx, dy);
@@ -436,7 +436,7 @@
           state.player.x = Math.max(state.player.r, Math.min(W - state.player.r, state.player.x));
           state.player.y = Math.max(state.player.r, Math.min(H - state.player.r, state.player.y));
         }
-        // 弾丸：最も近い敵に自動誘導
+        // 子弹：自动引导最近敌人
         state.player.fire++;
         if (state.player.fire >= state.player.fireRate) {
           for (let i = 0; i < state.player.bullets; i++) {
@@ -463,7 +463,7 @@
           }
           state.player.fire = 0;
         }
-        // 弾丸移動／命中判定
+        // 子弹移动／命中判定
         state.bullets = state.bullets.filter((b) => {
           b.x += b.vx;
           b.y += b.vy;
@@ -483,7 +483,7 @@
           }
           return true;
         });
-        // 敵のスポーン
+        // 敌人出场
         if (state.tick % Math.max(11, 42 - state.wave * 2) === 0) {
           let t = state.wave,
             r = 14 + Math.random() * 8,
@@ -502,7 +502,7 @@
             boss: 0
           });
         }
-        // ボス（1分ごと）
+        // Boss（每分钟出现）
         if (--state.bosscool <= 0) {
           state.bosscool = 870 + Math.random() * 90;
           let hp = 17 + state.wave * 4;
@@ -520,7 +520,7 @@
             boss: 1
           });
         }
-        // 敵の移動／衝突判定
+        // 敌人移动／碰撞判定
         for (let m of state.mobs) {
           if (m.dead) continue;
           let dx = state.player.x - m.x,
@@ -537,7 +537,7 @@
           }
         }
         state.mobs = state.mobs.filter((m) => !m.dead);
-        // アイテム処理
+        // 道具处理
         state.items = state.items.filter((it) => {
           if (Math.hypot(state.player.x - it.x, state.player.y - it.y) < state.player.r + it.r + 7) {
             if (it.type === "heal") state.player.hp = Math.min(state.player.maxhp, state.player.hp + 2);
@@ -558,14 +558,14 @@
           }
           return true;
         });
-        // 経験値／レベルアップ
+        // 经验／升级
         while (state.player.xp >= state.player.xpNext) {
           state.player.xp -= state.player.xpNext;
           state.player.lv++;
           state.player.xpNext = 8 + Math.floor(state.player.lv * 1.6);
           showLevelUp();
         }
-        // ウェーブ更新
+        // 波次更新
         state.wave = Math.floor(state.time / 18) + 1;
       }
       function dropExp(m) {
@@ -587,41 +587,41 @@
         }
       }
 
-      // ===== レベルアップ選択 =====
+      // ===== 升级选择 =====
       function showLevelUp() {
         setJoystickActive(false);
         let upgrades = [
           {
-            name: "発射速度↑",
-            desc: "より速く射撃",
+            name: "射速↑",
+            desc: "射击更快",
             act: () => {
               state.player.fireRate = Math.max(13, state.player.fireRate - 6);
             }
           },
           {
-            name: "弾丸数↑",
-            desc: "弾丸数を増やす",
+            name: "子弹数↑",
+            desc: "增加子弹数量",
             act: () => {
               state.player.bullets = Math.min(6, state.player.bullets + 1);
             }
           },
           {
-            name: "移動速度↑",
-            desc: "移動速度を上げる",
+            name: "移动速度↑",
+            desc: "提高移动速度",
             act: () => {
               state.player.spd += 0.7;
             }
           },
           {
-            name: "攻撃力↑",
-            desc: "攻撃力を上げる",
+            name: "攻击力↑",
+            desc: "提升攻击力",
             act: () => {
               state.player.atk += 1;
             }
           },
           {
             name: "最大体力↑",
-            desc: "最大体力+1かつ回復",
+            desc: "最大生命值+1并回血",
             act: () => {
               state.player.maxhp += 1;
               state.player.hp = Math.min(state.player.hp + 1, state.player.maxhp);
@@ -634,7 +634,7 @@
           if (!pick.includes(i)) pick.push(i);
         }
         levelup.innerHTML =
-          `<b>レベルアップ！<br>アップグレードを選択してください</b>
+          `<b>升级！<br>请选择一个升级</b>
     <div class='popupButtons'>` +
           pick
             .map(
@@ -670,7 +670,7 @@
         setJoystickActive(true);
       };
 
-      // ===== ゲームオーバー =====
+      // ===== 游戏结束 =====
       function gameOver() {
         setJoystickActive(false);
         state.gameover = true;
@@ -678,12 +678,12 @@
           hiscore = state.score;
           localStorage.surv_hi = hiscore;
         }
-        gameover.innerHTML = `<b>ゲームオーバー</b><br>
-    得点: <b>${state.score}</b><br>
-    ウェーブ: <b>${state.wave}</b><br>
-    時間: <b>${Math.floor(state.time / 60)}:${("0" + (state.time % 60)).slice(-2)}</b><br>
-    <span style="font-size:0.9em;color:#bbf;">ハイスコア: ${hiscore}</span><br>
-    <div class="popupButtons"><button class="popupBtn" onclick="restart()">再スタート</button></div>`;
+        gameover.innerHTML = `<b>游戏结束</b><br>
+    得分: <b>${state.score}</b><br>
+    波次: <b>${state.wave}</b><br>
+    时间: <b>${Math.floor(state.time / 60)}:${("0" + (state.time % 60)).slice(-2)}</b><br>
+    <span style="font-size:0.9em;color:#bbf;">最高分: ${hiscore}</span><br>
+    <div class="popupButtons"><button class="popupBtn" onclick="restart()">重新开始</button></div>`;
         gameover.style.display = "block";
       }
       window.restart = () => {
@@ -691,10 +691,10 @@
         setJoystickActive(true);
       };
 
-      // ========== 描画 ==========
+      // ========== 渲染 ==========
       function draw() {
         ctx.clearRect(0, 0, W, H);
-        // 背景の円
+        // 背景圆环
         ctx.save();
         for (let i = 0; i < 7; i++) {
           ctx.beginPath();
@@ -704,7 +704,7 @@
           ctx.stroke();
         }
         ctx.restore();
-        // アイテム
+        // 道具
         for (let it of state.items) {
           if (it.type === "exp") {
             ctx.beginPath();
@@ -738,7 +738,7 @@
             ctx.fillText("🧲", it.x - 8, it.y + 6);
           }
         }
-        // 敵
+        // 敌人
         for (let m of state.mobs) {
           ctx.beginPath();
           ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
@@ -750,9 +750,9 @@
             ctx.stroke();
             ctx.font = "bold 12px sans-serif";
             ctx.fillStyle = "#fff";
-            ctx.fillText("ボス", m.x - 16, m.y + 4);
+            ctx.fillText("Boss", m.x - 16, m.y + 4);
           }
-          // HPバー
+          // 血条
           if (m.hp < m.maxhp) {
             ctx.fillStyle = "#aaa";
             ctx.fillRect(m.x - m.r, m.y - m.r - 8, m.r * 2, 4);
@@ -760,7 +760,7 @@
             ctx.fillRect(m.x - m.r, m.y - m.r - 8, (m.r * 2 * m.hp) / m.maxhp, 4);
           }
         }
-        // プレイヤー
+        // 玩家
         ctx.beginPath();
         ctx.arc(state.player.x, state.player.y, state.player.r, 0, Math.PI * 2);
         ctx.fillStyle = "#fff";
@@ -768,7 +768,7 @@
         ctx.strokeStyle = "#27e";
         ctx.lineWidth = 4;
         ctx.stroke();
-        // 弾丸
+        // 子弹
         for (let b of state.bullets) {
           ctx.beginPath();
           ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
@@ -779,11 +779,11 @@
           ctx.stroke();
         }
         // HUD
-        scoreEl.textContent = "得点:" + state.score;
-        waveEl.textContent = "ウェーブ:" + state.wave;
+        scoreEl.textContent = "得分:" + state.score;
+        waveEl.textContent = "波次:" + state.wave;
         timeEl.textContent = `${Math.floor(state.time / 60)}:${("0" + (state.time % 60)).slice(-2)}`;
         levelEl.textContent = `Lv.${state.player.lv}`;
-        // HP, XPバー
+        // 血量 / 经验条
         hpbar.style.width = (100 * state.player.hp) / state.player.maxhp + "%";
         xpbar.style.width = (100 * state.player.xp) / state.player.xpNext + "%";
       }
@@ -799,33 +799,33 @@
         font-family: Arial, sans-serif;
       ">
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">❓ ゲーム紹介</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">❓ 游戏介绍</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          サバイバーミニは高速アクションシューティングゲームです。ゾンビをかわしながらレベルアップし、できるだけ長く生き延びましょう。次々と襲い来る敵を倒し、強力なアップグレードを選択して生存を目指してください！
+          生存迷你是一款高速动作射击游戏。躲避僵尸，升级并尽可能长久生存。击败不断袭来的敌人，选择强力升级来追求生存！
         </p>
       </div>
       <div style="margin-bottom: 12px">
         <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🕹️ 操作方法</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          モバイルでは画面下部のジョイスティックを使って移動します。PCでは矢印キー（← ↑ ↓ →）を使用してください。タッチデバイスではジョイスティックが自動表示されます。
+          在移动设备上请使用屏幕底部的操纵杆移动。PC请使用方向键（← ↑ ↓ →）。在触摸设备上操纵杆会自动显示。
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔫 自動射撃？</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔫 自动射击？</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          はい！プレイヤーは最も近い敵を自動で狙い、射撃します。移動と生存に集中してください。
+          是的！玩家会自动瞄准最近的敌人并射击。请专注于移动和生存。
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📈 レベルアップシステム</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📈 升级系统</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          敵を倒すと経験値を獲得します。十分な経験値を得るとレベルアップし、3つのランダムアップグレードから1つを選んでキャラクターを強化できます。
+          击败敌人可获得经验值。获得足够经验后会升级，从三个随机升级选项中选择一个来强化角色。
         </p>
       </div>
       <div style="margin-bottom: 0">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">💾 記録保存</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">💾 记录保存</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          ハイスコアはブラウザに自動で保存され、ゲームオーバー画面で確認できます。
+          最高分会自动保存在浏览器中，可在游戏结束画面查看。
         </p>
       </div>
     </section>
