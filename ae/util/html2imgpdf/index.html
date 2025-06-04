@@ -1,39 +1,39 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8" />
-    <title>HTML → 画像/PDF 変換ツール</title>
+    <title>أداة تحويل HTML إلى صورة/PDF</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <meta
         name="description"
-        content="ウェブページや自作のHTMLを高品質な画像またはPDFに即座に変換します。100%無料、プライバシー配慮でブラウザ内で完結。" />
+        content="حوّل صفحات الويب أو كود HTML الخاص بك إلى صورة عالية الجودة أو PDF فورًا. مجانية 100٪ مع احترام الخصوصية وتعمل بالكامل داخل المتصفح." />
     <meta
         name="keywords"
-        content="html 画像 変換, html PDF 変換, ウェブページ スクリーンショット, html2canvas, jsPDF, ブラウザ ツール, 無料" />
+        content="html تحويل إلى صورة, html تحويل إلى PDF, صفحة ويب لقطة شاشة, html2canvas, jsPDF, أداة متصفح, مجاني" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ja" />
+    <meta name="language" content="ar" />
     <meta name="theme-color" content="#4653ce" />
     <link rel="canonical" href="https://emfls.github.io/ae/util/html2imgpdf/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="HTML → 画像 & PDF 変換ツール" />
+    <meta property="og:title" content="أداة تحويل HTML إلى صورة & PDF" />
     <meta
         property="og:description"
-        content="ウェブページやHTMLコードをPNG、JPG、PDFに無料で変換します。100%ブラウザ内で動作、プライバシー保護。" />
+        content="حوّل صفحات الويب أو كود HTML الخاص بك إلى PNG أو JPG أو PDF مجانًا. تعمل بالكامل داخل المتصفح وتضمن الخصوصية." />
     <meta property="og:url" content="https://emfls.github.io/ae/util/html2imgpdf/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="HTML → 画像 & PDF 変換ツール" />
+    <meta name="twitter:title" content="أداة تحويل HTML إلى صورة & PDF" />
     <meta
         name="twitter:description"
-        content="ウェブページやHTMLコードをブラウザから直接画像やPDFに変換できます。アップロード不要。" />
+        content="حوّل صفحات الويب أو كود HTML إلى صورة أو PDF مباشرةً من المتصفح. لا حاجة لرفع البيانات." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
-    <!-- Google タグ (gtag.js) -->
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -43,11 +43,12 @@
         gtag("js", new Date());
         gtag("config", "G-QP5Q67GE5B");
     </script>
+    <!-- Google AdSense -->
     <script
         async
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
         crossorigin="anonymous"></script>
-    <!-- ライブラリ -->
+    <!-- المكتبات -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.4/dist/purify.min.js"></script>
@@ -116,6 +117,7 @@
             margin-bottom: 6px;
             display: block;
             font-size: 1.04em;
+            text-align: right;
         }
         input[type="text"],
         textarea {
@@ -128,6 +130,7 @@
             margin-bottom: 6px;
             font-family: inherit;
             box-sizing: border-box;
+            text-align: right;
         }
         textarea {
             min-height: 100px;
@@ -226,73 +229,72 @@
 </head>
 <body>
     <div class="container" itemscope itemtype="https://schema.org/WebApplication">
-        <div class="logo" itemprop="name">🖼️ HTML → 画像/PDF 変換ツール</div>
+        <div class="logo" itemprop="name">🖼️ أداة تحويل HTML إلى صورة/PDF</div>
         <div class="desc">
-            ウェブページや自作のHTMLコードをPNG/JPGまたはPDFに変換できます。ブラウザ内で100%動作します。<br />アップロードやウォーターマークなしで無料利用可能。
+            حوّل صفحات الويب أو كود HTML الخاص بك إلى PNG/JPG أو PDF. تعمل بالكامل داخل المتصفح.<br />مجانية تمامًا وبدون علامات مائية.
         </div>
         <div class="tab-row">
-            <button class="tab-btn active" id="urlTabBtn">URLで変換</button>
-            <button class="tab-btn" id="htmlTabBtn">HTMLコード入力</button>
+            <button class="tab-btn active" id="urlTabBtn">تحويل من URL</button>
+            <button class="tab-btn" id="htmlTabBtn">إدخال كود HTML</button>
         </div>
-        <!-- URL入力タブ -->
+        <!-- تبويب URL -->
         <div id="urlTab" style="display: block">
             <div class="input-row">
-                <label for="urlInput">ページURL</label>
+                <label for="urlInput">رابط الصفحة</label>
                 <input type="text" id="urlInput" placeholder="https://example.com" />
             </div>
-            <button class="action-btn" id="fetchUrlBtn">読み込んでプレビュー</button>
+            <button class="action-btn" id="fetchUrlBtn">تحميل للمعاينة</button>
             <div id="urlRenderBox" style="display: none; margin-top: 13px">
                 <div
                     id="urlRender"
                     style="background: #fafcff; border: 1px solid #ddd; border-radius: 10px; overflow: auto; padding: 19px;"></div>
                 <div class="result-row" id="urlResultRow" style="display: none">
-                    <button class="download-btn" id="downloadUrlImg">PNGで保存</button>
-                    <button class="download-btn" id="downloadUrlPdf">PDFで保存</button>
+                    <button class="download-btn" id="downloadUrlImg">حفظ كـ PNG</button>
+                    <button class="download-btn" id="downloadUrlPdf">حفظ كـ PDF</button>
                 </div>
             </div>
         </div>
-        <!-- HTML入力タブ -->
+        <!-- تبويب HTML -->
         <div id="htmlTab" style="display: none">
             <div class="input-row">
-                <label for="htmlInput">HTMLコード</label>
-                <textarea id="htmlInput" placeholder="&lt;div&gt;こんにちは&lt;/div&gt;"></textarea>
+                <label for="htmlInput">كود HTML</label>
+                <textarea id="htmlInput" placeholder="&lt;div&gt;مرحبا&lt;/div&gt;"></textarea>
             </div>
-            <button class="action-btn" id="renderHtmlBtn">プレビュー & 変換</button>
+            <button class="action-btn" id="renderHtmlBtn">معاينة & تحويل</button>
             <div id="htmlRenderBox" style="display: none; margin-top: 13px">
                 <div
                     id="htmlRender"
                     style="background: #fafcff; border: 1px solid #ddd; border-radius: 10px; overflow: auto; padding: 19px;"></div>
                 <div class="result-row" id="htmlResultRow" style="display: none">
-                    <button class="download-btn" id="downloadHtmlImg">PNGで保存</button>
-                    <button class="download-btn" id="downloadHtmlPdf">PDFで保存</button>
+                    <button class="download-btn" id="downloadHtmlImg">حفظ كـ PNG</button>
+                    <button class="download-btn" id="downloadHtmlPdf">حفظ كـ PDF</button>
                 </div>
             </div>
         </div>
         <div class="footer">
-            <b>注意:</b> 外部URLはCORSポリシーにより読み込みが制限される場合があり、動的なJavaScriptを含むサイトは正しくレンダリングされない可能性があります。<br />
-            HTMLレンダリングは安全のため制約があります。結果が切れないようにHTMLをシンプルにしてください。
+            <b>ملاحظة:</b> قد تواجه بعض الصفحات قيود CORS أو عدم عرض صحيح إذا استخدمت JavaScript ديناميكي. للمحتوى المثالي، استخدم كود HTML بسيط.
         </div>
         <section id="faq" aria-labelledby="faq-head">
-            <h2 id="faq-head">FAQ – HTML → 画像/PDF 変換ツール</h2>
+            <h2 id="faq-head">الأسئلة الشائعة – أداة تحويل HTML إلى صورة/PDF</h2>
             <dl>
-                <dt>このツールは何をしますか？</dt>
-                <dd>ウェブページ(URL)やユーザーが作成したHTMLコードをブラウザ上で高品質なPNG画像またはPDFファイルに変換します。</dd>
-                <dt>データはアップロードまたは保存されますか？</dt>
-                <dd>いいえ。すべての処理はクライアント側(ブラウザ)で行われ、データやコードは外部に送信されません。</dd>
-                <dt>すべてのサイトで使用できますか？</dt>
-                <dd>公開されているウェブサイトであれば試せますが、一部のサイトはCORS制限や動的JSの読み込みにより正常に表示されない場合があります。</dd>
-                <dt>どの形式で出力できますか？</dt>
-                <dd>PNG画像またはPDFファイルとして保存できます。両形式ともブラウザ上で即座に生成されます。</dd>
-                <dt>実際のサイトとレンダリング結果が異なるのはなぜですか？</dt>
-                <dd>動的なJavaScript、外部フォントやスタイルの読み込み、CORS制限などにより、一部リソースが正しく表示されないためです。完璧な結果を得たい場合は、HTMLを直接入力しCSSを調整してください。</dd>
-                <dt>無料で使えますか？</dt>
-                <dd>はい！会員登録不要で誰でも100%無料、ウォーターマークなしで利用できます。</dd>
+                <dt>ما وظيفة هذه الأداة؟</dt>
+                <dd>تحوّل صفحات الويب (من خلال URL) أو كود HTML الذي يدخله المستخدم إلى صورة PNG عالية الجودة أو ملف PDF مباشرةً في المتصفح.</dd>
+                <dt>هل تُرفع البيانات أو تُخزن؟</dt>
+                <dd>لا. كل العمليات تحدث بالكامل على جهاز المستخدم داخل المتصفح؛ لا يتم رفع أو تخزين أي بيانات خارجيًا.</dd>
+                <dt>هل يمكنني تحويل أي موقع ويب؟</dt>
+                <dd>يمكنك تجربة أي موقع ويب عام، لكن بعض المواقع قد تعاني من قيود CORS أو عدم تحميل JavaScript الديناميكي، مما قد يؤثر على النتيجة.</dd>
+                <dt>ما صيغ الإخراج المتاحة؟</dt>
+                <dd>يمكنك حفظ النتيجة كصورة PNG أو كملف PDF. كلاهما يُنشأ في المتصفح فورًا.</dd>
+                <dt>لماذا قد تختلف النتيجة عن الموقع الفعلي؟</dt>
+                <dd>الاعتماد على JavaScript الديناميكي، أو الخطوط والموارد الخارجية، أو قيود CORS يمكن أن يمنع عرض بعض العناصر بشكل صحيح. للحصول على أفضل نتيجة، أدخل HTML مباشرةً واضبط CSS.</dd>
+                <dt>هل الأداة مجانية؟</dt>
+                <dd>نعم! مجانية بالكامل ولا تحتاج لتسجيل أو دفع أي رسوم، ولا توجد علامة مائية على النتائج.</dd>
             </dl>
         </section>
     </div>
-    <a href="../index.html" id="backBtn">他のユーティリティ</a>
+    <a href="../index.html" id="backBtn">أدوات أخرى</a>
     <script>
-        // タブ切り替えロジック
+        // منطق تبديل التبويبات
         const urlTabBtn = document.getElementById("urlTabBtn");
         const htmlTabBtn = document.getElementById("htmlTabBtn");
         const urlTab = document.getElementById("urlTab");
@@ -310,10 +312,10 @@
             urlTabBtn.classList.remove("active");
         };
 
-        // URLから変換
+        // التحويل من URL
         document.getElementById("fetchUrlBtn").onclick = async function () {
             const url = document.getElementById("urlInput").value.trim();
-            if (!url) return alert("有効なURLを入力してください。");
+            if (!url) return alert("يرجى إدخال رابط صحيح.");
             try {
                 const res = await fetch(url);
                 const text = await res.text();
@@ -322,13 +324,13 @@
                 document.getElementById("urlRenderBox").style.display = "block";
                 document.getElementById("urlResultRow").style.display = "flex";
             } catch {
-                alert("ページの読み込みまたはレンダリングに失敗しました。(CORSまたは動的JSの制限)");
+                alert("فشل في تحميل الصفحة أو عرضها (ربما بسبب CORS أو JavaScript الديناميكي).");
             }
         };
         document.getElementById("downloadUrlImg").onclick = () => {
             html2canvas(document.getElementById("urlRender")).then((canvas) => {
                 const link = document.createElement("a");
-                link.download = "webpage.png";
+                link.download = "page.png";
                 link.href = canvas.toDataURL();
                 link.click();
             });
@@ -340,11 +342,11 @@
                 const w = pdf.internal.pageSize.getWidth();
                 const h = (canvas.height * w) / canvas.width;
                 pdf.addImage(imgData, "PNG", 0, 0, w, h);
-                pdf.save("webpage.pdf");
+                pdf.save("page.pdf");
             });
         };
 
-        // HTML入力から変換
+        // التحويل من كود HTML
         document.getElementById("renderHtmlBtn").onclick = () => {
             const html = document.getElementById("htmlInput").value;
             const clean = DOMPurify.sanitize(html);
@@ -371,7 +373,7 @@
             });
         };
     </script>
-    <!-- FAQPage 構造化データ -->
+    <!-- البيانات المهيكلة لصفحة الأسئلة الشائعة -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -379,33 +381,51 @@
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "このツールは何をしますか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "ウェブページ(URL)やユーザーが作成したHTMLコードをブラウザ上で高品質なPNG画像またはPDFファイルに変換します。" }
+          "name": "ما وظيفة هذه الأداة؟",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "تحوّل صفحات الويب (من خلال URL) أو كود HTML الذي يدخلّه المستخدم إلى صورة PNG عالية الجودة أو ملف PDF مباشرةً في المتصفح."
+          }
         },
         {
           "@type": "Question",
-          "name": "データはアップロードまたは保存されますか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "いいえ。すべての処理はクライアント側(ブラウザ)で行われ、データやコードは外部に送信されません。" }
+          "name": "هل تُرفع البيانات أو تُخزن؟",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "لا. كل العمليات تحدث بالكامل على جهاز المستخدم داخل المتصفح؛ لا يتم رفع أو تخزين أي بيانات خارجيًا."
+          }
         },
         {
           "@type": "Question",
-          "name": "すべてのサイトで使用できますか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "公開されているウェブサイトなら試せますが、一部のサイトはCORS制限や動的JSの読み込みによって正常にレンダリングされない場合があります。" }
+          "name": "هل يمكنني تحويل أي موقع ويب؟",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "يمكنك تجربة أي موقع ويب عام، لكن بعض المواقع قد تعاني من قيود CORS أو عدم تحميل JavaScript الديناميكي، مما قد يؤثر على النتيجة."
+          }
         },
         {
           "@type": "Question",
-          "name": "どの形式で出力できますか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "PNG画像またはPDFファイルとして保存できます。両方の形式ともブラウザ上で即座に生成されます。" }
+          "name": "ما صيغ الإخراج المتاحة؟",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "يمكنك حفظ النتيجة كصورة PNG أو كملف PDF. كلاهما يُنشأ في المتصفح فورًا."
+          }
         },
         {
           "@type": "Question",
-          "name": "実際のサイトとレンダリング結果が異なるのはなぜですか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "動的JavaScript、外部フォントやスタイルの読み込み、CORS制限などが影響し、一部のリソースが正しく表示されないためです。完璧な結果を得たい場合は、HTMLを直接入力し、CSSを調整してください。" }
+          "name": "لماذا قد تختلف النتيجة عن الموقع الفعلي؟",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "الاعتماد على JavaScript الديناميكي، أو الخطوط والموارد الخارجية، أو قيود CORS يمكن أن يمنع عرض بعض العناصر بشكل صحيح. للحصول على أفضل نتيجة، أدخل HTML مباشرةً واضبط CSS."
+          }
         },
         {
           "@type": "Question",
-          "name": "無料で使えますか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "はい！会員登録なしで誰でも100%無料、ウォーターマークなしでご利用いただけます。" }
+          "name": "هل الأداة مجانية؟",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "نعم! مجانية بالكامل ولا تحتاج تسجيل أو دفع أي رسوم، ولا توجد علامة مائية على النتائج."
+          }
         }
       ]
     }

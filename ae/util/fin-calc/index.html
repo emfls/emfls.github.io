@@ -1,32 +1,32 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>単利、積立、分割払い計算機</title>
+  <title>حاسبة الفائدة البسيطة، الادخار، والتقسيط</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta
     name="description"
-    content="単利利息、積立（毎月入金）予測、分割払い（毎月入金）計算を即座に行えます。無料、ブラウザベース、モバイル対応、データアップロード不要。" />
+    content="احسب الفائدة البسيطة، توقع الادخار الشهري، وحساب التقسيط الشهري فورًا. مجانية، تعمل في المتصفح، متوافقة مع الجوال، ولا تحتاج لرفع البيانات." />
   <meta
     name="keywords"
-    content="金融計算機, 単利計算, 積立計算, 分割払い計算, 利息計算機, 貯蓄, 分割払い, 金融, 単利, 積立, 分割払い" />
+    content="حاسبة مالية, حساب الفائدة البسيطة, حساب الادخار, حساب التقسيط, حاسبة الفائدة, التوفير, التقسيط, مالية, فائدة بسيطة, ادخار, تقسيط" />
   <meta name="author" content="Itagi" />
-  <meta name="language" content="ja" />
+  <meta name="language" content="ar" />
   <meta name="theme-color" content="#198dae" />
   <link rel="canonical" href="https://emfls.github.io/ae/util/fin-calc/" />
   <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-  <meta property="og:title" content="単利、積立、分割払い計算機"/>
+  <meta property="og:title" content="حاسبة الفائدة البسيطة، الادخار، والتقسيط"/>
   <meta
     property="og:description"
-    content="単利利息、積立貯蓄、分割払いの月額計算を簡単に行えます。100%無料、会員登録不要。" />
+    content="احسب الفائدة البسيطة، الادخار الشهري، وحساب القسط الشهري بسهولة. مجانية تمامًا، لا حاجة للتسجيل." />
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="https://emfls.github.io/ae/util/fin-calc/"/>
   <meta property="og:image" content="https://emfls.github.io/thumbnail.png"/>
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="単利、積立、分割払い計算機"/>
+  <meta name="twitter:title" content="حاسبة الفائدة البسيطة، الادخار، والتقسيط"/>
   <meta
     name="twitter:description"
-    content="単利利息計算、積立貯蓄計算、分割払い月額計算を簡単に行いましょう。アップロード不要、ブラウザ内で動作。" />
+    content="قم بحساب الفائدة البسيطة، حساب الادخار، وحساب القسط الشهري بسهولة. لا حاجة لرفع البيانات، يعمل في المتصفح." />
   <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png"/>
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -41,7 +41,7 @@
     crossorigin="anonymous"></script>
   <style>
     :root { --main: #198dae; --bg: #f8fcff;}
-    html, body { margin: 0; padding: 0; background: var(--bg);}
+    html, body { margin: 0; padding: 0; background: var(--bg); direction: rtl; }
     body { font-family: "Segoe UI", Arial, sans-serif; color: #234;}
     .container {
       max-width: 390px; margin: 38px auto 0 auto; background: #fff;
@@ -65,7 +65,7 @@
     }
     form { margin-bottom: 0; }
     .form-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 13px;}
-    .form-row label { font-size: 1em; color: #146078; font-weight: 500;}
+    .form-row label { font-size: 1em; color: #146078; font-weight: 500; text-align: right;}
     .form-row input[type="number"] {
       box-sizing: border-box;
       padding: 10px 10px;
@@ -76,6 +76,7 @@
       background: #fafdff;
       color: #234;
       transition: border 0.15s;
+      text-align: right;
     }
     .form-row input[type="number"]:focus { border-color: var(--main);}
     .btn {
@@ -100,8 +101,8 @@
     .footer { color: #789; text-align: center; font-size: 0.94em; margin-top: 14px;}
     section#faq { margin-top: 32px;}
     section#faq h2 { margin-bottom: 13px; color: #198dae; font-size: 1.09em; text-align: center;}
-    section#faq dt { font-weight: bold; margin-top: 8px;}
-    section#faq dd { margin: 0 0 7px 0; font-size: 0.98em; color: #1882b4;}
+    section#faq dt { font-weight: bold; margin-top: 8px; }
+    section#faq dd { margin: 0 0 7px 0; font-size: 0.98em; color: #1882b4; }
     #backBtn {
       position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%);
       background: #198dae; color: #fff; font-weight: 700; border: none; border-radius: 2rem;
@@ -118,89 +119,89 @@
 <body>
   <main>
     <div class="container" itemscope itemtype="https://schema.org/WebApplication">
-      <div class="title" itemprop="name">💸 簡単金融計算機</div>
+      <div class="title" itemprop="name">💸 الحاسبة المالية البسيطة</div>
       <div class="tab-row">
-        <button class="tab-btn active" id="tab1">単利計算</button>
-        <button class="tab-btn" id="tab2">積立計算</button>
-        <button class="tab-btn" id="tab3">分割払い計算</button>
+        <button class="tab-btn active" id="tab1">حساب الفائدة البسيطة</button>
+        <button class="tab-btn" id="tab2">حساب الادخار الشهري</button>
+        <button class="tab-btn" id="tab3">حساب التقسيط الشهري</button>
       </div>
-      <!-- 単利 -->
+      <!-- حساب الفائدة البسيطة -->
       <form id="simpleForm">
         <div class="form-row">
-          <label for="simple_principal">元金 (¥ または $)</label>
+          <label for="simple_principal">المبلغ الرئيسي (¥ أو $)</label>
           <input type="number" id="simple_principal" min="0" required />
         </div>
         <div class="form-row">
-          <label for="simple_rate">利率 (% 年)</label>
+          <label for="simple_rate">نسبة الفائدة (٪ سنويًا)</label>
           <input type="number" id="simple_rate" min="0" max="100" step="0.01" required />
         </div>
         <div class="form-row">
-          <label for="simple_years">期間 (年)</label>
+          <label for="simple_years">المدة (سنوات)</label>
           <input type="number" id="simple_years" min="0.1" step="0.01" required />
         </div>
-        <button type="submit" class="btn">計算する</button>
+        <button type="submit" class="btn">احسب</button>
         <div class="result" id="simpleResult"></div>
       </form>
-      <!-- 積立 -->
+      <!-- حساب الادخار الشهري -->
       <form id="savingForm" style="display:none">
         <div class="form-row">
-          <label for="save_monthly">月々の入金額</label>
+          <label for="save_monthly">المبلغ الشهري للإيداع</label>
           <input type="number" id="save_monthly" min="0" required />
         </div>
         <div class="form-row">
-          <label for="save_rate">利率 (% 年)</label>
+          <label for="save_rate">نسبة الفائدة (٪ سنويًا)</label>
           <input type="number" id="save_rate" min="0" max="100" step="0.01" required />
         </div>
         <div class="form-row">
-          <label for="save_years">期間 (年)</label>
+          <label for="save_years">المدة (سنوات)</label>
           <input type="number" id="save_years" min="0.1" step="0.01" required />
         </div>
-        <button type="submit" class="btn">計算する</button>
+        <button type="submit" class="btn">احسب</button>
         <div class="result" id="savingResult"></div>
       </form>
-      <!-- 分割払い -->
+      <!-- حساب التقسيط الشهري -->
       <form id="instForm" style="display:none">
         <div class="form-row">
-          <label for="inst_principal">分割払い元金</label>
+          <label for="inst_principal">المبلغ الإجمالي للتقسيط</label>
           <input type="number" id="inst_principal" min="0" required />
         </div>
         <div class="form-row">
-          <label for="inst_rate">利率 (% 年)</label>
+          <label for="inst_rate">نسبة الفائدة (٪ سنويًا)</label>
           <input type="number" id="inst_rate" min="0" max="100" step="0.01" required />
         </div>
         <div class="form-row">
-          <label for="inst_months">月数</label>
+          <label for="inst_months">عدد الأشهر</label>
           <input type="number" id="inst_months" min="1" max="1200" required />
         </div>
-        <button type="submit" class="btn">計算する</button>
+        <button type="submit" class="btn">احسب</button>
         <div class="result" id="instResult"></div>
       </form>
       <div class="footer">
-        単利計算、積立貯蓄計算、分割払い月額計算をサポートします。<br>
-        <b>ヒント:</b> すべての計算はブラウザ内で行われ、データがアップロードされることはありません。
+        يدعم حساب الفائدة البسيطة، حساب الادخار الشهري، وحساب القسط الشهري.<br>
+        <b>نصيحة:</b> تتم جميع الحسابات داخل المتصفح ولا يتم رفع أي بيانات.
       </div>
       <section aria-labelledby="faq-head" id="faq">
-        <h2 id="faq-head">FAQ – 簡単金融計算機</h2>
+        <h2 id="faq-head">الأسئلة الشائعة – الحاسبة المالية البسيطة</h2>
         <dl>
-          <dt>どんな計算ができますか？</dt>
-          <dd>単利利息計算、毎月入金の積立計算、分割払い（元金＋利息）の計算をサポートします。</dd>
-          <dt>単利計算機はどう動作しますか？</dt>
-          <dd>単利利息は <b>元金 × 利率 × 期間</b> で計算し、利息額と元利合計を表示します。</dd>
-          <dt>積立（毎月入金）計算はどうなっていますか？</dt>
-          <dd>毎月入金された金額を合算し、総期間にわたる単利利息を合算して総額を求めます。</dd>
-          <dt>分割払い計算機はどう動作しますか？</dt>
-          <dd>元金に発生する利息を加えた総返済額を、指定した月数で均等に分割して毎月払う方式です。</dd>
-          <dt>私の金融データは外部に送信されますか？</dt>
-          <dd>いいえ。すべての計算はブラウザ内で処理され、データがアップロードまたは保存されることはありません。</dd>
-          <dt>このツールは無料ですか？</dt>
-          <dd>はい。この計算機は100%無料で、ログインや会員登録は不要です。</dd>
+          <dt>ما أنواع الحسابات المتوفرة؟</dt>
+          <dd>تدعم الحاسبة حساب الفائدة البسيطة، الادخار الشهري (إيداع شهري)، وحساب التقسيط الشهري (رأس المال + الفائدة).</dd>
+          <dt>كيف يعمل حساب الفائدة البسيطة؟</dt>
+          <dd>تُحسب الفائدة البسيطة باستخدام <b>المبلغ الرئيسي × نسبة الفائدة × المدة</b>، ثم يُعرض مبلغ الفائدة والإجمالي (رأس المال + الفائدة).</dd>
+          <dt>كيف يعمل حساب الادخار الشهري؟</dt>
+          <dd>يُجمع مجموع المبالغ الشهرية ثم يُحسب الفائدة البسيطة عن كل إيداع بناءً على الفترة المتبقية ويُعرض الإجمالي.</dd>
+          <dt>كيف يعمل حساب التقسيط الشهري؟</dt>
+          <dd>يُحسب إجمالي المبلغ (رأس المال + الفائدة البسيطة على كامل الفترة)، ثم يُقسم على عدد الأشهر ليُحدد القسط الشهري.</dd>
+          <dt>هل تُرسل بياناتي المالية إلى خادم خارجي؟</dt>
+          <dd>لا. تتم جميع الحسابات داخل المتصفح المحلي دون رفع أو حفظ للبيانات.</dd>
+          <dt>هل هذه الأداة مجانية؟</dt>
+          <dd>نعم. هذه الأداة مجانية 100% ولا تتطلب تسجيل أو إذن دخول.</dd>
         </dl>
       </section>
     </div>
   </main>
-  <a href="../index.html" id="backBtn">他のユーティリティ</a>
+  <a href="../index.html" id="backBtn">أدوات أخرى</a>
   <script>
-    // タブ切り替えロジック
+    // منطق تبديل علامات التبويب
     const tabs = [
       { btn: document.getElementById("tab1"), form: document.getElementById("simpleForm") },
       { btn: document.getElementById("tab2"), form: document.getElementById("savingForm") },
@@ -215,7 +216,7 @@
       }
     });
 
-    // 単利計算
+    // حساب الفائدة البسيطة
     document.getElementById("simpleForm").onsubmit = function(e){
       e.preventDefault();
       const p = +document.getElementById("simple_principal").value;
@@ -225,10 +226,10 @@
       const interest = p * r * t;
       const total = p + interest;
       document.getElementById("simpleResult").innerHTML =
-        `利息: <b>${interest.toLocaleString()}</b><br>元利合計: <b>${total.toLocaleString()}</b>`;
+        `الفائدة: <b>${interest.toLocaleString()}</b><br>الإجمالي (رأس المال + الفائدة): <b>${total.toLocaleString()}</b>`;
     };
 
-    // 積立（毎月入金）計算
+    // حساب الادخار الشهري
     document.getElementById("savingForm").onsubmit = function(e){
       e.preventDefault();
       const m = +document.getElementById("save_monthly").value;
@@ -243,10 +244,10 @@
       }
       const total = sum + interest;
       document.getElementById("savingResult").innerHTML =
-        `入金合計: <b>${sum.toLocaleString()}</b><br>発生利息: <b>${interest.toLocaleString()}</b><br>総額: <b>${total.toLocaleString()}</b>`;
+        `إجمالي المبالغ المودعة: <b>${sum.toLocaleString()}</b><br>الفائدة المكتسبة: <b>${interest.toLocaleString()}</b><br>الإجمالي: <b>${total.toLocaleString()}</b>`;
     };
 
-    // 分割払い計算（単利利息基準）
+    // حساب التقسيط الشهري (الفائدة البسيطة)
     document.getElementById("instForm").onsubmit = function(e){
       e.preventDefault();
       const p = +document.getElementById("inst_principal").value;
@@ -257,7 +258,7 @@
       const total = p + totalInterest;
       const monthly = total / n;
       document.getElementById("instResult").innerHTML =
-        `月々支払額: <b>${monthly.toLocaleString(undefined, {maximumFractionDigits:2})}</b><br>総利息: <b>${totalInterest.toLocaleString()}</b><br>総支払額: <b>${total.toLocaleString()}</b>`;
+        `القسط الشهري: <b>${monthly.toLocaleString(undefined, {maximumFractionDigits:2})}</b><br>إجمالي الفائدة: <b>${totalInterest.toLocaleString()}</b><br>إجمالي السداد: <b>${total.toLocaleString()}</b>`;
     };
   </script>
   <!-- FAQPage Schema for SEO/SGE/GEO Rich Results -->
@@ -268,33 +269,33 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "どんな計算ができますか？",
-        "acceptedAnswer": { "@type": "Answer", "text": "単利利息計算、毎月入金の積立計算、分割払い（元金＋利息）計算をサポートします。" }
+        "name": "ما أنواع الحسابات المتوفرة؟",
+        "acceptedAnswer": { "@type": "Answer", "text": "تدعم الحاسبة حساب الفائدة البسيطة، الادخار الشهري (إيداع شهري)، وحساب التقسيط الشهري (رأس المال + الفائدة)." }
       },
       {
         "@type": "Question",
-        "name": "単利計算機はどう動作しますか？",
-        "acceptedAnswer": { "@type": "Answer", "text": "単利利息は 元金 × 利率 × 期間で計算し、利息額と元利合計を表示します。" }
+        "name": "كيف يعمل حساب الفائدة البسيطة؟",
+        "acceptedAnswer": { "@type": "Answer", "text": "تُحسب الفائدة البسيطة باستخدام المبلغ الرئيسي × نسبة الفائدة × المدة، ثم يُعرض مبلغ الفائدة والإجمالي (رأس المال + الفائدة)." }
       },
       {
         "@type": "Question",
-        "name": "積立（毎月入金）計算はどうなっていますか？",
-        "acceptedAnswer": { "@type": "Answer", "text": "毎月入金された金額を合算し、全期間にわたって発生する単利利息を合算して総額を求めます。" }
+        "name": "كيف يعمل حساب الادخار الشهري؟",
+        "acceptedAnswer": { "@type": "Answer", "text": "يُجمع مجموع المبالغ الشهرية ثم يُحسب الفائدة البسيطة عن كل إيداع بناءً على الفترة المتبقية ويُعرض الإجمالي." }
       },
       {
         "@type": "Question",
-        "name": "分割払い計算機はどう動作しますか？",
-        "acceptedAnswer": { "@type": "Answer", "text": "総返済額（元金＋発生利息）を指定した月数で均等に分割して毎月支払う方式です。" }
+        "name": "كيف يعمل حساب التقسيط الشهري؟",
+        "acceptedAnswer": { "@type": "Answer", "text": "يُحسب إجمالي المبلغ (رأس المال + الفائدة البسيطة على كامل الفترة)، ثم يُقسم على عدد الأشهر ليُحدد القسط الشهري." }
       },
       {
         "@type": "Question",
-        "name": "私の金融データは外部に送信されますか？",
-        "acceptedAnswer": { "@type": "Answer", "text": "いいえ。すべての計算はブラウザ内で処理され、データはアップロードまたは保存されません。" }
+        "name": "هل تُرسل بياناتي المالية إلى خادم خارجي؟",
+        "acceptedAnswer": { "@type": "Answer", "text": "لا. تتم جميع الحسابات داخل المتصفح المحلي دون رفع أو حفظ للبيانات." }
       },
       {
         "@type": "Question",
-        "name": "このツールは無料ですか？",
-        "acceptedAnswer": { "@type": "Answer", "text": "はい。この計算機は100%無料で、ログインや会員登録は不要です。" }
+        "name": "هل هذه الأداة مجانية؟",
+        "acceptedAnswer": { "@type": "Answer", "text": "نعم. هذه الأداة مجانية 100% ولا تتطلب تسجيل أو إذن دخول." }
       }
     ]
   }
