@@ -1,32 +1,32 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <title>ラダーゲーム</title>
+    <title>لعبة السلم</title>
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
     <meta
       name="description"
-      content="モバイル用ラダーゲーム - 数字を選んで運命を確認しよう！iPhone SEを含むすべてのスマートフォンに最適化された、速くて楽しい運ゲーウェブゲームです。" />
+      content="لعبة السلم للجوال – اختر رقمًا وتحقق من مصيرك! لعبة ويب سريعة وممتعة ومجانية، مُحسّنة لجميع الهواتف الذكية بما في ذلك iPhone SE." />
     <meta
       name="keywords"
-      content="ラダーゲーム, モバイルゲーム, ウェブゲーム, ラダーくじ, 運ゲーム, ミニゲーム, モバイルカジュアル, iPhoneゲーム, iPhone SE, ラダー, ランダムゲーム, ブラウザゲーム, 運試し, 数字選択, ソーシャルゲーム, HTML5ゲーム" />
+      content="لعبة السلم, لعبة جوال, لعبة ويب, قرعة سلم, لعبة حظ, لعبة مصغرة, كاجوال للجوال, لعبة iPhone, iPhone SE, سلم, لعبة عشوائية, لعبة متصفح, اختبار الحظ, اختيار رقم, لعبة اجتماعية, لعبة HTML5" />
     <meta name="author" content="Itagi" />
     <meta name="robots" content="index, follow" />
 
-    <meta property="og:title" content="ラダーゲーム - モバイル用運ゲーム" />
+    <meta property="og:title" content="لعبة السلم – لعبة حظ للجوال" />
     <meta
       property="og:description"
-      content="数字を選んで運命を確認しよう！楽しくて速い、モバイルに最適化されたラダーゲームです。" />
+      content="اختر رقمًا وتحقق من مصيرك عبر السلم! لعبة ممتعة وسريعة مُحسّنة للجوال." />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/ae/game/LadderGame" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="ラダーゲーム - モバイル用運ゲーム" />
+    <meta name="twitter:title" content="لعبة السلم – لعبة حظ للجوال" />
     <meta
       name="twitter:description"
-      content="モバイル用ラダーゲーム。数字を選んであなたの運命を確認しよう！" />
+      content="لعبة السلم للجوال. اختر رقمًا وتحقق من مصيرك!" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
     <link rel="canonical" href="https://emfls.github.io/ae/game/LadderGame" />
@@ -204,8 +204,8 @@
   </head>
   <body>
     <div id="gameWrap">
-      <h1>ラダーゲーム</h1>
-      <div class="desc">数字を選んでラダー（はしご）で運命を確認しよう！</div>
+      <h1>لعبة السلم</h1>
+      <div class="desc">اختر رقمًا وتحقق من مصيرك عبر السلم!</div>
       <div id="ladderBox">
         <div id="topChoices"></div>
         <canvas id="ladderCanvas" width="200" height="340"></canvas>
@@ -226,10 +226,10 @@
       </div>
       <div id="resultMsg"></div>
       <div id="btnRow">
-        <button class="btn" id="startBtn">ゲーム開始</button>
-        <button class="btn hide" id="retryBtn">再スタート</button>
-        <button class="btn" id="shareBtn">共有</button>
-        <button class="btn" id="otherBtn">他のゲーム</button>
+        <button class="btn" id="startBtn">ابدأ اللعبة</button>
+        <button class="btn hide" id="retryBtn">أعد التشغيل</button>
+        <button class="btn" id="shareBtn">مشاركة</button>
+        <button class="btn" id="otherBtn">ألعاب أخرى</button>
       </div>
     </div>
     <script>
@@ -247,9 +247,9 @@
       const shareBtn = document.getElementById("shareBtn");
       const otherBtn = document.getElementById("otherBtn");
 
-      // 세로선 기준 좌표(패딩 조정)
+      // حساب إحداثيات الأعمدة بناءً على عرض اللوح
       function getX(idx) {
-        const sidePadding = 18; // 더 좁은 폭에 맞춰진 패딩
+        const sidePadding = 18; // تباعد جانبي مناسب
         return sidePadding + idx * ((canvas.width - sidePadding * 2) / (ladderCols - 1));
       }
 
@@ -267,7 +267,7 @@
         arr = arr.sort(() => Math.random() - 0.5);
         let lines = [];
         const topMargin = 38;
-        const bottomMargin = 56; // 결과 원과 겹치지 않게
+        const bottomMargin = 56; // مسافة لمنع التداخل مع الدوائر السفلية
         for (let i = 0; i < cfg.hLines; ++i) {
           let pos, y;
           do {
@@ -325,7 +325,7 @@
             ctx.fillStyle = ladder.ends[i] === "LEVELUP" ? "#10b369" : "#b91414";
             ctx.font = "bold 1.05rem Jua,sans-serif";
             ctx.textAlign = "center";
-            ctx.fillText(ladder.ends[i] === "LEVELUP" ? "Lv↑" : "X", getX(i), canvas.height - 24);
+            ctx.fillText(ladder.ends[i] === "LEVELUP" ? "ارتقاء" : "انهاء", getX(i), canvas.height - 24);
           }
         }
       }
@@ -389,8 +389,8 @@
               let endIdx = path[path.length - 1].col;
               let endRes = ladder.ends[endIdx];
               resultMsg.innerHTML = endRes === "LEVELUP"
-                ? "🎉 <b>レベルアップ！</b> 次のウェーブ →"
-                : "💀 <b>ゲームオーバー！</b>";
+                ? "🎉 <b>ارتقاء المستوى!</b>"
+                : "💀 <b>انتهت اللعبة!</b>";
               renderTopChoices();
               playing = endRes === "LEVELUP";
               busy = false;
@@ -441,11 +441,11 @@
         if (navigator.share) {
           navigator.share({ title: document.title, url: shareUrl });
         } else {
-          window.prompt("このURLをコピーして友達に送ろう！", shareUrl);
+          window.prompt("انسخ هذا الرابط وشاركه مع أصدقائك!", shareUrl);
         }
       };
       otherBtn.onclick = function () {
-        window.location.href = "kor/game/";
+        window.location.href = "/";
       };
 
       function resetUI() {
@@ -489,36 +489,36 @@
         line-height: 1.6;
         font-size: 14px;
       ">
-      <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e70c2">❓ よくある質問 (FAQ)</h2>
+      <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e70c2">❓ الأسئلة الشائعة (FAQ)</h2>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q1. ラダーゲームはどのようにプレイしますか？</strong><br />
-        A. 画面上部の数字をタップしてラダーを下り、結果を確認してください！
+        <strong>س1. كيف ألعب لعبة السلم؟</strong><br />
+        أ. انقر على الرقم في الأعلى لتسقط من خلال السلم وتعرف نتيجتك!
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q2. 「レベルアップ」は何を意味しますか？</strong><br />
-        A. 現在のウェーブをクリアして、より難しい次のラウンドに進みます。
+        <strong>س2. ماذا يعني "ارتقاء المستوى"؟</strong><br />
+        أ. يعني أنك تجاوزت المرحل الحالية وتنتقل إلى مستوى أصعب في الجولة التالية.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q3. ゲームはいつ終わりますか？</strong><br />
-        A. 結果が<strong>ゲームオーバー（X）</strong>になるとゲームが終了します。
+        <strong>س3. متى تنتهي اللعبة؟</strong><br />
+        أ. تنتهي اللعبة إذا وصلت إلى نتيجة <strong>انتهت اللعبة (X)</strong>.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q4. 完全にランダムですか？</strong><br />
-        A. はい！ラダーの横線と結果は毎ラウンドランダムにシャッフルされます。
+        <strong>س4. هل النتائج عشوائية تمامًا؟</strong><br />
+        أ. نعم! يتم خلط الخطوط الأفقية والنهايات في كل جولة بشكل عشوائي.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q5. どうやって再スタートしますか？</strong><br />
-        A. <strong>再スタート</strong>をタップしてウェーブ1から再プレイできます。
+        <strong>س5. كيف أعيد تشغيل اللعبة؟</strong><br />
+        أ. اضغط على زر <strong>أعد التشغيل</strong> لبدء اللعبة من الجولة الأولى مرة أخرى.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>Q6. このゲームを共有できますか？</strong><br />
-        A. はい！<strong>共有</strong>をタップしてリンクをコピーするか、モバイルの共有機能を使用してください。
+        <strong>س6. كيف أشارك اللعبة؟</strong><br />
+        أ. اضغط زر <strong>مشاركة</strong> لنسخ الرابط إلى الحافظة أو استخدم ميزة المشاركة في جهازك المحمول.
       </div>
     </section>
   </body>

@@ -1,35 +1,35 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ar" dir="rtl">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="無料でオンライン四目並べをプレイしよう！友達やコンピュータと一緒にこのクラシック２人用戦略ゲームを楽しもう。シンプルで高速、モバイル対応です。"
+            content="العب كونكت فور مجانًا أونلاين! تحدى صديقك أو الذكاء الاصطناعي و اربط أربعة في صف أفقي أو عمودي أو قطري للفوز."
         />
         <meta
             name="keywords"
-            content="四目並べ, コネクトフォー, オンラインゲーム, 無料ゲーム, ２人用, AI対戦, 戦略ゲーム, ボードゲーム, ブラウザ, モバイル, パズル, クラシック"
+            content="كونكت فور, لعبة استراتيجية, لعب ثنائي, مواجهة الذكاء الاصطناعي, لعبة متصفح, لعبة جوال, بيتش أوت, لعبة لوحية, لعبة مجانية"
         />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/ae/game/ConnectFour" />
 
-        <meta property="og:title" content="四目並べ – 無料オンライン２人用ゲーム!" />
+        <meta property="og:title" content="كونكت فور – لعبة ثنائية أونلاين مجانية!" />
         <meta
             property="og:description"
-            content="ブラウザで四目並べを無料でプレイしよう！友達やAIを相手に、横・縦・斜めに４つ並べて勝利しよう。"
+            content="العب كونكت فور مجانًا في المتصفح! تحدى صديقك أو الذكاء الاصطناعي واربط أربعة لتحقق الفوز."
         />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/ae/game/ConnectFour" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="四目並べ – 無料オンライン２人用ゲーム!" />
+        <meta name="twitter:title" content="كونكت فور – لعبة ثنائية أونلاين مجانية!" />
         <meta
             name="twitter:description"
-            content="オンライン四目並べをプレイしよう – 友達と対戦するかAIに勝負を挑もう！ダウンロード不要。"
+            content="العب كونكت فور أونلاين – تحدى أصدقائك أو الذكاء الاصطناعي! دون الحاجة إلى تحميل."
         />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -47,7 +47,7 @@
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"
         ></script>
-        <title>四目並べ</title>
+        <title>كونكت فور</title>
         <style>
             * {
                 box-sizing: border-box;
@@ -207,23 +207,23 @@
 
     <body>
         <div id="wrapper">
-            <h1>四目並べ</h1>
-            <div class="desc">横・縦・斜めに４つつなげて勝利！</div>
+            <h1>كونكت فور</h1>
+            <div class="desc">اربط أربعة أفقيًا أو عموديًا أو قطريًا لتحقق الفوز!</div>
             <div id="modeSel">
-                <button class="modebtn active" id="mode2p" onclick="setMode('2p')">２人プレイ</button>
-                <button class="modebtn" id="modeai" onclick="setMode('ai')">AI対戦</button>
+                <button class="modebtn active" id="mode2p" onclick="setMode('2p')">لعب ثنائي</button>
+                <button class="modebtn" id="modeai" onclick="setMode('ai')">مواجهة الذكاء الاصطناعي</button>
             </div>
             <div id="turn"></div>
             <div id="board"></div>
             <div id="overMsg"></div>
             <div class="btns" id="gameBtns" style="display: none">
-                <button class="btn" onclick="restart()">再スタート</button>
-                <button class="btn" onclick="share()">共有</button>
+                <button class="btn" onclick="restart()">إعادة البدء</button>
+                <button class="btn" onclick="share()">مشاركة</button>
             </div>
-            <a id="otherGames" href="../" style="margin-top: 22px">他のゲーム</a>
+            <a id="otherGames" href="../" style="margin-top: 22px">📂 ألعاب أخرى</a>
         </div>
         <script>
-            // モバイル上での選択/ドラッグを無効化
+            // منع السحب/الاختيار على الجوال
             document.addEventListener(
                 "touchmove",
                 (e) => {
@@ -239,7 +239,7 @@
             const ROWS = 6,
                   COLS = 7;
             let board, turn, over, winner;
-            let mode = "2p"; // "2p" または "ai"
+            let mode = "2p"; // "2p" أو "ai"
             const COLORS = ["🔵", "🟡"];
 
             function emptyBoard() {
@@ -261,11 +261,11 @@
                         cell.innerHTML = board[r][c] !== null ? COLORS[board[r][c]] : "";
                         cell.onclick = () => {
                             if (over) return;
-                            if (mode === "ai" && turn === 1) return; // AIの番のときは無効
+                            if (mode === "ai" && turn === 1) return; // منع نقرة اللاعب في دور الذكاء الاصطناعي
                             if (playerMove(c)) {
                                 render();
                                 if (mode === "ai" && !over && turn === 1) {
-                                    setTimeout(aiMove, 350); // 少し遅延してAIを動かす
+                                    setTimeout(aiMove, 350); // تحريك الذكاء الاصطناعي بعد تأخير بسيط
                                 }
                             }
                         };
@@ -274,34 +274,38 @@
                 }
                 let msg = "";
                 if (!over) {
-                    msg = COLORS[turn]
-                        + (mode === "ai" ? (turn === 0 ? " (あなた)" : " (AI)") : "")
-                        + " の番";
+                    if (mode === "ai") {
+                        msg = COLORS[turn] + (turn === 0 ? " (أنت)" : " (الذكاء الاصطناعي)") + " دوره";
+                    } else {
+                        msg = COLORS[turn] + " دوره";
+                    }
                 } else if (winner !== null) {
-                    msg = COLORS[winner]
-                        + (mode === "ai" ? (winner === 0 ? " (あなた)" : " (AI)") : "")
-                        + " の勝利！";
+                    if (mode === "ai") {
+                        msg = COLORS[winner] + (winner === 0 ? " (أنت)" : " (الذكاء الاصطناعي)") + " فاز!";
+                    } else {
+                        msg = COLORS[winner] + " فاز!";
+                    }
                 } else {
-                    msg = "引き分け！";
+                    msg = "تعادل!";
                 }
-                document.getElementById("turn").textContent = msg;
+                document.getElementById("turn").textContent = (!over ? msg : winner !== null ? msg : "تعادل!");
                 document.getElementById("overMsg").textContent = over && winner !== null
                     ? msg
                     : over
-                        ? "引き分け！"
+                        ? "تعادل!"
                         : "";
                 document.getElementById("gameBtns").style.display = over ? "flex" : "none";
                 document.getElementById("mode2p").classList.toggle("active", mode === "2p");
                 document.getElementById("modeai").classList.toggle("active", mode === "ai");
             }
 
-            // プレイヤーまたは２Pの手を実際に置く（状態の更新）
+            // تنفيذ حركة اللاعب أو اللاعب الثاني (تحديث الحالة)
             function playerMove(col) {
                 if (over) return false;
                 for (let r = ROWS - 1; r >= 0; r--) {
                     if (board[r][col] === null) {
                         board[r][col] = turn;
-                        // 勝利／引き分け判定
+                        // تحقق من الفوز أو التعادل
                         if (checkWin(r, col, turn)) {
                             over = true;
                             winner = turn;
@@ -317,7 +321,7 @@
                 return false;
             }
 
-            // AIやシミュレーション用に仮に置く（over/winner状態には影響しない）
+            // لمحاكاة حركة الذكاء الاصطناعي أو التحقق (لا يؤثر على فائت الحالة)
             function tryMove(col, whichTurn) {
                 for (let r = ROWS - 1; r >= 0; r--) {
                     if (board[r][col] === null) {
@@ -379,29 +383,29 @@
                 let validCols = [];
                 for (let c = 0; c < COLS; c++) if (board[0][c] === null) validCols.push(c);
 
-                // 1. AIが勝利できる手を探す
+                // 1. ابحث عن خطوة فوز للذكاء الاصطناعي
                 for (let ci of validCols) {
                     let row = tryMove(ci, 1);
                     if (row !== -1 && checkWin(row, ci, 1)) {
                         undoMove(ci);
-                        playerMove(ci); // 実際にAIの手を置く
+                        playerMove(ci);
                         render();
                         return;
                     }
                     if (row !== -1) undoMove(ci);
                 }
-                // 2. プレイヤーが勝利できる手をブロック
+                // 2. احظر خطوة فوز اللاعب
                 for (let ci of validCols) {
                     let row = tryMove(ci, 0);
                     if (row !== -1 && checkWin(row, ci, 0)) {
                         undoMove(ci);
-                        playerMove(ci); // ブロックのために置く
+                        playerMove(ci);
                         render();
                         return;
                     }
                     if (row !== -1) undoMove(ci);
                 }
-                // 3. 中央優先
+                // 3. اختيار العمود المركزي أولًا
                 let bestCols = [3, 2, 4, 1, 5, 0, 6].filter((c) => validCols.includes(c));
                 let col = bestCols.length > 0
                     ? bestCols[0]
@@ -414,16 +418,16 @@
                 const url = location.href;
                 if (navigator.share) {
                     navigator.share({
-                        title: "四目並べ",
+                        title: "كونكت فور",
                         url
                     });
                 } else {
                     navigator.clipboard.writeText(url);
-                    alert("リンクがコピーされました！");
+                    alert("تم نسخ الرابط!");
                 }
             }
 
-            // 初期化
+            // التهيئة الأولية
             restart();
         </script>
         <section
@@ -435,43 +439,43 @@
                 background: #ffffff;
                 border: 1px solid #ccc;
                 border-radius: 12px;
-                font-family: &quot;Segoe UI&quot;, sans-serif;
+                font-family: 'Segoe UI', sans-serif;
                 font-size: 14px;
                 line-height: 1.6;
                 color: #2e2e2e;
                 box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             "
         >
-            <h2 style="font-size: 18px; margin-bottom: 1rem; color: #365ca0">❓ よくある質問 (FAQ)</h2>
+            <h2 style="font-size: 18px; margin-bottom: 1rem; color: #365ca0">❓ الأسئلة الشائعة (FAQ)</h2>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q1. 四目並べはどうプレイするの？</strong><br />
-                A. 列をタップしてトークンを落とします。横・縦・斜めに４つつなげたプレイヤーが勝ちです。
+                <strong>س1. كيف ألعب كونكت فور؟</strong><br />
+                أ. اضغط على عمود لإسقاط أحجارك. اربط أربعة من حجر بنفس اللون أفقيًا أو عموديًا أو قطريًا للفوز.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q2. ゲームモードには何があるの？</strong><br />
-                A. 友達と遊ぶ「２人プレイ」モードまたはコンピュータと対戦する「AI対戦」モードが選べます。
+                <strong>س2. ما هي أوضاع اللعبة؟</strong><br />
+                أ. يمكنك اختيار "لعب ثنائي" لمواجهة صديق، أو "مواجهة الذكاء الاصطناعي" للتحدي ضد الكمبيوتر.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q3. AIはどれくらい強いの？</strong><br />
-                A. AIは勝てる手を見つけ、自分の潜在的な勝利を阻止します。また、より有利な中央の列を優先します。
+                <strong>س3. ما مدى قوة الذكاء الاصطناعي؟</strong><br />
+                أ. يقوم الذكاء الاصطناعي بالبحث عن خطوة الفوز، ويحظر حركتك الفائزة، ويعطي الأولوية للمركز.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q4. ゲーム途中でモードを切り替えられる？</strong><br />
-                A. はい！画面上部のモードボタンをタップすると、別のモードで再スタートします。
+                <strong>س4. هل يمكن تغيير الوضع أثناء اللعب؟</strong><br />
+                أ. نعم! اضغط على زر الوضع في الأعلى لبدء اللعبة في الوضع الآخر.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q5. 引き分けのときはどうなる？</strong><br />
-                A. ボードがいっぱいになっても勝者がいない場合、ゲームは引き分けとして終了し、再スタートできます。
+                <strong>س5. ماذا يحدث في حالة التعادل؟</strong><br />
+                أ. إذا امتلأت اللوحة دون وجود فائز، تنتهي اللعبة كتعادل، ويمكنك إعادة البدء.
             </div>
 
             <div>
-                <strong>Q6. ゲームはどうやって共有するの？</strong><br />
-                A. ゲーム終了後に「共有」ボタンをタップし、リンクをコピーして友達に送ってください！
+                <strong>س6. كيف أشارك اللعبة؟</strong><br />
+                أ. عند انتهاء اللعبة اضغط زر "مشاركة" لنسخ الرابط وإرساله إلى أصدقائك.
             </div>
         </section>
     </body>
