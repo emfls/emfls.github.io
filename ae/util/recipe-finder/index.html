@@ -1,27 +1,27 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <title>かんたんレシピ検索 – 何を作ろう？</title>
+    <title>بحث وصفات بسيط – ماذا سنطبخ؟</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="材料を入力するだけで、かんたんレシピを見つけられます。子供でも簡単、YouTubeレシピリンク付き！" />
+      content="أدخل المكونات فقط، وستجد وصفات بسيطة. حتى الأطفال يمكنهم استخدامها بسهولة، مع روابط فيديوهات يوتيوب!" />
     <meta
       name="keywords"
-      content="かんたんレシピ, 子供料理, レシピ検索, 家にある材料, 料理検索, キッズクッキング" />
+      content="وصفة بسيطة, طبخ للأطفال, بحث وصفات, المكونات المتوفرة, بحث الطبخ, طبخ للأطفال" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ja" />
+    <meta name="language" content="ar" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <!-- SEO, Open Graph, Twitter, GA, AdSense含む -->
-    <meta property="og:title" content="子供向け かんたんレシピ検索 – 何を作ろう？" />
-    <meta property="og:description" content="材料を入力するとかんたんレシピを探します。とっても簡単！" />
+    <!-- SEO, Open Graph, Twitter, GA, AdSense -->
+    <meta property="og:title" content="بحث وصفات للأطفال – ماذا سنطبخ؟" />
+    <meta property="og:description" content="أدخل المكونات للبحث عن وصفات بسيطة. سهل جداً!" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/ae/util/recipe-finder/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="かんたんレシピ検索 – 何を作ろう？" />
-    <meta name="twitter:description" content="材料でレシピ検索、子供でも簡単！" />
+    <meta name="twitter:title" content="بحث وصفات بسيط – ماذا سنطبخ؟" />
+    <meta name="twitter:description" content="ابحث عن وصفات بالمكونات، سهل جداً للأطفال!" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
@@ -49,6 +49,7 @@
         border-radius: 14px;
         box-shadow: 0 4px 16px #36c1e420;
         padding: 18px 10px 22px 10px;
+        direction: rtl;
       }
       .logo {
         font-size: 1.23em;
@@ -69,6 +70,7 @@
         margin-bottom: 6px;
         margin-top: 7px;
         display: block;
+        text-align: right;
       }
       .ingredient-input-box {
         width: 100%;
@@ -87,7 +89,7 @@
         border-radius: 11px;
         padding: 5px 12px;
         font-size: 1em;
-        margin: 3px 3px 0 0;
+        margin: 3px 0 3px 3px;
         display: flex;
         align-items: center;
       }
@@ -104,11 +106,12 @@
         font-size: 1em;
         min-width: 85px;
         flex: 1;
+        text-align: right;
       }
       .autocomplete-box {
         position: absolute;
-        left: 0;
         right: 0;
+        left: 0;
         top: 44px;
         background: #fff;
         z-index: 100;
@@ -124,6 +127,7 @@
         padding: 9px 15px;
         cursor: pointer;
         color: #2c5b7d;
+        text-align: right;
       }
       .autocomplete-item.active,
       .autocomplete-item:hover {
@@ -157,16 +161,19 @@
         font-weight: bold;
         color: #1f7cb8;
         font-size: 1.13em;
+        text-align: right;
       }
       .match-info {
         font-size: 1em;
         color: #1ea07a;
         margin-top: 4px;
+        text-align: right;
       }
       .all-ings {
         color: #757;
         font-size: 0.96em;
         margin-top: 3px;
+        text-align: right;
       }
       .yt-link-btn {
         background: #eb4437;
@@ -179,6 +186,10 @@
         margin-top: 9px;
         cursor: pointer;
         box-shadow: 0 1px 7px #eb443726;
+        display: block;
+      }
+      .yt-link-btn:hover {
+        background: #c4372b;
       }
       .footer {
         color: #789;
@@ -225,30 +236,30 @@
         }
       }
     </style>
-    <!-- 外部レシピDB: recipes.jsでwindow.RECIPES_DB, window.INGREDIENTS_DBをロード -->
+    <!-- قاعدة بيانات الوصفات الخارجية: recipes.js تحمّل RECIPES_DB و INGREDIENTS_DB -->
     <script src="recipes.js"></script>
   </head>
   <body>
     <div class="container">
-      <div class="logo">🍳 かんたんレシピ検索</div>
-      <div class="desc">どんな材料がありますか？<br /><b>下に入力してみましょう！</b></div>
-      <span class="input-label">持っている材料：</span>
+      <div class="logo">🍳 بحث وصفات بسيط</div>
+      <div class="desc">ما هي المكونات المتوفرة؟<br /><b>جرب إدخالها أدناه!</b></div>
+      <span class="input-label">المكونات المتوفرة:</span>
       <div class="ingredient-input-box" id="ingredientWrap">
         <input
           type="text"
           class="ingredient-input"
           id="ingredientInput"
-          placeholder="例：たまご、チーズ、牛乳"
+          placeholder="مثال: بيض، جبنة، حليب"
           autocomplete="off" />
         <div class="autocomplete-box" id="autocompleteBox"></div>
       </div>
-      <button class="search-btn" id="searchBtn">レシピを表示</button>
+      <button class="search-btn" id="searchBtn">اعرض الوصفات</button>
       <div class="recipes-list" id="recipesList"></div>
       <div class="footer"></div>
-      <a href="../index.html" id="backBtn">その他ツール</a>
+      <a href="../index.html" id="backBtn">أدوات أخرى</a>
     </div>
     <script>
-      // recipes.jsからwindow.RECIPES_DB, window.INGREDIENTS_DBをロード
+      // من recipes.js نحمل window.RECIPES_DB و window.INGREDIENTS_DB
       const RECIPES = window.RECIPES_DB || [];
       const INGREDIENTS = window.INGREDIENTS_DB || [];
       const ingredientInput = document.getElementById("ingredientInput");
@@ -258,7 +269,7 @@
       const recipesList = document.getElementById("recipesList");
       let selectedIngredients = [];
 
-      // オートコンプリート表示
+      // عرض الاقتراحات التلقائية
       function showAutocomplete(val) {
         autocompleteBox.innerHTML = "";
         if (!val) {
@@ -303,7 +314,7 @@
       function addIngredient(val) {
         val = val
           .toLowerCase()
-          .replace(/[^\u3040-\u30FF\u4E00-\u9FFF\s]/g, "") // 일본어/한자만 허용
+          .replace(/[^\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\s]/g, "") // السماح بالعربية فقط
           .trim();
         if (!val || selectedIngredients.includes(val)) return;
         selectedIngredients.push(val);
@@ -314,7 +325,7 @@
         updateChips();
       }
       function updateChips() {
-        // 既存チップ削除
+        // إزالة الرقائق الحالية
         ingredientWrap.querySelectorAll(".ingredient-chip").forEach((el) => el.remove());
         selectedIngredients.forEach((ing) => {
           const chip = document.createElement("div");
@@ -329,10 +340,10 @@
         });
       }
 
-      // レシピマッチ＆表示（YouTubeリンク付き）
+      // البحث عن الوصفات وعرضها (مع رابط يوتيوب)
       function showRecipes() {
         if (selectedIngredients.length === 0) {
-          recipesList.innerHTML = `<div style="color:#aaa;font-size:1.11em;text-align:center;">材料を入力してください！</div>`;
+          recipesList.innerHTML = `<div style="color:#aaa;font-size:1.11em;text-align:center;">الرجاء إدخال المكونات!</div>`;
           return;
         }
         const matches = RECIPES.map((r) => {
@@ -348,7 +359,7 @@
           .filter((r) => r.matchedCount > 0)
           .sort((a, b) => b.matchedCount - a.matchedCount || a.total - b.total);
         if (matches.length === 0) {
-          recipesList.innerHTML = `<div style="color:#e57272;text-align:center;">その材料ではレシピが見つかりません。他の材料を試してください！</div>`;
+          recipesList.innerHTML = `<div style="color:#e57272;text-align:center;">لم تُعثر على أي وصفات بهذه المكونات. حاول مكونات أخرى!</div>`;
           return;
         }
         recipesList.innerHTML = matches
@@ -356,12 +367,12 @@
             (r) => `
         <div class="recipe-card">
           <div class="recipe-title">${r.name}</div>
-          <div class="match-info">一致材料: <b>${r.matchedCount}</b> / ${r.total}</div>
-          <div class="all-ings">材料: ${r.ingredients
+          <div class="match-info">المكونات المتطابقة: <b>${r.matchedCount}</b> / ${r.total}</div>
+          <div class="all-ings">المكونات: ${r.ingredients
             .map((i) => (r.matched.includes(i) ? `<b style="color:#228e6f">${i}</b>` : i))
             .join(", ")}</div>
-          <button class="yt-link-btn" onclick="window.open('https://www.youtube.com/results?search_query=${encodeURIComponent(r.name + " レシピ")}', '_blank')">
-            ▶ YouTubeで見る
+          <button class="yt-link-btn" onclick="window.open('https://www.youtube.com/results?search_query=${encodeURIComponent(r.name + ' وصفة')}', '_blank')">
+            ▶ عرض على يوتيوب
           </button>
         </div>
       `
@@ -373,7 +384,7 @@
         if (selectedIngredients.length) showRecipes();
       });
 
-      // 初回ロード時に案内表示
+      // عرض دليل مبدئي عند التحميل
       showRecipes();
     </script>
     <section
@@ -384,43 +395,44 @@
         border-radius: 18px;
         box-shadow: 0 6px 24px #1236;
         padding: 18px;
+        direction: rtl;
       ">
       <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 12px">
-        FAQ – かんたんレシピ検索
+        الأسئلة الشائعة – بحث وصفات بسيط
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Q. 登録やログインは必要ですか？</div>
+        <div style="color: #8f94fb; font-weight: bold">س: هل أحتاج للتسجيل أو تسجيل دخول؟</div>
         <div style="color: #f0f0f0">
-          いいえ！ログイン不要ですべてブラウザ内で処理されます。入力した材料や結果はご自身の端末だけに残ります。
+          لا! لا حاجة للتسجيل، كل شيء يعمل داخل المتصفح فقط. المكونات والنتائج تبقى على جهازك.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Q. 子供も安全に使えますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">س: هل يمكن للأطفال استخدامه بأمان؟</div>
         <div style="color: #f0f0f0">
-          はい！個人情報の収集や外部アップロードはなく、広告も最小限なので子供でも安心して使えます。
+          نعم! لا يتم جمع بيانات شخصية أو رفع الصور، والإعلانات قليلة جداً، لذا يمكن للأطفال استخدامه بأمان.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Q. レシピデータはどこから？</div>
+        <div style="color: #8f94fb; font-weight: bold">س: من أين تأتي بيانات الوصفات؟</div>
         <div style="color: #f0f0f0">
-          シンプルなローカルデータベースでレシピをマッチします。YouTubeリンクはレシピ名で検索した動画に飛びます。
+          نقوم بمطابقة الوصفات من قاعدة بيانات محلية بسيطة. روابط يوتيوب تنشئ بحثاً عن اسم الوصفة على يوتيوب.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Q. もっと多くのレシピは追加できますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">س: هل يمكن إضافة المزيد من الوصفات؟</div>
         <div style="color: #f0f0f0">
-          現在リストは固定ですが、今後リクエスト機能も追加予定です。お楽しみに！
+          القائمة حالياً ثابتة، ولكن سنضيف مستقبلًا إمكانية طلب وصفات جديدة. تابعنا!
         </div>
       </div>
 
       <div>
-        <div style="color: #8f94fb; font-weight: bold">Q. オフラインでも使えますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">س: هل يمكنني استخدامه دون اتصال؟</div>
         <div style="color: #f0f0f0">
-          はい、一度ページを開けばネットなしでも材料入力とレシピ検索が可能です（YouTube動画はネットが必要）。
+          نعم، بعد فتح الصفحة يمكنك البحث محليًا دون إنترنت (لروابط يوتيوب ستحتاج اتصال).
         </div>
       </div>
     </section>
