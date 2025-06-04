@@ -1,31 +1,31 @@
 <!doctype html>
-<html lang="ja">
+<html lang="zh">
   <head>
     <meta charset="UTF-8" />
-    <title>テキスト要約ツール – 長文をすばやく要約！</title>
+    <title>文本摘要工具 – 快速提取长文要点！</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="長文や記事、エッセイを簡単に要約しましょう。無料・プライバシー保護・ブラウザですぐ使える！" />
+      content="轻松为长文、文章和论文生成摘要。无需上传，免费且保护隐私，可在浏览器中立即使用！" />
     <meta
       name="keywords"
-      content="テキスト要約, 要約, 自動要約, 記事要約, 無料, オンライン, ブラウザ, アップロード不要" />
+      content="文本摘要, 自动摘要, 文章摘要, 在线摘要, 免费, 隐私保护, 浏览器工具" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ja" />
+    <meta name="language" content="zh" />
     <link rel="canonical" href="https://emfls.github.io/cn/util/textsummarizer/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <meta property="og:title" content="テキスト要約ツール – 長文をすばやく要約！" />
+    <meta property="og:title" content="文本摘要工具 – 快速提取长文要点！" />
     <meta
       property="og:description"
-      content="記事やドキュメント、エッセイをすぐに要約。アップロード不要・無料・プライバシー保護。" />
+      content="即时为文章、文档和论文生成摘要。无需上传，免费且隐私保护。" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/cn/util/textsummarizer/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="テキスト要約ツール – 長文をすばやく要約！" />
-    <meta name="twitter:description" content="長文や記事、エッセイをブラウザで手軽に要約しましょう。" />
+    <meta name="twitter:title" content="文本摘要工具 – 快速提取长文要点！" />
+    <meta name="twitter:description" content="在浏览器中轻松为长文、文章或论文生成摘要。" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-    <!-- Google タグ (gtag.js) -->
+    <!-- Google 标签 (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -163,25 +163,25 @@
   </head>
   <body>
     <div class="container">
-      <div class="logo">📝 テキスト要約ツール</div>
+      <div class="logo">📝 文本摘要工具</div>
       <div class="desc">
-        長文や記事を下の欄に貼り付けてください。<br />
-        <b>要約する</b> ボタンをクリックすると、かんたんに要約が得られます！
+        请将长文本或文章粘贴到下方。<br />
+        单击 <b>“生成摘要”</b> 按钮，立即获得简洁要点！
       </div>
-      <textarea id="inputText" placeholder="長いテキストをここに貼り付けてください..."></textarea>
+      <textarea id="inputText" placeholder="请在此粘贴长篇文本..."></textarea>
       <div class="input-row">
-        <label class="slider-label" for="summaryLength">要約文の長さ:</label>
+        <label class="slider-label" for="summaryLength">摘要长度：</label>
         <input type="range" min="1" max="10" value="3" id="summaryLength" />
-        <span id="lengthVal">3</span> 文
+        <span id="lengthVal">3</span> 句
       </div>
-      <button class="action-btn" id="summarizeBtn">要約する</button>
+      <button class="action-btn" id="summarizeBtn">生成摘要</button>
       <div class="output-box" id="summaryResult" style="margin-top: 8px"></div>
       <div class="footer">
-        すべての処理はローカルで実行されます。 <b>アップロード不要</b>・無料＆プライバシー保護。<br />
-        <span style="color: #127080">ヒント: ニュース、Wikipedia、レポート、どんなテキストでも試せます！</span>
+        所有处理均在本地浏览器完成。<b>无需上传</b>，免费且保护隐私。<br />
+        <span style="color: #127080">提示：可用于新闻、维基百科、报告等任何长文！</span>
       </div>
     </div>
-    <a href="../index.html" id="backBtn">その他ツール</a>
+    <a href="../index.html" id="backBtn">其他工具</a>
     <script>
       const inputText = document.getElementById("inputText");
       const summaryResult = document.getElementById("summaryResult");
@@ -193,13 +193,13 @@
         lengthVal.textContent = summaryLength.value;
       };
 
-      // シンプルな頻度ベース要約（AI非使用）
+      // 简单的基于词频的摘要（不使用 AI）
       function summarize(text, numSentences = 3) {
-        if (!text.trim()) return "テキストを貼り付け、「要約する」をクリックしてください。";
-        // 文ごとに分割
+        if (!text.trim()) return "请粘贴文本，然后点击“生成摘要”。";
+        // 按句子拆分
         const sentences = text.match(/[^\.!\?]+[\.!\?]+/g) || [text];
         if (sentences.length <= numSentences) return text;
-        // 単語の頻度計算
+        // 计算词频
         const freq = {};
         const words = text
           .replace(/[^\w\s]/g, "")
@@ -208,7 +208,7 @@
         words.forEach((w) => {
           if (w.length > 2) freq[w] = (freq[w] || 0) + 1;
         });
-        // 各文のスコア計算（単語頻度合計）
+        // 给每句打分（累加词频）
         const scored = sentences.map((s) => {
           const sw = s
             .replace(/[^\w\s]/g, "")
@@ -220,7 +220,7 @@
           });
           return { sentence: s.trim(), score };
         });
-        // スコアが高い上位N文を元の順序で選択
+        // 选出分数最高的前 N 句，然后按原顺序排序
         const top = scored
           .sort((a, b) => b.score - a.score)
           .slice(0, numSentences)
@@ -249,41 +249,41 @@
         font-family: Arial, sans-serif;
       ">
       <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 14px">
-        ❓ FAQ – テキスト要約ツール
+        ❓ 常见问题 – 文本摘要工具
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">このツールはAIやChatGPTを使っていますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">此工具使用 AI 或 ChatGPT 吗？</div>
         <div style="color: #f0f0f0">
-          いいえ。単語の頻度に基づくアルゴリズムを使用しています。高速かつプライバシー保護ですが、AI要約ほど高性能ではありません。
+          不使用。此工具基于词频算法提取关键句子，处理速度快且保护隐私，但无法达到 AI 摘要的精度。
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">私のテキストがアップロードまたは保存されますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">我的文本会被上传或保存吗？</div>
         <div style="color: #f0f0f0">
-          絶対にありません。すべての処理はブラウザ内で行われ、サーバーに送信されることはありません。
+          绝对不会。所有操作都在本地浏览器中完成，不会发送到任何服务器。
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">どの言語に対応していますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">支持哪些语言？</div>
         <div style="color: #f0f0f0">
-          主に英語に最適化されています。他の言語でも動作しますが、結果が異なる場合があります。
+          主要针对英文进行优化。其他语言也能使用，但结果可能会有所差异。
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">要約の精度はどうですか？</div>
+        <div style="color: #8f94fb; font-weight: bold">摘要效果如何？</div>
         <div style="color: #f0f0f0">
-          単語の繰り返し頻度から「重要な」文を選出します。とてもシンプルですが、ざっと内容を把握したい時に便利です。
+          通过计算词语出现频率，选择重要句子排序生成摘要。方法简单，但对快速了解文章内容非常有帮助。
         </div>
       </div>
 
       <div style="margin-bottom: 0">
-        <div style="color: #8f94fb; font-weight: bold">どんな場面で使えますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">适用于哪些场景？</div>
         <div style="color: #f0f0f0">
-          ニュース、ブログ、エッセイ、論文など長文テキストを手軽に要約したいときにご利用ください。
+          适合在需要快速获取新闻、博客、论文等长文要点时使用。
         </div>
       </div>
     </section>

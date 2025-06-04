@@ -1,30 +1,30 @@
 <!doctype html>
-<html lang="ja">
+<html lang="zh">
   <head>
     <meta charset="UTF-8" />
-    <title>時間差＆カウントダウン計算機</title>
+    <title>时间差＆倒计时计算器</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="2つの日付間の時間差を計算し、指定した日時までのリアルタイムカウントダウンを確認できます。日・時・分・秒。無料、ブラウザベース、モバイル対応。" />
+      content="可计算两个日期/时间之间的差异，并查看距指定日期/时间的实时倒计时。展示天、小时、分钟、秒。免费、基于浏览器、移动端兼容。" />
     <meta
       name="keywords"
-      content="時間差, カウントダウン, 日付計算, タイマー, 日, 時間, 分, 秒, ウェブ, カウントダウン, 日付計算機" />
+      content="时间差, 倒计时, 日期计算, 计时器, 天, 小时, 分钟, 秒, 网络, 倒计时, 日期计算器" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ja" />
+    <meta name="language" content="zh" />
     <meta name="theme-color" content="#1999c6" />
     <link rel="canonical" href="https://emfls.github.io/cn/util/time-diff/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <meta property="og:title" content="時間差＆カウントダウン計算機" />
+    <meta property="og:title" content="时间差＆倒计时计算器" />
     <meta
       property="og:description"
-      content="2つの日時の差を計算し、希望の未来日時までリアルタイムでカウントダウンします。" />
+      content="计算两个日期/时间之间的差异，并实时显示距目标未来时间的倒计时。" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/cn/util/time-diff/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="時間差＆カウントダウン計算機" />
-    <meta name="twitter:description" content="間隔計算やリアルタイムカウントダウン。100%ブラウザ内、アップロード不要。" />
+    <meta name="twitter:title" content="时间差＆倒计时计算器" />
+    <meta name="twitter:description" content="计算间隔或实时倒计时。100% 在浏览器内，无需上传。" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -161,25 +161,25 @@
   </head>
   <body>
     <div class="container">
-      <div class="title">⏳ 時間差＆カウントダウン</div>
+      <div class="title">⏳ 时间差＆倒计时</div>
       <form id="diffForm" autocomplete="off">
         <div class="form-row">
-          <label for="startTime">開始日時</label>
+          <label for="startTime">开始时间</label>
           <input type="datetime-local" id="startTime" />
         </div>
         <div class="form-row">
-          <label for="endTime">終了日時</label>
+          <label for="endTime">结束时间</label>
           <input type="datetime-local" id="endTime" />
         </div>
         <div class="result" id="diffResult"></div>
       </form>
       <div class="countdown" id="countdownBox"></div>
       <div class="footer">
-        日付間の日・時・分・秒を計算したり、リアルタイムのカウントダウンを確認できます。<br />
-        <b>ヒント:</b> カウントダウンだけなら「終了日時」だけ入力してください。
+        可计算日期/时间间的天、小时、分钟、秒差，并查看实时倒计时。<br />
+        <b>提示：</b>如果只需倒计时，仅输入“结束时间”即可。
       </div>
     </div>
-    <a href="../index.html" id="backBtn">他のツールを見る</a>
+    <a href="../index.html" id="backBtn">查看其他工具</a>
     <script>
       const startInput = document.getElementById("startTime");
       const endInput = document.getElementById("endTime");
@@ -194,21 +194,21 @@
         const hours = Math.floor((abs % 86400000) / 3600000);
         const mins = Math.floor((abs % 3600000) / 60000);
         const secs = Math.floor((abs % 60000) / 1000);
-        return `<b>${sign}${days}日</b> &nbsp; <b>${hours}時間</b> &nbsp; <b>${mins}分</b> &nbsp; <b>${secs}秒</b>`;
+        return `<b>${sign}${days}天</b> &nbsp; <b>${hours}小时</b> &nbsp; <b>${mins}分钟</b> &nbsp; <b>${secs}秒</b>`;
       }
 
       function update() {
         const start = startInput.value ? new Date(startInput.value) : null;
         const end = endInput.value ? new Date(endInput.value) : null;
-        // 差分計算
+        // 差值计算
         if (start && end) {
           let ms = end - start;
-          if (isNaN(ms)) result.textContent = "無効な日付・時刻です。";
+          if (isNaN(ms)) result.textContent = "无效的日期/时间。";
           else result.innerHTML = formatDiff(ms);
         } else {
           result.textContent = "";
         }
-        // カウントダウン（現在時刻から終了まで）
+        // 倒计时（从当前时间到结束）
         if (end) {
           let from =
             !startInput.value || (startInput.value && new Date(startInput.value) < new Date())
@@ -230,12 +230,12 @@
               return;
             }
             if (ms <= 0) {
-              countdownBox.innerHTML = `<b>時間終了！</b>`;
+              countdownBox.innerHTML = `<b>时间到！</b>`;
               clearInterval(countdownTimer);
               countdownTimer = null;
               return;
             }
-            countdownBox.innerHTML = `<b>カウントダウン: </b>` + formatDiff(ms);
+            countdownBox.innerHTML = `<b>倒计时： </b>` + formatDiff(ms);
           }
           if (countdownTimer) clearInterval(countdownTimer);
           tick();
@@ -247,10 +247,10 @@
         }
       }
 
-      // 入力時に自動更新
+      // 输入时自动更新
       startInput.addEventListener("input", update);
       endInput.addEventListener("input", update);
-      // ページロード時も即時更新
+      // 页面加载时立即更新
       window.addEventListener("DOMContentLoaded", update);
     </script>
     <section
@@ -264,41 +264,41 @@
         font-family: Arial, sans-serif;
       ">
       <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 14px">
-        ❓ FAQ – 時間差＆カウントダウン
+        ❓ 常见问题 – 时间差＆倒计时
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">このツールはインターネット接続やアップロードが必要ですか？</div>
+        <div style="color: #8f94fb; font-weight: bold">此工具需要联网或上传吗？</div>
         <div style="color: #f0f0f0">
-          いいえ。すべての計算はブラウザ内でローカルに行われます。データは外部に送信されません。
+          不需要。所有计算都在浏览器本地完成，不会将任何数据发送到服务器。
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">カウントダウン機能の使い方は？</div>
+        <div style="color: #8f94fb; font-weight: bold">如何仅使用倒计时功能？</div>
         <div style="color: #f0f0f0">
-          「終了日時」だけ入力してください。今から残り時間が表示されます。
+          只需输入“结束时间”，即可实时显示从现在到目标时间的剩余时间。
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">開始時刻と終了時刻を両方入力した場合は？</div>
+        <div style="color: #8f94fb; font-weight: bold">如果同时输入开始和结束时间会怎样？</div>
         <div style="color: #f0f0f0">
-          時間差とカウントダウン（開始時刻が現在または過去の場合）が両方表示されます。
+          将同时显示时间差和倒计时（如果开始时间是当前或过去的时间）。
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">マイナス（負）の差も計算できますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">可以计算负时间差吗？</div>
         <div style="color: #f0f0f0">
-          はい。終了日時が開始日時より前なら、結果はマイナス（“-”記号付き）で表示されます。
+          可以。如果结束时间早于开始时间，则结果会以负数（带“-”符号）显示。
         </div>
       </div>
 
       <div style="margin-bottom: 0">
-        <div style="color: #8f94fb; font-weight: bold">モバイルでも使えますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">能否在移动设备上使用？</div>
         <div style="color: #f0f0f0">
-          はい！このツールはレスポンシブ対応で、スマホ・タブレット・PCすべてで利用できます。
+          可以！此工具响应式设计，适用于手机、平板和电脑。
         </div>
       </div>
     </section>

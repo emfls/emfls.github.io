@@ -1,32 +1,32 @@
 <!doctype html>
-<html lang="ja">
+<html lang="zh">
     <head>
         <meta charset="UTF-8" />
-        <title>テキストクリーナー – 空白・改行削除（即時！）</title>
+        <title>文本清理器 – 空格和换行删除（即时！）</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="テキストを即座にきれいに整えます！不要な空白や改行、前後のスペースを削除。複数のクリーニングモード対応。100%ブラウザ処理・無料・アップロード不要。" />
+            content="即时清理文本！删除多余空格、换行和前后空白。支持多种清理模式。100% 浏览器端处理，免费，无需上传。" />
         <meta
             name="keywords"
-            content="テキストクリーナー, 即時クリーナー, 空白削除, 改行削除, ホワイトスペース, オンラインテキスト整形, 無料, アップロード不要" />
+            content="文本清理器, 即时清理, 删除空格, 删除换行, 空白字符, 在线文本格式化, 免费, 无需上传" />
         <meta name="author" content="Itagi" />
-        <meta name="language" content="ja" />
+        <meta name="language" content="zh" />
         <link rel="canonical" href="https://emfls.github.io/cn/util/text-cleaner/" />
         <link rel="icon" href="https://emfls.github.io/icon-192.png" />
         <!-- Open Graph & Twitter -->
-        <meta property="og:title" content="テキストクリーナー – 空白・改行削除（即時！）" />
+        <meta property="og:title" content="文本清理器 – 空格和换行删除（即时！）" />
         <meta
             property="og:description"
-            content="不要な空白・改行を即削除。貼り付けて整理、結果をコピー。100%ブラウザ・無料・アップロード不要。" />
+            content="删除多余空格和换行，粘贴即可整理文本，复制结果。100% 浏览器端，无需上传，免费。" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://emfls.github.io/cn/util/text-cleaner/" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="テキストクリーナー – 空白・改行削除（即時！）" />
+        <meta name="twitter:title" content="文本清理器 – 空格和换行删除（即时！）" />
         <meta
             name="twitter:description"
-            content="テキストを即時整理：不要な空白、連続改行、前後スペース等を削除します。" />
+            content="即时整理文本：删除多余空格、连续换行、前后空白等。" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
         <!-- Google tag (gtag.js) -->
@@ -202,27 +202,27 @@
     </head>
     <body>
         <div class="container">
-            <div class="logo">🧹 テキストクリーナー</div>
+            <div class="logo">🧹 文本清理器</div>
             <div class="desc">
-                下にテキストを貼り付けるか入力してください。<br />
-                すべての変更は即時に反映されます。モードを選択してください！
+                请在下方粘贴或输入文本。<br />
+                所有更改将即时生效。请选择清理模式！
             </div>
             <div class="options">
-                <label><input type="radio" name="mode" value="full" checked /> 全体（空白・改行）</label>
-                <label><input type="radio" name="mode" value="breaks" /> 改行をすべて削除</label>
-                <label><input type="radio" name="mode" value="spaces" /> 余分な空白のみ削除</label>
-                <label><input type="radio" name="mode" value="trimline" /> 各行の前後を整理</label>
+                <label><input type="radio" name="mode" value="full" checked /> 全部（空格和换行）</label>
+                <label><input type="radio" name="mode" value="breaks" /> 删除所有换行</label>
+                <label><input type="radio" name="mode" value="spaces" /> 仅删除多余空格</label>
+                <label><input type="radio" name="mode" value="trimline" /> 整理每行首尾空白</label>
             </div>
-            <textarea id="input" placeholder="ここにテキストを貼り付けてください..."></textarea>
+            <textarea id="input" placeholder="请在此处粘贴文本..."></textarea>
             <div class="result-block" id="resultBlock" style="display: none">
-                <button class="copy-btn" id="copyBtn" style="display: none">コピー</button>
+                <button class="copy-btn" id="copyBtn" style="display: none">复制</button>
                 <span id="result"></span>
             </div>
             <div class="footer">
-                アップロード不要。すべてのクリーニングはブラウザで即時実行されます。<br />
-                無料・プライバシー重視、<b>Itagi</b> 作成。
+                无需上传。所有清理操作均在浏览器中即时执行。<br />
+                免费、隐私保护，<b>Itagi</b> 制作。
             </div>
-            <a href="../index.html" id="backBtn">その他ツール</a>
+            <a href="../index.html" id="backBtn">其他工具</a>
         </div>
         <script>
             const input = document.getElementById("input");
@@ -235,13 +235,11 @@
                 if (!txt) return "";
                 switch (mode) {
                     case "breaks":
-                        // すべての改行削除、空白は1つに
                         return txt
                             .replace(/[\r\n]+/g, " ")
                             .replace(/ +/g, " ")
                             .trim();
                     case "spaces":
-                        // 連続空白を1つにし、改行は保持、空行は1つに
                         return txt
                             .replace(/[ \t]+/g, " ")
                             .replace(/\n{2,}/g, "\n")
@@ -250,7 +248,6 @@
                             .join("\n")
                             .trim();
                     case "trimline":
-                        // 各行の前後空白のみ削除
                         return txt
                             .split(/[\r\n]/)
                             .map((l) => l.trim())
@@ -258,7 +255,6 @@
                             .trim();
                     case "full":
                     default:
-                        // デフォルト：改行・空白すべて整理
                         txt = txt.replace(/\r\n?/g, "\n");
                         txt = txt.replace(/[ \t]+/g, " ");
                         txt = txt.replace(/\n{2,}/g, "\n");
@@ -296,8 +292,8 @@
                     document.execCommand("copy");
                     document.body.removeChild(ta);
                 }
-                copyBtn.textContent = "コピー済み！";
-                setTimeout(() => (copyBtn.textContent = "コピー"), 1200);
+                copyBtn.textContent = "复制成功！";
+                setTimeout(() => (copyBtn.textContent = "复制"), 1200);
             };
         </script>
         <section
@@ -310,46 +306,46 @@
                 font-family: Arial, sans-serif;
             ">
             <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; padding: 16px 16px 0 16px">
-                ❓ FAQ – テキストクリーナー
+                ❓ 常见问题 – 文本清理器
             </div>
 
             <div style="margin-bottom: 12px; padding: 12px 16px 0 16px">
-                <div style="color: #8f94fb; font-weight: bold">「全体（空白・改行）」モードは何を整理しますか？</div>
+                <div style="color: #8f94fb; font-weight: bold">“全部（空格和换行）”模式会整理哪些内容？</div>
                 <div style="color: #f0f0f0">
-                    余分な空白を削除し、各行の前後のスペースを整え、連続した改行を1つにします。
+                    删除多余空格，整理每行首尾空白，合并连续换行。
                 </div>
             </div>
 
             <div style="margin-bottom: 12px; padding: 0 16px">
-                <div style="color: #8f94fb; font-weight: bold">データがアップロードされますか？</div>
+                <div style="color: #8f94fb; font-weight: bold">数据会被上传吗？</div>
                 <div style="color: #f0f0f0">
-                    いいえ。すべてブラウザ内で処理され、入力内容が外部に送信されることはありません。
+                    不会。所有操作均在浏览器内完成，不会将输入内容上传到外部。
                 </div>
             </div>
 
             <div style="margin-bottom: 12px; padding: 0 16px">
-                <div style="color: #8f94fb; font-weight: bold">各モードの違いは何ですか？</div>
+                <div style="color: #8f94fb; font-weight: bold">各模式有何不同？</div>
                 <div style="color: #f0f0f0">
                     <ul style="padding-left: 20px; margin: 0">
-                        <li><b>全体:</b> 空白と改行をすべて整理します。</li>
-                        <li><b>改行をすべて削除:</b> すべての行を1行にまとめます。</li>
-                        <li><b>余分な空白のみ削除:</b> 余分な空白だけを除去し、改行はそのまま。</li>
-                        <li><b>各行の前後を整理:</b> 各行の先頭・末尾のスペースだけを削除します。</li>
+                        <li><b>全部：</b> 整理空格和换行。</li>
+                        <li><b>删除所有换行：</b> 将所有行合并为一行。</li>
+                        <li><b>仅删除多余空格：</b> 仅移除多余空格，保留换行。</li>
+                        <li><b>整理每行首尾空白：</b> 仅删除每行开头和结尾的空格。</li>
                     </ul>
                 </div>
             </div>
 
             <div style="margin-bottom: 12px; padding: 0 16px">
-                <div style="color: #8f94fb; font-weight: bold">長文テキストも貼り付けできますか？</div>
+                <div style="color: #8f94fb; font-weight: bold">可以粘贴长文本吗？</div>
                 <div style="color: #f0f0f0">
-                    はい。大量のテキストも貼り付けでき、処理も高速ですぐに反映されます。
+                    可以。支持大量文本粘贴，处理快速，实时生效。
                 </div>
             </div>
 
             <div style="margin-bottom: 0; padding: 0 16px 16px 16px">
-                <div style="color: #8f94fb; font-weight: bold">他言語も使えますか？</div>
+                <div style="color: #8f94fb; font-weight: bold">支持其他语言吗？</div>
                 <div style="color: #f0f0f0">
-                    はい。日本語、韓国語、絵文字などすべての言語や文字に対応しています。
+                    支持日语、韩语、表情等所有语言和字符。
                 </div>
             </div>
         </section>
