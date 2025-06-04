@@ -1,39 +1,39 @@
 <!doctype html>
-<html lang="ja">
+<html lang="zh">
 <head>
     <meta charset="UTF-8" />
-    <title>HTML → 画像/PDF 変換ツール</title>
+    <title>HTML → 图像/PDF 转换工具</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <meta
         name="description"
-        content="ウェブページや自作のHTMLを高品質な画像またはPDFに即座に変換します。100%無料、プライバシー配慮でブラウザ内で完結。" />
+        content="即时将网页或自定义 HTML 转换为高质量图像或 PDF。100% 免费，注重隐私，全部在浏览器内完成。" />
     <meta
         name="keywords"
-        content="html 画像 変換, html PDF 変換, ウェブページ スクリーンショット, html2canvas, jsPDF, ブラウザ ツール, 無料" />
+        content="html 图像 转换, html PDF 转换, 网页 截图, html2canvas, jsPDF, 浏览器 工具, 免费" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ja" />
+    <meta name="language" content="zh" />
     <meta name="theme-color" content="#4653ce" />
     <link rel="canonical" href="https://emfls.github.io/cn/util/html2imgpdf/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="HTML → 画像 & PDF 変換ツール" />
+    <meta property="og:title" content="HTML → 图像 & PDF 转换工具" />
     <meta
         property="og:description"
-        content="ウェブページやHTMLコードをPNG、JPG、PDFに無料で変換します。100%ブラウザ内で動作、プライバシー保護。" />
+        content="免费将网页或 HTML 代码转换为 PNG、JPG 或 PDF。100% 在浏览器内运行，保护隐私。" />
     <meta property="og:url" content="https://emfls.github.io/cn/util/html2imgpdf/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="HTML → 画像 & PDF 変換ツール" />
+    <meta name="twitter:title" content="HTML → 图像 & PDF 转换工具" />
     <meta
         name="twitter:description"
-        content="ウェブページやHTMLコードをブラウザから直接画像やPDFに変換できます。アップロード不要。" />
+        content="可从浏览器直接将网页或 HTML 代码转换为图像或 PDF，无需上传。" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
-    <!-- Google タグ (gtag.js) -->
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -47,7 +47,7 @@
         async
         src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
         crossorigin="anonymous"></script>
-    <!-- ライブラリ -->
+    <!-- 库 -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.4/dist/purify.min.js"></script>
@@ -226,73 +226,73 @@
 </head>
 <body>
     <div class="container" itemscope itemtype="https://schema.org/WebApplication">
-        <div class="logo" itemprop="name">🖼️ HTML → 画像/PDF 変換ツール</div>
+        <div class="logo" itemprop="name">🖼️ HTML → 图像/PDF 转换工具</div>
         <div class="desc">
-            ウェブページや自作のHTMLコードをPNG/JPGまたはPDFに変換できます。ブラウザ内で100%動作します。<br />アップロードやウォーターマークなしで無料利用可能。
+            将网页(URL)或用户编写的 HTML 代码转换为 PNG/JPG 或 PDF。在浏览器内 100% 运行。<br />无需上传，无水印，免费使用。
         </div>
         <div class="tab-row">
-            <button class="tab-btn active" id="urlTabBtn">URLで変換</button>
-            <button class="tab-btn" id="htmlTabBtn">HTMLコード入力</button>
+            <button class="tab-btn active" id="urlTabBtn">通过 URL 转换</button>
+            <button class="tab-btn" id="htmlTabBtn">输入 HTML 代码</button>
         </div>
-        <!-- URL入力タブ -->
+        <!-- URL 输入选项卡 -->
         <div id="urlTab" style="display: block">
             <div class="input-row">
-                <label for="urlInput">ページURL</label>
+                <label for="urlInput">页面 URL</label>
                 <input type="text" id="urlInput" placeholder="https://example.com" />
             </div>
-            <button class="action-btn" id="fetchUrlBtn">読み込んでプレビュー</button>
+            <button class="action-btn" id="fetchUrlBtn">加载并预览</button>
             <div id="urlRenderBox" style="display: none; margin-top: 13px">
                 <div
                     id="urlRender"
                     style="background: #fafcff; border: 1px solid #ddd; border-radius: 10px; overflow: auto; padding: 19px;"></div>
-                <div class="result-row" id="urlResultRow" style="display: none">
-                    <button class="download-btn" id="downloadUrlImg">PNGで保存</button>
-                    <button class="download-btn" id="downloadUrlPdf">PDFで保存</button>
+                <div class="result-row" id="urlResultRow" style="display: none; justify-content: center;">
+                    <button class="download-btn" id="downloadUrlImg">保存为 PNG</button>
+                    <button class="download-btn" id="downloadUrlPdf">保存为 PDF</button>
                 </div>
             </div>
         </div>
-        <!-- HTML入力タブ -->
+        <!-- HTML 输入选项卡 -->
         <div id="htmlTab" style="display: none">
             <div class="input-row">
-                <label for="htmlInput">HTMLコード</label>
-                <textarea id="htmlInput" placeholder="&lt;div&gt;こんにちは&lt;/div&gt;"></textarea>
+                <label for="htmlInput">HTML 代码</label>
+                <textarea id="htmlInput" placeholder="&lt;div&gt;你好&lt;/div&gt;"></textarea>
             </div>
-            <button class="action-btn" id="renderHtmlBtn">プレビュー & 変換</button>
+            <button class="action-btn" id="renderHtmlBtn">预览 & 转换</button>
             <div id="htmlRenderBox" style="display: none; margin-top: 13px">
                 <div
                     id="htmlRender"
                     style="background: #fafcff; border: 1px solid #ddd; border-radius: 10px; overflow: auto; padding: 19px;"></div>
-                <div class="result-row" id="htmlResultRow" style="display: none">
-                    <button class="download-btn" id="downloadHtmlImg">PNGで保存</button>
-                    <button class="download-btn" id="downloadHtmlPdf">PDFで保存</button>
+                <div class="result-row" id="htmlResultRow" style="display: none; justify-content: center;">
+                    <button class="download-btn" id="downloadHtmlImg">保存为 PNG</button>
+                    <button class="download-btn" id="downloadHtmlPdf">保存为 PDF</button>
                 </div>
             </div>
         </div>
         <div class="footer">
-            <b>注意:</b> 外部URLはCORSポリシーにより読み込みが制限される場合があり、動的なJavaScriptを含むサイトは正しくレンダリングされない可能性があります。<br />
-            HTMLレンダリングは安全のため制約があります。結果が切れないようにHTMLをシンプルにしてください。
+            <b>注意：</b>由于 CORS 策略，外部 URL 可能无法加载，包含动态 JavaScript 的网站可能无法正确渲染。<br />
+            为保证安全，HTML 渲染存在一定限制。请保持 HTML 简洁，以避免内容被截断。
         </div>
         <section id="faq" aria-labelledby="faq-head">
-            <h2 id="faq-head">FAQ – HTML → 画像/PDF 変換ツール</h2>
+            <h2 id="faq-head">常见问题 – HTML → 图像/PDF 转换工具</h2>
             <dl>
-                <dt>このツールは何をしますか？</dt>
-                <dd>ウェブページ(URL)やユーザーが作成したHTMLコードをブラウザ上で高品質なPNG画像またはPDFファイルに変換します。</dd>
-                <dt>データはアップロードまたは保存されますか？</dt>
-                <dd>いいえ。すべての処理はクライアント側(ブラウザ)で行われ、データやコードは外部に送信されません。</dd>
-                <dt>すべてのサイトで使用できますか？</dt>
-                <dd>公開されているウェブサイトであれば試せますが、一部のサイトはCORS制限や動的JSの読み込みにより正常に表示されない場合があります。</dd>
-                <dt>どの形式で出力できますか？</dt>
-                <dd>PNG画像またはPDFファイルとして保存できます。両形式ともブラウザ上で即座に生成されます。</dd>
-                <dt>実際のサイトとレンダリング結果が異なるのはなぜですか？</dt>
-                <dd>動的なJavaScript、外部フォントやスタイルの読み込み、CORS制限などにより、一部リソースが正しく表示されないためです。完璧な結果を得たい場合は、HTMLを直接入力しCSSを調整してください。</dd>
-                <dt>無料で使えますか？</dt>
-                <dd>はい！会員登録不要で誰でも100%無料、ウォーターマークなしで利用できます。</dd>
+                <dt>这个工具能做什么？</dt>
+                <dd>它可以将网页(URL)或用户编写的 HTML 代码在浏览器内转换为高质量的 PNG 图像或 PDF 文件。</dd>
+                <dt>数据会上传或保存到服务器吗？</dt>
+                <dd>不会。所有处理都在客户端(浏览器)完成，数据或代码不会发送到外部。</dd>
+                <dt>可以转换所有网站吗？</dt>
+                <dd>只要是公开网站都可以尝试，但部分网站因 CORS 限制或动态 JavaScript 加载可能无法正常显示。</dd>
+                <dt>支持哪些输出格式？</dt>
+                <dd>可以保存为 PNG 图像或 PDF 文件，均可在浏览器上即时生成。</dd>
+                <dt>为什么渲染结果与实际网站不同？</dt>
+                <dd>动态 JavaScript、外部字体或样式加载、CORS 限制等会导致部分资源无法正确渲染。如需完美效果，可直接输入 HTML 并调整 CSS。</dd>
+                <dt>是免费使用吗？</dt>
+                <dd>是的！无需注册，所有功能 100% 免费且无水印。</dd>
             </dl>
         </section>
     </div>
-    <a href="../index.html" id="backBtn">他のユーティリティ</a>
+    <a href="../index.html" id="backBtn">其他工具</a>
     <script>
-        // タブ切り替えロジック
+        // 选项卡切换逻辑
         const urlTabBtn = document.getElementById("urlTabBtn");
         const htmlTabBtn = document.getElementById("htmlTabBtn");
         const urlTab = document.getElementById("urlTab");
@@ -310,10 +310,10 @@
             urlTabBtn.classList.remove("active");
         };
 
-        // URLから変換
+        // 从 URL 转换
         document.getElementById("fetchUrlBtn").onclick = async function () {
             const url = document.getElementById("urlInput").value.trim();
-            if (!url) return alert("有効なURLを入力してください。");
+            if (!url) return alert("请输入有效的 URL。");
             try {
                 const res = await fetch(url);
                 const text = await res.text();
@@ -322,7 +322,7 @@
                 document.getElementById("urlRenderBox").style.display = "block";
                 document.getElementById("urlResultRow").style.display = "flex";
             } catch {
-                alert("ページの読み込みまたはレンダリングに失敗しました。(CORSまたは動的JSの制限)");
+                alert("加载或渲染页面失败（可能受 CORS 或动态 JS 限制）。");
             }
         };
         document.getElementById("downloadUrlImg").onclick = () => {
@@ -344,7 +344,7 @@
             });
         };
 
-        // HTML入力から変換
+        // 从 HTML 输入转换
         document.getElementById("renderHtmlBtn").onclick = () => {
             const html = document.getElementById("htmlInput").value;
             const clean = DOMPurify.sanitize(html);
@@ -371,7 +371,7 @@
             });
         };
     </script>
-    <!-- FAQPage 構造化データ -->
+    <!-- FAQPage 结构化数据 -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -379,33 +379,33 @@
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "このツールは何をしますか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "ウェブページ(URL)やユーザーが作成したHTMLコードをブラウザ上で高品質なPNG画像またはPDFファイルに変換します。" }
+          "name": "这个工具能做什么？",
+          "acceptedAnswer": { "@type": "Answer", "text": "它可以将网页(URL)或用户编写的 HTML 代码在浏览器内转换为高质量的 PNG 图像或 PDF 文件。" }
         },
         {
           "@type": "Question",
-          "name": "データはアップロードまたは保存されますか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "いいえ。すべての処理はクライアント側(ブラウザ)で行われ、データやコードは外部に送信されません。" }
+          "name": "数据会上传或保存到服务器吗？",
+          "acceptedAnswer": { "@type": "Answer", "text": "不会。所有处理都在客户端(浏览器)完成，数据或代码不会发送到外部。" }
         },
         {
           "@type": "Question",
-          "name": "すべてのサイトで使用できますか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "公開されているウェブサイトなら試せますが、一部のサイトはCORS制限や動的JSの読み込みによって正常にレンダリングされない場合があります。" }
+          "name": "可以转换所有网站吗？",
+          "acceptedAnswer": { "@type": "Answer", "text": "只要是公开网站都可以尝试，但部分网站因 CORS 限制或动态 JavaScript 加载可能无法正常显示。" }
         },
         {
           "@type": "Question",
-          "name": "どの形式で出力できますか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "PNG画像またはPDFファイルとして保存できます。両方の形式ともブラウザ上で即座に生成されます。" }
+          "name": "支持哪些输出格式？",
+          "acceptedAnswer": { "@type": "Answer", "text": "可以保存为 PNG 图像或 PDF 文件，均可在浏览器上即时生成。" }
         },
         {
           "@type": "Question",
-          "name": "実際のサイトとレンダリング結果が異なるのはなぜですか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "動的JavaScript、外部フォントやスタイルの読み込み、CORS制限などが影響し、一部のリソースが正しく表示されないためです。完璧な結果を得たい場合は、HTMLを直接入力し、CSSを調整してください。" }
+          "name": "为什么渲染结果与实际网站不同？",
+          "acceptedAnswer": { "@type": "Answer", "text": "动态 JavaScript、外部字体或样式加载、CORS 限制等会导致部分资源无法正确渲染。如需完美效果，可直接输入 HTML 并调整 CSS。" }
         },
         {
           "@type": "Question",
-          "name": "無料で使えますか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "はい！会員登録なしで誰でも100%無料、ウォーターマークなしでご利用いただけます。" }
+          "name": "是免费使用吗？",
+          "acceptedAnswer": { "@type": "Answer", "text": "是的！无需注册，所有功能 100% 免费且无水印。" }
         }
       ]
     }

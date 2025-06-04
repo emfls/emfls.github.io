@@ -1,33 +1,33 @@
 <!doctype html>
-<html lang="ja">
+<html lang="zh">
   <head>
     <meta charset="UTF-8" />
-    <title>テキスト比較ツール (Diff)</title>
+    <title>文本比较工具 (Diff)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="二つのテキストを高速に比較し、差分を強調表示します。すべてブラウザ内で実行され、無料でプライバシー保護が完璧です。" />
+      content="快速比较两个文本并突出显示差异。所有操作在浏览器内进行，完全免费，隐私得到保障。" />
     <meta
       name="keywords"
-      content="diff, テキスト比較, 差分確認, オンライン, ファイル比較, 変更箇所強調, ブラウザベース, プライバシー保護" />
+      content="diff, 文本比较, 差异查看, 在线, 文件比较, 更改高亮, 浏览器内, 隐私保护" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ja" />
+    <meta name="language" content="zh" />
     <link rel="canonical" href="https://emfls.github.io/cn/util/diff/" />
-    <meta property="og:title" content="テキスト比較ツール (Diff)" />
+    <meta property="og:title" content="文本比较工具 (Diff)" />
     <meta
       property="og:description"
-      content="二つのテキストを簡単に比較し、差分を確認しましょう。すべてブラウザ内で処理されます。アップロード不要、100%プライバシー保護。" />
+      content="轻松比较两个文本并查看差异。所有处理在浏览器中即时完成，无需上传，100% 隐私保护。" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/cn/util/diff/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="テキスト比較ツール (Diff)" />
+    <meta name="twitter:title" content="文本比较工具 (Diff)" />
     <meta
       name="twitter:description"
-      content="二つのテキストを比較し、差分を強調表示しましょう。ブラウザで即座に実行されます。" />
+      content="比较两个文本并高亮差异，浏览器内即时执行。" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <!-- Google タグ (gtag.js) -->
+    <!-- Google 标签 (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -36,7 +36,7 @@
       gtag("config", "G-QP5Q67GE5B");
     </script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
-    <!-- jsdiff (ブラウザ用, minified) -->
+    <!-- jsdiff (浏览器版, 已压缩) -->
     <script src="https://cdn.jsdelivr.net/npm/diff@5.2.0/dist/diff.min.js"></script>
     <style>
       :root { --main: #117c9a; --main-dark: #0c4d60; --bg: #f8fbff;}
@@ -71,52 +71,54 @@
   <body>
     <main>
       <div class="container" itemscope itemtype="https://schema.org/WebApplication">
-        <h1 class="logo" itemprop="name">🔎 テキスト比較ツール (Diff)</h1>
+        <h1 class="logo" itemprop="name">🔎 文本比较工具 (Diff)</h1>
         <p class="desc" itemprop="description">
-          二つのテキストを下の二つの枠に貼り付け、「比較」をクリックしてください。<br />
-          追加された部分、削除された部分、変更された部分が強調表示されます。
+          在下方的两个文本框中粘贴文本，然后点击“比较”。<br />
+          新增部分、删除部分或修改部分将会高亮显示。
         </p>
         <div class="label-row">
-          <label for="leftInput">左側のテキスト</label>
-          <label for="rightInput">右側のテキスト</label>
+          <label for="leftInput">左侧文本</label>
+          <label for="rightInput">右侧文本</label>
         </div>
         <div class="textarea-wrap">
-          <textarea id="leftInput" placeholder="元のまたは以前のバージョンを入力してください"></textarea>
-          <textarea id="rightInput" placeholder="修正後または新しいバージョンを入力してください"></textarea>
+          <textarea id="leftInput" placeholder="请输入原始或旧版本文本"></textarea>
+          <textarea id="rightInput" placeholder="请输入修改后或新版本文本"></textarea>
         </div>
-        <button class="action-btn" id="compareBtn">比較</button>
+        <button class="action-btn" id="compareBtn">比较</button>
         <div class="diff-result" id="diffResult"></div>
         <div class="footer">
-          データはどこにもアップロードされません。すべての処理はブラウザ内で即座に行われます。<br />
-          <b>ヒント:</b> コード、論文、エッセイ、テキストドキュメントなど、すべてのプレーンテキストに使用できます。
+          数据不会上传到任何地方。所有计算在浏览器本地快速完成。<br />
+          <b>提示：</b>可用于代码审查、论文对比、文章校对等所有纯文本比较场景。
         </div>
         <section aria-labelledby="faq-head" id="faq">
-          <h2 id="faq-head">よくある質問 – テキスト比較ツール</h2>
+          <h2 id="faq-head">常见问题 – 文本比较工具</h2>
           <dl>
-            <dt>このテキスト比較ツールはどのように動作しますか？</dt>
-            <dd>二つのテキストブロックを即座に比較し、ブラウザ内で色分けして差分を強調表示します。</dd>
-            <dt>私のテキストはどこに保存されますか？</dt>
-            <dd>一切保存されません。すべての処理はローカルブラウザで行われます。</dd>
-            <dt>強調色は何ですか？</dt>
-            <dd>緑色は追加されたテキスト、赤色は削除されたテキストを表し、変更されていないテキストは通常通り表示されます。</dd>
-            <dt>このツールはどこで使用できますか？</dt>
-            <dd>コードレビュー、論文の比較、バージョン管理、校正編集など、あらゆるテキスト比較作業に使用できます。</dd>
-            <dt>このツールは無料ですか？</dt>
-            <dd>はい。このツールは100%無料で、ブラウザベースのためログインや会員登録は必要ありません。</dd>
+            <dt>这个工具如何工作？</dt>
+            <dd>该工具会即时比较两个文本块，并在浏览器中以颜色突出显示差异。</dd>
+            <dt>我的文本会保存到哪里？</dt>
+            <dd>不会保存到任何地方。所有操作仅在本地浏览器中执行。</dd>
+            <dt>高亮颜色代表什么？</dt>
+            <dd>绿色表示新增内容，红色表示删除内容，未更改部分保持原样显示。</dd>
+            <dt>可以在哪些场景使用？</dt>
+            <dd>适用于代码对比、论文审核、版本管理、校对编辑等各种文本比较需求。</dd>
+            <dt>这个工具是免费的吗？</dt>
+            <dd>是的，完全免费，无需登录或注册即可使用。</dd>
           </dl>
         </section>
       </div>
     </main>
-    <a href="../index.html" id="backBtn">他のユーティリティ</a>
+    <a href="../index.html" id="backBtn">其他实用工具</a>
     <script>
       const leftInput = document.getElementById("leftInput");
       const rightInput = document.getElementById("rightInput");
       const diffResult = document.getElementById("diffResult");
+
       function escapeHTML(str) {
         return str.replace(/[&<>"']/g, function (m) {
           return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m];
         });
       }
+
       function formatDiff(diff) {
         return diff.map((part) => {
           const val = escapeHTML(part.value);
@@ -125,16 +127,18 @@
           return val;
         }).join("");
       }
+
       function updateDiff() {
         const left = leftInput.value;
         const right = rightInput.value;
         if (!left && !right) {
-          diffResult.innerHTML = '<span style="color:#888;">比較するテキストを入力してください。</span>';
+          diffResult.innerHTML = '<span style="color:#888;">请在此输入要比较的文本。</span>';
           return;
         }
         const diff = Diff.diffWordsWithSpace(left, right);
         diffResult.innerHTML = formatDiff(diff);
       }
+
       leftInput.addEventListener("input", updateDiff);
       rightInput.addEventListener("input", updateDiff);
       updateDiff();

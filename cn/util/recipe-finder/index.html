@@ -1,27 +1,27 @@
 <!doctype html>
-<html lang="ja">
+<html lang="zh">
   <head>
     <meta charset="UTF-8" />
-    <title>かんたんレシピ検索 – 何を作ろう？</title>
+    <title>简单食谱搜索 – 做什么好呢？</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="材料を入力するだけで、かんたんレシピを見つけられます。子供でも簡単、YouTubeレシピリンク付き！" />
+      content="只需输入食材，就能找到简单食谱。孩子也能轻松使用，附带YouTube食谱链接！" />
     <meta
       name="keywords"
-      content="かんたんレシピ, 子供料理, レシピ検索, 家にある材料, 料理検索, キッズクッキング" />
+      content="简单食谱, 儿童料理, 食谱搜索, 家中食材, 菜谱搜索, 儿童烹饪" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ja" />
+    <meta name="language" content="zh" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <!-- SEO, Open Graph, Twitter, GA, AdSense含む -->
-    <meta property="og:title" content="子供向け かんたんレシピ検索 – 何を作ろう？" />
-    <meta property="og:description" content="材料を入力するとかんたんレシピを探します。とっても簡単！" />
+    <!-- SEO, Open Graph, Twitter, GA, AdSense包含 -->
+    <meta property="og:title" content="儿童专用 简单食谱搜索 – 做什么好呢？" />
+    <meta property="og:description" content="输入食材即可搜索简单食谱，非常简单！" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/cn/util/recipe-finder/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="かんたんレシピ検索 – 何を作ろう？" />
-    <meta name="twitter:description" content="材料でレシピ検索、子供でも簡単！" />
+    <meta name="twitter:title" content="简单食谱搜索 – 做什么好呢？" />
+    <meta name="twitter:description" content="输入食材即可搜索简单食谱，非常简单！" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
@@ -225,30 +225,30 @@
         }
       }
     </style>
-    <!-- 外部レシピDB: recipes.jsでwindow.RECIPES_DB, window.INGREDIENTS_DBをロード -->
+    <!-- 外部食谱数据库: recipes.js 提供 window.RECIPES_DB 和 window.INGREDIENTS_DB -->
     <script src="recipes.js"></script>
   </head>
   <body>
     <div class="container">
-      <div class="logo">🍳 かんたんレシピ検索</div>
-      <div class="desc">どんな材料がありますか？<br /><b>下に入力してみましょう！</b></div>
-      <span class="input-label">持っている材料：</span>
+      <div class="logo">🍳 简单食谱搜索</div>
+      <div class="desc">有哪些食材？<br /><b>在下面输入试试吧！</b></div>
+      <span class="input-label">已有食材：</span>
       <div class="ingredient-input-box" id="ingredientWrap">
         <input
           type="text"
           class="ingredient-input"
           id="ingredientInput"
-          placeholder="例：たまご、チーズ、牛乳"
+          placeholder="例如：鸡蛋、奶酪、牛奶"
           autocomplete="off" />
         <div class="autocomplete-box" id="autocompleteBox"></div>
       </div>
-      <button class="search-btn" id="searchBtn">レシピを表示</button>
+      <button class="search-btn" id="searchBtn">显示食谱</button>
       <div class="recipes-list" id="recipesList"></div>
       <div class="footer"></div>
-      <a href="../index.html" id="backBtn">その他ツール</a>
+      <a href="../index.html" id="backBtn">其他工具</a>
     </div>
     <script>
-      // recipes.jsからwindow.RECIPES_DB, window.INGREDIENTS_DBをロード
+      // recipes.js 提供 window.RECIPES_DB, window.INGREDIENTS_DB
       const RECIPES = window.RECIPES_DB || [];
       const INGREDIENTS = window.INGREDIENTS_DB || [];
       const ingredientInput = document.getElementById("ingredientInput");
@@ -258,7 +258,7 @@
       const recipesList = document.getElementById("recipesList");
       let selectedIngredients = [];
 
-      // オートコンプリート表示
+      // 自动补全显示
       function showAutocomplete(val) {
         autocompleteBox.innerHTML = "";
         if (!val) {
@@ -303,7 +303,7 @@
       function addIngredient(val) {
         val = val
           .toLowerCase()
-          .replace(/[^\u3040-\u30FF\u4E00-\u9FFF\s]/g, "") // 일본어/한자만 허용
+          .replace(/[^\u4e00-\u9fff\s]/g, "") // 仅保留汉字/日文
           .trim();
         if (!val || selectedIngredients.includes(val)) return;
         selectedIngredients.push(val);
@@ -314,7 +314,7 @@
         updateChips();
       }
       function updateChips() {
-        // 既存チップ削除
+        // 删除现有标签
         ingredientWrap.querySelectorAll(".ingredient-chip").forEach((el) => el.remove());
         selectedIngredients.forEach((ing) => {
           const chip = document.createElement("div");
@@ -329,10 +329,10 @@
         });
       }
 
-      // レシピマッチ＆表示（YouTubeリンク付き）
+      // 食谱匹配与显示（附带YouTube链接）
       function showRecipes() {
         if (selectedIngredients.length === 0) {
-          recipesList.innerHTML = `<div style="color:#aaa;font-size:1.11em;text-align:center;">材料を入力してください！</div>`;
+          recipesList.innerHTML = `<div style="color:#aaa;font-size:1.11em;text-align:center;">请输入食材！</div>`;
           return;
         }
         const matches = RECIPES.map((r) => {
@@ -348,7 +348,7 @@
           .filter((r) => r.matchedCount > 0)
           .sort((a, b) => b.matchedCount - a.matchedCount || a.total - b.total);
         if (matches.length === 0) {
-          recipesList.innerHTML = `<div style="color:#e57272;text-align:center;">その材料ではレシピが見つかりません。他の材料を試してください！</div>`;
+          recipesList.innerHTML = `<div style="color:#e57272;text-align:center;">使用这些食材未能找到食谱，请尝试其他食材！</div>`;
           return;
         }
         recipesList.innerHTML = matches
@@ -356,12 +356,12 @@
             (r) => `
         <div class="recipe-card">
           <div class="recipe-title">${r.name}</div>
-          <div class="match-info">一致材料: <b>${r.matchedCount}</b> / ${r.total}</div>
-          <div class="all-ings">材料: ${r.ingredients
+          <div class="match-info">匹配食材：<b>${r.matchedCount}</b> / ${r.total}</div>
+          <div class="all-ings">材料：${r.ingredients
             .map((i) => (r.matched.includes(i) ? `<b style="color:#228e6f">${i}</b>` : i))
             .join(", ")}</div>
-          <button class="yt-link-btn" onclick="window.open('https://www.youtube.com/results?search_query=${encodeURIComponent(r.name + " レシピ")}', '_blank')">
-            ▶ YouTubeで見る
+          <button class="yt-link-btn" onclick="window.open('https://www.youtube.com/results?search_query=${encodeURIComponent(r.name + " 食谱")}', '_blank')">
+            ▶ 在YouTube查看
           </button>
         </div>
       `
@@ -373,7 +373,7 @@
         if (selectedIngredients.length) showRecipes();
       });
 
-      // 初回ロード時に案内表示
+      // 首次加载时显示提示
       showRecipes();
     </script>
     <section
@@ -386,41 +386,41 @@
         padding: 18px;
       ">
       <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 12px">
-        FAQ – かんたんレシピ検索
+        常见问题 – 简单食谱搜索
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Q. 登録やログインは必要ですか？</div>
+        <div style="color: #8f94fb; font-weight: bold">Q. 无需注册或登录吗？</div>
         <div style="color: #f0f0f0">
-          いいえ！ログイン不要ですべてブラウザ内で処理されます。入力した材料や結果はご自身の端末だけに残ります。
+          不需要！无需登录，所有操作都在浏览器中进行。输入的食材和结果仅保存在您的设备上。
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Q. 子供も安全に使えますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">Q. 儿童也可以安全使用吗？</div>
         <div style="color: #f0f0f0">
-          はい！個人情報の収集や外部アップロードはなく、広告も最小限なので子供でも安心して使えます。
+          是的！不收集个人信息，也不上传到外部，广告也很少，儿童也能放心使用。
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Q. レシピデータはどこから？</div>
+        <div style="color: #8f94fb; font-weight: bold">Q. 食谱数据来自哪里？</div>
         <div style="color: #f0f0f0">
-          シンプルなローカルデータベースでレシピをマッチします。YouTubeリンクはレシピ名で検索した動画に飛びます。
+          通过简单的本地数据库来匹配食谱。YouTube链接会跳转到以食谱名称搜索的视频。
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Q. もっと多くのレシピは追加できますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">Q. 可以添加更多食谱吗？</div>
         <div style="color: #f0f0f0">
-          現在リストは固定ですが、今後リクエスト機能も追加予定です。お楽しみに！
+          当前列表是固定的，但未来将添加请求功能，敬请期待！
         </div>
       </div>
 
       <div>
-        <div style="color: #8f94fb; font-weight: bold">Q. オフラインでも使えますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">Q. 可以离线使用吗？</div>
         <div style="color: #f0f0f0">
-          はい、一度ページを開けばネットなしでも材料入力とレシピ検索が可能です（YouTube動画はネットが必要）。
+          可以，一旦打开页面，即使没有网络也可以输入食材和搜索食谱（YouTube视频需要联网）。
         </div>
       </div>
     </section>
