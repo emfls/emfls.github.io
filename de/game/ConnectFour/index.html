@@ -1,35 +1,35 @@
 <!doctype html>
-<html lang="ja">
+<html lang="de">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="無料でオンライン四目並べをプレイしよう！友達やコンピュータと一緒にこのクラシック２人用戦略ゲームを楽しもう。シンプルで高速、モバイル対応です。"
+            content="Spiele kostenlos online Vier Gewinnt! Genieße dieses klassische 2-Spieler-Strategiespiel mit Freunden oder dem Computer. Einfach, schnell und mobilfreundlich."
         />
         <meta
             name="keywords"
-            content="四目並べ, コネクトフォー, オンラインゲーム, 無料ゲーム, ２人用, AI対戦, 戦略ゲーム, ボードゲーム, ブラウザ, モバイル, パズル, クラシック"
+            content="Vier Gewinnt, Connect Four, Online-Spiel, kostenloses Spiel, 2 Spieler, KI-Gegner, Strategiespiel, Brettspiel, Browser, Mobil, Puzzle, Klassiker"
         />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/de/game/ConnectFour" />
 
-        <meta property="og:title" content="四目並べ – 無料オンライン２人用ゲーム!" />
+        <meta property="og:title" content="Vier Gewinnt – Kostenloses Online-2-Spieler-Spiel!" />
         <meta
             property="og:description"
-            content="ブラウザで四目並べを無料でプレイしよう！友達やAIを相手に、横・縦・斜めに４つ並べて勝利しよう。"
+            content="Spiele Vier Gewinnt kostenlos im Browser! Trete gegen Freunde oder die KI an und verbinde vier Steine waagrecht, senkrecht oder diagonal."
         />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/de/game/ConnectFour" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="四目並べ – 無料オンライン２人用ゲーム!" />
+        <meta name="twitter:title" content="Vier Gewinnt – Kostenloses Online-2-Spieler-Spiel!" />
         <meta
             name="twitter:description"
-            content="オンライン四目並べをプレイしよう – 友達と対戦するかAIに勝負を挑もう！ダウンロード不要。"
+            content="Spiele Vier Gewinnt online – fordere Freunde heraus oder messe dich mit der KI! Kein Download nötig."
         />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -47,7 +47,7 @@
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"
         ></script>
-        <title>四目並べ</title>
+        <title>Vier Gewinnt</title>
         <style>
             * {
                 box-sizing: border-box;
@@ -207,23 +207,23 @@
 
     <body>
         <div id="wrapper">
-            <h1>四目並べ</h1>
-            <div class="desc">横・縦・斜めに４つつなげて勝利！</div>
+            <h1>Vier Gewinnt</h1>
+            <div class="desc">Verbinde vier Steine waagrecht, senkrecht oder diagonal, um zu gewinnen!</div>
             <div id="modeSel">
-                <button class="modebtn active" id="mode2p" onclick="setMode('2p')">２人プレイ</button>
-                <button class="modebtn" id="modeai" onclick="setMode('ai')">AI対戦</button>
+                <button class="modebtn active" id="mode2p" onclick="setMode('2p')">2 Spieler</button>
+                <button class="modebtn" id="modeai" onclick="setMode('ai')">Gegen KI</button>
             </div>
             <div id="turn"></div>
             <div id="board"></div>
             <div id="overMsg"></div>
             <div class="btns" id="gameBtns" style="display: none">
-                <button class="btn" onclick="restart()">再スタート</button>
-                <button class="btn" onclick="share()">共有</button>
+                <button class="btn" onclick="restart()">Neustart</button>
+                <button class="btn" onclick="share()">Teilen</button>
             </div>
-            <a id="otherGames" href="../" style="margin-top: 22px">他のゲーム</a>
+            <a id="otherGames" href="../" style="margin-top: 22px">Weitere Spiele</a>
         </div>
         <script>
-            // モバイル上での選択/ドラッグを無効化
+            // Mobil: Auswahl und Ziehen deaktivieren
             document.addEventListener(
                 "touchmove",
                 (e) => {
@@ -239,8 +239,8 @@
             const ROWS = 6,
                   COLS = 7;
             let board, turn, over, winner;
-            let mode = "2p"; // "2p" または "ai"
-            const COLORS = ["🔵", "🟡"];
+            let mode = "2p"; // "2p" oder "ai"
+            const COLORS = ["🔴", "🟡"];
 
             function emptyBoard() {
                 return Array.from(
@@ -261,11 +261,11 @@
                         cell.innerHTML = board[r][c] !== null ? COLORS[board[r][c]] : "";
                         cell.onclick = () => {
                             if (over) return;
-                            if (mode === "ai" && turn === 1) return; // AIの番のときは無効
+                            if (mode === "ai" && turn === 1) return; // KI-Zug überspringen
                             if (playerMove(c)) {
                                 render();
                                 if (mode === "ai" && !over && turn === 1) {
-                                    setTimeout(aiMove, 350); // 少し遅延してAIを動かす
+                                    setTimeout(aiMove, 350); // kurze Verzögerung für KI
                                 }
                             }
                         };
@@ -275,33 +275,32 @@
                 let msg = "";
                 if (!over) {
                     msg = COLORS[turn]
-                        + (mode === "ai" ? (turn === 0 ? " (あなた)" : " (AI)") : "")
-                        + " の番";
+                        + (mode === "ai" ? (turn === 0 ? " (Du)" : " (KI)") : "")
+                        + " ist am Zug";
                 } else if (winner !== null) {
                     msg = COLORS[winner]
-                        + (mode === "ai" ? (winner === 0 ? " (あなた)" : " (AI)") : "")
-                        + " の勝利！";
+                        + (mode === "ai" ? (winner === 0 ? " (Du)" : " (KI)") : "")
+                        + " gewinnt!";
                 } else {
-                    msg = "引き分け！";
+                    msg = "Unentschieden!";
                 }
                 document.getElementById("turn").textContent = msg;
                 document.getElementById("overMsg").textContent = over && winner !== null
                     ? msg
                     : over
-                        ? "引き分け！"
+                        ? "Unentschieden!"
                         : "";
                 document.getElementById("gameBtns").style.display = over ? "flex" : "none";
                 document.getElementById("mode2p").classList.toggle("active", mode === "2p");
                 document.getElementById("modeai").classList.toggle("active", mode === "ai");
             }
 
-            // プレイヤーまたは２Pの手を実際に置く（状態の更新）
+            // Spielerzug oder 2P-Zug platzieren (verändert Zustand)
             function playerMove(col) {
                 if (over) return false;
                 for (let r = ROWS - 1; r >= 0; r--) {
                     if (board[r][col] === null) {
                         board[r][col] = turn;
-                        // 勝利／引き分け判定
                         if (checkWin(r, col, turn)) {
                             over = true;
                             winner = turn;
@@ -317,7 +316,7 @@
                 return false;
             }
 
-            // AIやシミュレーション用に仮に置く（over/winner状態には影響しない）
+            // Für KI-Simulation: Probiere Zug (ändert nicht over/winner)
             function tryMove(col, whichTurn) {
                 for (let r = ROWS - 1; r >= 0; r--) {
                     if (board[r][col] === null) {
@@ -379,29 +378,29 @@
                 let validCols = [];
                 for (let c = 0; c < COLS; c++) if (board[0][c] === null) validCols.push(c);
 
-                // 1. AIが勝利できる手を探す
+                // 1. Zug finden, mit dem KI gewinnt
                 for (let ci of validCols) {
                     let row = tryMove(ci, 1);
                     if (row !== -1 && checkWin(row, ci, 1)) {
                         undoMove(ci);
-                        playerMove(ci); // 実際にAIの手を置く
+                        playerMove(ci);
                         render();
                         return;
                     }
                     if (row !== -1) undoMove(ci);
                 }
-                // 2. プレイヤーが勝利できる手をブロック
+                // 2. Zug blockieren, mit dem Spieler gewinnt
                 for (let ci of validCols) {
                     let row = tryMove(ci, 0);
                     if (row !== -1 && checkWin(row, ci, 0)) {
                         undoMove(ci);
-                        playerMove(ci); // ブロックのために置く
+                        playerMove(ci);
                         render();
                         return;
                     }
                     if (row !== -1) undoMove(ci);
                 }
-                // 3. 中央優先
+                // 3. Bevorzuge mittlere Spalten
                 let bestCols = [3, 2, 4, 1, 5, 0, 6].filter((c) => validCols.includes(c));
                 let col = bestCols.length > 0
                     ? bestCols[0]
@@ -414,16 +413,16 @@
                 const url = location.href;
                 if (navigator.share) {
                     navigator.share({
-                        title: "四目並べ",
+                        title: "Vier Gewinnt",
                         url
                     });
                 } else {
                     navigator.clipboard.writeText(url);
-                    alert("リンクがコピーされました！");
+                    alert("Link wurde kopiert!");
                 }
             }
 
-            // 初期化
+            // Initialisierung
             restart();
         </script>
         <section
@@ -442,36 +441,36 @@
                 box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             "
         >
-            <h2 style="font-size: 18px; margin-bottom: 1rem; color: #365ca0">❓ よくある質問 (FAQ)</h2>
+            <h2 style="font-size: 18px; margin-bottom: 1rem; color: #365ca0">❓ Häufig gestellte Fragen (FAQ)</h2>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q1. 四目並べはどうプレイするの？</strong><br />
-                A. 列をタップしてトークンを落とします。横・縦・斜めに４つつなげたプレイヤーが勝ちです。
+                <strong>F1. Wie spielt man Vier Gewinnt?</strong><br />
+                A. Tippe auf eine Spalte, um deinen Stein fallen zu lassen. Wer zuerst vier Steine waagrecht, senkrecht oder diagonal verbindet, gewinnt.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q2. ゲームモードには何があるの？</strong><br />
-                A. 友達と遊ぶ「２人プレイ」モードまたはコンピュータと対戦する「AI対戦」モードが選べます。
+                <strong>F2. Welche Spielmodi gibt es?</strong><br />
+                A. Du kannst im Modus „2 Spieler“ gegen einen Freund spielen oder im Modus „Gegen KI“ gegen die Computer-KI antreten.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q3. AIはどれくらい強いの？</strong><br />
-                A. AIは勝てる手を見つけ、自分の潜在的な勝利を阻止します。また、より有利な中央の列を優先します。
+                <strong>F3. Wie stark ist die KI?</strong><br />
+                A. Die KI erkennt eigene Gewinnzüge, blockiert deine möglichen Gewinnzüge und bevorzugt die mittleren Spalten für eine bessere Strategie.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q4. ゲーム途中でモードを切り替えられる？</strong><br />
-                A. はい！画面上部のモードボタンをタップすると、別のモードで再スタートします。
+                <strong>F4. Kann ich während des Spiels den Modus wechseln?</strong><br />
+                A. Ja! Tippe einfach oben auf den gewünschten Modus-Button, und das Spiel startet neu im ausgewählten Modus.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q5. 引き分けのときはどうなる？</strong><br />
-                A. ボードがいっぱいになっても勝者がいない場合、ゲームは引き分けとして終了し、再スタートできます。
+                <strong>F5. Was passiert bei einem Unentschieden?</strong><br />
+                A. Wenn das Spielfeld voll ist und kein Gewinner ermittelt wurde, endet das Spiel unentschieden. Du kannst dann neu starten.
             </div>
 
             <div>
-                <strong>Q6. ゲームはどうやって共有するの？</strong><br />
-                A. ゲーム終了後に「共有」ボタンをタップし、リンクをコピーして友達に送ってください！
+                <strong>F6. Wie teile ich das Spiel?</strong><br />
+                A. Nach Spielende tippe auf „Teilen“, um den Link zu kopieren und mit Freunden zu teilen!
             </div>
         </section>
     </body>
