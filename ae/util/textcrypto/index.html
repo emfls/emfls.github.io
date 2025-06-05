@@ -1,29 +1,29 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <title>かんたんテキストロック & ロック解除</title>
+    <title>قفل وفك قفل النص بسهولة</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="パスワードまたはBase64でテキストをかんたんにロック＆アンロック。アップロード不要、すべてブラウザ内で即時動作！" />
+      content="قفل وفك قفل النص بسهولة بكلمة مرور أو Base64. بدون رفع، كل العمليات فورية داخل المتصفح!" />
     <meta
       name="keywords"
-      content="テキストロック, テキスト復号, 簡単暗号化, 簡単復号化, パスワード, 初心者向け, オンライン, 安全, プライバシー保護" />
+      content="قفل النص، فك تشفير النص، تشفير بسيط، فك تشفير بسيط، كلمة مرور، للمبتدئين، عبر الإنترنت، آمن، حماية الخصوصية" />
     <meta name="author" content="Itagi" />
     <link rel="canonical" href="https://emfls.github.io/ae/util/textcrypto/" />
-    <meta property="og:title" content="かんたんテキストロック & ロック解除" />
+    <meta property="og:title" content="قفل وفك قفل النص بسهولة" />
     <meta
       property="og:description"
-      content="ブラウザ内ですぐ使える超シンプルなテキストロック／ロック解除ツールです。秘密のメッセージを非公開で隠したり復元したりできます。" />
+      content="أداة بسيطة للغاية لقفل وفك قفل النص داخل المتصفح. يمكنك إخفاء الرسائل السرية واستعادتها دون رفعها إلى الخادم." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/ae/util/textcrypto/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="かんたんテキストロック & ロック解除" />
+    <meta name="twitter:title" content="قفل وفك قفل النص بسهولة" />
     <meta
       name="twitter:description"
-      content="パスワードまたはBase64で秘密メッセージを簡単にロック＆解除。初心者でも安心・安全・プライバシー保護。" />
+      content="قم بقفل الرسائل السرية وفك قفلها بكلمة مرور أو Base64 ببساطة. آمن للمبتدئين، ويحافظ على الخصوصية." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
     <!-- Google tag (gtag.js) -->
@@ -56,6 +56,7 @@
         margin: 0;
         font-family: "Segoe UI", Arial, sans-serif;
         color: #224;
+        direction: rtl;
       }
       .container {
         max-width: 400px;
@@ -87,12 +88,14 @@
         display: block;
         color: #2874a4;
         font-size: 1em;
+        text-align: right;
       }
       .hint {
         color: #319a6c;
         font-size: 0.96em;
         margin-bottom: 7px;
         margin-top: -2px;
+        text-align: right;
       }
       select,
       input[type="password"] {
@@ -105,6 +108,8 @@
         background: #fafdff;
         color: #224;
         box-sizing: border-box;
+        direction: rtl;
+        text-align: right;
       }
       textarea {
         width: 100%;
@@ -117,6 +122,8 @@
         font-family: "Fira Mono", "Menlo", monospace;
         box-sizing: border-box;
         margin-bottom: 4px;
+        direction: rtl;
+        text-align: right;
       }
       .btn {
         width: 100%;
@@ -157,6 +164,7 @@
         margin-top: 12px;
         margin-bottom: 2px;
         color: #2874a4;
+        text-align: right;
       }
       .footer {
         color: #789;
@@ -164,6 +172,7 @@
         font-size: 0.94em;
         margin-top: 15px;
         opacity: 0.89;
+        direction: ltr;
       }
       .msg {
         color: #2a964b;
@@ -227,53 +236,53 @@
   </head>
   <body>
     <div class="container">
-      <div class="title">🔒 かんたんテキストロック & ロック解除</div>
+      <div class="title">🔒 قفل وفك قفل النص بسهولة</div>
       <div class="subtitle">
-        秘密のメッセージをかんたんに隠したり復元できます。<br />
-        （すべての処理はブラウザ内で即時完結。アップロードなし！）
+        يمكنك إخفاء الرسائل السرية أو استعادتها بسهولة.<br />
+        (كل العمليات تتم داخل المتصفح فورًا، دون رفع!)
       </div>
       <div class="step">
-        <label for="modeSelect">どの操作を行いますか？</label>
+        <label for="modeSelect">ما العملية التي تريدها؟</label>
         <select id="modeSelect">
-          <option value="encrypt">🔑 メッセージをロック（隠す）</option>
-          <option value="decrypt">🔓 メッセージをロック解除（表示）</option>
+          <option value="encrypt">🔑 قفل الرسالة (إخفاء)</option>
+          <option value="decrypt">🔓 فك قفل الرسالة (عرض)</option>
         </select>
       </div>
       <div class="step">
-        <label for="algoSelect">どの方法でロック／解除しますか？</label>
+        <label for="algoSelect">ما الطريقة التي تريد استخدامها؟</label>
         <select id="algoSelect">
-          <option value="aes">🔑 パスワードでロック（最強）</option>
-          <option value="base64">📦 隠すだけ（Base64）</option>
+          <option value="aes">🔑 قفل بكلمة مرور (AES، الأكثر أمانًا)</option>
+          <option value="base64">📦 إخفاء فقط (Base64)</option>
         </select>
-        <div class="hint">一番安全に隠したい場合は「パスワードでロック」を選択してください。</div>
+        <div class="hint">لأقصى أمان، اختر "قفل بكلمة مرور".</div>
       </div>
       <div class="step" id="passwordRow">
-        <label for="password">パスワード <span style="font-weight: 400">(AES専用)</span></label>
-        <input type="password" id="password" autocomplete="off" placeholder="AES用パスワードを入力" />
-        <div class="hint">英字と数字を組み合わせて強力なパスワードにしましょう。</div>
+        <label for="password">كلمة المرور <span style="font-weight: 400">(خاص بـ AES)</span></label>
+        <input type="password" id="password" autocomplete="off" placeholder="أدخل كلمة مرور لـ AES" />
+        <div class="hint">استخدم حروفًا وأرقامًا لإنشاء كلمة مرور قوية.</div>
       </div>
       <div class="step">
-        <label for="inputArea">メッセージ</label>
-        <textarea id="inputArea" placeholder="ロックまたは解除したいテキストを入力または貼り付けてください！"></textarea>
+        <label for="inputArea">الرسالة</label>
+        <textarea id="inputArea" placeholder="أدخل أو الصق النص الذي تريد قفله أو فك قفله هنا!"></textarea>
       </div>
-      <button class="btn" id="runBtn">メッセージをロック</button>
-      <div class="result-label">結果</div>
-      <textarea id="outputArea" readonly placeholder="ロック済みまたは解除済みメッセージがここに表示されます。"></textarea>
-      <button class="btn-copy" id="copyBtn">結果をコピー</button>
+      <button class="btn" id="runBtn">قفل الرسالة</button>
+      <div class="result-label">النتيجة</div>
+      <textarea id="outputArea" readonly placeholder="سيظهر النص المقفل أو المفكوك هنا."></textarea>
+      <button class="btn-copy" id="copyBtn">نسخ النتيجة</button>
       <div class="msg" id="msg"></div>
       <div class="warn">
-        <b>ヒント:</b> パスワードロックの場合は必ずパスワードを忘れないようにしてください！<br />
-        「隠すだけ」はセキュリティは低いですが、手軽に使えます。
+        <b>تذكير:</b> إذا اخترت قفل AES، احفظ كلمة المرور جيدًا!<br />
+        "إخفاء فقط" أقل أمانًا لكنه سهل الاستخدام.
       </div>
       <div class="footer">
-        100% ブラウザ内動作・オープンソース。<br />
-        <b>アップロードなし、追跡なし。</b><br />
-        すべての人に永久無料！
+        جميع العمليات تتم داخل المتصفح دون رفع. شفرة المصدر مفتوحة.<br />
+        <b>بدون رفع، بدون تتبع،</b><br />
+        مجاني دائمًا للجميع!
       </div>
     </div>
-    <a href="../" id="backBtn">その他ツール</a>
+    <a href="../" id="backBtn">أدوات أخرى</a>
     <script>
-      // 要素取得
+      // استدعاء العناصر
       const modeSelect = document.getElementById("modeSelect");
       const algoSelect = document.getElementById("algoSelect");
       const passwordRow = document.getElementById("passwordRow");
@@ -284,14 +293,14 @@
       const copyBtn = document.getElementById("copyBtn");
       const msg = document.getElementById("msg");
 
-      // パスワード欄の表示/非表示
+      // إظهار/إخفاء حقل كلمة المرور
       function updateAlgo() {
         passwordRow.style.display = algoSelect.value === "aes" ? "block" : "none";
       }
       algoSelect.onchange = updateAlgo;
       updateAlgo();
 
-      // モード切替時のボタンとフィールドリセット
+      // تغيير النص على الزر بحسب النمط
       function clearTextFields() {
         inputArea.value = "";
         outputArea.value = "";
@@ -300,11 +309,11 @@
       modeSelect.onchange = function () {
         clearTextFields();
         runBtn.textContent =
-          modeSelect.value === "encrypt" ? "メッセージをロック" : "メッセージを解除";
+          modeSelect.value === "encrypt" ? "قفل الرسالة" : "فك قفل الرسالة";
       };
       modeSelect.dispatchEvent(new Event("change"));
 
-      // ロック/解除実行
+      // تنفيذ القفل أو فك القفل
       runBtn.onclick = function () {
         const mode = modeSelect.value;
         const algo = algoSelect.value;
@@ -314,64 +323,64 @@
         msg.textContent = "";
 
         if (!text) {
-          msg.textContent = "メッセージを入力してください！";
+          msg.textContent = "الرجاء إدخال رسالة!";
           return;
         }
         if (algo === "aes") {
           if (!key) {
-            msg.textContent = "パスワードを入力してください！";
+            msg.textContent = "الرجاء إدخال كلمة المرور!";
             return;
           }
           try {
             if (mode === "encrypt") {
               const encrypted = CryptoJS.AES.encrypt(text, key).toString();
               outputArea.value = encrypted;
-              msg.textContent = "メッセージをロックしました！（AES）";
+              msg.textContent = "تم قفل الرسالة بنجاح! (AES)";
             } else {
               const decrypted = CryptoJS.AES.decrypt(text, key);
               const plain = decrypted.toString(CryptoJS.enc.Utf8);
               if (!plain) {
-                msg.textContent = "解除に失敗しました（パスワードまたはテキストを確認）。";
+                msg.textContent = "فشل في فك القفل (تأكد من كلمة المرور أو النص).";
                 outputArea.value = "";
                 return;
               }
               outputArea.value = plain;
-              msg.textContent = "成功！メッセージが復元されました！";
+              msg.textContent = "تم فك القفل بنجاح!";
             }
           } catch (e) {
-            msg.textContent = "エラー: " + e;
+            msg.textContent = "خطأ: " + e;
           }
         } else if (algo === "base64") {
           try {
             if (mode === "encrypt") {
               const encoded = btoa(unescape(encodeURIComponent(text)));
               outputArea.value = encoded;
-              msg.textContent = "メッセージを隠しました！（Base64）";
+              msg.textContent = "تم إخفاء الرسالة بكود Base64!";
             } else {
               try {
                 const decoded = decodeURIComponent(escape(atob(text)));
                 outputArea.value = decoded;
-                msg.textContent = "復元完了！元のメッセージです。";
+                msg.textContent = "تم استعادة الرسالة بنجاح!";
               } catch (err) {
-                msg.textContent = "解除できません（形式が正しくない可能性あり）。";
+                msg.textContent = "فشل في فك الكود (ربما التنسيق غير صحيح).";
                 outputArea.value = "";
               }
             }
           } catch (e) {
-            msg.textContent = "エラー: " + e;
+            msg.textContent = "خطأ: " + e;
           }
         }
       };
 
-      // 結果コピー
+      // نسخ النتيجة
       copyBtn.onclick = function () {
         if (!outputArea.value) {
-          msg.textContent = "コピーする内容がありません！";
+          msg.textContent = "لا يوجد شيء لنسخه!";
           return;
         }
         outputArea.select();
         document.execCommand("copy");
-        msg.textContent = "コピーしました！";
+        msg.textContent = "تم النسخ!";
       };
     </script>
     <section
@@ -383,44 +392,47 @@
         box-shadow: 0 6px 24px #1236;
         padding: 24px;
         font-family: Arial, sans-serif;
+        color: #f0f0f0;
+        direction: rtl;
+        text-align: right;
       ">
       <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 14px">
-        ❓ FAQ – テキストロック & ロック解除
+        ❓ الأسئلة الشائعة – قفل وفك قفل النص
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">メッセージがアップロードされますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">هل يتم رفع الرسالة؟</div>
         <div style="color: #f0f0f0">
-          いいえ。すべての暗号化・復号化はブラウザ内ですぐに処理され、外部にアップロードや保存は一切されません。
+          لا. تتم عمليات التشفير وفك التشفير بالكامل داخل المتصفح، بدون رفع أو حفظ على الخادم.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">どのモードを選べばいいですか？</div>
+        <div style="color: #8f94fb; font-weight: bold">أي وضع أختار؟</div>
         <div style="color: #f0f0f0">
-          <b>パスワード（AES）:</b> 強力な暗号化。解除にはパスワードが必要です。<br />
-          <b>隠すだけ（Base64）:</b> 簡単な隠蔽のみ。セキュリティは低いですが手軽です。
+          <b>كلمة مرور (AES):</b> تشفير قوي. ستحتاج نفس الكلمة لفك القفل.<br />
+          <b>إخفاء فقط (Base64):</b> تشفير بسيط لإخفاء النص، لكنه أقل أمانًا.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">パスワードを忘れたら？</div>
+        <div style="color: #8f94fb; font-weight: bold">ماذا لو نسيت كلمة المرور؟</div>
         <div style="color: #f0f0f0">
-          正しいパスワードがないとAESロックされたメッセージは復元できません。必ず安全に保管してください！
+          لن تتمكن من استعادة الرسالة المشفرة بـ AES بدون الكلمة الصحيحة. احتفظ بها في مكان آمن!
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">絵文字・記号や多言語も使えますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">هل يدعم رموز الإيموجي واللغات الأخرى؟</div>
         <div style="color: #f0f0f0">
-          はい。本ツールは絵文字、日本語、韓国語などあらゆる文字・記号に対応しています。
+          نعم. الأداة تدعم جميع الأحرف، بما في ذلك العربية والكورية والإيموجي.
         </div>
       </div>
 
       <div style="margin-bottom: 0">
-        <div style="color: #8f94fb; font-weight: bold">このツールは安全ですか？</div>
+        <div style="color: #8f94fb; font-weight: bold">هل هذه الأداة آمنة؟</div>
         <div style="color: #f0f0f0">
-          はい。オープンソースでオフラインでも動作し、データは一切サーバーに送信されません。
+          نعم. الصيغة مفتوحة المصدر وتعمل دون اتصال. لا يُرسل أي نص للخادم، مما يحفظ خصوصيتك.
         </div>
       </div>
     </section>

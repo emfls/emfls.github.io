@@ -1,36 +1,36 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <title>ソーシャルサムネイルダウンローダー (YouTube, X, TikTok)</title>
+    <title>أداة تنزيل صور المعاينة الاجتماعية (YouTube و X و TikTok)</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="YouTube、X(Twitter)、TikTokのサムネイル画像を抽出してダウンロードできます。様々な画質で閲覧・保存が可能。無料・ログイン不要。" />
+      content="يمكنك استخراج وتنزيل صور المعاينة من YouTube و X (Twitter) و TikTok. يمكنك عرض وحفظ الصور بجودات مختلفة. مجاني، ولا حاجة لتسجيل الدخول." />
     <meta
       name="keywords"
-      content="サムネイルダウンローダー, YouTubeサムネイル, Xサムネイル, TikTokサムネイル, 無料, オンラインツール, ソーシャルメディア画像, 抽出, ダウンロード" />
+      content="أداة تنزيل المعاينة، معاينة YouTube، معاينة X، معاينة TikTok، مجاني، أداة عبر الإنترنت، صور وسائل التواصل الاجتماعي، استخراج، تنزيل" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ja" />
+    <meta name="language" content="ar" />
     <link rel="canonical" href="https://emfls.github.io/ae/util/thumbnailgrabber/" />
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/ae/util/thumbnailgrabber/" />
-    <meta property="og:title" content="ソーシャルサムネイルダウンローダー (YouTube, X, TikTok)" />
+    <meta property="og:title" content="أداة تنزيل معاينة وسائل التواصل الاجتماعي (YouTube، X، TikTok)" />
     <meta
       property="og:description"
-      content="YouTube、X(Twitter)、TikTokのサムネイル画像を抽出してダウンロードできます。全画質・無料・ログイン不要。" />
+      content="يمكنك استخراج وتنزيل معاينات YouTube و X (Twitter) و TikTok. جميع الجودات متاحة مجانًا ودون تسجيل." />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://emfls.github.io/ae/util/thumbnailgrabber/" />
-    <meta name="twitter:title" content="ソーシャルサムネイルダウンローダー (YouTube, X, TikTok)" />
+    <meta name="twitter:title" content="أداة تنزيل معاينة وسائل التواصل الاجتماعي (YouTube، X، TikTok)" />
     <meta
       name="twitter:description"
-      content="YouTube、X(Twitter)、TikTokのサムネイル画像を抽出してダウンロード。ログイン不要。" />
+      content="يمكنك استخراج وتنزيل معاينات YouTube و X (Twitter) و TikTok دون الحاجة لتسجيل الدخول." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <!-- Googleタグ (gtag.js) -->
+    <!-- Google Tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -55,6 +55,7 @@
         font-family: "Segoe UI", Arial, sans-serif;
         margin: 0;
         color: #24262d;
+        direction: rtl;
       }
       .container {
         max-width: 410px;
@@ -82,6 +83,7 @@
         display: flex;
         gap: 8px;
         margin-bottom: 16px;
+        flex-direction: row-reverse;
       }
       .url-input-row input {
         flex: 1;
@@ -92,6 +94,8 @@
         background: #fff5f5;
         color: #303;
         transition: border 0.2s;
+        direction: ltr;
+        text-align: left;
       }
       .url-input-row input:focus {
         border-color: var(--main-dark);
@@ -235,49 +239,47 @@
   </head>
   <body>
     <div class="container">
-      <div class="logo">📸 ソーシャルサムネイルダウンローダー</div>
+      <div class="logo">📸 أداة تنزيل معاينة وسائل التواصل الاجتماعي</div>
       <div class="desc">
-        YouTube、X(Twitter)、TikTokのリンクを貼り付け、様々な画質のサムネイルをプレビューしてダウンロードできます。<br />
-        <span style="color: #1da1f2"><b>X (Twitter)</b></span> と
-        <span style="color: #ff0050"><b>TikTok</b></span> のサポートもご利用いただけます。
+        ألصق رابط فيديو YouTube، منشور X (Twitter)، أو TikTok لاستعراض وتنزيل معاينات بجودات متعددة.<br />
+        <span style="color: #1da1f2"><b>X (Twitter)</b></span> و
+        <span style="color: #ff0050"><b>TikTok</b></span> مدعومان أيضًا.
       </div>
       <div class="url-input-row">
-        <input id="urlInput" type="text" placeholder="動画や投稿のURLをここに貼り付けてください..." autocomplete="off" />
-        <button id="grabBtn">取得</button>
+        <input id="urlInput" type="text" placeholder="ألصق رابط الفيديو أو المنشور هنا..." autocomplete="off" />
+        <button id="grabBtn">استخراج</button>
       </div>
       <div class="info-msg" id="infoMsg"></div>
       <div class="example-row">
-        例:<br />
-        <span style="color: #e62e2d">YouTube</span> – https://www.youtube.com/watch?v=xxxx<br />
-        <span style="color: #1da1f2">X (Twitter)</span> – https://x.com/username/status/xxxx または
-        https://twitter.com/user/status/xxxx<br />
-        <span style="color: #ff0050">TikTok</span> – https://www.tiktok.com/@user/video/xxxx
+        أمثلة:<br />
+        <span style="color: #e62e2d">YouTube</span> – https://www.youtube.com/watch?v=معرّف_video<br />
+        <span style="color: #1da1f2">X (Twitter)</span> – https://x.com/username/status/معرّف المنشور أو<br />
+        https://twitter.com/username/status/معرّف_المنشور<br />
+        <span style="color: #ff0050">TikTok</span> – https://www.tiktok.com/@username/video/معرّف_الفيديو
       </div>
       <div class="preview-area" id="previewArea"></div>
       <div class="notice">
-        <b>お知らせ:</b>
-        <ul style="margin: 8px 0 0 18px; text-align: left">
-          <li>YouTubeのサムネイルは複数の画質が提供されます。</li>
-          <li>
-            X (Twitter) および TikTokのサムネイルはアカウント設定やプラットフォームの制限により表示できない場合や、低解像度の場合があります。
-          </li>
-          <li>このツールは公開されたWebデータのみ利用します。非公開/保護された投稿や動画は利用できません。</li>
-          <li>Xの場合、x.comとtwitter.comの両方のURLをお試しください。</li>
+        <b>ملاحظة:</b>
+        <ul style="margin: 8px 0 0 18px; text-align: left; direction: ltr;">
+          <li>صور معاينة YouTube متوفرة بجودات متعددة ويمكن تنزيلها بسهولة.</li>
+          <li>معاينات X (Twitter) و TikTok قد لا تظهر في حال كانت المنشورات خاصة أو محظورة.</li>
+          <li>يتم استخدام البيانات العامة فقط؛ لا يمكن الوصول إلى المحتوى الخاص أو المحذوف.</li>
+          <li>في حال فشل استخراج معاينة X، جرّب استخدام رابط x.com بدلاً من twitter.com.</li>
         </ul>
       </div>
     </div>
-    <a href="../" id="backBtn">他のツールを見る</a>
+    <a href="../" id="backBtn">عرض الأدوات الأخرى</a>
     <script>
-      // 品質: [ラベル, URLサフィックス]
+      // تعريف جودات YouTube: [التسمية، لاحقة URL]
       const YT_THUMB_QUALITIES = [
-        ["最高画質", "maxresdefault.jpg"],
-        ["標準 (SD)", "sddefault.jpg"],
-        ["高画質", "hqdefault.jpg"],
-        ["中画質", "mqdefault.jpg"],
-        ["基本", "default.jpg"]
+        ["أعلى جودة", "maxresdefault.jpg"],
+        ["جودة قياسية (SD)", "sddefault.jpg"],
+        ["جودة عالية (HQ)", "hqdefault.jpg"],
+        ["جودة متوسطة (MQ)", "mqdefault.jpg"],
+        ["الجودة الأساسية", "default.jpg"]
       ];
       function getYoutubeThumbs(url) {
-        // 11桁の動画IDを抽出
+        // استخراج معرّف الفيديو المكون من 11 حرفًا
         const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/))([\w\-]{11})/);
         if (!match) return null;
         const id = match[1];
@@ -291,7 +293,7 @@
         if (!match) return null;
         return [
           {
-            label: "TikTok サムネイル",
+            label: "معاينة TikTok",
             url: `https://p16-sign-va.tiktokcdn.com/obj/tos-maliva-p-0068/${match[1]}_0.jpg`
           }
         ];
@@ -304,7 +306,7 @@
           const data = await resp.json();
           const html = data.html;
           const imgMatch = html && html.match(/<img[^>]+src="([^"]+)"/);
-          if (imgMatch) return [{ label: "X (Twitter) サムネイル", url: imgMatch[1] }];
+          if (imgMatch) return [{ label: "معاينة X (Twitter)", url: imgMatch[1] }];
         } catch (e) {}
         return null;
       }
@@ -312,28 +314,28 @@
       function renderThumbs(label, thumbs) {
         const area = document.getElementById("previewArea");
         if (!thumbs || !thumbs.length) {
-          area.innerHTML = `<div class="info-msg">このURLからサムネイルを取得できません。</div>`;
+          area.innerHTML = `<div class="info-msg">لم نتمكن من استخراج معاينة من هذا الرابط.</div>`;
           return;
         }
         if (label === "YouTube") {
-          area.innerHTML = `<div class="service-label">${label} サムネイル（全画質）</div>
-        <div class="thumb-list">${thumbs
-          .map(
-            (thumb) => `
-          <div class="thumb-box">
-            <div class="thumb-label">${thumb.label}</div>
-            <img src="${thumb.url}" class="thumb-img" alt="サムネイル"/>
-            <a href="${thumb.url}" class="dl-btn" download>ダウンロード (${thumb.label})</a>
-          </div>`
-          )
-          .join("")}</div>`;
+          area.innerHTML = `<div class="service-label">${label} - جميع الجودات</div>
+          <div class="thumb-list">${thumbs
+            .map(
+              (thumb) => `
+            <div class="thumb-box">
+              <div class="thumb-label">${thumb.label}</div>
+              <img src="${thumb.url}" class="thumb-img" alt="معاينة"/>
+              <a href="${thumb.url}" class="dl-btn" download>تنزيل (${thumb.label})</a>
+            </div>`
+            )
+            .join("")}</div>`;
         } else {
-          // X/TikTok 単一サムネイル
-          area.innerHTML = `<div class="service-label">${label} サムネイル</div>
+          // X أو TikTok - معاينة واحدة
+          area.innerHTML = `<div class="service-label">${label}</div>
           <div class="thumb-list"><div class="thumb-box">
             <div class="thumb-label">${thumbs[0].label}</div>
-            <img src="${thumbs[0].url}" class="thumb-img" alt="サムネイル"/>
-            <a href="${thumbs[0].url}" class="dl-btn" download>ダウンロード</a>
+            <img src="${thumbs[0].url}" class="thumb-img" alt="معاينة"/>
+            <a href="${thumbs[0].url}" class="dl-btn" download>تنزيل</a>
           </div></div>`;
         }
       }
@@ -343,35 +345,35 @@
         document.getElementById("previewArea").innerHTML = "";
         document.getElementById("infoMsg").textContent = "";
         if (!url) {
-          document.getElementById("infoMsg").textContent = "動画や投稿のURLを入力してください！";
+          document.getElementById("infoMsg").textContent = "الرجاء إدخال رابط فيديو أو منشور!";
           return;
         }
-        // YouTube
+        // معالجة YouTube
         if (/youtu\.?be/.test(url)) {
           const thumbs = getYoutubeThumbs(url);
           renderThumbs("YouTube", thumbs);
           return;
         }
-        // TikTok
+        // معالجة TikTok
         if (/tiktok\.com/.test(url)) {
           const thumbs = getTiktokThumb(url);
           renderThumbs("TikTok", thumbs);
           return;
         }
-        // X (Twitter)
+        // معالجة X (Twitter)
         if (/twitter\.com|x\.com/.test(url)) {
-          document.getElementById("infoMsg").textContent = "X(Twitter) のサムネイルを取得中です（数秒かかる場合があります）...";
+          document.getElementById("infoMsg").textContent = "جاري استخراج معاينة X (قد يستغرق بضع ثوانٍ)...";
           const thumbs = await getXThumb(url);
           if (thumbs) {
             renderThumbs("X (Twitter)", thumbs);
           } else {
             document.getElementById("infoMsg").textContent =
-              "X(Twitter) のサムネイルを取得できませんでした。（プライバシー設定などで取得できない場合があります）";
+              "لم نتمكن من استخراج معاينة X. قد يكون المنشور خاصًا أو محذوفًا.";
           }
           return;
         }
         document.getElementById("infoMsg").textContent =
-          "サポートされていないURL形式です。有効なYouTube、X、TikTokのリンクを入力してください。";
+          "نوع الرابط غير مدعوم. الرجاء استخدام رابط YouTube أو X أو TikTok صحيح.";
       }
 
       document.getElementById("grabBtn").onclick = handleGrab;
@@ -390,37 +392,41 @@
         font-family: Arial, sans-serif;
       ">
       <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 14px">
-        ❓ FAQ – ソーシャルサムネイルダウンローダー
+        ❓ الأسئلة الشائعة – أداة تنزيل معاينة وسائل التواصل الاجتماعي
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">このツールはURLを保存したりアップロードしますか？</div>
-        <div style="color: #f0f0f0">いいえ。すべての処理はブラウザ上でローカルに行われます。データは送信・保存されません。</div>
-      </div>
-
-      <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">どのプラットフォームに対応していますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">هل يتم حفظ أو رفع بيانات الرابط؟</div>
         <div style="color: #f0f0f0">
-          YouTube（全てのサムネイル）、X（Twitter）、TikTok。XおよびTikTokは非公開投稿では取得できない場合があります。
+          لا. يتم كل المعالجة محليًا في المتصفح دون إرسال أي بيانات للخادم.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">TikTokやXのサムネイルが取得できないのはなぜですか？</div>
+        <div style="color: #8f94fb; font-weight: bold">ما المنصات المدعومة؟</div>
         <div style="color: #f0f0f0">
-          一部の投稿は非公開、削除済み、またはプレビューが制限されている場合があります。このツールは公開コンテンツのみ対応します。
+          YouTube (بجميع الجودات)، X (Twitter)، و TikTok. قد لا تكون معاينات X و TikTok متاحة إذا كان المنشور خاصًا.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">ログインは必要ですか？</div>
-        <div style="color: #f0f0f0">いいえ。このツールは完全無料でアカウントも不要です。</div>
+        <div style="color: #8f94fb; font-weight: bold">لماذا لا تُعرض معاينة TikTok أو X؟</div>
+        <div style="color: #f0f0f0">
+          قد تكون المنشورات خاصة أو محذوفة أو مقيدة بواسطة المنصة، وهذه الأداة تستخدم المحتوى العام فقط.
+        </div>
+      </div>
+
+      <div style="margin-bottom: 12px">
+        <div style="color: #8f94fb; font-weight: bold">هل أحتاج لتسجيل الدخول؟</div>
+        <div style="color: #f0f0f0">
+          لا. الأداة مجانية تمامًا ولا تتطلب أي تسجيل.
+        </div>
       </div>
 
       <div style="margin-bottom: 0">
-        <div style="color: #8f94fb; font-weight: bold">サムネイルの画質は選べますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">هل يمكنني اختيار جودة الصور؟</div>
         <div style="color: #f0f0f0">
-          はい、YouTubeの場合は画質を選んでダウンロード可能です。他のプラットフォームは1つの画像のみです。
+          نعم، في حالة YouTube يمكنك اختيار الجودة المناسبة. لاختيار الجودة الأخرى (X أو TikTok) يتم تنزيل الصورة المتاحة فقط.
         </div>
       </div>
     </section>

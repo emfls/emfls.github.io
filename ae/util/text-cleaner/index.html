@@ -1,32 +1,32 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ar" dir="rtl">
     <head>
         <meta charset="UTF-8" />
-        <title>テキストクリーナー – 空白・改行削除（即時！）</title>
+        <title>منظف النصوص – إزالة الفراغات وفواصل السطر (فوري!)</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="テキストを即座にきれいに整えます！不要な空白や改行、前後のスペースを削除。複数のクリーニングモード対応。100%ブラウザ処理・無料・アップロード不要。" />
+            content="قم بتنظيف النص بسرعة! إزالة الفراغات الزائدة وفواصل السطر والمساحات في البداية والنهاية. يدعم أوضاع تنظيف متعددة. معالجة داخل المتصفح بنسبة 100%، مجاني، بدون رفع." />
         <meta
             name="keywords"
-            content="テキストクリーナー, 即時クリーナー, 空白削除, 改行削除, ホワイトスペース, オンラインテキスト整形, 無料, アップロード不要" />
+            content="منظف النصوص, تنظيق فوري, إزالة الفراغات, إزالة فواصل السطر, مساحات بيضاء, تنسيق النص عبر الإنترنت, مجاني, بدون رفع" />
         <meta name="author" content="Itagi" />
-        <meta name="language" content="ja" />
+        <meta name="language" content="ar" />
         <link rel="canonical" href="https://emfls.github.io/ae/util/text-cleaner/" />
         <link rel="icon" href="https://emfls.github.io/icon-192.png" />
         <!-- Open Graph & Twitter -->
-        <meta property="og:title" content="テキストクリーナー – 空白・改行削除（即時！）" />
+        <meta property="og:title" content="منظف النصوص – إزالة الفراغات وفواصل السطر (فوري!)" />
         <meta
             property="og:description"
-            content="不要な空白・改行を即削除。貼り付けて整理、結果をコピー。100%ブラウザ・無料・アップロード不要。" />
+            content="احذف الفراغات الزائدة وفواصل السطر فورًا. ألصق النص ونظمه، ثم انسخ النتيجة. معالجة داخل المتصفح بنسبة 100%، مجاني، بدون رفع." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://emfls.github.io/ae/util/text-cleaner/" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="テキストクリーナー – 空白・改行削除（即時！）" />
+        <meta property="twitter:title" content="منظف النصوص – إزالة الفراغات وفواصل السطر (فوري!)" />
         <meta
-            name="twitter:description"
-            content="テキストを即時整理：不要な空白、連続改行、前後スペース等を削除します。" />
+            property="twitter:description"
+            content="نظف النص فورًا: احذف الفراغات الزائدة، الفواصل المتكررة، والمساحات في البداية والنهاية." />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
         <!-- Google tag (gtag.js) -->
@@ -54,6 +54,7 @@
                 flex-direction: column;
                 align-items: center;
                 min-height: 100vh;
+                direction: rtl;
             }
             .container {
                 margin: 42px auto 0 auto;
@@ -91,6 +92,8 @@
                 resize: vertical;
                 margin-bottom: 10px;
                 box-sizing: border-box;
+                direction: rtl;
+                text-align: right;
             }
             .options {
                 display: flex;
@@ -98,6 +101,7 @@
                 margin-bottom: 13px;
                 align-items: center;
                 flex-wrap: wrap;
+                justify-content: center;
             }
             .options label {
                 font-size: 1em;
@@ -115,7 +119,7 @@
                     border 0.13s;
             }
             .options input[type="radio"] {
-                margin-right: 6px;
+                margin-left: 6px;
                 accent-color: #1763a8;
             }
             .result-block {
@@ -129,11 +133,13 @@
                 min-height: 44px;
                 word-break: break-all;
                 position: relative;
+                direction: rtl;
+                text-align: right;
             }
             .copy-btn {
                 position: absolute;
                 top: 8px;
-                right: 14px;
+                left: 14px;
                 background: #19b16e;
                 color: #fff;
                 border: none;
@@ -153,6 +159,7 @@
                 text-align: center;
                 font-size: 0.93em;
                 margin-top: 19px;
+                direction: ltr;
             }
             #backBtn {
                 position: fixed;
@@ -202,27 +209,27 @@
     </head>
     <body>
         <div class="container">
-            <div class="logo">🧹 テキストクリーナー</div>
+            <div class="logo">🧹 منظف النصوص</div>
             <div class="desc">
-                下にテキストを貼り付けるか入力してください。<br />
-                すべての変更は即時に反映されます。モードを選択してください！
+                ألصق النص أسفله أو اكتب هنا.<br />
+                يتم تطبيق التغييرات فورًا. اختر الوضع المناسب!
             </div>
             <div class="options">
-                <label><input type="radio" name="mode" value="full" checked /> 全体（空白・改行）</label>
-                <label><input type="radio" name="mode" value="breaks" /> 改行をすべて削除</label>
-                <label><input type="radio" name="mode" value="spaces" /> 余分な空白のみ削除</label>
-                <label><input type="radio" name="mode" value="trimline" /> 各行の前後を整理</label>
+                <label><input type="radio" name="mode" value="full" checked /> الكامل (فراغات وفواصل سطر)</label>
+                <label><input type="radio" name="mode" value="breaks" /> احذف جميع فواصل السطر</label>
+                <label><input type="radio" name="mode" value="spaces" /> احذف الفراغات الزائدة فقط</label>
+                <label><input type="radio" name="mode" value="trimline" /> نظف بداية/نهاية كل سطر</label>
             </div>
-            <textarea id="input" placeholder="ここにテキストを貼り付けてください..."></textarea>
+            <textarea id="input" placeholder="ألصق النص هنا..."></textarea>
             <div class="result-block" id="resultBlock" style="display: none">
-                <button class="copy-btn" id="copyBtn" style="display: none">コピー</button>
+                <button class="copy-btn" id="copyBtn" style="display: none">نسخ</button>
                 <span id="result"></span>
             </div>
             <div class="footer">
-                アップロード不要。すべてのクリーニングはブラウザで即時実行されます。<br />
-                無料・プライバシー重視、<b>Itagi</b> 作成。
+                بدون رفع. جميع عمليات التنظيف تتم فورًا داخل المتصفح.<br />
+                مجاني، يحترم الخصوصية، من إعداد <b>Itagi</b>.
             </div>
-            <a href="../" id="backBtn">その他ツール</a>
+            <a href="../" id="backBtn">أدوات أخرى</a>
         </div>
         <script>
             const input = document.getElementById("input");
@@ -235,13 +242,13 @@
                 if (!txt) return "";
                 switch (mode) {
                     case "breaks":
-                        // すべての改行削除、空白は1つに
+                        // احذف جميع فواصل السطر، ادمج الأسطر وفراغ واحد
                         return txt
                             .replace(/[\r\n]+/g, " ")
                             .replace(/ +/g, " ")
                             .trim();
                     case "spaces":
-                        // 連続空白を1つにし、改行は保持、空行は1つに
+                        // احذف الفراغات المتكررة، احتفظ بالفواصل، اجعل الفراغ الواحد
                         return txt
                             .replace(/[ \t]+/g, " ")
                             .replace(/\n{2,}/g, "\n")
@@ -250,7 +257,7 @@
                             .join("\n")
                             .trim();
                     case "trimline":
-                        // 各行の前後空白のみ削除
+                        // نظف بداية ونهاية كل سطر فقط
                         return txt
                             .split(/[\r\n]/)
                             .map((l) => l.trim())
@@ -258,7 +265,7 @@
                             .trim();
                     case "full":
                     default:
-                        // デフォルト：改行・空白すべて整理
+                        // الوضع الكامل: نظم الفراغات والفواصل
                         txt = txt.replace(/\r\n?/g, "\n");
                         txt = txt.replace(/[ \t]+/g, " ");
                         txt = txt.replace(/\n{2,}/g, "\n");
@@ -296,8 +303,8 @@
                     document.execCommand("copy");
                     document.body.removeChild(ta);
                 }
-                copyBtn.textContent = "コピー済み！";
-                setTimeout(() => (copyBtn.textContent = "コピー"), 1200);
+                copyBtn.textContent = "تم النسخ!";
+                setTimeout(() => (copyBtn.textContent = "نسخ"), 1200);
             };
         </script>
         <section
@@ -308,48 +315,51 @@
                 border-radius: 18px;
                 box-shadow: 0 6px 24px #1236;
                 font-family: Arial, sans-serif;
+                color: #f0f0f0;
+                direction: rtl;
+                text-align: right;
             ">
             <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; padding: 16px 16px 0 16px">
-                ❓ FAQ – テキストクリーナー
+                ❓ الأسئلة الشائعة – منظف النصوص
             </div>
 
             <div style="margin-bottom: 12px; padding: 12px 16px 0 16px">
-                <div style="color: #8f94fb; font-weight: bold">「全体（空白・改行）」モードは何を整理しますか？</div>
+                <div style="color: #8f94fb; font-weight: bold">ماذا ينظف وضع "الكامل"؟</div>
                 <div style="color: #f0f0f0">
-                    余分な空白を削除し、各行の前後のスペースを整え、連続した改行を1つにします。
+                    يحذف الفراغات الزائدة، ينظم بداية ونهاية كل سطر، ويقلل فواصل السطر المتكررة إلى سطر واحد.
                 </div>
             </div>
 
             <div style="margin-bottom: 12px; padding: 0 16px">
-                <div style="color: #8f94fb; font-weight: bold">データがアップロードされますか？</div>
+                <div style="color: #8f94fb; font-weight: bold">هل يتم رفع البيانات؟</div>
                 <div style="color: #f0f0f0">
-                    いいえ。すべてブラウザ内で処理され、入力内容が外部に送信されることはありません。
+                    لا. تتم جميع العمليات داخل المتصفح، ولا يتم إرسال أي محتوى إلى جهة خارجية.
                 </div>
             </div>
 
             <div style="margin-bottom: 12px; padding: 0 16px">
-                <div style="color: #8f94fb; font-weight: bold">各モードの違いは何ですか？</div>
+                <div style="color: #8f94fb; font-weight: bold">ما الفرق بين الأوضاع؟</div>
                 <div style="color: #f0f0f0">
-                    <ul style="padding-left: 20px; margin: 0">
-                        <li><b>全体:</b> 空白と改行をすべて整理します。</li>
-                        <li><b>改行をすべて削除:</b> すべての行を1行にまとめます。</li>
-                        <li><b>余分な空白のみ削除:</b> 余分な空白だけを除去し、改行はそのまま。</li>
-                        <li><b>各行の前後を整理:</b> 各行の先頭・末尾のスペースだけを削除します。</li>
+                    <ul style="padding-left: 20px; margin: 0; text-align: right; direction: rtl">
+                        <li><b>الكامل:</b> ينظم الفراغات والفواصل في جميع أنحاء النص.</li>
+                        <li><b>احذف جميع فواصل السطر:</b> يدمج جميع الأسطر في سطر واحد.</li>
+                        <li><b>احذف الفراغات الزائدة فقط:</b> يزيل الفراغات الزائدة ويحافظ على فواصل السطر.</li>
+                        <li><b>نظف بداية/نهاية كل سطر:</b> يزيل المساحات في بداية ونهاية كل سطر فقط.</li>
                     </ul>
                 </div>
             </div>
 
             <div style="margin-bottom: 12px; padding: 0 16px">
-                <div style="color: #8f94fb; font-weight: bold">長文テキストも貼り付けできますか？</div>
+                <div style="color: #8f94fb; font-weight: bold">هل يمكن لصق نص طويل؟</div>
                 <div style="color: #f0f0f0">
-                    はい。大量のテキストも貼り付けでき、処理も高速ですぐに反映されます。
+                    نعم. يمكنك لصق كميات كبيرة من النص، وسيتم المعالجة بسرعة وعرض النتيجة فورًا.
                 </div>
             </div>
 
             <div style="margin-bottom: 0; padding: 0 16px 16px 16px">
-                <div style="color: #8f94fb; font-weight: bold">他言語も使えますか？</div>
+                <div style="color: #8f94fb; font-weight: bold">هل يدعم لغات أخرى؟</div>
                 <div style="color: #f0f0f0">
-                    はい。日本語、韓国語、絵文字などすべての言語や文字に対応しています。
+                    نعم. يدعم جميع اللغات بما في ذلك العربية والكورية والرموز التعبيرية.
                 </div>
             </div>
         </section>

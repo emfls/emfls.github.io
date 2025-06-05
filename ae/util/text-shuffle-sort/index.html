@@ -1,32 +1,32 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <title>テキストシャッフル & 並べ替えツール – ランダム・昇順・降順</title>
+    <title>أداة خلط وترتيب النص – عشوائي، تصاعدي، تنازلي</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <meta
       name="description"
-      content="ブラウザ上でテキスト行をランダム（シャッフル）、並べ替え（昇順・降順）に即時変換！リスト・原稿・学習ツールに最適。アップロード不要、100%プライバシー保護。" />
+      content="في المتصفح، يمكنك خلط أسطر النص عشوائيًا أو ترتيبها تصاعديًا / تنازليًا على الفور! مثالي لقوائمك ونصوصك وأدوات الدراسة. بدون رفع، 100٪ خصوصية محفوظة." />
     <meta
       name="keywords"
-      content="テキストシャッフル, ランダム, 並べ替え, 降順, 行ソート, ブラウザ, 無料, テキスト並べ替え, シャッフル, ランダム, 逆順, 改行" />
+      content="خلط النص، ترتيب النص، تنازلي، تصاعدي، فرز الأسطر، المتصفح، مجاني، فرز نص، خلط عشوائي، عكس الترتيب، فواصل السطر" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ja" />
+    <meta name="language" content="ar" />
     <link rel="canonical" href="https://emfls.github.io/ae/util/text-shuffle-sort/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <!-- Open Graph / Twitter meta -->
-    <meta property="og:title" content="テキストシャッフル & 並べ替えツール – ランダム・昇順・降順" />
+    <!-- Open Graph / Twitter -->
+    <meta property="og:title" content="أداة خلط وترتيب النص – عشوائي، تصاعدي، تنازلي" />
     <meta
       property="og:description"
-      content="テキストリストをシャッフル、並べ替え、逆順に即変換。高速・無料・プライバシー重視。すべてブラウザ内で完結。" />
+      content="قم بخلط قائمة الأسطر أو ترتيبها تصاعديًا/تنازليًا فورًا. سريع، مجاني، ويحافظ على الخصوصية. كل المعالجة تتم داخل المتصفح." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/ae/util/text-shuffle-sort/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="テキストシャッフル & 並べ替えツール – ランダム・昇順・降順" />
+    <meta name="twitter:title" content="أداة خلط وترتيب النص – عشوائي، تصاعدي، تنازلي" />
     <meta
       name="twitter:description"
-      content="テキスト行リストを簡単にランダム化・並べ替え・逆順に！すべての処理はブラウザで完結します。" />
+      content="خلط أسطر النص، ترتيبها تصاعديًا، أو تنازليًا بسهولة! جميع العمليات تتم داخل المتصفح." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -54,6 +54,7 @@
         margin: 0;
         font-family: "Segoe UI", Arial, sans-serif;
         color: #222;
+        direction: rtl;
       }
       .container {
         max-width: 430px;
@@ -89,9 +90,12 @@
         margin-bottom: 11px;
         font-family: "Fira Mono", "Menlo", monospace;
         transition: border 0.16s;
+        direction: rtl;
+        text-align: right;
       }
       textarea:focus {
         border-color: var(--main);
+        outline: none;
       }
       .btn-row {
         display: flex;
@@ -131,12 +135,21 @@
       .mini-btn:active {
         background: #bad0f8;
       }
+      .status-msg {
+        color: #41823c;
+        font-size: 0.98em;
+        text-align: left;
+        min-height: 18px;
+        margin-bottom: 2px;
+        opacity: 0.8;
+      }
       .footer {
         color: #789;
         text-align: center;
         font-size: 0.95em;
         margin-top: 16px;
         opacity: 0.9;
+        direction: ltr;
       }
       #backBtn {
         position: fixed;
@@ -177,45 +190,37 @@
           padding: 0.48em 1em;
         }
       }
-      .status-msg {
-        color: #41823c;
-        font-size: 0.98em;
-        text-align: right;
-        min-height: 18px;
-        margin-bottom: 2px;
-        opacity: 0.8;
-      }
     </style>
   </head>
   <body>
     <div class="container">
-      <div class="logo">🔀 テキストシャッフル & 並べ替えツール</div>
+      <div class="logo">🔀 أداة خلط وترتيب النص</div>
       <div class="desc">
-        複数行のテキストを入力または貼り付けてください。<br />
-        即座にランダム（シャッフル）、昇順（A→Z）、降順（Z→A）に変換できます！
+        أدخل أو الصق نصًا متعدد الأسطر أدناه.<br />
+        يمكنك الخلط العشوائي أو الترتيب تصاعديًا أو تنازليًا فورًا!
       </div>
       <div class="status-msg" id="statusMsg"></div>
-      <textarea id="inputArea" placeholder="リストを入力または貼り付けてください。1行ずつ..."></textarea>
+      <textarea id="inputArea" placeholder="أدخل القائمة أو الصقها هنا (سطر لكل عنصر)..."></textarea>
       <div class="btn-row">
-        <button class="action-btn" id="shuffleBtn">シャッフル</button>
-        <button class="action-btn" id="sortBtn">昇順（A→Z）</button>
-        <button class="action-btn" id="reverseBtn">降順（Z→A）</button>
+        <button class="action-btn" id="shuffleBtn">خلط</button>
+        <button class="action-btn" id="sortBtn">ترتيب تصاعدي (أ→ي)</button>
+        <button class="action-btn" id="reverseBtn">ترتيب تنازلي (ي→أ)</button>
       </div>
-      <div style="text-align: right; margin-bottom: 10px">
-        <button class="mini-btn" id="copyBtn">コピー</button>
-        <button class="mini-btn" id="clearBtn">クリア</button>
+      <div style="text-align: left; margin-bottom: 10px">
+        <button class="mini-btn" id="copyBtn">نسخ</button>
+        <button class="mini-btn" id="clearBtn">مسح</button>
       </div>
       <div class="footer">
-        すべての処理はブラウザ内で実行されます。アップロード不要・100%プライバシー保護。<br />
-        <b>ヒント:</b> ランダム順序作成・クイズフラッシュカード作成・リスト整理など多用途！
+        جميع المعالجة تتم داخل المتصفح. بدون رفع، 100٪ خصوصية محفوظة.<br />
+        <b>نصيحة:</b> استخدمها لإنشاء ترتيب عشوائي للاختبارات، بطاقات فلاش، تقسيم الطلاب عشوائيًا، أو عكس سجلاتك بسهولة!
       </div>
     </div>
-    <a href="../" id="backBtn">その他ツール</a>
+    <a href="../" id="backBtn">أدوات أخرى</a>
     <script>
       const inputArea = document.getElementById("inputArea");
       const statusMsg = document.getElementById("statusMsg");
 
-      // Fisher-Yates シャッフルアルゴリズム
+      // خوارزمية Fisher-Yates للخلط
       function shuffleArray(arr) {
         for (let i = arr.length - 1; i > 0; i--) {
           let j = Math.floor(Math.random() * (i + 1));
@@ -224,13 +229,12 @@
         return arr;
       }
 
-      // メイン機能
       document.getElementById("shuffleBtn").onclick = function () {
         let lines = inputArea.value.split(/\r?\n/).filter((l) => l.trim().length > 0);
         if (!lines.length) return;
         shuffleArray(lines);
         inputArea.value = lines.join("\n");
-        showStatus("シャッフル完了！");
+        showStatus("تم الخلط!");
       };
 
       document.getElementById("sortBtn").onclick = function () {
@@ -238,7 +242,7 @@
         if (!lines.length) return;
         lines.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
         inputArea.value = lines.join("\n");
-        showStatus("昇順で並べ替えました！（A→Z）");
+        showStatus("تم الترتيب تصاعديًا (أ→ي)!");
       };
 
       document.getElementById("reverseBtn").onclick = function () {
@@ -246,25 +250,24 @@
         if (!lines.length) return;
         lines.sort((a, b) => b.localeCompare(a, undefined, { sensitivity: "base" }));
         inputArea.value = lines.join("\n");
-        showStatus("降順で並べ替えました！（Z→A）");
+        showStatus("تم الترتيب تنازليًا (ي→أ)!");
       };
 
-      // コピー & クリア
       document.getElementById("copyBtn").onclick = function () {
         const val = inputArea.value;
         if (!val) return;
         navigator.clipboard.writeText(val);
-        showStatus("コピーしました！");
+        showStatus("تم النسخ!");
       };
+
       document.getElementById("clearBtn").onclick = function () {
         if (inputArea.value.length === 0) return;
-        if (confirm("すべてのテキストを消去しますか？")) {
+        if (confirm("هل تريد مسح جميع النص؟")) {
           inputArea.value = "";
-          showStatus("クリアされました！");
+          showStatus("تم المسح!");
         }
       };
 
-      // ステータスメッセージ
       function showStatus(msg) {
         statusMsg.textContent = msg;
         setTimeout(() => {
@@ -280,35 +283,39 @@
         border-radius: 18px;
         box-shadow: 0 6px 24px #1236;
         padding: 24px;
+        font-family: Arial, sans-serif;
+        color: #f0f0f0;
+        direction: rtl;
+        text-align: right;
       ">
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">このツールは何ができますか？</h3>
+        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">ما هي هذه الأداة؟</h3>
         <p style="color: #f0f0f0; font-family: Arial, sans-serif">
-          本ツールでは、テキスト行のリストを即時にランダム（シャッフル）、昇順（A→Z）、または降順（Z→A）に並べ替えられます。
+          يمكنك خلط أسطر النص عشوائيًا أو ترتيبها تصاعديًا (أ→ي) أو تنازليًا (ي→أ) فورًا.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">使い方は？</h3>
+        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">كيف أستخدمها؟</h3>
         <p style="color: #f0f0f0; font-family: Arial, sans-serif">
-          複数行テキストを入力または貼り付け、ボタンを押すだけでシャッフル・昇順・降順に変換。結果をコピー・消去も可能です。
+          أدخل أو الصق النص متعدد الأسطر، ثم اضغط زر "خلط" أو "ترتيب تصاعدي" أو "ترتيب تنازلي". يمكنك بعد ذلك نسخ النتيجة أو مسحها.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">オフラインでも使えますか？</h3>
+        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">هل تعمل دون اتصال؟</h3>
         <p style="color: #f0f0f0; font-family: Arial, sans-serif">
-          はい。すべての操作はブラウザ内で即時処理されるため、ネット接続やアップロードは不要です。
+          نعم. تتم جميع العمليات داخل المتصفح على الفور، ولا تحتاج إلى اتصال إنترنت أو رفع للنص.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">テキストは安全ですか？</h3>
+        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">هل النص آمن؟</h3>
         <p style="color: #f0f0f0; font-family: Arial, sans-serif">
-          絶対に安全です。入力したテキストは外部送信されず、すべてローカルで処理されます。
+          تمامًا. لا يُرسل أي نص خارجًا؛ كل المعالجة تتم محليًا في المتصفح.
         </p>
       </div>
       <div style="margin-bottom: 0">
-        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">どんな用途に使えますか？</h3>
+        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">ما هي استخداماته؟</h3>
         <p style="color: #f0f0f0; font-family: Arial, sans-serif">
-          クイズ問題のランダム化、生徒名の無作為分配、買い物リスト整理、ログやスクリプトの逆順表示など多彩に利用可能です。
+          يمكنك استخدامه لإنشاء اختبارات عشوائية، بطاقات فلاش تعليمية، تقسيم الطلاب عشوائيًا، عرض السجلات بترتيب عكسي، أو ترتيب قوائمك بسهولة.
         </p>
       </div>
     </section>

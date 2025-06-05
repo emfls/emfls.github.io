@@ -1,31 +1,31 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <title>テキスト要約ツール – 長文をすばやく要約！</title>
+    <title>أداة تلخيص النص – اختصر النصوص الطويلة بسرعة!</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="長文や記事、エッセイを簡単に要約しましょう。無料・プライバシー保護・ブラウザですぐ使える！" />
+      content="اختصر المقالات أو التقارير أو المقالات الطويلة بسهولة. مجاني، يحافظ على الخصوصية، ويعمل مباشرةً في المتصفح!" />
     <meta
       name="keywords"
-      content="テキスト要約, 要約, 自動要約, 記事要約, 無料, オンライン, ブラウザ, アップロード不要" />
+      content="تلخيص النص، اختصار النص، تلخيص تلقائي، تلخيص المقال، مجاني، عبر الإنترنت، المتصفح، بدون رفع" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ja" />
+    <meta name="language" content="ar" />
     <link rel="canonical" href="https://emfls.github.io/ae/util/textsummarizer/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <meta property="og:title" content="テキスト要約ツール – 長文をすばやく要約！" />
+    <meta property="og:title" content="أداة تلخيص النص – اختصر النصوص الطويلة بسرعة!" />
     <meta
       property="og:description"
-      content="記事やドキュメント、エッセイをすぐに要約。アップロード不要・無料・プライバシー保護。" />
+      content="اختصر المقالات أو الوثائق أو المقالات الطويلة فورًا. دون رفع، مجاني، ويحافظ على الخصوصية." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/ae/util/textsummarizer/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="テキスト要約ツール – 長文をすばやく要約！" />
-    <meta name="twitter:description" content="長文や記事、エッセイをブラウザで手軽に要約しましょう。" />
+    <meta name="twitter:title" content="أداة تلخيص النص – اختصر النصوص الطويلة بسرعة!" />
+    <meta name="twitter:description" content="اختصر المقالات أو التقارير أو المقالات الطويلة بسهولة في المتصفح." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-    <!-- Google タグ (gtag.js) -->
+    <!-- Google Tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -45,6 +45,7 @@
         font-family: "Segoe UI", Arial, sans-serif;
         margin: 0;
         color: #223;
+        direction: rtl;
       }
       .container {
         max-width: 420px;
@@ -77,20 +78,23 @@
         background: #fafdff;
         margin-bottom: 11px;
         font-family: inherit;
+        direction: rtl;
+        text-align: right;
       }
       .input-row {
         margin-bottom: 8px;
+        text-align: right;
       }
       .slider-label {
         color: #19788a;
         font-size: 1.03em;
-        margin-right: 8px;
+        margin-left: 8px;
       }
       #summaryLength {
         vertical-align: middle;
       }
       #lengthVal {
-        margin-left: 6px;
+        margin-right: 6px;
         color: #127080;
       }
       .action-btn {
@@ -116,12 +120,15 @@
         font-size: 1.07em;
         padding: 12px 10px 10px 12px;
         white-space: pre-wrap;
+        direction: rtl;
+        text-align: right;
       }
       .footer {
         color: #789;
         text-align: center;
         font-size: 0.93em;
         margin-top: 14px;
+        direction: ltr;
       }
       #backBtn {
         position: fixed;
@@ -163,25 +170,25 @@
   </head>
   <body>
     <div class="container">
-      <div class="logo">📝 テキスト要約ツール</div>
+      <div class="logo">📝 أداة تلخيص النص</div>
       <div class="desc">
-        長文や記事を下の欄に貼り付けてください。<br />
-        <b>要約する</b> ボタンをクリックすると、かんたんに要約が得られます！
+        ألصق نصًّا طويلًا أو مقالًا في المربع أدناه.<br />
+        اضغط <b>تلخيص</b> لتحصل على مختصر سريع!
       </div>
-      <textarea id="inputText" placeholder="長いテキストをここに貼り付けてください..."></textarea>
+      <textarea id="inputText" placeholder="أدخل النص الطويل هنا..."></textarea>
       <div class="input-row">
-        <label class="slider-label" for="summaryLength">要約文の長さ:</label>
+        <label class="slider-label" for="summaryLength">عدد الجمل في الملخص:</label>
         <input type="range" min="1" max="10" value="3" id="summaryLength" />
-        <span id="lengthVal">3</span> 文
+        <span id="lengthVal">3</span> جمل
       </div>
-      <button class="action-btn" id="summarizeBtn">要約する</button>
+      <button class="action-btn" id="summarizeBtn">تلخيص</button>
       <div class="output-box" id="summaryResult" style="margin-top: 8px"></div>
       <div class="footer">
-        すべての処理はローカルで実行されます。 <b>アップロード不要</b>・無料＆プライバシー保護。<br />
-        <span style="color: #127080">ヒント: ニュース、Wikipedia、レポート、どんなテキストでも試せます！</span>
+        كل المعالجة تجري محليًا داخل المتصفح. <b>بدون رفع</b>، مجاني ويضمن الخصوصية.<br />
+        <span style="color: #127080">نصيحة: جرّبها على الأخبار أو ويكيبيديا أو أي نص طويل تريد تلخيصه!</span>
       </div>
     </div>
-    <a href="../" id="backBtn">その他ツール</a>
+    <a href="../" id="backBtn">أدوات أخرى</a>
     <script>
       const inputText = document.getElementById("inputText");
       const summaryResult = document.getElementById("summaryResult");
@@ -193,13 +200,13 @@
         lengthVal.textContent = summaryLength.value;
       };
 
-      // シンプルな頻度ベース要約（AI非使用）
+      // تلخيص بسيط يعتمد على تكرار الكلمات (دون استخدام الذكاء الاصطناعي)
       function summarize(text, numSentences = 3) {
-        if (!text.trim()) return "テキストを貼り付け、「要約する」をクリックしてください。";
-        // 文ごとに分割
+        if (!text.trim()) return "الرجاء لصق النص في الأعلى ثم الضغط على \"تلخيص\".";
+        // تقسيم النص إلى جمل
         const sentences = text.match(/[^\.!\?]+[\.!\?]+/g) || [text];
         if (sentences.length <= numSentences) return text;
-        // 単語の頻度計算
+        // حساب تكرار الكلمات
         const freq = {};
         const words = text
           .replace(/[^\w\s]/g, "")
@@ -208,7 +215,7 @@
         words.forEach((w) => {
           if (w.length > 2) freq[w] = (freq[w] || 0) + 1;
         });
-        // 各文のスコア計算（単語頻度合計）
+        // احتساب درجة كل جملة بناءً على تكرار الكلمات فيها
         const scored = sentences.map((s) => {
           const sw = s
             .replace(/[^\w\s]/g, "")
@@ -220,7 +227,7 @@
           });
           return { sentence: s.trim(), score };
         });
-        // スコアが高い上位N文を元の順序で選択
+        // اختيار أعلى الجمل ترتيبًا ثم إرجاعها بترتيبها الأصلي
         const top = scored
           .sort((a, b) => b.score - a.score)
           .slice(0, numSentences)
@@ -247,43 +254,46 @@
         box-shadow: 0 6px 24px #1236;
         padding: 24px;
         font-family: Arial, sans-serif;
+        color: #f0f0f0;
+        direction: rtl;
+        text-align: right;
       ">
       <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 14px">
-        ❓ FAQ – テキスト要約ツール
+        ❓ الأسئلة الشائعة – أداة تلخيص النص
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">このツールはAIやChatGPTを使っていますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">هل تستخدم هذه الأداة الذكاء الاصطناعي أو ChatGPT؟</div>
         <div style="color: #f0f0f0">
-          いいえ。単語の頻度に基づくアルゴリズムを使用しています。高速かつプライバシー保護ですが、AI要約ほど高性能ではありません。
+          لا. تعتمد على خوارزمية بسيطة لحساب تكرار الكلمات. سريعة وتحافظ على الخصوصية لكنها ليست بمستوى الذكاء الاصطناعي.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">私のテキストがアップロードまたは保存されますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">هل يتم رفع أو حفظ نصّي؟</div>
         <div style="color: #f0f0f0">
-          絶対にありません。すべての処理はブラウザ内で行われ、サーバーに送信されることはありません。
+          لا. تتم كل العمليات داخل المتصفح فقط، ولا يُرسل أي نص للخادم.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">どの言語に対応していますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">ما اللغات المدعومة؟</div>
         <div style="color: #f0f0f0">
-          主に英語に最適化されています。他の言語でも動作しますが、結果が異なる場合があります。
+          الأداة مصممة أساسًا للغة الإنجليزية. قد تعمل على لغات أخرى لكن النتائج قد تختلف.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">要約の精度はどうですか？</div>
+        <div style="color: #8f94fb; font-weight: bold">ما مدى دقة الملخص؟</div>
         <div style="color: #f0f0f0">
-          単語の繰り返し頻度から「重要な」文を選出します。とてもシンプルですが、ざっと内容を把握したい時に便利です。
+          تقوم باختيار الجمل ذات الكلمات الأكثر تكرارًا. بسيطة لكنها مفيدة لفهم الفكرة العامة بسرعة.
         </div>
       </div>
 
       <div style="margin-bottom: 0">
-        <div style="color: #8f94fb; font-weight: bold">どんな場面で使えますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">في أي مواقف يمكنني استخدامها؟</div>
         <div style="color: #f0f0f0">
-          ニュース、ブログ、エッセイ、論文など長文テキストを手軽に要約したいときにご利用ください。
+          تلخيص الأخبار أو المدونات أو الأوراق البحثية أو أي نص طويل يحتاج إلى عقدة سريعة.
         </div>
       </div>
     </section>
