@@ -1,30 +1,30 @@
 <!doctype html>
-<html lang="ja">
+<html lang="de">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content="無料レトロアーケードジャンプゲームAeroJumpをプレイしよう！どこまで高く跳べるかな？" />
+        <meta name="description" content="Spiele das kostenlose Retro-Arcade-Jump-Spiel AeroJump! Wie hoch schaffst du es?" />
         <meta
             name="keywords"
-            content="AeroJump, ジャンプゲーム, アーケード, 無料オンラインゲーム, レトロ, ブラウザ, モバイル, ハイスコア, プラットフォームゲーム" />
+            content="AeroJump, Jump-Spiel, Arcade, kostenloses Online-Spiel, Retro, Browser, Mobile, Highscore, Plattformspiel" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/de/game/AeroJump" />
 
-        <meta property="og:title" content="AeroJump – 無料オンラインゲーム！" />
+        <meta property="og:title" content="AeroJump – Kostenloses Online-Spiel!" />
         <meta
             property="og:description"
-            content="無料レトロアーケードジャンプゲームAeroJumpをプレイしよう！どこまで高く跳べるかな？" />
+            content="Spiele das kostenlose Retro-Arcade-Jump-Spiel AeroJump! Wie hoch schaffst du es?" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/de/game/AeroJump" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="AeroJump – 無料オンラインゲーム！" />
+        <meta name="twitter:title" content="AeroJump – Kostenloses Online-Spiel!" />
         <meta
             name="twitter:description"
-            content="無料レトロアーケードジャンプゲームAeroJumpをプレイしよう！どこまで高く跳べるかな？" />
+            content="Spiele das kostenlose Retro-Arcade-Jump-Spiel AeroJump! Wie hoch schaffst du es?" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
@@ -68,7 +68,7 @@
                 -webkit-user-drag: none;
                 -webkit-tap-highlight-color: transparent;
             }
-            /* ゲームエリア外での選択を無効化 */
+            /* Auswahl und Ziehen außerhalb des Spielbereichs deaktivieren */
 
             #gameWrapper,
             #gameWrapper * {
@@ -213,28 +213,28 @@
 
     <body ondragstart="return false" onselectstart="return false">
         <header>
-            <h1>エアロジャンプ</h1>
+            <h1>AeroJump</h1>
         </header>
         <div id="gameWrapper">
-            <div id="scoreDisplay">スコア: 0</div>
+            <div id="scoreDisplay">Punktestand: 0</div>
             <canvas id="gameCanvas"></canvas>
             <div id="touchControls">
                 <button id="leftBtn">◀</button>
                 <button id="rightBtn">▶</button>
             </div>
             <div id="gameOverOverlay">
-                <div id="finalScore">スコア: 0</div>
+                <div id="finalScore">Punktestand: 0</div>
                 <div>
-                    <button id="shareBtn">共有</button>
-                    <button id="restartBtn">再スタート</button>
+                    <button id="shareBtn">Teilen</button>
+                    <button id="restartBtn">Neustarten</button>
                 </div>
             </div>
         </div>
         <footer id="otherGames">
-            <a href="window.location.href='../../'">他のゲーム</a>
+            <a href="window.location.href='../../'">Weitere Spiele</a>
         </footer>
         <script>
-            // ゲームエリア内でのドラッグ、選択、右クリックを無効化
+            // Auswählen, Ziehen und Kontextmenü im Spielbereich deaktivieren
             document.addEventListener("contextmenu", (e) => e.preventDefault());
             document.addEventListener("dragstart", (e) => {
                 if (e.target.closest("#gameWrapper")) e.preventDefault();
@@ -259,7 +259,7 @@
             window.addEventListener("resize", resizeCanvas);
             resizeCanvas();
 
-            // プレイヤーの横移動は縦ジャンプ速度に影響しない
+            // Spieler-Objekt
             const player = {
                 x: 0,
                 y: 0,
@@ -357,9 +357,9 @@
                     while (nextPlatformY > -50) spawnRow();
                 }
                 platforms = platforms.filter((p) => p.y < height);
-                document.getElementById("scoreDisplay").innerText = "スコア: " + Math.floor(score / 10);
+                document.getElementById("scoreDisplay").innerText = "Punktestand: " + Math.floor(score / 10);
                 if (player.y > height) {
-                    document.getElementById("finalScore").innerText = "スコア: " + Math.floor(score / 10);
+                    document.getElementById("finalScore").innerText = "Punktestand: " + Math.floor(score / 10);
                     document.getElementById("gameOverOverlay").style.display = "flex";
                     return;
                 }
@@ -367,7 +367,7 @@
                 requestAnimationFrame(update);
             }
 
-            // 操作
+            // Steuerung per Tastatur und Buttons
             ["ArrowLeft", "ArrowRight"].forEach((key) => {
                 window.addEventListener("keydown", (e) => {
                     if (e.key === key) key === "ArrowLeft" ? (left = true) : (right = true);
@@ -393,13 +393,13 @@
             document.getElementById("shareBtn").onclick = async () => {
                 const data = {
                     title: "AeroJump",
-                    text: `私のスコア: ${Math.floor(score / 10)}!`,
+                    text: `Mein Punktestand: ${Math.floor(score / 10)}!`,
                     url: location.href
                 };
                 try {
                     navigator.share
                         ? await navigator.share(data)
-                        : (await navigator.clipboard.writeText(location.href)) && alert("リンクがコピーされました！");
+                        : (await navigator.clipboard.writeText(location.href)) && alert("Link wurde kopiert!");
                 } catch {}
             };
 
@@ -422,36 +422,36 @@
                 line-height: 1.6;
                 font-size: 14px;
             ">
-            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ よくある質問 (FAQ)</h2>
+            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ Häufig gestellte Fragen (FAQ)</h2>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q1. エアロジャンプはどうプレイしますか？</strong><br />
-                A. 左(◀)および右(▶)ボタンまたは矢印キーで移動します。プラットフォームに着地してさらに高くジャンプしましょう。
+                <strong>F1. Wie spiele ich AeroJump?</strong><br />
+                A. Nutze die linken (◀) und rechten (▶) Pfeiltasten oder die Buttons, um dich zu bewegen. Springe auf Plattformen und erreiche immer höhere Ebenen.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q2. ゲームの目標は何ですか？</strong><br />
-                A. プラットフォーム上でジャンプを続け、できるだけ高く登ること！高く登るほどスコアが増えます。
+                <strong>F2. Was ist das Ziel des Spiels?</strong><br />
+                A. Springe kontinuierlich auf Plattformen, um so hoch wie möglich zu gelangen! Je höher du kommst, desto mehr Punkte erhältst du.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q3. 落ちたらどうなりますか？</strong><br />
-                A. 画面下に落ちるとゲームオーバーです。すぐに再スタートできます。
+                <strong>F3. Was passiert, wenn ich falle?</strong><br />
+                A. Wenn du unter den Bildschirmrand fällst, ist das Spiel vorbei. Du kannst sofort neu starten.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q4. モバイルでプレイできますか？</strong><br />
-                A. はい！このゲームはモバイルのタッチコントロールをサポートしています。下の緑色のボタンで移動してください。
+                <strong>F4. Kann ich auf dem Handy spielen?</strong><br />
+                A. Ja! Das Spiel unterstützt Touch-Steuerung. Verwende die grünen Buttons unten, um dich zu bewegen.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q5. スコアはどう共有しますか？</strong><br />
-                A. ゲームオーバー時に<strong>「共有」</strong>ボタンをクリックすると、デバイスの共有機能を利用するか、リンクとしてコピーされます。
+                <strong>F5. Wie teile ich meinen Punktestand?</strong><br />
+                A. Sobald das Spiel vorbei ist, klicke auf den Button <strong>„Teilen“</strong>, um die Freigabefunktion deines Geräts zu verwenden oder den Link zu kopieren.
             </div>
 
             <div>
-                <strong>Q6. 他のゲームはどこで見つかりますか？</strong><br />
-                A. 下にスクロールして<strong>「📂 他のゲーム」</strong>をクリックすると、全コレクションを確認できます。
+                <strong>F6. Wo finde ich weitere Spiele?</strong><br />
+                A. Scrolle nach unten und klicke auf <strong>„Weitere Spiele“</strong>, um alle Spiele in der Sammlung zu sehen.
             </div>
         </section>
     </body>

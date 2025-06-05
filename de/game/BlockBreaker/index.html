@@ -1,33 +1,34 @@
 <!doctype html>
-<html lang="ja">
+<html lang="de">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="ブラウザで無料のブロックブレイカーをプレイしよう！すべてのブロックを壊し、パワーアップを集め、新しいハイスコアを目指そう。シンプルで高速、モバイルでも快適に遊べます。" />
+            content="Spiele kostenlos den Block-Brecher im Browser! Zerstöre alle Blöcke, sammle Power-ups und jage nach einer neuen Highscore. Einfach, schnell und mobilfreundlich." />
         <meta
             name="keywords"
-            content="ブロックブレイカー, ブロック崩し, ブレイクアウト, 無料ゲーム, ブラウザゲーム, アーケード, パドルゲーム, モバイルゲーム, ブロック, ボール, ハイスコア, オンラインゲーム" />
+            content="Block-Brecher, Block-Breaker, Breakout, kostenloses Spiel, Browserspiel, Arcade, Paddle-Spiel, Mobile, Blöcke, Ball, Highscore, Online-Spiel" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/de/game/BlockBreaker" />
 
-        <meta property="og:title" content="ブロックブレイカー – 無料オンラインブロック崩しゲーム！" />
+        <meta property="og:title" content="Block-Brecher – Kostenloses Online-Breakout-Spiel!" />
         <meta
             property="og:description"
-            content="無料でブロックブレイカーをプレイしよう！すべてのブロックを壊し、パワーアップを獲得し、友達と競おう。ダウンロード不要。" />
+            content="Spiel den Block-Brecher kostenlos! Zerstöre alle Blöcke, sammle Power-ups und messe dich mit Freunden. Kein Download nötig." />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/de/game/BlockBreaker" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="ブロックブレイカー – 無料オンラインブロック崩しゲーム！" />
+        <meta name="twitter:title" content="Block-Brecher – Kostenloses Online-Breakout-Spiel!" />
         <meta
             name="twitter:description"
-            content="この中毒性のあるオンラインブロック崩しゲームで、すべてのブロックを壊そう！今すぐハイスコアを目指そう。" />
+            content="Zerstöre alle Blöcke in diesem süchtig machenden Online-Breakout-Spiel! Erreiche jetzt deinen Highscore." />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -35,14 +36,13 @@
                 dataLayer.push(arguments);
             }
             gtag("js", new Date());
-
             gtag("config", "G-QP5Q67GE5B");
         </script>
         <script
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <title>ブロックブレイカー</title>
+        <title>Block-Brecher</title>
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet" />
         <style>
             * {
@@ -57,7 +57,7 @@
                 width: 100%;
                 height: 100%;
                 background: linear-gradient(to bottom, #232526, #414345);
-                font-family: "Noto Sans KR", "Segoe UI", Tahoma, sans-serif; /* 日本語環境でも問題ないフォントスタック */
+                font-family: "Noto Sans KR", "Segoe UI", Tahoma, sans-serif;
             }
 
             #gameContainer {
@@ -161,7 +161,7 @@
                 box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             }
 
-            /* FAQ セクション フォント再定義 */
+            /* FAQ-Bereich, Schrift definieren */
             section {
                 width: 90%;
                 max-width: 600px;
@@ -188,18 +188,18 @@
     <body>
         <div id="gameContainer">
             <div id="header">
-                <h1>ブロックブレイカー</h1>
-                <p>ボールで全てのブロックを壊そう！</p>
+                <h1>Block-Brecher</h1>
+                <p>Zerstöre alle Blöcke mit dem Ball!</p>
             </div>
             <canvas id="gameCanvas"></canvas>
-            <div id="scoreUI"></div>
+            <div id="scoreUI">Punktestand: 0</div>
             <div id="gameOverUI">
                 <div id="gameOverMsg"></div>
-                <button id="restartBtn">再スタート</button>
-                <button id="shareBtn">共有</button>
+                <button id="restartBtn">Neustart</button>
+                <button id="shareBtn">Teilen</button>
             </div>
         </div>
-        <button id="otherBtn" onclick="window.location.href='../'">他のゲーム</button>
+        <button id="otherBtn" onclick="window.location.href='../'">Weitere Spiele</button>
         <script>
             (function () {
                 const canvas = document.getElementById("gameCanvas");
@@ -244,14 +244,10 @@
                     brickH = H / 20;
                     clearedCount = 0;
                     bricks = Array.from(
-                        {
-                            length: rows
-                        },
+                        { length: rows },
                         (_, r) =>
                             Array.from(
-                                {
-                                    length: cols
-                                },
+                                { length: cols },
                                 (_, c) => ({
                                     x: c * brickW,
                                     y: r * brickH + 60,
@@ -290,7 +286,7 @@
                         ctx.beginPath();
                         ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
                         ctx.fillStyle = "#f6d860";
-                        ctx.shadowColor = "#fcd34d";
+                        ctx.shadowColor = "#fdd835";
                         ctx.shadowBlur = 8;
                         ctx.fill();
                         ctx.closePath();
@@ -318,7 +314,7 @@
                 }
 
                 function drawItems() {
-                    for (let it of items) {
+                    items.forEach((it) => {
                         ctx.beginPath();
                         ctx.arc(it.x, it.y, it.size, 0, Math.PI * 2);
                         ctx.fillStyle = "#ffeb3b";
@@ -327,19 +323,17 @@
                         ctx.fill();
                         ctx.closePath();
                         ctx.shadowBlur = 0;
-                    }
+                    });
                 }
 
                 function updateScoreUI() {
-                    scoreUI.textContent = `スコア: ${score}`;
+                    scoreUI.textContent = `Punktestand: ${score}`;
                 }
 
                 function spawnNewRow() {
                     const newHue = Math.floor(Math.random() * 360);
                     const newRow = Array.from(
-                        {
-                            length: cols
-                        },
+                        { length: cols },
                         (_, c) => ({
                             x: c * brickW,
                             y: 0,
@@ -348,11 +342,11 @@
                         })
                     );
                     bricks.unshift(newRow);
-                    for (let r = 0; r < bricks.length; r++) {
-                        for (let c = 0; c < bricks[r].length; c++) {
-                            bricks[r][c].y = r * brickH + 60;
-                        }
-                    }
+                    bricks.forEach((row, r) => {
+                        row.forEach((b) => {
+                            b.y = r * brickH + 60;
+                        });
+                    });
                 }
 
                 function collisionBall(ball) {
@@ -361,7 +355,11 @@
                     if (ball.x + ball.r > W || ball.x - ball.r < 0) ball.dx *= -1;
                     if (ball.y - ball.r < 0) ball.dy *= -1;
                     if (ball.y + ball.r > H) return;
-                    if (ball.y + ball.r > paddle.y && ball.x > paddle.x && ball.x < paddle.x + paddle.w) {
+                    if (
+                        ball.y + ball.r > paddle.y &&
+                        ball.x > paddle.x &&
+                        ball.x < paddle.x + paddle.w
+                    ) {
                         ball.dy *= -1;
                         ball.dx = ((ball.x - (paddle.x + paddle.w / 2)) / (paddle.w / 2)) * ball.speed;
                     }
@@ -426,7 +424,11 @@
                     for (let i = 0; i < items.length; i++) {
                         const it = items[i];
                         it.y += it.dy;
-                        if (it.y + it.size > paddle.y && it.x > paddle.x && it.x < paddle.x + paddle.w) {
+                        if (
+                            it.y + it.size > paddle.y &&
+                            it.x > paddle.x &&
+                            it.x < paddle.x + paddle.w
+                        ) {
                             balls.push({
                                 x: paddle.x + paddle.w / 2,
                                 y: paddle.y - paddle.h,
@@ -463,8 +465,8 @@
                     cancelAnimationFrame(animationId);
                     scoreUI.style.display = "none";
                     gameOverMsg.textContent = won
-                        ? `勝利！スコア: ${score}`
-                        : `ゲームオーバー！スコア: ${score}`;
+                        ? `Gewonnen! Punktestand: ${score}`
+                        : `Game Over! Punktestand: ${score}`;
                     gameOverUI.style.display = "flex";
                 }
 
@@ -473,7 +475,12 @@
                         const rect = canvas.getBoundingClientRect();
                         const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
                         const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-                        if (y > paddle.y && y < paddle.y + paddle.h && x > paddle.x && x < paddle.x + paddle.w) {
+                        if (
+                            y > paddle.y &&
+                            y < paddle.y + paddle.h &&
+                            x > paddle.x &&
+                            x < paddle.x + paddle.w
+                        ) {
                             dragging = true;
                             dragOffset = x - paddle.x;
                         }
@@ -499,17 +506,21 @@
                 });
                 shareBtn.addEventListener("click", () => {
                     const url = encodeURIComponent(window.location.href);
-                    const message = encodeURIComponent(`私のスコア: ${score}点！`);
+                    const message = encodeURIComponent(`Mein Punktestand: ${score} Punkte!`);
                     if (navigator.share) {
                         navigator
                             .share({
-                                title: "ブロックブレイカー",
+                                title: "Block-Brecher",
                                 text: message,
                                 url: url
                             })
-                            .catch(() => alert("共有がキャンセルされたか失敗しました。"));
+                            .catch(() =>
+                                alert("Teilen wurde abgebrochen oder ist fehlgeschlagen.")
+                            );
                     } else {
-                        navigator.clipboard.writeText(url).then(() => alert("リンクがクリップボードにコピーされました！"));
+                        navigator.clipboard
+                            .writeText(url)
+                            .then(() => alert("Link wurde in die Zwischenablage kopiert!"));
                     }
                 });
                 canvas.addEventListener("contextmenu", (e) => e.preventDefault());
@@ -533,37 +544,37 @@
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
             ">
             <h2 style="font-size: 20px; margin-bottom: 1rem; color: #4facfe; font-family: &quot;Noto Sans KR&quot;, sans-serif;">
-                ❓ よくある質問 (FAQ)
+                ❓ Häufig gestellte Fragen (FAQ)
             </h2>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q1. ブロックブレイカーはどう遊ぶの？</strong><br />
-                A. パドルをドラッグしてボールを跳ね返し、すべてのブロックを壊そう！ボールを落とさないように注意しよう。
+                <strong>F1. Wie spiele ich Block-Brecher?</strong><br />
+                A. Ziehe das Paddle, um den Ball abprallen zu lassen, und zerstöre alle Blöcke! Achte darauf, den Ball nicht fallen zu lassen.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q2. パドルの操作方法は？</strong><br />
-                A. マウスや指でパドルを左右にドラッグして操作します。PCでもモバイルでも快適に動作します。
+                <strong>F2. Wie steuere ich das Paddle?</strong><br />
+                A. Ziehe das Paddle mit der Maus oder deinem Finger nach links und rechts. Es funktioniert sowohl auf dem PC als auch mobil reibungslos.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q3. 黄色い丸いものは何？</strong><br />
-                A. パワーアップです！パドルでキャッチして、追加のボールを生成したりスコアを上げたりしよう。
+                <strong>F3. Was sind die gelben Kugeln?</strong><br />
+                A. Das sind Power-ups! Fange sie mit dem Paddle ein, um zusätzliche Bälle zu erzeugen oder deinen Punktestand zu erhöhen.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q4. ゲームはいつ終了するの？</strong><br />
-                A. すべてのボールを失うとゲームオーバーです。スコアが表示され、再スタートや共有ができます。
+                <strong>F4. Wann endet das Spiel?</strong><br />
+                A. Wenn alle Bälle verloren gehen, ist das Spiel vorbei. Dein Punktestand wird angezeigt und du kannst neu starten.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q5. スコアはどう共有するの？</strong><br />
-                A. ゲームオーバー後に<strong>「共有」</strong>ボタンを押します。リンクをコピーするか、デバイスの共有機能を使えます。
+                <strong>F5. Wie teile ich meinen Punktestand?</strong><br />
+                A. Klicke nach dem Game Over auf den <strong>„Teilen“</strong>-Button. Du kannst den Link kopieren oder die Geräte-Sharing-Funktion verwenden.
             </div>
 
             <div>
-                <strong>Q6. 他のゲームはどこで探せるの？</strong><br />
-                A. 上にスクロールして<strong>「他のゲーム」</strong>をクリックすると、ブラウザ用ゲームの一覧が表示されます！
+                <strong>F6. Wo finde ich weitere Spiele?</strong><br />
+                A. Scrolle hoch und klicke auf <strong>„Weitere Spiele“</strong>, um die ganze Sammlung anzusehen!
             </div>
         </section>
     </body>

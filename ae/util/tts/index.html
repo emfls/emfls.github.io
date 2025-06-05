@@ -1,32 +1,32 @@
 <!doctype html>
-<html lang="ja">
+<html lang="ar" dir="rtl">
     <head>
         <meta charset="UTF-8" />
-        <title>テキスト音声変換（TTS）– オンライン文書読み上げツール</title>
+        <title>تحويل النص إلى صوت (TTS) – أداة قراءة المستندات عبر الإنترنت</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="テキスト・文書・記事を高品質な音声に変換し、MP3としてダウンロードできます。高速・無料・100%ブラウザ内処理。アップロード不要、プライバシー保護。" />
+            content="حوّل النصوص والمستندات والمقالات إلى صوت عالي الجودة وقم بتنزيلها كملف WAV. سريع ومجاني ومعالجة 100% داخل المتصفح. لا حاجة للتحميل، وضمان الخصوصية." />
         <meta
             name="keywords"
-            content="テキスト音声変換, TTS, 文書読み上げ, MP3 TTS, 記事読み上げ, オンラインTTS, ブラウザ, 無料, アップロード不要" />
+            content="تحويل نص إلى صوت, TTS, قراءة المستندات, نص إلى صوت WAV, قراءة المقالات, TTS عبر الإنترنت, متصفح, مجاني, بدون تحميل" />
         <meta name="author" content="Itagi" />
-        <meta name="language" content="ja" />
+        <meta name="language" content="ar" />
         <link rel="canonical" href="https://emfls.github.io/ae/util/tts/" />
         <link rel="icon" href="https://emfls.github.io/icon-192.png" />
         <!-- Open Graph / Twitter -->
-        <meta property="og:title" content="テキスト音声変換（TTS）– オンライン文書読み上げツール" />
+        <meta property="og:title" content="تحويل النص إلى صوت (TTS) – أداة قراءة المستندات عبر الإنترنت" />
         <meta
             property="og:description"
-            content="テキスト・記事・文書を音声に変換してMP3としてダウンロード。全てブラウザ内処理、無料、アップロード不要。" />
+            content="حوّل النصوص والمستندات والمقالات إلى صوت واستمع إليها أو قم بتنزيلها كملف WAV. كل المعالجة تتم داخل المتصفح، مجانًا وبدون تحميل." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://emfls.github.io/ae/util/tts/" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="テキスト音声変換（TTS）– オンライン文書読み上げツール" />
+        <meta name="twitter:title" content="تحويل النص إلى صوت (TTS) – أداة قراءة المستندات عبر الإنترنت" />
         <meta
             name="twitter:description"
-            content="テキスト・記事・文書を音声に変換してMP3としてダウンロード。全てブラウザ内処理、無料、アップロード不要。" />
+            content="حوّل النصوص والمستندات والمقالات إلى صوت واستمع إليها أو قم بتنزيلها كملف WAV. جميع العمليات تتم محليًا داخل المتصفح، مجانًا وبدون تحميل." />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -105,11 +105,13 @@
                 display: flex;
                 gap: 8px;
                 margin-bottom: 8px;
+                align-items: center;
             }
             .options-row label {
                 font-size: 0.98em;
                 color: #6c57d6;
                 font-weight: 500;
+                white-space: nowrap;
             }
             select,
             input[type="range"] {
@@ -124,6 +126,7 @@
                 margin-left: 7px;
                 font-size: 0.96em;
                 color: #4b4699;
+                white-space: nowrap;
             }
             .action-btn {
                 background: var(--main);
@@ -209,41 +212,41 @@
     </head>
     <body>
         <div class="container">
-            <div class="logo">🔊 テキスト音声変換（TTS）ツール</div>
+            <div class="logo">🔊 أداة تحويل النص إلى صوت (TTS)</div>
             <div class="desc">
-                テキスト・ニュース・文書を自然な音声に変換します。<br />
-                ブラウザで再生またはMP3形式でダウンロードできます。<br />
+                حوّل النصوص والمقالات والمستندات إلى صوت طبيعي.<br />
+                استمع إليه داخل المتصفح أو قم بتنزيله كملف WAV.<br />
                 <span style="color: #735edc; font-size: 0.97em"
-                    >すべての処理はローカルで行われ、テキストは絶対にアップロードされません。</span
+                    >جميع المعالجة تتم محليًا داخل المتصفح، ولا يتم رفع النصوص أبدًا.</span
                 >
             </div>
             <div class="form-row">
-                <label for="ttsText">変換するテキスト</label>
-                <textarea id="ttsText" placeholder="テキスト・ニュース・文書を入力または貼り付けてください..."></textarea>
+                <label for="ttsText">النص المراد تحويله</label>
+                <textarea id="ttsText" placeholder="أدخل أو الصق النص أو المقال أو المستند هنا..."></textarea>
             </div>
             <div class="form-row options-row">
-                <label for="voice">音声選択</label>
+                <label for="voice">اختر الصوت</label>
                 <select id="voice"></select>
-                <label for="rate">速度 <span class="slider-label" id="rateVal">1.0倍</span></label>
+                <label for="rate">السرعة <span class="slider-label" id="rateVal">1.0×</span></label>
                 <input type="range" id="rate" min="0.5" max="2" step="0.05" value="1" />
-                <label for="pitch">ピッチ <span class="slider-label" id="pitchVal">1.0</span></label>
+                <label for="pitch">النبرة <span class="slider-label" id="pitchVal">1.0</span></label>
                 <input type="range" id="pitch" min="0.5" max="2" step="0.05" value="1" />
             </div>
-            <button class="action-btn" id="speakBtn">音声再生</button>
+            <button class="action-btn" id="speakBtn">تشغيل الصوت</button>
             <button class="action-btn" id="downloadBtn" style="background: #3a256c; margin-top: 4px">
-                MP3ダウンロード
+                تنزيل WAV
             </button>
             <audio controls id="audioPlayer" class="tts-audio" style="display: none"></audio>
             <div id="ttsMsg"></div>
             <div class="footer">
-                音声と品質はご利用のブラウザや端末によって異なります。<br />
-                <b>ヒント:</b> 長い文書は段落ごとに分割してご利用ください。<br />
-                <span style="color: #494ca4">プライバシーは完全に保護されます – テキストはアップロードされません。</span>
+                قد تختلف جودة الصوت حسب المتصفح والجهاز المستخدم.<br />
+                <b>تلميح:</b> لتجنب المشاكل مع النصوص الطويلة، قم بتقسيمها إلى فقرات واستخدمها تدريجيًا.<br />
+                <span style="color: #494ca4">خصوصيتك مضمونة – لا يتم حفظ أو إرسال النصوص أبدًا.</span>
             </div>
         </div>
-        <a href="../" id="backBtn">他のツールを見る</a>
+        <a href="../" id="backBtn">عرض أدوات أخرى</a>
         <script>
-            // 音声選択
+            // إعداد قائمة الأصوات
             const ttsText = document.getElementById("ttsText");
             const voiceSelect = document.getElementById("voice");
             const rateInput = document.getElementById("rate");
@@ -259,7 +262,7 @@
                 voiceSelect.innerHTML = "";
                 const voices = window.speechSynthesis
                     .getVoices()
-                    .filter((v) => v.localService || v.lang.startsWith("ja") || v.lang.startsWith("en"));
+                    .filter((v) => v.localService || v.lang.startsWith("ja") || v.lang.startsWith("en") || v.lang.startsWith("ar"));
                 voices.forEach((voice, i) => {
                     const opt = document.createElement("option");
                     opt.value = i;
@@ -273,16 +276,16 @@
             }
 
             rateInput.oninput = () => {
-                rateVal.textContent = rateInput.value + "倍";
+                rateVal.textContent = rateInput.value + "×";
             };
             pitchInput.oninput = () => {
                 pitchVal.textContent = pitchInput.value;
             };
 
-            // 音声再生
+            // تشغيل الصوت
             speakBtn.onclick = function () {
                 if (!ttsText.value.trim()) {
-                    ttsMsg.innerHTML = '<div class="msg-error">変換するテキストを入力してください。</div>';
+                    ttsMsg.innerHTML = '<div class="msg-error">يرجى إدخال النص المراد تحويله أولاً.</div>';
                     return;
                 }
                 ttsMsg.innerHTML = "";
@@ -297,14 +300,13 @@
                 window.speechSynthesis.speak(utter);
             };
 
-            // MP3ダウンロード（ブラウザ内で音声録音: WAV形式）
+            // تنزيل WAV داخل المتصفح
             downloadBtn.onclick = async function () {
                 if (!ttsText.value.trim()) {
-                    ttsMsg.innerHTML = '<div class="msg-error">変換するテキストを入力してください。</div>';
+                    ttsMsg.innerHTML = '<div class="msg-error">يرجى إدخال النص المراد تحويله أولاً.</div>';
                     return;
                 }
                 ttsMsg.innerHTML = "";
-                // MediaRecorderによる録音（Chrome/Edge対応）
                 try {
                     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                     const dest = audioCtx.createMediaStreamDestination();
@@ -315,7 +317,7 @@
                     utter.rate = parseFloat(rateInput.value);
                     utter.pitch = parseFloat(pitchInput.value);
 
-                    // オーディオノード接続
+                    // ربط مصدر الصوت بـ MediaRecorder
                     const track = audioCtx.createMediaStreamSource(dest.stream);
                     const recorder = new MediaRecorder(dest.stream);
                     let chunks = [];
@@ -326,7 +328,7 @@
                         audioPlayer.src = url;
                         audioPlayer.style.display = "block";
                         audioPlayer.play();
-                        // 自動ダウンロード
+                        // إنشاء رابط للتنزيل تلقائيًا
                         const a = document.createElement("a");
                         a.href = url;
                         a.download = "tts_audio.wav";
@@ -340,7 +342,7 @@
                     };
                     window.speechSynthesis.speak(utter);
                 } catch (err) {
-                    ttsMsg.innerHTML = `<div class="msg-error">申し訳ありません。このブラウザでは音声録音に対応していません。<br>音声再生後、システムの録音ツールをご利用ください。</div>`;
+                    ttsMsg.innerHTML = `<div class="msg-error">عذرًا، هذا المتصفح لا يدعم تسجيل الصوت داخليًا.<br>يمكنك استخدام أداة تسجيل خارجية بعد تشغيل الصوت.</div>`;
                 }
             };
         </script>
@@ -355,41 +357,41 @@
                 font-family: Arial, sans-serif;
             ">
             <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 14px">
-                ❓ FAQ – テキスト音声変換（TTS）
+                ❓ الأسئلة الشائعة – تحويل النص إلى صوت (TTS)
             </div>
 
             <div style="margin-bottom: 12px">
-                <div style="color: #8f94fb; font-weight: bold">テキストがサーバーにアップロードされますか？</div>
+                <div style="color: #8f94fb; font-weight: bold">هل يتم رفع النصوص إلى الخادم؟</div>
                 <div style="color: #f0f0f0">
-                    いいえ。すべてのテキスト処理はブラウザ内でローカルに行われます。データが送信・保存されることはありません。
+                    لا. تتم جميع عمليات تحويل النص إلى صوت محليًا داخل المتصفح، ولا يتم إرسال أو تخزين أي نص.
                 </div>
             </div>
 
             <div style="margin-bottom: 12px">
-                <div style="color: #8f94fb; font-weight: bold">音声をMP3でダウンロードできますか？</div>
+                <div style="color: #8f94fb; font-weight: bold">هل يمكن تنزيل الصوت بصيغة MP3؟</div>
                 <div style="color: #f0f0f0">
-                    このツールではブラウザの制限上、WAV形式で保存します。MP3が必要な場合は別の変換ツールをご利用ください。
+                    نظرًا لقيود المتصفح، يتم تنزيل الصوت كملف WAV. إذا كنت بحاجة إلى MP3، استخدم أداة تحويل خارجية بعد التنزيل.
                 </div>
             </div>
 
             <div style="margin-bottom: 12px">
-                <div style="color: #8f94fb; font-weight: bold">一部の音声が表示されないのはなぜですか？</div>
+                <div style="color: #8f94fb; font-weight: bold">لماذا لا تظهر بعض الأصوات في القائمة؟</div>
                 <div style="color: #f0f0f0">
-                    利用できる音声は、ご使用のブラウザやOSによって異なります。ChromeやEdgeの使用をお勧めします。
+                    تختلف الأصوات المتاحة حسب المتصفح ونظام التشغيل. يُنصح باستخدام Chrome أو Edge للحصول على أفضل دعم.
                 </div>
             </div>
 
             <div style="margin-bottom: 12px">
-                <div style="color: #8f94fb; font-weight: bold">文字数の制限はありますか？</div>
+                <div style="color: #8f94fb; font-weight: bold">هل هناك حد لعدد الأحرف؟</div>
                 <div style="color: #f0f0f0">
-                    明確な制限はありませんが、長文の場合は再生や保存に失敗することがあります。段落ごとに分けてご利用ください。
+                    لا يوجد حد واضح، لكن النصوص الطويلة جدًا قد تؤدي إلى أخطاء في التشغيل أو التنزيل. يُفضل تقسيمها إلى فقرات.
                 </div>
             </div>
 
             <div style="margin-bottom: 0">
-                <div style="color: #8f94fb; font-weight: bold">モバイルでも使えますか？</div>
+                <div style="color: #8f94fb; font-weight: bold">هل يعمل على الهواتف المحمولة؟</div>
                 <div style="color: #f0f0f0">
-                    はい、対応していますが、再生やダウンロード機能は端末やブラウザによって異なります。
+                    نعم، الأداة متوافقة مع الأجهزة المحمولة، لكن قد تختلف قدرات التشغيل والتنزيل حسب الجهاز والمتصفح.
                 </div>
             </div>
         </section>
