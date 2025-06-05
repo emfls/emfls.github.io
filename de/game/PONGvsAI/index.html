@@ -1,30 +1,30 @@
 <!doctype html>
-<html lang="ja">
+<html lang="de">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="AIと対戦するPONGゲーム！レトロスタイルのPONGでAIに挑戦し、先に10点を獲得しましょう。モバイルとPCで無料で楽しめます。" />
+            content="Spiele PONG gegen eine KI! Fordere die Retro-KI heraus und erreiche als Erster 10 Punkte. Kostenlos und sofort auf Mobilgeräten und PC spielbar." />
         <meta
             name="keywords"
-            content="PONG, PONG AI, PONG ウェブゲーム, ブラウザゲーム, クラシックアーケード, AI PONG, ピンポン, 卓球, 無料ゲーム, ウェブゲーム, モバイルゲーム, 即プレイ, アーケード" />
+            content="PONG, PONG KI, PONG Webspiel, Browsergame, Klassischer Arcade, KI PONG, Tischtennis, kostenloses Spiel, Webgame, Mobilspiel, Direktstart, Arcade" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/de/game/PONGvsAI" />
 
-        <meta property="og:title" content="PONG vs AI – クラシックPONGウェブゲーム" />
+        <meta property="og:title" content="PONG vs KI – Klassisches PONG-Browsergame" />
         <meta
             property="og:description"
-            content="AIに挑戦して先に10点を獲得しよう！ブラウザでレトロなPONGを楽しんでください。ダウンロード不要で即プレイ！" />
+            content="Fordere die KI heraus und sei der Erste, der 10 Punkte erreicht! Spiele Retro-PONG direkt im Browser. Kein Download erforderlich!" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/de/game/PONGvsAI" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="PONG vs AI – クラシックPONGウェブゲーム" />
-        <meta name="twitter:description" content="スマートなAIと対戦するクラシックPONG。今すぐプレイしてスコアを共有しよう！" />
+        <meta name="twitter:title" content="PONG vs KI – Klassisches PONG-Browsergame" />
+        <meta name="twitter:description" content="Spiele PONG gegen eine kluge KI. Teile jetzt deine Punktzahl!" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -41,7 +41,7 @@
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <title>PONG vs AI</title>
+        <title>PONG vs KI</title>
         <style>
             html,
             body {
@@ -206,23 +206,23 @@
 
     <body>
         <div id="container">
-            <div id="gameTitle">PONG vs AI</div>
-            <div id="desc">先に10点取った方が勝ち！</div>
+            <div id="gameTitle">PONG vs KI</div>
+            <div id="desc">Erreiche zuerst 10 Punkte, um zu gewinnen!</div>
             <div id="scoreBoard"></div>
             <canvas id="pong" width="400" height="260"></canvas>
-            <button id="startBtn" onclick="startGame()">ゲーム開始</button>
+            <button id="startBtn" onclick="startGame()">Spiel starten</button>
             <div id="winMsg"></div>
             <div class="gameOverBtns" style="display: none">
-                <button onclick="restartGame()">再スタート</button>
-                <button onclick="shareScore()">共有</button>
+                <button onclick="restartGame()">Neu starten</button>
+                <button onclick="shareScore()">Teilen</button>
             </div>
             <div class="desc-ctrl">
-                操作方法: W/S (左側あなた) ・ 右パドルはAIが操作<br />モバイルでは左側をドラッグしてください。
+                Steuerung: W/S (du spielst links) · Rechtes Paddle wird von der KI gesteuert<br />Auf Mobilgeräten links wischen.
             </div>
         </div>
-        <button id="otherGames" onclick="window.location.href='../'">他のゲーム</button>
+        <button id="otherGames" onclick="window.location.href='../'">Weitere Spiele</button>
         <script>
-            // --- 変数宣言 ---
+            // --- Variablen ---
             const canvas = document.getElementById("pong");
             const ctx = canvas.getContext("2d");
             const scoreBoard = document.getElementById("scoreBoard");
@@ -245,7 +245,7 @@
             let aiLevel = 0.15;
             let rafId;
 
-            // スパークパーティクルシステム
+            // Funkenpartikel-System
             let particles = [];
 
             function spawnSpark(x, y, color = "#ffe287", count = 15) {
@@ -339,17 +339,17 @@
             function stepGame() {
                 leftY += leftMove * paddleSpeed;
                 leftY = Math.max(0, Math.min(canvas.height - paddleHeight, leftY));
-                // AI (右側)
+                // KI (rechts)
                 let targetY = ballY - (paddleHeight - ballSize) / 2;
                 rightY += (targetY - rightY) * aiLevel;
                 rightY = Math.max(0, Math.min(canvas.height - paddleHeight, rightY));
-                // ボール移動
+                // Ballbewegung
                 ballX += ballVelX;
                 ballY += ballVelY;
 
-                // 壁反射
+                // Wandprall
                 if (ballY <= 0 || ballY + ballSize >= canvas.height) ballVelY *= -1;
-                // パドル衝突
+                // Paddle-Kollision
                 let sparkAt = null;
                 if (ballX <= 10 + paddleWidth && ballY + ballSize >= leftY && ballY <= leftY + paddleHeight) {
                     ballX = 10 + paddleWidth;
@@ -371,7 +371,7 @@
                 }
                 if (sparkAt) spawnSpark(sparkAt.x, sparkAt.y, sparkAt.color);
 
-                // 得点およびゲームオーバーチェック
+                // Punkte und Spielende prüfen
                 if (ballX < 0) {
                     rightScore++;
                     updateScore();
@@ -426,27 +426,27 @@
                 gameRunning = false;
                 inGame = false;
                 cancelAnimationFrame(rafId);
-                winMsgDiv.textContent = playerWin ? "あなたの勝ち！ 🎉" : "AIの勝利！ 🤖";
+                winMsgDiv.textContent = playerWin ? "Du hast gewonnen! 🎉" : "Die KI hat gewonnen! 🤖";
                 gameOverBtns.style.display = "block";
             }
 
-            // 共有ボタン
+            // Teilen-Funktion
             function shareScore() {
-                let text = `[PONG vs AI]\n${winMsgDiv.textContent}\nあなたのスコア: ${leftScore}, AI: ${rightScore}\n\nここでプレイ: ${window.location.href}`;
+                let text = `[PONG vs KI]\n${winMsgDiv.textContent}\nDein Score: ${leftScore}, KI: ${rightScore}\n\nJetzt spielen: ${window.location.href}`;
                 if (navigator.share) {
-                    navigator.share({ title: "PONG vs AI", text })
+                    navigator.share({ title: "PONG vs KI", text })
                         .catch(() => {
                             navigator.clipboard.writeText(text);
-                            alert("結果がクリップボードにコピーされました！\n\n" + text);
+                            alert("Ergebnis in die Zwischenablage kopiert!\n\n" + text);
                         });
                 } else {
                     navigator.clipboard.writeText(text).then(() => {
-                        alert("結果がクリップボードにコピーされました！\n\n" + text);
+                        alert("Ergebnis in die Zwischenablage kopiert!\n\n" + text);
                     });
                 }
             }
 
-            // キーボード操作
+            // Tastatursteuerung
             document.addEventListener("keydown", (e) => {
                 if (!inGame) return;
                 if (e.key === "w" || e.key === "W") leftMove = -1;
@@ -458,7 +458,7 @@
                 if (e.key === "s" || e.key === "S") leftMove = 0;
             });
 
-            // モバイルタッチ（左パドルのみ）
+            // Touch-Steuerung (linkes Paddle)
             canvas.addEventListener("touchstart", function (e) {
                 if (!inGame) return;
                 const rect = canvas.getBoundingClientRect();
@@ -483,7 +483,7 @@
                 e.preventDefault();
             });
 
-            // モバイルでのスクロール防止
+            // Scrollen auf Mobilgeräten verhindern
             document.body.addEventListener(
                 "touchmove",
                 function (e) {
@@ -494,7 +494,7 @@
                 }
             );
 
-            // 初期表示
+            // Initialisierung
             updateScore();
             resetVars();
             draw();
@@ -516,36 +516,36 @@
                 line-height: 1.6;
                 color: #f0f0f0;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #f9bc60">❓ よくある質問</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #f9bc60">❓ Häufig gestellte Fragen</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. どのようにプレイしますか？</strong><br />
-                A. 左側のパドルを操作し、AIより先に10点を獲得しましょう。W/Sキーを使うか、モバイルではドラッグで操作できます。
+                <strong>F1. Wie spiele ich?</strong><br />
+                A. Steuere das linke Paddle, um gegen die KI zu spielen. Sei der Erste, der 10 Punkte erreicht – drücke W/S oder wische auf Mobilgeräten.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. 操作方法は何ですか？</strong><br />
-                A. PCではWキー（上）とSキー（下）を使用します。モバイルでは画面左側を指でドラッグしてください。
+                <strong>F2. Wie steuere ich das Paddle?</strong><br />
+                A. Auf dem PC benutzt du die Tasten W (nach oben) und S (nach unten). Auf Mobilgeräten wische auf der linken Seite des Bildschirms.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. AIはどのように動作しますか？</strong><br />
-                A. AIはボールを追跡し、自動でパドルを操作します。ボール速度が速くなるほどAIの難易度も上がります。
+                <strong>F3. Wie funktioniert die KI?</strong><br />
+                A. Die KI verfolgt den Ball automatisch. Je schneller der Ball wird, desto schwieriger wird es, die KI zu schlagen.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. 勝利または敗北したらどうなりますか？</strong><br />
-                A. 勝利または敗北のメッセージが表示されます。その後、再スタートしたりスコアを共有したりできます。
+                <strong>F4. Was passiert, wenn ich gewinne oder verliere?</strong><br />
+                A. Eine Sieg- oder Niederlagenmeldung erscheint. Dann kannst du neu starten oder dein Ergebnis teilen.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. 結果をどうやって共有できますか？</strong><br />
-                A. 「共有」ボタンを押すとスコアがコピーされ、友達と共有できます。
+                <strong>F5. Wie teile ich mein Ergebnis?</strong><br />
+                A. Klicke auf „Teilen“, um deinen Score zu kopieren und mit Freunden zu teilen.
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. モバイル対応ですか？</strong><br />
-                A. はい、モバイルおよびデスクトップのブラウザ両方に最適化されています。
+                <strong>F6. Ist das Spiel mobilfreundlich?</strong><br />
+                A. Ja, das Spiel ist sowohl auf Mobilgeräten als auch auf Desktop-Browsern optimiert.
             </div>
         </section>
     </body>

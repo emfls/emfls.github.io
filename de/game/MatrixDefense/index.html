@@ -1,30 +1,32 @@
 <!doctype html>
-<html lang="ja">
+<html lang="de">
     <head>
         <meta charset="UTF-8" />
-        <title>マトリックスディフェンス</title>
+        <title>Matrix Defense</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <meta
             name="description"
-            content="Matrix Defenseでロボットのウェーブから基地を守ろう！プラズマキャノンをアップグレードし、できるだけ長く生き残り、友達にハイスコアを挑戦しよう。PCやモバイルのブラウザで無料でプレイ！" />
+            content="Verteidige deine Basis gegen endlose Wellen von Robotern mit Matrix Defense! Rüste deine Plasmakanone auf, überlebe so lange wie möglich und fordere deine Freunde mit deinem Highscore heraus. Kostenlos im Browser auf PC und Mobil spielbar!" />
         <meta
             name="keywords"
-            content="マトリックスディフェンス, アイデルディフェンス, ウェブゲーム, ブラウザゲーム, プラズマキャノン, タレット, レーザー防衛, 無料, 防衛ゲーム, 放置ゲーム, モバイル, PC, オンラインゲーム" />
-        <meta property="og:title" content="マトリックスディフェンス | プラズマ防衛アイドルゲーム" />
+            content="Matrix-Verteidigung, Idle-Defense, Webspiel, Browserspiel, Plasmakanone, Turm, Laserabwehr, kostenlos, Defense-Spiel, Idle-Game, Mobil, PC, Online-Spiel" />
+
+        <meta property="og:title" content="Matrix Defense | Plasmaverteidigungs-Idle-Spiel" />
         <meta
             property="og:description"
-            content="ロボットの無限ウェーブから基地を守るスタイリッシュな放置防衛ブラウザゲーム！キャノンをアップグレードし、どれだけ長く生き残れるか挑戦しよう。" />
+            content="Verteidige deine Basis vor endlosen Robotern in diesem stilvollen Idle-Defense-Browserspiel! Rüste deine Kanone auf und überlebe so lange wie möglich." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://emfls.github.io/de/game/MatrixDefense/" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+
         <meta name="twitter:card" content="summary_large_image" />
-        <meta property="twitter:title" content="マトリックスディフェンス | プラズマ防衛アイドルゲーム" />
+        <meta property="twitter:title" content="Matrix Defense | Plasmaverteidigungs-Idle-Spiel" />
         <meta
             property="twitter:description"
-            content="Matrix Defenseをプレイしよう—究極のプラズマターレット防衛ゲームをブラウザで無料プレイ！" />
+            content="Spiele Matrix Defense – das ultimative Plasmatürm-Defense-Spiel kostenlos im Browser!" />
         <meta property="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <link rel="canonical" href="https://emfls.github.io/de/game/MatrixDefense/" />
 
@@ -246,35 +248,35 @@
     <body>
         <div id="wrap">
             <div id="header">
-                <h1>マトリックスディフェンス</h1>
-                <p>アイドルプラズマ防衛。生き残れ！</p>
+                <h1>Matrix Defense</h1>
+                <p>Idle-Plasma-Verteidigung. Überlebe!</p>
                 <div id="topStatBar">
-                    WAVE <span id="wave">1</span> ゴールド <span id="gold">0</span> ライフ <span id="life">10</span>
+                    WELLE <span id="wave">1</span> GOLD <span id="gold">0</span> LEBEN <span id="life">10</span>
                 </div>
             </div>
             <canvas id="gameCanvas" width="400" height="380"></canvas>
             <div id="upgrades">
                 <button class="upBtn" id="upDmg">
-                    攻撃力<br />
+                    Angriffskraft<br />
                     +<span id="dmgC">65</span>
                 </button>
                 <button class="upBtn" id="upSpd">
-                    連射速度<br />
+                    Feuerrate<br />
                     +<span id="spdC">80</span>
                 </button>
                 <button class="upBtn" id="upRng">
-                    射程<br />
+                    Reichweite<br />
                     +<span id="rngC">80</span>
                 </button>
                 <button class="upBtn" id="upLaser">
-                    レーザー数<br />
+                    Laseranzahl<br />
                     +<span id="laserC">150</span>
                 </button>
             </div>
             <div id="buttonBar">
-                <button class="btn" id="restartBtn" style="display: none">再スタート</button>
-                <button class="btn" id="shareBtn" style="display: none">シェア</button>
-                <a href="../" class="btn other">他のゲーム</a>
+                <button class="btn" id="restartBtn" style="display: none">Neu starten</button>
+                <button class="btn" id="shareBtn" style="display: none">Teilen</button>
+                <a href="../" class="btn other">Andere Spiele</a>
             </div>
         </div>
         <script>
@@ -287,7 +289,7 @@
             let turret, upg, enemies, frame, spawnCD, wave, gold, kills, life, phase, gameover;
             let bossSpawnedInWave, normalSpawnedInWave;
 
-            // touchmoveはキャンバス上のみ！
+            // touchmove nur auf Canvas verhindern
             canvas.addEventListener(
                 "touchmove",
                 (e) => {
@@ -608,7 +610,7 @@
                     ctx.textAlign = "center";
                     ctx.shadowColor = "#fef";
                     ctx.shadowBlur = 9;
-                    ctx.fillText("ゲームオーバー！", W / 2, H / 2 - 22);
+                    ctx.fillText("Game Over!", W / 2, H / 2 - 22);
                     ctx.shadowBlur = 0;
                 }
             }
@@ -637,7 +639,7 @@
             function upgrade(type) {
                 if (upgrading) return;
                 upgrading = true;
-                setTimeout(() => (upgrading = false), 250); // 0.25秒ロック
+                setTimeout(() => (upgrading = false), 250);
 
                 if (gameover) return;
                 let u = upg[type];
@@ -662,16 +664,16 @@
                 initGame();
             };
             document.getElementById("shareBtn").onclick = () => {
-                let shareTxt = `Matrix Defenseをプレイしよう！私はWave ${wave}に到達しました！`;
+                let shareTxt = `Ich habe bei Matrix Defense Welle ${wave} erreicht!`;
                 if (navigator.share) {
                     navigator.share({
-                        title: "マトリックスディフェンス",
+                        title: "Matrix Defense",
                         text: shareTxt,
                         url: location.href
                     });
                 } else {
                     navigator.clipboard.writeText(shareTxt);
-                    alert("リンクがクリップボードにコピーされました！");
+                    alert("Link wurde in die Zwischenablage kopiert!");
                 }
             };
             document.body.addEventListener(
@@ -700,76 +702,76 @@
                 line-height: 1.65;
                 color: #2d3436;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #2577cf">❓ よくある質問</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #2577cf">❓ Häufig gestellte Fragen</h2>
 
-            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">ゲーム紹介</h3>
+            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">Spielvorstellung</h3>
             <dl>
                 <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: 「マトリックスディフェンス」とは何ですか？
+                    F: Was ist "Matrix Defense"?
                 </dt>
                 <dd style="margin-bottom: 12px">
-                    A: 「マトリックスディフェンス」は放置型の防衛ブラウザゲームで、迫りくるロボットのウェーブから基地を守ります。
-                    プラズマキャノンをアップグレードして、できるだけ長く生き残ることが目標です。
+                    A: "Matrix Defense" ist ein Idle-Defense-Browserspiel, in dem du deine Basis gegen Wellen von Robotern verteidigst. Rüste deine Plasmakanone auf, um so lange wie möglich zu überleben.
                 </dd>
 
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ゲームは無料ですか？</dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">F: Ist das Spiel kostenlos?</dt>
                 <dd style="margin-bottom: 12px">
-                    A: はい、完全に無料で楽しめます。ダウンロードやインストールは不要で、ウェブブラウザでそのままプレイ可能です。
-                </dd>
-
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: どのデバイスでプレイできますか？
-                </dt>
-                <dd style="margin-bottom: 12px">A: モバイルとPCの両方のウェブブラウザでプレイできます。</dd>
-            </dl>
-
-            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">ゲーム方法</h3>
-            <dl>
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ゲームの目的は何ですか？</dt>
-                <dd style="margin-bottom: 12px">
-                    A: 敵ロボットが画面下部の基地に到達する前にすべて撃破し、ウェーブを進めて、ライフが0になるまでできるだけ長く生き残ることです。
+                    A: Ja, es ist komplett kostenlos. Kein Download oder Installation nötig – spiele direkt im Browser!
                 </dd>
 
                 <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: ゴールドはどうやって獲得しますか？
+                    F: Auf welchen Geräten kann ich spielen?
                 </dt>
                 <dd style="margin-bottom: 12px">
-                    A: 敵ロボットを撃破するとゴールドが手に入ります。ゴールドはキャノンのアップグレードに使用します。
-                </dd>
-
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: どんなアップグレードがありますか？
-                </dt>
-                <dd style="margin-bottom: 12px">
-                    A: 「攻撃力 (ATK)」「連射速度 (RATE)」「射程 (RNG)」「レーザー数 (LASER)」の4種類をアップグレードできます。
-                </dd>
-
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: ライフが0になるとどうなりますか？
-                </dt>
-                <dd style="margin-bottom: 12px">
-                    A: ライフが0になるとゲームオーバーです。「再スタート」ボタンを押して最初からやり直せます。
+                    A: Es funktioniert auf Mobilgeräten und PC in modernen Browsern.
                 </dd>
             </dl>
 
-            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">トラブルシューティング・その他</h3>
+            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">Spielregeln</h3>
             <dl>
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ゲームが正しく動作しません。</dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">F: Was ist das Ziel des Spiels?</dt>
                 <dd style="margin-bottom: 12px">
-                    A: ブラウザを再読み込みするか、別のブラウザを試してください。また、インターネット接続を確認してください。
-                    続けて問題が発生する場合は、開発者までお問い合わせください。
+                    A: Besiege alle feindlichen Roboter, bevor sie deine Basis erreichen. Kämpfe dich durch Wellen, um so lange wie möglich zu überleben.
                 </dd>
 
                 <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: 最高記録を友達と共有したいです。
+                    F: Wie erhält man Gold?
                 </dt>
                 <dd style="margin-bottom: 12px">
-                    A: ゲームオーバー後に表示される「シェア」ボタンをクリックすると、現在のWAVE記録を共有できます。
+                    A: Beim Besiegen von feindlichen Robotern erhältst du Gold. Gold wird für Turm-Upgrades verwendet.
                 </dd>
 
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: 他のゲームはありますか？</dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
+                    F: Welche Upgrades gibt es?
+                </dt>
                 <dd style="margin-bottom: 12px">
-                    A: はい、「他のゲーム」ボタンをクリックすると、開発者の他のウェブゲームをご覧いただけます。
+                    A: Es gibt Upgrades für "Angriffskraft (ATK)", "Feuerrate (RATE)", "Reichweite (RNG)" und "Laseranzahl (LASER)".
+                </dd>
+
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
+                    F: Was passiert, wenn dein Leben 0 erreicht?
+                </dt>
+                <dd style="margin-bottom: 12px">
+                    A: Wenn dein Leben 0 ist, ist das Spiel vorbei. Drücke "Neu starten", um von vorne zu beginnen.
+                </dd>
+            </dl>
+
+            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">Fehlerbehebung &amp; Sonstiges</h3>
+            <dl>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">F: Das Spiel funktioniert nicht richtig.</dt>
+                <dd style="margin-bottom: 12px">
+                    A: Lade die Seite neu oder versuche einen anderen Browser. Prüfe deine Internetverbindung. Falls das Problem weiterhin besteht, kontaktiere bitte den Entwickler.
+                </dd>
+
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
+                    F: Wie kann ich meinen Highscore teilen?
+                </dt>
+                <dd style="margin-bottom: 12px">
+                    A: Nach dem Game Over klicke auf "Teilen", um deine erreichte Welle mit Freunden zu teilen.
+                </dd>
+
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">F: Gibt es andere Spiele?</dt>
+                <dd style="margin-bottom: 12px">
+                    A: Ja, klicke auf "Andere Spiele", um weitere Browser-Spiele des Entwicklers anzusehen.
                 </dd>
             </dl>
         </section>

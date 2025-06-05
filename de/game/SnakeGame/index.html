@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ja">
+<html lang="de">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>スネークゲーム</title>
+        <title>Snake-Spiel</title>
         <meta name="robots" content="index, follow" />
 
         <!-- Canonical URL -->
@@ -11,25 +11,25 @@
         <!-- SEO Meta -->
         <meta
             name="description"
-            content="クラシックなスネークゲームをオンラインでプレイしよう。エサを食べて長くなり、衝突しないよう気をつけて進めてね！ダウンロード不要ですぐ遊べます。" />
-        <meta name="keywords" content="スネークゲーム, クイックプレイアーケード, 無料ウェブゲーム, スネークプレイ, モバイルスネークゲーム" />
+            content="Spiele das klassische Snake-Spiel online! Sammle Nahrung, wachse und vermeide Kollisionen. Ohne Download direkt im Browser spielen." />
+        <meta name="keywords" content="Snake-Spiel, Quick Play Arcade, kostenloses Webgame, Snake online, mobiles Snake-Spiel" />
         <meta name="author" content="Itagi" />
 
         <!-- Open Graph (Facebook, Kakao, etc) -->
-        <meta property="og:title" content="スネークゲーム – クイックプレイアーケード" />
+        <meta property="og:title" content="Snake-Spiel – Quick Play Arcade" />
         <meta
             property="og:description"
-            content="食べて成長、衝突を避けよう。ブラウザですぐ遊べるクラシックスネークゲーム！" />
+            content="Iss Nahrung, wachse und vermeide Zusammenstöße. Spiele das klassische Snake-Spiel direkt im Browser!" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/de/game/SnakeGame" />
         <meta property="og:type" content="website" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="スネークゲーム – クイックプレイ" />
+        <meta name="twitter:title" content="Snake-Spiel – Quick Play" />
         <meta
             name="twitter:description"
-            content="高速で楽しいスネークゲームを今すぐオンラインでプレイしよう – ログイン不要！" />
+            content="Spiele jetzt das schnelle und spaßige Snake-Spiel online – Keine Anmeldung erforderlich!" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
@@ -206,29 +206,25 @@
 
     <body>
         <h1>
-            <span style="color: #8f94fb">クイックプレイ:</span>
-            <span style="color: #0a0">ス</span><span style="color: #6f6">ネーク</span>
+            <span style="color: #8f94fb">Quick Play:</span>
+            <span style="color: #0a0">S</span><span style="color: #6f6">nake</span>
         </h1>
-        <p class="description">食べて、成長し、衝突を避けよう！行こう！</p>
+        <p class="description">Iss und wachse, vermeide Kollisionen. Los geht’s!</p>
 
         <div class="game-container">
             <canvas id="game" width="300" height="300"></canvas>
-            <button id="start-btn">開始</button>
+            <button id="start-btn">Start</button>
             <div id="game-over"></div>
         </div>
 
         <div class="controls">
             <button class="btn up" onclick="setDirection('ArrowUp')" style="font-size: 26px">▲</button>
-            <button class="btn left" onclick="setDirection('ArrowLeft')" style="font-size: 24px; padding-bottom: 2px">
-                ◀
-            </button>
-            <button class="btn right" onclick="setDirection('ArrowRight')" style="font-size: 24px; padding-bottom: 2px">
-                ▶
-            </button>
+            <button class="btn left" onclick="setDirection('ArrowLeft')" style="font-size: 24px; padding-bottom: 2px">◀</button>
+            <button class="btn right" onclick="setDirection('ArrowRight')" style="font-size: 24px; padding-bottom: 2px">▶</button>
             <button class="btn down" onclick="setDirection('ArrowDown')" style="font-size: 26px">▼</button>
         </div>
 
-        <button class="menu" onclick="goToMain()">📂 他のゲーム</button>
+        <button class="menu" onclick="goToMain()">📂 Weitere Spiele</button>
 
         <script>
             const canvas = document.getElementById("game");
@@ -340,10 +336,10 @@
                 gameOverDiv.innerHTML = "";
 
                 const msg = document.createElement("p");
-                msg.textContent = `あなたのスコア: ${score}`;
+                msg.textContent = `Dein Punktestand: ${score}`;
 
                 const retry = document.createElement("button");
-                retry.textContent = "再挑戦";
+                retry.textContent = "Erneut spielen";
                 retry.className = "restart";
                 retry.style.width = "100px";
                 retry.style.height = "50px";
@@ -356,7 +352,7 @@
                 };
 
                 const share = document.createElement("button");
-                share.textContent = "共有";
+                share.textContent = "Teilen";
                 share.className = "share";
                 share.style.marginTop = "10px";
                 share.style.width = "100px";
@@ -371,26 +367,26 @@
             }
 
             function goToMain() {
-                window.location.href = "/"; // または ''
+                window.location.href = "/"; // oder ''
             }
 
             function shareGame() {
                 const url = window.location.href;
-                const text = `🐍 クイックプレイスネーク - 私のスコア: ${lastScore}\n今すぐプレイ！`;
+                const text = `🐍 Quick Play Snake – Mein Punktestand: ${lastScore}\nSpiele jetzt mit:`;
                 if (navigator.share) {
                     navigator
                         .share({
-                            title: "クイックプレイ: スネーク",
+                            title: "Quick Play: Snake",
                             text,
                             url
                         })
-                        .catch(() => alert("共有に失敗しました。リンクをコピーしてください。"));
+                        .catch(() => alert("Teilen fehlgeschlagen. Bitte kopiere den Link manuell."));
                 } else {
                     const full = `${text}\n${url}`;
                     navigator.clipboard
                         .writeText(full)
-                        .then(() => alert("スコアとリンクがクリップボードにコピーされました！"))
-                        .catch(() => alert(`次のリンクをコピーしてください:\n${full}`));
+                        .then(() => alert("Punktestand und Link wurden in die Zwischenablage kopiert!"))
+                        .catch(() => alert(`Bitte kopiere den folgenden Text:\n${full}`));
                 }
             }
         </script>
@@ -408,36 +404,36 @@
                 line-height: 1.6;
                 color: #f0f0f0;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ よくある質問</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ Häufig gestellte Fragen</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. スネークゲームはどう遊びますか？</strong><br />
-                A. 矢印キー（または画面のボタン）でヘビを動かし、赤いエサを食べると長くなります！
+                <strong>F1. Wie spiele ich das Snake-Spiel?</strong><br />
+                A. Steuere die Schlange mit den Pfeiltasten (oder den angezeigten Buttons) und sammle die rote Nahrung, um länger zu werden!
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. ゲームオーバーになる条件は何ですか？</strong><br />
-                A. 壁にぶつかるか、自分の体に衝突するとゲームオーバーになります。
+                <strong>F2. Wann ist das Spiel vorbei?</strong><br />
+                A. Wenn die Schlange gegen die Wand oder ihren eigenen Körper stößt, ist das Spiel vorbei.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. 再スタートできますか？</strong><br />
-                A. はい！ゲーム終了後、「再挑戦」ボタンを押せばすぐに再開できます。
+                <strong>F3. Kann ich neu starten?</strong><br />
+                A. Ja! Nach einem Game Over drückst du den „Erneut spielen“-Button, um sofort von vorne zu beginnen.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. スコアを共有できますか？</strong><br />
-                A. はい！ゲーム終了後、「共有」ボタンを押してスコアをコピーまたは共有できます。
+                <strong>F4. Kann ich meinen Punktestand teilen?</strong><br />
+                A. Ja! Nach dem Game Over drückst du „Teilen“, um deinen Punktestand zu kopieren oder direkt zu verschicken.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. モバイルにも最適化されていますか？</strong><br />
-                A. もちろんです。画面に表示される矢印ボタンでスマホやタブレットでもプレイできます。
+                <strong>F5. Ist das Spiel auch für Mobilgeräte optimiert?</strong><br />
+                A. Natürlich. Nutze die Pfeil-Buttons auf dem Bildschirm, um auf Smartphone oder Tablet zu spielen.
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. ゲームスピードは変わりますか？</strong><br />
-                A. 現在は固定速度ですが、将来的なアップデートでヘビの長さに応じて速くなる可能性があります。
+                <strong>F6. Ändert sich die Spielgeschwindigkeit?</strong><br />
+                A. Derzeit bleibt die Geschwindigkeit konstant, könnte aber in zukünftigen Updates mit wachsender Schlange steigen.
             </div>
         </section>
     </body>

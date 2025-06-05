@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="ja">
+<html lang="de">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>スピードタップ</title>
+        <title>SpeedTap</title>
         <meta name="robots" content="index, follow" />
 
         <!-- Canonical URL -->
@@ -12,30 +12,30 @@
         <!-- SEO Meta -->
         <meta
             name="description"
-            content="あなたの指の速さはどれくらい？わずか5秒間でできるだけ速くタップしよう！友達に挑戦してリーダーボードに載ろう。無料でモバイル最適化されたウェブゲームです。" />
+            content="Wie schnell sind deine Finger? Tippe 5 Sekunden lang so oft wie möglich! Fordere Freunde heraus und lande in der Bestenliste. Kostenlos und mobil-optimiert." />
         <meta
             name="keywords"
-            content="スピードタップ, タップゲーム, 反応速度ゲーム, 5秒チャレンジ, クリックゲーム, モバイルゲーム, 無料ウェブゲーム, ブラウザゲーム, 速度テスト" />
+            content="SpeedTap, Tipp-Spiel, Reaktionsspiel, 5-Sekunden-Challenge, Klick-Spiel, mobiles Spiel, kostenloses Webgame, Browser-Spiel, Geschwindigkeitstest" />
         <meta name="author" content="Itagi" />
 
         <!-- Open Graph (Facebook, Kakao, Discord) -->
-        <meta property="og:title" content="スピードタップ" />
+        <meta property="og:title" content="SpeedTap" />
         <meta
             property="og:description"
-            content="わずか5秒間でできるだけ速くタップしよう！友達に挑戦してみてね。無料のウェブゲームです！" />
+            content="Tippe 5 Sekunden lang so oft wie möglich! Fordere deine Freunde heraus. Kostenloses Webgame!" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/de/game/SpeedTap" />
         <meta property="og:type" content="website" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="スピードタップ" />
+        <meta name="twitter:title" content="SpeedTap" />
         <meta
             name="twitter:description"
-            content="友達に勝とう！5秒間でできるだけ速くタップしよう！" />
+            content="Sieh, ob du deine Freunde schlagen kannst! Tippe 5 Sekunden lang so schnell wie möglich!" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
-        <!-- Google tag (gtag.js) -->
+        <!-- Google Tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -130,7 +130,7 @@
                 background: #16a085;
             }
 
-            /* 数字ポップ効果 */
+            /* Zahlen-Pop-Effekt */
             .pop {
                 animation: pop 0.2s ease;
             }
@@ -200,16 +200,16 @@
     </head>
 
     <body>
-        <h1>スピードタップ</h1>
-        <p style="margin-top: -10px; margin-bottom: 30px">わずか5秒間でできるだけ速くタップしよう！</p>
+        <h1>SpeedTap</h1>
+        <p style="margin-top: -10px; margin-bottom: 30px">Tippe 5 Sekunden lang so schnell wie möglich!</p>
 
-        <div id="tapZone">タップして開始</div>
+        <div id="tapZone">Tippe zum Starten</div>
 
         <div id="result"></div>
 
         <div class="button-group" id="afterButtons" style="display: none">
-            <button id="restartBtn">再スタート</button>
-            <button id="shareBtn">共有する</button>
+            <button id="restartBtn">Neu starten</button>
+            <button id="shareBtn">Teilen</button>
         </div>
 
         <script>
@@ -236,7 +236,7 @@
                 taps = 0;
                 isPlaying = true;
                 result.textContent = "";
-                tapZone.textContent = "Go!";
+                tapZone.textContent = "Los!";
                 tapZone.style.pointerEvents = "auto";
                 tapZone.style.fontSize = "2rem";
                 tapZone.classList.remove("pop");
@@ -244,11 +244,11 @@
 
                 timer = setTimeout(() => {
                     isPlaying = false;
-                    tapZone.textContent = "⏰ 時間切れ！";
+                    tapZone.textContent = "⏰ Zeit abgelaufen!";
                     tapZone.style.pointerEvents = "none";
-                    tapZone.style.fontSize = "2rem"; // サイズリセット
-                    tapZone.classList.remove("pop"); // アニメーション解除
-                    result.textContent = `5秒間に ${taps} 回タップしました！`;
+                    tapZone.style.fontSize = "2rem";
+                    tapZone.classList.remove("pop");
+                    result.textContent = `Du hast in 5 Sekunden ${taps} Taps erzielt!`;
                     afterButtons.style.display = "flex";
                 }, 5000);
             }
@@ -261,15 +261,15 @@
                     tapZone.textContent = `${taps}`;
                     updateFontSize();
 
-                    // アニメーション再適用
+                    // Animation neu triggern
                     tapZone.classList.remove("pop");
-                    void tapZone.offsetWidth; // 強制リフロー
+                    void tapZone.offsetWidth; // Reflow erzwingen
                     tapZone.classList.add("pop");
                 }
             });
 
             restartBtn.addEventListener("click", () => {
-                tapZone.textContent = "タップして開始";
+                tapZone.textContent = "Tippe zum Starten";
                 result.textContent = "";
                 tapZone.style.fontSize = "2rem";
                 tapZone.classList.remove("pop");
@@ -278,20 +278,20 @@
             });
 
             shareBtn.addEventListener("click", async () => {
-                const shareText = `💥 5秒間に ${taps} 回タップしました！\n挑戦してみてね: ${window.location.href}`;
+                const shareText = `💥 Ich habe in 5 Sekunden ${taps} Taps geschafft! Fordere mich heraus: ${window.location.href}`;
                 if (navigator.share) {
                     try {
                         await navigator.share({
-                            title: "スピードタップチャレンジ",
+                            title: "SpeedTap-Challenge",
                             text: shareText,
                             url: window.location.href
                         });
                     } catch {
-                        alert("共有がキャンセルされたか失敗しました。");
+                        alert("Teilen wurde abgebrochen oder ist fehlgeschlagen.");
                     }
                 } else {
                     await navigator.clipboard.writeText(shareText);
-                    alert("スコアとリンクがクリップボードにコピーされました！");
+                    alert("Punktestand und Link wurden in die Zwischenablage kopiert!");
                 }
             });
         </script>
@@ -312,40 +312,40 @@
                 cursor: pointer;
             "
             onclick="window.location.href='/'">
-            📂 他のゲーム
+            📂 Andere Spiele
         </button>
 
         <section style="max-width: 320px; width: 100%; margin: 48px auto 24px auto; font-family: 'Arial', sans-serif; font-size: 14px; background: #1e1e1e; border-radius: 18px; box-shadow: 0 6px 24px #1236; padding: 20px; line-height: 1.6; color: #f0f0f0;">
-          <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb;">❓ よくある質問</h2>
+          <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb;">❓ Häufig gestellte Fragen</h2>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q1. スピードタップはどう遊びますか？</strong><br/>
-            A. 緑のゾーンを5秒間できるだけ速くタップしてください。タップ数がスコアになります。
+            <strong>F1. Wie spielt man SpeedTap?</strong><br/>
+            A. Tippe 5 Sekunden lang so schnell wie möglich auf den grünen Bereich. Deine Tipp-Anzahl ist dein Ergebnis.
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q2. 一ラウンドはどれくらい続きますか？</strong><br/>
-            A. 正確に5秒間続きます。時間が来るとすぐに結果が表示されます。
+            <strong>F2. Wie lange dauert eine Runde?</strong><br/>
+            A. Eine Runde dauert genau 5 Sekunden. Danach wird sofort dein Ergebnis angezeigt.
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q3. ゲームを再スタートするにはどうすればいいですか？</strong><br/>
-            A. 「再スタート」ボタンを押すとすぐにもう一度挑戦できます。
+            <strong>F3. Wie starte ich neu?</strong><br/>
+            A. Drücke einfach den „Neu starten“-Button, um sofort wieder von vorne zu beginnen.
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q4. スコアを共有できますか？</strong><br/>
-            A. はい！「共有する」ボタンを押すとスコアとリンクをコピーして友達に送れます。
+            <strong>F4. Kann ich meinen Punktestand teilen?</strong><br/>
+            A. Ja! Drücke den „Teilen“-Button, um deinen Punktestand und den Link zu kopieren und mit Freunden zu teilen.
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q5. タップ速度は表示に影響しますか？</strong><br/>
-            A. はい！タップするたびに文字が少し大きくなり、視覚的なフィードバックが得られます。
+            <strong>F5. Verändert sich die Schriftgröße beim Tippen?</strong><br/>
+            A. Ja, jedes Tippen vergrößert kurz die Zahl als visuelles Feedback.
           </div>
 
           <div style="margin-bottom: 0;">
-            <strong>Q6. モバイルでもスムーズに遊べますか？</strong><br/>
-            A. もちろんです。タッチ入力に対応しているのでスマホやタブレットでも問題なく動作します。
+            <strong>F6. Funktioniert es auf Mobilgeräten?</strong><br/>
+            A. Natürlich. Touch-Eingaben werden unterstützt, sodass du auch auf Smartphone oder Tablet spielen kannst.
           </div>
         </section>
     </body>

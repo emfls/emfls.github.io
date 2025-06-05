@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="ja">
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <title>サバイバーミニ</title>
+    <title>SurvivorMini</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-    <!-- Google tag (gtag.js) -->
+    <!-- Google Tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -19,32 +19,32 @@
       async
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
       crossorigin="anonymous"></script>
-    <!-- SEO & Social meta -->
+    <!-- SEO & Social Meta -->
     <meta
       name="description"
-      content="サバイバーミニは高速アクションブラウザゲームです。モンスターをかわし、レベルアップしてできるだけ長く生き延びましょう！無料でプレイでき、ダウンロード不要です。" />
+      content="SurvivorMini ist ein rasantes Action-Browsergame. Weiche Monstern aus, steige Level auf und überlebe so lange wie möglich! Kostenlos spielbar, kein Download nötig." />
     <meta
       name="keywords"
-      content="サバイバー, ミニゲーム, アクションゲーム, サバイバル, シューター, アーケード, ブラウザゲーム, 無料, サバイブ, ウェーブ, シューティングゲーム, ゾンビ, アーケード, ウェブゲーム" />
+      content="Survivor, Mini-Spiel, Actionspiel, Survival, Shooter, Arcade, Browsergame, kostenlos, Überleben, Welle, Shooting-Spiel, Zombie, Arcade, Webgame" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ja" />
+    <meta name="language" content="de" />
     <meta name="theme-color" content="#181a20" />
     <link rel="canonical" href="https://emfls.github.io/de/game/SurvivorMini/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
     <!-- Open Graph (Facebook, Kakao, etc) -->
-    <meta property="og:title" content="サバイバーミニ – アクションウェブゲーム" />
+    <meta property="og:title" content="SurvivorMini – Action-Browsergame" />
     <meta
       property="og:description"
-      content="次々と押し寄せるウェーブの中、どれだけ長く生き延びられますか？高速アクションブラウザゲームでレベルアップし、ハイスコアを目指しましょう！" />
+      content="Wie lange kannst du in den Wellen überleben? Level up, setze deine Highscore und besiege die endlosen Feinde!" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/de/game/SurvivorMini/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="サバイバーミニ – アクションウェブゲーム" />
+    <meta name="twitter:title" content="SurvivorMini – Action-Browsergame" />
     <meta
       name="twitter:description"
-      content="ウェーブを耐え抜き、ハイスコアを競おう！100%無料のブラウザアクションゲームです。" />
+      content="Halte die Wellen stand und erreiche deine Highscore! 100 % kostenlos im Browser spielbar." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <style>
       html,
@@ -144,7 +144,7 @@
         letter-spacing: 0.2px;
         text-shadow: 0 2px 8px #000a;
       }
-      /* === 中央ポップアップデザイン === */
+      /* === Zentrales Popup-Design === */
       .centerPopup {
         display: none;
         position: absolute;
@@ -197,7 +197,7 @@
       .popupBtn:active {
         background: #1a75ff;
       }
-      /* === ジョイスティックUI改善 === */
+      /* === Joystick-UI-Optimierung === */
       #joystickWrap {
         position: absolute;
         bottom: 24px;
@@ -255,8 +255,8 @@
       <canvas id="game" width="375" height="500"></canvas>
       <div id="hud">
         <div id="stats">
-          <span id="score">得点:0</span>
-          <span id="wave">ウェーブ:1</span>
+          <span id="score">Punkte:0</span>
+          <span id="wave">Welle:1</span>
           <span id="time">0:00</span>
         </div>
         <div id="barwrap">
@@ -288,7 +288,7 @@
         cursor: pointer;
       "
       onclick="window.location.href='/'">
-      📂 他のゲーム
+      📂 Andere Spiele
     </button>
     <script>
       const W = 375,
@@ -344,7 +344,7 @@
       }
       reset();
 
-      // ====== 円形タッチジョイスティック＋キーボード対応 ======
+      // ===== Joystick & Tastatur =====
       let dragging = false;
       function setJoystickActive(active) {
         if (active) {
@@ -401,7 +401,7 @@
         }
       };
 
-      // PCのキーボードも対応（ポップアップ表示中は入力無効）
+      // Tastatur fürs Spiel
       window.addEventListener("keydown", (e) => {
         if (state.pause || state.gameover) return;
         if (e.key === "ArrowUp") state.input.y = -1;
@@ -414,7 +414,7 @@
         if (["ArrowLeft", "ArrowRight"].includes(e.key)) state.input.x = 0;
       });
 
-      // ========== メインループ ==========
+      // ===== Hauptschleife =====
       function loop() {
         if (!state.gameover && !state.pause) update();
         draw();
@@ -422,11 +422,11 @@
       }
       loop();
 
-      // ========== 更新 ==========
+      // ===== Update =====
       function update() {
         state.tick++;
         state.time = (state.tick / 60) | 0;
-        // 移動
+        // Bewegung
         let dx = state.input.x + state.joy.x,
           dy = state.input.y + state.joy.y;
         let len = Math.hypot(dx, dy);
@@ -436,14 +436,13 @@
           state.player.x = Math.max(state.player.r, Math.min(W - state.player.r, state.player.x));
           state.player.y = Math.max(state.player.r, Math.min(H - state.player.r, state.player.y));
         }
-        // 弾丸：最も近い敵に自動誘導
+        // Automatisches Schießen auf den nächsten Gegner
         state.player.fire++;
         if (state.player.fire >= state.player.fireRate) {
           for (let i = 0; i < state.player.bullets; i++) {
             let target = state.mobs.length
               ? state.mobs.reduce((a, b) =>
-                  Math.hypot(a.x - state.player.x, a.y - state.player.y) <
-                  Math.hypot(b.x - state.player.x, b.y - state.player.y)
+                  Math.hypot(a.x - state.player.x, a.y - state.player.y) < Math.hypot(b.x - state.player.x, b.y - state.player.y)
                     ? a
                     : b
                 )
@@ -463,7 +462,7 @@
           }
           state.player.fire = 0;
         }
-        // 弾丸移動／命中判定
+        // Bullets bewegen / Kollision
         state.bullets = state.bullets.filter((b) => {
           b.x += b.vx;
           b.y += b.vy;
@@ -483,7 +482,7 @@
           }
           return true;
         });
-        // 敵のスポーン
+        // Gegner spawnen
         if (state.tick % Math.max(11, 42 - state.wave * 2) === 0) {
           let t = state.wave,
             r = 14 + Math.random() * 8,
@@ -502,7 +501,7 @@
             boss: 0
           });
         }
-        // ボス（1分ごと）
+        // Boss (alle 60 Sekunden)
         if (--state.bosscool <= 0) {
           state.bosscool = 870 + Math.random() * 90;
           let hp = 17 + state.wave * 4;
@@ -520,7 +519,7 @@
             boss: 1
           });
         }
-        // 敵の移動／衝突判定
+        // Gegner bewegen / Kollision mit Spieler
         for (let m of state.mobs) {
           if (m.dead) continue;
           let dx = state.player.x - m.x,
@@ -537,7 +536,7 @@
           }
         }
         state.mobs = state.mobs.filter((m) => !m.dead);
-        // アイテム処理
+        // Items einsammeln
         state.items = state.items.filter((it) => {
           if (Math.hypot(state.player.x - it.x, state.player.y - it.y) < state.player.r + it.r + 7) {
             if (it.type === "heal") state.player.hp = Math.min(state.player.maxhp, state.player.hp + 2);
@@ -558,14 +557,14 @@
           }
           return true;
         });
-        // 経験値／レベルアップ
+        // Erfahrung / Level-Up
         while (state.player.xp >= state.player.xpNext) {
           state.player.xp -= state.player.xpNext;
           state.player.lv++;
           state.player.xpNext = 8 + Math.floor(state.player.lv * 1.6);
           showLevelUp();
         }
-        // ウェーブ更新
+        // Wellen-Update
         state.wave = Math.floor(state.time / 18) + 1;
       }
       function dropExp(m) {
@@ -587,41 +586,41 @@
         }
       }
 
-      // ===== レベルアップ選択 =====
+      // ===== Level-Up Auswahl =====
       function showLevelUp() {
         setJoystickActive(false);
         let upgrades = [
           {
-            name: "発射速度↑",
-            desc: "より速く射撃",
+            name: "Feuerrate ↑",
+            desc: "Schneller schießen",
             act: () => {
               state.player.fireRate = Math.max(13, state.player.fireRate - 6);
             }
           },
           {
-            name: "弾丸数↑",
-            desc: "弾丸数を増やす",
+            name: "Anzahl Projektile ↑",
+            desc: "Mehr Projektile pro Schuss",
             act: () => {
               state.player.bullets = Math.min(6, state.player.bullets + 1);
             }
           },
           {
-            name: "移動速度↑",
-            desc: "移動速度を上げる",
+            name: "Bewegungsgeschw. ↑",
+            desc: "Bewegungsgeschwindigkeit erhöhen",
             act: () => {
               state.player.spd += 0.7;
             }
           },
           {
-            name: "攻撃力↑",
-            desc: "攻撃力を上げる",
+            name: "Angriffskraft ↑",
+            desc: "Schaden erhöhen",
             act: () => {
               state.player.atk += 1;
             }
           },
           {
-            name: "最大体力↑",
-            desc: "最大体力+1かつ回復",
+            name: "Maximale HP ↑",
+            desc: "Maximale Lebenspunkte +1 und Heilen",
             act: () => {
               state.player.maxhp += 1;
               state.player.hp = Math.min(state.player.hp + 1, state.player.maxhp);
@@ -634,7 +633,7 @@
           if (!pick.includes(i)) pick.push(i);
         }
         levelup.innerHTML =
-          `<b>レベルアップ！<br>アップグレードを選択してください</b>
+          `<b>Levelaufstieg!<br>Wähle ein Upgrade</b>
     <div class='popupButtons'>` +
           pick
             .map(
@@ -670,7 +669,7 @@
         setJoystickActive(true);
       };
 
-      // ===== ゲームオーバー =====
+      // ===== Game Over =====
       function gameOver() {
         setJoystickActive(false);
         state.gameover = true;
@@ -678,12 +677,12 @@
           hiscore = state.score;
           localStorage.surv_hi = hiscore;
         }
-        gameover.innerHTML = `<b>ゲームオーバー</b><br>
-    得点: <b>${state.score}</b><br>
-    ウェーブ: <b>${state.wave}</b><br>
-    時間: <b>${Math.floor(state.time / 60)}:${("0" + (state.time % 60)).slice(-2)}</b><br>
-    <span style="font-size:0.9em;color:#bbf;">ハイスコア: ${hiscore}</span><br>
-    <div class="popupButtons"><button class="popupBtn" onclick="restart()">再スタート</button></div>`;
+        gameover.innerHTML = `<b>Spiel Vorbei</b><br>
+    Punkte: <b>${state.score}</b><br>
+    Welle: <b>${state.wave}</b><br>
+    Zeit: <b>${Math.floor(state.time / 60)}:${("0" + (state.time % 60)).slice(-2)}</b><br>
+    <span style="font-size:0.9em;color:#bbf;">Highscore: ${hiscore}</span><br>
+    <div class="popupButtons"><button class="popupBtn" onclick="restart()">Neustart</button></div>`;
         gameover.style.display = "block";
       }
       window.restart = () => {
@@ -691,10 +690,10 @@
         setJoystickActive(true);
       };
 
-      // ========== 描画 ==========
+      // ===== Zeichnen =====
       function draw() {
         ctx.clearRect(0, 0, W, H);
-        // 背景の円
+        // Hintergrundringe
         ctx.save();
         for (let i = 0; i < 7; i++) {
           ctx.beginPath();
@@ -704,7 +703,7 @@
           ctx.stroke();
         }
         ctx.restore();
-        // アイテム
+        // Items
         for (let it of state.items) {
           if (it.type === "exp") {
             ctx.beginPath();
@@ -738,7 +737,7 @@
             ctx.fillText("🧲", it.x - 8, it.y + 6);
           }
         }
-        // 敵
+        // Gegner
         for (let m of state.mobs) {
           ctx.beginPath();
           ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
@@ -750,9 +749,8 @@
             ctx.stroke();
             ctx.font = "bold 12px sans-serif";
             ctx.fillStyle = "#fff";
-            ctx.fillText("ボス", m.x - 16, m.y + 4);
+            ctx.fillText("Boss", m.x - 16, m.y + 4);
           }
-          // HPバー
           if (m.hp < m.maxhp) {
             ctx.fillStyle = "#aaa";
             ctx.fillRect(m.x - m.r, m.y - m.r - 8, m.r * 2, 4);
@@ -760,7 +758,7 @@
             ctx.fillRect(m.x - m.r, m.y - m.r - 8, (m.r * 2 * m.hp) / m.maxhp, 4);
           }
         }
-        // プレイヤー
+        // Spieler
         ctx.beginPath();
         ctx.arc(state.player.x, state.player.y, state.player.r, 0, Math.PI * 2);
         ctx.fillStyle = "#fff";
@@ -768,7 +766,7 @@
         ctx.strokeStyle = "#27e";
         ctx.lineWidth = 4;
         ctx.stroke();
-        // 弾丸
+        // Bullets
         for (let b of state.bullets) {
           ctx.beginPath();
           ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
@@ -779,11 +777,11 @@
           ctx.stroke();
         }
         // HUD
-        scoreEl.textContent = "得点:" + state.score;
-        waveEl.textContent = "ウェーブ:" + state.wave;
+        scoreEl.textContent = "Punkte:" + state.score;
+        waveEl.textContent = "Welle:" + state.wave;
         timeEl.textContent = `${Math.floor(state.time / 60)}:${("0" + (state.time % 60)).slice(-2)}`;
         levelEl.textContent = `Lv.${state.player.lv}`;
-        // HP, XPバー
+        // HP/XP-Leisten
         hpbar.style.width = (100 * state.player.hp) / state.player.maxhp + "%";
         xpbar.style.width = (100 * state.player.xp) / state.player.xpNext + "%";
       }
@@ -799,33 +797,33 @@
         font-family: Arial, sans-serif;
       ">
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">❓ ゲーム紹介</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">❓ Spielübersicht</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          サバイバーミニは高速アクションシューティングゲームです。ゾンビをかわしながらレベルアップし、できるだけ長く生き延びましょう。次々と襲い来る敵を倒し、強力なアップグレードを選択して生存を目指してください！
+          SurvivorMini ist ein rasantes Action-Shooter-Spiel. Weiche den Zombies aus, sammle Erfahrung und steige in den Leveln auf, um so lange wie möglich zu überleben. Besiege Welle um Welle und wähle mächtige Upgrades, um deine Überlebenschancen zu erhöhen!
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🕹️ 操作方法</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🕹️ Steuerung</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          モバイルでは画面下部のジョイスティックを使って移動します。PCでは矢印キー（← ↑ ↓ →）を使用してください。タッチデバイスではジョイスティックが自動表示されます。
+          Auf Mobilgeräten verwendest du den Joystick am unteren Bildschirmrand. Auf dem PC steuerst du mit den Pfeiltasten (← ↑ ↓ →). Der Joystick verschwindet, wenn du pausierst oder das Spiel vorbei ist.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔫 自動射撃？</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔫 Automatisches Zielen</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          はい！プレイヤーは最も近い敵を自動で狙い、射撃します。移動と生存に集中してください。
-        </p>
-      </div>
-      <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📈 レベルアップシステム</h3>
-        <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          敵を倒すと経験値を獲得します。十分な経験値を得るとレベルアップし、3つのランダムアップグレードから1つを選んでキャラクターを強化できます。
+          Dein Held schießt automatisch auf den nächsten Gegner. Konzentriere dich aufs Ausweichen und Überleben!
         </p>
       </div>
       <div style="margin-bottom: 0">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">💾 記録保存</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📈 Level-Up System</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          ハイスコアはブラウザに自動で保存され、ゲームオーバー画面で確認できます。
+          Besiegst du Gegner, erhältst du Erfahrungspunkte. Wenn genug Punkte gesammelt sind, steigst du im Level auf und kannst aus drei zufälligen Upgrades wählen, um deine Fähigkeiten zu verbessern.
+        </p>
+      </div>
+      <div style="margin-top: 12px">
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">💾 Highscore</h3>
+        <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
+          Dein Highscore wird automatisch im Browser gespeichert und auf dem Game-Over-Bildschirm angezeigt.
         </p>
       </div>
     </section>
