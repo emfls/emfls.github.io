@@ -1,32 +1,36 @@
 <!doctype html>
-<html lang="ja">
+<html lang="es">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="オンライン五目並べ（Gomoku）ゲームを楽しもう！友達やAIとこのクラシックボードゲームで腕試し。シンプルで楽しく、モバイルにも最適化。" />
+            content="¡Disfruta del juego de Gomoku en línea! Enfréntate a tus amigos o a la IA en este clásico juego de tablero. Simple, divertido y optimizado para móviles."
+        />
         <meta
             name="keywords"
-            content="五目並べ, GOMOKU, オンラインゲーム, AI, ボードゲーム, 無料, ブラウザゲーム, モバイル, クラシック, 戦略, 黒白, 2人対戦, パズル" />
+            content="Gomoku, cinco en línea, juego en línea, IA, juego de tablero, gratis, navegador, móvil, clásico, estrategia, negro y blanco, dos jugadores, puzzle"
+        />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/es/game/Gomoku" />
 
-        <meta property="og:title" content="五目並べ – 無料オンラインAI五目並べゲーム！" />
+        <meta property="og:title" content="Gomoku – ¡Juego de Gomoku con IA gratis en línea!" />
         <meta
             property="og:description"
-            content="友達または賢いAIと五目並べを対戦しよう。どちらが先に五つ並べるか？ブラウザで無料プレイ！" />
+            content="Enfréntate a tus amigos o a una IA inteligente en Gomoku. ¿Quién colocará cinco en línea primero? ¡Juega gratis en tu navegador!"
+        />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/es/game/Gomoku" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="五目並べ – 無料オンラインAI五目並べゲーム！" />
+        <meta name="twitter:title" content="Gomoku – ¡Juego de Gomoku con IA gratis en línea!" />
         <meta
             name="twitter:description"
-            content="友達またはAIと五目並べを楽しもう！クラシックな五目ボードゲームをオンラインで無料プレイ。" />
+            content="¡Disfruta de Gomoku con tus amigos o con la IA! Juega este clásico juego de tablero gratis en línea."
+        />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
@@ -42,7 +46,7 @@
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <title>五目並べ</title>
+        <title>Gomoku</title>
         <style>
             @import url("https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap");
             :root {
@@ -165,18 +169,18 @@
     </head>
 
     <body>
-        <h1>⚫ 五目並べ ⚪</h1>
+        <h1>⚫ Gomoku ⚪</h1>
         <div id="modeStatus" style="margin-top: -0.6rem; margin-bottom: 1rem; font-size: 1rem; color: #666"></div>
         <div id="board"></div>
 
         <div id="message"></div>
         <div>
-            <button onclick="resetGame()" style="font-weight: bold">再スタート</button>
+            <button onclick="resetGame()" style="font-weight: bold">Reiniciar</button>
             <button
                 onclick="toggleMode()"
                 id="modeBtn"
                 style="position: absolute; top: 2rem; right: 0.5rem; padding: 10px 10px; font-weight: bold">
-                🤖 AI
+                🤖 IA
             </button>
         </div>
 
@@ -192,7 +196,7 @@
 
             function updateModeStatus() {
                 const modeStatus = document.getElementById("modeStatus");
-                modeStatus.textContent = aiMode ? "プレイヤー vs AI" : "プレイヤー対プレイヤー";
+                modeStatus.textContent = aiMode ? "Jugador vs IA" : "Jugador vs Jugador";
             }
 
             function createBoard() {
@@ -223,7 +227,7 @@
                     }
                     cells.push(row);
                 }
-                message.textContent = "⚫ 黒番の番です";
+                message.textContent = "⚫ Es el turno del jugador negro";
             }
 
             function resetGame() {
@@ -235,7 +239,7 @@
 
             function toggleMode() {
                 aiMode = !aiMode;
-                modeBtn.textContent = aiMode ? "👥 2人" : "🤖 AI";
+                modeBtn.textContent = aiMode ? "👥 2 Jugadores" : "🤖 IA";
                 resetGame();
             }
 
@@ -248,12 +252,12 @@
                 const result = checkWin(x, y, currentPlayer);
                 if (result) {
                     highlightWin(result);
-                    message.textContent = currentPlayer === "black" ? "⚫ 黒の勝ち！" : "⚪ 白の勝ち！";
+                    message.textContent = currentPlayer === "black" ? "⚫ ¡Negro gana!" : "⚪ ¡Blanco gana!";
                     gameOver = true;
                     return;
                 }
                 currentPlayer = currentPlayer === "black" ? "white" : "black";
-                message.textContent = currentPlayer === "black" ? "⚫ 黒番の番です" : "⚪ 白番の番です";
+                message.textContent = currentPlayer === "black" ? "⚫ Es el turno del jugador negro" : "⚪ Es el turno del jugador blanco";
                 if (aiMode && currentPlayer === "white") {
                     setTimeout(() => aiTurn(), 300);
                 }
@@ -265,12 +269,12 @@
                 const result = checkWin(x, y, "white");
                 if (result) {
                     highlightWin(result);
-                    message.textContent = "⚪ 白の勝ち！";
+                    message.textContent = "⚪ ¡Blanco gana!";
                     gameOver = true;
                     return;
                 }
                 currentPlayer = "black";
-                message.textContent = "⚫ 黒番の番です";
+                message.textContent = "⚫ Es el turno del jugador negro";
             }
 
             function placeStone(x, y, player) {
@@ -436,7 +440,7 @@
                 border-color: black;
             "
             onclick="window.location.href='/'">
-            他のゲーム
+            Otros juegos
         </button>
         <button
             style="
@@ -453,21 +457,21 @@
                 border-color: black;
             "
             onclick="shareGame()">
-            共有
+            Compartir
         </button>
         <script>
             function shareGame() {
                 const shareData = {
-                    title: "五目並べ",
-                    text: "この素晴らしいAI五目並べゲームを楽しもう！",
+                    title: "Gomoku",
+                    text: "¡Disfruta de este increíble juego de Gomoku con IA!",
                     url: window.location.href
                 };
 
                 if (navigator.share) {
-                    navigator.share(shareData).catch((err) => console.log("Sharing failed", err));
+                    navigator.share(shareData).catch((err) => console.log("Error al compartir", err));
                 } else {
                     navigator.clipboard.writeText(window.location.href);
-                    alert("リンクがクリップボードにコピーされました！");
+                    alert("¡El enlace se ha copiado al portapapeles!");
                 }
             }
         </script>
@@ -485,36 +489,36 @@
                 line-height: 1.6;
                 font-size: 14px;
             ">
-            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ よくある質問 (FAQ)</h2>
+            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ Preguntas frecuentes (FAQ)</h2>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q1. 五目並べとは何ですか？</strong><br />
-                A. 五目並べは、二人のプレイヤーが交互に石を置き、五つの石を一列に並べた方が勝つ古典的な戦略ボードゲームです。
+                <strong>Q1. ¿Qué es Gomoku?</strong><br />
+                A. Gomoku es un juego de tablero clásico en el que dos jugadores alternan colocando piezas y el primero en alinear cinco de sus piezas gana.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q2. どうやって勝ちますか？</strong><br />
-                A. 自分の石（黒または白）が横、縦、または斜めに五つ連続すると勝利です。
+                <strong>Q2. ¿Cómo se gana?</strong><br />
+                A. Para ganar, debes colocar cinco piedras negras o blancas consecutivamente en línea horizontal, vertical o diagonal.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q3. ゲームモードには何がありますか？</strong><br />
-                A. 友達と対戦する「2人プレイ」モードと、AIと競う「AIプレイ」モードがあります。右上の切り替えボタンで変更できます。
+                <strong>Q3. ¿Qué modos de juego hay?</strong><br />
+                A. Hay modo “Jugador vs Jugador” y modo “Jugador vs IA”. Puedes alternar con el botón en la esquina superior derecha.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q4. ゲームを再スタートできますか？</strong><br />
-                A. はい！いつでもボード下の<strong>再スタート</strong>ボタンをクリックして新しいゲームを開始できます。
+                <strong>Q4. ¿Puedo reiniciar la partida?</strong><br />
+                A. ¡Claro! Haz clic en el botón <strong>Reiniciar</strong> para comenzar una nueva partida en cualquier momento.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q5. このゲームはモバイル対応ですか？</strong><br />
-                A. もちろんです。五目並べはPCとモバイルのブラウザの両方で快適に動作します。
+                <strong>Q5. ¿Es compatible con móviles?</strong><br />
+                A. Sí. Gomoku funciona perfectamente tanto en PC como en navegadores móviles.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q6. ゲームをどうやって共有しますか？</strong><br />
-                A. 「共有」ボタンをタップしてリンクをコピーするか（デバイスが対応していれば）共有メニューを開くことができます。
+                <strong>Q6. ¿Cómo comparto el juego?</strong><br />
+                A. Haz clic en <strong>Compartir</strong> para copiar el enlace o abrir el menú de compartir si tu dispositivo lo permite.
             </div>
         </section>
     </body>
