@@ -1,31 +1,35 @@
 <!doctype html>
-<html lang="ja">
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <title>テキスト要約ツール – 長文をすばやく要約！</title>
+    <title>Text-Zusammenfassungstool – Schnell lange Texte zusammenfassen!</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="長文や記事、エッセイを簡単に要約しましょう。無料・プライバシー保護・ブラウザですぐ使える！" />
+      content="Fasse lange Texte, Artikel oder Aufsätze einfach zusammen. Kostenlos, datenschutzfreundlich und direkt im Browser nutzbar!" />
     <meta
       name="keywords"
-      content="テキスト要約, 要約, 自動要約, 記事要約, 無料, オンライン, ブラウザ, アップロード不要" />
+      content="Text-Zusammenfassung, Zusammenfassung, automatische Zusammenfassung, Artikelsummarizer, kostenlos, online, Browser, kein Upload" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ja" />
+    <meta name="language" content="de" />
     <link rel="canonical" href="https://emfls.github.io/de/util/textsummarizer/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <meta property="og:title" content="テキスト要約ツール – 長文をすばやく要約！" />
+    <meta property="og:title" content="Text-Zusammenfassungstool – Schnell lange Texte zusammenfassen!" />
     <meta
       property="og:description"
-      content="記事やドキュメント、エッセイをすぐに要約。アップロード不要・無料・プライバシー保護。" />
+      content="Fasse Artikel, Dokumente und Aufsätze sofort zusammen. Kein Upload nötig, kostenlos und datenschutzfreundlich." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/de/util/textsummarizer/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="テキスト要約ツール – 長文をすばやく要約！" />
-    <meta name="twitter:description" content="長文や記事、エッセイをブラウザで手軽に要約しましょう。" />
+    <meta
+      name="twitter:title"
+      content="Text-Zusammenfassungstool – Schnell lange Texte zusammenfassen!" />
+    <meta
+      name="twitter:description"
+      content="Fasse lange Texte, Artikel oder Aufsätze unkompliziert direkt im Browser zusammen." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-    <!-- Google タグ (gtag.js) -->
+    <!-- Google Tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -163,25 +167,25 @@
   </head>
   <body>
     <div class="container">
-      <div class="logo">📝 テキスト要約ツール</div>
+      <div class="logo">📝 Text-Zusammenfassungstool</div>
       <div class="desc">
-        長文や記事を下の欄に貼り付けてください。<br />
-        <b>要約する</b> ボタンをクリックすると、かんたんに要約が得られます！
+        Fügen Sie unten einen langen Text oder Artikel ein.<br />
+        Klicken Sie auf <b>„Zusammenfassen“</b>, um schnell eine Zusammenfassung zu erhalten!
       </div>
-      <textarea id="inputText" placeholder="長いテキストをここに貼り付けてください..."></textarea>
+      <textarea id="inputText" placeholder="Fügen Sie hier den langen Text ein..."></textarea>
       <div class="input-row">
-        <label class="slider-label" for="summaryLength">要約文の長さ:</label>
+        <label class="slider-label" for="summaryLength">Länge der Zusammenfassung:</label>
         <input type="range" min="1" max="10" value="3" id="summaryLength" />
-        <span id="lengthVal">3</span> 文
+        <span id="lengthVal">3</span> Sätze
       </div>
-      <button class="action-btn" id="summarizeBtn">要約する</button>
+      <button class="action-btn" id="summarizeBtn">Zusammenfassen</button>
       <div class="output-box" id="summaryResult" style="margin-top: 8px"></div>
       <div class="footer">
-        すべての処理はローカルで実行されます。 <b>アップロード不要</b>・無料＆プライバシー保護。<br />
-        <span style="color: #127080">ヒント: ニュース、Wikipedia、レポート、どんなテキストでも試せます！</span>
+        Alle Berechnungen erfolgen lokal im Browser. <b>Kein Upload</b> · Kostenlos & datenschutzfreundlich.<br />
+        <span style="color: #127080">Tipp: Probieren Sie es mit News, Wikipedia-Artikeln oder Berichten!</span>
       </div>
     </div>
-    <a href="../" id="backBtn">その他ツール</a>
+    <a href="../" id="backBtn">Weitere Tools</a>
     <script>
       const inputText = document.getElementById("inputText");
       const summaryResult = document.getElementById("summaryResult");
@@ -193,25 +197,25 @@
         lengthVal.textContent = summaryLength.value;
       };
 
-      // シンプルな頻度ベース要約（AI非使用）
+      // Einfache, frequenzbasierte Zusammenfassung (ohne AI)
       function summarize(text, numSentences = 3) {
-        if (!text.trim()) return "テキストを貼り付け、「要約する」をクリックしてください。";
-        // 文ごとに分割
+        if (!text.trim()) return "Bitte fügen Sie Text ein und klicken Sie auf \"Zusammenfassen\".";
+        // In Sätze aufteilen
         const sentences = text.match(/[^\.!\?]+[\.!\?]+/g) || [text];
         if (sentences.length <= numSentences) return text;
-        // 単語の頻度計算
+        // Wortfrequenzen berechnen
         const freq = {};
         const words = text
-          .replace(/[^\w\s]/g, "")
+          .replace(/[^\wäöüÄÖÜß\s]/g, "")
           .toLowerCase()
           .split(/\s+/);
         words.forEach((w) => {
           if (w.length > 2) freq[w] = (freq[w] || 0) + 1;
         });
-        // 各文のスコア計算（単語頻度合計）
+        // Satzbewertung anhand der Wortfrequenz
         const scored = sentences.map((s) => {
           const sw = s
-            .replace(/[^\w\s]/g, "")
+            .replace(/[^\wäöüÄÖÜß\s]/g, "")
             .toLowerCase()
             .split(/\s+/);
           let score = 0;
@@ -220,7 +224,7 @@
           });
           return { sentence: s.trim(), score };
         });
-        // スコアが高い上位N文を元の順序で選択
+        // Top N Sätze auswählen und in Originalreihenfolge sortieren
         const top = scored
           .sort((a, b) => b.score - a.score)
           .slice(0, numSentences)
@@ -249,41 +253,45 @@
         font-family: Arial, sans-serif;
       ">
       <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 14px">
-        ❓ FAQ – テキスト要約ツール
+        ❓ FAQ – Text-Zusammenfassungstool
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">このツールはAIやChatGPTを使っていますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">Verwendet dieses Tool KI oder ChatGPT?</div>
         <div style="color: #f0f0f0">
-          いいえ。単語の頻度に基づくアルゴリズムを使用しています。高速かつプライバシー保護ですが、AI要約ほど高性能ではありません。
+          Nein. Es nutzt einen Algorithmus basierend auf Worthäufigkeiten. Das ist schnell und schützt Ihre
+          Privatsphäre, bietet aber nicht die gleiche Leistung wie eine KI-Zusammenfassung.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">私のテキストがアップロードまたは保存されますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">Wird mein Text hochgeladen oder gespeichert?</div>
         <div style="color: #f0f0f0">
-          絶対にありません。すべての処理はブラウザ内で行われ、サーバーに送信されることはありません。
+          Absolut nicht. Alles geschieht lokal im Browser, und keine Daten werden an einen Server gesendet.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">どの言語に対応していますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">Welche Sprachen werden unterstützt?</div>
         <div style="color: #f0f0f0">
-          主に英語に最適化されています。他の言語でも動作しますが、結果が異なる場合があります。
+          Das Tool ist hauptsächlich für Englisch optimiert. Andere Sprachen funktionieren ebenfalls, können
+          aber unterschiedliche Ergebnisse liefern.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">要約の精度はどうですか？</div>
+        <div style="color: #8f94fb; font-weight: bold">Wie genau ist die Zusammenfassung?</div>
         <div style="color: #f0f0f0">
-          単語の繰り返し頻度から「重要な」文を選出します。とてもシンプルですが、ざっと内容を把握したい時に便利です。
+          Es werden Sätze mit hoher Wortwiederholungsfrequenz ausgewählt. Das ist eine einfache Methode,
+          eignet sich aber gut, um schnell einen Überblick zu bekommen.
         </div>
       </div>
 
       <div style="margin-bottom: 0">
-        <div style="color: #8f94fb; font-weight: bold">どんな場面で使えますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">Wann sollte ich dieses Tool verwenden?</div>
         <div style="color: #f0f0f0">
-          ニュース、ブログ、エッセイ、論文など長文テキストを手軽に要約したいときにご利用ください。
+          Ideal, wenn Sie lange Texte wie Nachrichtenartikel, Blogposts, Essays oder Berichte schnell
+          zusammenfassen möchten.
         </div>
       </div>
     </section>

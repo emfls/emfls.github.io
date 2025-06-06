@@ -1,27 +1,26 @@
 <!doctype html>
-<html lang="ja">
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <title>かんたんレシピ検索 – 何を作ろう？</title>
+    <title>Einfache Rezeptsuche – Was kochen?</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="材料を入力するだけで、かんたんレシピを見つけられます。子供でも簡単、YouTubeレシピリンク付き！" />
+      content="Geben Sie Zutaten ein und finden Sie einfache Rezepte. Auch für Kinder leicht zu bedienen, mit YouTube-Rezeptlinks!" />
     <meta
       name="keywords"
-      content="かんたんレシピ, 子供料理, レシピ検索, 家にある材料, 料理検索, キッズクッキング" />
+      content="einfache Rezepte, Kindergerichte, Rezeptsuche, Zutaten zu Hause, Kochen suchen, Kinderkochen" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ja" />
+    <meta name="language" content="de" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <!-- SEO, Open Graph, Twitter, GA, AdSense含む -->
-    <meta property="og:title" content="子供向け かんたんレシピ検索 – 何を作ろう？" />
-    <meta property="og:description" content="材料を入力するとかんたんレシピを探します。とっても簡単！" />
+    <meta property="og:title" content="Kinderfreundliche einfache Rezeptsuche – Was kochen?" />
+    <meta property="og:description" content="Geben Sie Zutaten ein, um einfache Rezepte zu finden. Sehr leicht zu bedienen!" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/de/util/recipe-finder/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="かんたんレシピ検索 – 何を作ろう？" />
-    <meta name="twitter:description" content="材料でレシピ検索、子供でも簡単！" />
+    <meta name="twitter:title" content="Einfache Rezeptsuche – Was kochen?" />
+    <meta name="twitter:description" content="Zutaten eingeben und Rezepte suchen, auch für Kinder einfach!" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
@@ -225,30 +224,30 @@
         }
       }
     </style>
-    <!-- 外部レシピDB: recipes.jsでwindow.RECIPES_DB, window.INGREDIENTS_DBをロード -->
+    <!-- externes Rezept-DB: recipes.js lädt window.RECIPES_DB und window.INGREDIENTS_DB -->
     <script src="recipes.js"></script>
   </head>
   <body>
     <div class="container">
-      <div class="logo">🍳 かんたんレシピ検索</div>
-      <div class="desc">どんな材料がありますか？<br /><b>下に入力してみましょう！</b></div>
-      <span class="input-label">持っている材料：</span>
+      <div class="logo">🍳 Einfache Rezeptsuche</div>
+      <div class="desc">Welche Zutaten haben Sie?<br /><b>Geben Sie sie unten ein!</b></div>
+      <span class="input-label">Verfügbare Zutaten:</span>
       <div class="ingredient-input-box" id="ingredientWrap">
         <input
           type="text"
           class="ingredient-input"
           id="ingredientInput"
-          placeholder="例：たまご、チーズ、牛乳"
+          placeholder="z.B.: Ei, Käse, Milch"
           autocomplete="off" />
         <div class="autocomplete-box" id="autocompleteBox"></div>
       </div>
-      <button class="search-btn" id="searchBtn">レシピを表示</button>
+      <button class="search-btn" id="searchBtn">Rezepte anzeigen</button>
       <div class="recipes-list" id="recipesList"></div>
       <div class="footer"></div>
-      <a href="../" id="backBtn">その他ツール</a>
+      <a href="../" id="backBtn">Weitere Tools</a>
     </div>
     <script>
-      // recipes.jsからwindow.RECIPES_DB, window.INGREDIENTS_DBをロード
+      // Aus recipes.js: window.RECIPES_DB und window.INGREDIENTS_DB
       const RECIPES = window.RECIPES_DB || [];
       const INGREDIENTS = window.INGREDIENTS_DB || [];
       const ingredientInput = document.getElementById("ingredientInput");
@@ -258,7 +257,7 @@
       const recipesList = document.getElementById("recipesList");
       let selectedIngredients = [];
 
-      // オートコンプリート表示
+      // Autocomplete anzeigen
       function showAutocomplete(val) {
         autocompleteBox.innerHTML = "";
         if (!val) {
@@ -303,7 +302,7 @@
       function addIngredient(val) {
         val = val
           .toLowerCase()
-          .replace(/[^\u3040-\u30FF\u4E00-\u9FFF\s]/g, "") // 일본어/한자만 허용
+          .replace(/[^A-Za-zÄÖÜäöüß\s]/g, "") // nur Japanisch/Kanji erlauben
           .trim();
         if (!val || selectedIngredients.includes(val)) return;
         selectedIngredients.push(val);
@@ -314,7 +313,7 @@
         updateChips();
       }
       function updateChips() {
-        // 既存チップ削除
+        // vorhandene Chips entfernen
         ingredientWrap.querySelectorAll(".ingredient-chip").forEach((el) => el.remove());
         selectedIngredients.forEach((ing) => {
           const chip = document.createElement("div");
@@ -329,10 +328,10 @@
         });
       }
 
-      // レシピマッチ＆表示（YouTubeリンク付き）
+      // Rezepte filtern & anzeigen (mit YouTube-Link)
       function showRecipes() {
         if (selectedIngredients.length === 0) {
-          recipesList.innerHTML = `<div style="color:#aaa;font-size:1.11em;text-align:center;">材料を入力してください！</div>`;
+          recipesList.innerHTML = `<div style="color:#aaa;font-size:1.11em;text-align:center;">Bitte Zutaten eingeben!</div>`;
           return;
         }
         const matches = RECIPES.map((r) => {
@@ -348,7 +347,7 @@
           .filter((r) => r.matchedCount > 0)
           .sort((a, b) => b.matchedCount - a.matchedCount || a.total - b.total);
         if (matches.length === 0) {
-          recipesList.innerHTML = `<div style="color:#e57272;text-align:center;">その材料ではレシピが見つかりません。他の材料を試してください！</div>`;
+          recipesList.innerHTML = `<div style="color:#e57272;text-align:center;">Mit diesen Zutaten wurden keine Rezepte gefunden. Versuchen Sie andere Zutaten!</div>`;
           return;
         }
         recipesList.innerHTML = matches
@@ -356,12 +355,12 @@
             (r) => `
         <div class="recipe-card">
           <div class="recipe-title">${r.name}</div>
-          <div class="match-info">一致材料: <b>${r.matchedCount}</b> / ${r.total}</div>
-          <div class="all-ings">材料: ${r.ingredients
+          <div class="match-info">Übereinstimmende Zutaten: <b>${r.matchedCount}</b> / ${r.total}</div>
+          <div class="all-ings">Zutaten: ${r.ingredients
             .map((i) => (r.matched.includes(i) ? `<b style="color:#228e6f">${i}</b>` : i))
             .join(", ")}</div>
-          <button class="yt-link-btn" onclick="window.open('https://www.youtube.com/results?search_query=${encodeURIComponent(r.name + " レシピ")}', '_blank')">
-            ▶ YouTubeで見る
+          <button class="yt-link-btn" onclick="window.open('https://www.youtube.com/results?search_query=${encodeURIComponent(r.name + " Rezept")}', '_blank')">
+            ▶ Bei YouTube ansehen
           </button>
         </div>
       `
@@ -373,7 +372,7 @@
         if (selectedIngredients.length) showRecipes();
       });
 
-      // 初回ロード時に案内表示
+      // Hinweis beim ersten Laden
       showRecipes();
     </script>
     <section
@@ -386,41 +385,41 @@
         padding: 18px;
       ">
       <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 12px">
-        FAQ – かんたんレシピ検索
+        FAQ – Einfache Rezeptsuche
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Q. 登録やログインは必要ですか？</div>
+        <div style="color: #8f94fb; font-weight: bold">F: Ist eine Registrierung oder Anmeldung erforderlich?</div>
         <div style="color: #f0f0f0">
-          いいえ！ログイン不要ですべてブラウザ内で処理されます。入力した材料や結果はご自身の端末だけに残ります。
+          Nein! Es wird kein Login benötigt, alles läuft im Browser. Ihre eingegebenen Zutaten und Ergebnisse bleiben ausschließlich auf Ihrem Gerät.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Q. 子供も安全に使えますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">F: Ist die Nutzung auch für Kinder sicher?</div>
         <div style="color: #f0f0f0">
-          はい！個人情報の収集や外部アップロードはなく、広告も最小限なので子供でも安心して使えます。
+          Ja! Es werden keine persönlichen Daten gesammelt oder hochgeladen, und Werbung ist minimal, sodass Kinder es bedenkenlos nutzen können.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Q. レシピデータはどこから？</div>
+        <div style="color: #8f94fb; font-weight: bold">F: Woher stammen die Rezeptdaten?</div>
         <div style="color: #f0f0f0">
-          シンプルなローカルデータベースでレシピをマッチします。YouTubeリンクはレシピ名で検索した動画に飛びます。
+          Die Rezepte werden in einer einfachen lokalen Datenbank abgeglichen. Der YouTube-Link führt zu Videos, die nach dem Rezeptnamen gesucht wurden.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Q. もっと多くのレシピは追加できますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">F: Können mehr Rezepte hinzugefügt werden?</div>
         <div style="color: #f0f0f0">
-          現在リストは固定ですが、今後リクエスト機能も追加予定です。お楽しみに！
+          Die Liste ist derzeit fest, aber es ist geplant, bald eine Anfragefunktion hinzuzufügen. Bleiben Sie dran!
         </div>
       </div>
 
       <div>
-        <div style="color: #8f94fb; font-weight: bold">Q. オフラインでも使えますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">F: Kann man es auch offline nutzen?</div>
         <div style="color: #f0f0f0">
-          はい、一度ページを開けばネットなしでも材料入力とレシピ検索が可能です（YouTube動画はネットが必要）。
+          Ja, wenn Sie die Seite einmal geöffnet haben, können Sie Zutaten eingeben und Rezepte suchen, auch ohne Internet (YouTube-Videos erfordern jedoch eine Verbindung).
         </div>
       </div>
     </section>

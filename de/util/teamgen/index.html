@@ -1,30 +1,30 @@
 <!doctype html>
-<html lang="ja">
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <title>ランダムチームジェネレーター – オンライングループ分け</title>
+    <title>Zufälliger Team-Generator – Online-Gruppeneinteilung</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="名前を入力してチーム数を選ぶだけで、すぐにランダムなチームやグループに分けられます！100％ブラウザ上で完結、アップロード不要。" />
+      content="Einfach Namen eingeben und Teamanzahl wählen, schon werden zufällige Teams oder Gruppen erstellt! 100 % im Browser, kein Upload erforderlich." />
     <meta
       name="keywords"
-      content="ランダムチーム, グループ分け, 名前シャッフル, チーム作成, スタディグループ, クラス, チーム編成, グループメーカー, チーム分け, ランダム分け" />
+      content="zufälliges Team, Gruppenaufteilung, Namens-Mischung, Teamerstellung, Lerngruppe, Klasse, Teamzusammenstellung, Gruppenersteller, Teameinteilung, Zufallsauswahl" />
     <meta name="author" content="Itagi" />
     <link rel="canonical" href="https://emfls.github.io/de/util/teamgen/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <meta property="og:title" content="ランダムチームジェネレーター – オンライングループ分け" />
+    <meta property="og:title" content="Zufälliger Team-Generator – Online-Gruppeneinteilung" />
     <meta
       property="og:description"
-      content="名前をランダムにチーム/グループへ分けます。即シャッフル、ブラウザのみ、データアップロード不要。" />
+      content="Namen eingeben und in zufällige Teams/Gruppen aufteilen. Sofortiges Shuffle, nur im Browser, kein Daten-Upload." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/de/util/teamgen/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="ランダムチームジェネレーター – オンライングループ分け" />
+    <meta name="twitter:title" content="Zufälliger Team-Generator – Online-Gruppeneinteilung" />
     <meta
       name="twitter:description"
-      content="名前をランダムでグループ分け。高速かつプライバシー重視、完全ブラウザ処理！" />
+      content="Namen zufällig in Gruppen einteilen. Schnell und datenschutzfreundlich, komplett im Browser!" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -162,15 +162,11 @@
         line-height: 1.7;
       }
       .hint {
-        color: #18b88a;
+        color: #e57272;
         font-size: 0.97em;
         margin: 5px 0 7px 0;
         text-align: center;
         min-height: 20px;
-      }
-      .adsense {
-        text-align: center;
-        margin: 8px 0 9px 0;
       }
       .footer {
         color: #789;
@@ -182,9 +178,6 @@
         .container {
           max-width: 99vw;
           padding: 12px 2vw 9px 2vw;
-        }
-        .result-row {
-          font-size: 1em;
         }
       }
       #backBtn {
@@ -223,29 +216,28 @@
   </head>
   <body>
     <div class="container">
-      <div class="logo">🔀 ランダムチーム／グループ作成</div>
+      <div class="logo">🔀 Zufällige Team-/Gruppenerstellung</div>
       <div class="desc">
-        名前を貼り付けるか、1行に1人ずつ入力してください。<br />
-        チーム数を選んで、<br />
-        すぐにランダムなチームに分けます！
+        Fügen Sie Namen ein oder geben Sie sie zeilenweise ein.<br />
+        Wählen Sie die Anzahl der Teams und teilen Sie sofort zufällige Teams ein!
       </div>
       <div class="input-row">
-        <label for="names" class="label">名前（1行に1人）:</label>
+        <label for="names" class="label">Namen (je Zeile ein Name):</label>
         <textarea
           id="names"
           rows="6"
-          placeholder="山田太郎&#10;田中花子&#10;佐藤一郎&#10;..."></textarea>
+          placeholder="Max Mustermann&#10;Erika Musterfrau&#10;Hans Müller&#10;..."></textarea>
       </div>
       <div class="control-row">
-        <label for="teamNum" class="label">チーム数</label>
+        <label for="teamNum" class="label">Anzahl der Teams</label>
         <input id="teamNum" class="team-num-input" type="number" min="2" max="20" value="2" />
-        <button class="gen-btn" id="genBtn" title="ランダムチーム分け">チーム分け</button>
+        <button class="gen-btn" id="genBtn" title="Zufällige Teameinteilung">Teams erstellen</button>
       </div>
       <div class="hint" id="hint"></div>
       <div class="result-list" id="resultList"></div>
-      <a href="../" id="backBtn">その他ツール</a>
+      <a href="../" id="backBtn">Weitere Tools</a>
       <div class="footer">
-        100％ブラウザのみ。追跡やアップロード一切なし。<br />
+        100 % im Browser. Kein Tracking oder Upload.
       </div>
     </div>
     <script>
@@ -269,15 +261,15 @@
           .filter(Boolean);
 
         if (names.length < 2) {
-          hint.textContent = "名前を最低2人以上入力してください！";
+          hint.textContent = "Bitte geben Sie mindestens 2 Namen ein!";
           return;
         }
         if (teamNum < 2 || teamNum > 20) {
-          hint.textContent = "チーム数は2から20の間で指定してください。";
+          hint.textContent = "Die Teamanzahl muss zwischen 2 und 20 liegen.";
           return;
         }
         if (teamNum > names.length) {
-          hint.textContent = "チーム数は名前の数を超えることはできません！";
+          hint.textContent = "Die Teamanzahl darf nicht größer sein als die Anzahl der Namen!";
           return;
         }
 
@@ -289,7 +281,7 @@
         teams.forEach((team, i) => {
           const block = document.createElement("div");
           block.className = "team-block";
-          block.innerHTML = `<div class="team-title">チーム${i + 1}</div>
+          block.innerHTML = `<div class="team-title">Team ${i + 1}</div>
             <div class="team-names">${team.join(", ")}</div>`;
           resultList.appendChild(block);
         });
@@ -306,41 +298,41 @@
         font-family: Arial, sans-serif;
       ">
       <div style="color: #8f94fb; font-size: 1.15em; font-weight: bold; margin-bottom: 14px">
-        ❓ よくある質問
+        ❓ Häufige Fragen
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">データがアップロードされたり保存されますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">Wird etwas hochgeladen oder gespeichert?</div>
         <div style="color: #f0f0f0">
-          いいえ。すべてブラウザ内だけで処理されます。アップロード、保存、追跡は一切ありません。
+          Nein. Alles wird nur im Browser verarbeitet. Es gibt keine Uploads, Speicherung oder Tracking.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">20以上のチームを作れますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">Kann man mehr als 20 Teams erstellen?</div>
         <div style="color: #f0f0f0">
-          現在、最大20チームまでです。見やすさ重視で制限しており、必要に応じて再分割してください。
+          Derzeit sind maximal 20 Teams möglich. Diese Begrenzung dient der Übersichtlichkeit; bei Bedarf können Sie die Gruppen anschließend neu aufteilen.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">チーム結果をコピーやエクスポートできますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">Kann man die Teamergebnisse kopieren oder exportieren?</div>
         <div style="color: #f0f0f0">
-          はい！結果を選択してコピーしたり、手軽に共有するためにスクリーンショットも撮影できます。
+          Ja! Sie können die Ergebnisse markieren und kopieren oder einfach einen Screenshot machen, um sie zu teilen.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">チームのバランスや人数を調整できますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">Kann man die Teamgrößen ausbalancieren oder anpassen?</div>
         <div style="color: #f0f0f0">
-          いいえ。完全ランダム分けなので、人数が均等にならない場合もあります。
+          Nein. Da die Verteilung komplett zufällig ist, können die Teams ungleich groß sein.
         </div>
       </div>
 
       <div style="margin-bottom: 0">
-        <div style="color: #8f94fb; font-weight: bold">毎回結果は違いますか？</div>
+        <div style="color: #8f94fb; font-weight: bold">Erhalte ich bei jedem Mal unterschiedliche Ergebnisse?</div>
         <div style="color: #f0f0f0">
-          はい。クリックするたびに新しいランダム分け結果になります。
+          Ja. Bei jedem Klick erhalten Sie eine neue zufällige Einteilung.
         </div>
       </div>
     </section>

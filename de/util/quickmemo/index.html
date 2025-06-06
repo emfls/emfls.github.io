@@ -1,33 +1,33 @@
 <!doctype html>
-<html lang="ja">
+<html lang="de">
   <head>
     <meta charset="UTF-8" />
-    <title>クイックメモ – オンラインメモ帳＆スティッキーノート</title>
+    <title>Schnellnotiz – Online-Notizblock &amp; Haftnotizen</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <meta
       name="description"
-      content="素早く個人的に使えるオンラインメモ帳。ブラウザですぐにメモを書いて保存できます。ログイン不要・完全無料・ローカルストレージ対応でオフラインでも利用可能です。" />
+      content="Ein schneller, persönlicher Online-Notizblock. Schreiben und speichern Sie Notizen sofort im Browser. Kein Login erforderlich, komplett kostenlos, mit Local Storage-Unterstützung und offline nutzbar." />
     <meta
       name="keywords"
-      content="オンラインメモ, メモ帳, クイックノート, ローカルストレージ, スティッキーノート, テキスト保存, ブラウザ, 個人用, 無料, メモ, ノート, 一時保存" />
+      content="Online-Notiz, Notizblock, Schnellnotiz, Local Storage, Haftnotizen, Textspeicherung, Browser, privat, kostenlos, Notizen, Entwurfsspeicherung" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ja" />
+    <meta name="language" content="de" />
     <link rel="canonical" href="https://emfls.github.io/de/util/quickmemo/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <meta property="og:title" content="クイックメモ – オンラインメモ帳＆スティッキーノート" />
+    <meta property="og:title" content="Schnellnotiz – Online-Notizblock &amp; Haftnotizen" />
     <meta
       property="og:description"
-      content="ブラウザですぐにメモ・ToDo・アイデアや下書きを作成＆保存できます。すべてローカルストレージに保存され、絶対にアップロードされません。無料・シンプル・高速。" />
+      content="Erstellen und speichern Sie direkt Notizen, To-Dos, Ideen oder Entwürfe im Browser. Alles wird in Local Storage gesichert, niemals hochgeladen. Kostenlos, einfach, schnell." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/de/util/quickmemo/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="クイックメモ – オンラインメモ帳＆スティッキーノート" />
+    <meta name="twitter:title" content="Schnellnotiz – Online-Notizblock &amp; Haftnotizen" />
     <meta
       name="twitter:description"
-      content="ブラウザですぐにメモ・ToDo・アイデア・下書きを作成して保存できます。ローカルストレージ・無料・ログイン不要。" />
+      content="Erstellen und speichern Sie direkt Notizen, To-Dos, Ideen oder Entwürfe im Browser. Local Storage, kostenlos, ohne Login." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-    <!-- Googleタグ (gtag.js) -->
+    <!-- Google-Tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -170,34 +170,34 @@
   </head>
   <body>
     <div class="container">
-      <div class="logo">📝 クイックメモ</div>
+      <div class="logo">📝 Schnellnotiz</div>
       <div class="desc">
-        すばやくメモ・ToDo・アイデア・下書きを書きましょう。<br />
-        <b>自動保存</b>（ブラウザのローカルストレージ）。<br />
-        アップロードもログインも不要、100%プライベートで使えます。
+        Schreiben Sie blitzschnell Notizen, To-Dos, Ideen oder Entwürfe.<br />
+        <b>Automatisch speichern</b> (Local Storage im Browser).<br />
+        Kein Upload, kein Login, 100 % privat nutzbar.
       </div>
       <div class="autosave" id="autosaveMsg"></div>
-      <textarea id="memoArea" placeholder="ここにメモや一時ノートを入力してください..."></textarea>
+      <textarea id="memoArea" placeholder="Geben Sie hier Ihre Notizen oder Entwürfe ein..."></textarea>
       <div class="action-row">
-        <button class="mini-btn" id="clearBtn">消去</button>
-        <button class="mini-btn" id="copyBtn">コピー</button>
-        <button class="mini-btn" id="downloadBtn">ダウンロード</button>
+        <button class="mini-btn" id="clearBtn">Löschen</button>
+        <button class="mini-btn" id="copyBtn">Kopieren</button>
+        <button class="mini-btn" id="downloadBtn">Herunterladen</button>
       </div>
       <div class="footer">
-        すべての内容はご自身の端末にのみ保存されます。<br />
-        <b>ヒント:</b> 下書き・クイック作業・リマインダーに便利です！
+        Alle Inhalte werden nur auf Ihrem Gerät gespeichert.<br />
+        <b>Tipp:</b> Ideal für Entwürfe, kurze To-Dos oder Erinnerungen!
       </div>
     </div>
-    <a href="../" id="backBtn">他のツール</a>
+    <a href="../" id="backBtn">Andere Tools</a>
     <script>
       const memoArea = document.getElementById("memoArea");
       const autosaveMsg = document.getElementById("autosaveMsg");
       const LS_KEY = "quickMemoNote";
 
-      // 保存済みメモの読み込み
+      // Bereits gespeicherte Notiz laden
       memoArea.value = localStorage.getItem(LS_KEY) || "";
 
-      // 自動保存
+      // Automatisches Speichern
       let saveTimer;
       memoArea.addEventListener("input", function () {
         clearTimeout(saveTimer);
@@ -208,24 +208,24 @@
       });
 
       function showAutosaveMsg() {
-        autosaveMsg.textContent = "保存しました！";
+        autosaveMsg.textContent = "Gespeichert!";
         setTimeout(() => {
           autosaveMsg.textContent = "";
         }, 1200);
       }
 
-      // クリップボードへコピー
+      // In die Zwischenablage kopieren
       document.getElementById("copyBtn").onclick = function () {
         const val = memoArea.value;
         if (!val) return;
         navigator.clipboard.writeText(val);
-        autosaveMsg.textContent = "コピーしました！";
+        autosaveMsg.textContent = "Kopiert!";
         setTimeout(() => {
           autosaveMsg.textContent = "";
         }, 1000);
       };
 
-      // テキストファイルとしてダウンロード
+      // Als Textdatei herunterladen
       document.getElementById("downloadBtn").onclick = function () {
         const val = memoArea.value;
         if (!val) return;
@@ -241,13 +241,13 @@
         }, 500);
       };
 
-      // メモを消去
+      // Notiz löschen
       document.getElementById("clearBtn").onclick = function () {
         if (memoArea.value.length === 0) return;
-        if (confirm("メモ内容をすべて消去しますか？")) {
+        if (confirm("Möchten Sie alle Notizen wirklich löschen?")) {
           memoArea.value = "";
           localStorage.removeItem(LS_KEY);
-          autosaveMsg.textContent = "消去しました！";
+          autosaveMsg.textContent = "Gelöscht!";
           setTimeout(() => {
             autosaveMsg.textContent = "";
           }, 900);
@@ -265,33 +265,33 @@
         font-family: Arial, sans-serif;
       ">
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📝 このツールは何ですか？</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📝 Was ist dieses Tool?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          クイックメモは、ログイン不要でブラウザ上でメモを作成・保存できる個人用オンラインメモ帳です。オフライン状態でもローカルストレージで動作します。
+          Schnellnotiz ist ein persönlicher Online-Notizblock ohne Login. Er funktioniert vollständig im Browser und nutzt Local Storage, sodass Sie auch offline arbeiten können.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">💾 メモはどうやって保存されますか？</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">💾 Wie werden Notizen gespeichert?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          入力するたびに内容が自動的にブラウザのローカルストレージに保存されます。すべてのデータはご自身の端末内にのみ残ります。
+          Jede Eingabe wird automatisch im Local Storage des Browsers gesichert. Alle Daten bleiben ausschließlich auf Ihrem Gerät.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📋 メモをコピーやダウンロードできますか？</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📋 Kann ich Notizen kopieren oder herunterladen?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          はい。「コピー」ボタンでメモ内容をクリップボードにコピー、「ダウンロード」で.txtファイルとして保存できます。
+          Ja. Über die Schaltfläche „Kopieren“ können Sie den Inhalt in die Zwischenablage kopieren, und mit „Herunterladen“ speichern Sie den Text als .txt-Datei.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🧹 メモを消去するには？</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🧹 Wie lösche ich meine Notizen?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          「消去」ボタンを押して確認すると、メモがすべて消えます。ローカルストレージ内のデータも削除されます。
+          Klicken Sie auf „Löschen“ und bestätigen Sie den Dialog, um alle Notizen samt Einträgen aus dem Local Storage zu entfernen.
         </p>
       </div>
       <div style="margin-bottom: 0">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔐 このツールは安全ですか？</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔐 Ist dieses Tool sicher?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          100%安全です。すべてのメモはブラウザ内だけで処理され、絶対に外部にアップロードされません。個人情報はしっかり守られます。
+          Absolut. Alle Notizen werden nur im Browser verarbeitet und niemals hochgeladen. Ihre Daten bleiben privat und sicher.
         </p>
       </div>
     </section>
