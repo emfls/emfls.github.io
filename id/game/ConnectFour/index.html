@@ -1,35 +1,35 @@
 <!doctype html>
-<html lang="es">
+<html lang="id">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="¡Juega Conecta Cuatro en línea gratis! Disfruta este clásico juego estratégico para dos jugadores con amigos o la computadora. Es sencillo, rápido y compatible con móviles."
+            content="Mainkan Connect Four online gratis! Nikmati game strategi klasik dua pemain ini bersama teman atau melawan komputer. Mudah, cepat, dan mendukung perangkat mobile."
         />
         <meta
             name="keywords"
-            content="Conecta Cuatro, juego de conectar cuatro, juego en línea, juego gratuito, dos jugadores, contra IA, juego estratégico, juego de mesa, navegador, móvil, rompecabezas, clásico"
+            content="Connect Four, sambung empat, game online, game gratis, dua pemain, lawan AI, game strategi, papan permainan, browser, mobile, puzzle, klasik"
         />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/id/game/ConnectFour" />
 
-        <meta property="og:title" content="Conecta Cuatro – ¡Juego gratuito en línea para dos jugadores!" />
+        <meta property="og:title" content="Connect Four – Game Online Gratis untuk 2 Pemain!" />
         <meta
             property="og:description"
-            content="¡Juega Conecta Cuatro gratis en tu navegador! Enfréntate a amigos o a la IA y consigue cuatro en línea horizontal, vertical o diagonal para ganar."
+            content="Mainkan Connect Four gratis di browser Anda! Tantang teman atau AI, dan susun empat bidak secara horizontal, vertikal, atau diagonal untuk menang."
         />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/id/game/ConnectFour" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Conecta Cuatro – ¡Juego gratuito en línea para dos jugadores!" />
+        <meta name="twitter:title" content="Connect Four – Game Online Gratis untuk 2 Pemain!" />
         <meta
             name="twitter:description"
-            content="¡Juega Conecta Cuatro gratis en tu navegador! Enfréntate a amigos o a la IA y consigue cuatro en línea horizontal, vertical o diagonal para ganar."
+            content="Mainkan Connect Four gratis di browser Anda! Tantang teman atau AI, dan susun empat bidak secara horizontal, vertikal, atau diagonal untuk menang."
         />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -48,28 +48,28 @@
             crossorigin="anonymous"
         ></script>
         <link rel="stylesheet" href="style.css" />
-        <title>Conecta Cuatro</title>
+        <title>Connect Four</title>
     </head>
 
     <body>
         <div id="wrapper">
-            <h1>Conecta Cuatro</h1>
-            <div class="desc">¡Conecta cuatro en línea horizontal, vertical o diagonal para ganar!</div>
+            <h1>Connect Four</h1>
+            <div class="desc">Sambungkan empat bidak secara horizontal, vertikal, atau diagonal untuk menang!</div>
             <div id="modeSel">
-                <button class="modebtn active" id="mode2p" onclick="setMode('2p')">2 jugadores</button>
-                <button class="modebtn" id="modeai" onclick="setMode('ai')">Contra IA</button>
+                <button class="modebtn active" id="mode2p" onclick="setMode('2p')">2 Pemain</button>
+                <button class="modebtn" id="modeai" onclick="setMode('ai')">Lawan AI</button>
             </div>
             <div id="turn"></div>
             <div id="board"></div>
             <div id="overMsg"></div>
             <div class="btns" id="gameBtns" style="display: none">
-                <button class="btn" onclick="restart()">Reiniciar</button>
-                <button class="btn" onclick="share()">Compartir</button>
+                <button class="btn" onclick="restart()">Mulai Ulang</button>
+                <button class="btn" onclick="share()">Bagikan</button>
             </div>
-            <a id="otherGames" href="../" style="margin-top: 22px">Otros juegos</a>
+            <a id="otherGames" href="../" style="margin-top: 22px">Permainan Lainnya</a>
         </div>
         <script>
-            // Desactivar selección/arrastre en móvil
+            // Nonaktifkan select/drag di mobile
             document.addEventListener(
                 "touchmove",
                 (e) => {
@@ -85,7 +85,7 @@
             const ROWS = 6,
                   COLS = 7;
             let board, turn, over, winner;
-            let mode = "2p"; // "2p" o "ai"
+            let mode = "2p"; // "2p" atau "ai"
             const COLORS = ["🔵", "🟡"];
 
             function emptyBoard() {
@@ -107,11 +107,11 @@
                         cell.innerHTML = board[r][c] !== null ? COLORS[board[r][c]] : "";
                         cell.onclick = () => {
                             if (over) return;
-                            if (mode === "ai" && turn === 1) return; // No permitir cuando sea turno de IA
+                            if (mode === "ai" && turn === 1) return; // Tidak boleh saat giliran AI
                             if (playerMove(c)) {
                                 render();
                                 if (mode === "ai" && !over && turn === 1) {
-                                    setTimeout(aiMove, 350); // Retrasar ligeramente para mover IA
+                                    setTimeout(aiMove, 350); // Sedikit delay untuk AI
                                 }
                             }
                         };
@@ -121,33 +121,33 @@
                 let msg = "";
                 if (!over) {
                     msg = COLORS[turn]
-                        + (mode === "ai" ? (turn === 0 ? " (Tú)" : " (IA)") : "")
-                        + " es tu turno";
+                        + (mode === "ai" ? (turn === 0 ? " (Kamu)" : " (AI)") : "")
+                        + " giliranmu";
                 } else if (winner !== null) {
                     msg = COLORS[winner]
-                        + (mode === "ai" ? (winner === 0 ? " (Tú)" : " (IA)") : "")
-                        + " ¡ha ganado!";
+                        + (mode === "ai" ? (winner === 0 ? " (Kamu)" : " (AI)") : "")
+                        + " menang!";
                 } else {
-                    msg = "¡Empate!";
+                    msg = "Seri!";
                 }
                 document.getElementById("turn").textContent = msg;
                 document.getElementById("overMsg").textContent = over && winner !== null
                     ? msg
                     : over
-                        ? "¡Empate!"
+                        ? "Seri!"
                         : "";
                 document.getElementById("gameBtns").style.display = over ? "flex" : "none";
                 document.getElementById("mode2p").classList.toggle("active", mode === "2p");
                 document.getElementById("modeai").classList.toggle("active", mode === "ai");
             }
 
-            // Colocar la jugada del jugador o de 2P (actualiza estado)
+            // Gerakan pemain atau 2P (update state)
             function playerMove(col) {
                 if (over) return false;
                 for (let r = ROWS - 1; r >= 0; r--) {
                     if (board[r][col] === null) {
                         board[r][col] = turn;
-                        // Verificar victoria/empate
+                        // Cek menang/seri
                         if (checkWin(r, col, turn)) {
                             over = true;
                             winner = turn;
@@ -163,7 +163,7 @@
                 return false;
             }
 
-            // Colocación temporal para IA o simulación (no afecta over/winner)
+            // Simulasi langkah untuk AI
             function tryMove(col, whichTurn) {
                 for (let r = ROWS - 1; r >= 0; r--) {
                     if (board[r][col] === null) {
@@ -225,29 +225,29 @@
                 let validCols = [];
                 for (let c = 0; c < COLS; c++) if (board[0][c] === null) validCols.push(c);
 
-                // 1. La IA busca jugadas que le permitan ganar
+                // 1. AI mencari langkah untuk menang
                 for (let ci of validCols) {
                     let row = tryMove(ci, 1);
                     if (row !== -1 && checkWin(row, ci, 1)) {
                         undoMove(ci);
-                        playerMove(ci); // IA hace la jugada ganadora
+                        playerMove(ci); // AI menang
                         render();
                         return;
                     }
                     if (row !== -1) undoMove(ci);
                 }
-                // 2. Bloquear posibles victorias del jugador
+                // 2. Blokir kemenangan pemain
                 for (let ci of validCols) {
                     let row = tryMove(ci, 0);
                     if (row !== -1 && checkWin(row, ci, 0)) {
                         undoMove(ci);
-                        playerMove(ci); // Bloqueo de jugada
+                        playerMove(ci); // Blokir langkah pemain
                         render();
                         return;
                     }
                     if (row !== -1) undoMove(ci);
                 }
-                // 3. Prioridad al centro
+                // 3. Prioritaskan kolom tengah
                 let bestCols = [3, 2, 4, 1, 5, 0, 6].filter((c) => validCols.includes(c));
                 let col = bestCols.length > 0
                     ? bestCols[0]
@@ -260,16 +260,16 @@
                 const url = location.href;
                 if (navigator.share) {
                     navigator.share({
-                        title: "Conecta Cuatro",
+                        title: "Connect Four",
                         url
                     });
                 } else {
                     navigator.clipboard.writeText(url);
-                    alert("¡Enlace copiado!");
+                    alert("Tautan telah disalin!");
                 }
             }
 
-            // Inicialización
+            // Inisialisasi
             restart();
         </script>
         <section
@@ -288,36 +288,36 @@
                 box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             "
         >
-            <h2 style="font-size: 18px; margin-bottom: 1rem; color: #365ca0">❓ Preguntas frecuentes (FAQ)</h2>
+            <h2 style="font-size: 18px; margin-bottom: 1rem; color: #365ca0">❓ Pertanyaan yang Sering Diajukan (FAQ)</h2>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q1. ¿Cómo se juega Conecta Cuatro?</strong><br />
-                A. Toca una columna para dejar caer una ficha. El jugador que conecte cuatro en horizontal, vertical o diagonal gana.
+                <strong>P1. Bagaimana cara bermain Connect Four?</strong><br />
+                J. Ketuk salah satu kolom untuk menjatuhkan bidak. Pemain yang berhasil menyambung empat bidak secara horizontal, vertikal, atau diagonal akan menang.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q2. ¿Qué modos de juego hay?</strong><br />
-                A. Puedes elegir el modo “2 jugadores” para jugar con amigos o el modo “Contra IA” para enfrentarte a la computadora.
+                <strong>P2. Mode apa saja yang tersedia?</strong><br />
+                J. Anda dapat memilih mode “2 Pemain” untuk bermain bersama teman atau “Lawan AI” untuk melawan komputer.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q3. ¿Qué tan fuerte es la IA?</strong><br />
-                A. La IA busca jugadas que le permitan ganar, bloquea posibles victorias del jugador y da prioridad a las columnas centrales más ventajosas.
+                <strong>P3. Seberapa pintar AI?</strong><br />
+                J. AI mencari langkah kemenangan untuk dirinya, memblokir kemenangan lawan, dan memprioritaskan kolom tengah yang lebih menguntungkan.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q4. ¿Se puede cambiar el modo durante la partida?</strong><br />
-                A. ¡Sí! Toca los botones de modo en la parte superior de la pantalla y reiniciarás con el otro modo.
+                <strong>P4. Bisakah saya mengubah mode saat bermain?</strong><br />
+                J. Tentu! Ketuk tombol mode di bagian atas layar, dan permainan akan dimulai ulang dengan mode baru.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q5. ¿Qué sucede en caso de empate?</strong><br />
-                A. Si el tablero se llena sin un ganador, el juego termina en empate y puedes reiniciar.
+                <strong>P5. Apa yang terjadi jika seri?</strong><br />
+                J. Jika papan penuh tanpa pemenang, permainan berakhir seri dan Anda dapat mulai ulang.
             </div>
 
             <div>
-                <strong>Q6. ¿Cómo comparto el juego?</strong><br />
-                A. Después de la partida, toca el botón “Compartir”, copia el enlace y envíalo a tus amigos.
+                <strong>P6. Bagaimana cara membagikan game ini?</strong><br />
+                J. Setelah permainan selesai, ketuk tombol “Bagikan”, salin tautan, dan kirimkan ke teman Anda.
             </div>
         </section>
     </body>

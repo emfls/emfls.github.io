@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="es">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <title>🧟 Supervivencia Zombie</title>
+    <title>🧟 Survival Zombie</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -12,51 +12,50 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-
       gtag("config", "G-QP5Q67GE5B");
     </script>
     <script
       async
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
       crossorigin="anonymous"></script>
-    <!-- SEO y metadatos sociales -->
+    <!-- SEO & Social meta -->
     <meta
       name="description"
-      content="Sobrevive el mayor tiempo posible en un apocalipsis zombie basado en texto. Eventos aleatorios, manejo de inventario y ataques de zombies peligrosos. Juego gratuito de navegador." />
+      content="Bertahanlah selama mungkin di tengah kiamat zombie berbasis teks. Acak, kelola inventaris, dan hadapi serangan zombie berbahaya. Game browser gratis." />
     <meta
       name="keywords"
-      content="zombie, supervivencia, apocalipsis, juego web, juego de texto, navegador, gratis" />
+      content="zombie, survival, kiamat, game web, game teks, browser, gratis" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="es" />
+    <meta name="language" content="id" />
     <meta name="theme-color" content="#191d22" />
     <link rel="canonical" href="https://emfls.github.io/id/game/ZombieSurvival/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <!-- Open Graph (Facebook, Kakao, etc) -->
-    <meta property="og:title" content="Supervivencia Zombie – Juego de Texto" />
+    <!-- Open Graph (Facebook, Kakao, dll) -->
+    <meta property="og:title" content="Survival Zombie – Game Teks" />
     <meta
       property="og:description"
-      content="¿Cuántos días sobrevivirás al apocalipsis zombie? Administra tus objetos, explora y evita la muerte. Juego 100% en navegador, sin registro." />
+      content="Berapa hari kamu bisa bertahan di kiamat zombie? Kelola item, jelajah, dan hindari kematian. 100% di browser, tanpa daftar." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/id/game/ZombieSurvival/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Supervivencia Zombie – Juego de Texto" />
+    <meta name="twitter:title" content="Survival Zombie – Game Teks" />
     <meta
       name="twitter:description"
-      content="Sobrevive el mayor tiempo posible al apocalipsis zombie. Juego gratuito en navegador, sin descargas." />
+      content="Bertahanlah selama mungkin dari kiamat zombie. Game browser gratis, tanpa unduhan." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div id="container">
-      <h2>🧟 Supervivencia Zombie</h2>
+      <h2>🧟 Survival Zombie</h2>
       <div id="status"></div>
       <div id="inventory"></div>
       <div id="log"></div>
       <div id="actions"></div>
     </div>
-    <!-- Modal de detalles de ítem -->
+    <!-- Modal detail item -->
     <div id="itemDescBg">
       <div id="itemDescModal">
         <button class="close" onclick="closeDesc()">&times;</button>
@@ -78,161 +77,159 @@
         bottom: 50px;
       "
       onclick="window.location.href='/'">
-      📂 Otros juegos
+      📂 Game Lainnya
     </button>
     <script>
-      // Definición de ítems (clave, tipo, efecto, texto, descripción)
+      // Daftar item (key, tipe, efek, teks, deskripsi)
       const ITEM_LIST = [
         {
-          key: "🍞Pan",
+          key: "🍞Roti",
           type: "food",
           effect: () => {
             state.hunger = clamp(state.hunger - 22, 0, 100);
           },
-          text: "(-22 Hambre)",
-          desc: "Pan. Reduce mucho la sensación de hambre."
+          text: "(-22 Lapar)",
+          desc: "Roti. Sangat mengurangi rasa lapar."
         },
         {
-          key: "💧Agua",
+          key: "💧Air",
           type: "drink",
           effect: () => {
             state.hunger = clamp(state.hunger - 13, 0, 100);
           },
-          text: "(-13 Hambre)",
-          desc: "Agua. Reduce un poco la sensación de hambre."
+          text: "(-13 Lapar)",
+          desc: "Air. Sedikit mengurangi rasa lapar."
         },
         {
-          key: "🥪Sándwich",
+          key: "🥪Sandwich",
           type: "food",
           effect: () => {
             state.hunger = clamp(state.hunger - 35, 0, 100);
           },
-          text: "(-35 Hambre)",
-          desc: "Sándwich. Reduce mucho la sensación de hambre."
+          text: "(-35 Lapar)",
+          desc: "Sandwich. Sangat mengurangi rasa lapar."
         },
         {
-          key: "🥤Refresco",
+          key: "🥤Soda",
           type: "drink",
           effect: () => {
             state.mental = clamp(state.mental + 7, 0, 100);
             state.hunger = clamp(state.hunger - 7, 0, 100);
           },
-          text: "(+7 Salud mental, -7 Hambre)",
-          desc: "Refresco. Mejora un poco el ánimo y reduce algo el hambre."
+          text: "(+7 Mental, -7 Lapar)",
+          desc: "Soda. Sedikit menambah mood dan mengurangi lapar."
         },
         {
-          key: "🍫Snack",
+          key: "🍫Cemilan",
           type: "food",
           effect: () => {
             state.hunger = clamp(state.hunger - 12, 0, 100);
           },
-          text: "(-12 Hambre)",
-          desc: "Snack. Reduce algo la sensación de hambre."
+          text: "(-12 Lapar)",
+          desc: "Cemilan. Mengurangi sedikit rasa lapar."
         },
         {
-          key: "🍏Manzana",
+          key: "🍏Apel",
           type: "food",
           effect: () => {
             state.hunger = clamp(state.hunger - 11, 0, 100);
           },
-          text: "(-11 Hambre)",
-          desc: "Manzana. Reduce algo la sensación de hambre."
+          text: "(-11 Lapar)",
+          desc: "Apel. Mengurangi sedikit rasa lapar."
         },
         {
-          key: "💊Analgésico",
+          key: "💊Obat Pereda Nyeri",
           type: "heal",
           effect: () => {
             state.mental = clamp(state.mental + 22, 0, 100);
           },
-          text: "(+22 Salud mental)",
-          desc: "Analgésico. Recupera bastante salud mental."
+          text: "(+22 Mental)",
+          desc: "Obat pereda nyeri. Banyak memulihkan mental."
         },
         {
-          key: "🧰Vendaje",
+          key: "🧰Perban",
           type: "heal",
           effect: () => {
             state.hp = clamp(state.hp + 17, 0, 100);
           },
           text: "(+17 HP)",
-          desc: "Vendaje. Recupera salud física."
+          desc: "Perban. Memulihkan kesehatan fisik."
         },
         {
-          key: "🔪Cuchillo",
+          key: "🔪Pisau",
           type: "weapon",
           effect: () => {},
-          text: "Arma",
-          desc: "Cuchillo. Reduce el daño al enfrentar zombies."
+          text: "Senjata",
+          desc: "Pisau. Mengurangi kerusakan saat melawan zombie."
         },
         {
-          key: "🔧Llave inglesa",
+          key: "🔧Kunci Inggris",
           type: "weapon",
           effect: () => {},
-          text: "Arma",
-          desc: "Llave inglesa. Reduce el daño al enfrentar zombies."
+          text: "Senjata",
+          desc: "Kunci Inggris. Mengurangi kerusakan saat melawan zombie."
         },
         {
-          key: "🔦Linterna",
+          key: "🔦Senter",
           type: "tool",
           effect: () => {
             state.mental = clamp(state.mental + 5, 0, 100);
           },
-          text: "(+5 Salud mental)",
-          desc: "Linterna. Recupera un poco de salud mental."
+          text: "(+5 Mental)",
+          desc: "Senter. Memulihkan sedikit kesehatan mental."
         },
-        { key: "🪙Moneda", type: "misc", effect: () => {}, text: "Solo una moneda", desc: "Moneda. No sirve de nada por ahora." },
+        { key: "🪙Koin", type: "misc", effect: () => {}, text: "Cuma koin", desc: "Koin. Saat ini tidak berguna." },
         {
-          key: "📱Teléfono",
+          key: "📱Ponsel",
           type: "misc",
           effect: () => {},
-          text: "No funciona",
-          desc: "Teléfono. No tiene batería."
+          text: "Tidak bisa dipakai",
+          desc: "Ponsel. Baterainya habis."
         }
       ];
 
-      // Definición de ubicaciones (nombre, ítems posibles, probabilidad de zombie)
+      // Daftar lokasi (nama, kemungkinan item, zombie%)
       const LOC_POOL = [
-        { name: "🏠 Casa", item: ["🍞Pan", "🥤Refresco", "📱Teléfono", "🔪Cuchillo"], zombie: 18 },
-        { name: "🏪 Tienda", item: ["🥪Sándwich", "💧Agua", "🍫Snack", "💊Analgésico", "🪙Moneda"], zombie: 22 },
-        { name: "🚗 Callejón", item: ["🔧Llave inglesa", "🧰Vendaje", "💧Agua", "🍏Manzana"], zombie: 33 },
-        { name: "🏢 Oficina", item: ["🍫Snack", "💊Analgésico", "🔦Linterna"], zombie: 15 },
-        { name: "🏞 Parque", item: ["🍏Manzana", "💧Agua", "🪙Moneda"], zombie: 8 },
-        { name: "🏫 Escuela", item: ["🍞Pan", "🍫Snack", "📱Teléfono"], zombie: 17 },
-        { name: "🏚 Ruina", item: ["🔪Cuchillo", "🧰Vendaje"], zombie: 28 },
-        { name: "🏥 Hospital", item: ["💊Analgésico", "🧰Vendaje", "🔦Linterna"], zombie: 18 },
-        { name: "🏭 Fábrica", item: ["🔧Llave inglesa", "🔦Linterna"], zombie: 26 },
-        { name: "🚉 Metro", item: ["🍫Snack", "📱Teléfono"], zombie: 20 },
-        { name: "🍔 Restaurante", item: ["🍞Pan", "🥪Sándwich", "🥤Refresco"], zombie: 19 },
-        { name: "⛽ Gasolinera", item: ["🔧Llave inglesa", "💧Agua", "🪙Moneda"], zombie: 23 },
-        { name: "🛒 Supermercado", item: ["🍞Pan", "🍏Manzana", "🥤Refresco", "💧Agua"], zombie: 21 },
-        { name: "🏨 Hotel", item: ["🍫Snack", "💧Agua", "🧰Vendaje"], zombie: 18 },
-        { name: "🧑‍🔧 Taller", item: ["🔧Llave inglesa", "🪙Moneda"], zombie: 28 }
+        { name: "🏠 Rumah", item: ["🍞Roti", "🥤Soda", "📱Ponsel", "🔪Pisau"], zombie: 18 },
+        { name: "🏪 Toko", item: ["🥪Sandwich", "💧Air", "🍫Cemilan", "💊Obat Pereda Nyeri", "🪙Koin"], zombie: 22 },
+        { name: "🚗 Gang", item: ["🔧Kunci Inggris", "🧰Perban", "💧Air", "🍏Apel"], zombie: 33 },
+        { name: "🏢 Kantor", item: ["🍫Cemilan", "💊Obat Pereda Nyeri", "🔦Senter"], zombie: 15 },
+        { name: "🏞 Taman", item: ["🍏Apel", "💧Air", "🪙Koin"], zombie: 8 },
+        { name: "🏫 Sekolah", item: ["🍞Roti", "🍫Cemilan", "📱Ponsel"], zombie: 17 },
+        { name: "🏚 Reruntuhan", item: ["🔪Pisau", "🧰Perban"], zombie: 28 },
+        { name: "🏥 Rumah Sakit", item: ["💊Obat Pereda Nyeri", "🧰Perban", "🔦Senter"], zombie: 18 },
+        { name: "🏭 Pabrik", item: ["🔧Kunci Inggris", "🔦Senter"], zombie: 26 },
+        { name: "🚉 Stasiun", item: ["🍫Cemilan", "📱Ponsel"], zombie: 20 },
+        { name: "🍔 Restoran", item: ["🍞Roti", "🥪Sandwich", "🥤Soda"], zombie: 19 },
+        { name: "⛽ SPBU", item: ["🔧Kunci Inggris", "💧Air", "🪙Koin"], zombie: 23 },
+        { name: "🛒 Supermarket", item: ["🍞Roti", "🍏Apel", "🥤Soda", "💧Air"], zombie: 21 },
+        { name: "🏨 Hotel", item: ["🍫Cemilan", "💧Air", "🧰Perban"], zombie: 18 },
+        { name: "🧑‍🔧 Bengkel", item: ["🔧Kunci Inggris", "🪙Koin"], zombie: 28 }
       ];
 
-      // Selecciona aleatoriamente 4 o 5 ubicaciones
       function randomPlaces(n = 4) {
         let arr = LOC_POOL.slice();
         arr.sort(() => Math.random() - 0.5);
-        return arr.slice(0, n + Math.floor(Math.random() * 2)); // 4 o 5 lugares
+        return arr.slice(0, n + Math.floor(Math.random() * 2));
       }
 
-      // Estado del juego
+      // Status game
       let state = {
         hp: 100,
         hunger: 35,
         mental: 55,
         day: 1,
-        items: { "🍞Pan": 5, "💧Agua": 5, "💊Analgésico": 5 },
+        items: { "🍞Roti": 5, "💧Air": 5, "💊Obat Pereda Nyeri": 5 },
         alive: true,
         searching: false,
         locations: randomPlaces(),
         died: false
       };
 
-      // Convierte inventario a cadena
       function invStr(obj) {
         let out = [];
         for (let k of Object.keys(obj)) if (obj[k] > 0) out.push(`${k} x${obj[k]}`);
-        return out.length ? out.join(", ") : "Ninguno";
+        return out.length ? out.join(", ") : "Tidak ada";
       }
       function clamp(val, min, max) {
         return Math.max(min, Math.min(max, val));
@@ -246,29 +243,29 @@
       const itemDescText = document.getElementById("itemDescText");
 
       function render() {
-        statusEl.innerHTML = `<div style="font-size:1.09em;"><b>Día ${state.day}</b></div>
+        statusEl.innerHTML = `<div style="font-size:1.09em;"><b>Hari ${state.day}</b></div>
          <div id="barGroup">
            <div class="bar"><span class="fill-hp" style="width:${state.hp}%"></span></div>
            <div class="bar"><span class="fill-hunger" style="width:${clamp(100 - state.hunger, 0, 100)}%"></span></div>
            <div class="bar"><span class="fill-mental" style="width:${state.mental}%"></span></div>
          </div>
          <div style="font-size:0.97em; margin:0 2px 0 2px;">
-            ❤️PH ${state.hp} &nbsp;|&nbsp; 🍞Hambre ${state.hunger} &nbsp;|&nbsp; 🧠Salud mental ${state.mental}
+            ❤️HP ${state.hp} &nbsp;|&nbsp; 🍞Lapar ${state.hunger} &nbsp;|&nbsp; 🧠Mental ${state.mental}
          </div>`;
-        inventoryEl.innerHTML = `<b>🎒 Inventario:</b> ${invStr(state.items)}`;
+        inventoryEl.innerHTML = `<b>🎒 Inventaris:</b> ${invStr(state.items)}`;
         if (!state.alive) {
-          actionsEl.innerHTML = `<button class="actBtn" onclick="restart()">Reiniciar</button>`;
+          actionsEl.innerHTML = `<button class="actBtn" onclick="restart()">Mulai Ulang</button>`;
         } else if (state.searching) {
           actionsEl.innerHTML =
             state.locations
               .map((loc, i) => `<button class="locBtn" onclick="searchPlace(${i})">${loc.name}</button>`)
-              .join("") + `<button class="actBtn" onclick="cancelSearch()">Cancelar</button>`;
+              .join("") + `<button class="actBtn" onclick="cancelSearch()">Batal</button>`;
         } else {
           actionsEl.innerHTML = `
-          <button class="actBtn" onclick="startSearch()" ${state.locations.length == 0 ? 'disabled style="opacity:0.5;"' : ""}>🔍 Explorar</button>
-          <button class="actBtn" onclick="rest()">🛏 Descansar</button>
-          <button class="actBtn" onclick="move()">➡️ Mover</button>
-          <button class="actBtn" onclick="useItem()">🎒 Usar ítem</button>
+          <button class="actBtn" onclick="startSearch()" ${state.locations.length == 0 ? 'disabled style="opacity:0.5;"' : ""}>🔍 Jelajah</button>
+          <button class="actBtn" onclick="rest()">🛏 Istirahat</button>
+          <button class="actBtn" onclick="move()">➡️ Pindah Lokasi</button>
+          <button class="actBtn" onclick="useItem()">🎒 Pakai Item</button>
         `;
         }
       }
@@ -288,20 +285,20 @@
         state.mental -= 4;
         if (state.hunger >= 95) {
           state.hp -= 15;
-          log("😖 <b>¡Hambriento!</b> (-15 PH)", "event");
+          log("😖 <b>Lapar parah!</b> (-15 HP)", "event");
         }
         if (state.hp <= 0 || state.mental <= 0) {
           state.alive = false;
-          log(`<b>Juego terminado: sobreviviste <span style="color:#e9f85b">${state.day - 1}</span> días.</b>`, "event");
+          log(`<b>Game over: kamu bertahan <span style="color:#e9f85b">${state.day - 1}</span> hari.</b>`, "event");
         }
         render();
       }
 
-      // ---- Acciones ----
+      // ---- Actions ----
       function startSearch() {
         state.searching = true;
         render();
-        log("Elige un lugar para explorar...");
+        log("Pilih lokasi untuk dijelajahi...");
       }
       function cancelSearch() {
         state.searching = false;
@@ -309,40 +306,40 @@
       }
       function searchPlace(idx) {
         let loc = state.locations[idx];
-        log(`🔍 Explorando <b>${loc.name}</b>...`);
-        // 52% hallar ítem, probabilidadloc zombie%
+        log(`🔍 Menjelajahi <b>${loc.name}</b>...`);
+        // 52% dapat item, kemungkinan zombie sesuai proporsi
         if (Math.random() * 100 < 52) {
           let found = loc.item[Math.floor(Math.random() * loc.item.length)];
           state.items[found] = (state.items[found] || 0) + 1;
           let itemInfo = ITEM_LIST.find((x) => x.key === found);
           log(
-            `<span class="item-anim">✨ ¡Encontraste: <b>${found}</b> <span style="font-size:0.88em;color:#ffd;">${itemInfo ? itemInfo.text : ""}</span></span>`,
+            `<span class="item-anim">✨ Kamu menemukan: <b>${found}</b> <span style="font-size:0.88em;color:#ffd;">${itemInfo ? itemInfo.text : ""}</span></span>`,
             "event"
           );
         } else if (Math.random() * 100 < loc.zombie) {
           encounterZombie(loc.name);
           if (!state.alive) return;
         } else {
-          log("No encontraste nada.");
+          log("Tidak menemukan apa-apa.");
         }
-        // Eliminar lugar
+        // Hapus lokasi
         state.locations.splice(idx, 1);
         state.searching = false;
         nextDay();
       }
       function rest() {
-        log("🛏 Descansaste. +13 🧠Salud mental, +12 ❤️PH, +9 Hambre");
+        log("🛏 Kamu istirahat. +13 🧠Mental, +12 ❤️HP, +9 Lapar");
         state.mental = clamp(state.mental + 13, 0, 100);
         state.hp = clamp(state.hp + 12, 0, 100);
         state.hunger += 9;
         nextDay();
       }
       function move() {
-        log("➡️ Te moviste a una nueva área. -2 🧠Salud mental");
+        log("➡️ Kamu pindah ke area baru. -2 🧠Mental");
         state.mental -= 2;
         state.locations = randomPlaces();
         if (Math.random() * 100 < 22) {
-          encounterZombie("ciudad");
+          encounterZombie("kota");
           if (!state.alive) return;
         }
         nextDay();
@@ -350,7 +347,7 @@
       function useItem() {
         let keys = Object.keys(state.items).filter((k) => state.items[k] > 0);
         if (!keys.length) {
-          log("🎒 No tienes ítems para usar.");
+          log("🎒 Kamu tidak punya item yang bisa digunakan.");
           return;
         }
         actionsEl.innerHTML =
@@ -359,33 +356,33 @@
               let info = ITEM_LIST.find((x) => x.key === item);
               return `<button class="locBtn" onclick="chooseItem('${item}')">${item} x${state.items[item]} <span style="font-size:0.8em;color:#ffc;">${info ? info.text : ""}</span></button>`;
             })
-            .join("") + `<button class="actBtn" onclick="render()">Cancelar</button>`;
+            .join("") + `<button class="actBtn" onclick="render()">Batal</button>`;
       }
       function chooseItem(item) {
         state.items[item]--;
         let info = ITEM_LIST.find((x) => x.key === item);
         if (info) info.effect();
         log(
-          `<span class="item-anim">${item} usado. <span style="font-size:0.9em;color:#ffd;">${info ? info.text : ""}</span></span>`
+          `<span class="item-anim">${item} digunakan. <span style="font-size:0.9em;color:#ffd;">${info ? info.text : ""}</span></span>`
         );
         render();
       }
       function encounterZombie(place) {
-        let baseHp = 14 + Math.floor(Math.random() * 12); // 14–25
-        let baseMental = 8 + Math.floor(Math.random() * 8); // 8–15
+        let baseHp = 14 + Math.floor(Math.random() * 12);
+        let baseMental = 8 + Math.floor(Math.random() * 8);
         let weapon = Object.keys(state.items).find(
-          (x) => (x.includes("Cuchillo") || x.includes("Llave inglesa")) && state.items[x] > 0
+          (x) => (x.includes("Pisau") || x.includes("Kunci Inggris")) && state.items[x] > 0
         );
         let hpLoss = weapon ? Math.floor(baseHp * 0.5) : baseHp;
         let mLoss = weapon ? Math.floor(baseMental * 0.7) : baseMental;
         if (weapon) {
           log(
-            `<span class="zombie-anim">🧟 <b>¡Te encontraste con un zombie!</b> (${place})<br>Lo ahuyentaste con ${weapon}. <span style="color:#fd7;">(-${hpLoss} PH, -${mLoss} Salud mental)</span></span>`,
+            `<span class="zombie-anim">🧟 <b>Kamu bertemu zombie!</b> (${place})<br>Kamu menghalaunya dengan ${weapon}. <span style="color:#fd7;">(-${hpLoss} HP, -${mLoss} Mental)</span></span>`,
             "event"
           );
         } else {
           log(
-            `<span class="zombie-anim">🧟 <b>¡Te encontraste con un zombie!</b> (${place})<br>Fuiste herido. <span style="color:#fd7;">(-${hpLoss} PH, -${mLoss} Salud mental)</span></span>`,
+            `<span class="zombie-anim">🧟 <b>Kamu bertemu zombie!</b> (${place})<br>Kamu terluka. <span style="color:#fd7;">(-${hpLoss} HP, -${mLoss} Mental)</span></span>`,
             "event"
           );
         }
@@ -393,31 +390,31 @@
         state.mental -= mLoss;
         if (state.hp <= 0 || state.mental <= 0) {
           state.alive = false;
-          log(`<b>Juego terminado: sobreviviste <span style="color:#e9f85b">${state.day}</span> días.</b>`, "event");
+          log(`<b>Game over: kamu bertahan <span style="color:#e9f85b">${state.day}</span> hari.</b>`, "event");
           render();
         }
       }
-      // Mostrar detalles de ítem
+      // Tampilkan detail item
       function showDesc(item) {
         let info = ITEM_LIST.find((x) => x.key === item);
         if (!info) return;
-        itemDescText.innerHTML = `<b>${item}</b><br><span style="font-size:1.07em;color:#fe9;">${info.desc || ""}</span><br><span style="color:#ffec;">Efecto: ${info.text || ""}</span>`;
+        itemDescText.innerHTML = `<b>${item}</b><br><span style="font-size:1.07em;color:#fe9;">${info.desc || ""}</span><br><span style="color:#ffec;">Efek: ${info.text || ""}</span>`;
         itemDescBg.style.display = "flex";
       }
       function closeDesc() {
         itemDescBg.style.display = "none";
       }
 
-      // -------- Inicialización --------
+      // -------- Inisialisasi --------
       render();
-      log("Un nuevo superviviente ha llegado a la ciudad...");
+      log("Seorang penyintas baru tiba di kota...");
       function restart() {
         state = {
           hp: 100,
           hunger: 35,
           mental: 55,
           day: 1,
-          items: { "🍞Pan": 5, "💧Agua": 5, "💊Analgésico": 5 },
+          items: { "🍞Roti": 5, "💧Air": 5, "💊Obat Pereda Nyeri": 5 },
           alive: true,
           searching: false,
           locations: randomPlaces(),
@@ -425,7 +422,7 @@
         };
         logEl.innerHTML = "";
         render();
-        log("Un nuevo superviviente ha llegado a la ciudad...");
+        log("Seorang penyintas baru tiba di kota...");
       }
     </script>
     <section
@@ -441,33 +438,33 @@
         font-family: Arial, sans-serif;
       ">
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🧟 ¿Qué es Zombie Survival?</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🧟 Apa itu Survival Zombie?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          Zombie Survival es un juego de supervivencia basado en texto en el que debes gestionar tu hambre, salud mental y salud física durante un apocalipsis zombie. Explora lugares, recolecta ítems y sobrevive el mayor tiempo posible.
+          Survival Zombie adalah game bertahan hidup berbasis teks di mana kamu harus mengelola rasa lapar, mental, dan kesehatan fisik selama kiamat zombie. Jelajahi lokasi, kumpulkan item, dan bertahan selama mungkin.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🗺️ ¿Cómo jugar?</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🗺️ Bagaimana cara bermain?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          Usa los botones en la parte inferior: "Explorar", "Descansar", "Mover" o "Usar ítem". Explorar puede darte objetos o hacer que encuentres zombies.
+          Gunakan tombol di bawah: "Jelajah", "Istirahat", "Pindah Lokasi", atau "Pakai Item". Jelajah bisa memberi item atau malah bertemu zombie.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🎒 ¿Qué son los ítems?</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🎒 Apa itu item?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          Los ítems pueden recuperar salud, reducir el hambre o mejorar tu salud mental. Armas como el cuchillo o la llave inglesa reducen el daño de los zombies.
+          Item dapat memulihkan kesehatan, mengurangi lapar, atau meningkatkan mental. Senjata seperti pisau dan kunci inggris mengurangi kerusakan dari zombie.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🧠 ¿Qué pasa si mi salud mental o física llega a 0?</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🧠 Apa yang terjadi jika mental/fisik 0?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          Si tu salud física o mental llega a 0, el juego termina. El hambre aumenta cada día y si llegas a cierto nivel, perderás salud física.
+          Jika kesehatan fisik atau mental turun ke 0, game berakhir. Lapar naik setiap hari dan jika terlalu tinggi, HP akan berkurang.
         </p>
       </div>
       <div style="margin-bottom: 0">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔁 ¿Puedo reiniciar al morir?</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔁 Bisakah mulai ulang jika mati?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          ¡Sí! Al morir verás un botón "Reiniciar". Intenta sobrevivir más tiempo con mejores decisiones.
+          Bisa! Setelah mati akan muncul tombol "Mulai Ulang". Coba bertahan lebih lama dengan strategi yang lebih baik.
         </p>
       </div>
     </section>

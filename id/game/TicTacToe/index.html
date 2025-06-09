@@ -1,33 +1,32 @@
 <!doctype html>
-<html lang="es">
+<html lang="id">
     <head>
-        <!-- SEO optimizado -->
+        <!-- SEO dioptimalkan -->
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="¡Juega Tic Tac Toe en línea en modo seguro! Desafía a la IA en un estilizado juego arcade retro. Optimizado para móviles y con carga rápida." />
+            content="Mainkan Tic Tac Toe online dengan mode aman! Tantang AI dalam game arcade retro bergaya. Dioptimalkan untuk HP dan loading super cepat." />
         <meta
             name="keywords"
-            content="Tic Tac Toe, Tres en Raya, Gato, Juego en línea, Juego web gratis, Juego de tablero, IA, Retro, Móvil, Puzle" />
-
+            content="Tic Tac Toe, Susun Tiga, Gato, Game Online, Game Web Gratis, Papan, AI, Retro, Mobile, Puzzle" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://emfls.github.io/id/game/TicTacToe" />
 
-        <!-- Open Graph (para vista previa en redes) -->
-        <meta property="og:title" content="Tres en Raya (Tic Tac Toe)" />
+        <!-- Open Graph (untuk preview di media sosial) -->
+        <meta property="og:title" content="Susun Tiga (Tic Tac Toe)" />
         <meta
             property="og:description"
-            content="¡Desafía a la IA en un Tic Tac Toe de estilo retro! Juega rápidamente, sin registro y optimizado para móviles." />
+            content="Tantang AI di Tic Tac Toe gaya retro! Main cepat, tanpa daftar, dan dioptimalkan untuk HP." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://emfls.github.io/id/game/TicTacToe" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Tres en Raya (Tic Tac Toe)" />
-        <meta name="twitter:description" content="Juega Tres en Raya en modo seguro en línea – rápido y optimizado para pantalla móvil." />
+        <meta name="twitter:title" content="Susun Tiga (Tic Tac Toe)" />
+        <meta name="twitter:description" content="Mainkan Susun Tiga online dengan mode aman – cepat & ramah layar HP." />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -37,28 +36,27 @@
                 dataLayer.push(arguments);
             }
             gtag("js", new Date());
-
             gtag("config", "G-QP5Q67GE5B");
         </script>
         <script
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <title>Tres en Raya (Tic Tac Toe)</title>
+        <title>Susun Tiga (Tic Tac Toe)</title>
         <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
         <link rel="stylesheet" href="style.css" />
     </head>
 
     <body oncontextmenu="return false">
-        <h1>Tres en Raya (Tic Tac Toe)</h1>
-        <div class="status" id="status">Tu turno: ❌</div>
+        <h1>Susun Tiga (Tic Tac Toe)</h1>
+        <div class="status" id="status">Giliranmu: ❌</div>
         <div class="board" id="board"></div>
         <div class="button-container">
-            <button onclick="resetGame()">Reiniciar</button>
+            <button onclick="resetGame()">Mulai Ulang</button>
         </div>
 
         <script>
-            // Prevención de captura de pantalla con teclas
+            // Pencegahan shortcut tangkapan layar
             document.addEventListener("keydown", function (e) {
                 if (
                     (e.ctrlKey && (e.key === "u" || e.key === "U" || e.key === "c" || e.key === "C")) ||
@@ -107,19 +105,19 @@
 
                 cells[index].textContent = PLAYER;
                 if (checkWin(PLAYER)) {
-                    statusDiv.textContent = `¡Has ganado!`;
+                    statusDiv.textContent = `Kamu menang!`;
                     gameActive = false;
                     return;
                 }
 
                 if (isBoardFull()) {
-                    statusDiv.textContent = `¡Empate!`;
+                    statusDiv.textContent = `Seri!`;
                     gameActive = false;
                     return;
                 }
 
                 playerTurn = false;
-                statusDiv.textContent = `IA pensando...`;
+                statusDiv.textContent = `AI sedang berpikir...`;
                 setTimeout(() => {
                     aiMove();
                 }, 500);
@@ -130,24 +128,24 @@
                 if (bestMove !== null) {
                     cells[bestMove].textContent = AI;
                     if (checkWin(AI)) {
-                        statusDiv.textContent = `¡La IA gana!`;
+                        statusDiv.textContent = `AI menang!`;
                         gameActive = false;
                         return;
                     }
 
                     if (isBoardFull()) {
-                        statusDiv.textContent = `¡Empate!`;
+                        statusDiv.textContent = `Seri!`;
                         gameActive = false;
                         return;
                     }
 
-                    statusDiv.textContent = `Tu turno: ${PLAYER}`;
+                    statusDiv.textContent = `Giliranmu: ${PLAYER}`;
                     playerTurn = true;
                 }
             }
 
             function getBestMove() {
-                // Ver si IA puede ganar de inmediato
+                // AI menang langsung
                 for (let i = 0; i < cells.length; i++) {
                     if (!cells[i].textContent) {
                         cells[i].textContent = AI;
@@ -156,7 +154,7 @@
                     }
                 }
 
-                // Bloquear si el jugador puede ganar
+                // Blokir jika player bisa menang
                 for (let i = 0; i < cells.length; i++) {
                     if (!cells[i].textContent) {
                         cells[i].textContent = PLAYER;
@@ -168,16 +166,16 @@
                     }
                 }
 
-                // Tomar el centro
+                // Ambil tengah
                 if (!cells[4].textContent) return 4;
 
-                // Tomar una esquina
+                // Ambil sudut
                 const corners = [0, 2, 6, 8];
                 for (let i of corners) {
                     if (!cells[i].textContent) return i;
                 }
 
-                // Cualquier otra casilla
+                // Ambil sisa mana saja
                 for (let i = 0; i < cells.length; i++) {
                     if (!cells[i].textContent) return i;
                 }
@@ -196,7 +194,7 @@
             function resetGame() {
                 gameActive = true;
                 playerTurn = true;
-                statusDiv.textContent = `Tu turno: ${PLAYER}`;
+                statusDiv.textContent = `Giliranmu: ${PLAYER}`;
                 createBoard();
             }
 
@@ -218,7 +216,7 @@
                 cursor: pointer;
             "
             onclick="window.location.href='/'">
-            Otros juegos
+            Game Lainnya
         </button>
         <section
             style="
@@ -234,36 +232,36 @@
                 line-height: 1.6;
                 color: #f0f0f0;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ Preguntas frecuentes</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ Pertanyaan Umum</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>P1. ¿Cómo se juega Tres en Raya?</strong><br />
-                A. Toca una casilla vacía para colocar ❌. La IA juega con ⭕️.
+                <strong>P1. Bagaimana cara bermain Susun Tiga?</strong><br />
+                J: Ketuk kotak kosong untuk menaruh ❌. AI akan main dengan ⭕️.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>P2. ¿Cómo se gana?</strong><br />
-                A. Consigue tres ❌ en línea (horizontal, vertical o diagonal) para ganar.
+                <strong>P2. Bagaimana cara menang?</strong><br />
+                J: Dapatkan tiga ❌ berurutan (horizontal, vertikal, atau diagonal) untuk menang.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>P3. ¿Qué pasa en caso de empate?</strong><br />
-                A. Si todas las casillas están llenas y no hay ganador, resulta en empate.
+                <strong>P3. Bagaimana jika hasilnya seri?</strong><br />
+                J: Jika semua kotak sudah terisi dan tidak ada pemenang, maka hasilnya seri.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>P4. ¿Puedo reiniciar en cualquier momento?</strong><br />
-                A. ¡Sí! Pulsa el botón "Reiniciar" para jugar otra vez desde el principio.
+                <strong>P4. Bisa ulang kapan saja?</strong><br />
+                J: Tentu! Tekan tombol "Mulai Ulang" untuk main dari awal lagi.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>P5. ¿Funciona bien en móviles?</strong><br />
-                A. ¡Por supuesto! Está optimizado para pantallas móviles y de escritorio.
+                <strong>P5. Apakah cocok di HP?</strong><br />
+                J: Tentu! Game ini sudah dioptimalkan untuk layar HP maupun desktop.
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>P6. ¿Quién creó este juego?</strong><br />
-                A. Creado por Itagi. Consulta otros juegos con el botón "Otros juegos".
+                <strong>P6. Siapa pembuat game ini?</strong><br />
+                J: Dibuat oleh Itagi. Temukan game lain lewat tombol "Game Lainnya".
             </div>
         </section>
     </body>

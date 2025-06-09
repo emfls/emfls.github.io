@@ -1,323 +1,216 @@
 <!doctype html>
-<html lang="es">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta
-            name="description"
-            content="¡Prueba rápida y divertida de MBTI basada en situaciones! Responde preguntas reales y descubre tu tipo de MBTI al instante. Gratis, compatible con navegadores y móvil." />
-        <meta
-            name="keywords"
-            content="prueba MBTI, test de personalidad, MBTI rápido, juego web, test en el navegador, test psicológico, gratis, test en línea, ENFP, INFP, INTJ, INFJ, tipo MBTI, autodescubrimiento, quiz divertido, resultado inmediato" />
-        <meta name="author" content="Itagi" />
-        <meta name="robots" content="index, follow" />
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="Tes MBTI cepat dan menyenangkan berbasis situasi! Jawab pertanyaan nyata dan temukan tipe MBTI-mu langsung. Gratis dan kompatibel dengan browser serta perangkat seluler." />
+  <meta
+    name="keywords"
+    content="tes MBTI, tes kepribadian, MBTI cepat, permainan web, tes di browser, tes psikologi, gratis, tes online, ENFP, INFP, INTJ, INFJ, tipe MBTI, eksplorasi diri, kuis seru, hasil instan" />
+  <meta name="author" content="Itagi" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://emfls.github.io/id/game/MBTI" />
 
-        <link rel="canonical" href="https://emfls.github.io/id/game/MBTI" />
+  <meta property="og:title" content="Tes Cepat: MBTI – Kuis kepribadian yang menyenangkan" />
+  <meta property="og:description" content="Apa tipe MBTI-mu? Jawab pertanyaan berbasis situasi dan temukan hasilnya dalam hitungan menit. Gratis dan bisa dimainkan di ponsel!" />
+  <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+  <meta property="og:url" content="https://emfls.github.io/id/game/MBTI" />
+  <meta property="og:type" content="website" />
 
-        <meta property="og:title" content="Prueba Rápida: MBTI – Juego divertido de test de personalidad" />
-        <meta
-            property="og:description"
-            content="¿Cuál es tu tipo MBTI? Responde preguntas basadas en situaciones reales y descubre tu resultado al instante. ¡Gratis y compatible con móviles!" />
-        <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
-        <meta property="og:url" content="https://emfls.github.io/id/game/MBTI" />
-        <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Tes Cepat: MBTI – Kuis kepribadian yang menyenangkan" />
+  <meta name="twitter:description" content="Tes MBTI cepat dengan pertanyaan berbasis situasi! Temukan tipe kepribadianmu dalam beberapa menit." />
+  <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Prueba Rápida: MBTI – Juego divertido de test de personalidad" />
-        <meta
-            name="twitter:description"
-            content="¡Test MBTI rápido con preguntas basadas en situaciones! Descubre tu tipo en minutos." />
-        <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag() {
-                dataLayer.push(arguments);
-            }
-            gtag("js", new Date());
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag("js", new Date());
+    gtag("config", "G-QP5Q67GE5B");
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
 
-            gtag("config", "G-QP5Q67GE5B");
-        </script>
-        <script
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
-            crossorigin="anonymous"></script>
-        <title>Prueba Rápida: MBTI</title>
-        <link rel="stylesheet" href="style.css" />
-    </head>
+  <title>Tes Cepat: MBTI</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
 
-    <body>
-        <h1><span style="color: #8f94fb">Prueba Rápida:</span><span style="color: #6f6"> MBTI</span></h1>
-        <p class="description">¡Descubre tu tipo MBTI a través de preguntas en situaciones reales de manera rápida y divertida!</p>
+<body>
+  <h1><span style="color: #8f94fb">Tes Cepat:</span><span style="color: #6f6"> MBTI</span></h1>
+  <p class="description">Temukan tipe MBTI-mu melalui pertanyaan berbasis situasi yang cepat dan menyenangkan!</p>
 
-        <div id="progress"></div>
-        <div class="card fade show" id="quiz">
-            <div class="question" id="question"></div>
-            <div id="options"></div>
-        </div>
+  <div id="progress"></div>
+  <div class="card fade show" id="quiz">
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+  </div>
 
-        <div class="card fade" id="result" style="display: none">
-            <h2>
-                MBTI : <b><span id="mbti-type"></span></b>
-            </h2>
-            <p id="mbti-description"></p>
-            <button onclick="location.reload()"><b>Volver a intentarlo</b></button>
-            <button onclick="shareResult()"><b>Compartir resultado</b></button>
-        </div>
+  <div class="card fade" id="result" style="display: none">
+    <h2>MBTI : <b><span id="mbti-type"></span></b></h2>
+    <p id="mbti-description"></p>
+    <button onclick="location.reload()"><b>Coba Lagi</b></button>
+    <button onclick="shareResult()"><b>Bagikan Hasil</b></button>
+  </div>
 
-        <script>
-            const questions = [
-                {
-                    q: "Asistes a una bienvenida de trabajo donde todos tus compañeros son desconocidos. ¿Qué haces?",
-                    a: ["¡Te acercas y haces amigos!", "Primero observas en silencio"],
-                    t: ["E", "I"]
-                },
-                {
-                    q: "¡Un amigo te llama de improviso para salir a tomar algo un viernes por la noche!",
-                    a: ["¡Claro que sí, salgo de inmediato!", "Prefiero quedarme en casa y relajarme"],
-                    t: ["E", "I"]
-                },
-                {
-                    q: "Has comprado un dispositivo nuevo y necesitas montarlo.",
-                    a: ["Lees detenidamente el manual primero", "Lo intentas directamente y consultas si hace falta"],
-                    t: ["S", "N"]
-                },
-                {
-                    q: "Estás indeciso entre dos atuendos en la tienda.",
-                    a: ["Eliges el más práctico y conveniente", "Confías en tu intuición y eliges lo que más te atrae"],
-                    t: ["S", "N"]
-                },
-                {
-                    q: "El proyecto se retrasa por un error de un compañero del equipo. ¿Cómo reaccionas?",
-                    a: ["Analizas la causa y buscas soluciones", "Primero te aseguras de cómo se siente la otra persona"],
-                    t: ["T", "F"]
-                },
-                {
-                    q: "Un amigo te pide un favor urgente e incómodo.",
-                    a: ["Le explicas con lógica por qué es difícil", "Rechazas amablemente para no herir sus sentimientos"],
-                    t: ["T", "F"]
-                },
-                {
-                    q: "Es la víspera de un viaje importante. ¿Qué haces?",
-                    a: ["Preparo una lista y empaco con anticipación", "Lo dejo para la mañana para no estresarme"],
-                    t: ["J", "P"]
-                },
-                {
-                    q: "Un amigo te pide cambiar hora y lugar de una cita. ¿Cómo reaccionas?",
-                    a: ["Te indigna un poco el cambio repentino", "¡Genial! Me adapto sin problema"],
-                    t: ["J", "P"]
-                },
-                {
-                    q: "Viajas en ascensor con un desconocido. ¿Qué haces?",
-                    a: ["Lo saludas o inicias una conversación ligera", "Te quedas en silencio tranquilamente"],
-                    t: ["E", "I"]
-                },
-                {
-                    q: "¿Cómo planificas normalmente tu fin de semana?",
-                    a: ["Me gusta planearlo con antelación", "Decido según mi estado de ánimo del momento"],
-                    t: ["J", "P"]
-                },
-                {
-                    q: "Surge una idea nueva durante una reunión. ¿Qué haces?",
-                    a: ["Lo compartes de inmediato", "Lo anotas y esperas el momento adecuado para mencionarlo"],
-                    t: ["E", "I"]
-                },
-                {
-                    q: "Al elegir un restaurante, ¿qué haces primero?",
-                    a: ["Lees reseñas detalladas", "Entro a cualquiera que tenga buena vibra"],
-                    t: ["S", "N"]
-                },
-                {
-                    q: "Alguien te pide consejo sobre un problema personal.",
-                    a: ["Busco soluciones prácticas enseguida", "Primero escucho y muestro empatía"],
-                    t: ["T", "F"]
-                },
-                {
-                    q: "Alguien te dice que está enojado contigo. ¿Qué piensas primero?",
-                    a: ["Quiero entender exactamente qué hice mal", "Me pregunto si su enojo me afecta emocionalmente"],
-                    t: ["T", "F"]
-                },
-                {
-                    q: "Un plan importante se arruina en el último momento. ¡Qué desastre!",
-                    a: ["¡Maldición! No soporto que algo no salga como planeé", "¡Está bien! Me adapto sin problema"],
-                    t: ["J", "P"]
-                },
-                {
-                    q: "Te pierdes junto a un amigo en un viaje. ¿Qué haces?",
-                    a: ["Reviso el mapa y busco cómo regresar", "¡Qué emoción! Esto es parte de la aventura"],
-                    t: ["S", "N"]
-                }
-            ];
+  <script>
+    const questions = [
+      { q: "Kamu menghadiri acara sambutan di tempat kerja di mana semua orang asing. Apa yang kamu lakukan?", a: ["Kamu langsung mengajak bicara dan berteman!", "Kamu diam dan mengamati dulu"], t: ["E","I"] },
+      { q: "Teman tiba-tiba mengajak keluar minum malam Jumat!", a: ["Tentu! Ayo langsung pergi!", "Lebih suka di rumah untuk relaks"], t: ["E","I"] },
+      { q: "Kamu membeli perangkat baru dan harus merakitnya.", a: ["Membaca manual terlebih dulu", "Langsung coba dan cari cara bila perlu"], t: ["S","N"] },
+      { q: "Bingung memilih pakaian di toko.", a: ["Pilih yang praktis", "Ikuti intuisi dan pilih yang menarik hatimu"], t: ["S","N"] },
+      { q: "Proyek tertunda karena kesalahan rekan kerja. Bagaimana reaksimu?", a: ["Analisis masalah dan cari solusi", "Pastikan dulu kondisi emosional orang tersebut"], t: ["T","F"] },
+      { q: "Teman meminta bantuan mendadak dan tidak nyaman.", a: ["Jelaskan secara logis mengapa sulit", "Menolak dengan halus agar perasaannya tidak terluka"], t: ["T","F"] },
+      { q: "Malam sebelum perjalanan penting. Apa yang kamu lakukan?", a: ["Membuat daftar dan berkemas lebih awal", "Menunggu besok pagi agar tidak stres"], t: ["J","P"] },
+      { q: "Teman meminta ubah waktu dan tempat janji. Reaksimu?", a: ["Agak kesal karena tiba-tiba berubah", "Bagus! Aku fleksibel"], t: ["J","P"] },
+      { q: "Naik lift bersama orang asing. Apa yang kamu lakukan?", a: ["Menyapa atau memulai obrolan ringan", "Diam dan tenang saja"], t: ["E","I"] },
+      { q: "Bagaimana kamu merencanakan akhir pekan?", a: ["Suka direncanakan terlebih dulu", "Tergantung mood saat itu"], t: ["J","P"] },
+      { q: "Ide baru muncul saat rapat. Apa yang kamu lakukan?", a: ["Langsung sampaikan", "Catat dulu, sampaikan nanti"], t: ["E","I"] },
+      { q: "Memilih restoran. Apa yang kamu lakukan pertama?", a: ["Baca ulasan mendetail", "Pilih karena vibe-nya baik"], t: ["S","N"] },
+      { q: "Orang meminta saran tentang masalah pribadi.", a: ["Cari solusi praktis segera", "Dengarkan dan tunjukkan empati dulu"], t: ["T","F"] },
+      { q: "Orang marah padamu. Apa pemikiran pertamamu?", a: ["Ingin tahu apa salahku", "Bertanya-tanya apakah emosinya mempengaruhi diriku"], t: ["T","F"] },
+      { q: "Rencana penting gagal di menit terakhir. Apa reaksimu?", a: ["Kesal! Tidak suka hal tak terduga", "Santai saja, ini bagian dari hidup"], t: ["J","P"] },
+      { q: "Tersesat bersama teman saat perjalanan. Apa yang kamu lakukan?", a: ["Cek peta dan cari jalan pulang", "Seru! Ini bagian dari petualangan"], t: ["S","N"] }
+    ];
+    const descriptions = {
+      ENFP:"Penuh energi dan kreatif! Kamu suka eksplorasi ide baru dan bersosialisasi.",
+      INFP:"Idealistis dan reflektif, kamu mencari makna dan kedalaman emosional.",
+      INFJ:"Visioner dan pemimpin diam, empati dan wawasanmu menginspirasi.",
+      INTJ:"Strategis dan mandiri, kamu selalu memiliki rencana.",
+      ENTP:"Cerdas dan penasaran, lahir untuk berdebat dan tantangan.",
+      ENFJ:"Empatik dan memotivasi, kamu memberi energi positif ke orang lain.",
+      ENTJ:"Percaya diri dan berani, pemimpin yang fokus pada hasil.",
+      INTP:"Logis dan kreatif, senang memecahkan masalah rumit.",
+      ISTP:"Praktis dan tenang, fokus pada tindakan nyata.",
+      ISFP:"Tenang dan artistik, menemukan keindahan di segala hal.",
+      ISTJ:"Dapat diandalkan dan teliti, orang lain mempercayaimu.",
+      ISFJ:"Penuh kasih dan peduli, kamu selalu siap membantu.",
+      ESTP:"Aktif dan berani, kamu mencintai petualangan.",
+      ESFP:"Hidup dan suka bersenang-senang, kamu hidup penuh warna.",
+      ESTJ:"Tertata dan proaktif, mengorganisir segalanya.",
+      ESFJ:"Hangat dan loyal, kamu merawat orang dengan ketulusan."
+    };
+    let resultCount={E:0,I:0,S:0,N:0,T:0,F:0,J:0,P:0}, index=0;
 
-            const descriptions = {
-                ENFP: "¡Estás lleno de energía y creatividad! Te encanta explorar nuevas ideas y socializar con la gente. ¡Eres el alma de las fiestas!",
-                INFP: "Idealista y reflexivo, buscas significado y autenticidad en todo. Sientes con profundidad y piensas con profundidad.",
-                INFJ: "Visionario y líder silencioso. Tu empatía y perspicacia inspiran cambios desde detrás del telón.",
-                INTJ: "Eres estratégico e independiente, ves claramente el panorama general. Siempre tienes un plan.",
-                ENTP: "Ingenioso y curioso, naciste para debatir. Disfrutas de los desafíos y de lo nuevo.",
-                ENFJ: "Empático y motivador, llenas de energía a tu grupo. La gente se siente cómoda a tu alrededor.",
-                ENTJ: "Confiado y audaz, eres un líder visionario enfocado en los resultados.",
-                INTP: "Lógico y creativo, disfrutas resolver problemas complejos y explorar cómo funcionan las cosas.",
-                ISTP: "Práctico y sereno, actúas con rapidez y te enfocas en el presente. Eres eficiente y orientado a la acción.",
-                ISFP: "Tranquilo y artístico, encuentras belleza en todo. Tu espíritu pacífico es creativo y sensible.",
-                ISTJ: "Fiable y meticuloso, cumples todo con precisión. Los demás confían y dependen de ti.",
-                ISFJ: "Compasivo y atento, apoyas a los demás con tu fuerza silenciosa. Siempre estás pendiente de las necesidades ajenas.",
-                ESTP: "Activo y audaz, amas la aventura y la emoción. Eres excelente creando movimiento y resultados.",
-                ESFP: "Vibrante y amante de la diversión, eres el centro de atención. ¡Vives la vida al máximo!",
-                ESTJ: "Eres organizado y motivado, pones orden en el caos. Diriges y gestionas con habilidad.",
-                ESFJ: "Cálido y leal, cuidas a todos con dedicación. Tu comunidad confía en tu bondad."
-            };
+    function showQuestion(){
+      const quizCard=document.getElementById("quiz");
+      quizCard.classList.remove("show");
+      setTimeout(()=>{
+        const q=questions[index];
+        document.getElementById("question").innerText=q.q;
+        document.getElementById("progress").innerText=`Pertanyaan ${index+1} dari ${questions.length}`;
+        const options=document.getElementById("options");
+        options.innerHTML="";
+        q.a.forEach((text,i)=>{
+          const btn=document.createElement("button");
+          btn.className="option";
+          btn.innerText=text;
+          btn.onclick=()=>{
+            resultCount[q.t[i]]++;
+            index++;
+            index<questions.length?showQuestion():showResult();
+          };
+          options.appendChild(btn);
+        });
+        quizCard.classList.add("show");
+      },200);
+    }
 
-            const resultCount = {
-                E: 0,
-                I: 0,
-                S: 0,
-                N: 0,
-                T: 0,
-                F: 0,
-                J: 0,
-                P: 0
-            };
-            let index = 0;
+    function showResult(){
+      const resultCard=document.getElementById("result");
+      resultCard.classList.remove("show");
+      setTimeout(()=>{
+        document.getElementById("quiz").style.display="none";
+        const mbti=(resultCount.E>=resultCount.I?"E":"I")+
+                   (resultCount.S>=resultCount.N?"S":"N")+
+                   (resultCount.T>=resultCount.F?"T":"F")+
+                   (resultCount.J>=resultCount.P?"J":"P");
+        const emojiMap={
+          ENFP:"💡🌈",INFP:"🌱📖",INFJ:"🧘‍♀️✨",INTJ:"🧠🛰️",
+          ENTP:"🌀🎤",ENFJ:"🌟🤝",ENTJ:"📊🚀",INTP:"🔬🧩",
+          ISTP:"🔧🛠️",ISFP:"🎨🎵",ISTJ:"📚🔒",ISFJ:"🧸🍪",
+          ESTP:"🎮🚗",ESFP:"🎉📸",ESTJ:"📏📣",ESFJ:"🍰💬"
+        };
+        const emoji=emojiMap[mbti]||"✨";
+        document.getElementById("mbti-type").innerText=`${mbti} ${emoji}`;
+        document.getElementById("mbti-description").innerText=descriptions[mbti];
+        resultCard.className="card fade mbti-bg-"+mbti;
+        resultCard.style.display="block";
+        requestAnimationFrame(()=>resultCard.classList.add("show"));
+      },300);
+    }
 
-            function showQuestion() {
-                const quizCard = document.getElementById("quiz");
-                quizCard.classList.remove("show");
-                setTimeout(() => {
-                    const q = questions[index];
-                    document.getElementById("question").innerText = q.q;
-                    document.getElementById("progress").innerText = `Pregunta ${index + 1} de ${questions.length}`;
-                    const options = document.getElementById("options");
-                    options.innerHTML = "";
-                    q.a.forEach((text, i) => {
-                        const btn = document.createElement("button");
-                        btn.className = "option";
-                        btn.innerText = text;
-                        btn.onclick = () => {
-                            resultCount[q.t[i]]++;
-                            index++;
-                            if (index < questions.length) {
-                                showQuestion();
-                            } else {
-                                showResult();
-                            }
-                        };
-                        options.appendChild(btn);
-                    });
-                    quizCard.classList.add("show");
-                }, 200);
-            }
+    function shareResult(){
+      const mbti=document.getElementById("mbti-type").innerText;
+      const text=`📌 Tipe MBTI saya adalah ${mbti}! \n\nCoba juga! ${window.location.href}`;
+      if(navigator.share){
+        navigator.share({title:"Hasil MBTI", text:text, url:window.location.href})
+          .catch(err=>console.log("Error saat berbagi:",err));
+      } else {
+        navigator.clipboard.writeText(text)
+          .then(()=>alert("Hasil disalin ke clipboard!"))
+          .catch(()=>alert("Gagal menyalin. Mohon salin secara manual."));
+      }
+    }
 
-            function showResult() {
-                const resultCard = document.getElementById("result");
-                resultCard.classList.remove("show");
-                setTimeout(() => {
-                    document.getElementById("quiz").style.display = "none";
-                    const mbti =
-                        (resultCount.E >= resultCount.I ? "E" : "I") +
-                        (resultCount.S >= resultCount.N ? "S" : "N") +
-                        (resultCount.T >= resultCount.F ? "T" : "F") +
-                        (resultCount.J >= resultCount.P ? "J" : "P");
-                    const emojiMap = {
-                        ENFP: "💡🌈",
-                        INFP: "🌱📖",
-                        INFJ: "🧘‍♀️✨",
-                        INTJ: "🧠🛰️",
-                        ENTP: "🌀🎤",
-                        ENFJ: "🌟🤝",
-                        ENTJ: "📊🚀",
-                        INTP: "🔬🧩",
-                        ISTP: "🔧🛠️",
-                        ISFP: "🎨🎵",
-                        ISTJ: "📚🔒",
-                        ISFJ: "🧸🍪",
-                        ESTP: "🎮🚗",
-                        ESFP: "🎉📸",
-                        ESTJ: "📏📣",
-                        ESFJ: "🍰💬"
-                    };
-                    const emoji = emojiMap[mbti] || "✨";
-                    document.getElementById("mbti-type").innerText = `${mbti} ${emoji}`;
-                    document.getElementById("mbti-description").innerText =
-                        descriptions[mbti] || "Descripción no disponible.";
-                    resultCard.className = "card fade mbti-bg-" + mbti;
-                    resultCard.style.display = "block";
-                    requestAnimationFrame(() => resultCard.classList.add("show"));
-                }, 300);
-            }
+    showQuestion();
+  </script>
 
-            function shareResult() {
-                const mbti = document.getElementById("mbti-type").innerText;
-                const text = `📌 ¡Mi tipo MBTI es ${mbti}! \n\n¡Haz la prueba tú también! ${window.location.href}`;
-                if (navigator.share) {
-                    navigator
-                        .share({
-                            title: "Resultado MBTI",
-                            text: text,
-                            url: window.location.href
-                        })
-                        .catch((err) => console.log("Error al compartir:", err));
-                } else {
-                    navigator.clipboard
-                        .writeText(text)
-                        .then(() => alert("¡Resultado copiado al portapapeles!"))
-                        .catch(() => alert("Error al copiar. Copia el texto manualmente."));
-                }
-            }
+  <button class="menu" onclick="goToMain()">📂 Game Lainnya</button>
+  <script>
+    function goToMain(){
+      window.location.href="/";
+    }
+  </script>
 
-            showQuestion();
-        </script>
-        <button class="menu" onclick="goToMain()">📂 Otros juegos</button>
-        <script>
-            function goToMain() {
-                window.location.href = "/"; 
-            }
-        </script>
-        <section
-            style="
-                max-width: 320px;
-                width: 100%;
-                margin: 48px auto 24px auto;
-                font-family: 'Arial', sans-serif;
-                font-size: 14px;
-                background: #1e1e1e;
-                border-radius: 18px;
-                box-shadow: 0 6px 24px #1236;
-                padding: 20px;
-                line-height: 1.6;
-                color: #f0f0f0;
-            ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #6a72f8">❓ Preguntas Frecuentes</h2>
+  <section
+    style="
+      max-width: 320px;
+      width: 100%;
+      margin: 48px auto 24px auto;
+      font-family: 'Arial', sans-serif;
+      font-size: 14px;
+      background: #1e1e1e;
+      border-radius: 18px;
+      box-shadow: 0 6px 24px #1236;
+      padding: 20px;
+      line-height: 1.6;
+      color: #f0f0f0;
+    ">
+    <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #6a72f8">❓ Pertanyaan Umum</h2>
 
-            <div style="margin-bottom: 12px">
-                <strong>1. ¿Qué es esta prueba MBTI?</strong><br />
-                R. Es un quiz que utiliza 16 preguntas basadas en escenarios reales para determinar tu tipo de personalidad MBTI de forma rápida y entretenida en tu navegador.
-            </div>
+    <div style="margin-bottom: 12px">
+      <strong>1. Apa itu tes MBTI ini?</strong><br />
+      A. Ini adalah kuis dengan 16 pertanyaan berbasis skenario nyata untuk menentukan tipe kepribadian MBTI-mu secara cepat dan menyenangkan melalui browser.
+    </div>
 
-            <div style="margin-bottom: 12px">
-                <strong>2. ¿Cuántas preguntas hay?</strong><br />
-                R. Hay 16 preguntas diseñadas para identificar tu tipo MBTI de manera precisa.
-            </div>
+    <div style="margin-bottom: 12px">
+      <strong>2. Ada berapa pertanyaan?</strong><br />
+      A. Terdapat 16 pertanyaan yang dirancang untuk mengidentifikasi tipe MBTI kamu secara akurat.
+    </div>
 
-            <div style="margin-bottom: 12px">
-                <strong>3. ¿Es científicamente precisa?</strong><br />
-                R. Está basada en teoría MBTI, pero es principalmente para entretenimiento y autoconocimiento, no un diagnóstico profesional.
-            </div>
+    <div style="margin-bottom: 12px">
+      <strong>3. Apakah ini akurat secara ilmiah?</strong><br />
+      A. Tes ini didasarkan pada teori MBTI, tetapi lebih ditujukan untuk hiburan dan eksplorasi diri, bukan diagnosis profesional.
+    </div>
 
-            <div style="margin-bottom: 12px">
-                <strong>4. ¿Puedo repetir la prueba?</strong><br />
-                R. ¡Por supuesto! Pulsa el botón <b>Volver a intentarlo</b> para reiniciar el quiz.
-            </div>
+    <div style="margin-bottom: 12px">
+      <strong>4. Bisakah saya mengulang tesnya?</strong><br />
+      A. Tentu! Tekan tombol <b>Coba Lagi</b> untuk memulai ulang kuisnya.
+    </div>
 
-            <div style="margin-bottom: 12px">
-                <strong>5. ¿Cómo comparto mi resultado?</strong><br />
-                R. Pulsa el botón <b>Compartir resultado</b> y elige la opción que prefieras: copiar al portapapeles o compartir desde tu dispositivo.
-            </div>
+    <div style="margin-bottom: 12px">
+      <strong>5. Bagaimana cara membagikan hasil saya?</strong><br />
+      A. Tekan tombol <b>Bagikan Hasil</b> dan pilih opsi: salin ke clipboard atau gunakan fitur berbagi perangkat Anda.
+    </div>
 
-            <div style="margin-bottom: 0">
-                <strong>6. ¿Funciona en móviles?</strong><br />
-                R. ¡Sí! Está optimizado para escritorio y dispositivos móviles.
-            </div>
-        </section>
-    </body>
+    <div style="margin-bottom: 0">
+      <strong>6. Apakah ini berfungsi di perangkat seluler?</strong><br />
+      A. Ya! Halaman ini dioptimalkan untuk desktop maupun perangkat seluler.
+    </div>
+  </section>
+</body>
 </html>

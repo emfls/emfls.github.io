@@ -1,32 +1,32 @@
 <!doctype html>
-<html lang="es">
+<html lang="id">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="¡Juega al clásico Buscaminas en tu navegador! Descubre las casillas seguras evitando minas y desafía la mejor puntuación. Gratis, rápido y optimizado para móviles." />
+            content="Mainkan Minesweeper klasik di browser Anda! Temukan kotak aman, hindari ranjau, dan tantang skor terbaik. Gratis, cepat, dan dioptimalkan untuk perangkat seluler." />
         <meta
             name="keywords"
-            content="buscaminas, juego web, juego de navegador, rompecabezas, juego de minas, gratis, lógica, clásico, juego móvil, no descarga, juego instantáneo, en línea, juego gratuito, puzzle" />
+            content="minesweeper, game web, game browser, teka-teki, permainan ranjau, gratis, logika, klasik, game seluler, tanpa unduhan, instan, daring, puzzle gratis" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/id/game/Minesweeper" />
 
-        <meta property="og:title" content="Juego Rápido: Buscaminas – Rompecabezas clásico en la web" />
+        <meta property="og:title" content="Game Cepat: Minesweeper – Teka-teki Klasik di Web" />
         <meta
             property="og:description"
-            content="¡Disfruta del clásico Buscaminas en tu navegador! Descubre casillas seguras y evita las minas. Gratis, optimizado para móviles, ¡diversión para todos!" />
+            content="Nikmati Minesweeper klasik di browser Anda! Temukan kotak aman dan hindari ranjau. Gratis, dioptimalkan untuk seluler, seru untuk semua!" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/id/game/Minesweeper" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Juego Rápido: Buscaminas – Rompecabezas clásico en la web" />
+        <meta name="twitter:title" content="Game Cepat: Minesweeper – Teka-teki Klasik di Web" />
         <meta
             name="twitter:description"
-            content="Prueba tu lógica y suerte con Buscaminas – ¡sin descargas, juega al instante!" />
+            content="Uji logika dan keberuntungan Anda dengan Minesweeper – tanpa unduhan, mainkan langsung!" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -43,7 +43,7 @@
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <title>Juego Rápido: Buscaminas</title>
+        <title>Game Cepat: Minesweeper</title>
         <link rel="stylesheet" href="style.css" />
     </head>
 
@@ -55,10 +55,10 @@
                 margin-bottom: 0px;
                 margin-top: 0px;
             ">
-            Buscaminas
+            Minesweeper
         </h1>
         <p style="font-size: 14px; color: white; margin-bottom: 30px">
-            Descubre todas las casillas seguras sin detonar ninguna mina.
+            Temukan semua kotak aman tanpa meledakkan ranjau apa pun.
         </p>
         <div id="minimap">
             <canvas id="minimapCanvas" width="100" height="100"></canvas>
@@ -67,10 +67,10 @@
             <div id="game"></div>
         </div>
         <div id="overlay">
-            <h2>¡Juego Terminado!</h2>
-            <p id="scoreDisplay">Puntuación: 0</p>
-            <button onclick="resetGame()">Volver a Jugar</button>
-            <button onclick="shareScore()">Compartir</button>
+            <h2>Permainan Berakhir!</h2>
+            <p id="scoreDisplay">Skor: 0</p>
+            <button onclick="resetGame()">Main Lagi</button>
+            <button onclick="shareScore()">Bagikan</button>
         </div>
 
         <script>
@@ -152,7 +152,7 @@
                     cell.element.textContent = "💣";
                     gameEnded = true;
                     const score = calculateScore();
-                    scoreDisplay.textContent = `Puntuación: ${score}`;
+                    scoreDisplay.textContent = `Skor: ${score}`;
                     overlay.style.display = "flex";
                     return;
                 }
@@ -162,7 +162,7 @@
                     return;
                 }
 
-                // rellenar en 4 direcciones (arriba/abajo/izquierda/derecha)
+                // membuka 4 arah (atas/bawah/kiri/kanan)
                 const directions = [
                     [-1, 0],
                     [1, 0],
@@ -205,27 +205,27 @@
             function shareScore() {
                 const url = window.location.href;
                 const score = calculateScore();
-                const text = `🎖️ ¡He conseguido ${score} puntos en Buscaminas! ¡Intenta superarme! ${url}`;
+                const text = `🎖️ Saya mendapatkan ${score} poin di Minesweeper! Coba kalahkan skor saya! ${url}`;
                 if (navigator.share) {
                     navigator
                         .share({
-                            title: "Juego Rápido: Buscaminas",
+                            title: "Game Cepat: Minesweeper",
                             text,
                             url
                         })
                         .catch(() =>
-                            alert("Error al compartir. Copia el enlace manualmente.")
+                            alert("Gagal membagikan. Silakan salin tautan secara manual.")
                         );
                 } else {
                     navigator.clipboard
                         .writeText(text)
                         .then(() =>
                             alert(
-                                "¡Enlace con puntuación copiado al portapapeles!"
+                                "Tautan skor telah disalin ke papan klip!"
                             )
                         )
                         .catch(() =>
-                            alert(`Copia este enlace:\n${text}`)
+                            alert(`Salin tautan ini:\n${text}`)
                         );
                 }
             }
@@ -297,7 +297,7 @@
                 border: none;
             "
             onclick="window.location.href='/'">
-            📂 Otros juegos
+            📂 Game Lainnya
         </button>
         <section
             style="
@@ -313,36 +313,36 @@
                 line-height: 1.6;
                 color: #f0f0f0;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #6a72f8">❓ Preguntas Frecuentes</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #6a72f8">❓ Pertanyaan yang Sering Diajukan</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. ¿Cómo se juega al Buscaminas?</strong><br />
-                A. Haz clic/toca en cualquier casilla para descubrirla. Evita las minas y trata de revelar la mayor cantidad posible de casillas seguras.
+                <strong>Q1. Bagaimana cara bermain Minesweeper?</strong><br />
+                A. Klik/sentuh kotak mana pun untuk membukanya. Hindari ranjau dan usahakan buka kotak aman sebanyak mungkin.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. ¿Qué pasa si toco una mina?</strong><br />
-                A. El juego termina de inmediato y se muestra tu puntuación (número de casillas seguras reveladas).
+                <strong>Q2. Apa yang terjadi jika saya menyentuh ranjau?</strong><br />
+                A. Permainan langsung berakhir dan skor Anda (jumlah kotak aman yang dibuka) akan ditampilkan.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. ¿Puedo reiniciar la partida?</strong><br />
-                A. ¡Sí! En la pantalla de "Juego Terminado", pulsa el botón <strong>Volver a Jugar</strong> para comenzar de nuevo.
+                <strong>Q3. Bisakah saya mengulang permainan?</strong><br />
+                A. Ya! Pada layar "Permainan Berakhir", tekan tombol <strong>Main Lagi</strong> untuk mulai ulang.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. ¿Qué es el minimapa que aparece en la esquina?</strong><br />
-                A. Es una vista general del amplio tablero que muestra tu progreso y el área que estás viendo en este momento.
+                <strong>Q4. Apa itu minimap di pojok layar?</strong><br />
+                A. Itu adalah tampilan seluruh papan besar yang menunjukkan progres Anda dan area yang sedang dilihat.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. ¿Cómo comparto mi puntuación?</strong><br />
-                A. En la pantalla de "Juego Terminado", pulsa el botón <strong>Compartir</strong> para copiar el texto con tu puntuación y enlace, o usar las opciones de compartir de tu dispositivo.
+                <strong>Q5. Bagaimana cara membagikan skor saya?</strong><br />
+                A. Pada layar "Permainan Berakhir", tekan tombol <strong>Bagikan</strong> untuk menyalin teks dengan skor dan tautan Anda, atau gunakan fitur berbagi perangkat Anda.
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. ¿Puedo jugar en mi móvil?</strong><br />
-                A. ¡Por supuesto! Este juego está completamente optimizado para dispositivos móviles y funciona en todos los navegadores.
+                <strong>Q6. Apakah saya bisa bermain di ponsel?</strong><br />
+                A. Tentu! Game ini sepenuhnya dioptimalkan untuk perangkat seluler dan berjalan di semua browser.
             </div>
         </section>
     </body>

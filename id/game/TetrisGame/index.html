@@ -1,102 +1,71 @@
 <!doctype html>
-<html lang="es">
+<html lang="id">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="¡Juego de Tetris clásico en la web! Juega gratis para apilar bloques, eliminar líneas y conseguir una puntuación alta. Compatible con móvil y escritorio." />
+            content="Mainkan Tetris klasik di web! Susun balok, hapus garis, dan raih skor tinggi. Gratis, tanpa unduh, dan bisa di HP maupun desktop." />
         <meta
             name="keywords"
-            content="tetris, Tetris, rompecabezas, apilar bloques, juego online, arcade clásico, juego web gratis, juego móvil, navegador, tetris web, apilamiento, bloques que caen" />
+            content="tetris, Tetris, puzzle, susun balok, game online, arcade klasik, game web gratis, game mobile, browser, tetris web, menumpuk, balok jatuh" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://emfls.github.io/id/game/TetrisGame" />
 
         <!-- Open Graph / Facebook / Kakao / Discord -->
-        <meta property="og:title" content="Juego Rápido: Tetris – Rompecabezas Clásico en Línea" />
+        <meta property="og:title" content="Game Cepat: Tetris – Puzzle Klasik Online" />
         <meta
             property="og:description"
-            content="Apila con habilidad y muévete rápido para eliminar líneas. Juega gratis en línea sin descargas." />
+            content="Susun balok dengan cerdas dan cepat untuk menghapus garis. Main gratis tanpa unduh." />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/id/game/TetrisGame" />
         <meta property="og:type" content="website" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Juego Rápido: Tetris – Rompecabezas Clásico en Línea" />
+        <meta name="twitter:title" content="Game Cepat: Tetris – Puzzle Klasik Online" />
         <meta
             name="twitter:description"
-            content="¿Qué puntuación puedes alcanzar? Disfruta este juego gratuito de Tetris para navegador en móvil o PC." />
+            content="Berapa skor tertinggimu? Nikmati game Tetris gratis di browser HP atau PC!" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-        <title>Juego de Tetris</title>
+        <title>Game Tetris</title>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
-            function gtag() {
-                dataLayer.push(arguments);
-            }
+            function gtag() { dataLayer.push(arguments); }
             gtag("js", new Date());
-
             gtag("config", "G-QP5Q67GE5B");
         </script>
         <script
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js">
-            function onMobileInput(key) {
-                switch (key) {
-                    case 'ArrowLeft':
-                        heldKeys[LEFT_ARROW] = true;
-                        break;
-                    case 'ArrowRight':
-                        heldKeys[RIGHT_ARROW] = true;
-                        break;
-                    case 'ArrowDown':
-                        heldKeys[DOWN_ARROW] = true;
-                        break;
-                }
-            }
-
-            function offMobileInput(key) {
-                switch (key) {
-                    case 'ArrowLeft':
-                        delete heldKeys[LEFT_ARROW];
-                        break;
-                    case 'ArrowRight':
-                        delete heldKeys[RIGHT_ARROW];
-                        break;
-                    case 'ArrowDown':
-                        delete heldKeys[DOWN_ARROW];
-                        break;
-                }
-            }
-        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
         <link rel="stylesheet" href="style.css" />
     </head>
 
     <body>
         <h1>
-            <span style="color: #8f94fb">Juego Rápido:</span>
+            <span style="color: #8f94fb">Game Cepat:</span>
             <span style="color: #00ffff">Tetris</span>
         </h1>
-        <p class="description">Apila con habilidad, muévete rápido y elimina líneas. ¡Buena suerte!</p>
+        <p class="description">Susun balok dengan cerdas, bergerak cepat, dan hapus garis. Semoga beruntung!</p>
         <button id="startButton" style="position: absolute; top: 290px; left: 50%; transform: translate(-50%, -50%)">
-            Iniciar juego
+            Mulai Permainan
         </button>
         <button
             id="resetButton"
             style="position: absolute; top: 340px; left: 50%; transform: translate(-50%, -50%); display: none">
-            Reiniciar
+            Ulangi
         </button>
         <button
             id="shareButton"
             style="position: absolute; top: 390px; left: 50%; transform: translate(-50%, -50%); display: none"
             onclick="shareGame()">
-            Compartir
+            Bagikan
         </button>
         <script>
             let cols = 10;
@@ -164,7 +133,7 @@
                 fill(255);
                 textSize(16);
                 textAlign(LEFT, TOP);
-                text("Puntuación: " + score, 10, 10);
+                text("Skor: " + score, 10, 10);
                 if (!gameStarted) return;
 
                 if (!gameOver) {
@@ -176,7 +145,7 @@
                     textSize(32);
                     textAlign(CENTER, CENTER);
                     fill(255, 0, 0);
-                    text("Juego Terminado", width / 2, height / 2);
+                    text("Permainan Berakhir", width / 2, height / 2);
                     document.getElementById("resetButton").style.display = "inline-block";
                     document.getElementById("shareButton").style.display = "inline-block";
                     noLoop();
@@ -185,9 +154,7 @@
 
             function createEmptyBoard() {
                 return Array.from(
-                    {
-                        length: rows
-                    },
+                    { length: rows },
                     () => Array(cols).fill(0)
                 );
             }
@@ -297,7 +264,6 @@
 
                 if (!handleHeldKeys.lastTime) handleHeldKeys.lastTime = 0;
                 if (now - handleHeldKeys.lastTime > 100) {
-                    // Intervalo de 100ms
                     if (heldKeys[LEFT_ARROW]) movePiece(-1, 0);
                     if (heldKeys[RIGHT_ARROW]) movePiece(1, 0);
                     if (heldKeys[DOWN_ARROW]) movePiece(0, 1);
@@ -313,7 +279,6 @@
                 }
             }
 
-            // Botones de acción
             document.getElementById("startButton").onclick = function () {
                 gameStarted = true;
                 this.style.display = "none";
@@ -401,30 +366,29 @@
             </div>
         </div>
 
-        <button style="position: absolute; top: 660px" class="menu" onclick="goToMain()">📂 Otros juegos</button>
+        <button style="position: absolute; top: 660px" class="menu" onclick="goToMain()">📂 Game Lainnya</button>
 
         <script>
             function goToMain() {
-                window.location.href = "/"; // o ''
+                window.location.href = "/";
             }
-
             function shareGame() {
                 const url = window.location.href;
-                const text = `🧱 Tetris Rápido - Mi puntuación: ${score}\n¡Juega ahora!`;
+                const text = `🧱 Tetris Cepat - Skorku: ${score}\nMain sekarang!`;
                 if (navigator.share) {
                     navigator
                         .share({
-                            title: "Tetris Rápido",
+                            title: "Tetris Cepat",
                             text,
                             url
                         })
-                        .catch(() => alert("Error al compartir. Copia el enlace manualmente."));
+                        .catch(() => alert("Gagal membagikan. Salin tautan manual."));
                 } else {
                     const full = `${text}\n${url}`;
                     navigator.clipboard
                         .writeText(full)
-                        .then(() => alert("Puntuación y enlace copiados al portapapeles."))
-                        .catch(() => alert(`Copia este enlace manualmente:\n${full}`));
+                        .then(() => alert("Skor & tautan telah disalin ke clipboard."))
+                        .catch(() => alert(`Salin tautan ini:\n${full}`));
                 }
             }
         </script>
@@ -443,36 +407,36 @@
                 line-height: 1.6;
                 color: #f0f0f0;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ Preguntas frecuentes</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ Pertanyaan Umum</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. ¿Cómo se juega este juego de Tetris?</strong><br />
-                A. Usa las teclas de flecha o los botones en pantalla para mover los bloques y eliminar líneas.
+                <strong>Q1. Bagaimana cara bermain Tetris ini?</strong><br />
+                A. Gunakan tombol panah atau tombol di layar untuk menggerakkan balok dan hapus garis.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. ¿Qué controles están disponibles?</strong><br />
-                A. Usa los botones ◀ ▶ ▼ para mover y bajar, y ↻ para rotar. También se admite entrada táctil y con ratón.
+                <strong>Q2. Kontrol apa saja yang tersedia?</strong><br />
+                A. Gunakan tombol ◀ ▶ ▼ untuk bergerak & turun, ↻ untuk rotasi. Dukungan sentuh dan mouse juga tersedia.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. ¿Cuándo termina el juego?</strong><br />
-                A. El juego termina cuando los bloques se apilan hasta el tope y no hay espacio para la siguiente pieza.
+                <strong>Q3. Kapan permainan berakhir?</strong><br />
+                A. Permainan berakhir jika balok menumpuk hingga atas dan tidak ada ruang untuk balok berikutnya.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. ¿Puedo reiniciar el juego?</strong><br />
-                A. ¡Sí! Tras el game over, presiona el botón "Reiniciar" para empezar de nuevo.
+                <strong>Q4. Bisa mengulang game?</strong><br />
+                A. Ya! Setelah game over, tekan "Ulangi" untuk mulai dari awal.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. ¿Puedo compartir mi puntuación?</strong><br />
-                A. ¡Claro! Usa el botón "Compartir" para copiar o enviar tu puntuación y el enlace.
+                <strong>Q5. Bisa membagikan skor?</strong><br />
+                A. Tentu! Gunakan tombol "Bagikan" untuk menyalin atau membagikan skor dan tautan game.
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. ¿Se puede jugar cómodamente en móvil?</strong><br />
-                A. ¡Sí! Puedes jugar en smartphone o escritorio usando los controles en pantalla.
+                <strong>Q6. Bisa main nyaman di HP?</strong><br />
+                A. Ya! Game ini bisa dimainkan di smartphone atau desktop dengan kontrol di layar.
             </div>
         </section>
     </body>
