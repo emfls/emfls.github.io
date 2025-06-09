@@ -1,49 +1,47 @@
 <!doctype html>
-<html lang="es">
+<html lang="fr">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="¡Juega al clásico Buscaminas en tu navegador! Descubre las casillas seguras evitando minas y desafía la mejor puntuación. Gratis, rápido y optimizado para móviles." />
+            content="Jouez au classique Démineur directement dans votre navigateur ! Découvrez les cases sûres en évitant les mines. Gratuit, rapide et optimisé pour mobiles." />
         <meta
             name="keywords"
-            content="buscaminas, juego web, juego de navegador, rompecabezas, juego de minas, gratis, lógica, clásico, juego móvil, no descarga, juego instantáneo, en línea, juego gratuito, puzzle" />
+            content="démineur, jeu web, puzzle, mines, gratuit, logique, classique, mobile, sans téléchargement" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/fr/game/Minesweeper" />
 
-        <meta property="og:title" content="Juego Rápido: Buscaminas – Rompecabezas clásico en la web" />
+        <meta property="og:title" content="Jeu Rapide : Démineur – Puzzle classique en ligne" />
         <meta
             property="og:description"
-            content="¡Disfruta del clásico Buscaminas en tu navegador! Descubre casillas seguras y evita las minas. Gratis, optimizado para móviles, ¡diversión para todos!" />
+            content="Profitez du classique Démineur dans votre navigateur ! Découvrez les cases sûres et évitez les mines. Gratuit, mobile-friendly !" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/fr/game/Minesweeper" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Juego Rápido: Buscaminas – Rompecabezas clásico en la web" />
+        <meta name="twitter:title" content="Jeu Rapide : Démineur – Puzzle classique" />
         <meta
             name="twitter:description"
-            content="Prueba tu lógica y suerte con Buscaminas – ¡sin descargas, juega al instante!" />
+            content="Testez votre logique et votre chance avec le Démineur – sans installation, jouez instantanément !" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
-            function gtag() {
-                dataLayer.push(arguments);
-            }
+            function gtag() { dataLayer.push(arguments); }
             gtag("js", new Date());
-
             gtag("config", "G-QP5Q67GE5B");
         </script>
         <script
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <title>Juego Rápido: Buscaminas</title>
+        <title>Jeu Rapide : Démineur</title>
         <link rel="stylesheet" href="style.css" />
     </head>
 
@@ -52,13 +50,12 @@
             style="
                 font-family: 'Arial Black', sans-serif;
                 font-size: 28px;
-                margin-bottom: 0px;
-                margin-top: 0px;
+                margin: 0;
             ">
-            Buscaminas
+            Démineur
         </h1>
         <p style="font-size: 14px; color: white; margin-bottom: 30px">
-            Descubre todas las casillas seguras sin detonar ninguna mina.
+            Découvrez toutes les cases sûres sans faire exploser une mine.
         </p>
         <div id="minimap">
             <canvas id="minimapCanvas" width="100" height="100"></canvas>
@@ -67,10 +64,10 @@
             <div id="game"></div>
         </div>
         <div id="overlay">
-            <h2>¡Juego Terminado!</h2>
-            <p id="scoreDisplay">Puntuación: 0</p>
-            <button onclick="resetGame()">Volver a Jugar</button>
-            <button onclick="shareScore()">Compartir</button>
+            <h2>Partie Terminée !</h2>
+            <p id="scoreDisplay">Score : 0</p>
+            <button onclick="resetGame()">Rejouer</button>
+            <button onclick="shareScore()">Partager</button>
         </div>
 
         <script>
@@ -152,7 +149,7 @@
                     cell.element.textContent = "💣";
                     gameEnded = true;
                     const score = calculateScore();
-                    scoreDisplay.textContent = `Puntuación: ${score}`;
+                    scoreDisplay.textContent = `Score : ${score}`;
                     overlay.style.display = "flex";
                     return;
                 }
@@ -162,7 +159,7 @@
                     return;
                 }
 
-                // rellenar en 4 direcciones (arriba/abajo/izquierda/derecha)
+                // Propagation 4 directions (haut/bas/gauche/droite)
                 const directions = [
                     [-1, 0],
                     [1, 0],
@@ -205,27 +202,25 @@
             function shareScore() {
                 const url = window.location.href;
                 const score = calculateScore();
-                const text = `🎖️ ¡He conseguido ${score} puntos en Buscaminas! ¡Intenta superarme! ${url}`;
+                const text = `🎖️ J'ai obtenu ${score} points au Démineur ! À toi de jouer : ${url}`;
                 if (navigator.share) {
                     navigator
                         .share({
-                            title: "Juego Rápido: Buscaminas",
+                            title: "Jeu Rapide : Démineur",
                             text,
                             url
                         })
                         .catch(() =>
-                            alert("Error al compartir. Copia el enlace manualmente.")
+                            alert("Erreur de partage. Veuillez copier le lien manuellement.")
                         );
                 } else {
                     navigator.clipboard
                         .writeText(text)
                         .then(() =>
-                            alert(
-                                "¡Enlace con puntuación copiado al portapapeles!"
-                            )
+                            alert("Lien et score copiés dans le presse-papiers !")
                         )
                         .catch(() =>
-                            alert(`Copia este enlace:\n${text}`)
+                            alert(`Veuillez copier ce lien :\n${text}`)
                         );
                 }
             }
@@ -297,7 +292,7 @@
                 border: none;
             "
             onclick="window.location.href='/'">
-            📂 Otros juegos
+            📂 Autres jeux
         </button>
         <section
             style="
@@ -313,36 +308,36 @@
                 line-height: 1.6;
                 color: #f0f0f0;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #6a72f8">❓ Preguntas Frecuentes</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #6a72f8">❓ FAQ</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. ¿Cómo se juega al Buscaminas?</strong><br />
-                A. Haz clic/toca en cualquier casilla para descubrirla. Evita las minas y trata de revelar la mayor cantidad posible de casillas seguras.
+                <strong>Q1. Comment jouer au Démineur&nbsp;?</strong><br />
+                R. Cliquez ou touchez une case pour la dévoiler. Évitez les mines et tentez de révéler le plus de cases sûres possible.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. ¿Qué pasa si toco una mina?</strong><br />
-                A. El juego termina de inmediato y se muestra tu puntuación (número de casillas seguras reveladas).
+                <strong>Q2. Que se passe-t-il si je clique sur une mine&nbsp;?</strong><br />
+                R. La partie se termine immédiatement et votre score est affiché (nombre de cases sûres révélées).
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. ¿Puedo reiniciar la partida?</strong><br />
-                A. ¡Sí! En la pantalla de "Juego Terminado", pulsa el botón <strong>Volver a Jugar</strong> para comenzar de nuevo.
+                <strong>Q3. Puis-je relancer la partie&nbsp;?</strong><br />
+                R. Oui ! Dans l’écran « Partie Terminée », cliquez sur <strong>Rejouer</strong> pour recommencer.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. ¿Qué es el minimapa que aparece en la esquina?</strong><br />
-                A. Es una vista general del amplio tablero que muestra tu progreso y el área que estás viendo en este momento.
+                <strong>Q4. Qu’est-ce que la mini-carte en haut à gauche&nbsp;?</strong><br />
+                R. C’est une vue globale du grand plateau qui montre les cases déjà dévoilées et la zone affichée à l’écran.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. ¿Cómo comparto mi puntuación?</strong><br />
-                A. En la pantalla de "Juego Terminado", pulsa el botón <strong>Compartir</strong> para copiar el texto con tu puntuación y enlace, o usar las opciones de compartir de tu dispositivo.
+                <strong>Q5. Comment partager mon score&nbsp;?</strong><br />
+                R. Dans l’écran « Partie Terminée », cliquez sur <strong>Partager</strong> pour copier votre score et le lien, ou utilisez les options de partage de votre appareil.
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. ¿Puedo jugar en mi móvil?</strong><br />
-                A. ¡Por supuesto! Este juego está completamente optimizado para dispositivos móviles y funciona en todos los navegadores.
+                <strong>Q6. Puis-je jouer sur mobile&nbsp;?</strong><br />
+                R. Bien sûr ! Ce jeu est entièrement optimisé pour mobile et fonctionne sur tous les navigateurs.
             </div>
         </section>
     </body>

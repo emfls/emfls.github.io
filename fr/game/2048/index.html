@@ -1,155 +1,67 @@
 <!doctype html>
-<html lang="es">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
-    <!-- Metadatos (traducidos al español) -->
-    <meta
-      name="description"
-      content="¡Disfruta gratis del clásico juego de rompecabezas 2048 en tu navegador! Combina fichas para llegar a 2048. ¡Un juego de números simple y adictivo!" />
-    <meta
-      name="keywords"
-      content="2048, juego 2048, puzle de números, juego gratuito, juego de navegador, juego móvil, clásico 2048" />
+    <!-- Métadonnées (traduites en français) -->
+    <meta name="description" content="Profitez gratuitement du jeu de puzzle classique 2048 dans votre navigateur ! Combinez les tuiles pour atteindre 2048. Jeu de chiffres simple et addictif !" />
+    <meta name="keywords" content="2048, jeu 2048, puzzle numérique, jeu gratuit, jeu navigateur, jeu mobile, classique 2048" />
     <meta name="author" content="Itagi" />
     <meta name="robots" content="index, follow" />
 
-    <!-- Open Graph (traducido al español para previsualización en redes) -->
-    <meta property="og:title" content="Juego 2048 en línea – ¡Adictivo puzle de números!" />
-    <meta
-      property="og:description"
-      content="¡Combina fichas de 2048 y alcanza la puntuación máxima! Juego sencillo y adictivo de números, ¡juega ahora!" />
+    <!-- Open Graph (traduits en français) -->
+    <meta property="og:title" content="Jeu 2048 en ligne – Puzzle numérique addictif !" />
+    <meta property="og:description" content="Combinez les tuiles 2048 et atteignez le score maximum ! Jeu de chiffres simple et addictif, jouez maintenant !" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta property="og:url" content="https://emfls.github.io/fr/game/2048" />
     <meta property="og:type" content="website" />
 
-    <!-- Twitter Card (traducido al español) -->
+    <!-- Twitter Card (traduits en français) -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Juego 2048 en línea – ¡Juega gratis!" />
-    <meta
-      name="twitter:description"
-      content="¡Juega gratis al clásico puzle de números 2048! Compatible con móviles, fácil de disfrutar." />
+    <meta name="twitter:title" content="Jeu 2048 en ligne – Jouez gratuitement !" />
+    <meta name="twitter:description" content="Jouez gratuitement au puzzle de chiffres classique 2048 ! Compatible mobile, facile à apprécier." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
     <!-- Google Tags (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
+      function gtag() { dataLayer.push(arguments); }
       gtag("js", new Date());
-
       gtag("config", "G-QP5Q67GE5B");
     </script>
-    <script
-      async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
-      crossorigin="anonymous"></script>
-<link rel="stylesheet" href="style.css" />
-    <title>Juego 2048</title>
-    
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css" />
+    <title>Jeu 2048</title>
   </head>
 
   <body>
-    <div
-      style="
-        text-align: center;
-        margin-bottom: 10px;
-        position: absolute;
-        top: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100%;
-      ">
+    <div style="text-align: center; margin-bottom: 10px; position: absolute; top: 10px; left: 50%; transform: translateX(-50%); width: 100%;">
       <div style="font-size: 28px; font-weight: bold; color: #776e65">2048</div>
-      <div style="font-size: 14px; color: #8f7a66">¡Combina números para llegar a 2048!</div>
+      <div style="font-size: 14px; color: #8f7a66">Combinez les chiffres pour atteindre 2048 !</div>
     </div>
-    <div
-      id="score"
-      style="
-        position: absolute;
-        top: 80px;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 20px;
-        font-weight: bold;
-        color: #776e65;
-      ">
-      Puntuación: 0
+    <div id="score" style="position: absolute; top: 80px; left: 50%; transform: translateX(-50%); font-size: 20px; font-weight: bold; color: #776e65;">
+      Score : 0
     </div>
-    <button
-      id="start-button"
-      onclick="startGame()"
-      style="
-        position: absolute;
-        top: 280px;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 18px;
-        padding: 10px 20px;
-        background: #8f7a66;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-      ">
-      Iniciar Juego
+    <button id="start-button" onclick="startGame()" style="position: absolute; top: 280px; left: 50%; transform: translate(-50%, -50%); font-size: 18px; padding: 10px 20px; background: #8f7a66; color: white; border: none; border-radius: 5px; cursor: pointer;">
+      Démarrer le jeu
     </button>
     <div id="game"></div>
-    <div
-      id="game-over"
-      style="
-        display: none;
-        position: absolute;
-        top: 280px;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(255, 255, 255, 0.9);
-        padding: 20px 30px;
-        border-radius: 10px;
-        text-align: center;
-        font-size: 24px;
-        font-weight: bold;
-        color: #776e65;
-      ">
-      Juego Terminado<br /><br />
-      <button
-        onclick="shareScore()"
-        style="
-          font-size: 16px;
-          padding: 8px 16px;
-          background: #f57c00;
-          color: white;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-          margin-bottom: 10px;
-        ">
-        Compartir Puntuación
-      </button
-      ><br />
-      <button
-        onclick="startGame()"
-        style="
-          font-size: 16px;
-          padding: 8px 16px;
-          background: #8f7a66;
-          color: white;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-        ">
-        Reiniciar
+    <div id="game-over" style="display: none; position: absolute; top: 280px; left: 50%; transform: translate(-50%, -50%); background: rgba(255, 255, 255, 0.9); padding: 20px 30px; border-radius: 10px; text-align: center; font-size: 24px; font-weight: bold; color: #776e65;">
+      Jeu terminé<br /><br />
+      <button onclick="shareScore()" style="font-size: 16px; padding: 8px 16px; background: #f57c00; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 10px;">
+        Partager le score
+      </button><br />
+      <button onclick="startGame()" style="font-size: 16px; padding: 8px 16px; background: #8f7a66; color: white; border: none; border-radius: 5px; cursor: pointer;">
+        Recommencer
       </button>
     </div>
     <script>
       const game = document.getElementById("game");
-      let board = Array(4)
-        .fill()
-        .map(() => Array(4).fill(0));
+      let board = Array(4).fill().map(() => Array(4).fill(0));
       let score = 0;
 
       function drawBoard() {
@@ -165,9 +77,7 @@
       function addRandomTile() {
         let empty = [];
         board.forEach((row, i) => {
-          row.forEach((val, j) => {
-            if (val === 0) empty.push([i, j]);
-          });
+          row.forEach((val, j) => { if (val === 0) empty.push([i, j]); });
         });
         if (empty.length > 0) {
           let [i, j] = empty[Math.floor(Math.random() * empty.length)];
@@ -214,75 +124,30 @@
         let moved = false;
         if (e.key === "ArrowLeft") moved = moveLeft();
         else if (e.key === "ArrowRight") {
-          board.forEach((row) => row.reverse());
-          moved = moveLeft();
-          board.forEach((row) => row.reverse());
-        } else if (e.key === "ArrowUp") {
-          rotateBoard();
-          rotateBoard();
-          rotateBoard();
-          moved = moveLeft();
-          rotateBoard();
-        } else if (e.key === "ArrowDown") {
-          rotateBoard();
-          moved = moveLeft();
-          rotateBoard();
-          rotateBoard();
-          rotateBoard();
-        }
-        if (moved) addRandomTile();
-        drawBoard();
-        document.getElementById("score").textContent = `Puntuación: ${score}`;
-        if (isGameOver()) {
-          document.getElementById("game-over").style.display = "block";
-        }
+          board.forEach((row) => row.reverse()); moved = moveLeft(); board.forEach((row) => row.reverse());
+        } else if (e.key === "ArrowUp") { rotateBoard(); rotateBoard(); rotateBoard(); moved = moveLeft(); rotateBoard(); }
+        else if (e.key === "ArrowDown") { rotateBoard(); moved = moveLeft(); rotateBoard(); rotateBoard(); rotateBoard(); }
+        if (moved) { addRandomTile(); drawBoard(); document.getElementById("score").textContent = `Score : ${score}`; if (isGameOver()) document.getElementById("game-over").style.display = "block"; }
       }
 
       function startGame() {
         score = 0;
-        document.getElementById("score").textContent = "Puntuación: 0";
+        document.getElementById("score").textContent = "Score : 0";
         document.getElementById("start-button").style.display = "none";
         document.getElementById("game-over").style.display = "none";
-        board = Array(4)
-          .fill()
-          .map(() => Array(4).fill(0));
-        addRandomTile();
-        addRandomTile();
-        drawBoard();
+        board = Array(4).fill().map(() => Array(4).fill(0));
+        addRandomTile(); addRandomTile(); drawBoard();
       }
       document.addEventListener("keydown", handleKey);
 
       function shareScore() {
-        const text = `¡Acabo de obtener ${score} puntos en el juego 2048! ¿Puedes superarme?`;
-        if (navigator.share) {
-          navigator
-            .share({
-              title: "Juego 2048",
-              text,
-              url: window.location.href
-            })
-            .catch(console.error);
-        } else {
-          navigator.clipboard
-            .writeText(`${text} ${window.location.href}`)
-            .then(() => alert("Puntuación copiada al portapapeles"))
-            .catch(() => alert("Error al copiar la puntuación"));
-        }
+        const text = `Je viens d'obtenir ${score} points au jeu 2048 ! Pouvez-vous me battre ?`;
+        if (navigator.share) navigator.share({ title: "Jeu 2048", text, url: window.location.href }).catch(console.error);
+        else navigator.clipboard.writeText(`${text} ${window.location.href}`).then(() => alert("Score copié dans le presse-papiers")).catch(() => alert("Erreur lors de la copie du score"));
       }
     </script>
-    <div
-      id="mobile-controls"
-      style="
-        position: absolute;
-        top: 465px;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        display: grid;
-        grid-template-columns: repeat(3, 50px);
-        grid-template-rows: repeat(3, 50px);
-        gap: 5px;
-      ">
+
+    <div id="mobile-controls" style="position: absolute; top: 465px; bottom: 20px; left: 50%; transform: translateX(-50%); display: grid; grid-template-columns: repeat(3, 50px); grid-template-rows: repeat(3, 50px); gap: 5px;">
       <div></div>
       <button onclick="handleKey({ key: 'ArrowUp' })" style="font-size: 27px">▲</button>
       <div></div>
@@ -293,57 +158,42 @@
       <button onclick="handleKey({ key: 'ArrowDown' })" style="font-size: 27px">▼</button>
       <div></div>
     </div>
-    <button style="position: absolute; top: 640px" class="menu" onclick="goToMain()">📂 Otros Juegos</button>
+    <button style="position: absolute; top: 640px" class="menu" onclick="goToMain()">📂 Autres jeux</button>
     <script>
-      function goToMain() {
-        window.location.href = "../../"; // O '' si corresponde
-      }
+      function goToMain() { window.location.href = "../../"; }
     </script>
-    <section
-      style="
-        width: 90%;
-        max-width: 420px;
-        margin: 40px auto;
-        padding: 20px;
-        font-family: Arial, sans-serif;
-        color: #333;
-        background: #fffbea;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        box-sizing: border-box;
-        position: absolute;
-        margin-top: 44rem;
-      ">
-      <h2 style="font-size: 20px; margin-bottom: 1rem; color: #8f7a66">❓ Preguntas Frecuentes (FAQ)</h2>
+
+    <section style="width: 90%; max-width: 420px; margin: 40px auto; padding: 20px; font-family: Arial, sans-serif; color: #333; background: #fffbea; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); box-sizing: border-box; position: absolute; margin-top: 44rem;">
+      <h2 style="font-size: 20px; margin-bottom: 1rem; color: #8f7a66">❓ Foire aux questions (FAQ)</h2>
 
       <div style="margin-bottom: 1rem">
-        <strong>P1. ¿Cómo inicio el juego?</strong><br />
-        R. Haz clic en el botón <strong>"Iniciar Juego"</strong> en el centro. Se mostrarán dos fichas aleatorias.
+        <strong>P1. Comment démarrer le jeu ?</strong><br />
+        R. Cliquez sur le bouton <strong>« Démarrer le jeu »</strong> au centre. Deux tuiles aléatoires apparaîtront.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>P2. ¿Cómo se juega?</strong><br />
-        R. En el escritorio usa las flechas (← ↑ → ↓). En móviles, utiliza los botones de flechas (▲ ◀ ▶ ▼) en pantalla.
+        <strong>P2. Comment jouer ?</strong><br />
+        R. Sur ordinateur, utilisez les flèches (← ↑ → ↓). Sur mobile, utilisez les boutons fléchés (▲ ◀ ▶ ▼) à l'écran.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>P3. ¿Cómo se calcula la puntuación?</strong><br />
-        R. Cada vez que combinas dos fichas iguales, ganas puntos. Cuanto mayor es el número, más puntos obtienes.
+        <strong>P3. Comment le score est-il calculé ?</strong><br />
+        R. Chaque fois que vous combinez deux tuiles identiques, vous gagnez des points. Plus le chiffre est élevé, plus vous obtenez de points.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>P4. ¿Cuándo termina el juego?</strong><br />
-        R. El juego termina cuando no hay espacios vacíos y no se pueden combinar más fichas. Aparecerá "Juego Terminado".
+        <strong>P4. Quand le jeu se termine-t-il ?</strong><br />
+        R. Le jeu se termine lorsqu'il n'y a plus d'espaces vides et qu'aucune tuile ne peut être combinée. Le message « Jeu terminé » s'affichera.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>P5. ¿Cómo comparto mi puntuación?</strong><br />
-        R. Después de que termine el juego, presiona el botón <strong>"Compartir Puntuación"</strong> para usar la función de compartir de tu dispositivo o copiar el enlace.
+        <strong>P5. Comment partager mon score ?</strong><br />
+        R. Après la fin du jeu, appuyez sur le bouton <strong>« Partager le score »</strong> pour utiliser la fonction de partage de votre appareil ou copier le lien.
       </div>
 
       <div>
-        <strong>P6. ¿Hay otros juegos disponibles?</strong><br />
-        R. ¡Sí! Haz clic en el botón <strong>"📂 Otros Juegos"</strong> a continuación para ver la lista completa de juegos.
+        <strong>P6. Y a-t-il d'autres jeux disponibles ?</strong><br />
+        R. Oui ! Cliquez sur le bouton <strong>« 📂 Autres jeux »</strong> ci-dessous pour consulter la liste complète des jeux.
       </div>
     </section>
   </body>

@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="es">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="¡Juega gratis a BlockBreaker en tu navegador! Rompe todos los bloques, recoge potenciadores y alcanza una nueva puntuación máxima. Simple y rápido, disfruta también en móviles." />
+      content="Jouez gratuitement à BlockBreaker dans votre navigateur ! Cassez tous les blocs, récupérez des bonus et atteignez un nouveau meilleur score. Simple et rapide, profitez-en aussi sur mobile." />
     <meta
       name="keywords"
-      content="BlockBreaker, rompeladrillos, Breakout, juego gratuito, juego de navegador, arcade, juego de paleta, móvil, bloques, pelota, puntuación alta, juego en línea" />
+      content="BlockBreaker, casse-briques, Breakout, jeu gratuit, jeu de navigateur, arcade, jeu de raquette, mobile, briques, balle, meilleur score, jeu en ligne" />
     <meta name="author" content="Itagi" />
     <meta name="robots" content="index, follow" />
 
@@ -16,24 +16,26 @@
 
     <meta
       property="og:title"
-      content="BlockBreaker – ¡Juego de rompeladrillos en línea gratuito!" />
+      content="BlockBreaker – Jeu de casse-briques en ligne gratuit !" />
     <meta
       property="og:description"
-      content="¡Juega gratis a BlockBreaker! Rompe todos los bloques, consigue potenciadores y compite con tus amigos. Sin descargas." />
+      content="Jouez gratuitement à BlockBreaker ! Cassez tous les blocs, gagnez des bonus et défiez vos amis. Sans téléchargement." />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
-    <meta property="og:url" content="https://emfls.github.io/fr/game/BlockBreaker" />
+    <meta
+      property="og:url"
+      content="https://emfls.github.io/fr/game/BlockBreaker" />
     <meta property="og:type" content="website" />
 
-    <meta
-      name="twitter:card"
-      content="summary_large_image" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta
       name="twitter:title"
-      content="BlockBreaker – ¡Juego de rompeladrillos en línea gratuito!" />
+      content="BlockBreaker – Jeu de casse-briques en ligne gratuit !" />
     <meta
       name="twitter:description"
-      content="¡Destruye todos los bloques en este adictivo juego de rompeladrillos en línea! Compite por la puntuación más alta." />
-    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+      content="Détruisez tous les blocs dans ce jeu de casse-briques addictif en ligne ! Visez le meilleur score." />
+    <meta
+      name="twitter:image"
+      content="https://emfls.github.io/thumbnail.png" />
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
@@ -52,24 +54,24 @@
     <link
       href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap"
       rel="stylesheet" />
-      <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
     <div id="gameContainer">
       <div id="header">
         <h1>BlockBreaker</h1>
-        <p>¡Destruye todos los bloques con la pelota!</p>
+        <p>Détruisez tous les blocs avec la balle !</p>
       </div>
       <canvas id="gameCanvas"></canvas>
       <div id="scoreUI"></div>
       <div id="gameOverUI">
         <div id="gameOverMsg"></div>
-        <button id="restartBtn">Reiniciar</button>
-        <button id="shareBtn">Compartir</button>
+        <button id="restartBtn">Recommencer</button>
+        <button id="shareBtn">Partager</button>
       </div>
     </div>
-    <button id="otherBtn" onclick="window.location.href='../'">Otros Juegos</button>
+    <button id="otherBtn" onclick="window.location.href='../'">Autres jeux</button>
     <script>
       (function () {
         const canvas = document.getElementById("gameCanvas");
@@ -194,7 +196,7 @@
         }
 
         function updateScoreUI() {
-          scoreUI.textContent = `Puntuación: ${score}`;
+          scoreUI.textContent = `Score : ${score}`;
         }
 
         function spawnNewRow() {
@@ -222,7 +224,7 @@
           if (ball.x + ball.r > W || ball.x - ball.r < 0) ball.dx *= -1;
           if (ball.y - ball.r < 0) ball.dy *= -1;
           if (ball.y + ball.r > H) return;
-          // Colisión con la paleta
+          // Colision avec la palette
           if (
             ball.y + ball.r > paddle.y &&
             ball.x > paddle.x &&
@@ -231,7 +233,7 @@
             ball.dy *= -1;
             ball.dx = ((ball.x - (paddle.x + paddle.w / 2)) / (paddle.w / 2)) * ball.speed;
           }
-          // Colisión con bloques
+          // Colision avec les briques
           for (let r = 0; r < bricks.length; r++) {
             for (let c = 0; c < bricks[r].length; c++) {
               const b = bricks[r][c];
@@ -255,7 +257,7 @@
                   bb.speed *= 1.02;
                 });
                 updateScoreUI();
-                // Posibilidad de soltar un potenciador
+                // Possibilité de faire apparaître un bonus
                 if (Math.random() < 0.05) {
                   items.push({
                     x: b.x + brickW / 2,
@@ -272,7 +274,7 @@
 
         function update() {
           const H = canvas.height;
-          // Actualizar posiciones de bolas
+          // Mettre à jour les positions des balles
           for (let i = 0; i < balls.length; i++) {
             const ball = balls[i];
             const steps = Math.max(
@@ -291,9 +293,9 @@
               i--;
             }
           }
-          // Si no quedan bolas, termina el juego
+          // Si plus de balles, fin du jeu
           if (balls.length === 0) return endGame(false);
-          // Actualizar potenciadores
+          // Mettre à jour les bonus
           for (let i = 0; i < items.length; i++) {
             const it = items[i];
             it.y += it.dy;
@@ -338,12 +340,12 @@
           cancelAnimationFrame(animationId);
           scoreUI.style.display = "none";
           gameOverMsg.textContent = won
-            ? `¡Has ganado! Puntuación: ${score}`
-            : `¡Game Over! Puntuación: ${score}`;
+            ? `Vous avez gagné ! Score : ${score}`
+            : `Partie terminée ! Score : ${score}`;
           gameOverUI.style.display = "flex";
         }
 
-        // Control de arrastre de paleta
+        // Contrôle de glissement de la palette
         ["mousedown", "touchstart"].forEach((evt) =>
           canvas.addEventListener(evt, (e) => {
             const rect = canvas.getBoundingClientRect();
@@ -380,7 +382,7 @@
         });
         shareBtn.addEventListener("click", () => {
           const url = encodeURIComponent(window.location.href);
-          const message = encodeURIComponent(`Mi puntuación: ${score}`);
+          const message = encodeURIComponent(`Mon score : ${score}`);
           if (navigator.share) {
             navigator
               .share({
@@ -388,11 +390,11 @@
                 text: message,
                 url: url
               })
-              .catch(() => alert("La compartición ha sido cancelada o falló."));
+              .catch(() => alert("Le partage a été annulé ou a échoué."));
           } else {
             navigator.clipboard
               .writeText(url)
-              .then(() => alert("¡Enlace copiado al portapapeles!"));
+              .then(() => alert("Lien copié dans le presse-papiers !"));
           }
         });
         canvas.addEventListener("contextmenu", (e) => e.preventDefault());
@@ -402,36 +404,36 @@
       })();
     </script>
     <section>
-      <h2>❓ Preguntas Frecuentes (FAQ)</h2>
+      <h2>❓ Foire Aux Questions (FAQ)</h2>
 
       <div style="margin-bottom: 1rem">
-        <strong>P1. ¿Cómo se juega a BlockBreaker?</strong><br />
-        R. Arrastra la paleta con el ratón o el dedo para golpear la pelota y destruir todos los bloques. ¡No dejes que la pelota caiga!
+        <strong>Q1. Comment jouer à BlockBreaker ?</strong><br />
+        R. Faites glisser la raquette avec la souris ou le doigt pour frapper la balle et détruire tous les blocs. Ne laissez pas la balle tomber !
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>P2. ¿Cómo muevo la paleta?</strong><br />
-        R. Pulsa y arrastra la paleta con el ratón en PC o desliza con el dedo en móviles.
+        <strong>Q2. Comment déplacer la raquette ?</strong><br />
+        R. Cliquez et faites glisser la raquette avec la souris sur PC ou faites glisser avec le doigt sur mobile.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>P3. ¿Qué son los círculos amarillos?</strong><br />
-        R. Son potenciadores: recógelos con la paleta para generar bolas adicionales o aumentar tu puntuación.
+        <strong>Q3. Que sont ces cercles jaunes ?</strong><br />
+        R. Ce sont des bonus : attrapez-les avec la raquette pour générer des balles supplémentaires ou augmenter votre score.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>P4. ¿Cuándo termina el juego?</strong><br />
-        R. El juego termina cuando pierdes todas las bolas. Se mostrará tu puntuación y opciones para reiniciar o compartir.
+        <strong>Q4. Quand le jeu se termine-t-il ?</strong><br />
+        R. Le jeu se termine lorsque vous perdez toutes les balles. Votre score s'affichera, et vous pourrez redémarrer ou partager.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>P5. ¿Cómo comparto mi puntuación?</strong><br />
-        R. Cuando aparezca “Game Over”, presiona el botón <strong>“Compartir”</strong>. Puedes usar la función de compartir de tu dispositivo o copiar el enlace.
+        <strong>Q5. Comment partager mon score ?</strong><br />
+        R. Lorsque l'écran de fin apparaît, appuyez sur le bouton <strong>« Partager »</strong>. Vous pouvez utiliser la fonction de partage de votre appareil ou copier le lien.
       </div>
 
       <div>
-        <strong>P6. ¿Dónde encuentro otros juegos?</strong><br />
-        R. Haz clic en <strong>“Otros Juegos”</strong> para ver toda la colección de juegos en el navegador.
+        <strong>Q6. Où puis-je trouver d'autres jeux ?</strong><br />
+        R. Cliquez sur <strong>« Autres jeux »</strong> pour accéder à l'ensemble de la collection de jeux dans votre navigateur.
       </div>
     </section>
   </body>

@@ -1,40 +1,37 @@
 <!doctype html>
-<html lang="es">
+<html lang="fr">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="¡Juega PONG contra la IA! Desafía a la IA en estilo retro y consigue 10 puntos primero. Disfruta gratis en móvil y PC." />
+            content="Jouez à PONG contre l'IA ! Défiez l'IA dans un style rétro et atteignez 10 points en premier. Gratuit sur mobile et PC." />
         <meta
             name="keywords"
-            content="PONG, PONG IA, juego PONG web, juego de navegador, arcade clásico, IA PONG, ping pong, tenis de mesa, juego gratis, juego web, móvil, jugar al instante, arcade" />
+            content="PONG, PONG IA, jeu PONG web, navigateur, arcade classique, IA PONG, tennis de table, gratuit, instantané, mobile" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/fr/game/PONGvsAI" />
 
-        <meta property="og:title" content="PONG vs IA – Juego PONG clásico en web" />
+        <meta property="og:title" content="PONG vs IA – Le classique retro en ligne" />
         <meta
             property="og:description"
-            content="¡Desafía a la IA y consigue 10 puntos primero! Disfruta del PONG retro en tu navegador. ¡Sin descargas, jugar al instante!" />
+            content="Défiez l'IA et marquez 10 points en premier ! Jouez au PONG retro dans votre navigateur. Sans téléchargement !" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/fr/game/PONGvsAI" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="PONG vs IA – Juego PONG clásico en web" />
-        <meta name="twitter:description" content="Juega PONG clásico contra una IA inteligente. ¡Juega ahora y comparte tu puntuación!" />
+        <meta name="twitter:title" content="PONG vs IA – Le classique retro en ligne" />
+        <meta name="twitter:description" content="Jouez au PONG classique contre une IA intelligente. Partagez votre score !" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
-            function gtag() {
-                dataLayer.push(arguments);
-            }
+            function gtag() { dataLayer.push(arguments); }
             gtag("js", new Date());
-
             gtag("config", "G-QP5Q67GE5B");
         </script>
         <script
@@ -48,22 +45,23 @@
     <body>
         <div id="container">
             <div id="gameTitle">PONG vs IA</div>
-            <div id="desc">¡Consigue 10 puntos primero para ganar!</div>
+            <div id="desc">Atteignez 10 points en premier pour gagner !</div>
             <div id="scoreBoard"></div>
             <canvas id="pong" width="400" height="260"></canvas>
-            <button id="startBtn" onclick="startGame()">Iniciar Juego</button>
+            <button id="startBtn" onclick="startGame()">Démarrer</button>
             <div id="winMsg"></div>
             <div class="gameOverBtns" style="display: none">
-                <button onclick="restartGame()">Reiniciar</button>
-                <button onclick="shareScore()">Compartir</button>
+                <button onclick="restartGame()">Rejouer</button>
+                <button onclick="shareScore()">Partager</button>
             </div>
             <div class="desc-ctrl">
-                Controles: W/S (tú, lado izquierdo) ・ IA controla la paleta derecha<br />En móvil, arrastra la parte izquierda.
+                Contrôles : W/S (vous, gauche) ・ L'IA gère la droite<br />Sur mobile, glissez sur la moitié gauche.
             </div>
         </div>
-        <button id="otherGames" onclick="window.location.href='../'">Otros juegos</button>
+        <button id="otherGames" onclick="window.location.href='../'">Autres jeux</button>
+
         <script>
-            // --- Declaración de variables ---
+            // Variables
             const canvas = document.getElementById("pong");
             const ctx = canvas.getContext("2d");
             const scoreBoard = document.getElementById("scoreBoard");
@@ -72,321 +70,221 @@
             const gameOverBtns = document.querySelector(".gameOverBtns");
             const maxScore = 10;
 
-            const paddleWidth = 12,
-                paddleHeight = 56,
-                ballSize = 14;
-            const paddleSpeed = 6,
-                ballSpeedStart = 2.7;
-            let leftY, rightY, ballX, ballY, ballVelX, ballVelY;
-            let leftScore = 0,
-                rightScore = 0,
-                gameRunning = false,
-                inGame = false;
-            let leftMove = 0;
-            let aiLevel = 0.15;
-            let rafId;
+            const paddleW = 12, paddleH = 56, ballSz = 14;
+            const paddleSpeed = 6, ballSpeed0 = 2.7;
+            let lY, rY, bX, bY, vX, vY;
+            let lScore = 0, rScore = 0, running = false, playing = false;
+            let moveY = 0, aiSkill = 0.15, raf;
 
-            // Sistema de partículas para destellos
-            let particles = [];
-
-            function spawnSpark(x, y, color = "#ffe287", count = 15) {
-                for (let i = 0; i < count; i++) {
-                    let angle = Math.random() * 2 * Math.PI;
-                    let speed = 2.3 + Math.random() * 2.2;
-                    particles.push({
-                        x,
-                        y,
-                        vx: Math.cos(angle) * speed,
-                        vy: Math.sin(angle) * speed,
-                        alpha: 1.1,
-                        life: 12 + Math.random() * 5,
-                        color,
-                    });
+            let sparks = [];
+            function spawnSpark(x,y,c='#ffe287',n=15){
+                for(let i=0;i<n;i++){
+                    let a=Math.random()*2*Math.PI, s=2.3+Math.random()*2.2;
+                    sparks.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,alpha:1,life:12+Math.random()*5,color:c});
                 }
             }
-
-            function updateParticles() {
-                for (let i = particles.length - 1; i >= 0; i--) {
-                    let p = particles[i];
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.vx *= 0.91;
-                    p.vy *= 0.91;
-                    p.alpha -= 0.06;
-                    p.life--;
-                    if (p.life <= 0 || p.alpha <= 0) particles.splice(i, 1);
+            function updateSparks(){
+                for(let i=sparks.length-1;i>=0;i--){
+                    let p=sparks[i];
+                    p.x+=p.vx; p.y+=p.vy;
+                    p.vx*=0.91; p.vy*=0.91;
+                    p.alpha-=0.06; p.life--;
+                    if(p.life<=0||p.alpha<=0) sparks.splice(i,1);
                 }
             }
-
-            function drawParticles() {
-                for (const p of particles) {
-                    ctx.globalAlpha = Math.max(p.alpha, 0);
+            function drawSparks(){
+                sparks.forEach(p=>{
+                    ctx.globalAlpha=Math.max(p.alpha,0);
                     ctx.beginPath();
-                    ctx.arc(p.x, p.y, 2.1, 0, Math.PI * 2);
-                    ctx.fillStyle = p.color;
-                    ctx.fill();
-                }
-                ctx.globalAlpha = 1;
+                    ctx.arc(p.x,p.y,2.1,0,2*Math.PI);
+                    ctx.fillStyle=p.color; ctx.fill();
+                });
+                ctx.globalAlpha=1;
             }
 
-            function resetVars() {
-                leftY = (canvas.height - paddleHeight) / 2;
-                rightY = (canvas.height - paddleHeight) / 2;
-                ballX = (canvas.width - ballSize) / 2;
-                ballY = (canvas.height - ballSize) / 2;
-                let angle = ((Math.random() - 0.5) * Math.PI) / 3;
-                let dir = Math.random() > 0.5 ? 1 : -1;
-                ballVelX = ballSpeedStart * dir * Math.cos(angle);
-                ballVelY = ballSpeedStart * Math.sin(angle);
+            function resetVars(){
+                lY=(canvas.height-paddleH)/2;
+                rY=(canvas.height-paddleH)/2;
+                bX=(canvas.width-ballSz)/2;
+                bY=(canvas.height-ballSz)/2;
+                let ang=(Math.random()-0.5)*Math.PI/3;
+                let dir=Math.random()>0.5?1:-1;
+                vX=ballSpeed0*dir*Math.cos(ang);
+                vY=ballSpeed0* Math.sin(ang);
             }
+            function updateScore(){ scoreBoard.textContent=`${lScore} : ${rScore}`; }
 
-            function updateScore() {
-                scoreBoard.textContent = `${leftScore} : ${rightScore}`;
-            }
-
-            function drawPaddle(x, y) {
-                ctx.fillStyle = "#fffffe";
-                ctx.fillRect(x, y, paddleWidth, paddleHeight);
-            }
-
-            function drawBall(x, y) {
+            function drawP(x,y){ ctx.fillStyle="#fff"; ctx.fillRect(x,y,paddleW,paddleH); }
+            function drawB(x,y){
                 ctx.beginPath();
-                ctx.arc(x + ballSize / 2, y + ballSize / 2, ballSize / 2, 0, Math.PI * 2);
-                ctx.fillStyle = "#f9bc60";
-                ctx.fill();
+                ctx.arc(x+ballSz/2,y+ballSz/2,ballSz/2,0,2*Math.PI);
+                ctx.fillStyle="#f9bc60"; ctx.fill();
             }
-
-            function drawCenterLine() {
+            function drawMid(){
                 ctx.save();
-                ctx.setLineDash([9, 11]);
-                ctx.strokeStyle = "#393d42";
-                ctx.lineWidth = 3;
+                ctx.setLineDash([9,11]);
+                ctx.strokeStyle="#393d42"; ctx.lineWidth=3;
                 ctx.beginPath();
-                ctx.moveTo(canvas.width / 2, 0);
-                ctx.lineTo(canvas.width / 2, canvas.height);
+                ctx.moveTo(canvas.width/2,0);
+                ctx.lineTo(canvas.width/2,canvas.height);
                 ctx.stroke();
                 ctx.restore();
             }
 
-            function draw() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                drawCenterLine();
-                drawPaddle(10, leftY);
-                drawPaddle(canvas.width - paddleWidth - 10, rightY);
-                drawBall(ballX, ballY);
-                drawParticles();
+            function draw(){
+                ctx.clearRect(0,0,canvas.width,canvas.height);
+                drawMid();
+                drawP(10,lY);
+                drawP(canvas.width-paddleW-10,rY);
+                drawB(bX,bY);
+                drawSparks();
             }
 
-            function stepGame() {
-                leftY += leftMove * paddleSpeed;
-                leftY = Math.max(0, Math.min(canvas.height - paddleHeight, leftY));
-                // IA (lado derecho)
-                let targetY = ballY - (paddleHeight - ballSize) / 2;
-                rightY += (targetY - rightY) * aiLevel;
-                rightY = Math.max(0, Math.min(canvas.height - paddleHeight, rightY));
-                // Movimiento de la pelota
-                ballX += ballVelX;
-                ballY += ballVelY;
+            function step(){
+                lY+=moveY*paddleSpeed;
+                lY=Math.max(0,Math.min(canvas.height-paddleH,lY));
+                // IA
+                let tgt=bY-(paddleH-ballSz)/2;
+                rY+=(tgt-rY)*aiSkill;
+                rY=Math.max(0,Math.min(canvas.height-paddleH,rY));
+                // balle
+                bX+=vX; bY+=vY;
+                if(bY<=0||bY+ballSz>=canvas.height) vY*=-1;
 
-                // Rebote en paredes
-                if (ballY <= 0 || ballY + ballSize >= canvas.height) ballVelY *= -1;
-                // Colisión con paletas
-                let sparkAt = null;
-                if (ballX <= 10 + paddleWidth && ballY + ballSize >= leftY && ballY <= leftY + paddleHeight) {
-                    ballX = 10 + paddleWidth;
-                    ballVelX *= -1.07;
-                    let hit = (ballY + ballSize / 2 - (leftY + paddleHeight / 2)) / (paddleHeight / 2);
-                    ballVelY += hit * 2.0;
-                    sparkAt = { x: ballX + ballSize / 2, y: ballY + ballSize / 2, color: "#ffe287" };
+                let spark=null;
+                // collision gauche
+                if(bX<=10+paddleW && bY+ballSz>=lY && bY<=lY+paddleH){
+                    bX=10+paddleW;
+                    vX*=-1.07;
+                    let hit=(bY+ballSz/2-(lY+paddleH/2))/(paddleH/2);
+                    vY+=hit*2; spark={x:bX+ballSz/2,y:bY+ballSz/2,c:'#ffe287'};
                 }
-                if (
-                    ballX + ballSize >= canvas.width - 10 - paddleWidth &&
-                    ballY + ballSize >= rightY &&
-                    ballY <= rightY + paddleHeight
-                ) {
-                    ballX = canvas.width - 10 - paddleWidth - ballSize;
-                    ballVelX *= -1.07;
-                    let hit = (ballY + ballSize / 2 - (rightY + paddleHeight / 2)) / (paddleHeight / 2);
-                    ballVelY += hit * 2.0;
-                    sparkAt = { x: ballX + ballSize / 2, y: ballY + ballSize / 2, color: "#86f4ff" };
+                // collision droite
+                if(bX+ballSz>=canvas.width-10-paddleW && bY+ballSz>=rY && bY<=rY+paddleH){
+                    bX=canvas.width-10-paddleW-ballSz;
+                    vX*=-1.07;
+                    let hit=(bY+ballSz/2-(rY+paddleH/2))/(paddleH/2);
+                    vY+=hit*2; spark={x:bX+ballSz/2,y:bY+ballSz/2,c:'#86f4ff'};
                 }
-                if (sparkAt) spawnSpark(sparkAt.x, sparkAt.y, sparkAt.color);
+                if(spark) spawnSpark(spark.x,spark.y,spark.c);
 
-                // Marcador y comprobación de fin de juego
-                if (ballX < 0) {
-                    rightScore++;
-                    updateScore();
-                    if (rightScore >= maxScore) {
-                        endGame(false);
-                        return;
-                    }
+                // score & reset
+                if(bX<0){
+                    rScore++; updateScore();
+                    if(rScore>=maxScore){ endGame(false); return; }
                     resetVars();
                 }
-                if (ballX > canvas.width) {
-                    leftScore++;
-                    updateScore();
-                    if (leftScore >= maxScore) {
-                        endGame(true);
-                        return;
-                    }
+                if(bX>canvas.width){
+                    lScore++; updateScore();
+                    if(lScore>=maxScore){ endGame(true); return; }
                     resetVars();
                 }
-                updateParticles();
-                draw();
-                rafId = requestAnimationFrame(stepGame);
+
+                updateSparks(); draw();
+                raf=requestAnimationFrame(step);
             }
 
-            function startGame() {
-                leftScore = 0;
-                rightScore = 0;
-                updateScore();
-                resetVars();
-                draw();
-                startBtn.style.display = "none";
-                winMsgDiv.textContent = "";
-                gameOverBtns.style.display = "none";
-                inGame = true;
-                gameRunning = true;
-                rafId = requestAnimationFrame(stepGame);
+            function startGame(){
+                lScore=0; rScore=0; updateScore();
+                resetVars(); draw();
+                startBtn.style.display="none";
+                winMsgDiv.textContent="";
+                gameOverBtns.style.display="none";
+                playing=true; running=true;
+                raf=requestAnimationFrame(step);
+            }
+            function restartGame(){
+                lScore=0; rScore=0; updateScore();
+                resetVars(); draw();
+                winMsgDiv.textContent="";
+                gameOverBtns.style.display="none";
+                playing=true; running=true;
+                raf=requestAnimationFrame(step);
+            }
+            function endGame(playerWin){
+                running=false; playing=false;
+                cancelAnimationFrame(raf);
+                winMsgDiv.textContent=playerWin?"Vous gagnez ! 🎉":"L'IA gagne ! 🤖";
+                gameOverBtns.style.display="block";
             }
 
-            function restartGame() {
-                leftScore = 0;
-                rightScore = 0;
-                updateScore();
-                resetVars();
-                draw();
-                winMsgDiv.textContent = "";
-                gameOverBtns.style.display = "none";
-                inGame = true;
-                gameRunning = true;
-                rafId = requestAnimationFrame(stepGame);
-            }
-
-            function endGame(playerWin) {
-                gameRunning = false;
-                inGame = false;
-                cancelAnimationFrame(rafId);
-                winMsgDiv.textContent = playerWin ? "¡Tú ganas! 🎉" : "¡IA gana! 🤖";
-                gameOverBtns.style.display = "block";
-            }
-
-            // Botón de compartir
-            function shareScore() {
-                let text = `[PONG vs IA]\n${winMsgDiv.textContent}\nTu puntuación: ${leftScore}, IA: ${rightScore}\n\n¡Juega aquí!: ${window.location.href}`;
-                if (navigator.share) {
-                    navigator.share({ title: "PONG vs IA", text })
-                        .catch(() => {
-                            navigator.clipboard.writeText(text);
-                            alert("¡Resultado copiado al portapapeles!\n\n" + text);
-                        });
+            function shareScore(){
+                let txt=`[PONG vs IA]\n${winMsgDiv.textContent}\nVous : ${lScore}, IA : ${rScore}\n`+
+                        `Jouez : ${window.location.href}`;
+                if(navigator.share){
+                    navigator.share({title:"PONG vs IA", text:txt})
+                        .catch(()=>{ navigator.clipboard.writeText(txt); alert("Copié !\n"+txt)} );
                 } else {
-                    navigator.clipboard.writeText(text).then(() => {
-                        alert("¡Resultado copiado al portapapeles!\n\n" + text);
-                    });
+                    navigator.clipboard.writeText(txt)
+                        .then(()=> alert("Copié !\n"+txt));
                 }
             }
 
-            // Controles de teclado
-            document.addEventListener("keydown", (e) => {
-                if (!inGame) return;
-                if (e.key === "w" || e.key === "W") leftMove = -1;
-                if (e.key === "s" || e.key === "S") leftMove = 1;
+            // contrôles clavier
+            document.addEventListener("keydown",e=>{
+                if(!playing) return;
+                if(e.key==="w"||e.key==="W") moveY=-1;
+                if(e.key==="s"||e.key==="S") moveY=1;
             });
-            document.addEventListener("keyup", (e) => {
-                if (!inGame) return;
-                if (e.key === "w" || e.key === "W") leftMove = 0;
-                if (e.key === "s" || e.key === "S") leftMove = 0;
+            document.addEventListener("keyup",e=>{
+                if(!playing) return;
+                if(e.key==="w"||e.key==="W"||e.key==="s"||e.key==="S") moveY=0;
             });
 
-            // Toques táctiles en móvil (solo paleta izquierda)
-            canvas.addEventListener("touchstart", function (e) {
-                if (!inGame) return;
-                const rect = canvas.getBoundingClientRect();
-                for (const touch of e.touches) {
-                    if (touch.clientX - rect.left < canvas.width / 2) {
-                        let y = touch.clientY - rect.top - paddleHeight / 2;
-                        y = Math.max(0, Math.min(canvas.height - paddleHeight, y));
-                        leftY = y;
-                    }
-                }
-            });
-            canvas.addEventListener("touchmove", function (e) {
-                if (!inGame) return;
-                const rect = canvas.getBoundingClientRect();
-                for (const touch of e.touches) {
-                    if (touch.clientX - rect.left < canvas.width / 2) {
-                        let y = touch.clientY - rect.top - paddleHeight / 2;
-                        y = Math.max(0, Math.min(canvas.height - paddleHeight, y));
-                        leftY = y;
+            // tactile mobile
+            canvas.addEventListener("touchmove",e=>{
+                if(!playing) return;
+                let rect=canvas.getBoundingClientRect();
+                for(let t of e.touches){
+                    if(t.clientX-rect.left<canvas.width/2){
+                        let yy=t.clientY-rect.top-paddleH/2;
+                        lY=Math.max(0,Math.min(canvas.height-paddleH,yy));
                     }
                 }
                 e.preventDefault();
-            });
+            },{passive:false});
 
-            // Evitar desplazamiento en móvil mientras se juega
-            document.body.addEventListener(
-                "touchmove",
-                function (e) {
-                    if (inGame) e.preventDefault();
-                },
-                {
-                    passive: false,
-                }
-            );
-
-            // Estado inicial
-            updateScore();
-            resetVars();
-            draw();
-            startBtn.style.display = "block";
-            winMsgDiv.textContent = "";
-            gameOverBtns.style.display = "none";
+            // init
+            updateScore(); resetVars(); draw();
+            startBtn.style.display="block";
+            winMsgDiv.textContent=""; gameOverBtns.style.display="none";
         </script>
-        <section
-            style="
-                max-width: 320px;
-                width: 100%;
-                margin: 48px auto 24px auto;
-                font-family: 'Arial', sans-serif;
-                font-size: 14px;
-                background: #1e1e1e;
-                border-radius: 18px;
-                box-shadow: 0 6px 24px #1236;
-                padding: 20px;
-                line-height: 1.6;
-                color: #f0f0f0;
-            ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #f9bc60">❓ Preguntas Frecuentes</h2>
 
-            <div style="margin-bottom: 12px">
-                <strong>Q1. ¿Cómo se juega?</strong><br />
-                A. Maneja la paleta izquierda y consigue 10 puntos antes que la IA. Usa W/S en PC, o arrastra en la parte izquierda en móvil.
+        <section style="
+            max-width:320px; width:100%; margin:48px auto 24px;
+            font-family:'Arial',sans-serif; font-size:14px;
+            background:#1e1e1e; border-radius:18px; box-shadow:0 6px 24px #1236;
+            padding:20px; line-height:1.6; color:#f0f0f0;">
+            <h2 style="font-size:1.4rem; margin-bottom:14px; color:#f9bc60">❓ FAQ</h2>
+
+            <div style="margin-bottom:12px">
+                <strong>Q1. Comment jouer ?</strong><br/>
+                R. Contrôlez la raquette gauche pour atteindre 10 points avant l’IA. Utilisez W/S sur PC ou glissez à gauche sur mobile.
             </div>
 
-            <div style="margin-bottom: 12px">
-                <strong>Q2. ¿Cómo controlo la paleta?</strong><br />
-                A. En PC, presiona W (arriba) y S (abajo). En móvil, arrastra la paleta izquierda con el dedo.
+            <div style="margin-bottom:12px">
+                <strong>Q2. Comment contrôler la raquette ?</strong><br/>
+                R. Sur PC, appuyez sur W (haut) et S (bas). Sur mobile, glissez votre doigt sur la moitié gauche de l’écran.
             </div>
 
-            <div style="margin-bottom: 12px">
-                <strong>Q3. ¿Cómo funciona la IA?</strong><br />
-                A. La IA sigue la pelota y mueve la paleta automáticamente. Conforme la pelota se acelera, el nivel de dificultad aumenta.
+            <div style="margin-bottom:12px">
+                <strong>Q3. Comment fonctionne l’IA ?</strong><br/>
+                R. L’IA suit automatiquement la balle. Plus la balle accélère, plus le défi augmente.
             </div>
 
-            <div style="margin-bottom: 12px">
-                <strong>Q4. ¿Qué pasa cuando alguien gana?</strong><br />
-                A. Aparecerá un mensaje de victoria o derrota. Luego puedes reiniciar el juego o compartir tu puntuación.
+            <div style="margin-bottom:12px">
+                <strong>Q4. Que se passe-t-il à la fin ?</strong><br/>
+                R. Un message indique victoire ou défaite, puis vous pouvez rejouer ou partager votre score.
             </div>
 
-            <div style="margin-bottom: 12px">
-                <strong>Q5. ¿Cómo comparto mi puntuación?</strong><br />
-                A. Pulsa el botón <strong>Compartir</strong> para copiar tu resultado y compartirlo con amigos.
+            <div style="margin-bottom:12px">
+                <strong>Q5. Comment partager mon score ?</strong><br/>
+                R. Cliquez sur <strong>Partager</strong> pour copier votre résultat et le partager.
             </div>
 
-            <div style="margin-bottom: 0">
-                <strong>Q6. ¿Es compatible con móvil?</strong><br />
-                A. Sí, está optimizado tanto para navegadores móviles como de escritorio.
+            <div style="margin-bottom:0">
+                <strong>Q6. Compatible mobile ?</strong><br/>
+                R. Oui, optimisé pour navigateurs mobile et desktop.
             </div>
         </section>
     </body>

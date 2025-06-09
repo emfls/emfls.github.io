@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="es">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <title>SupervivienteMini</title>
+    <title>SurvivantMini</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -12,7 +12,6 @@
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-
       gtag("config", "G-QP5Q67GE5B");
     </script>
     <script
@@ -22,29 +21,29 @@
     <!-- SEO & Social meta -->
     <meta
       name="description"
-      content="SupervivienteMini es un juego de acción rápido para navegador. Esquiva monstruos, sube de nivel y sobrevive el mayor tiempo posible. ¡Juega gratis sin descargas!" />
+      content="SurvivantMini est un jeu d'action rapide sur navigateur. Esquivez les monstres, montez de niveau et survivez le plus longtemps possible. Jouez gratuitement, sans téléchargement !" />
     <meta
       name="keywords"
-      content="Superviviente, minijuego, acción, supervivencia, shooter, arcade, juego navegador, gratis, sobrevivir, oleadas, disparos, zombis, juego web" />
+      content="Survivant, mini-jeu, action, survie, shooter, arcade, jeu navigateur, gratuit, survivre, vagues, tirs, zombies, jeu web" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="es" />
+    <meta name="language" content="fr" />
     <meta name="theme-color" content="#181a20" />
     <link rel="canonical" href="https://emfls.github.io/fr/game/SurvivorMini/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
     <!-- Open Graph (Facebook, Kakao, etc) -->
-    <meta property="og:title" content="SupervivienteMini – Juego de acción web" />
+    <meta property="og:title" content="SurvivantMini – Jeu d'action web" />
     <meta
       property="og:description"
-      content="¿Cuánto tiempo puedes sobrevivir contra oleadas de enemigos? Sube de nivel en este juego de acción rápido para navegador y alcanza la máxima puntuación." />
+      content="Combien de temps pouvez-vous survivre face à des vagues d'ennemis ? Montez de niveau dans ce jeu d'action rapide et visez le meilleur score." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/fr/game/SurvivorMini/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="SupervivienteMini – Juego de acción web" />
+    <meta name="twitter:title" content="SurvivantMini – Jeu d'action web" />
     <meta
       name="twitter:description"
-      content="Resiste las oleadas y compite por la mejor puntuación. ¡100% gratis en tu navegador!" />
+      content="Résistez aux vagues et tentez de battre le meilleur score. 100% gratuit sur votre navigateur !" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <link rel="stylesheet" href="style.css" />
   </head>
@@ -53,8 +52,8 @@
       <canvas id="game" width="375" height="500"></canvas>
       <div id="hud">
         <div id="stats">
-          <span id="score">Puntuación: 0</span>
-          <span id="wave">Oleada: 1</span>
+          <span id="score">Score&nbsp;: 0</span>
+          <span id="wave">Vague&nbsp;: 1</span>
           <span id="time">0:00</span>
         </div>
         <div id="barwrap">
@@ -86,505 +85,506 @@
         cursor: pointer;
       "
       onclick="window.location.href='/'">
-      📂 Otros juegos
+      📂 Autres jeux
     </button>
     <script>
-      const W = 375,
-        H = 500;
-      const cvs = document.getElementById("game"),
-        ctx = cvs.getContext("2d");
-      const scoreEl = document.getElementById("score");
-      const waveEl = document.getElementById("wave");
-      const timeEl = document.getElementById("time");
-      const hpbar = document.getElementById("hpbar");
-      const xpbar = document.getElementById("xpbar");
-      const levelEl = document.getElementById("level");
-      const levelup = document.getElementById("levelup");
-      const gameover = document.getElementById("gameover");
-      const joystickWrap = document.getElementById("joystickWrap");
-      const joystickBG = document.getElementById("joystickBG");
-      const joystickKnob = document.getElementById("joystickKnob");
-      let hiscore = +(localStorage.surv_hi || 0);
+  const W = 375,
+    H = 500;
+  const cvs = document.getElementById("game"),
+    ctx = cvs.getContext("2d");
+  const scoreEl = document.getElementById("score");
+  const waveEl = document.getElementById("wave");
+  const timeEl = document.getElementById("time");
+  const hpbar = document.getElementById("hpbar");
+  const xpbar = document.getElementById("xpbar");
+  const levelEl = document.getElementById("level");
+  const levelup = document.getElementById("levelup");
+  const gameover = document.getElementById("gameover");
+  const joystickWrap = document.getElementById("joystickWrap");
+  const joystickBG = document.getElementById("joystickBG");
+  const joystickKnob = document.getElementById("joystickKnob");
+  let hiscore = +(localStorage.surv_hi || 0);
 
-      let state = {};
-      function reset() {
-        state = {
-          player: {
-            x: W / 2,
-            y: H / 2,
-            r: 18,
-            spd: 2.9,
-            hp: 7,
-            maxhp: 7,
-            atk: 1,
-            fireRate: 37,
-            fire: 0,
-            bullets: 1,
-            xp: 0,
-            lv: 1,
-            xpNext: 8
-          },
-          mobs: [],
-          items: [],
-          bullets: [],
-          tick: 0,
-          time: 0,
-          score: 0,
-          wave: 1,
-          gameover: false,
-          pause: 0,
-          bosscool: 900,
-          joy: { x: 0, y: 0 },
-          input: { x: 0, y: 0 }
-        };
-        levelup.style.display = gameover.style.display = "none";
-        joystickWrap.classList.remove("inactive");
-      }
-      reset();
+  let state = {};
+  function reset() {
+    state = {
+      player: {
+        x: W / 2,
+        y: H / 2,
+        r: 18,
+        spd: 2.9,
+        hp: 7,
+        maxhp: 7,
+        atk: 1,
+        fireRate: 37,
+        fire: 0,
+        bullets: 1,
+        xp: 0,
+        lv: 1,
+        xpNext: 8
+      },
+      mobs: [],
+      items: [],
+      bullets: [],
+      tick: 0,
+      time: 0,
+      score: 0,
+      wave: 1,
+      gameover: false,
+      pause: 0,
+      bosscool: 900,
+      joy: { x: 0, y: 0 },
+      input: { x: 0, y: 0 }
+    };
+    levelup.style.display = gameover.style.display = "none";
+    joystickWrap.classList.remove("inactive");
+  }
+  reset();
 
-      // ====== Joystick táctil circular + teclado ======
-      let dragging = false;
-      function setJoystickActive(active) {
-        if (active) {
-          joystickWrap.classList.remove("inactive");
-        } else {
-          joystickWrap.classList.add("inactive");
-        }
-      }
-      joystickKnob.ontouchstart = (e) => {
-        if (!state.pause && !state.gameover) {
-          e.preventDefault();
-          dragging = true;
-        }
-      };
-      joystickKnob.ontouchend = (e) => {
-        if (!state.pause && !state.gameover) {
-          e.preventDefault();
-          dragging = false;
-          joystickKnob.style.left = "41px";
-          joystickKnob.style.top = "41px";
-          state.joy.x = 0;
-          state.joy.y = 0;
-        }
-      };
-      joystickBG.ontouchstart = (e) => {
-        if (!state.pause && !state.gameover) e.preventDefault();
-      };
-      joystickBG.ontouchmove = joystickKnob.ontouchmove = (e) => {
-        if (state.pause || state.gameover) return;
-        e.preventDefault();
-        let t = e.touches[0];
-        let rect = joystickBG.getBoundingClientRect();
-        let x = t.clientX - rect.left - 70,
-          y = t.clientY - rect.top - 70;
-        let d = Math.hypot(x, y),
-          maxD = 45;
-        if (d > maxD) {
-          x *= maxD / d;
-          y *= maxD / d;
-        }
-        joystickKnob.style.left = 41 + x + "px";
-        joystickKnob.style.top = 41 + y + "px";
-        state.joy.x = x / maxD;
-        state.joy.y = y / maxD;
-      };
-      joystickBG.ontouchend = (e) => {
-        if (!state.pause && !state.gameover) {
-          e.preventDefault();
-          dragging = false;
-          joystickKnob.style.left = "41px";
-          joystickKnob.style.top = "41px";
-          state.joy.x = 0;
-          state.joy.y = 0;
-        }
-      };
+  // ====== Joystick tactile circulaire + clavier ======
+  let dragging = false;
+  function setJoystickActive(active) {
+    if (active) {
+      joystickWrap.classList.remove("inactive");
+    } else {
+      joystickWrap.classList.add("inactive");
+    }
+  }
+  joystickKnob.ontouchstart = (e) => {
+    if (!state.pause && !state.gameover) {
+      e.preventDefault();
+      dragging = true;
+    }
+  };
+  joystickKnob.ontouchend = (e) => {
+    if (!state.pause && !state.gameover) {
+      e.preventDefault();
+      dragging = false;
+      joystickKnob.style.left = "41px";
+      joystickKnob.style.top = "41px";
+      state.joy.x = 0;
+      state.joy.y = 0;
+    }
+  };
+  joystickBG.ontouchstart = (e) => {
+    if (!state.pause && !state.gameover) e.preventDefault();
+  };
+  joystickBG.ontouchmove = joystickKnob.ontouchmove = (e) => {
+    if (state.pause || state.gameover) return;
+    e.preventDefault();
+    let t = e.touches[0];
+    let rect = joystickBG.getBoundingClientRect();
+    let x = t.clientX - rect.left - 70,
+      y = t.clientY - rect.top - 70;
+    let d = Math.hypot(x, y),
+      maxD = 45;
+    if (d > maxD) {
+      x *= maxD / d;
+      y *= maxD / d;
+    }
+    joystickKnob.style.left = 41 + x + "px";
+    joystickKnob.style.top = 41 + y + "px";
+    state.joy.x = x / maxD;
+    state.joy.y = y / maxD;
+  };
+  joystickBG.ontouchend = (e) => {
+    if (!state.pause && !state.gameover) {
+      e.preventDefault();
+      dragging = false;
+      joystickKnob.style.left = "41px";
+      joystickKnob.style.top = "41px";
+      state.joy.x = 0;
+      state.joy.y = 0;
+    }
+  };
 
-      // Soporte de teclado en PC (ignorar si hay popup)
-      window.addEventListener("keydown", (e) => {
-        if (state.pause || state.gameover) return;
-        if (e.key === "ArrowUp") state.input.y = -1;
-        if (e.key === "ArrowDown") state.input.y = 1;
-        if (e.key === "ArrowLeft") state.input.x = -1;
-        if (e.key === "ArrowRight") state.input.x = 1;
-      });
-      window.addEventListener("keyup", (e) => {
-        if (["ArrowUp", "ArrowDown"].includes(e.key)) state.input.y = 0;
-        if (["ArrowLeft", "ArrowRight"].includes(e.key)) state.input.x = 0;
-      });
+  // Support clavier sur PC (ignorer si popup)
+  window.addEventListener("keydown", (e) => {
+    if (state.pause || state.gameover) return;
+    if (e.key === "ArrowUp") state.input.y = -1;
+    if (e.key === "ArrowDown") state.input.y = 1;
+    if (e.key === "ArrowLeft") state.input.x = -1;
+    if (e.key === "ArrowRight") state.input.x = 1;
+  });
+  window.addEventListener("keyup", (e) => {
+    if (["ArrowUp", "ArrowDown"].includes(e.key)) state.input.y = 0;
+    if (["ArrowLeft", "ArrowRight"].includes(e.key)) state.input.x = 0;
+  });
 
-      // ========== Bucle principal ==========
-      function loop() {
-        if (!state.gameover && !state.pause) update();
-        draw();
-        requestAnimationFrame(loop);
-      }
-      loop();
+  // ========== Boucle principale ==========
+  function loop() {
+    if (!state.gameover && !state.pause) update();
+    draw();
+    requestAnimationFrame(loop);
+  }
+  loop();
 
-      // ========== Actualizar ==========
-      function update() {
-        state.tick++;
-        state.time = (state.tick / 60) | 0;
-        // Movimiento
-        let dx = state.input.x + state.joy.x,
-          dy = state.input.y + state.joy.y;
-        let len = Math.hypot(dx, dy);
-        if (len) {
-          state.player.x += (state.player.spd * dx) / Math.max(len, 1);
-          state.player.y += (state.player.spd * dy) / Math.max(len, 1);
-          state.player.x = Math.max(state.player.r, Math.min(W - state.player.r, state.player.x));
-          state.player.y = Math.max(state.player.r, Math.min(H - state.player.r, state.player.y));
-        }
-        // Balas: guiado automático a enemigo más cercano
-        state.player.fire++;
-        if (state.player.fire >= state.player.fireRate) {
-          for (let i = 0; i < state.player.bullets; i++) {
-            let target = state.mobs.length
-              ? state.mobs.reduce((a, b) =>
-                  Math.hypot(a.x - state.player.x, a.y - state.player.y) < Math.hypot(b.x - state.player.x, b.y - state.player.y)
-                    ? a
-                    : b
-                )
-              : null;
-            let angle = target
-              ? Math.atan2(target.y - state.player.y, target.x - state.player.x)
-              : Math.random() * Math.PI * 2;
-            angle += (-0.16 + 0.32 * (i / (state.player.bullets - 1 || 1))) * !!(state.player.bullets - 1);
-            state.bullets.push({
-              x: state.player.x,
-              y: state.player.y,
-              vx: Math.cos(angle) * 7,
-              vy: Math.sin(angle) * 7,
-              r: 7,
-              dmg: state.player.atk
-            });
-          }
-          state.player.fire = 0;
-        }
-        // Movimiento/colisión de balas
-        state.bullets = state.bullets.filter((b) => {
-          b.x += b.vx;
-          b.y += b.vy;
-          if (b.x < 0 || b.x > W || b.y < 0 || b.y > H) return false;
-          for (let m of state.mobs) {
-            if (!m.dead && Math.hypot(b.x - m.x, b.y - m.y) < b.r + m.r) {
-              m.hp -= b.dmg;
-              b.r = 0;
-              if (m.hp <= 0) {
-                m.dead = 1;
-                state.score += m.score;
-                dropExp(m);
-                dropItem(m);
-              }
-              return false;
-            }
-          }
-          return true;
-        });
-        // Generar enemigos
-        if (state.tick % Math.max(11, 42 - state.wave * 2) === 0) {
-          let t = state.wave,
-            r = 14 + Math.random() * 8,
-            hp = 1 + Math.floor(t / 1.4);
-          let ang = Math.random() * Math.PI * 2,
-            d = W / 2 + 60;
-          state.mobs.push({
-            x: W / 2 + Math.cos(ang) * d,
-            y: H / 2 + Math.sin(ang) * d,
-            r,
-            hp,
-            maxhp: hp,
-            spd: 1 + t * 0.08 + Math.random() * 0.12,
-            score: 1,
-            dead: 0,
-            boss: 0
-          });
-        }
-        // Jefe (cada minuto)
-        if (--state.bosscool <= 0) {
-          state.bosscool = 870 + Math.random() * 90;
-          let hp = 17 + state.wave * 4;
-          let ang = Math.random() * Math.PI * 2,
-            d = W / 2 + 60;
-          state.mobs.push({
-            x: W / 2 + Math.cos(ang) * d,
-            y: H / 2 + Math.sin(ang) * d,
-            r: 32,
-            hp,
-            maxhp: hp,
-            spd: 1.2 + state.wave * 0.12,
-            score: 9,
-            dead: 0,
-            boss: 1
-          });
-        }
-        // Movimiento/colisión de enemigos
-        for (let m of state.mobs) {
-          if (m.dead) continue;
-          let dx = state.player.x - m.x,
-            dy = state.player.y - m.y,
-            dd = Math.hypot(dx, dy);
-          if (dd > 1) {
-            m.x += (m.spd * dx) / dd;
-            m.y += (m.spd * dy) / dd;
-          }
-          if (dd < m.r + state.player.r) {
-            state.player.hp--;
-            m.dead = 1;
-            if (state.player.hp <= 0) return gameOver();
-          }
-        }
-        state.mobs = state.mobs.filter((m) => !m.dead);
-        // Manejo de ítems
-        state.items = state.items.filter((it) => {
-          if (Math.hypot(state.player.x - it.x, state.player.y - it.y) < state.player.r + it.r + 7) {
-            if (it.type === "heal") state.player.hp = Math.min(state.player.maxhp, state.player.hp + 2);
-            if (it.type === "magnet") {
-              for (let e of state.items) if (e.type === "exp") e.magnet = 1;
-            }
-            if (it.type === "exp") {
-              state.player.xp++;
-            }
-            return false;
-          }
-          if (it.magnet) {
-            let dx = state.player.x - it.x,
-              dy = state.player.y - it.y,
-              dd = Math.hypot(dx, dy);
-            it.x += (dx / Math.max(dd, 2)) * 4;
-            it.y += (dy / Math.max(dd, 2)) * 4;
-          }
-          return true;
-        });
-        // Experiencia / Subir de nivel
-        while (state.player.xp >= state.player.xpNext) {
-          state.player.xp -= state.player.xpNext;
-          state.player.lv++;
-          state.player.xpNext = 8 + Math.floor(state.player.lv * 1.6);
-          showLevelUp();
-        }
-        // Actualizar oleada
-        state.wave = Math.floor(state.time / 18) + 1;
-      }
-      function dropExp(m) {
-        let cnt = m.boss ? 10 : 2;
-        for (let i = 0; i < cnt; i++) {
-          state.items.push({
-            x: m.x + (Math.random() - 0.5) * m.r * 1.2,
-            y: m.y + (Math.random() - 0.5) * m.r * 1.2,
-            r: 6,
-            type: "exp"
-          });
-        }
-      }
-      function dropItem(m) {
-        if (Math.random() < 0.12) {
-          state.items.push({ x: m.x, y: m.y, r: 11, type: "heal" });
-        } else if (Math.random() < 0.16) {
-          state.items.push({ x: m.x, y: m.y, r: 11, type: "magnet" });
-        }
-      }
-
-      // ===== Selección de mejoras al subir de nivel =====
-      function showLevelUp() {
-        setJoystickActive(false);
-        let upgrades = [
-          {
-            name: "Velocidad de disparo↑",
-            desc: "Dispara más rápido",
-            act: () => {
-              state.player.fireRate = Math.max(13, state.player.fireRate - 6);
-            }
-          },
-          {
-            name: "Cantidad de balas↑",
-            desc: "Aumenta el número de balas",
-            act: () => {
-              state.player.bullets = Math.min(6, state.player.bullets + 1);
-            }
-          },
-          {
-            name: "Velocidad de movimiento↑",
-            desc: "Aumenta tu velocidad",
-            act: () => {
-              state.player.spd += 0.7;
-            }
-          },
-          {
-            name: "Daño↑",
-            desc: "Aumenta tu daño",
-            act: () => {
-              state.player.atk += 1;
-            }
-          },
-          {
-            name: "Vida máxima↑",
-            desc: "Aumenta la vida máxima y cura",
-            act: () => {
-              state.player.maxhp += 1;
-              state.player.hp = Math.min(state.player.hp + 1, state.player.maxhp);
-            }
-          }
-        ];
-        let pick = [];
-        while (pick.length < 3) {
-          let i = Math.floor(Math.random() * upgrades.length);
-          if (!pick.includes(i)) pick.push(i);
-        }
-        levelup.innerHTML =
-          `<b>¡Nivel subido!<br>Selecciona una mejora</b>
-    <div class='popupButtons'>` +
-          pick
-            .map(
-              (i) =>
-                `<button class="popupBtn" onclick="upgrade(${i})">${upgrades[i].name}<br><span style='font-size:0.93em;color:#aad;'>${upgrades[i].desc}</span></button>`
+  // ========== Mise à jour ==========
+  function update() {
+    state.tick++;
+    state.time = (state.tick / 60) | 0;
+    // Mouvement
+    let dx = state.input.x + state.joy.x,
+      dy = state.input.y + state.joy.y;
+    let len = Math.hypot(dx, dy);
+    if (len) {
+      state.player.x += (state.player.spd * dx) / Math.max(len, 1);
+      state.player.y += (state.player.spd * dy) / Math.max(len, 1);
+      state.player.x = Math.max(state.player.r, Math.min(W - state.player.r, state.player.x));
+      state.player.y = Math.max(state.player.r, Math.min(H - state.player.r, state.player.y));
+    }
+    // Balles : visée auto vers l'ennemi le plus proche
+    state.player.fire++;
+    if (state.player.fire >= state.player.fireRate) {
+      for (let i = 0; i < state.player.bullets; i++) {
+        let target = state.mobs.length
+          ? state.mobs.reduce((a, b) =>
+              Math.hypot(a.x - state.player.x, a.y - state.player.y) < Math.hypot(b.x - state.player.x, b.y - state.player.y)
+                ? a
+                : b
             )
-            .join("") +
-          `</div>`;
-        levelup.style.display = "block";
-        state.pause = 1;
+          : null;
+        let angle = target
+          ? Math.atan2(target.y - state.player.y, target.x - state.player.x)
+          : Math.random() * Math.PI * 2;
+        angle += (-0.16 + 0.32 * (i / (state.player.bullets - 1 || 1))) * !!(state.player.bullets - 1);
+        state.bullets.push({
+          x: state.player.x,
+          y: state.player.y,
+          vx: Math.cos(angle) * 7,
+          vy: Math.sin(angle) * 7,
+          r: 7,
+          dmg: state.player.atk
+        });
       }
-      window.upgrade = function (i) {
-        [
-          () => {
-            state.player.fireRate = Math.max(13, state.player.fireRate - 6);
-          },
-          () => {
-            state.player.bullets = Math.min(6, state.player.bullets + 1);
-          },
-          () => {
-            state.player.spd += 0.7;
-          },
-          () => {
-            state.player.atk += 1;
-          },
-          () => {
-            state.player.maxhp += 1;
-            state.player.hp = Math.min(state.player.hp + 1, state.player.maxhp);
+      state.player.fire = 0;
+    }
+    // Mouvement/collision des balles
+    state.bullets = state.bullets.filter((b) => {
+      b.x += b.vx;
+      b.y += b.vy;
+      if (b.x < 0 || b.x > W || b.y < 0 || b.y > H) return false;
+      for (let m of state.mobs) {
+        if (!m.dead && Math.hypot(b.x - m.x, b.y - m.y) < b.r + m.r) {
+          m.hp -= b.dmg;
+          b.r = 0;
+          if (m.hp <= 0) {
+            m.dead = 1;
+            state.score += m.score;
+            dropExp(m);
+            dropItem(m);
           }
-        ][i]();
-        levelup.style.display = "none";
-        state.pause = 0;
-        setJoystickActive(true);
-      };
-
-      // ===== Juego terminado =====
-      function gameOver() {
-        setJoystickActive(false);
-        state.gameover = true;
-        if (state.score > hiscore) {
-          hiscore = state.score;
-          localStorage.surv_hi = hiscore;
+          return false;
         }
-        gameover.innerHTML = `<b>Juego Terminado</b><br>
-    Puntuación: <b>${state.score}</b><br>
-    Oleada: <b>${state.wave}</b><br>
-    Tiempo: <b>${Math.floor(state.time / 60)}:${("0" + (state.time % 60)).slice(-2)}</b><br>
-    <span style="font-size:0.9em;color:#bbf;">Récord: ${hiscore}</span><br>
-    <div class="popupButtons"><button class="popupBtn" onclick="restart()">Reiniciar</button></div>`;
-        gameover.style.display = "block";
       }
-      window.restart = () => {
-        reset();
-        setJoystickActive(true);
-      };
+      return true;
+    });
+    // Générer des ennemis
+    if (state.tick % Math.max(11, 42 - state.wave * 2) === 0) {
+      let t = state.wave,
+        r = 14 + Math.random() * 8,
+        hp = 1 + Math.floor(t / 1.4);
+      let ang = Math.random() * Math.PI * 2,
+        d = W / 2 + 60;
+      state.mobs.push({
+        x: W / 2 + Math.cos(ang) * d,
+        y: H / 2 + Math.sin(ang) * d,
+        r,
+        hp,
+        maxhp: hp,
+        spd: 1 + t * 0.08 + Math.random() * 0.12,
+        score: 1,
+        dead: 0,
+        boss: 0
+      });
+    }
+    // Boss (toutes les minutes)
+    if (--state.bosscool <= 0) {
+      state.bosscool = 870 + Math.random() * 90;
+      let hp = 17 + state.wave * 4;
+      let ang = Math.random() * Math.PI * 2,
+        d = W / 2 + 60;
+      state.mobs.push({
+        x: W / 2 + Math.cos(ang) * d,
+        y: H / 2 + Math.sin(ang) * d,
+        r: 32,
+        hp,
+        maxhp: hp,
+        spd: 1.2 + state.wave * 0.12,
+        score: 9,
+        dead: 0,
+        boss: 1
+      });
+    }
+    // Mouvement/collision des ennemis
+    for (let m of state.mobs) {
+      if (m.dead) continue;
+      let dx = state.player.x - m.x,
+        dy = state.player.y - m.y,
+        dd = Math.hypot(dx, dy);
+      if (dd > 1) {
+        m.x += (m.spd * dx) / dd;
+        m.y += (m.spd * dy) / dd;
+      }
+      if (dd < m.r + state.player.r) {
+        state.player.hp--;
+        m.dead = 1;
+        if (state.player.hp <= 0) return gameOver();
+      }
+    }
+    state.mobs = state.mobs.filter((m) => !m.dead);
+    // Gestion des items
+    state.items = state.items.filter((it) => {
+      if (Math.hypot(state.player.x - it.x, state.player.y - it.y) < state.player.r + it.r + 7) {
+        if (it.type === "heal") state.player.hp = Math.min(state.player.maxhp, state.player.hp + 2);
+        if (it.type === "magnet") {
+          for (let e of state.items) if (e.type === "exp") e.magnet = 1;
+        }
+        if (it.type === "exp") {
+          state.player.xp++;
+        }
+        return false;
+      }
+      if (it.magnet) {
+        let dx = state.player.x - it.x,
+          dy = state.player.y - it.y,
+          dd = Math.hypot(dx, dy);
+        it.x += (dx / Math.max(dd, 2)) * 4;
+        it.y += (dy / Math.max(dd, 2)) * 4;
+      }
+      return true;
+    });
+    // Expérience / Monter de niveau
+    while (state.player.xp >= state.player.xpNext) {
+      state.player.xp -= state.player.xpNext;
+      state.player.lv++;
+      state.player.xpNext = 8 + Math.floor(state.player.lv * 1.6);
+      showLevelUp();
+    }
+    // Mise à jour des vagues
+    state.wave = Math.floor(state.time / 18) + 1;
+  }
+  function dropExp(m) {
+    let cnt = m.boss ? 10 : 2;
+    for (let i = 0; i < cnt; i++) {
+      state.items.push({
+        x: m.x + (Math.random() - 0.5) * m.r * 1.2,
+        y: m.y + (Math.random() - 0.5) * m.r * 1.2,
+        r: 6,
+        type: "exp"
+      });
+    }
+  }
+  function dropItem(m) {
+    if (Math.random() < 0.12) {
+      state.items.push({ x: m.x, y: m.y, r: 11, type: "heal" });
+    } else if (Math.random() < 0.16) {
+      state.items.push({ x: m.x, y: m.y, r: 11, type: "magnet" });
+    }
+  }
 
-      // ========== Dibujar ==========
-      function draw() {
-        ctx.clearRect(0, 0, W, H);
-        // Círculos de fondo
-        ctx.save();
-        for (let i = 0; i < 7; i++) {
-          ctx.beginPath();
-          ctx.arc(W / 2, H / 2, 200 - i * 22, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(60,90,180,${0.07 - i * 0.009})`;
-          ctx.lineWidth = 3;
-          ctx.stroke();
+  // ===== Sélection d'améliorations au niveau supérieur =====
+  function showLevelUp() {
+    setJoystickActive(false);
+    let upgrades = [
+      {
+        name: "Vitesse de tir ↑",
+        desc: "Tirez plus vite",
+        act: () => {
+          state.player.fireRate = Math.max(13, state.player.fireRate - 6);
         }
-        ctx.restore();
-        // Ítems
-        for (let it of state.items) {
-          if (it.type === "exp") {
-            ctx.beginPath();
-            ctx.arc(it.x, it.y, it.r, 0, Math.PI * 2);
-            ctx.fillStyle = "#3be8fa";
-            ctx.fill();
-            ctx.strokeStyle = "#fff8";
-            ctx.lineWidth = 1;
-            ctx.stroke();
-          } else if (it.type === "heal") {
-            ctx.beginPath();
-            ctx.arc(it.x, it.y, it.r, 0, Math.PI * 2);
-            ctx.fillStyle = "#fa559a";
-            ctx.fill();
-            ctx.strokeStyle = "#fff";
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            ctx.fillStyle = "#fff";
-            ctx.font = "bold 14px sans-serif";
-            ctx.fillText("❤", it.x - 7, it.y + 5);
-          } else if (it.type === "magnet") {
-            ctx.beginPath();
-            ctx.arc(it.x, it.y, it.r, 0, Math.PI * 2);
-            ctx.fillStyle = "#ffc828";
-            ctx.fill();
-            ctx.strokeStyle = "#fff";
-            ctx.lineWidth = 2;
-            ctx.stroke();
-            ctx.fillStyle = "#fff";
-            ctx.font = "bold 12px sans-serif";
-            ctx.fillText("🧲", it.x - 8, it.y + 6);
-          }
+      },
+      {
+        name: "Nombre de balles ↑",
+        desc: "Augmente le nombre de balles",
+        act: () => {
+          state.player.bullets = Math.min(6, state.player.bullets + 1);
         }
-        // Enemigos
-        for (let m of state.mobs) {
-          ctx.beginPath();
-          ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
-          ctx.fillStyle = m.boss ? "#f24a9d" : "#e34";
-          ctx.fill();
-          if (m.boss) {
-            ctx.strokeStyle = "#fff9";
-            ctx.lineWidth = 4;
-            ctx.stroke();
-            ctx.font = "bold 12px sans-serif";
-            ctx.fillStyle = "#fff";
-            ctx.fillText("Jefe", m.x - 16, m.y + 4);
-          }
-          // Barra de HP
-          if (m.hp < m.maxhp) {
-            ctx.fillStyle = "#aaa";
-            ctx.fillRect(m.x - m.r, m.y - m.r - 8, m.r * 2, 4);
-            ctx.fillStyle = "#2ff";
-            ctx.fillRect(m.x - m.r, m.y - m.r - 8, (m.r * 2 * m.hp) / m.maxhp, 4);
-          }
+      },
+      {
+        name: "Vitesse de déplacement ↑",
+        desc: "Déplacez-vous plus vite",
+        act: () => {
+          state.player.spd += 0.7;
         }
-        // Jugador
+      },
+      {
+        name: "Dégâts ↑",
+        desc: "Augmente vos dégâts",
+        act: () => {
+          state.player.atk += 1;
+        }
+      },
+      {
+        name: "Vie max ↑",
+        desc: "Augmente la vie max et soigne",
+        act: () => {
+          state.player.maxhp += 1;
+          state.player.hp = Math.min(state.player.hp + 1, state.player.maxhp);
+        }
+      }
+    ];
+    let pick = [];
+    while (pick.length < 3) {
+      let i = Math.floor(Math.random() * upgrades.length);
+      if (!pick.includes(i)) pick.push(i);
+    }
+    levelup.innerHTML =
+      `<b>Niveau supérieur !<br>Sélectionnez une amélioration</b>
+  <div class='popupButtons'>` +
+      pick
+        .map(
+          (i) =>
+            `<button class="popupBtn" onclick="upgrade(${i})">${upgrades[i].name}<br><span style='font-size:0.93em;color:#aad;'>${upgrades[i].desc}</span></button>`
+        )
+        .join("") +
+      `</div>`;
+    levelup.style.display = "block";
+    state.pause = 1;
+  }
+  window.upgrade = function (i) {
+    [
+      () => {
+        state.player.fireRate = Math.max(13, state.player.fireRate - 6);
+      },
+      () => {
+        state.player.bullets = Math.min(6, state.player.bullets + 1);
+      },
+      () => {
+        state.player.spd += 0.7;
+      },
+      () => {
+        state.player.atk += 1;
+      },
+      () => {
+        state.player.maxhp += 1;
+        state.player.hp = Math.min(state.player.hp + 1, state.player.maxhp);
+      }
+    ][i]();
+    levelup.style.display = "none";
+    state.pause = 0;
+    setJoystickActive(true);
+  };
+
+  // ===== Fin de partie =====
+  function gameOver() {
+    setJoystickActive(false);
+    state.gameover = true;
+    if (state.score > hiscore) {
+      hiscore = state.score;
+      localStorage.surv_hi = hiscore;
+    }
+    gameover.innerHTML = `<b>Partie terminée</b><br>
+  Score&nbsp;: <b>${state.score}</b><br>
+  Vague&nbsp;: <b>${state.wave}</b><br>
+  Temps&nbsp;: <b>${Math.floor(state.time / 60)}:${("0" + (state.time % 60)).slice(-2)}</b><br>
+  <span style="font-size:0.9em;color:#bbf;">Meilleur score&nbsp;: ${hiscore}</span><br>
+  <div class="popupButtons"><button class="popupBtn" onclick="restart()">Rejouer</button></div>`;
+    gameover.style.display = "block";
+  }
+  window.restart = () => {
+    reset();
+    setJoystickActive(true);
+  };
+
+  // ========== Dessin ==========
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    // Cercles d'arrière-plan
+    ctx.save();
+    for (let i = 0; i < 7; i++) {
+      ctx.beginPath();
+      ctx.arc(W / 2, H / 2, 200 - i * 22, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(60,90,180,${0.07 - i * 0.009})`;
+      ctx.lineWidth = 3;
+      ctx.stroke();
+    }
+    ctx.restore();
+    // Items
+    for (let it of state.items) {
+      if (it.type === "exp") {
         ctx.beginPath();
-        ctx.arc(state.player.x, state.player.y, state.player.r, 0, Math.PI * 2);
-        ctx.fillStyle = "#fff";
+        ctx.arc(it.x, it.y, it.r, 0, Math.PI * 2);
+        ctx.fillStyle = "#3be8fa";
         ctx.fill();
-        ctx.strokeStyle = "#27e";
+        ctx.strokeStyle = "#fff8";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      } else if (it.type === "heal") {
+        ctx.beginPath();
+        ctx.arc(it.x, it.y, it.r, 0, Math.PI * 2);
+        ctx.fillStyle = "#fa559a";
+        ctx.fill();
+        ctx.strokeStyle = "#fff";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 14px sans-serif";
+        ctx.fillText("❤", it.x - 7, it.y + 5);
+      } else if (it.type === "magnet") {
+        ctx.beginPath();
+        ctx.arc(it.x, it.y, it.r, 0, Math.PI * 2);
+        ctx.fillStyle = "#ffc828";
+        ctx.fill();
+        ctx.strokeStyle = "#fff";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 12px sans-serif";
+        ctx.fillText("🧲", it.x - 8, it.y + 6);
+      }
+    }
+    // Ennemis
+    for (let m of state.mobs) {
+      ctx.beginPath();
+      ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
+      ctx.fillStyle = m.boss ? "#f24a9d" : "#e34";
+      ctx.fill();
+      if (m.boss) {
+        ctx.strokeStyle = "#fff9";
         ctx.lineWidth = 4;
         ctx.stroke();
-        // Balas
-        for (let b of state.bullets) {
-          ctx.beginPath();
-          ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
-          ctx.fillStyle = "#ffe76a";
-          ctx.fill();
-          ctx.strokeStyle = "#fff8";
-          ctx.lineWidth = 1.5;
-          ctx.stroke();
-        }
-        // HUD
-        scoreEl.textContent = "Puntuación: " + state.score;
-        waveEl.textContent = "Oleada: " + state.wave;
-        timeEl.textContent = `${Math.floor(state.time / 60)}:${("0" + (state.time % 60)).slice(-2)}`;
-        levelEl.textContent = `Nv.${state.player.lv}`;
-        // Barras de HP y XP
-        hpbar.style.width = (100 * state.player.hp) / state.player.maxhp + "%";
-        xpbar.style.width = (100 * state.player.xp) / state.player.xpNext + "%";
+        ctx.font = "bold 12px sans-serif";
+        ctx.fillStyle = "#fff";
+        ctx.fillText("Boss", m.x - 16, m.y + 4);
       }
-    </script>
+      // Barre de PV
+      if (m.hp < m.maxhp) {
+        ctx.fillStyle = "#aaa";
+        ctx.fillRect(m.x - m.r, m.y - m.r - 8, m.r * 2, 4);
+        ctx.fillStyle = "#2ff";
+        ctx.fillRect(m.x - m.r, m.y - m.r - 8, (m.r * 2 * m.hp) / m.maxhp, 4);
+      }
+    }
+    // Joueur
+    ctx.beginPath();
+    ctx.arc(state.player.x, state.player.y, state.player.r, 0, Math.PI * 2);
+    ctx.fillStyle = "#fff";
+    ctx.fill();
+    ctx.strokeStyle = "#27e";
+    ctx.lineWidth = 4;
+    ctx.stroke();
+    // Balles
+    for (let b of state.bullets) {
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+      ctx.fillStyle = "#ffe76a";
+      ctx.fill();
+      ctx.strokeStyle = "#fff8";
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+    // HUD
+    scoreEl.textContent = "Score : " + state.score;
+    waveEl.textContent = "Vague : " + state.wave;
+    timeEl.textContent = `${Math.floor(state.time / 60)}:${("0" + (state.time % 60)).slice(-2)}`;
+    levelEl.textContent = `Nv.${state.player.lv}`;
+    // Barres de PV et d'XP
+    hpbar.style.width = (100 * state.player.hp) / state.player.maxhp + "%";
+    xpbar.style.width = (100 * state.player.xp) / state.player.xpNext + "%";
+  }
+</script>
+
     <section
       style="
         max-width: 320px;
@@ -596,33 +596,33 @@
         font-family: Arial, sans-serif;
       ">
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">❓ Introducción al juego</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">❓ Introduction au jeu</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          SupervivienteMini es un juego de acción y disparos para navegador de ritmo rápido. Esquiva zombis mientras subes de nivel y sobrevive el mayor tiempo posible. Derrota oleadas de enemigos, elige mejoras poderosas y mantente con vida.
+          SurvivantMini est un jeu d’action et de tir rapide pour navigateur. Esquivez les zombies, montez de niveau et survivez le plus longtemps possible. Affrontez des vagues d’ennemis, choisissez des améliorations puissantes et restez en vie.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🕹️ Controles</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🕹️ Contrôles</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          En móviles, usa el joystick táctil en la parte inferior para moverte. En PC, usa las teclas de flecha (← ↑ ↓ →). En dispositivos táctiles, el joystick aparece automáticamente.
+          Sur mobile, utilisez le joystick tactile en bas pour vous déplacer. Sur PC, utilisez les flèches directionnelles (← ↑ ↓ →). Sur écran tactile, le joystick apparaît automatiquement.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔫 ¿Disparo automático?</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔫 Tir automatique&nbsp;?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          ¡Sí! El jugador dispara automáticamente al enemigo más cercano. Concéntrate en moverte y sobrevivir.
+          Oui&nbsp;! Le joueur tire automatiquement sur l’ennemi le plus proche. Concentrez-vous uniquement sur le déplacement et la survie.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📈 Sistema de niveles</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📈 Système de niveaux</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          Al derrotar enemigos, ganas experiencia. Al alcanzar la experiencia necesaria subes de nivel y eliges una de tres mejoras aleatorias para fortalecer a tu personaje.
+          En éliminant des ennemis, vous gagnez de l’expérience. Une fois le niveau atteint, choisissez l’une des trois améliorations aléatoires pour renforcer votre personnage.
         </p>
       </div>
       <div style="margin-bottom: 0">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">💾 Guardar puntuación</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">💾 Sauvegarde du score</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          Tu puntuación más alta se guarda automáticamente en el navegador y se muestra en la pantalla de game over.
+          Votre meilleur score est enregistré automatiquement dans le navigateur et affiché à l’écran de fin de partie.
         </p>
       </div>
     </section>

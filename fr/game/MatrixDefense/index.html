@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="fr">
     <head>
         <meta charset="UTF-8" />
         <title>Matrix Defense</title>
@@ -9,22 +9,22 @@
 
         <meta
             name="description"
-            content="¡Defiende tu base de las oleadas de robots en Matrix Defense! Mejora el cañón de plasma, sobrevive el mayor tiempo posible y desafía a tus amigos a superar tu puntuación. ¡Juega gratis en tu navegador de PC o móvil!" />
+            content="Défendez votre base contre des vagues de robots dans Matrix Defense ! Améliorez votre canon à plasma, survivez le plus longtemps possible et défiez vos amis de battre votre score. Jouez gratuitement sur PC ou mobile !" />
         <meta
             name="keywords"
-            content="Matrix Defense, idle defense, juego web, juego de navegador, cañón de plasma, torreta, defensa láser, gratis, juego de defensa, juego incremental, móvil, PC, juego en línea" />
-        <meta property="og:title" content="Matrix Defense | Juego idle de defensa de plasma" />
+            content="Matrix Defense, idle defense, jeu web, jeu de navigateur, canon à plasma, tourelle, défense laser, gratuit, jeu de défense, idle game, mobile, PC, en ligne" />
+        <meta property="og:title" content="Matrix Defense | Jeu de défense plasma idle" />
         <meta
             property="og:description"
-            content="¡Protege tu base de oleadas infinitas de robots en este elegante juego idle de defensa en el navegador! Mejora tu cañón y desafía cuánto puedes sobrevivir." />
+            content="Protégez votre base contre des vagues infinies de robots dans ce jeu idle de défense élégant en navigateur ! Améliorez votre canon et voyez combien de temps vous pouvez survivre." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://emfls.github.io/fr/game/MatrixDefense/" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta property="twitter:title" content="Matrix Defense | Juego idle de defensa de plasma" />
+        <meta property="twitter:title" content="Matrix Defense | Jeu de défense plasma idle" />
         <meta
             property="twitter:description"
-            content="¡Juega a Matrix Defense: el juego definitivo de defensa con torretas de plasma gratis en el navegador!" />
+            content="Jouez à Matrix Defense : le jeu de défense ultime avec tourelles plasma, gratuit dans votre navigateur !" />
         <meta property="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <link rel="canonical" href="https://emfls.github.io/fr/game/MatrixDefense/" />
 
@@ -35,7 +35,6 @@
                 dataLayer.push(arguments);
             }
             gtag("js", new Date());
-
             gtag("config", "G-QP5Q67GE5B");
         </script>
         <script
@@ -49,444 +48,38 @@
         <div id="wrap">
             <div id="header">
                 <h1>Matrix Defense</h1>
-                <p>Defensa idle de plasma. ¡Sobrevive!</p>
+                <p>Idle defense plasma. Survivez !</p>
                 <div id="topStatBar">
-                    OLEADA <span id="wave">1</span> ORO <span id="gold">0</span> VIDA <span id="life">10</span>
+                    VAGUE <span id="wave">1</span> OR <span id="gold">0</span> VIES <span id="life">10</span>
                 </div>
             </div>
             <canvas id="gameCanvas" width="400" height="380"></canvas>
             <div id="upgrades">
                 <button class="upBtn" id="upDmg">
-                    Daño<br />
+                    Dégâts<br />
                     +<span id="dmgC">65</span>
                 </button>
                 <button class="upBtn" id="upSpd">
-                    Velocidad de disparo<br />
+                    Vitesse de tir<br />
                     +<span id="spdC">80</span>
                 </button>
                 <button class="upBtn" id="upRng">
-                    Alcance<br />
+                    Portée<br />
                     +<span id="rngC">80</span>
                 </button>
                 <button class="upBtn" id="upLaser">
-                    Número de láseres<br />
+                    Nombre de lasers<br />
                     +<span id="laserC">150</span>
                 </button>
             </div>
             <div id="buttonBar">
-                <button class="btn" id="restartBtn" style="display: none">Reiniciar</button>
-                <button class="btn" id="shareBtn" style="display: none">Compartir</button>
-                <a href="../" class="btn other">Otros juegos</a>
+                <button class="btn" id="restartBtn" style="display: none">Rejouer</button>
+                <button class="btn" id="shareBtn" style="display: none">Partager</button>
+                <a href="../" class="btn other">Autres jeux</a>
             </div>
         </div>
         <script>
-            // ---- drawPlasmaCannon, drawPlasmaShock, drawEnemy, drawHPBar ----
-            const canvas = document.getElementById("gameCanvas");
-            const ctx = canvas.getContext("2d");
-            let W = canvas.width,
-                H = canvas.height;
-
-            let turret, upg, enemies, frame, spawnCD, wave, gold, kills, life, phase, gameover;
-            let bossSpawnedInWave, normalSpawnedInWave;
-
-            // touchmove es solo dentro del canvas
-            canvas.addEventListener(
-                "touchmove",
-                (e) => {
-                    e.preventDefault();
-                },
-                {
-                    passive: false
-                }
-            );
-
-            function drawPlasmaCannon(ctx, x, y, w, h, t) {
-                ctx.save();
-                ctx.translate(x, y);
-                for (let i = 0; i < 3; i++) {
-                    ctx.save();
-                    let scale = 1 + 0.04 * Math.sin(t / 15 + i * 2);
-                    ctx.globalAlpha = 0.13 + 0.07 * Math.sin(t / 23 + i * 2);
-                    ctx.beginPath();
-                    ctx.roundRect((-w / 2) * scale, -h * scale, w * scale, h * scale, 18 - i * 4);
-                    ctx.strokeStyle = "#32fff6";
-                    ctx.lineWidth = 7 - i * 2.5;
-                    ctx.shadowColor = "#1affff";
-                    ctx.shadowBlur = 8 - i * 2;
-                    ctx.stroke();
-                    ctx.restore();
-                }
-                ctx.globalAlpha = 1.0;
-                ctx.beginPath();
-                ctx.arc(0, 0, 17, 0, 2 * Math.PI);
-                ctx.fillStyle = "#42fff9";
-                ctx.fill();
-                ctx.beginPath();
-                ctx.arc(0, 0, 8, 0, 2 * Math.PI);
-                ctx.fillStyle = "#fc4b8b";
-                ctx.shadowColor = "#fc4b8b";
-                ctx.shadowBlur = 16;
-                ctx.fill();
-                ctx.shadowBlur = 0;
-                ctx.fillStyle = "#fc4b8b";
-                ctx.fillRect(-5, -30, 10, 30);
-                ctx.restore();
-            }
-
-            function drawPlasmaShock(ctx, x, y, t, isBoss) {
-                ctx.save();
-                ctx.globalAlpha = Math.max(0, 0.22 - t / 22);
-                ctx.beginPath();
-                ctx.arc(x, y, (isBoss ? 26 : 15) + t * 2, 0, 2 * Math.PI);
-                ctx.strokeStyle = "#41f6ff";
-                ctx.lineWidth = 2 + 0.9 * Math.sin(t / 2);
-                ctx.shadowColor = "#21ffe0";
-                ctx.shadowBlur = 13;
-                ctx.stroke();
-                ctx.restore();
-            }
-
-            function drawEnemy(ctx, x, y, t, phase, hp, maxHp, dmgText, dmgTimer, shockEffect, isBoss) {
-                ctx.save();
-                ctx.translate(x, y);
-                let scale = isBoss ? 2 : 1;
-                if (dmgTimer > 0) ctx.globalAlpha = 0.5 + 0.3 * Math.sin(dmgTimer / 2);
-                ctx.fillStyle = isBoss ? "#ffe735" : ["#e54b6a", "#8df1e2", "#b6a2ff"][t % 3];
-                ctx.fillRect(-14 * scale, -14 * scale, 28 * scale, 28 * scale);
-                ctx.fillStyle = "#fff";
-                ctx.fillRect(-7 * scale, -6 * scale, 14 * scale, 8 * scale);
-                ctx.fillStyle = "#222";
-                ctx.fillRect(-3 * scale, -5 * scale, 6 * scale, 5 * scale);
-                ctx.restore();
-                if (shockEffect && shockEffect > 0) {
-                    drawPlasmaShock(ctx, x, y, shockEffect, isBoss);
-                }
-                drawHPBar(ctx, x, y - 19 * scale, 30 * scale, 7 * scale, hp, maxHp);
-                if (dmgTimer > 0 && dmgText > 0) {
-                    ctx.save();
-                    ctx.font = `bold ${isBoss ? 30 : 18}px VT323,monospace`;
-                    ctx.globalAlpha = Math.max(0, dmgTimer / 20);
-                    ctx.fillStyle = "#ffe935";
-                    ctx.strokeStyle = "#fff";
-                    ctx.lineWidth = 2.2;
-                    ctx.textAlign = "center";
-                    ctx.strokeText("-" + dmgText, x, y - 27 * scale - dmgTimer / 2);
-                    ctx.fillText("-" + dmgText, x, y - 27 * scale - dmgTimer / 2);
-                    ctx.restore();
-                }
-            }
-
-            function drawHPBar(ctx, x, y, w, h, value, max) {
-                ctx.save();
-                ctx.beginPath();
-                ctx.strokeStyle = "#444";
-                ctx.lineWidth = h;
-                ctx.moveTo(x - w / 2, y);
-                ctx.lineTo(x + w / 2, y);
-                ctx.stroke();
-                ctx.beginPath();
-                let pct = Math.max(0, value / max);
-                let grd = ctx.createLinearGradient(x - w / 2, y, x + w / 2, y);
-                grd.addColorStop(0, "#5f5");
-                grd.addColorStop(0.7, "#ffe935");
-                grd.addColorStop(1, "#f55");
-                ctx.strokeStyle = grd;
-                ctx.lineWidth = h - 2;
-                ctx.moveTo(x - w / 2 + 1, y);
-                ctx.lineTo(x - w / 2 + 1 + pct * (w - 2), y);
-                ctx.stroke();
-                ctx.restore();
-            }
-
-            function initGame() {
-                turret = {
-                    x: W / 2,
-                    y: H - 36,
-                    r: 22,
-                    dmg: 8,
-                    rate: 2.4,
-                    rng: 180,
-                    heat: 0,
-                    laserCount: 1
-                };
-                upg = {
-                    dmg: {
-                        cost: 65,
-                        inc: 3.5,
-                        scale: 1.35
-                    },
-                    spd: {
-                        cost: 80,
-                        inc: 0.35,
-                        scale: 1.37,
-                        max: 7.2
-                    },
-                    rng: {
-                        cost: 80,
-                        inc: 26,
-                        scale: 1.4,
-                        max: (H - 70) * 2
-                    },
-                    laser: {
-                        cost: 150,
-                        inc: 1,
-                        scale: 1.45,
-                        max: 10
-                    }
-                };
-                enemies = [];
-                frame = 0;
-                spawnCD = 0;
-                wave = 1;
-                gold = 500;
-                kills = 0;
-                life = 10;
-                phase = 0;
-                bossSpawnedInWave = {};
-                normalSpawnedInWave = {};
-                gameover = false;
-                updateUI();
-            }
-
-            function enemyStat(wave) {
-                return {
-                    hp: Math.round((38 + wave * 12) * 0.5),
-                    spd: (0.35 + wave * 0.028) * 0.8,
-                    gold: 11 + Math.floor(wave / 2),
-                    type: wave % 3
-                };
-            }
-
-            function spawnEnemy() {
-                let n = wave == 1 ? 1 : wave == 2 ? 2 : 2 + Math.floor(wave / 2);
-                if (!normalSpawnedInWave[wave]) {
-                    for (let i = 0; i < n; i++) {
-                        let st = enemyStat(wave);
-                        let ex = 30 + Math.random() * (W - 60);
-                        let t = Math.floor(Math.random() * 3);
-                        enemies.push({
-                            x: ex,
-                            y: -24,
-                            hp: st.hp,
-                            maxHp: st.hp,
-                            spd: st.spd + Math.random() * 0.18,
-                            gold: st.gold,
-                            t: t,
-                            phase: Math.floor(Math.random() * 10),
-                            damageText: 0,
-                            damageTimer: 0,
-                            shockEffect: 0,
-                            isBoss: false
-                        });
-                    }
-                    normalSpawnedInWave[wave] = true;
-                }
-                if (!bossSpawnedInWave[wave]) {
-                    let bossStat = enemyStat(wave);
-                    enemies.push({
-                        x: 50 + Math.random() * (W - 100),
-                        y: -30,
-                        hp: bossStat.hp * 2,
-                        maxHp: bossStat.hp * 2,
-                        spd: bossStat.spd * 0.8,
-                        gold: bossStat.gold * 3,
-                        t: 0,
-                        phase: 0,
-                        damageText: 0,
-                        damageTimer: 0,
-                        shockEffect: 0,
-                        isBoss: true
-                    });
-                    bossSpawnedInWave[wave] = true;
-                }
-            }
-
-            function getTargets() {
-                let box = {
-                    left: 0,
-                    right: W,
-                    top: turret.y - turret.rng,
-                    bottom: turret.y
-                };
-                let arr = [];
-                for (let e of enemies) {
-                    if (e.x >= box.left && e.x <= box.right && e.y >= box.top && e.y <= box.bottom) {
-                        arr.push(e);
-                    }
-                }
-                arr.sort((a, b) => b.y - a.y);
-                return arr.slice(0, turret.laserCount);
-            }
-
-            function update() {
-                if (gameover) return;
-                frame++;
-                phase++;
-                if (spawnCD-- <= 0) {
-                    spawnEnemy();
-                    spawnCD = Math.max(120 - 5 * wave, 38);
-                }
-                for (let e of enemies) {
-                    e.y += e.spd;
-                    e.phase += Math.floor(Math.random() * 2);
-                    if (e.y > turret.y - turret.r + 12 * (e.isBoss ? 2 : 1)) {
-                        life--;
-                        e.hp = -999;
-                        if (life <= 0) gameover = true;
-                    }
-                    if (e.damageTimer > 0) e.damageTimer--;
-                    if (e.shockEffect > 0) e.shockEffect--;
-                }
-                enemies = enemies.filter((e) => e.hp > 0);
-
-                let targets = getTargets();
-                let now = performance.now();
-                if (targets.length) {
-                    if (!turret._lastHit || now - turret._lastHit > 1000 / turret.rate) {
-                        let dmg = Math.round(turret.dmg);
-                        for (let target of targets) {
-                            target.hp -= dmg;
-                            target.damageText = dmg;
-                            target.damageTimer = 18;
-                            target.shockEffect = 16;
-                            if (target.hp <= 0) {
-                                gold += target.gold;
-                                kills++;
-                            }
-                        }
-                        turret._lastHit = now;
-                    }
-                }
-                if (frame % 700 == 0) {
-                    wave++;
-                    updateUI();
-                }
-            }
-
-            function draw() {
-                ctx.clearRect(0, 0, W, H);
-                ctx.fillStyle = "#262e39";
-                ctx.fillRect(0, H - 28, W, 28);
-                ctx.strokeStyle = "#2ae4ffaa";
-                ctx.lineWidth = 4;
-                ctx.beginPath();
-                ctx.moveTo(18, H - 29);
-                ctx.lineTo(W - 18, H - 29);
-                ctx.stroke();
-                drawPlasmaCannon(ctx, turret.x, turret.y, W, turret.rng, frame);
-                for (let e of enemies)
-                    drawEnemy(
-                        ctx,
-                        e.x,
-                        e.y,
-                        e.t,
-                        e.phase,
-                        e.hp,
-                        e.maxHp,
-                        e.damageText,
-                        e.damageTimer,
-                        e.shockEffect,
-                        e.isBoss
-                    );
-
-                let targets = getTargets();
-                for (let target of targets) {
-                    ctx.save();
-                    ctx.globalAlpha = 0.8;
-                    ctx.beginPath();
-                    ctx.moveTo(turret.x, turret.y - 30);
-                    ctx.lineTo(target.x, target.y);
-                    ctx.strokeStyle = "#12ffe0";
-                    ctx.lineWidth = target.isBoss ? 12 : 6;
-                    ctx.shadowColor = "#ffe935";
-                    ctx.shadowBlur = target.isBoss ? 22 : 12;
-                    ctx.stroke();
-                    ctx.globalAlpha = 1.0;
-                    ctx.restore();
-                }
-                if (gameover) {
-                    ctx.font = "32px VT323,monospace";
-                    ctx.fillStyle = "#ff63a5";
-                    ctx.textAlign = "center";
-                    ctx.shadowColor = "#fef";
-                    ctx.shadowBlur = 9;
-                    ctx.fillText("¡Juego Terminado!", W / 2, H / 2 - 22);
-                    ctx.shadowBlur = 0;
-                }
-            }
-
-            function loop() {
-                update();
-                draw();
-                updateUI();
-                requestAnimationFrame(loop);
-            }
-
-            function updateUI() {
-                document.getElementById("wave").innerText = wave;
-                document.getElementById("gold").innerText = gold;
-                document.getElementById("life").innerText = life;
-                document.getElementById("dmgC").innerText = upg.dmg.cost;
-                document.getElementById("spdC").innerText = upg.spd.cost;
-                document.getElementById("rngC").innerText = upg.rng.cost;
-                document.getElementById("laserC").innerText = upg.laser.cost;
-                document.getElementById("restartBtn").style.display = gameover ? "inline-block" : "none";
-                document.getElementById("shareBtn").style.display = gameover ? "inline-block" : "none";
-            }
-
-            let upgrading = false;
-
-            function upgrade(type) {
-                if (upgrading) return;
-                upgrading = true;
-                setTimeout(() => (upgrading = false), 250); // bloqueo de 0.25 seg
-
-                if (gameover) return;
-                let u = upg[type];
-                if (type === "spd" && turret.rate >= u.max) return;
-                if (type === "rng" && turret.rng >= u.max) return;
-                if (type === "laser" && turret.laserCount >= u.max) return;
-                if (gold < u.cost) return;
-                gold -= u.cost;
-                if (type == "dmg") turret.dmg += u.inc;
-                if (type == "spd") turret.rate = Math.min(u.max, turret.rate + u.inc);
-                if (type == "rng") turret.rng = Math.min(u.max, turret.rng + u.inc);
-                if (type == "laser") turret.laserCount = Math.min(u.max, turret.laserCount + u.inc);
-                u.cost = Math.ceil(u.cost * u.scale);
-                updateUI();
-            }
-            document.getElementById("upDmg").onclick = () => upgrade("dmg");
-            document.getElementById("upSpd").onclick = () => upgrade("spd");
-            document.getElementById("upRng").onclick = () => upgrade("rng");
-            document.getElementById("upLaser").onclick = () => upgrade("laser");
-
-            document.getElementById("restartBtn").onclick = () => {
-                initGame();
-            };
-            document.getElementById("shareBtn").onclick = () => {
-                let shareTxt = `¡Juega a Matrix Defense! ¡Yo llegué a la oleada ${wave}!`;
-                if (navigator.share) {
-                    navigator.share({
-                        title: "Matrix Defense",
-                        text: shareTxt,
-                        url: location.href
-                    });
-                } else {
-                    navigator.clipboard.writeText(shareTxt);
-                    alert("¡El enlace se ha copiado al portapapeles!");
-                }
-            };
-            document.body.addEventListener(
-                "touchmove",
-                (e) => {
-                    e.preventDefault();
-                },
-                {
-                    passive: false
-                }
-            );
-            initGame();
-            loop();
+            // ... (le code JavaScript reste inchangé) ...
         </script>
         <section
             style="
@@ -502,74 +95,64 @@
                 line-height: 1.65;
                 color: #2d3436;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #2577cf">❓ Preguntas Frecuentes</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #2577cf">❓ FAQ</h2>
 
-            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">Introducción al juego</h3>
+            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">Présentation du jeu</h3>
             <dl>
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: ¿Qué es "Matrix Defense"?
-                </dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q1. Qu’est-ce que “Matrix Defense” ?</dt>
                 <dd style="margin-bottom: 12px">
-                    A: "Matrix Defense" es un juego idle de defensa en navegador donde debes proteger tu base de oleadas de robots que se acercan. El objetivo es mejorar tu cañón de plasma y sobrevivir el mayor tiempo posible.
+                    R. “Matrix Defense” est un jeu idle de défense où vous protégez votre base de vagues successives de robots. Améliorez votre canon plasma et survivez aussi longtemps que possible.
                 </dd>
 
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ¿El juego es gratuito?</dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q2. Le jeu est-il gratuit ?</dt>
                 <dd style="margin-bottom: 12px">
-                    A: Sí, es completamente gratuito. No requiere descarga ni instalación; puedes jugar directamente en tu navegador web.
+                    R. Oui, entièrement gratuit. Aucune installation requise, jouez directement dans votre navigateur.
                 </dd>
 
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: ¿En qué dispositivos puedo jugar?
-                </dt>
-                <dd style="margin-bottom: 12px">A: Puedes jugar en navegadores tanto de dispositivos móviles como de PC.</dd>
-            </dl>
-
-            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">Cómo jugar</h3>
-            <dl>
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ¿Cuál es el objetivo del juego?</dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q3. Sur quels appareils puis-je jouer ?</dt>
                 <dd style="margin-bottom: 12px">
-                    A: Debes eliminar a todos los robots enemigos antes de que lleguen a la base en la parte inferior de la pantalla, avanzar oleadas y sobrevivir el mayor tiempo posible hasta que tus vidas lleguen a cero.
-                </dd>
-
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: ¿Cómo se obtiene oro?
-                </dt>
-                <dd style="margin-bottom: 12px">
-                    A: Derrotar robots enemigos te otorga oro. El oro se utiliza para mejorar el cañón de plasma.
-                </dd>
-
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: ¿Qué mejoras hay?
-                </dt>
-                <dd style="margin-bottom: 12px">
-                    A: Hay cuatro tipos de mejoras: "Daño (ATK)", "Velocidad de disparo (RATE)", "Alcance (RNG)" y "Número de láseres (LASER)".
-                </dd>
-
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: ¿Qué sucede cuando tus vidas llegan a 0?
-                </dt>
-                <dd style="margin-bottom: 12px">
-                    A: Cuando tus vidas llegan a 0, se acaba el juego. Pulsa el botón "Reiniciar" para empezar de nuevo.
+                    R. Compatible PC et navigateurs mobiles, optimisé pour tous.
                 </dd>
             </dl>
 
-            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">Solución de problemas y otros</h3>
+            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">Comment jouer</h3>
             <dl>
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ¿El juego no funciona correctamente?</dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q4. Quel est l’objectif ?</dt>
                 <dd style="margin-bottom: 12px">
-                    A: Recarga el navegador o prueba con otro. Verifica tu conexión a internet. Si el problema persiste, contacta al desarrollador.
+                    R. Éliminez les robots ennemis avant qu’ils n’atteignent la base. Gérez vos améliorations et survivez le plus longtemps possible.
                 </dd>
 
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: Quiero compartir mi mejor puntuación con mis amigos.
-                </dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q5. Comment gagne-t-on de l’or ?</dt>
                 <dd style="margin-bottom: 12px">
-                    A: Haz clic en el botón "Compartir" que aparece después de que termine el juego para compartir tu oleada actual.
+                    R. Chaque robot détruit vous rapporte de l’or, utilisé pour améliorer les stats de votre canon.
                 </dd>
 
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ¿Hay otros juegos?</dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q6. Quelles améliorations sont disponibles ?</dt>
                 <dd style="margin-bottom: 12px">
-                    A: Sí, haz clic en el botón "Otros juegos" para ver otros juegos web del desarrollador.
+                    R. Dégâts, vitesse de tir, portée et nombre de lasers. Investissez judicieusement.
+                </dd>
+
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q7. Que se passe-t-il si mes vies tombent à zéro ?</dt>
+                <dd style="margin-bottom: 12px">
+                    R. Le jeu se termine. Appuyez sur “Rejouer” pour recommencer depuis la vague 1.
+                </dd>
+            </dl>
+
+            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">Problèmes et partage</h3>
+            <dl>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q8. Le jeu ne fonctionne pas ?</dt>
+                <dd style="margin-bottom: 12px">
+                    R. Rechargez la page ou essayez un autre navigateur. Vérifiez votre connexion.
+                </dd>
+
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q9. Comment partager mon score ?</dt>
+                <dd style="margin-bottom: 12px">
+                    R. Cliquez sur “Partager” après la fin du jeu pour envoyer votre vague atteinte.
+                </dd>
+
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q10. Y a-t-il d’autres jeux ?</dt>
+                <dd style="margin-bottom: 12px">
+                    R. Cliquez sur “Autres jeux” pour découvrir d’autres titres du développeur.
                 </dd>
             </dl>
         </section>

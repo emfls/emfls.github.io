@@ -1,51 +1,37 @@
 <!doctype html>
-<html lang="es">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="¡Juega gratis al juego retro de arcade AeroJump en tu navegador! ¿Hasta dónde puedes saltar?" />
-    <meta
-      name="keywords"
-      content="AeroJump, juego de salto, arcade retro, juego en línea gratuito, retro, navegador, móvil, puntuación alta, juego de plataformas" />
+    <meta name="description" content="Jouez gratuitement au jeu d'arcade rétro AeroJump dans votre navigateur ! Jusqu'où saurez-vous sauter ?" />
+    <meta name="keywords" content="AeroJump, jeu de saut, arcade rétro, jeu en ligne gratuit, rétro, navigateur, mobile, meilleur score, jeu de plateforme" />
     <meta name="author" content="Itagi" />
     <meta name="robots" content="index, follow" />
 
     <link rel="canonical" href="https://emfls.github.io/fr/game/AeroJump" />
 
-    <meta property="og:title" content="AeroJump – ¡Juego en línea gratuito!" />
-    <meta
-      property="og:description"
-      content="¡Juega gratis al juego retro de arcade de salto AeroJump! ¿Hasta dónde llegarás?" />
+    <meta property="og:title" content="AeroJump – Jeu en ligne gratuit !" />
+    <meta property="og:description" content="Jouez gratuitement au jeu d'arcade rétro AeroJump ! Jusqu'où irez-vous ?" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta property="og:url" content="https://emfls.github.io/fr/game/AeroJump" />
     <meta property="og:type" content="website" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="AeroJump – ¡Juego en línea gratuito!" />
-    <meta
-      name="twitter:description"
-      content="¡Juega gratis al juego retro de arcade de salto AeroJump! ¿Hasta dónde llegarás?" />
+    <meta name="twitter:title" content="AeroJump – Jeu en ligne gratuit !" />
+    <meta name="twitter:description" content="Jouez gratuitement au jeu d'arcade rétro AeroJump ! Jusqu'où irez-vous ?" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
+      function gtag() { dataLayer.push(arguments); }
       gtag("js", new Date());
-
       gtag("config", "G-QP5Q67GE5B");
     </script>
-    <script
-      async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
-      crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Hanna&display=swap" rel="stylesheet" />
-      <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css" />
     <title>AeroJump</title>
   </head>
 
@@ -54,32 +40,27 @@
       <h1>AeroJump</h1>
     </header>
     <div id="gameWrapper">
-      <div id="scoreDisplay">Puntuación: 0</div>
+      <div id="scoreDisplay">Score : 0</div>
       <canvas id="gameCanvas"></canvas>
       <div id="touchControls">
         <button id="leftBtn">◀</button>
         <button id="rightBtn">▶</button>
       </div>
       <div id="gameOverOverlay">
-        <div id="finalScore">Puntuación: 0</div>
+        <div id="finalScore">Score : 0</div>
         <div>
-          <button id="shareBtn">Compartir</button>
-          <button id="restartBtn">Reiniciar</button>
+          <button id="shareBtn">Partager</button>
+          <button id="restartBtn">Rejouer</button>
         </div>
       </div>
     </div>
     <footer id="otherGames">
-      <a onclick="window.location.href='../../'">📂 Otros Juegos</a>
+      <a onclick="window.location.href='../../'">📂 Autres jeux</a>
     </footer>
     <script>
-      // Desactivar arrastrar, seleccionar y clic derecho dentro del área de juego
-      document.addEventListener("contextmenu", (e) => e.preventDefault());
-      document.addEventListener("dragstart", (e) => {
-        if (e.target.closest("#gameWrapper")) e.preventDefault();
-      });
-      document.addEventListener("selectstart", (e) => {
-        if (e.target.closest("#gameWrapper")) e.preventDefault();
-      });
+      document.addEventListener("contextmenu", e => e.preventDefault());
+      document.addEventListener("dragstart", e => { if (e.target.closest("#gameWrapper")) e.preventDefault(); });
+      document.addEventListener("selectstart", e => { if (e.target.closest("#gameWrapper")) e.preventDefault(); });
 
       const canvas = document.getElementById("gameCanvas");
       canvas.draggable = false;
@@ -97,25 +78,14 @@
       window.addEventListener("resize", resizeCanvas);
       resizeCanvas();
 
-      // El movimiento horizontal del jugador no afecta la velocidad vertical
-      const player = {
-        x: 0,
-        y: 0,
-        size: 30,
-        vy: 0
-      };
+      const player = { x:0, y:0, size:30, vy:0 };
       const gravity = 0.5;
       const jumpVelocity = -12;
-      let left = false,
-        right = false;
-      let platforms = [],
-        nextPlatformY = 0,
-        rowCounter = 0,
-        score = 0;
-      let lastAnchorX = 0;
+      let left=false, right=false;
+      let platforms=[], nextPlatformY=0, rowCounter=0, score=0, lastAnchorX=0;
 
       function initGame() {
-        player.x = width / 2;
+        player.x = width/2;
         player.y = height - 60;
         score = 0;
         rowCounter = 0;
@@ -123,81 +93,62 @@
         platforms = [];
         lastAnchorX = player.x;
         while (nextPlatformY > -50) spawnRow();
+        document.getElementById("gameOverOverlay").style.display = "none";
       }
 
       function spawnRow() {
-        const maxPlatforms = Math.max(2, 6 - Math.floor(rowCounter / 3));
-        const initialWidth = width * 0.6;
-        const minWidth = width * 0.25;
+        const maxPlat = Math.max(2, 6 - Math.floor(rowCounter/3));
+        const initW = width * 0.6;
+        const minW = width * 0.25;
         const dec = 2;
-        const pW = Math.max(minWidth, initialWidth - rowCounter * dec);
+        const pW = Math.max(minW, initW - rowCounter*dec);
         const range = 120;
-        let ax = lastAnchorX + (Math.random() * 2 - 1) * range;
-        ax = Math.max(0, Math.min(ax, width - pW));
-        platforms.push({
-          x: ax,
-          y: nextPlatformY,
-          w: pW,
-          h: 10
-        });
-        for (let i = 1; i < maxPlatforms; i++) {
-          platforms.push({
-            x: Math.random() * (width - pW),
-            y: nextPlatformY,
-            w: pW,
-            h: 10
-          });
-        }
+        let ax = lastAnchorX + (Math.random()*2-1)*range;
+        ax = Math.max(0, Math.min(ax, width-pW));
+        platforms.push({ x:ax, y:nextPlatformY, w:pW, h:10 });
+        for (let i=1; i<maxPlat; i++) platforms.push({ x:Math.random()*(width-pW), y:nextPlatformY, w:pW, h:10 });
         lastAnchorX = ax;
-        nextPlatformY -= 60 + Math.random() * 70;
+        nextPlatformY -= 60 + Math.random()*70;
         rowCounter++;
       }
 
       function draw() {
-        ctx.clearRect(0, 0, width, height);
+        ctx.clearRect(0,0,width,height);
         ctx.fillStyle = "#2ecc71";
-        platforms.forEach((p) => ctx.fillRect(p.x, p.y, p.w, p.h));
+        platforms.forEach(p => ctx.fillRect(p.x,p.y,p.w,p.h));
         ctx.fillStyle = "#d63031";
         ctx.beginPath();
-        ctx.arc(player.x, player.y, player.size / 2, 0, Math.PI * 2);
+        ctx.arc(player.x,player.y,player.size/2,0,Math.PI*2);
         ctx.fill();
       }
 
       function update() {
-        if (left) player.x -= 5;
-        if (right) player.x += 5;
-        player.x = Math.max(player.size / 2, Math.min(player.x, width - player.size / 2));
+        if(left) player.x -=5;
+        if(right) player.x +=5;
+        player.x = Math.max(player.size/2, Math.min(player.x, width-player.size/2));
         player.vy += gravity;
         player.y += player.vy;
-        let bounced = false;
-        platforms.forEach((p) => {
-          const half = player.size / 2;
-          const bottom = player.y + half;
-          const prev = bottom - player.vy;
-          if (
-            !bounced &&
-            player.vy > 0 &&
-            player.x + half > p.x &&
-            player.x - half < p.x + p.w &&
-            prev <= p.y &&
-            bottom >= p.y
-          ) {
-            player.vy = jumpVelocity;
-            bounced = true;
+        let bounced=false;
+        platforms.forEach(p => {
+          const half=player.size/2;
+          const bottom = player.y+half;
+          const prev = bottom-player.vy;
+          if(!bounced && player.vy>0 && player.x+half>p.x && player.x-half<p.x+p.w && prev<=p.y && bottom>=p.y) {
+            player.vy = jumpVelocity; bounced=true;
           }
         });
-        if (player.y < height / 2) {
-          const delta = height / 2 - player.y;
-          player.y = height / 2;
-          platforms.forEach((p) => (p.y += delta));
+        if(player.y<height/2) {
+          const delta = height/2 - player.y;
+          player.y = height/2;
+          platforms.forEach(p=>p.y+=delta);
           nextPlatformY += delta;
           score += Math.floor(delta);
-          while (nextPlatformY > -50) spawnRow();
+          while(nextPlatformY>-50) spawnRow();
         }
-        platforms = platforms.filter((p) => p.y < height);
-        document.getElementById("scoreDisplay").innerText = "Puntuación: " + Math.floor(score / 10);
-        if (player.y > height) {
-          document.getElementById("finalScore").innerText = "Puntuación: " + Math.floor(score / 10);
+        platforms = platforms.filter(p=>p.y<height);
+        document.getElementById("scoreDisplay").innerText = "Score : " + Math.floor(score/10);
+        if(player.y>height) {
+          document.getElementById("finalScore").innerText = "Score : " + Math.floor(score/10);
           document.getElementById("gameOverOverlay").style.display = "flex";
           return;
         }
@@ -205,92 +156,36 @@
         requestAnimationFrame(update);
       }
 
-      // Controles
-      ["ArrowLeft", "ArrowRight"].forEach((key) => {
-        window.addEventListener("keydown", (e) => {
-          if (e.key === key) key === "ArrowLeft" ? (left = true) : (right = true);
-        });
-        window.addEventListener("keyup", (e) => {
-          if (e.key === key) key === "ArrowLeft" ? (left = false) : (right = false);
-        });
+      ["ArrowLeft","ArrowRight"].forEach(key=>{
+        window.addEventListener("keydown",e=>{ if(e.key===key) key==="ArrowLeft"?left=true:right=true; });
+        window.addEventListener("keyup",e=>{ if(e.key===key) key==="ArrowLeft"?left=false:right=false; });
       });
-      leftBtn.addEventListener("mousedown", () => (left = true));
-      leftBtn.addEventListener("mouseup", () => (left = false));
-      rightBtn.addEventListener("mousedown", () => (right = true));
-      rightBtn.addEventListener("mouseup", () => (right = false));
-      leftBtn.addEventListener("touchstart", () => (left = true));
-      leftBtn.addEventListener("touchend", () => (left = false));
-      rightBtn.addEventListener("touchstart", () => (right = true));
-      rightBtn.addEventListener("touchend", () => (right = false));
+      leftBtn.addEventListener("mousedown",()=>left=true);
+      leftBtn.addEventListener("mouseup",()=>left=false);
+      rightBtn.addEventListener("mousedown",()=>right=true);
+      rightBtn.addEventListener("mouseup",()=>right=false);
+      leftBtn.addEventListener("touchstart",()=>left=true);
+      leftBtn.addEventListener("touchend",()=>left=false);
+      rightBtn.addEventListener("touchstart",()=>right=true);
+      rightBtn.addEventListener("touchend",()=>right=false);
 
-      document.getElementById("restartBtn").onclick = () => {
-        document.getElementById("gameOverOverlay").style.display = "none";
-        initGame();
-        update();
-      };
+      document.getElementById("restartBtn").onclick = () => { initGame(); update(); };
       document.getElementById("shareBtn").onclick = async () => {
-        const data = {
-          title: "AeroJump",
-          text: `Mi puntuación: ${Math.floor(score / 10)}!`,
-          url: location.href
-        };
-        try {
-          navigator.share
-            ? await navigator.share(data)
-            : (await navigator.clipboard.writeText(location.href)) && alert("¡Enlace copiado al portapapeles!");
-        } catch {}
+        const data={ title:"AeroJump", text:`Mon score : ${Math.floor(score/10)} !`, url:location.href };
+        try { navigator.share? await navigator.share(data) : (await navigator.clipboard.writeText(location.href)&&alert("Lien copié !")); } catch{}
       };
 
-      window.onload = () => {
-        initGame();
-        update();
-      };
+      window.onload = () => { initGame(); update(); };
     </script>
-    <section
-      style="
-        width: 90%;
-        max-width: 420px;
-        margin: 60px auto;
-        padding: 20px;
-        font-family: 'Segoe UI', sans-serif;
-        background: #fffbea;
-        color: #2d3436;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        line-height: 1.6;
-        font-size: 14px;
-      ">
-      <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ Preguntas Frecuentes (FAQ)</h2>
 
-      <div style="margin-bottom: 1rem">
-        <strong>P1. ¿Cómo juego a AeroJump?</strong><br />
-        R. Usa los botones ◀ y ▶ o las flechas del teclado para moverte horizontalmente. Aterriza en plataformas para seguir saltando hacia arriba.
-      </div>
-
-      <div style="margin-bottom: 1rem">
-        <strong>P2. ¿Cuál es el objetivo del juego?</strong><br />
-        R. Sigue saltando de plataforma en plataforma para alcanzar la mayor altura posible. Cuanto más alto llegues, más aumentará tu puntuación.
-      </div>
-
-      <div style="margin-bottom: 1rem">
-        <strong>P3. ¿Qué sucede si caigo?</strong><br />
-        R. Si caes por debajo de la pantalla, el juego termina y aparece la pantalla de “Juego Terminado”. Puedes reiniciar al instante.
-      </div>
-
-      <div style="margin-bottom: 1rem">
-        <strong>P4. ¿Puedo jugar en móviles?</strong><br />
-        R. ¡Sí! AeroJump es compatible con controles táctiles. Usa los botones verdes en la parte inferior para moverte.
-      </div>
-
-      <div style="margin-bottom: 1rem">
-        <strong>P5. ¿Cómo comparto mi puntuación?</strong><br />
-        R. Cuando termine el juego, presiona el botón <strong>“Compartir”</strong> para usar la función de compartir de tu dispositivo o copiar el enlace.
-      </div>
-
-      <div>
-        <strong>P6. ¿Dónde encuentro otros juegos?</strong><br />
-        R. Desplázate hacia abajo y haz clic en <strong>“📂 Otros Juegos”</strong> para ver toda la colección.
-      </div>
+    <section style="width:90%;max-width:420px;margin:60px auto;padding:20px;font-family:'Segoe UI',sans-serif;background:#fffbea;color:#2d3436;border-radius:10px;box-shadow:0 4px 10px rgba(0,0,0,0.1);line-height:1.6;font-size:14px;">
+      <h2 style="font-size:20px;margin-bottom:1rem;color:#1e3c72;">❓ Foire aux questions (FAQ)</h2>
+      <div style="margin-bottom:1rem;"><strong>P1. Comment jouer à AeroJump ?</strong><br />Utilisez ◀ ▶ ou les flèches du clavier pour vous déplacer. Atterrissez sur les plateformes pour continuer à sauter.</div>
+      <div style="margin-bottom:1rem;"><strong>P2. Quel est l'objectif ?</strong><br />Sautez de plateforme en plateforme pour atteindre la plus grande hauteur possible ; plus vous montez, plus votre score augmente.</div>
+      <div style="margin-bottom:1rem;"><strong>P3. Que se passe-t-il si je tombe ?</strong><br />Si vous tombez sous l'écran, le jeu est terminé et l'overlay s'affiche. Vous pouvez alors rejouer immédiatement.</div>
+      <div style="margin-bottom:1rem;"><strong>P4. Puis-je jouer sur mobile ?</strong><br />Oui ! Des contrôles tactiles sont disponibles via les boutons à l'écran.</div>
+      <div style="margin-bottom:1rem;"><strong>P5. Comment partager mon score ?</strong><br />À la fin du jeu, appuyez sur « Partager » pour utiliser votre fonction de partage ou copier le lien.</div>
+      <div><strong>P6. Où trouver d'autres jeux ?</strong><br />Cliquez sur « 📂 Autres jeux » pour accéder à toute la collection.</div>
     </section>
   </body>
 </html>

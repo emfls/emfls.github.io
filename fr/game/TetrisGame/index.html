@@ -1,35 +1,35 @@
 <!doctype html>
-<html lang="es">
+<html lang="fr">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="¡Juego de Tetris clásico en la web! Juega gratis para apilar bloques, eliminar líneas y conseguir una puntuación alta. Compatible con móvil y escritorio." />
+            content="Jeu de Tetris classique en ligne ! Empilez les blocs, éliminez des lignes et marquez un score élevé. Jouez gratuitement sur mobile ou ordinateur." />
         <meta
             name="keywords"
-            content="tetris, Tetris, rompecabezas, apilar bloques, juego online, arcade clásico, juego web gratis, juego móvil, navegador, tetris web, apilamiento, bloques que caen" />
+            content="tetris, puzzle, empiler des blocs, jeu en ligne, arcade classique, jeu web gratuit, jeu mobile, navigateur, tetris web, empilement, blocs qui tombent" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://emfls.github.io/fr/game/TetrisGame" />
 
         <!-- Open Graph / Facebook / Kakao / Discord -->
-        <meta property="og:title" content="Juego Rápido: Tetris – Rompecabezas Clásico en Línea" />
+        <meta property="og:title" content="Tetris Rapide – Puzzle Classique en Ligne" />
         <meta
             property="og:description"
-            content="Apila con habilidad y muévete rápido para eliminar líneas. Juega gratis en línea sin descargas." />
+            content="Empilez habilement et éliminez des lignes. Jouez gratuitement en ligne sans téléchargement." />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/fr/game/TetrisGame" />
         <meta property="og:type" content="website" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Juego Rápido: Tetris – Rompecabezas Clásico en Línea" />
+        <meta name="twitter:title" content="Tetris Rapide – Puzzle Classique en Ligne" />
         <meta
             name="twitter:description"
-            content="¿Qué puntuación puedes alcanzar? Disfruta este juego gratuito de Tetris para navegador en móvil o PC." />
+            content="Quel score pouvez-vous atteindre ? Profitez de ce jeu de Tetris gratuit sur mobile ou PC." />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-        <title>Juego de Tetris</title>
+        <title>Jeu de Tetris</title>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -39,64 +39,35 @@
                 dataLayer.push(arguments);
             }
             gtag("js", new Date());
-
             gtag("config", "G-QP5Q67GE5B");
         </script>
         <script
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js">
-            function onMobileInput(key) {
-                switch (key) {
-                    case 'ArrowLeft':
-                        heldKeys[LEFT_ARROW] = true;
-                        break;
-                    case 'ArrowRight':
-                        heldKeys[RIGHT_ARROW] = true;
-                        break;
-                    case 'ArrowDown':
-                        heldKeys[DOWN_ARROW] = true;
-                        break;
-                }
-            }
-
-            function offMobileInput(key) {
-                switch (key) {
-                    case 'ArrowLeft':
-                        delete heldKeys[LEFT_ARROW];
-                        break;
-                    case 'ArrowRight':
-                        delete heldKeys[RIGHT_ARROW];
-                        break;
-                    case 'ArrowDown':
-                        delete heldKeys[DOWN_ARROW];
-                        break;
-                }
-            }
-        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
         <link rel="stylesheet" href="style.css" />
     </head>
 
     <body>
         <h1>
-            <span style="color: #8f94fb">Juego Rápido:</span>
+            <span style="color: #8f94fb">Tetris Rapide&nbsp;:</span>
             <span style="color: #00ffff">Tetris</span>
         </h1>
-        <p class="description">Apila con habilidad, muévete rápido y elimina líneas. ¡Buena suerte!</p>
+        <p class="description">Empilez habilement, bougez vite et éliminez des lignes. Bonne chance&nbsp;!</p>
         <button id="startButton" style="position: absolute; top: 290px; left: 50%; transform: translate(-50%, -50%)">
-            Iniciar juego
+            Démarrer le jeu
         </button>
         <button
             id="resetButton"
             style="position: absolute; top: 340px; left: 50%; transform: translate(-50%, -50%); display: none">
-            Reiniciar
+            Rejouer
         </button>
         <button
             id="shareButton"
             style="position: absolute; top: 390px; left: 50%; transform: translate(-50%, -50%); display: none"
             onclick="shareGame()">
-            Compartir
+            Partager
         </button>
         <script>
             let cols = 10;
@@ -164,7 +135,7 @@
                 fill(255);
                 textSize(16);
                 textAlign(LEFT, TOP);
-                text("Puntuación: " + score, 10, 10);
+                text("Score&nbsp;: " + score, 10, 10);
                 if (!gameStarted) return;
 
                 if (!gameOver) {
@@ -176,7 +147,7 @@
                     textSize(32);
                     textAlign(CENTER, CENTER);
                     fill(255, 0, 0);
-                    text("Juego Terminado", width / 2, height / 2);
+                    text("Partie terminée", width / 2, height / 2);
                     document.getElementById("resetButton").style.display = "inline-block";
                     document.getElementById("shareButton").style.display = "inline-block";
                     noLoop();
@@ -297,7 +268,7 @@
 
                 if (!handleHeldKeys.lastTime) handleHeldKeys.lastTime = 0;
                 if (now - handleHeldKeys.lastTime > 100) {
-                    // Intervalo de 100ms
+                    // Intervalle de 100ms
                     if (heldKeys[LEFT_ARROW]) movePiece(-1, 0);
                     if (heldKeys[RIGHT_ARROW]) movePiece(1, 0);
                     if (heldKeys[DOWN_ARROW]) movePiece(0, 1);
@@ -313,7 +284,7 @@
                 }
             }
 
-            // Botones de acción
+            // Boutons d'action
             document.getElementById("startButton").onclick = function () {
                 gameStarted = true;
                 this.style.display = "none";
@@ -359,6 +330,25 @@
                         break;
                 }
             }
+            function shareGame() {
+                const url = window.location.href;
+                const text = `🧱 Tetris Rapide - Mon score : ${score}\nJouez maintenant !`;
+                if (navigator.share) {
+                    navigator
+                        .share({
+                            title: "Tetris Rapide",
+                            text,
+                            url
+                        })
+                        .catch(() => alert("Erreur lors du partage. Copiez le lien manuellement."));
+                } else {
+                    const full = `${text}\n${url}`;
+                    navigator.clipboard
+                        .writeText(full)
+                        .then(() => alert("Score et lien copiés dans le presse-papiers."))
+                        .catch(() => alert(`Copiez ce lien manuellement :\n${full}`));
+                }
+            }
         </script>
 
         <div id="controls">
@@ -401,31 +391,11 @@
             </div>
         </div>
 
-        <button style="position: absolute; top: 660px" class="menu" onclick="goToMain()">📂 Otros juegos</button>
+        <button style="position: absolute; top: 660px" class="menu" onclick="goToMain()">📂 Autres jeux</button>
 
         <script>
             function goToMain() {
-                window.location.href = "/"; // o ''
-            }
-
-            function shareGame() {
-                const url = window.location.href;
-                const text = `🧱 Tetris Rápido - Mi puntuación: ${score}\n¡Juega ahora!`;
-                if (navigator.share) {
-                    navigator
-                        .share({
-                            title: "Tetris Rápido",
-                            text,
-                            url
-                        })
-                        .catch(() => alert("Error al compartir. Copia el enlace manualmente."));
-                } else {
-                    const full = `${text}\n${url}`;
-                    navigator.clipboard
-                        .writeText(full)
-                        .then(() => alert("Puntuación y enlace copiados al portapapeles."))
-                        .catch(() => alert(`Copia este enlace manualmente:\n${full}`));
-                }
+                window.location.href = "/";
             }
         </script>
         <section
@@ -443,36 +413,36 @@
                 line-height: 1.6;
                 color: #f0f0f0;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ Preguntas frecuentes</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ Foire aux questions</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. ¿Cómo se juega este juego de Tetris?</strong><br />
-                A. Usa las teclas de flecha o los botones en pantalla para mover los bloques y eliminar líneas.
+                <strong>Q1. Comment jouer à ce jeu de Tetris&nbsp;?</strong><br />
+                R. Utilisez les flèches du clavier ou les boutons à l’écran pour déplacer les blocs et supprimer des lignes.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. ¿Qué controles están disponibles?</strong><br />
-                A. Usa los botones ◀ ▶ ▼ para mover y bajar, y ↻ para rotar. También se admite entrada táctil y con ratón.
+                <strong>Q2. Quels sont les contrôles disponibles&nbsp;?</strong><br />
+                R. Utilisez les boutons ◀ ▶ ▼ pour déplacer et faire descendre, et ↻ pour faire pivoter. L’écran tactile et la souris sont aussi pris en charge.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. ¿Cuándo termina el juego?</strong><br />
-                A. El juego termina cuando los bloques se apilan hasta el tope y no hay espacio para la siguiente pieza.
+                <strong>Q3. Quand la partie se termine-t-elle&nbsp;?</strong><br />
+                R. La partie se termine lorsque les blocs atteignent le sommet et qu'il n'y a plus de place pour la pièce suivante.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. ¿Puedo reiniciar el juego?</strong><br />
-                A. ¡Sí! Tras el game over, presiona el botón "Reiniciar" para empezar de nuevo.
+                <strong>Q4. Puis-je recommencer une partie&nbsp;?</strong><br />
+                R. Oui&nbsp;! Après la fin, cliquez sur le bouton "Rejouer" pour recommencer.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. ¿Puedo compartir mi puntuación?</strong><br />
-                A. ¡Claro! Usa el botón "Compartir" para copiar o enviar tu puntuación y el enlace.
+                <strong>Q5. Puis-je partager mon score&nbsp;?</strong><br />
+                R. Bien sûr&nbsp;! Utilisez le bouton "Partager" pour copier ou envoyer votre score et le lien du jeu.
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. ¿Se puede jugar cómodamente en móvil?</strong><br />
-                A. ¡Sí! Puedes jugar en smartphone o escritorio usando los controles en pantalla.
+                <strong>Q6. Peut-on jouer confortablement sur mobile&nbsp;?</strong><br />
+                R. Oui&nbsp;! Le jeu fonctionne aussi bien sur smartphone que sur ordinateur, avec des contrôles adaptés.
             </div>
         </section>
     </body>

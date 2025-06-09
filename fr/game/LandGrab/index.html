@@ -1,33 +1,34 @@
 <!doctype html>
-<html lang="es">
+<html lang="fr">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
         <meta
             name="description"
-            content="Land Grab: ¡Expande tu territorio y evita la bola roja para subir de nivel! Juego web rápido, divertido y optimizado para móviles, gratis en tu navegador." />
+            content="Land Grab : étendez votre territoire et évitez la balle rouge pour passer de niveau ! Jeu web rapide, amusant et optimisé pour mobile, gratuit dans votre navigateur." />
         <meta
             name="keywords"
-            content="Land Grab, juego web, conquista de territorio, en línea, juego de navegador, gratis, móvil, rompecabezas, acción, arcade, adictivo, juego de bola, casual, estrategia" />
+            content="Land Grab, jeu web, conquête de territoire, en ligne, navigateur, gratuit, mobile, puzzle, action, arcade, addictif, jeu de balle, casual, stratégie" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/fr/game/LandGrab" />
 
-        <meta property="og:title" content="Land Grab – ¡Juego adictivo de conquista de territorio gratis!" />
+        <meta property="og:title" content="Land Grab – Jeu addictif de conquête de territoire gratuit !" />
         <meta
             property="og:description"
-            content="¡Expande tu territorio y evita la bola roja! ¿Podrás superar todos los niveles? Juega gratis en línea." />
+            content="Étendez votre territoire et évitez la balle rouge ! Parviendrez-vous à dépasser tous les niveaux ? Jouez gratuitement en ligne." />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/fr/game/LandGrab" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Land Grab – ¡Juego adictivo de conquista de territorio gratis!" />
+        <meta name="twitter:title" content="Land Grab – Jeu addictif de conquête de territoire gratuit !" />
         <meta
             name="twitter:description"
-            content="Land Grab: ¡Expande tu territorio y evita la bola roja! Gratis, en tu navegador y optimizado para móviles." />
+            content="Land Grab : étendez votre territoire et évitez la balle rouge ! Gratuit, dans votre navigateur et optimisé pour mobile." />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
@@ -42,7 +43,7 @@
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <title>Land Grab – ¡Juego adictivo de conquista de territorio gratis!</title>
+        <title>Land Grab – Jeu addictif de conquête de territoire gratuit !</title>
         <link rel="stylesheet" href="style.css" />
     </head>
 
@@ -50,11 +51,11 @@
         <div id="gameWrapper">
             <div class="game-header">
                 <div class="game-title">Land Grab <span class="game-title-emoji">⚽</span></div>
-                <div class="game-desc">¡Expande tu territorio y evita la bola roja!</div>
+                <div class="game-desc">Étendez votre territoire et évitez la balle rouge !</div>
             </div>
             <div class="statbar">
-                <span id="level">Nivel: 1</span>
-                <span id="percent">Territorio: 0%</span>
+                <span id="level">Niveau : 1</span>
+                <span id="percent">Territoire : 0 %</span>
             </div>
             <canvas id="game"></canvas>
             <div id="dpad">
@@ -69,10 +70,10 @@
                 <button class="emptyBtn"></button>
             </div>
             <div class="ui btn-row">
-                <button class="btn" id="startBtn">Iniciar Juego</button>
-                <button class="btn" id="restartBtn" style="display: none">Reiniciar</button>
-                <button class="btn" id="shareBtn" style="display: none">Compartir</button>
-                <a class="btn" href="../fr/game/" id="otherBtn">Otros Juegos</a>
+                <button class="btn" id="startBtn">Démarrer</button>
+                <button class="btn" id="restartBtn" style="display: none">Rejouer</button>
+                <button class="btn" id="shareBtn" style="display: none">Partager</button>
+                <a class="btn" href="../fr/game/" id="otherBtn">Autres jeux</a>
             </div>
             <div class="ui" id="gameover"></div>
         </div>
@@ -85,16 +86,11 @@
                 let ww = Math.min(window.innerWidth * 0.97, MAX_WIDTH);
                 if (ww < MIN_WIDTH) ww = MIN_WIDTH;
                 let hh = Math.round(ww / RATIO);
-                return {
-                    w: Math.round(ww),
-                    h: hh
-                };
+                return { w: Math.round(ww), h: hh };
             }
             let { w: CANVAS_W, h: CANVAS_H } = getCanvasSize();
-            const GRID_W = 40,
-                GRID_H = 27;
-            const CELL_W = CANVAS_W / GRID_W,
-                CELL_H = CANVAS_H / GRID_H;
+            const GRID_W = 40, GRID_H = 27;
+            const CELL_W = CANVAS_W / GRID_W, CELL_H = CANVAS_H / GRID_H;
             const canvas = document.getElementById("game");
             canvas.width = CANVAS_W;
             canvas.height = CANVAS_H;
@@ -105,17 +101,8 @@
                 canvas.height = size.h;
             });
 
-            let field,
-                player,
-                balls,
-                path,
-                percent,
-                running = false,
-                level = 1,
-                anim;
-            let frameCount = 0,
-                playerStepTick = 0,
-                playerSpeed = 2;
+            let field, player, balls, path, percent, running = false, level = 1, anim;
+            let frameCount = 0, playerStepTick = 0, playerSpeed = 2;
             const ballSpeed = 0.24;
             const colors = {
                 land: "#7ec89b",
@@ -127,11 +114,9 @@
 
             function isEdgeLand(x, y) {
                 if (field[y][x] !== 1) return false;
-                const dx = [0, 0, 1, -1],
-                    dy = [1, -1, 0, 0];
+                const dx = [0,0,1,-1], dy = [1,-1,0,0];
                 for (let i = 0; i < 4; i++) {
-                    let nx = x + dx[i],
-                        ny = y + dy[i];
+                    let nx = x + dx[i], ny = y + dy[i];
                     if (nx < 0 || nx >= GRID_W || ny < 0 || ny >= GRID_H) return true;
                     if (field[ny][nx] === 0) return true;
                 }
@@ -140,336 +125,228 @@
 
             function resetGame(lv = 1) {
                 level = lv;
-                field = Array.from(
-                    {
-                        length: GRID_H
-                    },
-                    (_, y) =>
-                        Array.from(
-                            {
-                                length: GRID_W
-                            },
-                            (_, x) => (y === 0 || y === GRID_H - 1 || x === 0 || x === GRID_W - 1 ? 1 : 0)
-                        )
+                field = Array.from({ length: GRID_H }, (_, y) =>
+                    Array.from({ length: GRID_W }, (_, x) =>
+                        (y === 0 || y === GRID_H-1 || x === 0 || x === GRID_W-1) ? 1 : 0
+                    )
                 );
-                player = {
-                    x: 0,
-                    y: Math.floor(GRID_H / 2),
-                    dir: null,
-                    moving: false
-                };
-                balls = [];
-                percent = 0;
-                path = [];
-                playerStepTick = 0;
+                player = { x:0, y:Math.floor(GRID_H/2), dir:null, moving:false };
+                balls = []; percent = 0; path = []; playerStepTick = 0;
                 for (let i = 0; i < level; ++i) balls.push(randBall());
-                updatePercent();
-                updateUI();
-                draw();
+                updatePercent(); updateUI(); draw();
             }
 
             function randBall() {
                 let x, y;
-                while (1) {
-                    x = 2 + Math.floor(Math.random() * (GRID_W - 4));
-                    y = 2 + Math.floor(Math.random() * (GRID_H - 4));
+                while (true) {
+                    x = 2 + Math.floor(Math.random() * (GRID_W-4));
+                    y = 2 + Math.floor(Math.random() * (GRID_H-4));
                     if (field[y][x] === 0) break;
                 }
-                let dirs = [
-                    [1, 1],
-                    [1, -1],
-                    [-1, 1],
-                    [-1, -1]
-                ];
-                let [dx, dy] = dirs[Math.floor(Math.random() * dirs.length)];
-                return {
-                    x,
-                    y,
-                    dx,
-                    dy
-                };
+                const dirs = [[1,1],[1,-1],[-1,1],[-1,-1]];
+                const [dx,dy] = dirs[Math.floor(Math.random()*dirs.length)];
+                return { x, y, dx, dy };
             }
 
             function startGame() {
                 resetGame(level);
-                running = true;
-                frameCount = 0;
-                playerStepTick = 0;
-                document.getElementById("startBtn").style.display = "";
+                running = true; frameCount = playerStepTick = 0;
+                document.getElementById("startBtn").style.display = "none";
                 document.getElementById("restartBtn").style.display = "none";
                 document.getElementById("shareBtn").style.display = "none";
                 document.getElementById("gameover").style.display = "none";
-                document.getElementById("startBtn").style.display = "none";
                 cancelAnimationFrame(anim);
                 loop();
             }
 
             function loop() {
                 try {
-                    if (!running) {
-                        anim = requestAnimationFrame(loop);
-                        return;
-                    }
-                    if (playerStepTick <= 0) {
-                        movePlayer();
-                        playerStepTick = playerSpeed;
-                    } else {
-                        playerStepTick--;
-                    }
-                    if (frameCount % Math.round(1 / ballSpeed) === 0) {
-                        moveBalls();
-                    }
-                    draw();
-                    checkCollisions();
-                    frameCount++;
+                    if (!running) { anim = requestAnimationFrame(loop); return; }
+                    if (playerStepTick <= 0) { movePlayer(); playerStepTick = playerSpeed; }
+                    else playerStepTick--;
+                    if (frameCount % Math.round(1/ballSpeed) === 0) moveBalls();
+                    draw(); checkCollisions(); frameCount++;
                     anim = requestAnimationFrame(loop);
                 } catch (e) {
-                    console.error("Error en el bucle del juego:", e);
+                    console.error("Erreur boucle jeu :", e);
                     anim = requestAnimationFrame(loop);
                 }
             }
 
             function movePlayer() {
                 if (!player.dir) return;
-                let dx = 0,
-                    dy = 0;
-                if (player.dir === "left") dx = -1;
-                if (player.dir === "right") dx = 1;
-                if (player.dir === "up") dy = -1;
-                if (player.dir === "down") dy = 1;
-                let nx = player.x + dx,
-                    ny = player.y + dy;
-                if (nx < 0 || nx >= GRID_W || ny < 0 || ny >= GRID_H) return;
+                let dx=0, dy=0;
+                if (player.dir==="left") dx=-1;
+                if (player.dir==="right") dx=1;
+                if (player.dir==="up") dy=-1;
+                if (player.dir==="down") dy=1;
+                let nx=player.x+dx, ny=player.y+dy;
+                if (nx<0||nx>=GRID_W||ny<0||ny>=GRID_H) return;
 
-                if (field[player.y][player.x] === 1 && field[ny][nx] === 1) {
-                    player.x = nx;
-                    player.y = ny;
-                    player.moving = false;
-                    updatePercent();
-                    return;
+                if (field[player.y][player.x]===1 && field[ny][nx]===1) {
+                    player.x=nx; player.y=ny; player.moving=false; updatePercent(); return;
                 }
-                if (field[player.y][player.x] === 1 && field[ny][nx] === 0) {
-                    player.x = nx;
-                    player.y = ny;
-                    player.moving = true;
-                    path = [[player.x, player.y]];
-                    updatePercent();
-                    return;
+                if (field[player.y][player.x]===1 && field[ny][nx]===0) {
+                    player.x=nx; player.y=ny; player.moving=true;
+                    path=[[player.x,player.y]]; updatePercent(); return;
                 }
-                if (field[player.y][player.x] === 0) {
-                    if (field[ny][nx] === 1) {
-                        player.x = nx;
-                        player.y = ny;
-                        player.moving = false;
-                        fillAreaWithBallLogic(path);
-                        path = [];
-                        updatePercent();
-                        return;
-                    } else if (field[ny][nx] === 0) {
-                        player.x = nx;
-                        player.y = ny;
-                        player.moving = true;
-                        if (!path.some(([px, py]) => px === nx && py === ny)) path.push([nx, ny]);
-                        updatePercent();
-                        return;
-                    } else {
-                        return;
+                if (field[player.y][player.x]===0) {
+                    if (field[ny][nx]===1) {
+                        player.x=nx; player.y=ny; player.moving=false;
+                        fillAreaWithBallLogic(path); path=[]; updatePercent(); return;
+                    } else if (field[ny][nx]===0) {
+                        player.x=nx; player.y=ny; player.moving=true;
+                        if (!path.some(([px,py])=>px===nx&&py===ny)) path.push([nx,ny]);
+                        updatePercent(); return;
                     }
                 }
             }
 
             function fillAreaWithBallLogic(trail) {
-                for (let [x, y] of trail) field[y][x] = 2;
-                let mask = Array.from(
-                    {
-                        length: GRID_H
-                    },
-                    () => Array(GRID_W).fill(0)
-                );
-                for (let b of balls) floodFill(b.x, b.y, mask);
-                for (let y = 0; y < GRID_H; ++y)
-                    for (let x = 0; x < GRID_W; ++x) if (field[y][x] === 0 && mask[y][x] === 0) field[y][x] = 1;
-                for (let y = 0; y < GRID_H; ++y)
-                    for (let x = 0; x < GRID_W; ++x) if (field[y][x] === 2) field[y][x] = 1;
+                for (let [x,y] of trail) field[y][x]=2;
+                const mask = Array.from({length:GRID_H},()=>Array(GRID_W).fill(0));
+                for (let b of balls) floodFill(b.x,b.y,mask);
+                for (let y=0;y<GRID_H;y++) {
+                    for (let x=0;x<GRID_W;x++) {
+                        if (field[y][x]===0 && !mask[y][x]) field[y][x]=1;
+                        if (field[y][x]===2) field[y][x]=1;
+                    }
+                }
             }
 
-            function floodFill(x, y, mask) {
-                if (x < 0 || x >= GRID_W || y < 0 || y >= GRID_H || mask[y][x] || field[y][x] !== 0) return;
-                mask[y][x] = 1;
-                floodFill(x - 1, y, mask);
-                floodFill(x + 1, y, mask);
-                floodFill(x, y - 1, mask);
-                floodFill(x, y + 1, mask);
+            function floodFill(x,y,mask) {
+                if (x<0||x>=GRID_W||y<0||y>=GRID_H||mask[y][x]||field[y][x]!==0) return;
+                mask[y][x]=1; floodFill(x-1,y,mask); floodFill(x+1,y,mask);
+                floodFill(x,y-1,mask); floodFill(x,y+1,mask);
             }
 
             function updatePercent() {
-                let total = (GRID_W - 2) * (GRID_H - 2),
-                    filled = 0;
-                for (let y = 1; y < GRID_H - 1; ++y)
-                    for (let x = 1; x < GRID_W - 1; ++x) if (field[y][x] === 1) filled++;
-                percent = Math.floor((filled / total) * 100);
-                document.getElementById("percent").innerText = `Territorio: ${percent}%`;
-                if (percent >= 80) nextLevel();
+                let total=(GRID_W-2)*(GRID_H-2), filled=0;
+                for(let y=1;y<GRID_H-1;y++){
+                    for(let x=1;x<GRID_W-1;x++){
+                        if(field[y][x]===1) filled++;
+                    }
+                }
+                percent=Math.floor((filled/total)*100);
+                document.getElementById("percent").innerText=`Territoire : ${percent}%`;
+                if(percent>=80) nextLevel();
             }
 
             function moveBalls() {
-                for (let b of balls) {
-                    let nx = b.x + b.dx,
-                        ny = b.y + b.dy;
-                    if (field[ny][nx] !== 0) {
-                        if (field[b.y][b.x + b.dx] !== 0) b.dx *= -1;
-                        if (field[b.y + b.dy][b.x] !== 0) b.dy *= -1;
-                        nx = b.x + b.dx;
-                        ny = b.y + b.dy;
-                        if (field[ny][nx] !== 0) {
-                            b.dx *= -1;
-                            b.dy *= -1;
-                        }
+                for(let b of balls){
+                    let nx=b.x+b.dx, ny=b.y+b.dy;
+                    if(field[ny][nx]!==0){
+                        if(field[b.y][b.x+b.dx]!==0) b.dx*=-1;
+                        if(field[b.y+b.dy][b.x]!==0) b.dy*=-1;
+                        nx=b.x+b.dx; ny=b.y+b.dy;
+                        if(field[ny][nx]!==0){ b.dx*=-1; b.dy*=-1; }
                     }
-                    b.x += b.dx;
-                    b.y += b.dy;
+                    b.x+=b.dx; b.y+=b.dy;
                 }
             }
 
             function checkCollisions() {
-                for (let b of balls) {
-                    for (let [x, y] of path) if (b.x === x && b.y === y) return gameOver();
-                    if (b.x === player.x && b.y === player.y && field[player.y][player.x] !== 1) return gameOver();
+                for(let b of balls){
+                    for(let [x,y] of path){
+                        if(b.x===x && b.y===y) return gameOver();
+                    }
+                    if(b.x===player.x && b.y===player.y && field[player.y][player.x]!==1) return gameOver();
                 }
             }
 
             function draw() {
-                let cw = canvas.width,
-                    ch = canvas.height;
-                let cellW = cw / GRID_W,
-                    cellH = ch / GRID_H;
-                ctx.clearRect(0, 0, cw, ch);
-
+                const cw=canvas.width, ch=canvas.height;
+                const cellW=cw/GRID_W, cellH=ch/GRID_H;
+                ctx.clearRect(0,0,cw,ch);
                 ctx.save();
-                ctx.strokeStyle = "#c2e3d7";
-                ctx.lineWidth = 0.5;
-                for (let x = 0; x <= GRID_W; ++x) {
-                    ctx.beginPath();
-                    ctx.moveTo(x * cellW, 0);
-                    ctx.lineTo(x * cellW, ch);
-                    ctx.stroke();
+                ctx.strokeStyle="#c2e3d7"; ctx.lineWidth=0.5;
+                for(let x=0;x<=GRID_W;x++){
+                    ctx.beginPath(); ctx.moveTo(x*cellW,0); ctx.lineTo(x*cellW,ch); ctx.stroke();
                 }
-                for (let y = 0; y <= GRID_H; ++y) {
-                    ctx.beginPath();
-                    ctx.moveTo(0, y * cellH);
-                    ctx.lineTo(cw, y * cellH);
-                    ctx.stroke();
+                for(let y=0;y<=GRID_H;y++){
+                    ctx.beginPath(); ctx.moveTo(0,y*cellH); ctx.lineTo(cw,y*cellH); ctx.stroke();
                 }
                 ctx.restore();
-
-                for (let y = 0; y < GRID_H; ++y)
-                    for (let x = 0; x < GRID_W; ++x) {
-                        ctx.fillStyle = field[y][x] === 1 ? colors.land : colors.empty;
-                        ctx.fillRect(x * cellW, y * cellH, cellW, cellH);
+                for(let y=0;y<GRID_H;y++){
+                    for(let x=0;x<GRID_W;x++){
+                        ctx.fillStyle = field[y][x]===1 ? colors.land : colors.empty;
+                        ctx.fillRect(x*cellW,y*cellH,cellW,cellH);
                     }
-                for (let [x, y] of path) {
-                    ctx.fillStyle = colors.trail;
-                    ctx.fillRect(x * cellW, y * cellH, cellW, cellH);
                 }
-                for (let b of balls) {
-                    ctx.fillStyle = colors.ball;
+                for(let [x,y] of path){
+                    ctx.fillStyle=colors.trail;
+                    ctx.fillRect(x*cellW,y*cellH,cellW,cellH);
+                }
+                for(let b of balls){
+                    ctx.fillStyle=colors.ball;
                     ctx.beginPath();
-                    ctx.arc(
-                        b.x * cellW + cellW / 2,
-                        b.y * cellH + cellH / 2,
-                        Math.min(cellW, cellH) / 2.5,
-                        0,
-                        2 * Math.PI
-                    );
+                    ctx.arc(b.x*cellW+cellW/2,b.y*cellH+cellH/2,Math.min(cellW,cellH)/2.5,0,2*Math.PI);
                     ctx.fill();
                 }
-                ctx.fillStyle = colors.player;
+                ctx.fillStyle=colors.player;
                 ctx.beginPath();
-                ctx.arc(
-                    player.x * cellW + cellW / 2,
-                    player.y * cellH + cellH / 2,
-                    Math.min(cellW, cellH) / 2,
-                    0,
-                    2 * Math.PI
-                );
+                ctx.arc(player.x*cellW+cellW/2,player.y*cellH+cellH/2,Math.min(cellW,cellH)/2,0,2*Math.PI);
                 ctx.fill();
             }
 
             function nextLevel() {
-                running = false;
-                cancelAnimationFrame(anim);
-                level++;
-                document.getElementById("gameover").style.color = "#18a600";
-                document.getElementById("gameover").innerHTML = `¡Subes de nivel!<br>Avanzando al nivel ${level}...`;
-                document.getElementById("gameover").style.display = "block";
-                setTimeout(() => {
-                    document.getElementById("gameover").style.display = "none";
-                    running = true;
-                    frameCount = 0;
-                    playerStepTick = 0;
-                    resetGame(level);
-                    cancelAnimationFrame(anim);
-                    loop();
-                }, 1200);
+                running = false; cancelAnimationFrame(anim); level++;
+                const go = document.getElementById("gameover");
+                go.style.color="#18a600";
+                go.innerHTML = `🎉 Vous passez au niveau ${level}…`;
+                go.style.display="block";
+                setTimeout(()=>{
+                    go.style.display="none"; running=true; frameCount=playerStepTick=0;
+                    resetGame(level); cancelAnimationFrame(anim); loop();
+                },1200);
             }
 
             function gameOver() {
-                running = false;
-                cancelAnimationFrame(anim);
-                document.getElementById("gameover").style.color = "#d11";
-                document.getElementById("gameover").innerHTML = `Juego Terminado<br>Nivel: ${level} | Territorio: ${percent}%`;
-                document.getElementById("gameover").style.display = "block";
-                document.getElementById("restartBtn").style.display = "";
-                document.getElementById("shareBtn").style.display = "";
+                running=false; cancelAnimationFrame(anim);
+                const go = document.getElementById("gameover");
+                go.style.color="#d11";
+                go.innerHTML = `💀 Jeu terminé<br>Niveau : ${level} | Territoire : ${percent}%`;
+                go.style.display="block";
+                document.getElementById("restartBtn").style.display="";
+                document.getElementById("shareBtn").style.display="";
             }
 
             function updateUI() {
-                document.getElementById("level").innerText = `Nivel: ${level}`;
-                document.getElementById("percent").innerText = `Territorio: ${percent}%`;
+                document.getElementById("level").innerText=`Niveau : ${level}`;
+                document.getElementById("percent").innerText=`Territoire : ${percent}%`;
             }
 
             function share() {
-                let txt = `Récord en Land Grab: Nivel ${level}, Territorio ${percent}%! Juega ahora: ${location.href}`;
-                if (navigator.share) {
-                    navigator.share({
-                        title: "Land Grab",
-                        text: txt,
-                        url: location.href
-                    });
+                const txt=`Record Land Grab : Niveau ${level}, Territoire ${percent}% ! Jouez maintenant : ${location.href}`;
+                if(navigator.share){
+                    navigator.share({ title:"Land Grab", text:txt, url:location.href });
                 } else {
                     navigator.clipboard.writeText(txt);
-                    alert("¡El enlace se ha copiado al portapapeles!");
+                    alert("🔗 Lien copié dans le presse-papiers !");
                 }
             }
 
-            window.addEventListener("keydown", (e) => {
-                if (!running) return;
-                if (["ArrowLeft", "a"].includes(e.key)) player.dir = "left";
-                if (["ArrowRight", "d"].includes(e.key)) player.dir = "right";
-                if (["ArrowUp", "w"].includes(e.key)) player.dir = "up";
-                if (["ArrowDown", "s"].includes(e.key)) player.dir = "down";
+            window.addEventListener("keydown", e=>{
+                if(!running) return;
+                if(["ArrowLeft","a"].includes(e.key)) player.dir="left";
+                if(["ArrowRight","d"].includes(e.key)) player.dir="right";
+                if(["ArrowUp","w"].includes(e.key)) player.dir="up";
+                if(["ArrowDown","s"].includes(e.key)) player.dir="down";
             });
-            ["up", "down", "left", "right"].forEach((dir) => {
-                document.getElementById("btn-" + dir).ontouchstart = () => {
-                    if (running) player.dir = dir;
-                };
-                document.getElementById("btn-" + dir).onmousedown = () => {
-                    if (running) player.dir = dir;
-                };
+            ["up","down","left","right"].forEach(dir=>{
+                const btn=document.getElementById("btn-"+dir);
+                btn.ontouchstart=btn.onmousedown=()=>{ if(running) player.dir=dir; };
             });
 
-            document.getElementById("startBtn").onclick = startGame;
-            document.getElementById("restartBtn").onclick = () => {
-                level = 1;
-                running = true;
-                startGame();
+            document.getElementById("startBtn").onclick=startGame;
+            document.getElementById("restartBtn").onclick=()=>{
+                level=1; running=true; startGame();
             };
-            document.getElementById("shareBtn").onclick = share;
+            document.getElementById("shareBtn").onclick=share;
 
-            resetGame();
-            draw();
-            loop();
+            resetGame(); draw(); loop();
         </script>
+
         <section
             style="
                 max-width: 320px;
@@ -479,41 +356,41 @@
                 font-size: 14px;
                 background: #fff;
                 border-radius: 18px;
-                box-shadow: 0 6px 24px #1232;
+                box-shadow: 0 6px 24px rgba(0,0,0,0.2);
                 padding: 20px;
                 line-height: 1.65;
                 color: #2d3436;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #2577cf">❓ Preguntas frecuentes (FAQ)</h2>
+            <h2 style="font-size:1.4rem;margin-bottom:14px;color:#2577cf">❓ Questions fréquemment posées (FAQ)</h2>
 
-            <div style="margin-bottom: 12px">
-                <strong>Q1. ¿Cómo se juega Land Grab?</strong><br />
-                A. Muévete para trazar líneas y expandir tu territorio. ¡Llena todos los espacios en blanco para avanzar al siguiente nivel!
+            <div style="margin-bottom:12px">
+                <strong>Q1. Comment jouer à Land Grab ?</strong><br/>
+                R. Déplacez-vous pour tracer des lignes et étendre votre territoire. Remplissez tous les espaces vides pour passer au niveau suivant !
             </div>
 
-            <div style="margin-bottom: 12px">
-                <strong>Q2. ¿Qué es subir de nivel?</strong><br />
-                A. Significa completar la etapa actual y avanzar a una más desafiante.
+            <div style="margin-bottom:12px">
+                <strong>Q2. Qu’est-ce que passer de niveau ?</strong><br/>
+                R. Cela signifie avoir complété la phase actuelle et progresser vers une plus difficile.
             </div>
 
-            <div style="margin-bottom: 12px">
-                <strong>Q3. ¿Cuándo termina el juego?</strong><br />
-                A. El juego termina si chocas con una bola roja o si la bola roja toca tu ruta mientras te mueves.
+            <div style="margin-bottom:12px">
+                <strong>Q3. Quand le jeu se termine-t-il ?</strong><br/>
+                R. Le jeu se termine si vous heurtez une balle rouge ou si la balle rouge touche votre tracé pendant votre déplacement.
             </div>
 
-            <div style="margin-bottom: 12px">
-                <strong>Q4. ¿Es un juego de suerte?</strong><br />
-                A. ¡No 😎! Este juego depende de tu estrategia y habilidad.
+            <div style="margin-bottom:12px">
+                <strong>Q4. Est-ce un jeu de hasard ?</strong><br/>
+                R. Non 😎 ! Ce jeu dépend de votre stratégie et de votre habileté.
             </div>
 
-            <div style="margin-bottom: 12px">
-                <strong>Q5. ¿Cómo reiniciar?</strong><br />
-                A. Después de un juego terminado, toca <strong>Reiniciar</strong> para jugar de nuevo desde el nivel 1.
+            <div style="margin-bottom:12px">
+                <strong>Q5. Comment réinitialiser ?</strong><br/>
+                R. Après un échec, appuyez sur <strong>Rejouer</strong> pour recommencer à partir du niveau 1.
             </div>
 
-            <div style="margin-bottom: 0">
-                <strong>Q6. ¿Puedo compartir con amigos?</strong><br />
-                A. ¡Claro! Toca <strong>Compartir</strong> para copiar el enlace o utilizar la función de compartir de tu móvil.
+            <div>
+                <strong>Q6. Puis-je partager avec mes amis ?</strong><br/>
+                R. Bien sûr ! Appuyez sur <strong>Partager</strong> pour copier le lien ou utiliser la fonction de partage de votre mobile.
             </div>
         </section>
     </body>

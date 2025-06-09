@@ -1,35 +1,35 @@
 <!doctype html>
-<html lang="es">
+<html lang="fr">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="¡Juega Conecta Cuatro en línea gratis! Disfruta este clásico juego estratégico para dos jugadores con amigos o la computadora. Es sencillo, rápido y compatible con móviles."
+            content="Jouez à Puissance 4 en ligne gratuitement ! Profitez de ce jeu stratégique classique à deux joueurs contre des amis ou l’ordinateur. Simple, rapide et compatible mobile."
         />
         <meta
             name="keywords"
-            content="Conecta Cuatro, juego de conectar cuatro, juego en línea, juego gratuito, dos jugadores, contra IA, juego estratégico, juego de mesa, navegador, móvil, rompecabezas, clásico"
+            content="Puissance4, jeu Puissance 4, jeu en ligne, jeu gratuit, deux joueurs, contre IA, jeu stratégique, jeu de plateau, navigateur, mobile, puzzle, classique"
         />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/fr/game/ConnectFour" />
 
-        <meta property="og:title" content="Conecta Cuatro – ¡Juego gratuito en línea para dos jugadores!" />
+        <meta property="og:title" content="Puissance 4 – Jeu gratuit en ligne pour deux joueurs !" />
         <meta
             property="og:description"
-            content="¡Juega Conecta Cuatro gratis en tu navegador! Enfréntate a amigos o a la IA y consigue cuatro en línea horizontal, vertical o diagonal para ganar."
+            content="Jouez à Puissance 4 gratuitement dans votre navigateur ! Affrontez des amis ou l’IA et alignez quatre jetons horizontalement, verticalement ou en diagonale pour gagner."
         />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/fr/game/ConnectFour" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Conecta Cuatro – ¡Juego gratuito en línea para dos jugadores!" />
+        <meta name="twitter:title" content="Puissance 4 – Jeu gratuit en ligne pour deux joueurs !" />
         <meta
             name="twitter:description"
-            content="¡Juega Conecta Cuatro gratis en tu navegador! Enfréntate a amigos o a la IA y consigue cuatro en línea horizontal, vertical o diagonal para ganar."
+            content="Jouez à Puissance 4 gratuitement dans votre navigateur ! Affrontez des amis ou l’IA et alignez quatre jetons pour gagner."
         />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -48,36 +48,34 @@
             crossorigin="anonymous"
         ></script>
         <link rel="stylesheet" href="style.css" />
-        <title>Conecta Cuatro</title>
+        <title>Puissance 4</title>
     </head>
 
     <body>
         <div id="wrapper">
-            <h1>Conecta Cuatro</h1>
-            <div class="desc">¡Conecta cuatro en línea horizontal, vertical o diagonal para ganar!</div>
+            <h1>Puissance 4</h1>
+            <div class="desc">Alignez quatre jetons horizontalement, verticalement ou en diagonale pour gagner !</div>
             <div id="modeSel">
-                <button class="modebtn active" id="mode2p" onclick="setMode('2p')">2 jugadores</button>
-                <button class="modebtn" id="modeai" onclick="setMode('ai')">Contra IA</button>
+                <button class="modebtn active" id="mode2p" onclick="setMode('2p')">2 joueurs</button>
+                <button class="modebtn" id="modeai" onclick="setMode('ai')">Contre IA</button>
             </div>
             <div id="turn"></div>
             <div id="board"></div>
             <div id="overMsg"></div>
             <div class="btns" id="gameBtns" style="display: none">
-                <button class="btn" onclick="restart()">Reiniciar</button>
-                <button class="btn" onclick="share()">Compartir</button>
+                <button class="btn" onclick="restart()">Recommencer</button>
+                <button class="btn" onclick="share()">Partager</button>
             </div>
-            <a id="otherGames" href="../" style="margin-top: 22px">Otros juegos</a>
+            <a id="otherGames" href="../" style="margin-top: 22px">Autres jeux</a>
         </div>
         <script>
-            // Desactivar selección/arrastre en móvil
+            // Désactiver sélection/arrêt de défilement sur mobile
             document.addEventListener(
                 "touchmove",
                 (e) => {
                     if (e.scale !== 1) e.preventDefault();
                 },
-                {
-                    passive: false
-                }
+                { passive: false }
             );
             document.body.addEventListener("dragstart", (e) => e.preventDefault());
             document.body.addEventListener("selectstart", (e) => e.preventDefault());
@@ -85,14 +83,11 @@
             const ROWS = 6,
                   COLS = 7;
             let board, turn, over, winner;
-            let mode = "2p"; // "2p" o "ai"
+            let mode = "2p"; // "2p" ou "ai"
             const COLORS = ["🔵", "🟡"];
 
             function emptyBoard() {
-                return Array.from(
-                    { length: ROWS },
-                    () => Array(COLS).fill(null)
-                );
+                return Array.from({ length: ROWS }, () => Array(COLS).fill(null));
             }
 
             function render() {
@@ -107,11 +102,11 @@
                         cell.innerHTML = board[r][c] !== null ? COLORS[board[r][c]] : "";
                         cell.onclick = () => {
                             if (over) return;
-                            if (mode === "ai" && turn === 1) return; // No permitir cuando sea turno de IA
+                            if (mode === "ai" && turn === 1) return;
                             if (playerMove(c)) {
                                 render();
                                 if (mode === "ai" && !over && turn === 1) {
-                                    setTimeout(aiMove, 350); // Retrasar ligeramente para mover IA
+                                    setTimeout(aiMove, 350);
                                 }
                             }
                         };
@@ -120,34 +115,28 @@
                 }
                 let msg = "";
                 if (!over) {
-                    msg = COLORS[turn]
-                        + (mode === "ai" ? (turn === 0 ? " (Tú)" : " (IA)") : "")
-                        + " es tu turno";
+                    msg = COLORS[turn] +
+                          (mode === "ai" ? (turn === 0 ? " (Vous)" : " (IA)") : "") +
+                          " à vous de jouer";
                 } else if (winner !== null) {
-                    msg = COLORS[winner]
-                        + (mode === "ai" ? (winner === 0 ? " (Tú)" : " (IA)") : "")
-                        + " ¡ha ganado!";
+                    msg = COLORS[winner] +
+                          (mode === "ai" ? (winner === 0 ? " (Vous)" : " (IA)") : "") +
+                          " a gagné !";
                 } else {
-                    msg = "¡Empate!";
+                    msg = "Match nul !";
                 }
                 document.getElementById("turn").textContent = msg;
-                document.getElementById("overMsg").textContent = over && winner !== null
-                    ? msg
-                    : over
-                        ? "¡Empate!"
-                        : "";
+                document.getElementById("overMsg").textContent = over && winner !== null ? msg : over ? "Match nul !" : "";
                 document.getElementById("gameBtns").style.display = over ? "flex" : "none";
                 document.getElementById("mode2p").classList.toggle("active", mode === "2p");
                 document.getElementById("modeai").classList.toggle("active", mode === "ai");
             }
 
-            // Colocar la jugada del jugador o de 2P (actualiza estado)
             function playerMove(col) {
                 if (over) return false;
                 for (let r = ROWS - 1; r >= 0; r--) {
                     if (board[r][col] === null) {
                         board[r][col] = turn;
-                        // Verificar victoria/empate
                         if (checkWin(r, col, turn)) {
                             over = true;
                             winner = turn;
@@ -163,7 +152,6 @@
                 return false;
             }
 
-            // Colocación temporal para IA o simulación (no afecta over/winner)
             function tryMove(col, whichTurn) {
                 for (let r = ROWS - 1; r >= 0; r--) {
                     if (board[r][col] === null) {
@@ -195,8 +183,7 @@
             function count(r, c, dr, dc, color) {
                 let cnt = 0;
                 for (let i = 1; i < 4; i++) {
-                    let nr = r + dr * i,
-                        nc = c + dc * i;
+                    let nr = r + dr * i, nc = c + dc * i;
                     if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) break;
                     if (board[nr][nc] === color) cnt++;
                     else break;
@@ -221,37 +208,34 @@
 
             function aiMove() {
                 if (over || turn !== 1) return;
-
                 let validCols = [];
                 for (let c = 0; c < COLS; c++) if (board[0][c] === null) validCols.push(c);
 
-                // 1. La IA busca jugadas que le permitan ganar
+                // 1. Chercher coup gagnant
                 for (let ci of validCols) {
                     let row = tryMove(ci, 1);
                     if (row !== -1 && checkWin(row, ci, 1)) {
                         undoMove(ci);
-                        playerMove(ci); // IA hace la jugada ganadora
+                        playerMove(ci);
                         render();
                         return;
                     }
                     if (row !== -1) undoMove(ci);
                 }
-                // 2. Bloquear posibles victorias del jugador
+                // 2. Bloquer le joueur
                 for (let ci of validCols) {
                     let row = tryMove(ci, 0);
                     if (row !== -1 && checkWin(row, ci, 0)) {
                         undoMove(ci);
-                        playerMove(ci); // Bloqueo de jugada
+                        playerMove(ci);
                         render();
                         return;
                     }
                     if (row !== -1) undoMove(ci);
                 }
-                // 3. Prioridad al centro
-                let bestCols = [3, 2, 4, 1, 5, 0, 6].filter((c) => validCols.includes(c));
-                let col = bestCols.length > 0
-                    ? bestCols[0]
-                    : validCols[Math.floor(Math.random() * validCols.length)];
+                // 3. Priorité au centre
+                let bestCols = [3,2,4,1,5,0,6].filter(c => validCols.includes(c));
+                let col = bestCols.length ? bestCols[0] : validCols[Math.floor(Math.random()*validCols.length)];
                 playerMove(col);
                 render();
             }
@@ -259,17 +243,14 @@
             function share() {
                 const url = location.href;
                 if (navigator.share) {
-                    navigator.share({
-                        title: "Conecta Cuatro",
-                        url
-                    });
+                    navigator.share({ title: "Puissance 4", url });
                 } else {
                     navigator.clipboard.writeText(url);
-                    alert("¡Enlace copiado!");
+                    alert("Lien copié !");
                 }
             }
 
-            // Inicialización
+            // Initialisation
             restart();
         </script>
         <section
@@ -281,43 +262,43 @@
                 background: #ffffff;
                 border: 1px solid #ccc;
                 border-radius: 12px;
-                font-family: &quot;Segoe UI&quot;, sans-serif;
+                font-family: 'Segoe UI', sans-serif;
                 font-size: 14px;
                 line-height: 1.6;
                 color: #2e2e2e;
                 box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             "
         >
-            <h2 style="font-size: 18px; margin-bottom: 1rem; color: #365ca0">❓ Preguntas frecuentes (FAQ)</h2>
+            <h2 style="font-size: 18px; margin-bottom: 1rem; color: #365ca0">❓ Questions fréquentes (FAQ)</h2>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q1. ¿Cómo se juega Conecta Cuatro?</strong><br />
-                A. Toca una columna para dejar caer una ficha. El jugador que conecte cuatro en horizontal, vertical o diagonal gana.
+                <strong>Q1. Comment jouer à Puissance 4 ?</strong><br />
+                R. Touchez une colonne pour y faire tomber un jeton. Le premier à aligner quatre jetons horizontalement, verticalement ou en diagonale gagne.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q2. ¿Qué modos de juego hay?</strong><br />
-                A. Puedes elegir el modo “2 jugadores” para jugar con amigos o el modo “Contra IA” para enfrentarte a la computadora.
+                <strong>Q2. Quels modes de jeu sont disponibles ?</strong><br />
+                R. Choisissez « 2 joueurs » pour jouer entre amis ou « Contre IA » pour défier l’ordinateur.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q3. ¿Qué tan fuerte es la IA?</strong><br />
-                A. La IA busca jugadas que le permitan ganar, bloquea posibles victorias del jugador y da prioridad a las columnas centrales más ventajosas.
+                <strong>Q3. Quelle est la compétence de l’IA ?</strong><br />
+                R. L’IA cherche d’abord un coup gagnant, bloque vos menaces, puis privilégie les colonnes centrales pour jouer.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q4. ¿Se puede cambiar el modo durante la partida?</strong><br />
-                A. ¡Sí! Toca los botones de modo en la parte superior de la pantalla y reiniciarás con el otro modo.
+                <strong>Q4. Peut-on changer de mode en cours de partie ?</strong><br />
+                R. Oui ! Cliquez sur l’un des boutons de mode en haut et la partie redémarrera dans le mode sélectionné.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q5. ¿Qué sucede en caso de empate?</strong><br />
-                A. Si el tablero se llena sin un ganador, el juego termina en empate y puedes reiniciar.
+                <strong>Q5. Que se passe-t-il en cas d’égalité ?</strong><br />
+                R. Si le plateau est plein sans gagnant, la partie se termine sur un match nul. Vous pouvez recommencer.
             </div>
 
             <div>
-                <strong>Q6. ¿Cómo comparto el juego?</strong><br />
-                A. Después de la partida, toca el botón “Compartir”, copia el enlace y envíalo a tus amigos.
+                <strong>Q6. Comment partager le jeu ?</strong><br />
+                R. Après la partie, cliquez sur « Partager » pour copier le lien et l’envoyer à vos amis.
             </div>
         </section>
     </body>

@@ -1,63 +1,60 @@
 <!doctype html>
-<html lang="es">
+<html lang="fr">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="¡Pon a prueba tu reflejo con CazaNúmeros! Toca los números del 1 al 50 lo más rápido que puedas y bate tu propio récord. Juega gratis al instante en móvil o escritorio." />
+            content="Testez vos réflexes avec ChasseNombres ! Touchez les chiffres de 1 à 50 le plus vite possible et battez votre record. Gratuit et instantané sur mobile ou desktop." />
         <meta
             name="keywords"
-            content="CazaNúmeros, juego de números, juego web, juego de navegador, velocidad de reacción, juego de reflejos, juego rápido, móvil, entrenamiento mental, gratis, entretenimiento, rompecabezas, contrarreloj, jugar al instante" />
+            content="ChasseNombres, jeu de chiffres, jeu web, réflexes, rapidité, mobile, gratuit, puzzle, contre-la-montre" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://emfls.github.io/fr/game/NumberHunt" />
 
-        <meta property="og:title" content="CazaNúmeros – Juego web de reflejos rápidos" />
+        <meta property="og:title" content="ChasseNombres – Jeu web de réflexes rapides" />
         <meta
             property="og:description"
-            content="¿Qué tan rápido puedes tocar del 1 al 50? En CazaNúmeros reta tus reflejos. ¡Gratis, sin descargas y listo para jugar!" />
+            content="À quelle vitesse pouvez-vous toucher de 1 à 50 ? Défiez vos réflexes avec ChasseNombres ! Gratuit, sans téléchargement." />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/fr/game/NumberHunt" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="CazaNúmeros – Juego web de reflejos rápidos" />
+        <meta name="twitter:title" content="ChasseNombres – Jeu web de réflexes rapides" />
         <meta
             name="twitter:description"
-            content="Toca los números del 1 al 50 lo más rápido posible en CazaNúmeros. ¡Pon a prueba tus reflejos y comparte tu mejor tiempo!" />
+            content="Touchez les chiffres de 1 à 50 le plus rapidement possible dans ChasseNombres. Défiez vos amis !" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
             window.dataLayer = window.dataLayer || [];
-            function gtag() {
-                dataLayer.push(arguments);
-            }
+            function gtag() { dataLayer.push(arguments); }
             gtag("js", new Date());
-
             gtag("config", "G-QP5Q67GE5B");
         </script>
         <script
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <title>CazaNúmeros</title>
+        <title>ChasseNombres</title>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700&display=swap" rel="stylesheet" />
         <link rel="stylesheet" href="style.css" />
     </head>
 
     <body>
-        <h1>CazaNúmeros</h1>
-        <div id="timer">Tiempo: 0.00 s</div>
+        <h1>ChasseNombres</h1>
+        <div id="timer">Temps : 0,00 s</div>
         <div id="game-container">
-            <button id="start-btn">Comenzar</button>
+            <button id="start-btn">Commencer</button>
             <div id="grid"></div>
             <div id="message"></div>
             <div id="buttons">
-                <button id="restart-btn">Reiniciar</button>
-                <button id="share-btn">Compartir</button>
+                <button id="restart-btn">Rejouer</button>
+                <button id="share-btn">Partager</button>
                 <div id="shareText"></div>
             </div>
         </div>
@@ -83,7 +80,7 @@
             function updateTimer() {
                 const now = new Date();
                 const diff = ((now - startTime) / 1000).toFixed(2);
-                timerDisplay.textContent = `Tiempo: ${diff} s`;
+                timerDisplay.textContent = `Temps : ${diff} s`;
             }
 
             function showFirework() {
@@ -103,7 +100,7 @@
                 shareText.textContent = "";
                 createGrid();
                 startTime = new Date();
-                timerDisplay.textContent = "Tiempo: 0.00 s";
+                timerDisplay.textContent = "Temps : 0,00 s";
                 timerInterval = setInterval(updateTimer, 50);
             }
 
@@ -135,7 +132,6 @@
                                 }
 
                                 if (nextToShow > 50) {
-                                    // Último número: cambia lentamente a verde sin mostrar otro número
                                     cell.classList.add("final-correct");
                                 }
                             }, 500);
@@ -148,7 +144,7 @@
                                 endTime = new Date();
                                 clearInterval(timerInterval);
                                 const timeTaken = ((endTime - startTime) / 1000).toFixed(2);
-                                message.textContent = `🎉 ¡Completado! Tiempo: ${timeTaken} s`;
+                                message.textContent = `🎉 Terminé ! Temps : ${timeTaken} s`;
                                 buttons.style.display = "flex";
                                 showFirework();
                             }
@@ -167,16 +163,16 @@
 
             document.getElementById("share-btn").addEventListener("click", () => {
                 const timeTaken = ((endTime - startTime) / 1000).toFixed(2);
-                const text = `¡Completé CazaNúmeros en ${timeTaken} s! ¡Intenta superarme!: ${window.location.href}`;
+                const text = `J'ai terminé ChasseNombres en ${timeTaken} s ! À toi de jouer : ${window.location.href}`;
                 if (navigator.share) {
-                    navigator.share({ title: "CazaNúmeros", text, url: window.location.href })
+                    navigator.share({ title: "ChasseNombres", text, url: window.location.href })
                         .catch(() => {
                             navigator.clipboard.writeText(text);
-                            shareText.textContent = "Copiado al portapapeles: " + text;
+                            shareText.textContent = "Copié dans le presse-papiers : " + text;
                         });
                 } else {
                     navigator.clipboard.writeText(text).then(() => {
-                        shareText.textContent = "Copiado al portapapeles: " + text;
+                        shareText.textContent = "Copié dans le presse-papiers : " + text;
                     });
                 }
             });
@@ -194,26 +190,26 @@
         <button
             style="
                 background: #4caf50;
-                padding: 19px 20px 20px 20px;
+                padding: 19px 20px;
                 border-radius: 10px;
                 margin-top: 30px;
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 10px 25px rgba(0,0,0,0.1);
                 text-align: center;
                 width: 90%;
                 max-width: 400px;
-                position: relative;
                 color: white;
                 font-weight: bold;
                 font-size: large;
             "
             onclick="window.location.href='/'">
-            📂 Otros juegos
+            📂 Autres jeux
         </button>
+
         <section
             style="
                 max-width: 320px;
                 width: 100%;
-                margin: 48px auto 24px auto;
+                margin: 48px auto 24px;
                 font-family: 'Arial', sans-serif;
                 font-size: 14px;
                 background: #1e1e1e;
@@ -223,30 +219,30 @@
                 line-height: 1.6;
                 color: #f0f0f0;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #6a72f8">❓ Preguntas Frecuentes</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #6a72f8">❓ FAQ</h2>
             <div style="margin-bottom: 12px">
-                <strong>Q1. ¿Cómo se juega a CazaNúmeros?</strong><br />
-                A. Toca los números del 1 al 50 en orden, lo más rápido posible. ¡Tu velocidad y reflejos determinan tu puntuación!
+                <strong>Q1. Comment jouer à ChasseNombres ?</strong><br />
+                R. Touchez les chiffres de 1 à 50 dans l’ordre, le plus rapidement possible. Vos réflexes déterminent votre score !
             </div>
             <div style="margin-bottom: 12px">
-                <strong>Q2. ¿Qué sucede después de tocar el 25?</strong><br />
-                A. Al tocar el 25, ese recuadro mostrará el siguiente número (26–50).
+                <strong>Q2. Que se passe-t-il après le 25 ?</strong><br />
+                R. Après avoir touché le 25, la case affiche le chiffre suivant (26 à 50).
             </div>
             <div style="margin-bottom: 12px">
-                <strong>Q3. ¿Puedo reiniciar el juego?</strong><br />
-                A. Claro. Después de completar el juego o en cualquier momento, pulsa el botón <strong>Reiniciar</strong>.
+                <strong>Q3. Puis-je recommencer ?</strong><br />
+                R. Bien sûr. À tout moment ou après avoir terminé, cliquez sur <strong>Rejouer</strong>.
             </div>
             <div style="margin-bottom: 12px">
-                <strong>Q4. ¿Cómo comparto mi tiempo?</strong><br />
-                A. Tras terminar, pulsa <strong>Compartir</strong> para copiar tu tiempo y el enlace del juego.
+                <strong>Q4. Comment partager mon temps ?</strong><br />
+                R. Après la partie, cliquez sur <strong>Partager</strong> pour copier votre temps et le lien.
             </div>
             <div style="margin-bottom: 12px">
-                <strong>Q5. ¿Hay límite de tiempo?</strong><br />
-                A. No hay límite de tiempo. ¡Depende completamente de tus reflejos y rapidez!
+                <strong>Q5. Y a-t-il une limite de temps ?</strong><br />
+                R. Non, pas de limite : votre rapidité seule compte.
             </div>
             <div style="margin-bottom: 0">
-                <strong>Q6. ¿Es compatible con dispositivos móviles?</strong><br />
-                A. ¡Sí! Funciona perfectamente en navegadores de móvil y escritorio.
+                <strong>Q6. Compatible mobile ?</strong><br />
+                R. Oui, optimisé pour mobiles et desktop.
             </div>
         </section>
     </body>
