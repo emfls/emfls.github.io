@@ -1,27 +1,27 @@
 <!doctype html>
-<html lang="ja">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>BMI 計算機 – 体格指数（BMI）測定</title>
+  <title>Calculadora de IMC – Índice de Masa Corporal (IMC)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta
     name="description"
-    content="身長と体重を入力して即座にBMI（体格指数）を計算できます。BMI数値や分類、推奨範囲を確認可能。100％無料、ブラウザベース、モバイル対応です。" />
-  <meta name="keywords" content="bmi, 体格指数, 健康, 計算機, 体重, 身長, 肥満度, フィットネス, 測定" />
+    content="Introduce tu altura y peso para calcular al instante tu IMC (Índice de Masa Corporal). Consulta el valor, clasificación y rango recomendado. 100% gratuito, basado en navegador y compatible con dispositivos móviles." />
+  <meta name="keywords" content="imc, índice de masa corporal, salud, calculadora, peso, altura, obesidad, fitness, medición" />
   <meta name="author" content="Itagi" />
-  <meta name="language" content="ja" />
+  <meta name="language" content="es" />
   <meta name="theme-color" content="#2e74d1" />
   <link rel="canonical" href="https://emfls.github.io/ru/util/bmi/" />
   <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-  <meta property="og:title" content="BMI 計算機 – 体格指数（BMI）測定"/>
-  <meta property="og:description" content="身長と体重を入力して数秒でBMI（体格指数）を確認しましょう！即座に結果を提供します。" />
-  <meta property="og:type" content="website"/>
-  <meta property="og:url" content="https://emfls.github.io/ru/util/bmi/"/>
-  <meta property="og:image" content="https://emfls.github.io/thumbnail.png"/>
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="BMI 計算機 – 体格指数（BMI）測定"/>
-  <meta name="twitter:description" content="身長と体重を入力して即座にBMIを計算しましょう。健康的な体重範囲を確認できます。アップロード不要、100％ブラウザベース。" />
-  <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png"/>
+  <meta property="og:title" content="Calculadora de IMC – Índice de Masa Corporal (IMC)" />
+  <meta property="og:description" content="Introduce tu altura y peso para obtener tu IMC en segundos. Consulta tu estado de salud rápidamente." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://emfls.github.io/ru/util/bmi/" />
+  <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Calculadora de IMC – Índice de Masa Corporal (IMC)" />
+  <meta name="twitter:description" content="Introduce tu altura y peso para calcular tu IMC al instante. Conoce tu rango de peso saludable. Sin carga, 100% en navegador." />
+  <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
   <script>
@@ -33,167 +33,87 @@
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
     crossorigin="anonymous"></script>
-  <style>
-    :root { --main: #2e74d1; --bg: #f7fafd; }
-    html, body { margin: 0; padding: 0; background: var(--bg); }
-    body { font-family: "Segoe UI", Arial, sans-serif; color: #234; }
-    .container {
-      max-width: 370px;
-      margin: 34px auto 0 auto;
-      background: #fff;
-      border-radius: 18px;
-      box-shadow: 0 4px 22px #2e74d111;
-      padding: 28px 16px 21px 16px;
-    }
-    .title { text-align: center; font-size: 1.25em; color: var(--main); font-weight: bold; margin-bottom: 8px; }
-    .desc { text-align: center; color: #4a73a5; font-size: 1.02em; margin-bottom: 20px; }
-    .form-row {
-      display: flex; flex-direction: column; gap: 7px; margin-bottom: 13px;
-    }
-    .form-row label { font-size: 1em; color: #2264c3; font-weight: 500; }
-    .form-row input[type="number"] {
-      box-sizing: border-box;
-      padding: 10px 10px;
-      border-radius: 7px;
-      border: 1.2px solid #bfd8ff;
-      font-size: 1.09em;
-      width: 100%;
-      background: #fafdff;
-      color: #234;
-      transition: border 0.15s;
-    }
-    .form-row input[type="number"]:focus { border-color: var(--main); }
-    .btn {
-      background: var(--main); color: #fff; border: none; border-radius: 8px;
-      padding: 13px 0; width: 100%; font-size: 1.13em; font-weight: bold; cursor: pointer;
-      margin-top: 7px; margin-bottom: 9px; box-shadow: 0 2px 12px #2e74d122;
-      transition: background 0.16s;
-    }
-    .btn:active { background: #194e99; }
-    .result {
-      background: #eaf3ff;
-      border-radius: 12px;
-      color: #144c91;
-      font-size: 1.07em;
-      padding: 13px 11px 9px 11px;
-      text-align: center;
-      margin-bottom: 9px;
-      min-height: 44px;
-      font-weight: 500;
-      word-break: break-word;
-    }
-    .bmi-table {
-      margin: 15px auto 5px auto;
-      border-collapse: collapse;
-      width: 100%;
-      font-size: 0.98em;
-      background: #fafdff;
-      box-shadow: 0 2px 8px #bbe7ff24;
-    }
-    .bmi-table th, .bmi-table td {
-      border: 1px solid #c5e1fa;
-      padding: 6px 4px;
-      text-align: center;
-    }
-    .bmi-table th { background: #e1eefe; color: #2274ba; }
-    .bmi-table td { background: #fff; }
-    section#faq { margin-top: 26px; }
-    section#faq h2 { margin-bottom: 13px; color: #2e74d1; font-size: 1.14em; text-align: center; }
-    section#faq dt { font-weight: bold; margin-top: 9px; }
-    section#faq dd { margin: 0 0 7px 0; font-size: 0.99em; color: #24528a; }
-    .footer { color: #789; text-align: center; font-size: 0.94em; margin-top: 16px; }
-    #backBtn {
-      position: fixed; left: 50%; bottom: 32px; transform: translateX(-50%);
-      background: #2e74d1; color: #fff; font-weight: 700; border: none; border-radius: 2rem;
-      padding: 0.58em 1.5em; box-shadow: 0 4px 16px #2e74d166; font-size: 1.09em; text-decoration: none;
-      cursor: pointer; letter-spacing: 0.01em; transition: background 0.15s, transform 0.12s; z-index: 2000;
-    }
-    #backBtn:hover { background: #144c91; transform: translateX(-50%) scale(1.04); }
-    @media (max-width: 520px) {
-      .container { max-width: 98vw; padding: 11px 2vw 10px 2vw; }
-      #backBtn { bottom: 18px; font-size: 0.98em; padding: 0.48em 1em; }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main>
     <div class="container" itemscope itemtype="https://schema.org/HealthApplication">
-      <h1 class="title" itemprop="name">🏃 BMI 計算機</h1>
+      <h1 class="title" itemprop="name">🏃 Calculadora de IMC</h1>
       <p class="desc" itemprop="description">
-        身長（cm）と体重（kg）を入力してすぐにBMI（体格指数）を計算。<br>
-        入力後、結果が即表示されます！
+        Introduce tu altura (cm) y peso (kg) para calcular al instante tu IMC.<br>
+        ¡Resultados inmediatos al ingresar los datos!
       </p>
       <form id="bmiForm" autocomplete="off">
         <div class="form-row">
-          <label for="height">身長 (cm)</label>
-          <input type="number" id="height" min="80" max="250" step="0.1" required placeholder="例: 170" />
+          <label for="height">Altura (cm)</label>
+          <input type="number" id="height" min="80" max="250" step="0.1" required placeholder="Ej: 170" />
         </div>
         <div class="form-row">
-          <label for="weight">体重 (kg)</label>
-          <input type="number" id="weight" min="20" max="250" step="0.1" required placeholder="例: 60" />
+          <label for="weight">Peso (kg)</label>
+          <input type="number" id="weight" min="20" max="250" step="0.1" required placeholder="Ej: 60" />
         </div>
-        <button type="submit" class="btn">BMI を計算</button>
+        <button type="submit" class="btn">Calcular IMC</button>
       </form>
-      <div class="result" id="bmiResult">身長と体重を入力してください。</div>
+      <div class="result" id="bmiResult">Por favor ingresa altura y peso.</div>
       <table class="bmi-table">
-        <tr><th>BMI 範囲</th><th>分類</th></tr>
-        <tr><td>&lt; 18.5</td><td>低体重</td></tr>
-        <tr><td>18.5 ～ 24.9</td><td>標準</td></tr>
-        <tr><td>25 ～ 29.9</td><td>過体重</td></tr>
-        <tr><td>30 ～ 34.9</td><td>肥満 (1度)</td></tr>
-        <tr><td>35 ～ 39.9</td><td>肥満 (2度)</td></tr>
-        <tr><td>≥ 40</td><td>高度肥満</td></tr>
+        <tr><th>Rango de IMC</th><th>Clasificación</th></tr>
+        <tr><td>&lt; 18.5</td><td>Peso bajo</td></tr>
+        <tr><td>18.5 – 24.9</td><td>Normal</td></tr>
+        <tr><td>25 – 29.9</td><td>Sobrepeso</td></tr>
+        <tr><td>30 – 34.9</td><td>Obesidad (grado 1)</td></tr>
+        <tr><td>35 – 39.9</td><td>Obesidad (grado 2)</td></tr>
+        <tr><td>≥ 40</td><td>Obesidad grave (grado 3)</td></tr>
       </table>
 
-      <!-- FAQ セクション (SEO/SGE 用) -->
+      <!-- Sección de Preguntas Frecuentes (FAQ) -->
       <section aria-labelledby="faq-head" id="faq">
-        <h2 id="faq-head">FAQ – BMIと健康</h2>
+        <h2 id="faq-head">Preguntas Frecuentes – IMC y Salud</h2>
         <dl>
-          <dt>BMIとは何ですか？</dt>
-          <dd>BMI（ボディマス指数）は、身長と体重を用いて算出する指標で、体脂肪量を推定し健康リスクを評価するために使われます。</dd>
-          <dt>BMIは正確ですか？</dt>
-          <dd>BMIは一般的な基準ですが、筋肉量が多い人や非常に運動量が多い人の場合、実際の体脂肪量と異なることがあります。</dd>
-          <dt>標準的なBMIの範囲は？</dt>
-          <dd>多くの成人では、BMIが18.5から24.9の範囲が標準とされています。</dd>
-          <dt>年齢や性別によってBMIは変わりますか？</dt>
-          <dd>成人男女のBMI基準は同じですが、子どもや青少年の場合は年齢と性別に応じたパーセンタイルを使用します。</dd>
-          <dt>BMIを改善するにはどうすればいいですか？</dt>
-          <dd>健康的な食事と定期的な運動で標準範囲に近づけることができます。専門の医療従事者に相談することをお勧めします。</dd>
+          <dt>¿Qué es el IMC?</dt>
+          <dd>El Índice de Masa Corporal (IMC) es un indicador que usa altura y peso para estimar la grasa corporal y evaluar riesgos de salud.</dd>
+          <dt>¿Es preciso el IMC?</dt>
+          <dd>Sirve como referencia general, pero puede no reflejar la grasa corporal real en personas muy musculosas o con mucha masa magra.</dd>
+          <dt>¿Cuál es el rango normal de IMC?</dt>
+          <dd>Se considera normal un IMC entre 18.5 y 24.9 en adultos.</dd>
+          <dt>¿Varía el IMC según edad o sexo?</dt>
+          <dd>Las referencias estándar de IMC son iguales para adultos de ambos sexos. En niños y adolescentes se usan percentiles según edad y sexo.</dd>
+          <dt>¿Cómo puedo mejorar mi IMC?</dt>
+          <dd>Adopta una alimentación balanceada y realiza actividad física regular. Consulta siempre a un profesional de la salud.</dd>
         </dl>
       </section>
 
       <footer class="footer">
-        BMIはあくまで簡易的な健康指標です。<br>
-        詳細な健康管理には医療専門家への相談を推奨します。
+        El IMC es solo una herramienta básica de salud.<br>
+        Para un análisis completo, consulta a un profesional médico.
       </footer>
     </div>
   </main>
-  <a href="../" id="backBtn">他のユーティリティ</a>
+  <a href="../" id="backBtn">Otras utilidades</a>
   <script>
     const bmiForm = document.getElementById('bmiForm');
     const bmiResult = document.getElementById('bmiResult');
     function bmiCategory(bmi) {
-      if (bmi < 18.5) return "低体重";
-      if (bmi < 25) return "標準";
-      if (bmi < 30) return "過体重";
-      if (bmi < 35) return "肥満 (1度)";
-      if (bmi < 40) return "肥満 (2度)";
-      return "高度肥満";
+      if (bmi < 18.5) return "Peso bajo";
+      if (bmi < 25) return "Normal";
+      if (bmi < 30) return "Sobrepeso";
+      if (bmi < 35) return "Obesidad (grado 1)";
+      if (bmi < 40) return "Obesidad (grado 2)";
+      return "Obesidad grave (grado 3)";
     }
     bmiForm.onsubmit = function(e) {
       e.preventDefault();
-      const h = parseFloat(document.getElementById('height').value) / 100.0;
+      const h = parseFloat(document.getElementById('height').value) / 100;
       const w = parseFloat(document.getElementById('weight').value);
       if (!h || !w || h < 0.8 || w < 20) {
-        bmiResult.textContent = "有効な身長と体重を入力してください。";
+        bmiResult.textContent = "Por favor ingresa valores válidos de altura y peso.";
         return;
       }
       const bmi = w / (h * h);
       const cat = bmiCategory(bmi);
-      bmiResult.innerHTML = `<b>BMI: ${bmi.toFixed(1)}</b> – <span style="color:#1c7b49;font-weight:600">${cat}</span>`;
+      bmiResult.innerHTML = `<b>IMC: ${bmi.toFixed(1)}</b> – <span style="color:#1c7b49;font-weight:600">${cat}</span>`;
     };
   </script>
-  <!-- FAQPage Schema.org JSON-LD -->
+  <!-- JSON-LD para FAQPage -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -201,28 +121,28 @@
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "BMIとは何ですか？",
-        "acceptedAnswer": { "@type": "Answer", "text": "BMI（ボディマス指数）は、身長と体重を用いて算出する指標で、体脂肪量を推定し健康リスクを評価するために使われます。" }
+        "name": "¿Qué es el IMC?",
+        "acceptedAnswer": { "@type": "Answer", "text": "El Índice de Masa Corporal (IMC) es un indicador que usa altura y peso para estimar la grasa corporal y evaluar riesgos de salud." }
       },
       {
         "@type": "Question",
-        "name": "BMIは正確ですか？",
-        "acceptedAnswer": { "@type": "Answer", "text": "BMIは一般的な基準ですが、筋肉量が多い人や非常に運動量が多い人の場合、実際の体脂肪量と異なることがあります。" }
+        "name": "¿Es preciso el IMC?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Sirve como referencia general, pero puede no reflejar la grasa corporal real en personas muy musculosas o con mucha masa magra." }
       },
       {
         "@type": "Question",
-        "name": "標準的なBMIの範囲は？",
-        "acceptedAnswer": { "@type": "Answer", "text": "多くの成人では、BMIが18.5から24.9の範囲が標準とされています。" }
+        "name": "¿Cuál es el rango normal de IMC?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Se considera normal un IMC entre 18.5 y 24.9 en adultos." }
       },
       {
         "@type": "Question",
-        "name": "年齢や性別によってBMIは変わりますか？",
-        "acceptedAnswer": { "@type": "Answer", "text": "成人男女のBMI基準は同じですが、子どもや青少年の場合は年齢と性別に応じたパーセンタイルを使用します。" }
+        "name": "¿Varía el IMC según edad o sexo?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Las referencias estándar de IMC son iguales para adultos de ambos sexos. En niños y adolescentes se usan percentiles según edad y sexo." }
       },
       {
         "@type": "Question",
-        "name": "BMIを改善するにはどうすればいいですか？",
-        "acceptedAnswer": { "@type": "Answer", "text": "健康的な食事と定期的な運動で標準範囲に近づけることができます。専門の医療従事者に相談することをお勧めします。" }
+        "name": "¿Cómo puedo mejorar mi IMC?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Adopta una alimentación balanceada y realiza actividad física regular. Consulta siempre a un profesional de la salud." }
       }
     ]
   }

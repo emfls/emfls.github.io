@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="ja">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>🧟 ゾンビ生存</title>
+    <title>🧟 Supervivencia Zombie</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -19,296 +19,44 @@
       async
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
       crossorigin="anonymous"></script>
-    <!-- SEO & Social meta -->
+    <!-- SEO y metadatos sociales -->
     <meta
       name="description"
-      content="テキストベースのゾンビアポカリプスでできるだけ長く生き残ろう！ランダムイベント、アイテム管理、危険なゾンビ襲来。100%無料のブラウザゲームです。" />
+      content="Sobrevive el mayor tiempo posible en un apocalipsis zombie basado en texto. Eventos aleatorios, manejo de inventario y ataques de zombies peligrosos. Juego gratuito de navegador." />
     <meta
       name="keywords"
-      content="ゾンビ, 生存, アポカリプス, ウェブゲーム, テキストゲーム, ブラウザゲーム, サバイバル, 無料ゲーム" />
+      content="zombie, supervivencia, apocalipsis, juego web, juego de texto, navegador, gratis" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ja" />
+    <meta name="language" content="es" />
     <meta name="theme-color" content="#191d22" />
     <link rel="canonical" href="https://emfls.github.io/id/game/ZombieSurvival/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
     <!-- Open Graph (Facebook, Kakao, etc) -->
-    <meta property="og:title" content="ゾンビ生存 – テキストゲーム" />
+    <meta property="og:title" content="Supervivencia Zombie – Juego de Texto" />
     <meta
       property="og:description"
-      content="ゾンビアポカリプスで何日生き延びられるか？アイテム管理、探索、死を避けて生き残ろう！100%ブラウザベース、サインアップ不要。" />
+      content="¿Cuántos días sobrevivirás al apocalipsis zombie? Administra tus objetos, explora y evita la muerte. Juego 100% en navegador, sin registro." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/id/game/ZombieSurvival/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="ゾンビ生存 – テキストゲーム" />
+    <meta name="twitter:title" content="Supervivencia Zombie – Juego de Texto" />
     <meta
       name="twitter:description"
-      content="ゾンビアポカリプスで生き延びよう。ブラウザベースの無料ゲーム、ダウンロード不要。" />
+      content="Sobrevive el mayor tiempo posible al apocalipsis zombie. Juego gratuito en navegador, sin descargas." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-    <style>
-      html,
-      body {
-        background: #191d22;
-        margin: 0;
-        padding: 0;
-        height: 100%;
-      }
-      body {
-        font-family: "Segoe UI", "Pretendard", Arial, sans-serif;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        min-height: 100vh;
-      }
-      #container {
-        background: rgba(34, 39, 46, 0.99);
-        border-radius: 18px;
-        box-shadow: 0 6px 32px #1118;
-        width: 99vw;
-        max-width: 390px;
-        margin: 10px 0 20px 0;
-        padding: 14px 8px 18px 8px;
-        box-sizing: border-box;
-        min-height: 610px;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-      h2 {
-        color: #f6fa4e;
-        letter-spacing: 1.5px;
-        text-align: center;
-        margin: 0 0 6px 0;
-        font-size: 1.6em;
-        font-weight: 700;
-        text-shadow: 0 2px 12px #161;
-      }
-      #status {
-        background: #22262e;
-        border-radius: 12px;
-        padding: 9px 10px 7px 10px;
-        font-size: 1em;
-        margin-bottom: 2px;
-        line-height: 1.8em;
-        min-height: 49px;
-        color: #fff;
-        box-shadow: 0 2px 6px #0106;
-        display: flex;
-        flex-direction: column;
-        gap: 3px;
-      }
-      #barGroup {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 2px;
-      }
-      .bar {
-        flex: 1;
-        border-radius: 7px;
-        height: 13px;
-        background: #37445a;
-        margin-right: 1px;
-        overflow: hidden;
-        position: relative;
-      }
-      .fill-hp {
-        background: linear-gradient(90deg, #fd7f7e, #feefae);
-      }
-      .fill-hunger {
-        background: linear-gradient(90deg, #71e397, #f5f79e);
-      }
-      .fill-mental {
-        background: linear-gradient(90deg, #6ed9ef, #c9b0f4);
-      }
-      .bar > span {
-        display: block;
-        height: 100%;
-        transition: width 0.7s cubic-bezier(0.7, 1.3, 0.4, 1);
-      }
-      #inventory {
-        font-size: 0.98em;
-        color: #ffe;
-        word-break: break-all;
-        margin-bottom: 2px;
-      }
-      #log {
-        background: #2d3341;
-        border-radius: 11px;
-        min-height: 87px;
-        max-height: 140px;
-        overflow-y: auto;
-        font-size: 0.97em;
-        padding: 7px 7px 7px 10px;
-        color: #f4fffa;
-        line-height: 1.4em;
-        margin-bottom: 2px;
-        box-shadow: 0 1px 6px #1116;
-        scroll-behavior: smooth;
-      }
-      .event {
-        animation: eventFlash 0.5s;
-      }
-      @keyframes eventFlash {
-        0% {
-          background: #fec;
-          color: #111;
-        }
-        100% {
-          background: inherit;
-          color: inherit;
-        }
-      }
-      .zombie-anim {
-        animation: zombiePop 0.6s;
-      }
-      @keyframes zombiePop {
-        0% {
-          transform: scale(0.7);
-        }
-        40% {
-          transform: scale(1.2);
-        }
-        80% {
-          transform: scale(1);
-        }
-      }
-      .item-anim {
-        animation: itemPop 0.4s;
-      }
-      @keyframes itemPop {
-        0% {
-          transform: scale(0.5);
-        }
-        60% {
-          transform: scale(1.2);
-        }
-        100% {
-          transform: scale(1);
-        }
-      }
-      #actions {
-        margin: 3px 0 0 0;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-      }
-      .actBtn,
-      .locBtn {
-        width: 100%;
-        font-size: 1.07em;
-        padding: 12px 2px;
-        border-radius: 8px;
-        border: none;
-        margin-bottom: 2px;
-        background: linear-gradient(90deg, #232d3d 70%, #2c374d 100%);
-        color: #ffe;
-        box-shadow: 0 2px 6px #1012;
-        font-weight: 700;
-        transition: background 0.18s;
-        letter-spacing: 0.02em;
-        cursor: pointer;
-        outline: none;
-      }
-      .actBtn:active,
-      .locBtn:active {
-        background: linear-gradient(90deg, #2c374d 20%, #232d3d 100%);
-      }
-      .emoji {
-        font-size: 1.3em;
-        vertical-align: middle;
-      }
-      #footer {
-        color: #99a;
-        font-size: 0.92em;
-        margin-top: 8px;
-        text-align: center;
-      }
-      /* アイテム詳細モーダル */
-      #itemDescBg {
-        display: none;
-        position: fixed;
-        left: 0;
-        top: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(8, 10, 19, 0.54);
-        z-index: 20;
-        align-items: center;
-        justify-content: center;
-      }
-      #itemDescModal {
-        background: #23293a;
-        border-radius: 14px;
-        color: #fff;
-        min-width: 210px;
-        max-width: 90vw;
-        padding: 21px 16px 18px 16px;
-        box-shadow: 0 8px 48px #000c;
-        font-size: 1.08em;
-        z-index: 21;
-        text-align: center;
-        position: relative;
-        animation: modalOpen 0.3s;
-      }
-      #itemDescModal b {
-        color: #fffa88;
-      }
-      #itemDescModal .close {
-        position: absolute;
-        right: 13px;
-        top: 8px;
-        font-size: 1.5em;
-        color: #7fd;
-        background: none;
-        border: none;
-        cursor: pointer;
-      }
-      .item-info-btn {
-        font-size: 0.93em;
-        margin-left: 5px;
-        background: none;
-        border: none;
-        color: #aef;
-        cursor: pointer;
-        vertical-align: middle;
-      }
-      @keyframes modalOpen {
-        0% {
-          transform: scale(0.85);
-        }
-        100% {
-          transform: scale(1);
-        }
-      }
-      @media (max-width: 400px) {
-        #container {
-          min-height: 480px;
-        }
-        #log {
-          font-size: 0.93em;
-          min-height: 66px;
-          max-height: 98px;
-        }
-        #status {
-          font-size: 0.93em;
-        }
-        .actBtn,
-        .locBtn {
-          font-size: 0.99em;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div id="container">
-      <h2>🧟 ゾンビ生存</h2>
+      <h2>🧟 Supervivencia Zombie</h2>
       <div id="status"></div>
       <div id="inventory"></div>
       <div id="log"></div>
       <div id="actions"></div>
     </div>
-    <!-- アイテム詳細モーダル -->
+    <!-- Modal de detalles de ítem -->
     <div id="itemDescBg">
       <div id="itemDescModal">
         <button class="close" onclick="closeDesc()">&times;</button>
@@ -327,50 +75,50 @@
         position: fixed;
         color: black;
         font-weight: bold;
-             bottom: 50px;
+        bottom: 50px;
       "
       onclick="window.location.href='/'">
-      📂 他のゲーム
+      📂 Otros juegos
     </button>
     <script>
-      // アイテム定義 (名前・絵文字・タイプ・効果・説明)
+      // Definición de ítems (clave, tipo, efecto, texto, descripción)
       const ITEM_LIST = [
         {
-          key: "🍞Bread",
+          key: "🍞Pan",
           type: "food",
           effect: () => {
             state.hunger = clamp(state.hunger - 22, 0, 100);
           },
-          text: "(-22 空腹)",
-          desc: "パン。空腹度を大きく減らす。"
+          text: "(-22 Hambre)",
+          desc: "Pan. Reduce mucho la sensación de hambre."
         },
         {
-          key: "💧Water",
+          key: "💧Agua",
           type: "drink",
           effect: () => {
             state.hunger = clamp(state.hunger - 13, 0, 100);
           },
-          text: "(-13 空腹)",
-          desc: "水。空腹度を少し減らす。"
+          text: "(-13 Hambre)",
+          desc: "Agua. Reduce un poco la sensación de hambre."
         },
         {
-          key: "🥪Sandwich",
+          key: "🥪Sándwich",
           type: "food",
           effect: () => {
             state.hunger = clamp(state.hunger - 35, 0, 100);
           },
-          text: "(-35 空腹)",
-          desc: "サンドイッチ。空腹度を大きく減らす。"
+          text: "(-35 Hambre)",
+          desc: "Sándwich. Reduce mucho la sensación de hambre."
         },
         {
-          key: "🥤Soda",
+          key: "🥤Refresco",
           type: "drink",
           effect: () => {
             state.mental = clamp(state.mental + 7, 0, 100);
             state.hunger = clamp(state.hunger - 7, 0, 100);
           },
-          text: "(+7 精神力, -7 空腹)",
-          desc: "炭酸飲料。気分が少し良くなり、空腹度も少し減らす。"
+          text: "(+7 Salud mental, -7 Hambre)",
+          desc: "Refresco. Mejora un poco el ánimo y reduce algo el hambre."
         },
         {
           key: "🍫Snack",
@@ -378,110 +126,113 @@
           effect: () => {
             state.hunger = clamp(state.hunger - 12, 0, 100);
           },
-          text: "(-12 空腹)",
-          desc: "お菓子。空腹度を少し減らす。"
+          text: "(-12 Hambre)",
+          desc: "Snack. Reduce algo la sensación de hambre."
         },
         {
-          key: "🍏Apple",
+          key: "🍏Manzana",
           type: "food",
           effect: () => {
             state.hunger = clamp(state.hunger - 11, 0, 100);
           },
-          text: "(-11 空腹)",
-          desc: "リンゴ。空腹度を少し減らす。"
+          text: "(-11 Hambre)",
+          desc: "Manzana. Reduce algo la sensación de hambre."
         },
         {
-          key: "💊Painkiller",
+          key: "💊Analgésico",
           type: "heal",
           effect: () => {
             state.mental = clamp(state.mental + 22, 0, 100);
           },
-          text: "(+22 精神力)",
-          desc: "鎮痛剤。精神力を大きく回復する。"
+          text: "(+22 Salud mental)",
+          desc: "Analgésico. Recupera bastante salud mental."
         },
         {
-          key: "🧰Bandage",
+          key: "🧰Vendaje",
           type: "heal",
           effect: () => {
             state.hp = clamp(state.hp + 17, 0, 100);
           },
           text: "(+17 HP)",
-          desc: "包帯。体力を回復する。"
+          desc: "Vendaje. Recupera salud física."
         },
         {
-          key: "🔪Knife",
+          key: "🔪Cuchillo",
           type: "weapon",
           effect: () => {},
-          text: "武器",
-          desc: "ナイフ。ゾンビと戦うときのダメージを減らす。"
+          text: "Arma",
+          desc: "Cuchillo. Reduce el daño al enfrentar zombies."
         },
         {
-          key: "🔧Wrench",
+          key: "🔧Llave inglesa",
           type: "weapon",
           effect: () => {},
-          text: "武器",
-          desc: "レンチ。ゾンビと戦うときのダメージを減らす。"
+          text: "Arma",
+          desc: "Llave inglesa. Reduce el daño al enfrentar zombies."
         },
         {
-          key: "🔦Flashlight",
+          key: "🔦Linterna",
           type: "tool",
           effect: () => {
             state.mental = clamp(state.mental + 5, 0, 100);
           },
-          text: "(+5 精神力)",
-          desc: "懐中電灯。精神力を少し回復する。"
+          text: "(+5 Salud mental)",
+          desc: "Linterna. Recupera un poco de salud mental."
         },
-        { key: "🪙Coin", type: "misc", effect: () => {}, text: "ただのコイン", desc: "コイン。使い道は不明。" },
+        { key: "🪙Moneda", type: "misc", effect: () => {}, text: "Solo una moneda", desc: "Moneda. No sirve de nada por ahora." },
         {
-          key: "📱Phone",
+          key: "📱Teléfono",
           type: "misc",
           effect: () => {},
-          text: "動かない",
-          desc: "スマホ。電源が入らない。"
+          text: "No funciona",
+          desc: "Teléfono. No tiene batería."
         }
       ];
-      // 場所データ (場所名, アイテム, ゾンビ出現確率)
+
+      // Definición de ubicaciones (nombre, ítems posibles, probabilidad de zombie)
       const LOC_POOL = [
-        { name: "🏠 家", item: ["🍞Bread", "🥤Soda", "📱Phone", "🔪Knife"], zombie: 18 },
-        { name: "🏪 店", item: ["🥪Sandwich", "💧Water", "🍫Snack", "💊Painkiller", "🪙Coin"], zombie: 22 },
-        { name: "🚗 路地", item: ["🔧Wrench", "🧰Bandage", "💧Water", "🍏Apple"], zombie: 33 },
-        { name: "🏢 事務所", item: ["🍫Snack", "💊Painkiller", "🔦Flashlight"], zombie: 15 },
-        { name: "🏞 公園", item: ["🍏Apple", "💧Water", "🪙Coin"], zombie: 8 },
-        { name: "🏫 学校", item: ["🍞Bread", "🍫Snack", "📱Phone"], zombie: 17 },
-        { name: "🏚 廃屋", item: ["🔪Knife", "🧰Bandage"], zombie: 28 },
-        { name: "🏥 病院", item: ["💊Painkiller", "🧰Bandage", "🔦Flashlight"], zombie: 18 },
-        { name: "🏭 工場", item: ["🔧Wrench", "🔦Flashlight"], zombie: 26 },
-        { name: "🚉 地下鉄", item: ["🍫Snack", "📱Phone"], zombie: 20 },
-        { name: "🍔 ファストフード店", item: ["🍞Bread", "🥪Sandwich", "🥤Soda"], zombie: 19 },
-        { name: "⛽ ガソリンスタンド", item: ["🔧Wrench", "💧Water", "🪙Coin"], zombie: 23 },
-        { name: "🛒 スーパー", item: ["🍞Bread", "🍏Apple", "🥤Soda", "💧Water"], zombie: 21 },
-        { name: "🏨 ホテル", item: ["🍫Snack", "💧Water", "🧰Bandage"], zombie: 18 },
-        { name: "🧑‍🔧 ガレージ", item: ["🔧Wrench", "🪙Coin"], zombie: 28 }
+        { name: "🏠 Casa", item: ["🍞Pan", "🥤Refresco", "📱Teléfono", "🔪Cuchillo"], zombie: 18 },
+        { name: "🏪 Tienda", item: ["🥪Sándwich", "💧Agua", "🍫Snack", "💊Analgésico", "🪙Moneda"], zombie: 22 },
+        { name: "🚗 Callejón", item: ["🔧Llave inglesa", "🧰Vendaje", "💧Agua", "🍏Manzana"], zombie: 33 },
+        { name: "🏢 Oficina", item: ["🍫Snack", "💊Analgésico", "🔦Linterna"], zombie: 15 },
+        { name: "🏞 Parque", item: ["🍏Manzana", "💧Agua", "🪙Moneda"], zombie: 8 },
+        { name: "🏫 Escuela", item: ["🍞Pan", "🍫Snack", "📱Teléfono"], zombie: 17 },
+        { name: "🏚 Ruina", item: ["🔪Cuchillo", "🧰Vendaje"], zombie: 28 },
+        { name: "🏥 Hospital", item: ["💊Analgésico", "🧰Vendaje", "🔦Linterna"], zombie: 18 },
+        { name: "🏭 Fábrica", item: ["🔧Llave inglesa", "🔦Linterna"], zombie: 26 },
+        { name: "🚉 Metro", item: ["🍫Snack", "📱Teléfono"], zombie: 20 },
+        { name: "🍔 Restaurante", item: ["🍞Pan", "🥪Sándwich", "🥤Refresco"], zombie: 19 },
+        { name: "⛽ Gasolinera", item: ["🔧Llave inglesa", "💧Agua", "🪙Moneda"], zombie: 23 },
+        { name: "🛒 Supermercado", item: ["🍞Pan", "🍏Manzana", "🥤Refresco", "💧Agua"], zombie: 21 },
+        { name: "🏨 Hotel", item: ["🍫Snack", "💧Agua", "🧰Vendaje"], zombie: 18 },
+        { name: "🧑‍🔧 Taller", item: ["🔧Llave inglesa", "🪙Moneda"], zombie: 28 }
       ];
+
+      // Selecciona aleatoriamente 4 o 5 ubicaciones
       function randomPlaces(n = 4) {
         let arr = LOC_POOL.slice();
         arr.sort(() => Math.random() - 0.5);
-        return arr.slice(0, n + Math.floor(Math.random() * 2)); // 4～5か所
+        return arr.slice(0, n + Math.floor(Math.random() * 2)); // 4 o 5 lugares
       }
 
-      // 状態
+      // Estado del juego
       let state = {
         hp: 100,
         hunger: 35,
         mental: 55,
         day: 1,
-        items: { "🍞Bread": 5, "💧Water": 5, "💊Painkiller": 5 },
+        items: { "🍞Pan": 5, "💧Agua": 5, "💊Analgésico": 5 },
         alive: true,
         searching: false,
         locations: randomPlaces(),
         died: false
       };
 
-      // インベントリ文字列化
+      // Convierte inventario a cadena
       function invStr(obj) {
         let out = [];
         for (let k of Object.keys(obj)) if (obj[k] > 0) out.push(`${k} x${obj[k]}`);
-        return out.length ? out.join(", ") : "なし";
+        return out.length ? out.join(", ") : "Ninguno";
       }
       function clamp(val, min, max) {
         return Math.max(min, Math.min(max, val));
@@ -495,29 +246,29 @@
       const itemDescText = document.getElementById("itemDescText");
 
       function render() {
-        statusEl.innerHTML = `<div style="font-size:1.09em;"><b>Day ${state.day}</b></div>
+        statusEl.innerHTML = `<div style="font-size:1.09em;"><b>Día ${state.day}</b></div>
          <div id="barGroup">
            <div class="bar"><span class="fill-hp" style="width:${state.hp}%"></span></div>
            <div class="bar"><span class="fill-hunger" style="width:${clamp(100 - state.hunger, 0, 100)}%"></span></div>
            <div class="bar"><span class="fill-mental" style="width:${state.mental}%"></span></div>
          </div>
          <div style="font-size:0.97em; margin:0 2px 0 2px;">
-            ❤️HP ${state.hp} &nbsp;|&nbsp; 🍞空腹 ${state.hunger} &nbsp;|&nbsp; 🧠精神 ${state.mental}
+            ❤️PH ${state.hp} &nbsp;|&nbsp; 🍞Hambre ${state.hunger} &nbsp;|&nbsp; 🧠Salud mental ${state.mental}
          </div>`;
-        inventoryEl.innerHTML = `<b>🎒インベントリ:</b> ${invStr(state.items)}`;
+        inventoryEl.innerHTML = `<b>🎒 Inventario:</b> ${invStr(state.items)}`;
         if (!state.alive) {
-          actionsEl.innerHTML = `<button class="actBtn" onclick="restart()">再スタート</button>`;
+          actionsEl.innerHTML = `<button class="actBtn" onclick="restart()">Reiniciar</button>`;
         } else if (state.searching) {
           actionsEl.innerHTML =
             state.locations
               .map((loc, i) => `<button class="locBtn" onclick="searchPlace(${i})">${loc.name}</button>`)
-              .join("") + `<button class="actBtn" onclick="cancelSearch()">キャンセル</button>`;
+              .join("") + `<button class="actBtn" onclick="cancelSearch()">Cancelar</button>`;
         } else {
           actionsEl.innerHTML = `
-          <button class="actBtn" onclick="startSearch()" ${state.locations.length == 0 ? 'disabled style="opacity:0.5;"' : ""}>🔍 探索</button>
-          <button class="actBtn" onclick="rest()">🛏 休息</button>
-          <button class="actBtn" onclick="move()">➡️ 移動</button>
-          <button class="actBtn" onclick="useItem()">🎒 アイテム使用</button>
+          <button class="actBtn" onclick="startSearch()" ${state.locations.length == 0 ? 'disabled style="opacity:0.5;"' : ""}>🔍 Explorar</button>
+          <button class="actBtn" onclick="rest()">🛏 Descansar</button>
+          <button class="actBtn" onclick="move()">➡️ Mover</button>
+          <button class="actBtn" onclick="useItem()">🎒 Usar ítem</button>
         `;
         }
       }
@@ -537,20 +288,20 @@
         state.mental -= 4;
         if (state.hunger >= 95) {
           state.hp -= 15;
-          log("😖 <b>空腹状態！</b> (-15 HP)", "event");
+          log("😖 <b>¡Hambriento!</b> (-15 PH)", "event");
         }
         if (state.hp <= 0 || state.mental <= 0) {
           state.alive = false;
-          log(`<b>ゲームオーバー: あなたは <span style="color:#e9f85b">${state.day - 1}</span> 日生存しました！</b>`, "event");
+          log(`<b>Juego terminado: sobreviviste <span style="color:#e9f85b">${state.day - 1}</span> días.</b>`, "event");
         }
         render();
       }
 
-      // ---- アクション ----
+      // ---- Acciones ----
       function startSearch() {
         state.searching = true;
         render();
-        log("探索する場所を選択してください...");
+        log("Elige un lugar para explorar...");
       }
       function cancelSearch() {
         state.searching = false;
@@ -558,42 +309,40 @@
       }
       function searchPlace(idx) {
         let loc = state.locations[idx];
-        log(`🔍 <b>${loc.name}</b> を探索中...`);
-        // アイテム発見 52%、ゾンビ遭遇 loc.zombie%
+        log(`🔍 Explorando <b>${loc.name}</b>...`);
+        // 52% hallar ítem, probabilidadloc zombie%
         if (Math.random() * 100 < 52) {
           let found = loc.item[Math.floor(Math.random() * loc.item.length)];
           state.items[found] = (state.items[found] || 0) + 1;
           let itemInfo = ITEM_LIST.find((x) => x.key === found);
           log(
-            `<span class="item-anim">✨ 発見: <b>${found}</b> <span style="font-size:0.88em;color:#ffd;">${itemInfo ? itemInfo.text : ""}</span></span>`,
+            `<span class="item-anim">✨ ¡Encontraste: <b>${found}</b> <span style="font-size:0.88em;color:#ffd;">${itemInfo ? itemInfo.text : ""}</span></span>`,
             "event"
           );
         } else if (Math.random() * 100 < loc.zombie) {
-          encounterZombie(loc.name); // 即時反映
-          // ゲームオーバーチェック
+          encounterZombie(loc.name);
           if (!state.alive) return;
         } else {
-          log("何も見つかりませんでした。");
+          log("No encontraste nada.");
         }
-        // 場所を削除
+        // Eliminar lugar
         state.locations.splice(idx, 1);
         state.searching = false;
         nextDay();
       }
       function rest() {
-        log("🛏 休息しました。 +13 🧠精神、 +12 ❤️HP、 +9 空腹");
+        log("🛏 Descansaste. +13 🧠Salud mental, +12 ❤️PH, +9 Hambre");
         state.mental = clamp(state.mental + 13, 0, 100);
         state.hp = clamp(state.hp + 12, 0, 100);
         state.hunger += 9;
         nextDay();
       }
       function move() {
-        log("➡️ 新しい地域へ移動しました。 -2 🧠精神");
+        log("➡️ Te moviste a una nueva área. -2 🧠Salud mental");
         state.mental -= 2;
-        // 新しいランダムな場所をリセット
         state.locations = randomPlaces();
         if (Math.random() * 100 < 22) {
-          encounterZombie("街中"); // 即座に反映
+          encounterZombie("ciudad");
           if (!state.alive) return;
         }
         nextDay();
@@ -601,7 +350,7 @@
       function useItem() {
         let keys = Object.keys(state.items).filter((k) => state.items[k] > 0);
         if (!keys.length) {
-          log("🎒 使用できるアイテムがありません。");
+          log("🎒 No tienes ítems para usar.");
           return;
         }
         actionsEl.innerHTML =
@@ -610,66 +359,65 @@
               let info = ITEM_LIST.find((x) => x.key === item);
               return `<button class="locBtn" onclick="chooseItem('${item}')">${item} x${state.items[item]} <span style="font-size:0.8em;color:#ffc;">${info ? info.text : ""}</span></button>`;
             })
-            .join("") + `<button class="actBtn" onclick="render()">キャンセル</button>`;
+            .join("") + `<button class="actBtn" onclick="render()">Cancelar</button>`;
       }
       function chooseItem(item) {
         state.items[item]--;
         let info = ITEM_LIST.find((x) => x.key === item);
         if (info) info.effect();
         log(
-          `<span class="item-anim">${item} を使用！ <span style="font-size:0.9em;color:#ffd;">${info ? info.text : ""}</span></span>`
+          `<span class="item-anim">${item} usado. <span style="font-size:0.9em;color:#ffd;">${info ? info.text : ""}</span></span>`
         );
         render();
       }
       function encounterZombie(place) {
-        let baseHp = 14 + Math.floor(Math.random() * 12); // 14～25
-        let baseMental = 8 + Math.floor(Math.random() * 8); // 8～15
+        let baseHp = 14 + Math.floor(Math.random() * 12); // 14–25
+        let baseMental = 8 + Math.floor(Math.random() * 8); // 8–15
         let weapon = Object.keys(state.items).find(
-          (x) => (x.includes("Knife") || x.includes("Wrench")) && state.items[x] > 0
+          (x) => (x.includes("Cuchillo") || x.includes("Llave inglesa")) && state.items[x] > 0
         );
         let hpLoss = weapon ? Math.floor(baseHp * 0.5) : baseHp;
         let mLoss = weapon ? Math.floor(baseMental * 0.7) : baseMental;
         if (weapon) {
           log(
-            `<span class="zombie-anim">🧟 <b>ゾンビ遭遇！</b> (${place})<br>${weapon} で撃退！ <span style="color:#fd7;">(-${hpLoss} HP, -${mLoss} 精神)</span></span>`,
+            `<span class="zombie-anim">🧟 <b>¡Te encontraste con un zombie!</b> (${place})<br>Lo ahuyentaste con ${weapon}. <span style="color:#fd7;">(-${hpLoss} PH, -${mLoss} Salud mental)</span></span>`,
             "event"
           );
         } else {
           log(
-            `<span class="zombie-anim">🧟 <b>ゾンビ遭遇！</b> (${place})<br>負傷しました！ <span style="color:#fd7;">(-${hpLoss} HP, -${mLoss} 精神)</span></span>`,
+            `<span class="zombie-anim">🧟 <b>¡Te encontraste con un zombie!</b> (${place})<br>Fuiste herido. <span style="color:#fd7;">(-${hpLoss} PH, -${mLoss} Salud mental)</span></span>`,
             "event"
           );
         }
         state.hp -= hpLoss;
         state.mental -= mLoss;
-        // 即時ゲームオーバーチェック
         if (state.hp <= 0 || state.mental <= 0) {
           state.alive = false;
-          log(`<b>ゲームオーバー: あなたは <span style="color:#e9f85b">${state.day}</span> 日生存しました！</b>`, "event");
+          log(`<b>Juego terminado: sobreviviste <span style="color:#e9f85b">${state.day}</span> días.</b>`, "event");
           render();
         }
       }
-      // アイテム詳細モーダル表示
+      // Mostrar detalles de ítem
       function showDesc(item) {
         let info = ITEM_LIST.find((x) => x.key === item);
         if (!info) return;
-        itemDescText.innerHTML = `<b>${item}</b><br><span style="font-size:1.07em;color:#fe9;">${info.desc || ""}</span><br><span style="color:#ffec;">効果: ${info.text || ""}</span>`;
+        itemDescText.innerHTML = `<b>${item}</b><br><span style="font-size:1.07em;color:#fe9;">${info.desc || ""}</span><br><span style="color:#ffec;">Efecto: ${info.text || ""}</span>`;
         itemDescBg.style.display = "flex";
       }
       function closeDesc() {
         itemDescBg.style.display = "none";
       }
 
-      // -------- 初期設定 --------
+      // -------- Inicialización --------
       render();
-      log("新たな生存者が街に入りました...");
+      log("Un nuevo superviviente ha llegado a la ciudad...");
       function restart() {
         state = {
           hp: 100,
           hunger: 35,
           mental: 55,
           day: 1,
-          items: { "🍞Bread": 5, "💧Water": 5, "💊Painkiller": 5 },
+          items: { "🍞Pan": 5, "💧Agua": 5, "💊Analgésico": 5 },
           alive: true,
           searching: false,
           locations: randomPlaces(),
@@ -677,14 +425,15 @@
         };
         logEl.innerHTML = "";
         render();
-        log("新たな生存者が街に入りました...");
+        log("Un nuevo superviviente ha llegado a la ciudad...");
       }
     </script>
     <section
       style="
         max-width: 320px;
+        width: 100%;
         margin: 48px auto 24px auto;
-             margin-top: 300px;
+        margin-top: 300px;
         background: #1e1e1e;
         border-radius: 18px;
         box-shadow: 0 6px 24px #1236;
@@ -692,33 +441,33 @@
         font-family: Arial, sans-serif;
       ">
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🧟 Zombie Survivalとは？</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🧟 ¿Qué es Zombie Survival?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          Zombie Survivalはテキストベースのサバイバルゲームで、ゾンビアポカリプス下で空腹、精神、体力を管理しながら生き残ることが目標です。場所を探索してアイテムを集め、できるだけ長く生き延びましょう。
+          Zombie Survival es un juego de supervivencia basado en texto en el que debes gestionar tu hambre, salud mental y salud física durante un apocalipsis zombie. Explora lugares, recolecta ítems y sobrevive el mayor tiempo posible.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🗺️ どうやってプレイするの？</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🗺️ ¿Cómo jugar?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          画面下のボタンを使って「探索」「休息」「移動」「アイテム使用」を選択します。場所を探索するとアイテムを手に入れたり、ゾンビに遭遇したりします！
+          Usa los botones en la parte inferior: "Explorar", "Descansar", "Mover" o "Usar ítem". Explorar puede darte objetos o hacer que encuentres zombies.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🎒 アイテムとは？</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🎒 ¿Qué son los ítems?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          アイテムは体力回復、空腹度減少、精神力回復に役立ちます。ナイフやレンチなどの武器はゾンビとの戦い時のダメージを軽減します。
+          Los ítems pueden recuperar salud, reducir el hambre o mejorar tu salud mental. Armas como el cuchillo o la llave inglesa reducen el daño de los zombies.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🧠 精神力や体力が0になると？</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🧠 ¿Qué pasa si mi salud mental o física llega a 0?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          体力または精神力が0になるとゲームオーバーです。空腹は毎日増加し、一定以上になると体力が減少するので注意しましょう。
+          Si tu salud física o mental llega a 0, el juego termina. El hambre aumenta cada día y si llegas a cierto nivel, perderás salud física.
         </p>
       </div>
       <div style="margin-bottom: 0">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔁 死亡したら再挑戦できる？</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔁 ¿Puedo reiniciar al morir?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          はい！死亡したら「再スタート」ボタンが表示されます。もっと長く生き延びるために、より良い選択をしましょう！
+          ¡Sí! Al morir verás un botón "Reiniciar". Intenta sobrevivir más tiempo con mejores decisiones.
         </p>
       </div>
     </section>

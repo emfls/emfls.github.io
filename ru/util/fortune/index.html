@@ -1,339 +1,182 @@
 <!doctype html>
-<html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <title>運勢くじ – 今日の運勢をチェック</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="今すぐ今日の運勢を受け取ろう！楽しくて無料、プライバシーを気にせずブラウザ内で利用できます。" />
-    <meta
-      name="keywords"
-      content="運勢, 今日の運勢, 運, ラッキー, ランダム運勢, 幸運, ポジティブメッセージ, 無料, 予測, インスピレーション" />
-    <meta name="author" content="Itagi" />
-    <link rel="canonical" href="https://emfls.github.io/ru/util/fortune/" />
-    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <meta property="og:title" content="運勢くじ – 今日の運勢をチェック" />
-    <meta
-      property="og:description"
-      content="ボタンをクリックすると今日の運勢が表示されます！100%ブラウザ内で、アップロードや追跡なしで使用可能。" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://emfls.github.io/ru/util/fortune/" />
-    <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="運勢くじ – 今日の運勢をチェック" />
-    <meta
-      name="twitter:description"
-      content="今すぐ今日の運勢を受け取ろう！楽しくて無料、ブラウザ内ですぐに使える。" />
-    <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-      gtag("config", "G-QP5Q67GE5B");
-    </script>
-    <!-- Google AdSense -->
-    <script
-      async
-      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
-      crossorigin="anonymous"></script>
-    <style>
-      body {
-        background: #f3f5ff;
-        margin: 0;
-        font-family: "Segoe UI", Arial, sans-serif;
-        color: #24325b;
-      }
-      .container {
-        max-width: 390px;
-        margin: 42px auto 0 auto;
-        background: #fff;
-        border-radius: 20px;
-        box-shadow: 0 6px 28px #2037a033;
-        padding: 28px 17px 19px 17px;
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .logo {
-        font-size: 1.23em;
-        font-weight: bold;
-        color: #7d4ae9;
-        text-align: center;
-        margin-bottom: 8px;
-        letter-spacing: -1px;
-      }
-      .desc {
-        text-align: center;
-        color: #2037a0;
-        margin-bottom: 17px;
-        font-size: 1.05em;
-      }
-      .fortune-btn {
-        background: linear-gradient(90deg, #9e72ff, #69e0d1);
-        color: #fff;
-        border: none;
-        border-radius: 9px;
-        font-size: 1.11em;
-        font-weight: bold;
-        padding: 14px 0;
-        cursor: pointer;
-        box-shadow: 0 2px 12px #6d63ff33;
-        letter-spacing: 0.01em;
-        margin-bottom: 17px;
-        transition: background 0.17s;
-      }
-      .fortune-btn:active {
-        background: linear-gradient(90deg, #5b3ca4, #1bc6a4);
-      }
-      .result-block {
-        background: #faf6ff;
-        border: 1.2px solid #dacffd;
-        border-radius: 13px;
-        padding: 17px 14px 12px 14px;
-        box-shadow: 0 2px 7px #bbacf533;
-        font-size: 1.13em;
-        text-align: center;
-        margin-bottom: 9px;
-        min-height: 65px;
-        color: #643cc3;
-        line-height: 1.7;
-        word-break: keep-all;
-        position: relative;
-      }
-      .copy-btn {
-        background: #7d4ae9;
-        color: #fff;
-        border: none;
-        border-radius: 6px;
-        padding: 7px 19px;
-        cursor: pointer;
-        font-size: 0.97em;
-        font-weight: bold;
-        margin: 0 auto 5px auto;
-        display: block;
-        transition: background 0.12s;
-        box-shadow: 0 2px 6px #7d4ae933;
-      }
-      .copy-btn:active {
-        background: #4328a3;
-      }
-      .hint {
-        color: #18b88a;
-        font-size: 0.96em;
-        margin: 2px 0 7px 0;
-        text-align: center;
-        min-height: 18px;
-        transition: color 0.14s;
-      }
-      .adsense {
-        text-align: center;
-        margin: 12px 0 13px 0;
-      }
-      .footer {
-        color: #789;
-        text-align: center;
-        font-size: 0.93em;
-        margin-top: 13px;
-      }
-      @media (max-width: 600px) {
-        .container {
-          max-width: 99vw;
-          padding: 12px 2vw 9px 2vw;
-        }
-        .result-block {
-          font-size: 1em;
-        }
-      }
-      #backBtn {
-        position: fixed;
-        left: 50%;
-        bottom: 32px;
-        transform: translateX(-50%);
-        background: #198dae;
-        color: #fff;
-        font-weight: 700;
-        border: none;
-        border-radius: 2rem;
-        padding: 0.58em 1.5em;
-        box-shadow: 0 4px 16px #198dae33;
-        font-size: 1.09em;
-        text-decoration: none;
-        cursor: pointer;
-        letter-spacing: 0.01em;
-        transition:
-          background 0.15s,
-          transform 0.12s;
-        z-index: 2000;
-      }
-      #backBtn:hover {
-        background: #115b73;
-        transform: translateX(-50%) scale(1.04);
-      }
-      @media (max-width: 500px) {
-        #backBtn {
-          bottom: 18px;
-          font-size: 0.98em;
-          padding: 0.48em 1em;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="logo">🔮 運勢くじ</div>
-      <div class="desc">
-        ボタンをクリックすると今日の運勢が表示されます！<br />
-        （楽しいポジティブエネルギーのためのツール）
-      </div>
-      <button class="fortune-btn" id="fortuneBtn">運勢をチェック</button>
-      <div class="result-block" id="resultBlock">ボタンをクリックまたはこの部分をクリックして、今日の運勢を受け取ってください！</div>
-      <button class="copy-btn" id="copyBtn" style="display: none">運勢をコピー</button>
-      <div class="hint" id="hint"></div>
-      <div class="adsense">
-        <!-- Google AdSense -->
-        <ins
-          class="adsbygoogle"
-          style="display: block; text-align: center"
-          data-ad-client="ca-pub-8830524482034754"
-          data-ad-slot="1234567890"
-          data-ad-format="auto"></ins>
-        <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-      </div>
-      <div class="footer">
-        100%ブラウザ内で動作します。アップロードや追跡はありません。<br />
-        Itagi制作 – すべて無料でご提供！
-      </div>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Fortuna del día – Consulta tu suerte</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="¡Descubre tu fortuna para hoy al instante! Herramienta divertida y gratuita que funciona solo en tu navegador, sin preocuparte por la privacidad." />
+  <meta
+    name="keywords"
+    content="fortuna, suerte del día, predicción, mensaje positivo, entretenimiento, gratis, inspiración" />
+  <meta name="author" content="Itagi" />
+  <link rel="canonical" href="https://emfls.github.io/ru/util/fortune/" />
+  <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+  <meta property="og:title" content="Fortuna del día – Consulta tu suerte" />
+  <meta
+    property="og:description"
+    content="Haz clic y obtén tu fortuna para hoy al instante. 100% en navegador, sin subidas ni rastreos." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://emfls.github.io/ru/util/fortune/" />
+  <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Fortuna del día – Consulta tu suerte" />
+  <meta
+    name="twitter:description"
+    content="¡Descubre tu fortuna para hoy al instante! Divertido, gratis y funciona en tu navegador." />
+  <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag("js", new Date());
+    gtag("config", "G-QP5Q67GE5B");
+  </script>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="logo">🔮 Fortuna del día</div>
+    <div class="desc">
+      ¡Haz clic para descubrir tu fortuna de hoy!<br />
+      (Una dosis de energía positiva y diversión)
     </div>
-    <a href="../" id="backBtn">他のユーティリティ</a>
-    <script>
-      // 30個の運勢メッセージ
-      const fortunes = [
-        "✨ 新しいチャンスが訪れます。勇気を出して今日をつかみましょう！",
-        "🍀 幸運があなたに味方します。小さな親切が大きな報いをもたらすでしょう。",
-        "🌈 良い知らせがもうすぐ届きます。",
-        "🔥 新しい挑戦が予期せぬ成功を呼び込みます。",
-        "💡 答えはあなたが考えるよりも近くにあります。周囲を注意深く見てみましょう。",
-        "🌱 今日始めた小さな習慣が人生を変えるかもしれません。",
-        "⭐ 周りの人との会話から良い洞察を得られます。",
-        "🎁 思いがけないプレゼントや誰かの気持ちを受け取るかもしれません。",
-        "🚦 少し休息を取りましょう—より大きなチャンスが待っています。",
-        "🌞 笑顔を忘れずに。ポジティブなエネルギーは良い人々を引き寄せます。",
-        "🦉 少し悩みを手放しても大丈夫です。",
-        "🌊 柔軟さが変化に適応する助けになります。",
-        "🪴 小さな祝福が静かに今日を輝かせます。",
-        "💬 オープンマインドでコミュニケーションすると運気が上がります。考えを共有してみましょう。",
-        "🍎 健康に気をつけると良いことが続きます。",
-        "🏃‍♂️ 今日の行動が明日の成果を生みます。",
-        "📚 学ぶ姿勢を保てば新しい扉が開かれます。",
-        "⚡ 今日は直感が冴えています。最初のひらめきを信じてみましょう。",
-        "🧭 軽い散歩や短い旅が心をクリアにしてくれます。",
-        "🛡️ 周囲の助けを受け入れれば日常がより楽になります。",
-        "🛤️ 小さな計画変更が大きな成果をもたらすかもしれません。",
-        "🎉 嬉しいサプライズがもうすぐ訪れます。",
-        "💸 慎重な支出がより大きな利益を呼びます。",
-        "🌠 今日あなたが下す選択が未来を作ります。",
-        "🔑 オープンマインドが運を呼び込みます。",
-        "🚀 迷っていたら、今日が始めるのに最適な日です。",
-        "🕊️ ストレスを解放して自由を楽しみましょう。",
-        "🎨 創造力があふれる日。新しいことに挑戦してみてください。",
-        "🧡 愛と友情がさらに深まります。",
-        "🪐 大きな視点で見ると新しい可能性が見えてきます。"
-      ];
-      const resultBlock = document.getElementById("resultBlock");
-      const copyBtn = document.getElementById("copyBtn");
-      const fortuneBtn = document.getElementById("fortuneBtn");
-      const hint = document.getElementById("hint");
+    <button class="fortune-btn" id="fortuneBtn">Ver mi fortuna</button>
+    <div class="result-block" id="resultBlock">
+      Haz clic en el botón o aquí para recibir tu fortuna del día.
+    </div>
+    <button class="copy-btn" id="copyBtn" style="display: none">Copiar fortuna</button>
+    <div class="hint" id="hint"></div>
+    <div class="adsense">
+      <ins class="adsbygoogle"
+        style="display:block; text-align:center;"
+        data-ad-client="ca-pub-8830524482034754"
+        data-ad-slot="1234567890"
+        data-ad-format="auto"></ins>
+      <script>
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+    <div class="footer">
+      100% en tu navegador, sin subidas ni rastreos.<br />
+      Creado por Itagi – totalmente gratuito.
+    </div>
+  </div>
+  <a href="../" id="backBtn">Otras utilidades</a>
+  <script>
+    const fortunes = [
+      "✨ Una nueva oportunidad llega. ¡Atrévete a aprovechar el día!",
+      "🍀 La suerte está de tu lado. Un pequeño gesto traerá grandes recompensas.",
+      "🌈 Pronto recibirás buenas noticias.",
+      "🔥 Un nuevo reto te traerá un éxito inesperado.",
+      "💡 La respuesta está más cerca de lo que crees. Observa tu alrededor.",
+      "🌱 Un hábito pequeño que comiences hoy puede cambiar tu vida.",
+      "⭐ Una conversación revelará valiosas ideas.",
+      "🎁 Puede llegar un regalo o un gesto amable.",
+      "🚦 Tómate un respiro; las mejores oportunidades te esperan.",
+      "🌞 No olvides sonreír. La energía positiva atrae a buena gente.",
+      "🦉 Está bien soltar algunas preocupaciones.",
+      "🌊 Ser flexible te ayudará a adaptarte al cambio.",
+      "🪴 Pequeñas bendiciones iluminarán tu día.",
+      "💬 Comunicación abierta mejorará tu fortuna.",
+      "🍎 Cuidar tu salud atraerá buena suerte.",
+      "🏃‍♂️ Tus acciones de hoy generarán los frutos de mañana.",
+      "📚 Mantén la curiosidad y se abrirán nuevas puertas.",
+      "⚡ Confía en tu intuición; está más afinada hoy.",
+      "🧭 Un paseo breve despejará tu mente.",
+      "🛡️ Aceptar ayuda hará tu día más fácil.",
+      "🛤️ Un pequeño cambio de plan puede traer grandes resultados.",
+      "🎉 Una agradable sorpresa está en camino.",
+      "💸 Gastar con prudencia atraerá mayores beneficios.",
+      "🌠 Tus decisiones de hoy darán forma a tu futuro.",
+      "🔑 Tener la mente abierta atraerá nuevas oportunidades.",
+      "🚀 Si tienes dudas, hoy es perfecto para empezar.",
+      "🕊️ Libera el estrés y disfruta de la libertad.",
+      "🎨 Un estallido de creatividad te inspirará.",
+      "🧡 El amor y la amistad se profundizarán.",
+      "🪐 Una perspectiva amplia revelará nuevas posibilidades."
+    ];
+    const resultBlock = document.getElementById("resultBlock");
+    const copyBtn = document.getElementById("copyBtn");
+    const fortuneBtn = document.getElementById("fortuneBtn");
+    const hint = document.getElementById("hint");
 
-      function pickFortune() {
-        const idx = Math.floor(Math.random() * fortunes.length);
-        resultBlock.textContent = fortunes[idx];
-        copyBtn.style.display = "block";
-        hint.textContent = "";
+    function pickFortune() {
+      const idx = Math.floor(Math.random() * fortunes.length);
+      resultBlock.textContent = fortunes[idx];
+      copyBtn.style.display = "block";
+      hint.textContent = "";
+    }
+
+    fortuneBtn.onclick = pickFortune;
+    resultBlock.onclick = pickFortune;
+
+    copyBtn.onclick = function () {
+      const text = resultBlock.textContent;
+      if (!text || text.includes("Haz clic")) {
+        hint.textContent = "¡Primero obtén tu fortuna!";
+        hint.style.color = "#ff416c";
+        return;
       }
-
-      fortuneBtn.onclick = pickFortune;
-      resultBlock.onclick = pickFortune;
-
-      copyBtn.onclick = function () {
-        const text = resultBlock.textContent;
-        if (!text || text.startsWith("ボタン")) {
-          hint.textContent = "まず運勢を取得してください！";
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+          hint.textContent = "¡Fortuna copiada!";
+          hint.style.color = "#18b88a";
+        });
+      } else {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand("copy");
+          hint.textContent = "¡Fortuna copiada!";
+          hint.style.color = "#18b88a";
+        } catch {
+          hint.textContent = "Error al copiar. Por favor copia manualmente.";
           hint.style.color = "#ff416c";
-          return;
         }
-        if (navigator.clipboard && window.isSecureContext) {
-          navigator.clipboard.writeText(text).then(() => {
-            hint.textContent = "運勢をコピーしました！";
-            hint.style.color = "#18b88a";
-          });
-        } else {
-          // 古いブラウザ向け
-          const textarea = document.createElement("textarea");
-          textarea.value = text;
-          document.body.appendChild(textarea);
-          textarea.select();
-          try {
-            document.execCommand("copy");
-            hint.textContent = "運勢をコピーしました！";
-            hint.style.color = "#18b88a";
-          } catch {
-            hint.textContent = "コピーに失敗しました。手動でコピーしてください。";
-            hint.style.color = "#ff416c";
-          }
-          document.body.removeChild(textarea);
-        }
-      };
-    </script>
-    <section
-      style="
-        max-width: 320px;
-        margin: 48px auto 24px auto;
-        background: #1e1e1e;
-        border-radius: 18px;
-        box-shadow: 0 6px 24px #1236;
-        padding: 20px;
-        font-family: Arial, sans-serif;
-      ">
-      <div style="margin-bottom: 12px;">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px;">🔮 このツールは何ですか？</h3>
-        <p style="color: #f0f0f0; font-size: 0.95em; margin: 0;">
-          ランダムで今日の運勢メッセージを受け取れるツールです。ボタンを押すだけで即座に運勢が表示されます！
-        </p>
-      </div>
-      <div style="margin-bottom: 12px;">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px;">📋 運勢をコピーできますか？</h3>
-        <p style="color: #f0f0f0; font-size: 0.95em; margin: 0;">
-          はい！運勢が表示されたら「運勢をコピー」ボタンを押してクリップボードにコピーし、
-          友達と共有したりメモに残せます。
-        </p>
-      </div>
-      <div style="margin-bottom: 12px;">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px;">📱 モバイルでも使えますか？</h3>
-        <p style="color: #f0f0f0; font-size: 0.95em; margin: 0;">
-          もちろんです。このサイトは完全にレスポンシブに設計されており、
-          スマホ、タブレット、デスクトップなどすべてのデバイスで快適に動作します。
-        </p>
-      </div>
-      <div style="margin-bottom: 12px;">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px;">🧠 本当の予測ですか？</h3>
-        <p style="color: #f0f0f0; font-size: 0.95em; margin: 0;">
-          いいえ――完全にエンタメとポジティブなインスピレーションのためのツールです！本当の占いではなく、
-          今日の気分を盛り上げるメッセージと思ってください。
-        </p>
-      </div>
-      <div style="margin-bottom: 0;">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px;">🔒 プライバシーは安全ですか？</h3>
-        <p style="color: #f0f0f0; font-size: 0.95em; margin: 0;">
-          はい。会員登録や個人情報の入力は不要で、100%ブラウザ内でのみ動作します。完全にプライバシーを保護します。
-        </p>
-      </div>
-    </section>
-  </body>
+        document.body.removeChild(ta);
+      }
+    };
+  </script>
+
+  <section style="max-width:320px; margin:48px auto; background:#1e1e1e; border-radius:18px; box-shadow:0 6px 24px #1236; padding:20px; font-family:Arial,sans-serif;">
+    <div style="margin-bottom:12px;">
+      <h3 style="color:#8f94fb; font-size:1.1em; margin-bottom:6px;">🔮 ¿Qué es esta herramienta?</h3>
+      <p style="color:#f0f0f0; font-size:0.95em; margin:0;">
+        Una herramienta divertida que te da un mensaje de suerte para el día. ¡Solo haz clic y obtén tu fortuna al instante!
+      </p>
+    </div>
+    <div style="margin-bottom:12px;">
+      <h3 style="color:#8f94fb; font-size:1.1em; margin-bottom:6px;">📋 ¿Puedo copiar la fortuna?</h3>
+      <p style="color:#f0f0f0; font-size:0.95em; margin:0;">
+        Sí. Cuando aparezca tu fortuna, presiona "Copiar fortuna" para copiar el mensaje y compartirlo o guardarlo.
+      </p>
+    </div>
+    <div style="margin-bottom:12px;">
+      <h3 style="color:#8f94fb; font-size:1.1em; margin-bottom:6px;">📱 ¿Funciona en móviles?</h3>
+      <p style="color:#f0f0f0; font-size:0.95em; margin:0;">
+        Claro, está diseñado con diseño responsive y funciona en smartphones, tablets y ordenadores.
+      </p>
+    </div>
+    <div style="margin-bottom:12px;">
+      <h3 style="color:#8f94fb; font-size:1.1em; margin-bottom:6px;">🧠 ¿Es una predicción real?</h3>
+      <p style="color:#f0f0f0; font-size:0.95em; margin:0;">
+        No, es una herramienta de entretenimiento y positividad, no una predicción auténtica.
+      </p>
+    </div>
+    <div style="margin-bottom:0;">
+      <h3 style="color:#8f94fb; font-size:1.1em; margin-bottom:6px;">🔒 ¿Mi privacidad está segura?</h3>
+      <p style="color:#f0f0f0; font-size:0.95em; margin:0;">
+        Sí. No se requiere registro ni datos personales; todo se procesa en tu navegador.
+      </p>
+    </div>
+  </section>
+</body>
 </html>

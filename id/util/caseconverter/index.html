@@ -1,37 +1,37 @@
 <!doctype html>
-<html lang="ja">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>大小文字変換ツール – 大文字、小文字、単語先頭大文字、文先頭大文字変換</title>
+    <title>Herramienta de conversión de mayúsculas y minúsculas – Mayúsculas, minúsculas, capitalizar palabras y oraciones</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <meta
       name="description"
-      content="テキストを大文字、小文字、単語の先頭文字大文字、文の先頭文字大文字に変換できます。100% ブラウザベースのツールです。" />
+      content="Convierte texto a mayúsculas, minúsculas, mayúscula inicial de palabra, mayúscula inicial de oración y toggle case. Herramienta 100% basada en el navegador, sin cargas ni almacenamiento." />
     <meta
       name="keywords"
-      content="大文字変換, 小文字変換, 単語先頭大文字, 文先頭大文字, テキストツール, オンライン, 無料" />
+      content="conversión mayúsculas, conversión minúsculas, capitalizar palabras, capitalizar oraciones, toggle case, herramienta de texto, en línea, gratis" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ja" />
+    <meta name="language" content="es" />
     <meta name="theme-color" content="#8e50f9" />
     <link rel="canonical" href="https://emfls.github.io/id/util/caseconverter/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
     <!-- Open Graph / Twitter meta -->
     <meta
       property="og:title"
-      content="大小文字変換ツール – 大文字、小文字、単語先頭大文字、文先頭大文字変換" />
+      content="Herramienta de conversión de mayúsculas y minúsculas – Mayúsculas, minúsculas, capitalizar palabras y oraciones" />
     <meta
       property="og:description"
-      content="テキストを大文字、小文字、単語の先頭文字大文字、文の先頭文字大文字、トグルケースに変換できます。100% ブラウザベース、アップロード不要。" />
+      content="Convierte texto a mayúsculas, minúsculas, mayúscula inicial de palabra, mayúscula inicial de oración y toggle case. 100% sin cargas." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/id/util/caseconverter/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta
       name="twitter:title"
-      content="大小文字変換ツール – 大文字、小文字、単語先頭大文字、文先頭大文字変換" />
+      content="Herramienta de conversión de mayúsculas y minúsculas – Mayúsculas, minúsculas, capitalizar palabras y oraciones" />
     <meta
       name="twitter:description"
-      content="テキストを大文字、小文字、単語の先頭文字大文字、文の先頭文字大文字、トグルケースに変換できます。無料、迅速、アップロード不要。" />
+      content="Convierte texto a mayúsculas, minúsculas, mayúscula inicial de palabra, mayúscula inicial de oración y toggle case. Gratis y sin cargas." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -47,234 +47,62 @@
       async
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
       crossorigin="anonymous"></script>
-    <style>
-      :root {
-        --main: #8e50f9;
-        --main-dark: #532e99;
-        --bg: #f6f6fa;
-      }
-      body {
-        background: var(--bg);
-        margin: 0;
-        font-family: "Segoe UI", Arial, sans-serif;
-        color: #222;
-      }
-      .container {
-        max-width: 430px;
-        margin: 38px auto 0 auto;
-        background: #fff;
-        border-radius: 18px;
-        box-shadow: 0 4px 22px #8e50f91a;
-        padding: 27px 18px 20px 18px;
-      }
-      .logo {
-        font-size: 1.19em;
-        font-weight: bold;
-        text-align: center;
-        color: var(--main-dark);
-        margin-bottom: 8px;
-      }
-      .desc {
-        text-align: center;
-        color: #703bb0;
-        font-size: 1.01em;
-        margin-bottom: 17px;
-      }
-      textarea {
-        width: 100%;
-        min-height: 100px;
-        font-size: 1.11em;
-        border: 1.3px solid #ccb7f7;
-        border-radius: 8px;
-        padding: 12px;
-        background: #fafdff;
-        color: #222;
-        resize: vertical;
-        margin-bottom: 9px;
-        font-family: "Fira Mono", "Menlo", monospace;
-        transition: border 0.18s;
-      }
-      textarea:focus {
-        border-color: var(--main);
-      }
-      .btn-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        justify-content: center;
-        margin-bottom: 13px;
-      }
-      .case-btn {
-        background: var(--main);
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        padding: 11px 16px;
-        font-size: 1em;
-        font-weight: bold;
-        cursor: pointer;
-        box-shadow: 0 2px 12px #8e50f925;
-        transition: background 0.15s;
-      }
-      .case-btn:active {
-        background: var(--main-dark);
-      }
-      .output-label {
-        margin: 9px 0 5px 1px;
-        color: #754db7;
-        font-size: 1.04em;
-        font-weight: 600;
-      }
-      .output-area {
-        background: #f7fafd;
-        border: 1.3px solid #ccb7f7;
-        border-radius: 8px;
-        min-height: 80px;
-        padding: 11px;
-        font-size: 1.11em;
-        word-break: break-all;
-        font-family: "Fira Mono", "Menlo", monospace;
-        position: relative;
-        margin-bottom: 6px;
-      }
-      .copy-btn {
-        background: #57bc79;
-        color: #fff;
-        border: none;
-        border-radius: 7px;
-        font-size: 0.99em;
-        padding: 7px 14px;
-        cursor: pointer;
-        font-weight: 600;
-        margin: 3px 0 0 0;
-        transition: background 0.13s;
-        position: absolute;
-        right: 10px;
-        top: 10px;
-      }
-      .copy-btn:active {
-        background: #357955;
-      }
-      .footer {
-        color: #789;
-        text-align: center;
-        font-size: 0.95em;
-        margin-top: 16px;
-        opacity: 0.88;
-      }
-      section#faq {
-        margin-top: 30px;
-      }
-      section#faq h2 {
-        margin-bottom: 13px;
-        color: #8e50f9;
-        font-size: 1.11em;
-        text-align: center;
-      }
-      section#faq dt {
-        font-weight: bold;
-        margin-top: 8px;
-      }
-      section#faq dd {
-        margin: 0 0 7px 0;
-        font-size: 0.99em;
-        color: #703bb0;
-      }
-      #backBtn {
-        position: fixed;
-        left: 50%;
-        bottom: 32px;
-        transform: translateX(-50%);
-        background: #8e50f9;
-        color: #fff;
-        font-weight: 700;
-        border: none;
-        border-radius: 2rem;
-        padding: 0.58em 1.5em;
-        box-shadow: 0 4px 16px #8e50f966;
-        font-size: 1.09em;
-        text-decoration: none;
-        cursor: pointer;
-        letter-spacing: 0.01em;
-        transition:
-          background 0.15s,
-          transform 0.12s;
-        z-index: 2000;
-      }
-      #backBtn:hover {
-        background: #532e99;
-        transform: translateX(-50%) scale(1.04);
-      }
-      @media (max-width: 600px) {
-        .container {
-          max-width: 99vw;
-          padding: 10px 2vw 10px 2vw;
-        }
-        #backBtn {
-          bottom: 18px;
-          font-size: 0.98em;
-          padding: 0.48em 1em;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <main>
       <div class="container" itemscope itemtype="https://schema.org/WebApplication">
-        <h1 class="logo" itemprop="name">🔠 大小文字変換ツール</h1>
+        <h1 class="logo" itemprop="name">🔠 Herramienta de conversión de mayúsculas y minúsculas</h1>
         <p class="desc" itemprop="description">
-          テキストを入力してボタンをクリックするだけで即時変換できます。<br />
-          対応形式: <b>大文字、小文字、単語の先頭文字大文字、文の先頭文字大文字、トグルケース</b>です。
+          Introduce el texto y haz clic en un botón para convertirlo al instante.<br />
+          Formatos soportados: <b>mayúsculas, minúsculas, capitalizar palabras, capitalizar oraciones, toggle case</b>.
         </p>
-        <textarea id="inputText" placeholder="ここにテキストを入力してください..."></textarea>
+        <textarea id="inputText" placeholder="Introduce el texto aquí..."></textarea>
         <div class="btn-row">
-          <button class="case-btn" onclick="convert('upper')">大文字に</button>
-          <button class="case-btn" onclick="convert('lower')">小文字に</button>
-          <button class="case-btn" onclick="convert('capitalize')">単語先頭大文字</button>
-          <button class="case-btn" onclick="convert('sentence')">文先頭大文字</button>
-          <button class="case-btn" onclick="convert('toggle')">トグルケース</button>
+          <button class="case-btn" onclick="convert('upper')">Mayúsculas</button>
+          <button class="case-btn" onclick="convert('lower')">Minúsculas</button>
+          <button class="case-btn" onclick="convert('capitalize')">Capitalizar palabras</button>
+          <button class="case-btn" onclick="convert('sentence')">Capitalizar oraciones</button>
+          <button class="case-btn" onclick="convert('toggle')">Toggle case</button>
         </div>
-        <div class="output-label">結果</div>
+        <div class="output-label">Resultado</div>
         <div class="output-area" id="outputArea">
-          <button class="copy-btn" onclick="copyOutput()">コピー</button>
+          <button class="copy-btn" onclick="copyOutput()">Copiar</button>
           <span id="outputText"></span>
         </div>
         <div class="footer">
-          100% ブラウザベースです。アップロードや保存は一切不要です。<br />
-          <b>ヒント:</b> メール、コード、キャプション、記事などでケース変換が必要なときに便利です！
+          100% basado en el navegador. No requiere carga ni almacenamiento.<br />
+          <b>Consejo:</b> Ideal para correos, código, subtítulos o artículos donde necesites cambiar el case.
         </div>
-        <!-- FAQ セクション (SEO/SGE 用) -->
+        <!-- Sección de Preguntas Frecuentes para SEO -->
         <section aria-labelledby="faq-head" id="faq">
-          <h2 id="faq-head">FAQ – 大小文字変換ツール</h2>
+          <h2 id="faq-head">Preguntas frecuentes – Herramienta de conversión</h2>
           <dl>
-            <dt>このツールは何に使えますか？</dt>
-            <dd>
-              テキストを大文字、小文字、単語の先頭文字大文字、文の先頭文字大文字、トグルケースなどに即時変換できます。
-            </dd>
-            <dt>私のテキストはアップロードまたは保存されますか？</dt>
-            <dd>いいえ。すべての変換はブラウザ上で100%処理され、データはアップロードや保存されません。</dd>
-            <dt>結果をコピーできますか？</dt>
-            <dd>はい、結果エリア横の「コピー」ボタンをクリックすると変換後のテキストがクリップボードにコピーされます。</dd>
-            <dt>このツールは無料ですか？</dt>
-            <dd>はい、完全に無料で使用でき、会員登録やインストールは不要です。</dd>
-            <dt>モバイルでも動作しますか？</dt>
-            <dd>もちろんです！このツールはモバイルフレンドリーなレスポンシブデザインです。</dd>
+            <dt>¿Para qué sirve esta herramienta?</dt>
+            <dd>Convierte texto a mayúsculas, minúsculas, capitalizar palabras, capitalizar oraciones y toggle case al instante.</dd>
+            <dt>¿Se sube o almacena mi texto?</dt>
+            <dd>No. Todas las conversiones se realizan localmente en el navegador y no se envía ni guarda nada.</dd>
+            <dt>¿Puedo copiar los resultados?</dt>
+            <dd>Sí, pulsa el botón "Copiar" para copiar el texto resultante al portapapeles.</dd>
+            <dt>¿Es gratis?</dt>
+            <dd>Sí, es completamente gratuita y no requiere registro ni instalación.</dd>
+            <dt>¿Funciona en móviles?</dt>
+            <dd>Claro, tiene diseño responsive y funciona en cualquier dispositivo.</dd>
           </dl>
         </section>
       </div>
     </main>
-    <a href="../" id="backBtn">他のユーティリティ</a>
+    <a href="../" id="backBtn">Otras utilidades</a>
     <script>
       const inputText = document.getElementById("inputText");
       const outputText = document.getElementById("outputText");
-      // 変換関数
       function toCapitalize(str) {
         return str
-          .replace(/\b\w/g, (c) => c.toUpperCase())
-          .replace(/\B\w/g, (c) => c.toLowerCase());
+          .replace(/\b\w/g, c => c.toUpperCase())
+          .replace(/\B\w/g, c => c.toLowerCase());
       }
       function toSentenceCase(str) {
-        return str.replace(/([^.!?]*[.!?]*)/g, (sentence) => {
+        return str.replace(/([^.!?]*[.!?]*)/g, sentence => {
           let trimmed = sentence.trim();
           if (!trimmed) return "";
           return trimmed.charAt(0).toUpperCase() + trimmed.slice(1).toLowerCase();
@@ -283,7 +111,7 @@
       function toToggleCase(str) {
         return str
           .split("")
-          .map((c) => (c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()))
+          .map(c => (c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()))
           .join("");
       }
       function convert(type) {
@@ -296,19 +124,17 @@
         else if (type === "toggle") res = toToggleCase(val);
         outputText.textContent = res;
       }
-      // 結果コピー
       function copyOutput() {
         const val = outputText.textContent;
         if (!val) return;
         navigator.clipboard.writeText(val);
         const btn = document.querySelector(".copy-btn");
-        btn.textContent = "コピーしました！";
-        setTimeout(() => (btn.textContent = "コピー"), 1000);
+        btn.textContent = "¡Copiado!";
+        setTimeout(() => btn.textContent = "Copiar", 1000);
       }
-      // 入力時に結果リセット
-      inputText.addEventListener("input", () => (outputText.textContent = ""));
+      inputText.addEventListener("input", () => outputText.textContent = "");
     </script>
-    <!-- FAQPage Schema for SGE/GEO/SEO Rich Results -->
+    <!-- JSON-LD FAQPage en español -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -316,43 +142,28 @@
         "mainEntity": [
           {
             "@type": "Question",
-            "name": "このツールは何に使えますか？",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "テキストを大文字、小文字、単語の先頭文字大文字、文の先頭文字大文字、トグルケースなどに即時変換できます。"
-            }
+            "name": "¿Para qué sirve esta herramienta?",
+            "acceptedAnswer": {"@type": "Answer","text": "Convierte texto a mayúsculas, minúsculas, capitalizar palabras, capitalizar oraciones y toggle case al instante."}
           },
           {
             "@type": "Question",
-            "name": "私のテキストはアップロードまたは保存されますか？",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "いいえ。すべての変換はブラウザ上で100%処理され、データはアップロードや保存されません。"
-            }
+            "name": "¿Se sube o almacena mi texto?",
+            "acceptedAnswer": {"@type": "Answer","text": "No. Todas las conversiones se realizan localmente en el navegador y no se envía ni guarda nada."}
           },
           {
             "@type": "Question",
-            "name": "結果をコピーできますか？",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "はい、結果エリア横の「コピー」ボタンをクリックすると変換後のテキストがクリップボードにコピーされます。"
-            }
+            "name": "¿Puedo copiar los resultados?",
+            "acceptedAnswer": {"@type": "Answer","text": "Sí, pulsa el botón 'Copiar' para copiar el texto resultante al portapapeles."}
           },
           {
             "@type": "Question",
-            "name": "このツールは無料ですか？",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "はい、完全に無料で使用でき、会員登録やインストールは不要です。"
-            }
+            "name": "¿Es gratis?",
+            "acceptedAnswer": {"@type": "Answer","text": "Sí, es completamente gratuita y no requiere registro ni instalación."}
           },
           {
             "@type": "Question",
-            "name": "モバイルでも動作しますか？",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "もちろんです！このツールはモバイルフレンドリーなレスポンシブデザインです。"
-            }
+            "name": "¿Funciona en móviles?",
+            "acceptedAnswer": {"@type": "Answer","text": "Claro, tiene diseño responsive y funciona en cualquier dispositivo."}
           }
         ]
       }

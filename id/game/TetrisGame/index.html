@@ -1,35 +1,35 @@
 <!doctype html>
-<html lang="ja">
+<html lang="es">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="クラシックテトリスのウェブゲーム！無料でプレイしてブロックを積み上げ、ラインを消して高得点を目指しましょう。モバイルおよびデスクトップ対応。" />
+            content="¡Juego de Tetris clásico en la web! Juega gratis para apilar bloques, eliminar líneas y conseguir una puntuación alta. Compatible con móvil y escritorio." />
         <meta
             name="keywords"
-            content="tetris, テトリス, パズル, ブロック積み, オンラインゲーム, クラシックアーケード, 無料ウェブゲーム, モバイルゲーム, ブラウザゲーム, テトリスウェブ, スタックゲーム, 落下ブロック" />
+            content="tetris, Tetris, rompecabezas, apilar bloques, juego online, arcade clásico, juego web gratis, juego móvil, navegador, tetris web, apilamiento, bloques que caen" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://emfls.github.io/id/game/TetrisGame" />
 
         <!-- Open Graph / Facebook / Kakao / Discord -->
-        <meta property="og:title" content="クイックプレイ: テトリス – オンラインクラシックパズル" />
+        <meta property="og:title" content="Juego Rápido: Tetris – Rompecabezas Clásico en Línea" />
         <meta
             property="og:description"
-            content="スマートに積み上げ、素早く操作してラインを消そう。無料のオンラインテトリスゲームをすぐにプレイ—ダウンロード不要！" />
+            content="Apila con habilidad y muévete rápido para eliminar líneas. Juega gratis en línea sin descargas." />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/id/game/TetrisGame" />
         <meta property="og:type" content="website" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="クイックプレイ: テトリス – オンラインクラシックパズル" />
+        <meta name="twitter:title" content="Juego Rápido: Tetris – Rompecabezas Clásico en Línea" />
         <meta
             name="twitter:description"
-            content="どれだけ高得点を出せますか？モバイルまたはPCで無料のこのテトリスブラウザゲームを楽しもう！" />
+            content="¿Qué puntuación puedes alcanzar? Disfruta este juego gratuito de Tetris para navegador en móvil o PC." />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-        <title>テトリスゲーム</title>
+        <title>Juego de Tetris</title>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -75,169 +75,28 @@
                 }
             }
         </script>
-        <style>
-            body {
-                background-color: #111;
-                color: white;
-                font-family: "Inter", sans-serif;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding: 1rem;
-            }
-
-            canvas {
-                border: 2px solid #3b3bb3;
-                background: #000;
-            }
-
-            #startButton,
-            #resetButton,
-            #shareButton {
-                padding: 10px 20px;
-                font-size: 18px;
-                background-color: #3b3bb3;
-                color: white;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                margin-top: 10px;
-            }
-
-            #resetButton,
-            #shareButton {
-                top: 60px;
-                display: none;
-            }
-
-            #controls {
-                position: absolute;
-                top: 520px;
-                display: flex;
-                flex-direction: column;
-                gap: 5px;
-                align-items: center;
-                justify-content: center;
-                z-index: 10;
-                width: 100%;
-            }
-
-            #controls .row {
-                display: flex;
-                gap: 10px;
-                justify-content: center;
-            }
-
-            .ctrl-btn {
-                width: 50px;
-                height: 50px;
-                font-size: 18px;
-                border: none;
-                border-radius: 10px;
-                background-color: #3b3bb3;
-            }
-
-            .ctrl-btn:active {
-                background-color: #666;
-            }
-
-            button.restart {
-                padding: 1rem;
-                margin-top: 1rem;
-                font-size: 1.1rem;
-                background-color: #4e54c8;
-                color: white;
-                border: none;
-                border-radius: 10px;
-                width: 90%;
-                max-width: 400px;
-                transition: background-color 0.2s ease;
-                cursor: pointer;
-                position: absolute;
-            }
-
-            button.restart:active {
-                background-color: #6a72f8;
-            }
-
-            button.menu,
-            button.share {
-                padding: 1rem;
-                margin-top: 1rem;
-                font-size: 1.1rem;
-                background-color: #4e54c8;
-                color: white;
-                border: none;
-                border-radius: 10px;
-                width: 90%;
-                max-width: 400px;
-                transition: background-color 0.2s ease;
-                cursor: pointer;
-            }
-
-            button.menu:active,
-            button.share:active {
-                background-color: #6a72f8;
-            }
-
-            #ad-banner {
-                width: 100%;
-                height: 80px;
-                margin: 0.8rem 0;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                background-color: #00000044;
-                color: #aaa;
-                font-size: 0.9rem;
-                position: absolute;
-                top: 630px;
-            }
-
-            h1 {
-                margin-bottom: 0.3rem;
-                font-size: 1.3rem;
-            }
-
-            * {
-                box-sizing: border-box;
-                margin: 0;
-                padding: 0;
-                user-select: none;
-            }
-
-            p.description {
-                margin-bottom: 1rem;
-                font-size: 0.85rem;
-                color: #ccc;
-                text-align: center;
-                padding: 0 1rem;
-            }
-        </style>
+        <link rel="stylesheet" href="style.css" />
     </head>
 
     <body>
         <h1>
-            <span style="color: #8f94fb">クイックプレイ:</span>
-            <span style="color: #00ffff">テ</span>
-            <span style="color: #0000ff">ト</span>
-            <span style="color: #ffa500">リ</span>
-            <span style="color: #ffff00">ス</span>
+            <span style="color: #8f94fb">Juego Rápido:</span>
+            <span style="color: #00ffff">Tetris</span>
         </h1>
-        <p class="description">スマートに積み上げ、素早く操作してラインを消そう。健闘を祈ります！</p>
+        <p class="description">Apila con habilidad, muévete rápido y elimina líneas. ¡Buena suerte!</p>
         <button id="startButton" style="position: absolute; top: 290px; left: 50%; transform: translate(-50%, -50%)">
-            ゲーム開始
+            Iniciar juego
         </button>
         <button
             id="resetButton"
             style="position: absolute; top: 340px; left: 50%; transform: translate(-50%, -50%); display: none">
-            再挑戦
+            Reiniciar
         </button>
         <button
             id="shareButton"
             style="position: absolute; top: 390px; left: 50%; transform: translate(-50%, -50%); display: none"
             onclick="shareGame()">
-            共有する
+            Compartir
         </button>
         <script>
             let cols = 10;
@@ -305,7 +164,7 @@
                 fill(255);
                 textSize(16);
                 textAlign(LEFT, TOP);
-                text("得点: " + score, 10, 10);
+                text("Puntuación: " + score, 10, 10);
                 if (!gameStarted) return;
 
                 if (!gameOver) {
@@ -317,7 +176,7 @@
                     textSize(32);
                     textAlign(CENTER, CENTER);
                     fill(255, 0, 0);
-                    text("ゲームオーバー", width / 2, height / 2);
+                    text("Juego Terminado", width / 2, height / 2);
                     document.getElementById("resetButton").style.display = "inline-block";
                     document.getElementById("shareButton").style.display = "inline-block";
                     noLoop();
@@ -438,7 +297,7 @@
 
                 if (!handleHeldKeys.lastTime) handleHeldKeys.lastTime = 0;
                 if (now - handleHeldKeys.lastTime > 100) {
-                    // 100ms 間隔
+                    // Intervalo de 100ms
                     if (heldKeys[LEFT_ARROW]) movePiece(-1, 0);
                     if (heldKeys[RIGHT_ARROW]) movePiece(1, 0);
                     if (heldKeys[DOWN_ARROW]) movePiece(0, 1);
@@ -454,7 +313,7 @@
                 }
             }
 
-            // ボタンハンドラ登録
+            // Botones de acción
             document.getElementById("startButton").onclick = function () {
                 gameStarted = true;
                 this.style.display = "none";
@@ -542,30 +401,30 @@
             </div>
         </div>
 
-        <button style="position: absolute; top: 660px" class="menu" onclick="goToMain()">📂 他のゲーム</button>
+        <button style="position: absolute; top: 660px" class="menu" onclick="goToMain()">📂 Otros juegos</button>
 
         <script>
             function goToMain() {
-                window.location.href = "/"; // or ''
+                window.location.href = "/"; // o ''
             }
 
             function shareGame() {
                 const url = window.location.href;
-                const text = `🧱 クイックプレイテトリス - 私のスコア: ${score}\n今すぐプレイ！`;
+                const text = `🧱 Tetris Rápido - Mi puntuación: ${score}\n¡Juega ahora!`;
                 if (navigator.share) {
                     navigator
                         .share({
-                            title: "クイックプレイ: テトリス",
+                            title: "Tetris Rápido",
                             text,
                             url
                         })
-                        .catch(() => alert("共有に失敗しました。リンクをコピーしてください。"));
+                        .catch(() => alert("Error al compartir. Copia el enlace manualmente."));
                 } else {
                     const full = `${text}\n${url}`;
                     navigator.clipboard
                         .writeText(full)
-                        .then(() => alert("スコアとリンクがクリップボードにコピーされました！"))
-                        .catch(() => alert(`このリンクをコピーしてください:\n${full}`));
+                        .then(() => alert("Puntuación y enlace copiados al portapapeles."))
+                        .catch(() => alert(`Copia este enlace manualmente:\n${full}`));
                 }
             }
         </script>
@@ -575,7 +434,7 @@
                 max-width: 320px;
                 width: 100%;
                 margin: 772px auto 24px auto;
-                font-family: 'Arial', sans-serif;
+                font-family: Arial, sans-serif;
                 font-size: 14px;
                 background: #1e1e1e;
                 border-radius: 18px;
@@ -584,36 +443,36 @@
                 line-height: 1.6;
                 color: #f0f0f0;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ よくある質問</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ Preguntas frecuentes</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. このテトリスゲームはどうプレイしますか？</strong><br />
-                A. 矢印キーまたは画面上のボタンでブロックを操作し、ラインを完成させて消去しましょう。
+                <strong>Q1. ¿Cómo se juega este juego de Tetris?</strong><br />
+                A. Usa las teclas de flecha o los botones en pantalla para mover los bloques y eliminar líneas.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. どのような操作が使えますか？</strong><br />
-                A. ◀ ▶ ▼ ボタンで左右移動・下降、↻ ボタンで回転します。タッチやマウス入力もサポートしています。
+                <strong>Q2. ¿Qué controles están disponibles?</strong><br />
+                A. Usa los botones ◀ ▶ ▼ para mover y bajar, y ↻ para rotar. También se admite entrada táctil y con ratón.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. ゲームはいつ終了しますか？</strong><br />
-                A. ブロックが上部まで積み上がり、新しいピースを配置できなくなったときにゲームオーバーになります。
+                <strong>Q3. ¿Cuándo termina el juego?</strong><br />
+                A. El juego termina cuando los bloques se apilan hasta el tope y no hay espacio para la siguiente pieza.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. ゲームを再スタートできますか？</strong><br />
-                A. はい！ゲームオーバー後に「再挑戦」ボタンを押すと、いつでもゲームを再スタートできます。
+                <strong>Q4. ¿Puedo reiniciar el juego?</strong><br />
+                A. ¡Sí! Tras el game over, presiona el botón "Reiniciar" para empezar de nuevo.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. スコアを共有できますか？</strong><br />
-                A. もちろんです。「共有する」ボタンを使って、スコアとリンクをクリップボードにコピーまたは送信できます。
+                <strong>Q5. ¿Puedo compartir mi puntuación?</strong><br />
+                A. ¡Claro! Usa el botón "Compartir" para copiar o enviar tu puntuación y el enlace.
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. このゲームはモバイルでも快適にプレイできますか？</strong><br />
-                A. はい！スマートフォンやデスクトップのどちらでも、オンスクリーンコントロールで快適にプレイできます。
+                <strong>Q6. ¿Se puede jugar cómodamente en móvil?</strong><br />
+                A. ¡Sí! Puedes jugar en smartphone o escritorio usando los controles en pantalla.
             </div>
         </section>
     </body>

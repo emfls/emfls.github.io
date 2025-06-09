@@ -1,298 +1,121 @@
 <!doctype html>
-<html lang="ja">
+<html lang="es">
 <head>
     <meta charset="UTF-8" />
-    <title>HTML → 画像/PDF 変換ツール</title>
+    <title>HTML → Imagen/PDF Conversor</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <meta
         name="description"
-        content="ウェブページや自作のHTMLを高品質な画像またはPDFに即座に変換します。100%無料、プライバシー配慮でブラウザ内で完結。" />
+        content="Convierte páginas web o tu propio código HTML en imágenes de alta calidad o PDF al instante. 100% gratuito, privacidad garantizada y todo en el navegador." />
     <meta
         name="keywords"
-        content="html 画像 変換, html PDF 変換, ウェブページ スクリーンショット, html2canvas, jsPDF, ブラウザ ツール, 無料" />
+        content="html imagen conversión, html pdf conversión, captura de pantalla web, html2canvas, jsPDF, herramienta navegador, gratis" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ja" />
+    <meta name="language" content="es" />
     <meta name="theme-color" content="#4653ce" />
     <link rel="canonical" href="https://emfls.github.io/ru/util/html2imgpdf/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="HTML → 画像 & PDF 変換ツール" />
+    <meta property="og:title" content="Conversor HTML → Imagen y PDF" />
     <meta
         property="og:description"
-        content="ウェブページやHTMLコードをPNG、JPG、PDFに無料で変換します。100%ブラウザ内で動作、プライバシー保護。" />
+        content="Convierte páginas web o código HTML en PNG, JPG o PDF de forma gratuita. 100% en tu navegador, privacidad protegida." />
     <meta property="og:url" content="https://emfls.github.io/ru/util/html2imgpdf/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="HTML → 画像 & PDF 変換ツール" />
+    <meta name="twitter:title" content="Conversor HTML → Imagen y PDF" />
     <meta
         name="twitter:description"
-        content="ウェブページやHTMLコードをブラウザから直接画像やPDFに変換できます。アップロード不要。" />
+        content="Convierte páginas web o código HTML directamente en tu navegador a imágenes o PDF. Sin subidas ni marcas de agua." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
-    <!-- Google タグ (gtag.js) -->
+    <!-- Google Analytics (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag() {
-            dataLayer.push(arguments);
-        }
+        function gtag() { dataLayer.push(arguments); }
         gtag("js", new Date());
         gtag("config", "G-QP5Q67GE5B");
     </script>
-    <script
-        async
-        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
         crossorigin="anonymous"></script>
-    <!-- ライブラリ -->
+    <!-- Librerías -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.4/dist/purify.min.js"></script>
-    <style>
-        :root {
-            --main: #4653ce;
-            --main-dark: #283078;
-            --bg: #f4f7ff;
-        }
-        body {
-            background: var(--bg);
-            margin: 0;
-            font-family: "Segoe UI", Arial, sans-serif;
-            color: #234;
-        }
-        .container {
-            max-width: 540px;
-            margin: 38px auto 0 auto;
-            background: #fff;
-            border-radius: 18px;
-            box-shadow: 0 4px 22px #4653ce22;
-            padding: 30px 18px 26px 18px;
-        }
-        .logo {
-            font-size: 1.31em;
-            font-weight: bold;
-            color: var(--main-dark);
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        .desc {
-            text-align: center;
-            color: #2b4899;
-            margin-bottom: 18px;
-            font-size: 1.07em;
-        }
-        .tab-row {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 14px;
-        }
-        .tab-btn {
-            background: #ebf0ff;
-            color: #4653ce;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 10px;
-            font-size: 1.02em;
-            cursor: pointer;
-            font-weight: bold;
-            transition:
-                background 0.14s,
-                color 0.12s;
-        }
-        .tab-btn.active {
-            background: var(--main);
-            color: #fff;
-        }
-        .input-row {
-            margin-bottom: 13px;
-        }
-        .input-row label {
-            font-weight: bold;
-            color: #233c87;
-            margin-bottom: 6px;
-            display: block;
-            font-size: 1.04em;
-        }
-        input[type="text"],
-        textarea {
-            width: 100%;
-            font-size: 1.05em;
-            border: 1.2px solid #b3bcf2;
-            border-radius: 8px;
-            padding: 10px 12px;
-            background: #fafdff;
-            margin-bottom: 6px;
-            font-family: inherit;
-            box-sizing: border-box;
-        }
-        textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-        .action-btn {
-            background: var(--main);
-            color: #fff;
-            border: none;
-            border-radius: 9px;
-            padding: 13px 0;
-            width: 100%;
-            font-size: 1.11em;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            transition: background 0.15s;
-            box-shadow: 0 2px 10px #4653ce17;
-        }
-        .action-btn:active {
-            background: var(--main-dark);
-        }
-        .result-row {
-            margin-top: 16px;
-            text-align: center;
-        }
-        .img-preview {
-            max-width: 99%;
-            border: 1px solid #ccd;
-            border-radius: 11px;
-            margin-bottom: 9px;
-        }
-        .download-btn {
-            background: #dde5fd;
-            color: #2b4899;
-            border: none;
-            border-radius: 7px;
-            padding: 7px 20px;
-            font-size: 1.04em;
-            font-weight: bold;
-            margin: 0 6px;
-            cursor: pointer;
-            transition: background 0.14s;
-        }
-        .download-btn:active {
-            background: #bbc7fa;
-        }
-        .footer {
-            color: #789;
-            text-align: center;
-            font-size: 0.95em;
-            margin-top: 24px;
-        }
-        section#faq { margin-top: 35px; }
-        section#faq h2 { margin-bottom: 13px; color: #4653ce; font-size: 1.09em; text-align: center;}
-        section#faq dt { font-weight: bold; margin-top: 8px;}
-        section#faq dd { margin: 0 0 7px 0; font-size: 0.98em; color: #2b4899;}
-        #backBtn {
-            position: fixed;
-            left: 50%;
-            bottom: 32px;
-            transform: translateX(-50%);
-            background: var(--main);
-            color: #fff;
-            font-weight: 700;
-            border: none;
-            border-radius: 2rem;
-            padding: 0.58em 1.5em;
-            box-shadow: 0 4px 16px #4653ce33;
-            font-size: 1.09em;
-            text-decoration: none;
-            cursor: pointer;
-            letter-spacing: 0.01em;
-            transition:
-                background 0.15s,
-                transform 0.12s;
-            z-index: 2000;
-        }
-        #backBtn:hover {
-            background: #283078;
-            transform: translateX(-50%) scale(1.04);
-        }
-        @media (max-width: 600px) {
-            .container {
-                max-width: 99vw;
-                padding: 10px 2vw 12px 2vw;
-            }
-            #backBtn {
-                bottom: 18px;
-                font-size: 0.98em;
-                padding: 0.48em 1em;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
     <div class="container" itemscope itemtype="https://schema.org/WebApplication">
-        <div class="logo" itemprop="name">🖼️ HTML → 画像/PDF 変換ツール</div>
+        <div class="logo" itemprop="name">🖼️ Herramienta HTML → Imagen/PDF</div>
         <div class="desc">
-            ウェブページや自作のHTMLコードをPNG/JPGまたはPDFに変換できます。ブラウザ内で100%動作します。<br />アップロードやウォーターマークなしで無料利用可能。
+            Convierte páginas web o tu propio código HTML a PNG/JPG o PDF. Funciona completamente en tu navegador.<br />
+            Gratuito y sin marcas de agua.
         </div>
         <div class="tab-row">
-            <button class="tab-btn active" id="urlTabBtn">URLで変換</button>
-            <button class="tab-btn" id="htmlTabBtn">HTMLコード入力</button>
+            <button class="tab-btn active" id="urlTabBtn">Convertir URL</button>
+            <button class="tab-btn" id="htmlTabBtn">Ingresar HTML</button>
         </div>
-        <!-- URL入力タブ -->
-        <div id="urlTab" style="display: block">
+        <!-- URL → Previsualización -->
+        <div id="urlTab">
             <div class="input-row">
-                <label for="urlInput">ページURL</label>
-                <input type="text" id="urlInput" placeholder="https://example.com" />
+                <label for="urlInput">URL de la página</label>
+                <input type="text" id="urlInput" placeholder="https://ejemplo.com" />
             </div>
-            <button class="action-btn" id="fetchUrlBtn">読み込んでプレビュー</button>
-            <div id="urlRenderBox" style="display: none; margin-top: 13px">
-                <div
-                    id="urlRender"
-                    style="background: #fafcff; border: 1px solid #ddd; border-radius: 10px; overflow: auto; padding: 19px;"></div>
-                <div class="result-row" id="urlResultRow" style="display: none">
-                    <button class="download-btn" id="downloadUrlImg">PNGで保存</button>
-                    <button class="download-btn" id="downloadUrlPdf">PDFで保存</button>
+            <button class="action-btn" id="fetchUrlBtn">Cargar y previsualizar</button>
+            <div id="urlRenderBox" style="display: none; margin-top: 13px;">
+                <div id="urlRender" style="background:#fafcff;border:1px solid #ddd;border-radius:10px;overflow:auto;padding:19px;"></div>
+                <div class="result-row" id="urlResultRow" style="display: none;">
+                    <button class="download-btn" id="downloadUrlImg">Descargar PNG</button>
+                    <button class="download-btn" id="downloadUrlPdf">Descargar PDF</button>
                 </div>
             </div>
         </div>
-        <!-- HTML入力タブ -->
-        <div id="htmlTab" style="display: none">
+        <!-- HTML → Previsualización -->
+        <div id="htmlTab" style="display:none;">
             <div class="input-row">
-                <label for="htmlInput">HTMLコード</label>
-                <textarea id="htmlInput" placeholder="&lt;div&gt;こんにちは&lt;/div&gt;"></textarea>
+                <label for="htmlInput">Código HTML</label>
+                <textarea id="htmlInput" placeholder="<div>¡Hola!</div>"></textarea>
             </div>
-            <button class="action-btn" id="renderHtmlBtn">プレビュー & 変換</button>
-            <div id="htmlRenderBox" style="display: none; margin-top: 13px">
-                <div
-                    id="htmlRender"
-                    style="background: #fafcff; border: 1px solid #ddd; border-radius: 10px; overflow: auto; padding: 19px;"></div>
-                <div class="result-row" id="htmlResultRow" style="display: none">
-                    <button class="download-btn" id="downloadHtmlImg">PNGで保存</button>
-                    <button class="download-btn" id="downloadHtmlPdf">PDFで保存</button>
+            <button class="action-btn" id="renderHtmlBtn">Previsualizar y convertir</button>
+            <div id="htmlRenderBox" style="display: none; margin-top: 13px;">
+                <div id="htmlRender" style="background:#fafcff;border:1px solid #ddd;border-radius:10px;overflow:auto;padding:19px;"></div>
+                <div class="result-row" id="htmlResultRow" style="display: none;">
+                    <button class="download-btn" id="downloadHtmlImg">Descargar PNG</button>
+                    <button class="download-btn" id="downloadHtmlPdf">Descargar PDF</button>
                 </div>
             </div>
         </div>
         <div class="footer">
-            <b>注意:</b> 外部URLはCORSポリシーにより読み込みが制限される場合があり、動的なJavaScriptを含むサイトは正しくレンダリングされない可能性があります。<br />
-            HTMLレンダリングは安全のため制約があります。結果が切れないようにHTMLをシンプルにしてください。
+            <b>Nota:</b> Las URL externas pueden estar limitadas por CORS, y sitios con JavaScript dinámico pueden no renderizarse correctamente.<br />
+            Para mejores resultados, usa HTML sencillo.
         </div>
         <section id="faq" aria-labelledby="faq-head">
-            <h2 id="faq-head">FAQ – HTML → 画像/PDF 変換ツール</h2>
+            <h2 id="faq-head">Preguntas frecuentes</h2>
             <dl>
-                <dt>このツールは何をしますか？</dt>
-                <dd>ウェブページ(URL)やユーザーが作成したHTMLコードをブラウザ上で高品質なPNG画像またはPDFファイルに変換します。</dd>
-                <dt>データはアップロードまたは保存されますか？</dt>
-                <dd>いいえ。すべての処理はクライアント側(ブラウザ)で行われ、データやコードは外部に送信されません。</dd>
-                <dt>すべてのサイトで使用できますか？</dt>
-                <dd>公開されているウェブサイトであれば試せますが、一部のサイトはCORS制限や動的JSの読み込みにより正常に表示されない場合があります。</dd>
-                <dt>どの形式で出力できますか？</dt>
-                <dd>PNG画像またはPDFファイルとして保存できます。両形式ともブラウザ上で即座に生成されます。</dd>
-                <dt>実際のサイトとレンダリング結果が異なるのはなぜですか？</dt>
-                <dd>動的なJavaScript、外部フォントやスタイルの読み込み、CORS制限などにより、一部リソースが正しく表示されないためです。完璧な結果を得たい場合は、HTMLを直接入力しCSSを調整してください。</dd>
-                <dt>無料で使えますか？</dt>
-                <dd>はい！会員登録不要で誰でも100%無料、ウォーターマークなしで利用できます。</dd>
+                <dt>¿Qué hace esta herramienta?</dt>
+                <dd>Convierte páginas web (URL) o código HTML en imágenes PNG/JPG o archivos PDF directamente en tu navegador.</dd>
+                <dt>¿Se suben o guardan mis datos?</dt>
+                <dd>No. Todo se procesa localmente en tu navegador; no se envía nada a ningún servidor.</dd>
+                <dt>¿Funciona con cualquier sitio?</dt>
+                <dd>La mayoría de sitios públicos funcionarán, pero algunos pueden estar restringidos por CORS o scripts dinámicos.</dd>
+                <dt>¿En qué formatos puedo exportar?</dt>
+                <dd>Puedes descargar PNG o PDF de la vista previsualizada.</dd>
+                <dt>¿Por qué difiere del sitio real?</dt>
+                <dd>Los scripts dinámicos, fuentes externas y políticas CORS pueden impedir que ciertos recursos se carguen.</dd>
+                <dt>¿Es gratuito?</dt>
+                <dd>Sí, 100% gratuito y sin necesidad de registro ni marcas de agua.</dd>
             </dl>
         </section>
     </div>
-    <a href="../" id="backBtn">他のユーティリティ</a>
+    <a href="../" id="backBtn">Otras utilidades</a>
     <script>
-        // タブ切り替えロジック
+        // Cambio de pestañas
         const urlTabBtn = document.getElementById("urlTabBtn");
         const htmlTabBtn = document.getElementById("htmlTabBtn");
         const urlTab = document.getElementById("urlTab");
@@ -310,10 +133,10 @@
             urlTabBtn.classList.remove("active");
         };
 
-        // URLから変換
+        // Convertir URL
         document.getElementById("fetchUrlBtn").onclick = async function () {
             const url = document.getElementById("urlInput").value.trim();
-            if (!url) return alert("有効なURLを入力してください。");
+            if (!url) return alert("Introduce una URL válida.");
             try {
                 const res = await fetch(url);
                 const text = await res.text();
@@ -322,29 +145,29 @@
                 document.getElementById("urlRenderBox").style.display = "block";
                 document.getElementById("urlResultRow").style.display = "flex";
             } catch {
-                alert("ページの読み込みまたはレンダリングに失敗しました。(CORSまたは動的JSの制限)");
+                alert("Error al cargar o renderizar la página. Puede ser un problema de CORS o de scripts dinámicos.");
             }
         };
         document.getElementById("downloadUrlImg").onclick = () => {
-            html2canvas(document.getElementById("urlRender")).then((canvas) => {
+            html2canvas(document.getElementById("urlRender")).then(canvas => {
                 const link = document.createElement("a");
-                link.download = "webpage.png";
+                link.download = "pagina.png";
                 link.href = canvas.toDataURL();
                 link.click();
             });
         };
         document.getElementById("downloadUrlPdf").onclick = () => {
-            html2canvas(document.getElementById("urlRender")).then((canvas) => {
+            html2canvas(document.getElementById("urlRender")).then(canvas => {
                 const imgData = canvas.toDataURL("image/png");
                 const pdf = new window.jspdf.jsPDF();
                 const w = pdf.internal.pageSize.getWidth();
                 const h = (canvas.height * w) / canvas.width;
                 pdf.addImage(imgData, "PNG", 0, 0, w, h);
-                pdf.save("webpage.pdf");
+                pdf.save("pagina.pdf");
             });
         };
 
-        // HTML入力から変換
+        // Convertir HTML
         document.getElementById("renderHtmlBtn").onclick = () => {
             const html = document.getElementById("htmlInput").value;
             const clean = DOMPurify.sanitize(html);
@@ -353,7 +176,7 @@
             document.getElementById("htmlResultRow").style.display = "flex";
         };
         document.getElementById("downloadHtmlImg").onclick = () => {
-            html2canvas(document.getElementById("htmlRender")).then((canvas) => {
+            html2canvas(document.getElementById("htmlRender")).then(canvas => {
                 const link = document.createElement("a");
                 link.download = "html.png";
                 link.href = canvas.toDataURL();
@@ -361,7 +184,7 @@
             });
         };
         document.getElementById("downloadHtmlPdf").onclick = () => {
-            html2canvas(document.getElementById("htmlRender")).then((canvas) => {
+            html2canvas(document.getElementById("htmlRender")).then(canvas => {
                 const imgData = canvas.toDataURL("image/png");
                 const pdf = new window.jspdf.jsPDF();
                 const w = pdf.internal.pageSize.getWidth();
@@ -371,7 +194,7 @@
             });
         };
     </script>
-    <!-- FAQPage 構造化データ -->
+    <!-- Estructura FAQPage para SEO -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -379,33 +202,51 @@
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "このツールは何をしますか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "ウェブページ(URL)やユーザーが作成したHTMLコードをブラウザ上で高品質なPNG画像またはPDFファイルに変換します。" }
+          "name": "¿Qué hace esta herramienta?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Convierte páginas web (URL) o código HTML en imágenes PNG/JPG o archivos PDF directamente en tu navegador."
+          }
         },
         {
           "@type": "Question",
-          "name": "データはアップロードまたは保存されますか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "いいえ。すべての処理はクライアント側(ブラウザ)で行われ、データやコードは外部に送信されません。" }
+          "name": "¿Se suben o guardan mis datos?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Todo se procesa localmente en tu navegador; no se envía nada a ningún servidor."
+          }
         },
         {
           "@type": "Question",
-          "name": "すべてのサイトで使用できますか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "公開されているウェブサイトなら試せますが、一部のサイトはCORS制限や動的JSの読み込みによって正常にレンダリングされない場合があります。" }
+          "name": "¿Funciona con cualquier sitio?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "La mayoría de sitios públicos funcionarán, pero algunos pueden estar restringidos por CORS o scripts dinámicos."
+          }
         },
         {
           "@type": "Question",
-          "name": "どの形式で出力できますか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "PNG画像またはPDFファイルとして保存できます。両方の形式ともブラウザ上で即座に生成されます。" }
+          "name": "¿En qué formatos puedo exportar?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Puedes descargar PNG o PDF de la vista previsualizada."
+          }
         },
         {
           "@type": "Question",
-          "name": "実際のサイトとレンダリング結果が異なるのはなぜですか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "動的JavaScript、外部フォントやスタイルの読み込み、CORS制限などが影響し、一部のリソースが正しく表示されないためです。完璧な結果を得たい場合は、HTMLを直接入力し、CSSを調整してください。" }
+          "name": "¿Por qué difiere el resultado de la vista del sitio real?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Los scripts dinámicos, fuentes externas y políticas CORS pueden impedir que ciertos recursos se carguen."
+          }
         },
         {
           "@type": "Question",
-          "name": "無料で使えますか？",
-          "acceptedAnswer": { "@type": "Answer", "text": "はい！会員登録なしで誰でも100%無料、ウォーターマークなしでご利用いただけます。" }
+          "name": "¿Es gratuito?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí, 100% gratuito y sin necesidad de registro ni marcas de agua."
+          }
         }
       ]
     }

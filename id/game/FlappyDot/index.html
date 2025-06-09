@@ -1,32 +1,36 @@
 <!doctype html>
-<html lang="ja">
+<html lang="es">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="Flappy Dot で爆弾を避けながらできるだけ遠くへ飛んでみよう！シンプルで中毒性のあるモバイルフレンドリーなブラウザゲームを無料で楽しめます。" />
+            content="En Flappy Dot evita las bombas y vuela lo más lejos posible. Disfruta este simple y adictivo juego para navegador, optimizado para móviles, completamente gratis."
+        />
         <meta
             name="keywords"
-            content="Flappy Dot, Flappy Bird, QuickPlay, アーケード, 飛行ゲーム, 爆弾回避, 無料ゲーム, オンライン, ブラウザ, モバイル, ハイスコア, スキルゲーム, カジュアル" />
+            content="Flappy Dot, Flappy Bird, QuickPlay, arcade, juego de vuelo, evitar bombas, juego gratis, en línea, navegador, móvil, puntuación, juego casual"
+        />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/id/game/FlappyDot" />
 
-        <meta property="og:title" content="QuickPlay: Flappy Dot – 無料オンラインゲーム!" />
+        <meta property="og:title" content="QuickPlay: Flappy Dot – ¡Juego en línea gratuito!" />
         <meta
             property="og:description"
-            content="ハイスコアに挑戦しよう！Flappy Dot で飛んで爆弾を避け、友達に挑戦しよう。" />
+            content="¡Desafía tu puntuación! En Flappy Dot vuela esquivando bombas y reta a tus amigos."
+        />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/id/game/FlappyDot" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Flappy Dot – 無料オンラインQuickPlayゲーム!" />
+        <meta name="twitter:title" content="Flappy Dot – ¡Juego gratuito de QuickPlay en línea!" />
         <meta
             name="twitter:description"
-            content="爆弾を避けながらできるだけ遠くまで飛んでみよう！Flappy Dot をオンラインで無料プレイしてハイスコアを競おう。" />
+            content="¡Vuela lo más lejos posible mientras esquivas bombas! Juega gratis a Flappy Dot en línea y compite por la mejor puntuación."
+        />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
         <script>
@@ -43,88 +47,20 @@
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
         <title>QuickPlay: Flappy Dot</title>
-        <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-
-            body {
-                background: #70c5ce;
-                display: flex;
-                justify-content: flex-start;
-                align-items: center;
-                height: 100vh;
-                flex-direction: column;
-            }
-
-            canvas {
-                background: #70c5ce;
-                display: block;
-                border: 2px solid #333;
-                margin-top: 20px;
-            }
-
-            .overlay {
-                position: absolute;
-                top: 20px;
-                display: flex;
-                gap: 10px;
-            }
-
-            button {
-                padding: 10px 18px;
-                font-size: 16px;
-                border: none;
-                border-radius: 6px;
-                cursor: pointer;
-                background-color: #ffffffcc;
-                font-weight: bold;
-                margin-top: 350px;
-            }
-
-            button:hover {
-                background-color: #fff;
-            }
-
-            h1 {
-                margin-top: 10px;
-            }
-
-            #jumpButtonWrapper {
-                margin-top: 0px;
-            }
-
-            #jumpButton {
-                font-size: 18px;
-                font-weight: bold;
-                background-color: #ffcc00;
-                color: #333;
-                border: none;
-                border-radius: 30px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-                cursor: pointer;
-                height: 70px;
-            }
-
-            #jumpButton:active {
-                transform: scale(0.95);
-            }
-        </style>
+        <link rel="stylesheet" href="style.css" />
     </head>
 
     <body>
         <h1 style="font-family: 'Arial Black', sans-serif; font-size: 28px; margin-bottom: 6px">Flappy Dot</h1>
-        <p style="font-size: 14px; color: white; margin-bottom: 12px">爆弾を避けながらできるだけ遠くまで飛ぼう！</p>
+        <p style="font-size: 14px; color: white; margin-bottom: 12px">¡Evita las bombas y vuela lo más lejos posible!</p>
 
         <canvas id="gameCanvas" width="300" height="450"></canvas>
         <div class="overlay" id="menu">
-            <button onclick="startGame()">ゲーム開始</button>
+            <button onclick="startGame()">Iniciar juego</button>
         </div>
         <div class="overlay" id="gameoverMenu" style="display: none">
-            <button onclick="resetGame()">再スタート</button>
-            <button onclick="shareScore()">共有</button>
+            <button onclick="resetGame()">Reiniciar</button>
+            <button onclick="shareScore()">Compartir</button>
         </div>
 
         <script>
@@ -287,12 +223,12 @@
 
                 ctx.fillStyle = "black";
                 ctx.font = "20px Arial";
-                ctx.fillText("スコア: " + score, 10, 30);
+                ctx.fillText("Puntuación: " + score, 10, 30);
 
                 if (gameOver) {
                     ctx.fillStyle = "red";
                     ctx.font = "32px Arial";
-                    ctx.fillText("ゲームオーバー", canvas.width / 2 - 80, canvas.height / 2 - 100);
+                    ctx.fillText("Juego terminado", canvas.width / 2 - 100, canvas.height / 2 - 100);
                     gameoverMenu.style.display = "flex";
                 }
             }
@@ -336,17 +272,17 @@
 
             function shareScore() {
                 const url = window.location.href;
-                const text = `🐤 Flappy Dot で ${score} 点獲得！あなたも挑戦してみて！`;
+                const text = `🐤 ¡Obtuve ${score} puntos en Flappy Dot! ¡Inténtalo tú también!`;
                 if (navigator.share) {
                     navigator
                         .share({ title: "QuickPlay: Flappy Dot", text, url })
-                        .catch(() => alert("共有に失敗しました。リンクをコピーしてください。"));
+                        .catch(() => alert("Error al compartir. Copia el enlace manualmente."));
                 } else {
                     const full = `${text}\n${url}`;
                     navigator.clipboard
                         .writeText(full)
-                        .then(() => alert("スコアを含むリンクがクリップボードにコピーされました！"))
-                        .catch(() => alert(`このリンクをコピーしてください:\n${full}`));
+                        .then(() => alert("¡Puntuación y enlace copiados al portapapeles!"))
+                        .catch(() => alert(`Por favor, copia este enlace:\n${full}`));
                 }
             }
 
@@ -374,7 +310,7 @@
         </script>
 
         <button style="margin-top: 20px; width: 90%; height: 60px" onclick="window.location.href='/'">
-            📂 他のゲーム
+            Otros juegos
         </button>
         <section
             style="
@@ -390,36 +326,36 @@
                 line-height: 1.6;
                 font-size: 14px;
             ">
-            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ よくある質問 (FAQ)</h2>
+            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ Preguntas frecuentes (FAQ)</h2>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q1. Flappy Dot はどのようなゲームですか？</strong><br />
-                A. Flappy Dot は画面をタップするかスペースキーを押してジャンプし、爆弾を避けながらできるだけ遠くまで飛ぶカジュアルな飛行ゲームです。
+                <strong>Q1. ¿Qué tipo de juego es Flappy Dot?</strong><br />
+                A. Flappy Dot es un juego casual donde tocas la pantalla o presionas la barra espaciadora para saltar y evitar bombas mientras vuelas lo más lejos posible.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q2. 操作方法は？</strong><br />
-                A. モバイルでは画面をタップし、PC ではスペースキーを押してジャンプします。
+                <strong>Q2. ¿Cómo se controla el juego?</strong><br />
+                A. En dispositivos móviles tocas la pantalla y en PC presionas la barra espaciadora para que el punto salte.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q3. ゲームはいつ終わりますか？</strong><br />
-                A. ドットが爆弾にぶつかるか画面外に出るとゲームオーバーになります。爆発エフェクトがゲーム終了を示します。
+                <strong>Q3. ¿Cuándo termina el juego?</strong><br />
+                A. El juego termina si el punto choca contra una bomba o sale de los límites de la pantalla. Aparecerá un efecto de explosión indicando el final.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q4. スコアが上がると難易度は上がりますか？</strong><br />
-                A. はい。スコアが高くなるほど爆弾の出現数とスピードが増し、より挑戦的になります。
+                <strong>Q4. ¿Aumenta la dificultad con la puntuación?</strong><br />
+                A. Sí. A medida que aumentas tu puntuación, aparecen más bombas y se mueven más rápido, haciendo el juego más desafiante.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q5. モバイルでもプレイできますか？</strong><br />
-                A. もちろんです。Flappy Dot はモバイルフレンドリーで、ダウンロード不要で楽しめます。
+                <strong>Q5. ¿Puedo jugar en el móvil?</strong><br />
+                A. ¡Por supuesto! Flappy Dot está optimizado para dispositivos móviles y no requiere descarga.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q6. スコアはどう共有できますか？</strong><br />
-                A. ゲーム終了後、「共有」ボタンをタップしてスコアとリンクを共有するか、クリップボードにコピーできます。
+                <strong>Q6. ¿Cómo comparto mi puntuación?</strong><br />
+                A. Al terminar el juego, pulsa el botón "Compartir" para copiar tu puntuación y el enlace, o para enviarlo directamente si tu dispositivo lo permite.
             </div>
         </section>
     </body>

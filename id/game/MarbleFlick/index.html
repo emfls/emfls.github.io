@@ -1,31 +1,31 @@
 <!doctype html>
-<html lang="ja">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <meta
       name="description"
-      content="高速でシンプルなオンラインフリックボードゲーム、マーブルフリックを遊ぼう！友達やAIとモバイルで対戦できる。楽しくて速くて完全無料。ダウンロード不要。" />
+      content="¡Juega Marble Flick, un sencillo y rápido juego de tablero por deslizamiento en línea! Compite con amigos o con IA en tu móvil. Divertido, veloz y totalmente gratis. No requiere descarga." />
     <meta
       name="keywords"
-      content="マーブルフリック, フリックゲーム, ウェブボードゲーム, モバイル, オンラインゲーム, 無料, 2人対戦, AI, フリックゲーム, ブラウザ, カジュアル, ダウンロード不要" />
+      content="Marble Flick, juego de deslizamiento, juego de tablero web, móvil, juego en línea, gratis, juego para 2 jugadores, IA, juego por deslizamiento, navegador, casual, sin descarga" />
     <meta name="author" content="Itagi" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://emfls.github.io/id/game/MarbleFlick/" />
 
-    <meta property="og:title" content="マーブルフリック - 無料モバイルウェブゲーム" />
+    <meta property="og:title" content="Marble Flick – ¡Juego móvil gratis!" />
     <meta
       property="og:description"
-      content="速くて楽しいモバイルボードゲーム、マーブルフリックを楽しもう。オンラインで1対1かAIと無料でプレイ！" />
+      content="Disfruta Marble Flick, un juego de tablero móvil rápido y divertido. ¡Juega 1 vs 1 en línea o contra IA, gratis!" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta property="og:url" content="https://emfls.github.io/id/game/MarbleFlick/" />
     <meta property="og:type" content="website" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="マーブルフリック - 無料モバイルウェブゲーム" />
+    <meta name="twitter:title" content="Marble Flick – ¡Juego móvil gratis!" />
     <meta
       name="twitter:description"
-      content="この無料モバイルフリックゲームで友達やAIに挑戦しよう。ダウンロード不要ですぐ遊べます！" />
+      content="Desafía a amigos o a la IA en este juego móvil de deslizamiento. ¡Gratis y sin descarga!" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
@@ -42,187 +42,31 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
       crossorigin="anonymous"
     ></script>
-    <title>マーブルフリック</title>
+    <title>Marble Flick</title>
     <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet" />
-    <style>
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        background: #f6f8fb;
-      }
-      body {
-        min-height: 100vh;
-        font-family: "Jua", "Segoe UI", Arial, sans-serif;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-      }
-      #gameWrap {
-        margin: 0 auto;
-        margin-top: 5vw;
-        background: #fff;
-        border-radius: 24px;
-        box-shadow: 0 6px 32px #1233;
-        padding: 2.5vw 4vw 3vw 4vw;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 94vw;
-        max-width: 470px;
-      }
-      h2 {
-        font-size: 2rem;
-        margin: 1vw 0 2vw 0;
-        color: #335;
-        letter-spacing: 2px;
-        text-shadow: 0 2px 12px #beeb;
-      }
-      #winnerBanner {
-        display: none;
-        font-size: 1.8rem;
-        font-weight: bold;
-        background: linear-gradient(90deg, #4aacee 40%, #fdd56b 100%);
-        color: #20314f;
-        border-radius: 16px;
-        box-shadow: 0 4px 22px #1476;
-        padding: 13px 22px;
-        margin-bottom: 12px;
-        text-align: center;
-        letter-spacing: 2px;
-        z-index: 2;
-        position: relative;
-      }
-      #aiBar {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 14px;
-        margin-bottom: 8px;
-        font-size: 1.12rem;
-      }
-      .ai-btn {
-        border: none;
-        outline: none;
-        border-radius: 10px;
-        background: #e8eefa;
-        color: #334;
-        padding: 8px 27px;
-        font-size: 1.14rem;
-        font-weight: bold;
-        box-shadow: 0 1.5px 7px #cdf3;
-        cursor: pointer;
-        transition: 0.1s;
-        margin: 0 2px;
-      }
-      .ai-btn.active {
-        background: linear-gradient(90deg, #447ee1 40%, #34c1ea 100%);
-        color: #fff;
-        box-shadow: 0 2px 12px #1355;
-      }
-      #info {
-        font-size: 1.09rem;
-        color: #236adc;
-        margin-bottom: 1vw;
-        letter-spacing: 1px;
-        text-align: center;
-      }
-      #turn {
-        font-size: 1.3rem;
-        font-weight: bold;
-        margin-bottom: 0.7vw;
-        margin-top: 0.2vw;
-        color: #233;
-        background: #f0f6ff;
-        border-radius: 14px;
-        padding: 7px 18px;
-        box-shadow: 0 2px 8px #bbf5;
-        display: inline-block;
-      }
-      #board {
-        display: block;
-        width: 86vw;
-        height: 86vw;
-        max-width: 360px;
-        max-height: 360px;
-        background: transparent;
-        margin: 2vw auto;
-        touch-action: none;
-        user-select: none;
-        border-radius: 50%;
-        box-shadow: 0 2px 12px #1234;
-      }
-      .btn-group {
-        display: flex;
-        justify-content: center;
-        gap: 1vw;
-        margin-top: 1vw;
-      }
-      button {
-        font-family: inherit;
-        background: linear-gradient(90deg, #447ee1 40%, #34c1ea 100%);
-        color: #fff;
-        border: none;
-        border-radius: 12px;
-        padding: 10px 22px;
-        font-size: 1.18rem;
-        font-weight: bold;
-        letter-spacing: 2px;
-        margin: 0.5vw 2vw 0.5vw 0;
-        box-shadow: 0 2px 12px #1355;
-        cursor: pointer;
-        transition: background 0.13s;
-      }
-      button:active {
-        background: #1b4d8b;
-      }
-      @media (max-width: 460px) {
-        #gameWrap {
-          margin-top: 3vw;
-        }
-        h2 {
-          font-size: 6.5vw;
-        }
-        #info,
-        #turn {
-          font-size: 1.1rem;
-        }
-        #board {
-          width: 98vw;
-          height: 98vw;
-          max-width: 370px;
-          max-height: 370px;
-        }
-        #winnerBanner {
-          font-size: 1.3rem;
-          padding: 10px 10px;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div id="gameWrap">
-      <h2>マーブルフリック</h2>
+      <h2>Marble Flick</h2>
       <div id="aiBar">
-        <button class="ai-btn active" id="modeHuman">2人モード</button>
-        <button class="ai-btn" id="modeAI">AIモード</button>
+        <button class="ai-btn active" id="modeHuman">Modo 2 Jugadores</button>
+        <button class="ai-btn" id="modeAI">Modo IA</button>
       </div>
       <div id="info">
-        <span id="descHuman">両者とも手動プレイ。円の中でドラッグ！</span>
-        <span id="descAI" style="display: none">あなた（黒）、AI（白）。円の中でドラッグ！</span>
+        <span id="descHuman">Ambos juegan manualmente. ¡Arrastra dentro del círculo!</span>
+        <span id="descAI" style="display: none">Tú (negro), IA (blanco). ¡Arrastra dentro del círculo!</span>
       </div>
-      <div id="turn">黒の番 ●</div>
+      <div id="turn">Turno de negro ●</div>
       <canvas id="board" width="360" height="360"></canvas>
       <div id="winnerBanner"></div>
       <div class="btn-group">
-        <button id="restartBtn">再スタート</button>
-        <button id="otherGamesBtn" onclick="window.location.href='../'">他のゲーム</button>
+        <button id="restartBtn">Reiniciar</button>
+        <button id="otherGamesBtn" onclick="window.location.href='../'">Otros Juegos</button>
       </div>
     </div>
     <script>
-      // ===== Variables & Setup =====
+      // ===== Variables y Configuración =====
       const canvas = document.getElementById("board");
       const ctx = canvas.getContext("2d");
       let size = canvas.width;
@@ -288,7 +132,7 @@
       }
 
       function updateTurnText() {
-        document.getElementById("turn").textContent = turn === 0 ? "黒の番 ●" : "白の番 ○";
+        document.getElementById("turn").textContent = turn === 0 ? "Turno de negro ●" : "Turno de blanco ○";
         document.getElementById("turn").style.background = turn === 0 ? "#f0f6ff" : "#fff8f7";
         document.getElementById("turn").style.color = turn === 0 ? "#1b304e" : "#bb302f";
       }
@@ -491,15 +335,15 @@
       function showWinner(winnerColor) {
         const banner = document.getElementById("winnerBanner");
         if (winnerColor === "white") {
-          banner.textContent = "白の勝利！ 🎉";
+          banner.textContent = "¡Victoria de blanco! 🎉";
           banner.style.background = "linear-gradient(90deg,#fceabb,#f8b500 100%)";
           banner.style.color = "#2b2323";
         } else if (winnerColor === "black") {
-          banner.textContent = "黒の勝利！ 🎉";
+          banner.textContent = "¡Victoria de negro! 🎉";
           banner.style.background = "linear-gradient(90deg,#5aaaff,#232942 100%)";
           banner.style.color = "#f5f8fc";
         } else {
-          banner.textContent = "引き分け 🤝";
+          banner.textContent = "¡Empate! 🤝";
           banner.style.background = "#eee";
           banner.style.color = "#2b2323";
         }
@@ -565,7 +409,7 @@
       }
 
       function aiAuto() {
-        if (animation || dragging || !aiMode || turn === 0 || winner) return;
+        if (animation || dragging || !aiMode || turn === 1 || winner) return;
         if (aiTimeout) clearTimeout(aiTimeout);
         aiTimeout = setTimeout(() => {
           let my = pieces.filter((p) => p.alive && p.color === "white");
@@ -627,7 +471,7 @@
           let start = clampInBoard(sel.x, sel.y);
           let end = clampInBoard(dragX, dragY);
           flickPiece(sel, start.x - end.x, start.y - end.y);
-          turn = 0;
+          turn = 1;
           updateTurnText();
         }, 700);
       }
@@ -649,7 +493,7 @@
       canvas.addEventListener("touchend", onPointerUp, { passive: false });
 
       function onPointerDown(e) {
-        if (dragging || animation || (aiMode && turn === 1) || winner) return;
+        if (dragging || animation || (aiMode && turn === 0) || winner) return;
         let { x, y } = pointerPos(e);
         if (!isInsideBoard(x, y)) return;
         let p = getPieceAt(x, y);
@@ -712,80 +556,80 @@
         line-height: 1.65;
         color: #2d3436;
       ">
-      <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #2577cf">❓ よくある質問</h2>
+      <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #2577cf">❓ Preguntas frecuentes</h2>
 
-      <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">ゲーム紹介</h3>
+      <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">Descripción del juego</h3>
       <dl>
-        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: "Marble Flick"とは何ですか？</dt>
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ¿Qué es "Marble Flick"?</dt>
         <dd style="margin-bottom: 12px">
-          A: "Marble Flick"はビー玉を弾いて相手のビー玉をボード外に押し出すシンプルで高速なウェブボードゲームです。1対1で対戦、またはAIと対戦できます。
+          A: "Marble Flick" es un sencillo y rápido juego de tablero en el que lanzas canicas para empujar las del oponente fuera del tablero. Puedes jugar 1 vs 1 o contra IA.
         </dd>
 
-        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ゲームは無料ですか？</dt>
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ¿Es gratis el juego?</dt>
         <dd style="margin-bottom: 12px">
-          A: はい、完全無料で楽しめます。ダウンロードやインストールは不要で、ブラウザからすぐにプレイ可能です。
+          A: Sí, es completamente gratis. No necesitas descargar ni instalar nada, puedes jugar directamente en el navegador.
         </dd>
 
-        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: どのデバイスでプレイできますか？</dt>
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ¿En qué dispositivos puedo jugar?</dt>
         <dd style="margin-bottom: 12px">
-          A: モバイルウェブに最適化されていますが、対応ブラウザがあればどの端末でもプレイできます。
+          A: Está optimizado para móviles, pero puedes jugar en cualquier dispositivo con un navegador compatible.
         </dd>
       </dl>
 
-      <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">ゲーム方法</h3>
+      <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">Cómo jugar</h3>
       <dl>
-        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ゲームの目的は何ですか？</dt>
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ¿Cuál es el objetivo del juego?</dt>
         <dd style="margin-bottom: 12px">
-          A: 自分のビー玉をすべてボード上に残し、相手のビー玉をすべてボード外に押し出せば勝利です。
+          A: El objetivo es mantener todas tus canicas dentro del tablero y empujar todas las canicas del oponente fuera para ganar.
         </dd>
 
-        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: どのようにビー玉を動かしますか？</dt>
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ¿Cómo muevo las canicas?</dt>
         <dd style="margin-bottom: 12px">
-          A: 自分のターンでビー玉を長押し＆ドラッグして、好きな方向と強さで弾きます。ドラッグの長さに応じて強さが増します。
+          A: En tu turno, mantén presionada tu canica y arrástrala en la dirección deseada. La fuerza depende de la longitud del arrastre.
         </dd>
 
-        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ビー玉がボード外に出たらどうなりますか？</dt>
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ¿Qué sucede si una canica sale del tablero?</dt>
         <dd style="margin-bottom: 12px">
-          A: ボード外に出たビー玉は除去されます。相手のビー玉を除去することが目的ですが、自分のビー玉が除去されると不利になります。
+          A: La canica se elimina. Empujar las canicas del oponente fuera te acerca a la victoria, pero si tu canica sale, estarás en desventaja.
         </dd>
 
-        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ゲームが終了する条件は何ですか？</dt>
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ¿Cuándo termina el juego?</dt>
         <dd style="margin-bottom: 12px">
-          A: どちらかのプレイヤーのすべてのビー玉がボード外に出るとゲーム終了し、残った色のプレイヤーの勝利です。両方とも同時に全部出た場合は引き分けになります。
+          A: El juego termina cuando todas las canicas de un jugador salen del tablero. El jugador con canicas restantes gana. Si ambos pierden la última al mismo tiempo, es empate.
         </dd>
       </dl>
 
-      <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">ゲームモード</h3>
+      <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">Modos de juego</h3>
       <dl>
-        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: AIモードはどうプレイしますか？</dt>
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ¿Cómo funciona el Modo IA?</dt>
         <dd style="margin-bottom: 12px">
-          A: AIモードではあなた（黒）がAI（白）と対戦します。AIは自動で自分のターンにビー玉を弾きます。
+          A: En Modo IA, tú (negro) juegas contra la IA (blanco). La IA lanzará canicas automáticamente en su turno.
         </dd>
 
-        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: 2人モードとは何ですか？</dt>
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ¿Qué es el Modo 2 Jugadores?</dt>
         <dd style="margin-bottom: 12px">
-          A: 2人モードでは二人のプレイヤーが同じ端末で交互にプレイします。友達と楽しめます。
+          A: En Modo 2 Jugadores, dos jugadores alternan turnos en el mismo dispositivo. ¡Ideal para jugar con amigos!
         </dd>
       </dl>
 
-      <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">トラブルシューティング</h3>
+      <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">Solución de problemas</h3>
       <dl>
-        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ゲームが正常に動きません。</dt>
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: El juego no funciona correctamente.</dt>
         <dd style="margin-bottom: 12px">
-          A: ブラウザをリロードするか、他のブラウザを試してください。ネットワーク状況も確認してください。問題が続く場合は開発者にお問い合わせください。
+          A: Recarga la página o prueba con otro navegador. Verifica tu conexión a internet. Si el problema persiste, contacta al desarrollador.
         </dd>
 
-        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ラグがひどいです。</dt>
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: Hay mucho lag.</dt>
         <dd style="margin-bottom: 12px">
-          A: デバイスの性能やバックグラウンドで動作している他アプリ/タブの影響かもしれません。不要なアプリ/タブを閉じるか、ネットワーク環境を確認してください。
+          A: Puede deberse al rendimiento del dispositivo o a otras aplicaciones/ pestañas en segundo plano. Cierra apps/pestañas innecesarias o verifica tu red.
         </dd>
       </dl>
 
-      <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">その他</h3>
+      <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">Otros</h3>
       <dl>
-        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ゲームへのフィードバックやアイデアを送りたいです。</dt>
+        <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: Quiero enviar comentarios o ideas.</dt>
         <dd style="margin-bottom: 12px">
-          A: ありがとうございます！ゲーム内のお問い合わせ先または開発者連絡先から自由にご意見をお送りください。
+          A: ¡Gracias! Puedes enviar sugerencias a través del contacto del juego o la información del desarrollador.
         </dd>
       </dl>
     </section>

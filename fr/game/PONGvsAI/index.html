@@ -1,30 +1,30 @@
 <!doctype html>
-<html lang="ja">
+<html lang="es">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="AIと対戦するPONGゲーム！レトロスタイルのPONGでAIに挑戦し、先に10点を獲得しましょう。モバイルとPCで無料で楽しめます。" />
+            content="¡Juega PONG contra la IA! Desafía a la IA en estilo retro y consigue 10 puntos primero. Disfruta gratis en móvil y PC." />
         <meta
             name="keywords"
-            content="PONG, PONG AI, PONG ウェブゲーム, ブラウザゲーム, クラシックアーケード, AI PONG, ピンポン, 卓球, 無料ゲーム, ウェブゲーム, モバイルゲーム, 即プレイ, アーケード" />
+            content="PONG, PONG IA, juego PONG web, juego de navegador, arcade clásico, IA PONG, ping pong, tenis de mesa, juego gratis, juego web, móvil, jugar al instante, arcade" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/fr/game/PONGvsAI" />
 
-        <meta property="og:title" content="PONG vs AI – クラシックPONGウェブゲーム" />
+        <meta property="og:title" content="PONG vs IA – Juego PONG clásico en web" />
         <meta
             property="og:description"
-            content="AIに挑戦して先に10点を獲得しよう！ブラウザでレトロなPONGを楽しんでください。ダウンロード不要で即プレイ！" />
+            content="¡Desafía a la IA y consigue 10 puntos primero! Disfruta del PONG retro en tu navegador. ¡Sin descargas, jugar al instante!" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/fr/game/PONGvsAI" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="PONG vs AI – クラシックPONGウェブゲーム" />
-        <meta name="twitter:description" content="スマートなAIと対戦するクラシックPONG。今すぐプレイしてスコアを共有しよう！" />
+        <meta name="twitter:title" content="PONG vs IA – Juego PONG clásico en web" />
+        <meta name="twitter:description" content="Juega PONG clásico contra una IA inteligente. ¡Juega ahora y comparte tu puntuación!" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -41,188 +41,29 @@
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <title>PONG vs AI</title>
-        <style>
-            html,
-            body {
-                margin: 0;
-                padding: 0;
-                background: #151a23;
-                min-height: 100vh;
-                width: 100vw;
-                overflow-x: hidden;
-            }
-
-            body {
-                box-sizing: border-box;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-
-            #container {
-                box-sizing: border-box;
-                width: 100vw;
-                max-width: 400px;
-                margin: 0 auto;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding: 0 0 8px 0;
-            }
-
-            #gameTitle {
-                color: #f9bc60;
-                font-size: 2.1rem;
-                margin-top: 2.1rem;
-                margin-bottom: 0.5rem;
-                text-align: center;
-                font-weight: bold;
-                letter-spacing: 2px;
-                word-break: keep-all;
-                white-space: nowrap;
-            }
-
-            #desc {
-                color: #eee;
-                text-align: center;
-                margin-bottom: 1.1rem;
-                font-size: 1.07rem;
-                line-height: 1.5;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: 100vw;
-            }
-
-            #pong {
-                background: #232946;
-                border-radius: 20px;
-                box-shadow: 0 8px 32px #0007;
-                display: block;
-                margin: 0 auto 14px auto;
-                width: 100vw;
-                max-width: 400px;
-                min-width: 0;
-                height: auto;
-            }
-
-            #scoreBoard {
-                color: #fff;
-                font-size: 1.5rem;
-                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-                margin-bottom: 5px;
-                letter-spacing: 2px;
-                text-align: center;
-                height: 2.1rem;
-            }
-
-            #startBtn,
-            .gameOverBtns button {
-                font-size: 1rem;
-                padding: 9px 26px;
-                border-radius: 10px;
-                border: none;
-                background: #ef4565;
-                color: #fff;
-                cursor: pointer;
-                margin: 12px 5px 0 5px;
-                box-shadow: 0 2px 8px #0003;
-                transition: background 0.2s;
-                font-weight: 600;
-                letter-spacing: 1px;
-                width: 80vw;
-                max-width: 340px;
-            }
-
-            #startBtn:hover,
-            .gameOverBtns button:hover {
-                background: #d7264c;
-            }
-
-            #winMsg {
-                color: #ffce6d;
-                font-size: 1.5rem;
-                font-weight: bold;
-                text-shadow: 2px 4px 10px #000b;
-                text-align: center;
-                margin-top: 10px;
-                min-height: 2.2rem;
-            }
-
-            .gameOverBtns {
-                text-align: center;
-                margin-top: 1.2rem;
-            }
-
-            #otherGames {
-                width: 100vw;
-                max-width: 400px;
-                margin: 32px auto 20px auto;
-                display: block;
-                font-size: 1.04rem;
-                padding: 12px 0;
-                border-radius: 10px;
-                border: none;
-                background: #f9bc60;
-                color: #22223b;
-                font-weight: 600;
-                letter-spacing: 1px;
-                box-shadow: 0 2px 8px #0002;
-                transition: background 0.18s;
-                text-align: center;
-                min-width: 0;
-            }
-
-            #otherGames:hover {
-                background: #facf85;
-            }
-
-            .desc-ctrl {
-                color: #bbb;
-                font-size: 0.98rem;
-                margin-top: 6px;
-                text-align: center;
-            }
-
-            @media (max-width: 450px) {
-                html,
-                body,
-                #container,
-                #pong,
-                #otherGames {
-                    width: 100vw !important;
-                    max-width: 100vw !important;
-                    min-width: 0 !important;
-                    box-sizing: border-box;
-                }
-                #gameTitle,
-                #desc {
-                    max-width: 100vw !important;
-                }
-            }
-        </style>
+        <title>PONG vs IA</title>
+        <link rel="stylesheet" href="style.css" />
     </head>
 
     <body>
         <div id="container">
-            <div id="gameTitle">PONG vs AI</div>
-            <div id="desc">先に10点取った方が勝ち！</div>
+            <div id="gameTitle">PONG vs IA</div>
+            <div id="desc">¡Consigue 10 puntos primero para ganar!</div>
             <div id="scoreBoard"></div>
             <canvas id="pong" width="400" height="260"></canvas>
-            <button id="startBtn" onclick="startGame()">ゲーム開始</button>
+            <button id="startBtn" onclick="startGame()">Iniciar Juego</button>
             <div id="winMsg"></div>
             <div class="gameOverBtns" style="display: none">
-                <button onclick="restartGame()">再スタート</button>
-                <button onclick="shareScore()">共有</button>
+                <button onclick="restartGame()">Reiniciar</button>
+                <button onclick="shareScore()">Compartir</button>
             </div>
             <div class="desc-ctrl">
-                操作方法: W/S (左側あなた) ・ 右パドルはAIが操作<br />モバイルでは左側をドラッグしてください。
+                Controles: W/S (tú, lado izquierdo) ・ IA controla la paleta derecha<br />En móvil, arrastra la parte izquierda.
             </div>
         </div>
-        <button id="otherGames" onclick="window.location.href='../'">他のゲーム</button>
+        <button id="otherGames" onclick="window.location.href='../'">Otros juegos</button>
         <script>
-            // --- 変数宣言 ---
+            // --- Declaración de variables ---
             const canvas = document.getElementById("pong");
             const ctx = canvas.getContext("2d");
             const scoreBoard = document.getElementById("scoreBoard");
@@ -245,7 +86,7 @@
             let aiLevel = 0.15;
             let rafId;
 
-            // スパークパーティクルシステム
+            // Sistema de partículas para destellos
             let particles = [];
 
             function spawnSpark(x, y, color = "#ffe287", count = 15) {
@@ -339,17 +180,17 @@
             function stepGame() {
                 leftY += leftMove * paddleSpeed;
                 leftY = Math.max(0, Math.min(canvas.height - paddleHeight, leftY));
-                // AI (右側)
+                // IA (lado derecho)
                 let targetY = ballY - (paddleHeight - ballSize) / 2;
                 rightY += (targetY - rightY) * aiLevel;
                 rightY = Math.max(0, Math.min(canvas.height - paddleHeight, rightY));
-                // ボール移動
+                // Movimiento de la pelota
                 ballX += ballVelX;
                 ballY += ballVelY;
 
-                // 壁反射
+                // Rebote en paredes
                 if (ballY <= 0 || ballY + ballSize >= canvas.height) ballVelY *= -1;
-                // パドル衝突
+                // Colisión con paletas
                 let sparkAt = null;
                 if (ballX <= 10 + paddleWidth && ballY + ballSize >= leftY && ballY <= leftY + paddleHeight) {
                     ballX = 10 + paddleWidth;
@@ -371,7 +212,7 @@
                 }
                 if (sparkAt) spawnSpark(sparkAt.x, sparkAt.y, sparkAt.color);
 
-                // 得点およびゲームオーバーチェック
+                // Marcador y comprobación de fin de juego
                 if (ballX < 0) {
                     rightScore++;
                     updateScore();
@@ -426,27 +267,27 @@
                 gameRunning = false;
                 inGame = false;
                 cancelAnimationFrame(rafId);
-                winMsgDiv.textContent = playerWin ? "あなたの勝ち！ 🎉" : "AIの勝利！ 🤖";
+                winMsgDiv.textContent = playerWin ? "¡Tú ganas! 🎉" : "¡IA gana! 🤖";
                 gameOverBtns.style.display = "block";
             }
 
-            // 共有ボタン
+            // Botón de compartir
             function shareScore() {
-                let text = `[PONG vs AI]\n${winMsgDiv.textContent}\nあなたのスコア: ${leftScore}, AI: ${rightScore}\n\nここでプレイ: ${window.location.href}`;
+                let text = `[PONG vs IA]\n${winMsgDiv.textContent}\nTu puntuación: ${leftScore}, IA: ${rightScore}\n\n¡Juega aquí!: ${window.location.href}`;
                 if (navigator.share) {
-                    navigator.share({ title: "PONG vs AI", text })
+                    navigator.share({ title: "PONG vs IA", text })
                         .catch(() => {
                             navigator.clipboard.writeText(text);
-                            alert("結果がクリップボードにコピーされました！\n\n" + text);
+                            alert("¡Resultado copiado al portapapeles!\n\n" + text);
                         });
                 } else {
                     navigator.clipboard.writeText(text).then(() => {
-                        alert("結果がクリップボードにコピーされました！\n\n" + text);
+                        alert("¡Resultado copiado al portapapeles!\n\n" + text);
                     });
                 }
             }
 
-            // キーボード操作
+            // Controles de teclado
             document.addEventListener("keydown", (e) => {
                 if (!inGame) return;
                 if (e.key === "w" || e.key === "W") leftMove = -1;
@@ -458,7 +299,7 @@
                 if (e.key === "s" || e.key === "S") leftMove = 0;
             });
 
-            // モバイルタッチ（左パドルのみ）
+            // Toques táctiles en móvil (solo paleta izquierda)
             canvas.addEventListener("touchstart", function (e) {
                 if (!inGame) return;
                 const rect = canvas.getBoundingClientRect();
@@ -483,7 +324,7 @@
                 e.preventDefault();
             });
 
-            // モバイルでのスクロール防止
+            // Evitar desplazamiento en móvil mientras se juega
             document.body.addEventListener(
                 "touchmove",
                 function (e) {
@@ -494,7 +335,7 @@
                 }
             );
 
-            // 初期表示
+            // Estado inicial
             updateScore();
             resetVars();
             draw();
@@ -516,36 +357,36 @@
                 line-height: 1.6;
                 color: #f0f0f0;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #f9bc60">❓ よくある質問</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #f9bc60">❓ Preguntas Frecuentes</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. どのようにプレイしますか？</strong><br />
-                A. 左側のパドルを操作し、AIより先に10点を獲得しましょう。W/Sキーを使うか、モバイルではドラッグで操作できます。
+                <strong>Q1. ¿Cómo se juega?</strong><br />
+                A. Maneja la paleta izquierda y consigue 10 puntos antes que la IA. Usa W/S en PC, o arrastra en la parte izquierda en móvil.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. 操作方法は何ですか？</strong><br />
-                A. PCではWキー（上）とSキー（下）を使用します。モバイルでは画面左側を指でドラッグしてください。
+                <strong>Q2. ¿Cómo controlo la paleta?</strong><br />
+                A. En PC, presiona W (arriba) y S (abajo). En móvil, arrastra la paleta izquierda con el dedo.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. AIはどのように動作しますか？</strong><br />
-                A. AIはボールを追跡し、自動でパドルを操作します。ボール速度が速くなるほどAIの難易度も上がります。
+                <strong>Q3. ¿Cómo funciona la IA?</strong><br />
+                A. La IA sigue la pelota y mueve la paleta automáticamente. Conforme la pelota se acelera, el nivel de dificultad aumenta.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. 勝利または敗北したらどうなりますか？</strong><br />
-                A. 勝利または敗北のメッセージが表示されます。その後、再スタートしたりスコアを共有したりできます。
+                <strong>Q4. ¿Qué pasa cuando alguien gana?</strong><br />
+                A. Aparecerá un mensaje de victoria o derrota. Luego puedes reiniciar el juego o compartir tu puntuación.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. 結果をどうやって共有できますか？</strong><br />
-                A. 「共有」ボタンを押すとスコアがコピーされ、友達と共有できます。
+                <strong>Q5. ¿Cómo comparto mi puntuación?</strong><br />
+                A. Pulsa el botón <strong>Compartir</strong> para copiar tu resultado y compartirlo con amigos.
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. モバイル対応ですか？</strong><br />
-                A. はい、モバイルおよびデスクトップのブラウザ両方に最適化されています。
+                <strong>Q6. ¿Es compatible con móvil?</strong><br />
+                A. Sí, está optimizado tanto para navegadores móviles como de escritorio.
             </div>
         </section>
     </body>

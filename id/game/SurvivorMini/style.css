@@ -1,0 +1,201 @@
+html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: #181a20;
+      }
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        font-family: "Segoe UI", "Inter", Arial, sans-serif;
+        background: radial-gradient(ellipse at center, #23243a 60%, #0e1020 100%);
+      }
+      #wrap {
+        position: relative;
+        width: 100vw;
+        max-width: 375px;
+        height: 90vh;
+        max-height: 650px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      canvas {
+        background: #191c27;
+        border-radius: 24px;
+        box-shadow: 0 10px 48px #001a, 0 0 12px #000a inset;
+        width: 100vw;
+        max-width: 375px;
+        height: 75vh;
+        max-height: 500px;
+        display: block;
+        touch-action: none;
+      }
+      #hud {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 8px;
+        padding: 0 20px;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        pointer-events: none;
+      }
+      #stats {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 700;
+        font-size: 1.18em;
+        color: #fff;
+        text-shadow: 0 2px 6px #000d;
+        margin-bottom: 7px;
+      }
+      #barwrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 5px;
+      }
+      .bar {
+        background: #232950;
+        border-radius: 9px;
+        height: 14px;
+        box-shadow: 0 1px 8px #23e4, 0 1px 2px #1119 inset;
+        flex: 1;
+        position: relative;
+        overflow: hidden;
+      }
+      .barfill {
+        background: linear-gradient(90deg, #28e 70%, #3ff);
+        height: 100%;
+        border-radius: 9px;
+        transition: 0.18s cubic-bezier(0.65, 1, 0.5, 1);
+      }
+      .bar.hp {
+        background: #39242e;
+      }
+      .bar.hp .barfill {
+        background: linear-gradient(90deg, #fd475d 60%, #fff);
+      }
+      #level {
+        font-size: 0.92em;
+        color: #ffecb0;
+        font-weight: 600;
+        background: #302e15cc;
+        border-radius: 7px;
+        padding: 3px 10px;
+        margin-left: 8px;
+        letter-spacing: 0.2px;
+        text-shadow: 0 2px 8px #000a;
+      }
+      /* === Diseño de ventana emergente central === */
+      .centerPopup {
+        display: none;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        min-width: 70%;
+        max-width: 95vw;
+        background: #212433ee;
+        color: #fff;
+        border-radius: 18px;
+        padding: 32px 16px 24px 16px;
+        z-index: 30;
+        box-shadow: 0 12px 48px #0009, 0 2px 14px #31ffeb17;
+        font-size: 1.19em;
+        text-align: center;
+        animation: fadein 0.32s cubic-bezier(0.4, 1.7, 0.6, 1);
+      }
+      @keyframes fadein {
+        from {
+          opacity: 0;
+          transform: scale(0.8) translate(-50%, -50%);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) translate(-50%, -50%);
+        }
+      }
+      .popupButtons {
+        margin-top: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 13px;
+      }
+      .popupBtn {
+        padding: 18px 6px 14px 6px;
+        font-size: 1.09em;
+        border-radius: 11px;
+        border: none;
+        background: #1f39fb;
+        color: #fff;
+        font-family: inherit;
+        font-weight: 700;
+        box-shadow: 0 2px 12px #001a;
+        cursor: pointer;
+        transition: 0.11s;
+        width: 100%;
+        outline: none;
+      }
+      .popupBtn:active {
+        background: #1a75ff;
+      }
+      /* === Mejora de UI para joystick === */
+      #joystickWrap {
+        position: absolute;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 140px;
+        height: 140px;
+        z-index: 10;
+        pointer-events: auto;
+        touch-action: none;
+        user-select: none;
+        opacity: 1;
+        transition: 0.19s;
+      }
+      #joystickWrap.inactive {
+        opacity: 0.2;
+        pointer-events: none;
+      }
+      #joystickBG {
+        width: 100%;
+        height: 100%;
+        background: none;
+        border-radius: 50%;
+        border: 2.7px solid #1cc8cc67;
+        position: absolute;
+        left: 0;
+        top: 0;
+        box-shadow: 0 6px 24px #10e7;
+        background: radial-gradient(circle at 65% 30%, #35396980 40%, #191c2760 80%);
+      }
+      #joystickKnob {
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        position: absolute;
+        left: 41px;
+        top: 41px;
+        background: radial-gradient(circle, #41b6fd 65%, #174f77 100%);
+        border: 3px solid #aef9;
+        box-shadow: 0 2px 12px #10e6;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.1em;
+        color: #fff;
+        touch-action: none;
+        cursor: pointer;
+        user-select: none;
+        transition: 0.07s cubic-bezier(0.4, 2, 0.7, 1.3);
+      }

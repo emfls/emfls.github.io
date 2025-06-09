@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="ja">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>英語発音（IPA）変換ツール</title>
+    <title>Herramienta de conversión de pronunciación (IPA) en inglés</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Google タグ (gtag.js) -->
+    <!-- Google Analytics (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -19,236 +19,84 @@
       async
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
       crossorigin="anonymous"></script>
+
     <!-- SEO -->
     <meta
       name="description"
-      content="英単語や文を簡単なIPAスタイルの発音記号に変換します。ルールベースで、無料でブラウザ内で即時使用可能です。アップロード不要で100%ブラウザ内で実行されます。" />
+      content="Convierte palabras y frases en inglés a una aproximación de estilo IPA basada en reglas. 100% en el navegador, gratis y sin subir datos." />
     <meta
       name="keywords"
-      content="english, ipa, pronunciation, converter, phonetic, phonics, pronunciation tool, phonetic transcription, online, study, education, 英語発音記号変換, ipa ツール, 無料, ブラウザ, 英語発音, english pronunciation, phoneme" />
+      content="inglés, ipa, pronunciación, conversor, fonético, transcripción, online, estudio, educación, herramienta ipa, gratis, navegador" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="ja" />
+    <meta name="language" content="es" />
     <meta name="theme-color" content="#1875d1" />
     <link rel="canonical" href="https://emfls.github.io/ru/util/ipa-convert/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+
     <!-- Open Graph -->
-    <meta property="og:title" content="英語 IPA 発音変換ツール – シンプルなルールベース" />
+    <meta property="og:title" content="Herramienta de conversión IPA para inglés – Basada en reglas" />
     <meta
       property="og:description"
-      content="英単語や文章を簡単なIPAスタイルの発音記号に変換します。ブラウザだけで無料ですぐに使えます。" />
+      content="Convierte texto en inglés a símbolos de pronunciación estilo IPA al instante. Gratis y 100% en el navegador." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/ru/util/ipa-convert/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="英語 IPA 発音変換ツール – シンプルなルールベース" />
+    <meta name="twitter:title" content="Herramienta de conversión IPA para inglés – Basada en reglas" />
     <meta
       name="twitter:description"
-      content="英語テキストをIPAスタイルの発音に即時変換できます。ルールベースで、ブラウザ内で無料で使えます。" />
+      content="Convierte texto en inglés a IPA al instante con reglas simples. 100% gratis en tu navegador." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-    <style>
-      /* ... 既存スタイル生かす ... */
-      body {
-        background: #f7f9fe;
-        margin: 0;
-        font-family: "Segoe UI", Arial, sans-serif;
-        color: #234;
-      }
-      .container {
-        max-width: 430px;
-        margin: 40px auto 0 auto;
-        background: #fff;
-        border-radius: 16px;
-        box-shadow: 0 4px 20px #2238;
-        padding: 30px 20px 18px 20px;
-      }
-      .logo {
-        font-size: 1.21em;
-        font-weight: bold;
-        text-align: center;
-        color: #154185;
-        margin-bottom: 10px;
-        letter-spacing: 0.02em;
-      }
-      .desc {
-        text-align: center;
-        color: #2262b3;
-        margin-bottom: 15px;
-        font-size: 1.03em;
-      }
-      .form-row {
-        margin-bottom: 14px;
-      }
-      input[type="text"] {
-        padding: 10px 11px;
-        border-radius: 7px;
-        border: 1.2px solid #bfd8ff;
-        font-size: 1.08em;
-        width: 100%;
-        background: #fafdff;
-        color: #234;
-        transition: border 0.15s;
-        box-sizing: border-box;
-      }
-      input[type="text"]:focus {
-        border-color: #2278d4;
-        outline: none;
-      }
-      .action-btn {
-        background: #1875d1;
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        padding: 12px 0;
-        width: 100%;
-        font-size: 1.13em;
-        font-weight: bold;
-        cursor: pointer;
-        margin-top: 7px;
-        margin-bottom: 11px;
-        box-shadow: 0 2px 12px #1875d120;
-        transition: background 0.15s;
-      }
-      .action-btn:active {
-        background: #0e4775;
-      }
-      .result-block {
-        background: #f4f7fd;
-        border: 1.2px solid #bfe1fa;
-        border-radius: 9px;
-        padding: 18px 11px 13px 11px;
-        margin-bottom: 7px;
-        color: #194f9e;
-        font-size: 1.14em;
-        text-align: center;
-        word-break: break-all;
-      }
-      section#faq {
-        background: #f0f7fc;
-        border-radius: 15px;
-        padding: 18px 14px 13px 16px;
-        margin: 28px 0 0 0;
-        border: 1px solid #b9daf8;
-        font-size: 0.99em;
-      }
-      section#faq h3 {
-        font-weight: bold;
-        color: #1875d1;
-        margin-bottom: 6px;
-        font-size: 1.08em;
-        text-align: center;
-      }
-      section#faq dt {
-        color: #195269;
-        margin-top: 10px;
-        margin-bottom: 2px;
-        font-weight: 500;
-      }
-      section#faq dd {
-        color: #265a7a;
-        margin-left: 7px;
-        margin-bottom: 7px;
-      }
-      .ipa {
-        font-size: 1.35em;
-        color: #1974b8;
-        background: #e6f4fc;
-        border-radius: 6px;
-        padding: 5px 12px;
-        display: inline-block;
-        margin: 8px 0 5px 0;
-        font-family: "Segoe UI", "Arial", "Times New Roman", serif;
-        letter-spacing: 1px;
-      }
-      .footer {
-        color: #789;
-        text-align: center;
-        font-size: 0.96em;
-        margin-top: 18px;
-      }
-      #backBtn {
-        position: fixed;
-        left: 50%;
-        bottom: 32px;
-        transform: translateX(-50%);
-        background: #1875d1;
-        color: #fff;
-        font-weight: 700;
-        border: none;
-        border-radius: 2rem;
-        padding: 0.58em 1.5em;
-        box-shadow: 0 4px 16px #1875d133;
-        font-size: 1.09em;
-        text-decoration: none;
-        cursor: pointer;
-        letter-spacing: 0.01em;
-        transition:
-          background 0.15s,
-          transform 0.12s;
-        z-index: 2000;
-      }
-      #backBtn:hover {
-        background: #0e4775;
-        transform: translateX(-50%) scale(1.04);
-      }
-      @media (max-width: 600px) {
-        .container {
-          max-width: 99vw;
-          padding: 12px 2vw 14px 2vw;
-        }
-        #backBtn {
-          bottom: 18px;
-          font-size: 0.98em;
-          padding: 0.48em 1em;
-        }
-      }
-    </style>
+
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="container">
-      <div class="logo">🔤 英語発音変換ツール</div>
+      <div class="logo">🔤 Convertidor de pronunciación IPA</div>
       <div class="desc">
-        英単語または文章を入力してください。<br />
-        簡易IPAスタイルの発音に変換されます。<br />
-        <b>ルールベースで学習用および楽しみ用（正式なIPAではありません！）</b>
+        Ingresa una palabra o frase en inglés.<br />
+        Se mostrará una aproximación en estilo IPA.<br />
+        <b>Basado en reglas, para aprender y divertirse (¡no IPA oficial!).</b>
       </div>
       <form id="form" autocomplete="off">
         <div class="form-row">
-          <input type="text" id="input" placeholder="英単語を入力（例: enough, school, photo）" required />
+          <input type="text" id="input" placeholder="Escribe una palabra (ej: enough, school, photo)" required />
         </div>
-        <button type="submit" class="action-btn">変換</button>
+        <button type="submit" class="action-btn">Convertir</button>
       </form>
       <div id="result"></div>
+
       <section id="faq" aria-labelledby="faq-head">
-        <h3 id="faq-head">FAQ – 英語発音（IPA）変換ツール</h3>
+        <h3 id="faq-head">FAQ – Convertidor IPA para inglés</h3>
         <dl>
-          <dt>これは本物のIPAですか？</dt>
-          <dd>いいえ。このツールは簡易ルールで英語の発音を大まかに表記します。言語学や試験用ではなく、学習および楽しむためのものです。</dd>
-          <dt>入力したテキストはサーバーに送信されますか？</dt>
-          <dd>いいえ。すべての変換はブラウザ内で行われます。テキストが外部に送信されることはありません。</dd>
-          <dt>どの英語アクセントを使用していますか？</dt>
-          <dd>アメリカ英語とイギリス英語のルールを混合して簡易化しています。実際の方言に完全には一致しません。</dd>
-          <dt>文章も入力できますか？</dt>
-          <dd>はい。単語でも文章でも入力できます。各単語が個別に変換されます。</dd>
-          <dt>このツールは無料ですか？</dt>
-          <dd>はい。このツールは100%無料で、誰でも自由に利用できます。</dd>
+          <dt>¿Es IPA real?</dt>
+          <dd>No. Usa reglas simples para aproximar la pronunciación. No es adecuado para estudios lingüísticos ni exámenes.</dd>
+          <dt>¿Se envía mi texto a un servidor?</dt>
+          <dd>No. Toda la conversión se realiza en tu navegador; nada se envía a la nube.</dd>
+          <dt>¿Qué acento usa?</dt>
+          <dd>Mezcla reglas de inglés americano e inglés británico de manera simplificada.</dd>
+          <dt>¿Puedo ingresar frases completas?</dt>
+          <dd>Sí. Convierte cualquier texto; cada palabra se procesa individualmente.</dd>
+          <dt>¿Es gratis?</dt>
+          <dd>Sí, 100% gratuito y accesible para todos.</dd>
         </dl>
       </section>
+
       <div class="footer">
-        英語を簡易ルールに基づいて大まかなIPA発音に変換します。<br />
-        学習および楽しみ用です。<br />
-        <span style="color: #bbb">100%ブラウザ内で実行、データアップロードなし。</span>
+        Convierte texto en inglés a una aproximación IPA basada en reglas.<br />
+        Para aprender y divertirse.<br />
+        <span style="color: #bbb">100% en el navegador, sin subir datos.</span>
       </div>
     </div>
-    <a href="../" id="backBtn">Other Util</a>
+    <a href="../" id="backBtn">Otras utilidades</a>
+
     <script>
-      // ... 既存のJSをそのまま活かす ...
       function toIPA(word) {
         if (!word.trim()) return "";
         let w = word.toLowerCase();
-        // 優先的に長いパターンから置換
         const rules = [
-          // ch, sh, th, ph, wh, qu
           [/(sch)/g, "sk"],
           [/ch/g, "tʃ"],
           [/sh/g, "ʃ"],
@@ -256,7 +104,6 @@
           [/ph/g, "f"],
           [/wh/g, "w"],
           [/qu/g, "kw"],
-          // 二重母音 / 長母音
           [/oo/g, "uː"],
           [/ee/g, "iː"],
           [/ea/g, "iː"],
@@ -270,14 +117,11 @@
           [/ei/g, "iː"],
           [/oy/g, "ɔɪ"],
           [/oi/g, "ɔɪ"],
-          // gn, kn, wr, mb
           [/gn/g, "n"],
           [/kn/g, "n"],
           [/wr/g, "r"],
           [/mb\b/g, "m"],
-          // 語尾のサイレントe
           [/e\b/g, ""],
-          // よく使われる単語（不規則）
           [/\bthe\b/g, "ðə"],
           [/\band\b/g, "ænd"],
           [/\bof\b/g, "ʌv"],
@@ -287,71 +131,30 @@
           [/\byou\b/g, "juː"],
           [/\bi\b/g, "aɪ"]
         ];
-        // 1文字ずつのルール
         const letters = {
-          a: "æ",
-          b: "b",
-          c: "k",
-          d: "d",
-          e: "ɛ",
-          f: "f",
-          g: "g",
-          h: "h",
-          i: "ɪ",
-          j: "dʒ",
-          k: "k",
-          l: "l",
-          m: "m",
-          n: "n",
-          o: "ɒ",
-          p: "p",
-          q: "k",
-          r: "r",
-          s: "s",
-          t: "t",
-          u: "ʌ",
-          v: "v",
-          w: "w",
-          x: "ks",
-          y: "j",
-          z: "z"
+          a: "æ", b: "b", c: "k", d: "d", e: "ɛ", f: "f", g: "g",
+          h: "h", i: "ɪ", j: "dʒ", k: "k", l: "l", m: "m", n: "n",
+          o: "ɒ", p: "p", q: "k", r: "r", s: "s", t: "t",
+          u: "ʌ", v: "v", w: "w", x: "ks", y: "j", z: "z"
         };
-        // ルール適用
-        for (const [pattern, rep] of rules) w = w.replace(pattern, rep);
-        // アルファベット→IPAの単純変換
+        for (const [pat, rep] of rules) w = w.replace(pat, rep);
         let ipa = "";
-        for (let i = 0; i < w.length; ++i) {
-          const ch = w[i];
-          ipa += letters[ch] !== undefined ? letters[ch] : ch;
-        }
-        // 単語ごとに / を追加
-        let output = ipa
-          .split(/\s+/)
-          .map((x) => (x ? "/" + x + "/" : ""))
-          .join(" ");
-        return output;
+        for (let ch of w) ipa += letters[ch] ?? ch;
+        return ipa.split(/\s+/).map(x => x ? "/" + x + "/" : "").join(" ");
       }
-      const form = document.getElementById("form");
-      const input = document.getElementById("input");
-      const result = document.getElementById("result");
-      form.onsubmit = function (e) {
-        e.preventDefault();
+      const form = document.getElementById("form"),
+            input = document.getElementById("input"),
+            result = document.getElementById("result");
+      function update() {
         const val = input.value.trim();
-        if (!val) return;
-        const ipa = toIPA(val);
-        result.innerHTML = `<div class="ipa">${ipa}</div>`;
-      };
-      input.addEventListener("input", () => {
-        if (!input.value.trim()) {
-          result.innerHTML = "";
-          return;
-        }
-        const ipa = toIPA(input.value);
-        result.innerHTML = `<div class="ipa">${ipa}</div>`;
-      });
+        result.innerHTML = val ? `<div class="ipa">${toIPA(val)}</div>` : "";
+      }
+      form.onsubmit = e => { e.preventDefault(); update(); };
+      input.addEventListener("input", update);
       input.focus();
     </script>
-    <!-- FAQPage 構造化データ (SEO/SGE/ネ이버/Google リッチ対応) -->
+
+    <!-- FAQPage JSON-LD -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -359,42 +162,42 @@
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "これは本物のIPAですか？",
+          "name": "¿Es IPA real?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "いいえ。このツールは簡易ルールで英語の発音を大まかに表記します。言語学や試験用ではなく、学習および楽しむためのものです。"
+            "text": "No. Usa reglas simples para aproximar la pronunciación. No es adecuado para estudios lingüísticos ni exámenes."
           }
         },
         {
           "@type": "Question",
-          "name": "入力したテキストはサーバーに送信されますか？",
+          "name": "¿Se envía mi texto a un servidor?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "いいえ。すべての変換はブラウザ内で行われます。テキストが外部に送信されることはありません。"
+            "text": "No. Toda la conversión se realiza en tu navegador; nada se envía a la nube."
           }
         },
         {
           "@type": "Question",
-          "name": "どの英語アクセントを使用していますか？",
+          "name": "¿Qué acento usa?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "アメリカ英語とイギリス英語のルールを混合して簡易化しています。実際の方言に完全には一致しません。"
+            "text": "Mezcla reglas de inglés americano e inglés británico de manera simplificada."
           }
         },
         {
           "@type": "Question",
-          "name": "文章も入力できますか？",
+          "name": "¿Puedo ingresar frases completas?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "はい。単語でも文章でも入力できます。各単語が個別に変換されます。"
+            "text": "Sí. Convierte cualquier texto; cada palabra se procesa individualmente."
           }
         },
         {
           "@type": "Question",
-          "name": "このツールは無料ですか？",
+          "name": "¿Es gratis?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "はい。このツールは100%無料で、誰でも自由に利用できます。"
+            "text": "Sí, 100% gratuito y accesible para todos."
           }
         }
       ]
