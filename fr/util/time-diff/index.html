@@ -1,32 +1,32 @@
 <!doctype html>
-<html lang="es">
+<html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <title>Calculadora de Diferencias y Cuenta Regresiva</title>
+    <title>Calculateur de Différence et Compte à Rebours</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Calcula la diferencia entre dos fechas y muestra una cuenta regresiva en tiempo real hasta la fecha y hora especificadas. Días, horas, minutos y segundos. Gratis, basado en navegador y compatible con móviles." />
+      content="Calculez la différence entre deux dates et affichez un compte à rebours en temps réel jusqu'à la date et l'heure choisies. Jours, heures, minutes et secondes. Gratuit, basé sur navigateur et compatible mobile." />
     <meta
       name="keywords"
-      content="diferencia horaria, cuenta regresiva, cálculo de fechas, temporizador, días, horas, minutos, segundos, web, calculadora de fechas" />
+      content="différence de temps, compte à rebours, calcul de dates, minuterie, jours, heures, minutes, secondes, web, calculateur de dates" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="es" />
+    <meta name="language" content="fr" />
     <meta name="theme-color" content="#1999c6" />
     <link rel="canonical" href="https://emfls.github.io/fr/util/time-diff/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <meta property="og:title" content="Calculadora de Diferencias y Cuenta Regresiva" />
+    <meta property="og:title" content="Calculateur de Différence et Compte à Rebours" />
     <meta
       property="og:description"
-      content="Calcula la diferencia entre dos fechas y muestra una cuenta regresiva en tiempo real hasta la fecha y hora especificadas." />
+      content="Calculez l'écart entre deux dates et affichez un compte à rebours en direct jusqu'à la date/heure cible." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/fr/util/time-diff/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Calculadora de Diferencias y Cuenta Regresiva" />
+    <meta name="twitter:title" content="Calculateur de Différence et Compte à Rebours" />
     <meta
       name="twitter:description"
-      content="Calcula intervalos y realiza cuenta regresiva en tiempo real. 100% en navegador, sin subir datos." />
+      content="Calculez des intervalles et lancez un compte à rebours en temps réel. 100% dans le navigateur, sans envoi de données." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -45,25 +45,25 @@
   </head>
   <body>
     <div class="container">
-      <div class="title">⏳ Diferencia de Tiempo & Cuenta Regresiva</div>
+      <div class="title">⏳ Différence de Temps & Compte à Rebours</div>
       <form id="diffForm" autocomplete="off">
         <div class="form-row">
-          <label for="startTime">Fecha y hora de inicio</label>
+          <label for="startTime">Date et heure de début</label>
           <input type="datetime-local" id="startTime" />
         </div>
         <div class="form-row">
-          <label for="endTime">Fecha y hora de fin</label>
+          <label for="endTime">Date et heure de fin</label>
           <input type="datetime-local" id="endTime" />
         </div>
         <div class="result" id="diffResult"></div>
       </form>
       <div class="countdown" id="countdownBox"></div>
       <div class="footer">
-        Calcula la diferencia en días, horas, minutos y segundos entre dos fechas, o comprueba una cuenta regresiva en tiempo real.<br />
-        <b>Consejo:</b> Para solo cuenta regresiva, ingresa únicamente la "Fecha y hora de fin".
+        Calculez la différence en jours, heures, minutes et secondes entre deux dates, ou suivez un compte à rebours en direct.<br />
+        <b>Astuce&nbsp;:</b> Pour un simple compte à rebours, entrez uniquement la « date et heure de fin ».
       </div>
     </div>
-    <a href="../" id="backBtn">Ver otras herramientas</a>
+    <a href="../" id="backBtn">Voir d’autres outils</a>
     <script>
       const startInput = document.getElementById("startTime");
       const endInput = document.getElementById("endTime");
@@ -78,7 +78,7 @@
         const hours = Math.floor((abs % 86400000) / 3600000);
         const mins = Math.floor((abs % 3600000) / 60000);
         const secs = Math.floor((abs % 60000) / 1000);
-        return `<b>${sign}${days} días</b> &nbsp; <b>${hours} h</b> &nbsp; <b>${mins} m</b> &nbsp; <b>${secs} s</b>`;
+        return `<b>${sign}${days} jours</b> &nbsp; <b>${hours} h</b> &nbsp; <b>${mins} min</b> &nbsp; <b>${secs} s</b>`;
       }
 
       function update() {
@@ -86,7 +86,7 @@
         const end = endInput.value ? new Date(endInput.value) : null;
         if (start && end) {
           const ms = end - start;
-          result.innerHTML = isNaN(ms) ? "Fecha u hora inválida." : formatDiff(ms);
+          result.innerHTML = isNaN(ms) ? "Date ou heure invalide." : formatDiff(ms);
         } else {
           result.textContent = "";
         }
@@ -100,11 +100,11 @@
               return;
             }
             if (ms <= 0) {
-              countdownBox.innerHTML = `<b>¡Tiempo cumplido!</b>`;
+              countdownBox.innerHTML = `<b>Temps écoulé&nbsp;!</b>`;
               clearInterval(countdownTimer);
               return;
             }
-            countdownBox.innerHTML = `<b>Cuenta regresiva: </b>` + formatDiff(ms);
+            countdownBox.innerHTML = `<b>Compte à rebours&nbsp;: </b>` + formatDiff(ms);
           }
           if (countdownTimer) clearInterval(countdownTimer);
           tick();
@@ -130,27 +130,27 @@
         font-family: Arial, sans-serif;
       ">
       <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 14px">
-        ❓ Preguntas Frecuentes – Diferencia y Cuenta Regresiva
+        ❓ FAQ – Différence & Compte à Rebours
       </div>
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">¿Necesito conexión o subir datos?</div>
-        <div style="color: #f0f0f0">No. Todos los cálculos se hacen localmente en el navegador y no se envía nada externamente.</div>
+        <div style="color: #8f94fb; font-weight: bold">Ai-je besoin d’une connexion ou d’envoyer des données&nbsp;?</div>
+        <div style="color: #f0f0f0">Non. Tous les calculs se font localement dans le navigateur. Rien n’est envoyé à l’extérieur.</div>
       </div>
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">¿Cómo usar la cuenta regresiva?</div>
-        <div style="color: #f0f0f0">Solo ingresa la "Fecha y hora de fin" y verás el tiempo restante desde ahora.</div>
+        <div style="color: #8f94fb; font-weight: bold">Comment utiliser le compte à rebours&nbsp;?</div>
+        <div style="color: #f0f0f0">Saisissez simplement la « date et heure de fin » pour voir le temps restant à partir de maintenant.</div>
       </div>
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">¿Qué ocurre si ingreso ambas fechas?</div>
-        <div style="color: #f0f0f0">Verás la diferencia y, si la fecha inicial ya pasó, también la cuenta regresiva.</div>
+        <div style="color: #8f94fb; font-weight: bold">Que se passe-t-il si je saisis les deux dates&nbsp;?</div>
+        <div style="color: #f0f0f0">Vous verrez la différence, et si la date de début est passée, le compte à rebours s’affichera aussi.</div>
       </div>
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">¿Se muestran diferencias negativas?</div>
-        <div style="color: #f0f0f0">Sí. Si la fecha final es anterior a la inicial, el resultado mostrará un signo "-".</div>
+        <div style="color: #8f94fb; font-weight: bold">Les différences négatives sont-elles affichées&nbsp;?</div>
+        <div style="color: #f0f0f0">Oui. Si la date de fin est antérieure à la date de début, un signe « - » apparaîtra devant le résultat.</div>
       </div>
       <div style="margin-bottom: 0">
-        <div style="color: #8f94fb; font-weight: bold">¿Funciona en móviles?</div>
-        <div style="color: #f0f0f0">Sí. La herramienta es responsive y funciona en smartphones, tablets y PC.</div>
+        <div style="color: #8f94fb; font-weight: bold">Est-ce que ça fonctionne sur mobile&nbsp;?</div>
+        <div style="color: #f0f0f0">Oui. L’outil est responsive et fonctionne sur smartphone, tablette et PC.</div>
       </div>
     </section>
   </body>

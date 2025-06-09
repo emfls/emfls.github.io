@@ -1,36 +1,36 @@
 <!doctype html>
-<html lang="es">
+<html lang="fr">
 <head>
     <meta charset="UTF-8" />
-    <title>HTML → Imagen/PDF Conversor</title>
+    <title>Convertisseur HTML → Image/PDF</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <meta
         name="description"
-        content="Convierte páginas web o tu propio código HTML en imágenes de alta calidad o PDF al instante. 100% gratuito, privacidad garantizada y todo en el navegador." />
+        content="Convertissez des pages web ou votre propre code HTML en images de haute qualité ou en PDF instantanément. 100 % gratuit, confidentialité garantie, tout reste dans votre navigateur." />
     <meta
         name="keywords"
-        content="html imagen conversión, html pdf conversión, captura de pantalla web, html2canvas, jsPDF, herramienta navegador, gratis" />
+        content="conversion html image, conversion html pdf, capture d’écran web, html2canvas, jsPDF, outil navigateur, gratuit" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="es" />
+    <meta name="language" content="fr" />
     <meta name="theme-color" content="#4653ce" />
     <link rel="canonical" href="https://emfls.github.io/fr/util/html2imgpdf/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Conversor HTML → Imagen y PDF" />
+    <meta property="og:title" content="Convertisseur HTML → Image et PDF" />
     <meta
         property="og:description"
-        content="Convierte páginas web o código HTML en PNG, JPG o PDF de forma gratuita. 100% en tu navegador, privacidad protegida." />
+        content="Convertissez des pages web ou du code HTML en PNG, JPG ou PDF gratuitement. 100 % local, confidentialité garantie." />
     <meta property="og:url" content="https://emfls.github.io/fr/util/html2imgpdf/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Conversor HTML → Imagen y PDF" />
+    <meta name="twitter:title" content="Convertisseur HTML → Image et PDF" />
     <meta
         name="twitter:description"
-        content="Convierte páginas web o código HTML directamente en tu navegador a imágenes o PDF. Sin subidas ni marcas de agua." />
+        content="Convertissez des pages web ou du code HTML en images ou PDF directement dans votre navigateur. Aucun envoi, aucun filigrane." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
     <!-- Google Analytics (gtag.js) -->
@@ -44,7 +44,7 @@
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
         crossorigin="anonymous"></script>
-    <!-- Librerías -->
+    <!-- Librairies -->
     <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.4/dist/purify.min.js"></script>
@@ -52,70 +52,70 @@
 </head>
 <body>
     <div class="container" itemscope itemtype="https://schema.org/WebApplication">
-        <div class="logo" itemprop="name">🖼️ Herramienta HTML → Imagen/PDF</div>
+        <div class="logo" itemprop="name">🖼️ Outil HTML → Image/PDF</div>
         <div class="desc">
-            Convierte páginas web o tu propio código HTML a PNG/JPG o PDF. Funciona completamente en tu navegador.<br />
-            Gratuito y sin marcas de agua.
+            Convertissez une page web ou votre propre code HTML en PNG/JPG ou PDF. Fonctionne entièrement dans votre navigateur.<br />
+            Gratuit et sans filigrane.
         </div>
         <div class="tab-row">
-            <button class="tab-btn active" id="urlTabBtn">Convertir URL</button>
-            <button class="tab-btn" id="htmlTabBtn">Ingresar HTML</button>
+            <button class="tab-btn active" id="urlTabBtn">Convertir une URL</button>
+            <button class="tab-btn" id="htmlTabBtn">Entrer du HTML</button>
         </div>
-        <!-- URL → Previsualización -->
+        <!-- URL → Prévisualisation -->
         <div id="urlTab">
             <div class="input-row">
-                <label for="urlInput">URL de la página</label>
-                <input type="text" id="urlInput" placeholder="https://ejemplo.com" />
+                <label for="urlInput">URL de la page</label>
+                <input type="text" id="urlInput" placeholder="https://exemple.com" />
             </div>
-            <button class="action-btn" id="fetchUrlBtn">Cargar y previsualizar</button>
+            <button class="action-btn" id="fetchUrlBtn">Charger et prévisualiser</button>
             <div id="urlRenderBox" style="display: none; margin-top: 13px;">
                 <div id="urlRender" style="background:#fafcff;border:1px solid #ddd;border-radius:10px;overflow:auto;padding:19px;"></div>
                 <div class="result-row" id="urlResultRow" style="display: none;">
-                    <button class="download-btn" id="downloadUrlImg">Descargar PNG</button>
-                    <button class="download-btn" id="downloadUrlPdf">Descargar PDF</button>
+                    <button class="download-btn" id="downloadUrlImg">Télécharger PNG</button>
+                    <button class="download-btn" id="downloadUrlPdf">Télécharger PDF</button>
                 </div>
             </div>
         </div>
-        <!-- HTML → Previsualización -->
+        <!-- HTML → Prévisualisation -->
         <div id="htmlTab" style="display:none;">
             <div class="input-row">
-                <label for="htmlInput">Código HTML</label>
-                <textarea id="htmlInput" placeholder="<div>¡Hola!</div>"></textarea>
+                <label for="htmlInput">Code HTML</label>
+                <textarea id="htmlInput" placeholder="<div>Bonjour !</div>"></textarea>
             </div>
-            <button class="action-btn" id="renderHtmlBtn">Previsualizar y convertir</button>
+            <button class="action-btn" id="renderHtmlBtn">Prévisualiser et convertir</button>
             <div id="htmlRenderBox" style="display: none; margin-top: 13px;">
                 <div id="htmlRender" style="background:#fafcff;border:1px solid #ddd;border-radius:10px;overflow:auto;padding:19px;"></div>
                 <div class="result-row" id="htmlResultRow" style="display: none;">
-                    <button class="download-btn" id="downloadHtmlImg">Descargar PNG</button>
-                    <button class="download-btn" id="downloadHtmlPdf">Descargar PDF</button>
+                    <button class="download-btn" id="downloadHtmlImg">Télécharger PNG</button>
+                    <button class="download-btn" id="downloadHtmlPdf">Télécharger PDF</button>
                 </div>
             </div>
         </div>
         <div class="footer">
-            <b>Nota:</b> Las URL externas pueden estar limitadas por CORS, y sitios con JavaScript dinámico pueden no renderizarse correctamente.<br />
-            Para mejores resultados, usa HTML sencillo.
+            <b>Note :</b> Les URL externes peuvent être limitées par CORS et les sites avec du JavaScript dynamique peuvent ne pas s’afficher correctement.<br />
+            Pour de meilleurs résultats, utilisez du HTML simple.
         </div>
         <section id="faq" aria-labelledby="faq-head">
-            <h2 id="faq-head">Preguntas frecuentes</h2>
+            <h2 id="faq-head">Foire aux questions</h2>
             <dl>
-                <dt>¿Qué hace esta herramienta?</dt>
-                <dd>Convierte páginas web (URL) o código HTML en imágenes PNG/JPG o archivos PDF directamente en tu navegador.</dd>
-                <dt>¿Se suben o guardan mis datos?</dt>
-                <dd>No. Todo se procesa localmente en tu navegador; no se envía nada a ningún servidor.</dd>
-                <dt>¿Funciona con cualquier sitio?</dt>
-                <dd>La mayoría de sitios públicos funcionarán, pero algunos pueden estar restringidos por CORS o scripts dinámicos.</dd>
-                <dt>¿En qué formatos puedo exportar?</dt>
-                <dd>Puedes descargar PNG o PDF de la vista previsualizada.</dd>
-                <dt>¿Por qué difiere del sitio real?</dt>
-                <dd>Los scripts dinámicos, fuentes externas y políticas CORS pueden impedir que ciertos recursos se carguen.</dd>
-                <dt>¿Es gratuito?</dt>
-                <dd>Sí, 100% gratuito y sin necesidad de registro ni marcas de agua.</dd>
+                <dt>À quoi sert cet outil ?</dt>
+                <dd>Il permet de convertir des pages web (URL) ou du code HTML en images PNG/JPG ou en fichiers PDF, directement dans votre navigateur.</dd>
+                <dt>Mes données sont-elles envoyées ou stockées ?</dt>
+                <dd>Non. Tout est traité localement dans votre navigateur : rien n’est envoyé sur un serveur.</dd>
+                <dt>Est-ce que ça marche avec tous les sites ?</dt>
+                <dd>La plupart des sites publics fonctionnent, mais certains peuvent être restreints par le CORS ou du JavaScript dynamique.</dd>
+                <dt>Quels formats puis-je exporter ?</dt>
+                <dd>Vous pouvez télécharger une prévisualisation en PNG ou PDF.</dd>
+                <dt>Pourquoi le rendu diffère-t-il du site réel ?</dt>
+                <dd>Les scripts dynamiques, les polices externes et les politiques CORS peuvent empêcher certains éléments de s’afficher.</dd>
+                <dt>Est-ce vraiment gratuit ?</dt>
+                <dd>Oui, 100 % gratuit, sans inscription ni filigrane.</dd>
             </dl>
         </section>
     </div>
-    <a href="../" id="backBtn">Otras utilidades</a>
+    <a href="../" id="backBtn">Autres outils</a>
     <script>
-        // Cambio de pestañas
+        // Changement d’onglets
         const urlTabBtn = document.getElementById("urlTabBtn");
         const htmlTabBtn = document.getElementById("htmlTabBtn");
         const urlTab = document.getElementById("urlTab");
@@ -136,7 +136,7 @@
         // Convertir URL
         document.getElementById("fetchUrlBtn").onclick = async function () {
             const url = document.getElementById("urlInput").value.trim();
-            if (!url) return alert("Introduce una URL válida.");
+            if (!url) return alert("Veuillez saisir une URL valide.");
             try {
                 const res = await fetch(url);
                 const text = await res.text();
@@ -145,13 +145,13 @@
                 document.getElementById("urlRenderBox").style.display = "block";
                 document.getElementById("urlResultRow").style.display = "flex";
             } catch {
-                alert("Error al cargar o renderizar la página. Puede ser un problema de CORS o de scripts dinámicos.");
+                alert("Erreur lors du chargement ou de l’affichage de la page. Il peut s’agir d’un problème de CORS ou de JavaScript dynamique.");
             }
         };
         document.getElementById("downloadUrlImg").onclick = () => {
             html2canvas(document.getElementById("urlRender")).then(canvas => {
                 const link = document.createElement("a");
-                link.download = "pagina.png";
+                link.download = "page.png";
                 link.href = canvas.toDataURL();
                 link.click();
             });
@@ -163,7 +163,7 @@
                 const w = pdf.internal.pageSize.getWidth();
                 const h = (canvas.height * w) / canvas.width;
                 pdf.addImage(imgData, "PNG", 0, 0, w, h);
-                pdf.save("pagina.pdf");
+                pdf.save("page.pdf");
             });
         };
 
@@ -194,7 +194,7 @@
             });
         };
     </script>
-    <!-- Estructura FAQPage para SEO -->
+    <!-- Structure FAQPage pour SEO -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -202,50 +202,50 @@
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "¿Qué hace esta herramienta?",
+          "name": "À quoi sert cet outil ?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Convierte páginas web (URL) o código HTML en imágenes PNG/JPG o archivos PDF directamente en tu navegador."
+            "text": "Il permet de convertir des pages web (URL) ou du code HTML en images PNG/JPG ou fichiers PDF directement dans votre navigateur."
           }
         },
         {
           "@type": "Question",
-          "name": "¿Se suben o guardan mis datos?",
+          "name": "Mes données sont-elles envoyées ou stockées ?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. Todo se procesa localmente en tu navegador; no se envía nada a ningún servidor."
+            "text": "Non. Tout est traité localement dans votre navigateur : rien n’est envoyé sur un serveur."
           }
         },
         {
           "@type": "Question",
-          "name": "¿Funciona con cualquier sitio?",
+          "name": "Est-ce que ça marche avec tous les sites ?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "La mayoría de sitios públicos funcionarán, pero algunos pueden estar restringidos por CORS o scripts dinámicos."
+            "text": "La plupart des sites publics fonctionnent, mais certains peuvent être limités par CORS ou JavaScript dynamique."
           }
         },
         {
           "@type": "Question",
-          "name": "¿En qué formatos puedo exportar?",
+          "name": "Quels formats puis-je exporter ?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Puedes descargar PNG o PDF de la vista previsualizada."
+            "text": "Vous pouvez télécharger la prévisualisation en PNG ou PDF."
           }
         },
         {
           "@type": "Question",
-          "name": "¿Por qué difiere el resultado de la vista del sitio real?",
+          "name": "Pourquoi le résultat diffère-t-il du site réel ?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Los scripts dinámicos, fuentes externas y políticas CORS pueden impedir que ciertos recursos se carguen."
+            "text": "Les scripts dynamiques, les polices externes et les politiques CORS peuvent empêcher certains éléments de s’afficher."
           }
         },
         {
           "@type": "Question",
-          "name": "¿Es gratuito?",
+          "name": "Est-ce vraiment gratuit ?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Sí, 100% gratuito y sin necesidad de registro ni marcas de agua."
+            "text": "Oui, 100 % gratuit, sans inscription ni filigrane."
           }
         }
       ]
