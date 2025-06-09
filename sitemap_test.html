@@ -3,38 +3,206 @@
 <head>
     <title>자동 사이트맵 생성기</title>
     <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .download-btn {
+            background-color: #28a745;
+        }
+        .download-btn:hover {
+            background-color: #1e7e34;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+        .error {
+            color: #dc3545;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .success {
+            color: #155724;
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        textarea {
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .help-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
 </head>
 <body>
-    <h1>사이트맵 생성 중...</h1>
-    <div id="result"></div>
+    <div class="container">
+        <h1>🚀 GitHub 사이트맵 자동 생성기</h1>
+        
+        <div class="form-group">
+            <label for="username">GitHub 사용자명:</label>
+            <input type="text" id="username" value="emfls" placeholder="예: emfls">
+        </div>
+        
+        <div class="form-group">
+            <label for="reponame">저장소 이름:</label>
+            <input type="text" id="reponame" value="emfls.github.io" placeholder="예: kor">
+        </div>
+        
+        <div class="form-group">
+            <label for="folderpath">폴더 경로 (선택사항):</label>
+            <input type="text" id="folderpath" value="kor/report/camp" placeholder="예: report/camp 또는 비워두면 루트 폴더">
+            <div class="help-text">루트 폴더를 원하면 비워두세요</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="includeext">포함할 확장자:</label>
+            <input type="text" id="includeext" value=".html, .htm" placeholder="예: .html, .htm, .php">
+            <div class="help-text">쉼표로 구분하여 입력하세요</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="excludeext">제외할 확장자:</label>
+            <input type="text" id="excludeext" value=".json, .css, .js, .md" placeholder="예: .json, .css, .js, .md">
+            <div class="help-text">쉼표로 구분하여 입력하세요</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="baseurl">사이트 기본 URL (선택사항):</label>
+            <input type="text" id="baseurl" placeholder="비워두면 자동으로 생성됩니다">
+            <div class="help-text">예: https://mydomain.com 또는 비워두면 GitHub Pages URL 사용</div>
+        </div>
+        
+        <button onclick="generateSitemap()">🔄 사이트맵 생성</button>
+        <button onclick="resetForm()">🔄 초기화</button>
+        
+        <div id="result"></div>
+    </div>
     
     <script>
-    // 여기에 여러분의 GitHub 정보를 입력하세요
-    const GITHUB_USERNAME = 'emfls';
-    const REPO_NAME = 'kor';  // 실제 저장소 이름으로 수정하세요
-    const FOLDER_PATH = 'report/camp';  // 폴더 경로는 별도로 지정
-    const BASE_URL = `https://${GITHUB_USERNAME}.github.io/${REPO_NAME}`;
+    let generatedSitemap = '';
+    
+    function resetForm() {
+        document.getElementById('username').value = 'emfls';
+        document.getElementById('reponame').value = 'emfls.github.io';
+        document.getElementById('folderpath').value = 'kor/report/camp';
+        document.getElementById('includeext').value = '.html';
+        document.getElementById('excludeext').value = '.json, .css, .js, .md';
+        document.getElementById('baseurl').value = '';
+        document.getElementById('result').innerHTML = '';
+    }
+    
+    function parseExtensions(extString) {
+        return extString.split(',')
+            .map(ext => ext.trim())
+            .filter(ext => ext.length > 0)
+            .map(ext => ext.startsWith('.') ? ext : '.' + ext);
+    }
+    
+    function shouldIncludeFile(filename, includeExts, excludeExts) {
+        const lowerFilename = filename.toLowerCase();
+        
+        // 제외할 확장자 체크
+        for (let ext of excludeExts) {
+            if (lowerFilename.endsWith(ext.toLowerCase())) {
+                return false;
+            }
+        }
+        
+        // 포함할 확장자 체크
+        for (let ext of includeExts) {
+            if (lowerFilename.endsWith(ext.toLowerCase())) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
     
     async function generateSitemap() {
+        const username = document.getElementById('username').value.trim();
+        const reponame = document.getElementById('reponame').value.trim();
+        const folderpath = document.getElementById('folderpath').value.trim();
+        const includeExtStr = document.getElementById('includeext').value.trim();
+        const excludeExtStr = document.getElementById('excludeext').value.trim();
+        const customBaseUrl = document.getElementById('baseurl').value.trim();
+        
+        if (!username || !reponame) {
+            document.getElementById('result').innerHTML = 
+                '<div class="error">GitHub 사용자명과 저장소 이름을 입력해주세요.</div>';
+            return;
+        }
+        
+        const includeExts = parseExtensions(includeExtStr);
+        const excludeExts = parseExtensions(excludeExtStr);
+        
+        const baseUrl = customBaseUrl || `https://${username}.github.io/${reponame}`;
+        
+        document.getElementById('result').innerHTML = '<div>🔄 사이트맵 생성 중...</div>';
+        
         try {
-            // 폴더 경로가 있으면 포함해서 API 호출
-            const apiUrl = FOLDER_PATH 
-                ? `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents/${FOLDER_PATH}`
-                : `https://api.github.com/repos/${GITHUB_USERNAME}/${REPO_NAME}/contents`;
+            const apiUrl = folderpath 
+                ? `https://api.github.com/repos/${username}/${reponame}/contents/${folderpath}`
+                : `https://api.github.com/repos/${username}/${reponame}/contents`;
                 
-            console.log('API URL:', apiUrl);  // 디버깅용
+            console.log('API URL:', apiUrl);
             
             const response = await fetch(apiUrl);
             const data = await response.json();
             
-            console.log('API 응답:', data);  // 디버깅용
-            
-            // API 오류 체크
             if (!response.ok) {
                 throw new Error(`GitHub API 오류: ${data.message || response.statusText}`);
             }
             
-            // 배열인지 확인
             if (!Array.isArray(data)) {
                 throw new Error('응답이 배열이 아닙니다. 저장소나 폴더 경로를 확인해주세요.');
             }
@@ -43,58 +211,87 @@
             sitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
             
             const today = new Date().toISOString().split('T')[0];
-            let htmlFileCount = 0;
+            let includedFiles = [];
+            let excludedFiles = [];
             
-            // HTML 파일들만 찾아서 사이트맵에 추가
             data.forEach(file => {
-                if (file.name.endsWith('.html') || file.name.endsWith('.htm')) {
-                    const fileUrl = FOLDER_PATH 
-                        ? `${BASE_URL}/${FOLDER_PATH}/${file.name}`
-                        : `${BASE_URL}/${file.name}`;
+                if (file.type === 'file') {
+                    if (shouldIncludeFile(file.name, includeExts, excludeExts)) {
+                        const fileUrl = folderpath 
+                            ? `https://${username}.github.io/${folderpath}/${file.name}`
+                            : `https://${username}.github.io/${file.name}`;
+                            
+                        sitemap += `  <url>\n`;
+                        sitemap += `    <loc>${fileUrl}</loc>\n`;
+                        sitemap += `  </url>\n`;
                         
-                    sitemap += `  <url>\n`;
-                    sitemap += `    <loc>${fileUrl}</loc>\n`;
-                    sitemap += `    <lastmod>${today}</lastmod>\n`;
-                    sitemap += `    <changefreq>weekly</changefreq>\n`;
-                    sitemap += `    <priority>0.8</priority>\n`;
-                    sitemap += `  </url>\n`;
-                    htmlFileCount++;
+                        includedFiles.push(file.name);
+                    } else {
+                        excludedFiles.push(file.name);
+                    }
                 }
             });
             
             sitemap += '</urlset>';
+            generatedSitemap = sitemap;
             
             // 결과 표시
-            if (htmlFileCount === 0) {
-                document.getElementById('result').innerHTML = 
-                    '<p style="color: orange;">HTML 파일을 찾을 수 없습니다.</p>' +
-                    '<p>찾은 파일들:</p>' +
-                    '<ul>' + data.map(file => `<li>${file.name} (${file.type})</li>`).join('') + '</ul>';
+            let resultHtml = '';
+            
+            if (includedFiles.length === 0) {
+                resultHtml += '<div class="error">포함할 파일을 찾을 수 없습니다.</div>';
             } else {
-                document.getElementById('result').innerHTML = 
-                    `<h2>생성된 사이트맵 (${htmlFileCount}개 파일):</h2>` +
-                    '<textarea rows="20" cols="80">' + sitemap + '</textarea>' +
-                    '<br><br><button onclick="downloadSitemap()">sitemap.xml 다운로드</button>';
-                
-                window.generatedSitemap = sitemap;
+                resultHtml += `<div class="success">✅ ${includedFiles.length}개 파일로 사이트맵을 생성했습니다!</div>`;
             }
+            
+            resultHtml += `
+                <div class="result">
+                    <h3>📊 생성 결과</h3>
+                    <p><strong>포함된 파일 (${includedFiles.length}개):</strong></p>
+                    <ul>${includedFiles.map(f => `<li>✅ ${f}</li>`).join('')}</ul>
+                    
+                    ${excludedFiles.length > 0 ? `
+                    <p><strong>제외된 파일 (${excludedFiles.length}개):</strong></p>
+                    <ul>${excludedFiles.slice(0, 10).map(f => `<li>❌ ${f}</li>`).join('')}
+                    ${excludedFiles.length > 10 ? `<li>... 외 ${excludedFiles.length - 10}개</li>` : ''}</ul>
+                    ` : ''}
+                    
+                    <h3>📄 생성된 사이트맵:</h3>
+                    <textarea rows="15" cols="80" readonly>${sitemap}</textarea>
+                    <br><br>
+                    <button class="download-btn" onclick="downloadSitemap()">💾 sitemap.xml 다운로드</button>
+                    <button onclick="copySitemap()">📋 클립보드에 복사</button>
+                </div>
+            `;
+            
+            document.getElementById('result').innerHTML = resultHtml;
             
         } catch (error) {
             console.error('오류 상세:', error);
-            document.getElementById('result').innerHTML = 
-                '<p style="color: red;">오류: ' + error.message + '</p>' +
-                '<p><strong>확인사항:</strong></p>' +
-                '<ul>' +
-                '<li>GitHub 사용자명: ' + GITHUB_USERNAME + '</li>' +
-                '<li>저장소명: ' + REPO_NAME + '</li>' +
-                '<li>폴더 경로: ' + (FOLDER_PATH || '루트') + '</li>' +
-                '<li>저장소가 공개(public)인지 확인</li>' +
-                '</ul>';
+            document.getElementById('result').innerHTML = `
+                <div class="error">
+                    <h3>❌ 오류 발생</h3>
+                    <p><strong>오류 메시지:</strong> ${error.message}</p>
+                    <p><strong>확인사항:</strong></p>
+                    <ul>
+                        <li>GitHub 사용자명: ${username}</li>
+                        <li>저장소명: ${reponame}</li>
+                        <li>폴더 경로: ${folderpath || '루트'}</li>
+                        <li>저장소가 공개(public)인지 확인</li>
+                        <li>폴더 경로가 정확한지 확인</li>
+                    </ul>
+                </div>
+            `;
         }
     }
     
     function downloadSitemap() {
-        const blob = new Blob([window.generatedSitemap], { type: 'text/xml' });
+        if (!generatedSitemap) {
+            alert('먼저 사이트맵을 생성해주세요.');
+            return;
+        }
+        
+        const blob = new Blob([generatedSitemap], { type: 'text/xml' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
@@ -103,8 +300,18 @@
         URL.revokeObjectURL(url);
     }
     
-    // 페이지 로드 시 자동 실행
-    generateSitemap();
+    function copySitemap() {
+        if (!generatedSitemap) {
+            alert('먼저 사이트맵을 생성해주세요.');
+            return;
+        }
+        
+        navigator.clipboard.writeText(generatedSitemap).then(() => {
+            alert('사이트맵이 클립보드에 복사되었습니다!');
+        }).catch(() => {
+            alert('클립보드 복사에 실패했습니다.');
+        });
+    }
     </script>
 </body>
 </html>
