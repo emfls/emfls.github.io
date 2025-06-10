@@ -1,30 +1,30 @@
 <!doctype html>
-<html lang="es">
+<html lang="ru">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="¡Juega PONG contra la IA! Desafía a la IA en estilo retro y consigue 10 puntos primero. Disfruta gratis en móvil y PC." />
+            content="Играй в ПОНГ против ИИ! Брось вызов ИИ в ретро стиле и набери 10 очков первым. Играй бесплатно на мобильном и ПК." />
         <meta
             name="keywords"
-            content="PONG, PONG IA, juego PONG web, juego de navegador, arcade clásico, IA PONG, ping pong, tenis de mesa, juego gratis, juego web, móvil, jugar al instante, arcade" />
+            content="ПОНГ, ПОНГ ИИ, веб игра ПОНГ, браузерная игра, классический аркад, ИИ ПОНГ, пинг понг, настольный теннис, бесплатная игра, веб игра, мобильная, играть мгновенно, аркад" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/ru/game/PONGvsAI" />
 
-        <meta property="og:title" content="PONG vs IA – Juego PONG clásico en web" />
+        <meta property="og:title" content="ПОНГ против ИИ – Классическая веб игра ПОНГ" />
         <meta
             property="og:description"
-            content="¡Desafía a la IA y consigue 10 puntos primero! Disfruta del PONG retro en tu navegador. ¡Sin descargas, jugar al instante!" />
+            content="Брось вызов ИИ и набери 10 очков первым! Наслаждайся ретро ПОНГ в браузере. Без загрузок, играй мгновенно!" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/ru/game/PONGvsAI" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="PONG vs IA – Juego PONG clásico en web" />
-        <meta name="twitter:description" content="Juega PONG clásico contra una IA inteligente. ¡Juega ahora y comparte tu puntuación!" />
+        <meta name="twitter:title" content="ПОНГ против ИИ – Классическая веб игра ПОНГ" />
+        <meta name="twitter:description" content="Играй в классический ПОНГ против умного ИИ. Играй сейчас и делись своим счётом!" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -41,29 +41,29 @@
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <title>PONG vs IA</title>
+        <title>ПОНГ против ИИ</title>
         <link rel="stylesheet" href="style.css" />
     </head>
 
     <body>
         <div id="container">
-            <div id="gameTitle">PONG vs IA</div>
-            <div id="desc">¡Consigue 10 puntos primero para ganar!</div>
+            <div id="gameTitle">ПОНГ против ИИ</div>
+            <div id="desc">Набери 10 очков первым, чтобы победить!</div>
             <div id="scoreBoard"></div>
             <canvas id="pong" width="400" height="260"></canvas>
-            <button id="startBtn" onclick="startGame()">Iniciar Juego</button>
+            <button id="startBtn" onclick="startGame()">Начать игру</button>
             <div id="winMsg"></div>
             <div class="gameOverBtns" style="display: none">
-                <button onclick="restartGame()">Reiniciar</button>
-                <button onclick="shareScore()">Compartir</button>
+                <button onclick="restartGame()">Перезапустить</button>
+                <button onclick="shareScore()">Поделиться</button>
             </div>
             <div class="desc-ctrl">
-                Controles: W/S (tú, lado izquierdo) ・ IA controla la paleta derecha<br />En móvil, arrastra la parte izquierda.
+                Управление: W/S (ты, левая сторона) ・ ИИ управляет правой ракеткой<br />На мобильном перетаскивай левую часть.
             </div>
         </div>
-        <button id="otherGames" onclick="window.location.href='../'">Otros juegos</button>
+        <button id="otherGames" onclick="window.location.href='../'">Другие игры</button>
         <script>
-            // --- Declaración de variables ---
+            // --- Объявление переменных ---
             const canvas = document.getElementById("pong");
             const ctx = canvas.getContext("2d");
             const scoreBoard = document.getElementById("scoreBoard");
@@ -86,7 +86,7 @@
             let aiLevel = 0.15;
             let rafId;
 
-            // Sistema de partículas para destellos
+            // Система частиц для вспышек
             let particles = [];
 
             function spawnSpark(x, y, color = "#ffe287", count = 15) {
@@ -180,17 +180,16 @@
             function stepGame() {
                 leftY += leftMove * paddleSpeed;
                 leftY = Math.max(0, Math.min(canvas.height - paddleHeight, leftY));
-                // IA (lado derecho)
+                // ИИ (правая сторона)
                 let targetY = ballY - (paddleHeight - ballSize) / 2;
                 rightY += (targetY - rightY) * aiLevel;
                 rightY = Math.max(0, Math.min(canvas.height - paddleHeight, rightY));
-                // Movimiento de la pelota
+                // Движение мяча
                 ballX += ballVelX;
                 ballY += ballVelY;
-
-                // Rebote en paredes
+                // Отскок от стен
                 if (ballY <= 0 || ballY + ballSize >= canvas.height) ballVelY *= -1;
-                // Colisión con paletas
+                // Столкновение с ракетками
                 let sparkAt = null;
                 if (ballX <= 10 + paddleWidth && ballY + ballSize >= leftY && ballY <= leftY + paddleHeight) {
                     ballX = 10 + paddleWidth;
@@ -212,7 +211,7 @@
                 }
                 if (sparkAt) spawnSpark(sparkAt.x, sparkAt.y, sparkAt.color);
 
-                // Marcador y comprobación de fin de juego
+                // Счёт и проверка окончания игры
                 if (ballX < 0) {
                     rightScore++;
                     updateScore();
@@ -267,27 +266,27 @@
                 gameRunning = false;
                 inGame = false;
                 cancelAnimationFrame(rafId);
-                winMsgDiv.textContent = playerWin ? "¡Tú ganas! 🎉" : "¡IA gana! 🤖";
+                winMsgDiv.textContent = playerWin ? "Ты победил! 🎉" : "ИИ победил! 🤖";
                 gameOverBtns.style.display = "block";
             }
 
-            // Botón de compartir
+            // Кнопка поделиться
             function shareScore() {
-                let text = `[PONG vs IA]\n${winMsgDiv.textContent}\nTu puntuación: ${leftScore}, IA: ${rightScore}\n\n¡Juega aquí!: ${window.location.href}`;
+                let text = `[ПОНГ против ИИ]\n${winMsgDiv.textContent}\nТвой счёт: ${leftScore}, ИИ: ${rightScore}\n\nИграй здесь!: ${window.location.href}`;
                 if (navigator.share) {
-                    navigator.share({ title: "PONG vs IA", text })
+                    navigator.share({ title: "ПОНГ против ИИ", text })
                         .catch(() => {
                             navigator.clipboard.writeText(text);
-                            alert("¡Resultado copiado al portapapeles!\n\n" + text);
+                            alert("Результат скопирован в буфер обмена!\n\n" + text);
                         });
                 } else {
                     navigator.clipboard.writeText(text).then(() => {
-                        alert("¡Resultado copiado al portapapeles!\n\n" + text);
+                        alert("Результат скопирован в буфер обмена!\n\n" + text);
                     });
                 }
             }
 
-            // Controles de teclado
+            // Управление клавиатурой
             document.addEventListener("keydown", (e) => {
                 if (!inGame) return;
                 if (e.key === "w" || e.key === "W") leftMove = -1;
@@ -299,7 +298,7 @@
                 if (e.key === "s" || e.key === "S") leftMove = 0;
             });
 
-            // Toques táctiles en móvil (solo paleta izquierda)
+            // Сенсорное управление на мобильном (только левая ракетка)
             canvas.addEventListener("touchstart", function (e) {
                 if (!inGame) return;
                 const rect = canvas.getBoundingClientRect();
@@ -323,8 +322,7 @@
                 }
                 e.preventDefault();
             });
-
-            // Evitar desplazamiento en móvil mientras se juega
+            // Предотвратить прокрутку на мобильном во время игры
             document.body.addEventListener(
                 "touchmove",
                 function (e) {
@@ -335,7 +333,7 @@
                 }
             );
 
-            // Estado inicial
+            // Начальное состояние
             updateScore();
             resetVars();
             draw();
@@ -357,36 +355,36 @@
                 line-height: 1.6;
                 color: #f0f0f0;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #f9bc60">❓ Preguntas Frecuentes</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #f9bc60">❓ Часто задаваемые вопросы</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. ¿Cómo se juega?</strong><br />
-                A. Maneja la paleta izquierda y consigue 10 puntos antes que la IA. Usa W/S en PC, o arrastra en la parte izquierda en móvil.
+                <strong>В1. Как играть?</strong><br />
+                О. Управляй левой ракеткой и набери 10 очков раньше ИИ. Используй W/S на ПК, или перетаскивай левую часть на мобильном.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. ¿Cómo controlo la paleta?</strong><br />
-                A. En PC, presiona W (arriba) y S (abajo). En móvil, arrastra la paleta izquierda con el dedo.
+                <strong>В2. Как управлять ракеткой?</strong><br />
+                О. На ПК нажимай W (вверх) и S (вниз). На мобильном перетаскивай левую ракетку пальцем.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. ¿Cómo funciona la IA?</strong><br />
-                A. La IA sigue la pelota y mueve la paleta automáticamente. Conforme la pelota se acelera, el nivel de dificultad aumenta.
+                <strong>В3. Как работает ИИ?</strong><br />
+                О. ИИ следует за мячом и автоматически двигает ракетку. По мере ускорения мяча уровень сложности увеличивается.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. ¿Qué pasa cuando alguien gana?</strong><br />
-                A. Aparecerá un mensaje de victoria o derrota. Luego puedes reiniciar el juego o compartir tu puntuación.
+                <strong>В4. Что происходит, когда кто-то побеждает?</strong><br />
+                О. Появится сообщение о победе или поражении. Затем ты можешь перезапустить игру или поделиться своим счётом.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. ¿Cómo comparto mi puntuación?</strong><br />
-                A. Pulsa el botón <strong>Compartir</strong> para copiar tu resultado y compartirlo con amigos.
+                <strong>В5. Как поделиться своим счётом?</strong><br />
+                О. Нажми кнопку <strong>Поделиться</strong>, чтобы скопировать свой результат и поделиться им с друзьями.
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. ¿Es compatible con móvil?</strong><br />
-                A. Sí, está optimizado tanto para navegadores móviles como de escritorio.
+                <strong>В6. Совместимо ли с мобильными устройствами?</strong><br />
+                О. Да, оптимизировано как для мобильных, так и для настольных браузеров.
             </div>
         </section>
     </body>

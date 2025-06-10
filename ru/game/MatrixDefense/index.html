@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="ru">
     <head>
         <meta charset="UTF-8" />
         <title>Matrix Defense</title>
@@ -9,22 +9,22 @@
 
         <meta
             name="description"
-            content="¡Defiende tu base de las oleadas de robots en Matrix Defense! Mejora el cañón de plasma, sobrevive el mayor tiempo posible y desafía a tus amigos a superar tu puntuación. ¡Juega gratis en tu navegador de PC o móvil!" />
+            content="Защищайте свою базу от волн роботов в Matrix Defense! Улучшайте плазменную пушку, выживайте как можно дольше и бросьте вызов друзьям превзойти ваш счет. Играйте бесплатно в браузере на ПК или мобильном!" />
         <meta
             name="keywords"
-            content="Matrix Defense, idle defense, juego web, juego de navegador, cañón de plasma, torreta, defensa láser, gratis, juego de defensa, juego incremental, móvil, PC, juego en línea" />
-        <meta property="og:title" content="Matrix Defense | Juego idle de defensa de plasma" />
+            content="Matrix Defense, idle defense, веб-игра, браузерная игра, плазменная пушка, турель, лазерная защита, бесплатно, игра защиты, инкрементальная игра, мобильная, ПК, онлайн игра" />
+        <meta property="og:title" content="Matrix Defense | Idle игра плазменной защиты" />
         <meta
             property="og:description"
-            content="¡Protege tu base de oleadas infinitas de robots en este elegante juego idle de defensa en el navegador! Mejora tu cañón y desafía cuánto puedes sobrevivir." />
+            content="Защищайте свою базу от бесконечных волн роботов в этой элегантной idle игре защиты в браузере! Улучшайте пушку и испытайте, как долго вы сможете выжить." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://emfls.github.io/ru/game/MatrixDefense/" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta property="twitter:title" content="Matrix Defense | Juego idle de defensa de plasma" />
+        <meta property="twitter:title" content="Matrix Defense | Idle игра плазменной защиты" />
         <meta
             property="twitter:description"
-            content="¡Juega a Matrix Defense: el juego definitivo de defensa con torretas de plasma gratis en el navegador!" />
+            content="Играйте в Matrix Defense: окончательную игру защиты с плазменными турелями бесплатно в браузере!" />
         <meta property="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <link rel="canonical" href="https://emfls.github.io/ru/game/MatrixDefense/" />
 
@@ -49,34 +49,34 @@
         <div id="wrap">
             <div id="header">
                 <h1>Matrix Defense</h1>
-                <p>Defensa idle de plasma. ¡Sobrevive!</p>
+                <p>Idle плазменная защита. Выживайте!</p>
                 <div id="topStatBar">
-                    OLEADA <span id="wave">1</span> ORO <span id="gold">0</span> VIDA <span id="life">10</span>
+                    ВОЛНА <span id="wave">1</span> ЗОЛОТО <span id="gold">0</span> ЖИЗНИ <span id="life">10</span>
                 </div>
             </div>
             <canvas id="gameCanvas" width="400" height="380"></canvas>
             <div id="upgrades">
                 <button class="upBtn" id="upDmg">
-                    Daño<br />
+                    Урон<br />
                     +<span id="dmgC">65</span>
                 </button>
                 <button class="upBtn" id="upSpd">
-                    Velocidad de disparo<br />
+                    Скорость стрельбы<br />
                     +<span id="spdC">80</span>
                 </button>
                 <button class="upBtn" id="upRng">
-                    Alcance<br />
+                    Дальность<br />
                     +<span id="rngC">80</span>
                 </button>
                 <button class="upBtn" id="upLaser">
-                    Número de láseres<br />
+                    Количество лазеров<br />
                     +<span id="laserC">150</span>
                 </button>
             </div>
             <div id="buttonBar">
-                <button class="btn" id="restartBtn" style="display: none">Reiniciar</button>
-                <button class="btn" id="shareBtn" style="display: none">Compartir</button>
-                <a href="../" class="btn other">Otros juegos</a>
+                <button class="btn" id="restartBtn" style="display: none">Перезапустить</button>
+                <button class="btn" id="shareBtn" style="display: none">Поделиться</button>
+                <a href="../" class="btn other">Другие игры</a>
             </div>
         </div>
         <script>
@@ -89,7 +89,7 @@
             let turret, upg, enemies, frame, spawnCD, wave, gold, kills, life, phase, gameover;
             let bossSpawnedInWave, normalSpawnedInWave;
 
-            // touchmove es solo dentro del canvas
+            // touchmove только внутри canvas
             canvas.addEventListener(
                 "touchmove",
                 (e) => {
@@ -410,7 +410,7 @@
                     ctx.textAlign = "center";
                     ctx.shadowColor = "#fef";
                     ctx.shadowBlur = 9;
-                    ctx.fillText("¡Juego Terminado!", W / 2, H / 2 - 22);
+                    ctx.fillText("Игра окончена!", W / 2, H / 2 - 22);
                     ctx.shadowBlur = 0;
                 }
             }
@@ -439,7 +439,7 @@
             function upgrade(type) {
                 if (upgrading) return;
                 upgrading = true;
-                setTimeout(() => (upgrading = false), 250); // bloqueo de 0.25 seg
+                setTimeout(() => (upgrading = false), 250); // блокировка на 0.25 сек
 
                 if (gameover) return;
                 let u = upg[type];
@@ -464,7 +464,7 @@
                 initGame();
             };
             document.getElementById("shareBtn").onclick = () => {
-                let shareTxt = `¡Juega a Matrix Defense! ¡Yo llegué a la oleada ${wave}!`;
+                let shareTxt = `Играйте в Matrix Defense! Я дошел до волны ${wave}!`;
                 if (navigator.share) {
                     navigator.share({
                         title: "Matrix Defense",
@@ -473,7 +473,7 @@
                     });
                 } else {
                     navigator.clipboard.writeText(shareTxt);
-                    alert("¡El enlace se ha copiado al portapapeles!");
+                    alert("Ссылка скопирована в буфер обмена!");
                 }
             };
             document.body.addEventListener(
@@ -502,74 +502,74 @@
                 line-height: 1.65;
                 color: #2d3436;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #2577cf">❓ Preguntas Frecuentes</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #2577cf">❓ Часто задаваемые вопросы</h2>
 
-            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">Introducción al juego</h3>
+            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">Введение в игру</h3>
             <dl>
                 <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: ¿Qué es "Matrix Defense"?
+                    В: Что такое "Matrix Defense"?
                 </dt>
                 <dd style="margin-bottom: 12px">
-                    A: "Matrix Defense" es un juego idle de defensa en navegador donde debes proteger tu base de oleadas de robots que se acercan. El objetivo es mejorar tu cañón de plasma y sobrevivir el mayor tiempo posible.
+                    О: "Matrix Defense" - это idle игра защиты в браузере, где вы должны защищать свою базу от волн приближающихся роботов. Цель - улучшать плазменную пушку и выживать как можно дольше.
                 </dd>
 
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ¿El juego es gratuito?</dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">В: Игра бесплатная?</dt>
                 <dd style="margin-bottom: 12px">
-                    A: Sí, es completamente gratuito. No requiere descarga ni instalación; puedes jugar directamente en tu navegador web.
+                    О: Да, она полностью бесплатная. Не требует загрузки или установки; вы можете играть прямо в веб-браузере.
                 </dd>
 
                 <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: ¿En qué dispositivos puedo jugar?
+                    В: На каких устройствах я могу играть?
                 </dt>
-                <dd style="margin-bottom: 12px">A: Puedes jugar en navegadores tanto de dispositivos móviles como de PC.</dd>
+                <dd style="margin-bottom: 12px">О: Вы можете играть в браузерах как на мобильных устройствах, так и на ПК.</dd>
             </dl>
 
-            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">Cómo jugar</h3>
+            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">Как играть</h3>
             <dl>
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ¿Cuál es el objetivo del juego?</dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">В: Какая цель игры?</dt>
                 <dd style="margin-bottom: 12px">
-                    A: Debes eliminar a todos los robots enemigos antes de que lleguen a la base en la parte inferior de la pantalla, avanzar oleadas y sobrevivir el mayor tiempo posible hasta que tus vidas lleguen a cero.
+                    О: Вы должны уничтожить всех вражеских роботов до того, как они достигнут базы в нижней части экрана, проходить волны и выживать как можно дольше, пока ваши жизни не закончатся.
                 </dd>
 
                 <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: ¿Cómo se obtiene oro?
+                    В: Как получить золото?
                 </dt>
                 <dd style="margin-bottom: 12px">
-                    A: Derrotar robots enemigos te otorga oro. El oro se utiliza para mejorar el cañón de plasma.
+                    О: Уничтожение вражеских роботов дает вам золото. Золото используется для улучшения плазменной пушки.
                 </dd>
 
                 <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: ¿Qué mejoras hay?
+                    В: Какие есть улучшения?
                 </dt>
                 <dd style="margin-bottom: 12px">
-                    A: Hay cuatro tipos de mejoras: "Daño (ATK)", "Velocidad de disparo (RATE)", "Alcance (RNG)" y "Número de láseres (LASER)".
+                    О: Есть четыре типа улучшений: "Урон", "Скорость стрельбы", "Дальность" и "Количество лазеров".
                 </dd>
 
                 <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: ¿Qué sucede cuando tus vidas llegan a 0?
+                    В: Что происходит, когда жизни заканчиваются?
                 </dt>
                 <dd style="margin-bottom: 12px">
-                    A: Cuando tus vidas llegan a 0, se acaba el juego. Pulsa el botón "Reiniciar" para empezar de nuevo.
+                    О: Когда жизни заканчиваются, игра окончена. Нажмите кнопку "Перезапустить", чтобы начать заново.
                 </dd>
             </dl>
 
-            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">Solución de problemas y otros</h3>
+            <h3 style="font-size: 1.15rem; margin-top: 18px; margin-bottom: 8px; color: #34495e">Устранение неполадок и прочее</h3>
             <dl>
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ¿El juego no funciona correctamente?</dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">В: Игра работает неправильно?</dt>
                 <dd style="margin-bottom: 12px">
-                    A: Recarga el navegador o prueba con otro. Verifica tu conexión a internet. Si el problema persiste, contacta al desarrollador.
+                    О: Перезагрузите браузер или попробуйте другой. Проверьте подключение к интернету. Если проблема сохраняется, обратитесь к разработчику.
                 </dd>
 
                 <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">
-                    Q: Quiero compartir mi mejor puntuación con mis amigos.
+                    В: Хочу поделиться своим лучшим результатом с друзьями.
                 </dt>
                 <dd style="margin-bottom: 12px">
-                    A: Haz clic en el botón "Compartir" que aparece después de que termine el juego para compartir tu oleada actual.
+                    О: Нажмите кнопку "Поделиться", которая появляется после окончания игры, чтобы поделиться текущей волной.
                 </dd>
 
-                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">Q: ¿Hay otros juegos?</dt>
+                <dt style="font-weight: bold; margin-bottom: 4px; color: #4a69bd">В: Есть ли другие игры?</dt>
                 <dd style="margin-bottom: 12px">
-                    A: Sí, haz clic en el botón "Otros juegos" para ver otros juegos web del desarrollador.
+                    О: Да, нажмите кнопку "Другие игры", чтобы увидеть другие веб-игры разработчика.
                 </dd>
             </dl>
         </section>

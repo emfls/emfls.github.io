@@ -1,35 +1,35 @@
 <!doctype html>
-<html lang="es">
+<html lang="ru">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="¡Pon a prueba tus conocimientos de geografía! En 'FlagQuest' observa la bandera y adivina el país. Juego de preguntas gratuito, divertido y compatible con móviles."
+            content="Проверьте свои знания географии! В 'FlagQuest' смотрите на флаг и угадывайте страну. Бесплатная викторина, веселая и совместимая с мобильными устройствами."
         />
         <meta
             name="keywords"
-            content="FlagQuest, quiz de banderas, geografía, quiz de países, juego de banderas, juego en línea gratuito, quiz, juego para navegador, móvil, banderas del mundo, educativo, juego de preguntas"
+            content="FlagQuest, викторина флагов, география, викторина стран, игра флагов, бесплатная онлайн игра, викторина, браузерная игра, мобильная, флаги мира, образовательная, игра-викторина"
         />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/ru/game/FlagQuest" />
 
-        <meta property="og:title" content="FlagQuest – ¡Juego de preguntas de banderas en línea gratuito!" />
+        <meta property="og:title" content="FlagQuest – Бесплатная онлайн викторина флагов!" />
         <meta
             property="og:description"
-            content="¿Cuántas banderas puedes adivinar? ¡Pon a prueba tu destreza con el quiz definitivo de banderas en FlagQuest!"
+            content="Сколько флагов вы можете угадать? Проверьте свои навыки в окончательной викторине флагов в FlagQuest!"
         />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/ru/game/FlagQuest" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="FlagQuest – ¡Juego de preguntas de banderas en línea gratuito!" />
+        <meta name="twitter:title" content="FlagQuest – Бесплатная онлайн викторина флагов!" />
         <meta
             name="twitter:description"
-            content="Observa la bandera y adivina el país. ¡Desafía a tus amigos y juega gratis a FlagQuest en línea!"
+            content="Смотрите на флаг и угадывайте страну. Бросьте вызов своим друзьям и играйте в FlagQuest онлайн бесплатно!"
         />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -54,11 +54,11 @@
 
     <body>
         <h1>🏁 FlagQuest</h1>
-        <p style="margin-top: 0rem">¡Observa la bandera y adivina el país!</p>
-        <img id="flag" src="" alt="Bandera" />
+        <p style="margin-top: 0rem">Смотрите на флаг и угадывайте страну!</p>
+        <img id="flag" src="" alt="Флаг" />
         <div class="options" id="options"></div>
         <div id="feedback"></div>
-        <div id="score">Puntuación: 0</div>
+        <div id="score">Счёт: 0</div>
 
         <div id="gameover">
             <div
@@ -76,8 +76,8 @@
             ></div>
 
             <div class="result">
-                <button onclick="restartGame()">Jugar de nuevo</button>
-                <button onclick="shareScore()">Compartir</button>
+                <button onclick="restartGame()">Играть снова</button>
+                <button onclick="shareScore()">Поделиться</button>
             </div>
         </div>
 
@@ -93,13 +93,12 @@
 
             function loadQuestion() {
                 if (unusedFlags.length < 4) {
-                    endGame("🎉 ¡Has completado todas las banderas!");
+                    endGame("🎉 Вы прошли все флаги!");
                     return;
                 }
                 const questionSet = shuffle([...unusedFlags]).slice(0, 4);
                 const answer = questionSet[Math.floor(Math.random() * 4)];
                 currentAnswer = answer.country;
-
                 document.getElementById("flag").src = answer.img;
                 const optionsDiv = document.getElementById("options");
                 optionsDiv.innerHTML = "";
@@ -116,20 +115,20 @@
 
             function checkAnswer(choice) {
                 if (choice === currentAnswer) {
-                    document.getElementById("feedback").textContent = "🌸 ¡Correcto!";
+                    document.getElementById("feedback").textContent = "🌸 Правильно!";
                     unusedFlags = unusedFlags.filter((f) => f.country !== currentAnswer);
                     score++;
-                    document.getElementById("score").textContent = `Puntuación: ${score}`;
+                    document.getElementById("score").textContent = `Счёт: ${score}`;
                     setTimeout(loadQuestion, 700);
                 } else {
-                    endGame(`😢 ¡Incorrecto! La respuesta correcta es ${currentAnswer}.`);
+                    endGame(`😢 Неправильно! Правильный ответ: ${currentAnswer}.`);
                 }
             }
 
             function endGame(message) {
                 document.getElementById("feedback").textContent = "";
                 document.getElementById("score").textContent = "";
-                document.getElementById("finalMessage").innerHTML = `${message}<br><br>En total has acertado ${score} pregunta(s).`;
+                document.getElementById("finalMessage").innerHTML = `${message}<br><br>Всего вы ответили правильно на ${score} вопрос(ов).`;
                 document.getElementById("gameover").style.display = "flex";
                 document.getElementById("options").innerHTML = "";
                 document.getElementById("flag").style.display = "none";
@@ -138,14 +137,14 @@
             function restartGame() {
                 score = 0;
                 unusedFlags = [...flags];
-                document.getElementById("score").textContent = `Puntuación: 0`;
+                document.getElementById("score").textContent = `Счёт: 0`;
                 document.getElementById("gameover").style.display = "none";
                 document.getElementById("flag").style.display = "block";
                 loadQuestion();
             }
 
             function shareScore() {
-                const text = `🏁 ¡Obtuve ${score} puntos en FlagQuest! ¡Desafía tú también!`;
+                const text = `🏁 Я набрал ${score} очков в FlagQuest! Попробуйте и вы!`;
                 const url = window.location.href;
 
                 if (navigator.share) {
@@ -155,11 +154,11 @@
                             text: text,
                             url: url
                         })
-                        .then(() => console.log("Compartido con éxito"))
-                        .catch((error) => console.error("Error al compartir:", error));
+                        .then(() => console.log("Успешно поделились"))
+                        .catch((error) => console.error("Ошибка при попытке поделиться:", error));
                 } else {
                     navigator.clipboard.writeText(`${text} ${url}`).then(() => {
-                        alert("¡Enlace copiado al portapapeles!");
+                        alert("Ссылка скопирована в буфер обмена!");
                     });
                 }
             }
@@ -182,7 +181,7 @@
             "
             onclick="window.location.href='/'"
         >
-            Otros juegos
+            Другие игры
         </button>
         <section
             style="
@@ -200,36 +199,36 @@
                 box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
             "
         >
-            <h2 style="font-size: 18px; margin-bottom: 1rem; color: #6c63ff">❓ Preguntas frecuentes (FAQ)</h2>
+            <h2 style="font-size: 18px; margin-bottom: 1rem; color: #6c63ff">❓ Часто задаваемые вопросы (FAQ)</h2>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q1. ¿Cómo se juega FlagQuest?</strong><br />
-                A. Observa la bandera mostrada y selecciona el país correcto entre 4 opciones. ¡El juego termina si fallas una respuesta!
+                <strong>В1. Как играть в FlagQuest?</strong><br />
+                О. Смотрите на показанный флаг и выберите правильную страну из 4 вариантов. Игра заканчивается, если вы дадите неправильный ответ!
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q2. ¿Qué sucede si acierto?</strong><br />
-                A. Obtienes 1 punto, se elimina esa bandera de la lista y aparece una nueva pregunta. El juego continúa hasta fallar o completar todas las banderas.
+                <strong>В2. Что происходит, если я отвечу правильно?</strong><br />
+                О. Вы получаете 1 очко, этот флаг удаляется из списка и появляется новый вопрос. Игра продолжается до тех пор, пока вы не ошибётесь или не пройдёте все флаги.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q3. ¿Cuántas banderas incluye el juego?</strong><br />
-                A. Este juego contiene más de 250 banderas diferentes. Cada ronda se eligen al azar 4 banderas para responder.
+                <strong>В3. Сколько флагов включает игра?</strong><br />
+                О. Эта игра содержит более 250 различных флагов. В каждом раунде случайно выбираются 4 флага для ответа.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q4. ¿Puedo reiniciar el juego en cualquier momento?</strong><br />
-                A. Sí. Después de perder o al completar todas las banderas, pulsa "Jugar de nuevo" para reiniciar el puntaje y comenzar desde el principio.
+                <strong>В4. Могу ли я перезапустить игру в любое время?</strong><br />
+                О. Да. После проигрыша или завершения всех флагов нажмите "Играть снова", чтобы сбросить счёт и начать сначала.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q5. ¿Este juego es compatible con móviles?</strong><br />
-                A. ¡Por supuesto! FlagQuest está optimizado para teléfonos inteligentes y tablets.
+                <strong>В5. Совместима ли эта игра с мобильными устройствами?</strong><br />
+                О. Конечно! FlagQuest оптимизирован для смартфонов и планшетов.
             </div>
 
             <div>
-                <strong>Q6. ¿Cómo comparto mi puntaje?</strong><br />
-                A. Al terminar el juego, pulsa el botón "Compartir" para copiar el enlace y tu puntaje. Luego envíalo a tus amigos para retarlos.
+                <strong>В6. Как поделиться своим счётом?</strong><br />
+                О. После окончания игры нажмите кнопку "Поделиться", чтобы скопировать ссылку и ваш счёт. Затем отправьте его друзьям, чтобы бросить им вызов.
             </div>
         </section>
     </body>

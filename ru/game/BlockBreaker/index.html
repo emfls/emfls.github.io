@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="es">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="¡Juega gratis a BlockBreaker en tu navegador! Rompe todos los bloques, recoge potenciadores y alcanza una nueva puntuación máxima. Simple y rápido, disfruta también en móviles." />
+      content="Играйте в BlockBreaker бесплатно в браузере! Разбивайте все блоки, собирайте усилители и достигайте новых рекордов. Простая и быстрая игра, также доступна на мобильных устройствах." />
     <meta
       name="keywords"
-      content="BlockBreaker, rompeladrillos, Breakout, juego gratuito, juego de navegador, arcade, juego de paleta, móvil, bloques, pelota, puntuación alta, juego en línea" />
+      content="BlockBreaker, арканоид, Breakout, бесплатная игра, браузерная игра, аркада, игра с платформой, мобильная, блоки, мяч, высокий счет, онлайн игра" />
     <meta name="author" content="Itagi" />
     <meta name="robots" content="index, follow" />
 
@@ -16,10 +16,10 @@
 
     <meta
       property="og:title"
-      content="BlockBreaker – ¡Juego de rompeladrillos en línea gratuito!" />
+      content="BlockBreaker – Бесплатная онлайн игра-арканоид!" />
     <meta
       property="og:description"
-      content="¡Juega gratis a BlockBreaker! Rompe todos los bloques, consigue potenciadores y compite con tus amigos. Sin descargas." />
+      content="Играйте в BlockBreaker бесплатно! Разбивайте все блоки, получайте усилители и соревнуйтесь с друзьями. Без загрузок." />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta property="og:url" content="https://emfls.github.io/ru/game/BlockBreaker" />
     <meta property="og:type" content="website" />
@@ -29,10 +29,10 @@
       content="summary_large_image" />
     <meta
       name="twitter:title"
-      content="BlockBreaker – ¡Juego de rompeladrillos en línea gratuito!" />
+      content="BlockBreaker – Бесплатная онлайн игра-арканоид!" />
     <meta
       name="twitter:description"
-      content="¡Destruye todos los bloques en este adictivo juego de rompeladrillos en línea! Compite por la puntuación más alta." />
+      content="Разбивайте все блоки в этой захватывающей онлайн игре-арканоиде! Соревнуйтесь за самый высокий счет." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -59,17 +59,17 @@
     <div id="gameContainer">
       <div id="header">
         <h1>BlockBreaker</h1>
-        <p>¡Destruye todos los bloques con la pelota!</p>
+        <p>Разбивайте все блоки мячом!</p>
       </div>
       <canvas id="gameCanvas"></canvas>
       <div id="scoreUI"></div>
       <div id="gameOverUI">
         <div id="gameOverMsg"></div>
-        <button id="restartBtn">Reiniciar</button>
-        <button id="shareBtn">Compartir</button>
+        <button id="restartBtn">Перезапустить</button>
+        <button id="shareBtn">Поделиться</button>
       </div>
     </div>
-    <button id="otherBtn" onclick="window.location.href='../'">Otros Juegos</button>
+    <button id="otherBtn" onclick="window.location.href='../'">Другие игры</button>
     <script>
       (function () {
         const canvas = document.getElementById("gameCanvas");
@@ -194,7 +194,7 @@
         }
 
         function updateScoreUI() {
-          scoreUI.textContent = `Puntuación: ${score}`;
+          scoreUI.textContent = `Счет: ${score}`;
         }
 
         function spawnNewRow() {
@@ -222,7 +222,7 @@
           if (ball.x + ball.r > W || ball.x - ball.r < 0) ball.dx *= -1;
           if (ball.y - ball.r < 0) ball.dy *= -1;
           if (ball.y + ball.r > H) return;
-          // Colisión con la paleta
+          // Столкновение с платформой
           if (
             ball.y + ball.r > paddle.y &&
             ball.x > paddle.x &&
@@ -231,7 +231,7 @@
             ball.dy *= -1;
             ball.dx = ((ball.x - (paddle.x + paddle.w / 2)) / (paddle.w / 2)) * ball.speed;
           }
-          // Colisión con bloques
+          // Столкновение с блоками
           for (let r = 0; r < bricks.length; r++) {
             for (let c = 0; c < bricks[r].length; c++) {
               const b = bricks[r][c];
@@ -255,7 +255,7 @@
                   bb.speed *= 1.02;
                 });
                 updateScoreUI();
-                // Posibilidad de soltar un potenciador
+                // Возможность выпадения усилителя
                 if (Math.random() < 0.05) {
                   items.push({
                     x: b.x + brickW / 2,
@@ -272,7 +272,7 @@
 
         function update() {
           const H = canvas.height;
-          // Actualizar posiciones de bolas
+          // Обновление позиций мячей
           for (let i = 0; i < balls.length; i++) {
             const ball = balls[i];
             const steps = Math.max(
@@ -291,9 +291,9 @@
               i--;
             }
           }
-          // Si no quedan bolas, termina el juego
+          // Если не осталось мячей, завершить игру
           if (balls.length === 0) return endGame(false);
-          // Actualizar potenciadores
+          // Обновление усилителей
           for (let i = 0; i < items.length; i++) {
             const it = items[i];
             it.y += it.dy;
@@ -338,12 +338,12 @@
           cancelAnimationFrame(animationId);
           scoreUI.style.display = "none";
           gameOverMsg.textContent = won
-            ? `¡Has ganado! Puntuación: ${score}`
-            : `¡Game Over! Puntuación: ${score}`;
+            ? `Вы выиграли! Счет: ${score}`
+            : `Игра окончена! Счет: ${score}`;
           gameOverUI.style.display = "flex";
         }
 
-        // Control de arrastre de paleta
+        // Управление перетаскиванием платформы
         ["mousedown", "touchstart"].forEach((evt) =>
           canvas.addEventListener(evt, (e) => {
             const rect = canvas.getBoundingClientRect();
@@ -380,7 +380,7 @@
         });
         shareBtn.addEventListener("click", () => {
           const url = encodeURIComponent(window.location.href);
-          const message = encodeURIComponent(`Mi puntuación: ${score}`);
+          const message = encodeURIComponent(`Мой счет: ${score}`);
           if (navigator.share) {
             navigator
               .share({
@@ -388,11 +388,11 @@
                 text: message,
                 url: url
               })
-              .catch(() => alert("La compartición ha sido cancelada o falló."));
+              .catch(() => alert("Отправка была отменена или не удалась."));
           } else {
             navigator.clipboard
               .writeText(url)
-              .then(() => alert("¡Enlace copiado al portapapeles!"));
+              .then(() => alert("Ссылка скопирована в буфер обмена!"));
           }
         });
         canvas.addEventListener("contextmenu", (e) => e.preventDefault());
@@ -402,36 +402,36 @@
       })();
     </script>
     <section>
-      <h2>❓ Preguntas Frecuentes (FAQ)</h2>
+      <h2>❓ Часто задаваемые вопросы (FAQ)</h2>
 
       <div style="margin-bottom: 1rem">
-        <strong>P1. ¿Cómo se juega a BlockBreaker?</strong><br />
-        R. Arrastra la paleta con el ratón o el dedo para golpear la pelota y destruir todos los bloques. ¡No dejes que la pelota caiga!
+        <strong>В1. Как играть в BlockBreaker?</strong><br />
+        О. Перетаскивайте платформу мышью или пальцем, чтобы отбивать мяч и разрушать все блоки. Не дайте мячу упасть!
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>P2. ¿Cómo muevo la paleta?</strong><br />
-        R. Pulsa y arrastra la paleta con el ratón en PC o desliza con el dedo en móviles.
+        <strong>В2. Как двигать платформу?</strong><br />
+        О. Нажмите и перетаскивайте платформу мышью на ПК или проведите пальцем на мобильных устройствах.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>P3. ¿Qué son los círculos amarillos?</strong><br />
-        R. Son potenciadores: recógelos con la paleta para generar bolas adicionales o aumentar tu puntuación.
+        <strong>В3. Что такое желтые круги?</strong><br />
+        О. Это усилители: поймайте их платформой, чтобы создать дополнительные мячи или увеличить счет.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>P4. ¿Cuándo termina el juego?</strong><br />
-        R. El juego termina cuando pierdes todas las bolas. Se mostrará tu puntuación y opciones para reiniciar o compartir.
+        <strong>В4. Когда заканчивается игра?</strong><br />
+        О. Игра заканчивается, когда вы теряете все мячи. Отобразится ваш счет и варианты перезапуска или отправки.
       </div>
 
       <div style="margin-bottom: 1rem">
-        <strong>P5. ¿Cómo comparto mi puntuación?</strong><br />
-        R. Cuando aparezca “Game Over”, presiona el botón <strong>“Compartir”</strong>. Puedes usar la función de compartir de tu dispositivo o copiar el enlace.
+        <strong>В5. Как поделиться своим счетом?</strong><br />
+        О. Когда появится "Игра окончена", нажмите кнопку <strong>"Поделиться"</strong>. Вы можете использовать функцию отправки вашего устройства или скопировать ссылку.
       </div>
 
       <div>
-        <strong>P6. ¿Dónde encuentro otros juegos?</strong><br />
-        R. Haz clic en <strong>“Otros Juegos”</strong> para ver toda la colección de juegos en el navegador.
+        <strong>В6. Где найти другие игры?</strong><br />
+        О. Нажмите на <strong>"Другие игры"</strong>, чтобы увидеть всю коллекцию браузерных игр.
       </div>
     </section>
   </body>

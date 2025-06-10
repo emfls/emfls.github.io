@@ -1,35 +1,35 @@
 <!doctype html>
-<html lang="es">
+<html lang="ru">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="En Flappy Dot evita las bombas y vuela lo más lejos posible. Disfruta este simple y adictivo juego para navegador, optimizado para móviles, completamente gratis."
+            content="В Flappy Dot избегайте бомб и летите как можно дальше. Наслаждайтесь этой простой и захватывающей игрой для браузера, оптимизированной для мобильных устройств, совершенно бесплатно."
         />
         <meta
             name="keywords"
-            content="Flappy Dot, Flappy Bird, QuickPlay, arcade, juego de vuelo, evitar bombas, juego gratis, en línea, navegador, móvil, puntuación, juego casual"
+            content="Flappy Dot, Flappy Bird, QuickPlay, аркада, игра полёт, избегать бомб, бесплатная игра, онлайн, браузер, мобильный, счёт, казуальная игра"
         />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/ru/game/FlappyDot" />
 
-        <meta property="og:title" content="QuickPlay: Flappy Dot – ¡Juego en línea gratuito!" />
+        <meta property="og:title" content="QuickPlay: Flappy Dot – Бесплатная онлайн игра!" />
         <meta
             property="og:description"
-            content="¡Desafía tu puntuación! En Flappy Dot vuela esquivando bombas y reta a tus amigos."
+            content="Бросьте вызов своему счёту! В Flappy Dot летите, уклоняясь от бомб, и соревнуйтесь с друзьями."
         />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/ru/game/FlappyDot" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Flappy Dot – ¡Juego gratuito de QuickPlay en línea!" />
+        <meta name="twitter:title" content="Flappy Dot – Бесплатная онлайн игра QuickPlay!" />
         <meta
             name="twitter:description"
-            content="¡Vuela lo más lejos posible mientras esquivas bombas! Juega gratis a Flappy Dot en línea y compite por la mejor puntuación."
+            content="Летите как можно дальше, уклоняясь от бомб! Играйте в Flappy Dot онлайн бесплатно и соревнуйтесь за лучший счёт."
         />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -52,15 +52,15 @@
 
     <body>
         <h1 style="font-family: 'Arial Black', sans-serif; font-size: 28px; margin-bottom: 6px">Flappy Dot</h1>
-        <p style="font-size: 14px; color: white; margin-bottom: 12px">¡Evita las bombas y vuela lo más lejos posible!</p>
+        <p style="font-size: 14px; color: white; margin-bottom: 12px">Избегайте бомб и летите как можно дальше!</p>
 
         <canvas id="gameCanvas" width="300" height="450"></canvas>
         <div class="overlay" id="menu">
-            <button onclick="startGame()">Iniciar juego</button>
+            <button onclick="startGame()">Начать игру</button>
         </div>
         <div class="overlay" id="gameoverMenu" style="display: none">
-            <button onclick="resetGame()">Reiniciar</button>
-            <button onclick="shareScore()">Compartir</button>
+            <button onclick="resetGame()">Перезапустить</button>
+            <button onclick="shareScore()">Поделиться</button>
         </div>
 
         <script>
@@ -210,7 +210,6 @@
 
                 if (bombs.length && bombs[0].x + 20 < 0) bombs.shift();
                 updateClouds();
-
                 if (frames % 60 === 0) score++;
             }
 
@@ -223,12 +222,12 @@
 
                 ctx.fillStyle = "black";
                 ctx.font = "20px Arial";
-                ctx.fillText("Puntuación: " + score, 10, 30);
+                ctx.fillText("Счёт: " + score, 10, 30);
 
                 if (gameOver) {
                     ctx.fillStyle = "red";
                     ctx.font = "32px Arial";
-                    ctx.fillText("Juego terminado", canvas.width / 2 - 100, canvas.height / 2 - 100);
+                    ctx.fillText("Игра окончена", canvas.width / 2 - 100, canvas.height / 2 - 100);
                     gameoverMenu.style.display = "flex";
                 }
             }
@@ -272,17 +271,17 @@
 
             function shareScore() {
                 const url = window.location.href;
-                const text = `🐤 ¡Obtuve ${score} puntos en Flappy Dot! ¡Inténtalo tú también!`;
+                const text = `🐤 Я набрал ${score} очков в Flappy Dot! Попробуй и ты!`;
                 if (navigator.share) {
                     navigator
                         .share({ title: "QuickPlay: Flappy Dot", text, url })
-                        .catch(() => alert("Error al compartir. Copia el enlace manualmente."));
+                        .catch(() => alert("Ошибка при отправке. Скопируйте ссылку вручную."));
                 } else {
                     const full = `${text}\n${url}`;
                     navigator.clipboard
                         .writeText(full)
-                        .then(() => alert("¡Puntuación y enlace copiados al portapapeles!"))
-                        .catch(() => alert(`Por favor, copia este enlace:\n${full}`));
+                        .then(() => alert("Счёт и ссылка скопированы в буфер обмена!"))
+                        .catch(() => alert(`Пожалуйста, скопируйте эту ссылку:\n${full}`));
                 }
             }
 
@@ -310,7 +309,7 @@
         </script>
 
         <button style="margin-top: 20px; width: 90%; height: 60px" onclick="window.location.href='/'">
-            Otros juegos
+            Другие игры
         </button>
         <section
             style="
@@ -326,36 +325,36 @@
                 line-height: 1.6;
                 font-size: 14px;
             ">
-            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ Preguntas frecuentes (FAQ)</h2>
+            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ Часто задаваемые вопросы (FAQ)</h2>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q1. ¿Qué tipo de juego es Flappy Dot?</strong><br />
-                A. Flappy Dot es un juego casual donde tocas la pantalla o presionas la barra espaciadora para saltar y evitar bombas mientras vuelas lo más lejos posible.
+                <strong>В1. Что за игра Flappy Dot?</strong><br />
+                О. Flappy Dot - это казуальная игра, где вы касаетесь экрана или нажимаете пробел, чтобы прыгать и избегать бомб, летя как можно дальше.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q2. ¿Cómo se controla el juego?</strong><br />
-                A. En dispositivos móviles tocas la pantalla y en PC presionas la barra espaciadora para que el punto salte.
+                <strong>В2. Как управлять игрой?</strong><br />
+                О. На мобильных устройствах касайтесь экрана, а на ПК нажимайте пробел, чтобы точка подпрыгнула.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q3. ¿Cuándo termina el juego?</strong><br />
-                A. El juego termina si el punto choca contra una bomba o sale de los límites de la pantalla. Aparecerá un efecto de explosión indicando el final.
+                <strong>В3. Когда игра заканчивается?</strong><br />
+                О. Игра заканчивается, если точка сталкивается с бомбой или выходит за границы экрана. Появится эффект взрыва, указывающий на конец игры.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q4. ¿Aumenta la dificultad con la puntuación?</strong><br />
-                A. Sí. A medida que aumentas tu puntuación, aparecen más bombas y se mueven más rápido, haciendo el juego más desafiante.
+                <strong>В4. Увеличивается ли сложность с ростом счёта?</strong><br />
+                О. Да. По мере увеличения вашего счёта появляется больше бомб и они движутся быстрее, делая игру более сложной.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q5. ¿Puedo jugar en el móvil?</strong><br />
-                A. ¡Por supuesto! Flappy Dot está optimizado para dispositivos móviles y no requiere descarga.
+                <strong>В5. Могу ли я играть на мобильном?</strong><br />
+                О. Конечно! Flappy Dot оптимизирована для мобильных устройств и не требует загрузки.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q6. ¿Cómo comparto mi puntuación?</strong><br />
-                A. Al terminar el juego, pulsa el botón "Compartir" para copiar tu puntuación y el enlace, o para enviarlo directamente si tu dispositivo lo permite.
+                <strong>В6. Как поделиться своим счётом?</strong><br />
+                О. По окончании игры нажмите кнопку "Поделиться", чтобы скопировать ваш счёт и ссылку, или отправить их напрямую, если ваше устройство это поддерживает.
             </div>
         </section>
     </body>

@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="es">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <title>🧟 Supervivencia Zombie</title>
+    <title>🧟 Выживание среди зомби</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -19,44 +19,44 @@
       async
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
       crossorigin="anonymous"></script>
-    <!-- SEO y metadatos sociales -->
+    <!-- SEO и социальные метаданные -->
     <meta
       name="description"
-      content="Sobrevive el mayor tiempo posible en un apocalipsis zombie basado en texto. Eventos aleatorios, manejo de inventario y ataques de zombies peligrosos. Juego gratuito de navegador." />
+      content="Выживайте как можно дольше в текстовом зомби-апокалипсисе. Случайные события, управление инвентарем и опасные атаки зомби. Бесплатная браузерная игра." />
     <meta
       name="keywords"
-      content="zombie, supervivencia, apocalipsis, juego web, juego de texto, navegador, gratis" />
+      content="зомби, выживание, апокалипсис, веб-игра, текстовая игра, браузер, бесплатно" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="es" />
+    <meta name="language" content="ru" />
     <meta name="theme-color" content="#191d22" />
     <link rel="canonical" href="https://emfls.github.io/ru/game/ZombieSurvival/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
     <!-- Open Graph (Facebook, Kakao, etc) -->
-    <meta property="og:title" content="Supervivencia Zombie – Juego de Texto" />
+    <meta property="og:title" content="Выживание среди зомби – Текстовая игра" />
     <meta
       property="og:description"
-      content="¿Cuántos días sobrevivirás al apocalipsis zombie? Administra tus objetos, explora y evita la muerte. Juego 100% en navegador, sin registro." />
+      content="Сколько дней вы сможете выжить в зомби-апокалипсисе? Управляйте предметами, исследуйте и избегайте смерти. Игра 100% в браузере, без регистрации." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/ru/game/ZombieSurvival/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Supervivencia Zombie – Juego de Texto" />
+    <meta name="twitter:title" content="Выживание среди зомби – Текстовая игра" />
     <meta
       name="twitter:description"
-      content="Sobrevive el mayor tiempo posible al apocalipsis zombie. Juego gratuito en navegador, sin descargas." />
+      content="Выживайте как можно дольше в зомби-апокалипсисе. Бесплатная браузерная игра, без загрузок." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div id="container">
-      <h2>🧟 Supervivencia Zombie</h2>
+      <h2>🧟 Выживание среди зомби</h2>
       <div id="status"></div>
       <div id="inventory"></div>
       <div id="log"></div>
       <div id="actions"></div>
     </div>
-    <!-- Modal de detalles de ítem -->
+    <!-- Модальное окно описания предмета -->
     <div id="itemDescBg">
       <div id="itemDescModal">
         <button class="close" onclick="closeDesc()">&times;</button>
@@ -78,161 +78,161 @@
         bottom: 50px;
       "
       onclick="window.location.href='/'">
-      📂 Otros juegos
+      📂 Другие игры
     </button>
     <script>
-      // Definición de ítems (clave, tipo, efecto, texto, descripción)
+      // Определение предметов (ключ, тип, эффект, текст, описание)
       const ITEM_LIST = [
         {
-          key: "🍞Pan",
+          key: "🍞Хлеб",
           type: "food",
           effect: () => {
             state.hunger = clamp(state.hunger - 22, 0, 100);
           },
-          text: "(-22 Hambre)",
-          desc: "Pan. Reduce mucho la sensación de hambre."
+          text: "(-22 Голод)",
+          desc: "Хлеб. Сильно уменьшает чувство голода."
         },
         {
-          key: "💧Agua",
+          key: "💧Вода",
           type: "drink",
           effect: () => {
             state.hunger = clamp(state.hunger - 13, 0, 100);
           },
-          text: "(-13 Hambre)",
-          desc: "Agua. Reduce un poco la sensación de hambre."
+          text: "(-13 Голод)",
+          desc: "Вода. Немного уменьшает чувство голода."
         },
         {
-          key: "🥪Sándwich",
+          key: "🥪Сэндвич",
           type: "food",
           effect: () => {
             state.hunger = clamp(state.hunger - 35, 0, 100);
           },
-          text: "(-35 Hambre)",
-          desc: "Sándwich. Reduce mucho la sensación de hambre."
+          text: "(-35 Голод)",
+          desc: "Сэндвич. Сильно уменьшает чувство голода."
         },
         {
-          key: "🥤Refresco",
+          key: "🥤Газировка",
           type: "drink",
           effect: () => {
             state.mental = clamp(state.mental + 7, 0, 100);
             state.hunger = clamp(state.hunger - 7, 0, 100);
           },
-          text: "(+7 Salud mental, -7 Hambre)",
-          desc: "Refresco. Mejora un poco el ánimo y reduce algo el hambre."
+          text: "(+7 Психическое здоровье, -7 Голод)",
+          desc: "Газировка. Немного улучшает настроение и уменьшает голод."
         },
         {
-          key: "🍫Snack",
+          key: "🍫Закуска",
           type: "food",
           effect: () => {
             state.hunger = clamp(state.hunger - 12, 0, 100);
           },
-          text: "(-12 Hambre)",
-          desc: "Snack. Reduce algo la sensación de hambre."
+          text: "(-12 Голод)",
+          desc: "Закуска. Немного уменьшает чувство голода."
         },
         {
-          key: "🍏Manzana",
+          key: "🍏Яблоко",
           type: "food",
           effect: () => {
             state.hunger = clamp(state.hunger - 11, 0, 100);
           },
-          text: "(-11 Hambre)",
-          desc: "Manzana. Reduce algo la sensación de hambre."
+          text: "(-11 Голод)",
+          desc: "Яблоко. Немного уменьшает чувство голода."
         },
         {
-          key: "💊Analgésico",
+          key: "💊Обезболивающее",
           type: "heal",
           effect: () => {
             state.mental = clamp(state.mental + 22, 0, 100);
           },
-          text: "(+22 Salud mental)",
-          desc: "Analgésico. Recupera bastante salud mental."
+          text: "(+22 Психическое здоровье)",
+          desc: "Обезболивающее. Значительно восстанавливает психическое здоровье."
         },
         {
-          key: "🧰Vendaje",
+          key: "🧰Бинт",
           type: "heal",
           effect: () => {
             state.hp = clamp(state.hp + 17, 0, 100);
           },
           text: "(+17 HP)",
-          desc: "Vendaje. Recupera salud física."
+          desc: "Бинт. Восстанавливает физическое здоровье."
         },
         {
-          key: "🔪Cuchillo",
+          key: "🔪Нож",
           type: "weapon",
           effect: () => {},
-          text: "Arma",
-          desc: "Cuchillo. Reduce el daño al enfrentar zombies."
+          text: "Оружие",
+          desc: "Нож. Уменьшает урон при столкновении с зомби."
         },
         {
-          key: "🔧Llave inglesa",
+          key: "🔧Гаечный ключ",
           type: "weapon",
           effect: () => {},
-          text: "Arma",
-          desc: "Llave inglesa. Reduce el daño al enfrentar zombies."
+          text: "Оружие",
+          desc: "Гаечный ключ. Уменьшает урон при столкновении с зомби."
         },
         {
-          key: "🔦Linterna",
+          key: "🔦Фонарик",
           type: "tool",
           effect: () => {
             state.mental = clamp(state.mental + 5, 0, 100);
           },
-          text: "(+5 Salud mental)",
-          desc: "Linterna. Recupera un poco de salud mental."
+          text: "(+5 Психическое здоровье)",
+          desc: "Фонарик. Немного восстанавливает психическое здоровье."
         },
-        { key: "🪙Moneda", type: "misc", effect: () => {}, text: "Solo una moneda", desc: "Moneda. No sirve de nada por ahora." },
+        { key: "🪙Монета", type: "misc", effect: () => {}, text: "Просто монета", desc: "Монета. Пока что бесполезна." },
         {
-          key: "📱Teléfono",
+          key: "📱Телефон",
           type: "misc",
           effect: () => {},
-          text: "No funciona",
-          desc: "Teléfono. No tiene batería."
+          text: "Не работает",
+          desc: "Телефон. Батарея разряжена."
         }
       ];
 
-      // Definición de ubicaciones (nombre, ítems posibles, probabilidad de zombie)
+      // Определение локаций (название, возможные предметы, вероятность зомби)
       const LOC_POOL = [
-        { name: "🏠 Casa", item: ["🍞Pan", "🥤Refresco", "📱Teléfono", "🔪Cuchillo"], zombie: 18 },
-        { name: "🏪 Tienda", item: ["🥪Sándwich", "💧Agua", "🍫Snack", "💊Analgésico", "🪙Moneda"], zombie: 22 },
-        { name: "🚗 Callejón", item: ["🔧Llave inglesa", "🧰Vendaje", "💧Agua", "🍏Manzana"], zombie: 33 },
-        { name: "🏢 Oficina", item: ["🍫Snack", "💊Analgésico", "🔦Linterna"], zombie: 15 },
-        { name: "🏞 Parque", item: ["🍏Manzana", "💧Agua", "🪙Moneda"], zombie: 8 },
-        { name: "🏫 Escuela", item: ["🍞Pan", "🍫Snack", "📱Teléfono"], zombie: 17 },
-        { name: "🏚 Ruina", item: ["🔪Cuchillo", "🧰Vendaje"], zombie: 28 },
-        { name: "🏥 Hospital", item: ["💊Analgésico", "🧰Vendaje", "🔦Linterna"], zombie: 18 },
-        { name: "🏭 Fábrica", item: ["🔧Llave inglesa", "🔦Linterna"], zombie: 26 },
-        { name: "🚉 Metro", item: ["🍫Snack", "📱Teléfono"], zombie: 20 },
-        { name: "🍔 Restaurante", item: ["🍞Pan", "🥪Sándwich", "🥤Refresco"], zombie: 19 },
-        { name: "⛽ Gasolinera", item: ["🔧Llave inglesa", "💧Agua", "🪙Moneda"], zombie: 23 },
-        { name: "🛒 Supermercado", item: ["🍞Pan", "🍏Manzana", "🥤Refresco", "💧Agua"], zombie: 21 },
-        { name: "🏨 Hotel", item: ["🍫Snack", "💧Agua", "🧰Vendaje"], zombie: 18 },
-        { name: "🧑‍🔧 Taller", item: ["🔧Llave inglesa", "🪙Moneda"], zombie: 28 }
+        { name: "🏠 Дом", item: ["🍞Хлеб", "🥤Газировка", "📱Телефон", "🔪Нож"], zombie: 18 },
+        { name: "🏪 Магазин", item: ["🥪Сэндвич", "💧Вода", "🍫Закуска", "💊Обезболивающее", "🪙Монета"], zombie: 22 },
+        { name: "🚗 Переулок", item: ["🔧Гаечный ключ", "🧰Бинт", "💧Вода", "🍏Яблоко"], zombie: 33 },
+        { name: "🏢 Офис", item: ["🍫Закуска", "💊Обезболивающее", "🔦Фонарик"], zombie: 15 },
+        { name: "🏞 Парк", item: ["🍏Яблоко", "💧Вода", "🪙Монета"], zombie: 8 },
+        { name: "🏫 Школа", item: ["🍞Хлеб", "🍫Закуска", "📱Телефон"], zombie: 17 },
+        { name: "🏚 Руины", item: ["🔪Нож", "🧰Бинт"], zombie: 28 },
+        { name: "🏥 Больница", item: ["💊Обезболивающее", "🧰Бинт", "🔦Фонарик"], zombie: 18 },
+        { name: "🏭 Завод", item: ["🔧Гаечный ключ", "🔦Фонарик"], zombie: 26 },
+        { name: "🚉 Метро", item: ["🍫Закуска", "📱Телефон"], zombie: 20 },
+        { name: "🍔 Ресторан", item: ["🍞Хлеб", "🥪Сэндвич", "🥤Газировка"], zombie: 19 },
+        { name: "⛽ Заправка", item: ["🔧Гаечный ключ", "💧Вода", "🪙Монета"], zombie: 23 },
+        { name: "🛒 Супермаркет", item: ["🍞Хлеб", "🍏Яблоко", "🥤Газировка", "💧Вода"], zombie: 21 },
+        { name: "🏨 Отель", item: ["🍫Закуска", "💧Вода", "🧰Бинт"], zombie: 18 },
+        { name: "🧑‍🔧 Мастерская", item: ["🔧Гаечный ключ", "🪙Монета"], zombie: 28 }
       ];
 
-      // Selecciona aleatoriamente 4 o 5 ubicaciones
+      // Случайно выбирает 4 или 5 локаций
       function randomPlaces(n = 4) {
         let arr = LOC_POOL.slice();
         arr.sort(() => Math.random() - 0.5);
-        return arr.slice(0, n + Math.floor(Math.random() * 2)); // 4 o 5 lugares
+        return arr.slice(0, n + Math.floor(Math.random() * 2)); // 4 или 5 мест
       }
 
-      // Estado del juego
+      // Состояние игры
       let state = {
         hp: 100,
         hunger: 35,
         mental: 55,
         day: 1,
-        items: { "🍞Pan": 5, "💧Agua": 5, "💊Analgésico": 5 },
+        items: { "🍞Хлеб": 5, "💧Вода": 5, "💊Обезболивающее": 5 },
         alive: true,
         searching: false,
         locations: randomPlaces(),
         died: false
       };
 
-      // Convierte inventario a cadena
+      // Преобразует инвентарь в строку
       function invStr(obj) {
         let out = [];
         for (let k of Object.keys(obj)) if (obj[k] > 0) out.push(`${k} x${obj[k]}`);
-        return out.length ? out.join(", ") : "Ninguno";
+        return out.length ? out.join(", ") : "Пусто";
       }
       function clamp(val, min, max) {
         return Math.max(min, Math.min(max, val));
@@ -246,29 +246,29 @@
       const itemDescText = document.getElementById("itemDescText");
 
       function render() {
-        statusEl.innerHTML = `<div style="font-size:1.09em;"><b>Día ${state.day}</b></div>
+        statusEl.innerHTML = `<div style="font-size:1.09em;"><b>День ${state.day}</b></div>
          <div id="barGroup">
            <div class="bar"><span class="fill-hp" style="width:${state.hp}%"></span></div>
            <div class="bar"><span class="fill-hunger" style="width:${clamp(100 - state.hunger, 0, 100)}%"></span></div>
            <div class="bar"><span class="fill-mental" style="width:${state.mental}%"></span></div>
          </div>
          <div style="font-size:0.97em; margin:0 2px 0 2px;">
-            ❤️PH ${state.hp} &nbsp;|&nbsp; 🍞Hambre ${state.hunger} &nbsp;|&nbsp; 🧠Salud mental ${state.mental}
+            ❤️HP ${state.hp} &nbsp;|&nbsp; 🍞Голод ${state.hunger} &nbsp;|&nbsp; 🧠Психическое здоровье ${state.mental}
          </div>`;
-        inventoryEl.innerHTML = `<b>🎒 Inventario:</b> ${invStr(state.items)}`;
+        inventoryEl.innerHTML = `<b>🎒 Инвентарь:</b> ${invStr(state.items)}`;
         if (!state.alive) {
-          actionsEl.innerHTML = `<button class="actBtn" onclick="restart()">Reiniciar</button>`;
+          actionsEl.innerHTML = `<button class="actBtn" onclick="restart()">Перезапустить</button>`;
         } else if (state.searching) {
           actionsEl.innerHTML =
             state.locations
               .map((loc, i) => `<button class="locBtn" onclick="searchPlace(${i})">${loc.name}</button>`)
-              .join("") + `<button class="actBtn" onclick="cancelSearch()">Cancelar</button>`;
+              .join("") + `<button class="actBtn" onclick="cancelSearch()">Отмена</button>`;
         } else {
           actionsEl.innerHTML = `
-          <button class="actBtn" onclick="startSearch()" ${state.locations.length == 0 ? 'disabled style="opacity:0.5;"' : ""}>🔍 Explorar</button>
-          <button class="actBtn" onclick="rest()">🛏 Descansar</button>
-          <button class="actBtn" onclick="move()">➡️ Mover</button>
-          <button class="actBtn" onclick="useItem()">🎒 Usar ítem</button>
+          <button class="actBtn" onclick="startSearch()" ${state.locations.length == 0 ? 'disabled style="opacity:0.5;"' : ""}>🔍 Исследовать</button>
+          <button class="actBtn" onclick="rest()">🛏 Отдохнуть</button>
+          <button class="actBtn" onclick="move()">➡️ Переместиться</button>
+          <button class="actBtn" onclick="useItem()">🎒 Использовать предмет</button>
         `;
         }
       }
@@ -288,20 +288,20 @@
         state.mental -= 4;
         if (state.hunger >= 95) {
           state.hp -= 15;
-          log("😖 <b>¡Hambriento!</b> (-15 PH)", "event");
+          log("😖 <b>Голодание!</b> (-15 HP)", "event");
         }
         if (state.hp <= 0 || state.mental <= 0) {
           state.alive = false;
-          log(`<b>Juego terminado: sobreviviste <span style="color:#e9f85b">${state.day - 1}</span> días.</b>`, "event");
+          log(`<b>Игра окончена: вы выжили <span style="color:#e9f85b">${state.day - 1}</span> дней.</b>`, "event");
         }
         render();
       }
 
-      // ---- Acciones ----
+      // ---- Действия ----
       function startSearch() {
         state.searching = true;
         render();
-        log("Elige un lugar para explorar...");
+        log("Выберите место для исследования...");
       }
       function cancelSearch() {
         state.searching = false;
@@ -309,40 +309,40 @@
       }
       function searchPlace(idx) {
         let loc = state.locations[idx];
-        log(`🔍 Explorando <b>${loc.name}</b>...`);
-        // 52% hallar ítem, probabilidadloc zombie%
+        log(`🔍 Исследую <b>${loc.name}</b>...`);
+        // 52% найти предмет, вероятность зомби loc.zombie%
         if (Math.random() * 100 < 52) {
           let found = loc.item[Math.floor(Math.random() * loc.item.length)];
           state.items[found] = (state.items[found] || 0) + 1;
           let itemInfo = ITEM_LIST.find((x) => x.key === found);
           log(
-            `<span class="item-anim">✨ ¡Encontraste: <b>${found}</b> <span style="font-size:0.88em;color:#ffd;">${itemInfo ? itemInfo.text : ""}</span></span>`,
+            `<span class="item-anim">✨ Найдено: <b>${found}</b> <span style="font-size:0.88em;color:#ffd;">${itemInfo ? itemInfo.text : ""}</span></span>`,
             "event"
           );
         } else if (Math.random() * 100 < loc.zombie) {
           encounterZombie(loc.name);
           if (!state.alive) return;
         } else {
-          log("No encontraste nada.");
+          log("Ничего не найдено.");
         }
-        // Eliminar lugar
+        // Удалить место
         state.locations.splice(idx, 1);
         state.searching = false;
         nextDay();
       }
       function rest() {
-        log("🛏 Descansaste. +13 🧠Salud mental, +12 ❤️PH, +9 Hambre");
+        log("🛏 Вы отдохнули. +13 🧠Психическое здоровье, +12 ❤️HP, +9 Голод");
         state.mental = clamp(state.mental + 13, 0, 100);
         state.hp = clamp(state.hp + 12, 0, 100);
         state.hunger += 9;
         nextDay();
       }
       function move() {
-        log("➡️ Te moviste a una nueva área. -2 🧠Salud mental");
+        log("➡️ Вы переместились в новую область. -2 🧠Психическое здоровье");
         state.mental -= 2;
         state.locations = randomPlaces();
         if (Math.random() * 100 < 22) {
-          encounterZombie("ciudad");
+          encounterZombie("город");
           if (!state.alive) return;
         }
         nextDay();
@@ -350,7 +350,7 @@
       function useItem() {
         let keys = Object.keys(state.items).filter((k) => state.items[k] > 0);
         if (!keys.length) {
-          log("🎒 No tienes ítems para usar.");
+          log("🎒 У вас нет предметов для использования.");
           return;
         }
         actionsEl.innerHTML =
@@ -359,14 +359,14 @@
               let info = ITEM_LIST.find((x) => x.key === item);
               return `<button class="locBtn" onclick="chooseItem('${item}')">${item} x${state.items[item]} <span style="font-size:0.8em;color:#ffc;">${info ? info.text : ""}</span></button>`;
             })
-            .join("") + `<button class="actBtn" onclick="render()">Cancelar</button>`;
+            .join("") + `<button class="actBtn" onclick="render()">Отмена</button>`;
       }
       function chooseItem(item) {
         state.items[item]--;
         let info = ITEM_LIST.find((x) => x.key === item);
         if (info) info.effect();
         log(
-          `<span class="item-anim">${item} usado. <span style="font-size:0.9em;color:#ffd;">${info ? info.text : ""}</span></span>`
+          `<span class="item-anim">${item} использован. <span style="font-size:0.9em;color:#ffd;">${info ? info.text : ""}</span></span>`
         );
         render();
       }
@@ -374,18 +374,18 @@
         let baseHp = 14 + Math.floor(Math.random() * 12); // 14–25
         let baseMental = 8 + Math.floor(Math.random() * 8); // 8–15
         let weapon = Object.keys(state.items).find(
-          (x) => (x.includes("Cuchillo") || x.includes("Llave inglesa")) && state.items[x] > 0
+          (x) => (x.includes("Нож") || x.includes("Гаечный ключ")) && state.items[x] > 0
         );
         let hpLoss = weapon ? Math.floor(baseHp * 0.5) : baseHp;
         let mLoss = weapon ? Math.floor(baseMental * 0.7) : baseMental;
         if (weapon) {
           log(
-            `<span class="zombie-anim">🧟 <b>¡Te encontraste con un zombie!</b> (${place})<br>Lo ahuyentaste con ${weapon}. <span style="color:#fd7;">(-${hpLoss} PH, -${mLoss} Salud mental)</span></span>`,
+            `<span class="zombie-anim">🧟 <b>Встреча с зомби!</b> (${place})<br>Вы отогнали его с помощью ${weapon}. <span style="color:#fd7;">(-${hpLoss} HP, -${mLoss} Психическое здоровье)</span></span>`,
             "event"
           );
         } else {
           log(
-            `<span class="zombie-anim">🧟 <b>¡Te encontraste con un zombie!</b> (${place})<br>Fuiste herido. <span style="color:#fd7;">(-${hpLoss} PH, -${mLoss} Salud mental)</span></span>`,
+            `<span class="zombie-anim">🧟 <b>Встреча с зомби!</b> (${place})<br>Вы получили ранения. <span style="color:#fd7;">(-${hpLoss} HP, -${mLoss} Психическое здоровье)</span></span>`,
             "event"
           );
         }
@@ -393,31 +393,31 @@
         state.mental -= mLoss;
         if (state.hp <= 0 || state.mental <= 0) {
           state.alive = false;
-          log(`<b>Juego terminado: sobreviviste <span style="color:#e9f85b">${state.day}</span> días.</b>`, "event");
+          log(`<b>Игра окончена: вы выжили <span style="color:#e9f85b">${state.day}</span> дней.</b>`, "event");
           render();
         }
       }
-      // Mostrar detalles de ítem
+      // Показать описание предмета
       function showDesc(item) {
         let info = ITEM_LIST.find((x) => x.key === item);
         if (!info) return;
-        itemDescText.innerHTML = `<b>${item}</b><br><span style="font-size:1.07em;color:#fe9;">${info.desc || ""}</span><br><span style="color:#ffec;">Efecto: ${info.text || ""}</span>`;
+        itemDescText.innerHTML = `<b>${item}</b><br><span style="font-size:1.07em;color:#fe9;">${info.desc || ""}</span><br><span style="color:#ffec;">Эффект: ${info.text || ""}</span>`;
         itemDescBg.style.display = "flex";
       }
       function closeDesc() {
         itemDescBg.style.display = "none";
       }
 
-      // -------- Inicialización --------
+      // -------- Инициализация --------
       render();
-      log("Un nuevo superviviente ha llegado a la ciudad...");
+      log("Новый выживший прибыл в город...");
       function restart() {
         state = {
           hp: 100,
           hunger: 35,
           mental: 55,
           day: 1,
-          items: { "🍞Pan": 5, "💧Agua": 5, "💊Analgésico": 5 },
+          items: { "🍞Хлеб": 5, "💧Вода": 5, "💊Обезболивающее": 5 },
           alive: true,
           searching: false,
           locations: randomPlaces(),
@@ -425,7 +425,7 @@
         };
         logEl.innerHTML = "";
         render();
-        log("Un nuevo superviviente ha llegado a la ciudad...");
+        log("Новый выживший прибыл в город...");
       }
     </script>
     <section
@@ -441,33 +441,33 @@
         font-family: Arial, sans-serif;
       ">
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🧟 ¿Qué es Zombie Survival?</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🧟 Что такое Выживание среди зомби?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          Zombie Survival es un juego de supervivencia basado en texto en el que debes gestionar tu hambre, salud mental y salud física durante un apocalipsis zombie. Explora lugares, recolecta ítems y sobrevive el mayor tiempo posible.
+          Выживание среди зомби - это текстовая игра на выживание, в которой вы должны управлять своим голодом, психическим и физическим здоровьем во время зомби-апокалипсиса. Исследуйте места, собирайте предметы и выживайте как можно дольше.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🗺️ ¿Cómo jugar?</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🗺️ Как играть?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          Usa los botones en la parte inferior: "Explorar", "Descansar", "Mover" o "Usar ítem". Explorar puede darte objetos o hacer que encuentres zombies.
+          Используйте кнопки внизу: "Исследовать", "Отдохнуть", "Переместиться" или "Использовать предмет". Исследование может дать вам предметы или привести к встрече с зомби.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🎒 ¿Qué son los ítems?</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🎒 Что такое предметы?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          Los ítems pueden recuperar salud, reducir el hambre o mejorar tu salud mental. Armas como el cuchillo o la llave inglesa reducen el daño de los zombies.
+          Предметы могут восстанавливать здоровье, уменьшать голод или улучшать психическое здоровье. Оружие, такое как нож или гаечный ключ, уменьшает урон от зомби.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🧠 ¿Qué pasa si mi salud mental o física llega a 0?</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🧠 Что происходит, если психическое или физическое здоровье достигает 0?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          Si tu salud física o mental llega a 0, el juego termina. El hambre aumenta cada día y si llegas a cierto nivel, perderás salud física.
+          Если ваше физическое или психическое здоровье достигает 0, игра заканчивается. Голод увеличивается каждый день, и если он достигает определенного уровня, вы теряете физическое здоровье.
         </p>
       </div>
       <div style="margin-bottom: 0">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔁 ¿Puedo reiniciar al morir?</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔁 Могу ли я перезапустить игру после смерти?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          ¡Sí! Al morir verás un botón "Reiniciar". Intenta sobrevivir más tiempo con mejores decisiones.
+          Да! После смерти вы увидите кнопку "Перезапустить". Попробуйте выжить дольше, принимая лучшие решения.
         </p>
       </div>
     </section>

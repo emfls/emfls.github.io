@@ -1,32 +1,32 @@
 <!doctype html>
-<html lang="es">
+<html lang="ru">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="¡Juega al clásico Buscaminas en tu navegador! Descubre las casillas seguras evitando minas y desafía la mejor puntuación. Gratis, rápido y optimizado para móviles." />
+            content="Играйте в классический Сапёр в вашем браузере! Открывайте безопасные клетки, избегая мин, и побейте лучший результат. Бесплатно, быстро и оптимизировано для мобильных устройств." />
         <meta
             name="keywords"
-            content="buscaminas, juego web, juego de navegador, rompecabezas, juego de minas, gratis, lógica, clásico, juego móvil, no descarga, juego instantáneo, en línea, juego gratuito, puzzle" />
+            content="сапёр, веб-игра, браузерная игра, головоломка, игра с минами, бесплатно, логика, классика, мобильная игра, без загрузки, мгновенная игра, онлайн, бесплатная игра, пазл" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/ru/game/Minesweeper" />
 
-        <meta property="og:title" content="Juego Rápido: Buscaminas – Rompecabezas clásico en la web" />
+        <meta property="og:title" content="Быстрая игра: Сапёр – Классическая головоломка в сети" />
         <meta
             property="og:description"
-            content="¡Disfruta del clásico Buscaminas en tu navegador! Descubre casillas seguras y evita las minas. Gratis, optimizado para móviles, ¡diversión para todos!" />
+            content="Наслаждайтесь классическим Сапёром в вашем браузере! Открывайте безопасные клетки и избегайте мин. Бесплатно, оптимизировано для мобильных устройств, развлечение для всех!" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/ru/game/Minesweeper" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Juego Rápido: Buscaminas – Rompecabezas clásico en la web" />
+        <meta name="twitter:title" content="Быстрая игра: Сапёр – Классическая головоломка в сети" />
         <meta
             name="twitter:description"
-            content="Prueba tu lógica y suerte con Buscaminas – ¡sin descargas, juega al instante!" />
+            content="Проверьте свою логику и удачу с Сапёром – без загрузок, играйте мгновенно!" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -43,7 +43,7 @@
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <title>Juego Rápido: Buscaminas</title>
+        <title>Быстрая игра: Сапёр</title>
         <link rel="stylesheet" href="style.css" />
     </head>
 
@@ -55,10 +55,10 @@
                 margin-bottom: 0px;
                 margin-top: 0px;
             ">
-            Buscaminas
+            Сапёр
         </h1>
         <p style="font-size: 14px; color: white; margin-bottom: 30px">
-            Descubre todas las casillas seguras sin detonar ninguna mina.
+            Откройте все безопасные клетки, не взорвав ни одной мины.
         </p>
         <div id="minimap">
             <canvas id="minimapCanvas" width="100" height="100"></canvas>
@@ -67,10 +67,10 @@
             <div id="game"></div>
         </div>
         <div id="overlay">
-            <h2>¡Juego Terminado!</h2>
-            <p id="scoreDisplay">Puntuación: 0</p>
-            <button onclick="resetGame()">Volver a Jugar</button>
-            <button onclick="shareScore()">Compartir</button>
+            <h2>Игра окончена!</h2>
+            <p id="scoreDisplay">Счёт: 0</p>
+            <button onclick="resetGame()">Играть снова</button>
+            <button onclick="shareScore()">Поделиться</button>
         </div>
 
         <script>
@@ -152,7 +152,7 @@
                     cell.element.textContent = "💣";
                     gameEnded = true;
                     const score = calculateScore();
-                    scoreDisplay.textContent = `Puntuación: ${score}`;
+                    scoreDisplay.textContent = `Счёт: ${score}`;
                     overlay.style.display = "flex";
                     return;
                 }
@@ -162,7 +162,7 @@
                     return;
                 }
 
-                // rellenar en 4 direcciones (arriba/abajo/izquierda/derecha)
+                // заполнение в 4 направлениях (вверх/вниз/влево/вправо)
                 const directions = [
                     [-1, 0],
                     [1, 0],
@@ -205,27 +205,27 @@
             function shareScore() {
                 const url = window.location.href;
                 const score = calculateScore();
-                const text = `🎖️ ¡He conseguido ${score} puntos en Buscaminas! ¡Intenta superarme! ${url}`;
+                const text = `🎖️ Я набрал ${score} очков в Сапёре! Попробуй превзойти меня! ${url}`;
                 if (navigator.share) {
                     navigator
                         .share({
-                            title: "Juego Rápido: Buscaminas",
+                            title: "Быстрая игра: Сапёр",
                             text,
                             url
                         })
                         .catch(() =>
-                            alert("Error al compartir. Copia el enlace manualmente.")
+                            alert("Ошибка при попытке поделиться. Скопируйте ссылку вручную.")
                         );
                 } else {
                     navigator.clipboard
                         .writeText(text)
                         .then(() =>
                             alert(
-                                "¡Enlace con puntuación copiado al portapapeles!"
+                                "Ссылка с результатом скопирована в буфер обмена!"
                             )
                         )
                         .catch(() =>
-                            alert(`Copia este enlace:\n${text}`)
+                            alert(`Скопируйте эту ссылку:\n${text}`)
                         );
                 }
             }
@@ -297,7 +297,7 @@
                 border: none;
             "
             onclick="window.location.href='/'">
-            📂 Otros juegos
+            📂 Другие игры
         </button>
         <section
             style="
@@ -313,36 +313,36 @@
                 line-height: 1.6;
                 color: #f0f0f0;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #6a72f8">❓ Preguntas Frecuentes</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #6a72f8">❓ Часто задаваемые вопросы</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. ¿Cómo se juega al Buscaminas?</strong><br />
-                A. Haz clic/toca en cualquier casilla para descubrirla. Evita las minas y trata de revelar la mayor cantidad posible de casillas seguras.
+                <strong>В1. Как играть в Сапёр?</strong><br />
+                О. Кликните/коснитесь любой клетки, чтобы открыть её. Избегайте мин и старайтесь открыть как можно больше безопасных клеток.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. ¿Qué pasa si toco una mina?</strong><br />
-                A. El juego termina de inmediato y se muestra tu puntuación (número de casillas seguras reveladas).
+                <strong>В2. Что происходит, если я коснусь мины?</strong><br />
+                О. Игра немедленно заканчивается, и отображается ваш счёт (количество открытых безопасных клеток).
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. ¿Puedo reiniciar la partida?</strong><br />
-                A. ¡Sí! En la pantalla de "Juego Terminado", pulsa el botón <strong>Volver a Jugar</strong> para comenzar de nuevo.
+                <strong>В3. Могу ли я перезапустить игру?</strong><br />
+                О. Да! На экране "Игра окончена" нажмите кнопку <strong>Играть снова</strong>, чтобы начать заново.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. ¿Qué es el minimapa que aparece en la esquina?</strong><br />
-                A. Es una vista general del amplio tablero que muestra tu progreso y el área que estás viendo en este momento.
+                <strong>В4. Что такое мини-карта в углу?</strong><br />
+                О. Это общий вид большого игрового поля, показывающий ваш прогресс и область, которую вы сейчас видите.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. ¿Cómo comparto mi puntuación?</strong><br />
-                A. En la pantalla de "Juego Terminado", pulsa el botón <strong>Compartir</strong> para copiar el texto con tu puntuación y enlace, o usar las opciones de compartir de tu dispositivo.
+                <strong>В5. Как поделиться своим результатом?</strong><br />
+                О. На экране "Игра окончена" нажмите кнопку <strong>Поделиться</strong>, чтобы скопировать текст с вашим результатом и ссылкой, или использовать опции обмена вашего устройства.
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. ¿Puedo jugar en mi móvil?</strong><br />
-                A. ¡Por supuesto! Este juego está completamente optimizado para dispositivos móviles y funciona en todos los navegadores.
+                <strong>В6. Могу ли я играть на мобильном устройстве?</strong><br />
+                О. Конечно! Эта игра полностью оптимизирована для мобильных устройств и работает во всех браузерах.
             </div>
         </section>
     </body>

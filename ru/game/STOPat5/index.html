@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="es">
+<html lang="ru">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Detente en 5</title>
+        <title>Остановись на 5</title>
         <meta name="robots" content="index, follow" />
 
         <!-- URL canónica -->
@@ -12,27 +12,27 @@
         <!-- Meta SEO -->
         <meta
             name="description"
-            content="¿Qué tan preciso es tu sentido del tiempo? Intenta detener el temporizador lo más cerca posible de 5.000 segundos. Súbete de nivel y desafía a tus amigos. Juego web gratuito y optimizado para móvil." />
+            content="Насколько точно ваше чувство времени? Попробуйте остановить таймер как можно ближе к 5.000 секундам. Повышайте уровень и бросайте вызов друзьям. Бесплатная веб-игра, оптимизированная для мобильных устройств." />
         <meta
             name="keywords"
-            content="Detente en 5, juego de temporizador, juego de reflejos, desafío de mantención, subir de nivel, juego web, juego gratuito, juego de navegador" />
+            content="Остановись на 5, игра с таймером, игра на рефлексы, вызов на точность, повышение уровня, веб-игра, бесплатная игра, браузерная игра" />
         <meta name="author" content="Itagi" />
 
         <!-- Open Graph (Facebook, Kakao, Discord) -->
-        <meta property="og:title" content="Detente en 5 – Juego de desafío de temporizador" />
+        <meta property="og:title" content="Остановись на 5 – Игра-вызов с таймером" />
         <meta
             property="og:description"
-            content="¡Detén el cronómetro lo más cercano posible a 5.000 segundos! Sube de nivel si tienes éxito. Juego web gratuito y optimizado para móvil." />
+            content="Остановите секундомер как можно ближе к 5.000 секундам! Повышайте уровень при успехе. Бесплатная веб-игра, оптимизированная для мобильных устройств." />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/ru/game/STOPat5" />
         <meta property="og:type" content="website" />
 
         <!-- Twitter Card -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Detente en 5 – Juego de desafío de temporizador" />
+        <meta name="twitter:title" content="Остановись на 5 – Игра-вызов с таймером" />
         <meta
             name="twitter:description"
-            content="¿Puedes detenerlo exactamente en 5 segundos? ¡Juega a Detente en 5 y desafía a tus amigos!" />
+            content="Сможете ли вы остановить точно на 5 секундах? Играйте в Остановись на 5 и бросайте вызов друзьям!" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
         <!-- Google tag (gtag.js) -->
@@ -55,26 +55,26 @@
     <body>
         <div id="game-container">
             <h1>
-                <span id="mainTitle">Detente</span><br />
-                <span id="subTitle">en 5</span>
+                <span id="mainTitle">Остановись</span><br />
+                <span id="subTitle">на 5</span>
             </h1>
             <div id="mainUI">
                 <div id="levelBox">
-                    <span id="levelLabel">Nivel 1</span>
-                    <span id="toleranceInfo">Rango de tolerancia ±0.5 s</span>
+                    <span id="levelLabel">Уровень 1</span>
+                    <span id="toleranceInfo">Диапазон допуска ±0.5 с</span>
                 </div>
-                <div id="timer">0.000 s</div>
-                <button id="startBtn">Iniciar</button>
+                <div id="timer">0.000 с</div>
+                <button id="startBtn">Начать</button>
                 <div id="result"></div>
             </div>
-            <div id="levelUpBanner">¡Nivel Subido!</div>
+            <div id="levelUpBanner">Уровень повышен!</div>
             <div id="gameOverArea">
-                <p><strong style="font-size: 1.6rem">❌ Juego Terminado</strong></p>
-                <div id="finalLevelBox">Nivel Alcanzado: <span id="finalLevel">1</span></div>
-                <div id="finalDiff">Diferencia: <span id="finalDiffValue">0.000 s</span></div>
+                <p><strong style="font-size: 1.6rem">❌ Игра окончена</strong></p>
+                <div id="finalLevelBox">Достигнутый уровень: <span id="finalLevel">1</span></div>
+                <div id="finalDiff">Разница: <span id="finalDiffValue">0.000 с</span></div>
                 <div style="margin-top: 1.5rem">
-                    <button onclick="restartGame()">Reiniciar</button>
-                    <button onclick="shareResult()">Compartir</button>
+                    <button onclick="restartGame()">Перезапустить</button>
+                    <button onclick="shareResult()">Поделиться</button>
                 </div>
             </div>
         </div>
@@ -142,15 +142,15 @@
 
             function updateTimer() {
                 const elapsed = (performance.now() - startTime) / 1000;
-                timerEl.textContent = `${elapsed.toFixed(3)} s`;
+                timerEl.textContent = `${elapsed.toFixed(3)} с`;
                 animationFrame = requestAnimationFrame(updateTimer);
             }
 
             function updateLevelUI() {
                 const tolerance = toleranceByLevel(level);
                 const colors = colorByLevel(level);
-                levelLabel.textContent = `Nivel ${level}`;
-                toleranceInfo.textContent = `Rango de tolerancia ±${tolerance} s`;
+                levelLabel.textContent = `Уровень ${level}`;
+                toleranceInfo.textContent = `Диапазон допуска ±${tolerance} с`;
                 levelBox.style.background = colors.bg;
                 levelBox.style.borderLeft = `6px solid ${colors.border}`;
                 levelLabel.style.color = colors.text;
@@ -170,31 +170,31 @@
                 mainUI.style.display = "none";
                 gameOverArea.style.display = "block";
                 finalLevel.textContent = level;
-                finalDiffValue.textContent = `${diff.toFixed(3)} s`;
+                finalDiffValue.textContent = `${diff.toFixed(3)} с`;
             }
 
             function restartGame() {
                 level = 1;
                 isGameOver = false;
                 btn.disabled = false;
-                btn.textContent = "Iniciar";
+                btn.textContent = "Начать";
                 resultEl.innerHTML = "";
                 gameOverArea.style.display = "none";
                 mainUI.style.display = "block";
                 updateLevelUI();
-                timerEl.textContent = "0.000 s";
+                timerEl.textContent = "0.000 с";
             }
 
             function shareResult() {
-                const text = `🎮 Detente en 5\nNivel alcanzado: ${level}\n¡Desafíalos 👉 https://emfls.github.io/ru/game/STOPat5`;
+                const text = `🎮 Остановись на 5\nДостигнутый уровень: ${level}\nБросьте вызов 👉 https://emfls.github.io/ru/game/STOPat5`;
                 if (navigator.share) {
                     navigator.share({
-                        title: "Detente en 5",
+                        title: "Остановись на 5",
                         text
                     });
                 } else {
                     navigator.clipboard.writeText(text);
-                    alert("📋 ¡Resultado copiado al portapapeles!");
+                    alert("📋 Результат скопирован в буфер обмена!");
                 }
             }
 
@@ -203,7 +203,7 @@
                 if (!running) {
                     startTime = performance.now();
                     updateTimer();
-                    btn.textContent = "¡Detener!";
+                    btn.textContent = "Остановить!";
                     resultEl.textContent = "";
                     running = true;
                 } else {
@@ -212,17 +212,17 @@
                     const formattedTime = finalTime.toFixed(3);
                     const diff = Math.abs(finalTime - 5);
                     const tolerance = toleranceByLevel(level);
-                    timerEl.textContent = `${formattedTime} s`;
+                    timerEl.textContent = `${formattedTime} с`;
                     if (diff <= tolerance) {
-                        resultEl.innerHTML = `🎉 <b>¡Éxito!</b> Detenido en ${formattedTime} s<br>🎯 Diferencia: ±${diff.toFixed(3)} s`;
+                        resultEl.innerHTML = `🎉 <b>Успех!</b> Остановлено на ${formattedTime} с<br>🎯 Разница: ±${diff.toFixed(3)} с`;
                         level++;
                         showBanner();
                     } else {
-                        resultEl.innerHTML = `❌ <b>¡Fallaste!</b> Detenido en ${formattedTime} s<br>Diferencia: ±${diff.toFixed(3)} s`;
+                        resultEl.innerHTML = `❌ <b>Неудача!</b> Остановлено на ${formattedTime} с<br>Разница: ±${diff.toFixed(3)} с`;
                         gameOver(diff);
                     }
                     updateLevelUI();
-                    btn.textContent = "Reintentar";
+                    btn.textContent = "Попробовать снова";
                     running = false;
                 }
             });
@@ -245,7 +245,7 @@
                 cursor: pointer;
             "
             onclick="window.location.href='/'">
-            📂 Otros juegos
+            📂 Другие игры
         </button>
         <section
             style="
@@ -261,36 +261,36 @@
                 line-height: 1.6;
                 color: #f0f0f0;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ Preguntas Frecuentes</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb">❓ Часто задаваемые вопросы</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. ¿Cómo se juega a Detente en 5?</strong><br />
-                A. Pulsa el botón “Iniciar” y luego “¡Detener!” para intentar detener el cronómetro lo más cerca posible a 5.000 segundos.
+                <strong>В1. Как играть в Остановись на 5?</strong><br />
+                О. Нажмите кнопку "Начать", а затем "Остановить!", чтобы попытаться остановить секундомер как можно ближе к 5.000 секундам.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. ¿Qué es el sistema de niveles?</strong><br />
-                A. A medida que subes de nivel, el rango de tolerancia se reduce. En niveles más altos, debes acercarte aún más a los 5.000 segundos.
+                <strong>В2. Что такое система уровней?</strong><br />
+                О. По мере повышения уровня диапазон допуска уменьшается. На более высоких уровнях вы должны подойти еще ближе к 5.000 секундам.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. ¿Cuándo termina el juego?</strong><br />
-                A. El juego termina si superas el rango de tolerancia. Se mostrará tu nivel final.
+                <strong>В3. Когда заканчивается игра?</strong><br />
+                О. Игра заканчивается, если вы превысите диапазон допуска. Будет показан ваш финальный уровень.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. ¿Puedo intentarlo de nuevo después de fallar?</strong><br />
-                A. ¡Sí! Puedes pulsar “Reiniciar” para volver a comenzar desde el nivel 1 en cualquier momento.
+                <strong>В4. Могу ли я попробовать снова после неудачи?</strong><br />
+                О. Да! Вы можете нажать "Перезапустить", чтобы начать заново с уровня 1 в любое время.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. ¿Puedo jugar en dispositivos móviles?</strong><br />
-                A. ¡Claro! Este juego está optimizado tanto para móviles como para escritorio.
+                <strong>В5. Могу ли я играть на мобильных устройствах?</strong><br />
+                О. Конечно! Эта игра оптимизирована как для мобильных устройств, так и для настольных компьютеров.
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. ¿Puedo compartir mi resultado?</strong><br />
-                A. ¡Por supuesto! Tras terminar, pulsa “Compartir” para copiar tu nivel final y el enlace, o compártelo directamente.
+                <strong>В6. Могу ли я поделиться своим результатом?</strong><br />
+                О. Конечно! После завершения нажмите "Поделиться", чтобы скопировать ваш финальный уровень и ссылку, или поделитесь напрямую.
             </div>
         </section>
     </body>

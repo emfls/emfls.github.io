@@ -1,22 +1,22 @@
 <!doctype html>
-<html lang="es">
+<html lang="ru">
     <head>
         <meta charset="UTF-8" />
-        <title>Herramienta de conversión de unidades en línea – Longitud, Peso, Temperatura, etc.</title>
+        <title>Онлайн инструмент конвертации единиц измерения – Длина, Вес, Температура и др.</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content="Convierte al instante unidades de longitud, peso, temperatura, velocidad, volumen y área. 100% en el navegador, sin subir datos." />
-        <meta name="keywords" content="conversión de unidades, longitud, peso, temperatura, velocidad, volumen, área, herramienta en línea, gratuito, sin subir datos" />
+        <meta name="description" content="Мгновенно конвертируйте единицы длины, веса, температуры, скорости, объема и площади. 100% в браузере, без загрузки данных." />
+        <meta name="keywords" content="конвертация единиц, длина, вес, температура, скорость, объем, площадь, онлайн инструмент, бесплатно, без загрузки данных" />
         <meta name="author" content="Itagi" />
         <link rel="canonical" href="https://emfls.github.io/ru/util/unitconverter/" />
         <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-        <meta property="og:title" content="Herramienta de conversión de unidades en línea – Longitud, Peso, Temperatura, etc." />
-        <meta property="og:description" content="Convierte unidades de longitud, peso, temperatura, velocidad, volumen y área al instante en tu navegador. Gratis y privado." />
+        <meta property="og:title" content="Онлайн инструмент конвертации единиц измерения – Длина, Вес, Температура и др." />
+        <meta property="og:description" content="Мгновенно конвертируйте единицы длины, веса, температуры, скорости, объема и площади в браузере. Бесплатно и конфиденциально." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://emfls.github.io/ru/util/unitconverter/" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Herramienta de conversión de unidades en línea – Longitud, Peso, Temperatura, etc." />
-        <meta name="twitter:description" content="Convierte al instante unidades de longitud, peso, temperatura, velocidad, volumen y área en el navegador." />
+        <meta name="twitter:title" content="Онлайн инструмент конвертации единиц измерения – Длина, Вес, Температура и др." />
+        <meta name="twitter:description" content="Мгновенно конвертируйте единицы длины, веса, температуры, скорости, объема и площади в браузере." />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -32,88 +32,268 @@
     </head>
     <body>
         <div class="container">
-            <div class="logo">🔄 Herramienta de conversión de unidades</div>
+            <div class="logo">🔄 Инструмент конвертации единиц</div>
             <div class="desc">
-                Convierte al instante unidades de longitud, peso, temperatura, velocidad, volumen y área.<br />
-                100% en el navegador, gratuito y privado.
+                Мгновенно конвертируйте единицы длины, веса, температуры, скорости, объема и площади.<br />
+                100% в браузере, бесплатно и конфиденциально.
             </div>
             <div class="mode-toggle">
-                <button class="toggle-btn active" id="lenBtn">Longitud</button>
-                <button class="toggle-btn" id="weightBtn">Peso</button>
-                <button class="toggle-btn" id="tempBtn">Temperatura</button>
-                <button class="toggle-btn" id="speedBtn">Velocidad</button>
-                <button class="toggle-btn" id="volBtn">Volumen</button>
-                <button class="toggle-btn" id="areaBtn">Área</button>
+                <button class="toggle-btn active" id="lenBtn">Длина</button>
+                <button class="toggle-btn" id="weightBtn">Вес</button>
+                <button class="toggle-btn" id="tempBtn">Температура</button>
+                <button class="toggle-btn" id="speedBtn">Скорость</button>
+                <button class="toggle-btn" id="volBtn">Объем</button>
+                <button class="toggle-btn" id="areaBtn">Площадь</button>
             </div>
             <form id="converterForm">
                 <div class="row">
-                    <label for="fromValue">Valor</label>
-                    <input type="number" id="fromValue" placeholder="Ingresa un valor" step="any" required autocomplete="off" />
+                    <label for="fromValue">Значение</label>
+                    <input type="number" id="fromValue" placeholder="Введите значение" step="any" required autocomplete="off" />
                 </div>
                 <div class="row">
-                    <label for="fromUnit">Unidad de origen</label>
+                    <label for="fromUnit">Исходная единица</label>
                     <select id="fromUnit"></select>
                 </div>
                 <div class="row">
-                    <label for="toUnit">Unidad de destino</label>
+                    <label for="toUnit">Целевая единица</label>
                     <select id="toUnit"></select>
                 </div>
                 <div class="result-area" id="resultArea"></div>
             </form>
             <div class="footer">
-                Todos los cálculos se realizan al instante y tu privacidad está protegida.<br />
-                100% procesado en el navegador.<br />
-                ¡Si deseas más unidades o tienes sugerencias, háznoslo saber!
+                Все вычисления выполняются мгновенно и ваша конфиденциальность защищена.<br />
+                100% обработка в браузере.<br />
+                Если вы хотите больше единиц или у вас есть предложения, дайте нам знать!
             </div>
-            <a href="../" id="backBtn">Ver otras herramientas</a>
+            <a href="../" id="backBtn">Посмотреть другие инструменты</a>
         </div>
         <script>
-            // Unidad de datos
+            // Данные единиц
             const units = {
-                length: { /* ...misma lógica de JavaScript original...*/ },
-                weight: { /* ... */ },
-                temp: { /* ... */ },
-                speed: { /* ... */ },
-                vol: { /* ... */ },
-                area: { /* ... */ }
+                length: {
+                    "мм": 0.001,
+                    "см": 0.01,
+                    "дм": 0.1,
+                    "м": 1,
+                    "км": 1000,
+                    "дюйм": 0.0254,
+                    "фут": 0.3048,
+                    "ярд": 0.9144,
+                    "миля": 1609.344,
+                    "морская миля": 1852,
+                    "микрометр": 0.000001,
+                    "нанометр": 0.000000001,
+                    "пикометр": 0.000000000001,
+                    "световой год": 9460730472580800,
+                    "парсек": 30856775814913673,
+                    "астрономическая единица": 149597870700
+                },
+                weight: {
+                    "мг": 0.000001,
+                    "г": 0.001,
+                    "кг": 1,
+                    "т": 1000,
+                    "унция": 0.0283495,
+                    "фунт": 0.453592,
+                    "стоун": 6.35029,
+                    "центнер": 100,
+                    "карат": 0.0002,
+                    "гран": 0.00006479891,
+                    "тройская унция": 0.0311035,
+                    "тройский фунт": 0.373242,
+                    "короткая тонна": 907.185,
+                    "длинная тонна": 1016.05,
+                    "атомная единица массы": 1.66054e-27
+                },
+                temp: {
+                    "Цельсий": { offset: 0, scale: 1 },
+                    "Фаренгейт": { offset: 32, scale: 9/5 },
+                    "Кельвин": { offset: 273.15, scale: 1 },
+                    "Ранкин": { offset: 491.67, scale: 9/5 },
+                    "Реомюр": { offset: 0, scale: 4/5 }
+                },
+                speed: {
+                    "м/с": 1,
+                    "км/ч": 0.277778,
+                    "миль/ч": 0.44704,
+                    "узел": 0.514444,
+                    "фут/с": 0.3048,
+                    "см/с": 0.01,
+                    "мм/с": 0.001,
+                    "скорость света": 299792458,
+                    "мах": 343,
+                    "км/мин": 16.6667,
+                    "км/с": 1000,
+                    "дюйм/с": 0.0254
+                },
+                vol: {
+                    "мл": 0.001,
+                    "л": 1,
+                    "м³": 1000,
+                    "см³": 0.001,
+                    "дм³": 1,
+                    "галлон (США)": 3.78541,
+                    "галлон (Великобритания)": 4.54609,
+                    "кварта (США)": 0.946353,
+                    "пинта (США)": 0.473176,
+                    "чашка (США)": 0.236588,
+                    "жидкая унция (США)": 0.0295735,
+                    "столовая ложка (США)": 0.0147868,
+                    "чайная ложка (США)": 0.00492892,
+                    "баррель нефти": 158.987,
+                    "кубический фут": 28.3168,
+                    "кубический дюйм": 0.0163871
+                },
+                area: {
+                    "мм²": 0.000001,
+                    "см²": 0.0001,
+                    "дм²": 0.01,
+                    "м²": 1,
+                    "км²": 1000000,
+                    "га": 10000,
+                    "ар": 100,
+                    "акр": 4046.86,
+                    "кв. дюйм": 0.00064516,
+                    "кв. фут": 0.092903,
+                    "кв. ярд": 0.836127,
+                    "кв. миля": 2589988.11,
+                    "десятина": 10925.4
+                }
             };
-            const btns = { len: document.getElementById("lenBtn"), weight: document.getElementById("weightBtn"), temp: document.getElementById("tempBtn"), speed: document.getElementById("speedBtn"), vol: document.getElementById("volBtn"), area: document.getElementById("areaBtn") };
+            
+            const btns = { 
+                len: document.getElementById("lenBtn"), 
+                weight: document.getElementById("weightBtn"), 
+                temp: document.getElementById("tempBtn"), 
+                speed: document.getElementById("speedBtn"), 
+                vol: document.getElementById("volBtn"), 
+                area: document.getElementById("areaBtn") 
+            };
             const fromValue = document.getElementById("fromValue");
             const fromUnit = document.getElementById("fromUnit");
             const toUnit = document.getElementById("toUnit");
             const resultArea = document.getElementById("resultArea");
             let currentType = "length";
-            Object.keys(btns).forEach(type => { btns[type].onclick = () => { Object.values(btns).forEach(b => b.classList.remove("active")); btns[type].classList.add("active"); currentType = type === "len" ? "length" : type; loadUnitOptions(); resultArea.textContent = ""; }; });
-            function loadUnitOptions() { /* ...misma lógica para cargar opciones...*/ }
+            
+            Object.keys(btns).forEach(type => { 
+                btns[type].onclick = () => { 
+                    Object.values(btns).forEach(b => b.classList.remove("active")); 
+                    btns[type].classList.add("active"); 
+                    currentType = type === "len" ? "length" : type; 
+                    loadUnitOptions(); 
+                    resultArea.textContent = ""; 
+                }; 
+            });
+            
+            function loadUnitOptions() {
+                fromUnit.innerHTML = "";
+                toUnit.innerHTML = "";
+                const unitData = units[currentType];
+                Object.keys(unitData).forEach(unit => {
+                    const option1 = document.createElement("option");
+                    option1.value = unit;
+                    option1.textContent = unit;
+                    fromUnit.appendChild(option1);
+                    
+                    const option2 = document.createElement("option");
+                    option2.value = unit;
+                    option2.textContent = unit;
+                    toUnit.appendChild(option2);
+                });
+                
+                if (Object.keys(unitData).length > 1) {
+                    toUnit.selectedIndex = 1;
+                }
+            }
+            
             loadUnitOptions();
-            function convert(type, value, from, to) { /* ...misma lógica de conversión...*/ }
-            function updateResult() { /* ...misma lógica de actualización de resultado...*/ }
+            
+            function convert(type, value, from, to) {
+                if (type === "temp") {
+                    // Температурные конвертации
+                    const fromData = units.temp[from];
+                    const toData = units.temp[to];
+                    
+                    // Конвертируем в Цельсий
+                    let celsius;
+                    if (from === "Цельсий") {
+                        celsius = value;
+                    } else if (from === "Фаренгейт") {
+                        celsius = (value - 32) * 5/9;
+                    } else if (from === "Кельвин") {
+                        celsius = value - 273.15;
+                    } else if (from === "Ранкин") {
+                        celsius = (value - 491.67) * 5/9;
+                    } else if (from === "Реомюр") {
+                        celsius = value * 5/4;
+                    }
+                    
+                    // Конвертируем из Цельсия в целевую единицу
+                    if (to === "Цельсий") {
+                        return celsius;
+                    } else if (to === "Фаренгейт") {
+                        return celsius * 9/5 + 32;
+                    } else if (to === "Кельвин") {
+                        return celsius + 273.15;
+                    } else if (to === "Ранкин") {
+                        return (celsius + 273.15) * 9/5;
+                    } else if (to === "Реомюр") {
+                        return celsius * 4/5;
+                    }
+                } else {
+                    // Обычные конвертации
+                    const unitData = units[type];
+                    const fromFactor = unitData[from];
+                    const toFactor = unitData[to];
+                    return (value * fromFactor) / toFactor;
+                }
+            }
+            
+            function updateResult() {
+                const value = parseFloat(fromValue.value);
+                if (isNaN(value)) {
+                    resultArea.textContent = "";
+                    return;
+                }
+                
+                const result = convert(currentType, value, fromUnit.value, toUnit.value);
+                
+                let displayResult;
+                if (Math.abs(result) >= 1e6 || (Math.abs(result) < 1e-3 && result !== 0)) {
+                    displayResult = result.toExponential(6);
+                } else {
+                    displayResult = parseFloat(result.toFixed(10)).toString();
+                }
+                
+                resultArea.innerHTML = `<div class="result">${displayResult} ${toUnit.value}</div>`;
+            }
+            
             fromValue.addEventListener("input", updateResult);
             fromUnit.addEventListener("change", updateResult);
             toUnit.addEventListener("change", updateResult);
             setTimeout(updateResult, 100);
         </script>
         <section style="max-width: 320px; margin: 48px auto 24px auto; background: #1e1e1e; border-radius: 18px; box-shadow: 0 6px 24px #1236; padding: 24px; font-family: Arial, sans-serif;">
-            <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 14px">❓ Preguntas Frecuentes – Herramienta de conversión de unidades</div>
+            <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 14px">❓ Часто задаваемые вопросы – Инструмент конвертации единиц</div>
             <div style="margin-bottom: 12px">
-                <div style="color: #8f94fb; font-weight: bold">¿Son precisas las conversiones?</div>
-                <div style="color: #f0f0f0">Sí. Se usan valores de conversión estándar internacionales.</div>
+                <div style="color: #8f94fb; font-weight: bold">Точны ли конвертации?</div>
+                <div style="color: #f0f0f0">Да. Используются международные стандартные значения конвертации.</div>
             </div>
             <div style="margin-bottom: 12px">
-                <div style="color: #8f94fb; font-weight: bold">¿Funciona sin conexión?</div>
-                <div style="color: #f0f0f0">Sí. Tras cargar la página puedes usarla sin conexión a internet.</div>
+                <div style="color: #8f94fb; font-weight: bold">Работает ли без интернета?</div>
+                <div style="color: #f0f0f0">Да. После загрузки страницы вы можете использовать её без подключения к интернету.</div>
             </div>
             <div style="margin-bottom: 12px">
-                <div style="color: #8f94fb; font-weight: bold">¿Hay límites de uso?</div>
-                <div style="color: #f0f0f0">No. Puedes convertir tantas veces como desees.</div>
+                <div style="color: #8f94fb; font-weight: bold">Есть ли ограничения на использование?</div>
+                <div style="color: #f0f0f0">Нет. Вы можете конвертировать столько раз, сколько хотите.</div>
             </div>
             <div style="margin-bottom: 12px">
-                <div style="color: #8f94fb; font-weight: bold">¿Por qué uso notación científica?</div>
-                <div style="color: #f0f0f0">Para números muy grandes o muy pequeños, se muestra notación científica por legibilidad.</div>
+                <div style="color: #8f94fb; font-weight: bold">Почему используется научная нотация?</div>
+                <div style="color: #f0f0f0">Для очень больших или очень маленьких чисел отображается научная нотация для удобочитаемости.</div>
             </div>
             <div style="margin-bottom: 0">
-                <div style="color: #8f94fb; font-weight: bold">¿Puedo sugerir nuevas categorías?</div>
-                <div style="color: #f0f0f0">¡Claro! Envíanos tus sugerencias y las consideraremos.</div>
+                <div style="color: #8f94fb; font-weight: bold">Могу ли я предложить новые категории?</div>
+                <div style="color: #f0f0f0">Конечно! Отправьте нам ваши предложения, и мы их рассмотрим.</div>
             </div>
         </section>
     </body>

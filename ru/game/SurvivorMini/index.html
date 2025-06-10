@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="es">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <title>SupervivienteMini</title>
+    <title>ВыживальщикМини</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -22,29 +22,29 @@
     <!-- SEO & Social meta -->
     <meta
       name="description"
-      content="SupervivienteMini es un juego de acción rápido para navegador. Esquiva monstruos, sube de nivel y sobrevive el mayor tiempo posible. ¡Juega gratis sin descargas!" />
+      content="ВыживальщикМини - это быстрая экшн-игра для браузера. Уклоняйтесь от монстров, повышайте уровень и выживайте как можно дольше. Играйте бесплатно без загрузок!" />
     <meta
       name="keywords"
-      content="Superviviente, minijuego, acción, supervivencia, shooter, arcade, juego navegador, gratis, sobrevivir, oleadas, disparos, zombis, juego web" />
+      content="Выживание, мини-игра, экшн, выживание, шутер, аркада, браузерная игра, бесплатно, выжить, волны, стрельба, зомби, веб-игра" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="es" />
+    <meta name="language" content="ru" />
     <meta name="theme-color" content="#181a20" />
     <link rel="canonical" href="https://emfls.github.io/ru/game/SurvivorMini/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
     <!-- Open Graph (Facebook, Kakao, etc) -->
-    <meta property="og:title" content="SupervivienteMini – Juego de acción web" />
+    <meta property="og:title" content="ВыживальщикМини – Веб экшн-игра" />
     <meta
       property="og:description"
-      content="¿Cuánto tiempo puedes sobrevivir contra oleadas de enemigos? Sube de nivel en este juego de acción rápido para navegador y alcanza la máxima puntuación." />
+      content="Как долго вы сможете выжить против волн врагов? Повышайте уровень в этой быстрой браузерной экшн-игре и достигните максимального счета." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/ru/game/SurvivorMini/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="SupervivienteMini – Juego de acción web" />
+    <meta name="twitter:title" content="ВыживальщикМини – Веб экшн-игра" />
     <meta
       name="twitter:description"
-      content="Resiste las oleadas y compite por la mejor puntuación. ¡100% gratis en tu navegador!" />
+      content="Сопротивляйтесь волнам и соревнуйтесь за лучший счет. 100% бесплатно в вашем браузере!" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <link rel="stylesheet" href="style.css" />
   </head>
@@ -53,14 +53,14 @@
       <canvas id="game" width="375" height="500"></canvas>
       <div id="hud">
         <div id="stats">
-          <span id="score">Puntuación: 0</span>
-          <span id="wave">Oleada: 1</span>
+          <span id="score">Счет: 0</span>
+          <span id="wave">Волна: 1</span>
           <span id="time">0:00</span>
         </div>
         <div id="barwrap">
           <div class="bar hp"><div class="barfill" id="hpbar"></div></div>
           <div class="bar"><div class="barfill" id="xpbar"></div></div>
-          <span id="level">Nv.1</span>
+          <span id="level">Ур.1</span>
         </div>
       </div>
       <div id="levelup" class="centerPopup"></div>
@@ -86,7 +86,7 @@
         cursor: pointer;
       "
       onclick="window.location.href='/'">
-      📂 Otros juegos
+      📂 Другие игры
     </button>
     <script>
       const W = 375,
@@ -142,7 +142,7 @@
       }
       reset();
 
-      // ====== Joystick táctil circular + teclado ======
+      // ====== Сенсорный круглый джойстик + клавиатура ======
       let dragging = false;
       function setJoystickActive(active) {
         if (active) {
@@ -198,8 +198,8 @@
           state.joy.y = 0;
         }
       };
-
-      // Soporte de teclado en PC (ignorar si hay popup)
+      
+      // Поддержка клавиатуры на ПК (игнорировать если есть всплывающее окно)
       window.addEventListener("keydown", (e) => {
         if (state.pause || state.gameover) return;
         if (e.key === "ArrowUp") state.input.y = -1;
@@ -212,7 +212,7 @@
         if (["ArrowLeft", "ArrowRight"].includes(e.key)) state.input.x = 0;
       });
 
-      // ========== Bucle principal ==========
+      // ========== Основной цикл ==========
       function loop() {
         if (!state.gameover && !state.pause) update();
         draw();
@@ -220,11 +220,11 @@
       }
       loop();
 
-      // ========== Actualizar ==========
+      // ========== Обновление ==========
       function update() {
         state.tick++;
         state.time = (state.tick / 60) | 0;
-        // Movimiento
+        // Движение
         let dx = state.input.x + state.joy.x,
           dy = state.input.y + state.joy.y;
         let len = Math.hypot(dx, dy);
@@ -234,7 +234,7 @@
           state.player.x = Math.max(state.player.r, Math.min(W - state.player.r, state.player.x));
           state.player.y = Math.max(state.player.r, Math.min(H - state.player.r, state.player.y));
         }
-        // Balas: guiado automático a enemigo más cercano
+        // Пули: автоматическое наведение на ближайшего врага
         state.player.fire++;
         if (state.player.fire >= state.player.fireRate) {
           for (let i = 0; i < state.player.bullets; i++) {
@@ -260,7 +260,7 @@
           }
           state.player.fire = 0;
         }
-        // Movimiento/colisión de balas
+        // Движение/столкновение пуль
         state.bullets = state.bullets.filter((b) => {
           b.x += b.vx;
           b.y += b.vy;
@@ -280,7 +280,7 @@
           }
           return true;
         });
-        // Generar enemigos
+        // Генерация врагов
         if (state.tick % Math.max(11, 42 - state.wave * 2) === 0) {
           let t = state.wave,
             r = 14 + Math.random() * 8,
@@ -299,7 +299,7 @@
             boss: 0
           });
         }
-        // Jefe (cada minuto)
+        // Босс (каждую минуту)
         if (--state.bosscool <= 0) {
           state.bosscool = 870 + Math.random() * 90;
           let hp = 17 + state.wave * 4;
@@ -317,7 +317,7 @@
             boss: 1
           });
         }
-        // Movimiento/colisión de enemigos
+        // Движение/столкновение врагов
         for (let m of state.mobs) {
           if (m.dead) continue;
           let dx = state.player.x - m.x,
@@ -334,7 +334,7 @@
           }
         }
         state.mobs = state.mobs.filter((m) => !m.dead);
-        // Manejo de ítems
+        // Обработка предметов
         state.items = state.items.filter((it) => {
           if (Math.hypot(state.player.x - it.x, state.player.y - it.y) < state.player.r + it.r + 7) {
             if (it.type === "heal") state.player.hp = Math.min(state.player.maxhp, state.player.hp + 2);
@@ -355,14 +355,14 @@
           }
           return true;
         });
-        // Experiencia / Subir de nivel
+        // Опыт / Повышение уровня
         while (state.player.xp >= state.player.xpNext) {
           state.player.xp -= state.player.xpNext;
           state.player.lv++;
           state.player.xpNext = 8 + Math.floor(state.player.lv * 1.6);
           showLevelUp();
         }
-        // Actualizar oleada
+        // Обновление волны
         state.wave = Math.floor(state.time / 18) + 1;
       }
       function dropExp(m) {
@@ -383,42 +383,42 @@
           state.items.push({ x: m.x, y: m.y, r: 11, type: "magnet" });
         }
       }
-
-      // ===== Selección de mejoras al subir de nivel =====
+      
+      // ===== Выбор улучшений при повышении уровня =====
       function showLevelUp() {
         setJoystickActive(false);
         let upgrades = [
           {
-            name: "Velocidad de disparo↑",
-            desc: "Dispara más rápido",
+            name: "Скорость стрельбы↑",
+            desc: "Стреляйте быстрее",
             act: () => {
               state.player.fireRate = Math.max(13, state.player.fireRate - 6);
             }
           },
           {
-            name: "Cantidad de balas↑",
-            desc: "Aumenta el número de balas",
+            name: "Количество пуль↑",
+            desc: "Увеличивает количество пуль",
             act: () => {
               state.player.bullets = Math.min(6, state.player.bullets + 1);
             }
           },
           {
-            name: "Velocidad de movimiento↑",
-            desc: "Aumenta tu velocidad",
+            name: "Скорость движения↑",
+            desc: "Увеличивает вашу скорость",
             act: () => {
               state.player.spd += 0.7;
             }
           },
           {
-            name: "Daño↑",
-            desc: "Aumenta tu daño",
+            name: "Урон↑",
+            desc: "Увеличивает ваш урон",
             act: () => {
               state.player.atk += 1;
             }
           },
           {
-            name: "Vida máxima↑",
-            desc: "Aumenta la vida máxima y cura",
+            name: "Максимальное здоровье↑",
+            desc: "Увеличивает максимальное здоровье и лечит",
             act: () => {
               state.player.maxhp += 1;
               state.player.hp = Math.min(state.player.hp + 1, state.player.maxhp);
@@ -431,7 +431,7 @@
           if (!pick.includes(i)) pick.push(i);
         }
         levelup.innerHTML =
-          `<b>¡Nivel subido!<br>Selecciona una mejora</b>
+          `<b>Уровень повышен!<br>Выберите улучшение</b>
     <div class='popupButtons'>` +
           pick
             .map(
@@ -467,7 +467,7 @@
         setJoystickActive(true);
       };
 
-      // ===== Juego terminado =====
+      // ===== Игра окончена =====
       function gameOver() {
         setJoystickActive(false);
         state.gameover = true;
@@ -475,23 +475,23 @@
           hiscore = state.score;
           localStorage.surv_hi = hiscore;
         }
-        gameover.innerHTML = `<b>Juego Terminado</b><br>
-    Puntuación: <b>${state.score}</b><br>
-    Oleada: <b>${state.wave}</b><br>
-    Tiempo: <b>${Math.floor(state.time / 60)}:${("0" + (state.time % 60)).slice(-2)}</b><br>
-    <span style="font-size:0.9em;color:#bbf;">Récord: ${hiscore}</span><br>
-    <div class="popupButtons"><button class="popupBtn" onclick="restart()">Reiniciar</button></div>`;
+        gameover.innerHTML = `<b>Игра окончена</b><br>
+    Счет: <b>${state.score}</b><br>
+    Волна: <b>${state.wave}</b><br>
+    Время: <b>${Math.floor(state.time / 60)}:${("0" + (state.time % 60)).slice(-2)}</b><br>
+    <span style="font-size:0.9em;color:#bbf;">Рекорд: ${hiscore}</span><br>
+    <div class="popupButtons"><button class="popupBtn" onclick="restart()">Перезапустить</button></div>`;
         gameover.style.display = "block";
       }
       window.restart = () => {
         reset();
         setJoystickActive(true);
       };
-
-      // ========== Dibujar ==========
+      
+      // ========== Отрисовка ==========
       function draw() {
         ctx.clearRect(0, 0, W, H);
-        // Círculos de fondo
+        // Фоновые круги
         ctx.save();
         for (let i = 0; i < 7; i++) {
           ctx.beginPath();
@@ -501,7 +501,7 @@
           ctx.stroke();
         }
         ctx.restore();
-        // Ítems
+        // Предметы
         for (let it of state.items) {
           if (it.type === "exp") {
             ctx.beginPath();
@@ -535,7 +535,7 @@
             ctx.fillText("🧲", it.x - 8, it.y + 6);
           }
         }
-        // Enemigos
+        // Враги
         for (let m of state.mobs) {
           ctx.beginPath();
           ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
@@ -547,9 +547,9 @@
             ctx.stroke();
             ctx.font = "bold 12px sans-serif";
             ctx.fillStyle = "#fff";
-            ctx.fillText("Jefe", m.x - 16, m.y + 4);
+            ctx.fillText("Босс", m.x - 16, m.y + 4);
           }
-          // Barra de HP
+          // Полоса здоровья
           if (m.hp < m.maxhp) {
             ctx.fillStyle = "#aaa";
             ctx.fillRect(m.x - m.r, m.y - m.r - 8, m.r * 2, 4);
@@ -557,7 +557,7 @@
             ctx.fillRect(m.x - m.r, m.y - m.r - 8, (m.r * 2 * m.hp) / m.maxhp, 4);
           }
         }
-        // Jugador
+        // Игрок
         ctx.beginPath();
         ctx.arc(state.player.x, state.player.y, state.player.r, 0, Math.PI * 2);
         ctx.fillStyle = "#fff";
@@ -565,7 +565,7 @@
         ctx.strokeStyle = "#27e";
         ctx.lineWidth = 4;
         ctx.stroke();
-        // Balas
+        // Пули
         for (let b of state.bullets) {
           ctx.beginPath();
           ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
@@ -576,11 +576,11 @@
           ctx.stroke();
         }
         // HUD
-        scoreEl.textContent = "Puntuación: " + state.score;
-        waveEl.textContent = "Oleada: " + state.wave;
+        scoreEl.textContent = "Счет: " + state.score;
+        waveEl.textContent = "Волна: " + state.wave;
         timeEl.textContent = `${Math.floor(state.time / 60)}:${("0" + (state.time % 60)).slice(-2)}`;
-        levelEl.textContent = `Nv.${state.player.lv}`;
-        // Barras de HP y XP
+        levelEl.textContent = `Ур.${state.player.lv}`;
+        // Полосы здоровья и опыта
         hpbar.style.width = (100 * state.player.hp) / state.player.maxhp + "%";
         xpbar.style.width = (100 * state.player.xp) / state.player.xpNext + "%";
       }
@@ -596,33 +596,33 @@
         font-family: Arial, sans-serif;
       ">
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">❓ Introducción al juego</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">❓ Введение в игру</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          SupervivienteMini es un juego de acción y disparos para navegador de ritmo rápido. Esquiva zombis mientras subes de nivel y sobrevive el mayor tiempo posible. Derrota oleadas de enemigos, elige mejoras poderosas y mantente con vida.
+          ВыживальщикМини - это быстрая браузерная экшн-игра с элементами стрельбы. Уклоняйтесь от зомби, повышая уровень, и выживайте как можно дольше. Побеждайте волны врагов, выбирайте мощные улучшения и оставайтесь в живых.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🕹️ Controles</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🕹️ Управление</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          En móviles, usa el joystick táctil en la parte inferior para moverte. En PC, usa las teclas de flecha (← ↑ ↓ →). En dispositivos táctiles, el joystick aparece automáticamente.
+          На мобильных устройствах используйте сенсорный джойстик внизу для движения. На ПК используйте клавиши стрелок (← ↑ ↓ →). На сенсорных устройствах джойстик появляется автоматически.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔫 ¿Disparo automático?</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔫 Автоматическая стрельба?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          ¡Sí! El jugador dispara automáticamente al enemigo más cercano. Concéntrate en moverte y sobrevivir.
+          Да! Игрок автоматически стреляет по ближайшему врагу. Сосредоточьтесь на движении и выживании.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📈 Sistema de niveles</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📈 Система уровней</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          Al derrotar enemigos, ganas experiencia. Al alcanzar la experiencia necesaria subes de nivel y eliges una de tres mejoras aleatorias para fortalecer a tu personaje.
+          Побеждая врагов, вы получаете опыт. При достижении необходимого опыта вы повышаете уровень и выбираете одно из трех случайных улучшений для усиления вашего персонажа.
         </p>
       </div>
       <div style="margin-bottom: 0">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">💾 Guardar puntuación</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">💾 Сохранение счета</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          Tu puntuación más alta se guarda automáticamente en el navegador y se muestra en la pantalla de game over.
+          Ваш лучший счет автоматически сохраняется в браузере и отображается на экране окончания игры.
         </p>
       </div>
     </section>

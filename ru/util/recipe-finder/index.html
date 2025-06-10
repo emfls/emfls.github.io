@@ -1,27 +1,27 @@
 <!doctype html>
-<html lang="es">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <title>Buscador de Recetas Fáciles – ¿Qué vamos a cocinar?</title>
+    <title>Поиск простых рецептов – Что будем готовить?</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Encuentra recetas sencillas solo ingresando los ingredientes que tienes. ¡Ideal para niños, con enlaces a recetas de YouTube!" />
+      content="Найдите простые рецепты, просто введя ингредиенты, которые у вас есть. Идеально для детей, со ссылками на рецепты YouTube!" />
     <meta
       name="keywords"
-      content="recetas fáciles, cocina para niños, búsqueda de recetas, ingredientes caseros, cocina sencilla, recetas rápidas" />
+      content="простые рецепты, кулинария для детей, поиск рецептов, домашние ингредиенты, простая кулинария, быстрые рецепты" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="es" />
+    <meta name="language" content="ru" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <!-- SEO, Open Graph, Twitter, GA, AdSense incluidos -->
-    <meta property="og:title" content="Buscador de Recetas Fáciles para Niños – ¿Qué vamos a cocinar?" />
-    <meta property="og:description" content="Introduce los ingredientes que tienes y encuentra recetas fáciles al instante. ¡Muy sencillo!" />
+    <!-- SEO, Open Graph, Twitter, GA, AdSense включены -->
+    <meta property="og:title" content="Поиск простых рецептов для детей – Что будем готовить?" />
+    <meta property="og:description" content="Введите ингредиенты, которые у вас есть, и найдите простые рецепты мгновенно. Очень просто!" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/ru/util/recipe-finder/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Buscador de Recetas Fáciles – ¿Qué vamos a cocinar?" />
-    <meta name="twitter:description" content="Búsqueda de recetas por ingredientes: ¡fácil para niños!" />
+    <meta name="twitter:title" content="Поиск простых рецептов – Что будем готовить?" />
+    <meta name="twitter:description" content="Поиск рецептов по ингредиентам: просто для детей!" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
@@ -37,30 +37,30 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
       crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css" />
-    <!-- Base de datos externa de recetas: recipes.js carga window.RECIPES_DB y window.INGREDIENTS_DB -->
+    <!-- Внешняя база данных рецептов: recipes.js загружает window.RECIPES_DB и window.INGREDIENTS_DB -->
     <script src="recipes.js"></script>
   </head>
   <body>
     <div class="container">
-      <div class="logo">🍳 Buscador de Recetas Fáciles</div>
-      <div class="desc">¿Qué ingredientes tienes?<br /><b>¡Escríbelos abajo!</b></div>
-      <span class="input-label">Ingredientes disponibles:</span>
+      <div class="logo">🍳 Поиск простых рецептов</div>
+      <div class="desc">Какие ингредиенты у вас есть?<br /><b>Напишите их ниже!</b></div>
+      <span class="input-label">Доступные ингредиенты:</span>
       <div class="ingredient-input-box" id="ingredientWrap">
         <input
           type="text"
           class="ingredient-input"
           id="ingredientInput"
-          placeholder="Ej: huevo, queso, leche"
+          placeholder="Например: яйцо, сыр, молоко"
           autocomplete="off" />
         <div class="autocomplete-box" id="autocompleteBox"></div>
       </div>
-      <button class="search-btn" id="searchBtn">Mostrar Recetas</button>
+      <button class="search-btn" id="searchBtn">Показать рецепты</button>
       <div class="recipes-list" id="recipesList"></div>
       <div class="footer"></div>
-      <a href="../" id="backBtn">Otras herramientas</a>
+      <a href="../" id="backBtn">Другие инструменты</a>
     </div>
     <script>
-      // Cargar datos de recipes.js
+      // Загрузить данные из recipes.js
       const RECIPES = window.RECIPES_DB || [];
       const INGREDIENTS = window.INGREDIENTS_DB || [];
       const ingredientInput = document.getElementById("ingredientInput");
@@ -70,7 +70,7 @@
       const recipesList = document.getElementById("recipesList");
       let selectedIngredients = [];
 
-      // Mostrar sugerencias de autocompletado
+      // Показать предложения автозаполнения
       function showAutocomplete(val) {
         autocompleteBox.innerHTML = "";
         if (!val) {
@@ -137,10 +137,10 @@
         });
       }
 
-      // Buscar y mostrar recetas con enlace a YouTube
+      // Поиск и показ рецептов со ссылкой на YouTube
       function showRecipes() {
         if (selectedIngredients.length === 0) {
-          recipesList.innerHTML = `<div style="color:#aaa;font-size:1.11em;text-align:center;">¡Por favor, ingresa ingredientes!</div>`;
+          recipesList.innerHTML = `<div style="color:#aaa;font-size:1.11em;text-align:center;">Пожалуйста, введите ингредиенты!</div>`;
           return;
         }
         const matches = RECIPES.map((r) => {
@@ -150,7 +150,7 @@
           .filter((r) => r.matchedCount > 0)
           .sort((a, b) => b.matchedCount - a.matchedCount || a.total - b.total);
         if (matches.length === 0) {
-          recipesList.innerHTML = `<div style="color:#e57272;text-align:center;">No se encontraron recetas con esos ingredientes. ¡Prueba con otros!</div>`;
+          recipesList.innerHTML = `<div style="color:#e57272;text-align:center;">Рецепты с этими ингредиентами не найдены. Попробуйте другие!</div>`;
           return;
         }
         recipesList.innerHTML = matches
@@ -158,12 +158,12 @@
             (r) => `
         <div class="recipe-card">
           <div class="recipe-title">${r.name}</div>
-          <div class="match-info">Ingredientes coincidentes: <b>${r.matchedCount}</b> / ${r.total}</div>
-          <div class="all-ings">Ingredientes: ${r.ingredients
+          <div class="match-info">Совпадающие ингредиенты: <b>${r.matchedCount}</b> / ${r.total}</div>
+          <div class="all-ings">Ингредиенты: ${r.ingredients
             .map((i) => (r.matched.includes(i) ? `<b style="color:#228e6f">${i}</b>` : i))
             .join(", ")}</div>
-          <button class="yt-link-btn" onclick="window.open('https://www.youtube.com/results?search_query=${encodeURIComponent(r.name + " receta")}', '_blank')">
-            ▶ Ver en YouTube
+          <button class="yt-link-btn" onclick="window.open('https://www.youtube.com/results?search_query=${encodeURIComponent(r.name + " рецепт")}', '_blank')">
+            ▶ Смотреть на YouTube
           </button>
         </div>
       `
@@ -175,7 +175,7 @@
         if (selectedIngredients.length) showRecipes();
       });
 
-      // Mensaje inicial
+      // Начальное сообщение
       showRecipes();
     </script>
     <section
@@ -188,41 +188,41 @@
         padding: 18px;
       ">
       <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 12px">
-        FAQ – Buscador de Recetas Fáciles
+        FAQ – Поиск простых рецептов
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">P: ¿Necesito registrarme o iniciar sesión?</div>
+        <div style="color: #8f94fb; font-weight: bold">В: Нужно ли регистрироваться или входить в систему?</div>
         <div style="color: #f0f0f0">
-          No. No se requiere inicio de sesión y todo se procesa en el navegador. Tus ingredientes y resultados permanecen solo en tu dispositivo.
+          Нет. Вход в систему не требуется, и все обрабатывается в браузере. Ваши ингредиенты и результаты остаются только на вашем устройстве.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">P: ¿Es seguro para niños?</div>
+        <div style="color: #8f94fb; font-weight: bold">В: Безопасно ли это для детей?</div>
         <div style="color: #f0f0f0">
-          Sí. No se recopila información personal y la publicidad es mínima, por lo que es ideal para uso infantil.
+          Да. Личная информация не собирается, а реклама минимальна, поэтому это идеально подходит для детей.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">P: ¿De dónde vienen los datos de las recetas?</div>
+        <div style="color: #8f94fb; font-weight: bold">В: Откуда берутся данные рецептов?</div>
         <div style="color: #f0f0f0">
-          Utilizamos una base de datos local de recetas. Los enlaces de YouTube buscan videos relacionados con el nombre de la receta.
+          Мы используем локальную базу данных рецептов. Ссылки YouTube ищут видео, связанные с названием рецепта.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">P: ¿Puedo añadir más recetas?</div>
+        <div style="color: #8f94fb; font-weight: bold">В: Могу ли я добавить больше рецептов?</div>
         <div style="color: #f0f0f0">
-          Actualmente la lista es fija, pero pronto implementaremos una función de solicitud de nuevas recetas. ¡Estate atento!
+          В настоящее время список фиксирован, но вскоре мы реализуем функцию запроса новых рецептов. Следите за обновлениями!
         </div>
       </div>
 
       <div>
-        <div style="color: #8f94fb; font-weight: bold">P: ¿Puedo usarlo sin conexión?</div>
+        <div style="color: #8f94fb; font-weight: bold">В: Могу ли я использовать это без интернета?</div>
         <div style="color: #f0f0f0">
-          Sí, una vez cargada la página puedes buscar recetas sin internet (necesitarás conexión para ver videos en YouTube).
+          Да, после загрузки страницы вы можете искать рецепты без интернета (для просмотра видео на YouTube потребуется подключение).
         </div>
       </div>
     </section>

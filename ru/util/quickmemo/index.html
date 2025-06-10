@@ -1,33 +1,33 @@
 <!doctype html>
-<html lang="es">
+<html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <title>Memo Rápido – Bloc de notas en línea y notas adhesivas</title>
+    <title>Быстрые заметки – Онлайн блокнот и стикеры</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <meta
       name="description"
-      content="Bloc de notas personal para uso rápido. Escribe y guarda notas en el navegador sin iniciar sesión. 100% gratuito y compatible con almacenamiento local para uso sin conexión." />
+      content="Персональный блокнот для быстрого использования. Пишите и сохраняйте заметки в браузере без входа в систему. 100% бесплатно и совместимо с локальным хранилищем для автономного использования." />
     <meta
       name="keywords"
-      content="bloc de notas en línea, bloc de notas, memo rápido, almacenamiento local, notas adhesivas, guardar texto, navegador, uso personal, gratis, borradores" />
+      content="онлайн блокнот, блокнот, быстрые заметки, локальное хранилище, стикеры, сохранить текст, браузер, личное использование, бесплатно, черновики" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="es" />
+    <meta name="language" content="ru" />
     <link rel="canonical" href="https://emfls.github.io/ru/util/quickmemo/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <meta property="og:title" content="Memo Rápido – Bloc de notas en línea y notas adhesivas" />
+    <meta property="og:title" content="Быстрые заметки – Онлайн блокнот и стикеры" />
     <meta
       property="og:description"
-      content="Escribe y guarda notas, tareas e ideas al instante en tu navegador. Todo se almacena localmente y nunca se sube a ningún servidor. Gratis, simple y rápido." />
+      content="Пишите и сохраняйте заметки, задачи и идеи мгновенно в вашем браузере. Всё хранится локально и никогда не загружается на серверы. Бесплатно, просто и быстро." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/ru/util/quickmemo/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Memo Rápido – Bloc de notas en línea y notas adhesivas" />
+    <meta name="twitter:title" content="Быстрые заметки – Онлайн блокнот и стикеры" />
     <meta
       name="twitter:description"
-      content="Crea y guarda notas, tareas e ideas en tu navegador. Almacenamiento local, gratis y sin inicio de sesión." />
+      content="Создавайте и сохраняйте заметки, задачи и идеи в вашем браузере. Локальное хранилище, бесплатно и без входа в систему." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
-    <!-- Google etiquetas (gtag.js) -->
+    <!-- Google теги (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -46,34 +46,34 @@
   </head>
   <body>
     <div class="container">
-      <div class="logo">📝 Memo Rápido</div>
+      <div class="logo">📝 Быстрые заметки</div>
       <div class="desc">
-        Escribe rápidamente notas, tareas e ideas.<br />
-        <b>Guardado automático</b> (almacenamiento local del navegador).<br />
-        Sin cargado, sin inicio de sesión, 100% privado.
+        Быстро записывайте заметки, задачи и идеи.<br />
+        <b>Автосохранение</b> (локальное хранилище браузера).<br />
+        Без загрузки, без входа в систему, 100% приватно.
       </div>
       <div class="autosave" id="autosaveMsg"></div>
-      <textarea id="memoArea" placeholder="Escribe aquí tus notas o borradores..."></textarea>
+      <textarea id="memoArea" placeholder="Пишите здесь ваши заметки или черновики..."></textarea>
       <div class="action-row">
-        <button class="mini-btn" id="clearBtn">Borrar</button>
-        <button class="mini-btn" id="copyBtn">Copiar</button>
-        <button class="mini-btn" id="downloadBtn">Descargar</button>
+        <button class="mini-btn" id="clearBtn">Очистить</button>
+        <button class="mini-btn" id="copyBtn">Копировать</button>
+        <button class="mini-btn" id="downloadBtn">Скачать</button>
       </div>
       <div class="footer">
-        Todo el contenido se guarda solo en tu dispositivo.<br />
-        <b>Consejo:</b> ¡Útil para borradores rápidos, trabajos express y recordatorios!
+        Весь контент сохраняется только на вашем устройстве.<br />
+        <b>Совет:</b> Полезно для быстрых черновиков, срочных работ и напоминаний!
       </div>
     </div>
-    <a href="../" id="backBtn">Otras herramientas</a>
+    <a href="../" id="backBtn">Другие инструменты</a>
     <script>
       const memoArea = document.getElementById("memoArea");
       const autosaveMsg = document.getElementById("autosaveMsg");
       const LS_KEY = "quickMemoNote";
 
-      // Cargar notas guardadas
+      // Загрузить сохранённые заметки
       memoArea.value = localStorage.getItem(LS_KEY) || "";
 
-      // Guardado automático
+      // Автосохранение
       let saveTimer;
       memoArea.addEventListener("input", function () {
         clearTimeout(saveTimer);
@@ -84,31 +84,31 @@
       });
 
       function showAutosaveMsg() {
-        autosaveMsg.textContent = "¡Guardado!";
+        autosaveMsg.textContent = "Сохранено!";
         setTimeout(() => {
           autosaveMsg.textContent = "";
         }, 1200);
       }
 
-      // Copiar al portapapeles
+      // Копировать в буфер обмена
       document.getElementById("copyBtn").onclick = function () {
         const val = memoArea.value;
         if (!val) return;
         navigator.clipboard.writeText(val);
-        autosaveMsg.textContent = "¡Copiado!";
+        autosaveMsg.textContent = "Скопировано!";
         setTimeout(() => {
           autosaveMsg.textContent = "";
         }, 1000);
       };
 
-      // Descargar como archivo de texto
+      // Скачать как текстовый файл
       document.getElementById("downloadBtn").onclick = function () {
         const val = memoArea.value;
         if (!val) return;
         const blob = new Blob([val], { type: "text/plain" });
         const a = document.createElement("a");
         a.href = URL.createObjectURL(blob);
-        a.download = "memo_rapido.txt";
+        a.download = "bystrye_zametki.txt";
         document.body.appendChild(a);
         a.click();
         setTimeout(() => {
@@ -117,13 +117,13 @@
         }, 500);
       };
 
-      // Borrar notas
+      // Очистить заметки
       document.getElementById("clearBtn").onclick = function () {
         if (memoArea.value.length === 0) return;
-        if (confirm("¿Deseas borrar todo el contenido de la nota?")) {
+        if (confirm("Хотите очистить всё содержимое заметки?")) {
           memoArea.value = "";
           localStorage.removeItem(LS_KEY);
-          autosaveMsg.textContent = "¡Borrado!";
+          autosaveMsg.textContent = "Очищено!";
           setTimeout(() => {
             autosaveMsg.textContent = "";
           }, 900);
@@ -141,33 +141,33 @@
         font-family: Arial, sans-serif;
       ">
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📝 ¿Qué es esta herramienta?</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📝 Что это за инструмент?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          Memo Rápido es un bloc de notas online personal. No requiere inicio de sesión y funciona completamente en offline usando el almacenamiento local del navegador.
+          Быстрые заметки — это персональный онлайн блокнот. Не требует входа в систему и работает полностью офлайн, используя локальное хранилище браузера.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">💾 ¿Cómo se guardan las notas?</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">💾 Как сохраняются заметки?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          Cada ingreso se guarda automáticamente en el almacenamiento local del navegador. Todos los datos permanecen solo en tu dispositivo.
+          Каждый ввод автоматически сохраняется в локальном хранилище браузера. Все данные остаются только на вашем устройстве.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📋 ¿Puedo copiar o descargar mis notas?</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">📋 Могу ли я копировать или скачивать заметки?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          Sí. Con el botón «Copiar» llevas el contenido al portapapeles y con «Descargar» guardas un archivo .txt.
+          Да. Кнопкой «Копировать» вы переносите содержимое в буфер обмена, а кнопкой «Скачать» сохраняете файл .txt.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🧹 ¿Cómo borro las notas?</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🧹 Как удалить заметки?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          Presiona «Borrar» y confirma para eliminar todo el contenido y limpiar el almacenamiento local.
+          Нажмите «Очистить» и подтвердите, чтобы удалить всё содержимое и очистить локальное хранилище.
         </p>
       </div>
       <div style="margin-bottom: 0">
-        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔐 ¿Es seguro?</h3>
+        <h3 style="color: #8f94fb; font-size: 1.1em; margin-bottom: 6px">🔐 Это безопасно?</h3>
         <p style="color: #f0f0f0; font-size: 0.95em; margin: 0">
-          100% seguro. Todas las notas se procesan localmente y nunca se envían a ningún servidor externo.
+          100% безопасно. Все заметки обрабатываются локально и никогда не отправляются на внешние серверы.
         </p>
       </div>
     </section>
