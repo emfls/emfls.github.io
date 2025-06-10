@@ -1,27 +1,27 @@
 <!doctype html>
-<html lang="es">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <title>Buscador de Recetas Fáciles – ¿Qué vamos a cocinar?</title>
+    <title>Pencari Resep Mudah – Apa yang akan kita masak?</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Encuentra recetas sencillas solo ingresando los ingredientes que tienes. ¡Ideal para niños, con enlaces a recetas de YouTube!" />
+      content="Temukan resep sederhana hanya dengan memasukkan bahan-bahan yang Anda miliki. Ideal untuk anak-anak, dengan tautan ke resep YouTube!" />
     <meta
       name="keywords"
-      content="recetas fáciles, cocina para niños, búsqueda de recetas, ingredientes caseros, cocina sencilla, recetas rápidas" />
+      content="resep mudah, masakan untuk anak, pencarian resep, bahan rumahan, masakan sederhana, resep cepat" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="es" />
+    <meta name="language" content="id" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <!-- SEO, Open Graph, Twitter, GA, AdSense incluidos -->
-    <meta property="og:title" content="Buscador de Recetas Fáciles para Niños – ¿Qué vamos a cocinar?" />
-    <meta property="og:description" content="Introduce los ingredientes que tienes y encuentra recetas fáciles al instante. ¡Muy sencillo!" />
+    <!-- SEO, Open Graph, Twitter, GA, AdSense disertakan -->
+    <meta property="og:title" content="Pencari Resep Mudah untuk Anak – Apa yang akan kita masak?" />
+    <meta property="og:description" content="Masukkan bahan-bahan yang Anda miliki dan temukan resep mudah secara instan. Sangat sederhana!" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/id/util/recipe-finder/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Buscador de Recetas Fáciles – ¿Qué vamos a cocinar?" />
-    <meta name="twitter:description" content="Búsqueda de recetas por ingredientes: ¡fácil para niños!" />
+    <meta name="twitter:title" content="Pencari Resep Mudah – Apa yang akan kita masak?" />
+    <meta name="twitter:description" content="Pencarian resep berdasarkan bahan: mudah untuk anak-anak!" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
@@ -37,30 +37,30 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
       crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css" />
-    <!-- Base de datos externa de recetas: recipes.js carga window.RECIPES_DB y window.INGREDIENTS_DB -->
+    <!-- Database resep eksternal: recipes.js memuat window.RECIPES_DB dan window.INGREDIENTS_DB -->
     <script src="recipes.js"></script>
   </head>
   <body>
     <div class="container">
-      <div class="logo">🍳 Buscador de Recetas Fáciles</div>
-      <div class="desc">¿Qué ingredientes tienes?<br /><b>¡Escríbelos abajo!</b></div>
-      <span class="input-label">Ingredientes disponibles:</span>
+      <div class="logo">🍳 Pencari Resep Mudah</div>
+      <div class="desc">Bahan apa yang Anda miliki?<br /><b>Tulis di bawah ini!</b></div>
+      <span class="input-label">Bahan yang tersedia:</span>
       <div class="ingredient-input-box" id="ingredientWrap">
         <input
           type="text"
           class="ingredient-input"
           id="ingredientInput"
-          placeholder="Ej: huevo, queso, leche"
+          placeholder="Contoh: telur, keju, susu"
           autocomplete="off" />
         <div class="autocomplete-box" id="autocompleteBox"></div>
       </div>
-      <button class="search-btn" id="searchBtn">Mostrar Recetas</button>
+      <button class="search-btn" id="searchBtn">Tampilkan Resep</button>
       <div class="recipes-list" id="recipesList"></div>
       <div class="footer"></div>
-      <a href="../" id="backBtn">Otras herramientas</a>
+      <a href="../" id="backBtn">Alat lainnya</a>
     </div>
     <script>
-      // Cargar datos de recipes.js
+      // Memuat data dari recipes.js
       const RECIPES = window.RECIPES_DB || [];
       const INGREDIENTS = window.INGREDIENTS_DB || [];
       const ingredientInput = document.getElementById("ingredientInput");
@@ -70,7 +70,7 @@
       const recipesList = document.getElementById("recipesList");
       let selectedIngredients = [];
 
-      // Mostrar sugerencias de autocompletado
+      // Menampilkan saran otomatis
       function showAutocomplete(val) {
         autocompleteBox.innerHTML = "";
         if (!val) {
@@ -137,10 +137,10 @@
         });
       }
 
-      // Buscar y mostrar recetas con enlace a YouTube
+      // Mencari dan menampilkan resep dengan tautan ke YouTube
       function showRecipes() {
         if (selectedIngredients.length === 0) {
-          recipesList.innerHTML = `<div style="color:#aaa;font-size:1.11em;text-align:center;">¡Por favor, ingresa ingredientes!</div>`;
+          recipesList.innerHTML = `<div style="color:#aaa;font-size:1.11em;text-align:center;">Silakan masukkan bahan-bahan!</div>`;
           return;
         }
         const matches = RECIPES.map((r) => {
@@ -150,7 +150,7 @@
           .filter((r) => r.matchedCount > 0)
           .sort((a, b) => b.matchedCount - a.matchedCount || a.total - b.total);
         if (matches.length === 0) {
-          recipesList.innerHTML = `<div style="color:#e57272;text-align:center;">No se encontraron recetas con esos ingredientes. ¡Prueba con otros!</div>`;
+          recipesList.innerHTML = `<div style="color:#e57272;text-align:center;">Tidak ditemukan resep dengan bahan-bahan tersebut. Coba dengan bahan lain!</div>`;
           return;
         }
         recipesList.innerHTML = matches
@@ -158,12 +158,12 @@
             (r) => `
         <div class="recipe-card">
           <div class="recipe-title">${r.name}</div>
-          <div class="match-info">Ingredientes coincidentes: <b>${r.matchedCount}</b> / ${r.total}</div>
-          <div class="all-ings">Ingredientes: ${r.ingredients
+          <div class="match-info">Bahan yang cocok: <b>${r.matchedCount}</b> / ${r.total}</div>
+          <div class="all-ings">Bahan-bahan: ${r.ingredients
             .map((i) => (r.matched.includes(i) ? `<b style="color:#228e6f">${i}</b>` : i))
             .join(", ")}</div>
-          <button class="yt-link-btn" onclick="window.open('https://www.youtube.com/results?search_query=${encodeURIComponent(r.name + " receta")}', '_blank')">
-            ▶ Ver en YouTube
+          <button class="yt-link-btn" onclick="window.open('https://www.youtube.com/results?search_query=${encodeURIComponent(r.name + " resep")}', '_blank')">
+            ▶ Lihat di YouTube
           </button>
         </div>
       `
@@ -175,7 +175,7 @@
         if (selectedIngredients.length) showRecipes();
       });
 
-      // Mensaje inicial
+      // Pesan awal
       showRecipes();
     </script>
     <section
@@ -188,41 +188,41 @@
         padding: 18px;
       ">
       <div style="color: #8f94fb; font-size: 1.1em; font-weight: bold; margin-bottom: 12px">
-        FAQ – Buscador de Recetas Fáciles
+        FAQ – Pencari Resep Mudah
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">P: ¿Necesito registrarme o iniciar sesión?</div>
+        <div style="color: #8f94fb; font-weight: bold">T: Apakah saya perlu mendaftar atau masuk?</div>
         <div style="color: #f0f0f0">
-          No. No se requiere inicio de sesión y todo se procesa en el navegador. Tus ingredientes y resultados permanecen solo en tu dispositivo.
+          Tidak. Tidak diperlukan login dan semua diproses di browser. Bahan dan hasil Anda tetap hanya di perangkat Anda.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">P: ¿Es seguro para niños?</div>
+        <div style="color: #8f94fb; font-weight: bold">T: Apakah aman untuk anak-anak?</div>
         <div style="color: #f0f0f0">
-          Sí. No se recopila información personal y la publicidad es mínima, por lo que es ideal para uso infantil.
+          Ya. Tidak ada informasi pribadi yang dikumpulkan dan iklan minimal, sehingga ideal untuk penggunaan anak-anak.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">P: ¿De dónde vienen los datos de las recetas?</div>
+        <div style="color: #8f94fb; font-weight: bold">T: Dari mana data resep berasal?</div>
         <div style="color: #f0f0f0">
-          Utilizamos una base de datos local de recetas. Los enlaces de YouTube buscan videos relacionados con el nombre de la receta.
+          Kami menggunakan database resep lokal. Tautan YouTube mencari video yang terkait dengan nama resep.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">P: ¿Puedo añadir más recetas?</div>
+        <div style="color: #8f94fb; font-weight: bold">T: Bisakah saya menambahkan lebih banyak resep?</div>
         <div style="color: #f0f0f0">
-          Actualmente la lista es fija, pero pronto implementaremos una función de solicitud de nuevas recetas. ¡Estate atento!
+          Saat ini daftar bersifat tetap, tetapi segera kami akan mengimplementasikan fungsi permintaan resep baru. Nantikan!
         </div>
       </div>
 
       <div>
-        <div style="color: #8f94fb; font-weight: bold">P: ¿Puedo usarlo sin conexión?</div>
+        <div style="color: #8f94fb; font-weight: bold">T: Bisakah saya menggunakannya tanpa koneksi?</div>
         <div style="color: #f0f0f0">
-          Sí, una vez cargada la página puedes buscar recetas sin internet (necesitarás conexión para ver videos en YouTube).
+          Ya, setelah halaman dimuat Anda dapat mencari resep tanpa internet (Anda memerlukan koneksi untuk menonton video di YouTube).
         </div>
       </div>
     </section>

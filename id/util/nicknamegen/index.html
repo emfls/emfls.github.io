@@ -1,28 +1,31 @@
 <!doctype html>
-<html lang="es">
+<html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <title>Generador de apodos aleatorios – Elige estilo, 5 al instante</title>
+    <title>Generator nama panggilan acak – Pilih gaya, 5 sekaligus</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <meta
       name="description"
-      content="Genera 5 apodos elegantes de una vez. Selecciona estilo y copia con un clic. Rápido, gratis y 100% en el navegador." />
-    <meta name="keywords" content="generador de apodos, apodos aleatorios, usuario, ID, estilo, gratis, lote" />
+      content="Buat 5 nama panggilan acak sekaligus. Pilih gaya dan salin dengan satu klik. Cepat, gratis, dan 100% di browser."
+    />
+    <meta name="keywords" content="generator nama panggilan, nama panggilan acak, pengguna, ID, gaya, gratis, batch" />
     <meta name="author" content="Itagi" />
     <link rel="canonical" href="https://emfls.github.io/id/util/nicknamegen/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
-    <meta property="og:title" content="Generador de apodos aleatorios – Elige estilo, 5 al instante" />
+    <meta property="og:title" content="Generator nama panggilan acak – Pilih gaya, 5 sekaligus" />
     <meta
       property="og:description"
-      content="Crea 5 apodos aleatorios al instante. Selecciona tu estilo favorito y copia con un clic." />
+      content="Buat 5 nama panggilan acak sekaligus. Pilih gaya favorit Anda dan salin dengan satu klik."
+    />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/id/util/nicknamegen/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Generador de apodos aleatorios – Elige estilo, 5 al instante" />
+    <meta name="twitter:title" content="Generator nama panggilan acak – Pilih gaya, 5 sekaligus" />
     <meta
       name="twitter:description"
-      content="Genera 5 apodos a la vez. Selecciona estilo y copia al instante." />
+      content="Buat 5 nama panggilan sekaligus. Pilih gaya dan salin langsung."
+    />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Google Analytics (GA4) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -36,73 +39,86 @@
     <script
       async
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
-      crossorigin="anonymous"></script>
+      crossorigin="anonymous"
+    ></script>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="container">
-      <div class="logo">✨ Generador de apodos aleatorios</div>
+      <div class="logo">✨ Generator nama panggilan acak</div>
       <div class="desc">
-        Genera <b>5 apodos aleatorios</b> de una vez.<br/>
-        ¡Elige estilo y copia al instante!
+        Buat <b>5 nama panggilan acak</b> sekaligus.<br />
+        Pilih gaya dan salin langsung!
       </div>
       <div class="control-row">
         <select id="styleSel" class="style-select">
-          <option value="0">Adjetivo + Animal + Números (p.ej. BraveFox99)</option>
-          <option value="1">Animal_Nombre + Dígito (p.ej. Otter_River7)</option>
-          <option value="2">Adjetivo + Sustantivo + Dígitos (p.ej. HappyStone77)</option>
-          <option value="random">Estilo aleatorio</option>
+          <option value="0">Kata sifat + Hewan + Angka (misal BraveFox99)</option>
+          <option value="1">Hewan_Nama + Digit (misal Otter_River7)</option>
+          <option value="2">Kata sifat + Kata benda + Digit (misal HappyStone77)</option>
+          <option value="random">Gaya acak</option>
         </select>
-        <button id="genBtn" class="gen-btn" title="Generar 5 nuevos">Generar</button>
+        <button id="genBtn" class="gen-btn" title="Buat 5 baru">Buat</button>
       </div>
       <div id="nickList" class="nick-list"></div>
       <div id="hint" class="hint"></div>
       <div class="footer">
-        100% en navegador, sin seguimiento ni subidas.<br/>
-        Creado por Itagi – ¡Totalmente gratis!
+        100% di browser, tanpa pelacakan atau upload.<br />
+        Dibuat oleh Itagi – Gratis sepenuhnya!
       </div>
     </div>
-    <a href="../" id="backBtn">Otras utilidades</a>
+    <a href="../" id="backBtn">Utilitas Lainnya</a>
     <script>
-      const adjectives=["Happy","Sunny","Brave","Funky","Crazy","Shy","Magic","Lucky","Tiny","Giant","Wise","Fast","Cool","Mighty","Jolly","Silent","Star","Cute","Rapid","Calm"];
-      const animals=["Tiger","Bear","Otter","Panda","Wolf","Fox","Lion","Bunny","Penguin","Falcon","Moose","Koala","Hawk","Eagle","Seal","Turtle","Shark","Corgi","Swan","Robin"];
-      const nouns=["Dream","River","Stone","Cloud","Sun","Leaf","Wave","Moon","Echo","Sky","Nova","Light","Wind","Rain","Flame","Frost","Wing","Storm","Mist","Dust"];
-      function randomNumStr(len=2){ return Math.random().toString().slice(2,2+len); }
-      Array.prototype.pick=function(){ return this[Math.floor(Math.random()*this.length)]; };
-      function makeNickname(style){
-        if(style==="0") return adjectives.pick()+animals.pick()+randomNumStr();
-        if(style==="1") return animals.pick()+"_"+nouns.pick()+randomNumStr(1);
-        if(style==="2") return adjectives.pick()+nouns.pick()+randomNumStr(2);
-        return makeNickname(["0","1","2"][Math.floor(Math.random()*3)]);
+      const adjectives = ["Happy", "Sunny", "Brave", "Funky", "Crazy", "Shy", "Magic", "Lucky", "Tiny", "Giant", "Wise", "Fast", "Cool", "Mighty", "Jolly", "Silent", "Star", "Cute", "Rapid", "Calm"];
+      const animals = ["Tiger", "Bear", "Otter", "Panda", "Wolf", "Fox", "Lion", "Bunny", "Penguin", "Falcon", "Moose", "Koala", "Hawk", "Eagle", "Seal", "Turtle", "Shark", "Corgi", "Swan", "Robin"];
+      const nouns = ["Dream", "River", "Stone", "Cloud", "Sun", "Leaf", "Wave", "Moon", "Echo", "Sky", "Nova", "Light", "Wind", "Rain", "Flame", "Frost", "Wing", "Storm", "Mist", "Dust"];
+      function randomNumStr(len = 2) { return Math.random().toString().slice(2, 2 + len); }
+      Array.prototype.pick = function () { return this[Math.floor(Math.random() * this.length)]; };
+      function makeNickname(style) {
+        if (style === "0") return adjectives.pick() + animals.pick() + randomNumStr();
+        if (style === "1") return animals.pick() + "_" + nouns.pick() + randomNumStr(1);
+        if (style === "2") return adjectives.pick() + nouns.pick() + randomNumStr(2);
+        return makeNickname(["0", "1", "2"][Math.floor(Math.random() * 3)]);
       }
-      function updateNicknames(){
-        const style=document.getElementById("styleSel").value;
-        const list=document.getElementById("nickList");
-        list.innerHTML="";
-        for(let i=0;i<5;i++){
-          const nn=makeNickname(style);
-          const row=document.createElement("div"); row.className="result-row";
-          const span=document.createElement("span"); span.className="nickname-text"; span.textContent=nn;
-          const btn=document.createElement("button"); btn.className="copy-btn"; btn.textContent="Copiar";
-          btn.onclick=()=>{
-            if(navigator.clipboard&&window.isSecureContext){
-              navigator.clipboard.writeText(nn).then(()=>hint.textContent="¡Copiado!");
+      function updateNicknames() {
+        const style = document.getElementById("styleSel").value;
+        const list = document.getElementById("nickList");
+        list.innerHTML = "";
+        for (let i = 0; i < 5; i++) {
+          const nn = makeNickname(style);
+          const row = document.createElement("div");
+          row.className = "result-row";
+          const span = document.createElement("span");
+          span.className = "nickname-text";
+          span.textContent = nn;
+          const btn = document.createElement("button");
+          btn.className = "copy-btn";
+          btn.textContent = "Salin";
+          btn.onclick = () => {
+            if (navigator.clipboard && window.isSecureContext) {
+              navigator.clipboard.writeText(nn).then(() => (hint.textContent = "Disalin!"));
             } else {
-              const ta=document.createElement("textarea"); ta.value=nn;
-              document.body.appendChild(ta); ta.select();
-              try{ document.execCommand("copy"); hint.textContent="¡Copiado!"; }
-              catch{ hint.textContent="Error al copiar"; }
+              const ta = document.createElement("textarea");
+              ta.value = nn;
+              document.body.appendChild(ta);
+              ta.select();
+              try {
+                document.execCommand("copy");
+                hint.textContent = "Disalin!";
+              } catch {
+                hint.textContent = "Gagal menyalin";
+              }
               document.body.removeChild(ta);
             }
           };
-          row.appendChild(span); row.appendChild(btn);
+          row.appendChild(span);
+          row.appendChild(btn);
           list.appendChild(row);
         }
-        hint.textContent="";
+        hint.textContent = "";
       }
-      document.getElementById("genBtn").onclick=updateNicknames;
-      document.getElementById("styleSel").onchange=updateNicknames;
-      const hint=document.getElementById("hint");
+      document.getElementById("genBtn").onclick = updateNicknames;
+      document.getElementById("styleSel").onchange = updateNicknames;
+      const hint = document.getElementById("hint");
       updateNicknames();
     </script>
   </body>
