@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>캠핑 정보 모음 - 지역별 캠핑 정보</title>
+    <meta name="description" content="전국 각 지역별 캠핑 정보를 한눈에 확인하세요. 서울부터 제주까지 모든 지역의 캠핑 정보를 제공합니다.">
+    <meta name="keywords" content="캠핑, 보고서, 지역별, 전국, 여행, 체험">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .search-container {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        #searchInput {
+            width: 100%;
+            max-width: 500px;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            outline: none;
+        }
+
+        .stats {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .region-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 1px solid #e0e0e0;
+        }
+
+        .region-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+        }
+
+        .region-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #4a5568;
+            margin-bottom: 10px;
+            text-transform: capitalize;
+        }
+
+        .region-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .region-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .no-results {
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+            margin-top: 50px;
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>전국 캠핑 정보</h1>
+            <p class="subtitle">지역별 캠핑 정보를 한눈에 확인하세요</p>
+        </header>
+
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="지역명을 검색하세요 (예: 서울, 부산, 제주...)">
+        </div>
+
+        <div class="stats">
+            <h3>📊 전체 통계</h3>
+            <p>총 <span id="totalCount">0</span>개 지역의 캠핑 정보를 제공합니다</p>
+        </div>
+
+        <div class="grid" id="regionGrid">
+            <!-- 지역 카드들이 여기에 동적으로 생성됩니다 -->
+        </div>
+
+        <div class="no-results" id="noResults">
+            검색 결과가 없습니다. 다른 키워드로 검색해보세요.
+        </div>
+
+        <footer>
+            <p>&copy; 2025 캠핑 정보</p>
+        </footer>
+    </div>
+
+    <script>
+        // 지역 데이터
+        const regions = [
+            'andong', 'ansan', 'anseong', 'anyang', 'asan', 'boeun', 'bonghwa', 'boryeong', 'boseong', 'buan',
+            'bucheon', 'busan', 'buyeo', 'changnyeong', 'changwon', 'cheongdo', 'cheongju', 'cheongsong', 'cheongyang', 'cheorwon',
+            'chilgok', 'choenan', 'chuncheon', 'chungju', 'daegu', 'damyang', 'dangjin', 'danyang', 'dongducheon', 'gangjin',
+            'gangneung', 'gapyeong', 'geochang', 'geoje', 'geumsan', 'gimcheon', 'gimhae', 'gimje', 'gimpo', 'gochang',
+            'goesan', 'goheung', 'gokseong', 'gongju', 'goryeong', 'goseong', 'goyang', 'gumi', 'gunpo', 'gunsan',
+            'gurye', 'gwacheon', 'gwangju-g', 'gwangju', 'gwangmyeong', 'gwangyang', 'gyeongju', 'gyeongsan', 'gyeryong', 'hadong',
+            'haenam', 'haman', 'hampyeong', 'hamyang', 'hanam', 'hoengseong', 'hongcheon', 'hongseong', 'hwacheon', 'hwaseong',
+            'hwasun', 'icheon', 'iksan', 'imsil', 'incheon', 'jangheung', 'jangseong', 'jangsu', 'jecheon', 'jeju',
+            'jeongeup', 'jeongseon', 'jeungpyeong', 'jinan', 'jincheon', 'jindo', 'jinju', 'miryang', 'mokpo', 'muan',
+            'muju', 'mungyeong', 'naju', 'namhae', 'namwon', 'namyangju', 'nonsan', 'okcheon', 'osan', 'paju',
+            'pohang', 'pyeongchang', 'pyeongtaek', 'sacheon', 'samcheok', 'sancheong', 'sangju', 'sejong', 'seocheon', 'seongju',
+            'seongnam', 'seosan', 'seoul', 'siheung', 'sinan', 'sokcho', 'sunchang', 'suncheon', 'suwon', 'taean',
+            'taebaek', 'tongyeong', 'uijeongbu', 'uiryeong', 'uiseong', 'uiwang', 'uljin', 'ulleung', 'ulsan', 'wando',
+            'wanju', 'wonju', 'yanggu', 'yangpyeong', 'yangsan', 'yangyang', 'yecheon', 'yeoju', 'yeoncheon', 'yeongam',
+            'yeongcheon', 'yeongdong', 'yeonggwang', 'yeongju', 'yeongwol', 'yeongyang', 'yeosu', 'yesan', 'yongin'
+        ];
+
+        // 한글 지역명 매핑
+        const regionNames = {
+            'andong': '안동', 'ansan': '안산', 'anseong': '안성', 'anyang': '안양', 'asan': '아산',
+            'boeun': '보은', 'bonghwa': '봉화', 'boryeong': '보령', 'boseong': '보성', 'buan': '부안',
+            'bucheon': '부천', 'busan': '부산', 'buyeo': '부여', 'changnyeong': '창녕', 'changwon': '창원',
+            'cheongdo': '청도', 'cheongju': '청주', 'cheongsong': '청송', 'cheongyang': '청양', 'cheorwon': '철원',
+            'chilgok': '칠곡', 'choenan': '천안', 'chuncheon': '춘천', 'chungju': '충주', 'daegu': '대구',
+            'damyang': '담양', 'dangjin': '당진', 'danyang': '단양', 'dongducheon': '동두천', 'gangjin': '강진',
+            'gangneung': '강릉', 'gapyeong': '가평', 'geochang': '거창', 'geoje': '거제', 'geumsan': '금산',
+            'gimcheon': '김천', 'gimhae': '김해', 'gimje': '김제', 'gimpo': '김포', 'gochang': '고창',
+            'goesan': '괴산', 'goheung': '고흥', 'gokseong': '곡성', 'gongju': '공주', 'goryeong': '고령',
+            'goseong': '고성', 'goyang': '고양', 'gumi': '구미', 'gunpo': '군포', 'gunsan': '군산',
+            'gurye': '구례', 'gwacheon': '과천', 'gwangju-g': '광주(경기)', 'gwangju': '광주', 'gwangmyeong': '광명',
+            'gwangyang': '광양', 'gyeongju': '경주', 'gyeongsan': '경산', 'gyeryong': '계룡', 'hadong': '하동',
+            'haenam': '해남', 'haman': '함안', 'hampyeong': '함평', 'hamyang': '함양', 'hanam': '하남',
+            'hoengseong': '횡성', 'hongcheon': '홍천', 'hongseong': '홍성', 'hwacheon': '화천', 'hwaseong': '화성',
+            'hwasun': '화순', 'icheon': '이천', 'iksan': '익산', 'imsil': '임실', 'incheon': '인천',
+            'jangheung': '장흥', 'jangseong': '장성', 'jangsu': '장수', 'jecheon': '제천', 'jeju': '제주',
+            'jeongeup': '정읍', 'jeongseon': '정선', 'jeungpyeong': '증평', 'jinan': '진안', 'jincheon': '진천',
+            'jindo': '진도', 'jinju': '진주', 'miryang': '밀양', 'mokpo': '목포', 'muan': '무안',
+            'muju': '무주', 'mungyeong': '문경', 'naju': '나주', 'namhae': '남해', 'namwon': '남원',
+            'namyangju': '남양주', 'nonsan': '논산', 'okcheon': '옥천', 'osan': '오산', 'paju': '파주',
+            'pohang': '포항', 'pyeongchang': '평창', 'pyeongtaek': '평택', 'sacheon': '사천', 'samcheok': '삼척',
+            'sancheong': '산청', 'sangju': '상주', 'sejong': '세종', 'seocheon': '서천', 'seongju': '성주',
+            'seongnam': '성남', 'seosan': '서산', 'seoul': '서울', 'siheung': '시흥', 'sinan': '신안',
+            'sokcho': '속초', 'sunchang': '순창', 'suncheon': '순천', 'suwon': '수원', 'taean': '태안',
+            'taebaek': '태백', 'tongyeong': '통영', 'uijeongbu': '의정부', 'uiryeong': '의령', 'uiseong': '의성',
+            'uiwang': '의왕', 'uljin': '울진', 'ulleung': '울릉', 'ulsan': '울산', 'wando': '완도',
+            'wanju': '완주', 'wonju': '원주', 'yanggu': '양구', 'yangpyeong': '양평', 'yangsan': '양산',
+            'yangyang': '양양', 'yecheon': '예천', 'yeoju': '여주', 'yeoncheon': '연천', 'yeongam': '영암',
+            'yeongcheon': '영천', 'yeongdong': '영동', 'yeonggwang': '영광', 'yeongju': '영주', 'yeongwol': '영월',
+            'yeongyang': '영양', 'yeosu': '여수', 'yesan': '예산', 'yongin': '용인'
+        };
+
+        let filteredRegions = [...regions];
+
+        function renderRegions(regionsToRender) {
+            const grid = document.getElementById('regionGrid');
+            const noResults = document.getElementById('noResults');
+            
+            if (regionsToRender.length === 0) {
+                grid.style.display = 'none';
+                noResults.style.display = 'block';
+                return;
+            }
+            
+            grid.style.display = 'grid';
+            noResults.style.display = 'none';
+            
+            grid.innerHTML = regionsToRender.map(region => `
+                <div class="region-card">
+                    <div class="region-name">${regionNames[region] || region}</div>
+                    <a href="https://emfls.github.io/kor/report/camp/${region}.html" class="region-link">
+                        자세히 보기 →
+                    </a>
+                </div>
+            `).join('');
+        }
+
+        function updateStats() {
+            document.getElementById('totalCount').textContent = filteredRegions.length;
+        }
+
+        function searchRegions() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                filteredRegions = [...regions];
+            } else {
+                filteredRegions = regions.filter(region => {
+                    const koreanName = regionNames[region] || region;
+                    return koreanName.includes(searchTerm) || region.includes(searchTerm);
+                });
+            }
+            
+            renderRegions(filteredRegions);
+            updateStats();
+        }
+
+        // 이벤트 리스너
+        document.getElementById('searchInput').addEventListener('input', searchRegions);
+
+        // 초기 렌더링
+        document.addEventListener('DOMContentLoaded', function() {
+            renderRegions(regions);
+            updateStats();
+        });
+    </script>
+</body>
+</html>
