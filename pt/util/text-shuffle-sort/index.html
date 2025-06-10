@@ -1,33 +1,33 @@
 <!doctype html>
-<html lang="es">
+<html lang="pt">
   <head>
     <meta charset="UTF-8" />
-    <title>Herramienta de Mezcla y Ordenación de Texto – Aleatorio, A→Z, Z→A</title>
+    <title>Ferramenta de Mistura e Ordenação de Texto – Aleatório, A→Z, Z→A</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <meta
       name="description"
-      content="Convierte al instante líneas de texto en aleatorio (mezcla), orden ascendente (A→Z) o descendente (Z→A) en el navegador. ¡Sin subir datos y con privacidad al 100%!" />
+      content="Converta instantaneamente linhas de texto em aleatório (mistura), ordem crescente (A→Z) ou decrescente (Z→A) no navegador. Sem upload de dados e com 100% de privacidade!" />
     <meta
       name="keywords"
-      content="mezclar texto, ordenar texto, aleatorio, ascendente, descendente, ordenar líneas, navegador, gratis, privacidad" />
+      content="misturar texto, ordenar texto, aleatório, crescente, decrescente, ordenar linhas, navegador, grátis, privacidade" />
     <meta name="author" content="Itagi" />
-    <meta name="language" content="es" />
+    <meta name="language" content="pt" />
     <link rel="canonical" href="https://emfls.github.io/pt/util/text-shuffle-sort/" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
 
     <!-- Open Graph / Twitter meta -->
-    <meta property="og:title" content="Herramienta de Mezcla y Ordenación de Texto – Aleatorio, A→Z, Z→A" />
+    <meta property="og:title" content="Ferramenta de Mistura e Ordenação de Texto – Aleatório, A→Z, Z→A" />
     <meta
       property="og:description"
-      content="Mezcla, ordena o invierte tu lista de texto al instante. Rápido, gratis y con total privacidad en el navegador." />
+      content="Misture, ordene ou inverta sua lista de texto instantaneamente. Rápido, grátis e com total privacidade no navegador." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/pt/util/text-shuffle-sort/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Herramienta de Mezcla y Ordenación de Texto – Aleatorio, A→Z, Z→A" />
+    <meta name="twitter:title" content="Ferramenta de Mistura e Ordenação de Texto – Aleatório, A→Z, Z→A" />
     <meta
       name="twitter:description"
-      content="Convierte tu lista de líneas en aleatorio, orden ascendente o descendente sin salir del navegador." />
+      content="Converta sua lista de linhas em aleatório, ordem crescente ou decrescente sem sair do navegador." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
     <!-- Google tag (gtag.js) -->
@@ -46,28 +46,28 @@
   </head>
   <body>
     <div class="container">
-      <div class="logo">🔀 Mezclar y Ordenar Texto</div>
+      <div class="logo">🔀 Misturar e Ordenar Texto</div>
       <div class="desc">
-        Introduce o pega tu texto de varias líneas.<br />
-        ¡Convierte al instante en aleatorio, orden ascendente (A→Z) o descendente (Z→A)!
+        Digite ou cole seu texto de várias linhas.<br />
+        Converta instantaneamente em aleatório, ordem crescente (A→Z) ou decrescente (Z→A)!
       </div>
       <div class="status-msg" id="statusMsg"></div>
-      <textarea id="inputArea" placeholder="Escribe o pega tu lista de líneas aquí..."></textarea>
+      <textarea id="inputArea" placeholder="Digite ou cole sua lista de linhas aqui..."></textarea>
       <div class="btn-row">
-        <button class="action-btn" id="shuffleBtn">Mezclar</button>
+        <button class="action-btn" id="shuffleBtn">Misturar</button>
         <button class="action-btn" id="sortBtn">Ordenar A→Z</button>
         <button class="action-btn" id="reverseBtn">Ordenar Z→A</button>
       </div>
       <div style="text-align: right; margin-bottom: 10px">
         <button class="mini-btn" id="copyBtn">Copiar</button>
-        <button class="mini-btn" id="clearBtn">Borrar</button>
+        <button class="mini-btn" id="clearBtn">Limpar</button>
       </div>
       <div class="footer">
-        Todos los procesos se ejecutan en el navegador. Sin cargas y con privacidad al 100%.<br />
-        <b>Consejo:</b> Ideal para crear órdenes aleatorias, tarjetas de repaso o reorganizar listas.
+        Todos os processos são executados no navegador. Sem uploads e com 100% de privacidade.<br />
+        <b>Dica:</b> Ideal para criar ordens aleatórias, cartões de estudo ou reorganizar listas.
       </div>
     </div>
-    <a href="../" id="backBtn">Otras herramientas</a>
+    <a href="../" id="backBtn">Outras ferramentas</a>
     <script>
       const inputArea = document.getElementById("inputArea");
       const statusMsg = document.getElementById("statusMsg");
@@ -85,7 +85,7 @@
         if (!lines.length) return;
         shuffleArray(lines);
         inputArea.value = lines.join("\n");
-        showStatus("¡Mezclado!");
+        showStatus("Misturado!");
       };
 
       document.getElementById("sortBtn").onclick = function () {
@@ -93,7 +93,7 @@
         if (!lines.length) return;
         lines.sort((a,b) => a.localeCompare(b, undefined, {sensitivity: "base"}));
         inputArea.value = lines.join("\n");
-        showStatus("Orden ascendente A→Z");
+        showStatus("Ordem crescente A→Z");
       };
 
       document.getElementById("reverseBtn").onclick = function () {
@@ -101,21 +101,21 @@
         if (!lines.length) return;
         lines.sort((a,b) => b.localeCompare(a, undefined, {sensitivity: "base"}));
         inputArea.value = lines.join("\n");
-        showStatus("Orden descendente Z→A");
+        showStatus("Ordem decrescente Z→A");
       };
 
       document.getElementById("copyBtn").onclick = function () {
         const val = inputArea.value;
         if (!val) return;
         navigator.clipboard.writeText(val);
-        showStatus("¡Copiado!");
+        showStatus("Copiado!");
       };
 
       document.getElementById("clearBtn").onclick = function () {
         if (!inputArea.value) return;
-        if (confirm("¿Borrar todo el texto?")) {
+        if (confirm("Limpar todo o texto?")) {
           inputArea.value = "";
-          showStatus("¡Borrado!");
+          showStatus("Limpo!");
         }
       };
 
@@ -134,33 +134,33 @@
         padding: 24px;
       ">
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">¿Qué hace esta herramienta?</h3>
+        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">O que faz esta ferramenta?</h3>
         <p style="color: #f0f0f0; font-family: Arial, sans-serif">
-          Convierte listas de texto en aleatorio, orden ascendente o descendente al instante.
+          Converte listas de texto em aleatório, ordem crescente ou decrescente instantaneamente.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">¿Cómo se usa?</h3>
+        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">Como usar?</h3>
         <p style="color: #f0f0f0; font-family: Arial, sans-serif">
-          Escribe o pega tu texto, pulsa el botón deseado y obtén el resultado. Puedes copiar o borrar el texto.
+          Digite ou cole seu texto, clique no botão desejado e obtenha o resultado. Você pode copiar ou limpar o texto.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">¿Funciona sin conexión?</h3>
+        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">Funciona offline?</h3>
         <p style="color: #f0f0f0; font-family: Arial, sans-serif">
-          Sí. Todo se procesa en tu navegador sin necesidad de conexión.
+          Sim. Tudo é processado no seu navegador sem necessidade de conexão.
         </p>
       </div>
       <div style="margin-bottom: 12px">
-        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">¿Es seguro?</h3>
+        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">É seguro?</h3>
         <p style="color: #f0f0f0; font-family: Arial, sans-serif">
-          Totalmente. Tu texto no sale de tu navegador y se mantiene privado.
+          Totalmente. Seu texto não sai do seu navegador e permanece privado.
         </p>
       </div>
       <div style="margin-bottom: 0">
-        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">¿Para qué sirve?</h3>
+        <h3 style="color: #8f94fb; font-family: Arial, sans-serif">Para que serve?</h3>
         <p style="color: #f0f0f0; font-family: Arial, sans-serif">
-          Ideal para crear tarjetas de estudio, repartir nombres al azar o reorganizar listas de compras.
+          Ideal para criar cartões de estudo, distribuir nomes aleatoriamente ou reorganizar listas de compras.
         </p>
       </div>
     </section>

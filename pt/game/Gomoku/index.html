@@ -1,35 +1,35 @@
 <!doctype html>
-<html lang="es">
+<html lang="pt">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="¡Disfruta del juego de Gomoku en línea! Enfréntate a tus amigos o a la IA en este clásico juego de tablero. Simple, divertido y optimizado para móviles."
+            content="Divirta-se com o jogo Gomoku online! Enfrente seus amigos ou a IA neste clássico jogo de tabuleiro. Simples, divertido e otimizado para celulares."
         />
         <meta
             name="keywords"
-            content="Gomoku, cinco en línea, juego en línea, IA, juego de tablero, gratis, navegador, móvil, clásico, estrategia, negro y blanco, dos jugadores, puzzle"
+            content="Gomoku, cinco em linha, jogo online, IA, jogo de tabuleiro, grátis, navegador, celular, clássico, estratégia, preto e branco, dois jogadores, puzzle"
         />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/pt/game/Gomoku" />
 
-        <meta property="og:title" content="Gomoku – ¡Juego de Gomoku con IA gratis en línea!" />
+        <meta property="og:title" content="Gomoku – Jogo de Gomoku com IA grátis online!" />
         <meta
             property="og:description"
-            content="Enfréntate a tus amigos o a una IA inteligente en Gomoku. ¿Quién colocará cinco en línea primero? ¡Juega gratis en tu navegador!"
+            content="Enfrente seus amigos ou uma IA inteligente no Gomoku. Quem colocará cinco em linha primeiro? Jogue grátis no seu navegador!"
         />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/pt/game/Gomoku" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Gomoku – ¡Juego de Gomoku con IA gratis en línea!" />
+        <meta name="twitter:title" content="Gomoku – Jogo de Gomoku com IA grátis online!" />
         <meta
             name="twitter:description"
-            content="¡Disfruta de Gomoku con tus amigos o con la IA! Juega este clásico juego de tablero gratis en línea."
+            content="Divirta-se com Gomoku com seus amigos ou com a IA! Jogue este clássico jogo de tabuleiro grátis online."
         />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -78,7 +78,7 @@
 
             function updateModeStatus() {
                 const modeStatus = document.getElementById("modeStatus");
-                modeStatus.textContent = aiMode ? "Jugador vs IA" : "Jugador vs Jugador";
+                modeStatus.textContent = aiMode ? "Jogador vs IA" : "Jogador vs Jogador";
             }
 
             function createBoard() {
@@ -109,7 +109,7 @@
                     }
                     cells.push(row);
                 }
-                message.textContent = "⚫ Es el turno del jugador negro";
+                message.textContent = "⚫ É a vez do jogador preto";
             }
 
             function resetGame() {
@@ -121,7 +121,7 @@
 
             function toggleMode() {
                 aiMode = !aiMode;
-                modeBtn.textContent = aiMode ? "👥 2 Jugadores" : "🤖 IA";
+                modeBtn.textContent = aiMode ? "👥 2 Jogadores" : "🤖 IA";
                 resetGame();
             }
 
@@ -134,12 +134,12 @@
                 const result = checkWin(x, y, currentPlayer);
                 if (result) {
                     highlightWin(result);
-                    message.textContent = currentPlayer === "black" ? "⚫ ¡Negro gana!" : "⚪ ¡Blanco gana!";
+                    message.textContent = currentPlayer === "black" ? "⚫ Preto vence!" : "⚪ Branco vence!";
                     gameOver = true;
                     return;
                 }
                 currentPlayer = currentPlayer === "black" ? "white" : "black";
-                message.textContent = currentPlayer === "black" ? "⚫ Es el turno del jugador negro" : "⚪ Es el turno del jugador blanco";
+                message.textContent = currentPlayer === "black" ? "⚫ É a vez do jogador preto" : "⚪ É a vez do jogador branco";
                 if (aiMode && currentPlayer === "white") {
                     setTimeout(() => aiTurn(), 300);
                 }
@@ -151,12 +151,12 @@
                 const result = checkWin(x, y, "white");
                 if (result) {
                     highlightWin(result);
-                    message.textContent = "⚪ ¡Blanco gana!";
+                    message.textContent = "⚪ Branco vence!";
                     gameOver = true;
                     return;
                 }
                 currentPlayer = "black";
-                message.textContent = "⚫ Es el turno del jugador negro";
+                message.textContent = "⚫ É a vez do jogador preto";
             }
 
             function placeStone(x, y, player) {
@@ -322,7 +322,7 @@
                 border-color: black;
             "
             onclick="window.location.href='/'">
-            Otros juegos
+            Outros jogos
         </button>
         <button
             style="
@@ -339,21 +339,20 @@
                 border-color: black;
             "
             onclick="shareGame()">
-            Compartir
+            Compartilhar
         </button>
         <script>
             function shareGame() {
                 const shareData = {
                     title: "Gomoku",
-                    text: "¡Disfruta de este increíble juego de Gomoku con IA!",
+                    text: "Divirta-se com este incrível jogo de Gomoku com IA!",
                     url: window.location.href
                 };
-
                 if (navigator.share) {
-                    navigator.share(shareData).catch((err) => console.log("Error al compartir", err));
+                    navigator.share(shareData).catch((err) => console.log("Erro ao compartilhar", err));
                 } else {
                     navigator.clipboard.writeText(window.location.href);
-                    alert("¡El enlace se ha copiado al portapapeles!");
+                    alert("O link foi copiado para a área de transferência!");
                 }
             }
         </script>
@@ -371,36 +370,36 @@
                 line-height: 1.6;
                 font-size: 14px;
             ">
-            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ Preguntas frecuentes (FAQ)</h2>
+            <h2 style="font-size: 20px; margin-bottom: 1rem; color: #1e3c72">❓ Perguntas frequentes (FAQ)</h2>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q1. ¿Qué es Gomoku?</strong><br />
-                A. Gomoku es un juego de tablero clásico en el que dos jugadores alternan colocando piezas y el primero en alinear cinco de sus piezas gana.
+                <strong>P1. O que é Gomoku?</strong><br />
+                R. Gomoku é um jogo de tabuleiro clássico onde dois jogadores alternam colocando peças e o primeiro a alinhar cinco de suas peças vence.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q2. ¿Cómo se gana?</strong><br />
-                A. Para ganar, debes colocar cinco piedras negras o blancas consecutivamente en línea horizontal, vertical o diagonal.
+                <strong>P2. Como se ganha?</strong><br />
+                R. Para ganhar, você deve colocar cinco pedras pretas ou brancas consecutivamente em linha horizontal, vertical ou diagonal.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q3. ¿Qué modos de juego hay?</strong><br />
-                A. Hay modo “Jugador vs Jugador” y modo “Jugador vs IA”. Puedes alternar con el botón en la esquina superior derecha.
+                <strong>P3. Quais modos de jogo existem?</strong><br />
+                R. Há o modo "Jogador vs Jogador" e o modo "Jogador vs IA". Você pode alternar com o botão no canto superior direito.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q4. ¿Puedo reiniciar la partida?</strong><br />
-                A. ¡Claro! Haz clic en el botón <strong>Reiniciar</strong> para comenzar una nueva partida en cualquier momento.
+                <strong>P4. Posso reiniciar a partida?</strong><br />
+                R. Claro! Clique no botão <strong>Reiniciar</strong> para começar uma nova partida a qualquer momento.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q5. ¿Es compatible con móviles?</strong><br />
-                A. Sí. Gomoku funciona perfectamente tanto en PC como en navegadores móviles.
+                <strong>P5. É compatível com celulares?</strong><br />
+                R. Sim. Gomoku funciona perfeitamente tanto em PC quanto em navegadores móveis.
             </div>
 
             <div style="margin-bottom: 1rem">
-                <strong>Q6. ¿Cómo comparto el juego?</strong><br />
-                A. Haz clic en <strong>Compartir</strong> para copiar el enlace o abrir el menú de compartir si tu dispositivo lo permite.
+                <strong>P6. Como compartilho o jogo?</strong><br />
+                R. Clique em <strong>Compartilhar</strong> para copiar o link ou abrir o menu de compartilhamento se seu dispositivo permitir.
             </div>
         </section>
     </body>

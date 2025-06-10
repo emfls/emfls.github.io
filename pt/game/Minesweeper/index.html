@@ -1,32 +1,32 @@
 <!doctype html>
-<html lang="es">
+<html lang="pt">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="¡Juega al clásico Buscaminas en tu navegador! Descubre las casillas seguras evitando minas y desafía la mejor puntuación. Gratis, rápido y optimizado para móviles." />
+            content="Jogue o clássico Campo Minado no seu navegador! Descubra as casas seguras evitando minas e desafie o melhor score. Grátis, rápido e otimizado para celular." />
         <meta
             name="keywords"
-            content="buscaminas, juego web, juego de navegador, rompecabezas, juego de minas, gratis, lógica, clásico, juego móvil, no descarga, juego instantáneo, en línea, juego gratuito, puzzle" />
+            content="campo minado, jogo web, jogo de navegador, quebra-cabeça, jogo de minas, grátis, lógica, clássico, jogo móvel, sem download, jogo instantâneo, online, jogo gratuito, puzzle" />
         <meta name="author" content="Itagi" />
         <meta name="robots" content="index, follow" />
 
         <link rel="canonical" href="https://emfls.github.io/pt/game/Minesweeper" />
 
-        <meta property="og:title" content="Juego Rápido: Buscaminas – Rompecabezas clásico en la web" />
+        <meta property="og:title" content="Jogo Rápido: Campo Minado – Quebra-cabeça clássico na web" />
         <meta
             property="og:description"
-            content="¡Disfruta del clásico Buscaminas en tu navegador! Descubre casillas seguras y evita las minas. Gratis, optimizado para móviles, ¡diversión para todos!" />
+            content="Divirta-se com o clássico Campo Minado no seu navegador! Descubra casas seguras e evite as minas. Grátis, otimizado para celular, diversão para todos!" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/pt/game/Minesweeper" />
         <meta property="og:type" content="website" />
 
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Juego Rápido: Buscaminas – Rompecabezas clásico en la web" />
+        <meta name="twitter:title" content="Jogo Rápido: Campo Minado – Quebra-cabeça clássico na web" />
         <meta
             name="twitter:description"
-            content="Prueba tu lógica y suerte con Buscaminas – ¡sin descargas, juega al instante!" />
+            content="Teste sua lógica e sorte com Campo Minado – sem downloads, jogue instantaneamente!" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -43,7 +43,7 @@
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
-        <title>Juego Rápido: Buscaminas</title>
+        <title>Jogo Rápido: Campo Minado</title>
         <link rel="stylesheet" href="style.css" />
     </head>
 
@@ -55,10 +55,10 @@
                 margin-bottom: 0px;
                 margin-top: 0px;
             ">
-            Buscaminas
+            Campo Minado
         </h1>
         <p style="font-size: 14px; color: white; margin-bottom: 30px">
-            Descubre todas las casillas seguras sin detonar ninguna mina.
+            Descubra todas as casas seguras sem detonar nenhuma mina.
         </p>
         <div id="minimap">
             <canvas id="minimapCanvas" width="100" height="100"></canvas>
@@ -67,10 +67,10 @@
             <div id="game"></div>
         </div>
         <div id="overlay">
-            <h2>¡Juego Terminado!</h2>
-            <p id="scoreDisplay">Puntuación: 0</p>
-            <button onclick="resetGame()">Volver a Jugar</button>
-            <button onclick="shareScore()">Compartir</button>
+            <h2>Jogo Terminado!</h2>
+            <p id="scoreDisplay">Pontuação: 0</p>
+            <button onclick="resetGame()">Jogar Novamente</button>
+            <button onclick="shareScore()">Compartilhar</button>
         </div>
 
         <script>
@@ -152,7 +152,7 @@
                     cell.element.textContent = "💣";
                     gameEnded = true;
                     const score = calculateScore();
-                    scoreDisplay.textContent = `Puntuación: ${score}`;
+                    scoreDisplay.textContent = `Pontuação: ${score}`;
                     overlay.style.display = "flex";
                     return;
                 }
@@ -162,7 +162,7 @@
                     return;
                 }
 
-                // rellenar en 4 direcciones (arriba/abajo/izquierda/derecha)
+                // preencher em 4 direções (cima/baixo/esquerda/direita)
                 const directions = [
                     [-1, 0],
                     [1, 0],
@@ -205,27 +205,27 @@
             function shareScore() {
                 const url = window.location.href;
                 const score = calculateScore();
-                const text = `🎖️ ¡He conseguido ${score} puntos en Buscaminas! ¡Intenta superarme! ${url}`;
+                const text = `🎖️ Consegui ${score} pontos no Campo Minado! Tente me superar! ${url}`;
                 if (navigator.share) {
                     navigator
                         .share({
-                            title: "Juego Rápido: Buscaminas",
+                            title: "Jogo Rápido: Campo Minado",
                             text,
                             url
                         })
                         .catch(() =>
-                            alert("Error al compartir. Copia el enlace manualmente.")
+                            alert("Erro ao compartilhar. Copie o link manualmente.")
                         );
                 } else {
                     navigator.clipboard
                         .writeText(text)
                         .then(() =>
                             alert(
-                                "¡Enlace con puntuación copiado al portapapeles!"
+                                "Link com pontuação copiado para a área de transferência!"
                             )
                         )
                         .catch(() =>
-                            alert(`Copia este enlace:\n${text}`)
+                            alert(`Copie este link:\n${text}`)
                         );
                 }
             }
@@ -297,7 +297,7 @@
                 border: none;
             "
             onclick="window.location.href='/'">
-            📂 Otros juegos
+            📂 Outros jogos
         </button>
         <section
             style="
@@ -313,36 +313,36 @@
                 line-height: 1.6;
                 color: #f0f0f0;
             ">
-            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #6a72f8">❓ Preguntas Frecuentes</h2>
+            <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #6a72f8">❓ Perguntas Frequentes</h2>
 
             <div style="margin-bottom: 12px">
-                <strong>Q1. ¿Cómo se juega al Buscaminas?</strong><br />
-                A. Haz clic/toca en cualquier casilla para descubrirla. Evita las minas y trata de revelar la mayor cantidad posible de casillas seguras.
+                <strong>P1. Como jogar Campo Minado?</strong><br />
+                R. Clique/toque em qualquer casa para descobri-la. Evite as minas e tente revelar o maior número possível de casas seguras.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q2. ¿Qué pasa si toco una mina?</strong><br />
-                A. El juego termina de inmediato y se muestra tu puntuación (número de casillas seguras reveladas).
+                <strong>P2. O que acontece se eu tocar numa mina?</strong><br />
+                R. O jogo termina imediatamente e sua pontuação é exibida (número de casas seguras reveladas).
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q3. ¿Puedo reiniciar la partida?</strong><br />
-                A. ¡Sí! En la pantalla de "Juego Terminado", pulsa el botón <strong>Volver a Jugar</strong> para comenzar de nuevo.
+                <strong>P3. Posso reiniciar a partida?</strong><br />
+                R. Sim! Na tela de "Jogo Terminado", pressione o botão <strong>Jogar Novamente</strong> para começar de novo.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q4. ¿Qué es el minimapa que aparece en la esquina?</strong><br />
-                A. Es una vista general del amplio tablero que muestra tu progreso y el área que estás viendo en este momento.
+                <strong>P4. O que é o minimapa que aparece no canto?</strong><br />
+                R. É uma visão geral do tabuleiro amplo que mostra seu progresso e a área que você está vendo no momento.
             </div>
 
             <div style="margin-bottom: 12px">
-                <strong>Q5. ¿Cómo comparto mi puntuación?</strong><br />
-                A. En la pantalla de "Juego Terminado", pulsa el botón <strong>Compartir</strong> para copiar el texto con tu puntuación y enlace, o usar las opciones de compartir de tu dispositivo.
+                <strong>P5. Como compartilho minha pontuação?</strong><br />
+                R. Na tela de "Jogo Terminado", pressione o botão <strong>Compartilhar</strong> para copiar o texto com sua pontuação e link, ou usar as opções de compartilhamento do seu dispositivo.
             </div>
 
             <div style="margin-bottom: 0">
-                <strong>Q6. ¿Puedo jugar en mi móvil?</strong><br />
-                A. ¡Por supuesto! Este juego está completamente optimizado para dispositivos móviles y funciona en todos los navegadores.
+                <strong>P6. Posso jogar no meu celular?</strong><br />
+                R. Claro! Este jogo está completamente otimizado para dispositivos móveis e funciona em todos os navegadores.
             </div>
         </section>
     </body>

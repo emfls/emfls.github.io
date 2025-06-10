@@ -1,28 +1,28 @@
 <!doctype html>
-<html lang="es">
+<html lang="pt">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Toque Rápido</title>
         <meta name="robots" content="index, follow" />
 
-        <!-- URL canónica -->
+        <!-- URL canônica -->
         <link rel="canonical" href="https://emfls.github.io/pt/game/SpeedTap" />
 
         <!-- Meta SEO -->
         <meta
             name="description"
-            content="¿Qué tan rápido son tus dedos? ¡Toca lo más rápido posible durante solo 5 segundos! Desafía a tus amigos y sube al tablero de clasificación. Juego web gratuito y optimizado para móviles." />
+            content="Quão rápidos são os seus dedos? Toque o mais rápido possível por apenas 5 segundos! Desafie seus amigos e suba no ranking. Jogo web gratuito e otimizado para celular." />
         <meta
             name="keywords"
-            content="Toque Rápido, juego de toques, juego de velocidad de reacción, desafío de 5 segundos, juego de clics, juego móvil, juego web gratis, juego de navegador, prueba de velocidad" />
+            content="Toque Rápido, jogo de toques, jogo de velocidade de reação, desafio de 5 segundos, jogo de cliques, jogo móvel, jogo web grátis, jogo de navegador, teste de velocidade" />
         <meta name="author" content="Itagi" />
 
         <!-- Open Graph (Facebook, Kakao, Discord) -->
         <meta property="og:title" content="Toque Rápido" />
         <meta
             property="og:description"
-            content="¡Toca lo más rápido que puedas durante solo 5 segundos! ¡Desafía a tus amigos y compruébalo! Juego web gratuito." />
+            content="Toque o mais rápido que conseguir por apenas 5 segundos! Desafie seus amigos e confira! Jogo web gratuito." />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
         <meta property="og:url" content="https://emfls.github.io/pt/game/SpeedTap" />
         <meta property="og:type" content="website" />
@@ -32,7 +32,7 @@
         <meta name="twitter:title" content="Toque Rápido" />
         <meta
             name="twitter:description"
-            content="¡Gánales a tus amigos! ¡Toca lo más rápido posible durante 5 segundos!" />
+            content="Vença seus amigos! Toque o mais rápido possível por 5 segundos!" />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
         <!-- Google tag (gtag.js) -->
@@ -56,15 +56,15 @@
 
     <body>
         <h1>Toque Rápido</h1>
-        <p style="margin-top: -10px; margin-bottom: 30px">¡Toca lo más rápido posible durante solo 5 segundos!</p>
+        <p style="margin-top: -10px; margin-bottom: 30px">Toque o mais rápido possível por apenas 5 segundos!</p>
 
-        <div id="tapZone">Toca para iniciar</div>
+        <div id="tapZone">Toque para começar</div>
 
         <div id="result"></div>
 
         <div class="button-group" id="afterButtons" style="display: none">
             <button id="restartBtn">Reiniciar</button>
-            <button id="shareBtn">Compartir</button>
+            <button id="shareBtn">Compartilhar</button>
         </div>
 
         <script>
@@ -91,19 +91,18 @@
                 taps = 0;
                 isPlaying = true;
                 result.textContent = "";
-                tapZone.textContent = "¡Ya!";
+                tapZone.textContent = "Já!";
                 tapZone.style.pointerEvents = "auto";
                 tapZone.style.fontSize = "2rem";
                 tapZone.classList.remove("pop");
                 afterButtons.style.display = "none";
-
                 timer = setTimeout(() => {
                     isPlaying = false;
-                    tapZone.textContent = "⏰ ¡Tiempo!";
+                    tapZone.textContent = "⏰ Tempo!";
                     tapZone.style.pointerEvents = "none";
-                    tapZone.style.fontSize = "2rem"; // Restablecer tamaño
-                    tapZone.classList.remove("pop"); // Quitar animación
-                    result.textContent = `¡Tocaste ${taps} veces en 5 segundos!`;
+                    tapZone.style.fontSize = "2rem"; // Resetar tamanho
+                    tapZone.classList.remove("pop"); // Remover animação
+                    result.textContent = `Você tocou ${taps} vezes em 5 segundos!`;
                     afterButtons.style.display = "flex";
                 }, 5000);
             }
@@ -116,15 +115,15 @@
                     tapZone.textContent = `${taps}`;
                     updateFontSize();
 
-                    // Reaplicar animación
+                    // Reaplicar animação
                     tapZone.classList.remove("pop");
-                    void tapZone.offsetWidth; // Forzar reflujo
+                    void tapZone.offsetWidth; // Forçar refluxo
                     tapZone.classList.add("pop");
                 }
             });
 
             restartBtn.addEventListener("click", () => {
-                tapZone.textContent = "Toca para iniciar";
+                tapZone.textContent = "Toque para começar";
                 result.textContent = "";
                 tapZone.style.fontSize = "2rem";
                 tapZone.classList.remove("pop");
@@ -133,20 +132,20 @@
             });
 
             shareBtn.addEventListener("click", async () => {
-                const shareText = `💥 ¡Tocaste ${taps} veces en 5 segundos! \n¡Intenta superarme!: ${window.location.href}`;
+                const shareText = `💥 Toquei ${taps} vezes em 5 segundos! \nTente me superar!: ${window.location.href}`;
                 if (navigator.share) {
                     try {
                         await navigator.share({
-                            title: "Desafío Toque Rápido",
+                            title: "Desafio Toque Rápido",
                             text: shareText,
                             url: window.location.href
                         });
                     } catch {
-                        alert("La compartición fue cancelada o falló.");
+                        alert("O compartilhamento foi cancelado ou falhou.");
                     }
                 } else {
                     await navigator.clipboard.writeText(shareText);
-                    alert("¡Tu puntuación y el enlace se han copiado al portapapeles!");
+                    alert("Sua pontuação e o link foram copiados para a área de transferência!");
                 }
             });
         </script>
@@ -167,40 +166,40 @@
                 cursor: pointer;
             "
             onclick="window.location.href='/'">
-            📂 Otros juegos
+            📂 Outros jogos
         </button>
 
         <section style="max-width: 320px; width: 100%; margin: 48px auto 24px auto; font-family: 'Arial', sans-serif; font-size: 14px; background: #1e1e1e; border-radius: 18px; box-shadow: 0 6px 24px #1236; padding: 20px; line-height: 1.6; color: #f0f0f0;">
-          <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb;">❓ Preguntas Frecuentes</h2>
+          <h2 style="font-size: 1.4rem; margin-bottom: 14px; color: #8f94fb;">❓ Perguntas Frequentes</h2>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q1. ¿Cómo se juega a Toque Rápido?</strong><br/>
-            A. Toca el área verde lo más rápido posible durante 5 segundos. El número de toques es tu puntuación.
+            <strong>P1. Como jogar Toque Rápido?</strong><br/>
+            R. Toque na área verde o mais rápido possível por 5 segundos. O número de toques é sua pontuação.
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q2. ¿Cuánto dura cada ronda?</strong><br/>
-            A. Dura exactamente 5 segundos. En cuanto termine el tiempo, aparecerá tu resultado.
+            <strong>P2. Quanto tempo dura cada rodada?</strong><br/>
+            R. Dura exatamente 5 segundos. Assim que o tempo acabar, seu resultado aparecerá.
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q3. ¿Cómo reinicio el juego?</strong><br/>
-            A. Pulsa el botón <strong>Reiniciar</strong> para intentarlo de nuevo inmediatamente.
+            <strong>P3. Como reiniciar o jogo?</strong><br/>
+            R. Clique no botão <strong>Reiniciar</strong> para tentar novamente imediatamente.
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q4. ¿Puedo compartir mi puntuación?</strong><br/>
-            A. ¡Sí! Pulsa <strong>Compartir</strong> para copiar tu puntuación y el enlace para que tus amigos puedan retarte.
+            <strong>P4. Posso compartilhar minha pontuação?</strong><br/>
+            R. Sim! Clique em <strong>Compartilhar</strong> para copiar sua pontuação e o link para seus amigos te desafiarem.
           </div>
 
           <div style="margin-bottom: 12px;">
-            <strong>Q5. ¿El ritmo de los toques afecta la animación?</strong><br/>
-            A. ¡Sí! Cada vez que tocas, el número crece un poco para darte una retroalimentación visual.
+            <strong>P5. O ritmo dos toques afeta a animação?</strong><br/>
+            R. Sim! Cada vez que você toca, o número cresce um pouco para dar feedback visual.
           </div>
 
           <div style="margin-bottom: 0;">
-            <strong>Q6. ¿Funciona sin problemas en móviles?</strong><br/>
-            A. ¡Por supuesto! Está optimizado para dispositivos móviles, así que puedes jugar en tu teléfono o tableta sin problemas.
+            <strong>P6. Funciona bem no celular?</strong><br/>
+            R. Claro! É otimizado para dispositivos móveis, então você pode jogar no seu telefone ou tablet sem problemas.
           </div>
         </section>
     </body>
