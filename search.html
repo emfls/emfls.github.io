@@ -3,1176 +3,919 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Pages 파일 검사 도구</title>
+    <title>정확한 URL 색인 상태 분석기</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
         }
         
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
             background: white;
             border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
         
-        .header {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: white;
-            padding: 30px;
+        h1 {
+            color: #333;
             text-align: center;
-        }
-        
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            font-weight: 300;
-        }
-        
-        .header p {
-            opacity: 0.9;
-            font-size: 1.1em;
-        }
-        
-        .main-content {
-            padding: 30px;
-        }
-        
-        .input-section {
-            background: #f8f9fa;
-            padding: 25px;
-            border-radius: 10px;
             margin-bottom: 30px;
-            border-left: 5px solid #667eea;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
-        .form-group {
-            margin-bottom: 20px;
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
         }
         
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #2c3e50;
-        }
-        
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.3s ease;
-        }
-        
-        .form-group input:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        
-        .form-group textarea {
-            height: 120px;
-            resize: vertical;
-            font-family: 'Courier New', monospace;
-        }
-        
-        .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
             color: white;
-            padding: 15px 30px;
             border: none;
+            padding: 15px 20px;
             border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s ease;
-            margin-right: 10px;
-            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         
-        .btn:hover {
+        button:hover:not(:disabled) {
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
         
-        .btn:disabled {
-            opacity: 0.6;
+        button:disabled {
+            background: #6c757d;
             cursor: not-allowed;
             transform: none;
         }
         
-        .btn-copy {
-            background: linear-gradient(135deg, #fd7e14 0%, #e83e8c 100%);
-            font-size: 14px;
-            padding: 8px 16px;
-        }
-        
-        .results-section {
-            margin-top: 30px;
-        }
-        
-        .result-card {
-            background: white;
-            border: 1px solid #e0e0e0;
+        .google-search-section {
+            background: #e8f4fd;
+            border: 2px solid #1a73e8;
             border-radius: 10px;
-            margin-bottom: 20px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-        }
-        
-        .result-header {
             padding: 20px;
-            font-weight: 600;
-            font-size: 1.2em;
-            border-bottom: 1px solid #e0e0e0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            margin: 20px 0;
         }
         
-        .result-header.success {
-            background: #d4edda;
-            color: #155724;
-            border-left: 5px solid #28a745;
+        .google-search-section h3 {
+            color: #1a73e8;
+            margin-top: 0;
         }
         
-        .result-header.warning {
+        .search-instruction {
             background: #fff3cd;
-            color: #856404;
-            border-left: 5px solid #ffc107;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
         }
         
-        .result-header.error {
-            background: #f8d7da;
-            color: #721c24;
-            border-left: 5px solid #dc3545;
-        }
-        
-        .result-content {
-            padding: 20px;
-        }
-        
-        .file-list {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .file-item {
-            padding: 12px;
-            margin-bottom: 8px;
-            background: #f8f9fa;
-            border-radius: 6px;
-            border-left: 4px solid #667eea;
-        }
-        
-        .file-item.error {
-            border-left-color: #dc3545;
-            background: #fff5f5;
-        }
-        
-        .file-item.warning {
-            border-left-color: #ffc107;
-            background: #fffbf0;
-        }
-        
-        .file-item.missing {
-            border-left-color: #6c757d;
-            background: #f8f9fa;
-        }
-        
-        .file-status {
-            padding: 4px 12px;
-            border-radius: 20px;
+        .google-results-input {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-family: monospace;
             font-size: 12px;
-            font-weight: 600;
+            resize: vertical;
         }
         
-        .status-valid {
-            background: #d4edda;
-            color: #155724;
+        .google-results-input:focus {
+            outline: none;
+            border-color: #1a73e8;
         }
         
-        .status-invalid {
-            background: #f8d7da;
-            color: #721c24;
-        }
-        
-        .status-missing {
-            background: #fff3cd;
-            color: #856404;
-        }
-        
-        .status-not-found {
-            background: #e2e3e5;
-            color: #6c757d;
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
-        
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .code-preview {
-            background: #f8f8f8;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            padding: 15px;
-            margin-top: 10px;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        
-        .error-details {
-            background: #fff5f5;
-            border: 1px solid #f5c6cb;
-            border-radius: 6px;
-            padding: 15px;
-            margin-top: 10px;
-            font-size: 14px;
-        }
-        
-        .line-error {
-            color: #dc3545;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .stat-card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-            border-top: 4px solid #667eea;
-        }
-        
-        .stat-number {
-            font-size: 2.5em;
-            font-weight: 700;
-            color: #2c3e50;
-            margin-bottom: 5px;
-        }
-        
-        .stat-label {
-            color: #666;
-            font-weight: 500;
-        }
-        
-        .sitemap-tree {
+        .progress-container {
             background: #f8f9fa;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            padding: 15px;
-            margin-top: 10px;
-            font-family: 'Courier New', monospace;
-            font-size: 13px;
-        }
-        
-        .sitemap-level {
-            margin-left: 20px;
-            border-left: 2px solid #ddd;
-            padding-left: 15px;
-            margin-top: 10px;
-        }
-        
-        .sitemap-file {
-            color: #667eea;
-            font-weight: 600;
-            margin-bottom: 5px;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            display: none;
         }
         
         .progress-bar {
             width: 100%;
-            height: 8px;
-            background: #e0e0e0;
-            border-radius: 4px;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
             overflow: hidden;
             margin: 10px 0;
         }
         
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            background: linear-gradient(45deg, #28a745, #20c997);
+            width: 0%;
             transition: width 0.3s ease;
+            border-radius: 10px;
         }
         
-        .copy-section {
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card.indexed {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+        
+        .stat-card.not-indexed {
+            background: linear-gradient(135deg, #dc3545, #fd7e14);
+        }
+        
+        .stat-card.google-indexed {
+            background: linear-gradient(135deg, #1a73e8, #4285f4);
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+        
+        .search-filters {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        input, select, textarea {
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .url-list-container {
             background: #f8f9fa;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .url-item {
             padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 5px solid #dee2e6;
+            background: white;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .url-item.google-indexed {
+            border-left-color: #1a73e8;
+            background: #f8fbff;
+        }
+        
+        .url-item.not-indexed {
+            border-left-color: #dc3545;
+            background: #fff8f8;
+        }
+        
+        .url-item.manual-check {
+            border-left-color: #ffc107;
+            background: #fffdf5;
+        }
+        
+        .url-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .url-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            flex: 1;
+            margin-right: 15px;
+            word-break: break-all;
+        }
+        
+        .url-link:hover {
+            text-decoration: underline;
+        }
+        
+        .url-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .status-badge.google-indexed {
+            background: #1a73e8;
+            color: white;
+        }
+        
+        .status-badge.not-indexed {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .status-badge.manual-check {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        .status-badge.unknown {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .comparison-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
             margin-top: 15px;
         }
         
-        .copy-textarea {
-            width: 100%;
-            height: 150px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+        .comparison-box {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            border: 2px solid #dee2e6;
+        }
+        
+        .comparison-box h4 {
+            margin-top: 0;
+            color: #495057;
+        }
+        
+        .url-count {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .log-container {
+            background: #343a40;
+            color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            max-height: 200px;
+            overflow-y: auto;
             font-family: 'Courier New', monospace;
             font-size: 12px;
-            resize: vertical;
-            margin-bottom: 10px;
+            display: none;
         }
         
-        .toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #28a745;
-            color: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            z-index: 1000;
-            opacity: 0;
-            transform: translateX(100%);
-            transition: all 0.3s ease;
+        .log-entry {
+            margin: 2px 0;
+            padding: 2px 0;
         }
         
-        .toast.show {
-            opacity: 1;
-            transform: translateX(0);
-        }
+        .log-info { color: #17a2b8; }
+        .log-success { color: #28a745; }
+        .log-warning { color: #ffc107; }
+        .log-error { color: #dc3545; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🔍 GitHub Pages 파일 검사 도구</h1>
-            <p>안전한 HTML 검사, 중첩 사이트맵 분석, 스마트 소스코드 검색</p>
+        <h1>🔍 정확한 URL 색인 상태 분석기</h1>
+        
+        <div class="controls">
+            <button onclick="startInitialCrawl()" id="startBtn">사이트맵 크롤링 시작</button>
+            <button onclick="crawlAllSitemaps()" id="crawlBtn" disabled>모든 사이트맵 크롤링</button>
+            <button onclick="parseGoogleResults()" id="parseBtn" disabled>구글 검색 결과 분석</button>
+            <button onclick="exportComparisonData()" id="exportBtn" disabled>비교 데이터 내보내기</button>
+            <button onclick="toggleLog()" id="logBtn">로그 보기</button>
+            <button onclick="clearAll()" id="clearBtn">전체 초기화</button>
         </div>
         
-        <div class="main-content">
-            <div class="input-section">
-                <h2>🛠️ 검사 설정</h2>
-                <div class="form-group">
-                    <label for="repoUrl">GitHub Pages URL (예: emfls.github.io)</label>
-                    <input type="text" id="repoUrl" placeholder="emfls.github.io" value="emfls.github.io">
-                </div>
-                
-                <div class="form-group">
-                    <label for="searchCode">검색할 소스코드 (선택사항)</label>
-                    <textarea id="searchCode" placeholder="검색하고 싶은 HTML, CSS, JavaScript 코드를 입력하세요..."></textarea>
-                </div>
-                
-                <button class="btn" onclick="startAnalysis()">🚀 분석 시작</button>
-                <button class="btn" onclick="clearResults()">🗑️ 결과 초기화</button>
+        <div class="google-search-section" id="googleSearchSection" style="display: none;">
+            <h3>📊 구글 검색 결과 입력</h3>
+            <div class="search-instruction">
+                <strong>1단계:</strong> 구글에서 <code>site:emfls.github.io</code>로 검색<br>
+                <strong>2단계:</strong> 검색 결과 페이지의 HTML 소스를 복사하여 아래에 붙여넣기<br>
+                <strong>3단계:</strong> "구글 검색 결과 분석" 버튼 클릭
             </div>
-            
-            <div id="loadingSection" class="loading" style="display: none;">
-                <div class="spinner"></div>
-                <p id="loadingText">파일을 분석하고 있습니다...</p>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
-                </div>
+            <textarea 
+                id="googleResultsInput" 
+                class="google-results-input" 
+                placeholder="구글 검색 결과 페이지의 HTML 소스를 여기에 붙여넣어주세요...&#10;&#10;방법:&#10;1. 구글에서 site:emfls.github.io 검색&#10;2. F12 (개발자 도구) 열기&#10;3. Elements 탭에서 <html> 태그 우클릭&#10;4. 'Copy' > 'Copy outerHTML' 선택&#10;5. 여기에 붙여넣기"></textarea>
+            <button onclick="parseGoogleResults()" style="margin-top: 10px; width: 100%;">구글 검색 결과 분석하기</button>
+        </div>
+        
+        <div class="progress-container" id="progressContainer">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <span id="progressText">진행률: 0%</span>
+                <span id="currentTask">대기 중...</span>
             </div>
-            
-            <div id="resultsSection" class="results-section" style="display: none;">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number" id="totalFiles">0</div>
-                        <div class="stat-label">총 파일 수</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="htmlFiles">0</div>
-                        <div class="stat-label">HTML 파일</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="sitemapFiles">0</div>
-                        <div class="stat-label">사이트맵 파일</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="validFiles">0</div>
-                        <div class="stat-label">유효한 파일</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="errorFiles">0</div>
-                        <div class="stat-label">오류 파일</div>
-                    </div>
-                </div>
-                
-                <div id="sitemapResults"></div>
-                <div id="htmlValidationResults"></div>
-                <div id="codeSearchResults"></div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
             </div>
         </div>
+        
+        <div class="stats-grid" id="statsGrid" style="display: none;">
+            <div class="stat-card">
+                <span class="stat-number" id="totalUrls">0</span>
+                <div class="stat-label">총 URL 수</div>
+            </div>
+            <div class="stat-card google-indexed">
+                <span class="stat-number" id="googleIndexedCount">0</span>
+                <div class="stat-label">구글 색인됨</div>
+            </div>
+            <div class="stat-card not-indexed">
+                <span class="stat-number" id="notIndexedCount">0</span>
+                <div class="stat-label">색인 미등록</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number" id="matchRate">0%</span>
+                <div class="stat-label">색인 비율</div>
+            </div>
+        </div>
+        
+        <div class="comparison-section" id="comparisonSection" style="display: none;">
+            <h3>📈 색인 상태 비교 분석</h3>
+            <div class="comparison-grid">
+                <div class="comparison-box">
+                    <h4>🟢 구글에서 색인된 URL</h4>
+                    <div class="url-count" id="indexedUrlCount">0개</div>
+                    <p>실제 구글 검색에서 발견된 색인된 페이지들</p>
+                </div>
+                <div class="comparison-box">
+                    <h4>🔴 색인되지 않은 URL</h4>
+                    <div class="url-count" id="notIndexedUrlCount">0개</div>
+                    <p>사이트맵에는 있지만 구글에서 색인되지 않은 페이지들</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="search-filters" id="searchFilters" style="display: none;">
+            <input type="text" id="searchInput" placeholder="URL 검색..." oninput="filterResults()">
+            <select id="statusFilter" onchange="filterResults()">
+                <option value="all">모든 상태</option>
+                <option value="google-indexed">구글 색인됨</option>
+                <option value="not-indexed">색인 미등록</option>
+                <option value="manual-check">수동 확인 필요</option>
+            </select>
+            <select id="sortBy" onchange="sortResults()">
+                <option value="url">URL 순</option>
+                <option value="status">상태 순</option>
+                <option value="lastmod">수정일 순</option>
+            </select>
+        </div>
+        
+        <div class="log-container" id="logContainer">
+            <div id="logContent"></div>
+        </div>
+        
+        <div id="messageContainer"></div>
+        
+        <div class="url-list-container" id="urlListContainer" style="display: none;">
+            <div id="urlList"></div>
+        </div>
     </div>
-    
-    <div id="toast" class="toast"></div>
 
     <script>
-        var allFiles = [];
-        var allSitemapUrls = [];
-        var sitemapStructure = {};
-        var analysisResults = {
-            totalFiles: 0,
-            htmlFiles: 0,
-            sitemapFiles: 0,
-            validFiles: 0,
-            errorFiles: 0,
-            missingFromSitemap: [],
-            htmlErrors: [],
-            codeMatches: [],
-            codeNotFound: [],
-            sitemapErrors: [],
-            allFileUrls: []
-        };
+        let allSitemaps = [];
+        let allUrls = [];
+        let processedSitemaps = new Set();
+        let googleIndexedUrls = new Set();
+        let indexStatusMap = new Map();
+        let isProcessing = false;
 
-        function startAnalysis() {
-            var repoUrl = document.getElementById('repoUrl').value.trim();
-            var searchCode = document.getElementById('searchCode').value.trim();
+        // 로그 시스템
+        function log(message, type = 'info') {
+            const logContainer = document.getElementById('logContent');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${type}`;
+            logEntry.innerHTML = `[${timestamp}] ${message}`;
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+            console.log(`[${type.toUpperCase()}] ${message}`);
+        }
+
+        function toggleLog() {
+            const logContainer = document.getElementById('logContainer');
+            logContainer.style.display = logContainer.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function showMessage(message, type = 'info') {
+            const container = document.getElementById('messageContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type === 'error' ? 'error-message' : 'success-message';
+            messageDiv.style.cssText = `
+                padding: 15px;
+                border-radius: 8px;
+                margin: 10px 0;
+                ${type === 'error' ? 
+                    'background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;' : 
+                    'background: #d4edda; color: #155724; border: 1px solid #c3e6cb;'
+                }
+            `;
+            messageDiv.textContent = message;
+            container.appendChild(messageDiv);
             
-            if (!repoUrl) {
-                alert('GitHub Pages URL을 입력해주세요.');
-                return;
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+
+        function updateProgress(current, total, task = '') {
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            const currentTaskEl = document.getElementById('currentTask');
+            
+            const percentage = total > 0 ? Math.round((current / total) * 100) : 0;
+            progressFill.style.width = percentage + '%';
+            progressText.textContent = `진행률: ${percentage}% (${current}/${total})`;
+            currentTaskEl.textContent = task;
+        }
+
+        function updateStats() {
+            const googleIndexed = googleIndexedUrls.size;
+            const total = allUrls.length;
+            const notIndexed = total - googleIndexed;
+            const matchRate = total > 0 ? Math.round((googleIndexed / total) * 100) : 0;
+            
+            document.getElementById('totalUrls').textContent = total;
+            document.getElementById('googleIndexedCount').textContent = googleIndexed;
+            document.getElementById('notIndexedCount').textContent = notIndexed;
+            document.getElementById('matchRate').textContent = matchRate + '%';
+            
+            document.getElementById('indexedUrlCount').textContent = googleIndexed + '개';
+            document.getElementById('notIndexedUrlCount').textContent = notIndexed + '개';
+        }
+
+        // 기존 사이트맵 크롤링 함수들 (간소화)
+        async function fetchWithProxy(url) {
+            const proxyServices = [
+                'https://api.allorigins.win/raw?url=',
+                'https://api.codetabs.com/v1/proxy?quest=',
+                'https://thingproxy.freeboard.io/fetch/'
+            ];
+            
+            for (const proxyUrl of proxyServices) {
+                try {
+                    const requestUrl = proxyUrl.includes('allorigins') || proxyUrl.includes('codetabs') 
+                        ? proxyUrl + encodeURIComponent(url) 
+                        : proxyUrl + url;
+                    
+                    const response = await fetch(requestUrl);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    
+                    const text = await response.text();
+                    if (!text || text.length === 0) throw new Error('빈 응답');
+                    
+                    return text;
+                } catch (error) {
+                    continue;
+                }
             }
+            throw new Error('모든 프록시 실패');
+        }
+
+        async function parseSitemap(url, xmlContent) {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlContent, 'text/xml');
             
-            showLoading();
-            clearPreviousResults();
+            const results = { sitemaps: [], urls: [] };
             
-            var repoInfo = extractRepoInfo(repoUrl);
-            if (!repoInfo) {
-                alert('올바른 GitHub Pages URL을 입력해주세요.');
-                hideLoading();
-                return;
-            }
-            
-            updateProgress(10, '저장소 정보 확인 중...');
-            
-            // 비동기 작업을 순차적으로 실행
-            fetchAllSitemaps(repoUrl)
-                .then(function() {
-                    updateProgress(40, '파일 목록 가져오는 중...');
-                    return fetchAllFiles(repoInfo.owner, repoInfo.repo);
-                })
-                .then(function() {
-                    updateProgress(60, 'HTML 파일 유효성 검사 중...');
-                    return validateHtmlFiles(repoUrl);
-                })
-                .then(function() {
-                    if (searchCode) {
-                        updateProgress(80, '소스코드 검색 중...');
-                        return searchInFiles(repoUrl, searchCode);
+            // 사이트맵 인덱스 확인
+            xmlDoc.querySelectorAll('sitemap').forEach(sitemap => {
+                const loc = sitemap.querySelector('loc')?.textContent;
+                if (loc) {
+                    results.sitemaps.push({
+                        url: loc,
+                        lastmod: sitemap.querySelector('lastmod')?.textContent || 'N/A',
+                        type: 'sitemap'
+                    });
+                }
+            });
+
+            // URL 요소 확인
+            xmlDoc.querySelectorAll('url').forEach(urlEl => {
+                const loc = urlEl.querySelector('loc')?.textContent;
+                if (loc) {
+                    const isSitemap = loc.includes('sitemap') && loc.endsWith('.xml');
+                    
+                    if (isSitemap) {
+                        results.sitemaps.push({
+                            url: loc,
+                            lastmod: urlEl.querySelector('lastmod')?.textContent || 'N/A',
+                            type: 'sitemap'
+                        });
+                    } else {
+                        results.urls.push({
+                            url: loc,
+                            lastmod: urlEl.querySelector('lastmod')?.textContent || 'N/A',
+                            changefreq: urlEl.querySelector('changefreq')?.textContent || 'N/A',
+                            priority: urlEl.querySelector('priority')?.textContent || 'N/A',
+                            type: 'page'
+                        });
                     }
-                    return Promise.resolve();
-                })
-                .then(function() {
-                    updateProgress(90, '사이트맵 비교 분석 중...');
-                    compareSitemapWithFiles(repoUrl);
-                    updateProgress(100, '분석 완료!');
-                    setTimeout(function() {
-                        displayResults();
-                    }, 500);
-                })
-                .catch(function(error) {
-                    console.error('분석 중 오류 발생:', error);
-                    hideLoading();
-                    alert('분석 중 오류가 발생했습니다: ' + error.message);
+                }
+            });
+
+            return results;
+        }
+
+        async function startInitialCrawl() {
+            if (isProcessing) return;
+            
+            isProcessing = true;
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('progressContainer').style.display = 'block';
+            
+            try {
+                const initialUrl = 'https://emfls.github.io/sitemap.xml';
+                updateProgress(0, 1, '초기 사이트맵 가져오는 중...');
+                
+                const xmlContent = await fetchWithProxy(initialUrl);
+                const results = await parseSitemap(initialUrl, xmlContent);
+                
+                allSitemaps = [{ url: initialUrl, type: 'sitemap' }, ...results.sitemaps];
+                allUrls = [...results.urls];
+                processedSitemaps.add(initialUrl);
+                
+                updateProgress(1, 1, '완료');
+                log(`초기 사이트맵에서 ${results.sitemaps.length}개의 하위 사이트맵과 ${results.urls.length}개의 URL을 발견했습니다.`, 'success');
+                
+                document.getElementById('crawlBtn').disabled = false;
+                showMessage('초기 사이트맵 크롤링이 완료되었습니다!', 'success');
+                
+            } catch (error) {
+                log(`초기 크롤링 오류: ${error.message}`, 'error');
+                showMessage(`오류: ${error.message}`, 'error');
+            } finally {
+                isProcessing = false;
+                document.getElementById('startBtn').disabled = false;
+            }
+        }
+
+        async function crawlAllSitemaps() {
+            if (isProcessing) return;
+            
+            isProcessing = true;
+            document.getElementById('crawlBtn').disabled = true;
+            
+            const unprocessedSitemaps = allSitemaps.filter(sm => !processedSitemaps.has(sm.url));
+            
+            for (let i = 0; i < unprocessedSitemaps.length; i++) {
+                const sitemap = unprocessedSitemaps[i];
+                try {
+                    updateProgress(i, unprocessedSitemaps.length, `처리 중: ${sitemap.url}`);
+                    
+                    const xmlContent = await fetchWithProxy(sitemap.url);
+                    const results = await parseSitemap(sitemap.url, xmlContent);
+                    
+                    // 새로운 사이트맵과 URL 추가
+                    results.sitemaps.forEach(newSitemap => {
+                        if (!allSitemaps.find(sm => sm.url === newSitemap.url)) {
+                            allSitemaps.push(newSitemap);
+                        }
+                    });
+                    
+                    results.urls.forEach(newUrl => {
+                        if (!allUrls.find(u => u.url === newUrl.url)) {
+                            allUrls.push(newUrl);
+                        }
+                    });
+                    
+                    processedSitemaps.add(sitemap.url);
+                    
+                } catch (error) {
+                    log(`사이트맵 처리 오류 (${sitemap.url}): ${error.message}`, 'error');
+                }
+                
+                await new Promise(resolve => setTimeout(resolve, 200));
+            }
+            
+            updateProgress(unprocessedSitemaps.length, unprocessedSitemaps.length, '완료');
+            log(`전체 크롤링 완료: ${allUrls.length}개 URL 수집`, 'success');
+            
+            // UI 활성화
+            document.getElementById('googleSearchSection').style.display = 'block';
+            document.getElementById('parseBtn').disabled = false;
+            document.getElementById('statsGrid').style.display = 'grid';
+            document.getElementById('searchFilters').style.display = 'grid';
+            updateStats();
+            displayUnifiedUrlList();
+            
+            showMessage(`크롤링 완료! 총 ${allUrls.length}개의 URL을 수집했습니다. 이제 구글 검색 결과를 입력해주세요.`, 'success');
+            
+            isProcessing = false;
+            document.getElementById('crawlBtn').disabled = false;
+        }
+
+        // 구글 검색 결과 파싱 함수
+        function parseGoogleResults() {
+            const googleHtml = document.getElementById('googleResultsInput').value.trim();
+            
+            if (!googleHtml) {
+                showMessage('구글 검색 결과 HTML을 입력해주세요.', 'error');
+                return;
+            }
+            
+            log('구글 검색 결과 분석 시작...', 'info');
+            
+            try {
+                // 임시 DOM 요소 생성하여 HTML 파싱
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = googleHtml;
+                
+                // 구글 검색 결과에서 URL 추출
+                const searchResults = tempDiv.querySelectorAll('a[href*="emfls.github.io"]');
+                const foundUrls = new Set();
+                
+                searchResults.forEach(link => {
+                    const href = link.getAttribute('href');
+                    if (href) {
+                        // URL 정리 (구글 리다이렉트 제거)
+                        let cleanUrl = href;
+                        if (href.startsWith('/url?q=')) {
+                            cleanUrl = decodeURIComponent(href.split('/url?q=')[1].split('&')[0]);
+                        }
+                        
+                        // emfls.github.io 도메인 확인
+                        if (cleanUrl.includes('emfls.github.io') && !cleanUrl.includes('google.com')) {
+                            foundUrls.add(cleanUrl);
+                        }
+                    }
                 });
-        }
-
-        function updateProgress(percentage, text) {
-            document.getElementById('progressFill').style.width = percentage + '%';
-            document.getElementById('loadingText').textContent = text;
-        }
-
-        function extractRepoInfo(url) {
-            var cleanUrl = url.replace(/^https?:\/\//, '').replace(/\/$/, '');
-            var parts = cleanUrl.split('.');
-            
-            if (parts.length >= 3 && parts[1] === 'github' && parts[2] === 'io') {
-                var owner = parts[0];
-                var repo = cleanUrl.includes('/') ? cleanUrl.split('/')[1] : owner + '.github.io';
-                return { owner: owner, repo: repo };
+                
+                // 추가적으로 텍스트에서 URL 패턴 찾기
+                const urlPattern = /https?:\/\/emfls\.github\.io[^\s<>"']+/g;
+                const textUrls = googleHtml.match(urlPattern) || [];
+                textUrls.forEach(url => {
+                    // URL 정리
+                    const cleanUrl = url.replace(/[.,;!?]+$/, ''); // 끝의 구두점 제거
+                    foundUrls.add(cleanUrl);
+                });
+                
+                googleIndexedUrls.clear();
+                foundUrls.forEach(url => googleIndexedUrls.add(url));
+                
+                log(`구글에서 ${googleIndexedUrls.size}개의 색인된 URL을 발견했습니다.`, 'success');
+                
+                // 색인 상태 업데이트
+                updateIndexStatus();
+                
+                // UI 업데이트
+                updateStats();
+                displayUnifiedUrlList();
+                document.getElementById('comparisonSection').style.display = 'block';
+                document.getElementById('exportBtn').disabled = false;
+                
+                showMessage(`분석 완료! 구글에서 ${googleIndexedUrls.size}개의 색인된 URL을 발견했습니다.`, 'success');
+                
+                // 상세 로그
+                log('발견된 색인 URL들:', 'info');
+                Array.from(googleIndexedUrls).slice(0, 10).forEach(url => {
+                    log(`  - ${url}`, 'info');
+                });
+                if (googleIndexedUrls.size > 10) {
+                    log(`  ... 그리고 ${googleIndexedUrls.size - 10}개 더`, 'info');
+                }
+                
+            } catch (error) {
+                log(`구글 검색 결과 분석 오류: ${error.message}`, 'error');
+                showMessage(`분석 오류: ${error.message}`, 'error');
             }
-            
-            return null;
         }
 
-        function fetchAllSitemaps(baseUrl) {
-            return new Promise(function(resolve, reject) {
-                var processedSitemaps = [];
-                var sitemapQueue = ['https://' + baseUrl + '/sitemap.xml'];
+        function updateIndexStatus() {
+            // 모든 URL의 색인 상태 업데이트
+            allUrls.forEach(urlObj => {
+                const url = urlObj.url;
+                let isIndexed = false;
                 
-                sitemapStructure = {
-                    main: {
-                        url: 'https://' + baseUrl + '/sitemap.xml',
-                        urls: [],
-                        childSitemaps: [],
-                        error: null
-                    }
-                };
-                
-                function processNextSitemap() {
-                    if (sitemapQueue.length === 0) {
-                        analysisResults.sitemapFiles = processedSitemaps.length;
-                        resolve();
-                        return;
-                    }
+                // 정확한 매칭 확인
+                if (googleIndexedUrls.has(url)) {
+                    isIndexed = true;
+                } else {
+                    // 유사한 URL 확인 (trailing slash 등)
+                    const urlVariants = [
+                        url,
+                        url.endsWith('/') ? url.slice(0, -1) : url + '/',
+                        url.replace('https://', 'http://'),
+                        url.replace('http://', 'https://')
+                    ];
                     
-                    var currentSitemapUrl = sitemapQueue.shift();
-                    
-                    // 이미 처리된 사이트맵인지 확인
-                    var alreadyProcessed = false;
-                    for (var i = 0; i < processedSitemaps.length; i++) {
-                        if (processedSitemaps[i] === currentSitemapUrl) {
-                            alreadyProcessed = true;
+                    for (const variant of urlVariants) {
+                        if (googleIndexedUrls.has(variant)) {
+                            isIndexed = true;
                             break;
                         }
                     }
                     
-                    if (alreadyProcessed) {
-                        processNextSitemap();
-                        return;
+                    // 부분 매칭 확인
+                    if (!isIndexed) {
+                        for (const indexedUrl of googleIndexedUrls) {
+                            if (indexedUrl.includes(url.replace('https://emfls.github.io', '')) ||
+                                url.includes(indexedUrl.replace('https://emfls.github.io', ''))) {
+                                isIndexed = true;
+                                break;
+                            }
+                        }
                     }
-                    
-                    processedSitemaps.push(currentSitemapUrl);
-                    
-                    fetch(currentSitemapUrl)
-                        .then(function(response) {
-                            if (response.ok) {
-                                return response.text();
-                            } else {
-                                throw new Error('HTTP ' + response.status + ': ' + response.statusText);
-                            }
-                        })
-                        .then(function(xmlText) {
-                            var parser = new DOMParser();
-                            var xmlDoc = parser.parseFromString(xmlText, 'text/xml');
-                            
-                            var parseError = xmlDoc.querySelector('parsererror');
-                            if (parseError) {
-                                throw new Error('XML 파싱 오류: ' + parseError.textContent);
-                            }
-                            
-                            var sitemapElements = xmlDoc.getElementsByTagName('sitemap');
-                            if (sitemapElements.length > 0) {
-                                var childSitemaps = [];
-                                for (var i = 0; i < sitemapElements.length; i++) {
-                                    var loc = sitemapElements[i].getElementsByTagName('loc')[0];
-                                    if (loc) {
-                                        childSitemaps.push(loc.textContent);
-                                    }
-                                }
-                                
-                                if (currentSitemapUrl === 'https://' + baseUrl + '/sitemap.xml') {
-                                    sitemapStructure.main.childSitemaps = childSitemaps;
-                                }
-                                
-                                for (var j = 0; j < childSitemaps.length; j++) {
-                                    var childUrl = childSitemaps[j];
-                                    var alreadyQueued = false;
-                                    for (var k = 0; k < processedSitemaps.length; k++) {
-                                        if (processedSitemaps[k] === childUrl) {
-                                            alreadyQueued = true;
-                                            break;
-                                        }
-                                    }
-                                    if (!alreadyQueued) {
-                                        sitemapQueue.push(childUrl);
-                                        var sitemapName = childUrl.split('/').pop().replace('.xml', '');
-                                        sitemapStructure[sitemapName] = {
-                                            url: childUrl,
-                                            urls: [],
-                                            childSitemaps: [],
-                                            error: null
-                                        };
-                                    }
-                                }
-                            }
-                            
-                            var urlElements = xmlDoc.getElementsByTagName('url');
-                            var urls = [];
-                            for (var i = 0; i < urlElements.length; i++) {
-                                var loc = urlElements[i].getElementsByTagName('loc')[0];
-                                if (loc) {
-                                    urls.push(loc.textContent);
-                                }
-                            }
-                            
-                            if (currentSitemapUrl === 'https://' + baseUrl + '/sitemap.xml') {
-                                sitemapStructure.main.urls = urls;
-                            } else {
-                                var sitemapName = currentSitemapUrl.split('/').pop().replace('.xml', '');
-                                if (sitemapStructure[sitemapName]) {
-                                    sitemapStructure[sitemapName].urls = urls;
-                                }
-                            }
-                            
-                            allSitemapUrls = allSitemapUrls.concat(urls);
-                            
-                            processNextSitemap();
-                        })
-                        .catch(function(error) {
-                            var errorMsg = error.message;
-                            if (currentSitemapUrl === 'https://' + baseUrl + '/sitemap.xml') {
-                                sitemapStructure.main.error = errorMsg;
-                            } else {
-                                var sitemapName = currentSitemapUrl.split('/').pop().replace('.xml', '');
-                                if (sitemapStructure[sitemapName]) {
-                                    sitemapStructure[sitemapName].error = errorMsg;
-                                }
-                            }
-                            analysisResults.sitemapErrors.push({
-                                file: currentSitemapUrl,
-                                error: errorMsg
-                            });
-                            
-                            processNextSitemap();
-                        });
                 }
                 
-                processNextSitemap();
+                indexStatusMap.set(url, isIndexed ? 'google-indexed' : 'not-indexed');
             });
         }
 
-        function fetchAllFiles(owner, repo) {
-            return new Promise(function(resolve, reject) {
-                fetch('https://api.github.com/repos/' + owner + '/' + repo + '/git/trees/main?recursive=1')
-                    .then(function(response) {
-                        if (!response.ok) {
-                            return fetch('https://api.github.com/repos/' + owner + '/' + repo + '/git/trees/master?recursive=1');
-                        }
-                        return response;
-                    })
-                    .then(function(response) {
-                        if (!response.ok) {
-                            throw new Error('저장소에 접근할 수 없습니다.');
-                        }
-                        return response.json();
-                    })
-                    .then(function(data) {
-                        allFiles = [];
-                        for (var i = 0; i < data.tree.length; i++) {
-                            if (data.tree[i].type === 'blob') {
-                                allFiles.push(data.tree[i]);
-                            }
-                        }
-                        
-                        analysisResults.totalFiles = allFiles.length;
-                        var htmlCount = 0;
-                        for (var i = 0; i < allFiles.length; i++) {
-                            var path = allFiles[i].path;
-                            if (path.endsWith('.html') || path.endsWith('.htm')) {
-                                htmlCount++;
-                            }
-                        }
-                        analysisResults.htmlFiles = htmlCount;
-                        
-                        resolve();
-                    })
-                    .catch(function(error) {
-                        reject(new Error('파일 목록을 가져올 수 없습니다: ' + error.message));
-                    });
+        function displayUnifiedUrlList() {
+            const container = document.getElementById('urlList');
+            document.getElementById('urlListContainer').style.display = 'block';
+            
+            container.innerHTML = allUrls.map(url => {
+                const status = indexStatusMap.get(url.url) || 'unknown';
+                const statusText = {
+                    'google-indexed': '구글 색인됨',
+                    'not-indexed': '색인 미등록',
+                    'manual-check': '수동 확인',
+                    'unknown': '미확인'
+                };
+                
+                return `
+                    <div class="url-item ${status}" data-status="${status}" data-url="${url.url.toLowerCase()}">
+                        <a href="${url.url}" target="_blank" class="url-link">${url.url}</a>
+                        <div class="url-status">
+                            <span class="status-badge ${status}">${statusText[status]}</span>
+                            <span style="font-size: 10px; color: #666;">수정: ${url.lastmod}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterResults() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            
+            const urlItems = document.querySelectorAll('.url-item');
+            let visibleCount = 0;
+            
+            urlItems.forEach(item => {
+                const url = item.getAttribute('data-url');
+                const status = item.getAttribute('data-status');
+                
+                const matchesSearch = url.includes(searchTerm);
+                const matchesStatus = statusFilter === 'all' || status === statusFilter;
+                
+                const isVisible = matchesSearch && matchesStatus;
+                item.style.display = isVisible ? 'flex' : 'none';
+                
+                if (isVisible) visibleCount++;
             });
-        }
-
-        function validateHtmlFiles(baseUrl) {
-            return new Promise(function(resolve, reject) {
-                var htmlFiles = [];
-                for (var i = 0; i < allFiles.length; i++) {
-                    var path = allFiles[i].path;
-                    if (path.endsWith('.html') || path.endsWith('.htm')) {
-                        htmlFiles.push(allFiles[i]);
-                    }
-                }
-                
-                var currentIndex = 0;
-                
-                function processNextFile() {
-                    if (currentIndex >= htmlFiles.length) {
-                        resolve();
-                        return;
-                    }
-                    
-                    var file = htmlFiles[currentIndex];
-                    var progress = 60 + (currentIndex / htmlFiles.length) * 20;
-                    updateProgress(progress, 'HTML 검사 중... (' + (currentIndex + 1) + '/' + htmlFiles.length + ')');
-                    
-                    var fileUrl = 'https://' + baseUrl + '/' + file.path;
-                    analysisResults.allFileUrls.push(fileUrl);
-                    
-                    fetch(fileUrl)
-                        .then(function(response) {
-                            if (response.ok) {
-                                return response.text();
-                            } else {
-                                throw new Error('파일을 로드할 수 없습니다');
-                            }
-                        })
-                        .then(function(htmlContent) {
-                            var errors = validateHtmlContent(htmlContent, file.path);
-                            
-                            if (errors.length > 0) {
-                                analysisResults.htmlErrors.push({
-                                    file: file.path,
-                                    url: fileUrl,
-                                    errors: errors
-                                });
-                                analysisResults.errorFiles++;
-                            } else {
-                                analysisResults.validFiles++;
-                            }
-                            
-                            currentIndex++;
-                            setTimeout(processNextFile, 50);
-                        })
-                        .catch(function(error) {
-                            analysisResults.htmlErrors.push({
-                                file: file.path,
-                                url: fileUrl,
-                                errors: [{
-                                    line: 0,
-                                    message: '파일을 로드할 수 없습니다: ' + error.message
-                                }]
-                            });
-                            analysisResults.errorFiles++;
-                            
-                            currentIndex++;
-                            setTimeout(processNextFile, 50);
-                        });
-                }
-                
-                processNextFile();
-            });
-        }
-
-        function validateHtmlContent(html, filePath) {
-            var errors = [];
-            var lines = html.split('\n');
             
-            // 기본 검사만 수행 (복잡한 파싱 제거)
-            if (html.indexOf('<!DOCTYPE') === -1) {
-                errors.push({
-                    line: 1,
-                    message: 'DOCTYPE 선언이 누락되었습니다.'
+            log(`필터 적용: ${visibleCount}개 URL 표시`, 'info');
+        }
+
+        function sortResults() {
+            const sortBy = document.getElementById('sortBy').value;
+            
+            if (sortBy === 'url') {
+                allUrls.sort((a, b) => a.url.localeCompare(b.url));
+            } else if (sortBy === 'status') {
+                allUrls.sort((a, b) => {
+                    const statusA = indexStatusMap.get(a.url) || 'unknown';
+                    const statusB = indexStatusMap.get(b.url) || 'unknown';
+                    return statusA.localeCompare(statusB);
                 });
+            } else if (sortBy === 'lastmod') {
+                allUrls.sort((a, b) => new Date(b.lastmod) - new Date(a.lastmod));
             }
             
-            if (html.indexOf('<html') === -1) {
-                errors.push({
-                    line: findLineNumber(lines, '<html'),
-                    message: 'html 태그가 누락되었습니다.'
-                });
-            }
-            
-            if (html.indexOf('<head>') === -1) {
-                errors.push({
-                    line: findLineNumber(lines, '<head>'),
-                    message: 'head 태그가 누락되었습니다.'
-                });
-            }
-            
-            if (html.indexOf('<body>') === -1) {
-                errors.push({
-                    line: findLineNumber(lines, '<body>'),
-                    message: 'body 태그가 누락되었습니다.'
-                });
-            }
-            
-            return errors;
+            displayUnifiedUrlList();
+            log(`정렬 적용: ${sortBy} 기준`, 'info');
         }
 
-        function findLineNumber(lines, searchText) {
-            for (var i = 0; i < lines.length; i++) {
-                if (lines[i].indexOf(searchText) > -1) {
-                    return i + 1;
+        function exportComparisonData() {
+            const indexedUrls = allUrls.filter(url => indexStatusMap.get(url.url) === 'google-indexed');
+            const notIndexedUrls = allUrls.filter(url => indexStatusMap.get(url.url) === 'not-indexed');
+            
+            const data = {
+                metadata: {
+                    exportedAt: new Date().toISOString(),
+                    domain: 'emfls.github.io',
+                    totalUrls: allUrls.length,
+                    googleIndexedCount: indexedUrls.length,
+                    notIndexedCount: notIndexedUrls.length,
+                    indexingRate: Math.round((indexedUrls.length / allUrls.length) * 100) + '%'
+                },
+                googleIndexedUrls: indexedUrls,
+                notIndexedUrls: notIndexedUrls,
+                allGoogleIndexedUrls: Array.from(googleIndexedUrls),
+                recommendations: {
+                    priorityActions: [
+                        '색인되지 않은 URL들을 Google Search Console에 수동 등록',
+                        '사이트맵을 Google Search Console에 재제출',
+                        '색인되지 않은 페이지들의 내부 링크 구조 개선',
+                        '메타 태그 및 구조화된 데이터 추가'
+                    ]
                 }
-            }
-            return 0;
-        }
-
-        function searchInFiles(baseUrl, searchCode) {
-            return new Promise(function(resolve, reject) {
-                var searchableFiles = [];
-                for (var i = 0; i < allFiles.length; i++) {
-                    var path = allFiles[i].path;
-                    if (path.endsWith('.html') || path.endsWith('.css') || 
-                        path.endsWith('.js') || path.endsWith('.htm')) {
-                        searchableFiles.push(allFiles[i]);
-                    }
-                }
-                
-                var normalizedSearchCode = searchCode.replace(/\s+/g, ' ').trim();
-                var currentIndex = 0;
-                
-                function processNextFile() {
-                    if (currentIndex >= searchableFiles.length) {
-                        resolve();
-                        return;
-                    }
-                    
-                    var file = searchableFiles[currentIndex];
-                    var progress = 80 + (currentIndex / searchableFiles.length) * 10;
-                    updateProgress(progress, '코드 검색 중... (' + (currentIndex + 1) + '/' + searchableFiles.length + ')');
-                    
-                    var fileUrl = 'https://' + baseUrl + '/' + file.path;
-                    
-                    fetch(fileUrl)
-                        .then(function(response) {
-                            if (response.ok) {
-                                return response.text();
-                            } else {
-                                throw new Error('파일을 로드할 수 없습니다');
-                            }
-                        })
-                        .then(function(content) {
-                            var normalizedContent = content.replace(/\s+/g, ' ');
-                            
-                            if (normalizedContent.indexOf(normalizedSearchCode) > -1) {
-                                var lines = content.split('\n');
-                                var matchingLines = [];
-                                
-                                for (var i = 0; i < lines.length; i++) {
-                                    var normalizedLine = lines[i].replace(/\s+/g, ' ');
-                                    if (normalizedLine.indexOf(normalizedSearchCode) > -1) {
-                                        matchingLines.push({
-                                            lineNumber: i + 1,
-                                            content: lines[i].trim()
-                                        });
-                                    }
-                                }
-                                
-                                analysisResults.codeMatches.push({
-                                    file: file.path,
-                                    url: fileUrl,
-                                    matches: matchingLines
-                                });
-                            } else {
-                                analysisResults.codeNotFound.push({
-                                    file: file.path,
-                                    url: fileUrl
-                                });
-                            }
-                            
-                            currentIndex++;
-                            setTimeout(processNextFile, 30);
-                        })
-                        .catch(function(error) {
-                            analysisResults.codeNotFound.push({
-                                file: file.path,
-                                url: fileUrl,
-                                error: error.message
-                            });
-                            
-                            currentIndex++;
-                            setTimeout(processNextFile, 30);
-                        });
-                }
-                
-                processNextFile();
-            });
-        }
-
-        function compareSitemapWithFiles(baseUrl) {
-            var htmlFiles = [];
-            for (var i = 0; i < allFiles.length; i++) {
-                var path = allFiles[i].path;
-                if (path.endsWith('.html') || path.endsWith('.htm')) {
-                    htmlFiles.push(allFiles[i]);
-                }
-            }
-            
-            for (var i = 0; i < htmlFiles.length; i++) {
-                var file = htmlFiles[i];
-                var isMatched = isInSitemap(file.path, allSitemapUrls, baseUrl);
-                
-                if (!isMatched) {
-                    analysisResults.missingFromSitemap.push({
-                        file: file.path,
-                        expectedUrl: 'https://' + baseUrl + '/' + file.path
-                    });
-                }
-            }
-        }
-
-        function isInSitemap(filePath, sitemapUrls, baseUrl) {
-            var expectedUrl = 'https://' + baseUrl + '/' + filePath;
-            
-            // 정확한 매칭 확인
-            for (var i = 0; i < sitemapUrls.length; i++) {
-                if (sitemapUrls[i] === expectedUrl) {
-                    return true;
-                }
-            }
-            
-            // index.html 파일의 폴더 매칭 확인
-            if (filePath.length > 10 && filePath.substring(filePath.length - 10) === 'index.html') {
-                var folderPath = filePath.substring(0, filePath.length - 10);
-                var folderUrl1 = 'https://' + baseUrl + '/' + folderPath;
-                var folderUrl2 = folderUrl1 + '/';
-                
-                for (var i = 0; i < sitemapUrls.length; i++) {
-                    if (sitemapUrls[i] === folderUrl1 || sitemapUrls[i] === folderUrl2) {
-                        return true;
-                    }
-                }
-                
-                if (folderPath === '') {
-                    var rootUrl = 'https://' + baseUrl + '/';
-                    for (var i = 0; i < sitemapUrls.length; i++) {
-                        if (sitemapUrls[i] === rootUrl) {
-                            return true;
-                        }
-                    }
-                }
-            }
-            
-            return false;
-        }
-
-        function displayResults() {
-            hideLoading();
-            document.getElementById('resultsSection').style.display = 'block';
-            
-            document.getElementById('totalFiles').textContent = analysisResults.totalFiles;
-            document.getElementById('htmlFiles').textContent = analysisResults.htmlFiles;
-            document.getElementById('sitemapFiles').textContent = analysisResults.sitemapFiles;
-            document.getElementById('validFiles').textContent = analysisResults.validFiles;
-            document.getElementById('errorFiles').textContent = analysisResults.errorFiles;
-            
-            displaySitemapResults();
-            displayHtmlValidationResults();
-            displayCodeSearchResults();
-        }
-
-        function displaySitemapResults() {
-            var container = document.getElementById('sitemapResults');
-            var missing = analysisResults.missingFromSitemap;
-            var sitemapErrors = analysisResults.sitemapErrors;
-            
-            var headerClass = (missing.length > 0 || sitemapErrors.length > 0) ? 'warning' : 'success';
-            var headerText = '';
-            
-            if (sitemapErrors.length > 0) {
-                headerText = '❌ 사이트맵 분석 (' + sitemapErrors.length + '개 사이트맵 오류, ' + missing.length + '개 파일 누락)';
-                headerClass = 'error';
-            } else if (missing.length > 0) {
-                headerText = '⚠️ 사이트맵 분석 (' + missing.length + '개 파일이 사이트맵에 누락됨)';
-            } else {
-                headerText = '✅ 사이트맵 분석 (모든 HTML 파일이 사이트맵에 등록됨)';
-            }
-            
-            var content = '<h3>📋 사이트맵 구조</h3>';
-            content += '<div class="sitemap-tree">';
-            content += generateSitemapTree();
-            content += '</div>';
-            
-            if (missing.length > 0) {
-                content += '<h3>⚠️ 사이트맵에 누락된 파일</h3>';
-                content += '<ul class="file-list">';
-                for (var i = 0; i < missing.length; i++) {
-                    var item = missing[i];
-                    content += '<li class="file-item warning">';
-                    content += '<span>' + item.file + '</span>';
-                    content += '<span class="file-status status-missing">사이트맵 누락</span>';
-                    content += '</li>';
-                }
-                content += '</ul>';
-            }
-            
-            if (sitemapErrors.length === 0 && missing.length === 0) {
-                content += '<p>모든 HTML 파일이 사이트맵에 적절히 등록되어 있습니다.</p>';
-            }
-            
-            container.innerHTML = '<div class="result-card">' +
-                '<div class="result-header ' + headerClass + '">' +
-                '<span>' + headerText + '</span>' +
-                '</div>' +
-                '<div class="result-content">' + content + '</div>' +
-                '</div>';
-        }
-
-        function generateSitemapTree() {
-            var tree = '';
-            var mainSitemap = sitemapStructure.main;
-            tree += '<div class="sitemap-file">📄 sitemap.xml</div>';
-            
-            if (mainSitemap.error) {
-                tree += '<div style="color: #dc3545; margin-left: 20px;">❌ ' + mainSitemap.error + '</div>';
-            } else {
-                if (mainSitemap.urls.length > 0) {
-                    tree += '<div style="margin-left: 20px; color: #28a745;">✅ ' + mainSitemap.urls.length + '개 URL 포함</div>';
-                }
-                
-                if (mainSitemap.childSitemaps.length > 0) {
-                    tree += '<div style="margin-left: 20px; color: #667eea;">🔗 ' + mainSitemap.childSitemaps.length + '개 하위 사이트맵 참조</div>';
-                }
-            }
-            
-            return tree;
-        }
-
-        function displayHtmlValidationResults() {
-            var container = document.getElementById('htmlValidationResults');
-            var errors = analysisResults.htmlErrors;
-            
-            var headerClass = errors.length > 0 ? 'error' : 'success';
-            var headerText = errors.length > 0 ? 
-                '❌ HTML 유효성 검사 (' + errors.length + '개 파일에서 오류 발견)' : 
-                '✅ HTML 유효성 검사 (모든 파일이 유효함)';
-            
-            var content = '';
-            if (errors.length > 0) {
-                content = '<ul class="file-list">';
-                for (var i = 0; i < errors.length; i++) {
-                    var item = errors[i];
-                    content += '<li class="file-item error">';
-                    content += '<div style="width: 100%;">';
-                    content += '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">';
-                    content += '<span><strong>' + item.file + '</strong></span>';
-                    content += '<span class="file-status status-invalid">' + item.errors.length + '개 오류</span>';
-                    content += '</div>';
-                    content += '<div class="error-details">';
-                    for (var j = 0; j < item.errors.length; j++) {
-                        var error = item.errors[j];
-                        content += '<div class="line-error">라인 ' + error.line + ': ' + error.message + '</div>';
-                    }
-                    content += '</div>';
-                    content += '</div>';
-                    content += '</li>';
-                }
-                content += '</ul>';
-            } else {
-                content = '<p>모든 HTML 파일이 유효성 검사를 통과했습니다.</p>';
-            }
-            
-            container.innerHTML = '<div class="result-card">' +
-                '<div class="result-header ' + headerClass + '">' +
-                '<span>' + headerText + '</span>' +
-                '</div>' +
-                '<div class="result-content">' + content + '</div>' +
-                '</div>';
-        }
-
-        function displayCodeSearchResults() {
-            var container = document.getElementById('codeSearchResults');
-            var matches = analysisResults.codeMatches;
-            var notFound = analysisResults.codeNotFound;
-            var searchCode = document.getElementById('searchCode').value.trim();
-            
-            if (!searchCode) {
-                container.innerHTML = '';
-                return;
-            }
-            
-            var headerClass = matches.length > 0 ? 'success' : 'warning';
-            var headerText = '🔍 코드 검색 결과 (' + matches.length + '개 파일에서 발견, ' + notFound.length + '개 파일에서 미발견)';
-            
-            var content = '';
-            
-            if (matches.length > 0) {
-                content += '<h3>✅ 코드가 발견된 파일들</h3>';
-                content += '<ul class="file-list">';
-                for (var i = 0; i < matches.length; i++) {
-                    var item = matches[i];
-                    content += '<li class="file-item">';
-                    content += '<div style="width: 100%;">';
-                    content += '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">';
-                    content += '<span><strong>' + item.file + '</strong></span>';
-                    content += '<span class="file-status status-valid">' + item.matches.length + '개 일치</span>';
-                    content += '</div>';
-                    content += '</div>';
-                    content += '</li>';
-                }
-                content += '</ul>';
-            }
-            
-            if (notFound.length > 0) {
-                content += '<h3>❌ 코드가 발견되지 않은 파일들</h3>';
-                content += '<ul class="file-list">';
-                for (var i = 0; i < notFound.length; i++) {
-                    var item = notFound[i];
-                    content += '<li class="file-item missing">';
-                    content += '<div style="width: 100%;">';
-                    content += '<div style="display: flex; justify-content: space-between; align-items: center;">';
-                    content += '<span><strong>' + item.file + '</strong></span>';
-                    content += '<span class="file-status status-not-found">코드 없음</span>';
-                    content += '</div>';
-                    content += '</div>';
-                    content += '</li>';
-                }
-                content += '</ul>';
-            }
-            
-            container.innerHTML = '<div class="result-card">' +
-                '<div class="result-header ' + headerClass + '">' +
-                '<span>' + headerText + '</span>' +
-                '</div>' +
-                '<div class="result-content">' + content + '</div>' +
-                '</div>';
-        }
-
-        function showLoading() {
-            document.getElementById('loadingSection').style.display = 'block';
-            document.getElementById('resultsSection').style.display = 'none';
-        }
-
-        function hideLoading() {
-            document.getElementById('loadingSection').style.display = 'none';
-        }
-
-        function clearResults() {
-            document.getElementById('resultsSection').style.display = 'none';
-            clearPreviousResults();
-        }
-
-        function clearPreviousResults() {
-            allFiles = [];
-            allSitemapUrls = [];
-            sitemapStructure = {};
-            analysisResults = {
-                totalFiles: 0,
-                htmlFiles: 0,
-                sitemapFiles: 0,
-                validFiles: 0,
-                errorFiles: 0,
-                missingFromSitemap: [],
-                htmlErrors: [],
-                codeMatches: [],
-                codeNotFound: [],
-                sitemapErrors: [],
-                allFileUrls: []
             };
+            
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `google_index_comparison_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            URL.revokeObjectURL(url);
+            log('구글 색인 비교 데이터 내보내기 완료', 'success');
+            showMessage('색인 비교 분석 데이터가 성공적으로 내보내졌습니다!', 'success');
         }
+
+        function clearAll() {
+            if (confirm('모든 데이터를 초기화하시겠습니까?')) {
+                allSitemaps = [];
+                allUrls = [];
+                processedSitemaps.clear();
+                googleIndexedUrls.clear();
+                indexStatusMap.clear();
+                
+                document.getElementById('googleResultsInput').value = '';
+                document.getElementById('statsGrid').style.display = 'none';
+                document.getElementById('urlListContainer').style.display = 'none';
+                document.getElementById('searchFilters').style.display = 'none';
+                document.getElementById('progressContainer').style.display = 'none';
+                document.getElementById('googleSearchSection').style.display = 'none';
+                document.getElementById('comparisonSection').style.display = 'none';
+                document.getElementById('logContent').innerHTML = '';
+                document.getElementById('messageContainer').innerHTML = '';
+                
+                ['crawlBtn', 'parseBtn', 'exportBtn'].forEach(id => {
+                    document.getElementById(id).disabled = true;
+                });
+                
+                log('모든 데이터가 초기화되었습니다.', 'info');
+                showMessage('데이터가 초기화되었습니다.', 'success');
+            }
+        }
+
+        // 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            log('정확한 URL 색인 상태 분석기가 준비되었습니다.', 'info');
+        });
     </script>
 </body>
 </html>
