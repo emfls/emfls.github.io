@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Pages 파일 검사 도구</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        
+        .main-content {
+            padding: 30px;
+        }
+        
+        .input-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+        
+        .btn-copy {
+            background: linear-gradient(135deg, #fd7e14 0%, #e83e8c 100%);
+            font-size: 14px;
+            padding: 8px 16px;
+        }
+        
+        .results-section {
+            margin-top: 30px;
+        }
+        
+        .result-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .result-header {
+            padding: 20px;
+            font-weight: 600;
+            font-size: 1.2em;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .result-header.success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 5px solid #28a745;
+        }
+        
+        .result-header.warning {
+            background: #fff3cd;
+            color: #856404;
+            border-left: 5px solid #ffc107;
+        }
+        
+        .result-header.error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 5px solid #dc3545;
+        }
+        
+        .result-content {
+            padding: 20px;
+        }
+        
+        .file-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .file-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .file-item.error {
+            border-left-color: #dc3545;
+            background: #fff5f5;
+        }
+        
+        .file-item.warning {
+            border-left-color: #ffc107;
+            background: #fffbf0;
+        }
+        
+        .file-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-valid {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-invalid {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-missing {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .code-preview {
+            background: #f8f8f8;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .error-details {
+            background: #fff5f5;
+            border: 1px solid #f5c6cb;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-top: 4px solid #667eea;
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .sitemap-tree {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+        }
+        
+        .sitemap-level {
+            margin-left: 20px;
+            border-left: 2px solid #ddd;
+            padding-left: 15px;
+            margin-top: 10px;
+        }
+        
+        .sitemap-file {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+        
+        .copy-section {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .copy-textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            resize: vertical;
+            margin-bottom: 10px;
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 1000;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.3s ease;
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 GitHub Pages 파일 검사 도구</h1>
+            <p>중첩 사이트맵 분석, HTML 유효성 검사, 소스코드 검색을 한 번에</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="input-section">
+                <h2>🛠️ 검사 설정</h2>
+                <div class="form-group">
+                    <label for="repoUrl">GitHub Pages URL (예: emfls.github.io)</label>
+                    <input type="text" id="repoUrl" placeholder="emfls.github.io" value="emfls.github.io">
+                </div>
+                
+                <div class="form-group">
+                    <label for="searchCode">검색할 소스코드 (선택사항)</label>
+                    <textarea id="searchCode" placeholder="검색하고 싶은 HTML, CSS, JavaScript 코드를 입력하세요..."></textarea>
+                </div>
+                
+                <button class="btn" onclick="startAnalysis()">🚀 분석 시작</button>
+                <button class="btn" onclick="clearResults()">🗑️ 결과 초기화</button>
+            </div>
+            
+            <div id="loadingSection" class="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p id="loadingText">파일을 분석하고 있습니다...</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <div id="resultsSection" class="results-section" style="display: none;">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalFiles">0</div>
+                        <div class="stat-label">총 파일 수</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="htmlFiles">0</div>
+                        <div class="stat-label">HTML 파일</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="sitemapFiles">0</div>
+                        <div class="stat-label">사이트맵 파일</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="validFiles">0</div>
+                        <div class="stat-label">유효한 파일</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="errorFiles">0</div>
+                        <div class="stat-label">오류 파일</div>
+                    </div>
+                </div>
+                
+                <div id="sitemapResults"></div>
+                <div id="htmlValidationResults"></div>
+                <div id="codeSearchResults"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="toast" class="toast"></div>
+
+    <script>
+        let allFiles = [];
+        let allSitemapUrls = [];
+        let sitemapStructure = {};
+        let analysisResults = {
+            totalFiles: 0,
+            htmlFiles: 0,
+            sitemapFiles: 0,
+            validFiles: 0,
+            errorFiles: 0,
+            missingFromSitemap: [],
+            htmlErrors: [],
+            codeMatches: [],
+            sitemapErrors: [],
+            allFileUrls: []
+        };
+
+        async function startAnalysis() {
+            const repoUrl = document.getElementById('repoUrl').value.trim();
+            const searchCode = document.getElementById('searchCode').value.trim();
+            
+            if (!repoUrl) {
+                alert('GitHub Pages URL을 입력해주세요.');
+                return;
+            }
+            
+            showLoading();
+            clearPreviousResults();
+            
+            try {
+                updateProgress(10, '저장소 정보 확인 중...');
+                const repoInfo = extractRepoInfo(repoUrl);
+                if (!repoInfo) {
+                    throw new Error('올바른 GitHub Pages URL을 입력해주세요.');
+                }
+                
+                updateProgress(20, '사이트맵 구조 분석 중...');
+                await fetchAllSitemaps(repoUrl);
+                
+                updateProgress(40, '파일 목록 가져오는 중...');
+                await fetchAllFiles(repoInfo.owner, repoInfo.repo);
+                
+                updateProgress(60, 'HTML 파일 유효성 검사 중...');
+                await validateHtmlFiles(repoUrl);
+                
+                if (searchCode) {
+                    updateProgress(80, '소스코드 검색 중...');
+                    await searchInFiles(repoUrl, searchCode);
+                }
+                
+                updateProgress(90, '사이트맵 비교 분석 중...');
+                compareSitemapWithFiles(repoUrl);
+                
+                updateProgress(100, '분석 완료!');
+                setTimeout(() => {
+                    displayResults();
+                }, 500);
+                
+            } catch (error) {
+                console.error('분석 중 오류 발생:', error);
+                hideLoading();
+                alert('분석 중 오류가 발생했습니다: ' + error.message);
+            }
+        }
+
+        function updateProgress(percentage, text) {
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('loadingText').textContent = text;
+        }
+
+        function extractRepoInfo(url) {
+            const cleanUrl = url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+            const parts = cleanUrl.split('.');
+            
+            if (parts.length >= 3 && parts[1] === 'github' && parts[2] === 'io') {
+                const owner = parts[0];
+                const repo = cleanUrl.includes('/') ? cleanUrl.split('/')[1] : owner + '.github.io';
+                return { owner, repo };
+            }
+            
+            return null;
+        }
+
+        async function fetchAllSitemaps(baseUrl) {
+            const processedSitemaps = new Set();
+            const sitemapQueue = [`https://${baseUrl}/sitemap.xml`];
+            
+            sitemapStructure = {
+                main: {
+                    url: `https://${baseUrl}/sitemap.xml`,
+                    urls: [],
+                    childSitemaps: [],
+                    error: null
+                }
+            };
+            
+            while (sitemapQueue.length > 0) {
+                const currentSitemapUrl = sitemapQueue.shift();
+                
+                if (processedSitemaps.has(currentSitemapUrl)) {
+                    continue;
+                }
+                
+                processedSitemaps.add(currentSitemapUrl);
+                
+                try {
+                    const response = await fetch(currentSitemapUrl);
+                    
+                    if (response.ok) {
+                        const xmlText = await response.text();
+                        const parser = new DOMParser();
+                        const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+                        
+                        const parseError = xmlDoc.querySelector('parsererror');
+                        if (parseError) {
+                            throw new Error('XML 파싱 오류: ' + parseError.textContent);
+                        }
+                        
+                        const sitemapElements = xmlDoc.getElementsByTagName('sitemap');
+                        if (sitemapElements.length > 0) {
+                            const childSitemaps = Array.from(sitemapElements).map(sitemap => {
+                                const loc = sitemap.getElementsByTagName('loc')[0];
+                                return loc ? loc.textContent : '';
+                            }).filter(url => url);
+                            
+                            if (currentSitemapUrl === `https://${baseUrl}/sitemap.xml`) {
+                                sitemapStructure.main.childSitemaps = childSitemaps;
+                            }
+                            
+                            childSitemaps.forEach(childUrl => {
+                                if (!processedSitemaps.has(childUrl)) {
+                                    sitemapQueue.push(childUrl);
+                                    
+                                    const sitemapName = childUrl.split('/').pop().replace('.xml', '');
+                                    sitemapStructure[sitemapName] = {
+                                        url: childUrl,
+                                        urls: [],
+                                        childSitemaps: [],
+                                        error: null
+                                    };
+                                }
+                            });
+                        }
+                        
+                        const urlElements = xmlDoc.getElementsByTagName('url');
+                        const urls = Array.from(urlElements).map(url => {
+                            const loc = url.getElementsByTagName('loc')[0];
+                            return loc ? loc.textContent : '';
+                        }).filter(url => url);
+                        
+                        if (currentSitemapUrl === `https://${baseUrl}/sitemap.xml`) {
+                            sitemapStructure.main.urls = urls;
+                        } else {
+                            const sitemapName = currentSitemapUrl.split('/').pop().replace('.xml', '');
+                            if (sitemapStructure[sitemapName]) {
+                                sitemapStructure[sitemapName].urls = urls;
+                            }
+                        }
+                        
+                        allSitemapUrls = allSitemapUrls.concat(urls);
+                        
+                    } else {
+                        const errorMsg = `HTTP ${response.status}: ${response.statusText}`;
+                        if (currentSitemapUrl === `https://${baseUrl}/sitemap.xml`) {
+                            sitemapStructure.main.error = errorMsg;
+                        } else {
+                            const sitemapName = currentSitemapUrl.split('/').pop().replace('.xml', '');
+                            if (sitemapStructure[sitemapName]) {
+                                sitemapStructure[sitemapName].error = errorMsg;
+                            }
+                        }
+                        analysisResults.sitemapErrors.push({
+                            file: currentSitemapUrl,
+                            error: errorMsg
+                        });
+                    }
+                } catch (error) {
+                    const errorMsg = error.message;
+                    if (currentSitemapUrl === `https://${baseUrl}/sitemap.xml`) {
+                        sitemapStructure.main.error = errorMsg;
+                    } else {
+                        const sitemapName = currentSitemapUrl.split('/').pop().replace('.xml', '');
+                        if (sitemapStructure[sitemapName]) {
+                            sitemapStructure[sitemapName].error = errorMsg;
+                        }
+                    }
+                    analysisResults.sitemapErrors.push({
+                        file: currentSitemapUrl,
+                        error: errorMsg
+                    });
+                }
+            }
+            
+            analysisResults.sitemapFiles = processedSitemaps.size;
+            console.log('처리된 사이트맵 파일:', processedSitemaps.size);
+            console.log('총 발견된 URL:', allSitemapUrls.length);
+        }
+
+        async function fetchAllFiles(owner, repo) {
+            try {
+                const response = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/trees/main?recursive=1`);
+                
+                if (!response.ok) {
+                    const masterResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/git/trees/master?recursive=1`);
+                    if (!masterResponse.ok) {
+                        throw new Error('저장소에 접근할 수 없습니다.');
+                    }
+                    const masterData = await masterResponse.json();
+                    allFiles = masterData.tree.filter(item => item.type === 'blob');
+                } else {
+                    const data = await response.json();
+                    allFiles = data.tree.filter(item => item.type === 'blob');
+                }
+                
+                analysisResults.totalFiles = allFiles.length;
+                analysisResults.htmlFiles = allFiles.filter(file => 
+                    file.path.endsWith('.html') || file.path.endsWith('.htm')
+                ).length;
+                
+                console.log('발견된 파일:', allFiles.length);
+            } catch (error) {
+                throw new Error('파일 목록을 가져올 수 없습니다: ' + error.message);
+            }
+        }
+
+        async function validateHtmlFiles(baseUrl) {
+            const htmlFiles = allFiles.filter(file => 
+                file.path.endsWith('.html') || file.path.endsWith('.htm')
+            );
+            
+            for (let i = 0; i < htmlFiles.length; i++) {
+                const file = htmlFiles[i];
+                const progress = 60 + (i / htmlFiles.length) * 20;
+                updateProgress(progress, `HTML 검사 중... (${i + 1}/${htmlFiles.length})`);
+                
+                try {
+                    const fileUrl = `https://${baseUrl}/${file.path}`;
+                    analysisResults.allFileUrls.push(fileUrl);
+                    
+                    const response = await fetch(fileUrl);
+                    
+                    if (response.ok) {
+                        const htmlContent = await response.text();
+                        const errors = validateHtmlContent(htmlContent);
+                        
+                        if (errors.length > 0) {
+                            analysisResults.htmlErrors.push({
+                                file: file.path,
+                                url: fileUrl,
+                                errors: errors
+                            });
+                            analysisResults.errorFiles++;
+                        } else {
+                            analysisResults.validFiles++;
+                        }
+                    }
+                } catch (error) {
+                    analysisResults.htmlErrors.push({
+                        file: file.path,
+                        url: `https://${baseUrl}/${file.path}`,
+                        errors: ['파일을 로드할 수 없습니다: ' + error.message]
+                    });
+                    analysisResults.errorFiles++;
+                }
+                
+                await new Promise(resolve => setTimeout(resolve, 50));
+            }
+        }
+
+        function validateHtmlContent(html) {
+            const errors = [];
+            
+            if (!html.includes('<!DOCTYPE')) {
+                errors.push('DOCTYPE 선언이 누락되었습니다.');
+            }
+            
+            if (!html.includes('<html')) {
+                errors.push('<html> 태그가 누락되었습니다.');
+            }
+            
+            if (!html.includes('<head>')) {
+                errors.push('<head> 태그가 누락되었습니다.');
+            }
+            
+            if (!html.includes('<body>')) {
+                errors.push('<body> 태그가 누락되었습니다.');
+            }
+            
+            const openTags = html.match(/<[^\/][^>]*>/g) || [];
+            const closeTags = html.match(/<\/[^>]*>/g) || [];
+            
+            const tagCounts = {};
+            
+            openTags.forEach(tag => {
+                const tagName = tag.match(/<(\w+)/);
+                if (tagName && !['img', 'br', 'hr', 'input', 'meta', 'link'].includes(tagName[1].toLowerCase())) {
+                    tagCounts[tagName[1].toLowerCase()] = (tagCounts[tagName[1].toLowerCase()] || 0) + 1;
+                }
+            });
+            
+            closeTags.forEach(tag => {
+                const tagName = tag.match(/<\/(\w+)/);
+                if (tagName) {
+                    tagCounts[tagName[1].toLowerCase()] = (tagCounts[tagName[1].toLowerCase()] || 0) - 1;
+                }
+            });
+            
+            Object.keys(tagCounts).forEach(tag => {
+                if (tagCounts[tag] > 0) {
+                    errors.push(`<${tag}> 태그가 닫히지 않았습니다.`);
+                } else if (tagCounts[tag] < 0) {
+                    errors.push(`<${tag}> 태그의 닫는 태그가 여분입니다.`);
+                }
+            });
+            
+            const unclosedAttributes = html.match(/\w+="[^"]*$/g);
+            if (unclosedAttributes) {
+                errors.push('닫히지 않은 속성 값이 있습니다.');
+            }
+            
+            return errors;
+        }
+
+        async function searchInFiles(baseUrl, searchCode) {
+            const searchableFiles = allFiles.filter(file => 
+                file.path.endsWith('.html') || 
+                file.path.endsWith('.css') || 
+                file.path.endsWith('.js') ||
+                file.path.endsWith('.htm')
+            );
+            
+            for (let i = 0; i < searchableFiles.length; i++) {
+                const file = searchableFiles[i];
+                const progress = 80 + (i / searchableFiles.length) * 10;
+                updateProgress(progress, `코드 검색 중... (${i + 1}/${searchableFiles.length})`);
+                
+                try {
+                    const fileUrl = `https://${baseUrl}/${file.path}`;
+                    const response = await fetch(fileUrl);
+                    
+                    if (response.ok) {
+                        const content = await response.text();
+                        if (content.includes(searchCode)) {
+                            const lines = content.split('\n');
+                            const matchingLines = [];
+                            
+                            lines.forEach((line, index) => {
+                                if (line.includes(searchCode)) {
+                                    matchingLines.push({
+                                        lineNumber: index + 1,
+                                        content: line.trim()
+                                    });
+                                }
+                            });
+                            
+                            analysisResults.codeMatches.push({
+                                file: file.path,
+                                url: fileUrl,
+                                matches: matchingLines
+                            });
+                        }
+                    }
+                } catch (error) {
+                    console.log(`파일 검색 실패 (${file.path}):`, error.message);
+                }
+                
+                await new Promise(resolve => setTimeout(resolve, 30));
+            }
+        }
+
+        // 개선된 사이트맵 비교 함수
+        function compareSitemapWithFiles(baseUrl) {
+            const htmlFiles = allFiles.filter(file => 
+                file.path.endsWith('.html') || file.path.endsWith('.htm')
+            );
+            
+            htmlFiles.forEach(file => {
+                if (!isInSitemap(file.path, allSitemapUrls, baseUrl)) {
+                    analysisResults.missingFromSitemap.push({
+                        file: file.path,
+                        expectedUrl: `https://${baseUrl}/${file.path}`
+                    });
+                }
+            });
+        }
+
+        // index.html 파일의 폴더/ 형태 매칭을 지원하는 함수
+        function isInSitemap(filePath, sitemapUrls, baseUrl) {
+            // 기본 URL 체크
+            const expectedUrl = `https://${baseUrl}/${filePath}`;
+            if (sitemapUrls.includes(expectedUrl)) {
+                return true;
+            }
+            
+            // index.html 파일인 경우 폴더/ 형태로도 체크
+            if (filePath.endsWith('index.html')) {
+                const folderPath = filePath.substring(0, filePath.length - 'index.html'.length);
+                const folderUrl = `https://${baseUrl}/${folderPath}`;
+                
+                // 폴더 URL이 사이트맵에 있는지 확인
+                if (sitemapUrls.includes(folderUrl)) {
+                    return true;
+                }
+                
+                // 루트 index.html인 경우 도메인 루트 URL도 체크
+                if (folderPath === '') {
+                    const rootUrl = `https://${baseUrl}/`;
+                    if (sitemapUrls.includes(rootUrl)) {
+                        return true;
+                    }
+                }
+            }
+            
+            // 끝부분 매칭 체크
+            for (const url of sitemapUrls) {
+                if (url.endsWith(filePath)) {
+                    return true;
+                }
+                
+                // index.html 파일의 경우 폴더 경로로도 매칭 체크
+                if (filePath.endsWith('index.html')) {
+                    const folderPath = filePath.substring(0, filePath.length - 'index.html'.length);
+                    if (folderPath && url.endsWith(folderPath)) {
+                        return true;
+                    }
+                }
+            }
+            
+            return false;
+        }
+
+        function displayResults() {
+            hideLoading();
+            document.getElementById('resultsSection').style.display = 'block';
+            
+            document.getElementById('totalFiles').textContent = analysisResults.totalFiles;
+            document.getElementById('htmlFiles').textContent = analysisResults.htmlFiles;
+            document.getElementById('sitemapFiles').textContent = analysisResults.sitemapFiles;
+            document.getElementById('validFiles').textContent = analysisResults.validFiles;
+            document.getElementById('errorFiles').textContent = analysisResults.errorFiles;
+            
+            displaySitemapResults();
+            displayHtmlValidationResults();
+            displayCodeSearchResults();
+        }
+
+        function displaySitemapResults() {
+            const container = document.getElementById('sitemapResults');
+            const missing = analysisResults.missingFromSitemap;
+            const sitemapErrors = analysisResults.sitemapErrors;
+            
+            let headerClass = (missing.length > 0 || sitemapErrors.length > 0) ? 'warning' : 'success';
+            let headerText = '';
+            
+            if (sitemapErrors.length > 0) {
+                headerText = `❌ 사이트맵 분석 (${sitemapErrors.length}개 사이트맵 오류, ${missing.length}개 파일 누락)`;
+                headerClass = 'error';
+            } else if (missing.length > 0) {
+                headerText = `⚠️ 사이트맵 분석 (${missing.length}개 파일이 사이트맵에 누락됨)`;
+            } else {
+                headerText = '✅ 사이트맵 분석 (모든 HTML 파일이 사이트맵에 등록됨)';
+            }
+            
+            let content = '';
+            
+            content += '<h3>📋 사이트맵 구조</h3>';
+            content += '<div class="sitemap-tree">';
+            content += generateSitemapTree();
+            content += '</div>';
+            
+            if (sitemapErrors.length > 0) {
+                content += '<h3>❌ 사이트맵 오류</h3>';
+                content += `<ul class="file-list">`;
+                sitemapErrors.forEach(error => {
+                    content += `
+                        <li class="file-item error">
+                            <div style="width: 100%;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span><strong>${error.file}</strong></span>
+                                    <span class="file-status status-invalid">오류</span>
+                                </div>
+                                <div class="error-details">${error.error}</div>
+                            </div>
+                        </li>
+                    `;
+                });
+                content += '</ul>';
+            }
+            
+            if (missing.length > 0) {
+                content += '<h3>⚠️ 사이트맵에 누락된 파일</h3>';
+                content += `<ul class="file-list">`;
+                missing.forEach(item => {
+                    content += `
+                        <li class="file-item warning">
+                            <span>${item.file}</span>
+                            <span class="file-status status-missing">사이트맵 누락</span>
+                        </li>
+                    `;
+                });
+                content += '</ul>';
+                
+                // 누락된 파일 링크 복사 기능
+                const missingUrls = missing.map(item => item.expectedUrl).join('\n');
+                content += `
+                    <div class="copy-section">
+                        <h4>📋 누락된 파일 링크 복사</h4>
+                        <textarea class="copy-textarea" readonly>${missingUrls}</textarea>
+                        <button class="btn btn-copy" onclick="copyToClipboard('${missingUrls.replace(/\n/g, '\\n')}')">📋 복사하기</button>
+                    </div>
+                `;
+            }
+            
+            if (sitemapErrors.length === 0 && missing.length === 0) {
+                content += '<p>모든 HTML 파일이 사이트맵에 적절히 등록되어 있고, 모든 사이트맵이 정상적으로 로드되었습니다.</p>';
+            }
+            
+            container.innerHTML = `
+                <div class="result-card">
+                    <div class="result-header ${headerClass}">
+                        <span>${headerText}</span>
+                        <button class="btn btn-copy" onclick="copyAllSitemapUrls()">📋 사이트맵 URL 복사</button>
+                    </div>
+                    <div class="result-content">${content}</div>
+                </div>
+            `;
+        }
+
+        function generateSitemapTree() {
+            let tree = '';
+            
+            const mainSitemap = sitemapStructure.main;
+            tree += `<div class="sitemap-file">📄 sitemap.xml</div>`;
+            
+            if (mainSitemap.error) {
+                tree += `<div style="color: #dc3545; margin-left: 20px;">❌ ${mainSitemap.error}</div>`;
+            } else {
+                if (mainSitemap.urls.length > 0) {
+                    tree += `<div style="margin-left: 20px; color: #28a745;">✅ ${mainSitemap.urls.length}개 URL 포함</div>`;
+                }
+                
+                if (mainSitemap.childSitemaps.length > 0) {
+                    tree += `<div style="margin-left: 20px; color: #667eea;">🔗 ${mainSitemap.childSitemaps.length}개 하위 사이트맵 참조</div>`;
+                    
+                    mainSitemap.childSitemaps.forEach(childUrl => {
+                        const sitemapName = childUrl.split('/').pop().replace('.xml', '');
+                        const childSitemap = sitemapStructure[sitemapName];
+                        
+                        tree += `<div class="sitemap-level">`;
+                        tree += `<div class="sitemap-file">📄 ${sitemapName}.xml</div>`;
+                        
+                        if (childSitemap && childSitemap.error) {
+                            tree += `<div style="color: #dc3545; margin-left: 20px;">❌ ${childSitemap.error}</div>`;
+                        } else if (childSitemap) {
+                            tree += `<div style="margin-left: 20px; color: #28a745;">✅ ${childSitemap.urls.length}개 URL 포함</div>`;
+                        }
+                        
+                        tree += `</div>`;
+                    });
+                }
+            }
+            
+            return tree;
+        }
+
+        function displayHtmlValidationResults() {
+            const container = document.getElementById('htmlValidationResults');
+            const errors = analysisResults.htmlErrors;
+            
+            let headerClass = errors.length > 0 ? 'error' : 'success';
+            let headerText = errors.length > 0 ? 
+                `❌ HTML 유효성 검사 (${errors.length}개 파일에서 오류 발견)` : 
+                '✅ HTML 유효성 검사 (모든 파일이 유효함)';
+            
+            let content = '';
+            if (errors.length > 0) {
+                content = `
+                    <ul class="file-list">
+                        ${errors.map(item => `
+                            <li class="file-item error">
+                                <div style="width: 100%;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                        <span><strong>${item.file}</strong></span>
+                                        <span class="file-status status-invalid">${item.errors.length}개 오류</span>
+                                    </div>
+                                    <div class="error-details">
+                                        ${item.errors.map(error => `<div>• ${error}</div>`).join('')}
+                                    </div>
+                                </div>
+                            </li>
+                        `).join('')}
+                    </ul>
+                `;
+                
+                // 오류 파일 링크 복사 기능
+                const errorUrls = errors.map(item => item.url).join('\n');
+                content += `
+                    <div class="copy-section">
+                        <h4>📋 오류 파일 링크 복사</h4>
+                        <textarea class="copy-textarea" readonly>${errorUrls}</textarea>
+                        <button class="btn btn-copy" onclick="copyToClipboard('${errorUrls.replace(/\n/g, '\\n')}')">📋 복사하기</button>
+                    </div>
+                `;
+            } else {
+                content = '<p>모든 HTML 파일이 유효성 검사를 통과했습니다.</p>';
+            }
+            
+            container.innerHTML = `
+                <div class="result-card">
+                    <div class="result-header ${headerClass}">
+                        <span>${headerText}</span>
+                        <button class="btn btn-copy" onclick="copyAllFileUrls()">📋 모든 파일 링크 복사</button>
+                    </div>
+                    <div class="result-content">${content}</div>
+                </div>
+            `;
+        }
+
+        function displayCodeSearchResults() {
+            const container = document.getElementById('codeSearchResults');
+            const matches = analysisResults.codeMatches;
+            const searchCode = document.getElementById('searchCode').value.trim();
+            
+            if (!searchCode) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            let headerClass = matches.length > 0 ? 'success' : 'warning';
+            let headerText = matches.length > 0 ? 
+                `🔍 코드 검색 결과 (${matches.length}개 파일에서 발견)` : 
+                '🔍 코드 검색 결과 (검색된 코드가 없음)';
+            
+            let content = '';
+            if (matches.length > 0) {
+                content = `
+                    <ul class="file-list">
+                        ${matches.map(item => `
+                            <li class="file-item">
+                                <div style="width: 100%;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                        <span><strong>${item.file}</strong></span>
+                                        <span class="file-status status-valid">${item.matches.length}개 일치</span>
+                                    </div>
+                                    <div class="code-preview">
+                                        ${item.matches.map(match => 
+                                            `<div><strong>라인 ${match.lineNumber}:</strong> ${escapeHtml(match.content)}</div>`
+                                        ).join('')}
+                                    </div>
+                                </div>
+                            </li>
+                        `).join('')}
+                    </ul>
+                `;
+                
+                // 매칭 파일 링크 복사 기능
+                const matchUrls = matches.map(item => item.url).join('\n');
+                content += `
+                    <div class="copy-section">
+                        <h4>📋 코드 매칭 파일 링크 복사</h4>
+                        <textarea class="copy-textarea" readonly>${matchUrls}</textarea>
+                        <button class="btn btn-copy" onclick="copyToClipboard('${matchUrls.replace(/\n/g, '\\n')}')">📋 복사하기</button>
+                    </div>
+                `;
+            } else {
+                content = '<p>검색한 코드가 어떤 파일에서도 발견되지 않았습니다.</p>';
+            }
+            
+            container.innerHTML = `
+                <div class="result-card">
+                    <div class="result-header ${headerClass}">
+                        <span>${headerText}</span>
+                        ${matches.length > 0 ? '<button class="btn btn-copy" onclick="copyCodeMatchUrls()">📋 매칭 파일 링크 복사</button>' : ''}
+                    </div>
+                    <div class="result-content">${content}</div>
+                </div>
+            `;
+        }
+
+        // 복사 기능들
+        function copyToClipboard(text) {
+            const cleanText = text.replace(/\\n/g, '\n');
+            navigator.clipboard.writeText(cleanText).then(() => {
+                showToast('클립보드에 복사되었습니다!');
+            }).catch(err => {
+                console.error('복사 실패:', err);
+                showToast('복사에 실패했습니다.', 'error');
+            });
+        }
+
+        function copyAllFileUrls() {
+            const urls = analysisResults.allFileUrls.join('\n');
+            copyToClipboard(urls);
+        }
+
+        function copyAllSitemapUrls() {
+            const urls = allSitemapUrls.join('\n');
+            copyToClipboard(urls);
+        }
+
+        function copyCodeMatchUrls() {
+            const urls = analysisResults.codeMatches.map(item => item.url).join('\n');
+            copyToClipboard(urls);
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type === 'error' ? 'error' : 'success'}`;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showLoading() {
+            document.getElementById('loadingSection').style.display = 'block';
+            document.getElementById('resultsSection').style.display = 'none';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingSection').style.display = 'none';
+        }
+
+        function clearResults() {
+            document.getElementById('resultsSection').style.display = 'none';
+            clearPreviousResults();
+        }
+
+        function clearPreviousResults() {
+            allFiles = [];
+            allSitemapUrls = [];
+            sitemapStructure = {};
+            analysisResults = {
+                totalFiles: 0,
+                htmlFiles: 0,
+                sitemapFiles: 0,
+                validFiles: 0,
+                errorFiles: 0,
+                missingFromSitemap: [],
+                htmlErrors: [],
+                codeMatches: [],
+                sitemapErrors: [],
+                allFileUrls: []
+            };
+        }
+
+        window.addEventListener('load', function() {
+            console.log('GitHub Pages 파일 검사 도구가 준비되었습니다.');
+        });
+    </script>
+</body>
+</html>
