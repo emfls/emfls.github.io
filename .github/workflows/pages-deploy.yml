@@ -1,0 +1,16 @@
+# ...
+- name: Test site
+  run: |
+      bundle exec htmlproofer _site \
+      \-\-disable-external=true \
+      \-\-ignore-urls "/^http:\/\/127.0.0.1/,/^http:\/\/0.0.0.0/,/^http:\/\/localhost/"
+
+# API 토큰을 _site 아래에 .txt 파일로 저장!
+- name: IndexNow Setup
+  run: |
+      echo ${{ secrets.INDEXNOW_KEY }} > _site/${{ secrets.INDEXNOW_KEY }}.txt
+
+- name: Upload site artifact
+  uses: actions/upload-pages-artifact@v1
+  with:
+      path: "_site${{ steps.pages.outputs.base_path }}"
