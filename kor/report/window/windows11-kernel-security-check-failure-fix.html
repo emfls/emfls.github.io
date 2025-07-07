@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows 11 KERNEL_SECURITY_CHECK_FAILURE 오류 해결 가이드</title>
+    <meta name="description" content="Windows 11 KERNEL_SECURITY_CHECK_FAILURE 블루스크린 오류 해결 방법을 단계별로 안내합니다. 드라이버 문제, 메모리 오류, 시스템 파일 손상 등 원인별 해결책을 제공합니다.">
+    <meta name="keywords" content="Windows 11, KERNEL_SECURITY_CHECK_FAILURE, 블루스크린, BSOD, 오류 해결, 드라이버 문제, 메모리 오류, 시스템 복구, 안전 모드, 윈도우 11 오류">
+    <meta name="author" content="Itagi">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://emfls.github.io/kor/report/window/windows11-kernel-security-check-failure-fix.html">
+    
+    <!-- Google 태그 (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0078d4;
+            text-align: center;
+            border-bottom: 3px solid #0078d4;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #106ebe;
+            border-left: 4px solid #0078d4;
+            padding-left: 15px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #2c5282;
+            margin-top: 25px;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .step {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .step-number {
+            background-color: #0078d4;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        ul, ol {
+            padding-left: 20px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        code {
+            background-color: #f1f1f1;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        .code-block {
+            background-color: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #0078d4;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #0078d4;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 10px 5px;
+        }
+        .btn:hover {
+            background-color: #106ebe;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Windows 11 KERNEL_SECURITY_CHECK_FAILURE 오류 해결 가이드</h1>
+        
+        <div class="warning">
+            <strong>⚠️ 주의사항:</strong> 이 오류는 시스템 안정성과 관련된 심각한 문제입니다. 아래 해결 방법을 순서대로 시도하되, 중요한 데이터는 미리 백업하시기 바랍니다.
+        </div>
+
+        <h2>🔍 오류 개요</h2>
+        <div class="info">
+            <p><strong>KERNEL_SECURITY_CHECK_FAILURE</strong>는 Windows 11에서 가장 자주 발생하는 블루스크린 오류 중 하나입니다. 이 오류는 주로 다음과 같은 원인으로 발생합니다:</p>
+            <ul>
+                <li>호환되지 않는 드라이버</li>
+                <li>메모리(RAM) 문제</li>
+                <li>하드웨어 충돌</li>
+                <li>시스템 파일 손상</li>
+                <li>바이러스 또는 맬웨어</li>
+            </ul>
+        </div>
+
+        <h2>🛠️ 해결 방법</h2>
+
+        <h3>방법 1: 안전 모드로 부팅 후 최근 변경사항 되돌리기</h3>
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>안전 모드 진입:</strong>
+            <ul>
+                <li>PC를 재시작하고 Windows 로고가 나타나면 전원 버튼을 길게 눌러 강제 종료</li>
+                <li>이 과정을 3번 반복하여 자동 복구 모드 진입</li>
+                <li>"고급 옵션" → "시작 설정" → "다시 시작" 클릭</li>
+                <li>4번 또는 F4 키를 눌러 안전 모드로 부팅</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>최근 설치한 프로그램 제거:</strong>
+            <ul>
+                <li>설정 → 앱 → 설치된 앱</li>
+                <li>최근 설치한 프로그램들을 날짜순으로 정렬하여 제거</li>
+                <li>특히 드라이버 관련 프로그램 우선 제거</li>
+            </ul>
+        </div>
+
+        <h3>방법 2: 드라이버 업데이트 및 롤백</h3>
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>장치 관리자에서 문제 드라이버 확인:</strong>
+            <ul>
+                <li>Windows + X 키를 누르고 "장치 관리자" 선택</li>
+                <li>노란색 경고 표시가 있는 장치 확인</li>
+                <li>문제가 있는 드라이버 우클릭 → "드라이버 업데이트"</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>최근 업데이트된 드라이버 롤백:</strong>
+            <ul>
+                <li>문제가 의심되는 드라이버 우클릭 → "속성"</li>
+                <li>"드라이버" 탭 → "드라이버 롤백" 클릭</li>
+                <li>특히 그래픽 카드, 네트워크 어댑터 드라이버 우선 확인</li>
+            </ul>
+        </div>
+
+        <h3>방법 3: 메모리 진단 실행</h3>
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Windows 메모리 진단 도구 실행:</strong>
+            <ul>
+                <li>Windows + R 키를 누르고 <code>mdsched.exe</code> 입력</li>
+                <li>"지금 다시 시작하고 문제 확인" 선택</li>
+                <li>PC가 재시작되면 메모리 테스트가 자동으로 실행됨</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>메모리 테스트 결과 확인:</strong>
+            <ul>
+                <li>테스트 완료 후 Windows 부팅</li>
+                <li>이벤트 뷰어에서 결과 확인: Windows + R → <code>eventvwr.msc</code></li>
+                <li>Windows 로그 → 시스템에서 MemoryDiagnostics-Results 검색</li>
+            </ul>
+        </div>
+
+        <h3>방법 4: 시스템 파일 검사 및 복구</h3>
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>SFC 스캔 실행:</strong>
+            <ul>
+                <li>Windows + X 키를 누르고 "Windows PowerShell(관리자)" 선택</li>
+                <li>다음 명령어 입력:</li>
+            </ul>
+            <div class="code-block">
+                sfc /scannow
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>DISM 명령어 실행:</strong>
+            <ul>
+                <li>SFC 스캔 완료 후 다음 명령어 순서대로 실행:</li>
+            </ul>
+            <div class="code-block">
+                DISM /Online /Cleanup-Image /CheckHealth<br>
+                DISM /Online /Cleanup-Image /ScanHealth<br>
+                DISM /Online /Cleanup-Image /RestoreHealth
+            </div>
+        </div>
+
+        <h3>방법 5: Windows 업데이트 확인</h3>
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>최신 업데이트 설치:</strong>
+            <ul>
+                <li>설정 → Windows Update</li>
+                <li>"업데이트 확인" 클릭</li>
+                <li>사용 가능한 모든 업데이트 설치</li>
+                <li>특히 드라이버 업데이트와 보안 업데이트 우선 설치</li>
+            </ul>
+        </div>
+
+        <h3>방법 6: 바이러스 및 맬웨어 검사</h3>
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>Windows Defender 전체 검사:</strong>
+            <ul>
+                <li>설정 → 개인 정보 보호 및 보안 → Windows 보안</li>
+                <li>"바이러스 및 위협 방지" → "검사 옵션"</li>
+                <li>"전체 검사" 선택 후 "지금 검사" 클릭</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <span class="step-number">2</span>
+            <strong>오프라인 검사 실행:</strong>
+            <ul>
+                <li>같은 메뉴에서 "Microsoft Defender 오프라인 검사" 선택</li>
+                <li>"지금 검사" 클릭 (PC가 재시작됨)</li>
+            </ul>
+        </div>
+
+        <h3>방법 7: 시스템 복원</h3>
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>시스템 복원 실행:</strong>
+            <ul>
+                <li>Windows + R 키를 누르고 <code>rstrui.exe</code> 입력</li>
+                <li>"다른 복원 지점 선택" → "다음"</li>
+                <li>오류가 발생하기 전 날짜의 복원 지점 선택</li>
+                <li>"다음" → "마침" 클릭하여 복원 시작</li>
+            </ul>
+        </div>
+
+        <h3>방법 8: 하드웨어 점검</h3>
+        <div class="step">
+            <span class="step-number">1</span>
+            <strong>하드웨어 연결 상태 확인:</strong>
+            <ul>
+                <li>PC 전원을 완전히 끄고 전원 케이블 분리</li>
+                <li>RAM 모듈을 다시 장착</li>
+                <li>그래픽 카드, 확장 카드 연결 상태 확인</li>
+                <li>모든 케이블 연결 상태 점검</li>
+            </ul>
+        </div>
+
+        <h2>📋 문제 해결 체크리스트</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>해결 방법</th>
+                    <th>난이도</th>
+                    <th>소요 시간</th>
+                    <th>성공률</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>안전 모드 + 최근 변경사항 되돌리기</td>
+                    <td>쉬움</td>
+                    <td>10-20분</td>
+                    <td>높음</td>
+                </tr>
+                <tr>
+                    <td>드라이버 업데이트/롤백</td>
+                    <td>보통</td>
+                    <td>20-30분</td>
+                    <td>높음</td>
+                </tr>
+                <tr>
+                    <td>메모리 진단</td>
+                    <td>쉬움</td>
+                    <td>30-60분</td>
+                    <td>보통</td>
+                </tr>
+                <tr>
+                    <td>시스템 파일 검사</td>
+                    <td>쉬움</td>
+                    <td>30-90분</td>
+                    <td>보통</td>
+                </tr>
+                <tr>
+                    <td>바이러스 검사</td>
+                    <td>쉬움</td>
+                    <td>60-120분</td>
+                    <td>보통</td>
+                </tr>
+                <tr>
+                    <td>시스템 복원</td>
+                    <td>쉬움</td>
+                    <td>30-60분</td>
+                    <td>높음</td>
+                </tr>
+                <tr>
+                    <td>하드웨어 점검</td>
+                    <td>어려움</td>
+                    <td>60분+</td>
+                    <td>보통</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>🚨 추가 고려사항</h2>
+        <div class="warning">
+            <h3>언제 전문가의 도움이 필요한가?</h3>
+            <ul>
+                <li>위의 모든 방법을 시도했지만 문제가 지속되는 경우</li>
+                <li>메모리 진단에서 오류가 발견된 경우</li>
+                <li>하드웨어 문제가 의심되는 경우</li>
+                <li>중요한 데이터 손실 위험이 있는 경우</li>
+            </ul>
+        </div>
+
+        <div class="success">
+            <h3>✅ 예방 방법</h3>
+            <ul>
+                <li>정기적인 Windows 업데이트 설치</li>
+                <li>신뢰할 수 있는 소스에서만 드라이버 다운로드</li>
+                <li>정기적인 시스템 백업</li>
+                <li>바이러스 백신 프로그램 최신 상태 유지</li>
+                <li>불필요한 프로그램 설치 자제</li>
+            </ul>
+        </div>
+
+        <div class="info">
+            <h3>💡 추가 팁</h3>
+            <ul>
+                <li>오류 발생 시 정확한 오류 코드와 상황을 기록해 두세요</li>
+                <li>중요한 작업 전에는 항상 시스템 복원 지점을 생성하세요</li>
+                <li>드라이버 업데이트 시 이전 버전을 백업해 두세요</li>
+                <li>하드웨어 변경 후에는 호환성을 반드시 확인하세요</li>
+            </ul>
+        </div>
+
+        <footer style="text-align: center; margin-top: 50px; padding-top: 20px; border-top: 1px solid #ddd; color: #666;">
+            <p>이 가이드가 도움이 되었기를 바랍니다. 문제가 지속되면 Microsoft 지원팀이나 전문 기술자에게 문의하시기 바랍니다.</p>
+        </footer>
+    </div>
+</body>
+</html>

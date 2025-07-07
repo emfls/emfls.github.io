@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GX Works2 설치 및 설정 방법 완벽 가이드 - 미쓰비시 PLC 프로그래밍 소프트웨어 GX Works2의 다운로드부터 초기 설정까지 단계별 안내">
+    <meta name="keywords" content="GX Works2 설치, GX Works2 설정, 미쓰비시 PLC, PLC 프로그래밍, 자동화 소프트웨어, MELSEC">
+    <meta name="author" content="Itagi">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://emfls.github.io/kor/report/plc/gx-works2-installation-guide.html">
+    <title>GX Works2 설치 및 설정 방법 - 미쓰비시 PLC 소프트웨어 완벽 설치 가이드</title>
+
+    <!-- Google 태그 (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 50px 0;
+            background: linear-gradient(45deg, #2c3e50, #3498db);
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+            animation: float 20s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateX(-50px) translateY(-50px); }
+            100% { transform: translateX(50px) translateY(50px); }
+        }
+        
+        h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            border-left: 6px solid #3498db;
+            padding-left: 20px;
+            margin: 40px 0 25px 0;
+            font-size: 2em;
+            position: relative;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 20px;
+            width: 50px;
+            height: 3px;
+            background: #3498db;
+        }
+        
+        h3 {
+            color: #34495e;
+            margin: 30px 0 20px 0;
+            font-size: 1.5em;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            border-left: 6px solid #28a745;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border: 2px solid #ffd93d;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            border-left: 6px solid #f39c12;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .tip-box {
+            background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+            border: 2px solid #86cfda;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            border-left: 6px solid #17a2b8;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .info-box {
+            background: linear-gradient(135deg, #e7f3ff 0%, #cce7ff 100%);
+            border: 2px solid #99d6ff;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            border-left: 6px solid #0066cc;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .error-box {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            border: 2px solid #f1aeb5;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            border-left: 6px solid #dc3545;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        ul, ol {
+            margin: 20px 0;
+            padding-left: 35px;
+        }
+        
+        li {
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+        
+        .step-guide {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 5px solid #28a745;
+            counter-increment: step-counter;
+            position: relative;
+        }
+        
+        .step-guide::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #28a745;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .step-container {
+            counter-reset: step-counter;
+        }
+        
+        .toc {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .toc li {
+            margin: 8px 0;
+            padding: 5px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .toc li:last-child {
+            border-bottom: none;
+        }
+        
+        .toc a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .toc a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            border-radius: 15px;
+            margin-top: 50px;
+        }
+        
+        .requirement-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .requirement-table th,
+        .requirement-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .requirement-table th {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .requirement-table tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .download-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #dee2e6;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .download-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-color: #3498db;
+        }
+        
+        .download-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .version-info {
+            background: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            display: inline-block;
+            margin: 5px;
+        }
+        
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: #3498db;
+            z-index: 1000;
+            transition: width 0.3s ease;
+        }
+        
+        .scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: none;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .scroll-to-top:hover {
+            background: #2980b9;
+            transform: scale(1.1);
+        }
+        
+        .checklist {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .checklist-item input[type="checkbox"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+        
+        .troubleshooting {
+            background: #fff5f5;
+            border: 2px solid #fed7d7;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .troubleshooting h4 {
+            color: #c53030;
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2.2em;
+            }
+            
+            .step-guide::before {
+                left: -15px;
+                width: 30px;
+                height: 30px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <div class="container">
+        <header>
+            <h1>📥 GX Works2 설치 및 설정 방법</h1>
+            <p class="subtitle">미쓰비시 PLC 프로그래밍 소프트웨어 완벽 설치 가이드</p>
+        </header>
+
+        <div class="toc">
+            <h3>📋 목차</h3>
+            <ul>
+                <li><a href="#requirements">💻 시스템 요구사항</a></li>
+                <li><a href="#preparation">🔧 설치 전 준비사항</a></li>
+                <li><a href="#download">📥 다운로드 방법</a></li>
+                <li><a href="#installation">⚙️ 설치 과정</a></li>
+                <li><a href="#license">🔑 라이선스 등록</a></li>
+                <li><a href="#initial-setup">🛠️ 초기 설정</a></li>
+                <li><a href="#driver-install">🔌 USB 드라이버 설치</a></li>
+                <li><a href="#verification">✅ 설치 확인</a></li>
+                <li><a href="#troubleshooting">🔧 문제 해결</a></li>
+            </ul>
+        </div>
+
+        <section id="requirements">
+            <h2>💻 시스템 요구사항</h2>
+            
+            <div class="info-box">
+                <h3>🖥️ 하드웨어 요구사항</h3>
+                <table class="requirement-table">
+                    <thead>
+                        <tr>
+                            <th>항목</th>
+                            <th>최소 사양</th>
+                            <th>권장 사양</th>
+                            <th>비고</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CPU</td>
+                            <td>Intel Pentium 4 2.0GHz</td>
+                            <td>Intel Core i5 이상</td>
+                            <td>64비트 권장</td>
+                        </tr>
+                        <tr>
+                            <td>메모리</td>
+                            <td>1GB RAM</td>
+                            <td>4GB RAM 이상</td>
+                            <td>대용량 프로젝트 시 8GB 권장</td>
+                        </tr>
+                        <tr>
+                            <td>하드디스크</td>
+                            <td>2GB 여유 공간</td>
+                            <td>10GB 이상 여유 공간</td>
+                            <td>SSD 권장</td>
+                        </tr>
+                        <tr>
+                            <td>해상도</td>
+                            <td>1024×768</td>
+                            <td>1920×1080 이상</td>
+                            <td>듀얼 모니터 권장</td>
+                        </tr>
+                        <tr>
+                            <td>USB 포트</td>
+                            <td>USB 2.0</td>
+                            <td>USB 3.0 이상</td>
+                            <td>PLC 연결용</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ 소프트웨어 요구사항</h4>
+                <ul>
+                    <li><strong>운영체제:</strong> Windows 7 SP1 / 8.1 / 10 / 11 (32bit/64bit)</li>
+                    <li><strong>Microsoft .NET Framework:</strong> 4.0 이상</li>
+                    <li><strong>Internet Explorer:</strong> 8.0 이상</li>
+                    <li><strong>Microsoft Visual C++:</strong> 2010 재배포 가능 패키지</li>
+                    <li><strong>Windows Installer:</strong> 3.1 이상</li>
+                </ul>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 호환성 정보</h4>
+                <ul>
+                    <li><strong>지원 PLC:</strong> MELSEC-Q, MELSEC-L, MELSEC-FX, MELSEC iQ-R 시리즈</li>
+                    <li><strong>이전 버전 호환:</strong> GX Developer 프로젝트 변환 가능</li>
+                    <li><strong>네트워크:</strong> Ethernet, USB, RS-232C 통신 지원</li>
+                    <li><strong>언어:</strong> 한국어, 영어, 일본어 등 다국어 지원</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="preparation">
+            <h2>🔧 설치 전 준비사항</h2>
+            
+            <div class="checklist">
+                <h3>📝 설치 전 체크리스트</h3>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check1">
+                    <label for="check1">관리자 권한 계정으로 로그인</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check2">
+                    <label for="check2">바이러스 백신 프로그램 일시 비활성화</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check3">
+                    <label for="check3">Windows 업데이트 최신 상태 확인</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check4">
+                    <label for="check4">기존 GX Works 버전 제거 (필요시)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check5">
+                    <label for="check5">시스템 복원 지점 생성</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check6">
+                    <label for="check6">라이선스 키 준비</label>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ 중요한 주의사항</h4>
+                <ul>
+                    <li><strong>기존 버전 제거:</strong> 이전 GX Works 버전이 설치되어 있다면 완전히 제거 후 설치</li>
+                    <li><strong>방화벽 설정:</strong> Windows 방화벽에서 GX Works2 허용 설정 필요</li>
+                    <li><strong>사용자 계정 제어:</strong> UAC 설정이 높을 경우 설치 중 문제 발생 가능</li>
+                    <li><strong>임시 폴더:</strong> 충분한 임시 폴더 공간 확보 (최소 1GB)</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h4>🛡️ 보안 설정 권장사항</h4>
+                <ul>
+                    <li>설치 중에만 바이러스 백신 실시간 검사 비활성화</li>
+                    <li>Windows Defender 예외 목록에 설치 폴더 추가</li>
+                    <li>방화벽에서 GX Works2 통신 포트 허용</li>
+                    <li>설치 완료 후 보안 프로그램 재활성화</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="download">
+            <h2>📥 다운로드 방법</h2>
+            
+            <div class="step-container">
+                <div class="step-guide">
+                    <h4>미쓰비시 전기 공식 웹사이트 접속</h4>
+                    <p>미쓰비시 전기 한국 공식 웹사이트(www.mitsubishielectric.co.kr)에 접속합니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>제품 정보 → 소프트웨어 메뉴 이동</h4>
+                    <p>상단 메뉴에서 "제품 정보" → "FA 제품" → "소프트웨어" 순으로 이동합니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>GX Works2 검색 및 선택</h4>
+                    <p>검색창에 "GX Works2"를 입력하거나 PLC 프로그래밍 소프트웨어 카테고리에서 찾습니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>회원 가입 및 로그인</h4>
+                    <p>다운로드를 위해 회원 가입 후 로그인합니다. 기업 회원 등록이 필요할 수 있습니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>버전 선택 및 다운로드</h4>
+                    <p>최신 버전을 선택하고 라이선스 동의 후 다운로드를 진행합니다.</p>
+                </div>
+            </div>
+
+            <div class="download-card">
+                <div class="download-title">📦 GX Works2 버전 정보</div>
+                <p>현재 최신 버전 정보와 다운로드 옵션</p>
+                <div class="version-info">Version 1.77 이상</div>
+                <div class="version-info">Windows 11 지원</div>
+                <div class="version-info">64bit 권장</div>
+            </div>
+
+            <div class="info-box">
+                <h4>📋 다운로드 파일 구성</h4>
+                <ul>
+                    <li><strong>GX Works2 본체:</strong> 메인 프로그래밍 소프트웨어</li>
+                    <li><strong>USB 드라이버:</strong> PLC 연결용 드라이버</li>
+                    <li><strong>매뉴얼:</strong> 사용 설명서 및 참조 문서</li>
+                    <li><strong>샘플 프로젝트:</strong> 학습용 예제 파일</li>
+                    <li><strong>업데이트 파일:</strong> 최신 패치 및 업데이트</li>
+                </ul>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 다운로드 팁</h4>
+                <ul>
+                    <li>안정적인 인터넷 연결 환경에서 다운로드</li>
+                    <li>다운로드 관리자 사용 권장 (대용량 파일)</li>
+                    <li>파일 무결성 검증을 위한 체크섬 확인</li>
+                    <li>다운로드 완료 후 바이러스 검사 실행</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="installation">
+            <h2>⚙️ 설치 과정</h2>
+            
+            <div class="step-container">
+                <div class="step-guide">
+                    <h4>설치 파일 실행</h4>
+                    <p>다운로드한 설치 파일을 마우스 우클릭하여 "관리자 권한으로 실행"을 선택합니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>설치 언어 선택</h4>
+                    <p>설치 프로그램이 시작되면 사용할 언어를 선택합니다. (한국어 권장)</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>라이선스 계약 동의</h4>
+                    <p>소프트웨어 라이선스 계약서를 읽고 "동의함"을 선택합니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>설치 유형 선택</h4>
+                    <p>"표준 설치" 또는 "사용자 정의 설치"를 선택합니다. 초보자는 표준 설치 권장.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>설치 경로 지정</h4>
+                    <p>설치 경로를 지정합니다. 기본 경로(C:\Program Files\MELSOFT\)를 권장합니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>구성 요소 선택</h4>
+                    <p>설치할 구성 요소를 선택합니다. 전체 설치를 권장합니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>설치 진행</h4>
+                    <p>"설치" 버튼을 클릭하여 설치를 시작합니다. 진행률을 확인하며 대기합니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>설치 완료</h4>
+                    <p>설치가 완료되면 "완료" 버튼을 클릭하고 시스템을 재부팅합니다.</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>🔧 설치 구성 요소 상세</h4>
+                <ul>
+                    <li><strong>GX Works2 Core:</strong> 메인 프로그래밍 환경 (필수)</li>
+                    <li><strong>Simulator:</strong> PLC 시뮬레이션 기능</li>
+                    <li><strong>Help Files:</strong> 도움말 및 매뉴얼</li>
+                    <li><strong>Sample Projects:</strong> 예제 프로젝트 파일</li>
+                    <li><strong>Communication Drivers:</strong> 통신 드라이버</li>
+                    <li><strong>Additional Tools:</strong> 추가 유틸리티</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ 설치 중 주의사항</h4>
+                <ul>
+                    <li>설치 중 다른 프로그램 실행 금지</li>
+                    <li>네트워크 연결 안정성 확인</li>
+                    <li>충분한 디스크 공간 확보</li>
+                    <li>설치 로그 파일 보관</li>
+                    <li>설치 실패 시 완전 제거 후 재설치</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="license">
+            <h2>🔑 라이선스 등록</h2>
+            
+            <div class="step-container">
+                <div class="step-guide">
+                    <h4>GX Works2 실행</h4>
+                    <p>설치 완료 후 바탕화면의 GX Works2 아이콘을 더블클릭하여 실행합니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>라이선스 관리자 접속</h4>
+                    <p>Help 메뉴 → License Manager를 선택하여 라이선스 관리 창을 엽니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>라이선스 키 입력</h4>
+                    <p>구매 시 제공받은 라이선스 키를 정확히 입력합니다. (대소문자 구분)</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>온라인 인증</h4>
+                    <p>인터넷 연결 상태에서 온라인 인증을 진행합니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>인증 완료 확인</h4>
+                    <p>라이선스 상태가 "활성화됨"으로 표시되는지 확인합니다.</p>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h4>📋 라이선스 유형</h4>
+                <ul>
+                    <li><strong>단일 라이선스:</strong> 한 대의 PC에서만 사용 가능</li>
+                    <li><strong>플로팅 라이선스:</strong> 네트워크를 통해 여러 PC에서 공유 사용</li>
+                    <li><strong>교육용 라이선스:</strong> 교육 기관 전용 라이선스</li>
+                    <li><strong>평가용 라이선스:</strong> 30일 제한 평가판</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ 라이선스 관련 주의사항</h4>
+                <ul>
+                    <li>라이선스 키는 분실하지 않도록 안전하게 보관</li>
+                    <li>하드웨어 변경 시 라이선스 재등록 필요</li>
+                    <li>불법 복제 사용 시 법적 문제 발생 가능</li>
+                    <li>라이선스 만료 전 갱신 필요</li>
+                </ul>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 라이선스 관리 팁</h4>
+                <ul>
+                    <li>라이선스 정보를 별도 파일로 백업</li>
+                    <li>만료일 알림 설정 활용</li>
+                    <li>여러 PC 사용 시 플로팅 라이선스 고려</li>
+                    <li>정기적인 라이선스 상태 확인</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="initial-setup">
+            <h2>🛠️ 초기 설정</h2>
+            
+            <h3>기본 환경 설정</h3>
+            <div class="step-container">
+                <div class="step-guide">
+                    <h4>언어 설정</h4>
+                    <p>Tools → Options → Environment → Language에서 한국어를 선택합니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>작업 폴더 설정</h4>
+                    <p>프로젝트 저장 기본 경로를 설정합니다. (예: C:\GX_Works_Projects\)</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>자동 저장 설정</h4>
+                    <p>자동 저장 간격을 설정하여 작업 내용을 보호합니다. (권장: 5분)</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>화면 레이아웃 설정</h4>
+                    <p>개인 선호에 맞게 툴바, 패널 위치를 조정합니다.</p>
+                </div>
+            </div>
+
+            <h3>통신 설정</h3>
+            <div class="highlight-box">
+                <h4>🔌 기본 통신 설정</h4>
+                <ul>
+                    <li><strong>USB 통신:</strong> 가장 일반적인 연결 방식</li>
+                    <li><strong>Ethernet 통신:</strong> 네트워크를 통한 원격 연결</li>
+                    <li><strong>Serial 통신:</strong> RS-232C를 통한 시리얼 연결</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h4>📊 편집기 설정</h4>
+                <ul>
+                    <li><strong>래더 편집기:</strong> 격자 표시, 색상 설정</li>
+                    <li><strong>텍스트 편집기:</strong> 폰트, 들여쓰기 설정</li>
+                    <li><strong>함수 블록 편집기:</strong> 블록 크기, 연결선 설정</li>
+                    <li><strong>SFC 편집기:</strong> 스텝 크기, 전환 조건 표시</li>
+                </ul>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 생산성 향상 설정</h4>
+                <ul>
+                    <li>자주 사용하는 명령어를 툴바에 추가</li>
+                    <li>단축키 설정으로 작업 속도 향상</li>
+                    <li>코드 템플릿 등록으로 반복 작업 단축</li>
+                    <li>프로젝트 템플릿 생성으로 표준화</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="driver-install">
+            <h2>🔌 USB 드라이버 설치</h2>
+            
+            <div class="step-container">
+                <div class="step-guide">
+                    <h4>드라이버 파일 위치 확인</h4>
+                    <p>GX Works2 설치 폴더 내 Driver 폴더에서 USB 드라이버를 찾습니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>PLC 연결</h4>
+                    <p>PLC의 전원을 켜고 USB 케이블로 PC와 연결합니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>장치 관리자 확인</h4>
+                    <p>Windows 장치 관리자에서 "알 수 없는 장치" 또는 "기타 장치"를 확인합니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>드라이버 수동 설치</h4>
+                    <p>해당 장치를 우클릭하여 "드라이버 업데이트"를 선택하고 수동으로 드라이버를 지정합니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>설치 완료 확인</h4>
+                    <p>장치 관리자에서 "Mitsubishi USB Driver"가 정상적으로 표시되는지 확인합니다.</p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ 드라이버 설치 주의사항</h4>
+                <ul>
+                    <li>PLC 모델에 맞는 정확한 드라이버 사용</li>
+                    <li>Windows 버전 호환성 확인</li>
+                    <li>디지털 서명되지 않은 드라이버 경고 시 계속 진행</li>
+                    <li>설치 후 시스템 재부팅 권장</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h4>📋 지원 PLC 모델별 드라이버</h4>
+                <ul>
+                    <li><strong>MELSEC-Q 시리즈:</strong> Q 시리즈 전용 USB 드라이버</li>
+                    <li><strong>MELSEC-L 시리즈:</strong> L 시리즈 전용 USB 드라이버</li>
+                    <li><strong>MELSEC-FX 시리즈:</strong> FX 시리즈 전용 USB 드라이버</li>
+                    <li><strong>MELSEC iQ-R 시리즈:</strong> iQ-R 시리즈 전용 USB 드라이버</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="verification">
+            <h2>✅ 설치 확인</h2>
+            
+            <div class="step-container">
+                <div class="step-guide">
+                    <h4>프로그램 실행 테스트</h4>
+                    <p>GX Works2를 실행하여 정상적으로 시작되는지 확인합니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>새 프로젝트 생성</h4>
+                    <p>File → New Project로 새 프로젝트를 생성해봅니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>PLC 연결 테스트</h4>
+                    <p>Online → Connection Setting에서 PLC 연결을 테스트합니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>기본 기능 확인</h4>
+                    <p>래더 편집, 컴파일, 시뮬레이션 등 기본 기능을 테스트합니다.</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>✅ 설치 성공 체크리스트</h4>
+                <ul>
+                    <li>GX Works2 프로그램이 정상적으로 실행됨</li>
+                    <li>라이선스가 올바르게 인증됨</li>
+                    <li>새 프로젝트 생성이 가능함</li>
+                    <li>PLC와 통신 연결이 정상적으로 작동함</li>
+                    <li>기본 편집 기능들이 모두 작동함</li>
+                    <li>도움말 및 매뉴얼에 접근 가능함</li>
+                </ul>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 성능 최적화 팁</h4>
+                <ul>
+                    <li>불필요한 백그라운드 프로그램 종료</li>
+                    <li>Windows 업데이트 최신 상태 유지</li>
+                    <li>정기적인 임시 파일 정리</li>
+                    <li>충분한 가상 메모리 설정</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="troubleshooting">
+            <h2>🔧 문제 해결</h2>
+            
+            <div class="troubleshooting">
+                <h4>🚫 설치 실패 문제</h4>
+                <ul>
+                    <li><strong>증상:</strong> 설치 중 오류 메시지 발생</li>
+                    <li><strong>원인:</strong> 권한 부족, 디스크 공간 부족, 바이러스 백신 간섭</li>
+                    <li><strong>해결책:</strong> 관리자 권한으로 실행, 디스크 정리, 바이러스 백신 일시 비활성화</li>
+                </ul>
+            </div>
+
+            <div class="troubleshooting">
+                <h4>🔑 라이선스 인증 실패</h4>
+                <ul>
+                    <li><strong>증상:</strong> 라이선스 키 입력 후 인증 실패</li>
+                    <li><strong>원인:</strong> 잘못된 키 입력, 네트워크 문제, 서버 접속 불가</li>
+                    <li><strong>해결책:</strong> 키 재확인, 인터넷 연결 확인, 방화벽 설정 확인</li>
+                </ul>
+            </div>
+
+            <div class="troubleshooting">
+                <h4>🔌 PLC 연결 실패</h4>
+                <ul>
+                    <li><strong>증상:</strong> PLC와 통신 연결 불가</li>
+                    <li><strong>원인:</strong> 드라이버 미설치, 케이블 불량, 포트 설정 오류</li>
+                    <li><strong>해결책:</strong> USB 드라이버 재설치, 케이블 교체, 통신 설정 재확인</li>
+                </ul>
+            </div>
+
+            <div class="troubleshooting">
+                <h4>💻 프로그램 실행 오류</h4>
+                <ul>
+                    <li><strong>증상:</strong> GX Works2 실행 시 오류 발생</li>
+                    <li><strong>원인:</strong> .NET Framework 문제, 시스템 파일 손상</li>
+                    <li><strong>해결책:</strong> .NET Framework 재설치, 시스템 파일 검사 실행</li>
+                </ul>
+            </div>
+
+            <div class="error-box">
+                <h4>🆘 긴급 복구 방법</h4>
+                <ol>
+                    <li>시스템 복원을 통한 이전 상태로 복구</li>
+                    <li>GX Works2 완전 제거 후 재설치</li>
+                    <li>Windows 시스템 파일 검사기 실행</li>
+                    <li>미쓰비시 기술 지원팀 연락</li>
+                </ol>
+            </div>
+
+            <div class="info-box">
+                <h4>📞 기술 지원 연락처</h4>
+                <ul>
+                    <li><strong>미쓰비시 전기 한국:</strong> 02-3660-9530</li>
+                    <li><strong>기술 지원 이메일:</strong> fa-support@mitsubishielectric.co.kr</li>
+                    <li><strong>온라인 지원:</strong> 공식 웹사이트 FAQ 및 다운로드 센터</li>
+                    <li><strong>사용자 포럼:</strong> 커뮤니티 Q&A 게시판</li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="footer">
+            <h3>⚙️ GX Works2 설치 완료!</h3>
+            <p>이제 미쓰비시 PLC 프로그래밍을 시작할 준비가 완료되었습니다.</p>
+            <p>지속적인 학습과 실습을 통해 전문가가 되어보세요!</p>
+            <p><small>※ 본 가이드는 2025년 7월 기준이며, 소프트웨어 업데이트에 따라 내용이 변경될 수 있습니다.</small></p>
+        </div>
+    </div>
+
+    <button class="scroll-to-top" id="scrollToTop">↑</button>
+
+    <script>
+        // 스크롤 진행률 표시
+        window.addEventListener('scroll', function() {
+            const scrollTop = document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollPercent = (scrollTop / scrollHeight) * 100;
+            document.getElementById('progressBar').style.width = scrollPercent + '%';
+            
+            // 맨 위로 버튼 표시/숨김
+            const scrollToTopBtn = document.getElementById('scrollToTop');
+            if (scrollTop > 300) {
+                scrollToTopBtn.style.display = 'block';
+            } else {
+                scrollToTopBtn.style.display = 'none';
+            }
+        });
+
+        // 맨 위로 스크롤
+        document.getElementById('scrollToTop').addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // 부드러운 스크롤 네비게이션
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 체크리스트 기능
+        document.querySelectorAll('.checklist-item input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    this.parentElement.style.background = '#d4edda';
+                    this.parentElement.style.borderLeft = '4px solid #28a745';
+                } else {
+                    this.parentElement.style.background = 'white';
+                    this.parentElement.style.borderLeft = 'none';
+                }
+            });
+        });
+
+        // 페이지 로드 시 애니메이션
+        window.addEventListener('load', function() {
+            document.body.style.opacity = '1';
+        });
+    </script>
+</body>
+</html>

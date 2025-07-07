@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="GX Works2 시작 가이드 - 미쓰비시 PLC 프로그래밍 소프트웨어 GX Works2의 설치부터 기본 사용법까지 완벽 가이드">
+    <meta name="keywords" content="GX Works2, 미쓰비시 PLC, 래더 프로그래밍, PLC 프로그래밍, 자동화, 산업용 제어">
+    <meta name="author" content="Itagi">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://emfls.github.io/kor/report/plc/gx-works2-guide.html">
+    
+    <title>GX Works2 시작 가이드 - 미쓰비시 PLC 프로그래밍 완벽 입문서</title>
+    
+    <!-- Google 태그 (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-QP5Q67GE5B");
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+      crossorigin="anonymous"></script>
+    
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 50px 0;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+            animation: float 20s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateX(-50px) translateY(-50px); }
+            100% { transform: translateX(50px) translateY(50px); }
+        }
+        
+        h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            border-left: 6px solid #3498db;
+            padding-left: 20px;
+            margin: 40px 0 25px 0;
+            font-size: 2em;
+            position: relative;
+        }
+        
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 20px;
+            width: 50px;
+            height: 3px;
+            background: #3498db;
+        }
+        
+        h3 {
+            color: #34495e;
+            margin: 30px 0 20px 0;
+            font-size: 1.5em;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            border-left: 6px solid #28a745;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border: 2px solid #ffd93d;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            border-left: 6px solid #f39c12;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .tip-box {
+            background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+            border: 2px solid #86cfda;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            border-left: 6px solid #17a2b8;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .info-box {
+            background: linear-gradient(135deg, #e7f3ff 0%, #cce7ff 100%);
+            border: 2px solid #99d6ff;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            border-left: 6px solid #0066cc;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        ul, ol {
+            margin: 20px 0;
+            padding-left: 35px;
+        }
+        
+        li {
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #dee2e6;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+        
+        .feature-card:hover::before {
+            left: 100%;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-color: #3498db;
+        }
+        
+        .feature-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .step-guide {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 5px solid #28a745;
+            counter-increment: step-counter;
+            position: relative;
+        }
+        
+        .step-guide::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #28a745;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .step-container {
+            counter-reset: step-counter;
+        }
+        
+        .toc {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .toc ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .toc li {
+            margin: 8px 0;
+            padding: 5px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .toc li:last-child {
+            border-bottom: none;
+        }
+        
+        .toc a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .toc a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            border-radius: 15px;
+            margin-top: 50px;
+        }
+        
+        .requirement-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .requirement-table th,
+        .requirement-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .requirement-table th {
+            background: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .requirement-table tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: #3498db;
+            z-index: 1000;
+            transition: width 0.3s ease;
+        }
+        
+        .scroll-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: none;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .scroll-to-top:hover {
+            background: #2980b9;
+            transform: scale(1.1);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2.2em;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <div class="container">
+        <header>
+            <h1>⚙️ GX Works2 시작 가이드</h1>
+            <p class="subtitle">미쓰비시 PLC 프로그래밍 소프트웨어 완벽 입문서</p>
+        </header>
+
+        <div class="toc">
+            <h3>📋 목차</h3>
+            <ul>
+                <li><a href="#intro">🔧 GX Works2 소개</a></li>
+                <li><a href="#requirements">💻 시스템 요구사항</a></li>
+                <li><a href="#installation">📥 설치 가이드</a></li>
+                <li><a href="#interface">🖥️ 인터페이스 이해</a></li>
+                <li><a href="#first-project">🚀 첫 번째 프로젝트</a></li>
+                <li><a href="#programming">📝 기본 프로그래밍</a></li>
+                <li><a href="#connection">🔗 PLC 연결</a></li>
+                <li><a href="#tips">💡 초보자 팁</a></li>
+            </ul>
+        </div>
+
+        <section id="intro">
+            <h2>🔧 GX Works2란?</h2>
+            <p><strong>GX Works2</strong>는 미쓰비시 전기에서 개발한 통합 PLC 프로그래밍 소프트웨어입니다. 래더 다이어그램, 함수 블록 다이어그램, 구조화 텍스트 등 다양한 프로그래밍 언어를 지원하며, 산업 자동화 시스템 개발에 필수적인 도구입니다.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-title">🎯 다양한 프로그래밍 언어</div>
+                    <ul>
+                        <li>래더 다이어그램 (LD)</li>
+                        <li>함수 블록 다이어그램 (FBD)</li>
+                        <li>구조화 텍스트 (ST)</li>
+                        <li>순차 기능 차트 (SFC)</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-title">⚡ 강력한 기능</div>
+                    <ul>
+                        <li>실시간 모니터링</li>
+                        <li>온라인 디버깅</li>
+                        <li>시뮬레이션 기능</li>
+                        <li>프로젝트 관리</li>
+                    </ul>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-title">🔧 호환성</div>
+                    <ul>
+                        <li>MELSEC-Q 시리즈</li>
+                        <li>MELSEC-L 시리즈</li>
+                        <li>MELSEC-FX 시리즈</li>
+                        <li>MELSEC iQ-R 시리즈</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <h3>✨ GX Works2의 주요 특징</h3>
+                <ul>
+                    <li><strong>🎨 직관적인 인터페이스:</strong> 사용자 친화적인 GUI로 쉬운 프로그래밍</li>
+                    <li><strong>🔄 통합 개발 환경:</strong> 프로그래밍부터 디버깅까지 한 번에</li>
+                    <li><strong>📊 실시간 모니터링:</strong> 프로그램 실행 상태를 실시간으로 확인</li>
+                    <li><strong>🛡️ 안전 기능:</strong> 안전 관련 프로그래밍 지원</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="requirements">
+            <h2>💻 시스템 요구사항</h2>
+            
+            <div class="info-box">
+                <h3>🖥️ 하드웨어 요구사항</h3>
+                <table class="requirement-table">
+                    <thead>
+                        <tr>
+                            <th>항목</th>
+                            <th>최소 사양</th>
+                            <th>권장 사양</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CPU</td>
+                            <td>Pentium 4 2.0GHz 이상</td>
+                            <td>Core i5 이상</td>
+                        </tr>
+                        <tr>
+                            <td>메모리</td>
+                            <td>1GB RAM</td>
+                            <td>4GB RAM 이상</td>
+                        </tr>
+                        <tr>
+                            <td>하드디스크</td>
+                            <td>2GB 이상 여유 공간</td>
+                            <td>10GB 이상 여유 공간</td>
+                        </tr>
+                        <tr>
+                            <td>해상도</td>
+                            <td>1024×768 이상</td>
+                            <td>1920×1080 이상</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ 소프트웨어 요구사항</h4>
+                <ul>
+                    <li><strong>운영체제:</strong> Windows 7/8/10/11 (32bit/64bit)</li>
+                    <li><strong>NET Framework:</strong> 4.0 이상</li>
+                    <li><strong>Internet Explorer:</strong> 8.0 이상</li>
+                    <li><strong>USB 드라이버:</strong> PLC 연결용 USB 드라이버</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="installation">
+            <h2>📥 설치 가이드</h2>
+            
+            <div class="step-container">
+                <div class="step-guide">
+                    <h4>설치 파일 다운로드</h4>
+                    <p>미쓰비시 전기 공식 웹사이트에서 GX Works2 설치 파일을 다운로드합니다. 라이선스 키가 필요하므로 정품 구매 후 진행하세요.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>관리자 권한으로 실행</h4>
+                    <p>다운로드한 설치 파일을 마우스 우클릭하여 "관리자 권한으로 실행"을 선택합니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>설치 마법사 진행</h4>
+                    <p>설치 마법사의 안내에 따라 진행합니다. 설치 경로는 기본값을 사용하는 것을 권장합니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>라이선스 등록</h4>
+                    <p>설치 완료 후 라이선스 키를 입력하여 제품을 활성화합니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>USB 드라이버 설치</h4>
+                    <p>PLC와 연결하기 위한 USB 드라이버를 별도로 설치합니다.</p>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 설치 팁</h4>
+                <ul>
+                    <li>설치 전 바이러스 백신 프로그램을 일시적으로 비활성화하세요</li>
+                    <li>Windows 방화벽 설정을 확인하세요</li>
+                    <li>설치 후 재부팅을 권장합니다</li>
+                    <li>설치 로그를 확인하여 오류가 없는지 점검하세요</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="interface">
+            <h2>🖥️ 인터페이스 이해</h2>
+            
+            <h3>메인 화면 구성</h3>
+            <div class="highlight-box">
+                <h4>🎛️ 주요 구성 요소</h4>
+                <ul>
+                    <li><strong>메뉴바:</strong> 파일, 편집, 보기, 프로젝트 등 주요 기능</li>
+                    <li><strong>툴바:</strong> 자주 사용하는 기능들의 빠른 접근</li>
+                    <li><strong>프로젝트 트리:</strong> 프로젝트 구조 및 파일 관리</li>
+                    <li><strong>편집 영역:</strong> 프로그램 작성 및 편집</li>
+                    <li><strong>출력 창:</strong> 컴파일 결과 및 오류 메시지</li>
+                    <li><strong>상태바:</strong> 현재 상태 정보 표시</li>
+                </ul>
+            </div>
+
+            <h3>프로젝트 트리 구조</h3>
+            <div class="info-box">
+                <h4>📁 프로젝트 구성</h4>
+                <ul>
+                    <li><strong>Parameter:</strong> PLC 파라미터 설정</li>
+                    <li><strong>Program:</strong> 메인 프로그램 및 서브루틴</li>
+                    <li><strong>Label:</strong> 변수 및 레이블 정의</li>
+                    <li><strong>Device Comment:</strong> 디바이스 주석</li>
+                    <li><strong>Library:</strong> 사용자 라이브러리</li>
+                </ul>
+            </div>
+
+            <h3>편집기 종류</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-title">📊 래더 편집기</div>
+                    <p>가장 일반적인 PLC 프로그래밍 방식으로, 전기 회로도와 유사한 형태로 프로그램을 작성합니다.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-title">🔧 함수 블록 편집기</div>
+                    <p>함수 블록을 연결하여 프로그램을 작성하는 방식으로, 복잡한 로직을 모듈화할 수 있습니다.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-title">📝 구조화 텍스트 편집기</div>
+                    <p>고급 프로그래밍 언어와 유사한 텍스트 기반 프로그래밍 방식입니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="first-project">
+            <h2>🚀 첫 번째 프로젝트 만들기</h2>
+            
+            <div class="step-container">
+                <div class="step-guide">
+                    <h4>새 프로젝트 생성</h4>
+                    <p>File → New Project를 선택하여 새 프로젝트를 생성합니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>PLC 타입 선택</h4>
+                    <p>사용할 PLC 시리즈와 모델을 선택합니다. (예: MELSEC-Q, MELSEC-L 등)</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>프로젝트 이름 설정</h4>
+                    <p>프로젝트 이름과 저장 위치를 지정합니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>프로젝트 설정</h4>
+                    <p>프로젝트 타입(Simple Project 또는 Structured Project)을 선택합니다.</p>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <h4>💡 프로젝트 타입 선택 가이드</h4>
+                <ul>
+                    <li><strong>Simple Project:</strong> 초보자에게 적합, 간단한 구조</li>
+                    <li><strong>Structured Project:</strong> 대규모 프로젝트에 적합, 모듈화 가능</li>
+                </ul>
+            </div>
+
+            <h3>기본 설정</h3>
+            <div class="warning-box">
+                <h4>⚠️ 필수 설정 항목</h4>
+                <ul>
+                    <li><strong>CPU 타입:</strong> 사용할 CPU 모델 정확히 선택</li>
+                    <li><strong>메모리 용량:</strong> 프로그램 메모리 크기 설정</li>
+                    <li><strong>I/O 구성:</strong> 입출력 모듈 구성 설정</li>
+                    <li><strong>네트워크 설정:</strong> 통신 파라미터 설정</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="programming">
+            <h2>📝 기본 프로그래밍</h2>
+            
+            <h3>래더 프로그래밍 기초</h3>
+            <div class="highlight-box">
+                <h4>🔧 기본 명령어</h4>
+                <ul>
+                    <li><strong>LD (Load):</strong> 접점을 읽어오는 명령</li>
+                    <li><strong>OUT:</strong> 코일을 출력하는 명령</li>
+                    <li><strong>AND:</strong> 논리곱 연산</li>
+                    <li><strong>OR:</strong> 논리합 연산</li>
+                    <li><strong>NOT:</strong> 논리부정 연산</li>
+                </ul>
+            </div>
+
+            <h3>간단한 예제</h3>
+            <div class="code-block">
+                <h4>LED 점멸 프로그램</h4>
+                <pre>
+Network 1: LED 점멸 회로
+LD    X0      // 입력 X0 읽기
+OUT   Y0      // 출력 Y0에 출력
+
+Network 2: 타이머를 이용한 점멸
+LD    M0      // 내부 릴레이 M0
+OUT   T0 K10  // 타이머 T0, 1초 설정
+LD    T0      // 타이머 T0 접점
+OUT   M0      // 내부 릴레이 M0 출력
+LD    M0      // 내부 릴레이 M0
+OUT   Y1      // 출력 Y1에 출력
+                </pre>
+            </div>
+
+            <div class="info-box">
+                <h4>📚 프로그래밍 순서</h4>
+                <ol>
+                    <li>요구사항 분석 및 설계</li>
+                    <li>I/O 할당 계획</li>
+                    <li>프로그램 작성</li>
+                    <li>시뮬레이션 테스트</li>
+                    <li>실제 하드웨어 테스트</li>
+                    <li>디버깅 및 최적화</li>
+                </ol>
+            </div>
+
+            <h3>변수 및 레이블 사용</h3>
+            <div class="tip-box">
+                <h4>💡 변수 명명 규칙</h4>
+                <ul>
+                    <li>의미 있는 이름 사용 (예: Motor_Start, Sensor_Input)</li>
+                    <li>일관된 명명 규칙 적용</li>
+                    <li>예약어 사용 금지</li>
+                    <li>주석을 활용한 설명 추가</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="connection">
+            <h2>🔗 PLC 연결 및 다운로드</h2>
+            
+            <div class="step-container">
+                <div class="step-guide">
+                    <h4>통신 설정</h4>
+                    <p>Online → Connection Setting에서 통신 방식을 설정합니다. (USB, Ethernet, Serial 등)</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>PLC 연결 확인</h4>
+                    <p>Online → PLC Read를 실행하여 PLC와의 연결을 확인합니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>프로그램 컴파일</h4>
+                    <p>Build → Build All을 실행하여 프로그램을 컴파일합니다.</p>
+                </div>
+
+                <div class="step-guide">
+                    <h4>프로그램 다운로드</h4>
+                    <p>Online → PLC Write를 실행하여 컴파일된 프로그램을 PLC에 다운로드합니다.</p>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ 연결 시 주의사항</h4>
+                <ul>
+                    <li>PLC 전원이 켜져 있는지 확인</li>
+                    <li>통신 케이블이 올바르게 연결되었는지 확인</li>
+                    <li>PLC 모드가 STOP 상태인지 확인</li>
+                    <li>기존 프로그램 백업 후 진행</li>
+                </ul>
+            </div>
+
+            <h3>모니터링 및 디버깅</h3>
+            <div class="highlight-box">
+                <h4>🔍 모니터링 기능</h4>
+                <ul>
+                    <li><strong>Device Monitor:</strong> 개별 디바이스 값 실시간 확인</li>
+                    <li><strong>Ladder Monitor:</strong> 래더 프로그램 실행 상태 확인</li>
+                    <li><strong>Entry Data Monitor:</strong> 데이터 테이블 형태로 모니터링</li>
+                    <li><strong>Sampling Trace:</strong> 시간에 따른 데이터 변화 추적</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="tips">
+            <h2>💡 초보자를 위한 팁</h2>
+            
+            <div class="tip-box">
+                <h4>🎯 효율적인 학습 방법</h4>
+                <ul>
+                    <li><strong>단계별 학습:</strong> 기초부터 차근차근 익히기</li>
+                    <li><strong>실습 위주:</strong> 이론보다는 직접 프로그래밍해보기</li>
+                    <li><strong>예제 활용:</strong> 다양한 예제 프로그램 분석</li>
+                    <li><strong>문서화:</strong> 학습 내용을 정리하고 기록</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ 자주 하는 실수</h4>
+                <ul>
+                    <li>I/O 할당 중복 또는 누락</li>
+                    <li>타이머/카운터 설정값 오류</li>
+                    <li>프로그램 논리 오류</li>
+                    <li>주석 부족으로 인한 유지보수 어려움</li>
+                    <li>백업 없이 프로그램 수정</li>
+                </ul>
+            </div>
+
+            <div class="info-box">
+                <h4>📚 추가 학습 자료</h4>
+                <ul>
+                    <li><strong>공식 매뉴얼:</strong> 미쓰비시 전기 기술 문서</li>
+                    <li><strong>온라인 교육:</strong> 공식 교육 과정 수강</li>
+                    <li><strong>커뮤니티:</strong> 사용자 포럼 및 Q&A</li>
+                    <li><strong>실습 키트:</strong> 교육용 PLC 키트 활용</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h4>🏆 성공적인 PLC 프로그래머가 되는 법</h4>
+                <ol>
+                    <li><strong>기초 탄탄히:</strong> 전기 회로 및 제어 이론 학습</li>
+                    <li><strong>지속적 실습:</strong> 다양한 프로젝트 경험</li>
+                    <li><strong>문제 해결 능력:</strong> 디버깅 및 트러블슈팅 스킬</li>
+                    <li><strong>최신 기술:</strong> 새로운 기능 및 업데이트 학습</li>
+                    <li><strong>협업 능력:</strong> 팀워크 및 의사소통 스킬</li>
+                </ol>
+            </div>
+        </section>
+
+        <div class="footer">
+            <h3>⚙️ GX Works2와 함께 PLC 프로그래밍 마스터하기!</h3>
+            <p>이 가이드가 GX Works2 학습의 첫 걸음에 도움이 되길 바랍니다.</p>
+            <p>지속적인 학습과 실습을 통해 전문가가 되어보세요!</p>
+            <p><small>※ 본 가이드는 2025년 7월 기준이며, 소프트웨어 업데이트에 따라 내용이 변경될 수 있습니다.</small></p>
+        </div>
+    </div>
+
+    <button class="scroll-to-top" id="scrollToTop">↑</button>
+
+    <script>
+        // 스크롤 진행률 표시
+        window.addEventListener('scroll', function() {
+            const scrollTop = document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollPercent = (scrollTop / scrollHeight) * 100;
+            document.getElementById('progressBar').style.width = scrollPercent + '%';
+            
+            // 맨 위로 버튼 표시/숨김
+            const scrollToTopBtn = document.getElementById('scrollToTop');
+            if (scrollTop > 300) {
+                scrollToTopBtn.style.display = 'block';
+            } else {
+                scrollToTopBtn.style.display = 'none';
+            }
+        });
+
+        // 맨 위로 스크롤
+        document.getElementById('scrollToTop').addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // 부드러운 스크롤 네비게이션
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 페이지 로드 시 애니메이션
+        window.addEventListener('load', function() {
+            document.body.style.opacity = '1';
+        });
+    </script>
+</body>
+</html>
