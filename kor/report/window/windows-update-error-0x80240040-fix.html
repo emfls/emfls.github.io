@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="Windows 0x80240040 WU_E_NO_SERVER_CORE_SUPPORT 오류 해결 방법을 단계별로 안내합니다. Windows Update 서버 코어 지원 없음 문제, 업데이트 서비스 오류 등 완벽한 해결책을 제공합니다." />
+        <meta
+            name="keywords"
+            content="Windows, 0x80240040, WU_E_NO_SERVER_CORE_SUPPORT, Windows Update, 서버 코어 지원 없음, 업데이트 오류, 서비스 오류" />
+        <meta name="robots" content="index, follow" />
+        <link
+            rel="canonical"
+            href="https://emfls.github.io/kor/report/window/windows-update-error-0x80240040-fix.html" />
+        <meta name="author" content="Itagi" />
+
+        <!-- Google 태그 (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+
+        <title>Windows 0x80240040 WU_E_NO_SERVER_CORE_SUPPORT 오류 해결 가이드 - 업데이트 서버 코어 지원 없음 완벽 해결법</title>
+        <style>
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                margin: 0;
+                padding: 20px;
+                background-color: #f5f5f5;
+                color: #333;
+            }
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                background-color: white;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+                color: #0078d4;
+                text-align: center;
+                border-bottom: 3px solid #0078d4;
+                padding-bottom: 10px;
+                margin-bottom: 30px;
+            }
+            h2 {
+                color: #106ebe;
+                border-left: 4px solid #0078d4;
+                padding-left: 15px;
+                margin-top: 30px;
+            }
+            h3 {
+                color: #2c5282;
+                margin-top: 25px;
+            }
+            .warning {
+                background-color: #fff3cd;
+                border: 1px solid #ffeaa7;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            .info {
+                background-color: #d1ecf1;
+                border: 1px solid #bee5eb;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            .success {
+                background-color: #d4edda;
+                border: 1px solid #c3e6cb;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            .danger {
+                background-color: #f8d7da;
+                border: 1px solid #f5c6cb;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            .step {
+                background-color: #f8f9fa;
+                border: 1px solid #dee2e6;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 15px 0;
+            }
+            .step-number {
+                background-color: #0078d4;
+                color: white;
+                border-radius: 50%;
+                width: 30px;
+                height: 30px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                margin-right: 10px;
+            }
+            ul,
+            ol {
+                padding-left: 20px;
+            }
+            li {
+                margin: 8px 0;
+            }
+            code {
+                background-color: #f1f1f1;
+                padding: 2px 4px;
+                border-radius: 3px;
+                font-family: "Courier New", monospace;
+            }
+            .code-block {
+                background-color: #2d3748;
+                color: #e2e8f0;
+                padding: 15px;
+                border-radius: 5px;
+                overflow-x: auto;
+                margin: 15px 0;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 20px 0;
+            }
+            th,
+            td {
+                border: 1px solid #ddd;
+                padding: 12px;
+                text-align: left;
+            }
+            th {
+                background-color: #0078d4;
+                color: white;
+            }
+            tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+            .btn {
+                display: inline-block;
+                padding: 10px 20px;
+                background-color: #0078d4;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+                margin: 10px 5px;
+            }
+            .btn:hover {
+                background-color: #106ebe;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Windows 0x80240040 WU_E_NO_SERVER_CORE_SUPPORT 오류 해결 가이드</h1>
+
+            <div class="warning">
+                <strong>⚠️ 주의사항:</strong> 이 오류는 Windows Server Core 환경에서 Windows Update가 지원되지 않을 때 발생하는 문제입니다. Server Core 설치 유형, GUI 구성 요소 누락, 또는 서버 역할 제한이 원인일 수 있으므로 신중하게 해결 방법을 적용하시기 바랍니다.
+            </div>
+
+            <h2>🔍 오류 개요</h2>
+            <div class="info">
+                <p>
+                    <strong>0x80240040 (WU_E_NO_SERVER_CORE_SUPPORT)</strong>는 Windows Server Core 환경에서 특정 Windows Update 기능이 지원되지 않을 때 발생하는 오류입니다. 이 오류는 주로 다음과 같은 원인으로 발생합니다:
+                </p>
+                <ul>
+                    <li>Windows Server Core 설치에서 GUI 기반 업데이트 시도</li>
+                    <li>Server Core에서 지원되지 않는 업데이트 패키지</li>
+                    <li>Desktop Experience 기능 누락</li>
+                    <li>Windows Update GUI 구성 요소 부재</li>
+                    <li>Server Core 전용 업데이트 메커니즘 미사용</li>
+                    <li>PowerShell 또는 명령줄 도구 미사용</li>
+                    <li>WSUS 서버 설정 문제 (Server Core 환경)</li>
+                    <li>Server Manager 기능 제한</li>
+                    <li>Windows Update Agent 호환성 문제</li>
+                    <li>Server Core 역할 및 기능 제한</li>
+                </ul>
+            </div>
+
+            <h2>🛠️ 해결 방법</h2>
+
+            <h3>방법 1: Server Core 환경 확인</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>현재 Windows 설치 유형 확인:</strong>
+                <ul>
+                    <li>관리자 권한으로 PowerShell 실행</li>
+                    <li>다음 명령어로 설치 유형 확인:</li>
+                </ul>
+                <div class="code-block">
+                    Get-WindowsFeature -Name "Server-Gui-Shell"<br />
+                    Get-WindowsFeature -Name "Server-Gui-Mgmt-Infra"<br />
+                    dism /online /get-currentedition<br />
+                    Get-ComputerInfo | Select-Object WindowsInstallationType, WindowsProductName
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Server Core 상태 진단:</strong>
+                <ul>
+                    <li>다음 명령어로 상세 정보 확인:</li>
+                </ul>
+                <div class="code-block">
+                    systeminfo | findstr /C:"OS Name" /C:"OS Version" /C:"System Type"<br />
+                    wmic os get Caption,InstallDate,OSArchitecture<br />
+                    Get-WindowsFeature | Where-Object {$_.InstallState -eq "Installed"} | Select-Object Name
+                </div>
+            </div>
+
+            <h3>방법 2: PowerShell을 이용한 Windows Update 관리</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>PSWindowsUpdate 모듈 설치:</strong>
+                <ul>
+                    <li>PowerShell을 관리자 권한으로 실행</li>
+                    <li>다음 명령어들을 실행:</li>
+                </ul>
+                <div class="code-block">
+                    Set-ExecutionPolicy RemoteSigned -Force<br />
+                    Install-PackageProvider -Name NuGet -Force<br />
+                    Install-Module PSWindowsUpdate -Force<br />
+                    Import-Module PSWindowsUpdate<br />
+                    Get-Command -Module PSWindowsUpdate
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>PowerShell을 통한 업데이트 확인 및 설치:</strong>
+                <ul>
+                    <li>다음 명령어들을 실행:</li>
+                </ul>
+                <div class="code-block">
+                    Get-WindowsUpdate -Verbose<br />
+                    Install-WindowsUpdate -AcceptAll -AutoReboot<br />
+                    Get-WUHistory<br />
+                    Get-WUServiceManager
+                </div>
+            </div>
+
+            <h3>방법 3: 명령줄을 이용한 Windows Update</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>UsoClient를 이용한 업데이트:</strong>
+                <ul>
+                    <li>관리자 권한으로 명령 프롬프트 실행</li>
+                    <li>다음 명령어들을 실행:</li>
+                </ul>
+                <div class="code-block">
+                    UsoClient ScanInstallWait<br />
+                    UsoClient StartScan<br />
+                    UsoClient StartDownload<br />
+                    UsoClient StartInstall<br />
+                    UsoClient RestartDevice
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>wuauclt를 이용한 업데이트:</strong>
+                <ul>
+                    <li>다음 명령어들을 실행:</li>
+                </ul>
+                <div class="code-block">
+                    wuauclt /detectnow<br />
+                    wuauclt /updatenow<br />
+                    wuauclt /resetauthorization /detectnow<br />
+                    wuauclt /reportnow
+                </div>
+            </div>
+
+            <h3>방법 4: WSUS 서버 구성 (기업 환경)</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>WSUS 클라이언트 설정:</strong>
+                <ul>
+                    <li>PowerShell에서 다음 명령어 실행:</li>
+                </ul>
+                <div class="code-block">
+                    $WSUSServer = "http://wsus-server:8530"<br />
+                    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "WUServer" -Value $WSUSServer<br />
+                    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name "WUStatusServer" -Value $WSUSServer<br />
+                    Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "UseWUServer" -Value 1 -Type DWord
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>WSUS 연결 테스트:</strong>
+                <ul>
+                    <li>다음 명령어로 WSUS 서버 연결 확인:</li>
+                </ul>
+                <div class="code-block">
+                    Test-NetConnection -ComputerName "wsus-server" -Port 8530<br />
+                    wuauclt /detectnow /reportnow<br />
+                    Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"
+                </div>
+            </div>
+
+            <h3>방법 5: Desktop Experience 기능 추가</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>GUI 기능 설치 가능성 확인:</strong>
+                <ul>
+                    <li>PowerShell에서 다음 명령어 실행:</li>
+                </ul>
+                <div class="code-block">
+                    Get-WindowsFeature -Name "Server-Gui-Shell"<br />
+                    Get-WindowsFeature -Name "Server-Gui-Mgmt-Infra"<br />
+                    dism /online /get-features | findstr "ServerCore"
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>Desktop Experience 설치 (가능한 경우):</strong>
+                <ul>
+                    <li>다음 명령어로 GUI 기능 설치:</li>
+                </ul>
+                <div class="code-block">
+                    Install-WindowsFeature Server-Gui-Mgmt-Infra,Server-Gui-Shell -Restart<br />
+                    # 또는 DISM 사용<br />
+                    dism /online /enable-feature /featurename:ServerCore-FullServer /all
+                </div>
+                <ul>
+                    <li>⚠️ 주의: 이 작업은 시스템 재부팅이 필요하며 상당한 시간이 소요됩니다</li>
+                </ul>
+            </div>
+
+            <h3>방법 6: Windows Update 서비스 재구성</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Windows Update 서비스 상태 확인:</strong>
+                <ul>
+                    <li>PowerShell에서 다음 명령어 실행:</li>
+                </ul>
+                <div class="code-block">
+                    Get-Service -Name "wuauserv", "cryptSvc", "bits", "msiserver" | Format-Table<br />
+                    sc query wuauserv<br />
+                    sc queryex wuauserv
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>서비스 재시작 및 구성:</strong>
+                <ul>
+                    <li>다음 명령어들을 순서대로 실행:</li>
+                </ul>
+                <div class="code-block">
+                    Stop-Service -Name "wuauserv", "cryptSvc", "bits" -Force<br />
+                    Remove-Item -Path "C:\Windows\SoftwareDistribution" -Recurse -Force<br />
+                    Remove-Item -Path "C:\Windows\System32\catroot2" -Recurse -Force<br />
+                    Start-Service -Name "cryptSvc", "bits", "wuauserv"<br />
+                    Set-Service -Name "wuauserv" -StartupType Automatic
+                </div>
+            </div>
+
+            <h3>방법 7: 수동 업데이트 다운로드 및 설치</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>Microsoft Update Catalog 사용:</strong>
+                <ul>
+                    <li>다른 컴퓨터에서 Microsoft Update Catalog 접속</li>
+                    <li>Server Core용 업데이트 검색 및 다운로드</li>
+                    <li>USB 또는 네트워크를 통해 Server Core로 전송</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>수동 업데이트 설치:</strong>
+                <ul>
+                    <li>PowerShell에서 다음 명령어 실행:</li>
+                </ul>
+                <div class="code-block">
+                    # MSU 파일 설치<br />
+                    wusa.exe "C:\Updates\update.msu" /quiet /norestart<br />
+                    # 또는 DISM 사용<br />
+                    dism /online /add-package /packagepath:"C:\Updates\update.msu"<br />
+                    # CAB 파일 설치<br />
+                    dism /online /add-package /packagepath:"C:\Updates\update.cab"
+                </div>
+            </div>
+
+            <h3>방법 8: DISM 및 SFC 시스템 복구</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>DISM 시스템 이미지 복구:</strong>
+                <ul>
+                    <li>관리자 권한으로 PowerShell 실행</li>
+                    <li>다음 명령어들을 순서대로 실행:</li>
+                </ul>
+                <div class="code-block">
+                    DISM /Online /Cleanup-Image /CheckHealth<br />
+                    DISM /Online /Cleanup-Image /ScanHealth<br />
+                    DISM /Online /Cleanup-Image /RestoreHealth<br />
+                    DISM /Online /Cleanup-Image /StartComponentCleanup /ResetBase
+                </div>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>SFC 시스템 파일 검사:</strong>
+                <ul>
+                    <li>다음 명령어 실행:</li>
+                </ul>
+                <div class="code-block">
+                    sfc /scannow<br />
+                    sfc /verifyonly<br />
+                    Get-WindowsErrorReporting
+                </div>
+            </div>
+
+            <h2>📋 문제 해결 체크리스트</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>해결 방법</th>
+                        <th>난이도</th>
+                        <th>소요 시간</th>
+                        <th>성공률</th>
+                        <th>재부팅 필요</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Server Core 환경 확인</td>
+                        <td>쉬움</td>
+                        <td>10-15분</td>
+                        <td>높음</td>
+                        <td>아니오</td>
+                    </tr>
+                    <tr>
+                        <td>PowerShell Windows Update</td>
+                        <td>보통</td>
+                        <td>20-30분</td>
+                        <td>매우 높음</td>
+                        <td>예</td>
+                    </tr>
+                    <tr>
+                        <td>명령줄 Windows Update</td>
+                        <td>보통</td>
+                        <td>15-25분</td>
+                        <td>높음</td>
+                        <td>예</td>
+                    </tr>
+                    <tr>
+                        <td>WSUS 서버 구성</td>
+                        <td>어려움</td>
+                        <td>30-60분</td>
+                        <td>높음</td>
+                        <td>아니오</td>
+                    </tr>
+                    <tr>
+                        <td>Desktop Experience 추가</td>
+                        <td>어려움</td>
+                        <td>60-120분</td>
+                        <td>매우 높음</td>
+                        <td>예</td>
+                    </tr>
+                    <tr>
+                        <td>서비스 재구성</td>
+                        <td>보통</td>
+                        <td>20-30분</td>
+                        <td>높음</td>
+                        <td>예</td>
+                    </tr>
+                    <tr>
+                        <td>수동 업데이트 설치</td>
+                        <td>보통</td>
+                        <td>30-90분</td>
+                        <td>매우 높음</td>
+                        <td>예</td>
+                    </tr>
+                    <tr>
+                        <td>DISM 및 SFC 복구</td>
+                        <td>보통</td>
+                        <td>45-90분</td>
+                        <td>높음</td>
+                        <td>예</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>🔧 주요 명령어 참조</h2>
+            <div class="info">
+                <h3>Server Core 관리 명령어</h3>
+                <ul>
+                    <li><code>Get-WindowsFeature</code>: 설치된 기능 확인</li>
+                    <li><code>Install-WindowsFeature</code>: 기능 설치</li>
+                    <li><code>dism /online /get-currentedition</code>: 현재 에디션 확인</li>
+                    <li><code>Get-ComputerInfo</code>: 시스템 정보 확인</li>
+                </ul>
+                
+                <h3>PowerShell Windows Update 명령어</h3>
+                <ul>
+                    <li><code>Get-WindowsUpdate</code>: 사용 가능한 업데이트 확인</li>
+                    <li><code>Install-WindowsUpdate</code>: 업데이트 설치</li>
+                    <li><code>Get-WUHistory</code>: 업데이트 기록 확인</li>
+                    <li><code>Get-WUServiceManager</code>: 업데이트 서비스 관리자 확인</li>
+                </ul>
+                
+                <h3>명령줄 업데이트 도구</h3>
+                <ul>
+                    <li><code>UsoClient ScanInstallWait</code>: 업데이트 스캔 및 설치</li>
+                    <li><code>wuauclt /detectnow</code>: 즉시 업데이트 확인</li>
+                    <li><code>wusa.exe [파일명].msu</code>: MSU 파일 설치</li>
+                    <li><code>dism /online /add-package</code>: 패키지 추가</li>
+                </ul>
+            </div>
+
+            <h2>⚠️ 주의사항</h2>
+            <div class="warning">
+                <h3>Server Core 환경에서 주의점</h3>
+                <ul>
+                    <li>Server Core는 GUI가 없는 최소 설치 환경입니다</li>
+                    <li>Desktop Experience 설치 시 상당한 시간과 리소스가 필요합니다</li>
+                    <li>PowerShell 및 명령줄 도구 사용에 익숙해야 합니다</li>
+                    <li>원격 관리 도구 사용을 권장합니다</li>
+                    <li>서버 역할 변경 시 신중하게 검토하세요</li>
+                    <li>네트워크 설정이 올바른지 확인하세요</li>
+                    <li>WSUS 서버 사용 시 정책 설정을 확인하세요</li>
+                    <li>시스템 복구 지점을 미리 생성하세요</li>
+                </ul>
+            </div>
+
+            <div class="danger">
+                <h3>언제 전문가의 도움이 필요한가?</h3>
+                <ul>
+                    <li>Server Core 환경 관리 경험이 부족한 경우</li>
+                    <li>기업 환경에서 복잡한 WSUS 정책이 적용된 경우</li>
+                    <li>Active Directory 도메인 환경에서 정책 충돌이 있는 경우</li>
+                    <li>하드웨어 호환성 문제로 인한 업데이트 실패</li>
+                    <li>시스템 파일 손상이 심각하여 복구가 불가능한 경우</li>
+                    <li>서버 역할 변경이 비즈니스에 미치는 영향이 큰 경우</li>
+                    <li>원격 관리 환경 구성이 필요한 경우</li>
+                </ul>
+            </div>
+
+            <h2>✅ 예방 방법</h2>
+            <div class="success">
+                <ul>
+                    <li>Server Core 환경에 적합한 관리 도구 사용</li>
+                    <li>PowerShell 스크립트를 이용한 자동화</li>
+                    <li>WSUS 서버를 통한 중앙 집중식 업데이트 관리</li>
+                    <li>정기적인 수동 업데이트 확인</li>
+                    <li>원격 관리 도구 활용</li>
+                    <li>시스템 복구 지점 정기 생성</li>
+                    <li>업데이트 정책 사전 계획</li>
+                    <li>서버 모니터링 도구 사용</li>
+                    <li>문서화된 업데이트 절차 준수</li>
+                </ul>
+            </div>
+
+            <h2>💡 추가 팁</h2>
+            <div class="info">
+                <ul>
+                    <li>Server Core는 보안과 성능을 위한 최소 설치 옵션입니다</li>
+                    <li>PowerShell은 Server Core 관리의 핵심 도구입니다</li>
+                    <li>원격 관리를 통해 GUI 환경에서 Server Core를 관리할 수 있습니다</li>
+                    <li>WSUS 서버 사용 시 네트워크 대역폭을 절약할 수 있습니다</li>
+                    <li>Server Manager를 통한 원격 관리가 효율적입니다</li>
+                    <li>정기적인 스크립트 기반 업데이트 확인을 권장합니다</li>
+                    <li>이벤트 로그를 통해 업데이트 상태를 모니터링하세요</li>
+                    <li>업데이트 실패 시 상세 로그를 분석하세요</li>
+                </ul>
+            </div>
+
+            <h2>🔍 관련 오류 코드</h2>
+            <div class="info">
+                <h3>유사한 Server Core 관련 오류들</h3>
+                <ul>
+                    <li><strong>0x8024001E</strong>: 서비스 중지 (WU_E_SERVICE_STOP)</li>
+                    <li><strong>0x8024001D</strong>: 잘못된 업데이트 (WU_E_INVALID_UPDATE)</li>
+                    <li><strong>0x8024001C</strong>: 업데이트 다운로더 없음 (WU_E_NO_UPDATE_DOWNLOADER)</li>
+                    <li><strong>0x80240041</strong>: 서버 선택 실패 (WU_E_SERVER_SELECTION_FAILED)</li>
+                    <li><strong>0x80240042</strong>: 프로토콜 오류 (WU_E_PROTOCOL_ERROR)</li>
+                    <li><strong>0x80070005</strong>: 액세스 거부됨</li>
+                    <li><strong>0x80070002</strong>: 시스템이 지정된 파일을 찾을 수 없음</li>
+                </ul>
+            </div>
+
+            <h2>🛠️ 고급 해결 방법</h2>
+            <div class="info">
+                <h3>Server Core 기능 확인 스크립트</h3>
+                <ul>
+                    <li>PowerShell에서 다음 스크립트 실행:</li>
+                </ul>
+                <div class="code-block">
+                    # Server Core 상태 확인<br />
+                    $ServerCore = Get-WindowsFeature -Name "Server-Gui-Shell"<br />
+                    $GuiMgmt = Get-WindowsFeature -Name "Server-Gui-Mgmt-Infra"<br />
+                    Write-Host "Server GUI Shell: $($ServerCore.InstallState)"<br />
+                    Write-Host "GUI Management Infrastructure: $($GuiMgmt.InstallState)"<br />
+                    if ($ServerCore.InstallState -eq "Available") {<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;Write-Host "현재 Server Core 모드입니다." -ForegroundColor Yellow<br />
+                    } else {<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;Write-Host "Desktop Experience가 설치되어 있습니다." -ForegroundColor Green<br />
+                    }
+                </div>
+                
+                <h3>자동 업데이트 스크립트</h3>
+                <ul>
+                    <li>Server Core용 자동 업데이트 스크립트:</li>
+                </ul>
+                <div class="code-block">
+                    # PSWindowsUpdate 모듈 확인 및 설치<br />
+                    if (!(Get-Module -ListAvailable -Name PSWindowsUpdate)) {<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;Install-Module PSWindowsUpdate -Force<br />
+                    }<br />
+                    Import-Module PSWindowsUpdate<br />
+                    # 업데이트 확인 및 설치<br />
+                    $Updates = Get-WindowsUpdate<br />
+                    if ($Updates) {<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;Write-Host "발견된 업데이트: $($Updates.Count)개" -ForegroundColor Green<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;Install-WindowsUpdate -AcceptAll -AutoReboot<br />
+                    } else {<br />
+                    &nbsp;&nbsp;&nbsp;&nbsp;Write-Host "사용 가능한 업데이트가 없습니다." -ForegroundColor Yellow<br />
+                    }
+                </div>
+            </div>
+
+            <h2>🔄 Server Core 관리 가이드</h2>
+            <div class="info">
+                <h3>Server Core vs Desktop Experience</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>특성</th>
+                            <th>Server Core</th>
+                            <th>Desktop Experience</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>GUI</td>
+                            <td>없음</td>
+                            <td>전체 GUI</td>
+                        </tr>
+                        <tr>
+                            <td>디스크 공간</td>
+                            <td>적음 (~4GB)</td>
+                            <td>많음 (~15GB)</td>
+                        </tr>
+                        <tr>
+                            <td>메모리 사용량</td>
+                            <td>적음</td>
+                            <td>많음</td>
+                        </tr>
+                        <tr>
+                            <td>보안 공격 표면</td>
+                            <td>작음</td>
+                            <td>큼</td>
+                        </tr>
+                        <tr>
+                            <td>관리 방법</td>
+                            <td>PowerShell, 원격</td>
+                            <td>GUI, PowerShell</td>
+                        </tr>
+                        <tr>
+                            <td>업데이트 방법</td>
+                            <td>PowerShell, 명령줄</td>
+                            <td>GUI, PowerShell</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>Server Core 권장 관리 도구</h3>
+                <ul>
+                    <li><strong>PowerShell</strong>: 주요 관리 인터페이스</li>
+                    <li><strong>Server Manager</strong>: 원격 GUI 관리</li>
+                    <li><strong>Windows Admin Center</strong>: 웹 기반 관리</li>
+                    <li><strong>RSAT</strong>: 원격 서버 관리 도구</li>
+                    <li><strong>PSWindowsUpdate</strong>: PowerShell 업데이트 모듈</li>
+                </ul>
+            </div>
+
+            <h2>📊 Server Core 업데이트 전략</h2>
+            <div class="info">
+                <h3>환경별 권장 업데이트 방법</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>환경</th>
+                            <th>권장 방법</th>
+                            <th>도구</th>
+                            <th>장점</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>단일 서버</td>
+                            <td>PowerShell 직접 관리</td>
+                            <td>PSWindowsUpdate</td>
+                            <td>간단하고 직접적</td>
+                        </tr>
+                        <tr>
+                            <td>소규모 환경</td>
+                            <td>원격 관리</td>
+                            <td>Server Manager</td>
+                            <td>중앙 집중식 관리</td>
+                        </tr>
+                        <tr>
+                            <td>대규모 환경</td>
+                            <td>WSUS 서버</td>
+                            <td>WSUS + GPO</td>
+                            <td>정책 기반 관리</td>
+                        </tr>
+                        <tr>
+                            <td>클라우드 환경</td>
+                            <td>자동화 스크립트</td>
+                            <td>PowerShell DSC</td>
+                            <td>자동화 및 확장성</td>
+                        </tr>
+                        <tr>
+                            <td>하이브리드 환경</td>
+                            <td>Windows Admin Center</td>
+                            <td>WAC + Azure</td>
+                            <td>통합 관리</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2>🔧 원격 관리 설정</h2>
+            <div class="info">
+                <h3>PowerShell 원격 관리 활성화</h3>
+                <ul>
+                    <li>Server Core에서 다음 명령어 실행:</li>
+                </ul>
+                <div class="code-block">
+                    # PowerShell 원격 관리 활성화<br />
+                    Enable-PSRemoting -Force<br />
+                    Set-Item WSMan:\localhost\Client\TrustedHosts -Value "*" -Force<br />
+                    # 방화벽 규칙 확인<br />
+                    Get-NetFirewallRule -DisplayName "*Remote Management*" | Enable-NetFirewallRule<br />
+                    # WinRM 서비스 시작<br />
+                    Start-Service WinRM<br />
+                    Set-Service WinRM -StartupType Automatic
+                </div>
+                
+                <h3>원격 컴퓨터에서 Server Core 관리</h3>
+                <ul>
+                    <li>관리 컴퓨터에서 다음 명령어 실행:</li>
+                </ul>
+                <div class="code-block">
+                    # 원격 세션 생성<br />
+                    $Session = New-PSSession -ComputerName "ServerCore-IP" -Credential (Get-Credential)<br />
+                    # 원격 명령 실행<br />
+                    Invoke-Command -Session $Session -ScriptBlock { Get-WindowsUpdate }<br />
+                    # 세션 종료<br />
+                    Remove-PSSession $Session
+                </div>
+            </div>
+
+            <h2>📞 Microsoft 지원 연락처</h2>
+            <div class="success">
+                <h3>한국 Microsoft 지원</h3>
+                <ul>
+                    <li><strong>기술 지원:</strong> 1588-8833</li>
+                    <li><strong>온라인 지원:</strong> Microsoft 지원 웹사이트</li>
+                    <li><strong>커뮤니티:</strong> Microsoft 커뮤니티 포럼</li>
+                    <li><strong>원격 지원:</strong> Microsoft 원격 지원 도구</li>
+                    <li><strong>운영 시간:</strong> 평일 09:00-18:00</li>
+                </ul>
+                
+                <h3>준비 사항</h3>
+                <ul>
+                    <li>정확한 오류 코드 (0x80240040)</li>
+                    <li>오류 발생 시점 및 상황 설명</li>
+                    <li>시스템 정보 (Windows Server 버전, 에디션)</li>
+                    <li>Server Core 설치 유형 정보</li>
+                    <li>설치된 역할 및 기능 목록</li>
+                    <li>네트워크 환경 정보</li>
+                    <li>WSUS 서버 정보 (해당되는 경우)</li>
+                    <li>PowerShell 실행 로그</li>
+                </ul>
+            </div>
+
+            <footer
+                style="
+                    text-align: center;
+                    margin-top: 50px;
+                    padding-top: 20px;
+                    border-top: 1px solid #ddd;
+                    color: #666;
+                ">
+                <p>
+                    이 가이드를 통해 Windows Server Core 환경에서의 업데이트 문제가 해결되기를 바랍니다. 문제가 지속되면 Microsoft 지원팀에 직접 문의하시기 바랍니다.
+                </p>
+            </footer>
+        </div>
+    </body>
+</html>
