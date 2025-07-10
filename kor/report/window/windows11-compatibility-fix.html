@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="Windows 11 호환성 검사를 통과하지 못했을 때 해결하는 방법을 단계별로 안내합니다. TPM 2.0, 보안 부팅, CPU 호환성 등 시스템 요구사항을 충족하는 완벽한 가이드를 제공합니다." />
+        <meta
+            name="keywords"
+            content="Windows 11, 호환성 검사, TPM 2.0, 보안 부팅, CPU 호환성, 시스템 요구사항, UEFI, 메모리 업그레이드" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://emfls.github.io/kor/report/window/windows11-compatibility-fix.html" />
+        <meta name="author" content="Itagi" />
+
+        <!-- Google 태그 (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+
+        <title>Windows 11 호환성 검사 통과 못했다면 이렇게 하세요 - 완벽한 해결 가이드</title>
+        <style>
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                margin: 0;
+                padding: 20px;
+                background-color: #f5f5f5;
+                color: #333;
+            }
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                background-color: white;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+                color: #0078d4;
+                text-align: center;
+                border-bottom: 3px solid #0078d4;
+                padding-bottom: 10px;
+                margin-bottom: 30px;
+            }
+            h2 {
+                color: #106ebe;
+                border-left: 4px solid #0078d4;
+                padding-left: 15px;
+                margin-top: 30px;
+            }
+            h3 {
+                color: #2c5282;
+                margin-top: 25px;
+            }
+            .warning {
+                background-color: #fff3cd;
+                border: 1px solid #ffeaa7;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            .info {
+                background-color: #d1ecf1;
+                border: 1px solid #bee5eb;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            .success {
+                background-color: #d4edda;
+                border: 1px solid #c3e6cb;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            .danger {
+                background-color: #f8d7da;
+                border: 1px solid #f5c6cb;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            .timeline-item {
+                background-color: #f8f9fa;
+                border: 1px solid #dee2e6;
+                border-radius: 8px;
+                padding: 20px;
+                margin: 20px 0;
+                position: relative;
+                padding-left: 80px;
+            }
+            .timeline-badge {
+                position: absolute;
+                top: 20px;
+                left: 20px;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background-color: #0078d4;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                font-size: 14px;
+            }
+            .priority-high {
+                border-left: 4px solid #dc3545;
+            }
+            .priority-medium {
+                border-left: 4px solid #ffc107;
+            }
+            .priority-low {
+                border-left: 4px solid #28a745;
+            }
+            ul,
+            ol {
+                padding-left: 20px;
+            }
+            li {
+                margin: 8px 0;
+            }
+            code {
+                background-color: #f1f1f1;
+                padding: 2px 4px;
+                border-radius: 3px;
+                font-family: "Courier New", monospace;
+            }
+            .code-block {
+                background-color: #2d3748;
+                color: #e2e8f0;
+                padding: 15px;
+                border-radius: 5px;
+                overflow-x: auto;
+                margin: 15px 0;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 20px 0;
+            }
+            th,
+            td {
+                border: 1px solid #ddd;
+                padding: 12px;
+                text-align: left;
+            }
+            th {
+                background-color: #0078d4;
+                color: white;
+            }
+            tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+            .checklist {
+                background-color: #f8f9fa;
+                border: 1px solid #dee2e6;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 15px 0;
+            }
+            .checklist input[type="checkbox"] {
+                margin-right: 10px;
+                transform: scale(1.2);
+            }
+            .highlight {
+                background-color: #fff3cd;
+                padding: 2px 4px;
+                border-radius: 3px;
+                font-weight: bold;
+            }
+            .requirement-status {
+                display: inline-block;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 12px;
+                font-weight: bold;
+                margin-left: 10px;
+            }
+            .status-pass {
+                background-color: #d4edda;
+                color: #155724;
+            }
+            .status-fail {
+                background-color: #f8d7da;
+                color: #721c24;
+            }
+            .status-warning {
+                background-color: #fff3cd;
+                color: #856404;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Windows 11 호환성 검사 통과 못했다면 이렇게 하세요</h1>
+
+            <div class="danger">
+                <strong>⚠️ 중요:</strong> Windows 11 호환성 검사 실패는 하드웨어 또는 설정 문제로 발생합니다. 이
+                가이드를 통해 단계별로 문제를 해결하고 Windows 11 설치 요구사항을 충족시킬 수 있습니다.
+            </div>
+
+            <h2>🔍 Windows 11 시스템 요구사항 확인</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>요구사항</th>
+                        <th>최소 사양</th>
+                        <th>권장 사양</th>
+                        <th>확인 방법</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>프로세서</td>
+                        <td>1GHz 이상, 2코어 이상 64비트</td>
+                        <td>Intel 8세대 이상 / AMD Ryzen 2000 이상</td>
+                        <td>작업 관리자 → 성능 탭</td>
+                    </tr>
+                    <tr>
+                        <td>메모리</td>
+                        <td>4GB RAM</td>
+                        <td>8GB RAM 이상</td>
+                        <td>시스템 정보 (msinfo32)</td>
+                    </tr>
+                    <tr>
+                        <td>저장소</td>
+                        <td>64GB 이상</td>
+                        <td>256GB SSD 이상</td>
+                        <td>디스크 관리</td>
+                    </tr>
+                    <tr>
+                        <td>TPM</td>
+                        <td>TPM 2.0</td>
+                        <td>TPM 2.0 활성화</td>
+                        <td>tpm.msc 실행</td>
+                    </tr>
+                    <tr>
+                        <td>보안 부팅</td>
+                        <td>UEFI 펌웨어</td>
+                        <td>보안 부팅 지원</td>
+                        <td>BIOS/UEFI 설정</td>
+                    </tr>
+                    <tr>
+                        <td>그래픽</td>
+                        <td>DirectX 12 호환</td>
+                        <td>WDDM 2.0 드라이버</td>
+                        <td>dxdiag 실행</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>🚀 단계별 호환성 문제 해결</h2>
+
+            <div class="timeline-item priority-high">
+                <div class="timeline-badge">1단계</div>
+                <h3>PC 상태 검사 도구로 정확한 문제 파악</h3>
+
+                <div class="info">
+                    <strong>💡 먼저 해야 할 일:</strong> Microsoft 공식 PC 상태 검사 도구를 사용하여 정확히 어떤
+                    요구사항이 충족되지 않는지 확인하세요.
+                </div>
+
+                <h4>PC 상태 검사 도구 사용법:</h4>
+                <ol>
+                    <li>Microsoft 공식 웹사이트에서 "PC 상태 검사" 앱 다운로드</li>
+                    <li>앱 설치 후 실행</li>
+                    <li>"지금 확인" 버튼 클릭</li>
+                    <li>실패한 항목들을 메모장에 기록</li>
+                </ol>
+
+                <div class="checklist">
+                    <h4>✅ 확인사항</h4>
+                    <label><input type="checkbox" /> PC 상태 검사 앱 다운로드 및 설치</label><br />
+                    <label><input type="checkbox" /> 호환성 검사 실행</label><br />
+                    <label><input type="checkbox" /> 실패한 요구사항 목록 작성</label><br />
+                    <label><input type="checkbox" /> 각 항목별 해결 우선순위 설정</label>
+                </div>
+
+                <div class="code-block">
+                    # PowerShell로 시스템 정보 확인<br />
+                    Get-ComputerInfo | Select-Object WindowsProductName, TotalPhysicalMemory, CsProcessors<br />
+                    Get-Tpm<br />
+                    Get-SecureBootUEFI -Name SetupMode
+                </div>
+            </div>
+
+            <div class="timeline-item priority-high">
+                <div class="timeline-badge">2단계</div>
+                <h3>TPM 2.0 활성화 및 설정</h3>
+
+                <div class="warning">
+                    <strong>🔒 가장 흔한 문제:</strong> TPM 2.0이 비활성화되어 있거나 지원하지 않는 경우가 Windows 11
+                    호환성 검사 실패의 주요 원인입니다.
+                </div>
+
+                <h4>TPM 상태 확인:</h4>
+                <ol>
+                    <li><kbd>Windows</kbd> + <kbd>R</kbd> → <code>tpm.msc</code> 입력</li>
+                    <li>TPM 관리 콘솔에서 상태 확인</li>
+                    <li>"TPM을 사용할 준비가 되었습니다" 메시지 확인</li>
+                </ol>
+
+                <h4>TPM 2.0 활성화 방법:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>메인보드 제조사</th>
+                            <th>BIOS 진입 키</th>
+                            <th>TPM 설정 위치</th>
+                            <th>설정 이름</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ASUS</td>
+                            <td>F2 또는 Del</td>
+                            <td>Advanced → PCH-FW Configuration</td>
+                            <td>TPM Device Selection</td>
+                        </tr>
+                        <tr>
+                            <td>MSI</td>
+                            <td>Del</td>
+                            <td>Settings → Security → Trusted Computing</td>
+                            <td>Security Device Support</td>
+                        </tr>
+                        <tr>
+                            <td>Gigabyte</td>
+                            <td>Del</td>
+                            <td>Settings → Miscellaneous</td>
+                            <td>Intel Platform Trust Technology</td>
+                        </tr>
+                        <tr>
+                            <td>ASRock</td>
+                            <td>F2 또는 Del</td>
+                            <td>Security → Intel Platform Trust Technology</td>
+                            <td>Intel PTT</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="checklist">
+                    <h4>✅ TPM 설정 체크리스트</h4>
+                    <label><input type="checkbox" /> 현재 TPM 상태 확인</label><br />
+                    <label><input type="checkbox" /> BIOS/UEFI 설정 진입</label><br />
+                    <label><input type="checkbox" /> TPM 2.0 또는 Intel PTT 활성화</label><br />
+                    <label><input type="checkbox" /> 설정 저장 후 재부팅</label><br />
+                    <label><input type="checkbox" /> Windows에서 TPM 상태 재확인</label>
+                </div>
+            </div>
+
+            <div class="timeline-item priority-high">
+                <div class="timeline-badge">3단계</div>
+                <h3>보안 부팅 (Secure Boot) 활성화</h3>
+
+                <div class="info">
+                    <strong>📋 보안 부팅이란:</strong> UEFI 펌웨어의 보안 기능으로, 부팅 시 디지털 서명된 운영체제만
+                    실행할 수 있도록 하는 기술입니다.
+                </div>
+
+                <h4>보안 부팅 활성화 전 준비사항:</h4>
+                <ol>
+                    <li><strong>UEFI 모드 확인:</strong> 레거시 BIOS가 아닌 UEFI 모드여야 함</li>
+                    <li><strong>디스크 파티션:</strong> GPT 파티션 테이블 사용</li>
+                    <li><strong>CSM 비활성화:</strong> Compatibility Support Module 끄기</li>
+                </ol>
+
+                <h4>보안 부팅 설정 방법:</h4>
+                <ol>
+                    <li>BIOS/UEFI 설정 진입</li>
+                    <li>Boot 또는 Security 메뉴 찾기</li>
+                    <li>Secure Boot 옵션을 "Enabled"로 설정</li>
+                    <li>OS Type을 "Windows UEFI mode"로 설정</li>
+                    <li>CSM (Compatibility Support Module) 비활성화</li>
+                </ol>
+
+                <div class="warning">
+                    <h4>⚠️ 주의사항</h4>
+                    <ul>
+                        <li>보안 부팅 활성화 전 중요한 데이터 백업</li>
+                        <li>레거시 부팅 모드에서 설치된 OS는 부팅 불가능</li>
+                        <li>일부 오래된 하드웨어나 소프트웨어 호환성 문제 발생 가능</li>
+                    </ul>
+                </div>
+
+                <div class="code-block">
+                    # PowerShell로 보안 부팅 상태 확인<br />
+                    Confirm-SecureBootUEFI<br />
+                    Get-SecureBootUEFI -Name SetupMode<br />
+                    Get-SecureBootPolicy
+                </div>
+
+                <div class="checklist">
+                    <h4>✅ 보안 부팅 체크리스트</h4>
+                    <label><input type="checkbox" /> 현재 부팅 모드 확인 (UEFI/Legacy)</label><br />
+                    <label><input type="checkbox" /> 디스크 파티션 형식 확인 (GPT/MBR)</label><br />
+                    <label><input type="checkbox" /> CSM 비활성화</label><br />
+                    <label><input type="checkbox" /> 보안 부팅 활성화</label><br />
+                    <label><input type="checkbox" /> 정상 부팅 확인</label>
+                </div>
+            </div>
+
+            <div class="timeline-item priority-medium">
+                <div class="timeline-badge">4단계</div>
+                <h3>CPU 호환성 문제 해결</h3>
+
+                <div class="danger">
+                    <strong>🚫 지원되지 않는 CPU:</strong> Windows 11은 Intel 8세대(2017년) 이후, AMD Ryzen 2000
+                    시리즈(2018년) 이후 CPU만 공식 지원합니다.
+                </div>
+
+                <h4>CPU 호환성 확인:</h4>
+                <ol>
+                    <li>작업 관리자 → 성능 탭 → CPU에서 모델명 확인</li>
+                    <li>Microsoft 공식 지원 CPU 목록과 비교</li>
+                    <li>제조사별 지원 여부 확인</li>
+                </ol>
+
+                <h4>지원되지 않는 CPU 해결 방법:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>해결 방법</th>
+                            <th>난이도</th>
+                            <th>위험도</th>
+                            <th>설명</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>레지스트리 수정</td>
+                            <td>중간</td>
+                            <td>중간</td>
+                            <td>CPU 검사 우회 (비공식)</td>
+                        </tr>
+                        <tr>
+                            <td>ISO 파일 수정</td>
+                            <td>높음</td>
+                            <td>중간</td>
+                            <td>설치 파일 직접 수정</td>
+                        </tr>
+                        <tr>
+                            <td>CPU 업그레이드</td>
+                            <td>높음</td>
+                            <td>낮음</td>
+                            <td>하드웨어 교체 (권장)</td>
+                        </tr>
+                        <tr>
+                            <td>Windows 10 유지</td>
+                            <td>낮음</td>
+                            <td>낮음</td>
+                            <td>2025년까지 지원</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block">
+                    # 레지스트리 수정으로 CPU 검사 우회 (비공식)<br />
+                    # 주의: 이 방법은 Microsoft에서 공식 지원하지 않습니다<br />
+                    reg add "HKLM\SYSTEM\Setup\LabConfig" /v "BypassCPUCheck" /t REG_DWORD /d 1 /f<br />
+                    reg add "HKLM\SYSTEM\Setup\LabConfig" /v "BypassTPMCheck" /t REG_DWORD /d 1 /f<br />
+                    reg add "HKLM\SYSTEM\Setup\LabConfig" /v "BypassSecureBootCheck" /t REG_DWORD /d 1 /f
+                </div>
+
+                <div class="checklist">
+                    <h4>✅ CPU 호환성 체크리스트</h4>
+                    <label><input type="checkbox" /> 현재 CPU 모델 확인</label><br />
+                    <label><input type="checkbox" /> Microsoft 지원 CPU 목록 확인</label><br />
+                    <label><input type="checkbox" /> 해결 방법 선택</label><br />
+                    <label><input type="checkbox" /> 백업 및 복원 지점 생성</label>
+                </div>
+            </div>
+
+            <div class="timeline-item priority-medium">
+                <div class="timeline-badge">5단계</div>
+                <h3>메모리 및 저장소 업그레이드</h3>
+
+                <h4>메모리 요구사항:</h4>
+                <ul>
+                    <li><strong>최소:</strong> 4GB RAM (64비트)</li>
+                    <li><strong>권장:</strong> 8GB RAM 이상</li>
+                    <li><strong>최적:</strong> 16GB RAM (멀티태스킹 환경)</li>
+                </ul>
+
+                <h4>저장소 요구사항:</h4>
+                <ul>
+                    <li><strong>최소:</strong> 64GB 사용 가능 공간</li>
+                    <li><strong>권장:</strong> 256GB SSD</li>
+                    <li><strong>최적:</strong> 512GB NVMe SSD</li>
+                </ul>
+
+                <div class="code-block">
+                    # PowerShell로 메모리 및 저장소 정보 확인<br />
+                    Get-WmiObject -Class Win32_PhysicalMemory | Measure-Object -Property Capacity -Sum<br />
+                    Get-WmiObject -Class Win32_LogicalDisk | Select-Object DeviceID, Size, FreeSpace
+                </div>
+
+                <h4>업그레이드 가이드:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>구성 요소</th>
+                            <th>확인 방법</th>
+                            <th>업그레이드 방법</th>
+                            <th>예상 비용</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>RAM</td>
+                            <td>작업 관리자 → 성능 → 메모리</td>
+                            <td>메모리 슬롯에 추가 설치</td>
+                            <td>5-15만원</td>
+                        </tr>
+                        <tr>
+                            <td>저장소</td>
+                            <td>디스크 관리 또는 설정 → 저장소</td>
+                            <td>SSD 교체 또는 추가</td>
+                            <td>10-30만원</td>
+                        </tr>
+                        <tr>
+                            <td>그래픽</td>
+                            <td>dxdiag 실행</td>
+                            <td>그래픽 카드 업그레이드</td>
+                            <td>20-100만원</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="checklist">
+                    <h4>✅ 하드웨어 업그레이드 체크리스트</h4>
+                    <label><input type="checkbox" /> 현재 메모리 용량 확인</label><br />
+                    <label><input type="checkbox" /> 저장소 용량 및 속도 확인</label><br />
+                    <label><input type="checkbox" /> 메인보드 호환성 확인</label><br />
+                    <label><input type="checkbox" /> 업그레이드 부품 구매</label><br />
+                    <label><input type="checkbox" /> 전문가 설치 또는 자가 설치</label>
+                </div>
+            </div>
+
+            <div class="timeline-item priority-low">
+                <div class="timeline-badge">6단계</div>
+                <h3>최종 호환성 검사 및 설치</h3>
+
+                <h4>최종 확인 단계:</h4>
+                <ol>
+                    <li>PC 상태 검사 앱으로 재검사</li>
+                    <li>모든 요구사항 통과 확인</li>
+                    <li>Windows 11 설치 미디어 준비</li>
+                    <li>중요 데이터 백업</li>
+                    <li>Windows 11 설치 진행</li>
+                </ol>
+
+                <div class="success">
+                    <h4>✅ 호환성 검사 통과 시 확인사항</h4>
+                    <ul>
+                        <li>프로세서: <span class="status-pass">통과</span></li>
+                        <li>메모리: <span class="status-pass">통과</span></li>
+                        <li>저장소: <span class="status-pass">통과</span></li>
+                        <li>TPM: <span class="status-pass">통과</span></li>
+                        <li>보안 부팅: <span class="status-pass">통과</span></li>
+                        <li>그래픽: <span class="status-pass">통과</span></li>
+                    </ul>
+                </div>
+
+                <div class="checklist">
+                    <h4>✅ 설치 준비 체크리스트</h4>
+                    <label><input type="checkbox" /> 모든 호환성 요구사항 통과</label><br />
+                    <label><input type="checkbox" /> Windows 11 ISO 파일 다운로드</label><br />
+                    <label><input type="checkbox" /> 설치 USB 또는 DVD 준비</label><br />
+                    <label><input type="checkbox" /> 중요 파일 백업 완료</label><br />
+                    <label><input type="checkbox" /> 제품 키 준비</label>
+                </div>
+            </div>
+
+            <h2>🔧 문제별 상세 해결 방법</h2>
+
+            <div class="info">
+                <h3>TPM 관련 문제</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>문제</th>
+                            <th>원인</th>
+                            <th>해결 방법</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>TPM을 찾을 수 없음</td>
+                            <td>하드웨어 미지원</td>
+                            <td>메인보드 교체 또는 우회 방법 사용</td>
+                        </tr>
+                        <tr>
+                            <td>TPM 1.2 버전</td>
+                            <td>구형 TPM 칩</td>
+                            <td>BIOS 업데이트 또는 하드웨어 교체</td>
+                        </tr>
+                        <tr>
+                            <td>TPM 비활성화 상태</td>
+                            <td>BIOS 설정 문제</td>
+                            <td>BIOS에서 TPM 또는 Intel PTT 활성화</td>
+                        </tr>
+                        <tr>
+                            <td>TPM 초기화 필요</td>
+                            <td>이전 설정 충돌</td>
+                            <td>TPM 관리 콘솔에서 초기화</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="warning">
+                <h3>보안 부팅 관련 문제</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>문제</th>
+                            <th>원인</th>
+                            <th>해결 방법</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>보안 부팅 옵션 없음</td>
+                            <td>레거시 BIOS</td>
+                            <td>UEFI 지원 메인보드로 교체</td>
+                        </tr>
+                        <tr>
+                            <td>보안 부팅 활성화 불가</td>
+                            <td>CSM 활성화 상태</td>
+                            <td>CSM 비활성화 후 재시도</td>
+                        </tr>
+                        <tr>
+                            <td>부팅 실패</td>
+                            <td>MBR 파티션 사용</td>
+                            <td>GPT로 변환 또는 재설치</td>
+                        </tr>
+                        <tr>
+                            <td>키 관리 오류</td>
+                            <td>보안 키 손상</td>
+                            <td>기본 키로 복원</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2>⚠️ 주의사항 및 대안</h2>
+
+            <div class="danger">
+                <h3>비공식 우회 방법 사용 시 주의사항</h3>
+                <ul>
+                    <li><strong>보안 위험:</strong> 시스템 보안 기능이 비활성화됨</li>
+                    <li><strong>업데이트 문제:</strong> 향후 Windows Update에서 문제 발생 가능</li>
+                    <li><strong>지원 제외:</strong> Microsoft 공식 지원 받을 수 없음</li>
+                    <li><strong>성능 저하:</strong> 최적화되지 않은 환경에서 실행</li>
+                    <li><strong>호환성 문제:</strong> 일부 앱이나 기능 사용 불가</li>
+                </ul>
+            </div>
+
+            <div class="info">
+                <h3>Windows 10 계속 사용하기</h3>
+                <ul>
+                    <li><strong>지원 기간:</strong> 2025년 10월 14일까지 보안 업데이트 제공</li>
+                    <li><strong>안정성:</strong> 검증된 운영체제로 안정적 사용 가능</li>
+                    <li><strong>호환성:</strong> 대부분의 소프트웨어와 하드웨어 지원</li>
+                    <li><strong>성능:</strong> 구형 하드웨어에서 더 나은 성능</li>
+                </ul>
+            </div>
+
+            <h2>📊 호환성 검사 결과별 대응 방안</h2>
+
+            <div class="success">
+                <h3>완전 호환 시스템</h3>
+                <div class="checklist">
+                    <label><input type="checkbox" /> 모든 요구사항 충족</label><br />
+                    <label><input type="checkbox" /> 즉시 Windows 11 설치 가능</label><br />
+                    <label><input type="checkbox" /> 최적의 성능 및 보안 제공</label><br />
+                    <label><input type="checkbox" /> 모든 기능 사용 가능</label>
+                </div>
+            </div>
+
+            <div class="warning">
+                <h3>부분 호환 시스템</h3>
+                <div class="checklist">
+                    <label><input type="checkbox" /> 일부 요구사항 미충족</label><br />
+                    <label><input type="checkbox" /> 설정 변경으로 해결 가능</label><br />
+                    <label><input type="checkbox" /> 소프트웨어 업데이트 필요</label><br />
+                    <label><input type="checkbox" /> 부분적 하드웨어 업그레이드</label>
+                </div>
+            </div>
+
+            <div class="danger">
+                <h3>비호환 시스템</h3>
+                <div class="checklist">
+                    <label><input type="checkbox" /> 주요 요구사항 미충족</label><br />
+                    <label><input type="checkbox" /> 대규모 하드웨어 교체 필요</label><br />
+                    <label><input type="checkbox" /> 비용 대비 효과 검토</label><br />
+                    <label><input type="checkbox" /> 새 PC 구매 고려</label>
+                </div>
+            </div>
+
+            <h2>📞 추가 지원 및 리소스</h2>
+
+            <div class="info">
+                <h3>Microsoft 공식 지원</h3>
+                <ul>
+                    <li><strong>PC 상태 검사 앱:</strong> 공식 호환성 검사 도구</li>
+                    <li><strong>Windows 11 사양:</strong> 상세 시스템 요구사항</li>
+                    <li><strong>지원 센터:</strong> 1588-8833 (한국)</li>
+                    <li><strong>커뮤니티:</strong> Microsoft 기술 커뮤니티</li>
+                </ul>
+            </div>
+
+            <div class="success">
+                <h3>하드웨어 제조사 지원</h3>
+                <ul>
+                    <li><strong>Intel:</strong> 프로세서 호환성 및 드라이버</li>
+                    <li><strong>AMD:</strong> CPU 및 그래픽 지원</li>
+                    <li><strong>메인보드 제조사:</strong> BIOS 업데이트 및 설정</li>
+                    <li><strong>OEM 제조사:</strong> 완제품 PC 지원</li>
+                </ul>
+            </div>
+
+            <footer
+                style="
+                    text-align: center;
+                    margin-top: 50px;
+                    padding-top: 20px;
+                    border-top: 1px solid #ddd;
+                    color: #666;
+                ">
+                <p>
+                    Windows 11 호환성 문제는 대부분 해결 가능합니다. 이 가이드를 통해 단계별로 문제를 해결하고, 필요시
+                    전문가의 도움을 받아 안전하게 업그레이드하시기 바랍니다. 무리한 우회 방법보다는 정식 해결 방법을
+                    권장합니다.
+                </p>
+            </footer>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,880 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="Windows 11 USB 설치 미디어 만들기 초보자용 가이드 - Media Creation Tool, Rufus 사용법부터 부팅 USB 생성까지 단계별로 쉽게 설명합니다. 설치 오류 해결 방법도 포함된 완벽한 가이드입니다." />
+        <meta
+            name="keywords"
+            content="Windows 11, USB 설치 미디어, Media Creation Tool, Rufus, 부팅 USB, 설치 USB, ISO 파일, 초보자 가이드" />
+        <meta name="robots" content="index, follow" />
+        <link
+            rel="canonical"
+            href="https://emfls.github.io/kor/report/window/windows11-usb-installation-media-guide.html" />
+        <meta name="author" content="Itagi" />
+
+        <!-- Google 태그 (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+
+        <title>Windows 11 USB 설치 미디어 만들기 (초보자용) - 쉽고 안전한 완벽 가이드</title>
+        <style>
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                margin: 0;
+                padding: 20px;
+                background-color: #f5f5f5;
+                color: #333;
+            }
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                background-color: white;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+                color: #0078d4;
+                text-align: center;
+                border-bottom: 3px solid #0078d4;
+                padding-bottom: 10px;
+                margin-bottom: 30px;
+            }
+            h2 {
+                color: #106ebe;
+                border-left: 4px solid #0078d4;
+                padding-left: 15px;
+                margin-top: 30px;
+            }
+            h3 {
+                color: #2c5282;
+                margin-top: 25px;
+            }
+            .warning {
+                background-color: #fff3cd;
+                border: 1px solid #ffeaa7;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            .info {
+                background-color: #d1ecf1;
+                border: 1px solid #bee5eb;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            .success {
+                background-color: #d4edda;
+                border: 1px solid #c3e6cb;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            .danger {
+                background-color: #f8d7da;
+                border: 1px solid #f5c6cb;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            .timeline-item {
+                background-color: #f8f9fa;
+                border: 1px solid #dee2e6;
+                border-radius: 8px;
+                padding: 20px;
+                margin: 20px 0;
+                position: relative;
+                padding-left: 80px;
+            }
+            .timeline-badge {
+                position: absolute;
+                top: 20px;
+                left: 20px;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background-color: #0078d4;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                font-size: 14px;
+            }
+            .priority-high {
+                border-left: 4px solid #dc3545;
+            }
+            .priority-medium {
+                border-left: 4px solid #ffc107;
+            }
+            .priority-low {
+                border-left: 4px solid #28a745;
+            }
+            ul,
+            ol {
+                padding-left: 20px;
+            }
+            li {
+                margin: 8px 0;
+            }
+            code {
+                background-color: #f1f1f1;
+                padding: 2px 4px;
+                border-radius: 3px;
+                font-family: "Courier New", monospace;
+            }
+            .code-block {
+                background-color: #2d3748;
+                color: #e2e8f0;
+                padding: 15px;
+                border-radius: 5px;
+                overflow-x: auto;
+                margin: 15px 0;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 20px 0;
+            }
+            th,
+            td {
+                border: 1px solid #ddd;
+                padding: 12px;
+                text-align: left;
+            }
+            th {
+                background-color: #0078d4;
+                color: white;
+            }
+            tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+            .checklist {
+                background-color: #f8f9fa;
+                border: 1px solid #dee2e6;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 15px 0;
+            }
+            .checklist input[type="checkbox"] {
+                margin-right: 10px;
+                transform: scale(1.2);
+            }
+            .highlight {
+                background-color: #fff3cd;
+                padding: 2px 4px;
+                border-radius: 3px;
+                font-weight: bold;
+            }
+            .step-image {
+                background-color: #e7f3ff;
+                border: 2px dashed #0078d4;
+                padding: 20px;
+                margin: 15px 0;
+                text-align: center;
+                border-radius: 8px;
+            }
+            .tool-comparison {
+                background-color: #f8f9fa;
+                border: 1px solid #dee2e6;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 15px 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Windows 11 USB 설치 미디어 만들기 (초보자용)</h1>
+
+            <div class="info">
+                <strong>👋 초보자를 위한 안내:</strong> 이 가이드는 컴퓨터 초보자도 쉽게 따라할 수 있도록 모든 과정을
+                스크린샷과 함께 단계별로 설명합니다. 천천히 따라하시면 누구나 성공할 수 있습니다.
+            </div>
+
+            <h2>📋 필요한 준비물 체크리스트</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>준비물</th>
+                        <th>최소 사양</th>
+                        <th>권장 사양</th>
+                        <th>구매 가격</th>
+                        <th>구매처</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>USB 드라이브</td>
+                        <td>8GB 이상</td>
+                        <td>16GB 이상 USB 3.0</td>
+                        <td>5,000-15,000원</td>
+                        <td>온라인/오프라인 매장</td>
+                    </tr>
+                    <tr>
+                        <td>인터넷 연결</td>
+                        <td>안정적인 연결</td>
+                        <td>고속 인터넷</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>컴퓨터</td>
+                        <td>Windows 7 이상</td>
+                        <td>Windows 10/11</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr>
+                        <td>시간</td>
+                        <td>30분</td>
+                        <td>1시간</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning">
+                <h3>⚠️ 시작하기 전 중요한 주의사항</h3>
+                <ul>
+                    <li><strong>USB 데이터 백업:</strong> USB 드라이브의 모든 데이터가 삭제됩니다</li>
+                    <li><strong>안정적인 전원:</strong> 노트북은 충전기를 연결하세요</li>
+                    <li><strong>바이러스 검사:</strong> 컴퓨터에 바이러스가 없는지 확인</li>
+                    <li><strong>관리자 권한:</strong> 관리자 계정으로 로그인 필요</li>
+                </ul>
+            </div>
+
+            <h2>🛠️ 방법별 비교 및 선택 가이드</h2>
+
+            <div class="tool-comparison">
+                <h3>🔍 도구별 특징 비교</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>방법</th>
+                            <th>난이도</th>
+                            <th>속도</th>
+                            <th>안정성</th>
+                            <th>추천 대상</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Media Creation Tool</td>
+                            <td>⭐⭐</td>
+                            <td>⭐⭐⭐</td>
+                            <td>⭐⭐⭐⭐⭐</td>
+                            <td>초보자 (강력 추천)</td>
+                        </tr>
+                        <tr>
+                            <td>Rufus</td>
+                            <td>⭐⭐⭐</td>
+                            <td>⭐⭐⭐⭐⭐</td>
+                            <td>⭐⭐⭐⭐</td>
+                            <td>중급자</td>
+                        </tr>
+                        <tr>
+                            <td>Windows USB/DVD Tool</td>
+                            <td>⭐⭐</td>
+                            <td>⭐⭐</td>
+                            <td>⭐⭐⭐</td>
+                            <td>구형 시스템</td>
+                        </tr>
+                        <tr>
+                            <td>PowerShell</td>
+                            <td>⭐⭐⭐⭐⭐</td>
+                            <td>⭐⭐⭐⭐</td>
+                            <td>⭐⭐⭐⭐</td>
+                            <td>고급 사용자</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2>🚀 방법 1: Media Creation Tool 사용 (초보자 추천)</h2>
+
+            <div class="timeline-item priority-high">
+                <div class="timeline-badge">1단계</div>
+                <h3>Media Creation Tool 다운로드</h3>
+
+                <div class="success">
+                    <strong>✅ 가장 안전하고 쉬운 방법:</strong> Microsoft에서 공식 제공하는 도구로 초보자도 실수 없이
+                    설치 미디어를 만들 수 있습니다.
+                </div>
+
+                <h4>다운로드 과정:</h4>
+                <ol>
+                    <li>웹 브라우저(크롬, 엣지 등)를 실행합니다</li>
+                    <li>주소창에 <code>microsoft.com/software-download/windows11</code> 입력</li>
+                    <li>"Windows 11 설치 미디어 만들기" 섹션 찾기</li>
+                    <li><strong>"지금 도구 다운로드"</strong> 버튼 클릭</li>
+                    <li>다운로드 폴더에 <code>MediaCreationToolW11.exe</code> 파일 확인</li>
+                </ol>
+
+                <div class="step-image">
+                    <strong>📸 화면 예시:</strong><br />
+                    Microsoft 공식 사이트 → "Windows 11 다운로드" → "지금 도구 다운로드" 버튼
+                </div>
+
+                <div class="checklist">
+                    <h4>✅ 1단계 완료 확인</h4>
+                    <label><input type="checkbox" /> Microsoft 공식 사이트 접속</label><br />
+                    <label><input type="checkbox" /> Media Creation Tool 다운로드</label><br />
+                    <label><input type="checkbox" /> 다운로드 파일 확인</label><br />
+                    <label><input type="checkbox" /> 바이러스 검사 완료</label>
+                </div>
+            </div>
+
+            <div class="timeline-item priority-high">
+                <div class="timeline-badge">2단계</div>
+                <h3>USB 드라이브 준비 및 연결</h3>
+
+                <div class="warning">
+                    <strong>⚠️ 데이터 손실 주의:</strong> USB 드라이브의 모든 데이터가 삭제됩니다. 중요한 파일이 있다면
+                    미리 백업하세요.
+                </div>
+
+                <h4>USB 드라이브 선택 기준:</h4>
+                <ul>
+                    <li><span class="highlight">용량:</span> 최소 8GB, 권장 16GB 이상</li>
+                    <li><span class="highlight">속도:</span> USB 3.0 이상 (파란색 포트)</li>
+                    <li><span class="highlight">브랜드:</span> 삼성, 샌디스크, 킹스톤 등 신뢰할 수 있는 브랜드</li>
+                    <li><span class="highlight">상태:</span> 정상 작동하는 USB (오류 없음)</li>
+                </ul>
+
+                <h4>USB 연결 및 확인:</h4>
+                <ol>
+                    <li>USB 드라이브를 컴퓨터에 연결</li>
+                    <li>파일 탐색기(<kbd>Windows</kbd> + <kbd>E</kbd>) 열기</li>
+                    <li>"이 PC"에서 USB 드라이브 확인</li>
+                    <li>USB 드라이브 우클릭 → "속성"으로 용량 확인</li>
+                    <li>필요시 USB 드라이브 포맷 (FAT32 또는 NTFS)</li>
+                </ol>
+
+                <div class="code-block">
+                    # PowerShell로 USB 드라이브 확인 (고급 사용자용)<br />
+                    Get-WmiObject -Class Win32_LogicalDisk | Where-Object {$_.DriveType -eq 2}<br />
+                    # 결과에서 USB 드라이브 정보 확인
+                </div>
+
+                <div class="checklist">
+                    <h4>✅ 2단계 완료 확인</h4>
+                    <label><input type="checkbox" /> USB 드라이브 연결</label><br />
+                    <label><input type="checkbox" /> 용량 8GB 이상 확인</label><br />
+                    <label><input type="checkbox" /> USB 정상 인식 확인</label><br />
+                    <label><input type="checkbox" /> 중요 데이터 백업 완료</label>
+                </div>
+            </div>
+
+            <div class="timeline-item priority-high">
+                <div class="timeline-badge">3단계</div>
+                <h3>Media Creation Tool 실행</h3>
+
+                <div class="info">
+                    <strong>💡 관리자 권한 필요:</strong> 시스템 파일에 접근하기 위해 관리자 권한으로 실행해야 합니다.
+                </div>
+
+                <h4>도구 실행 과정:</h4>
+                <ol>
+                    <li>다운로드한 <code>MediaCreationToolW11.exe</code> 파일 찾기</li>
+                    <li>파일 우클릭 → <strong>"관리자 권한으로 실행"</strong> 선택</li>
+                    <li>사용자 계정 컨트롤(UAC) 창에서 <strong>"예"</strong> 클릭</li>
+                    <li>도구 로딩 대기 (약 10-30초)</li>
+                    <li>라이선스 조건 화면에서 <strong>"동의"</strong> 클릭</li>
+                </ol>
+
+                <div class="step-image">
+                    <strong>📸 화면 예시:</strong><br />
+                    파일 우클릭 메뉴 → "관리자 권한으로 실행" → UAC 창 "예" → 라이선스 "동의"
+                </div>
+
+                <h4>초기 설정 선택:</h4>
+                <ul>
+                    <li><strong>언어:</strong> 한국어 (기본값)</li>
+                    <li><strong>에디션:</strong> Windows 11 (권장)</li>
+                    <li><strong>아키텍처:</strong> 64비트 (x64)</li>
+                </ul>
+
+                <div class="checklist">
+                    <h4>✅ 3단계 완료 확인</h4>
+                    <label><input type="checkbox" /> 관리자 권한으로 실행</label><br />
+                    <label><input type="checkbox" /> 라이선스 조건 동의</label><br />
+                    <label><input type="checkbox" /> 언어 및 에디션 확인</label><br />
+                    <label><input type="checkbox" /> 도구 정상 로딩</label>
+                </div>
+            </div>
+
+            <div class="timeline-item priority-high">
+                <div class="timeline-badge">4단계</div>
+                <h3>설치 미디어 생성 옵션 선택</h3>
+
+                <h4>옵션 선택 화면:</h4>
+                <ol>
+                    <li><strong>"다른 PC용 설치 미디어 만들기"</strong> 선택</li>
+                    <li><strong>"다음"</strong> 버튼 클릭</li>
+                    <li>언어, 에디션, 아키텍처 설정 확인</li>
+                    <li>필요시 <strong>"이 PC에 권장되는 옵션 사용"</strong> 체크 해제 후 수정</li>
+                </ol>
+
+                <div class="warning">
+                    <h4>⚠️ 옵션 선택 주의사항</h4>
+                    <ul>
+                        <li><strong>언어:</strong> 한국어 선택 (다른 언어 선택 시 한글 지원 안됨)</li>
+                        <li><strong>에디션:</strong> Windows 11 (Home/Pro 구분 없음)</li>
+                        <li><strong>아키텍처:</strong> 64비트 선택 (32비트는 지원 안됨)</li>
+                    </ul>
+                </div>
+
+                <h4>미디어 유형 선택:</h4>
+                <ul>
+                    <li><strong>USB 플래시 드라이브</strong> 선택 (권장)</li>
+                    <li>ISO 파일 옵션은 고급 사용자용</li>
+                </ul>
+
+                <div class="checklist">
+                    <h4>✅ 4단계 완료 확인</h4>
+                    <label><input type="checkbox" /> "다른 PC용 설치 미디어 만들기" 선택</label><br />
+                    <label><input type="checkbox" /> 언어/에디션/아키텍처 확인</label><br />
+                    <label><input type="checkbox" /> USB 플래시 드라이브 선택</label><br />
+                    <label><input type="checkbox" /> 다음 단계로 진행</label>
+                </div>
+            </div>
+
+            <div class="timeline-item priority-medium">
+                <div class="timeline-badge">5단계</div>
+                <h3>USB 드라이브 선택 및 생성 시작</h3>
+
+                <h4>USB 드라이브 선택:</h4>
+                <ol>
+                    <li>연결된 USB 드라이브 목록에서 올바른 드라이브 선택</li>
+                    <li>드라이브 이름과 용량을 확인하여 정확한 USB 선택</li>
+                    <li><strong>"다음"</strong> 버튼 클릭</li>
+                    <li>데이터 삭제 경고 메시지에서 <strong>"확인"</strong> 클릭</li>
+                </ol>
+
+                <div class="danger">
+                    <strong>🚨 마지막 확인:</strong> 선택한 USB 드라이브가 맞는지 다시 한 번 확인하세요. 잘못된
+                    드라이브를 선택하면 중요한 데이터가 삭제될 수 있습니다.
+                </div>
+
+                <h4>다운로드 및 생성 과정:</h4>
+                <ul>
+                    <li><span class="highlight">1단계:</span> Windows 11 다운로드 (약 4-5GB)</li>
+                    <li><span class="highlight">2단계:</span> 다운로드 파일 검증</li>
+                    <li><span class="highlight">3단계:</span> USB 드라이브 포맷</li>
+                    <li><span class="highlight">4단계:</span> 설치 파일 USB로 복사</li>
+                    <li><span class="highlight">5단계:</span> 부팅 가능한 USB 생성</li>
+                </ul>
+
+                <div class="info">
+                    <h4>💡 예상 소요 시간</h4>
+                    <ul>
+                        <li><strong>고속 인터넷 + USB 3.0:</strong> 15-30분</li>
+                        <li><strong>일반 인터넷 + USB 2.0:</strong> 45-60분</li>
+                        <li><strong>느린 인터넷:</strong> 1-2시간</li>
+                    </ul>
+                </div>
+
+                <div class="checklist">
+                    <h4>✅ 5단계 진행 확인</h4>
+                    <label><input type="checkbox" /> 올바른 USB 드라이브 선택</label><br />
+                    <label><input type="checkbox" /> 데이터 삭제 경고 확인</label><br />
+                    <label><input type="checkbox" /> 다운로드 진행 중</label><br />
+                    <label><input type="checkbox" /> 안정적인 인터넷 연결</label>
+                </div>
+            </div>
+
+            <div class="timeline-item priority-low">
+                <div class="timeline-badge">6단계</div>
+                <h3>생성 완료 및 검증</h3>
+
+                <h4>생성 완료 확인:</h4>
+                <ol>
+                    <li>"USB 플래시 드라이브 준비 완료" 메시지 확인</li>
+                    <li><strong>"마침"</strong> 버튼 클릭</li>
+                    <li>파일 탐색기에서 USB 드라이브 내용 확인</li>
+                    <li>주요 파일들이 정상적으로 생성되었는지 확인</li>
+                </ol>
+
+                <h4>USB 내용 확인사항:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>파일/폴더명</th>
+                            <th>유형</th>
+                            <th>용도</th>
+                            <th>필수 여부</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>setup.exe</td>
+                            <td>실행 파일</td>
+                            <td>Windows 설치 프로그램</td>
+                            <td>✅ 필수</td>
+                        </tr>
+                        <tr>
+                            <td>sources 폴더</td>
+                            <td>폴더</td>
+                            <td>설치 파일들</td>
+                            <td>✅ 필수</td>
+                        </tr>
+                        <tr>
+                            <td>boot 폴더</td>
+                            <td>폴더</td>
+                            <td>부팅 파일들</td>
+                            <td>✅ 필수</td>
+                        </tr>
+                        <tr>
+                            <td>efi 폴더</td>
+                            <td>폴더</td>
+                            <td>UEFI 부팅 파일</td>
+                            <td>✅ 필수</td>
+                        </tr>
+                        <tr>
+                            <td>autorun.inf</td>
+                            <td>설정 파일</td>
+                            <td>자동 실행 설정</td>
+                            <td>⚪ 선택</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="success">
+                    <h4>✅ 생성 성공 확인 방법</h4>
+                    <ul>
+                        <li>USB 용량이 4-5GB 정도 사용됨</li>
+                        <li>위 표의 필수 파일들이 모두 존재</li>
+                        <li>USB 드라이브 이름이 "ESD-USB" 또는 "CCSA_X64FRE_KO-KR_DV9"로 변경됨</li>
+                        <li>다른 컴퓨터에서 USB 부팅 테스트 가능</li>
+                    </ul>
+                </div>
+
+                <div class="checklist">
+                    <h4>✅ 6단계 완료 확인</h4>
+                    <label><input type="checkbox" /> 생성 완료 메시지 확인</label><br />
+                    <label><input type="checkbox" /> USB 내용 확인</label><br />
+                    <label><input type="checkbox" /> 필수 파일 존재 확인</label><br />
+                    <label><input type="checkbox" /> USB 안전 제거</label>
+                </div>
+            </div>
+
+            <h2>🛠️ 방법 2: Rufus 사용 (중급자용)</h2>
+
+            <div class="timeline-item priority-medium">
+                <div class="timeline-badge">대안</div>
+                <h3>Rufus로 더 빠른 USB 생성</h3>
+
+                <div class="info">
+                    <strong>💡 Rufus 장점:</strong> Media Creation Tool보다 빠르고 더 많은 옵션을 제공합니다. 하지만
+                    설정이 복잡하여 중급자 이상에게 권장합니다.
+                </div>
+
+                <h4>Rufus 사용 과정:</h4>
+                <ol>
+                    <li><strong>Rufus 다운로드:</strong> rufus.ie에서 최신 버전 다운로드</li>
+                    <li><strong>ISO 파일 준비:</strong> Microsoft에서 Windows 11 ISO 다운로드</li>
+                    <li><strong>Rufus 실행:</strong> 관리자 권한으로 실행</li>
+                    <li><strong>설정 구성:</strong> 아래 권장 설정 적용</li>
+                    <li><strong>생성 시작:</strong> "시작" 버튼 클릭</li>
+                </ol>
+
+                <h4>Rufus 권장 설정:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>설정 항목</th>
+                            <th>권장 값</th>
+                            <th>설명</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>장치</td>
+                            <td>USB 드라이브 선택</td>
+                            <td>대상 USB 드라이브</td>
+                        </tr>
+                        <tr>
+                            <td>부팅 선택</td>
+                            <td>디스크 또는 ISO 이미지</td>
+                            <td>Windows 11 ISO 파일</td>
+                        </tr>
+                        <tr>
+                            <td>이미지 옵션</td>
+                            <td>Standard Windows 11 installation</td>
+                            <td>표준 설치</td>
+                        </tr>
+                        <tr>
+                            <td>파티션 구성</td>
+                            <td>GPT</td>
+                            <td>UEFI 시스템용</td>
+                        </tr>
+                        <tr>
+                            <td>대상 시스템</td>
+                            <td>UEFI (non CSM)</td>
+                            <td>최신 시스템</td>
+                        </tr>
+                        <tr>
+                            <td>파일 시스템</td>
+                            <td>FAT32</td>
+                            <td>UEFI 호환</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="warning">
+                    <h4>⚠️ Rufus 사용 시 주의사항</h4>
+                    <ul>
+                        <li>잘못된 설정으로 부팅 불가능한 USB 생성 가능</li>
+                        <li>GPT/MBR, UEFI/Legacy 설정을 정확히 선택해야 함</li>
+                        <li>일부 컴퓨터에서 호환성 문제 발생 가능</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h2>🔧 문제 해결 가이드</h2>
+
+            <div class="danger">
+                <h3>자주 발생하는 문제와 해결책</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>문제</th>
+                            <th>원인</th>
+                            <th>해결 방법</th>
+                            <th>예방법</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>USB 인식 안됨</td>
+                            <td>USB 드라이브 불량</td>
+                            <td>다른 USB 사용</td>
+                            <td>품질 좋은 USB 구매</td>
+                        </tr>
+                        <tr>
+                            <td>다운로드 중단</td>
+                            <td>인터넷 연결 불안정</td>
+                            <td>네트워크 확인 후 재시도</td>
+                            <td>안정적인 인터넷 사용</td>
+                        </tr>
+                        <tr>
+                            <td>생성 실패</td>
+                            <td>USB 용량 부족</td>
+                            <td>16GB 이상 USB 사용</td>
+                            <td>충분한 용량 확보</td>
+                        </tr>
+                        <tr>
+                            <td>부팅 안됨</td>
+                            <td>BIOS 설정 문제</td>
+                            <td>부팅 순서 변경</td>
+                            <td>UEFI 설정 확인</td>
+                        </tr>
+                        <tr>
+                            <td>속도 너무 느림</td>
+                            <td>USB 2.0 사용</td>
+                            <td>USB 3.0 포트 사용</td>
+                            <td>고속 USB 구매</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="warning">
+                <h3>Media Creation Tool 오류 해결</h3>
+                <div class="code-block">
+                    # 임시 파일 정리<br />
+                    del /q /f /s "%TEMP%\*"<br />
+                    <br />
+                    # Windows Update 서비스 재시작<br />
+                    net stop wuauserv<br />
+                    net start wuauserv<br />
+                    <br />
+                    # 관리자 권한으로 도구 재실행<br />
+                    # 바이러스 백신 임시 비활성화
+                </div>
+            </div>
+
+            <h2>✅ USB 부팅 테스트 방법</h2>
+
+            <div class="success">
+                <h3>생성된 USB 정상 작동 확인</h3>
+                <ol>
+                    <li><strong>BIOS/UEFI 진입:</strong> 컴퓨터 부팅 시 F2, F12, Del 키 등</li>
+                    <li><strong>부팅 순서 변경:</strong> USB를 첫 번째 부팅 장치로 설정</li>
+                    <li><strong>설정 저장:</strong> F10 키로 저장 후 재부팅</li>
+                    <li><strong>Windows 설치 화면:</strong> 정상적으로 나타나는지 확인</li>
+                    <li><strong>언어 선택:</strong> 한국어가 정상적으로 표시되는지 확인</li>
+                </ol>
+            </div>
+
+            <div class="info">
+                <h3>BIOS 진입 키 (제조사별)</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>제조사</th>
+                            <th>데스크톱</th>
+                            <th>노트북</th>
+                            <th>부팅 메뉴</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ASUS</td>
+                            <td>Del</td>
+                            <td>F2</td>
+                            <td>F8</td>
+                        </tr>
+                        <tr>
+                            <td>MSI</td>
+                            <td>Del</td>
+                            <td>F2</td>
+                            <td>F11</td>
+                        </tr>
+                        <tr>
+                            <td>Gigabyte</td>
+                            <td>Del</td>
+                            <td>F2</td>
+                            <td>F12</td>
+                        </tr>
+                        <tr>
+                            <td>HP</td>
+                            <td>F1</td>
+                            <td>F10</td>
+                            <td>F9</td>
+                        </tr>
+                        <tr>
+                            <td>Dell</td>
+                            <td>F2</td>
+                            <td>F2</td>
+                            <td>F12</td>
+                        </tr>
+                        <tr>
+                            <td>Lenovo</td>
+                            <td>F1</td>
+                            <td>F2</td>
+                            <td>F12</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2>💡 초보자를 위한 추가 팁</h2>
+
+            <div class="info">
+                <h3>성공률을 높이는 팁들</h3>
+                <ul>
+                    <li><strong>시간 여유:</strong> 충분한 시간을 확보하고 서두르지 마세요</li>
+                    <li><strong>안정적인 환경:</strong> 전원이 안정적이고 인터넷이 빠른 곳에서 작업</li>
+                    <li><strong>품질 좋은 USB:</strong> 저렴한 USB보다는 신뢰할 수 있는 브랜드 선택</li>
+                    <li><strong>백업 준비:</strong> 여러 개의 USB를 준비하여 실패에 대비</li>
+                    <li><strong>도움 요청:</strong> 어려우면 주변의 컴퓨터 잘하는 사람에게 도움 요청</li>
+                </ul>
+            </div>
+
+            <div class="success">
+                <h3>완료 후 해야 할 일</h3>
+                <ul>
+                    <li><strong>USB 라벨링:</strong> "Windows 11 설치" 라벨 부착</li>
+                    <li><strong>안전한 보관:</strong> 먼지나 충격으로부터 보호</li>
+                    <li><strong>백업 생성:</strong> 동일한 USB를 하나 더 만들어 보관</li>
+                    <li><strong>설치 가이드 준비:</strong> Windows 11 설치 방법 미리 학습</li>
+                </ul>
+            </div>
+
+            <h2>❓ 자주 묻는 질문 (FAQ)</h2>
+
+            <div class="info">
+                <h3>Q&A</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>질문</th>
+                            <th>답변</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>USB 용량이 8GB인데 충분한가요?</td>
+                            <td>최소 요구사항이지만 16GB 이상을 권장합니다.</td>
+                        </tr>
+                        <tr>
+                            <td>생성 중에 컴퓨터를 끄면 안되나요?</td>
+                            <td>절대 안됩니다. USB가 손상될 수 있습니다.</td>
+                        </tr>
+                        <tr>
+                            <td>다른 컴퓨터에서도 사용할 수 있나요?</td>
+                            <td>네, 모든 컴퓨터에서 사용 가능합니다.</td>
+                        </tr>
+                        <tr>
+                            <td>USB를 다시 일반 저장소로 쓸 수 있나요?</td>
+                            <td>네, 포맷하면 일반 USB로 다시 사용 가능합니다.</td>
+                        </tr>
+                        <tr>
+                            <td>Mac에서도 만들 수 있나요?</td>
+                            <td>아니요, Windows 컴퓨터에서만 가능합니다.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2>📞 추가 도움 및 지원</h2>
+
+            <div class="info">
+                <h3>도움을 받을 수 있는 곳</h3>
+                <ul>
+                    <li><strong>Microsoft 지원:</strong> 1588-8833 (한국)</li>
+                    <li><strong>온라인 커뮤니티:</strong> 네이버 지식iN, 클리앙</li>
+                    <li><strong>YouTube:</strong> "Windows 11 USB 만들기" 검색</li>
+                    <li><strong>컴퓨터 매장:</strong> 근처 컴퓨터 수리점</li>
+                </ul>
+            </div>
+
+            <div class="success">
+                <h3>성공 확인 최종 체크리스트</h3>
+                <div class="checklist">
+                    <label><input type="checkbox" /> Media Creation Tool 정상 실행</label><br />
+                    <label><input type="checkbox" /> USB 드라이브 정상 인식</label><br />
+                    <label><input type="checkbox" /> Windows 11 다운로드 완료</label><br />
+                    <label><input type="checkbox" /> USB 생성 완료</label><br />
+                    <label><input type="checkbox" /> 필수 파일 존재 확인</label><br />
+                    <label><input type="checkbox" /> 다른 PC에서 부팅 테스트</label><br />
+                    <label><input type="checkbox" /> USB 안전하게 보관</label>
+                </div>
+            </div>
+
+            <footer
+                style="
+                    text-align: center;
+                    margin-top: 50px;
+                    padding-top: 20px;
+                    border-top: 1px solid #ddd;
+                    color: #666;
+                ">
+                <p>
+                    축하합니다! Windows 11 USB 설치 미디어 생성을 완료했습니다. 이제 언제든지 Windows 11을 새로
+                    설치하거나 복구할 수 있습니다. USB를 안전하게 보관하시고, 필요할 때 이 가이드를 다시 참고하세요.
+                </p>
+            </footer>
+        </div>
+    </body>
+</html>

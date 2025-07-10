@@ -1,0 +1,809 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="Windows 11 듀얼부팅 완벽 가이드 - Windows 10과 11, Linux와의 듀얼부팅 설정 방법을 단계별로 안내합니다. 파티션 설정, 부트로더 구성, 문제 해결까지 모든 것을 포함한 완벽한 가이드입니다." />
+        <meta
+            name="keywords"
+            content="Windows 11, 듀얼부팅, 멀티부팅, Linux, Windows 10, 파티션, GRUB, 부트로더, 듀얼 OS" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://emfls.github.io/kor/report/window/windows11-dual-boot-guide.html" />
+        <meta name="author" content="Itagi" />
+
+        <!-- Google 태그 (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+
+        <title>Windows 11 듀얼부팅 완벽 가이드 - 안전하고 쉬운 멀티부팅 설정</title>
+        <style>
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                margin: 0;
+                padding: 20px;
+                background-color: #f5f5f5;
+                color: #333;
+            }
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                background-color: white;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+                color: #0078d4;
+                text-align: center;
+                border-bottom: 3px solid #0078d4;
+                padding-bottom: 10px;
+                margin-bottom: 30px;
+            }
+            h2 {
+                color: #106ebe;
+                border-left: 4px solid #0078d4;
+                padding-left: 15px;
+                margin-top: 30px;
+            }
+            h3 {
+                color: #2c5282;
+                margin-top: 25px;
+            }
+            .warning {
+                background-color: #fff3cd;
+                border: 1px solid #ffeaa7;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            .info {
+                background-color: #d1ecf1;
+                border: 1px solid #bee5eb;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            .success {
+                background-color: #d4edda;
+                border: 1px solid #c3e6cb;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            .danger {
+                background-color: #f8d7da;
+                border: 1px solid #f5c6cb;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            .timeline-item {
+                background-color: #f8f9fa;
+                border: 1px solid #dee2e6;
+                border-radius: 8px;
+                padding: 20px;
+                margin: 20px 0;
+                position: relative;
+                padding-left: 80px;
+            }
+            .timeline-badge {
+                position: absolute;
+                top: 20px;
+                left: 20px;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background-color: #0078d4;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                font-size: 14px;
+            }
+            .priority-high {
+                border-left: 4px solid #dc3545;
+            }
+            .priority-medium {
+                border-left: 4px solid #ffc107;
+            }
+            .priority-low {
+                border-left: 4px solid #28a745;
+            }
+            ul,
+            ol {
+                padding-left: 20px;
+            }
+            li {
+                margin: 8px 0;
+            }
+            code {
+                background-color: #f1f1f1;
+                padding: 2px 4px;
+                border-radius: 3px;
+                font-family: "Courier New", monospace;
+            }
+            .code-block {
+                background-color: #2d3748;
+                color: #e2e8f0;
+                padding: 15px;
+                border-radius: 5px;
+                overflow-x: auto;
+                margin: 15px 0;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 20px 0;
+            }
+            th,
+            td {
+                border: 1px solid #ddd;
+                padding: 12px;
+                text-align: left;
+            }
+            th {
+                background-color: #0078d4;
+                color: white;
+            }
+            tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+            .checklist {
+                background-color: #f8f9fa;
+                border: 1px solid #dee2e6;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 15px 0;
+            }
+            .checklist input[type="checkbox"] {
+                margin-right: 10px;
+                transform: scale(1.2);
+            }
+            .highlight {
+                background-color: #fff3cd;
+                padding: 2px 4px;
+                border-radius: 3px;
+                font-weight: bold;
+            }
+            .boot-option {
+                background-color: #e7f3ff;
+                border: 1px solid #b3d9ff;
+                border-radius: 5px;
+                padding: 10px;
+                margin: 10px 0;
+            }
+            .partition-diagram {
+                background-color: #f8f9fa;
+                border: 2px solid #dee2e6;
+                padding: 15px;
+                margin: 15px 0;
+                font-family: monospace;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Windows 11 듀얼부팅 완벽 가이드</h1>
+
+            <div class="warning">
+                <strong>⚠️ 중요한 주의사항:</strong> 듀얼부팅 설정은 시스템에 중대한 변경을 가합니다. 작업 전 반드시
+                중요한 데이터를 백업하고, 복구 디스크를 준비하세요. 잘못된 설정으로 인해 기존 시스템이 부팅되지 않을 수
+                있습니다.
+            </div>
+
+            <h2>🎯 듀얼부팅 시나리오별 가이드</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>듀얼부팅 유형</th>
+                        <th>난이도</th>
+                        <th>권장 대상</th>
+                        <th>주요 장점</th>
+                        <th>예상 시간</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Windows 10 + Windows 11</td>
+                        <td>⭐⭐</td>
+                        <td>Windows 사용자</td>
+                        <td>안정성 + 최신 기능</td>
+                        <td>2-3시간</td>
+                    </tr>
+                    <tr>
+                        <td>Windows 11 + Ubuntu</td>
+                        <td>⭐⭐⭐</td>
+                        <td>개발자, 학습자</td>
+                        <td>개발 환경 + 일반 사용</td>
+                        <td>3-4시간</td>
+                    </tr>
+                    <tr>
+                        <td>Windows 11 + macOS</td>
+                        <td>⭐⭐⭐⭐⭐</td>
+                        <td>고급 사용자</td>
+                        <td>모든 OS 경험</td>
+                        <td>5-8시간</td>
+                    </tr>
+                    <tr>
+                        <td>멀티 Linux 배포판</td>
+                        <td>⭐⭐⭐⭐</td>
+                        <td>Linux 전문가</td>
+                        <td>다양한 환경 테스트</td>
+                        <td>4-6시간</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>🚀 단계별 듀얼부팅 설정 가이드</h2>
+
+            <div class="timeline-item priority-high">
+                <div class="timeline-badge">1단계</div>
+                <h3>사전 준비 및 백업</h3>
+
+                <div class="danger">
+                    <strong>🔒 필수 백업 작업:</strong> 듀얼부팅 설정 전 시스템 전체 백업은 필수입니다. 파티션 작업 중
+                    데이터 손실이 발생할 수 있습니다.
+                </div>
+
+                <h4>백업해야 할 항목들:</h4>
+                <ul>
+                    <li><span class="highlight">시스템 이미지:</span> Windows 백업 및 복원 도구 사용</li>
+                    <li><span class="highlight">중요 파일:</span> 개인 문서, 사진, 동영상 등</li>
+                    <li><span class="highlight">프로그램 설정:</span> 브라우저 북마크, 게임 세이브 파일</li>
+                    <li><span class="highlight">드라이버:</span> 하드웨어 제조사 드라이버 파일</li>
+                    <li><span class="highlight">라이선스 키:</span> Windows 및 소프트웨어 제품키</li>
+                </ul>
+
+                <h4>필요한 도구 준비:</h4>
+                <ol>
+                    <li><strong>Windows 11 설치 미디어:</strong> 공식 ISO 파일 및 USB</li>
+                    <li><strong>파티션 관리 도구:</strong> GParted, EaseUS Partition Master</li>
+                    <li><strong>부트 복구 도구:</strong> Boot Repair Disk, Windows PE</li>
+                    <li><strong>외장 저장소:</strong> 백업용 외장 하드 또는 클라우드</li>
+                </ol>
+
+                <div class="checklist">
+                    <h4>✅ 사전 준비 체크리스트</h4>
+                    <label><input type="checkbox" /> 시스템 전체 백업 완료</label><br />
+                    <label><input type="checkbox" /> 중요 파일 별도 백업</label><br />
+                    <label><input type="checkbox" /> Windows 복구 디스크 생성</label><br />
+                    <label><input type="checkbox" /> 설치 미디어 준비</label><br />
+                    <label><input type="checkbox" /> 하드웨어 호환성 확인</label>
+                </div>
+
+                <div class="code-block">
+                    # PowerShell로 시스템 정보 백업<br />
+                    Get-ComputerInfo > system_info.txt<br />
+                    Get-WmiObject -Class Win32_Product | Export-Csv installed_programs.csv<br />
+                    wmic product get name,version /format:csv > software_list.csv
+                </div>
+            </div>
+
+            <div class="timeline-item priority-high">
+                <div class="timeline-badge">2단계</div>
+                <h3>디스크 파티션 계획 및 설정</h3>
+
+                <div class="info">
+                    <strong>💡 파티션 계획:</strong> 듀얼부팅을 위해서는 각 운영체제가 독립적인 파티션에 설치되어야
+                    합니다. 적절한 크기 배분이 중요합니다.
+                </div>
+
+                <h4>권장 파티션 구성:</h4>
+                <div class="partition-diagram">
+                    <strong>1TB SSD 기준 파티션 예시</strong><br />
+                    ┌─────────────────────────────────────────────────────┐<br />
+                    │ EFI System (100MB) │ MSR (16MB) │ Windows 10 (400GB) │<br />
+                    └─────────────────────────────────────────────────────┘<br />
+                    ┌─────────────────────────────────────────────────────┐<br />
+                    │ Windows 11 (400GB) │ Shared Data (150GB) │ Linux (50GB) │<br />
+                    └─────────────────────────────────────────────────────┘
+                </div>
+
+                <h4>파티션 크기 가이드라인:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>운영체제</th>
+                            <th>최소 크기</th>
+                            <th>권장 크기</th>
+                            <th>용도</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Windows 11</td>
+                            <td>64GB</td>
+                            <td>250GB 이상</td>
+                            <td>시스템 + 프로그램</td>
+                        </tr>
+                        <tr>
+                            <td>Windows 10</td>
+                            <td>32GB</td>
+                            <td>200GB 이상</td>
+                            <td>시스템 + 프로그램</td>
+                        </tr>
+                        <tr>
+                            <td>Ubuntu Linux</td>
+                            <td>25GB</td>
+                            <td>50GB 이상</td>
+                            <td>시스템 + 개발 도구</td>
+                        </tr>
+                        <tr>
+                            <td>공유 데이터</td>
+                            <td>-</td>
+                            <td>100GB 이상</td>
+                            <td>문서, 미디어 파일</td>
+                        </tr>
+                        <tr>
+                            <td>Swap (Linux)</td>
+                            <td>2GB</td>
+                            <td>RAM 크기와 동일</td>
+                            <td>가상 메모리</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>디스크 관리 도구로 파티션 생성:</h4>
+                <ol>
+                    <li><kbd>Windows</kbd> + <kbd>X</kbd> → "디스크 관리" 선택</li>
+                    <li>기존 파티션 축소 (C: 드라이브 우클릭 → "볼륨 축소")</li>
+                    <li>할당되지 않은 공간에서 새 파티션 생성</li>
+                    <li>각 OS용 파티션을 NTFS로 포맷</li>
+                </ol>
+
+                <div class="code-block">
+                    # DiskPart로 파티션 생성<br />
+                    diskpart<br />
+                    list disk<br />
+                    select disk 0<br />
+                    list partition<br />
+                    create partition primary size=250000<br />
+                    format fs=ntfs quick label="Windows11"<br />
+                    assign letter=D<br />
+                    exit
+                </div>
+
+                <div class="checklist">
+                    <h4>✅ 파티션 설정 체크리스트</h4>
+                    <label><input type="checkbox" /> 디스크 여유 공간 확인</label><br />
+                    <label><input type="checkbox" /> 기존 파티션 축소</label><br />
+                    <label><input type="checkbox" /> 새 파티션 생성</label><br />
+                    <label><input type="checkbox" /> 파티션 포맷 완료</label><br />
+                    <label><input type="checkbox" /> 드라이브 문자 할당</label>
+                </div>
+            </div>
+
+            <div class="timeline-item priority-high">
+                <div class="timeline-badge">3단계</div>
+                <h3>Windows 11 설치 (듀얼부팅 모드)</h3>
+
+                <div class="warning">
+                    <strong>⚠️ 설치 시 주의사항:</strong> Windows 11 설치 시 기존 부트로더를 덮어쓸 수 있습니다. 설치 후
+                    부트 메뉴 복구가 필요할 수 있습니다.
+                </div>
+
+                <h4>Windows 11 설치 과정:</h4>
+                <ol>
+                    <li><strong>부팅 순서 변경:</strong> BIOS에서 USB 우선 부팅 설정</li>
+                    <li><strong>설치 시작:</strong> Windows 11 설치 미디어로 부팅</li>
+                    <li><strong>파티션 선택:</strong> 미리 준비한 파티션 선택 (포맷하지 않음)</li>
+                    <li><strong>사용자 지정 설치:</strong> "사용자 지정" 옵션 선택</li>
+                    <li><strong>설치 진행:</strong> 자동 설치 과정 대기</li>
+                </ol>
+
+                <h4>설치 중 중요한 선택사항:</h4>
+                <div class="boot-option">
+                    <strong>파티션 선택 화면에서:</strong>
+                    <ul>
+                        <li>기존 Windows가 설치된 파티션은 건드리지 않기</li>
+                        <li>새로 만든 파티션만 선택하여 설치</li>
+                        <li>"드라이버 로드" 필요시에만 사용</li>
+                        <li>시스템 파티션(EFI) 건드리지 않기</li>
+                    </ul>
+                </div>
+
+                <h4>설치 후 확인사항:</h4>
+                <ul>
+                    <li><span class="highlight">부팅 메뉴:</span> 재시작 시 OS 선택 메뉴 확인</li>
+                    <li><span class="highlight">드라이버:</span> 하드웨어 정상 작동 확인</li>
+                    <li><span class="highlight">네트워크:</span> 인터넷 연결 상태 확인</li>
+                    <li><span class="highlight">활성화:</span> Windows 정품 인증 상태</li>
+                </ul>
+
+                <div class="checklist">
+                    <h4>✅ Windows 11 설치 체크리스트</h4>
+                    <label><input type="checkbox" /> 설치 미디어 부팅 성공</label><br />
+                    <label><input type="checkbox" /> 올바른 파티션 선택</label><br />
+                    <label><input type="checkbox" /> 설치 완료</label><br />
+                    <label><input type="checkbox" /> 기본 드라이버 설치</label><br />
+                    <label><input type="checkbox" /> 부팅 메뉴 확인</label>
+                </div>
+            </div>
+
+            <div class="timeline-item priority-medium">
+                <div class="timeline-badge">4단계</div>
+                <h3>부트로더 설정 및 관리</h3>
+
+                <div class="info">
+                    <strong>💡 부트로더란:</strong> 여러 운영체제 중 어느 것을 부팅할지 선택할 수 있게 해주는
+                    프로그램입니다. Windows는 BCDEdit, Linux는 GRUB을 주로 사용합니다.
+                </div>
+
+                <h4>Windows 부트 관리자 설정:</h4>
+                <ol>
+                    <li>관리자 권한으로 명령 프롬프트 실행</li>
+                    <li>현재 부트 옵션 확인</li>
+                    <li>부트 메뉴 시간 조정</li>
+                    <li>기본 OS 설정</li>
+                </ol>
+
+                <div class="code-block">
+                    # BCDEdit 명령어로 부트 관리<br />
+                    # 현재 부트 설정 확인<br />
+                    bcdedit<br />
+                    <br />
+                    # 부트 메뉴 표시 시간 설정 (30초)<br />
+                    bcdedit /timeout 30<br />
+                    <br />
+                    # 기본 부팅 OS 설정<br />
+                    bcdedit /default {current}<br />
+                    <br />
+                    # 부트 메뉴 항목 이름 변경<br />
+                    bcdedit /set {current} description "Windows 11 Pro"
+                </div>
+
+                <h4>Linux와 듀얼부팅 시 GRUB 설정:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>설정 항목</th>
+                            <th>파일 위치</th>
+                            <th>주요 옵션</th>
+                            <th>설명</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>GRUB 설정</td>
+                            <td>/etc/default/grub</td>
+                            <td>GRUB_TIMEOUT</td>
+                            <td>부트 메뉴 대기 시간</td>
+                        </tr>
+                        <tr>
+                            <td>메뉴 항목</td>
+                            <td>/boot/grub/grub.cfg</td>
+                            <td>menuentry</td>
+                            <td>부팅 옵션 목록</td>
+                        </tr>
+                        <tr>
+                            <td>기본 OS</td>
+                            <td>/etc/default/grub</td>
+                            <td>GRUB_DEFAULT</td>
+                            <td>기본 부팅 시스템</td>
+                        </tr>
+                        <tr>
+                            <td>Windows 감지</td>
+                            <td>os-prober</td>
+                            <td>자동 감지</td>
+                            <td>Windows 자동 인식</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block">
+                    # Linux에서 GRUB 설정 업데이트<br />
+                    sudo nano /etc/default/grub<br />
+                    # GRUB_TIMEOUT=10 (10초 대기)<br />
+                    # GRUB_DEFAULT=0 (첫 번째 항목 기본)<br />
+                    <br />
+                    # Windows 자동 감지 활성화<br />
+                    sudo os-prober<br />
+                    <br />
+                    # GRUB 설정 업데이트<br />
+                    sudo update-grub
+                </div>
+
+                <div class="checklist">
+                    <h4>✅ 부트로더 설정 체크리스트</h4>
+                    <label><input type="checkbox" /> 부트 메뉴 정상 표시</label><br />
+                    <label><input type="checkbox" /> 모든 OS 인식 확인</label><br />
+                    <label><input type="checkbox" /> 대기 시간 적절히 설정</label><br />
+                    <label><input type="checkbox" /> 기본 OS 설정</label><br />
+                    <label><input type="checkbox" /> 메뉴 항목명 정리</label>
+                </div>
+            </div>
+
+            <div class="timeline-item priority-medium">
+                <div class="timeline-badge">5단계</div>
+                <h3>Linux 설치 (Ubuntu 기준)</h3>
+
+                <div class="warning">
+                    <strong>⚠️ Linux 설치 주의사항:</strong> Linux 설치 시 파티션을 잘못 선택하면 Windows 데이터가
+                    삭제될 수 있습니다. 수동 파티션 설정을 권장합니다.
+                </div>
+
+                <h4>Ubuntu 설치 과정:</h4>
+                <ol>
+                    <li><strong>Live USB 생성:</strong> Rufus 또는 Etcher로 부팅 USB 생성</li>
+                    <li><strong>Try Ubuntu:</strong> 먼저 Live 모드로 테스트</li>
+                    <li><strong>설치 시작:</strong> "Install Ubuntu" 선택</li>
+                    <li><strong>설치 유형:</strong> "기타" 또는 "Something else" 선택</li>
+                    <li><strong>파티션 설정:</strong> 수동으로 파티션 할당</li>
+                </ol>
+
+                <h4>Ubuntu 파티션 설정:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>마운트 포인트</th>
+                            <th>파일 시스템</th>
+                            <th>크기</th>
+                            <th>용도</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>/</td>
+                            <td>ext4</td>
+                            <td>30-50GB</td>
+                            <td>루트 파티션 (시스템)</td>
+                        </tr>
+                        <tr>
+                            <td>/home</td>
+                            <td>ext4</td>
+                            <td>50GB+</td>
+                            <td>사용자 데이터</td>
+                        </tr>
+                        <tr>
+                            <td>swap</td>
+                            <td>swap</td>
+                            <td>RAM 크기</td>
+                            <td>가상 메모리</td>
+                        </tr>
+                        <tr>
+                            <td>/boot/efi</td>
+                            <td>FAT32</td>
+                            <td>기존 사용</td>
+                            <td>EFI 시스템 파티션</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>GRUB 부트로더 설치:</h4>
+                <div class="boot-option">
+                    <strong>부트로더 설치 위치:</strong>
+                    <ul>
+                        <li><strong>UEFI 시스템:</strong> /boot/efi 파티션에 설치</li>
+                        <li><strong>Legacy BIOS:</strong> /dev/sda (전체 디스크)에 설치</li>
+                        <li><strong>주의:</strong> Windows Boot Manager를 덮어쓰지 않도록 주의</li>
+                    </ul>
+                </div>
+
+                <div class="checklist">
+                    <h4>✅ Linux 설치 체크리스트</h4>
+                    <label><input type="checkbox" /> Live USB 정상 부팅</label><br />
+                    <label><input type="checkbox" /> 하드웨어 호환성 확인</label><br />
+                    <label><input type="checkbox" /> 수동 파티션 설정</label><br />
+                    <label><input type="checkbox" /> GRUB 설치 완료</label><br />
+                    <label><input type="checkbox" /> Windows 부팅 확인</label>
+                </div>
+            </div>
+
+            <div class="timeline-item priority-low">
+                <div class="timeline-badge">6단계</div>
+                <h3>듀얼부팅 최적화 및 관리</h3>
+
+                <h4>시간 동기화 문제 해결:</h4>
+                <div class="info">
+                    <strong>💡 시간 문제:</strong> Windows와 Linux는 시간을 다르게 처리하여 듀얼부팅 시 시간이 맞지 않는
+                    문제가 발생할 수 있습니다.
+                </div>
+
+                <div class="code-block">
+                    # Windows에서 UTC 시간 사용하도록 설정<br />
+                    reg add "HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\TimeZoneInformation" /v
+                    RealTimeIsUniversal /d 1 /t REG_DWORD /f<br />
+                    <br />
+                    # 또는 Linux에서 로컬 시간 사용<br />
+                    sudo timedatectl set-local-rtc 1 --adjust-system-clock
+                </div>
+
+                <h4>공유 파티션 설정:</h4>
+                <ol>
+                    <li><strong>NTFS 파티션 생성:</strong> 양쪽 OS에서 읽기/쓰기 가능</li>
+                    <li><strong>Linux에서 NTFS 지원:</strong> ntfs-3g 패키지 설치</li>
+                    <li><strong>자동 마운트:</strong> /etc/fstab에 설정 추가</li>
+                    <li><strong>권한 설정:</strong> 사용자 권한 적절히 설정</li>
+                </ol>
+
+                <h4>부팅 관리 도구:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>도구명</th>
+                            <th>플랫폼</th>
+                            <th>기능</th>
+                            <th>난이도</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>EasyBCD</td>
+                            <td>Windows</td>
+                            <td>부트 메뉴 관리</td>
+                            <td>⭐⭐</td>
+                        </tr>
+                        <tr>
+                            <td>GRUB Customizer</td>
+                            <td>Linux</td>
+                            <td>GRUB 설정 GUI</td>
+                            <td>⭐⭐</td>
+                        </tr>
+                        <tr>
+                            <td>rEFInd</td>
+                            <td>UEFI</td>
+                            <td>고급 부트 관리자</td>
+                            <td>⭐⭐⭐⭐</td>
+                        </tr>
+                        <tr>
+                            <td>Boot Repair</td>
+                            <td>Linux</td>
+                            <td>부트 문제 자동 수정</td>
+                            <td>⭐⭐⭐</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="checklist">
+                    <h4>✅ 듀얼부팅 최적화 체크리스트</h4>
+                    <label><input type="checkbox" /> 시간 동기화 설정</label><br />
+                    <label><input type="checkbox" /> 공유 파티션 생성</label><br />
+                    <label><input type="checkbox" /> 부트 메뉴 커스터마이징</label><br />
+                    <label><input type="checkbox" /> 백업 시스템 구축</label><br />
+                    <label><input type="checkbox" /> 성능 최적화</label>
+                </div>
+            </div>
+
+            <h2>🔧 듀얼부팅 문제 해결</h2>
+
+            <div class="danger">
+                <h3>일반적인 문제와 해결책</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>문제</th>
+                            <th>증상</th>
+                            <th>원인</th>
+                            <th>해결 방법</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>부팅 메뉴 없음</td>
+                            <td>한 OS만 부팅됨</td>
+                            <td>부트로더 설정 오류</td>
+                            <td>BCDEdit 또는 GRUB 재설정</td>
+                        </tr>
+                        <tr>
+                            <td>Windows 부팅 실패</td>
+                            <td>부팅 오류 메시지</td>
+                            <td>BCD 손상</td>
+                            <td>Windows 복구 환경 사용</td>
+                        </tr>
+                        <tr>
+                            <td>Linux 부팅 실패</td>
+                            <td>GRUB 오류</td>
+                            <td>GRUB 설정 문제</td>
+                            <td>Live USB로 GRUB 복구</td>
+                        </tr>
+                        <tr>
+                            <td>시간 불일치</td>
+                            <td>OS 전환 시 시간 변경</td>
+                            <td>시간 기준 차이</td>
+                            <td>UTC 시간 통일</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="warning">
+                <h3>부트 복구 명령어</h3>
+                <div class="code-block">
+                    # Windows 부트 복구<br />
+                    bootrec /fixmbr<br />
+                    bootrec /fixboot<br />
+                    bootrec /scanos<br />
+                    bootrec /rebuildbcd<br />
+                    <br />
+                    # Linux GRUB 복구<br />
+                    sudo mount /dev/sda1 /mnt<br />
+                    sudo grub-install --root-directory=/mnt /dev/sda<br />
+                    sudo update-grub
+                </div>
+            </div>
+
+            <h2>⚠️ 듀얼부팅 주의사항</h2>
+
+            <div class="danger">
+                <h3>피해야 할 실수들</h3>
+                <ul>
+                    <li>❌ 백업 없이 파티션 작업</li>
+                    <li>❌ 시스템 파티션(EFI) 삭제</li>
+                    <li>❌ 잘못된 파티션에 OS 설치</li>
+                    <li>❌ 부트로더 위치 잘못 설정</li>
+                    <li>❌ 파티션 크기 부족</li>
+                    <li>❌ Fast Boot 활성화 상태에서 설치</li>
+                </ul>
+            </div>
+
+            <div class="success">
+                <h3>성공적인 듀얼부팅을 위한 팁</h3>
+                <ul>
+                    <li>✅ 충분한 디스크 공간 확보</li>
+                    <li>✅ 각 OS별 독립적인 파티션 사용</li>
+                    <li>✅ 정기적인 백업 수행</li>
+                    <li>✅ 부트로더 설정 문서화</li>
+                    <li>✅ 복구 디스크 항상 준비</li>
+                    <li>✅ 하드웨어 호환성 사전 확인</li>
+                </ul>
+            </div>
+
+            <h2>📊 듀얼부팅 성능 최적화</h2>
+
+            <div class="info">
+                <h3>성능 향상 방법</h3>
+                <ul>
+                    <li><strong>SSD 사용:</strong> 부팅 속도 및 전반적 성능 향상</li>
+                    <li><strong>충분한 RAM:</strong> 각 OS별 최소 8GB 권장</li>
+                    <li><strong>파티션 정렬:</strong> 4K 섹터 정렬로 성능 최적화</li>
+                    <li><strong>페이지 파일 관리:</strong> 각 OS별 적절한 가상 메모리 설정</li>
+                    <li><strong>불필요한 서비스 비활성화:</strong> 시작 프로그램 정리</li>
+                </ul>
+            </div>
+
+            <h2>📞 추가 지원 및 리소스</h2>
+
+            <div class="info">
+                <h3>유용한 리소스</h3>
+                <ul>
+                    <li><strong>공식 문서:</strong> Microsoft 및 Ubuntu 공식 가이드</li>
+                    <li><strong>커뮤니티:</strong> Reddit r/linux, r/windows</li>
+                    <li><strong>도구:</strong> GParted, Rufus, Etcher</li>
+                    <li><strong>백업 솔루션:</strong> Clonezilla, Macrium Reflect</li>
+                </ul>
+            </div>
+
+            <footer
+                style="
+                    text-align: center;
+                    margin-top: 50px;
+                    padding-top: 20px;
+                    border-top: 1px solid #ddd;
+                    color: #666;
+                ">
+                <p>
+                    듀얼부팅은 복잡한 과정이지만 이 가이드를 차근차근 따라하시면 성공적으로 설정할 수 있습니다. 항상
+                    백업을 우선하고, 문제 발생 시 복구 방법을 미리 숙지하시기 바랍니다. 추가 도움이 필요하시면 관련
+                    커뮤니티나 전문가에게 문의하세요.
+                </p>
+            </footer>
+        </div>
+    </body>
+</html>

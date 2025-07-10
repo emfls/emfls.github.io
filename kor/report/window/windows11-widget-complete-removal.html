@@ -1,0 +1,1026 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="Windows 11 위젯 완전히 제거하는 방법 완벽 가이드 - 작업 표시줄 위젯 버튼 제거, 위젯 서비스 비활성화, 레지스트리 편집, PowerShell 스크립트까지 위젯을 완전히 삭제하고 시스템 성능을 향상시키는 모든 방법을 제공합니다." />
+        <meta
+            name="keywords"
+            content="Windows 11, 위젯 제거, 위젯 비활성화, 작업 표시줄, 위젯 서비스, 레지스트리, PowerShell, 시스템 최적화, 성능 향상" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://emfls.github.io/kor/report/window/windows11-widget-complete-removal.html" />
+        <meta name="author" content="Itagi" />
+
+        <!-- Google 태그 (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+                dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+
+            gtag("config", "G-QP5Q67GE5B");
+        </script>
+        <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
+            crossorigin="anonymous"></script>
+
+        <title>Windows 11 위젯 완전히 제거하는 방법 - 완벽한 위젯 삭제 가이드</title>
+        <style>
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                line-height: 1.6;
+                margin: 0;
+                padding: 20px;
+                background-color: #f5f5f5;
+                color: #333;
+            }
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                background-color: white;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+                color: #0078d4;
+                text-align: center;
+                border-bottom: 3px solid #0078d4;
+                padding-bottom: 10px;
+                margin-bottom: 30px;
+            }
+            h2 {
+                color: #106ebe;
+                border-left: 4px solid #0078d4;
+                padding-left: 15px;
+                margin-top: 30px;
+            }
+            h3 {
+                color: #2c5282;
+                margin-top: 25px;
+            }
+            .warning {
+                background-color: #fff3cd;
+                border: 1px solid #ffeaa7;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            .info {
+                background-color: #d1ecf1;
+                border: 1px solid #bee5eb;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            .success {
+                background-color: #d4edda;
+                border: 1px solid #c3e6cb;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            .danger {
+                background-color: #f8d7da;
+                border: 1px solid #f5c6cb;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 20px 0;
+            }
+            .timeline-item {
+                background-color: #f8f9fa;
+                border: 1px solid #dee2e6;
+                border-radius: 8px;
+                padding: 20px;
+                margin: 20px 0;
+                position: relative;
+                padding-left: 80px;
+            }
+            .timeline-badge {
+                position: absolute;
+                top: 20px;
+                left: 20px;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background-color: #0078d4;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+                font-size: 14px;
+            }
+            .priority-high {
+                border-left: 4px solid #dc3545;
+            }
+            .priority-medium {
+                border-left: 4px solid #ffc107;
+            }
+            .priority-low {
+                border-left: 4px solid #28a745;
+            }
+            ul,
+            ol {
+                padding-left: 20px;
+            }
+            li {
+                margin: 8px 0;
+            }
+            code {
+                background-color: #f1f1f1;
+                padding: 2px 4px;
+                border-radius: 3px;
+                font-family: "Courier New", monospace;
+            }
+            .code-block {
+                background-color: #2d3748;
+                color: #e2e8f0;
+                padding: 15px;
+                border-radius: 5px;
+                overflow-x: auto;
+                margin: 15px 0;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 20px 0;
+            }
+            th,
+            td {
+                border: 1px solid #ddd;
+                padding: 12px;
+                text-align: left;
+            }
+            th {
+                background-color: #0078d4;
+                color: white;
+            }
+            tr:nth-child(even) {
+                background-color: #f9f9f9;
+            }
+            .checklist {
+                background-color: #f8f9fa;
+                border: 1px solid #dee2e6;
+                border-radius: 5px;
+                padding: 15px;
+                margin: 15px 0;
+            }
+            .checklist input[type="checkbox"] {
+                margin-right: 10px;
+                transform: scale(1.2);
+            }
+            .highlight {
+                background-color: #fff3cd;
+                padding: 2px 4px;
+                border-radius: 3px;
+                font-weight: bold;
+            }
+            .removal-level {
+                display: inline-block;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 12px;
+                font-weight: bold;
+                margin-left: 10px;
+            }
+            .level-basic {
+                background-color: #d4edda;
+                color: #155724;
+            }
+            .level-advanced {
+                background-color: #fff3cd;
+                color: #856404;
+            }
+            .level-expert {
+                background-color: #f8d7da;
+                color: #721c24;
+            }
+            .level-extreme {
+                background-color: #e2e3e5;
+                color: #383d41;
+            }
+            .widget-tip {
+                background-color: #e7f3ff;
+                border: 2px solid #0078d4;
+                border-radius: 8px;
+                padding: 15px;
+                margin: 15px 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Windows 11 위젯 완전히 제거하는 방법</h1>
+
+            <div class="success">
+                <strong>🗑️ 위젯 완전 제거 보장:</strong> 이 가이드를 통해 Windows 11의 위젯 기능을 완전히 제거할 수
+                있습니다. 작업 표시줄 버튼 숨기기부터 서비스 비활성화, 시스템 파일 제거까지 단계별로 진행하여 시스템
+                성능 향상과 깔끔한 인터페이스를 구현할 수 있습니다.
+            </div>
+
+            <h2>📊 위젯 제거 방법별 비교</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>제거 방법</th>
+                        <th>난이도</th>
+                        <th>제거 수준</th>
+                        <th>복구 가능성</th>
+                        <th>성능 개선</th>
+                        <th>안전성</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>작업 표시줄 버튼 숨기기</td>
+                        <td><span class="level-basic">초급</span></td>
+                        <td>UI만 숨김</td>
+                        <td>쉬움</td>
+                        <td>미미함</td>
+                        <td>매우 안전</td>
+                    </tr>
+                    <tr>
+                        <td>위젯 서비스 비활성화</td>
+                        <td><span class="level-advanced">중급</span></td>
+                        <td>기능 중지</td>
+                        <td>보통</td>
+                        <td>중간</td>
+                        <td>안전</td>
+                    </tr>
+                    <tr>
+                        <td>레지스트리 편집</td>
+                        <td><span class="level-expert">고급</span></td>
+                        <td>시스템 차단</td>
+                        <td>어려움</td>
+                        <td>높음</td>
+                        <td>주의 필요</td>
+                    </tr>
+                    <tr>
+                        <td>PowerShell 스크립트</td>
+                        <td><span class="level-expert">고급</span></td>
+                        <td>완전 제거</td>
+                        <td>어려움</td>
+                        <td>최고</td>
+                        <td>주의 필요</td>
+                    </tr>
+                    <tr>
+                        <td>시스템 파일 제거</td>
+                        <td><span class="level-extreme">전문가</span></td>
+                        <td>물리적 삭제</td>
+                        <td>매우 어려움</td>
+                        <td>최고</td>
+                        <td>위험</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>🚀 단계별 위젯 제거 과정</h2>
+
+            <div class="timeline-item priority-high">
+                <div class="timeline-badge">1단계</div>
+                <h3>기본 위젯 버튼 숨기기 (초급)</h3>
+
+                <div class="widget-tip">
+                    <strong>🎯 가장 안전한 방법:</strong> 위젯 기능을 완전히 제거하지 않고 작업 표시줄에서 버튼만 숨기는
+                    방법입니다. 언제든지 쉽게 되돌릴 수 있어 초보자에게 권장합니다.
+                </div>
+
+                <h4>설정을 통한 위젯 버튼 숨기기:</h4>
+                <ol>
+                    <li>작업 표시줄 빈 공간에서 우클릭</li>
+                    <li><strong>"작업 표시줄 설정"</strong> 선택</li>
+                    <li><strong>"위젯"</strong> 토글을 <strong>"끄기"</strong>로 변경</li>
+                    <li>즉시 적용되어 위젯 버튼이 사라짐</li>
+                </ol>
+
+                <h4>대체 방법 - 설정 앱 사용:</h4>
+                <ol>
+                    <li><kbd>Windows</kbd> + <kbd>I</kbd> 키로 설정 열기</li>
+                    <li>개인 설정 → <strong>"작업 표시줄"</strong></li>
+                    <li><strong>"위젯"</strong> 항목을 끄기로 설정</li>
+                </ol>
+
+                <h4>PowerShell로 위젯 버튼 숨기기:</h4>
+                <div class="code-block">
+                    # PowerShell 관리자 권한으로 실행<br />
+                    # 위젯 버튼 숨기기<br />
+                    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name
+                    "TaskbarDa" -Value 0<br />
+                    <br />
+                    # 탐색기 재시작으로 즉시 적용<br />
+                    Stop-Process -Name "explorer" -Force<br />
+                    Start-Process "explorer"<br />
+                    <br />
+                    # 설정 확인<br />
+                    Get-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name
+                    "TaskbarDa"
+                </div>
+
+                <h4>위젯 버튼 다시 표시하기:</h4>
+                <div class="code-block">
+                    # 위젯 버튼 다시 표시<br />
+                    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name
+                    "TaskbarDa" -Value 1<br />
+                    <br />
+                    # 탐색기 재시작<br />
+                    Stop-Process -Name "explorer" -Force<br />
+                    Start-Process "explorer"
+                </div>
+
+                <h4>이 방법의 장단점:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>장점</th>
+                            <th>단점</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>• 매우 안전함<br />• 쉽게 되돌릴 수 있음<br />• 시스템 안정성 유지</td>
+                            <td>
+                                • 위젯 서비스는 여전히 실행됨<br />• 메모리 사용량 변화 없음<br />• 완전한 제거가 아님
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="checklist">
+                    <h4>✅ 1단계 기본 숨기기 체크리스트</h4>
+                    <label><input type="checkbox" /> 작업 표시줄에서 위젯 버튼 확인</label><br />
+                    <label><input type="checkbox" /> 설정을 통해 위젯 토글 끄기</label><br />
+                    <label><input type="checkbox" /> 위젯 버튼 사라짐 확인</label><br />
+                    <label><input type="checkbox" /> 필요시 다시 켜기 방법 숙지</label>
+                </div>
+            </div>
+
+            <div class="timeline-item priority-high">
+                <div class="timeline-badge">2단계</div>
+                <h3>위젯 서비스 비활성화 (중급)</h3>
+
+                <div class="info">
+                    <strong>⚙️ 서비스 레벨 제거:</strong> 위젯 관련 서비스를 비활성화하여 시스템 리소스 사용을 줄이고 더
+                    확실한 제거 효과를 얻을 수 있습니다. 메모리 사용량과 CPU 사용률이 개선됩니다.
+                </div>
+
+                <h4>위젯 관련 서비스 목록:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>서비스명</th>
+                            <th>표시명</th>
+                            <th>기능</th>
+                            <th>제거 안전도</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>cbdhsvc</td>
+                            <td>Clipboard User Service</td>
+                            <td>위젯 데이터 처리</td>
+                            <td><span class="level-basic">안전</span></td>
+                        </tr>
+                        <tr>
+                            <td>WpnService</td>
+                            <td>Windows Push Notifications</td>
+                            <td>위젯 알림</td>
+                            <td><span class="level-advanced">주의</span></td>
+                        </tr>
+                        <tr>
+                            <td>lfsvc</td>
+                            <td>Geolocation Service</td>
+                            <td>위치 기반 위젯</td>
+                            <td><span class="level-basic">안전</span></td>
+                        </tr>
+                        <tr>
+                            <td>WebClient</td>
+                            <td>WebClient</td>
+                            <td>웹 콘텐츠 로딩</td>
+                            <td><span class="level-expert">위험</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>서비스 관리자를 통한 비활성화:</h4>
+                <ol>
+                    <li><kbd>Windows</kbd> + <kbd>R</kbd> → <code>services.msc</code> 입력</li>
+                    <li><strong>"cbdhsvc"</strong> 서비스 찾기</li>
+                    <li>서비스 더블클릭 → <strong>"중지"</strong> 버튼 클릭</li>
+                    <li><strong>"시작 유형"</strong>을 <strong>"사용 안 함"</strong>으로 변경</li>
+                    <li><strong>"적용"</strong> → <strong>"확인"</strong> 클릭</li>
+                </ol>
+
+                <h4>PowerShell로 서비스 일괄 비활성화:</h4>
+                <div class="code-block">
+                    # PowerShell 관리자 권한으로 실행<br />
+                    # 위젯 관련 서비스 비활성화<br />
+                    <br />
+                    # Clipboard User Service 비활성화<br />
+                    Set-Service -Name "cbdhsvc" -StartupType Disabled<br />
+                    Stop-Service -Name "cbdhsvc" -Force -ErrorAction SilentlyContinue<br />
+                    <br />
+                    # Geolocation Service 비활성화 (위젯 전용이 아니므로 주의)<br />
+                    Set-Service -Name "lfsvc" -StartupType Disabled<br />
+                    Stop-Service -Name "lfsvc" -Force -ErrorAction SilentlyContinue<br />
+                    <br />
+                    # 서비스 상태 확인<br />
+                    Get-Service -Name "cbdhsvc", "lfsvc" | Select-Object Name, Status, StartType
+                </div>
+
+                <h4>위젯 프로세스 강제 종료:</h4>
+                <div class="code-block">
+                    # 위젯 관련 프로세스 확인<br />
+                    Get-Process | Where-Object {$_.ProcessName -like "*widget*" -or $_.ProcessName -like "*WebView*"}<br />
+                    <br />
+                    # 위젯 프로세스 강제 종료<br />
+                    Stop-Process -Name "WidgetService" -Force -ErrorAction SilentlyContinue<br />
+                    Stop-Process -Name "WebViewHost" -Force -ErrorAction SilentlyContinue<br />
+                    <br />
+                    # 메모리 사용량 확인<br />
+                    Get-Process | Sort-Object WorkingSet -Descending | Select-Object -First 10 Name,
+                    @{Name="Memory(MB)";Expression={[math]::Round($_.WorkingSet/1MB,2)}}
+                </div>
+
+                <h4>서비스 복원 방법:</h4>
+                <div class="code-block">
+                    # 서비스 다시 활성화<br />
+                    Set-Service -Name "cbdhsvc" -StartupType Manual<br />
+                    Start-Service -Name "cbdhsvc"<br />
+                    <br />
+                    Set-Service -Name "lfsvc" -StartupType Manual<br />
+                    Start-Service -Name "lfsvc"<br />
+                    <br />
+                    # 서비스 상태 확인<br />
+                    Get-Service -Name "cbdhsvc", "lfsvc"
+                </div>
+
+                <div class="warning">
+                    <h4>⚠️ 서비스 비활성화 시 주의사항</h4>
+                    <ul>
+                        <li>일부 서비스는 다른 기능에도 영향을 줄 수 있음</li>
+                        <li>시스템 복원 지점 생성 후 진행 권장</li>
+                        <li>변경 후 시스템 안정성 확인 필요</li>
+                        <li>Windows 업데이트 시 서비스가 재활성화될 수 있음</li>
+                    </ul>
+                </div>
+
+                <div class="checklist">
+                    <h4>✅ 2단계 서비스 비활성화 체크리스트</h4>
+                    <label><input type="checkbox" /> 시스템 복원 지점 생성</label><br />
+                    <label><input type="checkbox" /> 위젯 관련 서비스 확인</label><br />
+                    <label><input type="checkbox" /> 안전한 서비스부터 비활성화</label><br />
+                    <label><input type="checkbox" /> 시스템 안정성 테스트</label><br />
+                    <label><input type="checkbox" /> 메모리 사용량 개선 확인</label>
+                </div>
+            </div>
+
+            <div class="timeline-item priority-medium">
+                <div class="timeline-badge">3단계</div>
+                <h3>레지스트리 편집으로 완전 차단 (고급)</h3>
+
+                <div class="danger">
+                    <strong>🚨 고급 사용자 전용:</strong> 레지스트리 편집은 시스템에 영구적인 변화를 가할 수 있습니다.
+                    반드시 백업을 생성하고 충분한 지식이 있는 경우에만 진행하세요. 잘못된 편집은 시스템 불안정을 야기할
+                    수 있습니다.
+                </div>
+
+                <h4>레지스트리 백업 생성:</h4>
+                <ol>
+                    <li><kbd>Windows</kbd> + <kbd>R</kbd> → <code>regedit</code> 입력</li>
+                    <li>파일 → <strong>"내보내기"</strong> 선택</li>
+                    <li>전체 레지스트리 백업 생성</li>
+                    <li>안전한 위치에 백업 파일 저장</li>
+                </ol>
+
+                <h4>위젯 관련 레지스트리 키:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>레지스트리 경로</th>
+                            <th>키 이름</th>
+                            <th>값</th>
+                            <th>효과</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced</td>
+                            <td>TaskbarDa</td>
+                            <td>0</td>
+                            <td>위젯 버튼 숨김</td>
+                        </tr>
+                        <tr>
+                            <td>HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds</td>
+                            <td>EnableFeeds</td>
+                            <td>0</td>
+                            <td>위젯 기능 차단</td>
+                        </tr>
+                        <tr>
+                            <td>HKCU\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds</td>
+                            <td>EnableFeeds</td>
+                            <td>0</td>
+                            <td>사용자별 차단</td>
+                        </tr>
+                        <tr>
+                            <td>HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\NewsAndInterests</td>
+                            <td>AllowNewsAndInterests</td>
+                            <td>0</td>
+                            <td>정책 차단</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>PowerShell로 레지스트리 일괄 편집:</h4>
+                <div class="code-block">
+                    # PowerShell 관리자 권한으로 실행<br />
+                    # 레지스트리 백업 생성<br />
+                    $backupPath = "C:\Backup\Registry_Widgets_$(Get-Date -Format 'yyyyMMdd_HHmmss').reg"<br />
+                    reg export "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"
+                    $backupPath<br />
+                    <br />
+                    # 위젯 완전 비활성화<br />
+                    # 작업 표시줄 위젯 버튼 제거<br />
+                    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name
+                    "TaskbarDa" -Value 0<br />
+                    <br />
+                    # 시스템 전체 위젯 비활성화<br />
+                    $policyPath = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds"<br />
+                    if (!(Test-Path $policyPath)) {<br />
+                    New-Item -Path $policyPath -Force<br />
+                    }<br />
+                    Set-ItemProperty -Path $policyPath -Name "EnableFeeds" -Value 0<br />
+                    <br />
+                    # 사용자별 위젯 비활성화<br />
+                    $userPolicyPath = "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds"<br />
+                    if (!(Test-Path $userPolicyPath)) {<br />
+                    New-Item -Path $userPolicyPath -Force<br />
+                    }<br />
+                    Set-ItemProperty -Path $userPolicyPath -Name "EnableFeeds" -Value 0<br />
+                    <br />
+                    # 탐색기 재시작<br />
+                    Stop-Process -Name "explorer" -Force<br />
+                    Start-Process "explorer"
+                </div>
+
+                <h4>그룹 정책을 통한 위젯 비활성화:</h4>
+                <ol>
+                    <li><kbd>Windows</kbd> + <kbd>R</kbd> → <code>gpedit.msc</code> 입력</li>
+                    <li>컴퓨터 구성 → 관리 템플릿 → Windows 구성 요소</li>
+                    <li><strong>"뉴스 및 관심사"</strong> 폴더 찾기</li>
+                    <li><strong>"작업 표시줄에서 뉴스 및 관심사 사용 안 함"</strong> 정책 활성화</li>
+                </ol>
+
+                <h4>레지스트리 복원 방법:</h4>
+                <div class="code-block">
+                    # 레지스트리 복원<br />
+                    # 백업 파일을 사용하여 복원<br />
+                    reg import "C:\Backup\Registry_Widgets_백업파일.reg"<br />
+                    <br />
+                    # 또는 PowerShell로 개별 복원<br />
+                    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name
+                    "TaskbarDa" -Value 1<br />
+                    Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" -Name
+                    "EnableFeeds" -ErrorAction SilentlyContinue<br />
+                    Remove-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" -Name
+                    "EnableFeeds" -ErrorAction SilentlyContinue<br />
+                    <br />
+                    # 탐색기 재시작<br />
+                    Stop-Process -Name "explorer" -Force<br />
+                    Start-Process "explorer"
+                </div>
+
+                <div class="checklist">
+                    <h4>✅ 3단계 레지스트리 편집 체크리스트</h4>
+                    <label><input type="checkbox" /> 전체 레지스트리 백업 생성</label><br />
+                    <label><input type="checkbox" /> 위젯 관련 레지스트리 키 편집</label><br />
+                    <label><input type="checkbox" /> 그룹 정책 설정 (Pro 버전)</label><br />
+                    <label><input type="checkbox" /> 시스템 재부팅 후 확인</label><br />
+                    <label><input type="checkbox" /> 복원 방법 숙지</label>
+                </div>
+            </div>
+
+            <div class="timeline-item priority-medium">
+                <div class="timeline-badge">4단계</div>
+                <h3>PowerShell 스크립트로 완전 제거 (고급)</h3>
+
+                <div class="widget-tip">
+                    <strong>🔧 자동화된 완전 제거:</strong> PowerShell 스크립트를 사용하여 위젯 관련 모든 구성 요소를
+                    자동으로 제거할 수 있습니다. 이 방법은 가장 효과적이지만 신중하게 사용해야 합니다.
+                </div>
+
+                <h4>종합 위젯 제거 스크립트:</h4>
+                <div class="code-block">
+                    # Windows 11 위젯 완전 제거 스크립트<br />
+                    # 관리자 권한 필요<br />
+                    <br />
+                    Write-Host "Windows 11 위젯 완전 제거 시작..." -ForegroundColor Green<br />
+                    <br />
+                    # 1. 백업 생성<br />
+                    $backupDir = "C:\WidgetRemoval_Backup_$(Get-Date -Format 'yyyyMMdd_HHmmss')"<br />
+                    New-Item -ItemType Directory -Path $backupDir -Force<br />
+                    <br />
+                    # 레지스트리 백업<br />
+                    reg export "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced"
+                    "$backupDir\TaskbarSettings.reg"<br />
+                    reg export "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows"
+                    "$backupDir\WindowsPolicies.reg"<br />
+                    <br />
+                    # 2. 위젯 서비스 중지 및 비활성화<br />
+                    $services = @("cbdhsvc", "lfsvc")<br />
+                    foreach ($service in $services) {<br />
+                    try {<br />
+                    Stop-Service -Name $service -Force -ErrorAction SilentlyContinue<br />
+                    Set-Service -Name $service -StartupType Disabled -ErrorAction SilentlyContinue<br />
+                    Write-Host "서비스 $service 비활성화 완료" -ForegroundColor Yellow<br />
+                    } catch {<br />
+                    Write-Host "서비스 $service 처리 실패: $($_.Exception.Message)" -ForegroundColor Red<br />
+                    }<br />
+                    }<br />
+                    <br />
+                    # 3. 위젯 프로세스 종료<br />
+                    $processes = @("WidgetService", "WebViewHost", "msedgewebview2")<br />
+                    foreach ($process in $processes) {<br />
+                    Get-Process -Name $process -ErrorAction SilentlyContinue | Stop-Process -Force<br />
+                    }<br />
+                    <br />
+                    # 4. 레지스트리 설정<br />
+                    # 작업 표시줄 위젯 버튼 제거<br />
+                    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name
+                    "TaskbarDa" -Value 0<br />
+                    <br />
+                    # 시스템 정책으로 위젯 비활성화<br />
+                    $policyPaths = @(<br />
+                    "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds",<br />
+                    "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds"<br />
+                    )<br />
+                    <br />
+                    foreach ($path in $policyPaths) {<br />
+                    if (!(Test-Path $path)) {<br />
+                    New-Item -Path $path -Force | Out-Null<br />
+                    }<br />
+                    Set-ItemProperty -Path $path -Name "EnableFeeds" -Value 0<br />
+                    }<br />
+                    <br />
+                    # 5. 위젯 관련 예약 작업 비활성화<br />
+                    $tasks = Get-ScheduledTask | Where-Object {$_.TaskName -like "*Widget*" -or $_.TaskName -like
+                    "*Feed*"}<br />
+                    foreach ($task in $tasks) {<br />
+                    Disable-ScheduledTask -TaskName $task.TaskName -ErrorAction SilentlyContinue<br />
+                    Write-Host "예약 작업 $($task.TaskName) 비활성화" -ForegroundColor Yellow<br />
+                    }<br />
+                    <br />
+                    # 6. 탐색기 재시작<br />
+                    Stop-Process -Name "explorer" -Force<br />
+                    Start-Process "explorer"<br />
+                    <br />
+                    Write-Host "위젯 제거 완료! 백업 위치: $backupDir" -ForegroundColor Green<br />
+                    Write-Host "시스템 재부팅을 권장합니다." -ForegroundColor Cyan
+                </div>
+
+                <h4>위젯 제거 확인 스크립트:</h4>
+                <div class="code-block">
+                    # 위젯 제거 상태 확인 스크립트<br />
+                    Write-Host "=== Windows 11 위젯 제거 상태 확인 ===" -ForegroundColor Green<br />
+                    <br />
+                    # 1. 작업 표시줄 설정 확인<br />
+                    $taskbarDa = Get-ItemProperty -Path
+                    "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name "TaskbarDa" -ErrorAction
+                    SilentlyContinue<br />
+                    if ($taskbarDa.TaskbarDa -eq 0) {<br />
+                    Write-Host "✓ 작업 표시줄 위젯 버튼: 숨김" -ForegroundColor Green<br />
+                    } else {<br />
+                    Write-Host "✗ 작업 표시줄 위젯 버튼: 표시됨" -ForegroundColor Red<br />
+                    }<br />
+                    <br />
+                    # 2. 서비스 상태 확인<br />
+                    $services = @("cbdhsvc", "lfsvc")<br />
+                    foreach ($service in $services) {<br />
+                    $svc = Get-Service -Name $service -ErrorAction SilentlyContinue<br />
+                    if ($svc -and $svc.StartType -eq "Disabled") {<br />
+                    Write-Host "✓ 서비스 $service : 비활성화됨" -ForegroundColor Green<br />
+                    } else {<br />
+                    Write-Host "✗ 서비스 $service : 활성화됨" -ForegroundColor Red<br />
+                    }<br />
+                    }<br />
+                    <br />
+                    # 3. 정책 설정 확인<br />
+                    $feedPolicy = Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" -Name
+                    "EnableFeeds" -ErrorAction SilentlyContinue<br />
+                    if ($feedPolicy.EnableFeeds -eq 0) {<br />
+                    Write-Host "✓ 시스템 정책: 위젯 비활성화됨" -ForegroundColor Green<br />
+                    } else {<br />
+                    Write-Host "✗ 시스템 정책: 위젯 활성화됨" -ForegroundColor Red<br />
+                    }<br />
+                    <br />
+                    # 4. 실행 중인 위젯 프로세스 확인<br />
+                    $widgetProcesses = Get-Process | Where-Object {$_.ProcessName -like "*widget*" -or $_.ProcessName
+                    -like "*WebView*"}<br />
+                    if ($widgetProcesses.Count -eq 0) {<br />
+                    Write-Host "✓ 위젯 프로세스: 실행되지 않음" -ForegroundColor Green<br />
+                    } else {<br />
+                    Write-Host "✗ 위젯 프로세스: $($widgetProcesses.Count)개 실행 중" -ForegroundColor Red<br />
+                    }
+                </div>
+
+                <h4>위젯 복원 스크립트:</h4>
+                <div class="code-block">
+                    # 위젯 기능 복원 스크립트<br />
+                    Write-Host "Windows 11 위젯 기능 복원 시작..." -ForegroundColor Green<br />
+                    <br />
+                    # 1. 작업 표시줄 위젯 버튼 복원<br />
+                    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name
+                    "TaskbarDa" -Value 1<br />
+                    <br />
+                    # 2. 서비스 재활성화<br />
+                    $services = @("cbdhsvc", "lfsvc")<br />
+                    foreach ($service in $services) {<br />
+                    Set-Service -Name $service -StartupType Manual -ErrorAction SilentlyContinue<br />
+                    Start-Service -Name $service -ErrorAction SilentlyContinue<br />
+                    }<br />
+                    <br />
+                    # 3. 정책 제거<br />
+                    Remove-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" -Name
+                    "EnableFeeds" -ErrorAction SilentlyContinue<br />
+                    Remove-ItemProperty -Path "HKCU:\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" -Name
+                    "EnableFeeds" -ErrorAction SilentlyContinue<br />
+                    <br />
+                    # 4. 예약 작업 재활성화<br />
+                    $tasks = Get-ScheduledTask | Where-Object {$_.TaskName -like "*Widget*" -or $_.TaskName -like
+                    "*Feed*"}<br />
+                    foreach ($task in $tasks) {<br />
+                    Enable-ScheduledTask -TaskName $task.TaskName -ErrorAction SilentlyContinue<br />
+                    }<br />
+                    <br />
+                    # 5. 탐색기 재시작<br />
+                    Stop-Process -Name "explorer" -Force<br />
+                    Start-Process "explorer"<br />
+                    <br />
+                    Write-Host "위젯 기능 복원 완료!" -ForegroundColor Green
+                </div>
+
+                <div class="checklist">
+                    <h4>✅ 4단계 PowerShell 완전 제거 체크리스트</h4>
+                    <label><input type="checkbox" /> 관리자 권한으로 PowerShell 실행</label><br />
+                    <label><input type="checkbox" /> 종합 제거 스크립트 실행</label><br />
+                    <label><input type="checkbox" /> 제거 상태 확인 스크립트 실행</label><br />
+                    <label><input type="checkbox" /> 시스템 재부팅 후 최종 확인</label><br />
+                    <label><input type="checkbox" /> 복원 스크립트 보관</label>
+                </div>
+            </div>
+
+            <div class="timeline-item priority-low">
+                <div class="timeline-badge">5단계</div>
+                <h3>시스템 파일 제거 (전문가)</h3>
+
+                <div class="danger">
+                    <strong>⚠️ 극도로 위험한 방법:</strong> 이 방법은 시스템 파일을 직접 수정하므로 매우 위험합니다.
+                    시스템 불안정, 부팅 실패, 데이터 손실 등이 발생할 수 있으므로 전문가가 아니라면 절대 시도하지
+                    마세요.
+                </div>
+
+                <h4>위젯 관련 시스템 파일 위치:</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>파일/폴더</th>
+                            <th>위치</th>
+                            <th>기능</th>
+                            <th>제거 위험도</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>WebView2</td>
+                            <td>C:\Program Files (x86)\Microsoft\EdgeWebView</td>
+                            <td>위젯 렌더링</td>
+                            <td><span class="level-extreme">매우 높음</span></td>
+                        </tr>
+                        <tr>
+                            <td>WidgetService.exe</td>
+                            <td>C:\Windows\System32</td>
+                            <td>위젯 서비스</td>
+                            <td><span class="level-extreme">매우 높음</span></td>
+                        </tr>
+                        <tr>
+                            <td>Windows.CloudStore.dll</td>
+                            <td>C:\Windows\System32</td>
+                            <td>클라우드 데이터</td>
+                            <td><span class="level-extreme">매우 높음</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h4>안전한 파일 제거 절차:</h4>
+                <ol>
+                    <li><strong>완전한 시스템 백업:</strong> 전체 시스템 이미지 백업</li>
+                    <li><strong>복구 디스크 생성:</strong> Windows 복구 미디어 준비</li>
+                    <li><strong>안전 모드 부팅:</strong> 최소한의 서비스로 부팅</li>
+                    <li><strong>파일 소유권 변경:</strong> TrustedInstaller에서 사용자로</li>
+                    <li><strong>파일 이름 변경:</strong> 삭제 대신 .bak 확장자로 변경</li>
+                </ol>
+
+                <h4>파일 소유권 변경 및 제거:</h4>
+                <div class="code-block">
+                    # 극도로 위험한 작업 - 전문가만 실행<br />
+                    # 시스템 백업 필수!<br />
+                    <br />
+                    # 1. 소유권 변경<br />
+                    takeown /f "C:\Windows\System32\WidgetService.exe" /a<br />
+                    icacls "C:\Windows\System32\WidgetService.exe" /grant administrators:F<br />
+                    <br />
+                    # 2. 파일 이름 변경 (삭제 대신)<br />
+                    ren "C:\Windows\System32\WidgetService.exe" "WidgetService.exe.bak"<br />
+                    <br />
+                    # 3. WebView2 폴더 이름 변경<br />
+                    takeown /f "C:\Program Files (x86)\Microsoft\EdgeWebView" /r /d y<br />
+                    icacls "C:\Program Files (x86)\Microsoft\EdgeWebView" /grant administrators:F /t<br />
+                    ren "C:\Program Files (x86)\Microsoft\EdgeWebView" "EdgeWebView.bak"
+                </div>
+
+                <h4>복구 방법:</h4>
+                <div class="code-block">
+                    # 파일 복구<br />
+                    ren "C:\Windows\System32\WidgetService.exe.bak" "WidgetService.exe"<br />
+                    ren "C:\Program Files (x86)\Microsoft\EdgeWebView.bak" "EdgeWebView"<br />
+                    <br />
+                    # 또는 시스템 파일 검사기 사용<br />
+                    sfc /scannow<br />
+                    <br />
+                    # DISM으로 시스템 이미지 복구<br />
+                    DISM /Online /Cleanup-Image /RestoreHealth
+                </div>
+
+                <div class="warning">
+                    <h4>🚨 시스템 파일 제거 시 위험 요소</h4>
+                    <ul>
+                        <li>시스템 부팅 실패 가능성</li>
+                        <li>다른 Microsoft 앱 오작동</li>
+                        <li>Windows 업데이트 실패</li>
+                        <li>시스템 복구 어려움</li>
+                        <li>데이터 손실 위험</li>
+                    </ul>
+                </div>
+
+                <div class="checklist">
+                    <h4>✅ 5단계 시스템 파일 제거 체크리스트</h4>
+                    <label><input type="checkbox" /> 전체 시스템 백업 생성</label><br />
+                    <label><input type="checkbox" /> 복구 디스크 준비</label><br />
+                    <label><input type="checkbox" /> 안전 모드에서 작업</label><br />
+                    <label><input type="checkbox" /> 파일 삭제 대신 이름 변경</label><br />
+                    <label><input type="checkbox" /> 복구 방법 숙지</label>
+                </div>
+            </div>
+
+            <h2>📊 위젯 제거 효과 분석</h2>
+
+            <div class="success">
+                <h3>성능 개선 효과</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>성능 지표</th>
+                            <th>제거 전</th>
+                            <th>제거 후</th>
+                            <th>개선 효과</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>메모리 사용량</td>
+                            <td>+150-300MB</td>
+                            <td>기준값</td>
+                            <td>150-300MB 절약</td>
+                        </tr>
+                        <tr>
+                            <td>CPU 사용률</td>
+                            <td>+2-5%</td>
+                            <td>기준값</td>
+                            <td>2-5% 감소</td>
+                        </tr>
+                        <tr>
+                            <td>네트워크 트래픽</td>
+                            <td>지속적 통신</td>
+                            <td>없음</td>
+                            <td>데이터 절약</td>
+                        </tr>
+                        <tr>
+                            <td>배터리 수명</td>
+                            <td>기준값</td>
+                            <td>+10-20분</td>
+                            <td>3-5% 향상</td>
+                        </tr>
+                        <tr>
+                            <td>부팅 시간</td>
+                            <td>기준값</td>
+                            <td>-2-5초</td>
+                            <td>약간 개선</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2>🔧 문제 해결 및 복구</h2>
+
+            <div class="info">
+                <h3>일반적인 문제와 해결책</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>문제</th>
+                            <th>원인</th>
+                            <th>해결 방법</th>
+                            <th>예방법</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>위젯이 다시 나타남</td>
+                            <td>Windows 업데이트</td>
+                            <td>설정 다시 적용</td>
+                            <td>정책 설정 사용</td>
+                        </tr>
+                        <tr>
+                            <td>시스템 불안정</td>
+                            <td>과도한 제거</td>
+                            <td>시스템 복원</td>
+                            <td>단계적 제거</td>
+                        </tr>
+                        <tr>
+                            <td>다른 앱 오작동</td>
+                            <td>공유 구성 요소 제거</td>
+                            <td>구성 요소 복원</td>
+                            <td>영향 범위 확인</td>
+                        </tr>
+                        <tr>
+                            <td>설정 적용 안됨</td>
+                            <td>권한 부족</td>
+                            <td>관리자 권한 사용</td>
+                            <td>권한 확인</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2>💡 위젯 제거 추가 팁</h2>
+
+            <div class="widget-tip">
+                <h3>전문가 추천 팁</h3>
+                <ul>
+                    <li><strong>단계적 접근:</strong> 가장 안전한 방법부터 시작</li>
+                    <li><strong>백업 필수:</strong> 모든 변경 전 백업 생성</li>
+                    <li><strong>테스트:</strong> 각 단계 후 시스템 안정성 확인</li>
+                    <li><strong>문서화:</strong> 수행한 작업 기록 보관</li>
+                    <li><strong>복구 계획:</strong> 문제 발생 시 복구 방법 준비</li>
+                    <li><strong>정기 점검:</strong> Windows 업데이트 후 설정 재확인</li>
+                </ul>
+            </div>
+
+            <div class="widget-tip">
+                <h3>🎯 위젯 완전 제거 달성 공식</h3>
+                <p>
+                    <strong
+                        >기본 숨기기 (20%) + 서비스 비활성화 (25%) + 레지스트리 편집 (25%) + PowerShell 스크립트 (25%) +
+                        백업 및 복구 (5%) = 완벽한 위젯 제거</strong
+                    >
+                </p>
+            </div>
+
+            <div class="info">
+                <h3>최종 위젯 제거 체크리스트</h3>
+                <div class="checklist">
+                    <label><input type="checkbox" /> 제거 목적 및 필요성 확인</label><br />
+                    <label><input type="checkbox" /> 시스템 백업 생성</label><br />
+                    <label><input type="checkbox" /> 기본 위젯 버튼 숨기기</label><br />
+                    <label><input type="checkbox" /> 위젯 서비스 비활성화</label><br />
+                    <label><input type="checkbox" /> 레지스트리 편집 (필요시)</label><br />
+                    <label><input type="checkbox" /> PowerShell 스크립트 실행 (고급)</label><br />
+                    <label><input type="checkbox" /> 제거 효과 확인</label><br />
+                    <label><input type="checkbox" /> 시스템 안정성 테스트</label><br />
+                    <label><input type="checkbox" /> 복구 방법 숙지</label><br />
+                    <label><input type="checkbox" /> 위젯 완전 제거 달성</label>
+                </div>
+            </div>
+
+            <footer
+                style="
+                    text-align: center;
+                    margin-top: 50px;
+                    padding-top: 20px;
+                    border-top: 1px solid #ddd;
+                    color: #666;
+                ">
+                <p>
+                    Windows 11 위젯 제거는 개인의 사용 패턴과 선호도에 따른 선택입니다. 이 가이드의 단계별 방법을 통해
+                    안전하고 효과적으로 위젯을 제거하여 더 깔끔하고 최적화된 Windows 환경을 구축하세요. 항상 백업을
+                    우선하고 단계적으로 접근하여 시스템 안정성을 유지하시기 바랍니다.
+                </p>
+            </footer>
+        </div>
+    </body>
+</html>
