@@ -91,7 +91,12 @@ def fmt_dividend(value):
         v = float(value)
         if v <= 0:
             return "미지급"
-        return f"{v*100:.2f}%"
+        # yfinance는 소수(0.025 = 2.5%)로 반환하나 가끔 이미 % 값으로 반환
+        # 15% 초과는 비정상 데이터로 판단
+        pct = v * 100 if v < 1 else v
+        if pct > 15 or pct <= 0:
+            return "확인 필요"
+        return f"{pct:.2f}%"
     except Exception:
         return "N/A"
 
@@ -160,10 +165,21 @@ def generate_page(stock, template_str):
         "pbr": fmt_pbr(info.get("priceToBook")),
         "dividend_yield": fmt_dividend(info.get("dividendYield")),
         "updated_date": datetime.now().strftime("%Y년 %m월 %d일"),
+        "related_stocks": stock.get("_related", []),
     }
 
     tmpl = Template(template_str)
     return tmpl.render(**context)
+
+
+def build_related(stocks: list, current_slug: str, same_sector: str, n: int = 8) -> list:
+    """같은 섹터 우선, 나머지는 랜덤 선택으로 관련 종목 목록 반환."""
+    import random
+    same = [s for s in stocks if s["sector"] == same_sector and s["slug"] != current_slug]
+    others = [s for s in stocks if s["sector"] != same_sector and s["slug"] != current_slug]
+    pool = same + others
+    chosen = pool[:n] if len(pool) <= n else random.sample(same, min(len(same), 4)) + random.sample(others, min(len(others), n - min(len(same), 4)))
+    return [{"slug": s["slug"], "name": s["name"], "ticker_code": s["ticker"].split(".")[0]} for s in chosen[:n]]
 
 
 def main():
@@ -188,6 +204,7 @@ def main():
             print(f"일일 한도({DAILY_LIMIT}개) 도달. 내일 계속 생성됩니다.")
             break
 
+        stock["_related"] = build_related(stocks, stock["slug"], stock["sector"])
         print(f"[생성] {stock['name']} → {out_path.name}")
         try:
             html = generate_page(stock, template_str)
