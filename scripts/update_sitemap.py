@@ -35,9 +35,14 @@ def update_subsitemap(folder: Path, url_prefix: str):
 def main():
     targets = [
         (REPO_ROOT / "kor/report/stock/2025", f"{SITE_URL}/kor/report/stock/2025"),
-        (REPO_ROOT / "kor/report/travel", f"{SITE_URL}/kor/report/travel"),
-        (REPO_ROOT / "kor/report/coin", f"{SITE_URL}/kor/report/coin"),
-        (REPO_ROOT / "kor/report/visa", f"{SITE_URL}/kor/report/visa"),
+        (REPO_ROOT / "kor/report/coin",        f"{SITE_URL}/kor/report/coin"),
+        (REPO_ROOT / "kor/report/travel",      f"{SITE_URL}/kor/report/travel"),
+        (REPO_ROOT / "kor/report/visa",        f"{SITE_URL}/kor/report/visa"),
+        (REPO_ROOT / "kor/report/window",      f"{SITE_URL}/kor/report/window"),
+        (REPO_ROOT / "kor/report/camp",        f"{SITE_URL}/kor/report/camp"),
+        (REPO_ROOT / "kor/report/animal",      f"{SITE_URL}/kor/report/animal"),
+        (REPO_ROOT / "report/travel",          f"{SITE_URL}/report/travel"),
+        (REPO_ROOT / "jp/report/travel",       f"{SITE_URL}/jp/report/travel"),
     ]
 
     total = 0
