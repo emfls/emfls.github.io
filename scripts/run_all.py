@@ -15,6 +15,7 @@ import gen_us_stocks
 import gen_kor_us_stocks
 import gen_crypto
 import gen_camp_special
+import gen_trend_pages
 import gen_index_pages
 import add_internal_links
 import update_sitemap
@@ -26,34 +27,37 @@ def main():
     print("🚀 자동화 파이프라인 시작")
     print("=" * 50)
 
-    print("\n[1/10] 한국 주식 페이지 생성")
+    print("\n[1/11] 한국 주식 페이지 생성")
     gen_kr_stocks.main()
 
-    print("\n[2/10] SEC 보고서 페이지 생성")
+    print("\n[2/11] SEC 보고서 페이지 생성")
     gen_sec_filings.main()
 
-    print("\n[3/10] 미국 주식 (영문) 페이지 생성")
+    print("\n[3/11] 미국 주식 (영문) 페이지 생성")
     gen_us_stocks.main()
 
-    print("\n[4/10] 미국 주식 (한국어) 페이지 생성")
+    print("\n[4/11] 미국 주식 (한국어) 페이지 생성")
     gen_kor_us_stocks.main()
 
-    print("\n[5/10] 암호화폐 페이지 생성")
+    print("\n[5/11] 암호화폐 페이지 생성")
     gen_crypto.main()
 
-    print("\n[6/10] 캠핑 특집 페이지 생성")
+    print("\n[6/11] 캠핑 특집 페이지 생성")
     gen_camp_special.main()
 
-    print("\n[7/10] 카테고리 인덱스 페이지 생성")
+    print("\n[7/11] 트렌드 키워드 페이지 생성")
+    gen_trend_pages.main()
+
+    print("\n[8/11] 카테고리 인덱스 페이지 생성")
     gen_index_pages.main()
 
-    print("\n[8/10] 내부 링크 강화")
+    print("\n[9/11] 내부 링크 강화")
     add_internal_links.main()
 
-    print("\n[9/10] 사이트맵 업데이트")
+    print("\n[10/11] 사이트맵 업데이트")
     update_sitemap.main()
 
-    print("\n[10/10] IndexNow 제출")
+    print("\n[11/11] IndexNow 제출")
     indexnow.main()
 
     print("\n" + "=" * 50)
