@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 import gen_kr_stocks
 import gen_sec_filings
+import gen_us_stocks
 import gen_index_pages
 import add_internal_links
 import update_sitemap
@@ -22,22 +23,25 @@ def main():
     print("🚀 자동화 파이프라인 시작")
     print("=" * 50)
 
-    print("\n[1/6] 한국 주식 페이지 생성")
+    print("\n[1/7] 한국 주식 페이지 생성")
     gen_kr_stocks.main()
 
-    print("\n[2/6] SEC 보고서 페이지 생성")
+    print("\n[2/7] SEC 보고서 페이지 생성")
     gen_sec_filings.main()
 
-    print("\n[3/6] 카테고리 인덱스 페이지 생성")
+    print("\n[3/7] 미국 주식 데이터베이스 페이지 생성")
+    gen_us_stocks.main()
+
+    print("\n[4/7] 카테고리 인덱스 페이지 생성")
     gen_index_pages.main()
 
-    print("\n[4/6] 내부 링크 강화")
+    print("\n[5/7] 내부 링크 강화")
     add_internal_links.main()
 
-    print("\n[5/6] 사이트맵 업데이트")
+    print("\n[6/7] 사이트맵 업데이트")
     update_sitemap.main()
 
-    print("\n[6/6] IndexNow 제출")
+    print("\n[7/7] IndexNow 제출")
     indexnow.main()
 
     print("\n" + "=" * 50)

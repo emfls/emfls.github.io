@@ -43,6 +43,7 @@ def main():
         (REPO_ROOT / "kor/report/animal",      f"{SITE_URL}/kor/report/animal"),
         (REPO_ROOT / "report/travel",          f"{SITE_URL}/report/travel"),
         (REPO_ROOT / "report/sec",             f"{SITE_URL}/report/sec"),
+        (REPO_ROOT / "report/stock",           f"{SITE_URL}/report/stock"),
         (REPO_ROOT / "jp/report/travel",       f"{SITE_URL}/jp/report/travel"),
     ]
 

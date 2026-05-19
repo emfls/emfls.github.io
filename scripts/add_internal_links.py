@@ -29,8 +29,9 @@ CROSS_LINK_BLOCK_EN = """
     <div style="background:white;border-radius:10px;padding:20px 24px;margin-bottom:18px;box-shadow:0 2px 8px rgba(0,0,0,.07);">
         <p style="font-size:.85rem;color:#888;font-weight:600;margin-bottom:10px;">🔗 More on emfls.com</p>
         <div style="display:flex;flex-wrap:wrap;gap:8px;">
-            <a href="https://emfls.com/report/sec/index.html" style="display:inline-block;background:#e8f5e9;color:#2e7d32;padding:5px 13px;border-radius:20px;font-size:.82rem;text-decoration:none;font-weight:500;">📋 SEC Filings</a>
-            <a href="https://emfls.com/kor/report/stock/2025/index.html" style="display:inline-block;background:#e3f2fd;color:#1565c0;padding:5px 13px;border-radius:20px;font-size:.82rem;text-decoration:none;font-weight:500;">🇰🇷 Korean Stocks</a>
+            <a href="https://emfls.com/report/stock/index.html" style="display:inline-block;background:#e8f5e9;color:#1b5e20;padding:5px 13px;border-radius:20px;font-size:.82rem;text-decoration:none;font-weight:500;">📈 US Stocks</a>
+            <a href="https://emfls.com/report/sec/index.html" style="display:inline-block;background:#e3f2fd;color:#0d47a1;padding:5px 13px;border-radius:20px;font-size:.82rem;text-decoration:none;font-weight:500;">📋 SEC Filings</a>
+            <a href="https://emfls.com/kor/report/stock/2025/index.html" style="display:inline-block;background:#fff8e1;color:#e65100;padding:5px 13px;border-radius:20px;font-size:.82rem;text-decoration:none;font-weight:500;">🇰🇷 Korean Stocks</a>
             <a href="https://emfls.com/report/travel/" style="display:inline-block;background:#fce4ec;color:#c62828;padding:5px 13px;border-radius:20px;font-size:.82rem;text-decoration:none;font-weight:500;">✈️ Travel Guides</a>
             <a href="https://emfls.com" style="display:inline-block;background:#f5f5f5;color:#424242;padding:5px 13px;border-radius:20px;font-size:.82rem;text-decoration:none;font-weight:500;">🎮 Mini Games</a>
         </div>
@@ -85,6 +86,7 @@ def main():
         (REPO_ROOT / "kor/report/animal", CROSS_LINK_BLOCK, "*.html"),
         (REPO_ROOT / "report/travel", CROSS_LINK_BLOCK_EN, "*.html"),
         (REPO_ROOT / "report/sec", CROSS_LINK_BLOCK_EN, "*.html"),
+        (REPO_ROOT / "report/stock", CROSS_LINK_BLOCK_EN, "*.html"),
         (REPO_ROOT / "jp/report/travel", CROSS_LINK_BLOCK_EN, "*.html"),
     ]
 
