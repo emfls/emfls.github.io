@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <title>{{ name }} ({{ symbol }}) Price, Market Cap & Analysis 2025 | emfls.com</title>
+    <meta name="description" content="{{ name }} ({{ symbol }}) price {{ current_price }}, market cap {{ market_cap }}, 24h change {{ change_24h }}, 7d change {{ change_7d }}. Complete crypto analysis with historical data, all-time high, and market trends."/>
+    <meta name="keywords" content="{{ symbol }} price,{{ name }} price,{{ symbol }} market cap,{{ name }} analysis,{{ symbol }} crypto,{{ symbol }} coin,cryptocurrency {{ name }}"/>
+    <link rel="canonical" href="https://emfls.com/report/crypto/{{ id }}.html"/>
+    <meta property="og:title" content="{{ name }} ({{ symbol }}) — Crypto Price & Analysis"/>
+    <meta property="og:description" content="{{ symbol }} current price: {{ current_price }}. Market cap: {{ market_cap }}. 24h change: {{ change_24h }}."/>
+    <meta property="og:url" content="https://emfls.com/report/crypto/{{ id }}.html"/>
+    <meta property="og:type" content="article"/>
+    <meta property="og:image" content="https://emfls.com/og-crypto.png"/>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "{{ name }} ({{ symbol }}) Price and Market Analysis",
+      "description": "Comprehensive crypto analysis for {{ name }} including price, market cap, and historical data",
+      "author": {"@type": "Organization", "name": "emfls.com"},
+      "publisher": {"@type": "Organization", "name": "emfls.com", "url": "https://emfls.com"},
+      "datePublished": "{{ updated_date }}",
+      "dateModified": "{{ updated_date }}"
+    }
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-QP5Q67GE5B');</script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Segoe UI',system-ui,sans-serif;background:#0f0f1a;color:#e0e0e0;line-height:1.6;}
+        .container{max-width:1060px;margin:0 auto;padding:16px;}
+        .crypto-header{background:linear-gradient(135deg,#0f0f1a 0%,#1a1a3e 50%,#12213e 100%);border:1px solid rgba(100,150,255,.15);color:white;padding:30px 26px;border-radius:14px;margin-bottom:16px;}
+        .symbol-badge{display:inline-block;background:rgba(100,150,255,.2);border:1px solid rgba(100,150,255,.4);border-radius:8px;padding:3px 13px;font-size:.95rem;font-weight:700;letter-spacing:1px;margin-bottom:8px;color:#90caf9;}
+        .crypto-name{font-size:1.8rem;font-weight:700;margin-bottom:4px;}
+        .header-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px;align-items:center;}
+        .price-block{background:rgba(255,255,255,.07);border-radius:10px;padding:10px 16px;}
+        .price-main{font-size:2rem;font-weight:800;}
+        .change-badge{font-size:.88rem;padding:3px 10px;border-radius:12px;font-weight:600;}
+        .change-badge.up{background:rgba(76,175,80,.25);color:#81c784;}
+        .change-badge.down{background:rgba(244,67,54,.25);color:#e57373;}
+        .htag{background:rgba(255,255,255,.08);border-radius:20px;padding:3px 11px;font-size:.77rem;color:#bbb;}
+        .section{background:#1a1a2e;border:1px solid rgba(100,150,255,.1);border-radius:12px;padding:20px 22px;margin-bottom:14px;}
+        .section h2{font-size:1rem;color:#90caf9;border-bottom:1px solid rgba(100,150,255,.15);padding-bottom:7px;margin-bottom:16px;display:flex;align-items:center;gap:7px;}
+        .kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:10px;}
+        .kpi{background:#12122a;border-radius:10px;padding:13px 15px;border-left:3px solid #3f51b5;}
+        .k-label{font-size:.72rem;color:#7986cb;font-weight:600;margin-bottom:4px;text-transform:uppercase;}
+        .k-val{font-size:1.1rem;font-weight:700;color:#e8eaf6;}
+        .k-sub{font-size:.7rem;color:#666;margin-top:2px;}
+        .two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+        .metric-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+        .metric-row:last-child{border-bottom:none;}
+        .metric-label{font-size:.83rem;color:#888;}
+        .metric-val{font-size:.9rem;font-weight:600;color:#e8eaf6;}
+        .desc-text{font-size:.86rem;color:#aaa;line-height:1.75;max-height:100px;overflow:hidden;transition:max-height .4s;}
+        .desc-text.open{max-height:600px;}
+        .desc-toggle{background:none;border:1px solid rgba(100,150,255,.3);color:#90caf9;border-radius:6px;padding:4px 14px;font-size:.8rem;cursor:pointer;margin-top:8px;}
+        .related-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;}
+        .related-card{background:#12122a;border-radius:8px;padding:11px;border-left:3px solid #5c6bc0;}
+        .related-card a{text-decoration:none;color:#90caf9;font-weight:600;font-size:.84rem;}
+        .related-card .r-sub{font-size:.71rem;color:#666;margin-top:3px;}
+        .breadcrumb{font-size:.8rem;color:#666;margin-bottom:12px;}
+        .breadcrumb a{color:#7986cb;text-decoration:none;}
+        footer{text-align:center;padding:20px;color:#555;font-size:.78rem;}
+        footer a{color:#7986cb;}
+        @media(max-width:600px){.two-col{grid-template-columns:1fr;}.crypto-name{font-size:1.4rem;}}
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="breadcrumb"><a href="https://emfls.com">Home</a> &rsaquo; <a href="https://emfls.com/report/crypto/index.html">Crypto</a> &rsaquo; {{ symbol }}</div>
+
+    <div class="crypto-header">
+        <div class="symbol-badge">{{ symbol }}</div>
+        <div class="crypto-name">{{ name }}</div>
+        <div class="header-meta">
+            <div class="price-block">
+                <div class="price-main">{{ current_price }}</div>
+                <span class="change-badge {{ dir_24h }}">24h: {{ change_24h }}</span>
+                &nbsp;<span class="change-badge {{ dir_7d }}">7d: {{ change_7d }}</span>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                <span class="htag">🏆 Rank #{{ market_cap_rank }}</span>
+                <span class="htag">📊 Market Cap: {{ market_cap }}</span>
+                {% if categories %}<span class="htag">🏷️ {{ categories }}</span>{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Market Overview -->
+    <div class="section">
+        <h2>📊 Market Overview</h2>
+        <div class="kpi-grid">
+            <div class="kpi"><div class="k-label">Current Price</div><div class="k-val">{{ current_price }}</div><div class="k-sub">USD</div></div>
+            <div class="kpi"><div class="k-label">Market Cap</div><div class="k-val">{{ market_cap }}</div><div class="k-sub">Rank #{{ market_cap_rank }}</div></div>
+            <div class="kpi"><div class="k-label">24h Volume</div><div class="k-val">{{ volume_24h }}</div><div class="k-sub">Trading Volume</div></div>
+            <div class="kpi"><div class="k-label">Circulating Supply</div><div class="k-val">{{ circulating_supply }}</div><div class="k-sub">{{ symbol }}</div></div>
+            <div class="kpi"><div class="k-label">Total Supply</div><div class="k-val">{{ total_supply }}</div><div class="k-sub">{{ symbol }}</div></div>
+            <div class="kpi"><div class="k-label">Max Supply</div><div class="k-val">{{ max_supply }}</div><div class="k-sub">{{ symbol }}</div></div>
+            <div class="kpi"><div class="k-label">All-Time High</div><div class="k-val">{{ ath }}</div><div class="k-sub">{{ ath_date }}</div></div>
+            <div class="kpi"><div class="k-label">ATH Change</div><div class="k-val">{{ ath_change }}</div><div class="k-sub">From ATH</div></div>
+            <div class="kpi"><div class="k-label">All-Time Low</div><div class="k-val">{{ atl }}</div><div class="k-sub">{{ atl_date }}</div></div>
+            <div class="kpi"><div class="k-label">ATL Change</div><div class="k-val">{{ atl_change }}</div><div class="k-sub">From ATL</div></div>
+            <div class="kpi"><div class="k-label">7d Change</div><div class="k-val">{{ change_7d }}</div><div class="k-sub">7 Days</div></div>
+            <div class="kpi"><div class="k-label">30d Change</div><div class="k-val">{{ change_30d }}</div><div class="k-sub">30 Days</div></div>
+        </div>
+    </div>
+
+    <!-- Price Range -->
+    <div class="two-col">
+        <div class="section">
+            <h2>📈 Price Performance</h2>
+            <div class="metric-row"><span class="metric-label">24h High</span><span class="metric-val">{{ high_24h }}</span></div>
+            <div class="metric-row"><span class="metric-label">24h Low</span><span class="metric-val">{{ low_24h }}</span></div>
+            <div class="metric-row"><span class="metric-label">1h Change</span><span class="metric-val">{{ change_1h }}</span></div>
+            <div class="metric-row"><span class="metric-label">7d Change</span><span class="metric-val">{{ change_7d }}</span></div>
+            <div class="metric-row"><span class="metric-label">14d Change</span><span class="metric-val">{{ change_14d }}</span></div>
+            <div class="metric-row"><span class="metric-label">30d Change</span><span class="metric-val">{{ change_30d }}</span></div>
+            <div class="metric-row"><span class="metric-label">1y Change</span><span class="metric-val">{{ change_1y }}</span></div>
+        </div>
+        <div class="section">
+            <h2>🔢 Market Data</h2>
+            <div class="metric-row"><span class="metric-label">Market Cap Rank</span><span class="metric-val">#{{ market_cap_rank }}</span></div>
+            <div class="metric-row"><span class="metric-label">Fully Diluted Val.</span><span class="metric-val">{{ fully_diluted_val }}</span></div>
+            <div class="metric-row"><span class="metric-label">Volume / Market Cap</span><span class="metric-val">{{ vol_market_cap }}</span></div>
+            <div class="metric-row"><span class="metric-label">Circulating / Total</span><span class="metric-val">{{ circ_total_ratio }}</span></div>
+            <div class="metric-row"><span class="metric-label">Genesis Date</span><span class="metric-val">{{ genesis_date }}</span></div>
+            <div class="metric-row"><span class="metric-label">Hashing Algorithm</span><span class="metric-val">{{ hashing_algo }}</span></div>
+        </div>
+    </div>
+
+    <!-- Description -->
+    {% if description %}
+    <div class="section">
+        <h2>📝 About {{ name }}</h2>
+        <p class="desc-text" id="desc">{{ description }}</p>
+        <button class="desc-toggle" onclick="var d=document.getElementById('desc');d.classList.toggle('open');this.textContent=d.classList.contains('open')?'Show less':'Read more';">Read more</button>
+    </div>
+    {% endif %}
+
+    <!-- Related Cryptos -->
+    {% if related_cryptos %}
+    <div class="section">
+        <h2>🔗 Related Cryptocurrencies</h2>
+        <div class="related-grid">
+            {% for c in related_cryptos %}
+            <div class="related-card">
+                <a href="https://emfls.com/report/crypto/{{ c.id }}.html">{{ c.name }}</a>
+                <div class="r-sub">{{ c.symbol }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Cross links -->
+    <div class="section">
+        <h2>🔗 More on emfls.com</h2>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <a href="https://emfls.com/report/stock/index.html" style="display:inline-block;background:rgba(27,94,32,.3);color:#81c784;padding:5px 13px;border-radius:20px;font-size:.82rem;text-decoration:none;font-weight:500;">📈 US Stocks</a>
+            <a href="https://emfls.com/report/sec/index.html" style="display:inline-block;background:rgba(13,71,161,.3);color:#90caf9;padding:5px 13px;border-radius:20px;font-size:.82rem;text-decoration:none;font-weight:500;">📋 SEC Filings</a>
+            <a href="https://emfls.com/kor/report/coin/bitcoin-guide.html" style="display:inline-block;background:rgba(198,40,40,.3);color:#ef9a9a;padding:5px 13px;border-radius:20px;font-size:.82rem;text-decoration:none;font-weight:500;">🇰🇷 한국어 암호화폐</a>
+            <a href="https://emfls.com" style="display:inline-block;background:rgba(66,66,66,.4);color:#bbb;padding:5px 13px;border-radius:20px;font-size:.82rem;text-decoration:none;font-weight:500;">🎮 Mini Games</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>Data sourced from CoinGecko. For informational purposes only. © 2025 Itagi | <a href="https://emfls.com">emfls.com</a></p>
+        <p style="margin-top:4px;">Last updated: {{ updated_date }}</p>
+    </footer>
+</div>
+</body>
+</html>

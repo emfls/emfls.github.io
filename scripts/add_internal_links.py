@@ -87,6 +87,8 @@ def main():
         (REPO_ROOT / "report/travel", CROSS_LINK_BLOCK_EN, "*.html"),
         (REPO_ROOT / "report/sec", CROSS_LINK_BLOCK_EN, "*.html"),
         (REPO_ROOT / "report/stock", CROSS_LINK_BLOCK_EN, "*.html"),
+        (REPO_ROOT / "report/crypto", CROSS_LINK_BLOCK_EN, "*.html"),
+        (REPO_ROOT / "kor/report/stock/us", CROSS_LINK_BLOCK, "*.html"),
         (REPO_ROOT / "jp/report/travel", CROSS_LINK_BLOCK_EN, "*.html"),
     ]
 
