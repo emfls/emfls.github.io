@@ -243,9 +243,10 @@
   }
 
   // DOM 준비 후 실행
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  // 일시 비활성화: 페이지 구조 확인용
+  // if (document.readyState === 'loading') {
+  //   document.addEventListener('DOMContentLoaded', init);
+  // } else {
+  //   init();
+  // }
 })();
