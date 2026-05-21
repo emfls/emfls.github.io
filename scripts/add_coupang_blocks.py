@@ -23,8 +23,8 @@ MARKER_TOP = "cp-injected-top"
 MARKER_MID = "cp-injected-mid"
 MARKER_BOT = "cp-injected-bot"
 
-# 게임 관련 경로/파일명 키워드 (제외)
-GAME_SKIP = {"nikke", "maplestory", "sevenknights", "mabinogi", "maplerange"}
+# 실제 플레이어블 게임 페이지 폴더 (제외) — /game/, /vn/game/, /ae/game/ 등
+GAME_DIR_PATTERN = re.compile(r'[\\/]game[\\/]')
 
 # ── 카테고리별 상단/중간/하단 키워드 정의 ─────────────────────────────
 # 형식: "경로": (상단키워드, 중간키워드, 하단키워드, 상단제목, 중간제목, 하단제목)
@@ -171,6 +171,18 @@ CATEGORIES = {
         ("아기 장난감 교육",      "👶 유아 장난감"),
         ("유아 침구 추천",        "🛏️ 유아 침구"),
         ("아기 이유식 용품",      "🍼 이유식 용품"),
+    ),
+    # ── 니케 가이드 (10개) ───────────────────────────────────────
+    "kor/report/nikke": (
+        ("게이밍 의자 추천",      "🎮 게이밍 의자"),
+        ("게이밍 헤드셋 추천",    "🎧 게이밍 헤드셋"),
+        ("게이밍 마우스 추천",    "🖱️ 게이밍 마우스"),
+    ),
+    # ── 메이플스토리 가이드 (12개) ───────────────────────────────
+    "kor/report/maple": (
+        ("게이밍 의자 추천",      "🎮 게이밍 의자"),
+        ("게이밍 키보드 추천",    "⌨️ 게이밍 키보드"),
+        ("게이밍 헤드셋 추천",    "🎧 게이밍 헤드셋"),
     ),
     # ── 절약/저축 ────────────────────────────────────────────────
     "kor/report/saving": (
@@ -345,9 +357,8 @@ def _inject(content: str, top_html: str, mid_html: str, bot_html: str) -> str:
 
 
 def _is_game_page(path: Path) -> bool:
-    """게임 관련 페이지인지 확인"""
-    combined = str(path).lower()
-    return any(kw in combined for kw in GAME_SKIP)
+    """실제 플레이어블 게임 페이지인지 확인 (/game/ 폴더)"""
+    return bool(GAME_DIR_PATTERN.search(str(path)))
 
 
 def _needs_injection(content: str) -> bool:
