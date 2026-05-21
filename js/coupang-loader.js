@@ -68,8 +68,8 @@
 .cp3-card{flex:0 0 clamp(72px,18vw,100px);text-decoration:none;color:inherit;
   transition:opacity 0.4s ease-in-out;display:flex;flex-direction:column;align-items:center;opacity:1}
 .cp3-card.hidden{opacity:0;position:absolute;pointer-events:none}
-.cp3-card img{width:100%;aspect-ratio:1;object-fit:contain;border-radius:5px;
-  background:#0d1117;display:block;border:1px solid #21262d}
+.cp3-card img{width:100%;height:auto;aspect-ratio:1 / 1;object-fit:contain;border-radius:5px;
+  background:#0d1117;display:block;border:1px solid #21262d;max-width:100%;margin:0;padding:0}
 .cp3-name{font-size:.68rem;color:#c9d1d9;line-height:1.3;margin-top:4px;text-align:center;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .cp3-price{font-size:.72rem;color:#ff6b6b;font-weight:700;margin-top:2px;text-align:center}
@@ -83,21 +83,20 @@
     document.head.appendChild(style);
   }
 
-  // 쿠팡 블록 생성 및 로테이션 시작
-  function createRotatingBlock(allProducts, position, title) {
-    if (!allProducts || allProducts.length === 0) return null;
+  // 쿠팡 블록 생성 (3개 상품으로 초기 카드 생성)
+  function createRotatingBlock(initialProducts, position, title) {
+    if (!initialProducts || initialProducts.length === 0) return null;
 
     const containerId = `cp-${position}-container`;
 
-    // 초기 3개 상품으로 카드 생성 (모두 포함, 나중에 숨길 예정)
-    const cardsHtml = allProducts.map((p, idx) => {
+    // 초기 3개 상품으로만 카드 생성
+    const cardsHtml = initialProducts.map((p, idx) => {
       const name = (p.name || '').substring(0, 30) + (p.name?.length > 30 ? '…' : '');
       const price = p.price ? p.price.toLocaleString('ko-KR') + '원' : '';
       const rocket = p.is_rocket ? '<span class="cp3-rocket">로켓</span>' : '';
       const img = p.image ? `<img src="${p.image}" alt="" loading="lazy">` : '';
-      const hidden = idx >= 3 ? 'hidden' : '';
 
-      return `<a class="cp3-card ${hidden}" href="${p.url}" target="_blank" rel="noopener sponsored" data-idx="${idx}">
+      return `<a class="cp3-card" href="${p.url}" target="_blank" rel="noopener sponsored" data-idx="${idx}">
         ${img}
         <div class="cp3-name">${name}${rocket}</div>
         <div class="cp3-price">${price}</div>
@@ -112,7 +111,7 @@
   <div class="cp3-notice">이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</div>
 </div></div>`;
 
-    return { containerId, blockHtml, allProducts };
+    return { containerId, blockHtml };
   }
 
   // 블록 주입
@@ -156,39 +155,25 @@
     return blockData.containerId;
   }
 
-  // 로테이션 시작
-  function startRotation(containerId, products) {
+  // 로테이션 시작 (매 3초마다 새로운 랜덤 상품)
+  function startRotation(containerId, allCategoryProducts) {
     const container = document.getElementById(containerId);
     if (!container) return;
 
     const cards = container.querySelectorAll('.cp3-card');
-    const totalItems = products.length;
     const itemsPerPage = 3;
-    const totalSets = Math.ceil(totalItems / itemsPerPage);
 
-    if (totalSets <= 1) return; // 3개 이하면 로테이션 불필요
+    if (allCategoryProducts.length < itemsPerPage) return; // 3개 미만이면 불필요
 
-    let currentSet = 0;
-
-    // 초기 상태: 처음 3개만 보임
-    cards.forEach((card, idx) => {
-      if (idx < itemsPerPage) {
-        card.classList.remove('hidden');
-      } else {
-        card.classList.add('hidden');
-      }
-    });
-
-    // 3초마다 로테이션
+    // 3초마다 새로운 랜덤 상품 선택 및 업데이트
     setInterval(() => {
-      currentSet = (currentSet + 1) % totalSets;
-      const startIdx = currentSet * itemsPerPage;
-
       cards.forEach((card, displayIdx) => {
-        const productIdx = startIdx + displayIdx;
-        const product = products[productIdx];
+        // 랜덤 상품 선택
+        const randomProduct = allCategoryProducts[
+          Math.floor(Math.random() * allCategoryProducts.length)
+        ];
 
-        if (product) {
+        if (randomProduct) {
           // 페이드 아웃
           card.style.opacity = '0';
 
@@ -199,21 +184,23 @@
             const price = card.querySelector('.cp3-price');
 
             if (img) {
-              img.src = product.image;
-              img.alt = product.name;
+              img.src = randomProduct.image;
+              img.alt = randomProduct.name;
             }
             if (name) {
-              let nameText = product.name.substring(0, 30);
-              if (product.name.length > 30) nameText += '…';
+              let nameText = randomProduct.name.substring(0, 30);
+              if (randomProduct.name.length > 30) nameText += '…';
               name.textContent = nameText;
-              if (product.is_rocket) {
+              if (randomProduct.is_rocket) {
                 name.innerHTML = nameText + '<span class="cp3-rocket">로켓</span>';
               }
             }
             if (price) {
-              price.textContent = product.price ? product.price.toLocaleString('ko-KR') + '원' : '';
+              price.textContent = randomProduct.price
+                ? randomProduct.price.toLocaleString('ko-KR') + '원'
+                : '';
             }
-            card.href = product.url;
+            card.href = randomProduct.url;
 
             // 페이드 인
             card.style.opacity = '1';
@@ -234,25 +221,25 @@
 
     injectStyle();
 
-    // 상단/중간/하단에 각각 충분한 상품 선택 (로테이션용)
-    const topProducts = selectRandom(categoryProducts, Math.min(categoryProducts.length, 12));
-    const midProducts = selectRandom(categoryProducts, Math.min(categoryProducts.length, 12));
-    const botProducts = selectRandom(categoryProducts, Math.min(categoryProducts.length, 12));
+    // 상단/중간/하단에 초기 상품 선택 (화면 표시용)
+    const topInitial = selectRandom(categoryProducts, 3);
+    const midInitial = selectRandom(categoryProducts, 3);
+    const botInitial = selectRandom(categoryProducts, 3);
 
-    // 블록 생성
-    const topBlock = createRotatingBlock(topProducts, 'cp-injected-top', '추천 상품');
-    const midBlock = createRotatingBlock(midProducts, 'cp-injected-mid', '함께 보기');
-    const botBlock = createRotatingBlock(botProducts, 'cp-injected-bot', '관심 상품');
+    // 블록 생성 (초기 상품으로)
+    const topBlock = createRotatingBlock(topInitial, 'cp-injected-top', '추천 상품');
+    const midBlock = createRotatingBlock(midInitial, 'cp-injected-mid', '함께 보기');
+    const botBlock = createRotatingBlock(botInitial, 'cp-injected-bot', '관심 상품');
 
     // 주입
     const topId = injectBlock(topBlock, 'top');
     const midId = injectBlock(midBlock, 'mid');
     const botId = injectBlock(botBlock, 'bot');
 
-    // 로테이션 시작
-    if (topId) startRotation(topId, topProducts);
-    if (midId) startRotation(midId, midProducts);
-    if (botId) startRotation(botId, botProducts);
+    // 로테이션 시작 (매번 전체 카테고리 상품에서 랜덤 선택)
+    if (topId) startRotation(topId, categoryProducts);
+    if (midId) startRotation(midId, categoryProducts);
+    if (botId) startRotation(botId, categoryProducts);
   }
 
   // DOM 준비 후 실행
