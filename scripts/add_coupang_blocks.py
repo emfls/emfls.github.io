@@ -231,28 +231,30 @@ CATEGORIES = {
 
 # ── 컴팩트 쿠팡 블록 HTML 생성 ──────────────────────────────────────
 
-COMPACT_STYLE = """
-<style>
-.cp3-wrap{max-width:860px;margin:18px auto;padding:0 14px;}
-.cp3-box{background:#fff;border:1px solid #e8e8e8;border-radius:10px;
-  padding:14px 16px;box-shadow:0 1px 6px rgba(0,0,0,.06);}
-.cp3-title{font-size:.88rem;font-weight:700;color:#555;margin-bottom:10px;
-  border-left:3px solid #e8231a;padding-left:8px;}
-.cp3-row{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;}
-.cp3-row::-webkit-scrollbar{height:4px;}
-.cp3-row::-webkit-scrollbar-thumb{background:#ddd;border-radius:2px;}
-.cp3-card{flex:0 0 120px;text-decoration:none;color:inherit;}
-.cp3-card img{width:120px;height:120px;object-fit:contain;border-radius:6px;
-  background:#f9f9f9;display:block;}
-.cp3-name{font-size:.73rem;color:#333;line-height:1.3;margin-top:5px;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-.cp3-price{font-size:.8rem;color:#e8231a;font-weight:700;margin-top:3px;}
-.cp3-rocket{font-size:.65rem;background:#e8231a;color:#fff;padding:1px 5px;
-  border-radius:3px;margin-left:3px;}
-.cp3-notice{font-size:.68rem;color:#bbb;margin-top:8px;}
-</style>
-"""
-_style_injected = False  # 페이지당 1회만 스타일 삽입
+COMPACT_STYLE = """<style id="cp3s">
+.cp3-wrap{max-width:860px;margin:10px auto;padding:0 10px}
+.cp3-box{background:#fff;border:1px solid #eee;border-radius:8px;
+  padding:10px 12px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.cp3-title{font-size:.8rem;font-weight:700;color:#555;margin-bottom:8px;
+  border-left:3px solid #e8231a;padding-left:7px}
+.cp3-row{display:flex;flex-wrap:nowrap;gap:8px;overflow-x:auto;
+  padding-bottom:4px;-webkit-overflow-scrolling:touch}
+.cp3-row::-webkit-scrollbar{height:3px}
+.cp3-row::-webkit-scrollbar-thumb{background:#ddd;border-radius:2px}
+.cp3-card{flex:0 0 clamp(72px,18vw,100px);text-decoration:none;color:inherit}
+.cp3-card img{width:100%;aspect-ratio:1;object-fit:contain;border-radius:5px;
+  background:#f9f9f9;display:block}
+.cp3-name{font-size:.68rem;color:#333;line-height:1.3;margin-top:4px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cp3-price{font-size:.72rem;color:#e8231a;font-weight:700;margin-top:2px}
+.cp3-rocket{font-size:.6rem;background:#e8231a;color:#fff;padding:1px 4px;
+  border-radius:3px;margin-left:2px}
+.cp3-notice{font-size:.62rem;color:#ccc;margin-top:6px}
+@media(max-width:480px){
+  .cp3-box{padding:8px 10px}
+  .cp3-card{flex:0 0 clamp(64px,20vw,80px)}
+}
+</style>"""
 
 
 def _build_block(keyword: str, title: str, position: str) -> str:
@@ -305,53 +307,50 @@ def _build_category_blocks(cat_cfg: tuple) -> tuple:
 
 # ── HTML 주입 헬퍼 ───────────────────────────────────────────────────
 
-def _inject(content: str, top_html: str, mid_html: str, bot_html: str) -> str:
-    """상단/중간/하단 위치에 블록 주입. 스타일도 한 번만 삽입."""
-    global _style_injected
+def _update_style(content: str) -> str:
+    """기존 구버전 cp3 스타일을 최신 반응형 버전으로 교체"""
+    old_style_pattern = re.compile(r'<style id="cp3s">.*?</style>', re.DOTALL)
+    if old_style_pattern.search(content):
+        content = old_style_pattern.sub(COMPACT_STYLE, content, count=1)
+    return content
 
-    need_style = not _style_injected
+
+def _inject(content: str, top_html: str, mid_html: str, bot_html: str) -> str:
+    """상단/중간/하단 위치에 블록 주입. 스타일은 상단 블록에만 포함(id=cp3s로 중복 방지)."""
+
+    # 기존 스타일이 있으면 최신 반응형으로 교체
+    content = _update_style(content)
 
     # ── 상단: </header> 뒤, 없으면 첫 <h1> 뒤, 없으면 <body> 뒤
     if top_html and MARKER_TOP not in content:
-        style_prefix = COMPACT_STYLE if need_style else ""
-        block = style_prefix + top_html
+        block = COMPACT_STYLE + top_html  # 상단에만 스타일 포함
         if "</header>" in content:
             content = content.replace("</header>", "</header>" + block, 1)
         elif "<h1" in content:
             content = re.sub(r'(<h1[^>]*>.*?</h1>)', r'\1' + block, content, count=1, flags=re.DOTALL)
         elif "<body" in content:
             content = re.sub(r'(<body[^>]*>)', r'\1' + block, content, count=1)
-        if need_style and MARKER_TOP in content:
-            _style_injected = True
 
     # ── 중간: </section> 절반 → 없으면 중간 <h2> → 없으면 </main> → 없으면 </article>
     if mid_html and MARKER_MID not in content:
-        style_prefix = COMPACT_STYLE if not _style_injected else ""
-        block = style_prefix + mid_html
+        block = mid_html  # 스타일 없음 (상단에서 이미 로드됨)
         section_ends = [m.end() for m in re.finditer(r'</section>', content)]
         h2_matches = list(re.finditer(r'<h2[\s>]', content))
         if len(section_ends) >= 2:
             pos = section_ends[len(section_ends) // 2]
             content = content[:pos] + block + content[pos:]
         elif len(h2_matches) >= 2:
-            # 중간 h2 태그 앞에 삽입
-            mid_h2 = h2_matches[len(h2_matches) // 2]
-            pos = mid_h2.start()
+            pos = h2_matches[len(h2_matches) // 2].start()
             content = content[:pos] + block + content[pos:]
         elif "</main>" in content:
             content = content.replace("</main>", block + "</main>", 1)
         elif "</article>" in content:
             content = content.replace("</article>", block + "</article>", 1)
-        if not _style_injected and MARKER_MID in content:
-            _style_injected = True
 
     # ── 하단: </body> 바로 앞
     if bot_html and MARKER_BOT not in content:
-        style_prefix = COMPACT_STYLE if not _style_injected else ""
-        block = style_prefix + bot_html
-        content = content.replace("</body>", block + "\n</body>", 1)
-        if not _style_injected and MARKER_BOT in content:
-            _style_injected = True
+        block = mid_html  # 스타일 없음
+        content = content.replace("</body>", bot_html + "\n</body>", 1)
 
     return content
 
