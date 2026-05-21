@@ -12,6 +12,7 @@
 import re
 import time
 import os as _os
+import json
 from pathlib import Path
 
 REPO_ROOT = Path(_os.environ.get("SITE_ROOT", str(Path(__file__).parent.parent)))
@@ -229,7 +230,7 @@ CATEGORIES = {
 }
 
 
-# ── 컴팩트 쿠팡 블록 HTML 생성 ──────────────────────────────────────
+# ── 컴팩트 쿠팡 블록 HTML 생성 (로테이션 지원) ──────────────────────
 
 COMPACT_STYLE = """<style id="cp3s">
 .cp3-wrap{max-width:860px;margin:10px auto;padding:0 10px}
@@ -241,7 +242,9 @@ COMPACT_STYLE = """<style id="cp3s">
   overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
 .cp3-row::-webkit-scrollbar{height:3px}
 .cp3-row::-webkit-scrollbar-thumb{background:#30363d;border-radius:2px}
-.cp3-card{flex:0 0 clamp(72px,18vw,100px);text-decoration:none;color:inherit}
+.cp3-card{flex:0 0 clamp(72px,18vw,100px);text-decoration:none;color:inherit;
+  transition:opacity 0.4s ease-in-out}
+.cp3-card.hidden{opacity:0;pointer-events:none;position:absolute}
 .cp3-card img{width:100%;aspect-ratio:1;object-fit:contain;border-radius:5px;
   background:#0d1117;display:block;border:1px solid #21262d}
 .cp3-name{font-size:.68rem;color:#c9d1d9;line-height:1.3;margin-top:4px;text-align:center;
@@ -256,33 +259,105 @@ COMPACT_STYLE = """<style id="cp3s">
 }
 </style>"""
 
+ROTATION_SCRIPT = """<script>
+(function() {
+  const rotators = document.querySelectorAll('[data-cp3-products]');
+  if (rotators.length === 0) return;
+
+  rotators.forEach(wrapper => {
+    const products = JSON.parse(wrapper.getAttribute('data-cp3-products'));
+    if (!products || products.length === 0) return;
+
+    const cards = wrapper.querySelectorAll('.cp3-card');
+    const numCards = cards.length;
+    const numSets = Math.ceil(products.length / numCards);
+    let currentSet = 0;
+
+    if (numSets <= 1) return; // 1세트만 있으면 로테이션 불필요
+
+    function updateDisplay() {
+      const startIdx = currentSet * numCards;
+      cards.forEach((card, i) => {
+        const product = products[startIdx + i];
+        if (!product) {
+          card.classList.add('hidden');
+          return;
+        }
+        card.classList.remove('hidden');
+        const img = card.querySelector('img');
+        const name = card.querySelector('.cp3-name');
+        const price = card.querySelector('.cp3-price');
+        const href = card.getAttribute('href');
+
+        if (img) {
+          img.src = product.image;
+          img.alt = product.name;
+        }
+        if (name) {
+          let nameText = product.name.substring(0, 30);
+          if (product.name.length > 30) nameText += '…';
+          name.innerHTML = nameText;
+          if (product.is_rocket) {
+            name.innerHTML += '<span class="cp3-rocket">로켓</span>';
+          }
+        }
+        if (price) {
+          price.textContent = product.price ? product.price.toLocaleString('ko-KR') + '원' : '';
+        }
+        if (href) {
+          card.setAttribute('href', product.url);
+        }
+      });
+    }
+
+    updateDisplay();
+
+    // 5초마다 다음 세트로 전환
+    setInterval(() => {
+      currentSet = (currentSet + 1) % numSets;
+      updateDisplay();
+    }, 5000);
+  });
+})();
+</script>"""
+
 
 def _build_block(keyword: str, title: str, position: str) -> str:
-    """키워드로 컴팩트 쿠팡 블록 생성 (3개 상품)"""
+    """키워드로 컴팩트 쿠팡 블록 생성 (9개 상품 → 3개 세트로 로테이션)"""
     items = []
     try:
         from coupang_api import search_products
-        items = search_products(keyword, limit=3)
+        items = search_products(keyword, limit=9)
     except Exception:
         pass
     if not items:
         return ""
 
+    # 첫 3개 상품으로 초기 카드 생성
     cards = ""
-    for p in items:
+    for i, p in enumerate(items[:3]):
         name = (p["name"] or "")[:30] + ("…" if len(p.get("name", "")) > 30 else "")
         price = f"{p['price']:,}원" if p.get("price") else ""
         img = f'<img src="{p["image"]}" alt="" loading="lazy">' if p.get("image") else ""
         rocket = '<span class="cp3-rocket">로켓</span>' if p.get("is_rocket") else ""
-        cards += f"""<a class="cp3-card" href="{p['url']}" target="_blank" rel="noopener sponsored">
+        cards += f"""<a class="cp3-card" href="{p['url']}" target="_blank" rel="noopener sponsored" data-idx="{i}">
       {img}
       <div class="cp3-name">{name}{rocket}</div>
       <div class="cp3-price">{price}</div>
     </a>"""
 
+    # JSON으로 모든 18개 상품 저장 (클라이언트측 로테이션용)
+    products_json = json.dumps([{
+        "name": p["name"],
+        "price": p["price"],
+        "image": p["image"],
+        "url": p["url"],
+        "is_rocket": p.get("is_rocket", False)
+    } for p in items], ensure_ascii=False)
+
     return f"""
 <!-- {position} -->
-<div class="cp3-wrap"><div class="cp3-box">
+<div class="cp3-wrap" data-cp3-products='{products_json}'><div class="cp3-box">
   <div class="cp3-title">{title}</div>
   <div class="cp3-row">{cards}</div>
   <div class="cp3-notice">이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</div>
@@ -349,8 +424,12 @@ def _inject(content: str, top_html: str, mid_html: str, bot_html: str) -> str:
 
     # ── 하단: </body> 바로 앞
     if bot_html and MARKER_BOT not in content:
-        block = mid_html  # 스타일 없음
-        content = content.replace("</body>", bot_html + "\n</body>", 1)
+        block = bot_html  # 스타일 없음
+        content = content.replace("</body>", block + "\n</body>", 1)
+
+    # ── 로테이션 스크립트: </body> 바로 앞 (한 번만 추가)
+    if (top_html or mid_html or bot_html) and "data-cp3-products" in content and ROTATION_SCRIPT not in content:
+        content = content.replace("</body>", ROTATION_SCRIPT + "\n</body>", 1)
 
     return content
 
