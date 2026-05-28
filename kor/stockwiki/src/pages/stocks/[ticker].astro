@@ -3,6 +3,7 @@ import StockLayout from '../../layouts/StockLayout.astro';
 import ValuationBadge from '../../components/ValuationBadge.astro';
 import PriceChart from '../../components/PriceChart.astro';
 import FinancialChart from '../../components/FinancialChart.astro';
+import FinancialTable from '../../components/FinancialTable.astro';
 import HistoricalValuationChart from '../../components/HistoricalValuationChart.astro';
 import AdSlot from '../../components/AdSlot.astro';
 import { readFileSync, readdirSync } from 'fs';
@@ -235,7 +236,14 @@ const latestNetMargin = latestFin?.net_margin ?? null;
         <!-- 6. 재무제표 그래프 -->
         <FinancialChart financials={finArr.length > 0 ? finArr : null} />
 
-        <!-- 7. 밸류에이션 추이 -->
+        <!-- 6-1. 재무제표 표 (연간/분기 전체 누적) -->
+        <FinancialTable
+          annual={stock.financials_annual ?? []}
+          quarterly={stock.financials_quarterly ?? []}
+          market={stock.market}
+        />
+
+        <!-- 7. 역사적 PER/PBR 차트 (실제 계산값) -->
         <HistoricalValuationChart historicalValuation={stock.historical_valuation ?? null} />
 
         <!-- 광고 (재무제표 하단) -->

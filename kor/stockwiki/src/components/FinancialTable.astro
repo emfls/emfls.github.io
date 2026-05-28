@@ -1,0 +1,200 @@
+---
+export interface Props {
+  annual: any[];
+  quarterly: any[];
+  market: string;
+}
+const { annual = [], quarterly = [], market } = Astro.props;
+
+const fmt = (v: any, unit = '') => {
+  if (v === null || v === undefined) return '-';
+  const n = Number(v);
+  if (isNaN(n)) return '-';
+  return n.toLocaleString('ko-KR') + unit;
+};
+const fmtPct = (v: any) => (v == null ? '-' : Number(v).toFixed(1) + '%');
+const unit = market === 'KR' ? '억원' : '백만$';
+---
+
+<div class="fin-table-section">
+  <div class="section-title">재무제표</div>
+
+  <!-- 탭 -->
+  <div class="fin-tabs" id="fin-table-tabs">
+    <button class="ftab active" data-view="quarterly">분기</button>
+    <button class="ftab" data-view="annual">연간</button>
+  </div>
+
+  <!-- 분기 -->
+  <div id="fin-view-quarterly" class="fin-view">
+    {quarterly.length === 0 ? (
+      <div class="no-data">📊 데이터 준비중</div>
+    ) : (
+      <div class="table-wrap">
+        <table class="fin-table">
+          <thead>
+            <tr>
+              <th class="sticky-col">항목</th>
+              {quarterly.map(q => <th>{q.label}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="row-group">
+              <td class="sticky-col label-cell">매출액<span class="unit">({unit})</span></td>
+              {quarterly.map(q => <td class={q.revenue != null ? (q.revenue > 0 ? '' : 'neg') : 'na'}>{fmt(q.revenue)}</td>)}
+            </tr>
+            <tr>
+              <td class="sticky-col label-cell">영업이익</td>
+              {quarterly.map(q => <td class={q.op_profit != null ? (q.op_profit > 0 ? 'pos' : 'neg') : 'na'}>{fmt(q.op_profit)}</td>)}
+            </tr>
+            <tr>
+              <td class="sticky-col label-cell">순이익</td>
+              {quarterly.map(q => <td class={q.net_profit != null ? (q.net_profit > 0 ? 'pos' : 'neg') : 'na'}>{fmt(q.net_profit)}</td>)}
+            </tr>
+            <tr class="divider-row">
+              <td class="sticky-col label-cell">영업이익률</td>
+              {quarterly.map(q => <td>{fmtPct(q.op_margin)}</td>)}
+            </tr>
+            <tr>
+              <td class="sticky-col label-cell">순이익률</td>
+              {quarterly.map(q => <td>{fmtPct(q.net_margin)}</td>)}
+            </tr>
+            <tr class="divider-row">
+              <td class="sticky-col label-cell">ROE</td>
+              {quarterly.map(q => <td>{fmtPct(q.roe)}</td>)}
+            </tr>
+            <tr>
+              <td class="sticky-col label-cell">부채비율</td>
+              {quarterly.map(q => <td class={q.debt_ratio != null ? (q.debt_ratio > 200 ? 'neg' : q.debt_ratio < 80 ? 'pos' : '') : 'na'}>{fmtPct(q.debt_ratio)}</td>)}
+            </tr>
+            {quarterly.some(q => q.op_cashflow != null) && (
+              <tr>
+                <td class="sticky-col label-cell">영업현금흐름</td>
+                {quarterly.map(q => <td class={q.op_cashflow != null ? (q.op_cashflow > 0 ? '' : 'neg') : 'na'}>{fmt(q.op_cashflow)}</td>)}
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    )}
+  </div>
+
+  <!-- 연간 -->
+  <div id="fin-view-annual" class="fin-view" style="display:none">
+    {annual.length === 0 ? (
+      <div class="no-data">📊 데이터 준비중</div>
+    ) : (
+      <div class="table-wrap">
+        <table class="fin-table">
+          <thead>
+            <tr>
+              <th class="sticky-col">항목</th>
+              {annual.map(a => <th>{a.label}</th>)}
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="row-group">
+              <td class="sticky-col label-cell">매출액<span class="unit">({unit})</span></td>
+              {annual.map(a => <td>{fmt(a.revenue)}</td>)}
+            </tr>
+            <tr>
+              <td class="sticky-col label-cell">영업이익</td>
+              {annual.map(a => <td class={a.op_profit != null ? (a.op_profit > 0 ? 'pos' : 'neg') : 'na'}>{fmt(a.op_profit)}</td>)}
+            </tr>
+            <tr>
+              <td class="sticky-col label-cell">순이익</td>
+              {annual.map(a => <td class={a.net_profit != null ? (a.net_profit > 0 ? 'pos' : 'neg') : 'na'}>{fmt(a.net_profit)}</td>)}
+            </tr>
+            <tr class="divider-row">
+              <td class="sticky-col label-cell">영업이익률</td>
+              {annual.map(a => <td>{fmtPct(a.op_margin)}</td>)}
+            </tr>
+            <tr>
+              <td class="sticky-col label-cell">순이익률</td>
+              {annual.map(a => <td>{fmtPct(a.net_margin)}</td>)}
+            </tr>
+            <tr class="divider-row">
+              <td class="sticky-col label-cell">ROE</td>
+              {annual.map(a => <td>{fmtPct(a.roe)}</td>)}
+            </tr>
+            <tr>
+              <td class="sticky-col label-cell">부채비율</td>
+              {annual.map(a => <td class={a.debt_ratio != null ? (a.debt_ratio > 200 ? 'neg' : a.debt_ratio < 80 ? 'pos' : '') : 'na'}>{fmtPct(a.debt_ratio)}</td>)}
+            </tr>
+            {annual.some(a => a.op_cashflow != null) && (
+              <tr>
+                <td class="sticky-col label-cell">영업현금흐름</td>
+                {annual.map(a => <td class={a.op_cashflow != null ? (a.op_cashflow > 0 ? '' : 'neg') : 'na'}>{fmt(a.op_cashflow)}</td>)}
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    )}
+  </div>
+</div>
+
+<style>
+  .fin-table-section {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .section-title { font-weight: 700; font-size: 1rem; margin-bottom: 14px; }
+
+  .fin-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+  .ftab {
+    background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text2); border-radius: 6px; padding: 4px 14px;
+    font-size: 0.82rem; cursor: pointer; transition: all 0.2s;
+  }
+  .ftab.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  .fin-table {
+    width: 100%; border-collapse: collapse;
+    font-size: 0.82rem; white-space: nowrap;
+  }
+  .fin-table th, .fin-table td {
+    padding: 8px 14px; text-align: right;
+    border-bottom: 1px solid var(--border);
+  }
+  .fin-table th {
+    background: var(--bg3); color: var(--text2);
+    font-weight: 600; font-size: 0.78rem;
+    position: sticky; top: 0; z-index: 2;
+  }
+  .sticky-col {
+    position: sticky; left: 0; z-index: 3;
+    background: var(--bg2); text-align: left !important;
+    border-right: 1px solid var(--border); min-width: 120px;
+  }
+  .fin-table th.sticky-col { background: var(--bg3); z-index: 4; }
+  .label-cell { color: var(--text2); font-size: 0.8rem; }
+  .unit { font-size: 0.7rem; color: var(--text2); margin-left: 3px; }
+
+  .row-group td { font-weight: 600; background: #1a1f28; }
+  .divider-row td { border-top: 1px solid var(--border); padding-top: 10px; }
+
+  td.pos { color: var(--red); }
+  td.neg { color: var(--blue); }
+  td.na  { color: var(--text2); }
+
+  .no-data { text-align: center; padding: 32px; color: var(--text2); font-size: 0.9rem; }
+</style>
+
+<script>
+  document.querySelectorAll('#fin-table-tabs .ftab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#fin-table-tabs .ftab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const view = (btn as HTMLElement).dataset.view;
+      document.querySelectorAll('.fin-view').forEach((v: any) => v.style.display = 'none');
+      const el = document.getElementById(`fin-view-${view}`);
+      if (el) el.style.display = '';
+    });
+  });
+</script>
