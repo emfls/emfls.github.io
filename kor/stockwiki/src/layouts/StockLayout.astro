@@ -4,7 +4,7 @@ export interface Props {
   description?: string;
   ogImage?: string;
 }
-const { title = '주식위키', description = '한국/미국 주식 종합 정보 사이트', ogImage } = Astro.props;
+const { title = 'StockWiki', description = '한국/미국 주식 종합 정보 사이트', ogImage } = Astro.props;
 const base = import.meta.env.BASE_URL;
 ---
 <!DOCTYPE html>
@@ -47,27 +47,47 @@ const base = import.meta.env.BASE_URL;
     .navbar {
       background: var(--bg2);
       border-bottom: 1px solid var(--border);
-      padding: 0 20px;
-      height: 52px;
+      padding: 0 24px;
+      height: 56px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       position: sticky;
       top: 0;
       z-index: 100;
+      backdrop-filter: blur(8px);
     }
     .navbar-brand {
-      font-weight: 700;
-      font-size: 1.1rem;
+      font-weight: 800;
+      font-size: 1.15rem;
       color: var(--text);
       display: flex;
       align-items: center;
       gap: 8px;
+      letter-spacing: -0.3px;
+      text-decoration: none;
     }
-    .navbar-brand span { color: var(--blue); }
-    .navbar-links { display: flex; gap: 20px; font-size: 0.875rem; color: var(--text2); }
-    .navbar-links a { color: var(--text2); }
-    .navbar-links a:hover { color: var(--text); text-decoration: none; }
+    .navbar-brand:hover { text-decoration: none; }
+    .navbar-logo {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, #58a6ff, #3fb950);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+    .navbar-brand .brand-sw { color: var(--blue); }
+    .navbar-brand .brand-wiki { color: var(--text2); font-weight: 400; }
+    .navbar-links { display: flex; gap: 4px; font-size: 0.875rem; align-items: center; }
+    .navbar-links a {
+      color: var(--text2);
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .navbar-links a:hover { color: var(--text); background: var(--bg3); text-decoration: none; }
 
     /* Layout */
     .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; width: 100%; }
@@ -105,7 +125,8 @@ const base = import.meta.env.BASE_URL;
 <body>
   <nav class="navbar">
     <a class="navbar-brand" href={base}>
-      📈 <span>주식</span>위키
+      <span class="navbar-logo">📈</span>
+      <span class="brand-sw">Stock</span><span class="brand-wiki">Wiki</span>
     </a>
     <div class="navbar-links">
       <a href={base}>홈</a>

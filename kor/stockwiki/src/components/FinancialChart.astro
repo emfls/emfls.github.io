@@ -1,21 +1,35 @@
 ---
 export interface Props {
-  financials: {
-    labels: string[];
-    revenue: number[];
-    op_profit: number[];
-    net_profit: number[];
-    roe: number[];
-    debt_ratio: number[];
-  } | null;
+  financials: Array<{
+    label: string;
+    revenue?: number | null;
+    op_profit?: number | null;
+    net_profit?: number | null;
+    roe?: number | null;
+    debt_ratio?: number | null;
+    op_margin?: number | null;
+    net_margin?: number | null;
+  }> | null;
 }
 const { financials } = Astro.props;
+
+// Prepare chart data from array
+const chartData = financials && financials.length > 0 ? {
+  labels: financials.map(f => f.label),
+  revenue: financials.map(f => f.revenue ?? 0),
+  op_profit: financials.map(f => f.op_profit ?? 0),
+  net_profit: financials.map(f => f.net_profit ?? 0),
+  roe: financials.map(f => f.roe ?? 0),
+  op_margin: financials.map(f => f.op_margin ?? 0),
+  net_margin: financials.map(f => f.net_margin ?? 0),
+  debt_ratio: financials.map(f => f.debt_ratio ?? 0),
+} : null;
 ---
 
 <div class="financial-section">
   <div class="section-title">재무제표 그래프</div>
 
-  {!financials ? (
+  {!chartData ? (
     <div class="preparing">
       <span>📊</span>
       <p>데이터 준비중입니다</p>
@@ -27,7 +41,9 @@ const { financials } = Astro.props;
         <button class="ftab active" data-metric="revenue">매출액</button>
         <button class="ftab" data-metric="op_profit">영업이익</button>
         <button class="ftab" data-metric="net_profit">순이익</button>
+        <button class="ftab" data-metric="op_margin">영업이익률</button>
         <button class="ftab" data-metric="roe">ROE</button>
+        <button class="ftab" data-metric="debt_ratio">부채비율</button>
       </div>
       <div style="position:relative;height:280px;">
         <canvas id="financial-chart"></canvas>
@@ -67,8 +83,8 @@ const { financials } = Astro.props;
   .preparing small { font-size: 0.8rem; }
 </style>
 
-<script define:vars={{ financials }}>
-  if (financials) {
+<script define:vars={{ chartData }}>
+  if (chartData) {
     import('https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js').then(() => {
       const ctx = document.getElementById('financial-chart').getContext('2d');
       const Chart = window.Chart;
@@ -77,24 +93,45 @@ const { financials } = Astro.props;
       Chart.defaults.borderColor = '#30363d';
 
       const datasets = {
-        revenue:   { label: '매출액', data: financials.revenue,   color: '#58a6ff' },
-        op_profit: { label: '영업이익', data: financials.op_profit, color: '#3fb950' },
-        net_profit:{ label: '순이익',  data: financials.net_profit,color: '#bc8cff' },
-        roe:       { label: 'ROE (%)', data: financials.roe,       color: '#d29922' },
+        revenue:    { label: '매출액 (백만)', data: chartData.revenue,    color: '#58a6ff', type: 'bar' },
+        op_profit:  { label: '영업이익 (백만)', data: chartData.op_profit,  color: '#3fb950', type: 'bar' },
+        net_profit: { label: '순이익 (백만)',   data: chartData.net_profit, color: '#bc8cff', type: 'bar' },
+        op_margin:  { label: '영업이익률 (%)',  data: chartData.op_margin,  color: '#d29922', type: 'line' },
+        roe:        { label: 'ROE (%)',         data: chartData.roe,        color: '#f0883e', type: 'line' },
+        debt_ratio: { label: '부채비율 (%)',    data: chartData.debt_ratio, color: '#f85149', type: 'line' },
       };
+
+      let activeMetric = 'revenue';
+
+      function makeDataset(metric) {
+        const d = datasets[metric];
+        if (d.type === 'line') {
+          return {
+            label: d.label,
+            data: d.data,
+            borderColor: d.color,
+            backgroundColor: d.color + '33',
+            fill: true,
+            tension: 0.3,
+            pointRadius: 4,
+            borderWidth: 2,
+          };
+        }
+        return {
+          label: d.label,
+          data: d.data,
+          backgroundColor: d.color + '66',
+          borderColor: d.color,
+          borderWidth: 2,
+          borderRadius: 4,
+        };
+      }
 
       let chart = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: financials.labels,
-          datasets: [{
-            label: '매출액',
-            data: financials.revenue,
-            backgroundColor: '#58a6ff66',
-            borderColor: '#58a6ff',
-            borderWidth: 2,
-            borderRadius: 4,
-          }],
+          labels: chartData.labels,
+          datasets: [makeDataset('revenue')],
         },
         options: {
           responsive: true,
@@ -116,10 +153,8 @@ const { financials } = Astro.props;
           btn.classList.add('active');
           const metric = btn.dataset.metric;
           const d = datasets[metric];
-          chart.data.datasets[0].label = d.label;
-          chart.data.datasets[0].data = d.data;
-          chart.data.datasets[0].backgroundColor = d.color + '66';
-          chart.data.datasets[0].borderColor = d.color;
+          chart.config.type = d.type;
+          chart.data.datasets[0] = makeDataset(metric);
           chart.update();
         });
       });

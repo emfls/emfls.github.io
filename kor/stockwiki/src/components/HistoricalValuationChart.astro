@@ -1,0 +1,106 @@
+---
+export interface Props {
+  historicalValuation: Array<{
+    date: string;
+    per?: number | null;
+    pbr?: number | null;
+    price?: number | null;
+  }> | null;
+}
+const { historicalValuation } = Astro.props;
+const hasData = historicalValuation && historicalValuation.length > 1;
+---
+
+{hasData && (
+<div class="hval-section">
+  <div class="section-title">밸류에이션 추이</div>
+  <div class="chart-tabs" id="hval-tabs">
+    <button class="hvtab active" data-metric="per">PER</button>
+    <button class="hvtab" data-metric="pbr">PBR</button>
+    <button class="hvtab" data-metric="price">주가</button>
+  </div>
+  <div style="position:relative;height:220px;">
+    <canvas id="hval-chart"></canvas>
+  </div>
+</div>
+)}
+
+<style>
+  .hval-section {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .section-title { font-weight: 700; font-size: 1rem; margin-bottom: 12px; }
+  .chart-tabs { display: flex; gap: 6px; margin-bottom: 16px; }
+  .hvtab {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .hvtab.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+</style>
+
+{hasData && (
+<script define:vars={{ historicalValuation }}>
+  import('https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js').then(() => {
+    const Chart = window.Chart;
+    Chart.defaults.color = '#8b949e';
+    Chart.defaults.borderColor = '#30363d';
+
+    const labels = historicalValuation.map(h => h.date);
+    const metrics = {
+      per:   { label: 'PER',  data: historicalValuation.map(h => h.per ?? null),   color: '#58a6ff' },
+      pbr:   { label: 'PBR',  data: historicalValuation.map(h => h.pbr ?? null),   color: '#3fb950' },
+      price: { label: '주가', data: historicalValuation.map(h => h.price ?? null), color: '#d29922' },
+    };
+
+    const ctx = document.getElementById('hval-chart').getContext('2d');
+    let chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
+          label: 'PER',
+          data: metrics.per.data,
+          borderColor: '#58a6ff',
+          backgroundColor: '#58a6ff22',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 3,
+          spanGaps: true,
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { color: '#21262d' } },
+          y: { grid: { color: '#21262d' } },
+        },
+      },
+    });
+
+    document.querySelectorAll('.hvtab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.hvtab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const m = metrics[btn.dataset.metric];
+        chart.data.datasets[0].label = m.label;
+        chart.data.datasets[0].data = m.data;
+        chart.data.datasets[0].borderColor = m.color;
+        chart.data.datasets[0].backgroundColor = m.color + '22';
+        chart.update();
+      });
+    });
+  });
+</script>
+)}

@@ -9,8 +9,7 @@ const { ticker, market } = Astro.props;
 <div class="price-chart-section">
   <div class="section-title">주가 차트</div>
   <div class="chart-tabs" id="chart-period-tabs">
-    <button class="ctab active" data-period="1D">1일</button>
-    <button class="ctab" data-period="1W">1주</button>
+    <button class="ctab active" data-period="1W">1주</button>
     <button class="ctab" data-period="1M">1개월</button>
     <button class="ctab" data-period="1Y">1년</button>
     <button class="ctab" data-period="5Y">5년</button>
@@ -91,8 +90,8 @@ const { ticker, market } = Astro.props;
       }
     } catch (e) {}
 
-    const periodDays = { '1D': 1, '1W': 7, '1M': 30, '1Y': 252, '5Y': 1260 };
-    let activePeriod = '1D';
+    const periodDays = { '1W': 7, '1M': 30, '1Y': 252, '5Y': 1260 };
+    let activePeriod = '1W';
 
     function updateChart(period) {
       const days = periodDays[period] ?? 30;
@@ -101,7 +100,7 @@ const { ticker, market } = Astro.props;
       chart.timeScale().fitContent();
     }
 
-    updateChart('1D');
+    updateChart('1W');
 
     document.querySelectorAll('.ctab').forEach(btn => {
       btn.addEventListener('click', () => {

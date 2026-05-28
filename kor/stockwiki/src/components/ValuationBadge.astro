@@ -7,8 +7,19 @@ export interface Props {
     per_industry_avg: number;
     score: number;
   };
+  rating?: {
+    overall: number;
+    stars: {
+      valuation: number;
+      profitability: number;
+      growth: number;
+      health: number;
+      moat: number;
+    };
+    label: string;
+  } | null;
 }
-const { valuation } = Astro.props;
+const { valuation, rating } = Astro.props;
 
 const gradeConfig: Record<string, { color: string; bg: string; label: string }> = {
   '매우저평가': { color: '#1f6feb', bg: '#0d1f38', label: '매우 저평가' },
@@ -18,9 +29,18 @@ const gradeConfig: Record<string, { color: string; bg: string; label: string }> 
   '매우고평가': { color: '#f85149', bg: '#2a0d0d', label: '매우 고평가' },
 };
 const cfg = gradeConfig[valuation.grade] ?? gradeConfig['중립'];
-const perRatio = valuation.per && valuation.per_industry_avg
-  ? Math.min((valuation.per / valuation.per_industry_avg) * 100, 200)
-  : 50;
+
+function starIcons(count: number) {
+  return Array.from({ length: 5 }, (_, i) => i < count ? '★' : '☆').join('');
+}
+
+const categories = rating ? [
+  { key: 'valuation',    label: '밸류에이션', stars: rating.stars.valuation },
+  { key: 'profitability',label: '수익성',     stars: rating.stars.profitability },
+  { key: 'growth',       label: '성장성',     stars: rating.stars.growth },
+  { key: 'health',       label: '재무건전성', stars: rating.stars.health },
+  { key: 'moat',         label: '경쟁우위',   stars: rating.stars.moat },
+] : [];
 ---
 
 <div class="valuation-card">
@@ -29,6 +49,7 @@ const perRatio = valuation.per && valuation.per_industry_avg
       {cfg.label}
     </span>
     <span class="score-text">투자매력도 {valuation.score}/100</span>
+    {rating && <span class="rating-label">{rating.label}</span>}
   </div>
 
   <div class="metrics-row">
@@ -46,6 +67,22 @@ const perRatio = valuation.per && valuation.per_industry_avg
     </div>
   </div>
 
+  {rating && (
+    <div class="star-section">
+      <div class="star-title">종합 평점 <strong>{rating.overall}</strong> / 5.0</div>
+      <div class="star-grid">
+        {categories.map(cat => (
+          <div class="star-row">
+            <span class="cat-label">{cat.label}</span>
+            <span class="stars" style={`color:${cat.stars >= 4 ? '#d29922' : cat.stars >= 3 ? '#58a6ff' : '#f85149'}`}>
+              {starIcons(cat.stars)}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )}
+
   <!-- PER 비교 바 -->
   {valuation.per && valuation.per_industry_avg && (
     <div class="bar-section">
@@ -54,7 +91,7 @@ const perRatio = valuation.per && valuation.per_industry_avg
         <span>업종 평균 {valuation.per_industry_avg}x 기준</span>
       </div>
       <div class="bar-track">
-        <div class="bar-fill" style={`width:${Math.min(perRatio, 100)}%;background:${cfg.color}`}></div>
+        <div class="bar-fill" style={`width:${Math.min(Math.min((valuation.per / valuation.per_industry_avg) * 100, 200), 100)}%;background:${cfg.color}`}></div>
         <div class="bar-avg-line" style="left:50%"></div>
       </div>
       <div class="bar-hint">
@@ -77,6 +114,7 @@ const perRatio = valuation.per && valuation.per_industry_avg
     align-items: center;
     gap: 12px;
     margin-bottom: 16px;
+    flex-wrap: wrap;
   }
   .grade-badge {
     padding: 6px 14px;
@@ -86,6 +124,15 @@ const perRatio = valuation.per && valuation.per_industry_avg
     font-size: 0.95rem;
   }
   .score-text { color: var(--text2); font-size: 0.875rem; }
+  .rating-label {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 0.8rem;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-weight: 600;
+  }
   .metrics-row {
     display: flex;
     gap: 24px;
@@ -95,6 +142,20 @@ const perRatio = valuation.per && valuation.per_industry_avg
   .metric { display: flex; flex-direction: column; gap: 2px; }
   .metric .label { font-size: 0.75rem; color: var(--text2); }
   .metric .value { font-size: 1.1rem; font-weight: 600; }
+
+  .star-section {
+    background: var(--bg3);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+  }
+  .star-title { font-size: 0.85rem; color: var(--text2); margin-bottom: 10px; }
+  .star-title strong { color: var(--text); font-size: 1.1rem; }
+  .star-grid { display: flex; flex-direction: column; gap: 6px; }
+  .star-row { display: flex; justify-content: space-between; align-items: center; }
+  .cat-label { font-size: 0.8rem; color: var(--text2); }
+  .stars { font-size: 1rem; letter-spacing: 1px; }
+
   .bar-section { margin-top: 8px; }
   .bar-label {
     display: flex;

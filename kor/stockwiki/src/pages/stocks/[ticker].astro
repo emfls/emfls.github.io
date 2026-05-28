@@ -3,6 +3,7 @@ import StockLayout from '../../layouts/StockLayout.astro';
 import ValuationBadge from '../../components/ValuationBadge.astro';
 import PriceChart from '../../components/PriceChart.astro';
 import FinancialChart from '../../components/FinancialChart.astro';
+import HistoricalValuationChart from '../../components/HistoricalValuationChart.astro';
 import AdSlot from '../../components/AdSlot.astro';
 import { readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
@@ -47,10 +48,18 @@ const formatPrice = (s: any) =>
   s.market === 'KR'
     ? s.price?.current?.toLocaleString() + '원'
     : '$' + s.price?.current?.toFixed(2);
+
+// Get latest financials from array
+const finArr: any[] = Array.isArray(stock?.financials) ? stock.financials : [];
+const latestFin = finArr.length > 0 ? finArr[finArr.length - 1] : null;
+const latestRoe = latestFin?.roe ?? null;
+const latestDebtRatio = latestFin?.debt_ratio ?? null;
+const latestOpMargin = latestFin?.op_margin ?? null;
+const latestNetMargin = latestFin?.net_margin ?? null;
 ---
 
 {!stock ? (
-  <StockLayout title="준비중 - 주식위키">
+  <StockLayout title="준비중 · StockWiki">
     <div class="preparing-page">
       <div class="preparing-icon">📊</div>
       <h1>데이터 준비중</h1>
@@ -60,7 +69,7 @@ const formatPrice = (s: any) =>
   </StockLayout>
 ) : (
   <StockLayout
-    title={`${stock.name}(${stock.ticker}) 주가, 재무제표, 가치평가 - 주식위키`}
+    title={`${stock.ticker} · StockWiki`}
     description={`${stock.name} 실시간 주가, 재무제표, PER/PBR 가치평가 분석. ${stock.tagline}`}
   >
     <!-- 1. 헤더 -->
@@ -97,8 +106,8 @@ const formatPrice = (s: any) =>
     <div class="content-grid">
       <div class="main-col">
 
-        <!-- 2. 가치평가 배지 -->
-        <ValuationBadge valuation={stock.valuation} />
+        <!-- 2. 가치평가 배지 + 별점 -->
+        <ValuationBadge valuation={stock.valuation} rating={stock.rating ?? null} />
 
         <!-- 3. 주가 차트 -->
         <PriceChart ticker={ticker} market={stock.market} />
@@ -119,20 +128,22 @@ const formatPrice = (s: any) =>
             </div>
             <div class="metric-item">
               <span class="m-label">ROE</span>
-              <span class="m-value">
-                {stock.financials?.roe?.length > 0
-                  ? stock.financials.roe[stock.financials.roe.length-1].toFixed(1) + '%'
-                  : 'N/A'}
-              </span>
+              <span class="m-value">{latestRoe != null ? latestRoe.toFixed(1) + '%' : 'N/A'}</span>
               <span class="m-note">자기자본이익률</span>
             </div>
             <div class="metric-item">
+              <span class="m-label">영업이익률</span>
+              <span class="m-value">{latestOpMargin != null ? latestOpMargin.toFixed(1) + '%' : 'N/A'}</span>
+              <span class="m-note">최근 분기</span>
+            </div>
+            <div class="metric-item">
+              <span class="m-label">순이익률</span>
+              <span class="m-value">{latestNetMargin != null ? latestNetMargin.toFixed(1) + '%' : 'N/A'}</span>
+              <span class="m-note">최근 분기</span>
+            </div>
+            <div class="metric-item">
               <span class="m-label">부채비율</span>
-              <span class="m-value">
-                {stock.financials?.debt_ratio?.length > 0
-                  ? stock.financials.debt_ratio[stock.financials.debt_ratio.length-1].toFixed(1) + '%'
-                  : 'N/A'}
-              </span>
+              <span class="m-value">{latestDebtRatio != null ? latestDebtRatio.toFixed(1) + '%' : 'N/A'}</span>
               <span class="m-note">최근 분기</span>
             </div>
             <div class="metric-item">
@@ -150,22 +161,96 @@ const formatPrice = (s: any) =>
           </div>
         </div>
 
-        <!-- 5. 재무제표 그래프 -->
-        <FinancialChart financials={stock.financials} />
+        <!-- 5. 주요 통계 (Finviz 스타일) -->
+        <div class="key-stats-card">
+          <div class="section-title">주요 통계</div>
+          <div class="stats-grid">
+            <div class="stat-row">
+              <span class="s-label">시가총액</span>
+              <span class="s-value">{stock.price?.current && latestFin?.revenue ? 'N/A' : 'N/A'}</span>
+            </div>
+            <div class="stat-row">
+              <span class="s-label">PER (TTM)</span>
+              <span class="s-value">{stock.valuation?.per?.toFixed(2) ?? 'N/A'}</span>
+            </div>
+            <div class="stat-row">
+              <span class="s-label">PBR</span>
+              <span class="s-value">{stock.valuation?.pbr?.toFixed(2) ?? 'N/A'}</span>
+            </div>
+            <div class="stat-row">
+              <span class="s-label">업종 평균 PER</span>
+              <span class="s-value">{stock.valuation?.per_industry_avg?.toFixed(1) ?? 'N/A'}</span>
+            </div>
+            <div class="stat-row">
+              <span class="s-label">매출액 (최근 분기)</span>
+              <span class="s-value">{latestFin?.revenue != null ? latestFin.revenue.toLocaleString() + 'M' : 'N/A'}</span>
+            </div>
+            <div class="stat-row">
+              <span class="s-label">영업이익 (최근 분기)</span>
+              <span class="s-value">{latestFin?.op_profit != null ? latestFin.op_profit.toLocaleString() + 'M' : 'N/A'}</span>
+            </div>
+            <div class="stat-row">
+              <span class="s-label">순이익 (최근 분기)</span>
+              <span class="s-value">{latestFin?.net_profit != null ? latestFin.net_profit.toLocaleString() + 'M' : 'N/A'}</span>
+            </div>
+            <div class="stat-row">
+              <span class="s-label">영업이익률</span>
+              <span class="s-value">{latestOpMargin != null ? latestOpMargin.toFixed(1) + '%' : 'N/A'}</span>
+            </div>
+            <div class="stat-row">
+              <span class="s-label">순이익률</span>
+              <span class="s-value">{latestNetMargin != null ? latestNetMargin.toFixed(1) + '%' : 'N/A'}</span>
+            </div>
+            <div class="stat-row">
+              <span class="s-label">ROE</span>
+              <span class="s-value">{latestRoe != null ? latestRoe.toFixed(1) + '%' : 'N/A'}</span>
+            </div>
+            <div class="stat-row">
+              <span class="s-label">부채비율</span>
+              <span class="s-value">{latestDebtRatio != null ? latestDebtRatio.toFixed(1) + '%' : 'N/A'}</span>
+            </div>
+            <div class="stat-row">
+              <span class="s-label">배당수익률</span>
+              <span class="s-value">{stock.dividends?.yield?.toFixed(2) ?? 0}%</span>
+            </div>
+            <div class="stat-row">
+              <span class="s-label">52주 최고</span>
+              <span class="s-value">{stock.market === 'KR' ? stock.price?.week52_high?.toLocaleString()+'원' : '$'+stock.price?.week52_high?.toFixed(2)}</span>
+            </div>
+            <div class="stat-row">
+              <span class="s-label">52주 최저</span>
+              <span class="s-value">{stock.market === 'KR' ? stock.price?.week52_low?.toLocaleString()+'원' : '$'+stock.price?.week52_low?.toFixed(2)}</span>
+            </div>
+            <div class="stat-row">
+              <span class="s-label">종합 별점</span>
+              <span class="s-value">{stock.rating?.overall ?? 'N/A'} / 5.0</span>
+            </div>
+            <div class="stat-row">
+              <span class="s-label">평가 레이블</span>
+              <span class="s-value">{stock.rating?.label ?? 'N/A'}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. 재무제표 그래프 -->
+        <FinancialChart financials={finArr.length > 0 ? finArr : null} />
+
+        <!-- 7. 밸류에이션 추이 -->
+        <HistoricalValuationChart historicalValuation={stock.historical_valuation ?? null} />
 
         <!-- 광고 (재무제표 하단) -->
         <AdSlot type="adsense" />
 
-        <!-- 6. 사업 개요 -->
+        <!-- 8. 사업 개요 -->
         <div class="description-card">
           <div class="section-title">사업 개요</div>
           <p class="description-text">{stock.description}</p>
         </div>
 
-        <!-- 7. 광고 슬롯 (쿠팡) -->
+        <!-- 9. 광고 슬롯 (쿠팡) -->
         <AdSlot type="coupang" />
 
-        <!-- 8. 관련 종목 -->
+        <!-- 10. 관련 종목 -->
         {related.length > 0 && (
           <div class="related-section">
             <div class="section-title">관련 종목 · {stock.sector}</div>
@@ -266,14 +351,40 @@ const formatPrice = (s: any) =>
   .section-title { font-weight: 700; font-size: 1rem; margin-bottom: 16px; }
   .metrics-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 16px;
   }
   .metric-item { display: flex; flex-direction: column; gap: 3px; }
   .m-label { font-size: 0.75rem; color: var(--text2); }
   .m-value { font-size: 1.2rem; font-weight: 700; }
   .m-note { font-size: 0.72rem; color: var(--text2); }
-  @media (max-width: 600px) { .metrics-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 768px) { .metrics-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  /* 주요 통계 */
+  .key-stats-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+  }
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+  }
+  .stat-row:nth-child(odd) { background: var(--bg3); }
+  .s-label { color: var(--text2); }
+  .s-value { font-weight: 600; font-family: monospace; font-size: 0.9rem; }
+  @media (max-width: 600px) { .stats-grid { grid-template-columns: 1fr; } }
 
   /* 사업 개요 */
   .description-card {
