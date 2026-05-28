@@ -1,0 +1,134 @@
+---
+export interface Props {
+  valuation: {
+    grade: string;
+    per: number | null;
+    pbr: number | null;
+    per_industry_avg: number;
+    score: number;
+  };
+}
+const { valuation } = Astro.props;
+
+const gradeConfig: Record<string, { color: string; bg: string; label: string }> = {
+  '매우저평가': { color: '#1f6feb', bg: '#0d1f38', label: '매우 저평가' },
+  '저평가':   { color: '#3fb950', bg: '#0d2a13', label: '저평가' },
+  '중립':     { color: '#8b949e', bg: '#21262d', label: '중립' },
+  '고평가':   { color: '#d29922', bg: '#2a1f0a', label: '고평가' },
+  '매우고평가': { color: '#f85149', bg: '#2a0d0d', label: '매우 고평가' },
+};
+const cfg = gradeConfig[valuation.grade] ?? gradeConfig['중립'];
+const perRatio = valuation.per && valuation.per_industry_avg
+  ? Math.min((valuation.per / valuation.per_industry_avg) * 100, 200)
+  : 50;
+---
+
+<div class="valuation-card">
+  <div class="badge-row">
+    <span class="grade-badge" style={`color:${cfg.color};background:${cfg.bg};border-color:${cfg.color}40`}>
+      {cfg.label}
+    </span>
+    <span class="score-text">투자매력도 {valuation.score}/100</span>
+  </div>
+
+  <div class="metrics-row">
+    <div class="metric">
+      <span class="label">PER</span>
+      <span class="value">{valuation.per?.toFixed(1) ?? 'N/A'}</span>
+    </div>
+    <div class="metric">
+      <span class="label">업종 평균 PER</span>
+      <span class="value">{valuation.per_industry_avg?.toFixed(1) ?? 'N/A'}</span>
+    </div>
+    <div class="metric">
+      <span class="label">PBR</span>
+      <span class="value">{valuation.pbr?.toFixed(2) ?? 'N/A'}</span>
+    </div>
+  </div>
+
+  <!-- PER 비교 바 -->
+  {valuation.per && valuation.per_industry_avg && (
+    <div class="bar-section">
+      <div class="bar-label">
+        <span>PER 업종 비교</span>
+        <span>업종 평균 {valuation.per_industry_avg}x 기준</span>
+      </div>
+      <div class="bar-track">
+        <div class="bar-fill" style={`width:${Math.min(perRatio, 100)}%;background:${cfg.color}`}></div>
+        <div class="bar-avg-line" style="left:50%"></div>
+      </div>
+      <div class="bar-hint">
+        <span>저평가</span><span>업종평균</span><span>고평가</span>
+      </div>
+    </div>
+  )}
+</div>
+
+<style>
+  .valuation-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .badge-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .grade-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid;
+    font-weight: 700;
+    font-size: 0.95rem;
+  }
+  .score-text { color: var(--text2); font-size: 0.875rem; }
+  .metrics-row {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .metric { display: flex; flex-direction: column; gap: 2px; }
+  .metric .label { font-size: 0.75rem; color: var(--text2); }
+  .metric .value { font-size: 1.1rem; font-weight: 600; }
+  .bar-section { margin-top: 8px; }
+  .bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--text2);
+    margin-bottom: 6px;
+  }
+  .bar-track {
+    position: relative;
+    height: 8px;
+    background: var(--bg3);
+    border-radius: 4px;
+    overflow: visible;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.6s ease;
+  }
+  .bar-avg-line {
+    position: absolute;
+    top: -4px;
+    bottom: -4px;
+    width: 2px;
+    background: var(--text2);
+    transform: translateX(-50%);
+    border-radius: 1px;
+  }
+  .bar-hint {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: var(--text2);
+    margin-top: 4px;
+  }
+</style>

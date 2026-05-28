@@ -1,0 +1,235 @@
+---
+import StockLayout from '../layouts/StockLayout.astro';
+import SearchBar from '../components/SearchBar.astro';
+import AdSlot from '../components/AdSlot.astro';
+import { readFileSync, readdirSync } from 'fs';
+import { join } from 'path';
+
+// Load all stock JSONs
+const dataDir = join(process.cwd(), 'data', 'stocks');
+let stocks: any[] = [];
+try {
+  const files = readdirSync(dataDir).filter(f => f.endsWith('.json') && !f.startsWith('_'));
+  stocks = files.map(f => JSON.parse(readFileSync(join(dataDir, f), 'utf-8')));
+} catch (e) {}
+
+const gradeColor: Record<string, string> = {
+  '매우저평가': '#1f6feb',
+  '저평가': '#3fb950',
+  '중립': '#8b949e',
+  '고평가': '#d29922',
+  '매우고평가': '#f85149',
+};
+
+const sectors = [...new Set(stocks.map(s => s.sector))].sort();
+const top20 = stocks.slice(0, 20);
+---
+
+<StockLayout title="주식위키 - 한국/미국 주식 종합 정보" description="토스증권 UI + 나무위키 정보량을 결합한 한국/미국 주식 종합 정보 사이트">
+
+  <!-- 상단 광고 배너 -->
+  <AdSlot type="adsense" style="display:inline-block;width:728px;height:90px" className="banner-ad" />
+
+  <!-- 검색바 -->
+  <SearchBar />
+
+  <!-- 시장별 탭 -->
+  <div class="tab-row" id="market-tabs">
+    <button class="tab active" data-market="all">전체 <span class="cnt">{stocks.length}</span></button>
+    <button class="tab" data-market="KR">한국 <span class="cnt">{stocks.filter(s=>s.market==='KR').length}</span></button>
+    <button class="tab" data-market="US">미국 <span class="cnt">{stocks.filter(s=>s.market==='US').length}</span></button>
+  </div>
+
+  <!-- 섹터 필터 -->
+  <div class="sector-row" id="sector-filters">
+    <button class="sector-btn active" data-sector="all">전체</button>
+    {sectors.map(sec => (
+      <button class="sector-btn" data-sector={sec}>{sec}</button>
+    ))}
+  </div>
+
+  <!-- 종목 카드 그리드 -->
+  <div class="stock-grid" id="stock-grid">
+    {stocks.map(stock => (
+      <a
+        class="stock-card"
+        href={`/kor/stockwiki/stocks/${stock.ticker}`}
+        data-market={stock.market}
+        data-sector={stock.sector}
+        data-pagefind-body
+      >
+        <div class="card-header">
+          <div>
+            <div class="stock-name">{stock.name}</div>
+            <div class="stock-meta">
+              <span class="market-badge" data-market={stock.market}>{stock.market}</span>
+              <span class="ticker">{stock.ticker}</span>
+              <span class="sector-tag">{stock.sector}</span>
+            </div>
+          </div>
+          <div class="price-col">
+            <div class="price">
+              {stock.market === 'KR'
+                ? stock.price?.current?.toLocaleString() + '원'
+                : '$' + stock.price?.current?.toFixed(2)}
+            </div>
+            <div class={`change ${(stock.price?.change_pct ?? 0) >= 0 ? 'pos' : 'neg'}`}>
+              {(stock.price?.change_pct ?? 0) >= 0 ? '+' : ''}{stock.price?.change_pct?.toFixed(2)}%
+            </div>
+          </div>
+        </div>
+        <div class="card-tagline">{stock.tagline}</div>
+        <div class="card-footer">
+          <span class="grade-pill" style={`color:${gradeColor[stock.valuation?.grade] ?? '#8b949e'}`}>
+            {stock.valuation?.grade ?? '-'}
+          </span>
+          <span class="per-info">PER {stock.valuation?.per?.toFixed(1) ?? 'N/A'}</span>
+          <span class="div-info">배당 {stock.dividends?.yield?.toFixed(1) ?? 0}%</span>
+        </div>
+      </a>
+    ))}
+  </div>
+
+  <!-- 하단 광고 -->
+  <AdSlot type="adsense" />
+</StockLayout>
+
+<style>
+  .banner-ad { margin-bottom: 24px; }
+
+  .tab-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0;
+  }
+  .tab {
+    background: none;
+    border: none;
+    color: var(--text2);
+    cursor: pointer;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+  .tab .cnt {
+    background: var(--bg3);
+    border-radius: 10px;
+    padding: 1px 7px;
+    font-size: 0.75rem;
+    margin-left: 4px;
+    color: var(--text2);
+  }
+
+  .sector-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .sector-btn {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    border-radius: 16px;
+    padding: 4px 14px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .sector-btn.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+
+  .stock-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .stock-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    display: block;
+    color: var(--text);
+    transition: border-color 0.2s, transform 0.1s;
+  }
+  .stock-card:hover { border-color: var(--blue); transform: translateY(-2px); text-decoration: none; }
+
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .stock-name { font-weight: 700; font-size: 1rem; margin-bottom: 4px; }
+  .stock-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .market-badge {
+    font-size: 0.7rem;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  .market-badge[data-market="KR"] { background: #0d2a4a; color: #58a6ff; }
+  .market-badge[data-market="US"] { background: #1a2a0d; color: #3fb950; }
+  .ticker { font-size: 0.78rem; color: var(--text2); font-family: monospace; }
+  .sector-tag { font-size: 0.72rem; color: var(--text2); background: var(--bg3); padding: 1px 7px; border-radius: 8px; }
+
+  .price-col { text-align: right; }
+  .price { font-weight: 700; font-size: 1rem; }
+  .change { font-size: 0.85rem; font-weight: 600; }
+  .change.pos { color: var(--red); }
+  .change.neg { color: var(--blue); }
+
+  .card-tagline { font-size: 0.8rem; color: var(--text2); margin-bottom: 12px; line-height: 1.4; }
+  .card-footer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-top: 1px solid var(--border);
+    padding-top: 10px;
+    font-size: 0.8rem;
+    color: var(--text2);
+  }
+  .grade-pill { font-weight: 600; }
+
+  @media (max-width: 600px) {
+    .stock-grid { grid-template-columns: 1fr; }
+    .banner-ad { display: none; }
+  }
+</style>
+
+<script>
+  const marketTabs = document.querySelectorAll('.tab');
+  const sectorBtns = document.querySelectorAll('.sector-btn');
+  const cards = document.querySelectorAll('.stock-card') as NodeListOf<HTMLElement>;
+
+  let activeMarket = 'all';
+  let activeSector = 'all';
+
+  function filterCards() {
+    cards.forEach(card => {
+      const m = card.dataset.market;
+      const s = card.dataset.sector;
+      const show = (activeMarket === 'all' || m === activeMarket) &&
+                   (activeSector === 'all' || s === activeSector);
+      card.style.display = show ? '' : 'none';
+    });
+  }
+
+  marketTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      marketTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      activeMarket = (tab as HTMLElement).dataset.market ?? 'all';
+      filterCards();
+    });
+  });
+
+  sectorBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      sectorBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeSector = (btn as HTMLElement).dataset.sector ?? 'all';
+      filterCards();
+    });
+  });
+</script>

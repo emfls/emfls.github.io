@@ -1,0 +1,308 @@
+---
+import StockLayout from '../../layouts/StockLayout.astro';
+import ValuationBadge from '../../components/ValuationBadge.astro';
+import PriceChart from '../../components/PriceChart.astro';
+import FinancialChart from '../../components/FinancialChart.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import { readFileSync, readdirSync } from 'fs';
+import { join } from 'path';
+
+export async function getStaticPaths() {
+  const dataDir = join(process.cwd(), 'data', 'stocks');
+  const files = readdirSync(dataDir).filter(f => f.endsWith('.json') && !f.startsWith('_'));
+  return files.map(f => ({
+    params: { ticker: f.replace('.json', '') },
+  }));
+}
+
+const { ticker } = Astro.params;
+const dataDir = join(process.cwd(), 'data', 'stocks');
+
+let stock: any = null;
+try {
+  stock = JSON.parse(readFileSync(join(dataDir, `${ticker}.json`), 'utf-8'));
+} catch (e) {}
+
+// Related stocks (same sector)
+let related: any[] = [];
+if (stock) {
+  try {
+    const files = readdirSync(dataDir).filter(f => f.endsWith('.json') && !f.startsWith('_'));
+    related = files
+      .map(f => JSON.parse(readFileSync(join(dataDir, f), 'utf-8')))
+      .filter(s => s.sector === stock.sector && s.ticker !== ticker)
+      .slice(0, 4);
+  } catch (e) {}
+}
+
+const gradeColor: Record<string, string> = {
+  '매우저평가': '#1f6feb',
+  '저평가': '#3fb950',
+  '중립': '#8b949e',
+  '고평가': '#d29922',
+  '매우고평가': '#f85149',
+};
+
+const formatPrice = (s: any) =>
+  s.market === 'KR'
+    ? s.price?.current?.toLocaleString() + '원'
+    : '$' + s.price?.current?.toFixed(2);
+---
+
+{!stock ? (
+  <StockLayout title="준비중 - 주식위키">
+    <div class="preparing-page">
+      <div class="preparing-icon">📊</div>
+      <h1>데이터 준비중</h1>
+      <p>종목 <strong>{ticker}</strong>의 데이터를 준비하고 있습니다.</p>
+      <a href="/kor/stockwiki/" class="back-btn">← 홈으로 돌아가기</a>
+    </div>
+  </StockLayout>
+) : (
+  <StockLayout
+    title={`${stock.name}(${stock.ticker}) 주가, 재무제표, 가치평가 - 주식위키`}
+    description={`${stock.name} 실시간 주가, 재무제표, PER/PBR 가치평가 분석. ${stock.tagline}`}
+  >
+    <!-- 1. 헤더 -->
+    <div class="stock-header" data-pagefind-body data-pagefind-meta={`title:${stock.name}(${stock.ticker})`}>
+      <div class="header-left">
+        <div class="breadcrumb">
+          <a href="/kor/stockwiki/">홈</a>
+          <span>›</span>
+          <span>{stock.sector}</span>
+          <span>›</span>
+          <span>{stock.name}</span>
+        </div>
+        <h1 class="stock-title">
+          {stock.name}
+          <span class="ticker-label">{stock.ticker}</span>
+          <span class="market-badge" data-market={stock.market}>{stock.market}</span>
+        </h1>
+        <p class="tagline">{stock.tagline}</p>
+        <p class="updated">최종 업데이트: {stock.updated_at}</p>
+      </div>
+      <div class="header-right">
+        <div class="current-price">{formatPrice(stock)}</div>
+        <div class={`price-change ${(stock.price?.change_pct ?? 0) >= 0 ? 'pos' : 'neg'}`}>
+          {(stock.price?.change_pct ?? 0) >= 0 ? '▲' : '▼'}
+          {Math.abs(stock.price?.change_pct ?? 0).toFixed(2)}%
+        </div>
+        <div class="price-range">
+          52주 최고 <strong>{stock.market === 'KR' ? stock.price?.week52_high?.toLocaleString()+'원' : '$'+stock.price?.week52_high?.toFixed(2)}</strong>
+          / 최저 <strong>{stock.market === 'KR' ? stock.price?.week52_low?.toLocaleString()+'원' : '$'+stock.price?.week52_low?.toFixed(2)}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-grid">
+      <div class="main-col">
+
+        <!-- 2. 가치평가 배지 -->
+        <ValuationBadge valuation={stock.valuation} />
+
+        <!-- 3. 주가 차트 -->
+        <PriceChart ticker={ticker} market={stock.market} />
+
+        <!-- 4. 핵심 투자지표 -->
+        <div class="metrics-card">
+          <div class="section-title">핵심 투자지표</div>
+          <div class="metrics-grid">
+            <div class="metric-item">
+              <span class="m-label">PER</span>
+              <span class="m-value">{stock.valuation?.per?.toFixed(1) ?? 'N/A'}x</span>
+              <span class="m-note">업종평균 {stock.valuation?.per_industry_avg}x</span>
+            </div>
+            <div class="metric-item">
+              <span class="m-label">PBR</span>
+              <span class="m-value">{stock.valuation?.pbr?.toFixed(2) ?? 'N/A'}x</span>
+              <span class="m-note">장부가 대비</span>
+            </div>
+            <div class="metric-item">
+              <span class="m-label">ROE</span>
+              <span class="m-value">
+                {stock.financials?.roe?.length > 0
+                  ? stock.financials.roe[stock.financials.roe.length-1].toFixed(1) + '%'
+                  : 'N/A'}
+              </span>
+              <span class="m-note">자기자본이익률</span>
+            </div>
+            <div class="metric-item">
+              <span class="m-label">부채비율</span>
+              <span class="m-value">
+                {stock.financials?.debt_ratio?.length > 0
+                  ? stock.financials.debt_ratio[stock.financials.debt_ratio.length-1].toFixed(1) + '%'
+                  : 'N/A'}
+              </span>
+              <span class="m-note">최근 분기</span>
+            </div>
+            <div class="metric-item">
+              <span class="m-label">배당수익률</span>
+              <span class="m-value">{stock.dividends?.yield?.toFixed(2) ?? 0}%</span>
+              <span class="m-note">연간 배당</span>
+            </div>
+            <div class="metric-item">
+              <span class="m-label">가치등급</span>
+              <span class="m-value" style={`color:${gradeColor[stock.valuation?.grade] ?? '#8b949e'}`}>
+                {stock.valuation?.grade ?? '-'}
+              </span>
+              <span class="m-note">점수 {stock.valuation?.score}/100</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. 재무제표 그래프 -->
+        <FinancialChart financials={stock.financials} />
+
+        <!-- 광고 (재무제표 하단) -->
+        <AdSlot type="adsense" />
+
+        <!-- 6. 사업 개요 -->
+        <div class="description-card">
+          <div class="section-title">사업 개요</div>
+          <p class="description-text">{stock.description}</p>
+        </div>
+
+        <!-- 7. 광고 슬롯 (쿠팡) -->
+        <AdSlot type="coupang" />
+
+        <!-- 8. 관련 종목 -->
+        {related.length > 0 && (
+          <div class="related-section">
+            <div class="section-title">관련 종목 · {stock.sector}</div>
+            <div class="related-grid">
+              {related.map(r => (
+                <a class="related-card" href={`/kor/stockwiki/stocks/${r.ticker}`}>
+                  <div class="r-name">{r.name}</div>
+                  <div class="r-ticker">{r.ticker}</div>
+                  <div class="r-price">{r.market === 'KR' ? r.price?.current?.toLocaleString()+'원' : '$'+r.price?.current?.toFixed(2)}</div>
+                  <div class={`r-change ${(r.price?.change_pct ?? 0) >= 0 ? 'pos' : 'neg'}`}>
+                    {(r.price?.change_pct ?? 0) >= 0 ? '+' : ''}{r.price?.change_pct?.toFixed(2)}%
+                  </div>
+                  <div class="r-grade" style={`color:${gradeColor[r.valuation?.grade] ?? '#8b949e'}`}>
+                    {r.valuation?.grade}
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <!-- 사이드바 광고 (PC only) -->
+      <aside class="sidebar">
+        <div class="sidebar-sticky">
+          <AdSlot type="adsense" style="display:block;width:300px;height:600px" />
+        </div>
+      </aside>
+    </div>
+  </StockLayout>
+)}
+
+<style>
+  /* 준비중 페이지 */
+  .preparing-page {
+    text-align: center;
+    padding: 80px 20px;
+  }
+  .preparing-icon { font-size: 4rem; margin-bottom: 20px; }
+  .preparing-page h1 { font-size: 1.5rem; margin-bottom: 12px; }
+  .preparing-page p { color: var(--text2); margin-bottom: 24px; }
+  .back-btn {
+    display: inline-block;
+    background: var(--blue);
+    color: #fff;
+    padding: 10px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  /* 헤더 */
+  .stock-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 24px;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .breadcrumb { font-size: 0.8rem; color: var(--text2); margin-bottom: 8px; display: flex; gap: 6px; }
+  .breadcrumb a { color: var(--text2); }
+  .stock-title { font-size: 1.6rem; font-weight: 700; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+  .ticker-label { font-size: 1rem; color: var(--text2); font-family: monospace; }
+  .market-badge {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  .market-badge[data-market="KR"] { background: #0d2a4a; color: #58a6ff; }
+  .market-badge[data-market="US"] { background: #1a2a0d; color: #3fb950; }
+  .tagline { color: var(--text2); font-size: 0.9rem; margin-bottom: 4px; }
+  .updated { font-size: 0.75rem; color: var(--text2); }
+
+  .header-right { text-align: right; }
+  .current-price { font-size: 2rem; font-weight: 700; }
+  .price-change { font-size: 1.1rem; font-weight: 600; margin-bottom: 6px; }
+  .price-change.pos { color: var(--red); }
+  .price-change.neg { color: var(--blue); }
+  .price-range { font-size: 0.8rem; color: var(--text2); }
+
+  /* 레이아웃 */
+  .content-grid { display: flex; gap: 24px; align-items: flex-start; }
+  .main-col { flex: 1; min-width: 0; }
+  .sidebar { width: 320px; flex-shrink: 0; }
+  .sidebar-sticky { position: sticky; top: 72px; }
+  @media (max-width: 1024px) { .sidebar { display: none; } }
+
+  /* 핵심 지표 */
+  .metrics-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .section-title { font-weight: 700; font-size: 1rem; margin-bottom: 16px; }
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .metric-item { display: flex; flex-direction: column; gap: 3px; }
+  .m-label { font-size: 0.75rem; color: var(--text2); }
+  .m-value { font-size: 1.2rem; font-weight: 700; }
+  .m-note { font-size: 0.72rem; color: var(--text2); }
+  @media (max-width: 600px) { .metrics-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  /* 사업 개요 */
+  .description-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .description-text { color: var(--text2); line-height: 1.8; font-size: 0.9rem; }
+
+  /* 관련 종목 */
+  .related-section { margin-bottom: 24px; }
+  .related-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 12px; }
+  .related-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    display: block;
+    color: var(--text);
+    transition: border-color 0.2s;
+  }
+  .related-card:hover { border-color: var(--blue); text-decoration: none; }
+  .r-name { font-weight: 600; margin-bottom: 2px; }
+  .r-ticker { font-size: 0.75rem; color: var(--text2); font-family: monospace; margin-bottom: 8px; }
+  .r-price { font-size: 1rem; font-weight: 700; margin-bottom: 2px; }
+  .r-change { font-size: 0.8rem; font-weight: 600; margin-bottom: 4px; }
+  .r-change.pos { color: var(--red); }
+  .r-change.neg { color: var(--blue); }
+  .r-grade { font-size: 0.75rem; font-weight: 600; }
+</style>

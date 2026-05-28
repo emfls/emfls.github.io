@@ -1,0 +1,133 @@
+---
+export interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+}
+const { title = '주식위키', description = '한국/미국 주식 종합 정보 사이트', ogImage } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  {ogImage && <meta property="og:image" content={ogImage} />}
+  <meta name="theme-color" content="#0d1117" />
+  <link rel="icon" type="image/x-icon" href={`${base}favicon.ico`} />
+
+  <!-- Pagefind UI CSS (loaded after build) -->
+  <link rel="stylesheet" href={`${base}pagefind/pagefind-ui.css`} />
+
+  <style>
+    :root {
+      --bg: #0d1117;
+      --bg2: #161b22;
+      --bg3: #21262d;
+      --border: #30363d;
+      --text: #e6edf3;
+      --text2: #8b949e;
+      --blue: #58a6ff;
+      --green: #3fb950;
+      --red: #f85149;
+      --yellow: #d29922;
+      --purple: #bc8cff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Noto Sans KR', sans-serif; font-size: 15px; }
+    body { min-height: 100vh; display: flex; flex-direction: column; }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* Navbar */
+    .navbar {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 0 20px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .navbar-brand {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .navbar-brand span { color: var(--blue); }
+    .navbar-links { display: flex; gap: 20px; font-size: 0.875rem; color: var(--text2); }
+    .navbar-links a { color: var(--text2); }
+    .navbar-links a:hover { color: var(--text); text-decoration: none; }
+
+    /* Layout */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; width: 100%; }
+    main { flex: 1; padding: 24px 0 60px; }
+
+    /* Footer */
+    footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 16px 20px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text2);
+    }
+
+    /* Mobile fixed ad */
+    .mobile-ad-fixed {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 4px 0;
+      text-align: center;
+    }
+    @media (max-width: 768px) {
+      .mobile-ad-fixed { display: block; }
+      main { padding-bottom: 80px; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a class="navbar-brand" href={base}>
+      📈 <span>주식</span>위키
+    </a>
+    <div class="navbar-links">
+      <a href={base}>홈</a>
+      <a href={`${base}search`}>검색</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      <slot />
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 주식위키 · 본 사이트의 정보는 투자 권유가 아닙니다 · 매매는 본인 판단 하에 진행하세요</p>
+  </footer>
+
+  <div class="mobile-ad-fixed">
+    <!-- 모바일 하단 고정 광고 -->
+    <ins class="adsbygoogle" style="display:inline-block;width:320px;height:50px" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX"></ins>
+  </div>
+
+  <script src={`${base}pagefind/pagefind-ui.js`} type="module" is:inline></script>
+</body>
+</html>

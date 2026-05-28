@@ -1,0 +1,128 @@
+---
+export interface Props {
+  financials: {
+    labels: string[];
+    revenue: number[];
+    op_profit: number[];
+    net_profit: number[];
+    roe: number[];
+    debt_ratio: number[];
+  } | null;
+}
+const { financials } = Astro.props;
+---
+
+<div class="financial-section">
+  <div class="section-title">재무제표 그래프</div>
+
+  {!financials ? (
+    <div class="preparing">
+      <span>📊</span>
+      <p>데이터 준비중입니다</p>
+      <small>재무제표 데이터를 수집하고 있습니다. 잠시 후 다시 확인해주세요.</small>
+    </div>
+  ) : (
+    <>
+      <div class="chart-tabs" id="fin-tabs">
+        <button class="ftab active" data-metric="revenue">매출액</button>
+        <button class="ftab" data-metric="op_profit">영업이익</button>
+        <button class="ftab" data-metric="net_profit">순이익</button>
+        <button class="ftab" data-metric="roe">ROE</button>
+      </div>
+      <div style="position:relative;height:280px;">
+        <canvas id="financial-chart"></canvas>
+      </div>
+    </>
+  )}
+</div>
+
+<style>
+  .financial-section {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .section-title { font-weight: 700; font-size: 1rem; margin-bottom: 12px; }
+  .chart-tabs { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+  .ftab {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text2);
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .ftab.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .preparing {
+    text-align: center;
+    padding: 48px 20px;
+    color: var(--text2);
+  }
+  .preparing span { font-size: 2rem; display: block; margin-bottom: 12px; }
+  .preparing p { font-size: 1rem; margin-bottom: 6px; }
+  .preparing small { font-size: 0.8rem; }
+</style>
+
+<script define:vars={{ financials }}>
+  if (financials) {
+    import('https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js').then(() => {
+      const ctx = document.getElementById('financial-chart').getContext('2d');
+      const Chart = window.Chart;
+
+      Chart.defaults.color = '#8b949e';
+      Chart.defaults.borderColor = '#30363d';
+
+      const datasets = {
+        revenue:   { label: '매출액', data: financials.revenue,   color: '#58a6ff' },
+        op_profit: { label: '영업이익', data: financials.op_profit, color: '#3fb950' },
+        net_profit:{ label: '순이익',  data: financials.net_profit,color: '#bc8cff' },
+        roe:       { label: 'ROE (%)', data: financials.roe,       color: '#d29922' },
+      };
+
+      let chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: financials.labels,
+          datasets: [{
+            label: '매출액',
+            data: financials.revenue,
+            backgroundColor: '#58a6ff66',
+            borderColor: '#58a6ff',
+            borderWidth: 2,
+            borderRadius: 4,
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: ctx => ' ' + ctx.parsed.y.toLocaleString() } },
+          },
+          scales: {
+            x: { grid: { color: '#21262d' } },
+            y: { grid: { color: '#21262d' } },
+          },
+        },
+      });
+
+      document.querySelectorAll('.ftab').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const metric = btn.dataset.metric;
+          const d = datasets[metric];
+          chart.data.datasets[0].label = d.label;
+          chart.data.datasets[0].data = d.data;
+          chart.data.datasets[0].backgroundColor = d.color + '66';
+          chart.data.datasets[0].borderColor = d.color;
+          chart.update();
+        });
+      });
+    });
+  }
+</script>

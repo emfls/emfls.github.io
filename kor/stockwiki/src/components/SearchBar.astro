@@ -1,0 +1,44 @@
+---
+// Pagefind-powered search bar
+---
+<div id="search-wrapper">
+  <div id="search"></div>
+</div>
+
+<style>
+  #search-wrapper {
+    margin-bottom: 32px;
+  }
+  /* Override pagefind styles for dark theme */
+  :root {
+    --pagefind-ui-scale: 1;
+    --pagefind-ui-primary: #58a6ff;
+    --pagefind-ui-text: #e6edf3;
+    --pagefind-ui-background: #161b22;
+    --pagefind-ui-border: #30363d;
+    --pagefind-ui-tag: #21262d;
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-border-radius: 8px;
+    --pagefind-ui-font: -apple-system, BlinkMacSystemFont, 'Pretendard', sans-serif;
+  }
+</style>
+
+<script>
+  import('/kor/stockwiki/pagefind/pagefind-ui.js').then(({ PagefindUI }) => {
+    new PagefindUI({
+      element: '#search',
+      showSubResults: true,
+      translations: {
+        placeholder: '종목명 또는 티커를 입력하세요 (예: 삼성전자, AAPL)',
+        zero_results: '[query]에 대한 결과가 없습니다',
+      },
+    });
+  }).catch(() => {
+    // pagefind not available in dev mode
+    document.getElementById('search').innerHTML = `
+      <input type="search" placeholder="종목명 또는 티커 검색..."
+        style="width:100%;padding:12px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:1rem;"
+        onkeydown="if(event.key==='Enter')window.location='/kor/stockwiki/stocks/'+this.value.trim().toUpperCase()">
+    `;
+  });
+</script>
