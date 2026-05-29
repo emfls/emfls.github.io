@@ -1,0 +1,412 @@
+---
+import StockLayout from '../../layouts/StockLayout.astro';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+const dataDir = join(process.cwd(), 'data', 'stocks');
+const samsung = JSON.parse(readFileSync(join(dataDir, '005930.json'), 'utf-8'));
+const apple   = JSON.parse(readFileSync(join(dataDir, 'AAPL.json'),   'utf-8'));
+
+const stocks = [samsung, apple];
+
+function fmt(v: any) {
+  if (v == null) return '<span class="null">null</span>';
+  if (typeof v === 'number') return v.toLocaleString('ko-KR');
+  return String(v);
+}
+function fmtPct(v: any) {
+  if (v == null) return '<span class="null">-</span>';
+  return Number(v).toFixed(1) + '%';
+}
+function stars(n: number) {
+  return '★'.repeat(Math.round(n)) + '☆'.repeat(5 - Math.round(n));
+}
+---
+
+<StockLayout title="Data Test Page · StockWiki" description="삼성전자·Apple 데이터 검증용 테스트 페이지">
+  <div class="test-page">
+    <div class="page-header">
+      <h1>🧪 Data Test Page</h1>
+      <p class="subtitle">삼성전자(005930) + Apple(AAPL) 전체 수집 데이터 검증</p>
+      <p class="updated">생성시각: {new Date().toLocaleString('ko-KR')}</p>
+    </div>
+
+    {stocks.map(stock => (
+      <section class="stock-section">
+
+        {/* ── 헤더 ── */}
+        <div class="sec-title">
+          <span class="ticker-badge">{stock.ticker}</span>
+          {stock.name}
+          <span class="market-tag">{stock.market}</span>
+          <span class="sector-tag">{stock.sector}</span>
+        </div>
+
+        {/* ── 1. 기본 정보 ── */}
+        <div class="block">
+          <div class="block-title">1. 기본 정보 / Price</div>
+          <div class="kv-grid">
+            <div class="kv"><span>현재가</span><strong>{stock.market === 'KR' ? stock.price?.current?.toLocaleString()+'원' : '$'+stock.price?.current?.toFixed(2)}</strong></div>
+            <div class="kv"><span>등락률</span><strong class={stock.price?.change_pct >= 0 ? 'pos' : 'neg'}>{stock.price?.change_pct?.toFixed(2)}%</strong></div>
+            <div class="kv"><span>52주 최고</span><strong>{stock.market === 'KR' ? stock.price?.week52_high?.toLocaleString()+'원' : '$'+stock.price?.week52_high?.toFixed(2)}</strong></div>
+            <div class="kv"><span>52주 최저</span><strong>{stock.market === 'KR' ? stock.price?.week52_low?.toLocaleString()+'원' : '$'+stock.price?.week52_low?.toFixed(2)}</strong></div>
+            <div class="kv"><span>업데이트</span><strong>{stock.updated_at}</strong></div>
+          </div>
+        </div>
+
+        {/* ── 2. 가치평가 ── */}
+        <div class="block">
+          <div class="block-title">2. 가치평가 / Valuation</div>
+          <div class="kv-grid">
+            <div class="kv"><span>등급</span><strong class={`grade-${stock.valuation?.grade}`}>{stock.valuation?.grade}</strong></div>
+            <div class="kv"><span>PER (TTM)</span><strong>{stock.valuation?.per?.toFixed(2) ?? 'null ⚠️'}</strong></div>
+            <div class="kv"><span>PBR</span><strong>{stock.valuation?.pbr?.toFixed(2) ?? 'null ⚠️'}</strong></div>
+            <div class="kv"><span>업종 평균 PER</span><strong>{stock.valuation?.per_industry_avg}</strong></div>
+            <div class="kv"><span>점수 (0=저평가)</span><strong>{stock.valuation?.score}/100</strong></div>
+            <div class="kv"><span>배당수익률</span><strong>{stock.dividends?.yield?.toFixed(2)}%</strong></div>
+          </div>
+        </div>
+
+        {/* ── 3. 별점 (모닝스타식) ── */}
+        <div class="block">
+          <div class="block-title">3. 종합 별점 / Star Rating</div>
+          <div class="rating-grid">
+            <div class="overall-star">
+              <span class="star-num">{stock.rating?.overall?.toFixed(1)}</span>
+              <span class="star-glyph">{stars(stock.rating?.overall ?? 0)}</span>
+              <span class="star-label">{stock.rating?.label}</span>
+            </div>
+            {Object.entries(stock.rating?.stars ?? {}).map(([k, v]) => (
+              <div class="cat-star">
+                <span class="cat-name">{({valuation:'가치평가', profitability:'수익성', health:'재무건전성', growth:'성장성', moat:'경제적해자'} as any)[k] ?? k}</span>
+                <span class="cat-stars">{stars(v as number)}</span>
+                <span class="cat-num">{v}/5</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── 4. 연간 재무제표 ── */}
+        <div class="block">
+          <div class="block-title">
+            4. 연간 재무제표 / Annual Financials
+            <span class="cnt">({stock.financials_annual?.length ?? 0}개 기간)</span>
+            <span class="unit">{stock.market === 'KR' ? '단위: 억원' : '단위: 백만$'}</span>
+          </div>
+          {!stock.financials_annual?.length ? (
+            <p class="no-data">⚠️ 데이터 없음</p>
+          ) : (
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>항목</th>
+                    {stock.financials_annual.map((r: any) => <th>{r.label}</th>)}
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    ['매출액','revenue'],['영업이익','op_profit'],['순이익','net_profit'],
+                    ['영업이익률','op_margin'],['순이익률','net_margin'],
+                    ['ROE','roe'],['부채비율','debt_ratio'],['영업현금흐름','op_cashflow']
+                  ].map(([label, key]) => (
+                    <tr>
+                      <td class="row-label">{label}</td>
+                      {stock.financials_annual.map((r: any) => {
+                        const v = r[key as string];
+                        const isPct = ['op_margin','net_margin','roe','debt_ratio'].includes(key as string);
+                        return (
+                          <td class={v == null ? 'null' : v < 0 ? 'neg' : ''}>
+                            {v == null ? 'null ⚠️' : isPct ? v.toFixed(1)+'%' : v.toLocaleString('ko-KR')}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        {/* ── 5. 분기 재무제표 ── */}
+        <div class="block">
+          <div class="block-title">
+            5. 분기 재무제표 / Quarterly Financials
+            <span class="cnt">({stock.financials_quarterly?.length ?? 0}개 분기)</span>
+            <span class="unit">{stock.market === 'KR' ? '단위: 억원' : '단위: 백만$'}</span>
+          </div>
+          {!stock.financials_quarterly?.length ? (
+            <p class="no-data">⚠️ 데이터 없음</p>
+          ) : (
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>항목</th>
+                    {stock.financials_quarterly.map((r: any) => <th>{r.label}</th>)}
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    ['매출액','revenue'],['영업이익','op_profit'],['순이익','net_profit'],
+                    ['영업이익률','op_margin'],['순이익률','net_margin'],
+                    ['ROE','roe'],['부채비율','debt_ratio'],['영업현금흐름','op_cashflow']
+                  ].map(([label, key]) => (
+                    <tr>
+                      <td class="row-label">{label}</td>
+                      {stock.financials_quarterly.map((r: any) => {
+                        const v = r[key as string];
+                        const isPct = ['op_margin','net_margin','roe','debt_ratio'].includes(key as string);
+                        return (
+                          <td class={v == null ? 'null' : v < 0 ? 'neg' : ''}>
+                            {v == null ? 'null ⚠️' : isPct ? v.toFixed(1)+'%' : v.toLocaleString('ko-KR')}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        {/* ── 6. 역사적 PER/PBR ── */}
+        <div class="block">
+          <div class="block-title">
+            6. 역사적 PER/PBR / Historical Valuation
+            <span class="cnt">({stock.historical_valuation?.length ?? 0}개 포인트)</span>
+          </div>
+          {!stock.historical_valuation?.length ? (
+            <p class="no-data">⚠️ 데이터 없음</p>
+          ) : (
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr><th>날짜</th><th>주가</th><th>PER</th><th>PBR</th></tr>
+                </thead>
+                <tbody>
+                  {stock.historical_valuation.map((h: any) => (
+                    <tr>
+                      <td>{h.date}</td>
+                      <td>{stock.market === 'KR' ? h.price?.toLocaleString()+'원' : '$'+(h.price?.toFixed(2) ?? '-')}</td>
+                      <td class={h.per == null ? 'null' : ''}>{h.per?.toFixed(2) ?? 'null ⚠️'}</td>
+                      <td class={h.pbr == null ? 'null' : ''}>{h.pbr?.toFixed(2) ?? 'null ⚠️'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        {/* ── 7. Raw JSON ── */}
+        <div class="block">
+          <div class="block-title">7. Raw JSON (디버그용)</div>
+          <details>
+            <summary>클릭해서 펼치기</summary>
+            <pre class="raw-json">{JSON.stringify(stock, null, 2)}</pre>
+          </details>
+        </div>
+
+      </section>
+    ))}
+
+    <div class="footer-note">
+      ⚠️ null ⚠️ = 데이터 수집 실패 항목 | 이 페이지는 테스트용이며 실제 서비스 대상이 아닙니다.
+    </div>
+  </div>
+</StockLayout>
+
+<style>
+  .test-page { max-width: 1100px; }
+  .page-header { margin-bottom: 32px; }
+  .page-header h1 { font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; }
+  .subtitle { color: var(--text2); margin-bottom: 4px; }
+  .updated { font-size: 0.8rem; color: var(--text2); }
+
+  .stock-section {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 40px;
+  }
+  .sec-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .ticker-badge {
+    background: var(--blue);
+    color: #fff;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: monospace;
+  }
+  .market-tag {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    color: var(--text2);
+  }
+  .sector-tag {
+    background: var(--bg3);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    color: var(--text2);
+  }
+
+  .block {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+    background: var(--bg);
+  }
+  .block-title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+    color: var(--blue);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .cnt { font-size: 0.78rem; color: var(--text2); font-weight: 400; }
+  .unit { font-size: 0.75rem; color: var(--yellow); font-weight: 400; }
+
+  /* Key-Value grid */
+  .kv-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px;
+  }
+  .kv {
+    background: var(--bg2);
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .kv span { font-size: 0.75rem; color: var(--text2); }
+  .kv strong { font-size: 1rem; font-weight: 700; }
+
+  /* Grade colors */
+  .grade-매우저평가 { color: #1f6feb; }
+  .grade-저평가 { color: #3fb950; }
+  .grade-중립 { color: #8b949e; }
+  .grade-고평가 { color: #d29922; }
+  .grade-매우고평가 { color: #f85149; }
+
+  /* Rating grid */
+  .rating-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .overall-star {
+    background: var(--bg2);
+    border: 2px solid var(--blue);
+    border-radius: 10px;
+    padding: 14px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    min-width: 120px;
+  }
+  .star-num { font-size: 2rem; font-weight: 800; color: var(--yellow); }
+  .star-glyph { color: var(--yellow); font-size: 1.1rem; letter-spacing: 2px; }
+  .star-label { font-size: 0.78rem; color: var(--text2); font-weight: 600; }
+
+  .cat-star {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 110px;
+  }
+  .cat-name { font-size: 0.72rem; color: var(--text2); }
+  .cat-stars { color: var(--yellow); font-size: 0.9rem; letter-spacing: 1px; }
+  .cat-num { font-size: 0.8rem; font-weight: 700; }
+
+  /* Tables */
+  .table-wrap { overflow-x: auto; }
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    white-space: nowrap;
+  }
+  .data-table th, .data-table td {
+    padding: 8px 14px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+  }
+  .data-table th {
+    background: var(--bg2);
+    color: var(--text2);
+    font-size: 0.78rem;
+    position: sticky;
+    top: 0;
+  }
+  .data-table th:first-child, .data-table td:first-child {
+    text-align: left;
+    position: sticky;
+    left: 0;
+    background: var(--bg);
+    font-weight: 600;
+    border-right: 1px solid var(--border);
+  }
+  .data-table th:first-child { background: var(--bg2); }
+  .row-label { color: var(--text2) !important; font-weight: 600 !important; }
+  td.neg { color: var(--red); }
+  td.null { color: #f85149; font-size: 0.78rem; }
+  .pos { color: var(--red); }
+  .neg { color: var(--blue); }
+
+  /* Raw JSON */
+  details summary {
+    cursor: pointer;
+    color: var(--text2);
+    font-size: 0.85rem;
+    padding: 4px 0;
+  }
+  .raw-json {
+    background: var(--bg3);
+    border-radius: 6px;
+    padding: 14px;
+    font-size: 0.75rem;
+    overflow-x: auto;
+    color: var(--text2);
+    margin-top: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .no-data { color: #f85149; font-size: 0.85rem; padding: 8px 0; }
+  .footer-note {
+    text-align: center;
+    padding: 24px;
+    font-size: 0.82rem;
+    color: var(--text2);
+    border-top: 1px solid var(--border);
+    margin-top: 8px;
+  }
+</style>
