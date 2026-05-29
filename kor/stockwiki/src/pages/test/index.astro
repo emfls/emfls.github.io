@@ -6,407 +6,443 @@ import { join } from 'path';
 const dataDir = join(process.cwd(), 'data', 'stocks');
 const samsung = JSON.parse(readFileSync(join(dataDir, '005930.json'), 'utf-8'));
 const apple   = JSON.parse(readFileSync(join(dataDir, 'AAPL.json'),   'utf-8'));
+const stocks  = [samsung, apple];
 
-const stocks = [samsung, apple];
+const FIN_ROWS = [
+  ['매출액','revenue',false],['매출총이익','gross_profit',false],
+  ['영업이익','op_profit',false],['순이익','net_profit',false],
+  ['영업현금흐름','op_cashflow',false],
+  ['매출총이익률','gross_margin',true],['영업이익률','op_margin',true],
+  ['순이익률','net_margin',true],['ROE','roe',true],['부채비율','debt_ratio',true],
+] as [string, string, boolean][];
 
-function fmt(v: any) {
-  if (v == null) return '<span class="null">null</span>';
-  if (typeof v === 'number') return v.toLocaleString('ko-KR');
-  return String(v);
+const STAR_NAMES: Record<string,string> = {
+  valuation:'가치평가', profitability:'수익성',
+  health:'재무건전성', growth:'성장성', moat:'경제적 해자',
+};
+const STAR_WEIGHT: Record<string,string> = {
+  valuation:'25%', profitability:'25%', growth:'20%', health:'15%', moat:'15%',
+};
+
+function fmtNum(v: any, unit='') {
+  if (v == null) return null;
+  const n = Number(v);
+  if (isNaN(n)) return null;
+  return n.toLocaleString('ko-KR') + unit;
 }
 function fmtPct(v: any) {
-  if (v == null) return '<span class="null">-</span>';
+  if (v == null) return null;
   return Number(v).toFixed(1) + '%';
 }
+function cell(v: any, isPct=false, isNeg=false) {
+  const s = isPct ? fmtPct(v) : fmtNum(v);
+  if (!s) return '<td class="na">-</td>';
+  const cls = isNeg ? (Number(v) < 0 ? 'neg' : '') : '';
+  return `<td class="${cls}">${s}</td>`;
+}
 function stars(n: number) {
-  return '★'.repeat(Math.round(n)) + '☆'.repeat(5 - Math.round(n));
+  const full = Math.round(n);
+  return '★'.repeat(full) + '☆'.repeat(5 - full);
+}
+function starColor(n: number) {
+  if (n >= 4) return '#3fb950';
+  if (n >= 3) return '#d29922';
+  return '#f85149';
 }
 ---
 
-<StockLayout title="Data Test Page · StockWiki" description="삼성전자·Apple 데이터 검증용 테스트 페이지">
-  <div class="test-page">
-    <div class="page-header">
-      <h1>🧪 Data Test Page</h1>
-      <p class="subtitle">삼성전자(005930) + Apple(AAPL) 전체 수집 데이터 검증</p>
-      <p class="updated">생성시각: {new Date().toLocaleString('ko-KR')}</p>
-    </div>
+<StockLayout title="Data Test · StockWiki">
+<div class="test-wrap">
 
-    {stocks.map(stock => (
-      <section class="stock-section">
-
-        {/* ── 헤더 ── */}
-        <div class="sec-title">
-          <span class="ticker-badge">{stock.ticker}</span>
-          {stock.name}
-          <span class="market-tag">{stock.market}</span>
-          <span class="sector-tag">{stock.sector}</span>
-        </div>
-
-        {/* ── 1. 기본 정보 ── */}
-        <div class="block">
-          <div class="block-title">1. 기본 정보 / Price</div>
-          <div class="kv-grid">
-            <div class="kv"><span>현재가</span><strong>{stock.market === 'KR' ? stock.price?.current?.toLocaleString()+'원' : '$'+stock.price?.current?.toFixed(2)}</strong></div>
-            <div class="kv"><span>등락률</span><strong class={stock.price?.change_pct >= 0 ? 'pos' : 'neg'}>{stock.price?.change_pct?.toFixed(2)}%</strong></div>
-            <div class="kv"><span>52주 최고</span><strong>{stock.market === 'KR' ? stock.price?.week52_high?.toLocaleString()+'원' : '$'+stock.price?.week52_high?.toFixed(2)}</strong></div>
-            <div class="kv"><span>52주 최저</span><strong>{stock.market === 'KR' ? stock.price?.week52_low?.toLocaleString()+'원' : '$'+stock.price?.week52_low?.toFixed(2)}</strong></div>
-            <div class="kv"><span>업데이트</span><strong>{stock.updated_at}</strong></div>
-          </div>
-        </div>
-
-        {/* ── 2. 가치평가 ── */}
-        <div class="block">
-          <div class="block-title">2. 가치평가 / Valuation</div>
-          <div class="kv-grid">
-            <div class="kv"><span>등급</span><strong class={`grade-${stock.valuation?.grade}`}>{stock.valuation?.grade}</strong></div>
-            <div class="kv"><span>PER (TTM)</span><strong>{stock.valuation?.per?.toFixed(2) ?? 'null ⚠️'}</strong></div>
-            <div class="kv"><span>PBR</span><strong>{stock.valuation?.pbr?.toFixed(2) ?? 'null ⚠️'}</strong></div>
-            <div class="kv"><span>업종 평균 PER</span><strong>{stock.valuation?.per_industry_avg}</strong></div>
-            <div class="kv"><span>점수 (0=저평가)</span><strong>{stock.valuation?.score}/100</strong></div>
-            <div class="kv"><span>배당수익률</span><strong>{stock.dividends?.yield?.toFixed(2)}%</strong></div>
-          </div>
-        </div>
-
-        {/* ── 3. 별점 (모닝스타식) ── */}
-        <div class="block">
-          <div class="block-title">3. 종합 별점 / Star Rating</div>
-          <div class="rating-grid">
-            <div class="overall-star">
-              <span class="star-num">{stock.rating?.overall?.toFixed(1)}</span>
-              <span class="star-glyph">{stars(stock.rating?.overall ?? 0)}</span>
-              <span class="star-label">{stock.rating?.label}</span>
-            </div>
-            {Object.entries(stock.rating?.stars ?? {}).map(([k, v]) => (
-              <div class="cat-star">
-                <span class="cat-name">{({valuation:'가치평가', profitability:'수익성', health:'재무건전성', growth:'성장성', moat:'경제적해자'} as any)[k] ?? k}</span>
-                <span class="cat-stars">{stars(v as number)}</span>
-                <span class="cat-num">{v}/5</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ── 4. 연간 재무제표 ── */}
-        <div class="block">
-          <div class="block-title">
-            4. 연간 재무제표 / Annual Financials
-            <span class="cnt">({stock.financials_annual?.length ?? 0}개 기간)</span>
-            <span class="unit">{stock.market === 'KR' ? '단위: 억원' : '단위: 백만$'}</span>
-          </div>
-          {!stock.financials_annual?.length ? (
-            <p class="no-data">⚠️ 데이터 없음</p>
-          ) : (
-            <div class="table-wrap">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>항목</th>
-                    {stock.financials_annual.map((r: any) => <th>{r.label}</th>)}
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    ['매출액','revenue'],['영업이익','op_profit'],['순이익','net_profit'],
-                    ['영업이익률','op_margin'],['순이익률','net_margin'],
-                    ['ROE','roe'],['부채비율','debt_ratio'],['영업현금흐름','op_cashflow']
-                  ].map(([label, key]) => (
-                    <tr>
-                      <td class="row-label">{label}</td>
-                      {stock.financials_annual.map((r: any) => {
-                        const v = r[key as string];
-                        const isPct = ['op_margin','net_margin','roe','debt_ratio'].includes(key as string);
-                        return (
-                          <td class={v == null ? 'null' : v < 0 ? 'neg' : ''}>
-                            {v == null ? 'null ⚠️' : isPct ? v.toFixed(1)+'%' : v.toLocaleString('ko-KR')}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-
-        {/* ── 5. 분기 재무제표 ── */}
-        <div class="block">
-          <div class="block-title">
-            5. 분기 재무제표 / Quarterly Financials
-            <span class="cnt">({stock.financials_quarterly?.length ?? 0}개 분기)</span>
-            <span class="unit">{stock.market === 'KR' ? '단위: 억원' : '단위: 백만$'}</span>
-          </div>
-          {!stock.financials_quarterly?.length ? (
-            <p class="no-data">⚠️ 데이터 없음</p>
-          ) : (
-            <div class="table-wrap">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>항목</th>
-                    {stock.financials_quarterly.map((r: any) => <th>{r.label}</th>)}
-                  </tr>
-                </thead>
-                <tbody>
-                  {[
-                    ['매출액','revenue'],['영업이익','op_profit'],['순이익','net_profit'],
-                    ['영업이익률','op_margin'],['순이익률','net_margin'],
-                    ['ROE','roe'],['부채비율','debt_ratio'],['영업현금흐름','op_cashflow']
-                  ].map(([label, key]) => (
-                    <tr>
-                      <td class="row-label">{label}</td>
-                      {stock.financials_quarterly.map((r: any) => {
-                        const v = r[key as string];
-                        const isPct = ['op_margin','net_margin','roe','debt_ratio'].includes(key as string);
-                        return (
-                          <td class={v == null ? 'null' : v < 0 ? 'neg' : ''}>
-                            {v == null ? 'null ⚠️' : isPct ? v.toFixed(1)+'%' : v.toLocaleString('ko-KR')}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-
-        {/* ── 6. 역사적 PER/PBR ── */}
-        <div class="block">
-          <div class="block-title">
-            6. 역사적 PER/PBR / Historical Valuation
-            <span class="cnt">({stock.historical_valuation?.length ?? 0}개 포인트)</span>
-          </div>
-          {!stock.historical_valuation?.length ? (
-            <p class="no-data">⚠️ 데이터 없음</p>
-          ) : (
-            <div class="table-wrap">
-              <table class="data-table">
-                <thead>
-                  <tr><th>날짜</th><th>주가</th><th>PER</th><th>PBR</th></tr>
-                </thead>
-                <tbody>
-                  {stock.historical_valuation.map((h: any) => (
-                    <tr>
-                      <td>{h.date}</td>
-                      <td>{stock.market === 'KR' ? h.price?.toLocaleString()+'원' : '$'+(h.price?.toFixed(2) ?? '-')}</td>
-                      <td class={h.per == null ? 'null' : ''}>{h.per?.toFixed(2) ?? 'null ⚠️'}</td>
-                      <td class={h.pbr == null ? 'null' : ''}>{h.pbr?.toFixed(2) ?? 'null ⚠️'}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-
-        {/* ── 7. Raw JSON ── */}
-        <div class="block">
-          <div class="block-title">7. Raw JSON (디버그용)</div>
-          <details>
-            <summary>클릭해서 펼치기</summary>
-            <pre class="raw-json">{JSON.stringify(stock, null, 2)}</pre>
-          </details>
-        </div>
-
-      </section>
-    ))}
-
-    <div class="footer-note">
-      ⚠️ null ⚠️ = 데이터 수집 실패 항목 | 이 페이지는 테스트용이며 실제 서비스 대상이 아닙니다.
-    </div>
+  <div class="top-bar">
+    <h1>🧪 Data Test Page</h1>
+    <p>삼성전자(005930) + Apple(AAPL) 전체 수집 데이터 검증용</p>
+    <span class="ts">빌드: {new Date().toLocaleString('ko-KR')}</span>
   </div>
+
+  {stocks.map(stock => {
+    const v = stock.valuation ?? {};
+    const m = stock.metrics ?? {};
+    const r = stock.rating ?? {};
+    const rd = r.detail ?? {};
+    const isKR = stock.market === 'KR';
+    const priceStr = isKR
+      ? stock.price?.current?.toLocaleString()+'원'
+      : '$'+stock.price?.current?.toFixed(2);
+    const capStr = isKR
+      ? (m.market_cap_억 ? m.market_cap_억.toLocaleString()+'억원' : '-')
+      : (m.market_cap_M ? '$'+m.market_cap_M.toLocaleString()+'M' : '-');
+    const unit = isKR ? '억원' : '백만$';
+    const fa = stock.financials_annual ?? [];
+    const fq = stock.financials_quarterly ?? [];
+    const hv = stock.historical_valuation ?? [];
+
+    return (
+    <section class="stock-sec">
+      <div class="sec-header">
+        <span class="tick">{stock.ticker}</span>
+        <span class="sname">{stock.name}</span>
+        <span class="badge mkt">{stock.market}</span>
+        <span class="badge sec">{stock.sector}</span>
+        <span class="price-big">{priceStr}</span>
+        <span class={`chg ${stock.price?.change_pct >= 0 ? 'pos' : 'neg'}`}>
+          {stock.price?.change_pct?.toFixed(2)}%
+        </span>
+      </div>
+
+      {/* ─── 1. 기본 정보 ─── */}
+      <div class="block">
+        <div class="btitle">1. 기본 정보</div>
+        <div class="kv-row">
+          <div class="kv"><span>시가총액</span><b>{capStr}</b></div>
+          <div class="kv"><span>52주 최고</span><b>{isKR ? stock.price?.week52_high?.toLocaleString()+'원' : '$'+stock.price?.week52_high?.toFixed(2)}</b></div>
+          <div class="kv"><span>52주 최저</span><b>{isKR ? stock.price?.week52_low?.toLocaleString()+'원' : '$'+stock.price?.week52_low?.toFixed(2)}</b></div>
+          <div class="kv"><span>발행주식수</span><b>{m.shares_outstanding?.toLocaleString()}</b></div>
+          {!isKR && <div class="kv"><span>유통주식수</span><b>{m.float_shares?.toLocaleString()}</b></div>}
+          <div class="kv"><span>베타</span><b>{m.beta}</b></div>
+          <div class="kv"><span>배당수익률</span><b>{stock.dividends?.yield?.toFixed(2)}%</b></div>
+          {!isKR && <div class="kv"><span>배당성향</span><b>{m.payout_ratio != null ? m.payout_ratio+'%' : '-'}</b></div>}
+          <div class="kv"><span>업데이트</span><b>{stock.updated_at}</b></div>
+        </div>
+      </div>
+
+      {/* ─── 2. PER 두 종류 ─── */}
+      <div class="block highlight-block">
+        <div class="btitle">2. PER — 두 가지 방식 비교</div>
+        <div class="per-source-note">📌 출처: {v.per_source ?? m.per_source ?? isKR ? 'FnGuide 재무데이터 + PyKrx 주가' : 'yfinance'}</div>
+        <div class="per-grid">
+          <div class="per-card">
+            <div class="per-label">연간 PER<span class="per-sub">(Annual)</span></div>
+            <div class="per-value">{v.per_annual_calc?.toFixed(2) ?? '-'}<span class="per-x">x</span></div>
+            <div class="per-desc">{isKR ? '최근 12월 결산 연도 순이익 기준' : '최근 회계연도(FY) 순이익 기준'}<br/>
+              {isKR ? `2025/12 순이익: ${fa.find((x:any)=>x.label==='2025/12')?.net_profit?.toLocaleString()}억원` : `${fa[fa.length-1]?.label} 순이익: $${fa[fa.length-1]?.net_profit?.toLocaleString()}M`}
+            </div>
+          </div>
+          <div class="per-card">
+            <div class="per-label">TTM PER<span class="per-sub">(최근 4분기)</span></div>
+            <div class="per-value">{(v.per_ttm_calc ?? v.per_ttm)?.toFixed(2) ?? '-'}<span class="per-x">x</span></div>
+            <div class="per-desc">최근 4분기 순이익 합산 기준<br/>
+              {fq.slice(-4).map((x:any)=>x.label).join(' + ')}<br/>
+              합계: {fq.slice(-4).reduce((s:number,x:any)=>s+(x.net_profit||0),0).toLocaleString()}{unit}
+            </div>
+          </div>
+          {isKR && v.per_krx != null && (
+            <div class="per-card">
+              <div class="per-label">KRX 공식 PER</div>
+              <div class="per-value">{v.per_krx?.toFixed(2) ?? '-'}<span class="per-x">x</span></div>
+              <div class="per-desc">한국거래소 공식 발표값<br/>(직접 계산 아님)</div>
+            </div>
+          )}
+          <div class="per-card ref">
+            <div class="per-label">업종 평균 PER</div>
+            <div class="per-value">{v.per_industry_avg?.toFixed(1)}<span class="per-x">x</span></div>
+            <div class="per-desc">비교 기준값</div>
+          </div>
+        </div>
+      </div>
+
+      {/* ─── 3. Finviz 스타일 종합 지표 ─── */}
+      <div class="block">
+        <div class="btitle">3. 종합 재무 지표 (Finviz 스타일)</div>
+        <div class="finviz-grid">
+          {/* 밸류에이션 */}
+          <div class="fv-group">
+            <div class="fv-group-title">밸류에이션</div>
+            <div class="fv-row"><span>PER (연간)</span><b>{v.per_annual_calc?.toFixed(2) ?? '-'}</b></div>
+            <div class="fv-row"><span>PER (TTM)</span><b>{(v.per_ttm_calc ?? v.per_ttm)?.toFixed(2) ?? '-'}</b></div>
+            {!isKR && <div class="fv-row"><span>Forward PER</span><b>{m.forward_pe?.toFixed(2) ?? '-'}</b></div>}
+            {!isKR && <div class="fv-row"><span>PEG</span><b>{m.peg_ratio?.toFixed(2) ?? '-'}</b></div>}
+            <div class="fv-row"><span>PBR</span><b>{(v.pbr ?? m.pb_ratio)?.toFixed(2) ?? '-'}</b></div>
+            <div class="fv-row"><span>PSR</span><b>{m.ps_ratio?.toFixed(2) ?? '-'}</b></div>
+            {!isKR && <div class="fv-row"><span>EV/EBITDA</span><b>{m.ev_ebitda?.toFixed(2) ?? '-'}</b></div>}
+            {!isKR && <div class="fv-row"><span>EV/Revenue</span><b>{m.ev_revenue?.toFixed(2) ?? '-'}</b></div>}
+          </div>
+          {/* 수익성 */}
+          <div class="fv-group">
+            <div class="fv-group-title">수익성 마진</div>
+            <div class="fv-row"><span>매출총이익률</span><b>{(m.gross_margin != null ? m.gross_margin+'%' : '-')}</b></div>
+            <div class="fv-row"><span>영업이익률</span><b>{(m.op_margin != null ? m.op_margin+'%' : '-')}</b></div>
+            <div class="fv-row"><span>순이익률</span><b>{(m.net_margin != null ? m.net_margin+'%' : '-')}</b></div>
+            <div class="fv-row"><span>ROE</span><b>{(m.roe != null ? m.roe+'%' : '-')}</b></div>
+            <div class="fv-row"><span>ROA</span><b>{(m.roa != null ? m.roa+'%' : '-')}</b></div>
+            {!isKR && <div class="fv-row"><span>EPS (TTM)</span><b>{m.eps_ttm != null ? '$'+m.eps_ttm : '-'}</b></div>}
+            {!isKR && <div class="fv-row"><span>EPS (Fwd)</span><b>{m.eps_forward != null ? '$'+m.eps_forward : '-'}</b></div>}
+          </div>
+          {/* 재무건전성 */}
+          <div class="fv-group">
+            <div class="fv-group-title">재무건전성</div>
+            <div class="fv-row"><span>유동비율</span><b>{m.current_ratio?.toFixed(2) ?? '-'}</b></div>
+            <div class="fv-row"><span>당좌비율</span><b>{m.quick_ratio?.toFixed(2) ?? '-'}</b></div>
+            <div class="fv-row"><span>부채/자본</span><b>{m.debt_to_equity?.toFixed(2) ?? '-'}</b></div>
+            {!isKR && <div class="fv-row"><span>현금</span><b>{m.total_cash_M != null ? '$'+m.total_cash_M?.toLocaleString()+'M' : '-'}</b></div>}
+            {!isKR && <div class="fv-row"><span>총부채</span><b>{m.total_debt_M != null ? '$'+m.total_debt_M?.toLocaleString()+'M' : '-'}</b></div>}
+            {!isKR && <div class="fv-row"><span>FCF</span><b>{m.free_cashflow_M != null ? '$'+m.free_cashflow_M?.toLocaleString()+'M' : '-'}</b></div>}
+            {isKR && <div class="fv-row"><span>영업현금흐름</span><b>{m.op_cashflow_억 != null ? m.op_cashflow_억?.toLocaleString()+'억원' : '-'}</b></div>}
+          </div>
+          {/* 성장 & 애널리스트 */}
+          <div class="fv-group">
+            <div class="fv-group-title">성장 & 애널리스트</div>
+            {!isKR && <div class="fv-row"><span>매출 성장(YoY)</span><b class={m.revenue_growth_yoy >= 0 ? 'pos' : 'neg'}>{m.revenue_growth_yoy != null ? m.revenue_growth_yoy+'%' : '-'}</b></div>}
+            {!isKR && <div class="fv-row"><span>EPS 성장(YoY)</span><b class={m.earnings_growth_yoy >= 0 ? 'pos' : 'neg'}>{m.earnings_growth_yoy != null ? m.earnings_growth_yoy+'%' : '-'}</b></div>}
+            {!isKR && <div class="fv-row"><span>목표주가</span><b>{m.target_price != null ? '$'+m.target_price?.toFixed(2) : '-'}</b></div>}
+            {!isKR && <div class="fv-row"><span>애널리스트 추천</span><b>{m.analyst_recom?.toFixed(2) ?? '-'} <span class="small-txt">({m.analyst_count}명)</span></b></div>}
+            {!isKR && <div class="fv-row"><span>SMA 50일</span><b>{m.sma_50 != null ? '$'+m.sma_50?.toFixed(2) : '-'}</b></div>}
+            {!isKR && <div class="fv-row"><span>SMA 200일</span><b>{m.sma_200 != null ? '$'+m.sma_200?.toFixed(2) : '-'}</b></div>}
+            <div class="fv-row"><span>베타</span><b>{m.beta}</b></div>
+            {!isKR && <div class="fv-row"><span>BPS</span><b>{m.book_value_per_share != null ? '$'+m.book_value_per_share : '-'}</b></div>}
+          </div>
+        </div>
+      </div>
+
+      {/* ─── 4. 종합 별점 (근거 포함) ─── */}
+      <div class="block">
+        <div class="btitle">4. 종합 별점 — 항목별 기준 및 근거</div>
+        <div class="rating-header">
+          <div class="overall-box">
+            <div class="ov-num">{r.overall?.toFixed(1)}</div>
+            <div class="ov-stars" style={`color:${starColor(r.overall??0)}`}>{stars(r.overall??0)}</div>
+            <div class="ov-label">{r.label}</div>
+          </div>
+          <div class="weight-note">
+            가중치: 가치평가 25% / 수익성 25% / 성장성 20% / 재무건전성 15% / 경제적해자 15%
+          </div>
+        </div>
+        <div class="cat-list">
+          {Object.entries(r.stars ?? {}).map(([k, sv]) => (
+            <div class="cat-item">
+              <div class="cat-top">
+                <span class="cat-name">{STAR_NAMES[k] ?? k}</span>
+                <span class="cat-weight">가중치 {STAR_WEIGHT[k]}</span>
+                <span class="cat-stars" style={`color:${starColor(sv as number)}`}>{stars(sv as number)}</span>
+                <span class="cat-score">{sv}/5</span>
+              </div>
+              <div class="cat-reason">💬 {rd[k] ?? '-'}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ─── 5. 연간 재무제표 ─── */}
+      <div class="block">
+        <div class="btitle">
+          5. 연간 재무제표
+          {isKR && <span class="note-badge">12월 결산 기준만 표시</span>}
+          <span class="unit-badge">{unit}</span>
+          <span class="cnt-badge">{fa.length}개 연도</span>
+        </div>
+        {fa.length === 0
+          ? <p class="nodata">⚠️ 데이터 없음</p>
+          : <div class="tw"><table class="dt">
+              <thead><tr>
+                <th class="lh">항목</th>
+                {fa.map((x:any) => <th>{x.label}</th>)}
+              </tr></thead>
+              <tbody>
+                {FIN_ROWS.map(([label, key, isPct]) => (
+                  <tr>
+                    <td class="lc">{label}</td>
+                    {fa.map((x:any) => {
+                      const val = x[key];
+                      if (val == null) return <td class="na">-</td>;
+                      const cls = key==='net_profit'||key==='op_profit' ? (val<0?'neg':'pos2') : '';
+                      const disp = isPct ? val.toFixed(1)+'%' : val.toLocaleString('ko-KR');
+                      return <td class={cls}>{disp}</td>;
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table></div>
+        }
+      </div>
+
+      {/* ─── 6. 분기 재무제표 ─── */}
+      <div class="block">
+        <div class="btitle">
+          6. 분기 재무제표
+          <span class="unit-badge">{unit}</span>
+          <span class="cnt-badge">{fq.length}개 분기</span>
+        </div>
+        {fq.length === 0
+          ? <p class="nodata">⚠️ 데이터 없음</p>
+          : <div class="tw"><table class="dt">
+              <thead><tr>
+                <th class="lh">항목</th>
+                {fq.map((x:any) => <th>{x.label}</th>)}
+              </tr></thead>
+              <tbody>
+                {FIN_ROWS.map(([label, key, isPct]) => (
+                  <tr>
+                    <td class="lc">{label}</td>
+                    {fq.map((x:any) => {
+                      const val = x[key];
+                      if (val == null) return <td class="na">-</td>;
+                      const cls = key==='net_profit'||key==='op_profit' ? (val<0?'neg':'pos2') : '';
+                      const disp = isPct ? val.toFixed(1)+'%' : val.toLocaleString('ko-KR');
+                      return <td class={cls}>{disp}</td>;
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table></div>
+        }
+      </div>
+
+      {/* ─── 7. 역사적 PER/PBR ─── */}
+      <div class="block">
+        <div class="btitle">
+          7. 역사적 PER / PBR ({hv.length}개 포인트)
+        </div>
+        <div class="source-box">
+          📡 데이터 출처: <strong>{stock.historical_source ?? '-'}</strong>
+        </div>
+        {hv.length === 0
+          ? <p class="nodata">⚠️ 데이터 없음</p>
+          : <div class="tw"><table class="dt">
+              <thead><tr>
+                <th class="lh">날짜</th><th>주가</th><th>PER</th><th>PBR</th>
+                <th>EPS</th><th>BPS</th><th>출처</th>
+              </tr></thead>
+              <tbody>
+                {hv.map((h:any) => (
+                  <tr>
+                    <td class="lc">{h.date}</td>
+                    <td>{isKR ? h.price?.toLocaleString()+'원' : '$'+(h.price?.toFixed(2)??'-')}</td>
+                    <td class={h.per==null?'na':''}>{h.per?.toFixed(2)??'-'}</td>
+                    <td class={h.pbr==null?'na':''}>{h.pbr?.toFixed(2)??'-'}</td>
+                    <td class="small">{h.eps?.toFixed(isKR?0:4)??'-'}</td>
+                    <td class="small">{h.bps?.toFixed(isKR?0:2)??'-'}</td>
+                    <td class="small source-td">{h.source ?? '-'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table></div>
+        }
+      </div>
+
+      {/* ─── 8. Raw JSON ─── */}
+      <div class="block">
+        <div class="btitle">8. Raw JSON</div>
+        <details>
+          <summary>클릭해서 펼치기 (전체 원본 데이터)</summary>
+          <pre class="raw">{JSON.stringify(stock, null, 2)}</pre>
+        </details>
+      </div>
+
+    </section>
+    );
+  })}
+
+  <div class="footer">
+    ⚠️ 이 페이지는 데이터 검증 전용입니다. '-' 또는 빈 값이 있으면 수집 실패 항목입니다.
+  </div>
+</div>
 </StockLayout>
 
 <style>
-  .test-page { max-width: 1100px; }
-  .page-header { margin-bottom: 32px; }
-  .page-header h1 { font-size: 1.6rem; font-weight: 800; margin-bottom: 6px; }
-  .subtitle { color: var(--text2); margin-bottom: 4px; }
-  .updated { font-size: 0.8rem; color: var(--text2); }
+  .test-wrap { max-width: 1200px; }
+  .top-bar { margin-bottom: 32px; }
+  .top-bar h1 { font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; }
+  .top-bar p { color: var(--text2); margin-bottom: 4px; }
+  .ts { font-size: 0.78rem; color: var(--text2); }
 
-  .stock-section {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 24px;
-    margin-bottom: 40px;
+  .stock-sec {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 14px; padding: 24px; margin-bottom: 48px;
   }
-  .sec-title {
-    font-size: 1.3rem;
-    font-weight: 800;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .ticker-badge {
-    background: var(--blue);
-    color: #fff;
-    padding: 3px 10px;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-family: monospace;
-  }
-  .market-tag {
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    color: var(--text2);
-  }
-  .sector-tag {
-    background: var(--bg3);
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    color: var(--text2);
-  }
-
-  .block {
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px;
-    margin-bottom: 16px;
-    background: var(--bg);
-  }
-  .block-title {
-    font-weight: 700;
-    font-size: 0.9rem;
-    margin-bottom: 12px;
-    color: var(--blue);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .cnt { font-size: 0.78rem; color: var(--text2); font-weight: 400; }
-  .unit { font-size: 0.75rem; color: var(--yellow); font-weight: 400; }
-
-  /* Key-Value grid */
-  .kv-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 10px;
-  }
-  .kv {
-    background: var(--bg2);
-    border-radius: 8px;
-    padding: 10px 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .kv span { font-size: 0.75rem; color: var(--text2); }
-  .kv strong { font-size: 1rem; font-weight: 700; }
-
-  /* Grade colors */
-  .grade-매우저평가 { color: #1f6feb; }
-  .grade-저평가 { color: #3fb950; }
-  .grade-중립 { color: #8b949e; }
-  .grade-고평가 { color: #d29922; }
-  .grade-매우고평가 { color: #f85149; }
-
-  /* Rating grid */
-  .rating-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    align-items: flex-start;
-  }
-  .overall-star {
-    background: var(--bg2);
-    border: 2px solid var(--blue);
-    border-radius: 10px;
-    padding: 14px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    min-width: 120px;
-  }
-  .star-num { font-size: 2rem; font-weight: 800; color: var(--yellow); }
-  .star-glyph { color: var(--yellow); font-size: 1.1rem; letter-spacing: 2px; }
-  .star-label { font-size: 0.78rem; color: var(--text2); font-weight: 600; }
-
-  .cat-star {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    min-width: 110px;
-  }
-  .cat-name { font-size: 0.72rem; color: var(--text2); }
-  .cat-stars { color: var(--yellow); font-size: 0.9rem; letter-spacing: 1px; }
-  .cat-num { font-size: 0.8rem; font-weight: 700; }
-
-  /* Tables */
-  .table-wrap { overflow-x: auto; }
-  .data-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.82rem;
-    white-space: nowrap;
-  }
-  .data-table th, .data-table td {
-    padding: 8px 14px;
-    text-align: right;
+  .sec-header {
+    display: flex; align-items: center; gap: 12px;
+    flex-wrap: wrap; margin-bottom: 20px; padding-bottom: 16px;
     border-bottom: 1px solid var(--border);
   }
-  .data-table th {
-    background: var(--bg2);
-    color: var(--text2);
-    font-size: 0.78rem;
-    position: sticky;
-    top: 0;
-  }
-  .data-table th:first-child, .data-table td:first-child {
-    text-align: left;
-    position: sticky;
-    left: 0;
-    background: var(--bg);
-    font-weight: 600;
-    border-right: 1px solid var(--border);
-  }
-  .data-table th:first-child { background: var(--bg2); }
-  .row-label { color: var(--text2) !important; font-weight: 600 !important; }
-  td.neg { color: var(--red); }
-  td.null { color: #f85149; font-size: 0.78rem; }
-  .pos { color: var(--red); }
-  .neg { color: var(--blue); }
+  .tick { background: var(--blue); color:#fff; padding:3px 10px; border-radius:6px; font-family:monospace; font-size:1rem; }
+  .sname { font-size:1.3rem; font-weight:800; }
+  .badge { font-size:0.72rem; padding:2px 8px; border-radius:4px; background:var(--bg3); color:var(--text2); }
+  .price-big { font-size:1.4rem; font-weight:700; margin-left:auto; }
+  .chg { font-size:0.9rem; font-weight:600; }
+  .chg.pos { color:var(--red); }
+  .chg.neg { color:var(--blue); }
 
-  /* Raw JSON */
-  details summary {
-    cursor: pointer;
-    color: var(--text2);
-    font-size: 0.85rem;
-    padding: 4px 0;
+  .block {
+    border:1px solid var(--border); border-radius:10px;
+    padding:16px; margin-bottom:16px; background:var(--bg);
   }
-  .raw-json {
-    background: var(--bg3);
-    border-radius: 6px;
-    padding: 14px;
-    font-size: 0.75rem;
-    overflow-x: auto;
-    color: var(--text2);
-    margin-top: 10px;
-    max-height: 400px;
-    overflow-y: auto;
+  .highlight-block { border-color: var(--yellow); }
+  .btitle {
+    font-weight:700; font-size:0.9rem; color:var(--blue);
+    margin-bottom:14px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;
   }
+  .note-badge { background:#1a2a0d; color:#3fb950; font-size:0.72rem; padding:2px 8px; border-radius:4px; font-weight:400; }
+  .unit-badge { background:var(--bg3); color:var(--yellow); font-size:0.72rem; padding:2px 8px; border-radius:4px; font-weight:400; }
+  .cnt-badge  { background:var(--bg3); color:var(--text2);  font-size:0.72rem; padding:2px 8px; border-radius:4px; font-weight:400; }
 
-  .no-data { color: #f85149; font-size: 0.85rem; padding: 8px 0; }
-  .footer-note {
-    text-align: center;
-    padding: 24px;
-    font-size: 0.82rem;
-    color: var(--text2);
-    border-top: 1px solid var(--border);
-    margin-top: 8px;
+  /* KV */
+  .kv-row { display:flex; flex-wrap:wrap; gap:10px; }
+  .kv { background:var(--bg2); border-radius:8px; padding:10px 14px; display:flex; flex-direction:column; gap:3px; min-width:130px; }
+  .kv span { font-size:0.72rem; color:var(--text2); }
+  .kv b { font-size:0.95rem; font-weight:700; }
+
+  /* PER 두 종류 */
+  .per-source-note { font-size:0.78rem; color:var(--text2); margin-bottom:12px; }
+  .per-grid { display:flex; gap:12px; flex-wrap:wrap; }
+  .per-card {
+    background:var(--bg2); border:1px solid var(--border); border-radius:10px;
+    padding:14px 18px; min-width:180px; flex:1;
   }
+  .per-card.ref { border-style:dashed; opacity:0.7; }
+  .per-label { font-size:0.8rem; color:var(--text2); margin-bottom:6px; }
+  .per-sub { font-size:0.7rem; margin-left:4px; color:var(--text2); }
+  .per-value { font-size:1.8rem; font-weight:800; color:var(--yellow); }
+  .per-x { font-size:1rem; color:var(--text2); margin-left:2px; }
+  .per-desc { font-size:0.75rem; color:var(--text2); margin-top:8px; line-height:1.5; }
+
+  /* Finviz grid */
+  .finviz-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:14px; }
+  .fv-group { background:var(--bg2); border-radius:8px; padding:12px 14px; }
+  .fv-group-title { font-size:0.78rem; font-weight:700; color:var(--blue); margin-bottom:8px; padding-bottom:4px; border-bottom:1px solid var(--border); }
+  .fv-row { display:flex; justify-content:space-between; padding:3px 0; font-size:0.8rem; }
+  .fv-row span { color:var(--text2); }
+  .fv-row b { font-weight:600; }
+  .small-txt { font-size:0.7rem; color:var(--text2); font-weight:400; }
+
+  /* 별점 */
+  .rating-header { display:flex; align-items:center; gap:20px; margin-bottom:16px; flex-wrap:wrap; }
+  .overall-box { text-align:center; background:var(--bg2); border:2px solid var(--yellow); border-radius:12px; padding:14px 24px; }
+  .ov-num { font-size:2.2rem; font-weight:800; color:var(--yellow); }
+  .ov-stars { font-size:1.1rem; letter-spacing:2px; }
+  .ov-label { font-size:0.78rem; color:var(--text2); margin-top:4px; font-weight:600; }
+  .weight-note { font-size:0.78rem; color:var(--text2); line-height:1.6; }
+
+  .cat-list { display:flex; flex-direction:column; gap:10px; }
+  .cat-item { background:var(--bg2); border-radius:8px; padding:12px 14px; }
+  .cat-top { display:flex; align-items:center; gap:10px; margin-bottom:6px; flex-wrap:wrap; }
+  .cat-name { font-weight:700; font-size:0.88rem; min-width:90px; }
+  .cat-weight { font-size:0.72rem; color:var(--text2); background:var(--bg3); padding:1px 7px; border-radius:4px; }
+  .cat-stars { font-size:1rem; letter-spacing:2px; }
+  .cat-score { font-size:0.85rem; font-weight:700; }
+  .cat-reason { font-size:0.8rem; color:var(--text2); line-height:1.5; padding-left:4px; border-left:2px solid var(--border); }
+
+  /* 테이블 */
+  .tw { overflow-x:auto; }
+  .dt { width:100%; border-collapse:collapse; font-size:0.8rem; white-space:nowrap; }
+  .dt th, .dt td { padding:7px 12px; text-align:right; border-bottom:1px solid var(--border); }
+  .dt th { background:var(--bg2); color:var(--text2); font-size:0.76rem; position:sticky; top:0; }
+  .lh, .lc { text-align:left !important; position:sticky; left:0; background:var(--bg); border-right:1px solid var(--border); min-width:110px; }
+  .dt th.lh { background:var(--bg2); }
+  .lc { color:var(--text2); font-weight:600; font-size:0.78rem; }
+  td.na { color:var(--text2); }
+  td.neg { color:var(--red) !important; }
+  td.pos2 { color:var(--green); }
+  td.pos { color:var(--red); }
+  .small { font-size:0.72rem; color:var(--text2); }
+  .source-td { font-size:0.68rem; color:var(--text2); max-width:180px; white-space:normal; }
+
+  .source-box { background:var(--bg3); border-radius:6px; padding:8px 12px; font-size:0.8rem; color:var(--text2); margin-bottom:12px; }
+  .nodata { color:var(--red); font-size:0.85rem; padding:8px 0; }
+
+  details summary { cursor:pointer; color:var(--text2); font-size:0.85rem; padding:4px 0; }
+  .raw { background:var(--bg2); border-radius:6px; padding:12px; font-size:0.72rem; overflow:auto; max-height:400px; color:var(--text2); margin-top:10px; }
+
+  .footer { text-align:center; padding:20px; font-size:0.8rem; color:var(--text2); border-top:1px solid var(--border); margin-top:8px; }
+  .pos { color:var(--red); }
+  .neg { color:var(--blue); }
 </style>
