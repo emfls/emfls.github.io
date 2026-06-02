@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://emfls.github.io',
+  site: 'https://emfls.com',
   base: '/kor/stockwiki',
   output: 'static',
   integrations: [],
