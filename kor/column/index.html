@@ -118,10 +118,16 @@ function esc(str) {
   return str.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
+function stripHtml(str) {
+  return str.replace(/<[^>]*>/g, '');
+}
+
 function highlight(text, q) {
-  if (!q) return esc(text);
+  if (!q) return text; // HTML 태그 포함 원본 그대로
+  // 검색 시: 태그 제거 후 평문에서 하이라이트
+  const plain = stripHtml(text);
   const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
-  return esc(text).replace(re, '<mark style="background:#388bfd33;color:#58a6ff;border-radius:2px">$1</mark>');
+  return esc(plain).replace(re, '<mark style="background:#388bfd33;color:#58a6ff;border-radius:2px">$1</mark>');
 }
 
 function createCard(col, delay, q) {
