@@ -50,6 +50,17 @@ body{font-family:'Apple SD Gothic Neo','Malgun Gothic',sans-serif;background:#0d
 #end-msg{text-align:center;padding:32px;color:#6e7681;font-size:.85rem;display:none}
 #end-msg span{display:inline-block;background:#161b22;border:1px solid #30363d;padding:8px 20px;border-radius:20px}
 
+/* 검색 */
+.search-wrap{margin-top:28px;display:flex;justify-content:center}
+.search-box{display:flex;align-items:center;background:#161b22;border:1px solid #30363d;border-radius:32px;padding:10px 18px;gap:10px;width:100%;max-width:500px;transition:.2s}
+.search-box:focus-within{border-color:#388bfd;box-shadow:0 0 0 3px #388bfd22}
+.search-icon{width:16px;height:16px;color:#8b949e;flex-shrink:0}
+#search-input{flex:1;background:transparent;border:none;outline:none;color:#e6edf3;font-size:.95rem;min-width:0}
+#search-input::placeholder{color:#6e7681}
+#search-clear{background:none;border:none;color:#6e7681;cursor:pointer;font-size:.9rem;padding:0 2px;display:none;line-height:1}
+#search-clear:hover{color:#e6edf3}
+.no-result{text-align:center;padding:60px 20px;color:#8b949e;font-size:.95rem}
+.no-result strong{display:block;font-size:1.6rem;margin-bottom:8px}
 footer{text-align:center;padding:28px;color:#6e7681;font-size:.78rem;border-top:1px solid #21262d;margin-top:20px}
 footer a{color:#58a6ff;text-decoration:none}
 @media(max-width:600px){.site-header nav{display:none}}
@@ -72,11 +83,18 @@ footer a{color:#58a6ff;text-decoration:none}
   <h1>emfls 인사이트 칼럼</h1>
   <p>AI·경제·투자·건강·라이프 분야의 깊이 있는 분석 칼럼</p>
   <div class="hero-count" id="total-count"></div>
+  <div class="search-wrap">
+    <div class="search-box">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="search-input" placeholder="칼럼 검색… (제목, 설명)" autocomplete="off">
+      <button id="search-clear" aria-label="검색 초기화">✕</button>
+    </div>
+  </div>
 </div>
 
 <div class="container">
   <div class="section-title">
-    <span>최신 칼럼</span>
+    <span id="section-label">최신 칼럼</span>
     <span id="shown-count" style="font-weight:400;font-size:.8rem;color:#6e7681"></span>
   </div>
   <div class="card-grid" id="card-grid"></div>
@@ -91,14 +109,26 @@ footer a{color:#58a6ff;text-decoration:none}
 <script>
 const PAGE_SIZE = 12;
 let allColumns = [];
+let filteredColumns = [];
 let currentIndex = 0;
 let isLoading = false;
+let searchMode = false;
 
-function createCard(col, delay) {
+function esc(str) {
+  return str.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function highlight(text, q) {
+  if (!q) return esc(text);
+  const re = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+  return esc(text).replace(re, '<mark style="background:#388bfd33;color:#58a6ff;border-radius:2px">$1</mark>');
+}
+
+function createCard(col, delay, q) {
   return `<a class="col-card" href="${col.file}" style="animation-delay:${delay}ms">
     <span class="cat-badge ${col.catClass}">${col.cat}</span>
-    <h2>${col.title}</h2>
-    <p class="desc">${col.desc}</p>
+    <h2>${highlight(col.title, q)}</h2>
+    <p class="desc">${highlight(col.desc, q)}</p>
     <div class="meta">
       <span>${col.date}</span><span>·</span>
       <span class="read-more">읽기 →</span>
@@ -107,37 +137,41 @@ function createCard(col, delay) {
 }
 
 function renderCards() {
-  if (isLoading || currentIndex >= allColumns.length) return;
+  const cols = searchMode ? filteredColumns : allColumns;
+  if (isLoading || currentIndex >= cols.length) return;
   isLoading = true;
 
   const loader = document.getElementById('loader');
   loader.style.display = 'flex';
 
+  const q = searchMode ? document.getElementById('search-input').value.trim() : '';
+
   setTimeout(() => {
     const grid = document.getElementById('card-grid');
-    const batch = allColumns.slice(currentIndex, currentIndex + PAGE_SIZE);
+    const batch = cols.slice(currentIndex, currentIndex + PAGE_SIZE);
 
     batch.forEach((col, i) => {
-      grid.insertAdjacentHTML('beforeend', createCard(col, i * 40));
+      grid.insertAdjacentHTML('beforeend', createCard(col, i * 40, q));
     });
 
     currentIndex += batch.length;
 
-    // 카운터 업데이트
     document.getElementById('shown-count').textContent =
-      `${currentIndex} / ${allColumns.length}편 표시 중`;
+      `${currentIndex} / ${cols.length}편 표시 중`;
 
     loader.style.display = 'none';
     isLoading = false;
 
-    if (currentIndex >= allColumns.length) {
+    if (currentIndex >= cols.length) {
       observer.disconnect();
       document.getElementById('end-msg').style.display = 'block';
+    } else {
+      observer.observe(sentinel);
     }
-  }, 300); // 로딩 체감을 위한 미세 딜레이
+  }, searchMode ? 0 : 300);
 }
 
-// Intersection Observer — 페이지 하단 감지
+// Intersection Observer
 const sentinel = document.createElement('div');
 sentinel.id = 'sentinel';
 sentinel.style.height = '1px';
@@ -145,19 +179,70 @@ document.querySelector('.container').appendChild(sentinel);
 
 const observer = new IntersectionObserver((entries) => {
   if (entries[0].isIntersecting) renderCards();
-}, { rootMargin: '200px' }); // 하단 200px 전에 미리 로드
+}, { rootMargin: '200px' });
+
+// 검색
+let searchTimer;
+document.getElementById('search-input').addEventListener('input', function() {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => doSearch(this.value.trim()), 220);
+  document.getElementById('search-clear').style.display = this.value ? 'block' : 'none';
+});
+
+document.getElementById('search-clear').addEventListener('click', function() {
+  document.getElementById('search-input').value = '';
+  this.style.display = 'none';
+  doSearch('');
+  document.getElementById('search-input').focus();
+});
+
+function doSearch(q) {
+  const grid = document.getElementById('card-grid');
+  const endMsg = document.getElementById('end-msg');
+  const sectionLabel = document.getElementById('section-label');
+
+  observer.disconnect();
+  grid.innerHTML = '';
+  endMsg.style.display = 'none';
+  currentIndex = 0;
+  isLoading = false;
+
+  if (!q) {
+    searchMode = false;
+    sectionLabel.textContent = '최신 칼럼';
+    document.getElementById('shown-count').textContent = '';
+    renderCards();
+    return;
+  }
+
+  const lower = q.toLowerCase();
+  filteredColumns = allColumns.filter(col =>
+    col.title.toLowerCase().includes(lower) ||
+    col.desc.toLowerCase().includes(lower) ||
+    (col.cat && col.cat.toLowerCase().includes(lower))
+  );
+  searchMode = true;
+  sectionLabel.textContent = `"${q}" 검색 결과`;
+
+  if (filteredColumns.length === 0) {
+    document.getElementById('shown-count').textContent = '';
+    grid.innerHTML = `<div class="no-result" style="grid-column:1/-1"><strong>🔍</strong>일치하는 칼럼이 없습니다.<br><small style="color:#6e7681">"${esc(q)}"에 해당하는 결과를 찾을 수 없어요.</small></div>`;
+    return;
+  }
+
+  renderCards();
+}
 
 // columns.json 불러오기
 fetch('columns.json')
   .then(r => r.json())
   .then(data => {
     allColumns = data;
-    document.getElementById('total-count').textContent =
-      `총 ${allColumns.length}편의 칼럼`;
+    filteredColumns = data;
+    document.getElementById('total-count').textContent = `총 ${allColumns.length}편의 칼럼`;
     observer.observe(sentinel);
   })
   .catch(() => {
-    // JSON 로드 실패 시 폴백 메시지
     document.getElementById('card-grid').innerHTML =
       '<p style="color:#8b949e;padding:40px 0">칼럼을 불러오는 중 오류가 발생했습니다.</p>';
   });
