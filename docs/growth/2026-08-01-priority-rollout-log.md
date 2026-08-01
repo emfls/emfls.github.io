@@ -161,7 +161,8 @@
 ## Google 측정·사이트맵 후속 점검
 
 - 점검일: 2026-08-02
-- GA4–AdSense: 기존 연결 0개 확인. GA4 속성과 `pub-8830524482034754` 연결 마법사에서 수익 데이터 보고 `켜기` 상태로 최종 제출 직전까지 구성
+- GA4–AdSense: 기존 연결 0개였으나 사용자 승인 후 GA4 속성 `exchat-b9ce8`과 `pub-8830524482034754` 연결 생성 완료. 수익 데이터 보고 `켜기`, 연결 목록 1개 및 연결일 2026-08-02 확인
+- GA4–AdSense 반영 시간: Google 안내상 AdSense 데이터가 GA4 보고서에 표시되기까지 최대 24시간 소요 가능
 - 사이트맵: 루트 `sitemap.xml`, 캠핑 `kor/report/camp/sitemap.xml`, 비자 `kor/report/visa/sitemap.xml`을 Search Console에 재제출
 - 사이트맵 공개 검사: 세 파일 모두 HTTP 200, `application/xml`; 로컬 루트 XML 파싱 통과, `robots.txt`에서 루트 사이트맵 선언과 전체 크롤링 허용 확인
 - 사이트맵 콘솔 상태: 제출 직후 세 파일 모두 `가져올 수 없음`으로 남아 있어 Google 재처리 대기 후 재확인 필요
