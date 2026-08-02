@@ -118,6 +118,12 @@ class GapyeongCampingPageTest(unittest.TestCase):
         self.assertEqual(home_links[0].get("href"), "index.html")
         self.assertNotIn("position: fixed", self.html)
 
+    def test_automatic_ads_are_bounded_to_the_mobile_viewport(self):
+        self.assertIn('div[id^="aswift_"]', self.html)
+        self.assertIn('iframe[id^="aswift_"]', self.html)
+        self.assertRegex(self.html, re.compile(r"max-width:\s*100%\s*!important"))
+        self.assertRegex(self.html, re.compile(r"overflow-x:\s*clip\s*!important"))
+
 
 if __name__ == "__main__":
     unittest.main()
