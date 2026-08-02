@@ -37,7 +37,7 @@
 - Consumes: 저장소 루트의 `kor/report/visa/switzerland.html`
 - Produces: 실제 HTML 파싱 결과를 검증하는 `SwitzerlandVisaPageTests`
 
-- [ ] **Step 1: 기존 페이지에서 실패하는 전용 테스트 작성**
+- [x] **Step 1: 기존 페이지에서 실패하는 전용 테스트 작성**
 
 `html.parser.HTMLParser`로 title, canonical, 링크, JSON-LD를 수집하고 다음 테스트를 작성한다.
 
@@ -128,13 +128,13 @@ class SwitzerlandVisaPageTests(unittest.TestCase):
         self.assertEqual(page["dateModified"], "2026-08-02")
 ```
 
-- [ ] **Step 2: RED 실패 이유 확인**
+- [x] **Step 2: RED 실패 이유 확인**
 
 Run: `python3 -m unittest tests.test_switzerland_visa_page -v`
 
 Expected: 낡은 title, ETIAS 문구, 공식 링크, `WebPage` JSON-LD가 없어 FAIL하고 GA4·AdSense·기존 상호작용만 PASS한다.
 
-- [ ] **Step 3: 실패 테스트 커밋**
+- [x] **Step 3: 실패 테스트 커밋**
 
 ```bash
 git add tests/test_switzerland_visa_page.py
@@ -151,7 +151,7 @@ git commit -m "test: define Switzerland visa page contract"
 - Consumes: Task 1의 `SwitzerlandVisaPageTests`, 기존 `style.css`, `searchInput`, `toggleFAQ(element)`
 - Produces: 검색 가능한 `.visa-category` 섹션과 `WebPage` JSON-LD를 갖춘 정적 페이지
 
-- [ ] **Step 1: 검색 메타데이터와 구조화 데이터 교체**
+- [x] **Step 1: 검색 메타데이터와 구조화 데이터 교체**
 
 ```html
 <title>스위스 비자: 한국 여권 90일 무비자·ETIAS·취업 안내</title>
@@ -172,7 +172,7 @@ git commit -m "test: define Switzerland visa page contract"
 }
 ```
 
-- [ ] **Step 2: 첫 화면 답변과 최근 확인일 추가**
+- [x] **Step 2: 첫 화면 답변과 최근 확인일 추가**
 
 ```html
 <div class="info-box">
@@ -183,7 +183,7 @@ git commit -m "test: define Switzerland visa page contract"
 
 본문과 관련 링크를 `<main>`으로 감싼다.
 
-- [ ] **Step 3: 검색 가능한 여섯 개 콘텐츠 섹션 작성**
+- [x] **Step 3: 검색 가능한 여섯 개 콘텐츠 섹션 작성**
 
 각 섹션에 `.visa-category`와 검색어를 포함한 `data-category`를 유지한다.
 
@@ -194,11 +194,11 @@ git commit -m "test: define Switzerland visa page contract"
 5. `한국 국적자 취업`: 비EU/EFTA 제3국 국민, 취업허가 필요, 고숙련·쿼터·노동시장 우선 원칙, 고용주가 관할 당국에 신청.
 6. `유학·가족결합`: 목적과 칸톤별 장기체류 승인 후 국가 비자·입국 절차를 대사관과 관할 당국에서 확인.
 
-- [ ] **Step 4: FAQ를 검색 의도 네 개로 교체**
+- [x] **Step 4: FAQ를 검색 의도 네 개로 교체**
 
 질문은 `스위스 여행에 비자가 필요한가요?`, `ETIAS를 지금 신청해야 하나요?`, `무비자로 일할 수 있나요?`, `C형과 D형은 무엇이 다른가요?`로 제한한다. 고정 처리기간·서류·비용은 답변하지 않는다.
 
-- [ ] **Step 5: 공식 출처와 실제 내부 링크 추가**
+- [x] **Step 5: 공식 출처와 실제 내부 링크 추가**
 
 ```html
 <a href="https://www.schweiz-republikkorea.eda.admin.ch/en/do-i-need-a-schengen-visa">주한 스위스대사관 공식 단기비자 안내</a>
@@ -209,7 +209,7 @@ git commit -m "test: define Switzerland visa page contract"
 
 관련 링크는 `/kor/report/visa/france.html`, `germany.html`, `italy.html`, `austria.html`, `liechtenstein.html`만 사용한다.
 
-- [ ] **Step 6: 모바일 광고 가로 넘침 차단**
+- [x] **Step 6: 모바일 광고 가로 넘침 차단**
 
 페이지 `<head>`에만 다음 스타일을 추가해 공통 CSS와 광고 배치를 바꾸지 않는다.
 
@@ -221,7 +221,7 @@ body {
 }
 ```
 
-- [ ] **Step 7: GREEN 검증**
+- [x] **Step 7: GREEN 검증**
 
 Run: `python3 -m unittest tests.test_switzerland_visa_page tests.test_validate_priority_pages -v`
 
@@ -235,7 +235,7 @@ Run: `git diff --check && rg -n '완벽|최신 정보|2025년부터 ETIAS|보통
 
 Expected: diff 오류와 검색 결과 없음.
 
-- [ ] **Step 8: 페이지 변경 커밋**
+- [x] **Step 8: 페이지 변경 커밋**
 
 ```bash
 git add kor/report/visa/switzerland.html
@@ -253,7 +253,7 @@ git commit -m "feat: refresh Switzerland visa revenue guide"
 - Consumes: Task 2의 최신 커밋과 GitHub Pages 공개 URL
 - Produces: 공개 검증·Search Console 재요청·2026-08-30 수익 판정 기준이 기록된 로그
 
-- [ ] **Step 1: 전체 테스트 후 메인 배포**
+- [x] **Step 1: 전체 테스트 후 메인 배포**
 
 Run: `python3 -m unittest discover -s tests -v && git diff --check && git status --short`
 
@@ -263,15 +263,15 @@ Expected: 모든 테스트 PASS, diff 오류 없음, 작업 트리 깨끗함.
 git push origin main
 ```
 
-- [ ] **Step 2: 공개 데스크톱·모바일·상호작용 검증**
+- [x] **Step 2: 공개 데스크톱·모바일·상호작용 검증**
 
 공개 URL에서 새 title, H1, `최근 확인: 2026-08-02`, 공식 링크 4개, GA4·AdSense를 확인한다. 375×844 화면에서 문서 폭이 viewport를 넘지 않아야 한다. 검색창에 `ETIAS`를 입력하면 ETIAS 섹션만 관련 결과로 남고, `무비자로 일할 수 있나요?` FAQ를 클릭하면 답변이 열린다.
 
-- [ ] **Step 3: Search Console 색인 재요청**
+- [x] **Step 3: Search Console 색인 재요청**
 
 로그인된 Search Console의 URL 검사에서 공개 URL을 검사하고 `색인 생성 요청`을 실행한다. 성공 메시지, 기존 대기열, 일일 한도 중 실제 표시 결과를 기록한다.
 
-- [ ] **Step 4: 성장 로그와 체크리스트 갱신**
+- [x] **Step 4: 성장 로그와 체크리스트 갱신**
 
 ```markdown
 ## 2026-08-02 — 2차 우선순위 2: 스위스 비자
@@ -287,7 +287,7 @@ git push origin main
 
 계획 문서의 모든 완료 단계도 `- [x]`로 바꾼다.
 
-- [ ] **Step 5: 기록 커밋·푸시·원격 일치 확인**
+- [x] **Step 5: 기록 커밋·푸시·원격 일치 확인**
 
 ```bash
 git add docs/growth/2026-08-01-priority-rollout-log.md docs/superpowers/plans/2026-08-02-switzerland-visa-revenue-seo.md
