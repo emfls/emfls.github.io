@@ -115,7 +115,7 @@ class GapyeongCampingPageTest(unittest.TestCase):
         )
         home_links = [link for link in self.page.links if link.get("class") == "home-button"]
         self.assertEqual(len(home_links), 1)
-        self.assertEqual(home_links[0].get("href"), "../index.html")
+        self.assertEqual(home_links[0].get("href"), "index.html")
         self.assertNotIn("position: fixed", self.html)
 
 
