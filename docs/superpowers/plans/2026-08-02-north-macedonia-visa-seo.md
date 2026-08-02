@@ -35,7 +35,7 @@
 - Consumes: 저장소 루트 기준 `kor/report/visa/northmacedonia.html`
 - Produces: 메타데이터·추적 코드·공식 출처·금지 표현을 검사하는 `NorthMacedoniaVisaPageTests`
 
-- [ ] **Step 1: 현재 페이지에서 실패하는 전용 테스트 작성**
+- [x] **Step 1: 현재 페이지에서 실패하는 전용 테스트 작성**
 
 ```python
 import json
@@ -86,13 +86,13 @@ if __name__ == "__main__":
     unittest.main()
 ```
 
-- [ ] **Step 2: 테스트가 기존의 낡은 콘텐츠 때문에 실패하는지 확인**
+- [x] **Step 2: 테스트가 기존의 낡은 콘텐츠 때문에 실패하는지 확인**
 
 Run: `python3 -m unittest tests.test_northmacedonia_visa_page -v`
 
 Expected: 제목, `180일 내 최대 90일`, 공식 URL, `WebPage` JSON-LD 관련 assertion이 FAIL한다.
 
-- [ ] **Step 3: 테스트 파일만 커밋**
+- [x] **Step 3: 테스트 파일만 커밋**
 
 ```bash
 git add tests/test_northmacedonia_visa_page.py
@@ -109,7 +109,7 @@ git commit -m "test: define North Macedonia visa page contract"
 - Consumes: Task 1의 `NorthMacedoniaVisaPageTests`, 기존 `style.css`, `searchInput`, `toggleFAQ(element)`
 - Produces: 검색 가능한 `.visa-category` 섹션과 유효한 `WebPage` JSON-LD를 갖춘 정적 페이지
 
-- [ ] **Step 1: 검색 메타데이터와 JSON-LD 교체**
+- [x] **Step 1: 검색 메타데이터와 JSON-LD 교체**
 
 `title`, description, Open Graph, Twitter를 다음 핵심 문구로 맞춘다.
 
@@ -132,7 +132,7 @@ git commit -m "test: define North Macedonia visa page contract"
 }
 ```
 
-- [ ] **Step 2: 첫 화면에 결론과 적용 범위를 먼저 배치**
+- [x] **Step 2: 첫 화면에 결론과 적용 범위를 먼저 배치**
 
 `<body>`의 기존 `.container` 안에 `<main>`을 추가하고 H1 아래 요약을 다음 의미로 작성한다.
 
@@ -145,7 +145,7 @@ git commit -m "test: define North Macedonia visa page contract"
 
 `main`은 본문 콘텐츠와 내부 링크 블록을 감싸고 footer 직전에 닫아 검증기의 `main` 요구를 충족한다.
 
-- [ ] **Step 3: 본문을 목적별 다섯 섹션으로 재작성**
+- [x] **Step 3: 본문을 목적별 다섯 섹션으로 재작성**
 
 기존 디자인과 검색 동작을 위해 각 섹션에 `.visa-category`를 유지하고 다음 사실만 단정한다.
 
@@ -155,11 +155,11 @@ git commit -m "test: define North Macedonia visa page contract"
 4. `D형 비자와 임시거주`: D형은 내무부의 임시거주 결정 후 목적에 맞는 서류를 제출하는 장기체류 절차이며, 사유는 취업·학업·연구·가족결합 등을 포함한다.
 5. `취업·유학`: 단기 무비자 방문만으로 근무나 학업 자격이 생기지 않으며, 목적별 임시거주·고용 절차를 북마케도니아 내무부 또는 관할 공관에서 확인한다.
 
-- [ ] **Step 4: FAQ를 검증 가능한 질문 네 개로 교체**
+- [x] **Step 4: FAQ를 검증 가능한 질문 네 개로 교체**
 
 FAQ 답변은 `180일 내 90일 계산`, `무비자로 일할 수 있는지`, `C형과 D형 차이`, `출발 전 어디서 확인하는지`만 다룬다. 처리기간, 일률적 보험 의무, 범죄경력증명서 같은 목적별 변동사항은 확정 답변에서 제거한다.
 
-- [ ] **Step 5: 공식 확인처와 관련 비자 링크 추가**
+- [x] **Step 5: 공식 확인처와 관련 비자 링크 추가**
 
 다음 링크를 표시되는 앵커 텍스트에 `공식`이라는 단어가 포함되도록 추가한다.
 
@@ -172,7 +172,7 @@ FAQ 답변은 `180일 내 90일 계산`, `무비자로 일할 수 있는지`, `C
 
 관련 국가 링크는 실제 파일이 존재하는 `/kor/report/visa/albania.html`, `/kor/report/visa/bulgaria.html`, `/kor/report/visa/serbia.html`, `/kor/report/visa/montenegro.html`만 사용한다.
 
-- [ ] **Step 6: 전용 테스트와 공통 검증 실행**
+- [x] **Step 6: 전용 테스트와 공통 검증 실행**
 
 Run: `python3 -m unittest tests.test_northmacedonia_visa_page tests.test_validate_priority_pages -v`
 
@@ -182,7 +182,7 @@ Run: `python3 scripts/validate_priority_pages.py kor/report/visa/northmacedonia.
 
 Expected: `PASS kor/report/visa/northmacedonia.html`.
 
-- [ ] **Step 7: HTML·변경사항 정적 검사**
+- [x] **Step 7: HTML·변경사항 정적 검사**
 
 Run: `git diff --check`
 
@@ -192,7 +192,7 @@ Run: `rg -n '완벽|최신 정보|1년 단위|여행자보험 가입 필수|Sear
 
 Expected: 검색 결과 없음.
 
-- [ ] **Step 8: 페이지 변경 커밋**
+- [x] **Step 8: 페이지 변경 커밋**
 
 ```bash
 git add kor/report/visa/northmacedonia.html
@@ -209,7 +209,7 @@ git commit -m "feat: refresh North Macedonia visa guide"
 - Consumes: Task 2의 커밋과 GitHub Pages 공개 URL
 - Produces: 검증·배포·색인 요청 상태가 남은 성장 로그
 
-- [ ] **Step 1: 전체 변경과 테스트를 최종 재검증**
+- [x] **Step 1: 전체 변경과 테스트를 최종 재검증**
 
 Run: `python3 -m unittest discover -s tests -v`
 
@@ -219,7 +219,7 @@ Run: `git diff --check && git status --short`
 
 Expected: diff 오류 없음. 성장 로그 갱신 전에는 작업 트리가 깨끗함.
 
-- [ ] **Step 2: 메인 브랜치를 GitHub에 배포**
+- [x] **Step 2: 메인 브랜치를 GitHub에 배포**
 
 ```bash
 git push origin main
@@ -227,15 +227,15 @@ git push origin main
 
 Expected: 원격 `main`이 Task 2의 최신 커밋으로 이동한다.
 
-- [ ] **Step 3: 공개 URL에서 배포 결과 확인**
+- [x] **Step 3: 공개 URL에서 배포 결과 확인**
 
 GitHub Pages 반영을 기다린 뒤 공개 URL의 HTTP 200, 새 `<title>`, `최근 확인: 2026-08-02`, 세 공식 출처 도메인, GA4·AdSense ID를 확인한다. 모바일 폭에서는 가로 넘침이 없고 검색 필터와 FAQ 토글이 동작해야 한다.
 
-- [ ] **Step 4: Search Console URL 검사에서 색인 생성 요청**
+- [x] **Step 4: Search Console URL 검사에서 색인 생성 요청**
 
 Chrome의 로그인된 Search Console에서 `https://emfls.github.io/kor/report/visa/northmacedonia.html`을 검사하고 `색인 생성 요청`을 실행한다. 이미 대기열에 있거나 일일 한도에 걸리면 그 상태를 성공으로 가장하지 말고 로그에 그대로 기록한다.
 
-- [ ] **Step 5: 성장 로그에 결과 추가**
+- [x] **Step 5: 성장 로그에 결과 추가**
 
 다음 형식으로 `docs/growth/2026-08-01-priority-rollout-log.md`에 추가한다.
 
@@ -251,7 +251,7 @@ Chrome의 로그인된 Search Console에서 `https://emfls.github.io/kor/report/
 - 28일 재평가일: 2026-08-30
 ```
 
-- [ ] **Step 6: 로그 커밋과 원격 일치 확인**
+- [x] **Step 6: 로그 커밋과 원격 일치 확인**
 
 ```bash
 git add docs/growth/2026-08-01-priority-rollout-log.md
