@@ -97,7 +97,7 @@
 
 ### 처리 우선순위
 
-1. LadderGame canonical 404 수정 및 배포 — 2026-08-08 코드 수정 완료, 공개 배포·Search Console 검증 진행
+1. LadderGame canonical 404 수정 및 배포 — 커밋 `a69d0d709e`, GitHub Pages 빌드 성공, 공개 canonical `https://emfls.github.io/game/LadderGame/` 확인. Search Console 404 유효성 검사 2026-08-08 시작
 2. 이미 성장 후보에 포함된 우간다 비자 페이지 개선
 3. 검색 의도가 분명한 한국어 여행·캠핑 페이지 품질 강화
 4. 도구·게임 페이지는 고유 설명, 사용법, FAQ와 내부 링크를 점검한 뒤 재크롤링 유도
