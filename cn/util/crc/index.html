@@ -186,6 +186,8 @@
         color: #286673;
       }
     </style>
+    <style>ins.adsbygoogle,div[id^="aswift_"],iframe[id^="aswift_"]{max-width:100%!important;overflow:hidden!important}</style>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"CRC 生成器","url":"https://emfls.github.io/cn/util/crc/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","isAccessibleForFree":true,"dateModified":"2026-08-09","inLanguage":"zh-CN"}</script>
   </head>
   <body>
     <main>
@@ -215,8 +217,8 @@
         <div class="result-area" id="resultArea"></div>
 
         <div class="footer" id="footer">
-          <b>提示：</b>可用于固件校验、网络数据包验证、文件完整性检查等。<br />
-          <span style="color: #20477f">数据不会发送到外部。</span>
+          <b>检查日期：2026-08-09。</b>CRC 用于发现传输错误，不是加密、密码散列或防篡改证明。<br />
+          <span style="color: #20477f">输入计算在浏览器内完成；页面仍会加载分析和广告服务。</span>
         </div>
 
         <!-- FAQ 部分 (SEO/SGE 用) -->
@@ -235,22 +237,21 @@
             <dd>CRC 广泛用于固件完整性校验、网络数据包验证、文件完整性检查等。</dd>
           </dl>
         </section>
+        <section><h2>相关工具</h2><p><a href="../barcode/">条形码生成器</a> · <a href="../caseconverter/">大小写转换</a> · <a href="../">全部工具</a></p></section>
       </div>
     </main>
     <a href="../" id="backBtn">其他实用工具</a>
     <script>
       // 简易 CRC 计算函数
       function crc32(str) {
-        let crc = 0 ^ -1;
+        let crc = 0xffffffff;
         for (let i = 0; i < str.length; i++) {
-          crc =
-            (crc >>> 8) ^
-            [
-              0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3,
-              0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988, 0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91
-            ][(crc ^ str.charCodeAt(i)) & 0x0f];
+          crc ^= str.charCodeAt(i) & 0xff;
+          for (let bit = 0; bit < 8; bit++) {
+            crc = (crc >>> 1) ^ (crc & 1 ? 0xedb88320 : 0);
+          }
         }
-        return ((crc ^ -1) >>> 0).toString(16).toUpperCase().padStart(8, "0");
+        return ((crc ^ 0xffffffff) >>> 0).toString(16).toUpperCase().padStart(8, "0");
       }
       function crc16(str) {
         let crc = 0xffff;

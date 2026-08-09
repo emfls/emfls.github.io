@@ -170,6 +170,8 @@
       section#faq dt { font-weight: bold; margin-top: 8px;}
       section#faq dd { margin: 0 0 7px 0; font-size: 0.99em; color: #286673;}
     </style>
+    <style>ins.adsbygoogle,div[id^="aswift_"],iframe[id^="aswift_"]{max-width:100%!important;overflow:hidden!important}</style>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"CRC Generator","url":"https://emfls.github.io/util/crc/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","isAccessibleForFree":true,"dateModified":"2026-08-09","inLanguage":"en"}</script>
   </head>
   <body>
     <main>
@@ -199,8 +201,8 @@
         <div class="result-area" id="resultArea"></div>
 
         <div class="footer" id="footer">
-          <b>Tip:</b> Use for firmware, network packets, files, etc.<br />
-          <span style="color: #20477f">No data leaves your device.</span>
+          <b>Reviewed: 2026-08-09.</b> CRC detects common transmission errors; it is not encryption, authentication, or proof that a file is safe.<br />
+          <span style="color: #20477f">The calculation runs locally; analytics and advertising services still load on the page.</span>
         </div>
 
         <!-- FAQ section for GEO/SGE/SEO -->
@@ -219,23 +221,21 @@
             <dd>CRCs are commonly used for checking the integrity of firmware, network packets, files, and data transfers.</dd>
           </dl>
         </section>
+        <section><h2>Related tools</h2><p><a href="../barcode/">Barcode generator</a> · <a href="../qrcode/">QR generator</a> · <a href="../">All utilities</a></p></section>
       </div>
     </main>
     <a href="../" id="backBtn">Other Util</a>
     <script>
       // CRC 계산 함수 (간단화)
       function crc32(str) {
-        // (가장 널리 쓰이는 CRC32 구현, 텍스트용)
-        let crc = 0 ^ -1;
+        let crc = 0xffffffff;
         for (let i = 0; i < str.length; i++) {
-          crc =
-            (crc >>> 8) ^
-            [
-              0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3,
-              0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988, 0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91
-            ][(crc ^ str.charCodeAt(i)) & 0x0f];
+          crc ^= str.charCodeAt(i) & 0xff;
+          for (let bit = 0; bit < 8; bit++) {
+            crc = (crc >>> 1) ^ (crc & 1 ? 0xedb88320 : 0);
+          }
         }
-        return ((crc ^ -1) >>> 0).toString(16).toUpperCase().padStart(8, "0");
+        return ((crc ^ 0xffffffff) >>> 0).toString(16).toUpperCase().padStart(8, "0");
       }
       function crc16(str) {
         let crc = 0xffff;
