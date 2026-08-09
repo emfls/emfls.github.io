@@ -526,3 +526,10 @@
 - 개인정보 정정: 입력 변환은 브라우저 안에서 처리하지만 외부 라이브러리·분석·광고 통신은 존재한다고 정확히 안내
 - 검증: WebApplication/FAQPage, canonical, GA4·AdSense, 모바일 광고 폭 및 JavaScript 구문 검증; 전체 테스트 116개 통과
 - 재평가일: 2026-09-06
+## 미색인 우선 보정 — Image Compressor
+
+- 반영일: 2026-08-09
+- 변경: JPEG·PNG·WebP 입력, JPEG 출력, 1600px 축소, 투명도·애니메이션 손실을 명시하고 용량이 커지는 경우도 실제 수치로 표시
+- 개인정보 정정: 선택 이미지는 업로드하지 않지만 페이지의 분석·광고 스크립트 통신은 존재한다고 안내
+- 검증: WebApplication/FAQPage, canonical, GA4·AdSense, 모바일 광고 폭 및 JavaScript 구문 검증; 전체 테스트 118개 통과
+- 재평가일: 2026-09-06
