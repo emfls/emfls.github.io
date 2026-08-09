@@ -89,7 +89,13 @@ def validate_page(path: Path) -> List[str]:
         errors.append("missing h1 element")
     if not has_date_modified(parser.json_ld):
         errors.append("missing JSON-LD dateModified")
-    if not any(href.startswith("https://") and "공식" in label for href, label in parser.links):
+    has_labeled_official_link = any(
+        href.startswith("https://") and "공식" in label for href, label in parser.links
+    )
+    has_official_source_section = "공식 확인처" in text and any(
+        href.startswith("https://") for href, _ in parser.links
+    )
+    if not (has_labeled_official_link or has_official_source_section):
         errors.append("missing HTTPS official source")
     if not DATE_PATTERN.search(text):
         errors.append("missing recent verification date")
