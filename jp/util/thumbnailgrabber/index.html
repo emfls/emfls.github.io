@@ -2,34 +2,40 @@
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
-    <title>ソーシャルサムネイルダウンローダー (YouTube, X, TikTok)</title>
+    <title>YouTubeサムネイル取得・保存｜無料・ログイン不要</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="YouTube、X(Twitter)、TikTokのサムネイル画像を抽出してダウンロードできます。様々な画質で閲覧・保存が可能。無料・ログイン不要。" />
+      content="YouTube動画URLから5種類のサムネイルを無料で表示・保存。動画IDをブラウザで解析し、ログイン不要で最大解像度から標準画質まで確認できます。" />
     <meta
       name="keywords"
-      content="サムネイルダウンローダー, YouTubeサムネイル, Xサムネイル, TikTokサムネイル, 無料, オンラインツール, ソーシャルメディア画像, 抽出, ダウンロード" />
+      content="YouTubeサムネイル, サムネイルダウンローダー, 無料, ログイン不要, 動画ID, maxresdefault" />
     <meta name="author" content="Itagi" />
     <meta name="language" content="ja" />
     <link rel="canonical" href="https://emfls.github.io/jp/util/thumbnailgrabber/" />
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/jp/util/thumbnailgrabber/" />
-    <meta property="og:title" content="ソーシャルサムネイルダウンローダー (YouTube, X, TikTok)" />
+    <meta property="og:title" content="YouTubeサムネイル取得・保存｜無料・ログイン不要" />
     <meta
       property="og:description"
-      content="YouTube、X(Twitter)、TikTokのサムネイル画像を抽出してダウンロードできます。全画質・無料・ログイン不要。" />
+      content="YouTube動画URLから5種類のサムネイルを表示。無料・ログイン不要。" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://emfls.github.io/jp/util/thumbnailgrabber/" />
-    <meta name="twitter:title" content="ソーシャルサムネイルダウンローダー (YouTube, X, TikTok)" />
+    <meta name="twitter:title" content="YouTubeサムネイル取得・保存" />
     <meta
       name="twitter:description"
-      content="YouTube、X(Twitter)、TikTokのサムネイル画像を抽出してダウンロード。ログイン不要。" />
+      content="YouTube動画のサムネイルを5画質で確認。無料・ログイン不要。" />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+    <script type="application/ld+json">
+      {"@context":"https://schema.org","@type":"WebApplication","name":"YouTubeサムネイル取得・保存","url":"https://emfls.github.io/jp/util/thumbnailgrabber/","applicationCategory":"MultimediaApplication","operatingSystem":"Web browser","isAccessibleForFree":true,"dateModified":"2026-08-09"}
+    </script>
+    <script type="application/ld+json">
+      {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"最大解像度の画像が表示されないのはなぜですか？","acceptedAnswer":{"@type":"Answer","text":"動画側で最大解像度サムネイルが作成されていない場合があります。その場合は標準または高画質を利用してください。"}},{"@type":"Question","name":"ログインは必要ですか？","acceptedAnswer":{"@type":"Answer","text":"不要です。公開YouTube動画のURLを入力して利用できます。"}}]}
+    </script>
     <!-- Googleタグ (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
     <script>
@@ -231,16 +237,17 @@
           max-width: 98vw;
         }
       }
+      .updated { text-align: center; color: #666; font-size: 0.82em; }
+      ins.adsbygoogle, div[id^="aswift_"] { max-width: 100% !important; overflow: hidden; }
     </style>
   </head>
   <body>
     <div class="container">
-      <div class="logo">📸 ソーシャルサムネイルダウンローダー</div>
+      <h1 class="logo">📸 YouTubeサムネイル取得・保存</h1>
       <div class="desc">
-        YouTube、X(Twitter)、TikTokのリンクを貼り付け、様々な画質のサムネイルをプレビューしてダウンロードできます。<br />
-        <span style="color: #1da1f2"><b>X (Twitter)</b></span> と
-        <span style="color: #ff0050"><b>TikTok</b></span> のサポートもご利用いただけます。
+        YouTube動画URLを貼り付けると、最大解像度から基本画質まで5種類を確認できます。無料・ログイン不要です。
       </div>
+      <p class="updated">更新日: 2026-08-09</p>
       <div class="url-input-row">
         <input id="urlInput" type="text" placeholder="動画や投稿のURLをここに貼り付けてください..." autocomplete="off" />
         <button id="grabBtn">取得</button>
@@ -248,10 +255,7 @@
       <div class="info-msg" id="infoMsg"></div>
       <div class="example-row">
         例:<br />
-        <span style="color: #e62e2d">YouTube</span> – https://www.youtube.com/watch?v=xxxx<br />
-        <span style="color: #1da1f2">X (Twitter)</span> – https://x.com/username/status/xxxx または
-        https://twitter.com/user/status/xxxx<br />
-        <span style="color: #ff0050">TikTok</span> – https://www.tiktok.com/@user/video/xxxx
+        https://www.youtube.com/watch?v=動画ID<br />https://youtu.be/動画ID または YouTube Shorts URL
       </div>
       <div class="preview-area" id="previewArea"></div>
       <div class="notice">
@@ -259,10 +263,10 @@
         <ul style="margin: 8px 0 0 18px; text-align: left">
           <li>YouTubeのサムネイルは複数の画質が提供されます。</li>
           <li>
-            X (Twitter) および TikTokのサムネイルはアカウント設定やプラットフォームの制限により表示できない場合や、低解像度の場合があります。
+            最大解像度が作成されていない動画では画像が表示されないため、標準・高画質をお試しください。
           </li>
           <li>このツールは公開されたWebデータのみ利用します。非公開/保護された投稿や動画は利用できません。</li>
-          <li>Xの場合、x.comとtwitter.comの両方のURLをお試しください。</li>
+          <li>保存ボタンが画像を開く場合は、画像を右クリックまたは長押しして保存してください。</li>
         </ul>
       </div>
     </div>
@@ -286,29 +290,6 @@
           url: `https://img.youtube.com/vi/${id}/${suffix}`
         }));
       }
-      function getTiktokThumb(url) {
-        const match = url.match(/tiktok\.com\/.*\/video\/(\d+)/);
-        if (!match) return null;
-        return [
-          {
-            label: "TikTok サムネイル",
-            url: `https://p16-sign-va.tiktokcdn.com/obj/tos-maliva-p-0068/${match[1]}_0.jpg`
-          }
-        ];
-      }
-      async function getXThumb(url) {
-        const match = url.match(/(?:twitter\.com|x\.com)\/(?:\w+)\/status\/(\d+)/);
-        if (!match) return null;
-        try {
-          const resp = await fetch("https://publish.twitter.com/oembed?url=" + encodeURIComponent(url));
-          const data = await resp.json();
-          const html = data.html;
-          const imgMatch = html && html.match(/<img[^>]+src="([^"]+)"/);
-          if (imgMatch) return [{ label: "X (Twitter) サムネイル", url: imgMatch[1] }];
-        } catch (e) {}
-        return null;
-      }
-
       function renderThumbs(label, thumbs) {
         const area = document.getElementById("previewArea");
         if (!thumbs || !thumbs.length) {
@@ -327,14 +308,6 @@
           </div>`
           )
           .join("")}</div>`;
-        } else {
-          // X/TikTok 単一サムネイル
-          area.innerHTML = `<div class="service-label">${label} サムネイル</div>
-          <div class="thumb-list"><div class="thumb-box">
-            <div class="thumb-label">${thumbs[0].label}</div>
-            <img src="${thumbs[0].url}" class="thumb-img" alt="サムネイル"/>
-            <a href="${thumbs[0].url}" class="dl-btn" download>ダウンロード</a>
-          </div></div>`;
         }
       }
 
@@ -352,26 +325,8 @@
           renderThumbs("YouTube", thumbs);
           return;
         }
-        // TikTok
-        if (/tiktok\.com/.test(url)) {
-          const thumbs = getTiktokThumb(url);
-          renderThumbs("TikTok", thumbs);
-          return;
-        }
-        // X (Twitter)
-        if (/twitter\.com|x\.com/.test(url)) {
-          document.getElementById("infoMsg").textContent = "X(Twitter) のサムネイルを取得中です（数秒かかる場合があります）...";
-          const thumbs = await getXThumb(url);
-          if (thumbs) {
-            renderThumbs("X (Twitter)", thumbs);
-          } else {
-            document.getElementById("infoMsg").textContent =
-              "X(Twitter) のサムネイルを取得できませんでした。（プライバシー設定などで取得できない場合があります）";
-          }
-          return;
-        }
         document.getElementById("infoMsg").textContent =
-          "サポートされていないURL形式です。有効なYouTube、X、TikTokのリンクを入力してください。";
+          "対応していないURL形式です。有効なYouTube動画・Shortsのリンクを入力してください。";
       }
 
       document.getElementById("grabBtn").onclick = handleGrab;
@@ -395,21 +350,19 @@
 
       <div style="margin-bottom: 12px">
         <div style="color: #8f94fb; font-weight: bold">このツールはURLを保存したりアップロードしますか？</div>
-        <div style="color: #f0f0f0">いいえ。すべての処理はブラウザ上でローカルに行われます。データは送信・保存されません。</div>
+        <div style="color: #f0f0f0">入力URLの動画ID解析は端末内で行います。表示時はYouTube画像サーバーへ画像を要求し、ページではアクセス解析・広告スクリプトも読み込まれます。</div>
       </div>
 
       <div style="margin-bottom: 12px">
         <div style="color: #8f94fb; font-weight: bold">どのプラットフォームに対応していますか？</div>
         <div style="color: #f0f0f0">
-          YouTube（全てのサムネイル）、X（Twitter）、TikTok。XおよびTikTokは非公開投稿では取得できない場合があります。
+          公開YouTube動画、youtu.be短縮URL、埋め込みURL、Shorts URLに対応します。
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">TikTokやXのサムネイルが取得できないのはなぜですか？</div>
-        <div style="color: #f0f0f0">
-          一部の投稿は非公開、削除済み、またはプレビューが制限されている場合があります。このツールは公開コンテンツのみ対応します。
-        </div>
+        <div style="color: #8f94fb; font-weight: bold">最大解像度が表示されないのはなぜですか？</div>
+        <div style="color: #f0f0f0">動画側でmaxresdefault画像が作成されていない場合があります。標準または高画質を選んでください。</div>
       </div>
 
       <div style="margin-bottom: 12px">
