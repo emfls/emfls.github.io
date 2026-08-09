@@ -426,6 +426,13 @@
 - 기술·검증: WebPage/FAQPage, GA4·AdSense·canonical, 모바일 광고 폭 제한을 적용하고 집중 테스트 3개·전체 테스트 82개·우선 페이지 검증기를 통과
 - 재평가일: 2026-09-06
 
+## 미색인 우선 보정 — Flappy Dot
+
+- 반영일: 2026-08-09
+- 변경: 무료 브라우저 게임·Spacebar·모바일 탭·무설치 설명과 난이도 동작을 보강하고 게임 로직은 유지
+- 검증: VideoGame/FAQPage, canonical, GA4·AdSense, 모바일 광고 폭 제한 적용; 전체 테스트 105개 통과
+- 재평가일: 2026-09-06
+
 ## 미색인 우선 보정 — Easy Letter Word Counter
 
 - 반영일: 2026-08-09
