@@ -2,32 +2,32 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>Descargador de Miniaturas Sociales (YouTube, X, TikTok)</title>
+    <title>Descargador de Miniaturas de YouTube – Cinco Tamaños</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Extrae y descarga las miniaturas de YouTube, X (Twitter) y TikTok. Visualiza y guarda en múltiples calidades. Gratis y sin inicio de sesión." />
+      content="Previsualiza cinco tamaños estándar de miniaturas de un vídeo público de YouTube. Gratis y sin iniciar sesión." />
     <meta
       name="keywords"
-      content="descargador de miniaturas, miniaturas YouTube, miniaturas X, miniaturas TikTok, gratis, herramienta en línea, redes sociales, extraer, descargar" />
+      content="descargador de miniaturas YouTube, maxresdefault, miniatura de video, gratis, descargar" />
     <meta name="author" content="Itagi" />
     <meta name="language" content="es" />
     <link rel="canonical" href="https://emfls.github.io/es/util/thumbnailgrabber/" />
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/es/util/thumbnailgrabber/" />
-    <meta property="og:title" content="Descargador de Miniaturas Sociales (YouTube, X, TikTok)" />
+    <meta property="og:title" content="Descargador de Miniaturas de YouTube" />
     <meta
       property="og:description"
-      content="Extrae y descarga miniaturas de YouTube, X (Twitter) y TikTok. Todas las calidades, gratis y sin iniciar sesión." />
+      content="Previsualiza cinco tamaños estándar de miniaturas de un vídeo público de YouTube." />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://emfls.github.io/es/util/thumbnailgrabber/" />
-    <meta name="twitter:title" content="Descargador de Miniaturas Sociales (YouTube, X, TikTok)" />
+    <meta name="twitter:title" content="Descargador de Miniaturas de YouTube" />
     <meta
       name="twitter:description"
-      content="Extrae y descarga miniaturas de YouTube, X (Twitter) y TikTok. Sin necesidad de iniciar sesión." />
+      content="Previsualiza tamaños estándar de miniaturas de YouTube sin iniciar sesión." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
     <!-- Google tag (gtag.js) -->
@@ -43,13 +43,12 @@
       src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
       crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css" />
-  </head>
+    <style>ins.adsbygoogle,div[id^="aswift_"],iframe[id^="aswift_"]{max-width:100%!important;overflow:hidden!important}</style><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Descargador de Miniaturas de YouTube","url":"https://emfls.github.io/es/util/thumbnailgrabber/","applicationCategory":"MultimediaApplication","operatingSystem":"Any","isAccessibleForFree":true,"dateModified":"2026-08-10","inLanguage":"es"}</script></head>
   <body>
     <div class="container">
-      <div class="logo">📸 Descargador de Miniaturas Sociales</div>
+      <div class="logo">📸 Miniaturas de YouTube</div>
       <div class="desc">
-        Pega el enlace de YouTube, X (Twitter) o TikTok y obtén vistas previas de las miniaturas en distintas calidades para descargar.<br />
-        Soporta <span style="color: #1da1f2"><b>X (Twitter)</b></span> y <span style="color: #ff0050"><b>TikTok</b></span> también.
+        Pega un enlace público de YouTube para ver cinco tamaños estándar.<br />Revisado: 2026-08-10. No todos los vídeos disponen de imagen de máxima resolución.
       </div>
       <div class="url-input-row">
         <input id="urlInput" type="text" placeholder="Pega aquí la URL del video o publicación..." autocomplete="off" />
@@ -58,18 +57,14 @@
       <div class="info-msg" id="infoMsg"></div>
       <div class="example-row">
         Ejemplos:<br />
-        <span style="color: #e62e2d">YouTube</span> – https://www.youtube.com/watch?v=xxxx<br />
-        <span style="color: #1da1f2">X (Twitter)</span> – https://x.com/usuario/status/xxxx<br />
-        <span style="color: #ff0050">TikTok</span> – https://www.tiktok.com/@usuario/video/xxxx
+        <span style="color: #e62e2d">YouTube</span> – https://www.youtube.com/watch?v=xxxxxxxxxxx
       </div>
       <div class="preview-area" id="previewArea"></div>
       <div class="notice">
         <b>Aviso:</b>
         <ul style="margin: 8px 0 0 18px; text-align: left">
           <li>YouTube ofrece múltiples calidades de miniatura.</li>
-          <li>Las miniaturas de X y TikTok pueden no mostrarse o estar en baja resolución por restricciones de la plataforma.</li>
           <li>Solo funciona con contenido público; no es compatible con videos o publicaciones protegidas.</li>
-          <li>Para X, prueba tanto en x.com como en twitter.com si falla.</li>
         </ul>
       </div>
     </div>
@@ -139,14 +134,7 @@
           return;
         }
         if (/youtu\.?be/.test(url)) { renderThumbs("YouTube", getYoutubeThumbs(url)); return; }
-        if (/tiktok\.com/.test(url)) { renderThumbs("TikTok", getTiktokThumb(url)); return; }
-        if (/twitter\.com|x\.com/.test(url)) {
-          document.getElementById("infoMsg").textContent = "Obteniendo miniatura de X...";
-          const thumbs = await getXThumb(url);
-          thumbs ? renderThumbs("X (Twitter)", thumbs) : document.getElementById("infoMsg").textContent = "No se pudo obtener la miniatura de X.";
-          return;
-        }
-        document.getElementById("infoMsg").textContent = "URL no soportada. Usa un enlace válido de YouTube, X o TikTok.";
+        document.getElementById("infoMsg").textContent = "URL no soportada. Usa un enlace válido de YouTube.";
       }
       document.getElementById("grabBtn").onclick = handleGrab;
       document.getElementById("urlInput").addEventListener("keydown", e => { if (e.key === "Enter") handleGrab(); });
@@ -170,11 +158,10 @@
       </div>
       <div style="margin-bottom: 12px">
         <div style="color: #8f94fb; font-weight: bold">¿Qué plataformas soporta?</div>
-        <div style="color: #f0f0f0">YouTube (todas las miniaturas), X (Twitter) y TikTok. Solo contenido público.</div>
+        <div style="color: #f0f0f0">Enlaces públicos de YouTube, Shorts, embed y youtu.be.</div>
       </div>
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">¿Por qué no aparece la miniatura de TikTok o X?</div>
-        <div style="color: #f0f0f0">Puede ser contenido privado o restricciones de la plataforma. Solo funciona con publicaciones públicas.</div>
+        <div style="color: #8f94fb; font-weight: bold">¿Por qué falta una imagen?</div><div style="color: #f0f0f0">El vídeo puede ser privado, eliminado o no haber generado todos los tamaños.</div>
       </div>
       <div style="margin-bottom: 12px">
         <div style="color: #8f94fb; font-weight: bold">¿Necesito iniciar sesión?</div>
@@ -182,8 +169,8 @@
       </div>
       <div style="margin-bottom: 0">
         <div style="color: #8f94fb; font-weight: bold">¿Puedo elegir la calidad?</div>
-        <div style="color: #f0f0f0">En YouTube sí; para X y TikTok solo hay una opción.</div>
+        <div style="color: #f0f0f0">Sí, cuando YouTube proporciona ese tamaño.</div>
       </div>
     </section>
-  </body>
+    <section><h2>Herramientas relacionadas</h2><p><a href="../../../util/ImageCompressor/">Compresor de imágenes</a> · <a href="../">Todas las herramientas</a></p></section></body>
 </html>

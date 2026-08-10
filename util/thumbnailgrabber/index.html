@@ -2,32 +2,32 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Social Thumbnail Downloader (YouTube, X, TikTok)</title>
+    <title>YouTube Thumbnail Downloader – Five Image Sizes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Extract and download thumbnails from YouTube, X (Twitter), and TikTok. View and download in various qualities. Free, no login." />
+      content="Preview five standard YouTube thumbnail image sizes from a public video URL. Free, no login." />
     <meta
       name="keywords"
-      content="thumbnail downloader, youtube thumbnail, x thumbnail, tiktok thumbnail, free, online tool, social media image, extract, download" />
+      content="youtube thumbnail downloader, youtube thumbnail, maxresdefault, free, online tool, download" />
     <meta name="author" content="Itagi" />
     <meta name="language" content="en" />
     <link rel="canonical" href="https://emfls.github.io/util/thumbnailgrabber/" />
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/util/thumbnailgrabber/" />
-    <meta property="og:title" content="Social Thumbnail Downloader (YouTube, X, TikTok)" />
+    <meta property="og:title" content="YouTube Thumbnail Downloader" />
     <meta
       property="og:description"
-      content="Extract and download thumbnails from YouTube, X (Twitter), and TikTok. All qualities, free, no login." />
+      content="Preview five standard YouTube thumbnail image sizes from a public video URL." />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content="https://emfls.github.io/util/thumbnailgrabber/" />
-    <meta name="twitter:title" content="Social Thumbnail Downloader (YouTube, X, TikTok)" />
+    <meta name="twitter:title" content="YouTube Thumbnail Downloader" />
     <meta
       name="twitter:description"
-      content="Extract and download thumbnails from YouTube, X (Twitter), and TikTok. No login required." />
+      content="Preview standard YouTube thumbnail image sizes. No login required." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <link rel="icon" href="https://emfls.github.io/icon-192.png" />
     <!-- Google tag (gtag.js) -->
@@ -233,15 +233,12 @@
         }
       }
     </style>
-  </head>
+    <style>ins.adsbygoogle,div[id^="aswift_"],iframe[id^="aswift_"]{max-width:100%!important;overflow:hidden!important}</style><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"YouTube Thumbnail Downloader","url":"https://emfls.github.io/util/thumbnailgrabber/","applicationCategory":"MultimediaApplication","operatingSystem":"Any","isAccessibleForFree":true,"dateModified":"2026-08-10","inLanguage":"en"}</script></head>
   <body>
     <div class="container">
-      <div class="logo">📸 Social Thumbnail Downloader</div>
+      <div class="logo">📸 YouTube Thumbnail Downloader</div>
       <div class="desc">
-        Paste a YouTube, X (formerly Twitter), or TikTok link to preview and download thumbnails in various
-        qualities.<br />
-        <span style="color: #1da1f2"><b>X (Twitter)</b></span> and
-        <span style="color: #ff0050"><b>TikTok</b></span> support is best-effort.
+        Paste a public YouTube video, Shorts, embed or youtu.be URL to preview five standard image sizes.<br />Reviewed: 2026-08-10. A high-resolution image may not exist for every video.
       </div>
       <div class="url-input-row">
         <input id="urlInput" type="text" placeholder="Paste video or post URL here..." autocomplete="off" />
@@ -250,22 +247,14 @@
       <div class="info-msg" id="infoMsg"></div>
       <div class="example-row">
         Examples:<br />
-        <span style="color: #e62e2d">YouTube</span> – https://www.youtube.com/watch?v=xxxx<br />
-        <span style="color: #1da1f2">X (Twitter)</span> – https://x.com/username/status/xxxx or
-        https://twitter.com/user/status/xxxx<br />
-        <span style="color: #ff0050">TikTok</span> – https://www.tiktok.com/@user/video/xxxx
+        <span style="color: #e62e2d">YouTube</span> – https://www.youtube.com/watch?v=xxxxxxxxxxx
       </div>
       <div class="preview-area" id="previewArea"></div>
       <div class="notice">
         <b>Notice:</b>
         <ul style="margin: 8px 0 0 18px; text-align: left">
           <li>YouTube thumbnails are available in several quality levels.</li>
-          <li>
-            X (Twitter) and TikTok thumbnails depend on account privacy and platform restrictions – images may be
-            unavailable, blurry, or not found.
-          </li>
           <li>This tool uses only public web data. Private/protected posts or videos will not work.</li>
-          <li>For X, try both x.com and twitter.com URLs.</li>
         </ul>
       </div>
     </div>
@@ -355,26 +344,7 @@
           renderThumbs("YouTube", thumbs);
           return;
         }
-        // TikTok
-        if (/tiktok\.com/.test(url)) {
-          const thumbs = getTiktokThumb(url);
-          renderThumbs("TikTok", thumbs);
-          return;
-        }
-        // X (Twitter)
-        if (/twitter\.com|x\.com/.test(url)) {
-          document.getElementById("infoMsg").textContent = "Fetching thumbnail from X (may take a few seconds)...";
-          const thumbs = await getXThumb(url);
-          if (thumbs) {
-            renderThumbs("X (Twitter)", thumbs);
-          } else {
-            document.getElementById("infoMsg").textContent =
-              "Failed to extract X (Twitter) thumbnail. (Privacy settings may block browser scraping)";
-          }
-          return;
-        }
-        document.getElementById("infoMsg").textContent =
-          "Unsupported URL format. Please enter a valid YouTube, X, or TikTok link.";
+        document.getElementById("infoMsg").textContent = "Unsupported URL format. Please enter a valid YouTube link.";
       }
 
       document.getElementById("grabBtn").onclick = handleGrab;
@@ -404,14 +374,14 @@
       <div style="margin-bottom: 12px">
         <div style="color: #8f94fb; font-weight: bold">Which platforms are supported?</div>
         <div style="color: #f0f0f0">
-          YouTube (all thumbnails), X (Twitter), and TikTok. X and TikTok may fail if the post is private.
+          YouTube public video, Shorts, embed and youtu.be links.
         </div>
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Why does TikTok or X thumbnail fail sometimes?</div>
+        <div style="color: #8f94fb; font-weight: bold">Why can an image be missing?</div>
         <div style="color: #f0f0f0">
-          Some posts are private, removed, or blocked from preview. This tool only works with public content.
+          The video may be private, removed, or may not have generated every image size.
         </div>
       </div>
 
@@ -423,9 +393,9 @@
       <div style="margin-bottom: 0">
         <div style="color: #8f94fb; font-weight: bold">Can I choose thumbnail quality?</div>
         <div style="color: #f0f0f0">
-          Yes, for YouTube. You can download from Max Resolution to Default. Other platforms offer only one image.
+          Yes. You can open sizes from Max Resolution to Default when YouTube provides them.
         </div>
       </div>
     </section>
-  </body>
+    <section><h2>Related tools</h2><p><a href="../ImageCompressor/">Image compressor</a> · <a href="../">All utilities</a></p></section></body>
 </html>
