@@ -1,0 +1,3 @@
+# Fourteenth GA4 Priority Batch Design
+
+Improve the next ten GA4 landing pages that still lack one or more shared quality signals. Preserve every game and tool behavior. Add review date `2026-08-10`, appropriate schema, honest limitations, related navigation, canonical consistency, and responsive ad containment. Camping pages must not present parks, riversides, or parking areas as automatically legal campsites; Romania entry guidance must defer to official authorities and count Schengen stays cumulatively; games and tools must explain their non-secure, device-dependent, or entertainment-only limits.
