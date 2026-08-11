@@ -15,6 +15,55 @@ from typing import Dict, List, Optional, Sequence, Tuple
 
 SITE_ORIGIN = "https://emfls.github.io"
 TRAVEL_DIRECTORY = Path("report/travel")
+COUNTRY_ALIASES = {
+    "anti is babu": ("Antigua and Barbuda", "antigua-and-barbuda"),
+    "arab emirates": ("United Arab Emirates", "united-arab-emirates"),
+    "bellless": ("Belize", "belize"),
+    "bencyan": ("Benin", "benin"),
+    "book macedonia": ("North Macedonia", "north-macedonia"),
+    "bosnia herzegovina": ("Bosnia and Herzegovina", "bosnia-and-herzegovina"),
+    "butane": ("Bhutan", "bhutan"),
+    "carbobert": ("Cabo Verde", "cabo-verde"),
+    "catarrh": ("Qatar", "qatar"),
+    "cote divoire": ("Côte d’Ivoire", "cote-d-ivoire"),
+    "congo democratic republic": ("Democratic Republic of the Congo", "democratic-republic-of-the-congo"),
+    "congo republic": ("Republic of the Congo", "republic-of-the-congo"),
+    "croatia, bosnia herzegovina": ("Bosnia and Herzegovina", "bosnia-and-herzegovina"),
+    "czech republic": ("Czechia", "czechia"),
+    "democratic people's republic of korea": ("North Korea", "north-korea"),
+    "dominican federation": ("Dominica", "dominica"),
+    "equatorial": ("Equatorial Guinea", "equatorial-guinea"),
+    "french hangiana": ("French Guiana", "french-guiana"),
+    "gaiana": ("Guyana", "guyana"),
+    "germany, austria": ("Germany", "germany"),
+    "guinea beach sau": ("Guinea-Bissau", "guinea-bissau"),
+    "jjibouti": ("Djibouti", "djibouti"),
+    "kiribashi": ("Kiribati", "kiribati"),
+    "korea": ("South Korea", "south-korea"),
+    "maldive islands": ("Maldives", "maldives"),
+    "marshall": ("Marshall Islands", "marshall-islands"),
+    "marshall islands republic": ("Marshall Islands", "marshall-islands"),
+    "method": ("Sudan", "sudan"),
+    "micronesia": ("Federated States of Micronesia", "micronesia"),
+    "micronesia federation": ("Federated States of Micronesia", "micronesia"),
+    "sebum": ("Fiji", "fiji"),
+    "sierra lion": ("Sierra Leone", "sierra-leone"),
+    "slovenian": ("Slovenia", "slovenia"),
+    "st. kitsune bis": ("Saint Kitts and Nevis", "saint-kitts-and-nevis"),
+    "st. lucia": ("Saint Lucia", "saint-lucia"),
+    "st. vincent grenadin": ("Saint Vincent and the Grenadines", "saint-vincent-and-the-grenadines"),
+    "surname": ("Suriname", "suriname"),
+    "swiss": ("Switzerland", "switzerland"),
+    "trinidad tobago": ("Trinidad and Tobago", "trinidad-and-tobago"),
+    "trinidadi tobago": ("Trinidad and Tobago", "trinidad-and-tobago"),
+    "uk": ("United Kingdom", "united-kingdom"),
+    "usa": ("United States", "united-states"),
+    "루마니아": ("Romania", "romania"),
+    "카타르": ("Qatar", "qatar"),
+    "페루": ("Peru", "peru"),
+    "포르투갈": ("Portugal", "portugal"),
+    "푸에르토리코": ("Puerto Rico", "puerto-rico"),
+}
 
 
 @dataclass(frozen=True)
@@ -201,30 +250,27 @@ def _group_slug(country: str, pages: Sequence[TravelPage]) -> str:
     return prefix
 
 
+def _canonical_country(country: str) -> Tuple[str, str]:
+    alias = COUNTRY_ALIASES.get(country.casefold())
+    if alias:
+        return alias
+    display = country.title() if country.islower() else country
+    return display, country_slug(display)
+
+
 def build_country_groups(pages: Sequence[TravelPage]) -> List[CountryGroup]:
     aliases: Dict[str, List[str]] = {}
     merged: Dict[str, List[TravelPage]] = {}
-    exact_groups = group_by_country(pages)
-    known_slugs = sorted(
-        (country_slug(country) for country in exact_groups if country_slug(country)),
-        key=len,
-        reverse=True,
-    )
-    for country, country_pages in exact_groups.items():
-        slug = country_slug(country)
+    for country, country_pages in group_by_country(pages).items():
+        display, slug = _canonical_country(country)
         if not slug:
-            stems = [page.path.stem for page in country_pages]
-            slug = next(
-                (candidate for candidate in known_slugs if all(stem.startswith(candidate + "-") for stem in stems)),
-                _group_slug(country, country_pages),
-            )
-        aliases.setdefault(slug, []).append(country)
+            slug = _group_slug(country, country_pages)
+        aliases.setdefault(slug, []).append(display)
         merged.setdefault(slug, []).extend(country_pages)
 
     result = []
     for slug, country_pages in merged.items():
-        ascii_aliases = [name for name in aliases[slug] if country_slug(name)]
-        display = sorted(ascii_aliases or aliases[slug], key=str.casefold)[0]
+        display = sorted(aliases[slug], key=str.casefold)[0]
         normalized = tuple(
             sorted(
                 (
@@ -295,6 +341,7 @@ def generate(root: Path, check: bool = False) -> GenerationSummary:
             )
             changed += _write_if_changed(path, updated, check)
 
+    expected_hubs = set()
     for group in groups:
         page_count = max(1, (len(group.pages) + 99) // 100)
         for page_number in range(1, page_count + 1):
@@ -303,7 +350,21 @@ def generate(root: Path, check: bool = False) -> GenerationSummary:
                 if page_number == 1
                 else TRAVEL_DIRECTORY / "country" / group.slug / "page" / str(page_number) / "index.html"
             )
+            expected_hubs.add((root / relative).resolve())
             changed += _write_if_changed(root / relative, render_country_hub(group, page_number), check)
+
+    country_root = root / TRAVEL_DIRECTORY / "country"
+    stale_hubs = sorted(
+        (path for path in country_root.rglob("*.html") if path.resolve() not in expected_hubs),
+        reverse=True,
+    ) if country_root.exists() else []
+    changed += len(stale_hubs)
+    if not check:
+        for path in stale_hubs:
+            path.unlink()
+        for directory in sorted((path for path in country_root.rglob("*") if path.is_dir()), reverse=True):
+            if not any(directory.iterdir()):
+                directory.rmdir()
 
     index_path = root / TRAVEL_DIRECTORY / "index.html"
     index_html = index_path.read_text(encoding="utf-8", errors="ignore")

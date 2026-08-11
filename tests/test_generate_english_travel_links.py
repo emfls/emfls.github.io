@@ -78,6 +78,23 @@ def test_build_country_groups_merges_localized_country_aliases_by_file_prefix():
     assert {page.country for page in groups[0].pages} == {"Romania"}
 
 
+def test_build_country_groups_normalizes_corrupt_country_names_and_aliases():
+    pages = [
+        TravelPage(Path("report/travel/belize-city.html"), "Belize City", "Bellless", "Belize City", "https://emfls.github.io/report/travel/belize-city.html"),
+        TravelPage(Path("report/travel/qatar-doha.html"), "Doha", "catarrh", "Doha", "https://emfls.github.io/report/travel/qatar-doha.html"),
+        TravelPage(Path("report/travel/qatar-lusail.html"), "Lusail", "카타르", "Lusail", "https://emfls.github.io/report/travel/qatar-lusail.html"),
+        TravelPage(Path("report/travel/usa-chicago.html"), "Chicago", "USA", "Chicago", "https://emfls.github.io/report/travel/usa-chicago.html"),
+    ]
+
+    groups = build_country_groups(pages)
+
+    assert [(group.country, group.slug, len(group.pages)) for group in groups] == [
+        ("Belize", "belize", 1),
+        ("Qatar", "qatar", 2),
+        ("United States", "united-states", 1),
+    ]
+
+
 def test_render_related_block_contains_static_same_country_links_only():
     chicago = TravelPage(Path("report/travel/usa-chicago.html"), "Chicago Guide", "USA", "Chicago", "https://emfls.github.io/report/travel/usa-chicago.html")
     boston = TravelPage(Path("report/travel/usa-boston.html"), "Boston Guide", "USA", "Boston", "https://emfls.github.io/report/travel/usa-boston.html")
@@ -150,12 +167,27 @@ def test_generate_builds_hubs_and_is_idempotent_in_check_mode(tmp_path):
     assert first.countries == 1
     assert first.changed_files == 7
     assert second.changed_files == 0
-    hub = travel / "country" / "usa" / "index.html"
+    hub = travel / "country" / "united-states" / "index.html"
     assert hub.exists()
     assert hub.read_text(encoding="utf-8").count('class="travel-city-link"') == 4
     chicago = (travel / "usa-chicago.html").read_text(encoding="utf-8")
     assert chicago.count("emfls:travel-related:start") == 1
     assert chicago.count("travel guide</a>") >= 3
+
+
+def test_generate_removes_obsolete_generated_country_hubs(tmp_path):
+    travel = tmp_path / "report" / "travel"
+    travel.mkdir(parents=True)
+    (travel / "index.html").write_text("<html><body></body></html>", encoding="utf-8")
+    write_travel_page(tmp_path, "belize-city.html", country="Bellless", city="Belize City")
+    stale = travel / "country" / "bellless" / "index.html"
+    stale.parent.mkdir(parents=True)
+    stale.write_text("old generated hub", encoding="utf-8")
+
+    generate(tmp_path)
+
+    assert not stale.exists()
+    assert (travel / "country" / "belize" / "index.html").exists()
 
 
 def test_validate_generated_links_reports_missing_internal_target(tmp_path):
