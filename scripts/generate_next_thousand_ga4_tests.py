@@ -42,10 +42,14 @@ def prior_pages() -> set[str]:
 
 def classify(relative: str) -> tuple[str, str]:
     for token, category in (
-        ("/travel/", "travel"), ("/camp/", "camp"), ("/coin/", "coin"),
+        ("/travel/", "travel"), ("/visa/", "visa"), ("/camp/", "camp"), ("/coin/", "coin"),
     ):
         if token in relative:
             return "WebPage", category
+    if relative.startswith("util/") or "/util/" in relative:
+        return "WebApplication", "tool"
+    if relative.startswith("game/") or "/game/" in relative:
+        return "VideoGame", "game"
     if any(token in relative for token in ("/stock/", "/finance/", "/sec/")):
         return "WebPage", "finance"
     return "WebPage", "article"
@@ -60,7 +64,7 @@ def hub_for(relative: str) -> str:
     return f"/{parent}/" if parent else "/"
 
 
-def select() -> list[tuple[str, str, str, str]]:
+def select(limit: int = 1000) -> list[tuple[str, str, str, str]]:
     rows = list(csv.reader(CSV_PATH.open(encoding="utf-8-sig")))
     header = next(i for i, row in enumerate(rows) if row and row[0] == "방문 페이지")
     ranked: dict[str, tuple[float, float]] = {}
@@ -93,10 +97,10 @@ def select() -> list[tuple[str, str, str, str]]:
             continue
         schema, category = classify(relative)
         selected.append((relative, schema, category, hub_for(relative)))
-        if len(selected) == 1000:
+        if len(selected) == limit:
             break
-    if len(selected) != 1000 or len({row[0] for row in selected}) != 1000:
-        raise SystemExit("selection must contain 1,000 unique pages")
+    if len(selected) != limit or len({row[0] for row in selected}) != limit:
+        raise SystemExit(f"selection must contain {limit:,} unique pages")
     return selected
 
 

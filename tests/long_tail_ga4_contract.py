@@ -4,9 +4,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def assert_manifest(test, pages, marker):
-    test.assertEqual(len(pages), 100)
-    test.assertEqual(len({row[0] for row in pages}), 100)
+def assert_manifest(test, pages, marker, expected_len=100):
+    test.assertEqual(len(pages), expected_len)
+    test.assertEqual(len({row[0] for row in pages}), expected_len)
     for relative, schema_type, category, hub in pages:
         source = (ROOT / relative).read_text(encoding="utf-8")
         test.assertEqual(source.count(marker), 1, relative)

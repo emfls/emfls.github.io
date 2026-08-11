@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 import scripts.improve_next_hundred_ga4_pages as base
 
 _default_copy = base.trust_copy
@@ -78,9 +80,9 @@ def localized_copy(relative: str, category: str) -> tuple[str, str, str]:
     return _default_copy(relative, category)
 
 
-def apply_pages(root, pages, marker: str) -> tuple[int, int]:
-    if len(pages) != 100 or len({row[0] for row in pages}) != 100:
-        raise SystemExit("manifest must contain exactly 100 unique pages")
+def apply_pages(root, pages, marker: str, expected_len: int = 100) -> tuple[int, int]:
+    if len(pages) != expected_len or len({row[0] for row in pages}) != expected_len:
+        raise SystemExit(f"manifest must contain exactly {expected_len} unique pages")
     sources: dict[str, str] = {}
     for relative, _, _, _ in pages:
         path = root / relative
@@ -100,7 +102,10 @@ def apply_pages(root, pages, marker: str) -> tuple[int, int]:
         if marker in source:
             skipped += 1
             continue
-        position = source.lower().rfind("</body>")
+        body_closes = list(re.finditer(r"</body\s*>", source, flags=re.IGNORECASE))
+        if not body_closes:
+            raise SystemExit(f"missing body close after preflight: {relative}")
+        position = body_closes[-1].start()
         (root / relative).write_text(
             source[:position] + base.make_block(relative, schema_type, category, hub) + source[position:],
             encoding="utf-8",
