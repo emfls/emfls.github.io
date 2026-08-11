@@ -18,7 +18,7 @@ The exact manifest is authoritative and contains the next 100 eligible pages in 
 - 1 finance page
 - 1 technology comparison article
 
-The first target is `kor/report/travel/mongolia-darkhan.html`; the hundredth is `kor/column/claude-vs-chatgpt-practical-2026.html`. This boundary prevents selection drift.
+The first target is `kor/report/travel/mongolia-darkhan.html`. The original ranked set included `mexico-merida.html`, but preflight found pre-existing embedded-document corruption, so that page is excluded from this safe bulk pass and replaced by the next eligible candidate, `turkey-samsun.html`. The manifest remains the exact boundary and contains 100 pages.
 
 ## Alternatives Considered
 
