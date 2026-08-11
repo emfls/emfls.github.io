@@ -6,7 +6,7 @@ Improve the next 200 individual landing pages from the supplied GA4 export (2026
 
 Use two immutable 100-page manifests. Batch five begins with `cn/util/age/index.html` and ends with `jp/game/STOPat5/index.html`; batch six begins with `jp/report/travel/bangladesh-dhaka.html` and ends with `kor/report/camp/danyang.html`.
 
-The combined scope contains 59 general articles, 44 travel pages, 27 visa pages, 22 browser tools, 21 camping pages, 14 games, 7 finance pages, and 6 cryptocurrency pages.
+The combined scope contains 50 general articles, 44 travel pages, 27 visa pages, 23 games, 22 browser tools, 21 camping pages, 7 finance pages, and 6 cryptocurrency pages.
 
 ## Contract
 
