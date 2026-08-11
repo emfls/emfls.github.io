@@ -29,7 +29,11 @@ class SixthGa4PriorityBatchTest(unittest.TestCase):
                 self.assertIn("2026-08-09", html)
                 self.assertIn(limitation, html)
                 self.assertIn("googletagmanager.com/gtag/js", html)
-                self.assertIn("pagead2.googlesyndication.com", html)
+                if "/game/" in f"/{rel}":
+                    self.assertNotIn("pagead2.googlesyndication.com", html)
+                    self.assertNotIn("adsbygoogle", html)
+                else:
+                    self.assertIn("pagead2.googlesyndication.com", html)
                 self.assertIn('div[id^="aswift_"]', html)
                 schemas = re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)
                 parsed = [json.loads(item) for item in schemas]

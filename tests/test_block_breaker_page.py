@@ -23,9 +23,10 @@ class BlockBreakerPageTest(unittest.TestCase):
     def test_contract_and_game_logic(self):
         self.assertEqual(self.page.canonical, "https://emfls.github.io/game/BlockBreaker/")
         self.assertEqual({item.get("@type") for item in self.page.json_ld}, {"VideoGame", "FAQPage"})
-        for phrase in ("G-QP5Q67GE5B", "ca-pub-8830524482034754", "function collisionBall", "spawnNewRow"):
+        for phrase in ("G-QP5Q67GE5B", "function collisionBall", "spawnNewRow"):
             self.assertIn(phrase, self.html)
-        self.assertIn('div[id^="aswift_"]', self.html)
+        self.assertNotIn("adsbygoogle", self.html)
+        self.assertNotIn("pagead2.googlesyndication.com", self.html)
         self.assertNotIn("(_, c) => ({\n                                (_, c) => ({", self.html)
 
 
