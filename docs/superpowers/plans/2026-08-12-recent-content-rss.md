@@ -61,6 +61,6 @@
 
 - [x] **Step 1: Record entry count, date range, discovery paths, and limitations in the growth log**
 - [x] **Step 2: Run `git diff --check` and full `pytest -q`**
-- [ ] **Step 3: Commit, push `main`, trigger Pages, and verify exact deployed SHA**
-- [ ] **Step 4: Verify public `feed.xml` HTTP 200 and XML contents**
-- [ ] **Step 5: Submit `feed.xml` in Search Console and record the visible result**
+- [x] **Step 3: Commit, push `main`, trigger Pages, and verify exact deployed SHA**
+- [x] **Step 4: Verify public `feed.xml` HTTP 200 and XML contents**
+- [x] **Step 5: Submit `feed.xml` in Search Console and record the visible result**
