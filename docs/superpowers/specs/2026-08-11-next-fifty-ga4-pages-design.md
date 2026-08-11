@@ -10,10 +10,10 @@ Use descending recent sessions after excluding the 170 pages already covered by 
 
 - Tools and games (7): English 3D Dice, Japanese Tetris, English MBTI, Flappy Dot, Matrix Defense, Flag Quest, Block Breaker
 - Camps (4): Gapyeong, Busan, Gongju, Goheung
-- Visas (4): Nigeria, Russia, Uganda, Georgia
+- Visas (5): Nigeria, Russia, Uganda, Georgia, Malaysia
 - Windows (2): error `0x80070306`, boot-time optimization
 - Finance (2): GPT stock guide, 2026 dividend stocks
-- Travel (31): Mostar, Kotor, Dodoma, Mecca, Nyaungshwe, Ashgabat, Urgench, Thai Nguyen, Vang Vieng, Ningbo, Alesund, Tiflet, Dalanzadgad, Yekaterinburg, Dammam, Warsaw, Lanzhou, Sakete, Kota Kinabalu, Meknes, Utsunomiya, La Lima, Sendai, Khabarovsk, Johor Bahru, Santa Rosa, Cairo, Giga, Can Tho, Dresden, Darkhan
+- Travel (30): Mostar, Kotor, Dodoma, Mecca, Nyaungshwe, Ashgabat, Urgench, Thai Nguyen, Vang Vieng, Ningbo, Alesund, Tiflet, Dalanzadgad, Yekaterinburg, Dammam, Warsaw, Lanzhou, Sakete, Kota Kinabalu, Meknes, Utsunomiya, La Lima, Sendai, Khabarovsk, Johor Bahru, Santa Rosa, Cairo, Giga, Can Tho, Dresden
 
 The manifest is the authoritative exact list and must contain 50 unique, existing paths in five deterministic groups of ten.
 
