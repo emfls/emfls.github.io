@@ -917,3 +917,14 @@
 - 제외: 404, Google·Naver 소유권 검증 파일, StockWiki 테스트 페이지
 - 회귀 방지: 전체 HTML canonical 계약 테스트와 `emfls.com` 잔존 검사 추가
 - 색인 참고: 서치콘솔에 보이는 `emfls.com` canonical은 2026-05-30 이전 크롤 결과이며 재크롤 전까지 화면에 남을 수 있음
+
+## 최근 콘텐츠 RSS 2.0 피드 확장
+
+- 반영일: 2026-08-12
+- 기존 상태: 루트 `feed.xml`은 칼럼 전용 피드였고 robots 및 홈페이지 발견 링크가 없었음
+- 변경: 전체 사이트에서 최근 수정 self-canonical 콘텐츠 최대 500개를 선택하는 RSS 2.0 생성기로 교체
+- 현재 항목: 500개, 수정일 범위 2026-08-11~2026-08-11; 한국어 리포트 371개, 칼럼 45개 및 일본어·게임·도구 등 포함
+- 발견 경로: `robots.txt`의 `Sitemap: https://emfls.github.io/feed.xml`과 홈페이지 RSS alternate 링크
+- 운영: 새 페이지 발행·대량 개선 후 `python3 scripts/generate_recent_rss.py`를 실행하며 동일 입력에서 결정론적 결과를 생성
+- 검증: 항목 고유성, HTTPS emfls.github.io 링크, 필수 RSS 필드, 500개 제한, 제외 규칙, 날짜 정렬, XML 이스케이프 회귀 테스트
+- 한계: RSS는 최근 URL 발견을 보조하며 크롤·색인을 보장하거나 기존 전체 XML 사이트맵을 대체하지 않음
