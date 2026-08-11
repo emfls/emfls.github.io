@@ -4,9 +4,13 @@
 from dataclasses import dataclass
 from html import escape, unescape
 from pathlib import Path
+import argparse
+import csv
+import io
+import os
 import re
 import unicodedata
-from typing import Dict, List, Sequence, Tuple
+from typing import Dict, List, Optional, Sequence, Tuple
 
 
 SITE_ORIGIN = "https://emfls.github.io"
@@ -27,6 +31,14 @@ class CountryGroup:
     country: str
     slug: str
     pages: Tuple[TravelPage, ...]
+
+
+@dataclass(frozen=True)
+class GenerationSummary:
+    pages: int
+    countries: int
+    exceptions: int
+    changed_files: int
 
 
 def country_slug(country: str) -> str:
@@ -93,9 +105,15 @@ def related_pages(page: TravelPage, country_pages: Sequence[TravelPage], limit: 
     return [ordered[(start + offset) % len(ordered)] for offset in range(1, min(limit, len(ordered) - 1) + 1)]
 
 
-def render_related_block(page: TravelPage, related: Sequence[TravelPage]) -> str:
-    country = escape(page.country)
-    country_url = f"{SITE_ORIGIN}/report/travel/country/{country_slug(page.country)}/"
+def render_related_block(
+    page: TravelPage,
+    related: Sequence[TravelPage],
+    group: Optional[CountryGroup] = None,
+) -> str:
+    country_name = group.country if group else page.country
+    slug = group.slug if group else country_slug(page.country)
+    country = escape(country_name)
+    country_url = f"{SITE_ORIGIN}/report/travel/country/{slug}/"
     related_links = "".join(
         f'<li><a href="{escape(item.canonical, quote=True)}">{escape(item.city)} travel guide</a></li>'
         for item in related
@@ -170,3 +188,173 @@ main{{max-width:1000px;margin:0 auto;padding:32px 20px}}a{{color:#3157a4}}.city-
 <nav class="pagination" aria-label="Country guide pages">{pagination}</nav>
 </main></body></html>
 '''
+
+
+def _group_slug(country: str, pages: Sequence[TravelPage]) -> str:
+    slug = country_slug(country)
+    if slug:
+        return slug
+    stems = [page.path.stem for page in pages]
+    prefix = os.path.commonprefix(stems).rstrip("-")
+    if not prefix:
+        raise ValueError(f"Cannot create country slug for {country}")
+    return prefix
+
+
+def build_country_groups(pages: Sequence[TravelPage]) -> List[CountryGroup]:
+    aliases: Dict[str, List[str]] = {}
+    merged: Dict[str, List[TravelPage]] = {}
+    exact_groups = group_by_country(pages)
+    known_slugs = sorted(
+        (country_slug(country) for country in exact_groups if country_slug(country)),
+        key=len,
+        reverse=True,
+    )
+    for country, country_pages in exact_groups.items():
+        slug = country_slug(country)
+        if not slug:
+            stems = [page.path.stem for page in country_pages]
+            slug = next(
+                (candidate for candidate in known_slugs if all(stem.startswith(candidate + "-") for stem in stems)),
+                _group_slug(country, country_pages),
+            )
+        aliases.setdefault(slug, []).append(country)
+        merged.setdefault(slug, []).extend(country_pages)
+
+    result = []
+    for slug, country_pages in merged.items():
+        ascii_aliases = [name for name in aliases[slug] if country_slug(name)]
+        display = sorted(ascii_aliases or aliases[slug], key=str.casefold)[0]
+        normalized = tuple(
+            sorted(
+                (
+                    TravelPage(page.path, page.title, display, page.city, page.canonical)
+                    for page in country_pages
+                ),
+                key=lambda page: (page.city.casefold(), page.path.as_posix()),
+            )
+        )
+        result.append(CountryGroup(display, slug, normalized))
+    return sorted(result, key=lambda group: (group.country.casefold(), group.slug))
+
+
+def _render_country_directory(groups: Sequence[CountryGroup]) -> str:
+    links = "\n".join(
+        '<li><a href="{origin}/report/travel/country/{slug}/">{country} travel guides</a> '
+        '<span>({count} destinations)</span></li>'.format(
+            origin=SITE_ORIGIN,
+            slug=group.slug,
+            country=escape(group.country),
+            count=len(group.pages),
+        )
+        for group in groups
+    )
+    return (
+        '<section class="country-directory" aria-labelledby="country-directory-title">'
+        '<h2 id="country-directory-title">Browse travel guides by country</h2>'
+        '<p>Choose a country to find city itineraries, preparation tips, costs, and safety information.</p>'
+        f'<ul class="country-directory-list">{links}</ul></section>'
+    )
+
+
+def _exception_csv(exceptions: Sequence[Tuple[str, str]]) -> str:
+    output = io.StringIO()
+    writer = csv.writer(output, lineterminator="\n")
+    writer.writerow(("path", "reason"))
+    writer.writerows(exceptions)
+    return output.getvalue()
+
+
+def _write_if_changed(path: Path, content: str, check: bool) -> int:
+    current = path.read_text(encoding="utf-8", errors="ignore") if path.exists() else None
+    if current == content:
+        return 0
+    if not check:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = path.with_name(path.name + ".tmp-emfls")
+        temporary.write_text(content, encoding="utf-8")
+        temporary.replace(path)
+    return 1
+
+
+def generate(root: Path, check: bool = False) -> GenerationSummary:
+    pages, exceptions = collect_pages(root)
+    groups = build_country_groups(pages)
+    changed = 0
+
+    for group in groups:
+        for page in group.pages:
+            path = root / page.path
+            original = path.read_text(encoding="utf-8", errors="ignore")
+            related = related_pages(page, group.pages)
+            updated = apply_generated_block(
+                original,
+                "travel-related",
+                render_related_block(page, related, group),
+                "<footer",
+            )
+            changed += _write_if_changed(path, updated, check)
+
+    for group in groups:
+        page_count = max(1, (len(group.pages) + 99) // 100)
+        for page_number in range(1, page_count + 1):
+            relative = (
+                TRAVEL_DIRECTORY / "country" / group.slug / "index.html"
+                if page_number == 1
+                else TRAVEL_DIRECTORY / "country" / group.slug / "page" / str(page_number) / "index.html"
+            )
+            changed += _write_if_changed(root / relative, render_country_hub(group, page_number), check)
+
+    index_path = root / TRAVEL_DIRECTORY / "index.html"
+    index_html = index_path.read_text(encoding="utf-8", errors="ignore")
+    index_updated = apply_generated_block(
+        index_html,
+        "country-directory",
+        _render_country_directory(groups),
+        "</body>",
+    )
+    changed += _write_if_changed(index_path, index_updated, check)
+    changed += _write_if_changed(
+        root / "docs/growth/2026-08-12-english-travel-link-exceptions.csv",
+        _exception_csv(exceptions),
+        check,
+    )
+    return GenerationSummary(len(pages), len(groups), len(exceptions), changed)
+
+
+def _target_path(root: Path, href: str) -> Path:
+    relative = href.removeprefix(SITE_ORIGIN).split("#", 1)[0].split("?", 1)[0].lstrip("/")
+    path = root / relative
+    return path / "index.html" if href.split("#", 1)[0].split("?", 1)[0].endswith("/") else path
+
+
+def validate_generated_links(root: Path) -> List[Tuple[str, str]]:
+    missing = []
+    for path in (root / TRAVEL_DIRECTORY).rglob("*.html"):
+        html = path.read_text(encoding="utf-8", errors="ignore")
+        blocks = re.findall(r"<!-- emfls:(?:travel-related|country-directory):start -->(.*?)<!-- emfls:.*?:end -->", html, re.DOTALL)
+        if "/country/" in path.as_posix():
+            blocks.append(html)
+        for block in blocks:
+            for href in re.findall(r'href=["\']([^"\']+)["\']', block, re.IGNORECASE):
+                if href.startswith(SITE_ORIGIN + "/") and not _target_path(root, href).exists():
+                    missing.append((path.relative_to(root).as_posix(), href))
+    return sorted(set(missing))
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--root", type=Path, default=Path.cwd())
+    parser.add_argument("--check", action="store_true")
+    args = parser.parse_args()
+    summary = generate(args.root, check=args.check)
+    missing = validate_generated_links(args.root) if args.check else []
+    print(
+        f"pages={summary.pages} countries={summary.countries} exceptions={summary.exceptions} "
+        f"changed_files={summary.changed_files} missing_links={len(missing)}"
+    )
+    return 1 if summary.changed_files or missing else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
