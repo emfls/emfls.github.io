@@ -81,7 +81,7 @@ class GapyeongCampingPageTest(unittest.TestCase):
         self.assertIn("ca-pub-8830524482034754", self.html)
 
     def test_gives_current_source_backed_information(self):
-        self.assertIn("2026-08-02", self.html)
+        self.assertIn("2026-08-12", self.html)
         official_links = [
             link for link in self.page.links
             if "gocamping.or.kr" in link.get("href", "")

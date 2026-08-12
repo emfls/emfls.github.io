@@ -19,7 +19,8 @@ class ThirdBatchVisaPagesTest(unittest.TestCase):
                 html = (ROOT / "kor/report/visa" / filename).read_text(encoding="utf-8")
                 page = PageParser(); page.feed(html)
                 self.assertIn(country.lower(), (page.title + page.h1 + page.meta["description"]).lower())
-                for phrase in ("한국 여권", key_fact, "공식", "최근 확인", "2026-08-09", official_url):
+                expected_date = "2026-08-12" if filename in {"russia.html", "uae.html", "saudiarabia.html"} else "2026-08-09"
+                for phrase in ("한국 여권", key_fact, "공식", "최근 확인", expected_date, official_url):
                     self.assertIn(phrase, html)
                 self.assertEqual({item.get("@type") for item in page.json_ld}, {"WebPage", "FAQPage"})
                 for phrase in ("G-QP5Q67GE5B", "ca-pub-8830524482034754", 'div[id^="aswift_"]'):
