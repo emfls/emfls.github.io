@@ -33,11 +33,11 @@
 - Consumes: 각 HTML 페이지의 `<title>`, description, canonical, 본문 링크, JSON-LD, GA4·AdSense 태그
 - Produces: 검색 의도, 공식 출처, 최신 확인일, 관련 내부 링크가 검증되는 다섯 개 정적 페이지
 
-- [ ] **Step 1: 공식 출처를 확인하고 변경 근거를 기록한다**
+- [x] **Step 1: 공식 출처를 확인하고 변경 근거를 기록한다**
 
 캠핑은 부산시·안동시·고캠핑, 비자는 UDI·카타르 내무부/Visit Qatar·스웨덴 이민국/EU 공식 페이지를 확인한다. 출처가 서로 다르면 한쪽 수치를 임의 선택하지 않고 출발 직전 국적별 공식 조회를 요구하는 문장으로 제한한다.
 
-- [ ] **Step 2: 실패하는 공통 계약 테스트를 작성한다**
+- [x] **Step 2: 실패하는 공통 계약 테스트를 작성한다**
 
 `tests/test_gsc_opportunity_batch.py`에 다음 동작을 검증한다.
 
@@ -66,29 +66,29 @@ def test_volatile_stale_claims_are_removed():
         assert phrase not in combined_html()
 ```
 
-- [ ] **Step 3: 테스트가 요구사항 부재로 실패하는지 확인한다**
+- [x] **Step 3: 테스트가 요구사항 부재로 실패하는지 확인한다**
 
 Run: `pytest -q tests/test_gsc_opportunity_batch.py`
 
 Expected: 다섯 페이지 중 최신 확인일·첫 화면 답변·내부 링크 또는 오래된 변동 정보 조건에서 FAIL.
 
-- [ ] **Step 4: 다섯 페이지를 최소 범위로 개선한다**
+- [x] **Step 4: 다섯 페이지를 최소 범위로 개선한다**
 
 각 페이지에 검색 질문에 대한 2~4문장짜리 즉답을 첫 화면에 배치하고, 확인한 공식 링크 및 관련 내부 링크를 추가한다. 카타르의 월드컵 시기 혜택처럼 현재 근거가 없는 문장과 노르웨이의 오래된 ETIAS 일정·고정 수수료 문장을 제거한다. 제목과 설명은 페이지가 실제로 답하는 내용만 반영하며 JSON-LD의 이름·설명·수정일도 화면 내용과 맞춘다.
 
-- [ ] **Step 5: 새 계약 테스트를 통과시킨다**
+- [x] **Step 5: 새 계약 테스트를 통과시킨다**
 
 Run: `pytest -q tests/test_gsc_opportunity_batch.py`
 
 Expected: PASS.
 
-- [ ] **Step 6: 기존 페이지 테스트를 함께 실행한다**
+- [x] **Step 6: 기존 페이지 테스트를 함께 실행한다**
 
 Run: `pytest -q tests/test_busan_camping_page.py tests/test_andong_camping_page.py tests/test_sweden_visa_page.py tests/test_seventeenth_ga4_priority_batch.py`
 
 Expected: PASS. 날짜처럼 의도적으로 최신화된 계약만 새 사실과 일치하도록 조정한다.
 
-- [ ] **Step 7: 작업 묶음을 커밋한다**
+- [x] **Step 7: 작업 묶음을 커밋한다**
 
 ```bash
 git add tests/test_gsc_opportunity_batch.py kor/report/camp/busan.html kor/report/camp/andong.html kor/report/visa/norway.html kor/report/visa/qatar.html kor/report/visa/sweden.html
@@ -105,17 +105,17 @@ git commit -m "feat: improve five search opportunity pages"
 - Consumes: 설계 문서의 최근 90일 기준선과 Task 1의 변경 결과
 - Produces: 28일 후 동일 기준으로 비교 가능한 기록과 배포된 GitHub Pages 변경
 
-- [ ] **Step 1: 기준선과 변경 내역을 기록한다**
+- [x] **Step 1: 기준선과 변경 내역을 기록한다**
 
 문서에 사이트 전체 클릭 170, 노출 4,557, CTR 3.7%, 평균 순위 17.4와 대상별 수치를 기록한다. 각 페이지에서 바꾼 검색 스니펫·즉답·공식 출처·내부 링크와 AdSense 안전장치 유지 여부를 표로 남긴다.
 
-- [ ] **Step 2: 전체 회귀 검사를 실행한다**
+- [x] **Step 2: 전체 회귀 검사를 실행한다**
 
 Run: `pytest -q`
 
 Expected: 전체 PASS, error와 failure 0개.
 
-- [ ] **Step 3: 변경 품질과 저장소 상태를 확인한다**
+- [x] **Step 3: 변경 품질과 저장소 상태를 확인한다**
 
 Run: `git diff --check && git status --short`
 
