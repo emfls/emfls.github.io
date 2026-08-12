@@ -32,21 +32,21 @@
 - Consumes: 각 HTML의 메타데이터, canonical, JSON-LD, 본문 링크와 광고·측정 태그
 - Produces: 공식 근거를 갖춘 세 콘텐츠 페이지와 실제 조작법이 검색 설명과 일치하는 두 게임 페이지
 
-- [ ] **Step 1: 실패하는 계약 테스트를 작성한다**
+- [x] **Step 1: 실패하는 계약 테스트를 작성한다**
 
 테스트는 다섯 canonical과 GA4, 콘텐츠 페이지의 공식 출처·최근 확인일·AdSense, 게임 페이지의 광고 비활성·조작법·설명형 제목을 검증한다.
 
-- [ ] **Step 2: 신규 계약의 RED를 확인한다**
+- [x] **Step 2: 신규 계약의 RED를 확인한다**
 
 Run: `pytest -q tests/test_gsc_opportunity_batch_05.py`
 
 Expected: 새 날짜, 구체적 여행 판단 또는 게임 설명 계약에서 FAIL.
 
-- [ ] **Step 3: 다섯 페이지를 최소 범위로 수정한다**
+- [x] **Step 3: 다섯 페이지를 최소 범위로 수정한다**
 
 나이지리아의 단기 e-Visa 조건, 뉴캐슬 Bathers Way, 퍼스 터미널별 공항 이동을 공식 출처와 첫 답변에 반영한다. 두 게임은 실제 조작·목표·재시작 설명과 검색 메타데이터를 일치시키며 광고 비활성을 유지한다.
 
-- [ ] **Step 4: 신규 및 관련 테스트를 통과시킨다**
+- [x] **Step 4: 신규 및 관련 테스트를 통과시킨다**
 
 Run: `pytest -q tests/test_gsc_opportunity_batch_05.py tests/test_nigeria_visa_page.py tests/test_marbleflick_page.py`
 
