@@ -35,7 +35,7 @@
 - [x] **Step 2: 전용 테스트 RED를 확인한다**
 - [x] **Step 3: 다섯 페이지를 최소 수정한다**
 - [x] **Step 4: 전용·관련 테스트를 통과시킨다**
-- [ ] **Step 5: 구현을 커밋한다**
+- [x] **Step 5: 구현을 커밋한다**
 
 ### Task 2: 기록·전체 검증·배포
 
@@ -43,6 +43,6 @@
 - Create: `docs/growth/2026-08-12-search-opportunity-batch-07.md`
 - Modify: `docs/superpowers/plans/2026-08-12-gsc-opportunity-batch-07.md`
 
-- [ ] **Step 1: 기준선과 안전장치를 기록한다**
-- [ ] **Step 2: 전체 테스트와 diff 검사를 통과시킨다**
+- [x] **Step 1: 기준선과 안전장치를 기록한다**
+- [x] **Step 2: 전체 테스트와 diff 검사를 통과시킨다**
 - [ ] **Step 3: 커밋·푸시하고 원격 해시를 확인한다**
