@@ -71,5 +71,5 @@ git commit -m "feat: improve fifth search opportunity batch"
 
 - [x] **Step 1: 기준선·변경·정책 안전장치를 기록한다**
 - [x] **Step 2: `pytest -q`와 `git diff --check`를 통과시킨다**
-- [ ] **Step 3: 기록을 커밋하고 `main`에 푸시한다**
-- [ ] **Step 4: 로컬과 `origin/main` 해시 일치 및 깨끗한 작업 트리를 확인한다**
+- [x] **Step 3: 기록을 커밋하고 `main`에 푸시한다**
+- [x] **Step 4: 로컬과 `origin/main` 해시 일치 및 깨끗한 작업 트리를 확인한다**
