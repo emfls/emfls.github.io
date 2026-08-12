@@ -76,7 +76,7 @@ class NorthMacedoniaVisaPageTests(unittest.TestCase):
         self.assertIn("function toggleFAQ(element)", self.html)
 
     def test_official_sources_and_freshness_are_present(self):
-        self.assertIn("최근 확인: 2026-08-02", self.text)
+        self.assertIn("최근 확인: 2026-08-12", self.text)
         hrefs = {href for href, _ in self.parser.links}
         self.assertIn("https://0404.go.kr/ntnSafetyInfo/368/detail", hrefs)
         self.assertIn(
@@ -109,7 +109,7 @@ class NorthMacedoniaVisaPageTests(unittest.TestCase):
             if document.get("@type") == "WebPage"
         )
         self.assertEqual(page["url"], CANONICAL)
-        self.assertEqual(page["dateModified"], "2026-08-02")
+        self.assertEqual(page["dateModified"], "2026-08-12")
 
 
 if __name__ == "__main__":
