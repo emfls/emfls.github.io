@@ -85,7 +85,7 @@ class SwitzerlandVisaPageTests(unittest.TestCase):
                 self.assertIn(marker, self.html)
 
     def test_official_sources_and_freshness_are_present(self):
-        self.assertIn("최근 확인: 2026-08-02", self.text)
+        self.assertIn("최근 확인: 2026-08-12", self.text)
         hrefs = {href for href, _ in self.parser.links}
         for href in (
             "https://www.schweiz-republikkorea.eda.admin.ch/en/do-i-need-a-schengen-visa",
@@ -115,7 +115,7 @@ class SwitzerlandVisaPageTests(unittest.TestCase):
             item for item in self.parser.json_ld if item.get("@type") == "WebPage"
         )
         self.assertEqual(page["url"], CANONICAL)
-        self.assertEqual(page["dateModified"], "2026-08-02")
+        self.assertEqual(page["dateModified"], "2026-08-12")
 
 
 if __name__ == "__main__":

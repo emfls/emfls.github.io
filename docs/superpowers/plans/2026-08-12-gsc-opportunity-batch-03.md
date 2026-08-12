@@ -32,11 +32,11 @@
 - Consumes: 각 HTML의 메타데이터, canonical, JSON-LD, 본문 링크, GA4·AdSense 태그
 - Produces: 현재 확인일, 답변 우선 구조, 공식 출처와 내부 다음 단계가 있는 다섯 페이지
 
-- [ ] **Step 1: 공식 출처를 현재 시점에 확인한다**
+- [x] **Step 1: 공식 출처를 현재 시점에 확인한다**
 
 스위스 이민청·EU ETIAS, 르완다 이민국·보건기관, 토고 정부 여행 포털, 탄자니아 이민국, 호주 내무부·애들레이드 공식 관광·교통기관 원문에서 설계서의 변동 정보를 확인한다.
 
-- [ ] **Step 2: 실패하는 공통 계약 테스트를 작성한다**
+- [x] **Step 2: 실패하는 공통 계약 테스트를 작성한다**
 
 ```python
 def test_pages_keep_canonical_measurement_and_ads():
@@ -55,23 +55,23 @@ def test_pages_have_current_answer_sources_and_internal_next_step():
         assert any(link.endswith(".html") or link.startswith("/kor/report/") for link in page.links)
 ```
 
-- [ ] **Step 3: 새 계약이 현재 페이지에서 실패하는지 확인한다**
+- [x] **Step 3: 새 계약이 현재 페이지에서 실패하는지 확인한다**
 
 Run: `pytest -q tests/test_gsc_opportunity_batch_03.py`
 
 Expected: 최신 확인일, 첫 답변 표지 또는 필수 공식 출처 조건에서 FAIL.
 
-- [ ] **Step 4: 공식 자료와 검색 의도에 맞게 다섯 페이지를 수정한다**
+- [x] **Step 4: 공식 자료와 검색 의도에 맞게 다섯 페이지를 수정한다**
 
 스위스는 90/180일·ETIAS·장기체류 구분, 르완다는 도착비자·온라인 신청·황열, 토고는 eVisa와 입국 전 신청, 탄자니아는 eVisa·도착비자·서류 조건, 애들레이드는 공항 이동·2박 3일 동선·마켓 운영·ETA를 첫 판단부터 정리한다. 제목, description, 본문과 JSON-LD 날짜를 일치시킨다.
 
-- [ ] **Step 5: 신규 및 관련 기존 테스트를 통과시킨다**
+- [x] **Step 5: 신규 및 관련 기존 테스트를 통과시킨다**
 
 Run: `pytest -q tests/test_gsc_opportunity_batch_03.py $(rg --files tests | rg 'switzerland|rwanda|togo|tanzania|adelaide')`
 
 Expected: PASS.
 
-- [ ] **Step 6: 구현을 커밋한다**
+- [x] **Step 6: 구현을 커밋한다**
 
 ```bash
 git add tests/test_gsc_opportunity_batch_03.py kor/report/visa/switzerland.html kor/report/visa/rwanda.html kor/report/visa/togo.html kor/report/visa/tanzania.html kor/report/travel/australia-adelaide.html
