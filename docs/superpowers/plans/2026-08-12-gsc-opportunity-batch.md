@@ -121,20 +121,20 @@ Run: `git diff --check && git status --short`
 
 Expected: 공백 오류 없음. 계획·성과 문서 외 의도하지 않은 파일 없음.
 
-- [ ] **Step 4: 기록 문서를 커밋한다**
+- [x] **Step 4: 기록 문서를 커밋한다**
 
 ```bash
 git add docs/growth/2026-08-12-search-opportunity-batch-01.md docs/superpowers/plans/2026-08-12-gsc-opportunity-batch.md
 git commit -m "docs: record search opportunity baseline"
 ```
 
-- [ ] **Step 5: 메인 브랜치에 배포한다**
+- [x] **Step 5: 메인 브랜치에 배포한다**
 
 Run: `git push origin main`
 
 Expected: 원격 `main`이 로컬 최종 커밋으로 갱신된다.
 
-- [ ] **Step 6: 원격 동기화를 검증한다**
+- [x] **Step 6: 원격 동기화를 검증한다**
 
 Run: `git fetch origin main && git rev-parse HEAD && git rev-parse origin/main && git status --short`
 
