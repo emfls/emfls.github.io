@@ -32,11 +32,11 @@
 - Consumes: HTML 메타데이터, canonical, JSON-LD, 본문 링크, GA4·AdSense 태그
 - Produces: 최신 답변·공식 출처·내부 다음 단계가 확인되는 다섯 페이지
 
-- [ ] **Step 1: 공식 출처를 현재 시점에 확인한다**
+- [x] **Step 1: 공식 출처를 현재 시점에 확인한다**
 
 대한민국 외교부의 러시아·우크라이나 여행경보, 러시아 외교부 입국조건, UAE 정부 비자 안내, Visit Saudi eVisa, 고캠핑의 가평 시설 운영 상태를 확인한다. 검색 결과 요약이 아닌 공식 원문을 최종 기준으로 삼는다.
 
-- [ ] **Step 2: 실패하는 공통 계약 테스트를 작성한다**
+- [x] **Step 2: 실패하는 공통 계약 테스트를 작성한다**
 
 ```python
 def test_pages_keep_canonical_measurement_and_ads():
@@ -55,23 +55,23 @@ def test_pages_have_current_answer_sources_and_internal_next_step():
         assert any(a.get("href", "").endswith(".html") or a.get("href", "").startswith("/kor/report/") for a in page.links)
 ```
 
-- [ ] **Step 3: 새 계약이 현재 페이지에서 실패하는지 확인한다**
+- [x] **Step 3: 새 계약이 현재 페이지에서 실패하는지 확인한다**
 
 Run: `pytest -q tests/test_gsc_opportunity_batch_02.py`
 
 Expected: 최신 확인일 또는 명시적인 첫 답변 조건에서 FAIL.
 
-- [ ] **Step 4: 공식 자료와 검색 의도에 맞게 다섯 페이지를 수정한다**
+- [x] **Step 4: 공식 자료와 검색 의도에 맞게 다섯 페이지를 수정한다**
 
 러시아·우크라이나는 여행경보를 첫 판단으로, UAE·사우디는 공식 조회와 승인서 조건을 첫 판단으로 둔다. 가평 시설은 운영 상태가 확인된 곳만 예약 후보로 표현한다. 제목·description·화면 본문·JSON-LD 날짜가 서로 일치하도록 한다.
 
-- [ ] **Step 5: 신규 및 기존 페이지 테스트를 통과시킨다**
+- [x] **Step 5: 신규 및 기존 페이지 테스트를 통과시킨다**
 
 Run: `pytest -q tests/test_gsc_opportunity_batch_02.py tests/test_ukraine_visa_page.py tests/test_gapyeong_camping_page.py tests/test_third_batch_visa_pages.py`
 
 Expected: PASS.
 
-- [ ] **Step 6: 구현을 커밋한다**
+- [x] **Step 6: 구현을 커밋한다**
 
 ```bash
 git add tests/test_gsc_opportunity_batch_02.py tests/test_ukraine_visa_page.py tests/test_gapyeong_camping_page.py kor/report/visa/russia.html kor/report/visa/ukraine.html kor/report/visa/uae.html kor/report/visa/saudiarabia.html kor/report/camp/gapyeong.html
@@ -88,17 +88,17 @@ git commit -m "feat: improve second search opportunity batch"
 - Consumes: Search Console 기준선과 Task 1의 변경 결과
 - Produces: 28일 후 비교 가능한 기록과 원격 `main` 배포
 
-- [ ] **Step 1: 페이지별 기준선·변경·공식 근거를 기록한다**
+- [x] **Step 1: 페이지별 기준선·변경·공식 근거를 기록한다**
 
 사이트 전체 기준선과 다섯 페이지의 클릭·노출·CTR·순위를 표로 저장하고 AdSense 안전장치 유지 여부를 기록한다.
 
-- [ ] **Step 2: 전체 회귀 검사를 실행한다**
+- [x] **Step 2: 전체 회귀 검사를 실행한다**
 
 Run: `pytest -q`
 
 Expected: 전체 PASS, failure와 error 0개.
 
-- [ ] **Step 3: 변경 품질을 검사하고 기록을 커밋한다**
+- [x] **Step 3: 변경 품질을 검사하고 기록을 커밋한다**
 
 Run: `git diff --check && git status --short`
 
