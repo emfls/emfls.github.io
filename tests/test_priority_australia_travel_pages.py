@@ -4,9 +4,9 @@ from tests.test_gapyeong_camping_page import PageParser
 
 ROOT = Path(__file__).resolve().parents[1]
 CASES = {
-    "australia-newcastle.html": ("뉴캐슬", "https://visitnewcastle.com.au/", "2026-08-09"),
+    "australia-newcastle.html": ("뉴캐슬", "https://visitnewcastle.com.au/", "2026-08-12"),
     "australia-adelaide.html": ("애들레이드", "https://southaustralia.com/", "2026-08-12"),
-    "australia-perth.html": ("퍼스", "https://www.westernaustralia.com/", "2026-08-09"),
+    "australia-perth.html": ("퍼스", "https://www.westernaustralia.com/", "2026-08-12"),
 }
 
 class PriorityAustraliaTravelPagesTest(unittest.TestCase):
