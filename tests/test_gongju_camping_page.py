@@ -21,7 +21,7 @@ class GongjuCampingPageTest(unittest.TestCase):
 
     def test_contract(self):
         self.assertEqual(self.page.canonical, "https://emfls.github.io/kor/report/camp/gongju.html")
-        for marker in ("G-QP5Q67GE5B", "ca-pub-8830524482034754", "function filterCamps", "function toggleFAQ", "2026-08-02"):
+        for marker in ("G-QP5Q67GE5B", "ca-pub-8830524482034754", "function filterCamps", "function toggleFAQ", "2026-08-12"):
             self.assertIn(marker, self.html)
         self.assertEqual({item.get("@type") for item in self.page.json_ld}, {"WebPage", "FAQPage"})
         self.assertIn('div[id^="aswift_"]', self.html)
