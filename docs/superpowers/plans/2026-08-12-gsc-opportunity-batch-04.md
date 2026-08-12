@@ -88,17 +88,17 @@ git commit -m "feat: improve fourth search opportunity batch"
 - Consumes: Search Console 기준선, 공식 출처와 Task 1의 변경 결과
 - Produces: 2026-09-09 이후 비교 가능한 기록과 원격 `main` 배포
 
-- [ ] **Step 1: 페이지별 기준선·변경·공식 근거를 기록한다**
+- [x] **Step 1: 페이지별 기준선·변경·공식 근거를 기록한다**
 
 다섯 페이지의 클릭·노출·CTR·평균 순위, 적용 내용, 공식 출처와 AdSense 안전장치 유지 여부를 저장한다.
 
-- [ ] **Step 2: 전체 회귀 검사를 실행한다**
+- [x] **Step 2: 전체 회귀 검사를 실행한다**
 
 Run: `pytest -q`
 
 Expected: 전체 PASS, failure와 error 0개.
 
-- [ ] **Step 3: 변경 품질을 검사하고 기록을 커밋한다**
+- [x] **Step 3: 변경 품질을 검사하고 기록을 커밋한다**
 
 Run: `git diff --check && git status --short`
 

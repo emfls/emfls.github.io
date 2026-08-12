@@ -4,7 +4,7 @@ from tests.test_gapyeong_camping_page import PageParser
 
 ROOT = Path(__file__).resolve().parents[1]
 CASES = {
-    "southsudan.html": ("남수단", "eVisa", "https://www.evisa.gov.ss/", "2026-08-09"),
+    "southsudan.html": ("남수단", "eVisa", "https://www.evisa.gov.ss/", "2026-08-12"),
     "tanzania.html": ("탄자니아", "US$50", "https://visa.immigration.go.tz/", "2026-08-12"),
     "togo.html": ("토고", "최소 5일 전", "https://voyage.gouv.tg/", "2026-08-12"),
 }
