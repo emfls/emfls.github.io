@@ -31,10 +31,10 @@
 - Consumes: HTML 메타데이터, canonical, JSON-LD, 공식 링크, 광고·측정 태그
 - Produces: 검색 질문에 첫 화면에서 답하고 위험한 보장을 피하는 다섯 페이지
 
-- [ ] **Step 1: 실패하는 전용 계약 테스트를 작성한다**
-- [ ] **Step 2: `pytest -q tests/test_gsc_opportunity_batch_06.py`에서 RED를 확인한다**
-- [ ] **Step 3: 다섯 페이지를 공식 근거와 실제 기능에 맞게 수정한다**
-- [ ] **Step 4: 전용 및 관련 기존 테스트를 통과시킨다**
+- [x] **Step 1: 실패하는 전용 계약 테스트를 작성한다**
+- [x] **Step 2: `pytest -q tests/test_gsc_opportunity_batch_06.py`에서 RED를 확인한다**
+- [x] **Step 3: 다섯 페이지를 공식 근거와 실제 기능에 맞게 수정한다**
+- [x] **Step 4: 전용 및 관련 기존 테스트를 통과시킨다**
 - [ ] **Step 5: 구현을 커밋한다**
 
 ### Task 2: 기록, 전체 검증과 배포
