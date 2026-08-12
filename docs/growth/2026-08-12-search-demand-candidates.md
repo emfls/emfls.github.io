@@ -31,6 +31,14 @@
 
 ## 첫 발행 묶음
 
+### 2026-08-12 제작 반영
+
+- `/kor/util/camping-packing-checklist/`
+- `/kor/util/japan-esim-data-calculator/`
+- `/kor/util/japan-travel-packing-checklist/`
+- 1차 측정: 2026-08-26 색인·최초 노출
+- 2차 측정: 2026-09-09 노출·클릭·자연검색 세션
+
 아래 5개만 먼저 제작하고 14~28일 동안 관찰한다.
 
 1. 캠핑 준비물 체크리스트
