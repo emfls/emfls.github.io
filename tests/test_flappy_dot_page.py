@@ -8,7 +8,7 @@ class FlappyDotPageTest(unittest.TestCase):
  def test_search(self):
   combined=self.page.title+self.page.h1+self.page.meta["description"]
   for x in ("Flappy Dot","free browser game","Spacebar","mobile"): self.assertIn(x,combined)
-  for x in ("No download","2026-08-09","Difficulty increases"): self.assertIn(x,self.html)
+  for x in ("No download","2026-08-12","Difficulty increases"): self.assertIn(x,self.html)
  def test_contract(self):
   self.assertEqual(self.page.canonical,"https://emfls.github.io/game/FlappyDot/")
   for x in ("G-QP5Q67GE5B","ca-pub-8830524482034754","function startGame","function flap"): self.assertIn(x,self.html)

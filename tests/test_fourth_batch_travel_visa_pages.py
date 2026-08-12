@@ -18,8 +18,9 @@ class FourthBatchTravelVisaPagesTest(unittest.TestCase):
                 html = (ROOT / path).read_text(encoding="utf-8")
                 page = PageParser(); page.feed(html)
                 self.assertIn(place, page.title + page.h1 + page.meta.get("description", ""))
-                for phrase in (passport, fact, official, "공식", "최근 확인", "2026-08-09"):
+                for phrase in (passport, fact, official, "공식", "최근 확인"):
                     self.assertIn(phrase, html)
+                self.assertRegex(html, r"2026-08-(?:09|12)")
                 self.assertEqual({item.get("@type") for item in page.json_ld}, {"WebPage", "FAQPage"})
                 for phrase in ("G-QP5Q67GE5B", "ca-pub-8830524482034754", 'div[id^="aswift_"]'):
                     self.assertIn(phrase, html)
