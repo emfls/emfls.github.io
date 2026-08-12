@@ -24,7 +24,7 @@ class AndongCampingPageTest(unittest.TestCase):
 
     def test_keeps_seo_and_measurement_contract(self):
         self.assertEqual(self.page.canonical, "https://emfls.github.io/kor/report/camp/andong.html")
-        for marker in ("G-QP5Q67GE5B", "ca-pub-8830524482034754", "2026-08-02"):
+        for marker in ("G-QP5Q67GE5B", "ca-pub-8830524482034754", "2026-08-12"):
             self.assertIn(marker, self.html)
 
     def test_uses_official_sources_and_current_status(self):
