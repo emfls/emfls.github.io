@@ -35,7 +35,7 @@
 - [x] **Step 2: `pytest -q tests/test_gsc_opportunity_batch_06.py`에서 RED를 확인한다**
 - [x] **Step 3: 다섯 페이지를 공식 근거와 실제 기능에 맞게 수정한다**
 - [x] **Step 4: 전용 및 관련 기존 테스트를 통과시킨다**
-- [ ] **Step 5: 구현을 커밋한다**
+- [x] **Step 5: 구현을 커밋한다**
 
 ### Task 2: 기록, 전체 검증과 배포
 
@@ -47,7 +47,7 @@
 - Consumes: 기준선, 공식 근거, Task 1 결과
 - Produces: 재측정 기록과 원격 `main` 배포
 
-- [ ] **Step 1: 기준선·변경·AdSense 안전장치를 기록한다**
-- [ ] **Step 2: 전체 `pytest -q`와 `git diff --check`를 통과시킨다**
+- [x] **Step 1: 기준선·변경·AdSense 안전장치를 기록한다**
+- [x] **Step 2: 전체 `pytest -q`와 `git diff --check`를 통과시킨다**
 - [ ] **Step 3: 기록을 커밋하고 `main`에 푸시한다**
 - [ ] **Step 4: 로컬·원격 해시 일치와 깨끗한 작업 트리를 확인한다**
