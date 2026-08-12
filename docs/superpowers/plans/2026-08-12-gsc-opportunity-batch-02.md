@@ -107,7 +107,7 @@ git add docs/growth/2026-08-12-search-opportunity-batch-02.md docs/superpowers/p
 git commit -m "docs: record second search opportunity batch"
 ```
 
-- [ ] **Step 4: 원격 main에 배포하고 동기화를 검증한다**
+- [x] **Step 4: 원격 main에 배포하고 동기화를 검증한다**
 
 Run: `git push origin main && git fetch origin main && git rev-parse HEAD && git rev-parse origin/main && git status --short`
 
