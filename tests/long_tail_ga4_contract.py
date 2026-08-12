@@ -10,7 +10,6 @@ def assert_manifest(test, pages, marker, expected_len=100):
     for relative, schema_type, category, hub in pages:
         source = (ROOT / relative).read_text(encoding="utf-8")
         test.assertEqual(source.count(marker), 1, relative)
-        test.assertIn('"dateModified":"2026-08-11"', source, relative)
         test.assertIn(f'"@type":"{schema_type}"', source, relative)
         test.assertIn(f'data-trust-category="{category}"', source, relative)
         test.assertIn("max-width:100%", source, relative)
@@ -20,4 +19,6 @@ def assert_manifest(test, pages, marker, expected_len=100):
         start = source.index(f"<!-- {marker} -->")
         begin = source.index('<script type="application/ld+json">', start) + len('<script type="application/ld+json">')
         end = source.index("</script>", begin)
-        test.assertEqual(json.loads(source[begin:end])["@type"], schema_type, relative)
+        payload = json.loads(source[begin:end])
+        test.assertEqual(payload["@type"], schema_type, relative)
+        test.assertGreaterEqual(payload["dateModified"], "2026-08-11", relative)
