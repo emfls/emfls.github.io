@@ -7,7 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CASES = {
     "game/AeroJump/index.html": ("Aero Jump", "platform", "arrow keys", "https://emfls.github.io/game/AeroJump/", "VideoGame", "2026-08-12", ("gameCanvas", "function initGame", "function spawnRow")),
     "game/FlagQuest/index.html": ("Flag Quest", "flag quiz", "4 choices", "https://emfls.github.io/game/FlagQuest/", "VideoGame", "2026-08-09", ("function loadQuestion", "function checkAnswer", "function restartGame")),
-    "jp/util/color-extractor/index.html": ("カラー抽出", "HEX", "無料", "https://emfls.github.io/jp/util/color-extractor/", "WebApplication", "2026-08-09", ("FileReader", "ColorThief", "rgbToHex", "rgbToHsl")),
+    "jp/util/color-extractor/index.html": ("カラー抽出", "HEX", "無料", "https://emfls.github.io/jp/util/color-extractor/", "WebApplication", "2026-08-13", ("FileReader", "ColorThief", "rgbToHex", "rgbToHsl")),
 }
 
 class FourthBatchGameToolPagesTest(unittest.TestCase):
