@@ -14,7 +14,7 @@ class BusanCampingPageTest(unittest.TestCase):
         cls.page = PageParser(); cls.page.feed(cls.html)
 
     def test_answers_booking_intent(self):
-        for phrase in ("부산 캠핑장", "예약", "공식"):
+        for phrase in ("부산 노지캠핑", "예약", "공식"):
             self.assertIn(phrase, self.page.title + self.page.h1 + self.page.meta["description"])
         for name in ("삼락", "화명", "부산항", "영도"):
             self.assertIn(name, self.html)
@@ -27,7 +27,7 @@ class BusanCampingPageTest(unittest.TestCase):
     def test_uses_current_official_sources(self):
         official = [a for a in self.page.links if "busan.go.kr" in a.get("href", "")]
         self.assertGreaterEqual(len(official), 6)
-        self.assertIn("2026-08-12", self.html)
+        self.assertIn("2026-08-13", self.html)
 
     def test_structured_data_and_mobile_ads_are_safe(self):
         self.assertEqual({x.get("@type") for x in self.page.json_ld}, {"WebPage", "FAQPage"})
