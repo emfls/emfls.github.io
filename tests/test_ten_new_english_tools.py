@@ -34,7 +34,7 @@ class TenNewEnglishToolsTest(unittest.TestCase):
                 self.assertIn("G-QP5Q67GE5B", html)
                 self.assertIn("ca-pub-8830524482034754", html)
                 self.assertIn('href="../new-tools.css"', html)
-                expected_date = "2026-08-13" if slug in {"url-encoder", "unix-timestamp"} else "2026-08-09"
+                expected_date = "2026-08-13" if slug in {"url-encoder", "unix-timestamp", "date-difference"} else "2026-08-09"
                 self.assertIn(f"Reviewed: {expected_date}", html)
                 self.assertIn("processed in your browser", html)
                 self.assertNotRegex(html, r"\.innerHTML\s*=")
