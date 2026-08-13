@@ -34,14 +34,15 @@ class TenNewEnglishToolsTest(unittest.TestCase):
                 self.assertIn("G-QP5Q67GE5B", html)
                 self.assertIn("ca-pub-8830524482034754", html)
                 self.assertIn('href="../new-tools.css"', html)
-                self.assertIn("Reviewed: 2026-08-09", html)
+                expected_date = "2026-08-13" if slug == "url-encoder" else "2026-08-09"
+                self.assertIn(f"Reviewed: {expected_date}", html)
                 self.assertIn("processed in your browser", html)
                 self.assertNotRegex(html, r"\.innerHTML\s*=")
                 blocks = re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)
                 schemas = [json.loads(block) for block in blocks]
                 self.assertIn("WebApplication", {x.get("@type") for x in schemas})
                 self.assertIn("FAQPage", {x.get("@type") for x in schemas})
-                self.assertTrue(all(x.get("dateModified") == "2026-08-09" for x in schemas))
+                self.assertTrue(all(x.get("dateModified") == expected_date for x in schemas))
 
     def test_hub_and_sitemap_link_every_tool(self):
         hub = (ROOT / "util" / "index.html").read_text(encoding="utf-8")
