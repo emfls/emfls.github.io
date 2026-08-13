@@ -41,7 +41,7 @@ class SearchOpportunityBatch02Test(unittest.TestCase):
         for relative_path in PAGES:
             with self.subTest(page=relative_path):
                 html, _ = parse(relative_path)
-                expected_date = "2026-08-13" if relative_path in {"kor/report/camp/gapyeong.html", "kor/report/visa/uae.html"} else "2026-08-12"
+                expected_date = "2026-08-13" if relative_path in {"kor/report/camp/gapyeong.html", "kor/report/visa/uae.html", "kor/report/visa/ukraine.html"} else "2026-08-12"
                 self.assertIn(expected_date, html)
                 self.assertTrue(any(label in html for label in ("먼저 답", "빠른 답", "핵심 답변")))
 
