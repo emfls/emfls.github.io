@@ -66,10 +66,10 @@ class GapyeongCampingPageTest(unittest.TestCase):
         cls.page.feed(cls.html)
 
     def test_search_result_answers_registered_campground_intent(self):
-        self.assertIn("가평 캠핑장", self.page.title)
+        self.assertIn("가평 노지계곡", self.page.title)
         self.assertIn("자라섬", self.page.title)
         self.assertIn("예약", self.page.title)
-        self.assertIn("가평 캠핑장", self.page.h1)
+        self.assertIn("가평 노지계곡", self.page.h1)
         self.assertIn("공식", self.page.meta["description"])
 
     def test_keeps_canonical_and_measurement_tags(self):
@@ -81,7 +81,7 @@ class GapyeongCampingPageTest(unittest.TestCase):
         self.assertIn("ca-pub-8830524482034754", self.html)
 
     def test_gives_current_source_backed_information(self):
-        self.assertIn("2026-08-12", self.html)
+        self.assertIn("2026-08-13", self.html)
         official_links = [
             link for link in self.page.links
             if "gocamping.or.kr" in link.get("href", "")
