@@ -39,7 +39,7 @@ class SearchOpportunityBatch05Test(unittest.TestCase):
         for path, domain in domains.items():
             with self.subTest(path=path):
                 html, page = load(path)
-                expected_date = "2026-08-13" if path == "kor/report/visa/nigeria.html" else "2026-08-12"
+                expected_date = "2026-08-13" if path in {"kor/report/visa/nigeria.html", "kor/report/travel/australia-newcastle.html"} else "2026-08-12"
                 self.assertIn(expected_date, html)
                 self.assertIn("ca-pub-8830524482034754", html)
                 self.assertTrue(any(domain in a.get("href", "") for a in page.links))
