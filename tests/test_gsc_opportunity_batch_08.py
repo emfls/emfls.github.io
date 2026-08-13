@@ -17,7 +17,7 @@ PAGES = {
         "https://emfls.github.io/kor/report/visa/northmacedonia.html",
     ),
     "kor/report/visa/senegal.html": (
-        "세네갈 비자 2026: 한국 여권 3개월 미만 무비자·황열 조건",
+        "세네갈 비자 필요할까? 한국 여권 3개월 미만 무비자·황열",
         "https://emfls.github.io/kor/report/visa/senegal.html",
     ),
     "kor/report/visa/sierra-leone.html": (
@@ -34,7 +34,8 @@ class GscOpportunityBatch08Test(unittest.TestCase):
                 source = (ROOT / relative).read_text(encoding="utf-8")
                 self.assertIn(f"<title>{title}</title>", source)
                 self.assertIn(f'href="{canonical}"', source)
-                self.assertIn("2026-08-12", source)
+                expected_date = "2026-08-13" if relative == "kor/report/visa/senegal.html" else "2026-08-12"
+                self.assertIn(expected_date, source)
                 self.assertIn("G-QP5Q67GE5B", source)
                 self.assertIn("ca-pub-8830524482034754", source)
 
