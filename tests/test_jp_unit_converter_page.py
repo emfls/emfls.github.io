@@ -8,7 +8,7 @@ class JapaneseUnitConverterPageTest(unittest.TestCase):
  def test_intent(self):
   combined=self.page.title+self.page.h1+self.page.meta["description"]
   for x in ("単位変換","長さ","重さ","温度"): self.assertIn(x,combined)
-  for x in ("速度","体積","面積","2026-08-09"): self.assertIn(x,self.html)
+  for x in ("速度","体積","面積","2026-08-13"): self.assertIn(x,self.html)
  def test_contract(self):
   self.assertEqual(self.page.canonical,"https://emfls.github.io/jp/util/unitconverter/")
   for x in ("G-QP5Q67GE5B","ca-pub-8830524482034754","function convert","function updateResult"): self.assertIn(x,self.html)
