@@ -27,7 +27,7 @@ class NigeriaVisaPageTest(unittest.TestCase):
     def test_uses_current_official_sources(self):
         official = [a for a in self.page.links if any(d in a.get("href", "") for d in ("immigration.gov.ng", "nigerianembassy.or.kr", "health.gov.ng", "who.int"))]
         self.assertGreaterEqual(len(official), 6)
-        self.assertIn("2026-08-12", self.html)
+        self.assertIn("2026-08-13", self.html)
 
     def test_structured_data_and_mobile_ads_are_safe(self):
         self.assertEqual({x.get("@type") for x in self.page.json_ld}, {"WebPage", "FAQPage"})
