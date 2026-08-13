@@ -41,7 +41,7 @@ class SearchOpportunityBatchTest(unittest.TestCase):
         for relative_path in PAGES:
             with self.subTest(page=relative_path):
                 html, page = parse(relative_path)
-                expected_date = "2026-08-13" if relative_path in {"kor/report/camp/busan.html", "kor/report/visa/qatar.html", "kor/report/visa/norway.html"} else "2026-08-12"
+                expected_date = "2026-08-13" if relative_path in {"kor/report/camp/busan.html", "kor/report/camp/andong.html", "kor/report/visa/qatar.html", "kor/report/visa/norway.html"} else "2026-08-12"
                 self.assertIn(expected_date, html)
                 self.assertTrue(
                     any(label in html for label in ("먼저 답", "빠른 답", "핵심 답변"))
@@ -77,7 +77,7 @@ class SearchOpportunityBatchTest(unittest.TestCase):
     def test_andong_marks_danho_status_for_booking_decisions(self):
         html, _ = parse("kor/report/camp/andong.html")
         self.assertIn("단호샌드파크", html)
-        self.assertIn("단호샌드파크는 현재 휴업 중", html)
+        self.assertIn("두 공식 정보가 일치하지 않습니다", html)
 
 
 if __name__ == "__main__":

@@ -24,13 +24,13 @@ class AndongCampingPageTest(unittest.TestCase):
 
     def test_keeps_seo_and_measurement_contract(self):
         self.assertEqual(self.page.canonical, "https://emfls.github.io/kor/report/camp/andong.html")
-        for marker in ("G-QP5Q67GE5B", "ca-pub-8830524482034754", "2026-08-12"):
+        for marker in ("G-QP5Q67GE5B", "ca-pub-8830524482034754", "2026-08-13"):
             self.assertIn(marker, self.html)
 
     def test_uses_official_sources_and_current_status(self):
         official = [a for a in self.page.links if "gocamping.or.kr" in a.get("href", "") or "andong.go.kr" in a.get("href", "")]
         self.assertGreaterEqual(len(official), 5)
-        self.assertIn("현재 휴업 중", self.html)
+        self.assertIn("두 공식 정보가 일치하지 않습니다", self.html)
 
     def test_structured_data_and_mobile_contract(self):
         types = {block.get("@type") for block in self.page.json_ld}
