@@ -20,7 +20,7 @@ class SeventeenthGa4PriorityBatchTest(unittest.TestCase):
         for relative,(schema,limit) in PAGES.items():
             with self.subTest(relative=relative):
                 html=(ROOT/relative).read_text(encoding="utf-8"); compact="".join(html.split())
-                expected_date = "2026-08-12" if relative == "kor/report/visa/norway.html" else "2026-08-11"
+                expected_date = "2026-08-13" if relative == "kor/report/visa/norway.html" else "2026-08-11"
                 self.assertIn(expected_date,html); self.assertIn(f'"@type":"{schema}"',compact)
                 self.assertIn(limit.lower(),html.lower()); self.assertIn("max-width:100%",compact)
                 self.assertTrue("관련" in html or "Другие" in html)
