@@ -27,3 +27,11 @@
 - 관련 테스트 5개 통과
 - 배포 후 실제 네 가지 변환 버튼과 모바일 표시 확인
 - Search Console 재색인 요청 후 7~14일간 `encodeurl`, `url encode`, `encodeURIComponent online` 노출·클릭 확인
+
+## 배포·색인 결과
+
+- GitHub Pages 배포 성공: 커밋 `3be9b59890`
+- 공개 페이지에서 새 제목과 네 가지 변환 버튼 확인
+- 실제 전체 URL 입력 결과 확인: `https://example.com/search?q=hello%20world`
+- Search Console 기존 상태: `URL이 Google에 등록되어 있음`
+- 변경본 수동 색인 요청 완료: 우선순위 크롤링 대기열 추가
