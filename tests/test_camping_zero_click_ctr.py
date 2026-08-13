@@ -18,7 +18,7 @@ def test_gapyeong_page_matches_valley_search_without_promising_wild_camping():
 def test_cheongju_page_matches_car_camping_search_without_permission_claims():
     html = CHEONGJU.read_text(encoding="utf-8")
 
-    assert "청주 차박·노지캠핑 가능할까?" in html
+    assert "청주 차박 장소 2026" in html
     assert "주차 가능이 차박 허용을 뜻하지 않습니다" in html
     assert "문암생태공원 캠핑장" in html
     assert "/kor/util/camping-packing-checklist/" in html

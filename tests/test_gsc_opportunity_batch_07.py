@@ -4,7 +4,7 @@ from tests.test_gapyeong_camping_page import PageParser
 
 ROOT = Path(__file__).resolve().parents[1]
 PAGES = {
-    "kor/report/camp/cheongju.html": ("https://emfls.github.io/kor/report/camp/cheongju.html", "청주 차박·노지캠핑 가능할까? 문암생태공원 예약·규정"),
+    "kor/report/camp/cheongju.html": ("https://emfls.github.io/kor/report/camp/cheongju.html", "청주 차박 장소 2026 | 문암 예약·오창 8/18~11/6 휴장"),
     "kor/report/camp/gimpo.html": ("https://emfls.github.io/kor/report/camp/gimpo.html", "김포 노지캠핑 가이드 | 전류리포구·한강 주변 확인사항"),
     "kor/report/camp/damyang.html": ("https://emfls.github.io/kor/report/camp/damyang.html", "담양 노지캠핑 가이드 | 담양호·하천변 이용 전 확인사항"),
     "kor/report/visa/romania.html": ("https://emfls.github.io/kor/report/visa/romania.html", "루마니아 비자 필요할까? 한국인 90일 무비자·솅겐 계산"),
