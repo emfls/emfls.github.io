@@ -23,7 +23,7 @@ class SearchOpportunityBatch06Test(unittest.TestCase):
                 html, page = load(path)
                 self.assertEqual(page.canonical, canonical)
                 self.assertIn("G-QP5Q67GE5B", html)
-                expected_date = "2026-08-13" if path in ("kor/report/visa/singapore.html", "kor/report/visa/serbia.html", "kor/report/visa/philippines.html", "game/MBTI/index.html") else "2026-08-12"
+                expected_date = "2026-08-13"
                 self.assertIn(expected_date, html)
 
     def test_mbti_is_transparent_and_ad_free(self):

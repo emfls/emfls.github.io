@@ -16,7 +16,7 @@ class MabinogiMobileJobsPageTest(unittest.TestCase):
         combined = self.page.title + self.page.h1 + self.page.meta["description"]
         for phrase in ("마비노기 모바일", "직업", "초보", "클래스"):
             self.assertIn(phrase, combined)
-        for phrase in ("2026-08-12", "견습 클래스", "착용한 무기", "주 능력치", "공식"):
+        for phrase in ("2026-08-13", "견습 클래스", "착용한 무기", "주 능력치", "공식"):
             self.assertIn(phrase, self.html)
         self.assertEqual({item.get("@type") for item in self.page.json_ld}, {"WebPage", "FAQPage"})
 
