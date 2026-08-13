@@ -16,7 +16,7 @@ class MbtiGamePageTest(unittest.TestCase):
         combined = self.page.title + self.page.h1 + self.page.meta["description"]
         for phrase in ("Free", "MBTI", "16-question", "personality test"):
             self.assertIn(phrase.lower(), combined.lower())
-        for phrase in ("2026-08-12", "entertainment", "No sign-up", "four preference pairs"):
+        for phrase in ("2026-08-13", "entertainment", "No email or sign-up", "four preference pairs"):
             self.assertIn(phrase, self.html)
         self.assertEqual({item.get("@type") for item in self.page.json_ld}, {"WebApplication", "FAQPage"})
 
