@@ -26,6 +26,9 @@
   }
 
   function bind() {
+    var analytics = document.createElement('script');
+    analytics.src = '/kor/util/tool-analytics.js';
+    document.head.appendChild(analytics);
     var form = document.getElementById('permission-checker');
     var output = document.getElementById('permission-result');
     if (!form || !output) return;
@@ -41,6 +44,11 @@
       output.innerHTML = '<strong>' + result.status + '</strong><br>' + result.message;
       output.dataset.status = result.status;
       output.focus();
+      if (typeof root.trackToolCompletion === 'function') {
+        var resultType = result.status === '공식 허용 확인' ? 'allowed' :
+          result.status === '이용하지 않기' ? 'do_not_use' : 'check_more';
+        root.trackToolCompletion('car_camping_permission', resultType);
+      }
     });
   }
 

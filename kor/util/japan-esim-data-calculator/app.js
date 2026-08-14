@@ -11,4 +11,14 @@
   }
   root.estimateEsimUsage = estimateEsimUsage;
   if (typeof module !== 'undefined') module.exports = { estimateEsimUsage };
+  if (typeof document !== 'undefined') {
+    const analytics = document.createElement('script');
+    analytics.src = '/kor/util/tool-analytics.js';
+    document.head.appendChild(analytics);
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('calculate')?.addEventListener('click', () => {
+        if (typeof root.trackToolCompletion === 'function') root.trackToolCompletion('japan_esim', 'calculated');
+      });
+    });
+  }
 })(typeof window !== 'undefined' ? window : globalThis);

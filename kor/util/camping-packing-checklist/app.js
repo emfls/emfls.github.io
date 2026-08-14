@@ -19,4 +19,14 @@
   }
   root.buildCampingList = buildCampingList;
   if (typeof module !== 'undefined') module.exports = { buildCampingList };
+  if (typeof document !== 'undefined') {
+    const analytics = document.createElement('script');
+    analytics.src = '/kor/util/tool-analytics.js';
+    document.head.appendChild(analytics);
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('make')?.addEventListener('click', () => {
+        if (typeof root.trackToolCompletion === 'function') root.trackToolCompletion('camping_packing', 'generated');
+      });
+    });
+  }
 })(typeof window !== 'undefined' ? window : globalThis);

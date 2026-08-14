@@ -17,4 +17,14 @@
   }
   root.buildJapanPackingList = buildJapanPackingList;
   if (typeof module !== 'undefined') module.exports = { buildJapanPackingList };
+  if (typeof document !== 'undefined') {
+    const analytics = document.createElement('script');
+    analytics.src = '/kor/util/tool-analytics.js';
+    document.head.appendChild(analytics);
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('make')?.addEventListener('click', () => {
+        if (typeof root.trackToolCompletion === 'function') root.trackToolCompletion('japan_packing', 'generated');
+      });
+    });
+  }
 })(typeof window !== 'undefined' ? window : globalThis);
