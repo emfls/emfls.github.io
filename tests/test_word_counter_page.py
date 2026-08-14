@@ -16,4 +16,8 @@ class WordCounterPageTest(unittest.TestCase):
  def test_privacy_is_precise(self):
   self.assertIn("Your typed text is processed locally",self.html); self.assertIn("analytics and advertising scripts",self.html)
   self.assertNotIn("Nothing is sent or stored anywhere",self.html)
+ def test_ad_is_separated_from_text_input(self):
+  self.assertIn('class="ad-wrap" aria-label="Advertisement"',self.html)
+  self.assertIn('<div class="ad-label">Advertisement</div>',self.html)
+  self.assertIn('margin:80px 0 20px',self.html)
 if __name__=="__main__": unittest.main()
