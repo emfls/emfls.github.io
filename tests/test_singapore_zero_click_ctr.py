@@ -7,7 +7,8 @@ PAGE = Path("kor/report/visa/singapore.html")
 def test_singapore_page_matches_tourist_and_work_pass_search_intent():
     html = PAGE.read_text(encoding="utf-8")
 
-    assert "한국인 무비자·취업비자 종류" in html
+    assert "싱가포르 비자 2026" in html
+    assert "무비자·ONE Pass 해외 네트워크 전문가" in html
     assert "싱가포르 취업비자 종류" in html
     assert "Employment Pass" in html
     assert "S Pass" in html
