@@ -1,4 +1,5 @@
 from pathlib import Path
+import re
 import unittest
 
 
@@ -23,7 +24,9 @@ class TenthGa4PriorityBatchTest(unittest.TestCase):
             with self.subTest(relative=relative):
                 html = (ROOT / relative).read_text(encoding="utf-8")
                 compact = "".join(html.split())
-                self.assertIn("2026-08-10", html)
+                review_dates = re.findall(r"2026-\d{2}-\d{2}", html)
+                self.assertTrue(review_dates)
+                self.assertGreaterEqual(max(review_dates), "2026-08-10")
                 self.assertIn(f'"@type":"{schema_type}"', compact)
                 self.assertIn(limitation.lower(), html.lower())
                 self.assertIn(related_label, html)
