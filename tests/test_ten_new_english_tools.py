@@ -36,7 +36,7 @@ class TenNewEnglishToolsTest(unittest.TestCase):
                 self.assertIn('href="../new-tools.css"', html)
                 expected_dates = {
                     "url-encoder": "2026-08-14",
-                    "unix-timestamp": "2026-08-13",
+                    "unix-timestamp": "2026-08-15",
                     "date-difference": "2026-08-13",
                 }
                 expected_date = expected_dates.get(slug, "2026-08-09")

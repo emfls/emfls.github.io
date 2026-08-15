@@ -15,10 +15,10 @@ class UnixTimestampZeroClickTest(unittest.TestCase):
         cls.page.feed(cls.html)
 
     def test_search_snippet_matches_milliseconds_intent(self):
-        self.assertIn("Milliseconds to Date Converter", self.page.title)
-        self.assertIn("Date to Milliseconds", self.page.title)
-        self.assertIn("Milliseconds to Date & Unix Timestamp Converter", self.page.h1)
-        self.assertIn("Quick answer: paste a 13-digit millisecond timestamp", self.html)
+        self.assertEqual("Date to Milliseconds Converter | Milliseconds to Date", self.page.title)
+        self.assertEqual("Date to Milliseconds & Milliseconds to Date Converter", self.page.h1)
+        self.assertIn("Quick answer: choose a local date and time", self.html)
+        self.assertLess(self.html.index('id="date"'), self.html.index('id="stamp"'))
 
     def test_indexable_examples_and_internal_routes_exist(self):
         for phrase in (
@@ -31,7 +31,7 @@ class UnixTimestampZeroClickTest(unittest.TestCase):
             self.assertIn(phrase, self.html)
 
     def test_contract_and_privacy_stay_current(self):
-        self.assertIn('dateModified":"2026-08-13"', self.html)
+        self.assertIn('dateModified":"2026-08-15"', self.html)
         self.assertIn("function convertTimestamp", self.html)
         self.assertIn("processed in your browser", self.html)
         self.assertIn("Analytics and advertising", self.html)
