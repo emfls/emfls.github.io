@@ -4,9 +4,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PAGE = ROOT / "jp/report/travel/singapore-visa.html"
 TRAVEL_PAGES = [
-    ROOT / "jp/report/travel/singapore-marinabay.html",
-    ROOT / "jp/report/travel/singapore-orchard.html",
-    ROOT / "jp/report/travel/singapore-woodlands.html",
+    page
+    for page in sorted((ROOT / "jp/report/travel").glob("singapore-*.html"))
+    if page.name != "singapore-visa.html"
 ]
 
 
@@ -35,8 +35,11 @@ def test_page_uses_official_sources_and_policy_safe_language():
 
 
 def test_japanese_travel_pages_and_sitemap_discover_the_new_page():
+    assert len(TRAVEL_PAGES) == 25
     for page in TRAVEL_PAGES:
-        assert 'href="/jp/report/travel/singapore-visa.html"' in page.read_text(encoding="utf-8")
+        html = page.read_text(encoding="utf-8")
+        assert '<html lang="ja">' in html
+        assert html.count('href="/jp/report/travel/singapore-visa.html"') == 1
 
     sitemap = (ROOT / "jp/report/travel/sitemap.xml").read_text(encoding="utf-8")
     assert "https://emfls.github.io/jp/report/travel/singapore-visa.html" in sitemap
