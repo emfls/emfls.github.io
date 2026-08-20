@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Gemini 출력(PDF 또는 텍스트)을 읽어 emfls.com 컬럼 HTML 페이지 생성
+Gemini 출력(PDF 또는 텍스트)을 읽어 emfls.github.io 컬럼 HTML 페이지 생성
 """
 
 import os, re, json
@@ -17,7 +17,7 @@ OUT_DIR    = os.path.join(SCRIPT_DIR, "kor", "column")
 
 GA_ID    = "G-QP5Q67GE5B"
 ADSENSE  = "ca-pub-8830524482034754"
-SITE_URL = "https://emfls.com"
+SITE_URL = "https://emfls.github.io"
 
 def read_content():
     """PDF 또는 텍스트에서 본문 추출"""
@@ -236,7 +236,7 @@ def main():
     with open(out_path, "w", encoding="utf-8") as f:
         f.write(html)
 
-    page_url = f"https://emfls.com/kor/column/{slug}.html"
+    page_url = f"{SITE_URL}/kor/column/{slug}.html"
     open(RESULT_FILE, "w").write(page_url)
 
     print(f"저장: {out_path}")

@@ -26,7 +26,7 @@ TELEGRAM_CHAT_ID = ""
 REPO_DIR = os.path.dirname(os.path.abspath(__file__))
 GA_ID    = "G-QP5Q67GE5B"
 ADSENSE  = "ca-pub-8830524482034754"
-SITE_URL = "https://emfls.com"
+SITE_URL = "https://emfls.github.io"
 
 GIT_REMOTE = "https://github.com/emfls/emfls.github.io.git"
 GIT_WORK   = "/tmp/repo_auto"   # config.lock 없는 별도 클론 디렉토리
