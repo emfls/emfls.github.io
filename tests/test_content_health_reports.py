@@ -29,12 +29,15 @@ class ContentHealthReportTests(unittest.TestCase):
             root = Path(tmp)
             (root / "index.html").write_text(
                 '<a href="/exists/">ok</a><a href="/page.html#part">ok2</a>'
+                '<a href="/">home</a><a href="/exists/index.html">explicit index</a>'
+                '<a href="/page">extensionless</a><a href="/feed.xml">non-html file</a>'
                 '<a href="missing.html">bad</a><a href="https://example.com">external</a>',
                 encoding="utf-8",
             )
             (root / "exists").mkdir()
             (root / "exists/index.html").write_text("ok", encoding="utf-8")
             (root / "page.html").write_text("ok", encoding="utf-8")
+            (root / "feed.xml").write_text("ok", encoding="utf-8")
 
             broken = find_broken_internal_links(root)
 

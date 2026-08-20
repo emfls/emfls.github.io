@@ -115,23 +115,29 @@ def _source_url(path, root):
     return "/" + relative
 
 
-def _target_exists(root, url_path):
-    clean = unquote(url_path).lstrip("/")
-    candidate = root / clean
-    possibilities = [candidate]
-    if url_path.endswith("/"):
-        possibilities.append(candidate / "index.html")
-    elif not candidate.suffix:
-        possibilities.extend((candidate.with_suffix(".html"), candidate / "index.html"))
-    return any(path.is_file() for path in possibilities)
+def _target_exists(public_urls, url_path):
+    path = unquote(url_path) or "/"
+    possibilities = {path}
+    if not path.endswith("/") and not Path(path).suffix:
+        possibilities.update((path + ".html", path + "/"))
+    return bool(possibilities & public_urls)
 
 
 def find_broken_internal_links(root):
     root = Path(root).resolve()
     broken = set()
-    for path in sorted(root.rglob("*.html")):
-        if any(part in {".git", ".venv", "node_modules"} for part in path.parts):
-            continue
+    public_files = [
+        path for path in sorted(root.rglob("*"))
+        if path.is_file()
+        if not any(part in {".git", ".venv", "node_modules"} for part in path.parts)
+    ]
+    html_paths = [path for path in public_files if path.suffix.lower() == ".html"]
+    public_urls = {
+        "/" + path.relative_to(root).as_posix()
+        for path in public_files
+    }
+    public_urls.update(_source_url(path, root) for path in html_paths)
+    for path in html_paths:
         try:
             html = path.read_text(encoding="utf-8")
         except (OSError, UnicodeError):
@@ -146,7 +152,7 @@ def find_broken_internal_links(root):
             target = urlparse(urljoin(base, href))
             if target.scheme not in {"http", "https"} or target.netloc.lower() not in PUBLIC_HOSTS:
                 continue
-            if not _target_exists(root, target.path):
+            if not _target_exists(public_urls, target.path):
                 broken.add((source, target.path or "/"))
     return [{"source": source, "target": target} for source, target in sorted(broken)]
 
