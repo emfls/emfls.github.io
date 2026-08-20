@@ -22,7 +22,9 @@ class FifthBatchPagesTest(unittest.TestCase):
     h=(ROOT/path).read_text(); p=PageParser(); p.feed(h)
     self.assertIn(place,p.title+p.h1+p.meta.get("description",""))
     for x in ("한국 여권",fact,official,"공식","최근 확인","2026-08-09"): self.assertIn(x,h)
-    self.assertEqual({x.get("@type") for x in p.json_ld},{"WebPage","FAQPage"})
+    expected={"WebPage","FAQPage"}
+    if path=="kor/report/travel/austria-bad-voeslau.html": expected|={"Article","BreadcrumbList"}
+    self.assertEqual({x.get("@type") for x in p.json_ld},expected)
     for x in ("G-QP5Q67GE5B","ca-pub-8830524482034754",'div[id^="aswift_"]'): self.assertIn(x,h)
  def test_apps(self):
   for path,(name,fn,typ) in APPS.items():
@@ -30,7 +32,9 @@ class FifthBatchPagesTest(unittest.TestCase):
     h=(ROOT/path).read_text(); p=PageParser(); p.feed(h)
     self.assertIn(name.lower(),(p.title+p.h1+p.meta.get("description","")).lower())
     for x in (fn,"2026-08-09","privacy"): self.assertIn(x.lower(),h.lower())
-    self.assertEqual({x.get("@type") for x in p.json_ld},{typ,"FAQPage"})
+    expected={typ,"FAQPage"}
+    if path in {"jp/util/passwordgen/index.html","ae/game/2048/index.html"}: expected.add("BreadcrumbList")
+    self.assertEqual({x.get("@type") for x in p.json_ld},expected)
     for x in ("G-QP5Q67GE5B","ca-pub-8830524482034754",'div[id^="aswift_"]'): self.assertIn(x,h)
  def test_visa_index(self):
   h=(ROOT/"kor/report/visa/index.html").read_text(); p=PageParser(); p.feed(h)

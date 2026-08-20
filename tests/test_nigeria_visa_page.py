@@ -30,7 +30,7 @@ class NigeriaVisaPageTest(unittest.TestCase):
         self.assertIn("2026-08-13", self.html)
 
     def test_structured_data_and_mobile_ads_are_safe(self):
-        self.assertEqual({x.get("@type") for x in self.page.json_ld}, {"WebPage", "FAQPage"})
+        self.assertEqual({x.get("@type") for x in self.page.json_ld}, {"WebPage", "FAQPage", "Article", "BreadcrumbList"})
         self.assertIn('div[id^="aswift_"]', self.html)
         self.assertIn("max-width:100% !important", self.html)
 

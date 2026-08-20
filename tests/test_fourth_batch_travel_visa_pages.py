@@ -21,7 +21,10 @@ class FourthBatchTravelVisaPagesTest(unittest.TestCase):
                 for phrase in (passport, fact, official, "공식", "최근 확인"):
                     self.assertIn(phrase, html)
                 self.assertRegex(html, r"2026-08-(?:09|12)")
-                self.assertEqual({item.get("@type") for item in page.json_ld}, {"WebPage", "FAQPage"})
+                expected = {"WebPage", "FAQPage"}
+                if path in {"kor/report/visa/san-marino.html", "kor/report/visa/niger.html", "kor/report/travel/austria-ansfelden.html"}:
+                    expected |= {"Article", "BreadcrumbList"}
+                self.assertEqual({item.get("@type") for item in page.json_ld}, expected)
                 for phrase in ("G-QP5Q67GE5B", "ca-pub-8830524482034754", 'div[id^="aswift_"]'):
                     self.assertIn(phrase, html)
 

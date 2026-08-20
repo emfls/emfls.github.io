@@ -21,7 +21,7 @@ class RwandaVisaPageTest(unittest.TestCase):
         self.assertEqual(self.page.canonical, "https://emfls.github.io/kor/report/visa/rwanda.html")
         for marker in ("G-QP5Q67GE5B", "ca-pub-8830524482034754", "function filterVisas", "function toggleFAQ", "2026-08-13"):
             self.assertIn(marker, self.html)
-        self.assertEqual({x.get("@type") for x in self.page.json_ld}, {"WebPage", "FAQPage"})
+        self.assertEqual({x.get("@type") for x in self.page.json_ld}, {"WebPage", "FAQPage", "Article", "BreadcrumbList"})
         self.assertIn('div[id^="aswift_"]', self.html)
 
     def test_official_sources(self):
