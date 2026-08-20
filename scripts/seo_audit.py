@@ -35,6 +35,26 @@ def _jsonld_types(value):
     return found
 
 
+def _jsonld_dates(value):
+    published = []
+    modified = []
+    if isinstance(value, dict):
+        if value.get("datePublished"):
+            published.append(str(value["datePublished"])[:10])
+        if value.get("dateModified"):
+            modified.append(str(value["dateModified"])[:10])
+        for child in value.values():
+            child_published, child_modified = _jsonld_dates(child)
+            published.extend(child_published)
+            modified.extend(child_modified)
+    elif isinstance(value, list):
+        for child in value:
+            child_published, child_modified = _jsonld_dates(child)
+            published.extend(child_published)
+            modified.extend(child_modified)
+    return published, modified
+
+
 class PageParser(HTMLParser):
     def __init__(self):
         super().__init__(convert_charrefs=True)
@@ -112,7 +132,13 @@ class PageParser(HTMLParser):
                 raw = "".join(self.json_ld_parts).strip()
                 if raw:
                     try:
-                        self.json_ld_types.update(_jsonld_types(json.loads(raw)))
+                        value = json.loads(raw)
+                        self.json_ld_types.update(_jsonld_types(value))
+                        published, modified = _jsonld_dates(value)
+                        if published and not self.published_date:
+                            self.published_date = published[0]
+                        if modified and not self.updated_date:
+                            self.updated_date = modified[0]
                     except (TypeError, ValueError):
                         self.parse_warnings.append("invalid_json_ld")
             self.in_script = False

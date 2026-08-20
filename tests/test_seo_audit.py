@@ -54,6 +54,17 @@ class SeoAuditParserTests(unittest.TestCase):
         page = parse_html(html, Path("charset.html"))
         self.assertEqual(page["title"], "X")
 
+    def test_extracts_dates_from_json_ld_when_meta_dates_are_absent(self):
+        html = """<html><head><title>X</title>
+        <script type="application/ld+json">{
+          "@type":"Article",
+          "datePublished":"2025-03-04T10:00:00+09:00",
+          "dateModified":"2026-07-08"
+        }</script></head><body><h1>X</h1></body></html>"""
+        page = parse_html(html, Path("dated.html"))
+        self.assertEqual(page["published_date"], "2025-03-04")
+        self.assertEqual(page["updated_date"], "2026-07-08")
+
     def test_audit_is_deterministic_and_does_not_modify_html(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

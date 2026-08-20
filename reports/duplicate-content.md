@@ -1,0 +1,217 @@
+# Duplicate Content Report
+
+Exact duplicates are review candidates, not automatic merge or deletion instructions.
+
+## Titles
+
+- Duplicate groups: 301
+
+- `AeroJump` — 10 URLs
+- `Marble Flick` — 9 URLs
+- `QuickPlay: Flappy Dot` — 9 URLs
+- `Land Grab` — 8 URLs
+- `Matrix Defense` — 8 URLs
+- `Gomoku` — 7 URLs
+- `BlockBreaker` — 6 URLs
+- `Congo Democratic Republic Perfect Guide | Travel course, preparations, precautions` — 6 URLs
+- `PONG vs AI` — 6 URLs
+- `コンゴ民主共和国パーフェクトガイド|旅行コース、準備、予防策` — 6 URLs
+- `CardMatch` — 5 URLs
+- `Error 500 (Server Error)!!1500.That’s an error.There was an error. Please try again later.That’s all we know.` — 5 URLs
+- `FlagQuest` — 5 URLs
+- `GREEN Click` — 3 URLs
+- `Milton Keynes Travel Perfect Guide | Itinerary, Essentials, Tips` — 3 URLs
+- `PONG vs IA` — 3 URLs
+- `Perfect Guide to Travel Australia | Travel course, preparations, precautions` — 3 URLs
+- `QuickPlay: Minesweeper` — 3 URLs
+- `○× (Tic Tac Toe)` — 3 URLs
+- `オーストラリア旅行への完璧なガイド|旅行コース、準備、予防策` — 3 URLs
+- `コンゴ民主共和国ツアーパーフェクトガイド|旅行コース、準備、予防策` — 3 URLs
+- `Be -Cold Grand Popo Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Be -Cold Grand Popo Travel Perfect Guide |旅行コース、準備、予防策` — 2 URLs
+- `Belarus Berake Tour Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Belarus Biso Kiye Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Belarus Boroni Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Belarus Boroni Travel Perfect Guide |旅行コース、準備、予防策` — 2 URLs
+- `Belarus Ceski Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Belarus Cherlobyce Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Belarus Cherrei Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Belarus Dukrobeno Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Belarus Gluco Koye Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Belarus Gluco Koye Travel Perfect Guide |旅行コース、準備、予防策` — 2 URLs
+- `Belarus Ibahce Beach Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Belarus Ibahce Beach Travel Perfect Guide |旅行コース、準備、予防策` — 2 URLs
+- `Belarus Lago Esk Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Belarus Lago Esk Travel Perfect Guide |旅行コース、準備、予防策` — 2 URLs
+- `Belarus Lecha Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Belarus Lecha Travel Perfect Guide |旅行コース、準備、予防策` — 2 URLs
+- `Belarus Malorita Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Belarus Marco Beach Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Belarus Narovia Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Belarus Paris Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Belarus Petrikov Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Belarus Radosi Kobichi Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Belarus Riozno Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Belarus Rubbesha Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Belarus Rubbesha Travel Perfect Guide |旅行コース、準備、予防策` — 2 URLs
+- `Belarus Storin Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Belarus Tele Hanei Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Belarus Travel Guides: 122 Destinations` — 2 URLs
+- `Belarus Ushachi Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Belarus Volkovic Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Belarus Volkovic Travel Perfect Guide |旅行コース、準備、予防策` — 2 URLs
+- `Belarus biso kiye Travel Perfect Guide |旅行コース、準備、予防策` — 2 URLs
+- `Bengen Cobry Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Benin Semepoji Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Benin Semepoji Travel Perfect Guide |旅行コース、準備、予防策` — 2 URLs
+- `Benko Panga Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Benko Panga Travel Perfect Guide |旅行コース、準備、予防策` — 2 URLs
+- `Benkome Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Benkome Travel Perfect Guide |旅行コース、準備、予防策` — 2 URLs
+- `Benzan Zakutome Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Benzan Zakutome Travel Perfect Guide |旅行コース、準備、予防策` — 2 URLs
+- `Benzen Teku Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Benzen Teku Travel Perfect Guide |旅行コース、準備、予防策` — 2 URLs
+- `British Burton Fidelis Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `COTE DIVENDO AROROROGO TRAVEL PERFECT GUIDE |旅行コース、準備、予防策` — 2 URLs
+- `Card Match` — 2 URLs
+- `Connect Four` — 2 URLs
+- `Cote Divende Arre Grand Lau Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Cote Divende Arre Grand Lau Travel Perfect Guide |旅行コース、準備、予防策` — 2 URLs
+- `Cote Divende Ear Natural Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Cote Divende Ear Natural Travel Perfect Guide |旅行コース、準備、予防策` — 2 URLs
+- `Cote Divendo Arrogo Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Court Bean -Ear Avoyo Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Court Bean -Ear Avoyo Travel Perfect Guide |旅行コース、準備、予防策` — 2 URLs
+- `Court Bourn Ear Audienne Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Court Budy Ear Yamu Sucro Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Honduras Sanfed La Sulta Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Libya Wara Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Marshall Islands Ronelab Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Mexico Cabosan Jose Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Number Hunt` — 2 URLs
+- `Papua New Guinea Tour perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Past Guide to Travel Bengin Ago | Travel course, preparations, precautions` — 2 URLs
+- `Perfect Guide to Mali Vancas Travel | Travel course, preparations, precautions` — 2 URLs
+- `Perfect Guide to Travel Greece | Travel course, preparations, precautions` — 2 URLs
+- `Perfect Guide to Travel with Belarusd | Travel course, preparations, precautions` — 2 URLs
+- `Perfect Guide to Travel, Italy | Travel course, preparations, precautions` — 2 URLs
+- `Perfect Guide to the Marshall Islands Family Provisions | Travel course, preparations, precautions` — 2 URLs
+- `Perfect Guide to travel to Tanan, Vietnam | Travel course, preparations, precautions` — 2 URLs
+- `Peruvian Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Samoa Pagai Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Saudi Arabia Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `South African Republic Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `South Korea Travel Guides: 146 Destinations` — 2 URLs
+- `Sudan Sudan Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `Survivor Mini` — 2 URLs
+- `SurvivorMini` — 2 URLs
+
+## Descriptions
+
+- Duplicate groups: 123
+
+- `Error 500 (Server Error)!!1500.That’s an error.There was an error. Please try again later.That’s all we know.` — 4 URLs
+- `A complete guide for traveling Milton Keynes, UK. 2-night 3-day itinerary, essential items, safety tips, and must-see attractions including Bletchley Park, Xscape, Willen Lake, and more.` — 3 URLs
+- `싱가포르 오차드로드 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 이온 오차드, 파라곤, 313@서머셋, 오차드 센트럴 등 오차드로드 핵심 명소 정보 제공.` — 3 URLs
+- `Courtboire Avoyoに旅行するための完璧なガイド。一目で、2日間、3日間の旅行コース、必要な材料、安全上の注意事項をチェックしてください。 Avoiso Beach、Traditional Market、Cocoa Farm、Cultural Centerは、Avoyoコアアトラクションを提供しています。` — 2 URLs
+- `Courtbuire Yamu Sucroに旅行するのに最適なガイド。一目で、2日間、3日間の旅行コース、必要な材料、安全上の注意事項をチェックしてください。聖マリア大聖堂、大統領宮殿、クロコダイル湖など、ヤム・ソロの中心的なアトラクションを提供します。` — 2 URLs
+- `Defend against waves of robotic enemies in Matrix Defense! Upgrade your plasma cannon, survive as long as you can, and challenge friends to beat your high score. Play free in your browser on mobile or PC.` — 2 URLs
+- `Explore 122 destination guides for Belarus, including itineraries, preparation tips, costs, and safety information.` — 2 URLs
+- `Explore 146 destination guides for South Korea, including itineraries, preparation tips, costs, and safety information.` — 2 URLs
+- `Perfect guide for traveling to Courtboire Avoyo. Check out the two -day, three -day trip course, required materials, and safety precautions at a glance. Avoiso Beach, Traditional Market, Cocoa Farm, and Cultural Center Provides Avoyo Core attractions.` — 2 URLs
+- `Perfect guide for traveling to Syria Maarat Miss Lin. Check out the two -day, three -day trip course, required materials, and safety precautions at a glance. Provide Maarat Miss Lin's core attraction information, including the Museum of Archaeological Museum, the ancient ruins, and the traditional market.` — 2 URLs
+- `The perfect guide for traveling to Courtbuire Yamu Sucro. Check out the two -day, three -day trip course, required materials, and safety precautions at a glance. Provide core attractions of Yamu Sucro, including the St. Mary's Cathedral, Presidential Palace, and Crocodile Lake.` — 2 URLs
+- `シリア・マラト・ミス・リンへの旅行に最適なガイド。一目で、2日間、3日間の旅行コース、必要な材料、安全上の注意事項をチェックしてください。考古学博物館、古代遺跡、伝統的な市場など、Maarat Miss Linのコアアトラクション情報を提供してください。` — 2 URLs
+- `テキストベースのゾンビアポカリプスでできるだけ長く生き残ろう！ランダムイベント、アイテム管理、危険なゾンビ襲来。100%無料のブラウザゲームです。` — 2 URLs
+- `독일 함부르크 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 함부르크 항구, 미니어처 분더랜드, 엘필하모니 등 함부르크 핵심 명소 정보 제공.` — 2 URLs
+- `루마니아 바야마레 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 바야마레 역사지구, 목조 교회, 시구헤트 마라무레슈, 마라무레슈 전통 마을 등 바야마레 핵심 명소 정보 제공.` — 2 URLs
+- `루마니아 버커우 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 버커우 시청, 중앙공원, 정교회 성당, 문화센터 등 버커우 핵심 명소 정보 제공.` — 2 URLs
+- `루마니아 보토샤니 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 미하이 에미네스쿠 기념관, 니콜라에 이오르가 기념관, 조지 에네스쿠 기념관, 시하스트리아 보로네이 수도원 등 보토샤니 핵심 명소 정보 제공.` — 2 URLs
+- `루마니아 브라쇼브 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 브란 성, 검은 교회, 브라쇼브 구시가지, 의회 광장 등 브라쇼브 핵심 명소 정보 제공.` — 2 URLs
+- `루마니아 브러일라 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 다뉴브강 산책로, 그리스 정교회, 마리아 필로티 극장, 트라이안 광장 등 브러일라 핵심 명소 정보 제공.` — 2 URLs
+- `루마니아 비스트리차 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 드라큘라 성, 복음주의 교회, 중앙 광장, 쿠퍼스 타워 등 비스트리차 핵심 명소 정보 제공.` — 2 URLs
+- `루마니아 아라드 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 아브람 이안쿠 광장, 레볼루티에이 거리, 문화 궁전 등 아라드 핵심 명소 정보 제공.` — 2 URLs
+- `루마니아 알바이울리아 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알바 카롤리나 요새, 통일 대성당, 국립 통일 박물관, 후냐디 성 등 알바이울리아 핵심 명소 정보 제공.` — 2 URLs
+- `바베이도스 밧세바 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 밧세바 해변, 수프 보울, 안드로메다 식물원, 애틀란티스 레스토랑 등 밧세바 핵심 명소 정보 제공.` — 2 URLs
+- `방글라데시 라지샤히 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 실크시티 라지샤히, 파드마강, 바렌드라 박물관, 푸티아 라즈바리 등 라지샤히 핵심 명소 정보 제공.` — 2 URLs
+- `방글라데시 라크샤미푸르 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 라크샤미푸르 강변, 전통 시장, 모스크, 릭샤 체험 등 라크샤미푸르 핵심 명소 정보 제공.` — 2 URLs
+- `방글라데시 랄모니르하트 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 티스타 댐, 칸타지 사원, 독립 박물관, 갈리간지 공원 등 랄모니르하트 핵심 명소 정보 제공.` — 2 URLs
+- `방글라데시 랑가마티 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 캅타이 호수, 흔들다리, 불교사원, 차크마족 문화 등 랑가마티 핵심 명소 정보 제공.` — 2 URLs
+- `방글라데시 랑푸르 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 랑푸르 궁전, 타지하트 궁전, 케라니고니 모스크, 랑푸르 박물관 등 랑푸르 핵심 명소 정보 제공.` — 2 URLs
+- `방글라데시 마다리푸르 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 마다리푸르 강, 전통 시장, 모스크, 농촌 마을 등 마다리푸르 핵심 명소 정보 제공.` — 2 URLs
+- `방글라데시 메헤르푸르 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 메헤르푸르 강, 쿠스티아 지역, 라론 샤 모스크, 라비드라 쿠티르 등 메헤르푸르 핵심 명소 정보 제공.` — 2 URLs
+- `방글라데시 시라지간지 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 자무나강, 바랄강, 손놀림 코티지 산업, 전통 시장 등 시라지간지 핵심 명소 정보 제공.` — 2 URLs
+- `방글라데시 조이푸르하트 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 파하르푸르 불교 사원, 소마푸르 마하비하라, 칸타지우 사원, 아스랑가 디기 등 조이푸르하트 핵심 명소 정보 제공.` — 2 URLs
+- `방글라데시 카그라차리 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 카그라차리 호수, 차크마 왕궁, 부족 문화 박물관, 하자차라 폭포 등 카그라차리 핵심 명소 정보 제공.` — 2 URLs
+- `방글라데시 쿠리그람 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 브라마푸트라 강, 쿠리그람 제방, 로얄 벵골 타이거 보호구역, 전통 시장 등 쿠리그람 핵심 명소 정보 제공.` — 2 URLs
+- `방글라데시 쿠시티아 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 쿠티바리 모스크, 라비드라나트 타고르 하우스, 하디가온 쿠티바리, 고라이 강 등 쿠시티아 핵심 명소 정보 제공.` — 2 URLs
+- `방글라데시 쿨나 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 순다르반 국립공원, 쿨나 대학, 로열 벵골 타이거, 맹그로브 숲 등 쿨나 핵심 명소 정보 제공.` — 2 URLs
+- `방글라데시 키쇼르간지 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 하오르 습지, 키쇼르간지 박물관, 브라마푸트라 강, 전통 시장 등 키쇼르간지 핵심 명소 정보 제공.` — 2 URLs
+- `방글라데시 탕가일 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 탕가일 사리 공장, 아티아 모스크, 엘렝가 궁전, 포가르 강 등 탕가일 핵심 명소 정보 제공.` — 2 URLs
+- `방글라데시 파브나 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 팍쉐이, 실라이도호, 찰란 빌, 파브나 정신병원 등 파브나 핵심 명소 정보 제공.` — 2 URLs
+- `방글라데시 파투아칼리 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 쿠아카타 해변, 라우카티강, 로할리아강, 파투아칼리 시내 등 파투아칼리 핵심 명소 정보 제공.` — 2 URLs
+- `방글라데시 팬차가르 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 팬차가르 차 정원, 테툴리아 강, 방글라반드 박물관, 사이드울 모스크 등 팬차가르 핵심 명소 정보 제공.` — 2 URLs
+- `시리아 마아라트미스린 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 마아라트미스린 고고학 박물관, 고대 유적지, 전통 시장 등 마아라트미스린 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 도하 여행을 위한 완벽한 가이드. 4박 5일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 이슬람 미술관, 수크 와키프, 카타라 문화 마을, 도하 코르니체 등 도하 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 루사일 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 루사일 스타디움, 마리나 프롬나드, 플레이스 방돔, 카타라 타워 등 루사일 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 메사이드 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 내륙 바다, 사막 사파리, 시라인 비치, 하마드 항구 등 메사이드 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알가라파·알마르키야 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 도하 근교 도시 탐방, 전통 시장, 현대 쇼핑몰, 축구 경기장 등 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알라이얀 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 에듀케이션 시티, 알라이얀 스타디움, 몰 오브 카타르, 어스파이어 타워 등 알라이얀 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알마르크하니야 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알마르크하니야 해변, 전통 시장, 문화 센터, 마리나 등 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알마르크하니야알자디다 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알마르크하니야알자디다 신도시, 현대 건축물, 쇼핑몰, 문화센터 등 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알마르크하바 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알마르크하바 항구, 전통 수크, 해안 산책로, 문화 센터 등 알마르크하바 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알마르크하바알자디다 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알마르크하바알자디다 항구, 시장, 해변, 문화센터 등 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알마르키야 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알하즘 몰, 알마르키야 갤러리, 카타라 문화마을 등 알마르키야 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알마르하바 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알마르하바 해변, 전통 시장, 문화센터, 마리나 등 알마르하바 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알마무라 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알마무라 패밀리 파크, 문화센터, 국제학교 등 알마무라 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알마시아브 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알마시아브 모스크, 전통 시장, 사막 투어, 해안 지역 등 알마시아브 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알사드 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알사드 스포츠 클럽, 자심 빈 하마드 스타디움, 도하 시내 등 알사드 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알사일리야 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알사일리야 비치, 사일리야 아일랜드, 알사일리야 박물관, 전통 시장 등 알사일리야 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알샤말 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알 주바일 요새, 알 샤말 해변, 퍼플 아일랜드, 알 가리야 해변 등 알샤말 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알샤이나 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알샤이나 해변, 알샤이나 몰, 전통 시장, 문화 센터 등 알샤이나 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알샤키라 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알 타키라 맹그로브, 푸와이릿 비치, 알 주바라 유적지 등 알샤키라 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알수와이디 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 사막 사파리, 전통 시장, 해변 투어, 이슬람 예술 박물관 등 알수와이디 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알수와이크 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알자사시야 암각화, 알루와이스 모스크, 코르 알 우데이드, 수크 와키프 등 알수와이크 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알시하니야 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알시하니야 비치, 알시하니야 몰, 전통 시장, 해안 산책로 등 알시하니야 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알와지바 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알와지바 요새, 사막 투어, 낙타 농장, 전통 시장 등 알와지바 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알와크라 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알와크라 비치, 알와크라 몰, 알와크라 헤리티지 빌리지, 알와크라 박물관 등 알와크라 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알우다이드 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알우다이드 요새, 알 주바라 요새, 알 가리야 해변, 자크리트 해변 등 알우다이드 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알우마이드 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 도하 근교의 숨겨진 보석 알우마이드 마을과 자연보호구역 탐방 정보 제공.` — 2 URLs
+- `카타르 알자말리야 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알자말리야 해변, 알자말리야 몰, 알자말리야 공원, 알자말리야 마리나 등 알자말리야 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알자시라알하마라 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 전통 진주 무역 도시, 산호석 건축물, 바르질 윈드타워, 전통 수크 등 알자시라알하마라 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알자크리트 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알자크리트 해변, 전통 시장, 모스크, 문화센터 등 알자크리트 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알주바라 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알주바라 해변, 알주바라 몰, 알주바라 마리나, 알주바라 공원 등 알주바라 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알카르아나알자디다 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알카르아나알자디다 마을, 사막 풍경, 전통 우물, 베두인 문화 등 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알코르 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알코르 항구, 진주 다이빙 역사, 맹그로브 숲, 알코르 박물관 등 알코르 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 알투마마 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알투마마 스타디움, 도하 코니쉬, 사막 투어, 이슬람 문화 체험 등 알투마마 핵심 명소 정보 제공.` — 2 URLs
+- `카타르 움살랄 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 바잔 타워, 움살랄 모하메드 요새, 자연보호구역 등 움살랄 핵심 명소 정보 제공.` — 2 URLs
+- `코트디부아르 아보이소 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 아보이소 해변, 전통 시장, 코코아 농장, 문화 센터 등 아보이소 핵심 명소 정보 제공.` — 2 URLs
+- `코트디부아르 야무수크로 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 평화의 성모 대성당, 대통령 궁전, 악어 호수 등 야무수크로 핵심 명소 정보 제공.` — 2 URLs
+- `토큰 소비가 새로운 생산성 지표가 된 AI 경제의 실체. 메타·쇼피파이의 토큰 거버넌스, 미중 AI 패권 경쟁, 5단 가치사슬 구조, Eco-Efficiency 전략까지 완벽 분석.` — 2 URLs
+- `페루 리마 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 아르마스 광장, 미라플로레스, 바랑코, 산 프란시스코 수녀원 등 리마 핵심 명소 정보 제공.` — 2 URLs
+- `페루 이키토스 여행을 위한 완벽한 가이드. 3박 4일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 아마존 강, 벨렌 시장, 이키토스 대성당, 말레콘 타라파카 등 이키토스 핵심 명소 정보 제공.` — 2 URLs
+- `포르투갈 곤도마르 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 곤도마르 필리그리 박물관, 상 페드로 다 코바 광산 박물관, 도우루 강변 등 곤도마르 핵심 명소 정보 제공.` — 2 URLs
+- `포르투갈 기마랑이스 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 기마랑이스 성, 브라간사 공작 저택, 올리베이라 광장 등 기마랑이스 핵심 명소 정보 제공.` — 2 URLs
+- `포르투갈 라구스 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 도나 아나 해변, 파에다데 곶, 라구스 구시가지 등 라구스 핵심 명소 정보 제공.` — 2 URLs
+- `포르투갈 라메고 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 노사 세뇨라 도스 레메디오스 성지, 라메고 박물관, 두우로 계곡, 와이너리 등 라메고 핵심 명소 정보 제공.` — 2 URLs
+- `포르투갈 로우레스 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 로우레스 성, 마을 중심지, 현지 시장, 근교 자연 명소 등 로우레스 핵심 명소 정보 제공.` — 2 URLs
+- `포르투갈 리스본 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 벨렝 지구, 제로니무스 수도원, 트램 28번 등 리스본 핵심 명소 정보 제공.` — 2 URLs
+- `포르투갈 마이아 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 마이아 동물원, 리다도르 타워, 아구아스 산타스 교회, 아비오소 공원 등 마이아 핵심 명소 정보 제공.` — 2 URLs
+- `포르투갈 마토지뉴스 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 마토지뉴스 해변, Castelo do Queijo, 해산물 레스토랑 등 마토지뉴스 핵심 명소 정보 제공.` — 2 URLs
+- `포르투갈 바레이루 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 바레이루 워터프론트, 도시 예술, 시립공원 등 바레이루 핵심 명소 정보 제공.` — 2 URLs
+- `포르투갈 베자 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 베자 성, 대성당, 박물관 등 베자 핵심 명소 정보 제공.` — 2 URLs
+- `포르투갈 브라가 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 봄 지저스 성역, 브라가 대성당, 아르코 다 포르타 노바 등 브라가 핵심 명소 정보 제공.` — 2 URLs
+- `포르투갈 브라간사 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 브라간사 성, 구시가지, 도우로 계곡 등 브라간사 핵심 명소 정보 제공.` — 2 URLs
+- `포르투갈 비아나두카스텔루 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 산타 루지아 성역, 리퍼블리카 광장, 카사 다 레이나 등 핵심 명소 정보 제공.` — 2 URLs
+- `포르투갈 비제우 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 비제우 대성당, 폰텔로 공원, 시청, 그라우 바스코 박물관 등 비제우 핵심 명소 정보 제공.` — 2 URLs
+- `포르투갈 빌라노바드가이아 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 루이스 1세 다리, 모루 공원, 포트와이너리, WOW Porto 등 빌라노바드가이아 핵심 명소 정보 제공.` — 2 URLs
+- `포르투갈 빌라프랑카 드 시라 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 빌라프랑카 드 시라 항구, 팔라브라스 도서관, 자르딤 무니시팔 등 빌라프랑카 드 시라 핵심 명소 정보 제공.` — 2 URLs
+- `포르투갈 산타렝 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 산타렝 대성당, 미라두로 산투 에스테방, 포르탈 두 솔 공원 등 산타렝 핵심 명소 정보 제공.` — 2 URLs
+- `포르투갈 산타마리아다페이라 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항, 산타마리아다페이라 성, 에스피리투 산투 수도원 등 핵심 명소 정보 제공.` — 2 URLs
+- `포르투갈 세이샬 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 세이샬 선착장, 바스코 다 가마 유적, 현지 레스토랑 등 세이샬 핵심 명소 정보 제공.` — 2 URLs
+- `포르투갈 세투발 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 세투발 항구, 아라비다 자연공원, 트로이아 반도 등 세투발 핵심 명소 정보 제공.` — 2 URLs
+
+## Canonicals
+
+- Duplicate groups: 0
