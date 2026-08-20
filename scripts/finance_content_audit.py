@@ -68,7 +68,10 @@ def _metadata_by_url(metadata):
 
 def audit_finance_content(audit, metadata, html_by_url):
     meta_by_url = _metadata_by_url(metadata)
-    selected = [page for page in audit.get("pages", []) if _is_finance_page(page)]
+    selected = [
+        page for page in audit.get("pages", [])
+        if page.get("indexable", True) and _is_finance_page(page)
+    ]
     intent_urls = defaultdict(list)
     for page in selected:
         key = _intent_key(page.get("title"))

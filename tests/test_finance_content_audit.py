@@ -4,6 +4,18 @@ from scripts.finance_content_audit import audit_finance_content
 
 
 class FinanceContentAuditTests(unittest.TestCase):
+    def test_excludes_noindex_archive_from_duplicate_intent_groups(self):
+        audit = {"pages": [
+            {"url": "/old.html", "path": "kor/report/finance/old.html", "title": "ETF 추천 2025", "indexable": False},
+            {"url": "/new.html", "path": "kor/report/finance/new.html", "title": "ETF 추천 2026", "indexable": True},
+        ]}
+
+        result = audit_finance_content(audit, [], {})
+
+        self.assertEqual(result["summary"]["finance_pages"], 1)
+        self.assertEqual(result["summary"]["duplicate_intent_groups"], 0)
+        self.assertEqual(result["pages"][0]["url"], "/new.html")
+
     def test_selects_finance_pages_and_flags_review_signals_without_claiming_errors(self):
         audit = {
             "pages": [

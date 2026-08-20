@@ -17,11 +17,15 @@ class CanonicalParser(HTMLParser):
     def __init__(self):
         super().__init__()
         self.urls = []
+        self.noindex = False
 
     def handle_starttag(self, tag, attrs):
+        values = {name.lower(): value for name, value in attrs}
+        if tag.lower() == "meta" and (values.get("name") or "").lower() in {"robots", "googlebot"}:
+            self.noindex = "noindex" in (values.get("content") or "").lower()
+            return
         if tag.lower() != "link":
             return
-        values = {name.lower(): value for name, value in attrs}
         rel = (values.get("rel") or "").lower().split()
         if "canonical" in rel and values.get("href"):
             self.urls.append(values["href"])
@@ -45,6 +49,8 @@ def test_every_indexable_html_has_one_exact_self_canonical():
 
         parser = CanonicalParser()
         parser.feed(page.read_text(encoding="utf-8"))
+        if parser.noindex:
+            continue
         expected = public_url(relative_path)
         if parser.urls != [expected]:
             failures.append(f"{relative_path}: expected {[expected]!r}, got {parser.urls!r}")

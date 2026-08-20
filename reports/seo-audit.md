@@ -1,7 +1,7 @@
 # Site SEO Audit
 
 - Total HTML pages: 19,065
-- Indexable pages: 19,064
+- Indexable pages: 19,062
 - Parser errors: 0
 
 ## Coverage
