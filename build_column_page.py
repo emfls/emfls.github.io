@@ -6,6 +6,7 @@ Gemini 출력(PDF 또는 텍스트)을 읽어 emfls.com 컬럼 HTML 페이지 �
 
 import os, re, json
 from datetime import datetime
+from automation_security import require_automation_enabled
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PDF_FILE   = os.path.join(SCRIPT_DIR, ".gemini_output.pdf")
@@ -209,6 +210,7 @@ footer a{{color:#58a6ff;text-decoration:none;}}
 </html>"""
 
 def main():
+    require_automation_enabled()
     content = read_content()
     if not content:
         print("처리할 콘텐츠 없음")

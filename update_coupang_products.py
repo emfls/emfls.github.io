@@ -24,10 +24,11 @@ import os
 import sys
 from time import gmtime, strftime
 from datetime import datetime
+from automation_security import require_automation_enabled, required_env
 
 # ── 설정 ──────────────────────────────────────────
-ACCESS_KEY = "537242c1-60a4-4c60-ac25-b34f8dc73bc7"
-SECRET_KEY = "06ab79657985589a7797bd6a53d994d387633822"
+ACCESS_KEY = ""
+SECRET_KEY = ""
 DOMAIN = "https://api-gateway.coupang.com"
 
 # 스크립트 위치 기준으로 JSON 경로 설정
@@ -143,6 +144,10 @@ def update_category(category: str, keywords: list, existing: list) -> list:
 
 
 def main():
+    global ACCESS_KEY, SECRET_KEY
+    require_automation_enabled()
+    ACCESS_KEY = required_env("COUPANG_PARTNERS_ACCESS_KEY")
+    SECRET_KEY = required_env("COUPANG_PARTNERS_SECRET_KEY")
     parser = argparse.ArgumentParser(description="쿠팡 파트너스 상품 데이터 갱신")
     parser.add_argument(
         "--category", "-c",

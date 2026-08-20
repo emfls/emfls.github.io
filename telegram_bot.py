@@ -7,10 +7,10 @@
 
 import requests, json, os, re, time
 from datetime import datetime
+from automation_security import require_automation_enabled, required_env
 
-BOT_TOKEN = "8595780602:AAF1mlorCVtSVcwisQQUBD66RWRQFrgVC4Q"
-CHAT_ID   = "124378681"
-BASE      = f"https://api.telegram.org/bot{BOT_TOKEN}"
+BOT_TOKEN = ""
+CHAT_ID = ""
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 QUEUE_FILE = os.path.join(SCRIPT_DIR, "youtube_queue.json")
 OFFSET_FILE = os.path.join(SCRIPT_DIR, ".tg_offset")
@@ -20,7 +20,7 @@ YOUTUBE_RE = re.compile(
 )
 
 def send(text):
-    requests.post(f"{BASE}/sendMessage",
+    requests.post(f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
                   json={"chat_id": CHAT_ID, "text": text, "parse_mode": "HTML"},
                   timeout=8)
 
@@ -43,7 +43,7 @@ def save_offset(n):
 def poll():
     offset = get_offset()
     try:
-        r = requests.get(f"{BASE}/getUpdates",
+        r = requests.get(f"https://api.telegram.org/bot{BOT_TOKEN}/getUpdates",
                          params={"offset": offset, "timeout": 30},
                          timeout=35)
         updates = r.json().get("result", [])
@@ -81,6 +81,10 @@ def poll():
     save_offset(offset)
 
 def main():
+    global BOT_TOKEN, CHAT_ID
+    require_automation_enabled()
+    BOT_TOKEN = required_env("TELEGRAM_BOT_TOKEN")
+    CHAT_ID = required_env("TELEGRAM_CHAT_ID")
     print(f"[{datetime.now():%H:%M:%S}] 텔레그램 봇 시작 (폴링 간격: 5초)")
     send("🤖 봇이 시작됐습니다. YouTube URL을 보내주세요!")
     while True:

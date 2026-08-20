@@ -10,6 +10,7 @@ YouTube 큐 처리 스크립트 — 스케줄 태스크에서 호출됨
 
 import json, os, sys
 from datetime import datetime
+from automation_security import require_automation_enabled
 
 SCRIPT_DIR  = os.path.dirname(os.path.abspath(__file__))
 QUEUE_FILE  = os.path.join(SCRIPT_DIR, "youtube_queue.json")
@@ -54,6 +55,7 @@ def mark_failed(url, reason):
     save_queue(q)
 
 if __name__ == "__main__":
+    require_automation_enabled()
     pending = get_pending()
     if not pending:
         print("처리할 항목 없음")

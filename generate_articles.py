@@ -13,23 +13,31 @@
 import hmac, hashlib, requests, json, urllib.parse, time, os, sys, re, argparse, subprocess
 from datetime import datetime
 from time import gmtime, strftime
+from automation_security import require_automation_enabled, required_env
 
 # ── 설정 ──────────────────────────────────────────────────────────
-COUPANG_ACCESS = "537242c1-60a4-4c60-ac25-b34f8dc73bc7"
-COUPANG_SECRET = "06ab79657985589a7797bd6a53d994d387633822"
+COUPANG_ACCESS = ""
+COUPANG_SECRET = ""
 COUPANG_DOMAIN = "https://api-gateway.coupang.com"
 
-TELEGRAM_TOKEN   = "8595780602:AAF1mlorCVtSVcwisQQUBD66RWRQFrgVC4Q"
-TELEGRAM_CHAT_ID = "124378681"
+TELEGRAM_TOKEN = ""
+TELEGRAM_CHAT_ID = ""
 
 REPO_DIR = os.path.dirname(os.path.abspath(__file__))
 GA_ID    = "G-QP5Q67GE5B"
 ADSENSE  = "ca-pub-8830524482034754"
 SITE_URL = "https://emfls.com"
 
-GIT_TOKEN  = "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"
-GIT_REMOTE = f"https://emfls:{GIT_TOKEN}@github.com/emfls/emfls.github.io.git"
+GIT_REMOTE = "https://github.com/emfls/emfls.github.io.git"
 GIT_WORK   = "/tmp/repo_auto"   # config.lock 없는 별도 클론 디렉토리
+
+
+def configure_credentials():
+    global COUPANG_ACCESS, COUPANG_SECRET, TELEGRAM_TOKEN, TELEGRAM_CHAT_ID
+    COUPANG_ACCESS = required_env("COUPANG_PARTNERS_ACCESS_KEY")
+    COUPANG_SECRET = required_env("COUPANG_PARTNERS_SECRET_KEY")
+    TELEGRAM_TOKEN = required_env("TELEGRAM_BOT_TOKEN")
+    TELEGRAM_CHAT_ID = required_env("TELEGRAM_CHAT_ID")
 
 # ── 트렌드 주제 데이터베이스 ────────────────────────────────────────
 # 프리한19 최근 방영 주제에서 추출한 독립 키워드들 (프로그램명 미포함)
@@ -460,6 +468,8 @@ def save_published(slugs):
 
 # ── 메인 ──────────────────────────────────────────────────────────
 def main():
+    require_automation_enabled()
+    configure_credentials()
     parser = argparse.ArgumentParser(description="트렌드 주제 자동 글 발행")
     parser.add_argument("--count", "-n", type=int, default=3, help="발행할 글 수 (기본 3)")
     parser.add_argument("--reset", action="store_true", help="발행 이력 초기화 후 전체 재발행")
