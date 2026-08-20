@@ -1,0 +1,52 @@
+name: SEO QA
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: seo-qa-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install test runner
+        run: python3 -m pip install pytest
+
+      - name: Regenerate deterministic site audit
+        run: python3 scripts/seo_audit.py . --json data/site-audit.json --markdown reports/seo-audit.md
+
+      - name: Reject new SEO regressions
+        run: python3 scripts/seo_qa.py . --audit data/site-audit.json --baseline data/seo-qa-baseline.json --report reports/seo-qa.md
+
+      - name: Run unittest regression suite
+        run: python3 -m unittest discover -s tests -q
+
+      - name: Run complete pytest suite
+        run: python3 -m pytest -q
+
+      - name: Upload QA reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seo-qa-reports
+          path: |
+            reports/seo-audit.md
+            reports/seo-qa.md
+          if-no-files-found: warn
