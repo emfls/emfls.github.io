@@ -20,6 +20,10 @@ class SeoQaWorkflowTests(unittest.TestCase):
         source = WORKFLOW.read_text(encoding="utf-8")
         self.assertIn("permissions:\n  contents: read", source)
 
+    def test_workflow_uses_the_sites_korean_operating_date(self):
+        source = WORKFLOW.read_text(encoding="utf-8")
+        self.assertIn("TZ: Asia/Seoul", source)
+
 
 if __name__ == "__main__":
     unittest.main()
