@@ -62,6 +62,29 @@ class PlanningSectionParser(HTMLParser):
             self.terms.append(data.strip())
 
 
+class LinkParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.links = []
+        self.in_json_ld = False
+        self.json_ld = []
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if tag == "a" and attrs.get("href"):
+            self.links.append(attrs["href"])
+        elif tag == "script" and attrs.get("type") == "application/ld+json":
+            self.in_json_ld = True
+
+    def handle_endtag(self, tag):
+        if tag == "script":
+            self.in_json_ld = False
+
+    def handle_data(self, data):
+        if self.in_json_ld and data.strip():
+            self.json_ld.append(json.loads(data))
+
+
 class RevenueCampPlanningSectionsTest(unittest.TestCase):
     def test_pages_expose_quick_planning_facts_and_regional_navigation(self):
         for page, related_files in PAGES.items():
@@ -80,6 +103,23 @@ class RevenueCampPlanningSectionsTest(unittest.TestCase):
                         for item in parser.json_ld
                     )
                 )
+
+    def test_jeonnam_hub_links_to_the_gwangyang_revenue_page(self):
+        parser = LinkParser()
+        parser.feed(
+            (ROOT / "kor/report/camp/jeonnam-best.html").read_text(encoding="utf-8")
+        )
+        self.assertIn(
+            "https://emfls.github.io/kor/report/camp/gwangyang.html",
+            parser.links,
+        )
+        self.assertTrue(
+            any(
+                item.get("@type") == "WebPage"
+                and item.get("dateModified") == "2026-08-21"
+                for item in parser.json_ld
+            )
+        )
 
 
 if __name__ == "__main__":
