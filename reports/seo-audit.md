@@ -1,17 +1,17 @@
 # Site SEO Audit
 
-- Total HTML pages: 19,065
-- Indexable pages: 19,062
+- Total HTML pages: 19,066
+- Indexable pages: 19,063
 - Parser errors: 0
 
 ## Coverage
 
 | Element | Pages | Coverage |
 |---|---:|---:|
-| Title | 19,063 | 100.0% |
-| Description | 19,053 | 99.9% |
-| Canonical | 19,061 | 100.0% |
-| GA4 | 18,836 | 98.8% |
+| Title | 19,064 | 100.0% |
+| Description | 19,054 | 99.9% |
+| Canonical | 19,062 | 100.0% |
+| GA4 | 18,837 | 98.8% |
 | AdSense | 18,500 | 97.0% |
 
 ## Quality signals
