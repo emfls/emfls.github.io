@@ -6,11 +6,13 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 PAGES = {
-    "namyangju.html": {"gyeonggi-best.html", "uijeongbu.html", "goyang.html"},
-    "jeongseon.html": {"gangwon-best.html", "taebaek.html", "pyeongchang.html"},
-    "hadong.html": {"gyeongnam-best.html", "jinju.html", "gimhae.html"},
-    "gwangyang.html": {"jeonnam-best.html", "suncheon.html", "yeosu.html"},
-    "yangyang.html": {"gangwon-best.html", "sokcho.html", "gangneung.html"},
+    "namyangju.html": ({"gyeonggi-best.html", "uijeongbu.html", "goyang.html"}, "2026-08-21"),
+    "jeongseon.html": ({"gangwon-best.html", "taebaek.html", "pyeongchang.html"}, "2026-08-21"),
+    "hadong.html": ({"gyeongnam-best.html", "jinju.html", "gimhae.html"}, "2026-08-21"),
+    "gwangyang.html": ({"jeonnam-best.html", "suncheon.html", "yeosu.html"}, "2026-08-21"),
+    "yangyang.html": ({"gangwon-best.html", "sokcho.html", "gangneung.html"}, "2026-08-21"),
+    "gyeonggi-best.html": ({"namyangju.html", "goyang.html", "uijeongbu.html"}, "2026-08-22"),
+    "taebaek.html": ({"gangwon-best.html", "jeongseon.html", "pyeongchang.html"}, "2026-08-22"),
 }
 REQUIRED_LABELS = {"대표 장소", "주차", "화장실", "취사", "요금·허용 여부", "최종 재검토"}
 
@@ -87,7 +89,7 @@ class LinkParser(HTMLParser):
 
 class RevenueCampPlanningSectionsTest(unittest.TestCase):
     def test_pages_expose_quick_planning_facts_and_regional_navigation(self):
-        for page, related_files in PAGES.items():
+        for page, (related_files, modified_date) in PAGES.items():
             with self.subTest(page=page):
                 parser = PlanningSectionParser()
                 parser.feed((ROOT / "kor/report/camp" / page).read_text(encoding="utf-8"))
@@ -98,8 +100,8 @@ class RevenueCampPlanningSectionsTest(unittest.TestCase):
                 )
                 self.assertTrue(
                     any(
-                        item.get("@type") == "WebPage"
-                        and item.get("dateModified") == "2026-08-21"
+                        item.get("@type") in {"WebPage", "TravelGuide"}
+                        and item.get("dateModified") == modified_date
                         for item in parser.json_ld
                     )
                 )
