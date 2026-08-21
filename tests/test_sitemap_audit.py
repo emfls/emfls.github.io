@@ -1,5 +1,6 @@
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from scripts.sitemap_audit import audit_local_sitemaps
@@ -28,6 +29,21 @@ class SitemapAuditTests(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         result = audit_local_sitemaps(root)
         self.assertEqual(result["omitted_from_root"], [])
+
+    def test_directory_hubs_use_canonical_slash_urls(self):
+        root = Path(__file__).resolve().parents[1]
+        namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+        index_entries = []
+        for sitemap in root.rglob("sitemap.xml"):
+            xml_root = ET.parse(sitemap).getroot()
+            if xml_root.tag.rsplit("}", 1)[-1] != "urlset":
+                continue
+            index_entries.extend(
+                (loc.text or "").strip()
+                for loc in xml_root.findall("sm:url/sm:loc", namespace)
+                if (loc.text or "").strip().endswith("/index.html")
+            )
+        self.assertEqual(index_entries, [])
 
 
 if __name__ == "__main__":
