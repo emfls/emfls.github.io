@@ -41,3 +41,16 @@ XML과 Google 수집 문제를 분리하려면 canonical URL 1개만 담은 UTF-
 - 기존 XML 사이트맵·robots.txt에는 연결하지 않음
 - 실험 목적 외 색인 확대 수단으로 사용하지 않음
 - Search Console 처리 결과가 확정되면 유지 또는 제거를 결정
+
+## 진단 스파이크 결과
+
+- GitHub Pages 배포 성공
+- 공개 응답: HTTP 200
+- Content-Type: `text/plain; charset=utf-8`
+- 본문: canonical URL 한 줄, 54바이트
+- Search Console 제출 성공
+- 제출 직후 상태: `가져올 수 없음`, 유형 `알 수 없음`, 발견된 페이지 0
+
+XML과 일반 텍스트가 동일하게 실패했으므로 XML 문법, XML MIME 유형, URL 수, 사이트맵 크기와 canonical 불일치는 현재 실패의 원인이 아니다. 사이트 전체에서 모든 형식이 동일하게 실패하는 Search Console/Google 수집 계층 문제 가능성이 크게 높아졌다.
+
+`/sitemap-probe.txt`는 Google의 주기적 재처리 여부를 확인하기 위해 2026-08-28까지 임시 유지한다. 그날에도 실패하면 결과를 기록한 뒤 제거한다.
