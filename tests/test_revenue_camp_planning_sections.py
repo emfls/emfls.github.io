@@ -25,6 +25,10 @@ PAGES = {
     "uljin.html": ({"yeongyang.html", "andong.html", "pohang.html"}, "2026-08-23"),
     "gunsan.html": ({"iksan.html", "buan.html", "gimje.html"}, "2026-08-23"),
     "gangwon-best.html": ({"jeongseon.html", "taebaek.html", "pyeongchang.html"}, "2026-08-23"),
+    "uijeongbu.html": ({"gyeonggi-best.html", "namyangju.html", "goyang.html"}, "2026-08-24"),
+    "yeongdong.html": ({"chungcheong-camping-best.html", "geumsan.html", "okcheon.html"}, "2026-08-24"),
+    "pyeongtaek.html": ({"gyeonggi-best.html", "goyang.html", "namyangju.html"}, "2026-08-24"),
+    "hoengseong.html": ({"gangwon-best.html", "pyeongchang.html", "wonju.html"}, "2026-08-24"),
 }
 REQUIRED_LABELS = {"대표 장소", "주차", "화장실", "취사", "요금·허용 여부", "최종 재검토"}
 
