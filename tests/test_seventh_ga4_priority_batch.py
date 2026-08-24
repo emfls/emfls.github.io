@@ -25,6 +25,7 @@ class SeventhGa4PriorityBatchTest(unittest.TestCase):
                 html = (ROOT / relative).read_text(encoding="utf-8")
                 expected_date = "2026-08-24" if relative.endswith(
                     (
+                        "maple-planet-bishop-4th-skill-quest-guide-2026.html",
                         "maple-planet-suncall-blizzard-hp-zero-setup-2026.html",
                         "maple-planet-lv80-black-centaurus-leveling-2026.html",
                     )
