@@ -37,6 +37,10 @@ PAGES = {
     "nonsan.html": ({"chungcheong-camping-best.html", "geumsan.html", "buyeo.html"}, "2026-08-24"),
     "jinan.html": ({"gunsan.html", "muju.html", "wanju.html"}, "2026-08-24"),
     "boseong.html": ({"jeonnam-best.html", "hwasun.html", "jangseong.html"}, "2026-08-24"),
+    "yongin.html": ({"gyeonggi-best.html", "gwangju-g.html", "seongnam.html"}, "2026-08-24"),
+    "free-camping-top20.html": ({"namyangju.html", "yeoncheon.html", "cheorwon.html"}, "2026-08-24"),
+    "yeoncheon.html": ({"gyeonggi-best.html", "uijeongbu.html", "cheorwon.html"}, "2026-08-24"),
+    "cheongju.html": ({"chungcheong-camping-best.html", "yeongdong.html", "nonsan.html"}, "2026-08-24"),
 }
 REQUIRED_LABELS = {"대표 장소", "주차", "화장실", "취사", "요금·허용 여부", "최종 재검토"}
 
