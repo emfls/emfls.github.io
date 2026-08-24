@@ -26,7 +26,8 @@ class SixthGa4PriorityBatchTest(unittest.TestCase):
             with self.subTest(page=rel):
                 html = (ROOT / rel).read_text(encoding="utf-8")
                 self.assertIn(f'href="{canonical}"', html)
-                self.assertIn("2026-08-09", html)
+                expected_date = "2026-08-25" if rel == "util/qrcode/index.html" else "2026-08-09"
+                self.assertIn(expected_date, html)
                 self.assertIn(limitation, html)
                 self.assertIn("googletagmanager.com/gtag/js", html)
                 if "/game/" in f"/{rel}":
