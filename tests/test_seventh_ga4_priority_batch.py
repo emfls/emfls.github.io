@@ -23,7 +23,12 @@ class SeventhGa4PriorityBatchTest(unittest.TestCase):
         for relative, (schema_type, limitation, related_label) in PAGES.items():
             with self.subTest(relative=relative):
                 html = (ROOT / relative).read_text(encoding="utf-8")
-                self.assertIn("2026-08-09", html)
+                expected_date = (
+                    "2026-08-24"
+                    if relative.endswith("maple-planet-suncall-blizzard-hp-zero-setup-2026.html")
+                    else "2026-08-09"
+                )
+                self.assertIn(expected_date, html)
                 self.assertIn(f'"@type":"{schema_type}"', html.replace(" ", ""))
                 self.assertIn(limitation.lower(), html.lower())
                 self.assertIn(related_label, html)
