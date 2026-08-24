@@ -23,7 +23,7 @@ class SixteenthGa4PriorityBatchTest(unittest.TestCase):
                 html = (ROOT / relative).read_text(encoding="utf-8")
                 compact = "".join(html.split())
                 expected_date = (
-                    "2026-08-24"
+                    "2026-08-25"
                     if relative.endswith("korean-souvenir-foreigners-2026.html")
                     else "2026-08-10"
                 )

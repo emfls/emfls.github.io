@@ -59,7 +59,7 @@ class KoreanSouvenirRevenuePageTest(unittest.TestCase):
         ):
             self.assertIn(link, self.parser.links)
         self.assertTrue(
-            any(item.get("dateModified") == "2026-08-24" for item in self.parser.json_ld)
+            any(item.get("dateModified") == "2026-08-25" for item in self.parser.json_ld)
         )
 
 
