@@ -22,7 +22,12 @@ class SixteenthGa4PriorityBatchTest(unittest.TestCase):
             with self.subTest(relative=relative):
                 html = (ROOT / relative).read_text(encoding="utf-8")
                 compact = "".join(html.split())
-                self.assertIn("2026-08-10", html)
+                expected_date = (
+                    "2026-08-24"
+                    if relative.endswith("korean-souvenir-foreigners-2026.html")
+                    else "2026-08-10"
+                )
+                self.assertIn(expected_date, html)
                 self.assertIn('"@type":"WebPage"', compact)
                 self.assertIn(limitation, html)
                 self.assertIn("관련", html)
