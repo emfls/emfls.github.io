@@ -13,7 +13,7 @@ PAGES = {
     "yangyang.html": ({"gangwon-best.html", "sokcho.html", "gangneung.html"}, "2026-08-21"),
     "gyeonggi-best.html": ({"namyangju.html", "goyang.html", "uijeongbu.html"}, "2026-08-22"),
     "taebaek.html": ({"gangwon-best.html", "jeongseon.html", "pyeongchang.html"}, "2026-08-22"),
-    "gyeongnam-best.html": ({"hadong.html", "jinju.html", "gimhae.html"}, "2026-08-22"),
+    "gyeongnam-best.html": ({"hadong.html", "jinju.html", "gimhae.html"}, "2026-08-26"),
     "geumsan.html": ({"chungcheong-camping-best.html", "nonsan.html", "gongju.html"}, "2026-08-22"),
     "jinju.html": ({"gyeongnam-best.html", "hadong.html", "gimhae.html"}, "2026-08-26"),
     "cheorwon.html": ({"gangwon-best.html", "taebaek.html", "pyeongchang.html"}, "2026-08-22"),
