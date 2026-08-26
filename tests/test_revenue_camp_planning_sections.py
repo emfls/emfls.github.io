@@ -29,7 +29,7 @@ PAGES = {
     "yeongdong.html": ({"chungcheong-camping-best.html", "geumsan.html", "okcheon.html"}, "2026-08-24"),
     "pyeongtaek.html": ({"gyeonggi-best.html", "goyang.html", "namyangju.html"}, "2026-08-24"),
     "hoengseong.html": ({"gangwon-best.html", "pyeongchang.html", "wonju.html"}, "2026-08-24"),
-    "jeonnam-best.html": ({"jangseong.html", "hwasun.html", "gwangyang.html"}, "2026-08-24"),
+    "jeonnam-best.html": ({"jangseong.html", "hwasun.html", "gwangyang.html"}, "2026-08-26"),
     "incheon.html": ({"gyeonggi-best.html", "goyang.html", "pyeongtaek.html"}, "2026-08-26"),
     "gwangju-g.html": ({"gyeonggi-best.html", "seongnam.html", "yongin.html"}, "2026-08-24"),
     "pyeongchang.html": ({"gangwon-best.html", "hoengseong.html", "jeongseon.html"}, "2026-08-24"),
@@ -146,7 +146,7 @@ class RevenueCampPlanningSectionsTest(unittest.TestCase):
         self.assertTrue(
             any(
                 item.get("@type") == "WebPage"
-                and item.get("dateModified") == "2026-08-24"
+                and item.get("dateModified") == "2026-08-26"
                 for item in parser.json_ld
             )
         )
