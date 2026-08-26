@@ -14,6 +14,7 @@ PAGES = {
     "kor/report/travel/albania-durres.html": ("WebPage", "입국", "관련"),
     "kor/report/travel/china-shenyang.html": ("WebPage", "입국", "관련"),
 }
+REVIEW_DATES = {"kor/report/camp/mokpo.html": "2026-08-26"}
 
 class TwelfthGa4PriorityBatchTest(unittest.TestCase):
     def test_pages_have_quality_contract(self):
@@ -21,7 +22,7 @@ class TwelfthGa4PriorityBatchTest(unittest.TestCase):
             with self.subTest(relative=relative):
                 html = (ROOT / relative).read_text(encoding="utf-8")
                 compact = "".join(html.split())
-                self.assertIn("2026-08-10", html)
+                self.assertIn(REVIEW_DATES.get(relative, "2026-08-10"), html)
                 self.assertIn(f'"@type":"{schema_type}"', compact)
                 self.assertIn(limitation.lower(), html.lower())
                 self.assertIn(related, html)
