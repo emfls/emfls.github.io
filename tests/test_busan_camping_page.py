@@ -31,8 +31,14 @@ class BusanCampingPageTest(unittest.TestCase):
 
     def test_structured_data_and_mobile_ads_are_safe(self):
         self.assertEqual({x.get("@type") for x in self.page.json_ld}, {"WebPage", "FAQPage"})
+        self.assertEqual(sum(x.get("@type") == "WebPage" for x in self.page.json_ld), 1)
         self.assertIn('div[id^="aswift_"]', self.html)
         self.assertIn("max-width:100% !important", self.html)
+
+    def test_links_to_geographically_relevant_camp_guides(self):
+        hrefs = {a.get("href") for a in self.page.links}
+        for href in ("ulsan.html", "gyeongnam-best.html", "yangsan.html", "gimhae.html"):
+            self.assertIn(href, hrefs)
 
     def test_removes_unsupported_wild_camping_claims(self):
         for phrase in ("무료 노지 캠핑장", "오륙도 스카이워크 차박", "천성항 캠핑", "다대포 해수욕장 차박", "암남공원 캠핑"):
