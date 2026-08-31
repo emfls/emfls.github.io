@@ -113,6 +113,18 @@ class SeoAuditParserTests(unittest.TestCase):
             self.assertEqual(before, {path: path.read_bytes() for path in (first, second)})
             json.dumps(one, ensure_ascii=False)
 
+    def test_audit_excludes_private_local_quality_dashboard(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "index.html").write_text("<html><title>Home</title></html>", encoding="utf-8")
+            reports = root / "reports"
+            reports.mkdir()
+            (reports / "site-quality-dashboard.html").write_text("<html><title>Private</title></html>", encoding="utf-8")
+
+            audit = audit_site(root)
+
+            self.assertEqual([page["path"] for page in audit["pages"]], ["index.html"])
+
 
 if __name__ == "__main__":
     unittest.main()
