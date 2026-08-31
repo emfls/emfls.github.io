@@ -101,4 +101,7 @@ PAGE_SCORE가 낮더라도 검증된 수익이 있는 WINNER는 자동 수정 �
 
 - 기준선: `609 passed`
 - 신규 집중 테스트: 데이터 freshness, 허위 수익 방지, WINNER 보호, COOLDOWN 제외, 높은 노출·낮은 CTR 점수, AdSense CTR 배제, 최대 3개 제한, DEAD_CANDIDATE 비파괴, 기간 불일치와 결정적 재실행을 검증했다.
-- 전체 회귀 테스트 결과는 최종 검증 후 이 기록과 최종 보고서에 반영한다.
+- 집중 Revenue/대시보드/자동화 테스트: `31 passed`
+- 전체 pytest 회귀 테스트: `623 passed in 50.71s`
+- 전체 unittest 회귀 테스트: `Ran 552 tests`, `OK`
+- 산출물 불변조건: 실제 수정 추천 3개 이하, 미연결 AdSense 허위 수익 0개, 자동 DEAD 삭제 동작 0개, 28일 수익과 Views/User 기준값 일치
