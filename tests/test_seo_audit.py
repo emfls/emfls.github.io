@@ -7,6 +7,36 @@ from scripts.seo_audit import audit_site, parse_html
 
 
 class SeoAuditParserTests(unittest.TestCase):
+    def test_extracts_quality_scoring_signals(self):
+        html = """<!doctype html><html lang="en"><head>
+        <title>Example Calculator</title><meta name="viewport" content="width=device-width">
+        <meta name="author" content="emfls"><link rel="canonical" href="https://emfls.github.io/util/example/">
+        </head><body><nav class="breadcrumb"><a href="/util/">Tools</a></nav>
+        <main><h1>Example Calculator</h1><p>Immediate answer with 2026 data and a clear result for visitors.</p>
+        <h2>Methodology</h2><h3>Formula</h3><p>Method and calculation formula.</p>
+        <table class="responsive-table"><tr><td>1</td></tr></table>
+        <form><input><button>Calculate</button></form><img src="x.jpg">
+        <section class="related-posts"><a href="/about/">About methodology</a></section>
+        <p>Limit: results may differ.</p></main></body></html>"""
+
+        page = parse_html(html, Path("util/example/index.html"))
+
+        self.assertEqual(page["h3_count"], 1)
+        self.assertEqual(page["image_alt_missing"], 1)
+        self.assertTrue(page["has_viewport"])
+        self.assertTrue(page["has_table"])
+        self.assertTrue(page["has_table_overflow"])
+        self.assertTrue(page["has_form"])
+        self.assertTrue(page["has_breadcrumb"])
+        self.assertTrue(page["has_related_section"])
+        self.assertTrue(page["has_author_signal"])
+        self.assertTrue(page["has_method_signal"])
+        self.assertTrue(page["has_limitation_signal"])
+        self.assertTrue(page["has_about_methodology_link"])
+        self.assertTrue(page["has_parent_hub_link"])
+        self.assertEqual(page["interactive_controls"], 2)
+        self.assertTrue(page["visible_text_prefix"].startswith("Tools Example Calculator Immediate answer"))
+
     def test_extracts_required_page_fields(self):
         html = """<!doctype html><html lang="ko"><head>
         <title>테스트 페이지</title>

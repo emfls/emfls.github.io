@@ -67,7 +67,9 @@ class PageParser(HTMLParser):
         self.updated_date = ""
         self.h1_count = 0
         self.h2_count = 0
+        self.h3_count = 0
         self.images = 0
+        self.image_alt_missing = 0
         self.links = []
         self.text_parts = []
         self.json_ld_parts = []
@@ -78,10 +80,23 @@ class PageParser(HTMLParser):
         self.script_type = ""
         self.adsense = False
         self.ga4 = False
+        self.has_viewport = False
+        self.has_table = False
+        self.has_table_overflow = False
+        self.has_form = False
+        self.has_breadcrumb = False
+        self.has_related_section = False
+        self.has_author_signal = False
+        self.has_about_methodology_link = False
+        self.has_parent_hub_link = False
+        self.has_intrusive_popup = False
+        self.interactive_controls = 0
 
     def handle_starttag(self, tag, attrs):
         values = _attrs(attrs)
         tag = tag.lower()
+        classes = values.get("class", "").lower()
+        element_id = values.get("id", "").lower()
         if tag == "html":
             self.language = values.get("lang", "").strip()
         elif tag == "title":
@@ -91,6 +106,10 @@ class PageParser(HTMLParser):
             content = values.get("content", "").strip()
             if key == "description":
                 self.description = content
+            elif key == "viewport":
+                self.has_viewport = True
+            elif key == "author" and content:
+                self.has_author_signal = True
             elif key in {"robots", "googlebot"}:
                 self.robots = f"{self.robots},{content}".strip(",")
             elif key in {"article:published_time", "datepublished", "date"}:
@@ -105,12 +124,27 @@ class PageParser(HTMLParser):
             href = values.get("href", "").strip()
             if href:
                 self.links.append(href)
+                lowered_href = href.lower()
+                if "about" in lowered_href or "methodology" in lowered_href:
+                    self.has_about_methodology_link = True
+                if lowered_href.rstrip("/").endswith(("/util", "/report", "/kor/report", "/stockwiki")):
+                    self.has_parent_hub_link = True
         elif tag == "img":
             self.images += 1
+            if not values.get("alt", "").strip():
+                self.image_alt_missing += 1
         elif tag == "h1":
             self.h1_count += 1
         elif tag == "h2":
             self.h2_count += 1
+        elif tag == "h3":
+            self.h3_count += 1
+        elif tag == "table":
+            self.has_table = True
+            style = values.get("style", "").lower()
+            self.has_table_overflow = self.has_table_overflow or "responsive" in classes or "overflow" in style
+        elif tag == "form":
+            self.has_form = True
         elif tag == "ins" and "adsbygoogle" in values.get("class", "").split():
             self.adsense = True
         elif tag == "script":
@@ -122,6 +156,14 @@ class PageParser(HTMLParser):
                 self.adsense = True
             if "googletagmanager.com/gtag/js" in src:
                 self.ga4 = True
+        if tag in {"input", "button", "select", "textarea"}:
+            self.interactive_controls += 1
+        if "breadcrumb" in classes or "breadcrumb" in element_id:
+            self.has_breadcrumb = True
+        if any(marker in classes or marker in element_id for marker in ("related-post", "related-content", "next-read")):
+            self.has_related_section = True
+        if any(marker in classes for marker in ("intrusive-popup", "forced-modal")):
+            self.has_intrusive_popup = True
 
     def handle_endtag(self, tag):
         tag = tag.lower()
@@ -203,6 +245,8 @@ def parse_html(html, relative_path):
     parser.close()
     internal_links, external_links = _link_counts(parser.links)
     text = " ".join(parser.text_parts)
+    normalized_text = " ".join(text.split())
+    lowered_text = normalized_text.lower()
     robots = parser.robots.lower()
     return {
         "path": relative_path.as_posix(),
@@ -216,9 +260,25 @@ def parse_html(html, relative_path):
         "word_count": len(WORD_RE.findall(text)),
         "h1_count": parser.h1_count,
         "h2_count": parser.h2_count,
+        "h3_count": parser.h3_count,
         "internal_links": internal_links,
         "external_links": external_links,
         "images": parser.images,
+        "image_alt_missing": parser.image_alt_missing,
+        "has_viewport": parser.has_viewport,
+        "has_table": parser.has_table,
+        "has_table_overflow": parser.has_table_overflow,
+        "has_form": parser.has_form,
+        "has_breadcrumb": parser.has_breadcrumb or "BreadcrumbList" in parser.json_ld_types,
+        "has_related_section": parser.has_related_section,
+        "has_author_signal": parser.has_author_signal or "author" in lowered_text[:2000],
+        "has_method_signal": any(term in lowered_text for term in ("methodology", "method", "계산 방법", "방법론", "計算方法")),
+        "has_limitation_signal": any(term in lowered_text for term in ("limitation", "limit:", "한계", "주의사항", "制限")),
+        "has_about_methodology_link": parser.has_about_methodology_link,
+        "has_parent_hub_link": parser.has_parent_hub_link,
+        "has_intrusive_popup": parser.has_intrusive_popup,
+        "interactive_controls": parser.interactive_controls,
+        "visible_text_prefix": " ".join(normalized_text.split()[:400]),
         "structured_data_types": sorted(parser.json_ld_types),
         "canonical": parser.canonical,
         "indexable": "noindex" not in robots,
