@@ -55,6 +55,35 @@ def page_results():
     ]
 
 
+def revenue_fixture():
+    opportunity = {
+        "url": "/kor/report/camp/example.html",
+        "revenueOpportunityScore": 88,
+        "classification": "OPPORTUNITY",
+        "nextAction": "IMPROVE_SEARCH_CTR",
+        "cooldown": False,
+        "dataStatus": "VERIFIED",
+        "reasons": ["High Naver impressions", "CTR below cluster median"],
+    }
+    return {
+        "phase": "PHASE 1",
+        "kpis": {
+            "revenue28d": {"value": 13.88, "status": "VERIFIED"},
+            "dailyAverage28d": {"value": 0.5, "status": "VERIFIED"},
+            "indexedPages": {"value": 19063, "status": "VERIFIED"},
+            "revenuePerIndexedPage": {"value": 0.00072811, "status": "VERIFIED"},
+            "viewsPerActiveUser": {"value": 1.34, "status": "VERIFIED"},
+            "winnerRevenueConcentration": {"value": None, "status": "INSUFFICIENT_DATA"},
+        },
+        "classificationCounts": {"WINNER": 3, "OPPORTUNITY": 1, "EXPERIMENT": 0, "DEAD_CANDIDATE": 0},
+        "topOpportunities": [opportunity],
+        "selectedImprovements": [opportunity],
+        "protectedWinners": [{**opportunity, "url": "/winner.html", "classification": "WINNER"}],
+        "activeExperiments": [],
+        "campingCluster": {"pages": 171, "views": 503, "revenue": 1.91, "revenuePer1000Views": 3.8, "winner": 4, "opportunity": 1, "naverStatus": "NOT_CONNECTED"},
+    }
+
+
 class QualityReportTest(unittest.TestCase):
     def test_markdown_contains_required_decision_sections(self):
         text = render_site_markdown(site_fixture(), page_results(), None)
@@ -90,6 +119,19 @@ class QualityReportTest(unittest.TestCase):
         self.assertNotIn("adsbygoogle", html)
         self.assertNotIn("ad_click", html)
         self.assertIn("100 rows", html)
+
+    def test_dashboard_puts_revenue_control_center_before_page_score(self):
+        rendered = render_dashboard(site_fixture(), page_results(), revenue_fixture())
+
+        self.assertIn("REVENUE GROWTH CONTROL CENTER", rendered)
+        self.assertIn("TODAY'S TOP OPPORTUNITIES", rendered)
+        self.assertIn("WINNERS - DO NOT REWRITE", rendered)
+        self.assertIn("ACTIVE EXPERIMENTS", rendered)
+        self.assertIn("Camping Cluster", rendered)
+        self.assertIn("PAGE SCORE", rendered)
+        self.assertLess(rendered.index("REVENUE GROWTH CONTROL CENTER"), rendered.index("PAGE SCORE"))
+        self.assertNotIn("adsenseCtr", rendered)
+        self.assertNotIn("ad_click", rendered)
 
 
 if __name__ == "__main__":

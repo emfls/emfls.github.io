@@ -167,6 +167,7 @@ def _compact_result(result):
 def run_quality_audit(
     *, root, audit_path, metadata_path, performance_dir, cannibalization_path,
     as_of, page_output, site_output, report_output=None, dashboard_output=None,
+    revenue_path=None,
 ):
     root = Path(root)
     audit = _read_json(audit_path, {"pages": []})
@@ -235,7 +236,8 @@ def run_quality_audit(
     if dashboard_output:
         dashboard_output = Path(dashboard_output)
         dashboard_output.parent.mkdir(parents=True, exist_ok=True)
-        dashboard_output.write_text(render_dashboard(site_payload, results), encoding="utf-8")
+        revenue = _read_json(revenue_path, None) if revenue_path else None
+        dashboard_output.write_text(render_dashboard(site_payload, results, revenue), encoding="utf-8")
     return page_payload, site_payload
 
 
@@ -251,6 +253,7 @@ def main():
     parser.add_argument("--site-output", type=Path, default=Path("data/site-score.json"))
     parser.add_argument("--report", type=Path, default=Path("SITE_SCORE.md"))
     parser.add_argument("--dashboard", type=Path, default=Path("reports/site-quality-dashboard.html"))
+    parser.add_argument("--revenue", type=Path)
     args = parser.parse_args()
     page_payload, site_payload = run_quality_audit(
         root=args.root,
@@ -263,6 +266,7 @@ def main():
         site_output=args.site_output,
         report_output=args.report,
         dashboard_output=args.dashboard,
+        revenue_path=args.revenue,
     )
     print(json.dumps({"pages": page_payload["summary"]["evaluated_indexable_pages"], "site_score": site_payload["score"]}))
 

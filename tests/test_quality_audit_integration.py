@@ -73,6 +73,7 @@ class QualityAuditIntegrationTest(unittest.TestCase):
             site_output = root / "site-score.json"
             report_output = root / "SITE_SCORE.md"
             dashboard_output = root / "site-quality-dashboard.html"
+            revenue_path = root / "revenue-opportunities.json"
             audit_path.write_text(
                 json.dumps({"summary": {}, "parser_errors": [], "pages": [page("/tool/", "util/tool/index.html"), page("/a.html", "report/a.html"), page("/private.html", "private.html", False)]}),
                 encoding="utf-8",
@@ -88,6 +89,21 @@ class QualityAuditIntegrationTest(unittest.TestCase):
                 encoding="utf-8",
             )
             (root / "robots.txt").write_text("User-agent: *\nAllow: /\n", encoding="utf-8")
+            revenue_path.write_text(
+                json.dumps(
+                    {
+                        "phase": "PHASE 1",
+                        "kpis": {},
+                        "classificationCounts": {},
+                        "topOpportunities": [],
+                        "selectedImprovements": [],
+                        "protectedWinners": [],
+                        "activeExperiments": [],
+                        "campingCluster": {},
+                    }
+                ),
+                encoding="utf-8",
+            )
 
             kwargs = dict(
                 root=root,
@@ -100,6 +116,7 @@ class QualityAuditIntegrationTest(unittest.TestCase):
                 site_output=site_output,
                 report_output=report_output,
                 dashboard_output=dashboard_output,
+                revenue_path=revenue_path,
             )
             _, site = run_quality_audit(**kwargs)
             first_bytes = page_output.read_bytes()
@@ -116,6 +133,7 @@ class QualityAuditIntegrationTest(unittest.TestCase):
             self.assertEqual(site["connections"]["ga4"], "STALE_DATA")
             self.assertIn("현재 SITE SCORE", report_output.read_text(encoding="utf-8"))
             self.assertIn("로컬 전용", dashboard_output.read_text(encoding="utf-8"))
+            self.assertIn("REVENUE GROWTH CONTROL CENTER", dashboard_output.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":
