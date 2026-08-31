@@ -34,6 +34,9 @@ jobs:
       - name: Regenerate deterministic site audit
         run: python3 scripts/seo_audit.py . --json data/site-audit.json --markdown reports/seo-audit.md
 
+      - name: Calculate page and site quality scores
+        run: python3 scripts/quality_audit.py --as-of "$(date +%F)" --dashboard /tmp/site-quality-dashboard.html
+
       - name: Reject new SEO regressions
         run: python3 scripts/seo_qa.py . --audit data/site-audit.json --baseline data/seo-qa-baseline.json --report reports/seo-qa.md
 
@@ -51,4 +54,6 @@ jobs:
           path: |
             reports/seo-audit.md
             reports/seo-qa.md
+            SITE_SCORE.md
+            data/site-score.json
           if-no-files-found: warn
