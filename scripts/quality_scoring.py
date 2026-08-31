@@ -164,16 +164,17 @@ def _score_seo(page, metadata, context):
     return _category(_sum(checks), 10, checks)
 
 
-def _score_trust(page, metadata):
+def _score_trust(page, metadata, page_type):
     sources = metadata.get("sources") or []
     has_date = bool(metadata.get("last_verified") or metadata.get("updated") or page.get("updated_date"))
+    editorial_sources_required = page_type in {"MONEY", "TRAFFIC", "HUB"}
     checks = [
-        _check("reference_links", int(page.get("external_links") or 0) > 0, 3),
+        _check("reference_links", not editorial_sources_required or int(page.get("external_links") or 0) > 0, 3),
         _check("freshness_date", has_date, 2),
         _check("author_or_operator", bool(page.get("has_author_signal")), 2, "ESTIMATED"),
         _check("method_explained", bool(page.get("has_method_signal")), 2, "ESTIMATED"),
         _check("limitations_explained", bool(page.get("has_limitation_signal")), 2, "ESTIMATED"),
-        _check("curated_primary_sources", bool(sources), 2),
+        _check("curated_primary_sources", not editorial_sources_required or bool(sources), 2),
         _check("about_or_methodology_link", bool(page.get("has_about_methodology_link")), 2),
     ]
     return _category(_sum(checks), 15, checks)
@@ -276,7 +277,7 @@ def score_page(page, metadata, context):
         "searchIntent": _score_search_intent(page, metadata),
         "contentValue": _score_content_value(page, context),
         "seo": _score_seo(page, metadata, context),
-        "trust": _score_trust(page, metadata),
+        "trust": _score_trust(page, metadata, page_type),
         "ux": _score_ux(page, context),
         "internalLinks": _score_internal_links(page, page_type, context),
         "monetization": _score_monetization(page, page_type, context),

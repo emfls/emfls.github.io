@@ -1,4 +1,6 @@
 import json
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -49,6 +51,16 @@ def page(url, path, indexable=True):
 
 
 class QualityAuditIntegrationTest(unittest.TestCase):
+    def test_script_entrypoint_can_load_its_scoring_modules(self):
+        root = Path(__file__).resolve().parents[1]
+        result = subprocess.run(
+            [sys.executable, "scripts/quality_audit.py", "--help"],
+            cwd=root,
+            text=True,
+            capture_output=True,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+
     def test_writes_every_indexable_page_once_and_is_deterministic(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
@@ -68,7 +80,7 @@ class QualityAuditIntegrationTest(unittest.TestCase):
             metadata_path.write_text("[]", encoding="utf-8")
             cannibalization_path.write_text('{"candidate_groups": []}', encoding="utf-8")
             (performance_dir / "2026-08-01.json").write_text(
-                json.dumps({"periods": {"gsc": {"start": "2026-07-01", "end": "2026-08-01"}, "ga4": {"start": "2026-07-01", "end": "2026-08-01"}}, "pages": [], "adsense": None}),
+                json.dumps({"periods": {"gsc": {"start": "2026-07-01", "end": "2026-07-29"}, "ga4": {"start": "2026-07-01", "end": "2026-07-29"}}, "pages": [], "adsense": None}),
                 encoding="utf-8",
             )
             (root / "sitemap.xml").write_text(
@@ -89,7 +101,7 @@ class QualityAuditIntegrationTest(unittest.TestCase):
                 report_output=report_output,
                 dashboard_output=dashboard_output,
             )
-            run_quality_audit(**kwargs)
+            _, site = run_quality_audit(**kwargs)
             first_bytes = page_output.read_bytes()
             run_quality_audit(**kwargs)
 
@@ -98,6 +110,10 @@ class QualityAuditIntegrationTest(unittest.TestCase):
             self.assertEqual([row["url"] for row in payload["pages"]], ["/a.html", "/tool/"])
             self.assertEqual(payload["summary"]["evaluated_indexable_pages"], 2)
             self.assertEqual(payload["schema_version"], 1)
+            self.assertNotIn("checks", payload["pages"][0]["scores"]["seo"])
+            self.assertIn("evidence", payload["pages"][0]["scores"]["seo"])
+            self.assertEqual(site["connections"]["gsc"], "STALE_DATA")
+            self.assertEqual(site["connections"]["ga4"], "STALE_DATA")
             self.assertIn("현재 SITE SCORE", report_output.read_text(encoding="utf-8"))
             self.assertIn("로컬 전용", dashboard_output.read_text(encoding="utf-8"))
 

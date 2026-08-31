@@ -37,7 +37,7 @@ def rank_priority(page_result, metrics):
     )))
     values = metrics or {}
     quality_gap = max(0.0, min(100.0, 100.0 - float(page_result.get("score", 0))))
-    search_opportunity = min(100.0, max(0.0, float(values.get("opportunity_score") or 0) / 5))
+    search_opportunity = min(100.0, max(0.0, float(values.get("opportunity_score") or 0) / 5 * 100))
     impressions = max(0.0, float(values.get("impressions") or 0))
     sessions = max(0.0, float(values.get("sessions") or 0))
     traffic_signal = min(100.0, impressions / 200 + sessions / 20)
@@ -53,6 +53,8 @@ def rank_priority(page_result, metrics):
         + type_value * 0.10
         + ease_of_fix * 0.10
     )
+    if not measured:
+        priority *= 0.60
     metric_status = "VERIFIED" if measured else "NOT_CONNECTED"
     return {
         "score": round(priority, 2),
@@ -105,7 +107,7 @@ def calculate_revenue_goal(adsense):
         warnings.append("source_rpm_differs_from_earnings_divided_by_page_views")
     return {
         "status": "VERIFIED",
-        "label": "period_daily_average",
+        "label": "historical_period_daily_average" if days > 90 else "period_daily_average",
         "period": {"start": start.isoformat(), "end": end.isoformat(), "days": days},
         "daily_revenue_usd": round(daily, 2),
         "target_daily_revenue_usd": 100.0,

@@ -149,6 +149,19 @@ class QualityEvidenceModelTest(unittest.TestCase):
         result = score_page(trust_page(), {}, scoring_context())
         self.assertNotIn("fewer_than_three_related_pages", result["issues"])
 
+    def test_non_financial_tool_does_not_require_external_editorial_sources(self):
+        page = finance_page()
+        page.update({
+            "path": "util/percentage-calculator/index.html",
+            "url": "/util/percentage-calculator/",
+            "category": "util",
+            "structured_data_types": ["WebApplication"],
+            "has_form": True,
+        })
+        result = score_page(page, {}, scoring_context())
+        self.assertEqual(result["type"], "TOOL")
+        self.assertNotIn("missing_sources", result["issues"])
+
     def test_score_contains_exact_eight_categories_and_actionable_recommendations(self):
         result = score_page(finance_page(), {}, scoring_context())
         self.assertEqual(

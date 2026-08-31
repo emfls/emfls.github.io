@@ -49,7 +49,10 @@ def render_site_markdown(site, pages, previous=None):
     lines.extend(("", "## AdSense $100/day", ""))
     goal = site.get("revenue_goal") or {"status": "DATA NOT AVAILABLE"}
     if goal.get("status") == "VERIFIED":
+        period = goal.get("period") or {}
+        period_label = "과거 데이터 기간" if goal.get("label") == "historical_period_daily_average" else "데이터 기간"
         lines.extend((
+            f"- {period_label}: {period.get('start', '알 수 없음')} ~ {period.get('end', '알 수 없음')}",
             f"- 기간 일평균 수익: ${goal['daily_revenue_usd']:.2f}",
             f"- 목표 달성률: {goal['achievement_rate']:.1%}",
             f"- 필요 성장: {goal['required_growth']:.2f}x" if goal.get("required_growth") else "- 필요 성장: DATA NOT AVAILABLE",

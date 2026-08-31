@@ -27,6 +27,17 @@ class QualityPriorityTest(unittest.TestCase):
         self.assertEqual(result["metrics"]["revenue"]["status"], "NOT_CONNECTED")
         self.assertEqual(result["metrics"]["rpm"]["status"], "NOT_CONNECTED")
 
+    def test_small_measured_opportunity_outranks_unmeasured_verification_file(self):
+        measured = rank_priority(
+            {"score": 70, "type": "TRAFFIC", "issues": ["missing_sources"]},
+            {"impressions": 198, "organic_clicks": 2, "average_position": 8, "opportunity_score": 3.5},
+        )
+        unmeasured = rank_priority(
+            {"score": 25, "type": "UTILITY", "issues": ["thin_content", "missing_sources"]},
+            None,
+        )
+        self.assertGreater(measured["score"], unmeasured["score"])
+
 
 class RevenueAndSiteScoreTest(unittest.TestCase):
     def test_revenue_goal_uses_period_daily_average_and_actual_rpm(self):
@@ -45,6 +56,17 @@ class RevenueAndSiteScoreTest(unittest.TestCase):
 
     def test_missing_adsense_data_is_explicit(self):
         self.assertEqual(calculate_revenue_goal(None)["status"], "DATA NOT AVAILABLE")
+
+    def test_multi_year_adsense_export_is_labeled_historical(self):
+        result = calculate_revenue_goal(
+            {
+                "period": {"start": "2023-08-01", "end": "2026-08-01"},
+                "estimated_earnings_usd": 89.81,
+                "page_views": 85936,
+                "page_rpm": 1.05,
+            }
+        )
+        self.assertEqual(result["label"], "historical_period_daily_average")
 
     def test_negative_values_are_rejected(self):
         with self.assertRaisesRegex(ValueError, "non-negative"):

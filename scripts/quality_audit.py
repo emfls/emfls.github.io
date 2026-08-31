@@ -4,25 +4,39 @@
 import argparse
 import json
 from collections import Counter, defaultdict
+from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlparse
 from xml.etree import ElementTree
 
-from scripts.quality_scoring import CATEGORY_MAX, score_page
-from scripts.quality_reports import render_dashboard, render_site_markdown
-from scripts.quality_site import (
-    calculate_revenue_goal,
-    calculate_site_score,
-    latest_performance_file,
-    load_performance,
-    normalize_url,
-    performance_by_url,
-    rank_priority,
-)
+try:
+    from scripts.quality_scoring import CATEGORY_MAX, score_page
+    from scripts.quality_reports import render_dashboard, render_site_markdown
+    from scripts.quality_site import (
+        calculate_revenue_goal,
+        calculate_site_score,
+        latest_performance_file,
+        load_performance,
+        normalize_url,
+        performance_by_url,
+        rank_priority,
+    )
+except ModuleNotFoundError:
+    from quality_scoring import CATEGORY_MAX, score_page
+    from quality_reports import render_dashboard, render_site_markdown
+    from quality_site import (
+        calculate_revenue_goal,
+        calculate_site_score,
+        latest_performance_file,
+        load_performance,
+        normalize_url,
+        performance_by_url,
+        rank_priority,
+    )
 
 
 SCHEMA_VERSION = 1
-RULES_VERSION = "2026-08-31"
+RULES_VERSION = "2026-08-31.1"
 
 
 def _read_json(path, default):
@@ -75,7 +89,18 @@ def _trust_pages(pages):
     return found
 
 
-def _system_context(pages, performance, sitemap_urls, inbound, root):
+def _connection_state(period, as_of):
+    end = period.get("end")
+    if not end:
+        return "NOT_CONNECTED"
+    try:
+        age = (datetime.strptime(as_of, "%Y-%m-%d").date() - datetime.strptime(end, "%Y-%m-%d").date()).days
+    except (TypeError, ValueError):
+        return "NOT_CONNECTED"
+    return "STALE_DATA" if age > 30 else "CSV_CONNECTED"
+
+
+def _system_context(pages, performance, sitemap_urls, inbound, root, as_of):
     total = len(pages) or 1
     periods = performance.get("periods") or {}
     gsc_period = periods.get("gsc") or {}
@@ -83,8 +108,8 @@ def _system_context(pages, performance, sitemap_urls, inbound, root):
     robots_path = Path(root) / "robots.txt"
     robots_text = robots_path.read_text(encoding="utf-8", errors="ignore") if robots_path.exists() else ""
     return {
-        "gsc_state": "CSV_CONNECTED" if gsc_period.get("end") else "NOT_CONNECTED",
-        "ga4_state": "CSV_CONNECTED" if ga4_period.get("end") else "NOT_CONNECTED",
+        "gsc_state": _connection_state(gsc_period, as_of),
+        "ga4_state": _connection_state(ga4_period, as_of),
         "sitemap_ok": bool(sitemap_urls),
         "robots_ok": robots_path.exists() and "Disallow: /\n" not in robots_text,
         "https_ok": True,
@@ -123,6 +148,22 @@ def _validate(page_payload, expected_urls):
                 raise ValueError(f"fabricated {name} for {row['url']}")
 
 
+def _compact_result(result):
+    priority = {"MANUAL_REVIEW_REQUIRED": 3, "NOT_CONNECTED": 2, "ESTIMATED": 1, "VERIFIED": 0}
+    compact_scores = {}
+    for name, section in result["scores"].items():
+        statuses = [check["status"] for check in section["checks"]]
+        evidence_status = max(statuses, key=lambda status: priority[status]) if statuses else "NOT_CONNECTED"
+        compact_scores[name] = {"score": section["score"], "max": section["max"], "evidence": evidence_status}
+    return {
+        **result,
+        "scores": compact_scores,
+        "issues": result["issues"][:20],
+        "strengths": result["strengths"][:8],
+        "recommendations": result["recommendations"][:10],
+    }
+
+
 def run_quality_audit(
     *, root, audit_path, metadata_path, performance_dir, cannibalization_path,
     as_of, page_output, site_output, report_output=None, dashboard_output=None,
@@ -155,6 +196,7 @@ def run_quality_audit(
         key = normalize_url(page["url"])
         result = score_page(page, metadata.get(key, {}), context)
         priority = rank_priority(result, metrics.get(key))
+        result = _compact_result(result)
         result["priority"] = {key: value for key, value in priority.items() if key != "metrics"}
         result["metrics"] = priority["metrics"]
         results.append(result)
@@ -166,7 +208,7 @@ def run_quality_audit(
         "summary": {"evaluated_indexable_pages": len(results)},
         "pages": results,
     }
-    system_context = _system_context(pages, performance, sitemap_urls, inbound, root)
+    system_context = _system_context(pages, performance, sitemap_urls, inbound, root, as_of)
     site = calculate_site_score(results, system_context)
     site_payload = {
         "schema_version": SCHEMA_VERSION,
@@ -181,7 +223,10 @@ def run_quality_audit(
     previous_site = _read_json(site_output, None)
     page_output.parent.mkdir(parents=True, exist_ok=True)
     site_output.parent.mkdir(parents=True, exist_ok=True)
-    page_output.write_text(json.dumps(page_payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    page_output.write_text(
+        json.dumps(page_payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
     site_output.write_text(json.dumps(site_payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     if report_output:
         report_output = Path(report_output)

@@ -61,6 +61,21 @@ class QualityReportTest(unittest.TestCase):
         for heading in ("현재 SITE SCORE", "가장 큰 사이트 문제", "가장 먼저 개선할 페이지", "데이터 제한", "다음 작업"):
             self.assertIn(heading, text)
 
+    def test_markdown_labels_historical_adsense_period(self):
+        site = site_fixture()
+        site["revenue_goal"] = {
+            "status": "VERIFIED",
+            "label": "historical_period_daily_average",
+            "period": {"start": "2023-08-01", "end": "2026-08-01", "days": 1097},
+            "daily_revenue_usd": 0.08,
+            "achievement_rate": 0.0008,
+            "required_growth": 1250,
+            "required_page_views": 95238,
+        }
+        text = render_site_markdown(site, page_results(), None)
+        self.assertIn("과거 데이터 기간", text)
+        self.assertIn("2023-08-01 ~ 2026-08-01", text)
+
     def test_dashboard_has_filters_but_no_account_or_ad_interaction_code(self):
         html = render_dashboard(site_fixture(), page_results())
         self.assertIn('id="grade-filter"', html)
