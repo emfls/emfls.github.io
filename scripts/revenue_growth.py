@@ -41,13 +41,15 @@ def _read_json(path, default):
     return json.loads(path.read_text(encoding="utf-8")) if path and path.exists() else default
 
 
-def _write_json(path, payload):
+def _write_json(path, payload, compact=False):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
-        json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-    )
+    options = {"ensure_ascii": False, "sort_keys": True}
+    if compact:
+        options["separators"] = (",", ":")
+    else:
+        options["indent"] = 2
+    path.write_text(json.dumps(payload, **options) + "\n", encoding="utf-8")
 
 
 def _by_url(rows):
@@ -302,7 +304,7 @@ def run_revenue_growth(
         "summary": {"evaluatedIndexablePages": indexed},
         "pages": records,
     }
-    _write_json(page_output, page_payload)
+    _write_json(page_output, page_payload, compact=True)
     _write_json(opportunity_output, summary)
     report_output = Path(report_output)
     report_output.parent.mkdir(parents=True, exist_ok=True)
