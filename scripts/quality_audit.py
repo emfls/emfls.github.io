@@ -9,6 +9,7 @@ from urllib.parse import urlparse
 from xml.etree import ElementTree
 
 from scripts.quality_scoring import CATEGORY_MAX, score_page
+from scripts.quality_reports import render_dashboard, render_site_markdown
 from scripts.quality_site import (
     calculate_revenue_goal,
     calculate_site_score,
@@ -124,7 +125,7 @@ def _validate(page_payload, expected_urls):
 
 def run_quality_audit(
     *, root, audit_path, metadata_path, performance_dir, cannibalization_path,
-    as_of, page_output, site_output,
+    as_of, page_output, site_output, report_output=None, dashboard_output=None,
 ):
     root = Path(root)
     audit = _read_json(audit_path, {"pages": []})
@@ -177,10 +178,19 @@ def run_quality_audit(
     _validate(page_payload, [page["url"] for page in pages])
     page_output = Path(page_output)
     site_output = Path(site_output)
+    previous_site = _read_json(site_output, None)
     page_output.parent.mkdir(parents=True, exist_ok=True)
     site_output.parent.mkdir(parents=True, exist_ok=True)
     page_output.write_text(json.dumps(page_payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     site_output.write_text(json.dumps(site_payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    if report_output:
+        report_output = Path(report_output)
+        report_output.parent.mkdir(parents=True, exist_ok=True)
+        report_output.write_text(render_site_markdown(site_payload, results, previous_site), encoding="utf-8")
+    if dashboard_output:
+        dashboard_output = Path(dashboard_output)
+        dashboard_output.parent.mkdir(parents=True, exist_ok=True)
+        dashboard_output.write_text(render_dashboard(site_payload, results), encoding="utf-8")
     return page_payload, site_payload
 
 
@@ -194,6 +204,8 @@ def main():
     parser.add_argument("--as-of", required=True)
     parser.add_argument("--page-output", type=Path, default=Path("data/page-scores.json"))
     parser.add_argument("--site-output", type=Path, default=Path("data/site-score.json"))
+    parser.add_argument("--report", type=Path, default=Path("SITE_SCORE.md"))
+    parser.add_argument("--dashboard", type=Path, default=Path("reports/site-quality-dashboard.html"))
     args = parser.parse_args()
     page_payload, site_payload = run_quality_audit(
         root=args.root,
@@ -204,6 +216,8 @@ def main():
         as_of=args.as_of,
         page_output=args.page_output,
         site_output=args.site_output,
+        report_output=args.report,
+        dashboard_output=args.dashboard,
     )
     print(json.dumps({"pages": page_payload["summary"]["evaluated_indexable_pages"], "site_score": site_payload["score"]}))
 

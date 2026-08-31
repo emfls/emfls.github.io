@@ -59,6 +59,8 @@ class QualityAuditIntegrationTest(unittest.TestCase):
             cannibalization_path = root / "cannibalization.json"
             page_output = root / "page-scores.json"
             site_output = root / "site-score.json"
+            report_output = root / "SITE_SCORE.md"
+            dashboard_output = root / "site-quality-dashboard.html"
             audit_path.write_text(
                 json.dumps({"summary": {}, "parser_errors": [], "pages": [page("/tool/", "util/tool/index.html"), page("/a.html", "report/a.html"), page("/private.html", "private.html", False)]}),
                 encoding="utf-8",
@@ -84,6 +86,8 @@ class QualityAuditIntegrationTest(unittest.TestCase):
                 as_of="2026-08-31",
                 page_output=page_output,
                 site_output=site_output,
+                report_output=report_output,
+                dashboard_output=dashboard_output,
             )
             run_quality_audit(**kwargs)
             first_bytes = page_output.read_bytes()
@@ -94,6 +98,8 @@ class QualityAuditIntegrationTest(unittest.TestCase):
             self.assertEqual([row["url"] for row in payload["pages"]], ["/a.html", "/tool/"])
             self.assertEqual(payload["summary"]["evaluated_indexable_pages"], 2)
             self.assertEqual(payload["schema_version"], 1)
+            self.assertIn("현재 SITE SCORE", report_output.read_text(encoding="utf-8"))
+            self.assertIn("로컬 전용", dashboard_output.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":
