@@ -28,7 +28,9 @@ def render_site_markdown(site, pages, previous=None):
         f"- 60점 미만 비율: {kpis['pages_under_60_ratio']:.1%} (목표 3% 이하)", "",
     ]
     if previous and previous.get("rules_version") == site.get("rules_version"):
-        lines.extend((f"- 이전 실행 대비 SITE_SCORE: {site['score'] - previous.get('score', 0):+d}", ""))
+        change = site["score"] - previous.get("score", 0)
+        if change:
+            lines.extend((f"- 이전 실행 대비 SITE_SCORE: {change:+d}", ""))
     lines.extend(("## 영역별 점수", "", "| 영역 | 점수 |", "|---|---:|"))
     lines.extend(f"| {name} | {value['score']} / {value['max']} |" for name, value in site["scores"].items())
     lines.extend(("", "## 등급 분포", ""))

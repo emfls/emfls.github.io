@@ -76,6 +76,12 @@ class QualityReportTest(unittest.TestCase):
         self.assertIn("과거 데이터 기간", text)
         self.assertIn("2023-08-01 ~ 2026-08-01", text)
 
+    def test_markdown_omits_zero_change_from_previous_run(self):
+        site = site_fixture()
+        site["rules_version"] = "v1"
+        text = render_site_markdown(site, page_results(), {"rules_version": "v1", "score": 74})
+        self.assertNotIn("이전 실행 대비 SITE_SCORE: +0", text)
+
     def test_dashboard_has_filters_but_no_account_or_ad_interaction_code(self):
         html = render_dashboard(site_fixture(), page_results())
         self.assertIn('id="grade-filter"', html)
