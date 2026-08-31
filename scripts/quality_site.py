@@ -2,7 +2,10 @@
 """Join performance signals, rank improvements, and aggregate site quality."""
 
 import json
+from collections import Counter
+from datetime import datetime
 from pathlib import Path
+from statistics import mean, median
 from urllib.parse import urlparse
 
 
@@ -79,4 +82,155 @@ def load_performance(path):
 
 
 def calculate_revenue_goal(adsense):
-    raise NotImplementedError("implemented in Task 5")
+    if not adsense:
+        return {"status": "DATA NOT AVAILABLE", "reason": "AdSense export is not connected."}
+    earnings = float(adsense.get("estimated_earnings_usd") or 0)
+    page_views = float(adsense.get("page_views") or 0)
+    rpm = float(adsense.get("page_rpm") or 0)
+    if min(earnings, page_views, rpm) < 0:
+        raise ValueError("AdSense earnings, page views, and RPM must be non-negative")
+    period = adsense.get("period") or {}
+    try:
+        start = datetime.strptime(period["start"], "%Y-%m-%d").date()
+        end = datetime.strptime(period["end"], "%Y-%m-%d").date()
+    except (KeyError, TypeError, ValueError):
+        return {"status": "DATA NOT AVAILABLE", "reason": "AdSense period is missing or invalid."}
+    days = (end - start).days + 1
+    if days <= 0 or rpm <= 0:
+        return {"status": "DATA NOT AVAILABLE", "reason": "AdSense period or RPM cannot support the goal calculation."}
+    daily = earnings / days
+    warnings = []
+    calculated_rpm = earnings * 1000 / page_views if page_views else 0
+    if page_views and calculated_rpm and abs(rpm - calculated_rpm) / calculated_rpm > 0.1:
+        warnings.append("source_rpm_differs_from_earnings_divided_by_page_views")
+    return {
+        "status": "VERIFIED",
+        "label": "period_daily_average",
+        "period": {"start": start.isoformat(), "end": end.isoformat(), "days": days},
+        "daily_revenue_usd": round(daily, 2),
+        "target_daily_revenue_usd": 100.0,
+        "achievement_rate": round(daily / 100, 4),
+        "required_growth": round(100 / daily, 2) if daily else None,
+        "page_views": int(page_views),
+        "page_rpm": round(rpm, 2),
+        "required_page_views": round(100 / rpm * 1000),
+        "warnings": warnings,
+    }
+
+
+def _site_grade(score):
+    if score >= 95:
+        return "S"
+    if score >= 90:
+        return "A+"
+    if score >= 80:
+        return "A"
+    if score >= 70:
+        return "B"
+    if score >= 60:
+        return "C"
+    return "F"
+
+
+def _section(score, maximum, status, reasons):
+    return {"score": min(maximum, max(0, int(round(score)))), "max": maximum, "status": status, "reasons": list(reasons)}
+
+
+def calculate_site_score(page_results, system_context):
+    pages = list(page_results)
+    total = len(pages)
+    page_scores = [int(page.get("score") or 0) for page in pages]
+    grades = Counter(page.get("grade") for page in pages)
+    grade_counts = {grade: grades.get(grade, 0) for grade in ("S", "A", "B", "C", "D", "F")}
+    ratio_80 = sum(score >= 80 for score in page_scores) / total if total else 0
+    ratio_fail = sum(score < 60 for score in page_scores) / total if total else 0
+    tool_count = sum(page.get("type") == "TOOL" for page in pages)
+
+    portfolio = (
+        5 * bool(total)
+        + 5 * bool(system_context.get("category_structure_ok", True))
+        + 5 * ratio_80
+        + 5 * max(0, 1 - ratio_fail)
+        + 5 * bool(tool_count)
+    )
+    search_connected = system_context.get("gsc_state") == "CSV_CONNECTED"
+    ga_connected = system_context.get("ga4_state") == "CSV_CONNECTED"
+    search = (
+        3 * search_connected
+        + 3 * bool(system_context.get("sitemap_ok"))
+        + 3 * bool(system_context.get("index_tracking", search_connected))
+        + 3 * search_connected
+        + 3 * search_connected
+        + 2 * bool(system_context.get("decline_detection", False))
+        + 3 * bool(search_connected or ga_connected)
+    )
+    breadcrumb_ratio = float(system_context.get("breadcrumb_ratio") or 0)
+    orphan_ratio = float(system_context.get("orphan_ratio") or 0)
+    structure = (
+        3 * bool(system_context.get("three_click_access", False))
+        + 3 * bool(system_context.get("category_structure_ok", True))
+        + 2 * breadcrumb_ratio
+        + 3 * bool(system_context.get("internal_link_system", total > 0))
+        + 2 * max(0, 1 - orphan_ratio)
+        + 2 * bool(system_context.get("url_consistency", True))
+    )
+    canonical_ratio = float(system_context.get("canonical_ratio") or 0)
+    schema_ratio = float(system_context.get("structured_data_ratio") or 0)
+    technical = (
+        2 * bool(system_context.get("https_ok"))
+        + 1
+        + 2 * bool(system_context.get("sitemap_ok"))
+        + 1 * bool(system_context.get("robots_ok"))
+        + 2 * canonical_ratio
+        + 2 * bool(system_context.get("mobile_baseline", True))
+        + 2 * bool(system_context.get("performance_connected", False))
+        + 1 * bool(system_context.get("custom_404", True))
+        + 1 * schema_ratio
+        + 1 * bool(system_context.get("mixed_content_safe", True))
+    )
+    trust_pages = set(system_context.get("trust_pages") or set())
+    trust = (
+        2 * ("about" in trust_pages)
+        + 2 * ("contact" in trust_pages)
+        + 2 * ("privacy" in trust_pages)
+        + 1 * ("terms" in trust_pages)
+        + 1 * ("disclaimer" in trust_pages)
+        + 2 * ("methodology" in trust_pages)
+    )
+    monetization = (
+        3 * bool(system_context.get("adsense_policy_safe"))
+        + 2 * bool(system_context.get("ad_placement_reviewed", False))
+        + 2 * bool(system_context.get("viewability_connected", False))
+        + 2 * bool(system_context.get("url_revenue_connected", False))
+        + 2 * bool(system_context.get("ad_ux_safe", True))
+        + 2 * bool(any(page.get("type") in {"MONEY", "TOOL"} for page in pages))
+        + 2 * bool(total)
+    )
+    scores = {
+        "contentPortfolio": _section(portfolio, 25, "ESTIMATED", ["page_grade_distribution", "tool_inventory"]),
+        "searchAcquisition": _section(search, 20, "VERIFIED" if search_connected else "NOT_CONNECTED", [system_context.get("gsc_state", "NOT_CONNECTED")]),
+        "siteStructure": _section(structure, 15, "ESTIMATED", ["breadcrumb_and_orphan_coverage"]),
+        "technicalHealth": _section(technical, 15, "ESTIMATED", ["static_audit_coverage"]),
+        "trust": _section(trust, 10, "VERIFIED", sorted(trust_pages)),
+        "monetization": _section(monetization, 15, "ESTIMATED", ["no_ad_click_tracking", "url_revenue_not_assumed"]),
+    }
+    score = sum(section["score"] for section in scores.values())
+    return {
+        "score": score,
+        "grade": _site_grade(score),
+        "scores": scores,
+        "kpis": {
+            "total_pages": total,
+            "grades": grade_counts,
+            "average_page_score": round(mean(page_scores), 2) if page_scores else 0,
+            "median_page_score": round(median(page_scores), 2) if page_scores else 0,
+            "pages_80_plus_ratio": round(ratio_80, 4),
+            "pages_under_60_ratio": round(ratio_fail, 4),
+            "targets": {"site_score": 90, "pages_80_plus_ratio": 0.8, "pages_under_60_ratio": 0.03},
+        },
+        "connections": {
+            "gsc": system_context.get("gsc_state", "NOT_CONNECTED"),
+            "ga4": system_context.get("ga4_state", "NOT_CONNECTED"),
+            "url_adsense": "NOT_CONNECTED",
+        },
+    }

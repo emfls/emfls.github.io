@@ -1,6 +1,6 @@
 import unittest
 
-from scripts.quality_site import rank_priority
+from scripts.quality_site import calculate_revenue_goal, calculate_site_score, rank_priority
 
 
 class QualityPriorityTest(unittest.TestCase):
@@ -26,5 +26,62 @@ class QualityPriorityTest(unittest.TestCase):
         result = rank_priority({"score": 70, "type": "MONEY", "issues": []}, {"impressions": 10})
         self.assertEqual(result["metrics"]["revenue"]["status"], "NOT_CONNECTED")
         self.assertEqual(result["metrics"]["rpm"]["status"], "NOT_CONNECTED")
+
+
+class RevenueAndSiteScoreTest(unittest.TestCase):
+    def test_revenue_goal_uses_period_daily_average_and_actual_rpm(self):
+        result = calculate_revenue_goal(
+            {
+                "period": {"start": "2026-08-01", "end": "2026-08-10"},
+                "estimated_earnings_usd": 10.0,
+                "page_views": 2000,
+                "page_rpm": 5.0,
+            }
+        )
+        self.assertEqual(result["daily_revenue_usd"], 1.0)
+        self.assertEqual(result["required_growth"], 100.0)
+        self.assertEqual(result["required_page_views"], 20000)
+        self.assertEqual(result["label"], "period_daily_average")
+
+    def test_missing_adsense_data_is_explicit(self):
+        self.assertEqual(calculate_revenue_goal(None)["status"], "DATA NOT AVAILABLE")
+
+    def test_negative_values_are_rejected(self):
+        with self.assertRaisesRegex(ValueError, "non-negative"):
+            calculate_revenue_goal(
+                {
+                    "period": {"start": "2026-08-01", "end": "2026-08-01"},
+                    "estimated_earnings_usd": -1,
+                    "page_views": 1,
+                    "page_rpm": 1,
+                }
+            )
+
+    def test_site_score_aggregates_distribution_and_exact_category_total(self):
+        pages = [
+            {"url": "/a", "score": 92, "grade": "S", "type": "TOOL", "status": "CORE"},
+            {"url": "/b", "score": 84, "grade": "A", "type": "TRAFFIC", "status": "GOOD"},
+            {"url": "/c", "score": 55, "grade": "D", "type": "MONEY", "status": "FAIL"},
+        ]
+        result = calculate_site_score(
+            pages,
+            {
+                "gsc_state": "CSV_CONNECTED",
+                "ga4_state": "CSV_CONNECTED",
+                "sitemap_ok": True,
+                "robots_ok": True,
+                "https_ok": True,
+                "canonical_ratio": 1.0,
+                "breadcrumb_ratio": 0.67,
+                "structured_data_ratio": 0.67,
+                "orphan_ratio": 0.0,
+                "trust_pages": {"about", "contact", "privacy", "terms", "disclaimer", "methodology"},
+                "adsense_policy_safe": True,
+            },
+        )
+        self.assertEqual(result["kpis"]["total_pages"], 3)
+        self.assertEqual(result["kpis"]["grades"], {"S": 1, "A": 1, "B": 0, "C": 0, "D": 1, "F": 0})
+        self.assertEqual(result["score"], sum(section["score"] for section in result["scores"].values()))
+        self.assertEqual(sum(section["max"] for section in result["scores"].values()), 100)
 if __name__ == "__main__":
     unittest.main()
