@@ -1,9 +1,30 @@
 import unittest
 
-from scripts.quality_site import calculate_revenue_goal, calculate_site_score, rank_priority
+from scripts.quality_site import (
+    calculate_revenue_goal,
+    calculate_site_score,
+    performance_by_url,
+    rank_priority,
+)
 
 
 class QualityPriorityTest(unittest.TestCase):
+    def test_nested_current_performance_is_available_to_existing_priority_logic(self):
+        rows = performance_by_url(
+            {
+                "pages": [
+                    {
+                        "url": "/camp/example.html",
+                        "google": {"impressions": 100, "clicks": 4, "ctr": 0.04, "position": 12},
+                        "ga4": {"views": 80, "users": 60, "engagementSeconds": 45, "revenue": 0.2},
+                    }
+                ]
+            }
+        )
+
+        self.assertEqual(rows["/camp/example.html"]["impressions"], 100)
+        self.assertEqual(rows["/camp/example.html"]["organic_clicks"], 4)
+        self.assertEqual(rows["/camp/example.html"]["sessions"], 80)
     def test_measured_page_outranks_zero_data_page_when_opportunity_is_large(self):
         measured = rank_priority(
             {"score": 72, "type": "TRAFFIC", "issues": ["missing_sources"]},

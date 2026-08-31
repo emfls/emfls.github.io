@@ -24,7 +24,24 @@ def latest_performance_file(directory):
 
 
 def performance_by_url(data):
-    return {normalize_url(row.get("url")): row for row in data.get("pages", []) if row.get("url")}
+    normalized = {}
+    for row in data.get("pages", []):
+        if not row.get("url"):
+            continue
+        values = dict(row)
+        ga4 = row.get("ga4") or {}
+        google = row.get("google") or {}
+        if ga4:
+            values.setdefault("sessions", ga4.get("views"))
+            values.setdefault("active_users", ga4.get("users"))
+            values.setdefault("engagement_seconds", ga4.get("engagementSeconds"))
+        if google:
+            values.setdefault("organic_clicks", google.get("clicks"))
+            values.setdefault("impressions", google.get("impressions"))
+            values.setdefault("search_ctr", google.get("ctr"))
+            values.setdefault("average_position", google.get("position"))
+        normalized[normalize_url(row.get("url"))] = values
+    return normalized
 
 
 def _metric(value, status):
