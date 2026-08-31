@@ -40,9 +40,16 @@ def public_url(relative_path: str) -> str:
     return f"{BASE_URL}/{relative_path}"
 
 
+def public_html_pages():
+    return (
+        page for page in sorted(ROOT.rglob("*.html"))
+        if ".worktrees" not in page.relative_to(ROOT).parts
+    )
+
+
 def test_every_indexable_html_has_one_exact_self_canonical():
     failures = []
-    for page in sorted(ROOT.rglob("*.html")):
+    for page in public_html_pages():
         relative_path = unicodedata.normalize("NFC", page.relative_to(ROOT).as_posix())
         if relative_path in EXCLUDED:
             continue
@@ -60,7 +67,7 @@ def test_every_indexable_html_has_one_exact_self_canonical():
 
 def test_no_canonical_uses_retired_custom_domain():
     offenders = []
-    for page in sorted(ROOT.rglob("*.html")):
+    for page in public_html_pages():
         parser = CanonicalParser()
         parser.feed(page.read_text(encoding="utf-8"))
         if any(url.startswith("https://emfls.com") for url in parser.urls):
