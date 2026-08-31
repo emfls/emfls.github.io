@@ -27,6 +27,21 @@ class SeoQaWorkflowTests(unittest.TestCase):
         source = WORKFLOW.read_text(encoding="utf-8")
         self.assertIn("TZ: Asia/Seoul", source)
 
+    def test_workflow_generates_revenue_opportunities_before_final_dashboard_and_tests(self):
+        source = WORKFLOW.read_text(encoding="utf-8")
+        audit = source.index("scripts/seo_audit.py")
+        quality = source.index("scripts/quality_audit.py")
+        revenue = source.index("scripts/revenue_growth.py")
+        dashboard = source.rindex("scripts/quality_audit.py")
+        tests = source.index("python3 -m unittest discover")
+
+        self.assertLess(audit, quality)
+        self.assertLess(quality, revenue)
+        self.assertLess(revenue, dashboard)
+        self.assertLess(dashboard, tests)
+        self.assertIn("data/revenue-opportunities.json", source)
+        self.assertIn("reports/revenue-growth-report.md", source)
+
 
 if __name__ == "__main__":
     unittest.main()

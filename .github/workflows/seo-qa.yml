@@ -37,6 +37,12 @@ jobs:
       - name: Calculate page and site quality scores
         run: python3 scripts/quality_audit.py --as-of "$(date +%F)" --dashboard /tmp/site-quality-dashboard.html
 
+      - name: Calculate revenue opportunities from available performance data
+        run: python3 scripts/revenue_growth.py --as-of "$(date +%F)"
+
+      - name: Render revenue growth control center
+        run: python3 scripts/quality_audit.py --as-of "$(date +%F)" --revenue data/revenue-opportunities.json --dashboard reports/site-quality-dashboard.html
+
       - name: Reject new SEO regressions
         run: python3 scripts/seo_qa.py . --audit data/site-audit.json --baseline data/seo-qa-baseline.json --report reports/seo-qa.md
 
@@ -56,4 +62,7 @@ jobs:
             reports/seo-qa.md
             SITE_SCORE.md
             data/site-score.json
+            data/revenue-opportunities.json
+            reports/revenue-growth-report.md
+            reports/site-quality-dashboard.html
           if-no-files-found: warn
