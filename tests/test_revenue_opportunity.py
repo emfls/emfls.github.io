@@ -1,6 +1,49 @@
 import unittest
 
-from scripts.revenue_opportunity import empty_channel, freshness_status, normalize_channel
+from scripts.revenue_opportunity import (
+    classify_record,
+    cooldown_state,
+    empty_channel,
+    freshness_status,
+    normalize_channel,
+    score_opportunity,
+    select_improvements,
+)
+
+
+def performance_record(**overrides):
+    record = {
+        "url": "/kor/report/camp/example.html",
+        "pageScore": 70,
+        "pageType": "TRAFFIC",
+        "cluster": "camping",
+        "naver": {
+            "impressions": 10000,
+            "clicks": 100,
+            "ctr": 0.01,
+            "position": 18,
+            "status": "VERIFIED",
+        },
+        "google": {
+            "impressions": None,
+            "clicks": None,
+            "ctr": None,
+            "position": None,
+            "status": "NOT_CONNECTED",
+        },
+        "ga4": {
+            "views": 100,
+            "users": 80,
+            "engagementSeconds": 50,
+            "revenue": 0.2,
+            "status": "VERIFIED",
+        },
+        "adsense": {"revenue": None, "rpm": None, "status": "NOT_CONNECTED"},
+        "lastOptimizationDate": None,
+        "cooldown": False,
+    }
+    record.update(overrides)
+    return record
 
 
 class RevenueOpportunityDataTest(unittest.TestCase):
@@ -35,6 +78,128 @@ class RevenueOpportunityDataTest(unittest.TestCase):
 
         self.assertEqual(channel["impressions"], 0)
         self.assertEqual(channel["status"], "VERIFIED")
+
+
+class RevenueOpportunityBehaviorTest(unittest.TestCase):
+    def test_high_impressions_low_ctr_scores_above_low_demand_page(self):
+        high = score_opportunity(performance_record(), {"naver_ctr": 0.024})
+        low = score_opportunity(
+            performance_record(
+                naver={
+                    "impressions": 10,
+                    "clicks": 0,
+                    "ctr": 0.0,
+                    "position": 80,
+                    "status": "VERIFIED",
+                }
+            ),
+            {"naver_ctr": 0.024},
+        )
+
+        self.assertGreater(high["score"], low["score"])
+        self.assertEqual(sum(item["max"] for item in high["components"]), 100)
+
+    def test_low_page_score_does_not_unprotect_winner(self):
+        record = performance_record(
+            pageScore=30,
+            ga4={
+                "views": 143,
+                "users": 117,
+                "engagementSeconds": 71,
+                "revenue": 0.88,
+                "status": "VERIFIED",
+            },
+        )
+
+        classification, action, _ = classify_record(
+            record, score_opportunity(record, {"naver_ctr": 0.024})
+        )
+
+        self.assertEqual(classification, "WINNER")
+        self.assertEqual(action, "PROTECT")
+
+    def test_cooldown_is_excluded_from_improvement_selection(self):
+        record = performance_record(lastOptimizationDate="2026-08-25")
+        record.update(cooldown_state(record["lastOptimizationDate"], "2026-08-31"))
+        record.update(
+            {
+                "classification": "OPPORTUNITY",
+                "nextAction": "IMPROVE_SEARCH_CTR",
+                "revenueOpportunityScore": 95,
+                "dataStatus": "VERIFIED",
+            }
+        )
+
+        self.assertEqual(select_improvements([record]), [])
+
+    def test_selection_is_capped_at_three(self):
+        rows = []
+        for index in range(8):
+            row = performance_record(url=f"/p-{index}.html")
+            row.update(
+                {
+                    "classification": "OPPORTUNITY",
+                    "nextAction": "IMPROVE_SEARCH_CTR",
+                    "revenueOpportunityScore": 90 - index,
+                    "dataStatus": "VERIFIED",
+                }
+            )
+            rows.append(row)
+
+        self.assertEqual(len(select_improvements(rows)), 3)
+
+    def test_adsense_ctr_cannot_change_score(self):
+        first = performance_record(
+            adsense={
+                "revenue": None,
+                "rpm": None,
+                "ctr": 0.01,
+                "status": "NOT_CONNECTED",
+            }
+        )
+        second = performance_record(
+            adsense={
+                "revenue": None,
+                "rpm": None,
+                "ctr": 0.99,
+                "status": "NOT_CONNECTED",
+            }
+        )
+
+        self.assertEqual(
+            score_opportunity(first, {"naver_ctr": 0.024}),
+            score_opportunity(second, {"naver_ctr": 0.024}),
+        )
+
+    def test_dead_candidate_only_returns_review_action(self):
+        record = performance_record(
+            naver={
+                "impressions": 0,
+                "clicks": 0,
+                "ctr": 0.0,
+                "position": None,
+                "status": "VERIFIED",
+            },
+            ga4={
+                "views": 0,
+                "users": 0,
+                "engagementSeconds": 0,
+                "revenue": 0,
+                "status": "VERIFIED",
+            },
+            duplicate=True,
+            inboundLinks=0,
+        )
+
+        classification, action, _ = classify_record(
+            record, score_opportunity(record, {"naver_ctr": 0.024})
+        )
+
+        self.assertEqual(
+            (classification, action),
+            ("DEAD_CANDIDATE", "DEAD_CANDIDATE_REVIEW"),
+        )
+        self.assertNotIn(action, {"DELETE", "NOINDEX", "CHANGE_CANONICAL"})
 
 
 if __name__ == "__main__":
