@@ -37,8 +37,11 @@ jobs:
       - name: Calculate page and site quality scores
         run: python3 scripts/quality_audit.py --as-of "$(date +%F)" --dashboard /tmp/site-quality-dashboard.html
 
+      - name: Validate Naver URL performance snapshot
+        run: python3 scripts/naver_performance.py --snapshot data/naver/search-advisor-2026-08-30.json --page-scores data/page-scores.json --report reports/naver-data-quality.md
+
       - name: Calculate revenue opportunities from available performance data
-        run: python3 scripts/revenue_growth.py --as-of "$(date +%F)"
+        run: python3 scripts/revenue_growth.py --as-of "$(date +%F)" --naver-snapshot data/naver/search-advisor-2026-08-30.json
 
       - name: Render revenue growth control center
         run: python3 scripts/quality_audit.py --as-of "$(date +%F)" --revenue data/revenue-opportunities.json --dashboard reports/site-quality-dashboard.html
@@ -63,6 +66,7 @@ jobs:
             SITE_SCORE.md
             data/site-score.json
             data/revenue-opportunities.json
+            reports/naver-data-quality.md
             reports/revenue-growth-report.md
             reports/site-quality-dashboard.html
           if-no-files-found: warn

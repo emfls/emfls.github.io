@@ -1,4 +1,5 @@
 import json
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -143,6 +144,22 @@ class CheckedInNaverSnapshotTest(unittest.TestCase):
             _, markdown = build_naver_quality_report(path, ["/a.html", "/not-in-top-30.html"])
         self.assertNotIn("/not-in-top-30.html: 0", markdown)
         self.assertIn("TOP 30 밖 사이트 URL은 NOT_AVAILABLE", markdown)
+
+    def test_cli_writes_report_and_returns_nonzero_when_gate_fails(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            snapshot = root / "snapshot.json"
+            scores = root / "scores.json"
+            report = root / "report.md"
+            snapshot.write_text(json.dumps(snapshot_with_rows([verified_row("https://emfls.github.io/missing.html", 1, 10)])))
+            scores.write_text(json.dumps({"pages": [{"url": "/known.html"}]}))
+            completed = subprocess.run(
+                ["python3", "scripts/naver_performance.py", "--snapshot", str(snapshot), "--page-scores", str(scores), "--report", str(report)],
+                capture_output=True,
+                text=True,
+            )
+        self.assertEqual(completed.returncode, 2)
+        self.assertIn("Quality gate: FAIL", report.read_text() if report.exists() else completed.stdout)
 
 
 if __name__ == "__main__":

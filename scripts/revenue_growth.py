@@ -5,8 +5,10 @@ import argparse
 import json
 from collections import Counter
 from pathlib import Path
+from statistics import median
 
 try:
+    from scripts.naver_performance import load_naver_snapshot, match_naver_rows
     from scripts.quality_site import normalize_url
     from scripts.revenue_opportunity import (
         classify_record,
@@ -17,6 +19,7 @@ try:
         select_improvements,
     )
 except ModuleNotFoundError:
+    from naver_performance import load_naver_snapshot, match_naver_rows
     from quality_site import normalize_url
     from revenue_opportunity import (
         classify_record,
@@ -90,6 +93,40 @@ def _cluster_medians(records):
     return values
 
 
+def _camping_naver_benchmarks(records):
+    pages = [
+        row for row in records
+        if row.get("cluster") == "camping" and row["naver"].get("status") == "VERIFIED"
+    ]
+    if not pages:
+        return {"coveredPages": 0, "impressionsMedian": None, "clicksMedian": None, "ctrMedian": None, "weightedCtr": None}
+    impressions = [row["naver"]["impressions"] for row in pages]
+    clicks = [row["naver"]["clicks"] for row in pages]
+    ctrs = [row["naver"]["ctr"] for row in pages]
+    total_impressions = sum(impressions)
+    ordered_impressions = sorted(impressions)
+    ordered_clicks = sorted(clicks)
+    divisor = max(1, len(pages) - 1)
+    percentiles = {
+        row["url"]: {
+            "impressions": ordered_impressions.index(row["naver"]["impressions"]) / divisor,
+            "clicks": ordered_clicks.index(row["naver"]["clicks"]) / divisor,
+        }
+        for row in pages
+    }
+    return {
+        "coveredPages": len(pages),
+        "impressionsMedian": median(impressions),
+        "clicksMedian": median(clicks),
+        "ctrMedian": median(ctrs),
+        "weightedCtr": sum(clicks) / total_impressions if total_impressions else 0,
+        "maxImpressions": max(impressions),
+        "maxClicks": max(clicks),
+        "rankBenchmark": "NOT_AVAILABLE",
+        "percentiles": percentiles,
+    }
+
+
 def _data_status(record):
     search_states = {record[name].get("status") for name in ("naver", "google")}
     if "VERIFIED" in search_states:
@@ -123,6 +160,7 @@ def _camping_cluster(records):
 
 def _render_report(summary):
     kpis = summary["kpis"]
+    naver_quality = ((summary.get("dataQuality") or {}).get("naver") or {})
     lines = [
         "# Revenue Growth Report",
         "",
@@ -148,12 +186,22 @@ def _render_report(summary):
                 f"- Next Action: {row['nextAction']}",
                 f"- Cooldown: {'YES' if row.get('cooldown') else 'NO'}",
                 f"- Data Status: {row['dataStatus']}",
+                f"- Naver: {row['naver']['impressions']:,} impressions / {row['naver']['clicks']:,} clicks / {row['naver']['ctr']:.1%} CTR" if row.get("naver", {}).get("impressions") is not None else "- Naver: NOT_AVAILABLE",
+                f"- Rank: {row.get('naver', {}).get('position') if row.get('naver', {}).get('position') is not None else 'N/A'}",
                 "",
             )
         )
-    lines.extend(("## 이번 실행 실제 콘텐츠 수정", "", f"- {len(summary['selectedImprovements'])}페이지"))
-    if not summary["selectedImprovements"]:
-        lines.append("- 최신 URL별 검색 근거가 부족하거나 보호 규칙이 적용되어 콘텐츠를 수정하지 않습니다.")
+    lines.extend((
+        "## Naver URL Data Quality", "",
+        f"- URL match: {int(naver_quality.get('matched') or 0)}/{int(naver_quality.get('rows') or 0)} ({float(naver_quality.get('matchRate') or 0):.1%})",
+        f"- Gate: {'PASS' if naver_quality.get('gatePassed') else 'FAIL'}",
+        f"- Cross-source period: {summary.get('crossSourcePeriodAlignment')}",
+        f"- Rank: {'N/A' if naver_quality.get('rankAvailability') == 'NOT_AVAILABLE' else naver_quality.get('rankAvailability')}",
+        f"- Limitations: {', '.join(naver_quality.get('limitations') or [])}", "",
+        "## 다음 콘텐츠 실험 후보", "", f"- {len(summary.get('eligibleCandidates') or [])}페이지 (최대 3)", "",
+        "## 이번 실행 실제 콘텐츠 수정", "", f"- 이번 콘텐츠 실제 수정: {len(summary.get('contentChanges') or [])}페이지",
+        "- 이번 실행은 데이터 연결과 후보 선별만 수행했습니다.",
+    ))
     lines.extend(("", "## PROTECTED WINNERS", ""))
     for row in summary["protectedWinners"]:
         lines.append(f"- `{row['url']}` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지")
@@ -187,6 +235,7 @@ def run_revenue_growth(
     opportunity_output,
     report_output,
     optimization_history_path=None,
+    naver_snapshot_path=None,
 ):
     page_scores = _read_json(page_scores_path, {"pages": []})
     audit = _read_json(audit_path, {"pages": []})
@@ -197,6 +246,17 @@ def run_revenue_growth(
     performance_map = _by_url(performance.get("pages") or [])
     history_map = _by_url(history.get("pages") or [])
     experiment_map = _by_url(experiments.get("experiments") or [])
+    naver_snapshot = load_naver_snapshot(naver_snapshot_path) if naver_snapshot_path else None
+    canonical_map = {
+        normalize_url(row.get("url")): normalize_url(row.get("canonical"))
+        for row in audit.get("pages") or []
+        if row.get("url") and row.get("canonical")
+    }
+    naver_match = match_naver_rows(
+        naver_snapshot,
+        [row.get("url") for row in page_scores.get("pages") or [] if row.get("url")],
+        canonical_map=canonical_map,
+    ) if naver_snapshot else None
     records = []
     for page in sorted(page_scores.get("pages") or [], key=lambda row: normalize_url(row.get("url"))):
         url = normalize_url(page.get("url"))
@@ -219,13 +279,62 @@ def run_revenue_growth(
         for channel_name, fields in CHANNEL_FIELDS.items():
             channel = performance_row.get(channel_name)
             record[channel_name] = normalize_channel(channel, fields, as_of) if channel else empty_channel(fields)
+        if naver_match:
+            naver_row = naver_match["matchedByUrl"].get(url)
+            if naver_row:
+                record["naver"] = {
+                    "impressions": naver_row["impressions"],
+                    "clicks": naver_row["clicks"],
+                    "ctr": naver_row["ctr"],
+                    "position": None,
+                    "positionStatus": "NOT_AVAILABLE",
+                    "status": "VERIFIED",
+                    "period": naver_snapshot["period"],
+                    "periodPreset": naver_snapshot["periodPreset"],
+                    "source": naver_snapshot["source"],
+                    "dataUpdatedAt": naver_snapshot["dataUpdatedAt"],
+                    "crossSourceStatus": "PERIOD_MISMATCH",
+                }
+            else:
+                record["naver"] = {
+                    **empty_channel(CHANNEL_FIELDS["naver"], status="NOT_AVAILABLE"),
+                    "positionStatus": "NOT_AVAILABLE",
+                    "crossSourceStatus": "PERIOD_MISMATCH",
+                }
         record.update(cooldown_state(record["lastOptimizationDate"], as_of, experiment.get("observe_until")))
         records.append(record)
 
     medians = _cluster_medians(records)
+    naver_benchmarks = _camping_naver_benchmarks(records)
+    if naver_benchmarks["coveredPages"]:
+        medians.update({
+            "naver_ctr": naver_benchmarks["ctrMedian"],
+            "naver_impressions": naver_benchmarks["impressionsMedian"],
+            "naver_max_impressions": naver_benchmarks["maxImpressions"],
+            "naver_max_clicks": naver_benchmarks["maxClicks"],
+            "naver_percentiles": naver_benchmarks["percentiles"],
+        })
+    naver_gate_passed = bool(naver_match and naver_match["quality"]["gatePassed"])
     for record in records:
         score = score_opportunity(record, medians)
         classification, action, reasons = classify_record(record, score)
+        naver = record["naver"]
+        eligible = (
+            naver_gate_passed
+            and record.get("cluster") == "camping"
+            and naver.get("status") == "VERIFIED"
+            and naver_benchmarks["impressionsMedian"] is not None
+            and naver.get("impressions") >= naver_benchmarks["impressionsMedian"]
+            and naver.get("ctr") < naver_benchmarks["ctrMedian"]
+            and classification != "WINNER"
+            and not record.get("cooldown")
+        )
+        if eligible:
+            classification, action = "OPPORTUNITY", "IMPROVE_SEARCH_CTR"
+            reasons = ["Naver impressions at or above camping median", "Naver CTR below camping median", "Verified camping demand"]
+        elif naver_match and classification == "OPPORTUNITY":
+            classification, action = "EXPERIMENT", "WAIT_FOR_DATA"
+            reasons = ["Naver evidence does not satisfy the controlled Opportunity gate"]
         record.update(
             {
                 "classification": classification,
@@ -233,11 +342,12 @@ def run_revenue_growth(
                 "scoreStatus": score["status"],
                 "scoreComponents": score["components"],
                 "dataStatus": _data_status(record),
+                "candidateDataStatus": "VERIFIED_WITH_LIMITATIONS" if eligible else _data_status(record),
                 "nextAction": action,
                 "reasons": reasons,
             }
         )
-    selected = select_improvements(records)
+    selected = select_improvements(records) if (not naver_match or naver_gate_passed) else []
     ranked = sorted(records, key=lambda row: (-row["revenueOpportunityScore"], row["url"]))
     site = performance.get("site") or {}
     adsense = site.get("adsense") or {}
@@ -263,6 +373,7 @@ def run_revenue_growth(
         "schemaVersion": 1,
         "asOf": as_of,
         "periodCompatibility": period_compatibility,
+        "crossSourcePeriodAlignment": "PERIOD_MISMATCH" if naver_match else period_compatibility,
         "phase": phase,
         "revenue": {
             "today": (adsense.get("daily") or {}).get("revenue"),
@@ -286,9 +397,18 @@ def run_revenue_growth(
         },
         "topOpportunities": ranked[:10],
         "selectedImprovements": selected,
+        "eligibleCandidates": selected,
+        "contentChanges": [],
+        "dataQuality": {
+            "naver": {
+                **(naver_match["quality"] if naver_match else {"gatePassed": False, "gateFailures": ["NOT_CONNECTED"]}),
+                "rankingReliable": bool(naver_gate_passed),
+                "limitations": (naver_snapshot or {}).get("limitations") or [],
+            }
+        },
         "protectedWinners": [row for row in records if row.get("classification") == "WINNER"],
         "activeExperiments": experiments.get("experiments") or [],
-        "campingCluster": _camping_cluster(records),
+        "campingCluster": {**_camping_cluster(records), "naver": naver_benchmarks},
         "growthDrivers": {
             "status": "ESTIMATED",
             "revenueChange": adsense.get("previous_28d_change"),
@@ -319,6 +439,7 @@ def main():
     parser.add_argument("--performance", type=Path, default=Path("data/performance/2026-08-31.json"))
     parser.add_argument("--experiments", type=Path, default=Path("data/experiments.json"))
     parser.add_argument("--optimization-history", type=Path, default=Path("data/optimization-history.json"))
+    parser.add_argument("--naver-snapshot", type=Path, default=Path("data/naver/search-advisor-2026-08-30.json"))
     parser.add_argument("--as-of", required=True)
     parser.add_argument("--page-output", type=Path, default=Path("data/page-performance.json"))
     parser.add_argument("--opportunity-output", type=Path, default=Path("data/revenue-opportunities.json"))
@@ -330,6 +451,7 @@ def main():
         performance_path=args.performance,
         experiments_path=args.experiments,
         optimization_history_path=args.optimization_history,
+        naver_snapshot_path=args.naver_snapshot,
         as_of=args.as_of,
         page_output=args.page_output,
         opportunity_output=args.opportunity_output,

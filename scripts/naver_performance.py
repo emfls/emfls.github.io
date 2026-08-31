@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Validate and match verified Naver Search Advisor URL snapshots."""
 
+import argparse
 import json
 from collections import Counter
 from pathlib import Path
@@ -133,3 +134,26 @@ def build_naver_quality_report(snapshot_path, site_urls, canonical_map=None):
     if quality["gateFailures"]:
         lines.extend(("", "## Gate Failures", "", *(f"- {item}" for item in quality["gateFailures"])))
     return result, "\n".join(lines).rstrip() + "\n"
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--snapshot", type=Path, required=True)
+    parser.add_argument("--page-scores", type=Path, required=True)
+    parser.add_argument("--report", type=Path, required=True)
+    parser.add_argument("--json-output", type=Path)
+    args = parser.parse_args()
+    page_scores = json.loads(args.page_scores.read_text(encoding="utf-8"))
+    site_urls = [row["url"] for row in page_scores.get("pages") or [] if row.get("url")]
+    result, markdown = build_naver_quality_report(args.snapshot, site_urls)
+    args.report.parent.mkdir(parents=True, exist_ok=True)
+    args.report.write_text(markdown, encoding="utf-8")
+    if args.json_output:
+        args.json_output.parent.mkdir(parents=True, exist_ok=True)
+        args.json_output.write_text(json.dumps(result["quality"], ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(markdown, end="")
+    raise SystemExit(0 if result["quality"]["gatePassed"] else 2)
+
+
+if __name__ == "__main__":
+    main()

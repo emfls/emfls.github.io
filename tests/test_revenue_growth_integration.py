@@ -11,6 +11,51 @@ def write_json(path, payload):
 
 
 class RevenueGrowthIntegrationTest(unittest.TestCase):
+    def test_verified_naver_snapshot_drives_only_eligible_camping_candidates(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            urls = [
+                "/kor/report/camp/winner.html",
+                "/kor/report/camp/opportunity.html",
+                "/kor/report/camp/cooldown.html",
+                "/kor/report/camp/low-demand.html",
+            ]
+            paths = {name: root / f"{name}.json" for name in ("scores", "audit", "performance", "experiments", "history", "naver")}
+            write_json(paths["scores"], {"pages": [{"url": url, "score": 20 if "winner" in url else 75, "type": "TRAFFIC"} for url in urls]})
+            write_json(paths["audit"], {"pages": [{"url": url, "indexable": True, "duplicate": False} for url in urls]})
+            period = {"start": "2026-08-03", "end": "2026-08-30"}
+            write_json(paths["performance"], {"site": {"ga4": {"views": 100, "users": 80, "period": period, "status": "VERIFIED"}}, "pages": [{"url": urls[0], "ga4": {"views": 10, "users": 8, "revenue": 0.5, "period": period, "status": "VERIFIED"}}]})
+            write_json(paths["experiments"], {"experiments": []})
+            write_json(paths["history"], {"pages": [{"url": urls[2], "lastOptimizationDate": "2026-08-25"}]})
+            naver_rows = [
+                (urls[0], 100, 1000, 0.10),
+                (urls[1], 24, 600, 0.04),
+                (urls[2], 30, 600, 0.05),
+                (urls[3], 10, 100, 0.10),
+            ]
+            write_json(paths["naver"], {"source": "NAVER_SEARCH_ADVISOR_UI_TOP_30", "periodPreset": "RECENT_30_DAYS", "period": {"start": "2026-08-01", "end": "2026-08-30"}, "dataUpdatedAt": "2026-08-30", "limitations": ["TOP_30_ONLY", "AVERAGE_RANK_NOT_AVAILABLE"], "rows": [{"sourceUrl": f"https://emfls.github.io{url}", "clicks": clicks, "impressions": impressions, "ctr": ctr, "averageRank": None, "rankStatus": "NOT_AVAILABLE", "status": "VERIFIED"} for url, clicks, impressions, ctr in naver_rows]})
+
+            pages, summary = run_revenue_growth(
+                page_scores_path=paths["scores"], audit_path=paths["audit"], performance_path=paths["performance"],
+                experiments_path=paths["experiments"], optimization_history_path=paths["history"], naver_snapshot_path=paths["naver"],
+                as_of="2026-08-31", page_output=root / "pages.json", opportunity_output=root / "opportunities.json", report_output=root / "report.md",
+            )
+
+            self.assertTrue(summary["dataQuality"]["naver"]["gatePassed"])
+            self.assertEqual(summary["crossSourcePeriodAlignment"], "PERIOD_MISMATCH")
+            self.assertEqual([row["url"] for row in summary["eligibleCandidates"]], [urls[1]])
+            self.assertEqual(summary["contentChanges"], [])
+            winner = next(row for row in pages["pages"] if row["url"] == urls[0])
+            low_demand = next(row for row in pages["pages"] if row["url"] == urls[3])
+            self.assertEqual((winner["classification"], winner["nextAction"]), ("WINNER", "PROTECT"))
+            self.assertNotEqual(low_demand["classification"], "OPPORTUNITY")
+            self.assertEqual(winner["naver"]["positionStatus"], "NOT_AVAILABLE")
+            report = (root / "report.md").read_text(encoding="utf-8")
+            self.assertIn("Naver URL Data Quality", report)
+            self.assertIn("URL match: 4/4 (100.0%)", report)
+            self.assertIn("Rank: N/A", report)
+            self.assertIn("이번 콘텐츠 실제 수정: 0페이지", report)
+
     def test_pipeline_protects_selects_and_preserves_missing_values(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

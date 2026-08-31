@@ -11,6 +11,8 @@ ALLOWED_STATUSES = {
     "STALE_DATA",
     "NOT_CONNECTED",
     "INSUFFICIENT_DATA",
+    "NOT_AVAILABLE",
+    "ZERO_VERIFIED",
 }
 
 
@@ -85,8 +87,15 @@ def score_opportunity(record, cluster_medians):
     clicks = search.get("clicks") if channel_name else None
     ctr = search.get("ctr") if channel_name else None
     position = search.get("position") if channel_name else None
-    impression_score = 20 * log1p(max(0, impressions or 0)) / log1p(100000)
-    click_score = 15 * log1p(max(0, clicks or 0)) / log1p(10000)
+    max_impressions = cluster_medians.get(f"{channel_name}_max_impressions") or 100000
+    max_clicks = cluster_medians.get(f"{channel_name}_max_clicks") or 10000
+    impression_log = min(1.0, log1p(max(0, impressions or 0)) / log1p(max(1, max_impressions)))
+    click_log = min(1.0, log1p(max(0, clicks or 0)) / log1p(max(1, max_clicks)))
+    percentiles = (cluster_medians.get(f"{channel_name}_percentiles") or {}).get(record.get("url"), {})
+    impression_percentile = percentiles.get("impressions", impression_log)
+    click_percentile = percentiles.get("clicks", click_log)
+    impression_score = 20 * (impression_log + impression_percentile) / 2
+    click_score = 15 * (click_log + click_percentile) / 2
     if position is None:
         position_score = 0
     elif 10 <= position <= 30:
@@ -98,9 +107,13 @@ def score_opportunity(record, cluster_medians):
     else:
         position_score = 1
     median_ctr = cluster_medians.get(f"{channel_name}_ctr") if channel_name else None
+    median_impressions = cluster_medians.get(f"{channel_name}_impressions") if channel_name else None
     if ctr is None or median_ctr in (None, 0):
         ctr_score = 0
         ctr_status = "INSUFFICIENT_DATA" if channel_name else "NOT_CONNECTED"
+    elif median_impressions is not None and (impressions or 0) < median_impressions:
+        ctr_score = 0
+        ctr_status = search_status
     else:
         ctr_score = 15 * max(0.0, min(1.0, (median_ctr - ctr) / median_ctr))
         ctr_status = search_status
@@ -119,9 +132,9 @@ def score_opportunity(record, cluster_medians):
     ease_score = 5 if (impressions or 0) > 0 and ctr is not None else 2
 
     components = [
-        _component("search_impressions", impression_score, 20, search_status, "Verified search demand volume." if channel_name else "No URL-level search data.", {"channel": channel_name, "impressions": impressions}),
-        _component("search_clicks", click_score, 15, search_status, "Verified search clicks." if channel_name else "No URL-level search data.", {"channel": channel_name, "clicks": clicks}),
-        _component("ranking_upside", position_score, 10, search_status, "Positions 10-30 receive the highest improvement weight.", {"channel": channel_name, "position": position}),
+        _component("search_impressions", impression_score, 20, search_status, "Verified search demand volume using cluster percentile and log normalization." if channel_name else "No URL-level search data.", {"channel": channel_name, "impressions": impressions, "clusterPercentile": impression_percentile if channel_name else None, "logNormalized": impression_log if channel_name else None}),
+        _component("search_clicks", click_score, 15, search_status, "Verified search clicks using cluster percentile and log normalization." if channel_name else "No URL-level search data.", {"channel": channel_name, "clicks": clicks, "clusterPercentile": click_percentile if channel_name else None, "logNormalized": click_log if channel_name else None}),
+        _component("ranking_upside", position_score, 10, "NOT_AVAILABLE" if channel_name and position is None else search_status, "Average rank is unavailable; no ranking points are inferred." if channel_name and position is None else "Positions 10-30 receive the highest improvement weight.", {"channel": channel_name, "position": position}),
         _component("search_ctr_gap", ctr_score, 15, ctr_status, "CTR gap versus the same-channel cluster median.", {"channel": channel_name, "ctr": ctr, "clusterMedianCtr": median_ctr}),
         _component("actual_revenue", revenue_score, 15, revenue_status, "Verified URL revenue only.", {"revenue": revenue}),
         _component("page_efficiency", efficiency_score, 10, revenue_status if efficiency is not None else "INSUFFICIENT_DATA", "GA4 page revenue per 1,000 views; not AdSense RPM.", {"revenuePer1000Views": efficiency}),

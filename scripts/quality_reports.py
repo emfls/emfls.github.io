@@ -97,8 +97,26 @@ def _render_revenue_control_center(revenue):
     camping = revenue.get("campingCluster") or {}
     revenue_totals = revenue.get("revenue") or {}
     traffic = revenue.get("traffic") or {}
+    naver_quality = ((revenue.get("dataQuality") or {}).get("naver") or {})
+    naver_limitations = naver_quality.get("limitations") or []
+    if naver_quality.get("gatePassed"):
+        quality_banner = (
+            f'<div class="card"><strong>URL matching verified: {int(naver_quality.get("matched") or 0)}/'
+            f'{int(naver_quality.get("rows") or 0)} ({float(naver_quality.get("matchRate") or 0):.1%})</strong></div>'
+        )
+    else:
+        quality_banner = '<div class="card"><strong>⚠ OPPORTUNITY RANKING NOT RELIABLE</strong></div>'
+    warnings = [str(revenue.get("crossSourcePeriodAlignment") or "")]
+    if naver_quality.get("rankAvailability") == "NOT_AVAILABLE":
+        warnings.append("RANK_NOT_AVAILABLE")
+    warnings.extend(str(item) for item in naver_limitations)
+    warning_banner = f'<p><strong>⚠ {html.escape(" · ".join(item for item in warnings if item))}</strong></p>'
     top_rows = []
     for index, row in enumerate(opportunities[:10], 1):
+        naver = row.get("naver") or {}
+        naver_metrics = "N/A"
+        if naver.get("impressions") is not None:
+            naver_metrics = f"{int(naver['impressions']):,} impressions · {int(naver.get('clicks') or 0):,} clicks · {float(naver.get('ctr') or 0):.1%} CTR"
         top_rows.append(
             "<tr>"
             f"<td>{index}</td><td>{html.escape(str(row.get('url', '')))}</td>"
@@ -107,6 +125,7 @@ def _render_revenue_control_center(revenue):
             f"<td>{html.escape(str(row.get('nextAction') or 'WAIT_FOR_DATA'))}</td>"
             f"<td>{'YES' if row.get('cooldown') else 'NO'}</td>"
             f"<td>{html.escape(str(row.get('dataStatus') or 'INSUFFICIENT_DATA'))}</td>"
+            f"<td>{html.escape(naver_metrics)}</td>"
             "</tr>"
         )
     winner_rows = "".join(
@@ -140,13 +159,13 @@ def _render_revenue_control_center(revenue):
             ("Google clicks", traffic.get("googleClicks")),
         )
     )
-    return f"""<section id="revenue-control"><h1>REVENUE GROWTH CONTROL CENTER</h1>
+    return f"""<section id="revenue-control"><h1>REVENUE GROWTH CONTROL CENTER</h1>{warning_banner}{quality_banner}
 <p>현재 단계: <strong>{html.escape(str(revenue.get('phase', 'DATA NOT AVAILABLE')))}</strong></p>
 <p>Revenue goals: {goals}</p><h2>Revenue</h2><div class="cards">{revenue_cards}</div>
 <h2>Traffic</h2><div class="cards">{traffic_cards}</div>
 <h2>Efficiency</h2><div class="cards">{_revenue_metric(revenue, 'revenuePerIndexedPage', '$', 6)}{_revenue_metric(revenue, 'viewsPerActiveUser')}{_revenue_metric(revenue, 'winnerRevenueConcentration')}</div>
 <h2>Opportunity</h2><div class="cards">{count_cards}</div>
-<h2>TODAY'S TOP OPPORTUNITIES</h2><div class="wrap"><table><thead><tr><th>#</th><th>URL</th><th>Score</th><th>Classification</th><th>Next action</th><th>Cooldown</th><th>Data</th></tr></thead><tbody>{''.join(top_rows)}</tbody></table></div>
+<h2>TODAY'S TOP OPPORTUNITIES</h2><div class="wrap"><table><thead><tr><th>#</th><th>URL</th><th>Score</th><th>Classification</th><th>Next action</th><th>Cooldown</th><th>Data</th><th>Naver</th></tr></thead><tbody>{''.join(top_rows)}</tbody></table></div>
 <div class="cards"><div class="card"><h2>WINNERS - DO NOT REWRITE</h2><ul>{winner_rows}</ul></div><div class="card"><h2>ACTIVE EXPERIMENTS</h2><ul>{experiment_rows}</ul></div></div>
 <div class="card"><h2>Camping Cluster</h2><p>Pages: {int(camping.get('pages') or 0):,} · Views: {camping.get('views') if camping.get('views') is not None else 'N/A'} · Revenue: {camping.get('revenue') if camping.get('revenue') is not None else 'N/A'} · Revenue / 1000 views: {camping.get('revenuePer1000Views') if camping.get('revenuePer1000Views') is not None else 'N/A'} · Naver URL data: {html.escape(str(camping.get('naverStatus', 'NOT_CONNECTED')))}</p></div></section>"""
 

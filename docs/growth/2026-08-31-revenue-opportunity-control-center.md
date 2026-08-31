@@ -105,3 +105,59 @@ PAGE_SCORE가 낮더라도 검증된 수익이 있는 WINNER는 자동 수정 �
 - 전체 pytest 회귀 테스트: `623 passed in 50.71s`
 - 전체 unittest 회귀 테스트: `Ran 552 tests`, `OK`
 - 산출물 불변조건: 실제 수정 추천 3개 이하, 미연결 AdSense 허위 수익 0개, 자동 DEAD 삭제 동작 0개, 28일 수익과 Views/User 기준값 일치
+
+---
+
+## 3차 작업 — 네이버 URL별 성과 연결 (2026-09-01 기록)
+
+### 데이터 품질
+
+- 원본: Naver Search Advisor `콘텐츠 노출/클릭` UI TOP 30
+- 원본 업데이트일: `2026-08-30`
+- 네이버 기간: `2026-08-01~2026-08-30` (`RECENT_30_DAYS`)
+- GA4·Google·AdSense 기간: `2026-08-03~2026-08-30`
+- 교차 소스 상태: `PERIOD_MISMATCH` — 서로 다른 기간 수치를 합산하지 않음
+- URL 매칭: `30/30 (100.0%)`
+- invalid rows: `0`
+- duplicate normalized URLs: `0`
+- 평균 순위: `NOT_AVAILABLE`; ranking component `0/10`
+- 표본 제한: `TOP_30_ONLY`, `AVERAGE_RANK_NOT_AVAILABLE`, `NO_OFFICIAL_EXPORT`
+- TOP 30 밖 URL은 0이 아니라 `NOT_AVAILABLE`
+
+### 캠핑 클러스터 네이버 기준
+
+- 네이버 URL 데이터 보유 캠핑 페이지: `29`
+- 노출 중앙값: `350`
+- 클릭 중앙값: `30`
+- CTR 중앙값: `8.2%`
+- 가중 CTR: `7.89%`
+- 최대 노출: `1,816`
+- 최대 클릭: `138`
+
+### 다음 콘텐츠 실험 후보 (아직 수정하지 않음)
+
+1. `/kor/report/camp/uljin.html` — 704 impressions, 40 clicks, 5.7% CTR, Opportunity 48.51
+2. `/kor/report/camp/nonsan.html` — 560 impressions, 21 clicks, 3.8% CTR, Opportunity 45.65
+3. `/kor/report/camp/cheorwon.html` — 529 impressions, 27 clicks, 5.1% CTR, Opportunity 44.18
+
+세 페이지 모두 캠핑 노출 중앙값 이상이고 CTR 중앙값 미만이며, 기존 WINNER가 아니고 COOLDOWN이 아니다. 다음 별도 승인 작업에서는 title·description·첫 답변 중 검색 CTR에 직접 필요한 최소 범위만 수정하고 각 페이지에 `experiment_id`를 부여한다.
+
+### 보호와 실행 결정
+
+- 보호 WINNER: 남양주 캠핑, 경기도 캠핑 BEST, 정선 캠핑, 양양 캠핑 및 기존 URL 수익 WINNER
+- PAGE_SCORE가 낮아도 WINNER는 `PROTECT`를 유지한다.
+- 이번 콘텐츠 실제 수정: `0페이지`
+- 신규 페이지 발행: `0페이지`
+- URL·canonical·광고 배치 변경: `0건`
+- 이번 실행은 `ANALYZE → SELECT`까지만 완료했다.
+
+### 다음 측정 방법
+
+별도 승인 후 최대 3페이지를 수정할 때 수정 직전의 네이버 impressions/clicks/CTR과 GA4 views/revenue를 실험 레코드에 고정한다. 최소 14일, 이상적으로 28일 동안 재수정하지 않고 같은 길이의 후속 기간과 비교한다. 네이버 기간 preset이 30일이므로 28일 GA4 데이터와 직접 합산하지 않고 채널별 변화율을 별도로 판정한다. 결과는 `SUCCESS`, `FAILED`, `INCONCLUSIVE` 중 하나로 기록한다.
+
+### 3차 검증
+
+- unittest: `Ran 571 tests`, `OK`
+- pytest: `642 passed in 50.28s`
+- 동일 입력 재실행 SHA 일치 확인
+- 캠핑 콘텐츠 HTML 변경: `0파일`

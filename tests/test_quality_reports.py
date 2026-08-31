@@ -64,6 +64,7 @@ def revenue_fixture():
         "cooldown": False,
         "dataStatus": "VERIFIED",
         "reasons": ["High Naver impressions", "CTR below cluster median"],
+        "naver": {"impressions": 704, "clicks": 40, "ctr": 0.057, "position": None, "positionStatus": "NOT_AVAILABLE"},
     }
     return {
         "phase": "PHASE 1",
@@ -83,6 +84,8 @@ def revenue_fixture():
         "protectedWinners": [{**opportunity, "url": "/winner.html", "classification": "WINNER"}],
         "activeExperiments": [],
         "campingCluster": {"pages": 171, "views": 503, "revenue": 1.91, "revenuePer1000Views": 3.8, "winner": 4, "opportunity": 1, "naverStatus": "NOT_CONNECTED"},
+        "crossSourcePeriodAlignment": "PERIOD_MISMATCH",
+        "dataQuality": {"naver": {"gatePassed": True, "matched": 30, "rows": 30, "matchRate": 1.0, "rankAvailability": "NOT_AVAILABLE", "limitations": ["TOP_30_ONLY"]}},
     }
 
 
@@ -138,6 +141,15 @@ class QualityReportTest(unittest.TestCase):
         self.assertLess(rendered.index("REVENUE GROWTH CONTROL CENTER"), rendered.index("PAGE SCORE"))
         self.assertNotIn("adsenseCtr", rendered)
         self.assertNotIn("ad_click", rendered)
+
+    def test_dashboard_shows_verified_naver_matching_and_limitations(self):
+        rendered = render_dashboard(site_fixture(), page_results(), revenue_fixture())
+        self.assertIn("URL matching verified: 30/30 (100.0%)", rendered)
+        self.assertIn("PERIOD_MISMATCH", rendered)
+        self.assertIn("RANK_NOT_AVAILABLE", rendered)
+        self.assertIn("TOP_30_ONLY", rendered)
+        self.assertIn("704 impressions", rendered)
+        self.assertIn("5.7% CTR", rendered)
 
 
 if __name__ == "__main__":
