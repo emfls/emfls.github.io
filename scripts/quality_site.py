@@ -6,16 +6,16 @@ from collections import Counter
 from datetime import datetime
 from pathlib import Path
 from statistics import mean, median
-from urllib.parse import urlparse
+from urllib.parse import unquote, urlsplit
 
 
 def normalize_url(url):
     value = str(url or "").strip()
-    if value.startswith(("http://", "https://")):
-        value = urlparse(value).path or "/"
-    if not value.startswith("/"):
-        value = "/" + value
-    return value.replace("/index.html", "/")
+    parsed = urlsplit(value if "://" in value else f"https://emfls.github.io/{value.lstrip('/')}")
+    path = unquote(parsed.path or "/")
+    if not path.startswith("/"):
+        path = "/" + path
+    return path[: -len("index.html")] if path.endswith("/index.html") else path
 
 
 def latest_performance_file(directory):

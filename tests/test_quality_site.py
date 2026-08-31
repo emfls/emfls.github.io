@@ -3,12 +3,19 @@ import unittest
 from scripts.quality_site import (
     calculate_revenue_goal,
     calculate_site_score,
+    normalize_url,
     performance_by_url,
     rank_priority,
 )
 
 
 class QualityPriorityTest(unittest.TestCase):
+    def test_normalize_url_removes_query_fragment_and_decodes_utf8_once(self):
+        self.assertEqual(
+            normalize_url("https://www.emfls.github.io/%ED%95%9C%EA%B8%80/A/index.html?utm_source=x#answer"),
+            "/한글/A/",
+        )
+
     def test_nested_current_performance_is_available_to_existing_priority_logic(self):
         rows = performance_by_url(
             {
