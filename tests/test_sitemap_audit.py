@@ -3,7 +3,7 @@ import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-from scripts.sitemap_audit import audit_local_sitemaps
+from scripts.sitemap_audit import audit_local_sitemaps, render_root_index
 
 
 class SitemapAuditTests(unittest.TestCase):
@@ -29,6 +29,25 @@ class SitemapAuditTests(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         result = audit_local_sitemaps(root)
         self.assertEqual(result["omitted_from_root"], [])
+
+    def test_ignores_sitemaps_inside_isolated_worktrees(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "sitemap.xml").write_text(
+                '<?xml version="1.0"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></sitemapindex>',
+                encoding="utf-8",
+            )
+            isolated = root / ".worktrees" / "feature"
+            isolated.mkdir(parents=True)
+            (isolated / "sitemap.xml").write_text(
+                '<?xml version="1.0"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>',
+                encoding="utf-8",
+            )
+
+            result = audit_local_sitemaps(root)
+
+            self.assertEqual(result["sitemap_files"], 1)
+            self.assertNotIn("/.worktrees/feature/sitemap.xml", render_root_index(root))
 
     def test_directory_hubs_use_canonical_slash_urls(self):
         root = Path(__file__).resolve().parents[1]

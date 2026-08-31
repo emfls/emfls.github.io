@@ -16,6 +16,13 @@ MAX_URLS = 50000
 MAX_BYTES = 50 * 1024 * 1024
 
 
+def _site_sitemap_files(root):
+    return sorted(
+        path for path in root.rglob("sitemap.xml")
+        if not any(part in {".git", ".worktrees", "node_modules", ".venv"} for part in path.relative_to(root).parts)
+    )
+
+
 def _public_path(url):
     parsed = urlparse(url)
     return parsed.path or "/"
@@ -23,7 +30,7 @@ def _public_path(url):
 
 def audit_local_sitemaps(root, site_audit=None):
     root = Path(root).resolve()
-    files = sorted(root.rglob("sitemap.xml"))
+    files = _site_sitemap_files(root)
     invalid_xml = []
     leaf_paths = []
     root_refs = []
@@ -91,7 +98,7 @@ def render_root_index(root):
     root = Path(root).resolve()
     leaves = sorted(
         "/" + path.relative_to(root).as_posix()
-        for path in root.rglob("sitemap.xml")
+        for path in _site_sitemap_files(root)
         if path.resolve() != (root / "sitemap.xml").resolve()
     )
     lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
