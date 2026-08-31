@@ -161,3 +161,7 @@ PAGE_SCORE가 낮더라도 검증된 수익이 있는 WINNER는 자동 수정 �
 - pytest: `642 passed in 50.28s`
 - 동일 입력 재실행 SHA 일치 확인
 - 캠핑 콘텐츠 HTML 변경: `0파일`
+
+## 4차 작업 연결 — 2026-09-01
+
+3차에서 선별한 논산·철원·울진 OPPORTUNITY에 각각 독립 CTR 실험을 시작했다. 자세한 baseline, 변경 전후 문구, 가설과 판정 규칙은 `docs/growth/2026-09-01-camping-ctr-experiments.md`에 기록했다. 세 페이지는 2026-09-29까지 COOLDOWN이며, 활성 실험 3개가 끝날 때까지 추가 콘텐츠 수정 후보는 자동 선별하지 않는다.

@@ -347,7 +347,10 @@ def run_revenue_growth(
                 "reasons": reasons,
             }
         )
-    selected = select_improvements(records) if (not naver_match or naver_gate_passed) else []
+    active_experiment_count = sum(
+        row.get("status") == "OBSERVING" for row in experiments.get("experiments") or []
+    )
+    selected = select_improvements(records, active_experiments=active_experiment_count) if (not naver_match or naver_gate_passed) else []
     ranked = sorted(records, key=lambda row: (-row["revenueOpportunityScore"], row["url"]))
     site = performance.get("site") or {}
     adsense = site.get("adsense") or {}

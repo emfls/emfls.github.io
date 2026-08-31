@@ -201,7 +201,7 @@ def classify_record(record, score):
     return None, "WAIT_FOR_DATA", ["Current URL-level evidence is insufficient"]
 
 
-def select_improvements(records, limit=3):
+def select_improvements(records, limit=3, active_experiments=0):
     allowed_actions = {
         "IMPROVE_SEARCH_CTR",
         "IMPROVE_TOP_ANSWER",
@@ -218,4 +218,5 @@ def select_improvements(records, limit=3):
         and record.get("nextAction") in allowed_actions
     ]
     candidates.sort(key=lambda row: (-float(row.get("revenueOpportunityScore") or 0), row.get("url", "")))
-    return candidates[: min(max(0, limit), 3)]
+    available = max(0, min(max(0, limit), 3) - max(0, active_experiments))
+    return candidates[:available]

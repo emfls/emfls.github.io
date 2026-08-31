@@ -148,6 +148,18 @@ class RevenueOpportunityBehaviorTest(unittest.TestCase):
 
         self.assertEqual(len(select_improvements(rows)), 3)
 
+    def test_three_active_experiments_block_additional_improvement_selection(self):
+        row = performance_record()
+        row.update(
+            {
+                "classification": "OPPORTUNITY",
+                "nextAction": "IMPROVE_SEARCH_CTR",
+                "revenueOpportunityScore": 90,
+                "dataStatus": "VERIFIED",
+            }
+        )
+        self.assertEqual(select_improvements([row], active_experiments=3), [])
+
     def test_adsense_ctr_cannot_change_score(self):
         first = performance_record(
             adsense={

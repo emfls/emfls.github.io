@@ -8,8 +8,8 @@
 - Revenue per Indexed Page: $0.000728
 - Views per User: 1.34
 - WINNER: 9
-- OPPORTUNITY: 7
-- EXPERIMENT: 19
+- OPPORTUNITY: 4
+- EXPERIMENT: 22
 - DEAD_CANDIDATE: 0
 - INSUFFICIENT_DATA: 19028
 
@@ -62,10 +62,10 @@
 ### 5. `/kor/report/camp/uljin.html`
 
 - Score: 48.51 / 100
-- Classification: OPPORTUNITY
-- Why: Naver impressions at or above camping median; Naver CTR below camping median; Verified camping demand
-- Next Action: IMPROVE_SEARCH_CTR
-- Cooldown: NO
+- Classification: EXPERIMENT
+- Why: Demand signal exists; Monetization or cooldown blocks selection
+- Next Action: WAIT_FOR_DATA
+- Cooldown: YES
 - Data Status: VERIFIED
 - Naver: 704 impressions / 40 clicks / 5.7% CTR
 - Rank: N/A
@@ -84,10 +84,10 @@
 ### 7. `/kor/report/camp/nonsan.html`
 
 - Score: 45.65 / 100
-- Classification: OPPORTUNITY
-- Why: Naver impressions at or above camping median; Naver CTR below camping median; Verified camping demand
-- Next Action: IMPROVE_SEARCH_CTR
-- Cooldown: NO
+- Classification: EXPERIMENT
+- Why: Demand signal exists; Monetization or cooldown blocks selection
+- Next Action: WAIT_FOR_DATA
+- Cooldown: YES
 - Data Status: VERIFIED
 - Naver: 560 impressions / 21 clicks / 3.8% CTR
 - Rank: N/A
@@ -106,10 +106,10 @@
 ### 9. `/kor/report/camp/cheorwon.html`
 
 - Score: 44.18 / 100
-- Classification: OPPORTUNITY
-- Why: Naver impressions at or above camping median; Naver CTR below camping median; Verified camping demand
-- Next Action: IMPROVE_SEARCH_CTR
-- Cooldown: NO
+- Classification: EXPERIMENT
+- Why: Demand signal exists; Monetization or cooldown blocks selection
+- Next Action: WAIT_FOR_DATA
+- Cooldown: YES
 - Data Status: VERIFIED
 - Naver: 529 impressions / 27 clicks / 5.1% CTR
 - Rank: N/A
@@ -135,7 +135,7 @@
 
 ## 다음 콘텐츠 실험 후보
 
-- 3페이지 (최대 3)
+- 0페이지 (최대 3)
 
 ## 이번 실행 실제 콘텐츠 수정
 
