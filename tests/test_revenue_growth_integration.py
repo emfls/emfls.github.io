@@ -101,6 +101,7 @@ class RevenueGrowthIntegrationTest(unittest.TestCase):
             self.assertIn("이번 실행 실제 콘텐츠 수정", report_output.read_text(encoding="utf-8"))
             self.assertEqual(summary["revenue"]["twentyEightDays"], 13.88)
             self.assertEqual(summary["traffic"]["views"], 8090)
+            self.assertEqual(summary["classificationCounts"]["INSUFFICIENT_DATA"], 1)
 
     def test_mismatched_periods_are_not_combined(self):
         with tempfile.TemporaryDirectory() as temporary:

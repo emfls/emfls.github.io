@@ -132,7 +132,7 @@ def _render_report(summary):
         f"- Revenue per Indexed Page: ${kpis['revenuePerIndexedPage']['value']:.6f}" if kpis["revenuePerIndexedPage"]["value"] is not None else "- Revenue per Indexed Page: N/A",
         f"- Views per User: {kpis['viewsPerActiveUser']['value']:.2f}" if kpis["viewsPerActiveUser"]["value"] is not None else "- Views per User: N/A",
     ]
-    for name in ("WINNER", "OPPORTUNITY", "EXPERIMENT", "DEAD_CANDIDATE"):
+    for name in ("WINNER", "OPPORTUNITY", "EXPERIMENT", "DEAD_CANDIDATE", "INSUFFICIENT_DATA"):
         lines.append(f"- {name}: {summary['classificationCounts'].get(name, 0)}")
     lines.extend(("", "## TOP REVENUE OPPORTUNITIES", ""))
     for index, row in enumerate(summary["topOpportunities"], 1):
@@ -278,7 +278,10 @@ def run_revenue_growth(
             "googleClicks": (site.get("google") or {}).get("clicks"),
         },
         "kpis": kpis,
-        "classificationCounts": {name: counts.get(name, 0) for name in ("WINNER", "OPPORTUNITY", "EXPERIMENT", "DEAD_CANDIDATE")},
+        "classificationCounts": {
+            **{name: counts.get(name, 0) for name in ("WINNER", "OPPORTUNITY", "EXPERIMENT", "DEAD_CANDIDATE")},
+            "INSUFFICIENT_DATA": sum(not row.get("classification") for row in records),
+        },
         "topOpportunities": ranked[:10],
         "selectedImprovements": selected,
         "protectedWinners": [row for row in records if row.get("classification") == "WINNER"],

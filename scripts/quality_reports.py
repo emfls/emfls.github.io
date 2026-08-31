@@ -118,7 +118,7 @@ def _render_revenue_control_center(revenue):
     ) or "<li>활성 실험이 없습니다.</li>"
     count_cards = "".join(
         f'<div class="card"><div>{name}</div><div class="score">{int(counts.get(name, 0)):,}</div></div>'
-        for name in ("WINNER", "OPPORTUNITY", "EXPERIMENT", "DEAD_CANDIDATE")
+        for name in ("WINNER", "OPPORTUNITY", "EXPERIMENT", "DEAD_CANDIDATE", "INSUFFICIENT_DATA")
     )
     goals = " · ".join(("$1/day", "$3/day", "$10/day", "$30/day", "$100/day"))
     revenue_cards = "".join(
