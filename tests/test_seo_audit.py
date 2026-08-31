@@ -62,6 +62,7 @@ class SeoAuditParserTests(unittest.TestCase):
         self.assertEqual(page["h1_count"], 1)
         self.assertEqual(page["h2_count"], 1)
         self.assertEqual(page["internal_links"], 1)
+        self.assertEqual(page["internal_link_targets"], ["/kor/"])
         self.assertEqual(page["external_links"], 1)
         self.assertEqual(page["images"], 1)
         self.assertEqual(page["structured_data_types"], ["Article"])

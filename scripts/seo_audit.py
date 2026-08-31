@@ -7,7 +7,7 @@ import re
 from collections import Counter
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 
 
 PUBLIC_HOSTS = {"emfls.github.io", "www.emfls.github.io"}
@@ -239,18 +239,31 @@ def _link_counts(links):
     return internal, external
 
 
+def _internal_link_targets(links, source_url):
+    targets = set()
+    base = "https://emfls.github.io" + source_url
+    for href in links:
+        if href.startswith(("#", "mailto:", "tel:", "javascript:", "data:")):
+            continue
+        parsed = urlparse(urljoin(base, href))
+        if parsed.scheme in {"http", "https"} and parsed.netloc.lower() in PUBLIC_HOSTS:
+            targets.add(parsed.path or "/")
+    return sorted(targets)
+
+
 def parse_html(html, relative_path):
     parser = PageParser()
     parser.feed(html)
     parser.close()
     internal_links, external_links = _link_counts(parser.links)
+    source_url = _public_url(relative_path)
     text = " ".join(parser.text_parts)
     normalized_text = " ".join(text.split())
     lowered_text = normalized_text.lower()
     robots = parser.robots.lower()
     return {
         "path": relative_path.as_posix(),
-        "url": _public_url(relative_path),
+        "url": source_url,
         "title": " ".join("".join(parser.title_parts).split()),
         "description": parser.description,
         "language": _language(relative_path, parser.language),
@@ -262,6 +275,7 @@ def parse_html(html, relative_path):
         "h2_count": parser.h2_count,
         "h3_count": parser.h3_count,
         "internal_links": internal_links,
+        "internal_link_targets": _internal_link_targets(parser.links, source_url),
         "external_links": external_links,
         "images": parser.images,
         "image_alt_missing": parser.image_alt_missing,
