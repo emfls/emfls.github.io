@@ -95,6 +95,8 @@ def _render_revenue_control_center(revenue):
     winners = revenue.get("protectedWinners") or []
     experiments = revenue.get("activeExperiments") or []
     camping = revenue.get("campingCluster") or {}
+    revenue_totals = revenue.get("revenue") or {}
+    traffic = revenue.get("traffic") or {}
     top_rows = []
     for index, row in enumerate(opportunities[:10], 1):
         top_rows.append(
@@ -118,9 +120,31 @@ def _render_revenue_control_center(revenue):
         f'<div class="card"><div>{name}</div><div class="score">{int(counts.get(name, 0)):,}</div></div>'
         for name in ("WINNER", "OPPORTUNITY", "EXPERIMENT", "DEAD_CANDIDATE")
     )
+    goals = " · ".join(("$1/day", "$3/day", "$10/day", "$30/day", "$100/day"))
+    revenue_cards = "".join(
+        f'<div class="card"><div>{label}</div><div class="score">{("N/A" if value is None else f"${value:,.2f}")}</div></div>'
+        for label, value in (
+            ("Today revenue", revenue_totals.get("today")),
+            ("7d revenue", revenue_totals.get("sevenDays")),
+            ("28d revenue", revenue_totals.get("twentyEightDays")),
+            ("28d daily average", revenue_totals.get("dailyAverage")),
+        )
+    )
+    traffic_cards = "".join(
+        f'<div class="card"><div>{label}</div><div class="score">{("N/A" if value is None else f"{value:,.2f}" if isinstance(value, float) else f"{value:,}")}</div></div>'
+        for label, value in (
+            ("PV", traffic.get("views")),
+            ("Users", traffic.get("users")),
+            ("Views / user", traffic.get("viewsPerUser")),
+            ("Naver clicks", traffic.get("naverClicks")),
+            ("Google clicks", traffic.get("googleClicks")),
+        )
+    )
     return f"""<section id="revenue-control"><h1>REVENUE GROWTH CONTROL CENTER</h1>
 <p>현재 단계: <strong>{html.escape(str(revenue.get('phase', 'DATA NOT AVAILABLE')))}</strong></p>
-<div class="cards">{_revenue_metric(revenue, 'revenue28d', '$')}{_revenue_metric(revenue, 'dailyAverage28d', '$')}{_revenue_metric(revenue, 'revenuePerIndexedPage', '$', 6)}{_revenue_metric(revenue, 'viewsPerActiveUser')}{_revenue_metric(revenue, 'winnerRevenueConcentration')}</div>
+<p>Revenue goals: {goals}</p><h2>Revenue</h2><div class="cards">{revenue_cards}</div>
+<h2>Traffic</h2><div class="cards">{traffic_cards}</div>
+<h2>Efficiency</h2><div class="cards">{_revenue_metric(revenue, 'revenuePerIndexedPage', '$', 6)}{_revenue_metric(revenue, 'viewsPerActiveUser')}{_revenue_metric(revenue, 'winnerRevenueConcentration')}</div>
 <h2>Opportunity</h2><div class="cards">{count_cards}</div>
 <h2>TODAY'S TOP OPPORTUNITIES</h2><div class="wrap"><table><thead><tr><th>#</th><th>URL</th><th>Score</th><th>Classification</th><th>Next action</th><th>Cooldown</th><th>Data</th></tr></thead><tbody>{''.join(top_rows)}</tbody></table></div>
 <div class="cards"><div class="card"><h2>WINNERS - DO NOT REWRITE</h2><ul>{winner_rows}</ul></div><div class="card"><h2>ACTIVE EXPERIMENTS</h2><ul>{experiment_rows}</ul></div></div>

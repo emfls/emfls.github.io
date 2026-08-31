@@ -67,6 +67,8 @@ def revenue_fixture():
     }
     return {
         "phase": "PHASE 1",
+        "revenue": {"today": 0.58, "sevenDays": 4.25, "twentyEightDays": 13.88},
+        "traffic": {"views": 8090, "users": 6035, "viewsPerUser": 1.34, "naverClicks": 2800, "googleClicks": 49},
         "kpis": {
             "revenue28d": {"value": 13.88, "status": "VERIFIED"},
             "dailyAverage28d": {"value": 0.5, "status": "VERIFIED"},
@@ -128,6 +130,10 @@ class QualityReportTest(unittest.TestCase):
         self.assertIn("WINNERS - DO NOT REWRITE", rendered)
         self.assertIn("ACTIVE EXPERIMENTS", rendered)
         self.assertIn("Camping Cluster", rendered)
+        self.assertIn("Naver clicks", rendered)
+        self.assertIn("Google clicks", rendered)
+        self.assertIn("$1/day", rendered)
+        self.assertIn("$100/day", rendered)
         self.assertIn("PAGE SCORE", rendered)
         self.assertLess(rendered.index("REVENUE GROWTH CONTROL CENTER"), rendered.index("PAGE SCORE"))
         self.assertNotIn("adsenseCtr", rendered)

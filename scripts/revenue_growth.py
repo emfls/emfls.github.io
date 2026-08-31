@@ -156,6 +156,21 @@ def _render_report(summary):
     for row in summary["protectedWinners"]:
         lines.append(f"- `{row['url']}` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지")
     lines.extend(("", "## Camping Cluster", "", f"- Pages: {summary['campingCluster']['pages']}", f"- Revenue: {summary['campingCluster']['revenue']}", f"- Naver URL data: {summary['campingCluster']['naverStatus']}", ""))
+    drivers = summary.get("growthDrivers") or {}
+    change = drivers.get("revenueChange")
+    lines.extend(
+        (
+            "## Growth Drivers",
+            "",
+            f"- Revenue change: {change:+.0%}" if change is not None else "- Revenue change: N/A",
+            f"- Status: {drivers.get('status', 'INSUFFICIENT_DATA')}",
+            "- PV growth: N/A",
+            "- RPM improvement: N/A",
+            "- Camping contribution: N/A",
+            f"- Reason: {drivers.get('reason', 'Matched comparison data is unavailable.')}",
+            "",
+        )
+    )
     return "\n".join(lines).rstrip() + "\n"
 
 
@@ -247,6 +262,21 @@ def run_revenue_growth(
         "asOf": as_of,
         "periodCompatibility": period_compatibility,
         "phase": phase,
+        "revenue": {
+            "today": (adsense.get("daily") or {}).get("revenue"),
+            "sevenDays": adsense.get("revenue_7d"),
+            "twentyEightDays": revenue_28d,
+            "dailyAverage": kpis["dailyAverage28d"]["value"],
+            "previous28dChange": adsense.get("previous_28d_change"),
+            "status": adsense.get("status", "NOT_CONNECTED"),
+        },
+        "traffic": {
+            "views": ga4.get("views"),
+            "users": ga4.get("users"),
+            "viewsPerUser": kpis["viewsPerActiveUser"]["value"],
+            "naverClicks": (site.get("naver") or {}).get("clicks"),
+            "googleClicks": (site.get("google") or {}).get("clicks"),
+        },
         "kpis": kpis,
         "classificationCounts": {name: counts.get(name, 0) for name in ("WINNER", "OPPORTUNITY", "EXPERIMENT", "DEAD_CANDIDATE")},
         "topOpportunities": ranked[:10],
@@ -254,6 +284,14 @@ def run_revenue_growth(
         "protectedWinners": [row for row in records if row.get("classification") == "WINNER"],
         "activeExperiments": experiments.get("experiments") or [],
         "campingCluster": _camping_cluster(records),
+        "growthDrivers": {
+            "status": "ESTIMATED",
+            "revenueChange": adsense.get("previous_28d_change"),
+            "pvGrowth": None,
+            "rpmImprovement": None,
+            "campingContribution": None,
+            "reason": "Matched prior-period PV, RPM and URL revenue coverage are unavailable.",
+        },
     }
     page_payload = {
         "schemaVersion": 1,
