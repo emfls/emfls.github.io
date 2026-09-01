@@ -51,3 +51,16 @@
 - 보호: WINNER 및 논산·철원·울진 실험 수정 없음
 
 주요 CTR 기회는 `냐짱 여행준비` 608노출·3클릭·0.5%, `미크로네시아 여행` 124노출·5클릭·4.0%, `경기도 노지캠핑` 67노출·4클릭·6.0%다. 이번 실행에서는 신규 페이지가 아니라 기존 intent 강화 또는 추가 검토 대상으로 유지한다.
+
+## 19:07 KST 예약 회차 수동 실행
+
+- 놓친 19시 예약 회차를 사용자 요청에 따라 2026-09-01 19:07 KST에 수동 실행
+- Direct query evidence: `VERIFIED` (Naver Search Advisor 업데이트 2026-08-30)
+- Researched: 10
+- Selected: 0
+- Published: 0
+- 판정: 10개 후보 모두 기존 페이지와 동일한 검색 의도이므로 `IMPROVE_EXISTING` 유지
+- 보호: WINNER, COOLDOWN, 활성 CTR 실험 및 콘텐츠 본문 수정 없음
+- 검증: content launch guard 통과, 전체 pytest 661개 통과
+
+새 외부 데이터나 독립적인 신규 intent가 확인되지 않았으므로 이번 회차의 올바른 결과는 `NO_PUBLICATION`이다.
