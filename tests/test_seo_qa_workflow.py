@@ -57,6 +57,14 @@ class SeoQaWorkflowTests(unittest.TestCase):
         self.assertIn("permissions:\n  contents: read", source)
         self.assertNotIn("git push", source)
 
+    def test_push_guard_fetches_event_before_commit_in_shallow_checkout(self):
+        source = WORKFLOW.read_text(encoding="utf-8")
+        push_branch = source.index('COMPARE_REF="$EVENT_BEFORE"')
+        fetch_before = source.index('git fetch origin "$EVENT_BEFORE" --depth=1')
+        guard = source.index("scripts/content_launch_guard.py")
+        self.assertLess(fetch_before, push_branch)
+        self.assertLess(push_branch, guard)
+
 
 if __name__ == "__main__":
     unittest.main()

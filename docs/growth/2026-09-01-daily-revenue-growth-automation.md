@@ -33,3 +33,10 @@
 ## 기록 위치
 
 프로젝트 루트에 `PROJECT_HISTORY.md`가 없으므로 이 파일을 동일 목적의 권위 있는 구현 기록으로 사용한다. 예약 ID와 최종 테스트 수는 활성화·검증 후 추가한다.
+
+## GitHub Actions 회귀 수정
+
+- 실패 run: `33475375136`
+- 원인: checkout이 shallow 상태라 push 직전 SHA가 로컬 object database에 없었지만 launch guard가 해당 SHA와 diff를 시도함
+- 수정: push 경로에서 `EVENT_BEFORE` SHA를 depth 1로 fetch한 뒤 guard 실행
+- 검증: workflow 테스트 6개, 전체 pytest 660개 통과
