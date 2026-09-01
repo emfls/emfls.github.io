@@ -56,7 +56,7 @@ def _report(payload):
     lines.extend(["", "## Candidates", ""])
     for row in payload["candidates"]:
         lines.append("- `{}` — {} / {} / {}".format(row.get("url"), row.get("score"), row.get("decision"), row.get("demand", {}).get("status")))
-    return "\n".join(lines) + "\n"
+    return "\n".join(lines).rstrip() + "\n"
 
 
 def run_daily_analysis(root, run_at, research_path, write=True):

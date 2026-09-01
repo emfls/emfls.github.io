@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** 2026-09-01 04:00 Asia/Seoul을 시작점으로 5시간마다 직접 검증된 검색 수요를 바탕으로 신규 후보 10~20개를 평가하고, 기존 intent와 겹치지 않는 후보만 기본 3개·최대 5개까지 안전하게 발행·측정하는 운영 시스템을 구축한다.
+**Goal:** 2026-09-01 14:00 Asia/Seoul을 시작점으로 5시간마다 직접 검증된 검색 수요를 바탕으로 신규 후보 10~20개를 평가하고, 기존 intent와 겹치지 않는 후보만 기본 3개·최대 5개까지 안전하게 발행·측정하는 운영 시스템을 구축한다.
 
 **Architecture:** 기존 `revenue_opportunity.py`와 `revenue_growth.py`는 기존 URL 개선 판단을 계속 담당한다. 신규 `new_content_opportunity.py`는 직접 수요 증거, 의미 중복, 신규 점수, 선발 및 28일 cohort 판정을 순수 함수로 제공하고, `daily_revenue_growth.py`는 heartbeat가 저장한 조사 입력을 결정적 JSON·Markdown 산출물로 변환한다. 콘텐츠 파일 생성은 heartbeat가 담당하지만 `content_launch_guard.py`가 manifest와 git diff를 대조해 보호 URL, 발행량, 실험량, sitemap·hub·canonical·광고/GA4 불변성을 커밋 전에 강제한다.
 
@@ -12,7 +12,7 @@
 
 ## Global Constraints
 
-- 예약은 `2026-09-01 04:00 Asia/Seoul`을 시작점으로 하는 연속 5시간 간격이며, 예시는 `04:00 → 09:00 → 14:00 → 19:00 → 다음 날 00:00 → 05:00`이다.
+- 예약은 `2026-09-01 14:00 Asia/Seoul`을 시작점으로 하는 연속 5시간 간격이며, 예시는 `14:00 → 19:00 → 다음 날 00:00 → 05:00 → 10:00`이다.
 - 매 실행 후보 조사량은 10~20개다.
 - 자동 발행 기본 한도는 점수 70 이상 최대 3개다.
 - 4~5번째 슬롯은 점수 85 이상, 직접 수요 `VERIFIED`, overlap `NO_OVERLAP`일 때만 허용한다.
@@ -594,11 +594,11 @@ Expected: fast-forward succeeds and remote main accepts the commits. On conflict
 
 - [ ] **Step 3: Create one heartbeat on a continuous five-hour interval**
 
-Use the Codex automation API with kind `heartbeat`, destination `thread`, status active, start `2026-09-01 04:00 Asia/Seoul`, and an interval of five hours. The prompt must instruct the task to read the runbook and current project history, collect and preserve direct query evidence, allow 0 pages, enforce all thresholds, run all guards/tests, commit and push only on success, and report failures without force push. Do not create a GitHub Actions cron.
+Use the Codex automation API with kind `heartbeat`, destination `thread`, status active, start `2026-09-01 14:00 Asia/Seoul`, and an interval of five hours. The prompt must instruct the task to read the runbook and current project history, collect and preserve direct query evidence, allow 0 pages, enforce all thresholds, run all guards/tests, commit and push only on success, and report failures without force push. Do not create a GitHub Actions cron.
 
 - [ ] **Step 4: View and verify the saved automation**
 
-Use the returned automation ID in view mode. Verify name, active state, target thread, `2026-09-01 04:00 Asia/Seoul` start, five-hour interval, and the complete fail-closed prompt. If any field differs, update the same automation instead of creating a duplicate.
+Use the returned automation ID in view mode. Verify name, active state, target thread, `2026-09-01 14:00 Asia/Seoul` start, five-hour interval, and the complete fail-closed prompt. If any field differs, update the same automation instead of creating a duplicate.
 
 - [ ] **Step 5: Record the automation ID without credentials**
 
