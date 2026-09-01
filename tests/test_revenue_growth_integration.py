@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.revenue_growth import run_revenue_growth
+from scripts.revenue_growth import content_growth_summary, run_revenue_growth
 
 
 def write_json(path, payload):
@@ -11,6 +11,18 @@ def write_json(path, payload):
 
 
 class RevenueGrowthIntegrationTest(unittest.TestCase):
+    def test_content_growth_uses_only_mature_launches_for_win_rate(self):
+        rows = [
+            {"type": "CONTENT_LAUNCH_EXPERIMENT", "publishedOn": "2026-07-01", "status": "COMPLETE", "result": "WINNER", "revenue": None},
+            {"type": "CONTENT_LAUNCH_EXPERIMENT", "publishedOn": "2026-07-02", "status": "COMPLETE", "result": "FAILED", "revenue": None},
+            {"type": "CONTENT_LAUNCH_EXPERIMENT", "publishedOn": "2026-08-25", "status": "OBSERVING", "result": None, "revenue": None},
+        ]
+        result = content_growth_summary(rows, "2026-09-01")
+        self.assertEqual(result["activeExperiments"], 1)
+        self.assertEqual(result["matureCohort"], 2)
+        self.assertEqual(result["newPageWinRate"], 0.5)
+        self.assertIsNone(result["revenuePerNewPage"])
+        self.assertEqual(result["revenuePerNewPageStatus"], "INSUFFICIENT_DATA")
     def test_verified_naver_snapshot_drives_only_eligible_camping_candidates(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

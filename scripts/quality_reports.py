@@ -99,6 +99,7 @@ def _render_revenue_control_center(revenue):
     traffic = revenue.get("traffic") or {}
     naver_quality = ((revenue.get("dataQuality") or {}).get("naver") or {})
     naver_limitations = naver_quality.get("limitations") or []
+    content_growth = revenue.get("contentGrowth") or {}
     if naver_quality.get("gatePassed"):
         quality_banner = (
             f'<div class="card"><strong>URL matching verified: {int(naver_quality.get("matched") or 0)}/'
@@ -159,6 +160,16 @@ def _render_revenue_control_center(revenue):
             ("Google clicks", traffic.get("googleClicks")),
         )
     )
+    secondary = ", ".join(content_growth.get("secondaryClusters") or []) or "INSUFFICIENT_DATA"
+    launch_cards = "".join(
+        f'<div class="card"><div>{label}</div><div class="score">{value if value is not None else "N/A"}</div></div>'
+        for label, value in (
+            ("Active content experiments", content_growth.get("activeExperiments")),
+            ("New pages / 28d", content_growth.get("newPages28d")),
+            ("New page win rate", content_growth.get("newPageWinRate")),
+            ("Pattern status", content_growth.get("patternStatus")),
+        )
+    )
     return f"""<section id="revenue-control"><h1>REVENUE GROWTH CONTROL CENTER</h1>{warning_banner}{quality_banner}
 <p>현재 단계: <strong>{html.escape(str(revenue.get('phase', 'DATA NOT AVAILABLE')))}</strong></p>
 <p>Revenue goals: {goals}</p><h2>Revenue</h2><div class="cards">{revenue_cards}</div>
@@ -167,6 +178,7 @@ def _render_revenue_control_center(revenue):
 <h2>Opportunity</h2><div class="cards">{count_cards}</div>
 <h2>TODAY'S TOP OPPORTUNITIES</h2><div class="wrap"><table><thead><tr><th>#</th><th>URL</th><th>Score</th><th>Classification</th><th>Next action</th><th>Cooldown</th><th>Data</th><th>Naver</th></tr></thead><tbody>{''.join(top_rows)}</tbody></table></div>
 <div class="cards"><div class="card"><h2>WINNERS - DO NOT REWRITE</h2><ul>{winner_rows}</ul></div><div class="card"><h2>ACTIVE EXPERIMENTS</h2><ul>{experiment_rows}</ul></div></div>
+<h2>CONTENT LAUNCH EXPERIMENTS</h2><div class="cards">{launch_cards}</div><p>Secondary cluster: {html.escape(secondary)}</p>
 <div class="card"><h2>Camping Cluster</h2><p>Pages: {int(camping.get('pages') or 0):,} · Views: {camping.get('views') if camping.get('views') is not None else 'N/A'} · Revenue: {camping.get('revenue') if camping.get('revenue') is not None else 'N/A'} · Revenue / 1000 views: {camping.get('revenuePer1000Views') if camping.get('revenuePer1000Views') is not None else 'N/A'} · Naver URL data: {html.escape(str(camping.get('naverStatus', 'NOT_CONNECTED')))}</p></div></section>"""
 
 

@@ -86,6 +86,7 @@ def revenue_fixture():
         "campingCluster": {"pages": 171, "views": 503, "revenue": 1.91, "revenuePer1000Views": 3.8, "winner": 4, "opportunity": 1, "naverStatus": "NOT_CONNECTED"},
         "crossSourcePeriodAlignment": "PERIOD_MISMATCH",
         "dataQuality": {"naver": {"gatePassed": True, "matched": 30, "rows": 30, "matchRate": 1.0, "rankAvailability": "NOT_AVAILABLE", "limitations": ["TOP_30_ONLY"]}},
+        "contentGrowth": {"activeExperiments": 2, "newPages28d": 3, "matureCohort": 2, "newPageWinRate": 0.5, "revenuePerNewPage": None, "revenuePerNewPageStatus": "INSUFFICIENT_DATA", "patternStatus": "OBSERVE_PATTERN", "secondaryClusters": ["QR code"]},
     }
 
 
@@ -133,6 +134,11 @@ class QualityReportTest(unittest.TestCase):
         self.assertIn("WINNERS - DO NOT REWRITE", rendered)
         self.assertIn("ACTIVE EXPERIMENTS", rendered)
         self.assertIn("Camping Cluster", rendered)
+        self.assertIn("CONTENT LAUNCH EXPERIMENTS", rendered)
+        self.assertIn("New pages / 28d", rendered)
+        self.assertIn("New page win rate", rendered)
+        self.assertIn("Pattern status", rendered)
+        self.assertIn("Secondary cluster", rendered)
         self.assertIn("Naver clicks", rendered)
         self.assertIn("Google clicks", rendered)
         self.assertIn("$1/day", rendered)

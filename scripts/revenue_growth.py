@@ -4,6 +4,7 @@
 import argparse
 import json
 from collections import Counter
+from datetime import date, timedelta
 from pathlib import Path
 from statistics import median
 
@@ -37,6 +38,24 @@ CHANNEL_FIELDS = {
     "ga4": ("views", "users", "engagementSeconds", "revenue"),
     "adsense": ("revenue", "rpm"),
 }
+
+
+def content_growth_summary(experiments, as_of):
+    current = date.fromisoformat(as_of)
+    launches = [row for row in experiments if row.get("type") == "CONTENT_LAUNCH_EXPERIMENT"]
+    mature = [row for row in launches if row.get("publishedOn") and (current - date.fromisoformat(row["publishedOn"])).days >= 28]
+    winners = sum(row.get("result") == "WINNER" for row in mature)
+    recent = [row for row in launches if row.get("publishedOn") and date.fromisoformat(row["publishedOn"]) >= current - timedelta(days=27)]
+    revenues = [row.get("revenue") for row in recent]
+    revenue_ready = bool(recent) and all(value is not None for value in revenues)
+    return {
+        "activeExperiments": sum(row.get("status") == "OBSERVING" for row in launches),
+        "newPages28d": len(recent), "matureCohort": len(mature),
+        "newPageWinRate": round(winners / len(mature), 4) if mature else None,
+        "revenuePerNewPage": round(sum(revenues) / len(recent), 6) if revenue_ready else None,
+        "revenuePerNewPageStatus": "VERIFIED" if revenue_ready else "INSUFFICIENT_DATA",
+        "patternStatus": "OBSERVE_PATTERN", "secondaryClusters": [],
+    }
 
 
 def _read_json(path, default):
@@ -236,11 +255,13 @@ def run_revenue_growth(
     report_output,
     optimization_history_path=None,
     naver_snapshot_path=None,
+    content_experiments_path=None,
 ):
     page_scores = _read_json(page_scores_path, {"pages": []})
     audit = _read_json(audit_path, {"pages": []})
     performance = _read_json(performance_path, {"site": {}, "pages": []})
     experiments = _read_json(experiments_path, {"experiments": []})
+    content_experiments = _read_json(content_experiments_path, {"experiments": []})
     history = _read_json(optimization_history_path, {"pages": []})
     audit_map = _by_url(audit.get("pages") or [])
     performance_map = _by_url(performance.get("pages") or [])
@@ -411,6 +432,7 @@ def run_revenue_growth(
         },
         "protectedWinners": [row for row in records if row.get("classification") == "WINNER"],
         "activeExperiments": experiments.get("experiments") or [],
+        "contentGrowth": content_growth_summary(content_experiments.get("experiments") or [], as_of),
         "campingCluster": {**_camping_cluster(records), "naver": naver_benchmarks},
         "growthDrivers": {
             "status": "ESTIMATED",
@@ -443,6 +465,7 @@ def main():
     parser.add_argument("--experiments", type=Path, default=Path("data/experiments.json"))
     parser.add_argument("--optimization-history", type=Path, default=Path("data/optimization-history.json"))
     parser.add_argument("--naver-snapshot", type=Path, default=Path("data/naver/search-advisor-2026-08-30.json"))
+    parser.add_argument("--content-experiments", type=Path, default=Path("data/content-launch-experiments.json"))
     parser.add_argument("--as-of", required=True)
     parser.add_argument("--page-output", type=Path, default=Path("data/page-performance.json"))
     parser.add_argument("--opportunity-output", type=Path, default=Path("data/revenue-opportunities.json"))
@@ -455,6 +478,7 @@ def main():
         experiments_path=args.experiments,
         optimization_history_path=args.optimization_history,
         naver_snapshot_path=args.naver_snapshot,
+        content_experiments_path=args.content_experiments,
         as_of=args.as_of,
         page_output=args.page_output,
         opportunity_output=args.opportunity_output,
