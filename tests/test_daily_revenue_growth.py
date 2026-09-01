@@ -60,3 +60,15 @@ def test_fewer_than_ten_researched_candidates_cannot_publish(tmp_path):
     result = run_daily_analysis(tmp_path, "2026-09-01T14:00:00+09:00", tmp_path / "research.json")
     assert result["selected"] == []
     assert result["dataStatus"] == "INSUFFICIENT_DATA"
+
+
+def test_verified_same_intent_candidates_report_improve_existing_reason(tmp_path):
+    rows = [raw_candidate(i) for i in range(1, 11)]
+    for row in rows:
+        row["goalRelation"] = "SAME_GOAL"
+        row["closest"] = {"url": row["url"], "targetIntent": row["targetIntent"]}
+    prepare(tmp_path, rows)
+    run_daily_analysis(tmp_path, "2026-09-01T15:20:00+09:00", tmp_path / "research.json")
+    report = (tmp_path / "reports/daily-revenue-growth.md").read_text(encoding="utf-8")
+    assert "Direct query evidence is verified, but every researched intent maps to an existing page." in report
+    assert "No eligible direct query evidence" not in report

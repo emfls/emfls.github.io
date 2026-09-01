@@ -40,3 +40,14 @@
 - 원인: checkout이 shallow 상태라 push 직전 SHA가 로컬 object database에 없었지만 launch guard가 해당 SHA와 diff를 시도함
 - 수정: push 경로에서 `EVENT_BEFORE` SHA를 depth 1로 fetch한 뒤 guard 실행
 - 검증: workflow 테스트 6개, 전체 pytest 660개 통과
+
+## 15:20 KST 직접 query 분석
+
+- Source: Naver Search Advisor, 최근 30일, 업데이트 2026-08-30
+- Evidence: `data/naver/search-query-2026-08-30.json`
+- TOP 30 상태: `VERIFIED`, 평균순위는 `NOT_AVAILABLE`
+- 분석 후보: 10개
+- 결과: `IMPROVE_EXISTING` 10개, `NEW_PAGE` 0개, 발행 0개
+- 보호: WINNER 및 논산·철원·울진 실험 수정 없음
+
+주요 CTR 기회는 `냐짱 여행준비` 608노출·3클릭·0.5%, `미크로네시아 여행` 124노출·5클릭·4.0%, `경기도 노지캠핑` 67노출·4클릭·6.0%다. 이번 실행에서는 신규 페이지가 아니라 기존 intent 강화 또는 추가 검토 대상으로 유지한다.

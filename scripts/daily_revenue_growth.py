@@ -52,7 +52,13 @@ def _recent_launches(experiments, run_at):
 
 def _report(payload):
     lines = ["# Daily Revenue Growth", "", f"- Run: {payload['runAt']}", f"- Data Status: {payload['dataStatus']}", f"- Researched: {len(payload['candidates'])}", f"- Selected: {len(payload['selected'])}", f"- Published: 0 (analysis and selection are separate)", "", "## New Page Win Rate", "", f"- Mature cohort: {payload['kpis']['matureCohort']}", f"- Win rate: {payload['kpis']['newPageWinRate']}", "", "## Data Limitations", ""]
-    lines.append("- No eligible direct query evidence; zero publication is expected." if not payload["selected"] else "- Selected pages still require content creation and the launch guard.")
+    if payload["selected"]:
+        limitation = "- Selected pages still require content creation and the launch guard."
+    elif payload.get("dataStatus") == "VERIFIED" and payload.get("candidates"):
+        limitation = "- Direct query evidence is verified, but every researched intent maps to an existing page."
+    else:
+        limitation = "- No eligible direct query evidence; zero publication is expected."
+    lines.append(limitation)
     lines.extend(["", "## Candidates", ""])
     for row in payload["candidates"]:
         lines.append("- `{}` — {} / {} / {}".format(row.get("url"), row.get("score"), row.get("decision"), row.get("demand", {}).get("status")))

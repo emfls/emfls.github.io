@@ -1,8 +1,8 @@
 # Daily Revenue Growth
 
-- Run: 2026-09-01T14:00:00+09:00
-- Data Status: INSUFFICIENT_DATA
-- Researched: 0
+- Run: 2026-09-01T15:20:00+09:00
+- Data Status: VERIFIED
+- Researched: 10
 - Selected: 0
 - Published: 0 (analysis and selection are separate)
 
@@ -13,6 +13,17 @@
 
 ## Data Limitations
 
-- No eligible direct query evidence; zero publication is expected.
+- Direct query evidence is verified, but every researched intent maps to an existing page.
 
 ## Candidates
+
+- `/kor/report/camp/free-camping-top20.html` — 0.0 / IMPROVE_EXISTING / VERIFIED
+- `/kor/report/camp/gimpo.html` — 0.0 / IMPROVE_EXISTING / VERIFIED
+- `/kor/report/camp/gyeonggi-best.html` — 0.0 / IMPROVE_EXISTING / VERIFIED
+- `/kor/report/camp/jeongseon.html` — 0.0 / IMPROVE_EXISTING / VERIFIED
+- `/kor/report/camp/jinju.html` — 0.0 / IMPROVE_EXISTING / VERIFIED
+- `/kor/report/camp/namyangju.html` — 0.0 / IMPROVE_EXISTING / VERIFIED
+- `/kor/report/camp/pyeongchang.html` — 0.0 / IMPROVE_EXISTING / VERIFIED
+- `/kor/report/camp/pyeongtaek.html` — 0.0 / IMPROVE_EXISTING / VERIFIED
+- `/kor/report/camp/yangyang.html` — 0.0 / IMPROVE_EXISTING / VERIFIED
+- `/kor/report/travel/philippines-santa-rosa.html` — 0.0 / IMPROVE_EXISTING / VERIFIED
