@@ -43,6 +43,24 @@ jobs:
       - name: Calculate revenue opportunities from available performance data
         run: python3 scripts/revenue_growth.py --as-of "$(date +%F)" --naver-snapshot data/naver/search-advisor-2026-08-30.json
 
+      - name: Validate deterministic growth-run artifacts
+        run: python3 scripts/daily_revenue_growth.py --run-at "$(date -Iseconds)" --research data/new-content-research.json
+
+      - name: Guard automated content launch changes
+        env:
+          EVENT_BEFORE: ${{ github.event.before }}
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          if [ -n "$BASE_REF" ]; then
+            git fetch origin "$BASE_REF" --depth=1
+            COMPARE_REF="origin/$BASE_REF"
+          elif [ -n "$EVENT_BEFORE" ] && [ "$EVENT_BEFORE" != "0000000000000000000000000000000000000000" ]; then
+            COMPARE_REF="$EVENT_BEFORE"
+          else
+            COMPARE_REF="HEAD^"
+          fi
+          python3 scripts/content_launch_guard.py --root . --manifest data/content-launch-manifest.json --base-ref "$COMPARE_REF"
+
       - name: Render revenue growth control center
         run: python3 scripts/quality_audit.py --as-of "$(date +%F)" --revenue data/revenue-opportunities.json --dashboard reports/site-quality-dashboard.html
 
@@ -66,7 +84,10 @@ jobs:
             SITE_SCORE.md
             data/site-score.json
             data/revenue-opportunities.json
+            data/new-content-opportunities.json
+            data/content-launch-manifest.json
             reports/naver-data-quality.md
             reports/revenue-growth-report.md
+            reports/daily-revenue-growth.md
             reports/site-quality-dashboard.html
           if-no-files-found: warn

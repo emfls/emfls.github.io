@@ -42,6 +42,21 @@ class SeoQaWorkflowTests(unittest.TestCase):
         self.assertIn("data/revenue-opportunities.json", source)
         self.assertIn("reports/revenue-growth-report.md", source)
 
+    def test_workflow_validates_daily_launch_without_cron_or_write_permission(self):
+        source = WORKFLOW.read_text(encoding="utf-8")
+        revenue = source.index("scripts/revenue_growth.py")
+        daily = source.index("scripts/daily_revenue_growth.py")
+        guard = source.index("scripts/content_launch_guard.py")
+        dashboard = source.rindex("scripts/quality_audit.py")
+        tests = source.index("python3 -m unittest discover")
+        self.assertLess(revenue, daily)
+        self.assertLess(daily, guard)
+        self.assertLess(guard, dashboard)
+        self.assertLess(dashboard, tests)
+        self.assertNotIn("schedule:", source)
+        self.assertIn("permissions:\n  contents: read", source)
+        self.assertNotIn("git push", source)
+
 
 if __name__ == "__main__":
     unittest.main()
