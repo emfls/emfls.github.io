@@ -97,3 +97,16 @@
 - 매 실행 시 시작 단계와 완료 요약을 한국어로 보고
 - 완료 보고 항목: 외부 후보 수, 소스별 발견 수, 중복 거절 수, 조사·Brief·READY 상태, 오늘 발행 수(`X / 3`), TOP 기회, 테스트·push·GitHub Actions 상태
 - 데이터나 외부 출처가 부족해 fail-closed로 종료하는 경우에도 이유를 현재 대화에 보고
+
+## 2026-09-02 15:03 KST 외부 탐색 자동 실행
+
+- Discovery origin: `EXTERNAL_WEB`
+- 발견 후보: 10개 (`Google 3`, `Naver 5`, `Other websites 2`)
+- 기존 site audit: 19,066페이지 기준 intent 중복 검사
+- 상태: `BRIEF_READY 10`, `READY_TO_LAUNCH 0`
+- 오늘 발행: `0 / 3`, launch manifest는 `NO_PUBLICATION`
+- 상위 후보: 국가자격시험 모바일 신분증 확인(78.0), 항공권 예약번호 확인(76.5), 네이버 수집·색인 진단(76.0)
+- 미발행 사유: 공식 출처 검증 또는 Quality Feasibility 75점 기준 미충족. 건강기능식품 확인 후보는 기존 건강 클러스터와 `MEDIUM_OVERLAP`이라 별도 URL 보류
+- YMYL 후보는 공식 출처·한계·고지 요건을 fail-closed로 적용
+- 보호: WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
+- 검증: content launch guard `PASS`, 전체 pytest `677 passed`
