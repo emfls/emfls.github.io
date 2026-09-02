@@ -110,3 +110,16 @@
 - YMYL 후보는 공식 출처·한계·고지 요건을 fail-closed로 적용
 - 보호: WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
 - 검증: content launch guard `PASS`, 전체 pytest `677 passed`
+
+## 2026-09-02 17:03 KST 외부 탐색 자동 실행
+
+- Discovery origin: `EXTERNAL_WEB`
+- 신규 발견 후보: 10개 (`Google 4`, `Naver 0`, `Other websites 6`)
+- Naver 검색 결과 직접 접근은 robots 제한으로 차단되어 숫자나 수요를 추측하지 않음
+- 기존 site audit: 19,066페이지 기준 intent 중복 검사
+- 누적 상태: `BRIEF_READY 20`, `READY_TO_LAUNCH 0`
+- 오늘 발행: `0 / 3`, launch manifest는 `NO_PUBLICATION`
+- 상위 신규 후보: 자동차 여행 연료비·통행료 분담 계산기(80.0), 페인트 필요량 계산기(77.0), 신발 사이즈 변환기(76.5)
+- 미발행 사유: 공식·표준 출처 및 Quality Feasibility 75점 기준 미충족
+- 보호: WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
+- 검증: content launch guard `PASS`, 전체 pytest `677 passed`

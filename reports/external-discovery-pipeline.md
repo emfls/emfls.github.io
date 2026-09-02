@@ -1,20 +1,32 @@
 # EXTERNAL DISCOVERY PIPELINE
 
-- Run: 2026-09-02T15:03:29+09:00
+- Run: 2026-09-02T17:03:29+09:00
 - Data status: OBSERVED_SEARCH_SIGNAL
 - External ideas discovered: 10
-- Google: 3
-- Naver: 5
-- Other websites: 2
+- Google: 4
+- Naver: 0
+- Other websites: 6
 - Rejected as existing intent: 0
 - Researching: 0
-- Brief ready: 10
+- Brief ready: 20
 - Ready to launch: 0
 - Pages launched today: 0 / 3
 
 ## TOP 10 EXTERNAL OPPORTUNITIES
 
-### 1. 국가자격시험 모바일 신분증 인정 범위 확인표
+### 1. 자동차 여행 연료비·통행료 분담 계산기
+
+- Candidate: EXT-20260902-014
+- Discovery: GOOGLE / COMPETITOR_TOOL
+- Demand status: OBSERVED_SEARCH_SIGNAL
+- Opportunity: 80.0
+- Quality: 70.0
+- Closest existing page: None
+- Overlap: NO_OVERLAP
+- Content gap: 연료비 계산에 통행료·왕복·인원 분담을 결합하고 입력 가정을 명확히 보여주면 한국 자동차 여행에 실용적이다.
+- Status: BRIEF_READY
+
+### 2. 국가자격시험 모바일 신분증 인정 범위 확인표
 
 - Candidate: EXT-20260902-006
 - Discovery: GOOGLE / SEARCH_RESULT_REPEATED_QUESTION
@@ -26,7 +38,19 @@
 - Content gap: 시험별 공고문에 흩어진 인정 신분증과 캡처 금지 규칙을 응시자 유형별로 비교하기 어렵다.
 - Status: BRIEF_READY
 
-### 2. 여행사 항공권 예약번호와 항공사 예약번호 확인 가이드
+### 3. 페인트 필요량과 캔 수 계산기
+
+- Candidate: EXT-20260902-015
+- Discovery: OTHER_WEBSITE / CATEGORY_PATTERN
+- Demand status: OBSERVED_SEARCH_SIGNAL
+- Opportunity: 77.0
+- Quality: 69.0
+- Closest existing page: None
+- Overlap: NO_OVERLAP
+- Content gap: 도포율과 도장 횟수, 제외 면적, 여유율을 분리 입력하고 캔 규격별 구매 수량을 보여주는 구조가 필요하다.
+- Status: BRIEF_READY
+
+### 4. 여행사 항공권 예약번호와 항공사 예약번호 확인 가이드
 
 - Candidate: EXT-20260902-001
 - Discovery: NAVER / Q_AND_A
@@ -38,7 +62,31 @@
 - Content gap: 질문 답변은 예약번호가 두 종류라는 설명에 그치며 발권 완료, e-ticket 번호, PNR을 구분하는 확인표가 없다.
 - Status: BRIEF_READY
 
-### 3. 네이버 웹사이트 수집·색인 여부 확인 체크리스트
+### 5. 여러 나라 신발 사이즈 변환·발길이 비교표
+
+- Candidate: EXT-20260902-020
+- Discovery: OTHER_WEBSITE / COMPETITOR_TOOL
+- Demand status: OBSERVED_SEARCH_SIGNAL
+- Opportunity: 76.5
+- Quality: 61.5
+- Closest existing page: None
+- Overlap: NO_OVERLAP
+- Content gap: 단일 변환값보다 국가·성별·아동 표기를 구분하고 브랜드별 차이가 있음을 명확히 경고해야 한다.
+- Status: BRIEF_READY
+
+### 6. 이미지·문서를 서버 업로드 없이 OCR하는 도구
+
+- Candidate: EXT-20260902-018
+- Discovery: OTHER_WEBSITE / PRIVACY_TOOL_PATTERN
+- Demand status: OBSERVED_SEARCH_SIGNAL
+- Opportunity: 76.5
+- Quality: 61.0
+- Closest existing page: None
+- Overlap: NO_OVERLAP
+- Content gap: 한국어 인식 지원 범위, 처리 위치, 파일 폐기 여부를 명확히 보여주는 프라이버시 중심 OCR이 차별점이다.
+- Status: BRIEF_READY
+
+### 7. 네이버 웹사이트 수집·색인 여부 확인 체크리스트
 
 - Candidate: EXT-20260902-004
 - Discovery: NAVER / Q_AND_A
@@ -50,88 +98,40 @@
 - Content gap: 커뮤니티 답변은 site: 검색과 등록 절차를 섞어 설명해 수집·색인·노출을 구분하기 어렵다.
 - Status: BRIEF_READY
 
-### 4. 식약처 인정 건강기능식품 제품 확인 방법
+### 8. 회의 비용 실시간 계산기
 
-- Candidate: EXT-20260902-002
-- Discovery: NAVER / Q_AND_A
-- Demand status: OBSERVED_SEARCH_SIGNAL
-- Opportunity: 72.5
-- Quality: 85.5
-- Closest existing page: /kor/report/health/
-- Overlap: MEDIUM_OVERLAP
-- Content gap: 기존 사이트는 제품 추천 중심이고 식품안전나라에서 신고 제품을 검증하는 독립 절차를 제공하지 않는다.
-- Status: BRIEF_READY
-
-### 5. 고용보험 피보험자격 확인청구 처리 단계와 지연 대응
-
-- Candidate: EXT-20260902-005
-- Discovery: NAVER / Q_AND_A
-- Demand status: OBSERVED_SEARCH_SIGNAL
-- Opportunity: 72.0
-- Quality: 47.5
-- Closest existing page: None
-- Overlap: NO_OVERLAP
-- Content gap: Q&A의 처리기간 주장은 공식 근거가 불명확하고 실제 진행 단계와 문의 경로를 검증하지 않는다.
-- Status: BRIEF_READY
-
-### 6. 2026 건물신축가격기준액 공식 고시 확인 가이드
-
-- Candidate: EXT-20260902-010
-- Discovery: OTHER_WEBSITE / OFFICIAL_UPDATE
-- Demand status: OBSERVED_SEARCH_SIGNAL
-- Opportunity: 71.0
-- Quality: 74.5
-- Closest existing page: None
-- Overlap: NO_OVERLAP
-- Content gap: 공식 고시는 신뢰할 수 있지만 일반 사용자가 적용 대상과 세금 계산의 다른 요소를 오해할 수 있어 단순 수치 재게시로는 부족하다.
-- Status: BRIEF_READY
-
-### 7. 정부24 행정서비스 신청·처리 내역 찾기
-
-- Candidate: EXT-20260902-008
-- Discovery: GOOGLE / COMPETITOR_PAGE
-- Demand status: OBSERVED_SEARCH_SIGNAL
-- Opportunity: 69.5
-- Quality: 55.0
-- Closest existing page: None
-- Overlap: NO_OVERLAP
-- Content gap: 경쟁 문서는 정부24와 국민신문고를 구분하지만 공식 메뉴 변경 시 검증할 구조와 서비스별 분기표가 약하다.
-- Status: BRIEF_READY
-
-### 8. 고등학교 전학 가능 인원 확인 절차
-
-- Candidate: EXT-20260902-003
-- Discovery: NAVER / Q_AND_A
-- Demand status: OBSERVED_SEARCH_SIGNAL
-- Opportunity: 69.5
-- Quality: 54.0
-- Closest existing page: None
-- Overlap: NO_OVERLAP
-- Content gap: 검색 답변은 학교에 전화하라는 수준이며 지역·학교 유형별 문의 순서와 준비 정보를 구분하지 않는다.
-- Status: BRIEF_READY
-
-### 9. 한국·미국 공휴일 선택 영업일 계산기
-
-- Candidate: EXT-20260902-007
+- Candidate: EXT-20260902-011
 - Discovery: GOOGLE / COMPETITOR_TOOL
 - Demand status: OBSERVED_SEARCH_SIGNAL
-- Opportunity: 66.0
-- Quality: 54.5
+- Opportunity: 75.0
+- Quality: 69.5
 - Closest existing page: None
 - Overlap: NO_OVERLAP
-- Content gap: 경쟁 도구가 이미 핵심 계산을 제공하므로 별도 차별성 없이 유사 계산기를 만들면 가치가 부족하다.
+- Content gap: 한국어 도구에서 시급·연봉 혼합 입력과 반복 회의의 월·연간 비용을 함께 보여주는 기능을 검토할 가치가 있다.
 - Status: BRIEF_READY
 
-### 10. 국가자격·어학시험 접수와 발표 일정 통합 달력
+### 9. 콘크리트 부피와 포대 수 계산기
 
-- Candidate: EXT-20260902-009
-- Discovery: OTHER_WEBSITE / COMPETITOR_TOOL
+- Candidate: EXT-20260902-016
+- Discovery: OTHER_WEBSITE / CATEGORY_PATTERN
 - Demand status: OBSERVED_SEARCH_SIGNAL
-- Opportunity: 64.0
-- Quality: 49.0
+- Opportunity: 75.0
+- Quality: 68.0
 - Closest existing page: None
 - Overlap: NO_OVERLAP
-- Content gap: 경쟁 도구가 이미 광범위한 일정을 제공하므로 데이터 자동 갱신·정정 이력에서 우월하지 않으면 독립 가치가 없다.
+- Content gap: 형상별 부피와 제품 한 포대당 생산 부피를 분리해 실제 구매 수량을 계산하는 한국어 흐름을 검토할 수 있다.
+- Status: BRIEF_READY
+
+### 10. JSON을 CSV로 변환하고 배열 구조를 미리 보는 도구
+
+- Candidate: EXT-20260902-017
+- Discovery: OTHER_WEBSITE / COMPETITOR_TOOL
+- Demand status: OBSERVED_SEARCH_SIGNAL
+- Opportunity: 74.5
+- Quality: 68.0
+- Closest existing page: None
+- Overlap: NO_OVERLAP
+- Content gap: 중첩 객체 처리 규칙과 변환 전 열 미리보기, 로컬 처리 여부를 명확히 하는 도구가 필요하다.
 - Status: BRIEF_READY
 
 ## DUPLICATE REMOVAL RESULTS
