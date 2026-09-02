@@ -36,16 +36,18 @@ def _evaluate(raw, as_of):
     return {**candidate, "score": scored["score"], "scoreComponents": scored["components"], "decision": decision}
 
 
-def _recent_launches(experiments, run_at):
+def _launches_on_local_day(experiments, run_at):
     current = datetime.fromisoformat(run_at)
-    cutoff = current - timedelta(hours=24)
     rows = []
     for row in experiments:
+        if row.get("publishedOn") == current.date().isoformat():
+            rows.append(row)
+            continue
         try:
             published = datetime.fromisoformat(row.get("publishedAt", ""))
         except ValueError:
             continue
-        if cutoff <= published <= current:
+        if published.astimezone(current.tzinfo).date() == current.date():
             rows.append(row)
     return rows
 
@@ -73,7 +75,7 @@ def run_daily_analysis(root, run_at, research_path, write=True):
     launches = read_json(root / "data/content-launch-experiments.json", {"experiments": []}).get("experiments") or []
     active = sum(row.get("status") == "OBSERVING" for row in launches)
     complete_research = 10 <= len(raw) <= 20
-    selected = select_new_pages(candidates, active, _recent_launches(launches, run_at)) if complete_research else []
+    selected = select_new_pages(candidates, active, _launches_on_local_day(launches, run_at)) if complete_research else []
     cohort = evaluate_launch_cohort(launches, run_at[:10])
     status = "VERIFIED" if complete_research and any((row.get("demand") or {}).get("status") == "VERIFIED" for row in candidates) else "INSUFFICIENT_DATA"
     payload = {

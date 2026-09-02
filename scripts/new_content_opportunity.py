@@ -80,19 +80,13 @@ def score_new_content(candidate):
     return {"score": round(sum(row["score"] for row in components), 2), "components": components}
 
 
-def select_new_pages(candidates, active_launches, published_last_24h, default_limit=3, hard_limit=5):
+def select_new_pages(candidates, active_launches, published_today, daily_limit=3):
     if active_launches >= 20:
         return []
     eligible = [row for row in candidates if row.get("decision") == "NEW_PAGE" and (row.get("demand") or {}).get("status") == "VERIFIED" and float(row.get("score") or 0) >= 70 and (row.get("overlap") or {}).get("level") in {"NO_OVERLAP", "LOW_OVERLAP"}]
     eligible.sort(key=lambda row: (-float(row.get("score") or 0), row.get("url", "")))
-    selected = eligible[:max(0, default_limit)]
-    for row in eligible[len(selected):]:
-        if len(selected) >= hard_limit:
-            break
-        if float(row.get("score") or 0) >= 85 and row["overlap"]["level"] == "NO_OVERLAP":
-            selected.append(row)
-    capacity = min(20 - active_launches, hard_limit - len(published_last_24h))
-    return selected[:max(0, capacity)]
+    capacity = min(20 - active_launches, daily_limit - len(published_today))
+    return eligible[:max(0, capacity)]
 
 
 def build_experiment(candidate, published_at, sequence):

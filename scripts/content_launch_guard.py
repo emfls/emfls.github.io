@@ -26,8 +26,8 @@ def validate_launch(root, manifest, changed_paths):
     errors = set()
     added_html = {path for status, path in changed if status == "A" and path.endswith(".html")}
     expected_html = set(manifest.get("contentPaths") or [_url_to_path(url) for url in manifest.get("urls") or []])
-    if len(added_html) > 5:
-        errors.add("NEW_CONTENT_LIMIT_EXCEEDED")
+    if len(added_html) > 3:
+        errors.add("NEW_CONTENT_DAILY_LIMIT_EXCEEDED")
     if added_html != expected_html:
         errors.add("MANIFEST_DIFF_MISMATCH")
     if manifest.get("deletions") or any(status.startswith("D") or status.startswith("R") for status, _ in changed):

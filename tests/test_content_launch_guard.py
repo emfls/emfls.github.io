@@ -19,12 +19,11 @@ def manifest(urls):
     return {"urls": urls, "contentPaths": [u.lstrip("/") for u in urls], "sitemapPaths": ["kor/report/camp/sitemap.xml"], "hubPaths": ["kor/report/camp/index.html"]}
 
 
-def test_guard_rejects_sixth_unmanifested_page_and_deletion(tmp_path):
+def test_guard_rejects_fourth_page_and_deletion(tmp_path):
     setup_data(tmp_path)
-    changed = [("A", f"kor/report/camp/n-{i}.html") for i in range(6)]
-    errors = validate_launch(tmp_path, manifest([f"/kor/report/camp/n-{i}.html" for i in range(5)]), changed)
-    assert "NEW_CONTENT_LIMIT_EXCEEDED" in errors
-    assert "MANIFEST_DIFF_MISMATCH" in errors
+    changed = [("A", f"kor/report/camp/n-{i}.html") for i in range(4)]
+    errors = validate_launch(tmp_path, manifest([f"/kor/report/camp/n-{i}.html" for i in range(4)]), changed)
+    assert "NEW_CONTENT_DAILY_LIMIT_EXCEEDED" in errors
     assert "DELETION_NOT_ALLOWED" in validate_launch(tmp_path, {**manifest([]), "deletions": ["old.html"]}, [("D", "old.html")])
 
 

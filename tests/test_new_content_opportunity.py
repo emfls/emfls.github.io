@@ -57,12 +57,11 @@ def test_same_goal_blocks_new_page_and_score_is_explainable():
     assert "adsenseCtr" not in str(result)
 
 
-def test_selection_uses_strict_extra_slots_and_rolling_limit():
+def test_selection_never_exceeds_three_pages_per_local_day():
     rows = [candidate(1, 98), candidate(2, 94), candidate(3, 90), candidate(4, 86), candidate(5, 84)]
-    assert [r["candidateId"] for r in select_new_pages(rows, 0, [])] == ["C-1", "C-2", "C-3", "C-4"]
-    rows[3]["overlap"]["level"] = "LOW_OVERLAP"
-    assert len(select_new_pages(rows, 0, [])) == 3
-    assert len(select_new_pages(rows, 4, [{"publishedAt": "x"}] * 4)) == 1
+    assert [r["candidateId"] for r in select_new_pages(rows, 0, [])] == ["C-1", "C-2", "C-3"]
+    assert len(select_new_pages(rows, 0, [{"publishedAt": "x"}] * 2)) == 1
+    assert select_new_pages(rows, 0, [{"publishedAt": "x"}] * 3) == []
     assert select_new_pages(rows, 20, []) == []
 
 
