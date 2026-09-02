@@ -111,6 +111,19 @@
 - 보호: WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
 - 검증: content launch guard `PASS`, 전체 pytest `677 passed`
 
+## 2026-09-02 19:05 KST 외부 탐색 자동 실행
+
+- Discovery origin: `EXTERNAL_WEB`
+- 신규 발견 후보: 10개 (`Google 3`, `Naver 0`, `Other websites 7`)
+- Naver 검색 결과 직접 접근 제한이 계속되어 관련 수요를 추측하지 않음
+- 신규 후보군: WebRTC IP 유출, canvas/font fingerprint, Client Hints, GPC/DNT, 브라우저 권한, TLS, HTTP/3, fingerprint 비교, privacy browser 비교
+- 기존 site audit 19,066페이지와 비교한 결과 명시적 제목·H1 중복은 발견되지 않음
+- 누적 상태: `RESEARCHING 10`, `BRIEF_READY 20`, `READY_TO_LAUNCH 0`
+- 오늘 발행: `0 / 3`, launch manifest는 `NO_PUBLICATION`
+- 미발행 사유: 신규 후보의 공식 기술 문서 검증과 완성 Content Brief가 부족함
+- 보호: WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
+- 검증: content launch guard `PASS`, 전체 pytest `677 passed`
+
 ## 2026-09-02 17:03 KST 외부 탐색 자동 실행
 
 - Discovery origin: `EXTERNAL_WEB`
