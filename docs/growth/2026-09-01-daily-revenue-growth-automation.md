@@ -78,3 +78,12 @@
 - 검증: content launch guard 통과, 전체 pytest 661개 통과
 
 직전 19:07 회차 이후 새 성과 데이터가 없으므로 분석 산출물의 실행시각만 갱신하고 `NO_PUBLICATION`을 유지한다.
+
+## 2026-09-02 External Web Opportunity 전환
+
+- 기존 `revenue-growth-5` heartbeat는 사용자 요청으로 삭제 완료
+- 신규 외부 탐색 설계: `docs/superpowers/specs/2026-09-02-external-web-opportunity-automation-design.md`
+- 구현 계획: `docs/superpowers/plans/2026-09-02-external-web-opportunity-automation.md`
+- 운영 runbook: `docs/growth/external-web-opportunity-runbook.md`
+- 외부 후보 검증, 후보 DB, 하루 3페이지 제한, launch manifest 연결을 별도 worktree에서 테스트 우선으로 구현
+- 신규 cron은 검증된 구현이 main에 반영된 뒤 2시간 주기로 활성화한다.
