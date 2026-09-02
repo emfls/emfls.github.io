@@ -111,6 +111,19 @@
 - 보호: WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
 - 검증: content launch guard `PASS`, 전체 pytest `677 passed`
 
+## 2026-09-02 21:07 KST 외부 탐색 자동 실행
+
+- Discovery origin: `EXTERNAL_WEB`
+- 신규 발견 후보: 10개 (`Google 3`, `Naver 0`, `Other websites 7`)
+- Naver 직접 검색은 접근 제한 상태라 수요 신호를 추측하지 않음
+- 신규 후보군: 학원 환불, 예술활동증명, 주민조례청구, 재개발 준공인가, 저작권 법정허락, 정수기 렌탈 피해, 산지전용허가, 미용사 면허, 리콜상품 대응, 외국인 신청내역 조회
+- 기존 site audit 19,066페이지 제목·H1 기준 명시적 중복 없음
+- 누적 상태: `RESEARCHING 20`, `BRIEF_READY 20`, `READY_TO_LAUNCH 0`
+- 점수 통과·Brief 미완성: 학원 환불(80.5/77.5), 저작권 법정허락(78.0/77.0), 리콜상품 대응(77.0/76.0)
+- 오늘 발행: `0 / 3`, launch manifest는 `NO_PUBLICATION`
+- 보호: WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
+- 검증: content launch guard `PASS`, 전체 pytest `677 passed`
+
 ## 2026-09-02 19:05 KST 외부 탐색 자동 실행
 
 - Discovery origin: `EXTERNAL_WEB`
