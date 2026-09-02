@@ -87,3 +87,13 @@
 - 운영 runbook: `docs/growth/external-web-opportunity-runbook.md`
 - 외부 후보 검증, 후보 DB, 하루 3페이지 제한, launch manifest 연결을 별도 worktree에서 테스트 우선으로 구현
 - 신규 cron은 검증된 구현이 main에 반영된 뒤 2시간 주기로 활성화한다.
+
+## 2026-09-02 대화형 진행상황 보고 전환
+
+- 자동화 ID: `external-web-opportunity-discovery`
+- 실행 주기: 2시간
+- 상태: `ACTIVE`
+- 사용자가 실행 진행상황을 현재 대화에서 확인할 수 있도록 독립 cron에서 현재 스레드에 연결된 heartbeat 방식으로 전환
+- 매 실행 시 시작 단계와 완료 요약을 한국어로 보고
+- 완료 보고 항목: 외부 후보 수, 소스별 발견 수, 중복 거절 수, 조사·Brief·READY 상태, 오늘 발행 수(`X / 3`), TOP 기회, 테스트·push·GitHub Actions 상태
+- 데이터나 외부 출처가 부족해 fail-closed로 종료하는 경우에도 이유를 현재 대화에 보고
