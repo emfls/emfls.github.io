@@ -181,6 +181,19 @@
 - 오늘 발행: `1 / 3`; 19:00 발행한 자동차 여행 비용 계산기 외 추가 발행 없음
 - 보호: 기존 WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
 
+## 2026-09-07 01:19 KST 외부 탐색 자동 실행
+
+- Discovery origin: `EXTERNAL_WEB`
+- 신규 발견 후보: 10개 (`Google 7`, `Naver 0`, `Other websites 3`)
+- Naver 탐색 결과는 직전 두 회차 후보와 중복되어 신규 후보 0; 검색량 추측 없음
+- 신규 후보군: 항공 배출량 미표시, 비행운 영향, 항공사 검색 누락, 호텔 맞춤가격, 호텔 평균가격 기준, 환경 인증, AI 호텔 예약 지원조건, 해외 여권분실·도난, 신속해외송금
+- 기존 site audit 제목·description 기준 명시적 동일 intent 없음; 여권분실·도난 후보는 기존 여행 안전 콘텐츠와 `MEDIUM_OVERLAP`
+- 누적 상태: `RESEARCHING 50`, `BRIEF_READY 19`, `READY_TO_LAUNCH 0`
+- 신규 TOP 후보군: NO_OVERLAP 후보 `70.0 / 65.5`; 다음 행동은 별도 페이지가 필요한 반복 수요와 추가 출처를 확보한 뒤 가장 강한 후보 하나만 Brief로 승격
+- 미발행 사유: 모든 신규 후보가 Quality Feasibility 75 미만이며 Brief 미완성
+- 오늘 발행: `0 / 3`; 새 날짜의 슬롯은 열려 있으나 억지 발행하지 않음
+- 보호: 기존 WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
+
 ## 2026-09-06 23:18 KST 외부 탐색 자동 실행
 
 - Discovery origin: `EXTERNAL_WEB`
