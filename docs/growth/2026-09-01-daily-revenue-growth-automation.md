@@ -181,6 +181,19 @@
 - 오늘 발행: `1 / 3`; 19:00 발행한 자동차 여행 비용 계산기 외 추가 발행 없음
 - 보호: 기존 WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
 
+## 2026-09-07 05:20 KST 외부 탐색 자동 실행
+
+- Discovery origin: `EXTERNAL_WEB`
+- 신규 발견 후보: 10개 (`Google 5`, `Naver 0`, `Other websites 5`)
+- Naver도 탐색했지만 새롭고 검증 가능한 고유 신호를 확보하지 못해 0으로 기록했으며 검색량을 추측하지 않음
+- 신규 후보군: 민원 처리기간, 온라인 세대주 변경 확인, 자동차 종합검사, 도난 말소차 재등록, 지역 통합돌봄, 사회보장급여 변경, 소액사건 인지대·송달료, 공유재산 대부료, 건설일용근로자 휴업수당, 저작권 법정허락
+- 기존 site audit에서 10개 표현의 명시적 동일 페이지는 없었으나, 저작권 법정허락은 기존 외부 후보 DB와 `SAME_INTENT`여서 `DO_NOT_CREATE` 처리
+- 누적 상태: `RESEARCHING 69`, `BRIEF_READY 19`, `READY_TO_LAUNCH 0`, `SAME_INTENT 1`
+- 오늘 발행: `0 / 3`; launch manifest는 `NO_PUBLICATION`
+- 미발행 사유: 행정·법률·복지 YMYL 후보로서 최신 공식 기준 교차검증, 계산식 유지관리 방안 및 완성 Brief가 부족함
+- TOP 신규 후보: 자동차 종합검사 대상·주기 확인표; 다음 행동은 공식 검사 조회 경로와 차량별 적용 조건을 추가 검증한 뒤 독립 도구 가치 평가
+- 보호: 기존 WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
+
 ## 2026-09-07 03:20 KST 외부 탐색 자동 실행
 
 - Discovery origin: `EXTERNAL_WEB`
