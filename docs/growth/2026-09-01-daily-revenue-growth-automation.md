@@ -167,3 +167,16 @@
 - 반복 방지: 발행 실험에 등록된 `candidateId`는 다음 예약 실행의 launch selector에서 자동 제외
 - CI 안전성: 같은 날의 `LAUNCHED` manifest를 기존 daily 분석이 덮어쓰지 않도록 보호하고, 재생성된 site audit에서는 현재 manifest URL 자체를 기존 중복 집합에서 제외
 - 검증: launch guard `PASS`, site audit 파서 오류 `0`, unittest `577`, pytest `681`, JavaScript 도구 테스트 `6` 모두 통과
+
+## 2026-09-06 21:17 KST 외부 탐색 자동 실행
+
+- Discovery origin: `EXTERNAL_WEB`
+- 신규 발견 후보: 10개 (`Google 1`, `Naver 8`, `Other websites 1`)
+- 수요 상태: 모두 `OBSERVED_SEARCH_SIGNAL`; 정확한 검색량 숫자는 생성하지 않음
+- 신규 후보군: 호텔 표시가격 차이, 항공권 예약 미연동, 예약 부분취소, 해외 식당 예약 준비, 호텔 포인트 미지급, 패키지여행 변경·취소, 여행정보 오류 신고, 해외 감염병 사전 확인, Merchant Center 인기제품 해석
+- 기존 site audit 제목·description 기준 명시적 동일 intent 없음; 항공권 미연동은 기존 예약번호 후보와 `LOW_OVERLAP`, 해외 감염병 후보는 여행 클러스터와 `MEDIUM_OVERLAP`으로 보수 판정
+- 누적 상태: `RESEARCHING 30`, `BRIEF_READY 19`, `READY_TO_LAUNCH 0`
+- 신규 TOP 후보: 호텔 검색가격 차이 확인표 `74.5 / 66.5`; 다음 행동은 추가 공식 판매사 자료와 세금·수수료 조건 비교 후 Brief 완성
+- 미발행 사유: 신규 10개 모두 Quality Feasibility 75 미만 또는 Brief 미완성. 서비스 종속 질문을 얇은 페이지로 발행하지 않음
+- 오늘 발행: `1 / 3`; 19:00 발행한 자동차 여행 비용 계산기 외 추가 발행 없음
+- 보호: 기존 WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
