@@ -1,13 +1,13 @@
 # EXTERNAL DISCOVERY PIPELINE
 
-- Run: 2026-09-07T05:20:52+09:00
+- Run: 2026-09-07T07:22:22+09:00
 - Data status: OBSERVED_SEARCH_SIGNAL
 - External ideas discovered: 10
 - Google: 5
 - Naver: 0
 - Other websites: 5
 - Rejected as existing intent: 1
-- Researching: 69
+- Researching: 79
 - Brief ready: 19
 - Ready to launch: 0
 - Pages launched today: 0 / 3
@@ -62,77 +62,77 @@
 - Content gap: 시험별 공고문에 흩어진 인정 신분증과 캡처 금지 규칙을 응시자 유형별로 비교하기 어렵다.
 - Status: BRIEF_READY
 
-### 5. 리콜상품 확인 후 수리·환불 요청 준비
+### 5. 자동차검사 종류·차급별 수수료 확인표
 
-- Candidate: EXT-20260902-039
-- Discovery: OTHER_WEBSITE / OFFICIAL_RECALL_SEARCH
+- Candidate: EXT-20260907-091
+- Discovery: GOOGLE / OFFICIAL_AUTOMOTIVE_SERVICE_SEARCH
 - Demand status: OBSERVED_SEARCH_SIGNAL
-- Opportunity: 77.0
-- Quality: 76.0
+- Opportunity: 77.95
+- Quality: 70.1
 - Closest existing page: None
 - Overlap: NO_OVERLAP
-- Content gap: 개별 리콜 공고를 복제하지 않고 모델 확인부터 사업자 조치 요청까지 공통 체크 절차를 제공해야 한다.
+- Content gap: 정기·종합·신규·임시검사와 차급을 먼저 구분해 공식 금액표로 안내할 필요가 있다.
 - Status: RESEARCHING
 
-### 6. 페인트 필요량과 캔 수 계산기
+### 6. 자동차검사 지연 과태료 계산기
 
-- Candidate: EXT-20260902-015
-- Discovery: OTHER_WEBSITE / CATEGORY_PATTERN
+- Candidate: EXT-20260907-092
+- Discovery: GOOGLE / OFFICIAL_AUTOMOTIVE_SERVICE_SEARCH
 - Demand status: OBSERVED_SEARCH_SIGNAL
-- Opportunity: 77.0
-- Quality: 69.0
+- Opportunity: 77.95
+- Quality: 70.1
 - Closest existing page: None
 - Overlap: NO_OVERLAP
-- Content gap: 도포율과 도장 횟수, 제외 면적, 여유율을 분리 입력하고 캔 규격별 구매 수량을 보여주는 구조가 필요하다.
-- Status: BRIEF_READY
+- Content gap: 지연일수 입력과 상한 적용을 제공하되 관할 지자체 확정액이 아님을 명확히 해야 한다.
+- Status: RESEARCHING
 
-### 7. 여행사 항공권 예약번호와 항공사 예약번호 확인 가이드
+### 7. 자동차검사 수수료 감면 대상 확인표
 
-- Candidate: EXT-20260902-001
-- Discovery: NAVER / Q_AND_A
+- Candidate: EXT-20260907-093
+- Discovery: OTHER_WEBSITE / OFFICIAL_AUTOMOTIVE_SERVICE_SEARCH
 - Demand status: OBSERVED_SEARCH_SIGNAL
-- Opportunity: 76.5
-- Quality: 62.5
+- Opportunity: 77.95
+- Quality: 70.1
 - Closest existing page: None
 - Overlap: NO_OVERLAP
-- Content gap: 질문 답변은 예약번호가 두 종류라는 설명에 그치며 발권 완료, e-ticket 번호, PNR을 구분하는 확인표가 없다.
-- Status: BRIEF_READY
+- Content gap: 대상별 감면 조건과 전산 미확인 시 사후 환불 절차를 한 흐름으로 정리할 필요가 있다.
+- Status: RESEARCHING
 
-### 8. 여러 나라 신발 사이즈 변환·발길이 비교표
+### 8. 자동차검사 기간 알림 서비스 신청 체크리스트
 
-- Candidate: EXT-20260902-020
-- Discovery: OTHER_WEBSITE / COMPETITOR_TOOL
+- Candidate: EXT-20260907-094
+- Discovery: OTHER_WEBSITE / OFFICIAL_AUTOMOTIVE_SERVICE_SEARCH
 - Demand status: OBSERVED_SEARCH_SIGNAL
-- Opportunity: 76.5
-- Quality: 61.5
+- Opportunity: 77.95
+- Quality: 70.1
 - Closest existing page: None
 - Overlap: NO_OVERLAP
-- Content gap: 단일 변환값보다 국가·성별·아동 표기를 구분하고 브랜드별 차이가 있음을 명확히 경고해야 한다.
-- Status: BRIEF_READY
+- Content gap: 신청 가능자, 동의 요건, 수정·해지 경로를 신청 전 점검하는 안내가 필요하다.
+- Status: RESEARCHING
 
-### 9. 이미지·문서를 서버 업로드 없이 OCR하는 도구
+### 9. 신차·중고차 등록비용 공식 조회 준비표
 
-- Candidate: EXT-20260902-018
-- Discovery: OTHER_WEBSITE / PRIVACY_TOOL_PATTERN
+- Candidate: EXT-20260907-095
+- Discovery: GOOGLE / OFFICIAL_AUTOMOTIVE_SERVICE_SEARCH
 - Demand status: OBSERVED_SEARCH_SIGNAL
-- Opportunity: 76.5
-- Quality: 61.0
+- Opportunity: 77.95
+- Quality: 70.1
 - Closest existing page: None
 - Overlap: NO_OVERLAP
-- Content gap: 한국어 인식 지원 범위, 처리 위치, 파일 폐기 여부를 명확히 보여주는 프라이버시 중심 OCR이 차별점이다.
-- Status: BRIEF_READY
+- Content gap: 취득세·공채 관련 조회의 입력항목과 비영업용 등 계산 범위를 먼저 설명할 필요가 있다.
+- Status: RESEARCHING
 
-### 10. 네이버 웹사이트 수집·색인 여부 확인 체크리스트
+### 10. 중고차 실매물 등록 여부 확인 절차
 
-- Candidate: EXT-20260902-004
-- Discovery: NAVER / Q_AND_A
+- Candidate: EXT-20260907-096
+- Discovery: GOOGLE / OFFICIAL_AUTOMOTIVE_SERVICE_SEARCH
 - Demand status: OBSERVED_SEARCH_SIGNAL
-- Opportunity: 76.0
-- Quality: 62.5
+- Opportunity: 77.95
+- Quality: 70.1
 - Closest existing page: None
 - Overlap: NO_OVERLAP
-- Content gap: 커뮤니티 답변은 site: 검색과 등록 절차를 섞어 설명해 수집·색인·노출을 구분하기 어렵다.
-- Status: BRIEF_READY
+- Content gap: 조회 불가와 허위매물을 혼동하지 않도록 결과별 다음 확인 행동을 구분해야 한다.
+- Status: RESEARCHING
 
 ## DUPLICATE REMOVAL RESULTS
 
