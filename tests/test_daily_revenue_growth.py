@@ -88,3 +88,29 @@ def test_verified_same_intent_candidates_report_improve_existing_reason(tmp_path
     report = (tmp_path / "reports/daily-revenue-growth.md").read_text(encoding="utf-8")
     assert "Direct query evidence is verified, but every researched intent maps to an existing page." in report
     assert "No eligible direct query evidence" not in report
+
+
+def test_same_day_launched_external_manifest_is_not_overwritten(tmp_path):
+    prepare(tmp_path, [raw_candidate(i) for i in range(1, 4)])
+    launched = {
+        "status": "LAUNCHED",
+        "candidateIds": ["EXT-1"],
+        "urls": ["/kor/util/new-tool/"],
+    }
+    index = {
+        "status": "REVIEW_ONLY",
+        "candidates": [{"candidateId": "EXT-1", "url": "/kor/util/new-tool/"}],
+    }
+    write_json(tmp_path / "data/content-launch-manifest.json", launched)
+    write_json(tmp_path / "data/google-index-candidates.json", index)
+    write_json(
+        tmp_path / "data/content-launch-experiments.json",
+        {"experiments": [{"candidateId": "EXT-1", "publishedOn": "2026-09-06"}]},
+    )
+
+    run_daily_analysis(
+        tmp_path, "2026-09-06T21:00:00+09:00", tmp_path / "research.json"
+    )
+
+    assert json.loads((tmp_path / "data/content-launch-manifest.json").read_text()) == launched
+    assert json.loads((tmp_path / "data/google-index-candidates.json").read_text()) == index

@@ -4,14 +4,14 @@
 
 - 28d Revenue: $13.88
 - 28d Daily Average: $0.50
-- Indexed Pages: 19,063
+- Indexed Pages: 19,064
 - Revenue per Indexed Page: $0.000728
 - Views per User: 1.34
 - WINNER: 9
 - OPPORTUNITY: 4
 - EXPERIMENT: 22
 - DEAD_CANDIDATE: 0
-- INSUFFICIENT_DATA: 19028
+- INSUFFICIENT_DATA: 19029
 
 ## TOP REVENUE OPPORTUNITIES
 

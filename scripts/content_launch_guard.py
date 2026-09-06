@@ -46,8 +46,14 @@ def validate_launch(root, manifest, changed_paths):
         errors.add("MONETIZATION_OR_ANALYTICS_CHANGED")
 
     audit = _read(root / "data/site-audit.json", {"pages": []})
-    existing_titles = {row.get("title") for row in audit.get("pages") or [] if row.get("title")}
-    existing_h1 = {row.get("h1") for row in audit.get("pages") or [] if row.get("h1")}
+    manifest_urls = set(manifest.get("urls") or [])
+    existing_rows = [
+        row
+        for row in audit.get("pages") or []
+        if row.get("path") not in expected_html and row.get("url") not in manifest_urls
+    ]
+    existing_titles = {row.get("title") for row in existing_rows if row.get("title")}
+    existing_h1 = {row.get("h1") for row in existing_rows if row.get("h1")}
     titles, headings, canonicals = set(), set(), set()
     sitemap_text = "\n".join((root / path).read_text(encoding="utf-8") for path in manifest.get("sitemapPaths") or [] if (root / path).exists())
     hub_text = "\n".join((root / path).read_text(encoding="utf-8") for path in manifest.get("hubPaths") or [] if (root / path).exists())

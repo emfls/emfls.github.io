@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>자동차 여행 연료비·통행료 분담 계산기 | 왕복·1인당 비용</title>
+  <meta name="description" content="자동차 여행의 왕복 거리, 연비, 유가, 통행료와 주차비를 합산해 총비용과 1인당 분담액을 계산합니다.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://emfls.github.io/kor/util/road-trip-cost-calculator/">
+  <meta property="og:title" content="자동차 여행 연료비·통행료 분담 계산기">
+  <meta property="og:description" content="왕복 거리와 차량 연비를 기준으로 여행 총비용과 인원별 분담액을 바로 계산하세요.">
+  <meta property="og:url" content="https://emfls.github.io/kor/util/road-trip-cost-calculator/">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"자동차 여행 연료비·통행료 분담 계산기","url":"https://emfls.github.io/kor/util/road-trip-cost-calculator/","applicationCategory":"TravelApplication","operatingSystem":"Any","inLanguage":"ko-KR"}</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QP5Q67GE5B')</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:#17243a;font:16px/1.65 system-ui,sans-serif}header{background:#183b61;color:#fff;padding:34px 20px}header div,main,footer{max-width:900px;margin:auto}.eyebrow{margin:0 0 6px;color:#cfe7ff;font-weight:700}.panel{background:#fff;border:1px solid #d4deea;border-radius:16px;padding:22px;margin:20px 0;box-shadow:0 7px 24px #183b6112}.form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}label{font-weight:750}input{width:100%;margin-top:5px;padding:11px;border:1px solid #94a8be;border-radius:9px;font:inherit}.check{display:flex;gap:9px;align-items:center;margin:16px 0}.check input{width:auto;margin:0}button{border:0;border-radius:9px;padding:13px 20px;background:#0d66b2;color:#fff;font:inherit;font-weight:850;cursor:pointer}.result{margin-top:18px;padding:20px;border-radius:13px;background:#eaf4ff}.result-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.result-grid div{padding:12px;background:#fff;border-radius:9px}.big{font-size:1.8rem;font-weight:900;color:#075394}.formula{padding:14px;border-left:4px solid #0d66b2;background:#f2f7fc}a{color:#075d9c}small{color:#56677b}footer{padding:10px 20px 36px}@media(max-width:620px){.form,.result-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <header><div><p class="eyebrow">무료 여행 비용 도구</p><h1>자동차 여행 연료비·통행료 분담 계산기</h1><p>유류비와 부대비용을 더한 뒤 동행 인원으로 나눠 1인당 금액을 확인하세요.</p></div></header>
+  <main>
+    <section class="panel" aria-labelledby="calculator-title">
+      <h2 id="calculator-title">여행 조건 입력</h2>
+      <p>유가와 통행료는 출발 전에 공식 사이트에서 확인한 금액을 직접 입력하는 방식입니다.</p>
+      <div class="form">
+        <label>편도 거리 (km)<input id="distanceKm" type="number" min="0" step="0.1" value="150" inputmode="decimal"></label>
+        <label>차량 연비 (km/L)<input id="fuelEfficiency" type="number" min="0.1" step="0.1" value="12" inputmode="decimal"></label>
+        <label>유가 (원/L)<input id="fuelPrice" type="number" min="0" step="1" value="1700" inputmode="numeric"></label>
+        <label>통행료 합계 (원)<input id="toll" type="number" min="0" step="100" value="18000" inputmode="numeric"></label>
+        <label>주차비 합계 (원)<input id="parking" type="number" min="0" step="100" value="6000" inputmode="numeric"></label>
+        <label>분담 인원 (명)<input id="people" type="number" min="1" step="1" value="3" inputmode="numeric"></label>
+      </div>
+      <label class="check"><input id="roundTrip" type="checkbox" checked> 입력한 거리를 편도로 보고 왕복 거리로 계산</label>
+      <button id="calculate" type="button">여행 비용 계산</button>
+      <div id="result" class="result" aria-live="polite"><noscript>계산 기능을 사용하려면 JavaScript를 켜주세요.</noscript></div>
+    </section>
+
+    <section class="panel">
+      <h2>계산식과 입력 기준</h2>
+      <p class="formula"><strong>유류비 = 총 주행거리 ÷ 차량 연비 × 리터당 유가</strong><br>총비용 = 유류비 + 통행료 + 주차비<br>1인당 비용 = 총비용 ÷ 분담 인원</p>
+      <p>통행료와 주차비에는 여행 전체에서 예상되는 합계액을 넣으세요. 식비, 차량 감가상각, 보험료와 우회·정체로 늘어난 주행거리는 포함하지 않습니다.</p>
+    </section>
+
+    <section class="panel">
+      <h2>출발 전 실제 금액 확인</h2>
+      <p><a href="https://www.opinet.co.kr/" target="_blank" rel="noopener noreferrer">오피넷</a>에서 지역별 판매가격을 확인하고, <a href="https://www.ex.co.kr/" target="_blank" rel="noopener noreferrer">한국도로공사</a>에서 경로별 통행료를 확인한 뒤 입력하면 오차를 줄일 수 있습니다.</p>
+      <p><small>공식 출처 확인일: 2026-09-06. 이 계산기는 사용자가 입력한 값을 계산하며 실시간 유가·통행료를 자동 조회하지 않습니다.</small></p>
+    </section>
+
+    <section class="panel">
+      <h2>다음 여행 준비</h2>
+      <p><a href="/kor/report/camp/">캠핑·차박 지역 정보</a> · <a href="/kor/report/travel/">국내외 여행 정보</a> · <a href="/kor/util/camping-packing-checklist/">캠핑 준비물 체크리스트</a></p>
+    </section>
+  </main>
+  <footer><p>결과는 계획용 예상치입니다. 실제 차량 상태, 운전 습관, 정체와 우회 경로에 따라 달라질 수 있습니다.</p></footer>
+  <script src="app.js"></script>
+  <script>
+    function won(value){return Math.round(value).toLocaleString('ko-KR')+'원'}
+    function run(){
+      var r=calculateRoadTripCost({distanceKm:distanceKm.value,fuelEfficiency:fuelEfficiency.value,fuelPrice:fuelPrice.value,toll:toll.value,parking:parking.value,people:people.value,roundTrip:roundTrip.checked});
+      result.innerHTML='<div class="result-grid"><div>총 주행거리<br><strong>'+r.totalDistanceKm.toLocaleString('ko-KR')+'km</strong></div><div>예상 연료<br><strong>'+r.fuelLiters.toLocaleString('ko-KR')+'L</strong></div><div>예상 유류비<br><strong>'+won(r.fuelCost)+'</strong></div><div>통행료 + 주차비<br><strong>'+won(r.toll+r.parking)+'</strong></div></div><p>여행 총비용</p><div class="big">'+won(r.totalCost)+'</div><p><strong>1인당 '+won(r.perPersonCost)+'</strong></p>';
+    }
+    calculate.onclick=run;run();
+  </script>
+</body>
+</html>

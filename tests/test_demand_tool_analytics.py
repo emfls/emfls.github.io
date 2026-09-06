@@ -10,6 +10,7 @@ PAGES = (
     ROOT / "kor/util/camping-packing-checklist/index.html",
     ROOT / "kor/util/japan-travel-packing-checklist/index.html",
     ROOT / "kor/util/japan-esim-data-calculator/index.html",
+    ROOT / "kor/util/road-trip-cost-calculator/index.html",
     ROOT / "kor/report/camp/차박.html",
 )
 

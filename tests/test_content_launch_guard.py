@@ -34,6 +34,15 @@ def test_guard_rejects_protected_pages_and_monetization_code(tmp_path):
     assert {"PROTECTED_EXPERIMENT_CHANGED", "PROTECTED_WINNER_CHANGED", "MONETIZATION_OR_ANALYTICS_CHANGED"} <= set(errors)
 
 
+def test_guard_allows_bounded_tool_completion_allowlist_for_new_tool(tmp_path):
+    setup_data(tmp_path)
+    assert validate_launch(
+        tmp_path,
+        manifest([]),
+        [("M", "kor/util/tool-analytics.js")],
+    ) == []
+
+
 def test_new_page_requires_canonical_sitemap_hub_and_viewport(tmp_path):
     setup_data(tmp_path)
     page = tmp_path / "kor/report/camp/new.html"
@@ -48,3 +57,30 @@ def test_new_page_requires_canonical_sitemap_hub_and_viewport(tmp_path):
 def test_no_publication_manifest_passes_without_html_changes(tmp_path):
     setup_data(tmp_path)
     assert validate_launch(tmp_path, manifest([]), [("M", "reports/daily-revenue-growth.md")]) == []
+
+
+def test_regenerated_audit_does_not_treat_manifest_page_as_existing_duplicate(tmp_path):
+    setup_data(tmp_path)
+    url = "/kor/report/camp/new.html"
+    relative = "kor/report/camp/new.html"
+    page = tmp_path / relative
+    page.parent.mkdir(parents=True)
+    page.write_text(
+        '<html><head><meta name="viewport" content="width=device-width">'
+        '<title>새 독립 제목</title><link rel="canonical" '
+        f'href="https://emfls.github.io{url}"><script type="application/ld+json">{{}}</script>'
+        '</head><body><h1>새 독립 제목</h1></body></html>',
+        encoding="utf-8",
+    )
+    (tmp_path / "kor/report/camp/sitemap.xml").write_text(
+        f"<urlset><loc>https://emfls.github.io{url}</loc></urlset>", encoding="utf-8"
+    )
+    (tmp_path / "kor/report/camp/index.html").write_text(
+        f'<a href="{url}">새 페이지</a>', encoding="utf-8"
+    )
+    write_json(
+        tmp_path / "data/site-audit.json",
+        {"pages": [{"path": relative, "url": url, "title": "새 독립 제목", "h1": "새 독립 제목"}]},
+    )
+
+    assert validate_launch(tmp_path, manifest([url]), [("A", relative)]) == []

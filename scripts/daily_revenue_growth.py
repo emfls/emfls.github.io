@@ -52,6 +52,21 @@ def _launches_on_local_day(experiments, run_at):
     return rows
 
 
+def _preserve_same_day_launch(root, experiments, run_at):
+    manifest = read_json(root / "data/content-launch-manifest.json", {})
+    if manifest.get("status") != "LAUNCHED":
+        return False
+    launched_ids = set(manifest.get("candidateIds") or [])
+    if not launched_ids:
+        return False
+    recorded_ids = {
+        row.get("candidateId")
+        for row in _launches_on_local_day(experiments, run_at)
+        if row.get("candidateId")
+    }
+    return launched_ids <= recorded_ids
+
+
 def _report(payload):
     lines = ["# Daily Revenue Growth", "", f"- Run: {payload['runAt']}", f"- Data Status: {payload['dataStatus']}", f"- Researched: {len(payload['candidates'])}", f"- Selected: {len(payload['selected'])}", f"- Published: 0 (analysis and selection are separate)", "", "## New Page Win Rate", "", f"- Mature cohort: {payload['kpis']['matureCohort']}", f"- Win rate: {payload['kpis']['newPageWinRate']}", "", "## Data Limitations", ""]
     if payload["selected"]:
@@ -92,8 +107,9 @@ def run_daily_analysis(root, run_at, research_path, write=True):
     index_candidates = {"schemaVersion": 1, "runAt": run_at, "status": "REVIEW_ONLY", "candidates": [{"url": row["url"], "status": "PENDING_CONTENT_LAUNCH"} for row in selected]}
     if write:
         write_json(root / "data/new-content-opportunities.json", payload)
-        write_json(root / "data/content-launch-manifest.json", manifest)
-        write_json(root / "data/google-index-candidates.json", index_candidates)
+        if not _preserve_same_day_launch(root, launches, run_at):
+            write_json(root / "data/content-launch-manifest.json", manifest)
+            write_json(root / "data/google-index-candidates.json", index_candidates)
         report = root / "reports/daily-revenue-growth.md"
         report.parent.mkdir(parents=True, exist_ok=True)
         report.write_text(_report(payload), encoding="utf-8")

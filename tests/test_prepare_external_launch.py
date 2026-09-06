@@ -145,3 +145,23 @@ def test_expected_value_ranking_is_deterministic(tmp_path):
     result = prepare_external_launch(tmp_path, "2026-09-02T14:00:00+09:00")
 
     assert result["candidateIds"] == ["HIGH", "LOW"]
+
+
+def test_candidate_already_registered_as_published_is_not_selected_again(tmp_path):
+    published = ready_candidate("PUBLISHED")
+    fresh = ready_candidate("FRESH", opportunity=80)
+    prepare(
+        tmp_path,
+        [published, fresh],
+        experiments=[
+            {
+                "candidateId": "PUBLISHED",
+                "publishedOn": "2026-09-06",
+                "status": "OBSERVING",
+            }
+        ],
+    )
+
+    result = prepare_external_launch(tmp_path, "2026-09-06T21:00:00+09:00")
+
+    assert result["candidateIds"] == ["FRESH"]

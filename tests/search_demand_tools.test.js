@@ -4,6 +4,7 @@ const assert = require('node:assert/strict');
 const { buildCampingList } = require('../kor/util/camping-packing-checklist/app.js');
 const { estimateEsimUsage } = require('../kor/util/japan-esim-data-calculator/app.js');
 const { buildJapanPackingList } = require('../kor/util/japan-travel-packing-checklist/app.js');
+const { calculateRoadTripCost } = require('../kor/util/road-trip-cost-calculator/app.js');
 
 test('camping list adapts to winter family camping without duplicates', () => {
   const list = buildCampingList({ people: 4, nights: 2, season: 'winter', type: 'auto' });
@@ -34,4 +35,20 @@ test('japan packing list includes winter, checked bag and child items without du
   assert.ok(names.includes('위탁수하물 규정 확인'));
   assert.ok(names.includes('어린이 상비약과 보호자 연락처'));
   assert.equal(new Set(names).size, names.length);
+});
+
+test('road trip calculator combines fuel, toll and parking then splits per person', () => {
+  const result = calculateRoadTripCost({ distanceKm: 300, fuelEfficiency: 12, fuelPrice: 1800, toll: 18000, parking: 6000, people: 3, roundTrip: true });
+  assert.equal(result.totalDistanceKm, 600);
+  assert.equal(result.fuelLiters, 50);
+  assert.equal(result.fuelCost, 90000);
+  assert.equal(result.totalCost, 114000);
+  assert.equal(result.perPersonCost, 38000);
+});
+
+test('road trip calculator clamps invalid inputs and never returns non-finite values', () => {
+  const result = calculateRoadTripCost({ distanceKm: -1, fuelEfficiency: 0, fuelPrice: 'bad', toll: -2, parking: -3, people: 0, roundTrip: false });
+  for (const value of Object.values(result)) assert.ok(Number.isFinite(value));
+  assert.equal(result.totalCost, 0);
+  assert.equal(result.perPersonCost, 0);
 });

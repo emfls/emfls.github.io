@@ -1,5 +1,5 @@
 (function (root) {
-  var allowedTools = ['camping_packing', 'japan_packing', 'japan_esim', 'car_camping_permission'];
+  var allowedTools = ['camping_packing', 'japan_packing', 'japan_esim', 'car_camping_permission', 'road_trip_cost'];
   var allowedResults = ['generated', 'calculated', 'allowed', 'check_more', 'do_not_use'];
 
   function trackToolCompletion(toolName, resultType) {

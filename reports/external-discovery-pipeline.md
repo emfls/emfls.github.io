@@ -1,20 +1,32 @@
 # EXTERNAL DISCOVERY PIPELINE
 
-- Run: 2026-09-02T21:07:06+09:00
+- Run: 2026-09-06T19:00:00+09:00
 - Data status: OBSERVED_SEARCH_SIGNAL
 - External ideas discovered: 10
-- Google: 3
-- Naver: 0
-- Other websites: 7
+- Google: 4
+- Naver: 5
+- Other websites: 1
 - Rejected as existing intent: 0
 - Researching: 20
-- Brief ready: 20
+- Brief ready: 19
 - Ready to launch: 0
-- Pages launched today: 0 / 3
+- Pages launched today: 1 / 3
 
 ## TOP 10 EXTERNAL OPPORTUNITIES
 
-### 1. 학원 수강 중도해지 환불액 계산 가이드
+### 1. 자동차 여행 연료비·통행료 분담 계산기
+
+- Candidate: EXT-20260902-014
+- Discovery: GOOGLE / COMPETITOR_TOOL
+- Demand status: OBSERVED_SEARCH_SIGNAL
+- Opportunity: 84.0
+- Quality: 91.0
+- Closest existing page: None
+- Overlap: NO_OVERLAP
+- Content gap: 연료비 계산에 통행료·왕복·인원 분담을 결합하고 입력 가정을 명확히 보여주면 한국 자동차 여행에 실용적이다.
+- Status: LAUNCHED
+
+### 2. 학원 수강 중도해지 환불액 계산 가이드
 
 - Candidate: EXT-20260902-031
 - Discovery: GOOGLE / OFFICIAL_CASE_SEARCH
@@ -25,18 +37,6 @@
 - Overlap: NO_OVERLAP
 - Content gap: 공식 사례의 문장형 기준을 계약기간·경과시점별 입력표로 바꾸되 실제 계약 조건 차이를 명확히 경고해야 한다.
 - Status: RESEARCHING
-
-### 2. 자동차 여행 연료비·통행료 분담 계산기
-
-- Candidate: EXT-20260902-014
-- Discovery: GOOGLE / COMPETITOR_TOOL
-- Demand status: OBSERVED_SEARCH_SIGNAL
-- Opportunity: 80.0
-- Quality: 70.0
-- Closest existing page: None
-- Overlap: NO_OVERLAP
-- Content gap: 연료비 계산에 통행료·왕복·인원 분담을 결합하고 입력 가정을 명확히 보여주면 한국 자동차 여행에 실용적이다.
-- Status: BRIEF_READY
 
 ### 3. 저작권자를 찾을 수 없을 때 법정허락 절차
 

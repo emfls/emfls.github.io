@@ -9,6 +9,7 @@ class SearchDemandToolsContractTest(unittest.TestCase):
         "camping-packing-checklist": "캠핑 준비물 체크리스트",
         "japan-esim-data-calculator": "일본 eSIM 데이터 사용량 계산기",
         "japan-travel-packing-checklist": "일본 여행 준비물 체크리스트",
+        "road-trip-cost-calculator": "자동차 여행 연료비·통행료 분담 계산기",
     }
 
     def test_pages_have_required_metadata_and_measurement(self):
@@ -33,6 +34,10 @@ class SearchDemandToolsContractTest(unittest.TestCase):
         self.assertIn('/kor/util/japan-travel-packing-checklist/', esim)
         self.assertIn('/kor/util/japan-esim-data-calculator/', japan)
         self.assertIn('/kor/report/travel/japan-tokyo.html', japan)
+        road_trip = (ROOT / "kor/util/road-trip-cost-calculator/index.html").read_text(encoding="utf-8")
+        self.assertIn('https://www.opinet.co.kr/', road_trip)
+        self.assertIn('https://www.ex.co.kr/', road_trip)
+        self.assertIn('/kor/report/camp/', road_trip)
 
     def test_hubs_link_to_new_tools(self):
         camp_hub = (ROOT / "kor/report/camp/index.html").read_text(encoding="utf-8")
@@ -40,6 +45,8 @@ class SearchDemandToolsContractTest(unittest.TestCase):
         self.assertIn('/kor/util/camping-packing-checklist/', camp_hub)
         self.assertIn('/kor/util/japan-esim-data-calculator/', tokyo)
         self.assertIn('/kor/util/japan-travel-packing-checklist/', tokyo)
+        util_hub = (ROOT / "kor/util/index.html").read_text(encoding="utf-8")
+        self.assertIn('/kor/util/road-trip-cost-calculator/', util_hub)
 
 
 if __name__ == "__main__":

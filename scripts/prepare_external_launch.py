@@ -57,10 +57,15 @@ def prepare_external_launch(root, run_at, write=True):
     experiments = _read(
         root / "data/content-launch-experiments.json", {"experiments": []}
     ).get("experiments") or []
+    published_candidate_ids = {
+        row.get("candidateId") for row in experiments if row.get("candidateId")
+    }
     ready_ids = set(queue.get("readyToLaunch") or [])
     eligible = []
     for candidate in queue.get("candidates") or []:
         readiness = launch_readiness(candidate)
+        if candidate.get("candidateId") in published_candidate_ids:
+            continue
         if candidate.get("candidateId") not in ready_ids:
             continue
         if readiness.get("status") != "READY_TO_LAUNCH":

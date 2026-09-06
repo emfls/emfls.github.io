@@ -149,3 +149,21 @@
 - 미발행 사유: 공식·표준 출처 및 Quality Feasibility 75점 기준 미충족
 - 보호: WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
 - 검증: content launch guard `PASS`, 전체 pytest `677 passed`
+
+## 2026-09-06 19:00 KST 외부 기회 첫 신규 도구 발행
+
+- 발행 후보: `EXT-20260902-014` 자동차 여행 연료비·통행료 분담 계산기
+- 신규 URL: `/kor/util/road-trip-cost-calculator/`
+- 근거 상태: `OBSERVED_SEARCH_SIGNAL` (정확한 검색량은 주장하지 않음)
+- 중복 판정: `NO_OVERLAP`; 여행·캠핑 클러스터의 독립적인 계산형 intent
+- Opportunity: `84 / 100`; Quality Feasibility: `91 / 100`
+- 공식 확인 출처: 오피넷, 한국도로공사 (2026-09-06 확인)
+- 추가 가치: 왕복 거리, 유류비, 통행료, 주차비, 총비용과 1인당 분담액을 한 번에 계산
+- 실험: `EXP-CONTENT-20260906-01`, 상태 `OBSERVING`
+- 관찰 종료 및 COOLDOWN: 2026-10-04
+- 신규 페이지 baseline: Naver·Google·GA4 `NOT_AVAILABLE`, AdSense URL 수익 `NOT_CONNECTED`; 임의 수치 없음
+- 당일 발행: `1 / 3`; 품질 기준을 통과한 다른 후보가 없어 추가 발행하지 않음
+- 보호: 기존 WINNER 및 논산·철원·울진 CTR 실험 수정 없음
+- 반복 방지: 발행 실험에 등록된 `candidateId`는 다음 예약 실행의 launch selector에서 자동 제외
+- CI 안전성: 같은 날의 `LAUNCHED` manifest를 기존 daily 분석이 덮어쓰지 않도록 보호하고, 재생성된 site audit에서는 현재 manifest URL 자체를 기존 중복 집합에서 제외
+- 검증: launch guard `PASS`, site audit 파서 오류 `0`, unittest `577`, pytest `681`, JavaScript 도구 테스트 `6` 모두 통과
