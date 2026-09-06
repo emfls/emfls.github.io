@@ -181,6 +181,20 @@
 - 오늘 발행: `1 / 3`; 19:00 발행한 자동차 여행 비용 계산기 외 추가 발행 없음
 - 보호: 기존 WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
 
+## 2026-09-07 03:20 KST 외부 탐색 자동 실행
+
+- Discovery origin: `EXTERNAL_WEB`
+- 신규 발견 후보: 10개 (`Google 2`, `Naver 0`, `Other websites 8`)
+- Naver도 탐색했지만 새롭고 검증 가능한 고유 신호를 확보하지 못해 0으로 기록했으며 검색량을 추측하지 않음
+- 신규 후보군: 무료체험 자동결제, 렌터카 인수·반납 증빙, 반려동물 멤버십 해지, 소비자 피해구제 증빙, 미성년자 피해구제, 내용증명 준비, 해외직구 합배송 통관, SNS 해외쇼핑몰 사기 점검, 택배 피해 증빙, 체육시설 장기이용권 해지
+- 한국소비자원 공식 자료에서 문제 신호를 확인했으며 정확한 검색량은 모두 `OBSERVED_SEARCH_SIGNAL`로만 기록
+- 기존 site audit 제목·description 검색에서 명시적 동일 intent 0건; 추후 본문 의미 중복과 최신 기준을 추가 검증
+- 누적 상태: `RESEARCHING 60`, `BRIEF_READY 19`, `READY_TO_LAUNCH 0`
+- 오늘 발행: `0 / 3`; launch manifest는 `NO_PUBLICATION`
+- 미발행 사유: 소비자 분쟁·환급 관련 YMYL 후보로서 추가 공식 근거, 최신 기준, 한계 고지 및 완성 Brief가 필요함
+- 다음 행동: 무료체험 자동결제와 렌터카 증빙 후보부터 반복 질문 신호와 최신 공식 기준을 교차 확인하고, 독립 가치가 입증된 후보 하나만 Brief 승격 검토
+- 보호: 기존 WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
+
 ## 2026-09-07 01:19 KST 외부 탐색 자동 실행
 
 - Discovery origin: `EXTERNAL_WEB`

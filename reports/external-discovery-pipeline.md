@@ -1,13 +1,13 @@
 # EXTERNAL DISCOVERY PIPELINE
 
-- Run: 2026-09-07T01:19:21+09:00
+- Run: 2026-09-07T03:20:22+09:00
 - Data status: OBSERVED_SEARCH_SIGNAL
 - External ideas discovered: 10
-- Google: 7
+- Google: 2
 - Naver: 0
-- Other websites: 3
+- Other websites: 8
 - Rejected as existing intent: 0
-- Researching: 50
+- Researching: 60
 - Brief ready: 19
 - Ready to launch: 0
 - Pages launched today: 0 / 3
