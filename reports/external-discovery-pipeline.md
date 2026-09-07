@@ -1,13 +1,13 @@
 # EXTERNAL DISCOVERY PIPELINE
 
-- Run: 2026-09-07T07:22:22+09:00
+- Run: 2026-09-07T09:23:23+09:00
 - Data status: OBSERVED_SEARCH_SIGNAL
 - External ideas discovered: 10
 - Google: 5
 - Naver: 0
 - Other websites: 5
 - Rejected as existing intent: 1
-- Researching: 79
+- Researching: 89
 - Brief ready: 19
 - Ready to launch: 0
 - Pages launched today: 0 / 3
@@ -50,88 +50,88 @@
 - Content gap: 요건을 단순 요약하지 않고 이용 전 확인 순서와 신청기관을 구분해야 한다.
 - Status: RESEARCHING
 
-### 4. 국가자격시험 모바일 신분증 인정 범위 확인표
+### 4. CSS 색상 형식 변환기
 
-- Candidate: EXT-20260902-006
-- Discovery: GOOGLE / SEARCH_RESULT_REPEATED_QUESTION
+- Candidate: EXT-20260907-101
+- Discovery: GOOGLE / OFFICIAL_WEB_STANDARD_SEARCH
 - Demand status: OBSERVED_SEARCH_SIGNAL
 - Opportunity: 78.0
-- Quality: 60.5
+- Quality: 76.85
 - Closest existing page: None
 - Overlap: NO_OVERLAP
-- Content gap: 시험별 공고문에 흩어진 인정 신분증과 캡처 금지 규칙을 응시자 유형별로 비교하기 어렵다.
-- Status: BRIEF_READY
-
-### 5. 자동차검사 종류·차급별 수수료 확인표
-
-- Candidate: EXT-20260907-091
-- Discovery: GOOGLE / OFFICIAL_AUTOMOTIVE_SERVICE_SEARCH
-- Demand status: OBSERVED_SEARCH_SIGNAL
-- Opportunity: 77.95
-- Quality: 70.1
-- Closest existing page: None
-- Overlap: NO_OVERLAP
-- Content gap: 정기·종합·신규·임시검사와 차급을 먼저 구분해 공식 금액표로 안내할 필요가 있다.
+- Content gap: 최신 CSS 색상 형식을 한 화면에서 변환하고 복사하면서 브라우저 지원 주의를 함께 보여줄 필요가 있다.
 - Status: RESEARCHING
 
-### 6. 자동차검사 지연 과태료 계산기
+### 5. WCAG 텍스트 명암비 계산기
 
-- Candidate: EXT-20260907-092
-- Discovery: GOOGLE / OFFICIAL_AUTOMOTIVE_SERVICE_SEARCH
+- Candidate: EXT-20260907-102
+- Discovery: OTHER_WEBSITE / OFFICIAL_WEB_STANDARD_SEARCH
 - Demand status: OBSERVED_SEARCH_SIGNAL
-- Opportunity: 77.95
-- Quality: 70.1
+- Opportunity: 78.0
+- Quality: 76.85
 - Closest existing page: None
 - Overlap: NO_OVERLAP
-- Content gap: 지연일수 입력과 상한 적용을 제공하되 관할 지자체 확정액이 아님을 명확히 해야 한다.
+- Content gap: 일반·큰 글자 판정을 구분하고 입력 색상을 즉시 조정할 수 있는 한국어 도구가 필요하다.
 - Status: RESEARCHING
 
-### 7. 자동차검사 수수료 감면 대상 확인표
+### 6. 키보드 포커스 표시 면적·명암 점검기
 
-- Candidate: EXT-20260907-093
-- Discovery: OTHER_WEBSITE / OFFICIAL_AUTOMOTIVE_SERVICE_SEARCH
+- Candidate: EXT-20260907-103
+- Discovery: OTHER_WEBSITE / OFFICIAL_WEB_STANDARD_SEARCH
 - Demand status: OBSERVED_SEARCH_SIGNAL
-- Opportunity: 77.95
-- Quality: 70.1
+- Opportunity: 78.0
+- Quality: 76.85
 - Closest existing page: None
 - Overlap: NO_OVERLAP
-- Content gap: 대상별 감면 조건과 전산 미확인 시 사후 환불 절차를 한 흐름으로 정리할 필요가 있다.
+- Content gap: 명암만 보지 않고 표시 면적과 인접색 조건을 함께 점검하는 입력 도구가 필요하다.
 - Status: RESEARCHING
 
-### 8. 자동차검사 기간 알림 서비스 신청 체크리스트
+### 7. CSS 선택자 우선순위 비교기
 
-- Candidate: EXT-20260907-094
-- Discovery: OTHER_WEBSITE / OFFICIAL_AUTOMOTIVE_SERVICE_SEARCH
+- Candidate: EXT-20260907-104
+- Discovery: GOOGLE / OFFICIAL_WEB_STANDARD_SEARCH
 - Demand status: OBSERVED_SEARCH_SIGNAL
-- Opportunity: 77.95
-- Quality: 70.1
+- Opportunity: 78.0
+- Quality: 76.85
 - Closest existing page: None
 - Overlap: NO_OVERLAP
-- Content gap: 신청 가능자, 동의 요건, 수정·해지 경로를 신청 전 점검하는 안내가 필요하다.
+- Content gap: 숫자 비교에 그치지 않고 cascade origin·layer·source order가 먼저 작동하는 경우를 경고해야 한다.
 - Status: RESEARCHING
 
-### 9. 신차·중고차 등록비용 공식 조회 준비표
+### 8. CSS clamp 반응형 값 생성기
 
-- Candidate: EXT-20260907-095
-- Discovery: GOOGLE / OFFICIAL_AUTOMOTIVE_SERVICE_SEARCH
+- Candidate: EXT-20260907-105
+- Discovery: GOOGLE / OFFICIAL_WEB_STANDARD_SEARCH
 - Demand status: OBSERVED_SEARCH_SIGNAL
-- Opportunity: 77.95
-- Quality: 70.1
+- Opportunity: 78.0
+- Quality: 76.85
 - Closest existing page: None
 - Overlap: NO_OVERLAP
-- Content gap: 취득세·공채 관련 조회의 입력항목과 비영업용 등 계산 범위를 먼저 설명할 필요가 있다.
+- Content gap: 폰트·간격 값을 입력하면 중간 기울기와 실제 화면별 결과를 미리 보여줄 필요가 있다.
 - Status: RESEARCHING
 
-### 10. 중고차 실매물 등록 여부 확인 절차
+### 9. CSS 박스 모델 전체 크기 계산기
 
-- Candidate: EXT-20260907-096
-- Discovery: GOOGLE / OFFICIAL_AUTOMOTIVE_SERVICE_SEARCH
+- Candidate: EXT-20260907-106
+- Discovery: OTHER_WEBSITE / OFFICIAL_WEB_STANDARD_SEARCH
 - Demand status: OBSERVED_SEARCH_SIGNAL
-- Opportunity: 77.95
-- Quality: 70.1
+- Opportunity: 78.0
+- Quality: 76.85
 - Closest existing page: None
 - Overlap: NO_OVERLAP
-- Content gap: 조회 불가와 허위매물을 혼동하지 않도록 결과별 다음 확인 행동을 구분해야 한다.
+- Content gap: content-box와 border-box를 나란히 계산해 예상치 못한 overflow 원인을 설명해야 한다.
+- Status: RESEARCHING
+
+### 10. object-fit 이미지 미리보기 도구
+
+- Candidate: EXT-20260907-107
+- Discovery: GOOGLE / OFFICIAL_WEB_STANDARD_SEARCH
+- Demand status: OBSERVED_SEARCH_SIGNAL
+- Opportunity: 78.0
+- Quality: 76.85
+- Closest existing page: None
+- Overlap: NO_OVERLAP
+- Content gap: 잘리는 영역과 여백을 실제 미리보기로 비교하고 object-position까지 조정할 수 있어야 한다.
 - Status: RESEARCHING
 
 ## DUPLICATE REMOVAL RESULTS

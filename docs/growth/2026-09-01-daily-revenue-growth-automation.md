@@ -181,6 +181,19 @@
 - 오늘 발행: `1 / 3`; 19:00 발행한 자동차 여행 비용 계산기 외 추가 발행 없음
 - 보호: 기존 WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
 
+## 2026-09-07 09:23 KST 외부 탐색 자동 실행
+
+- Discovery origin: `EXTERNAL_WEB`
+- 신규 발견 후보: 10개 (`Google 5`, `Naver 0`, `Other websites 5`)
+- Naver도 변환기·계산기 표현을 탐색했으나 별도의 검증 가능한 신규 근거를 확보하지 못해 0으로 기록하고 검색량을 추측하지 않음
+- 신규 후보군: CSS 색상 형식 변환, WCAG 텍스트 명암비, 포커스 표시 점검, CSS specificity, CSS clamp, 박스 모델 계산, object-fit 미리보기, 이미지 비율·크롭, srcset 생성, 개발자도구 단축키
+- 기존 site audit 19,066페이지와 이전 후보 DB의 제목·intent 기준 이번 10개 직접 중복 없음
+- 신규 후보 공통 점수: Opportunity `78.0`, Quality Feasibility `76.85`; 점수는 통과했지만 완성 Content Brief가 없어 `RESEARCHING` 유지
+- 누적 상태: `RESEARCHING 89`, `BRIEF_READY 19`, `READY_TO_LAUNCH 0`, 전체 `SAME_INTENT 1`
+- 오늘 발행: `0 / 3`; launch manifest는 `NO_PUBLICATION`
+- TOP 신규 후보: CSS 색상 형식 변환기; 다음 행동은 기존 색상·변환 도구와의 본문 의미 중복을 정밀 검사하고 브라우저 호환성·테스트 벡터·내부링크를 갖춘 Brief로 한 후보만 승격 검토
+- 보호: 기존 WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
+
 ## 2026-09-07 07:22 KST 외부 탐색 자동 실행
 
 - Discovery origin: `EXTERNAL_WEB`
