@@ -336,3 +336,14 @@
 - 오늘 발행: `0 / 3`; launch manifest는 `NO_PUBLICATION`
 - TOP 신규 후보: 여행자 휴대품 자진신고 감면 예상액 계산기; 다음 행동은 최신 고시·감면한도·공식 계산기 결과를 날짜 경계 사례로 검증
 - 보호: 기존 WINNER, 논산·철원·울진 COOLDOWN 및 기존 도로여행 계산기 실험 수정 없음
+## 2026-09-08 03:28 KST 외부 탐색 자동 실행
+
+- Discovery origin: `EXTERNAL_WEB`
+- 신규 발견 후보: 10개 (`Google 5`, `Naver 2`, `Other websites 3`)
+- 신규 후보군: 기내 액체류 포장, 보조배터리 Wh, 면세 액체 환승, 유아 이유식 보안검색, 교통약자 우대출구, 셀프백드롭, 수유실, 샤워실, 교통약자 수하물 배송, 어린이 놀이시설
+- 인천국제공항 공식 보안검색·맞춤형 서비스·시설 정보를 근거로 사용하고 검색량은 `OBSERVED_SEARCH_SIGNAL`로만 기록
+- 기존 19,066페이지와 후보 DB에서 직접 동일 intent는 없었으며 광범위 여행 콘텐츠와 가까운 후보는 추가 의미 중복 검증 전 발행하지 않음
+- 누적 상태: `RESEARCHING 156`, `BRIEF_READY 21`, `READY_TO_LAUNCH 0`, 전체 `SAME_INTENT 2`
+- 오늘 발행: `0 / 3`; launch manifest는 `NO_PUBLICATION`
+- TOP 신규 후보: 보조배터리 Wh 변환·기내반입 확인기; 다음 행동은 항공사별 최신 승인·개수·포장 규정을 교차검증하고 계산 테스트 벡터 작성
+- 보호: 기존 WINNER, 논산·철원·울진 COOLDOWN 및 기존 발행 실험 수정 없음
