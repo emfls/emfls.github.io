@@ -181,6 +181,19 @@
 - 오늘 발행: `1 / 3`; 19:00 발행한 자동차 여행 비용 계산기 외 추가 발행 없음
 - 보호: 기존 WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
 
+## 2026-09-07 13:25 KST 외부 탐색 자동 실행
+
+- Discovery origin: `EXTERNAL_WEB`
+- 신규 발견 후보: 10개 (`Google 5`, `Naver 0`, `Other websites 5`)
+- Naver에서 유니코드·URL 인코딩 관련 표현을 탐색했으나 별도의 검증 가능한 신규 근거를 확보하지 못해 0으로 기록하고 검색량을 추측하지 않음
+- 신규 후보군: URI 퍼센트 인코딩, URI 파서, URI 정규화, URI Template, IRI 변환, UUID 판독, UUIDv7 시간 해석, UUID 검증, Unicode 정규화, 혼동문자 점검
+- 기존 site audit 19,066페이지와 이전 후보 DB에서 이번 10개 intent의 직접 중복 없음
+- 신규 후보 공통 점수: Opportunity `77.35`, Quality Feasibility `75.5`; 점수는 통과했지만 독립 수요·테스트 벡터·완성 Brief가 부족해 `RESEARCHING` 유지
+- 누적 상태: `RESEARCHING 108`, `BRIEF_READY 19`, `READY_TO_LAUNCH 0`, 전체 `SAME_INTENT 2`
+- 오늘 발행: `0 / 3`; launch manifest는 `NO_PUBLICATION`
+- TOP 신규 후보: URI 예약문자 구분 퍼센트 인코더; 다음 행동은 기존 dataconvert·코드 도구 기능 overlap과 URI 하위 후보 통합 가능성을 검증한 뒤 한 개의 완결형 Brief만 검토
+- 보호: 기존 WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
+
 ## 2026-09-07 11:24 KST 외부 탐색 자동 실행
 
 - Discovery origin: `EXTERNAL_WEB`
