@@ -1,14 +1,14 @@
 # EXTERNAL DISCOVERY PIPELINE
 
-- Run: 2026-09-08T03:28:57+09:00
-- Data status: OBSERVED_SEARCH_SIGNAL
-- External ideas discovered: 10
-- Google: 5
-- Naver: 2
-- Other websites: 3
+- Run: 2026-09-08T07:29:57+09:00
+- Data status: INSUFFICIENT_DATA
+- External ideas discovered: 0
+- Google: 0
+- Naver: 0
+- Other websites: 0
 - Rejected as existing intent: 2
-- Researching: 156
-- Brief ready: 21
+- Researching: 155
+- Brief ready: 22
 - Ready to launch: 0
 - Pages launched today: 0 / 3
 
@@ -24,7 +24,7 @@
 - Closest existing page: None
 - Overlap: NO_OVERLAP
 - Content gap: 단위 환산과 승인 구간을 한 번에 확인하는 도구가 필요하다.
-- Status: RESEARCHING
+- Status: BRIEF_READY
 
 ### 2. 유아 동반 기내 이유식·우유 보안검색 준비표
 
