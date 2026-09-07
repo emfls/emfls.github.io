@@ -181,6 +181,19 @@
 - 오늘 발행: `1 / 3`; 19:00 발행한 자동차 여행 비용 계산기 외 추가 발행 없음
 - 보호: 기존 WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
 
+## 2026-09-07 15:26 KST 외부 탐색 자동 실행
+
+- Discovery origin: `EXTERNAL_WEB`
+- 신규 발견 후보: 10개 (`Google 5`, `Naver 0`, `Other websites 5`)
+- Naver에서 캠핑 안전·환불 관련 표현을 탐색했으나 별도의 검증 가능한 신규 근거를 확보하지 못해 0으로 기록하고 검색량을 추측하지 않음
+- 신규 후보군: 국립공원 야영장 환불 계산, 추첨 신청, 무공해 영지, 기상특보 취소, 등록 캠핑장 확인, CO 경보기, 방염 텐트, 부탄가스 불판, 전기 릴선, 아이 동반 설치 안전
+- 기존 site audit 19,066페이지와 후보 DB에서 직접 SAME_INTENT 없음; 아이 동반 설치 안전은 기존 `/kor/util/camping-packing-checklist/`와 `LOW_OVERLAP`
+- TOP 점수: 국립공원 야영장 취소 환불 예상액 계산기 Opportunity `81.0`, Quality `75.05`; 완성 Brief와 정책 예외 검증 부족으로 `RESEARCHING`
+- 누적 상태: `RESEARCHING 118`, `BRIEF_READY 19`, `READY_TO_LAUNCH 0`, 전체 `SAME_INTENT 2`
+- 오늘 발행: `0 / 3`; launch manifest는 `NO_PUBLICATION`
+- 다음 행동: 국립공원 최신 환불 규정·기상특보 예외·날짜 경계 테스트를 교차 검증하고 캠핑 WINNER로 연결되는 독립 계산기 Brief를 우선 완성
+- 보호: 기존 WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
+
 ## 2026-09-07 13:25 KST 외부 탐색 자동 실행
 
 - Discovery origin: `EXTERNAL_WEB`
