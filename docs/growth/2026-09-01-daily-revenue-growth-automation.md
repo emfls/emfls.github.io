@@ -324,3 +324,15 @@
 - 오늘 발행: `0 / 3`; launch manifest는 `NO_PUBLICATION`
 - 다음 행동: 환불 계산기와 추가요금 계산기의 날짜·요금 경계 테스트 및 내부링크 계획을 비교해 더 완결성 높은 한 후보만 READY 승격 검토
 - 보호: 기존 WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
+## 2026-09-08 01:28 KST 외부 탐색 자동 실행
+
+- Discovery origin: `EXTERNAL_WEB`
+- 신규 발견 후보: 10개 (`Google 5`, `Naver 2`, `Other websites 3`)
+- 신규 후보군: 여행자 휴대품 예상세액 입력, 면세범위 초과, 술·담배·향수 별도 한도, 자진신고 감면, 미신고 가산세, 외화 신고, 농축수산물, 의약품·건강기능식품, CITES 기념품, 국내 면세점 구매품 재반입
+- 정확한 검색량은 생성하지 않고 모두 `OBSERVED_SEARCH_SIGNAL`로 기록했으며 관세청 공식 자료에 reviewed date를 저장
+- 기존 19,066페이지 제목·본문 검색과 후보 DB에서 동일 intent를 발견하지 못해 `NO_OVERLAP`으로 두되, 모두 YMYL 후보로 limitations와 disclaimer를 필수 기록
+- 추가 공식기관 교차검증과 완성 Content Brief가 없으므로 전부 `RESEARCHING`; 자동 발행하지 않음
+- 누적 상태: `RESEARCHING 146`, `BRIEF_READY 21`, `READY_TO_LAUNCH 0`, 전체 `SAME_INTENT 2`
+- 오늘 발행: `0 / 3`; launch manifest는 `NO_PUBLICATION`
+- TOP 신규 후보: 여행자 휴대품 자진신고 감면 예상액 계산기; 다음 행동은 최신 고시·감면한도·공식 계산기 결과를 날짜 경계 사례로 검증
+- 보호: 기존 WINNER, 논산·철원·울진 COOLDOWN 및 기존 도로여행 계산기 실험 수정 없음
