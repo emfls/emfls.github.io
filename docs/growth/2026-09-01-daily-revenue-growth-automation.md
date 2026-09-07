@@ -181,6 +181,19 @@
 - 오늘 발행: `1 / 3`; 19:00 발행한 자동차 여행 비용 계산기 외 추가 발행 없음
 - 보호: 기존 WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
 
+## 2026-09-07 11:24 KST 외부 탐색 자동 실행
+
+- Discovery origin: `EXTERNAL_WEB`
+- 처리 후보: 11개 (`Google 6`, `Naver 0`, `Other websites 5`): 신규 intent 10개 + 이전 후보 정밀 중복 교정 1개
+- Naver 접근성 체크리스트 탐색에서 별도의 검증 가능한 신규 근거를 확보하지 못해 0으로 기록하고 검색량을 추측하지 않음
+- 신규 후보군: alt 텍스트 결정, 터치 타깃 크기, 텍스트 간격, accessible name, 200% 확대, 자동 움직임 정지, reduced motion, HTML 언어 태그, 헤딩 구조, 키보드 포커스 순서
+- 정밀 중복 교정: `EXT-20260907-101` CSS 색상 형식 변환기는 기존 `/kor/util/color-extractor/`가 HEX·RGB·HSL 변환 intent를 충족하므로 `SAME_INTENT / DO_NOT_CREATE`
+- 누적 상태: `RESEARCHING 98`, `BRIEF_READY 19`, `READY_TO_LAUNCH 0`, 전체 `SAME_INTENT 2`
+- 오늘 발행: `0 / 3`; launch manifest는 `NO_PUBLICATION`
+- 미발행 사유: 신규 접근성 후보는 자동 판정 한계, 실제 사용자 테스트 범위와 완성 Content Brief가 아직 부족함
+- TOP 신규 후보: 이미지 alt 텍스트 결정 도우미; 다음 행동은 한국어 이미지 유형 사례와 기존 이미지 도구 overlap을 검증하고 재현 가능한 결정 트리 Brief 작성
+- 보호: 기존 WINNER 및 논산·철원·울진 COOLDOWN 수정 없음
+
 ## 2026-09-07 09:23 KST 외부 탐색 자동 실행
 
 - Discovery origin: `EXTERNAL_WEB`
