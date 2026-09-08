@@ -122,6 +122,36 @@ def test_manifest_respects_remaining_daily_slots(tmp_path):
     assert result["candidateIds"] == ["0"]
 
 
+def test_daily_counter_reset_preserves_history_and_reopens_slots(tmp_path):
+    rows = [ready_candidate(str(i), opportunity=95 - i) for i in range(4)]
+    prepare(
+        tmp_path,
+        rows,
+        experiments=[
+            {
+                "candidateId": "OLD",
+                "publishedOn": "2026-09-02",
+                "publishedAt": "2026-09-02T09:00:00+09:00",
+            },
+            {
+                "candidateId": "NEW",
+                "publishedOn": "2026-09-02",
+                "publishedAt": "2026-09-02T15:00:00+09:00",
+            },
+        ],
+    )
+    write_json(
+        tmp_path / "data/content-launch-counter.json",
+        {"resetAt": "2026-09-02T12:00:00+09:00", "reason": "MANUAL_RESET"},
+    )
+
+    result = prepare_external_launch(tmp_path, "2026-09-02T16:00:00+09:00")
+
+    assert result["publishedToday"] == 1
+    assert result["remainingCapacity"] == 2
+    assert len(result["candidateIds"]) == 2
+
+
 def test_no_ready_candidate_writes_no_publication_manifest(tmp_path):
     row = ready_candidate("A")
     row["officialSources"] = []

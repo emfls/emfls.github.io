@@ -26,9 +26,18 @@ def _write(path, payload):
     )
 
 
-def _published_today(experiments, run_at):
+def _published_today(experiments, run_at, reset_at=None):
     local_day = datetime.fromisoformat(run_at).date().isoformat()
-    return [row for row in experiments if row.get("publishedOn") == local_day]
+    rows = [row for row in experiments if row.get("publishedOn") == local_day]
+    if not reset_at:
+        return rows
+    reset_time = datetime.fromisoformat(reset_at)
+    return [
+        row
+        for row in rows
+        if row.get("publishedAt")
+        and datetime.fromisoformat(row["publishedAt"]) > reset_time
+    ]
 
 
 def _expected_value(candidate):
@@ -57,6 +66,8 @@ def prepare_external_launch(root, run_at, write=True):
     experiments = _read(
         root / "data/content-launch-experiments.json", {"experiments": []}
     ).get("experiments") or []
+    counter_state = _read(root / "data/content-launch-counter.json", {})
+    reset_at = counter_state.get("resetAt")
     published_candidate_ids = {
         row.get("candidateId") for row in experiments if row.get("candidateId")
     }
@@ -74,7 +85,8 @@ def prepare_external_launch(root, run_at, write=True):
             continue
         eligible.append({**candidate, "readiness": readiness})
     eligible.sort(key=lambda row: (-_expected_value(row), row.get("candidateId", "")))
-    capacity = max(0, 3 - len(_published_today(experiments, run_at)))
+    published_today = _published_today(experiments, run_at, reset_at)
+    capacity = max(0, 3 - len(published_today))
     selected = eligible[:capacity]
     manifest = {
         "schemaVersion": 1,
@@ -87,7 +99,7 @@ def prepare_external_launch(root, run_at, write=True):
         "sitemapPaths": sorted({row["sitemapPath"] for row in selected}),
         "hubPaths": sorted({row["hubPath"] for row in selected}),
         "dailyLimit": 3,
-        "publishedToday": len(_published_today(experiments, run_at)),
+        "publishedToday": len(published_today),
         "remainingCapacity": capacity,
     }
     index_candidates = {
