@@ -47,6 +47,8 @@ WINNER와 활성 COOLDOWN, 특히 논산·철원·울진 CTR 실험을 수정하
 - 종류: Codex local cron
 - 주기: 2시간
 - 알림: 실패한 실행만
+- 자동 발행 권한: 사용자가 2026-09-08에 명시적으로 사전 승인함. 모든 launch gate를 통과한 `READY_TO_LAUNCH` 후보는 페이지별 추가 승인 없이 구현·QA·발행한다.
+- 승인 재요청 금지: 기존 승인 범위 안의 신규 페이지 발행은 별도 설계 승인 때문에 중단하지 않는다. 단, 하루 3개 제한과 품질·중복·출처·YMYL·WINNER·COOLDOWN 보호 기준은 그대로 적용한다.
 - 프로젝트 ID: 자동화 생성 시 `list_projects`로 검증한 실제 ID 사용
 - 외부 후보 DB: `data/external-content-opportunities.json`
 - 실행 보고서: `reports/external-discovery-pipeline.md`
