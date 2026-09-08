@@ -384,3 +384,12 @@
 - 기준 데이터가 없는 발행 전 검색·GA4·AdSense 수치는 `NOT_AVAILABLE` 또는 `NOT_CONNECTED`로 보존하고 생성하지 않음
 - 보류: 국립공원 차량·전기 추가요금 및 취소 환불 계산기는 시설별 예외 검증이 부족해 미발행
 - 보호: 기존 WINNER와 논산·철원·울진 COOLDOWN 변경 없음
+
+## 2026-09-08 GitHub Actions 발행 검증 오류 수정
+
+- 실패 실행: SEO QA `34190831690`; 오류 코드 `MANIFEST_DIFF_MISMATCH`
+- 원인: 외부 콘텐츠 자동 발행기는 manifest 상태를 `PUBLISHED`로 기록하지만, 일일 성장 분석기는 `LAUNCHED`만 당일 완료 상태로 보존해 CI 검증 직전에 발행 manifest를 덮어씀
+- 수정: 당일 실험 기록과 candidate ID가 일치하면 `LAUNCHED`와 `PUBLISHED` 상태를 모두 보존
+- 후속 커밋 보호: 이전 발행 manifest가 남아 있어도 현재 diff에 신규 HTML이나 manifest 변경이 없으면 과거 발행 파일을 다시 요구하지 않음; WINNER·COOLDOWN·삭제·분석/광고 코드 보호 검사는 계속 수행
+- 회귀 테스트: `PUBLISHED` manifest가 CI의 일일 분석 단계에서 덮어쓰이지 않는 시나리오 추가
+- 영향 범위: 발행 파일·URL·canonical·광고·분석 코드에는 변경 없음

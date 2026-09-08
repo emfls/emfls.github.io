@@ -114,3 +114,35 @@ def test_same_day_launched_external_manifest_is_not_overwritten(tmp_path):
 
     assert json.loads((tmp_path / "data/content-launch-manifest.json").read_text()) == launched
     assert json.loads((tmp_path / "data/google-index-candidates.json").read_text()) == index
+
+
+def test_same_day_published_external_manifest_is_not_overwritten(tmp_path):
+    prepare(tmp_path, [raw_candidate(i) for i in range(1, 4)])
+    published = {
+        "schemaVersion": 1,
+        "status": "PUBLISHED",
+        "candidateIds": ["EXT-20260908-172"],
+        "urls": ["/kor/util/power-bank-wh-calculator/"],
+        "contentPaths": ["kor/util/power-bank-wh-calculator/index.html"],
+    }
+    write_json(tmp_path / "data/content-launch-manifest.json", published)
+    write_json(
+        tmp_path / "data/content-launch-experiments.json",
+        {
+            "experiments": [
+                {
+                    "candidateId": "EXT-20260908-172",
+                    "publishedOn": "2026-09-08",
+                    "status": "OBSERVING",
+                }
+            ]
+        },
+    )
+
+    run_daily_analysis(
+        tmp_path,
+        "2026-09-08T05:31:00+09:00",
+        tmp_path / "research.json",
+    )
+
+    assert json.loads((tmp_path / "data/content-launch-manifest.json").read_text()) == published

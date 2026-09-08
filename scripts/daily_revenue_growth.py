@@ -54,7 +54,7 @@ def _launches_on_local_day(experiments, run_at):
 
 def _preserve_same_day_launch(root, experiments, run_at):
     manifest = read_json(root / "data/content-launch-manifest.json", {})
-    if manifest.get("status") != "LAUNCHED":
+    if manifest.get("status") not in {"LAUNCHED", "PUBLISHED"}:
         return False
     launched_ids = set(manifest.get("candidateIds") or [])
     if not launched_ids:

@@ -24,11 +24,13 @@ def validate_launch(root, manifest, changed_paths):
     root = Path(root)
     changed = [_changed_tuple(row) for row in changed_paths]
     errors = set()
+    changed_names = {path for _, path in changed}
     added_html = {path for status, path in changed if status == "A" and path.endswith(".html")}
     expected_html = set(manifest.get("contentPaths") or [_url_to_path(url) for url in manifest.get("urls") or []])
+    launch_changed = bool(added_html) or "data/content-launch-manifest.json" in changed_names
     if len(added_html) > 3:
         errors.add("NEW_CONTENT_DAILY_LIMIT_EXCEEDED")
-    if added_html != expected_html:
+    if launch_changed and added_html != expected_html:
         errors.add("MANIFEST_DIFF_MISMATCH")
     if manifest.get("deletions") or any(status.startswith("D") or status.startswith("R") for status, _ in changed):
         errors.add("DELETION_NOT_ALLOWED")
@@ -37,13 +39,15 @@ def validate_launch(root, manifest, changed_paths):
     protected_experiments = {_url_to_path(row.get("url")) for row in ctr.get("experiments") or [] if row.get("status") == "OBSERVING"}
     revenue = _read(root / "data/revenue-opportunities.json", {})
     protected_winners = {_url_to_path(row.get("url")) for row in revenue.get("protectedWinners") or []}
-    changed_names = {path for _, path in changed}
     if changed_names & protected_experiments:
         errors.add("PROTECTED_EXPERIMENT_CHANGED")
     if changed_names & protected_winners:
         errors.add("PROTECTED_WINNER_CHANGED")
     if any(re.search(r"(^|/)(ads?|adsense|ga4|analytics)([._/-]|$)", path, re.I) for path in changed_names):
         errors.add("MONETIZATION_OR_ANALYTICS_CHANGED")
+
+    if not launch_changed:
+        return sorted(errors)
 
     audit = _read(root / "data/site-audit.json", {"pages": []})
     manifest_urls = set(manifest.get("urls") or [])
