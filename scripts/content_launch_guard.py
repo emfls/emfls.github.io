@@ -27,7 +27,10 @@ def validate_launch(root, manifest, changed_paths):
     changed_names = {path for _, path in changed}
     added_html = {path for status, path in changed if status == "A" and path.endswith(".html")}
     expected_html = set(manifest.get("contentPaths") or [_url_to_path(url) for url in manifest.get("urls") or []])
-    launch_changed = bool(added_html) or "data/content-launch-manifest.json" in changed_names
+    # A manifest can change for launch bookkeeping without adding content.
+    # Only a newly added HTML file starts content-launch validation; when HTML
+    # is added, it must still match the manifest exactly.
+    launch_changed = bool(added_html)
     if len(added_html) > 3:
         errors.add("NEW_CONTENT_DAILY_LIMIT_EXCEEDED")
     if launch_changed and added_html != expected_html:

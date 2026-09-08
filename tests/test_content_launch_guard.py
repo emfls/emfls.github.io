@@ -70,6 +70,20 @@ def test_prior_published_manifest_does_not_block_unrelated_followup_commit(tmp_p
     ) == []
 
 
+def test_manifest_only_counter_reset_does_not_require_new_html_diff(tmp_path):
+    setup_data(tmp_path)
+    prior_manifest = manifest(["/kor/util/already-published/index.html"])
+
+    assert validate_launch(
+        tmp_path,
+        prior_manifest,
+        [
+            ("M", "data/content-launch-manifest.json"),
+            ("A", "data/content-launch-counter.json"),
+        ],
+    ) == []
+
+
 def test_regenerated_audit_does_not_treat_manifest_page_as_existing_duplicate(tmp_path):
     setup_data(tmp_path)
     url = "/kor/report/camp/new.html"
