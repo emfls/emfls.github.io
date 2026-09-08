@@ -393,3 +393,14 @@
 - 후속 커밋 보호: 이전 발행 manifest가 남아 있어도 현재 diff에 신규 HTML이나 manifest 변경이 없으면 과거 발행 파일을 다시 요구하지 않음; WINNER·COOLDOWN·삭제·분석/광고 코드 보호 검사는 계속 수행
 - 회귀 테스트: `PUBLISHED` manifest가 CI의 일일 분석 단계에서 덮어쓰이지 않는 시나리오 추가
 - 영향 범위: 발행 파일·URL·canonical·광고·분석 코드에는 변경 없음
+
+## 2026-09-08 15:13 KST 팰월드 신규 공략 발행
+
+- 외부 탐색에서 팰월드 1.0 초보·초반 공략이 Google·네이버 검색 결과에 반복 노출되는 수요 신호를 확인
+- 정확한 검색량은 알 수 없어 `OBSERVED_SEARCH_SIGNAL`로 기록하고 수치를 생성하지 않음
+- 기존 19,000여 페이지와 동일 intent 없음: `NO_OVERLAP`
+- Opportunity `78.6`, Quality `80.0`; 공식 1.0 변경 기록과 Steam 제품 설명으로 핵심 시스템 검증
+- 차별점: 팁 나열이 아니라 첫날 행동 순서, 거점 작업 적성 진단표, 막혔을 때 다음 행동을 한 화면에 제공
+- 실험: `EXP-CONTENT-20260908-02`; 관찰 종료 및 COOLDOWN `2026-10-06`
+- 발행 전 Google·네이버·GA4·AdSense URL 지표는 `NOT_AVAILABLE` 또는 `NOT_CONNECTED`
+- 기존 WINNER와 논산·철원·울진 CTR 실험은 수정하지 않음
