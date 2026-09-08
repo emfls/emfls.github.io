@@ -359,3 +359,28 @@
 - 오늘 발행: `0 / 3`
 - 다음 행동: 전압 미표기, 0·음수·소수 입력, 정확히 100Wh·160Wh 경계 테스트와 내부링크 계획 완성
 - 보호: 기존 WINNER, 논산·철원·울진 COOLDOWN 및 기존 발행 실험 수정 없음
+## 2026-09-08 11:30 KST 대기 콘텐츠 자동 발행
+
+- 발행: `1 / 3` — `/kor/util/power-bank-wh-calculator/`
+- Candidate: `EXT-20260908-172`; Experiment: `EXP-CONTENT-20260908-01`
+- 선택 이유: Opportunity `87.3`, Quality `79.7`, `NO_OVERLAP`, 공식 출처 3개, 입력형 계산 차별성
+- 구현: mAh·전압을 Wh로 변환하고 100Wh 이하·100~160Wh·160Wh 초과 구간을 구분
+- 안전 설계: 결과를 운송 허가로 단정하지 않고 항공사별 수량·승인·해외 출발지 규정을 공식 링크에서 재확인하도록 안내
+- QA: 정확히 100Wh·160Wh, 99.9Wh·159.1Wh·185Wh, 누락·0·음수·문자 입력 테스트
+- 내부링크: 유틸리티 허브에서 신규 도구 연결, 도구에서 여행 허브·준비물·도로여행 계산기로 연결
+- sitemap 및 index request candidate 갱신
+- Baseline: 실제 검색·GA4·AdSense URL 데이터가 아직 없어 모두 `NOT_AVAILABLE` 또는 `NOT_CONNECTED`; 숫자를 생성하지 않음
+- 관찰 종료 및 COOLDOWN: `2026-10-06`; 그 전에는 기술·정책 오류 외 재수정 금지
+- 보류: 캠핑 차량·전기 추가요금 및 야영장 환불 계산기는 시설별 예외·책임 규정 검증이 남아 미발행
+## 2026-09-08 11:30 KST 대기 콘텐츠 자동 발행
+
+- 발행: `1 / 3` — `/kor/util/power-bank-wh-calculator/`
+- 후보: `EXT-20260908-172`, Opportunity `87.3`, Quality `79.7`, overlap `NO_OVERLAP`
+- 실험: `EXP-CONTENT-20260908-01`, 관찰 종료 및 COOLDOWN `2026-10-06`
+- 구현 가치: mAh·전압을 Wh로 변환하고 100Wh·160Wh 구간, 단락방지와 공식 항공사 확인 경로를 함께 제공
+- 공식 출처: 인천국제공항·대한항공·제주항공, reviewed `2026-09-08`
+- 테스트 범위: 정확히 100Wh·160Wh, 100Wh 미만·초과, 160Wh 초과, 누락·0·음수·비숫자 입력
+- 연결: `/kor/util/` 허브, `kor/sitemap.xml`, Google index request candidate 갱신
+- 기준 데이터가 없는 발행 전 검색·GA4·AdSense 수치는 `NOT_AVAILABLE` 또는 `NOT_CONNECTED`로 보존하고 생성하지 않음
+- 보류: 국립공원 차량·전기 추가요금 및 취소 환불 계산기는 시설별 예외 검증이 부족해 미발행
+- 보호: 기존 WINNER와 논산·철원·울진 COOLDOWN 변경 없음

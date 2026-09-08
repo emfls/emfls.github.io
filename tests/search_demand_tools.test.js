@@ -5,6 +5,7 @@ const { buildCampingList } = require('../kor/util/camping-packing-checklist/app.
 const { estimateEsimUsage } = require('../kor/util/japan-esim-data-calculator/app.js');
 const { buildJapanPackingList } = require('../kor/util/japan-travel-packing-checklist/app.js');
 const { calculateRoadTripCost } = require('../kor/util/road-trip-cost-calculator/app.js');
+const { calculatePowerBankWh } = require('../kor/util/power-bank-wh-calculator/app.js');
 
 test('camping list adapts to winter family camping without duplicates', () => {
   const list = buildCampingList({ people: 4, nights: 2, season: 'winter', type: 'auto' });
@@ -51,4 +52,18 @@ test('road trip calculator clamps invalid inputs and never returns non-finite va
   for (const value of Object.values(result)) assert.ok(Number.isFinite(value));
   assert.equal(result.totalCost, 0);
   assert.equal(result.perPersonCost, 0);
+});
+
+test('power bank calculator converts mAh and voltage to Wh at airline boundaries', () => {
+  assert.deepEqual(calculatePowerBankWh({ mah: 27000, voltage: 3.7 }), { wh: 99.9, band: 'UNDER_OR_EQUAL_100' });
+  assert.deepEqual(calculatePowerBankWh({ mah: 20000, voltage: 5 }), { wh: 100, band: 'UNDER_OR_EQUAL_100' });
+  assert.deepEqual(calculatePowerBankWh({ mah: 32000, voltage: 5 }), { wh: 160, band: 'OVER_100_TO_160' });
+  assert.deepEqual(calculatePowerBankWh({ mah: 43000, voltage: 3.7 }), { wh: 159.1, band: 'OVER_100_TO_160' });
+  assert.deepEqual(calculatePowerBankWh({ mah: 50000, voltage: 3.7 }), { wh: 185, band: 'OVER_160' });
+});
+
+test('power bank calculator rejects missing, zero, negative and non-numeric input', () => {
+  for (const input of [{}, { mah: 0, voltage: 3.7 }, { mah: -1, voltage: 3.7 }, { mah: 10000, voltage: 0 }, { mah: 'bad', voltage: 3.7 }]) {
+    assert.deepEqual(calculatePowerBankWh(input), { wh: null, band: 'INVALID' });
+  }
 });

@@ -10,6 +10,7 @@ class SearchDemandToolsContractTest(unittest.TestCase):
         "japan-esim-data-calculator": "일본 eSIM 데이터 사용량 계산기",
         "japan-travel-packing-checklist": "일본 여행 준비물 체크리스트",
         "road-trip-cost-calculator": "자동차 여행 연료비·통행료 분담 계산기",
+        "power-bank-wh-calculator": "보조배터리 Wh 변환·기내반입 확인기",
     }
 
     def test_pages_have_required_metadata_and_measurement(self):
@@ -25,6 +26,10 @@ class SearchDemandToolsContractTest(unittest.TestCase):
                 self.assertIn('ca-pub-8830524482034754', html)
                 self.assertIn('application/ld+json', html)
                 self.assertIn('app.js', html)
+                if slug == "power-bank-wh-calculator":
+                    app = (path.parent / "app.js").read_text(encoding="utf-8")
+                    self.assertIn("tool-analytics.js", app)
+                    self.assertIn("trackToolCompletion", app)
 
     def test_tools_cross_link_to_relevant_content(self):
         camp = (ROOT / "kor/util/camping-packing-checklist/index.html").read_text(encoding="utf-8")
@@ -47,6 +52,7 @@ class SearchDemandToolsContractTest(unittest.TestCase):
         self.assertIn('/kor/util/japan-travel-packing-checklist/', tokyo)
         util_hub = (ROOT / "kor/util/index.html").read_text(encoding="utf-8")
         self.assertIn('/kor/util/road-trip-cost-calculator/', util_hub)
+        self.assertIn('/kor/util/power-bank-wh-calculator/', util_hub)
 
 
 if __name__ == "__main__":
