@@ -404,3 +404,13 @@
 - 실험: `EXP-CONTENT-20260908-02`; 관찰 종료 및 COOLDOWN `2026-10-06`
 - 발행 전 Google·네이버·GA4·AdSense URL 지표는 `NOT_AVAILABLE` 또는 `NOT_CONNECTED`
 - 기존 WINNER와 논산·철원·울진 CTR 실험은 수정하지 않음
+
+## 2026-09-08 16:20 KST 팰월드 교배 공략 발행
+
+- 발행: `3 / 3` — `/kor/column/palworld-1-0-breeding-start-checklist.html`; 오늘 신규 발행 한도 도달
+- Candidate `EXT-20260908-182`; Opportunity `82.4`, Quality `84.0`, overlap `LOW_OVERLAP`
+- 외부 검색 결과에서 교배·케이크·패시브 질문이 반복되어 `OBSERVED_SEARCH_SIGNAL`로 기록; 검색량 수치는 생성하지 않음
+- 공식 1.0 변경 기록으로 전체 조합 재검토, 액티브 스킬 유전 규칙, 돌연변이와 신규 케이크 효과를 검증
+- 기존 조합표를 복제하지 않고 첫 교배 준비 순서, 케이크 비교, 결과 오류 진단과 기록표로 차별화
+- 실험 `EXP-CONTENT-20260908-03`; 관찰 종료 및 COOLDOWN `2026-10-06`
+- 발행 전 URL별 Google·네이버·GA4·AdSense 수치는 `NOT_AVAILABLE` 또는 `NOT_CONNECTED`
