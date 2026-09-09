@@ -1,5 +1,13 @@
 # PROJECT HISTORY
 
+## 2026-09-09 — 무료 검색 트렌드 신호 연동
+
+- TrendRadar의 SQLite 출력에서 제목·플랫폼·순위·반복 관찰 횟수를 읽는 독립 어댑터를 추가했다. GPL 소스는 저장소에 복사하지 않고 외부 실행 결과만 소비한다.
+- 네이버 데이터랩 공식 API의 30일 상대 검색 추이를 수집하도록 추가했다. 절대 검색량은 생성하지 않는다.
+- 인증정보나 TrendRadar DB가 없으면 각각 `NOT_CONNECTED`, `INSUFFICIENT_DATA`로 기록하며 허위 값을 만들지 않는다.
+- Google Trends 공식 API는 접근 권한이 없으므로 `NOT_CONNECTED`로 유지한다.
+- 검색 트렌드 데이터와 보고서를 GitHub SEO QA 산출물에 포함했다.
+
 ## 2026-09-09 — 팰월드 7개 페이지 Google·네이버 수집 요청
 
 - 팰월드 신규 페이지 7개를 Google Search Console URL 검사에서 개별 제출했고, 모두 `우선순위 크롤링 대기열에 추가` 결과를 확인했다.

@@ -46,6 +46,12 @@ jobs:
       - name: Validate deterministic growth-run artifacts
         run: python3 scripts/daily_revenue_growth.py --run-at "$(date -Iseconds)" --research data/new-content-research.json
 
+      - name: Build search trend signal status
+        env:
+          NAVER_DATALAB_CLIENT_ID: ${{ secrets.NAVER_DATALAB_CLIENT_ID }}
+          NAVER_DATALAB_CLIENT_SECRET: ${{ secrets.NAVER_DATALAB_CLIENT_SECRET }}
+        run: python3 scripts/search_trend_signals.py --root . --run-at "$(date -Iseconds)" --config data/search-trend-keywords.json
+
       - name: Guard automated content launch changes
         env:
           EVENT_BEFORE: ${{ github.event.before }}
@@ -87,8 +93,10 @@ jobs:
             data/revenue-opportunities.json
             data/new-content-opportunities.json
             data/content-launch-manifest.json
+            data/search-trend-signals.json
             reports/naver-data-quality.md
             reports/revenue-growth-report.md
             reports/daily-revenue-growth.md
             reports/site-quality-dashboard.html
+            reports/search-trend-signals.md
           if-no-files-found: warn
