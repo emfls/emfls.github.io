@@ -17,7 +17,7 @@ class FourthBatchCorePagesTest(unittest.TestCase):
             self.assertIn(phrase, html)
 
     def test_homepage(self):
-        self.check_page("index.html", ("무료", "게임", "도구", "2026-08-09", "비자", "여행"),
+        self.check_page("index.html", ("무료", "게임", "도구", "2026-09-09", "캠핑", "여행"),
                         "https://emfls.github.io/", ("WebSite", "FAQPage"))
 
     def test_obbb(self):
