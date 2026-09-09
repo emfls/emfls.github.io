@@ -1,5 +1,25 @@
 # PROJECT HISTORY
 
+## 2026-09-09 — Codex 저토큰 프로젝트 운영체계 구축
+
+### 요청
+- 긴 프롬프트 없이 저장소 문서만 읽고 최고 우선순위 작업 1개를 이어서 수행할 수 있는 운영체계를 만든다.
+
+### 조사
+- 기존 기록은 `PROJECT_HISTORY.md`, 작업 규칙·큐·전략 문서는 없었다.
+- 주요 경로: 정적 사이트 `index.html`·`kor/`, 주식 소스 `kor/stockwiki/src/`, 주식 JSON `kor/stockwiki/data/stocks/`, 도구 `util/`, 게임 `game/`, 자동화 `scripts/`, CI `.github/workflows/seo-qa.yml`.
+- `data/finance-content-audit.json`에서 비상장 독립회사인 `Amazon Web Services (AMZ)` 페이지 흔적을 확인했다. 주식 화면은 `kor/stockwiki/src/pages/stocks/[ticker].astro`에서 `dividends.yield`를 백분율로 직접 표시한다.
+
+### 변경
+- `AGENTS.md`, `TASKS.md`, `SEO_STRATEGY.md`를 추가하고 기존 `PROJECT_HISTORY.md`를 운영 기록으로 유지했다.
+- 주식 데이터 오류 4건을 P1, 공통 validation과 정적 QA를 P2로 등록했다. 완료된 홈페이지 개편은 삭제하지 않고 `[x]`로 기록했다.
+
+### 검증
+- 문서 필수 항목, 파일 경로, 체크박스 구조와 Markdown 형식을 점검한다.
+
+### 남은 문제
+- 다음 기본 작업은 `미국주식 dividendYield 단위 및 validation 수정`이다. 이번 작업에서는 원인 경로만 확인하고 데이터·생성 로직은 수정하지 않았다.
+
 ## 2026-09-09 — 홈페이지 검색 중심 허브 리디자인
 
 - 사용자가 선택한 첫 번째 시안을 기준으로 기존의 동등한 카테고리 버튼 12개와 오래된 카드 벽을 검색 중심 정보 허브로 교체했다.
@@ -68,3 +88,8 @@
 - `data/content-launch-counter.json`에 `resetAt`을 기록해 초기화 시각 이후 발행만 오늘 카운트에 포함하도록 했다.
 - 초기화 직후 상태: `publishedToday: 0`, `remainingCapacity: 3`.
 - 회귀 테스트: `691 passed`.
+
+## 2026-09-09 — Keyword Hunter 착수
+- 이전 요구사항 및 기존 기록을 확인. HTML 19,079개와 기존 SEO/외부 기회/DataLab/발행 가드 구조를 조사했다.
+- Python 표준 라이브러리와 기존 모듈 재사용으로 구현한다. 설계·체크리스트: docs/keyword-hunter/design.md.
+- 기존 미추적 사용자 파일과 sources 참조 파일은 보존한다.
