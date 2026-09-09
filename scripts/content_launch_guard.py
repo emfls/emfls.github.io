@@ -31,8 +31,6 @@ def validate_launch(root, manifest, changed_paths):
     # Only a newly added HTML file starts content-launch validation; when HTML
     # is added, it must still match the manifest exactly.
     launch_changed = bool(added_html)
-    if len(added_html) > 3:
-        errors.add("NEW_CONTENT_DAILY_LIMIT_EXCEEDED")
     if launch_changed and added_html != expected_html:
         errors.add("MANIFEST_DIFF_MISMATCH")
     if manifest.get("deletions") or any(status.startswith("D") or status.startswith("R") for status, _ in changed):

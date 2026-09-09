@@ -86,8 +86,9 @@ def prepare_external_launch(root, run_at, write=True):
         eligible.append({**candidate, "readiness": readiness})
     eligible.sort(key=lambda row: (-_expected_value(row), row.get("candidateId", "")))
     published_today = _published_today(experiments, run_at, reset_at)
-    capacity = max(0, 3 - len(published_today))
-    selected = eligible[:capacity]
+    # Publication volume is governed by readiness and quality, not a daily cap.
+    # Keep today's count for reporting, but never truncate the READY queue.
+    selected = eligible
     manifest = {
         "schemaVersion": 1,
         "runId": "EXT-RUN-" + datetime.fromisoformat(run_at).strftime("%Y%m%d-%H%M"),
@@ -98,9 +99,9 @@ def prepare_external_launch(root, run_at, write=True):
         "contentPaths": [row["contentPath"] for row in selected],
         "sitemapPaths": sorted({row["sitemapPath"] for row in selected}),
         "hubPaths": sorted({row["hubPath"] for row in selected}),
-        "dailyLimit": 3,
+        "dailyLimit": None,
         "publishedToday": len(published_today),
-        "remainingCapacity": capacity,
+        "remainingCapacity": None,
     }
     index_candidates = {
         "schemaVersion": 1,

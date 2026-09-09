@@ -104,7 +104,7 @@ def test_same_intent_and_incomplete_brief_never_enter_manifest(tmp_path):
     assert result["urls"] == [valid["url"]]
 
 
-def test_manifest_respects_remaining_daily_slots(tmp_path):
+def test_manifest_has_no_daily_publication_limit(tmp_path):
     rows = [ready_candidate(str(i), opportunity=95 - i) for i in range(5)]
     prepare(
         tmp_path,
@@ -118,11 +118,13 @@ def test_manifest_respects_remaining_daily_slots(tmp_path):
 
     result = prepare_external_launch(tmp_path, "2026-09-02T14:00:00+09:00")
 
-    assert len(result["candidateIds"]) == 1
-    assert result["candidateIds"] == ["0"]
+    assert len(result["candidateIds"]) == 5
+    assert result["candidateIds"] == ["0", "1", "2", "3", "4"]
+    assert result["dailyLimit"] is None
+    assert result["remainingCapacity"] is None
 
 
-def test_daily_counter_reset_preserves_history_and_reopens_slots(tmp_path):
+def test_daily_counter_reset_preserves_history_without_limiting_selection(tmp_path):
     rows = [ready_candidate(str(i), opportunity=95 - i) for i in range(4)]
     prepare(
         tmp_path,
@@ -148,8 +150,8 @@ def test_daily_counter_reset_preserves_history_and_reopens_slots(tmp_path):
     result = prepare_external_launch(tmp_path, "2026-09-02T16:00:00+09:00")
 
     assert result["publishedToday"] == 1
-    assert result["remainingCapacity"] == 2
-    assert len(result["candidateIds"]) == 2
+    assert result["remainingCapacity"] is None
+    assert len(result["candidateIds"]) == 4
 
 
 def test_no_ready_candidate_writes_no_publication_manifest(tmp_path):
