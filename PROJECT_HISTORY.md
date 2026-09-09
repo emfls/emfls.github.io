@@ -1,5 +1,24 @@
 # PROJECT HISTORY
 
+## 2026-09-09 — 미국주식 dividendYield 단위 및 validation 수정
+
+### 요청
+- yfinance 배당수익률 단위의 근본 원인을 고치고 AAPL 포함 배당·무배당 종목을 검증한다.
+
+### 조사
+- private source로 이전된 구형 `scripts/gen_us_stocks.py`가 이미 퍼센트 단위인 `dividendYield`에 다시 `×100`을 적용했다. 그 결과 공개된 `kor/report/stock/us/` 페이지에서 AAPL 36%, KO 261%, JNJ 234% 등이 노출됐다.
+- 현행 `kor/stockwiki/data/stocks/`는 2026-05-29 수정 이후 퍼센트 단위로 정상 저장돼 있었다.
+
+### 변경
+- `scripts/us_stock_dividend_yield.py`에 yfinance 퍼센트 단위 정규화, 0~20% 범위 validation, 반복 실행 안전한 legacy HTML 교정 로직을 추가했다.
+- 구형 미국주식 60페이지의 값을 공통 로직으로 교정하고 단위 표식을 추가했다. 범위 밖·비수치 값은 `N/A`로 처리한다.
+
+### 검증
+- `tests/test_us_stock_dividend_yield.py`: 22 passed. AAPL 0.36%, KO 2.61%, JNJ 2.34%, NVDA 0.02%, TSLA·AMZN N/A 및 StockWiki AAPL/MSFT/NVDA/TSLA를 확인했다.
+
+### 남은 문제
+- private `emfls-source` 생성기에도 같은 규칙(`trailingAnnualDividendYield`를 퍼센트 단위 그대로 저장, 0~20% 검증)을 적용해야 한다. 공개 저장소의 CI 회귀 테스트는 잘못 생성된 결과를 차단한다.
+
 ## 2026-09-09 — Codex 저토큰 프로젝트 운영체계 구축
 
 ### 요청

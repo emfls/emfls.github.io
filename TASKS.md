@@ -8,10 +8,11 @@
 
 ## P1 - High
 
-- [ ] 미국주식 `dividendYield` 단위 및 validation 수정
+- [x] 미국주식 `dividendYield` 단위 및 validation 수정
   - 목적: AAPL 등 일부 종목에서 배당수익률이 약 36%처럼 비정상 표시될 가능성을 제거한다.
   - 완료 조건: 데이터 원본 단위 확인, normalize 로직 수정, 이상치 validation 추가, AAPL 포함 미국주식 샘플 검증.
   - 관련 영역: `kor/stockwiki/data/stocks/`, 주식 데이터 생성 경로, `kor/stockwiki/src/pages/`.
+  - 완료 기록: 2026-09-09. yfinance 퍼센트 단위의 중복 `×100` 원인을 확인하고 공통 정규화·0~20% validation·60페이지 교정·22개 회귀 테스트를 적용했다.
 
 - [ ] 잘못된 미국주식 ticker 검증
   - 목적: `Amazon Web Services (AMZ)`처럼 독립 상장사가 아닌 항목의 생성과 노출을 막는다.
