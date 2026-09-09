@@ -23,7 +23,7 @@ def test_next_palworld_guides_are_complete_and_discoverable():
         assert "공식 자료" in html
         for phrase in phrases:
             assert phrase in html
-        assert filename in hub
+        assert f'href="/kor/column/{filename}"' in hub
         assert url in sitemap
 
 
