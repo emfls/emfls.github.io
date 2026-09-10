@@ -27,6 +27,10 @@ PAGES = {
     ),
 }
 
+OFFICIAL_SOURCES = {
+    "car": "https://main.kotsa.or.kr/portal/contents.do?menuCode=01010102",
+}
+
 
 def read_page(slug):
     relative, _ = PAGES[slug]
@@ -57,3 +61,12 @@ def test_all_pages_meet_shared_publication_contract():
         assert "2026-09-10" in html
         assert "application/ld+json" in html
         assert "개인정보" in html or "브라우저" in html
+
+
+def test_car_tool_has_bounded_fee_lookup_and_official_handoff():
+    result = run_pure(PAGES["car"][0], "lookupInspectionFee('unknown','unknown')")
+    assert result["status"] == "unknown"
+    html = read_page("car")
+    assert "대행 수수료와 검사 수수료는 다릅니다" in html
+    assert "확정 견적이 아닙니다" in html
+    assert OFFICIAL_SOURCES["car"] in html
