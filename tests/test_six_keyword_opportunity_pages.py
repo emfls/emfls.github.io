@@ -121,3 +121,12 @@ def test_car_tool_rejects_partially_unknown_fee_mappings(inspection_type, vehicl
         f"lookupInspectionFee({inspection_type!r}, {vehicle_class!r})",
     )
     assert result == {"status": "unknown", "fee": None, "label": "확인 필요"}
+
+
+def test_date_calculator_handles_leap_reverse_inclusive_and_weekdays():
+    path = PAGES["date"][0]
+    assert run_pure(path, "daysBetween('2024-02-28','2024-03-01',false)")["days"] == 2
+    assert run_pure(path, "daysBetween('2024-03-01','2024-02-28',false)")["days"] == -2
+    assert run_pure(path, "daysBetween('2024-02-28','2024-03-01',true)")["days"] == 3
+    assert run_pure(path, "shiftDate('2024-02-28',1)")["date"] == "2024-02-29"
+    assert run_pure(path, "weekdaysBetween('2026-09-07','2026-09-13',true)")["days"] == 5
