@@ -378,6 +378,46 @@ def test_pet_selector_keeps_general_adult_result_neutral_and_label_focused():
     assert result["veterinaryPrompt"]
 
 
+def test_pet_selector_checks_are_only_neutral_label_reading_questions():
+    result = run_pure(
+        PAGES["pet"][0],
+        "buildLabelChecklist({species:'cat',lifeStage:'kitten',"
+        "bodyGoal:'maintain',sensitivity:true})",
+    )
+    questions = result["checks"]
+    assert all(question.endswith("?") for question in questions)
+    assert all("라벨" in question for question in questions)
+    assert questions[1] == "라벨에 표시된 적용 생애 단계가 '키튼'인가요?"
+
+    combined = " ".join(questions).lower()
+    forbidden_terms = (
+        "추천",
+        "브랜드",
+        "순위",
+        "베스트",
+        "진단",
+        "증상",
+        "처방",
+        "치료",
+        "질환",
+        "질병",
+        "효능",
+        "효과",
+        "예방",
+        "급여량",
+        "용량",
+        "칼로리",
+        "그램",
+        "밀리리터",
+        "스푼",
+        "기록하세요",
+        "확인하세요",
+        "바꾸세요",
+    )
+    assert all(term not in combined for term in forbidden_terms)
+    assert not re.search(r"\d+(?:\.\d+)?\s*(?:g|kg|ml|컵|kcal)\b", combined)
+
+
 def test_pet_selector_is_local_dom_safe_source_backed_and_matches_faq():
     html = read_page("pet")
     assert all(source in html_lib.unescape(html) for source in OFFICIAL_SOURCES["pet"])
