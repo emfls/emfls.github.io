@@ -50,40 +50,8 @@
   <footer>기준일: 2026-09-10 · 결과는 일정 관리 참고용입니다. 법정 공휴일, 근로일·계약상 기한은 해당 기관 또는 계약 조건을 확인하세요.</footer>
 </main>
 
-<!-- PURE_START -->
-function parseUtcDate(value) {
-  if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
-  const [year, month, day] = value.split("-").map(Number);
-  const date = new Date(Date.UTC(year, month - 1, day));
-  return date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day ? date : null;
-}
-function dateString(date) { return date.toISOString().slice(0, 10); }
-function daysBetween(start, end, inclusive) {
-  const first = parseUtcDate(start), last = parseUtcDate(end);
-  if (!first || !last || typeof inclusive !== "boolean") return { error: "올바른 날짜와 포함 여부를 입력해 주세요." };
-  const days = Math.round((last - first) / 86400000);
-  return { days: inclusive ? (days === 0 ? 1 : days + Math.sign(days)) : days, error: null };
-}
-function shiftDate(value, days) {
-  const date = parseUtcDate(value);
-  if (!date || !Number.isInteger(days)) return { error: "올바른 날짜와 정수 일수를 입력해 주세요." };
-  date.setUTCDate(date.getUTCDate() + days);
-  return { date: dateString(date), error: null };
-}
-function weekdaysBetween(start, end, inclusive) {
-  const first = parseUtcDate(start), last = parseUtcDate(end);
-  if (!first || !last || typeof inclusive !== "boolean") return { error: "올바른 날짜와 포함 여부를 입력해 주세요." };
-  const direction = last >= first ? 1 : -1;
-  const from = new Date(direction > 0 ? first : last), to = direction > 0 ? last : first;
-  if (!inclusive) { from.setUTCDate(from.getUTCDate() + 1); }
-  let days = 0;
-  for (let cursor = new Date(from); cursor <= to; cursor.setUTCDate(cursor.getUTCDate() + 1)) {
-    const day = cursor.getUTCDay(); if (day !== 0 && day !== 6) days += 1;
-  }
-  return { days: direction * days, error: null };
-}
-<!-- PURE_END -->
 <script>
+<!-- PURE_START -->
   function parseUtcDate(value) {
     if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
     const [year, month, day] = value.split("-").map(Number);
@@ -101,18 +69,20 @@ function weekdaysBetween(start, end, inclusive) {
     const date = parseUtcDate(value);
     if (!date || !Number.isInteger(days)) return { error: "올바른 날짜와 정수 일수를 입력해 주세요." };
     date.setUTCDate(date.getUTCDate() + days);
+    if (Number.isNaN(date.getTime())) return { error: "표현 가능한 날짜 범위를 벗어났습니다." };
     return { date: dateString(date), error: null };
   }
   function weekdaysBetween(start, end, inclusive) {
     const first = parseUtcDate(start), last = parseUtcDate(end);
     if (!first || !last || typeof inclusive !== "boolean") return { error: "올바른 날짜와 포함 여부를 입력해 주세요." };
     const direction = last >= first ? 1 : -1;
-    const from = new Date(direction > 0 ? first : last), to = direction > 0 ? last : first;
-    if (!inclusive) from.setUTCDate(from.getUTCDate() + 1);
+    const from = new Date(first), to = new Date(last);
+    if (!inclusive) { from.setUTCDate(from.getUTCDate() + direction); to.setUTCDate(to.getUTCDate() - direction); }
     let days = 0;
-    for (let cursor = new Date(from); cursor <= to; cursor.setUTCDate(cursor.getUTCDate() + 1)) { const day = cursor.getUTCDay(); if (day !== 0 && day !== 6) days += 1; }
+    for (let cursor = new Date(from); direction > 0 ? cursor <= to : cursor >= to; cursor.setUTCDate(cursor.getUTCDate() + direction)) { const day = cursor.getUTCDay(); if (day !== 0 && day !== 6) days += 1; }
     return { days: direction * days, error: null };
   }
+<!-- PURE_END -->
   const byId = (id) => document.getElementById(id);
   const show = (id, text) => { byId(id).textContent = text; };
   document.querySelectorAll('[role="tab"]').forEach((tab) => tab.addEventListener('click', () => {

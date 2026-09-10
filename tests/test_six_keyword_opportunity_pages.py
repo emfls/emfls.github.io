@@ -130,3 +130,20 @@ def test_date_calculator_handles_leap_reverse_inclusive_and_weekdays():
     assert run_pure(path, "daysBetween('2024-02-28','2024-03-01',true)")["days"] == 3
     assert run_pure(path, "shiftDate('2024-02-28',1)")["date"] == "2024-02-29"
     assert run_pure(path, "weekdaysBetween('2026-09-07','2026-09-13',true)")["days"] == 5
+
+
+def test_date_calculator_excludes_both_weekday_endpoints_when_not_inclusive():
+    path = PAGES["date"][0]
+    assert run_pure(path, "weekdaysBetween('2026-09-07','2026-09-11',false)")["days"] == 3
+    assert run_pure(path, "weekdaysBetween('2026-09-11','2026-09-07',false)")["days"] == -3
+
+
+def test_date_calculator_rejects_out_of_range_integer_shift():
+    result = run_pure(PAGES["date"][0], "shiftDate('2024-02-28', 10 ** 12)")
+    assert result["error"]
+
+
+def test_date_calculator_pure_block_is_executable_once():
+    html = read_page("date")
+    assert re.search(r"<script>\s*<!-- PURE_START -->", html)
+    assert html.count("function parseUtcDate") == 1
