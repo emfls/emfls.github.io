@@ -47,6 +47,11 @@ OFFICIAL_SOURCES = {
         "https://www.cpsc.gov/Safety-Education/Safety-Education-Centers/Carbon-Monoxide-Information-Center/Carbon-Monoxide-Questions-and-Answers",
         "https://www.cdc.gov/carbon-monoxide/about/index.html",
     ),
+    "esta": (
+        "https://esta.cbp.dhs.gov/",
+        "https://www.help.cbp.gov/s/article/Article-1437?language=en_US",
+        "https://www.help.cbp.gov/s/article/Article-1445?language=en_US",
+    ),
 }
 
 
@@ -265,6 +270,35 @@ def test_co_guide_checklist_is_memory_only_dom_safe_and_source_backed():
 
     html = read_page("camp")
     assert all(source in html_lib.unescape(html) for source in OFFICIAL_SOURCES["camp"])
+    assert ".innerHTML" not in html
+    assert ".textContent" in html
+    assert "localStorage" not in html
+    assert "sessionStorage" not in html
+    assert '"@type":"FAQPage"' in html
+
+
+def test_esta_helper_is_official_first_and_collects_no_sensitive_fields():
+    html = read_page("esta")
+    assert "https://esta.cbp.dhs.gov/" in html
+    assert html.index("공식 ESTA 신청") < html.index("관련 글")
+    assert "입국을 보장하지 않습니다" in html
+    for forbidden in ('name="passport"', 'type="file"', 'name="card"', 'name="address"'):
+        assert forbidden not in html
+
+
+def test_esta_checklist_uses_only_boolean_state_and_dom_safe_output():
+    path = PAGES["esta"][0]
+    assert run_pure(path, "summarizeChecklist([true,false,true,false])") == {
+        "complete": 2,
+        "remaining": 2,
+    }
+    assert run_pure(path, "summarizeChecklist([true,'true',1,false])") == {
+        "complete": 1,
+        "remaining": 3,
+    }
+
+    html = read_page("esta")
+    assert all(source in html_lib.unescape(html) for source in OFFICIAL_SOURCES["esta"])
     assert ".innerHTML" not in html
     assert ".textContent" in html
     assert "localStorage" not in html
