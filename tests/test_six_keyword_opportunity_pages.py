@@ -53,6 +53,16 @@ OFFICIAL_SOURCES = {
         "https://www.help.cbp.gov/s/article/Article-1445?language=en_US",
         "https://public-inspection.federalregister.gov/2025-20304.pdf",
     ),
+    "pet": (
+        "https://www.mafra.go.kr/bbs/home/792/583313/download.do",
+        "https://www.law.go.kr/LSW/lumLsLinkPop.do?chrClsCd=010202&lspttninfSeq=74454",
+        "https://www.mafra.go.kr/bbs/home/792/589871/download.do",
+        "https://www.fda.gov/animal-veterinary/animal-health-literacy/complete-and-balanced-pet-food",
+        "https://www.fda.gov/animal-veterinary/animal-health-literacy/helping-pets-live-healthier-thinner-lives-aaha-nutritional-assessment-guidelines",
+        "https://www.fda.gov/consumers/consumer-updates/my-dog-or-cat-healthy-weight-important-questions-ask-vet",
+        "https://www.aaha.org/resources/2021-aaha-nutrition-and-weight-management-guidelines/home/",
+        "https://www.fda.gov/animal-veterinary/animal-health-literacy/proper-storage-pet-food-treats",
+    ),
 }
 
 
@@ -321,3 +331,60 @@ def test_esta_checklist_uses_only_boolean_state_and_dom_safe_output():
     assert "localStorage" not in html
     assert "sessionStorage" not in html
     assert '"@type":"FAQPage"' in html
+
+
+def test_pet_selector_returns_label_questions_not_products_or_diagnoses():
+    result = run_pure(
+        PAGES["pet"][0],
+        "buildLabelChecklist({species:'cat',lifeStage:'kitten',"
+        "bodyGoal:'maintain',sensitivity:true})",
+    )
+    assert result["status"] == "veterinary_review"
+    assert result["checks"]
+    assert result["veterinaryPrompt"]
+    html = read_page("pet")
+    assert "제품이나 브랜드를 추천하지 않습니다" in html
+    assert "진단하지 않습니다" in html
+    assert "수의사" in html
+
+
+@pytest.mark.parametrize(
+    "expression",
+    [
+        "buildLabelChecklist({species:'dog',lifeStage:'puppy',bodyGoal:'maintain',sensitivity:false})",
+        "buildLabelChecklist({species:'cat',lifeStage:'kitten',bodyGoal:'maintain',sensitivity:false})",
+        "buildLabelChecklist({species:'dog',lifeStage:'pregnant',bodyGoal:'maintain',sensitivity:false})",
+        "buildLabelChecklist({species:'cat',lifeStage:'adult',bodyGoal:'weight-loss',sensitivity:false})",
+        "buildLabelChecklist({species:'dog',lifeStage:'adult',bodyGoal:'maintain',sensitivity:true})",
+        "buildLabelChecklist({species:'cat',lifeStage:'adult',bodyGoal:'maintain',sensitivity:false,symptomatic:true})",
+        "buildLabelChecklist({species:'dog',lifeStage:'adult',bodyGoal:'maintain',sensitivity:false,diagnosed:true})",
+    ],
+)
+def test_pet_selector_routes_nutrition_risk_states_to_veterinary_review(expression):
+    result = run_pure(PAGES["pet"][0], expression)
+    assert result["status"] == "veterinary_review"
+    assert result["veterinaryPrompt"]
+
+
+def test_pet_selector_keeps_general_adult_result_neutral_and_label_focused():
+    result = run_pure(
+        PAGES["pet"][0],
+        "buildLabelChecklist({species:'dog',lifeStage:'adult',"
+        "bodyGoal:'maintain',sensitivity:false})",
+    )
+    assert result["status"] == "label_check"
+    assert len(result["checks"]) >= 4
+    assert all(isinstance(question, str) and question for question in result["checks"])
+    assert result["veterinaryPrompt"]
+
+
+def test_pet_selector_is_local_dom_safe_source_backed_and_matches_faq():
+    html = read_page("pet")
+    assert all(source in html_lib.unescape(html) for source in OFFICIAL_SOURCES["pet"])
+    assert ".innerHTML" not in html
+    assert ".textContent" in html
+    assert "localStorage" not in html
+    assert "sessionStorage" not in html
+    assert '"@type":"FAQPage"' in html
+    assert "2028-09-03 시행 예정" in html
+    assert "미국 FDA" in html
