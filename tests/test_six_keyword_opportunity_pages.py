@@ -51,6 +51,7 @@ OFFICIAL_SOURCES = {
         "https://esta.cbp.dhs.gov/",
         "https://www.help.cbp.gov/s/article/Article-1437?language=en_US",
         "https://www.help.cbp.gov/s/article/Article-1445?language=en_US",
+        "https://public-inspection.federalregister.gov/2025-20304.pdf",
     ),
 }
 
@@ -279,11 +280,27 @@ def test_co_guide_checklist_is_memory_only_dom_safe_and_source_backed():
 
 def test_esta_helper_is_official_first_and_collects_no_sensitive_fields():
     html = read_page("esta")
-    assert "https://esta.cbp.dhs.gov/" in html
-    assert html.index("공식 ESTA 신청") < html.index("관련 글")
+    official_anchor = re.search(
+        r'<a\b[^>]*href="https://esta\.cbp\.dhs\.gov/"[^>]*>'
+        r'.*?공식 ESTA 신청.*?</a>',
+        html,
+        re.S,
+    )
+    assert official_anchor, "missing actual official ESTA application anchor"
+    assert official_anchor.start() < html.index("pagead2.googlesyndication.com")
+    assert official_anchor.start() < html.index("관련 글")
     assert "입국을 보장하지 않습니다" in html
     for forbidden in ('name="passport"', 'type="file"', 'name="card"', 'name="address"'):
         assert forbidden not in html
+
+
+def test_esta_fee_timing_and_check_date_are_fully_qualified():
+    html = read_page("esta")
+    assert html.count("승인된 여행 허가 1건당 총 USD $40.27") >= 2
+    assert html.count("신청이 거절되면 처리 수수료 USD $10.27") >= 2
+    assert "FY 2026 · 2026-01-01 시행 · 2026-09-10 확인" in html
+    assert "신청 상태는 일반적으로 72시간 이내" in html
+    assert "https://public-inspection.federalregister.gov/2025-20304.pdf" in html
 
 
 def test_esta_checklist_uses_only_boolean_state_and_dom_safe_output():
