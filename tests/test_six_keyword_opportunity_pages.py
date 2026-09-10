@@ -41,6 +41,12 @@ OFFICIAL_SOURCES = {
         "https://law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1032588861",
         "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7888&mi=2312",
     ),
+    "camp": (
+        "https://nfa.go.kr/nfa/safetyinfo/lifesafety/stats/0001/",
+        "https://www.nfa.go.kr/nfa/news/pressrelease/press/?cntId=2076&mode=view",
+        "https://www.cpsc.gov/Safety-Education/Safety-Education-Centers/Carbon-Monoxide-Information-Center/Carbon-Monoxide-Questions-and-Answers",
+        "https://www.cdc.gov/carbon-monoxide/about/index.html",
+    ),
 }
 
 
@@ -234,3 +240,33 @@ def test_pension_page_leaves_assumed_return_blank_and_neutral_by_default():
     assert value is None or value.group(2) == ""
     initial_result = re.search(r'<strong id="assumed-result">([^<]*)</strong>', html)
     assert initial_result and initial_result.group(1).strip() == "수익률을 입력하면 표시"
+
+
+def test_co_guide_puts_emergency_action_before_product_criteria():
+    html = read_page("camp")
+    assert html.index("경보가 울리면") < html.index("제품 선택 기준")
+    assert "경보기가 있어도 텐트나 차량 안에서 연소기기를 사용하면 안전해지는 것은 아닙니다" in html
+    assert "119" in html
+    assert "제조사 설치 지침" in html
+
+
+def test_co_guide_checklist_is_memory_only_dom_safe_and_source_backed():
+    path = PAGES["camp"][0]
+    result = run_pure(
+        path,
+        "(toggleChecklistItem('alarm-test',true),"
+        "toggleChecklistItem('battery-check',true))",
+    )
+    assert result == {"checkedCount": 2, "total": 8}
+    assert run_pure(path, "toggleChecklistItem('unknown-item',true)") == {
+        "checkedCount": 0,
+        "total": 8,
+    }
+
+    html = read_page("camp")
+    assert all(source in html_lib.unescape(html) for source in OFFICIAL_SOURCES["camp"])
+    assert ".innerHTML" not in html
+    assert ".textContent" in html
+    assert "localStorage" not in html
+    assert "sessionStorage" not in html
+    assert '"@type":"FAQPage"' in html
