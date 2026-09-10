@@ -1,3 +1,4 @@
+import html as html_lib
 import json
 import re
 import subprocess
@@ -34,6 +35,11 @@ OFFICIAL_SOURCES = {
         "https://main.kotsa.or.kr/portal/contents.do?menuCode=01010102",
         "https://main.kotsa.or.kr/portal/contents.do?menuCode=01010000",
         "https://www.cyberts.kr/",
+    ),
+    "pension": (
+        "https://www.moel.go.kr/retirementpay.do",
+        "https://law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1032588861",
+        "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7888&mi=2312",
     ),
 }
 
@@ -147,3 +153,48 @@ def test_date_calculator_pure_block_is_executable_once():
     html = read_page("date")
     assert re.search(r"<script>\s*<!-- PURE_START -->", html)
     assert html.count("function parseUtcDate") == 1
+
+
+def test_pension_tool_calculates_only_gross_illustrations():
+    path = PAGES["pension"][0]
+    result = run_pure(path, "calculatePensionIllustration(12000000,10,0)")
+    assert result["zeroReturnMonthly"] == 100000
+    assert result["assumedReturnMonthly"] == 100000
+    assert "세금·수수료를 계산하지 않습니다" in read_page("pension")
+    assert "수익률을 직접 입력" in read_page("pension")
+
+
+def test_pension_tool_requires_explicit_return_and_rejects_invalid_inputs():
+    path = PAGES["pension"][0]
+    without_return = run_pure(path, "calculatePensionIllustration(12000000,10,null)")
+    assert without_return == {
+        "status": "ok",
+        "zeroReturnMonthly": 100000,
+        "assumedReturnMonthly": None,
+    }
+    assert run_pure(path, "calculatePensionIllustration(12000000,10,3)") == {
+        "status": "ok",
+        "zeroReturnMonthly": 100000,
+        "assumedReturnMonthly": 115873,
+    }
+    for expression in (
+        "calculatePensionIllustration(0,10,null)",
+        "calculatePensionIllustration(12000000,0,null)",
+        "calculatePensionIllustration(12000000,10,-100)",
+        "calculatePensionIllustration(Infinity,10,null)",
+    ):
+        assert run_pure(path, expression) == {
+            "status": "invalid",
+            "zeroReturnMonthly": None,
+            "assumedReturnMonthly": None,
+        }
+
+
+def test_pension_page_uses_official_handoffs_and_dom_safe_output():
+    html = read_page("pension")
+    assert all(source in html_lib.unescape(html) for source in OFFICIAL_SOURCES["pension"])
+    assert 'id="annual-rate"' in html
+    assert 'id="annual-rate" type="number"' in html
+    assert ".innerHTML" not in html
+    assert ".textContent" in html
+    assert '"@type":"FAQPage"' in html
