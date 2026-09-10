@@ -205,6 +205,17 @@ def test_pension_tool_rejects_extreme_finite_inputs_with_invalid_monthly_amounts
     }
 
 
+def test_pension_tool_rejects_assumed_payment_that_rounds_to_zero():
+    assert run_pure(
+        PAGES["pension"][0],
+        "calculatePensionIllustration(12000000,17,-99.99)",
+    ) == {
+        "status": "invalid",
+        "zeroReturnMonthly": None,
+        "assumedReturnMonthly": None,
+    }
+
+
 def test_pension_page_uses_official_handoffs_and_dom_safe_output():
     html = read_page("pension")
     assert all(source in html_lib.unescape(html) for source in OFFICIAL_SOURCES["pension"])

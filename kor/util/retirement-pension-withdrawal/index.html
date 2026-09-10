@@ -144,6 +144,9 @@
           return { status: "invalid", zeroReturnMonthly: null, assumedReturnMonthly: null };
         }
         assumedReturnMonthly = Math.round(payment);
+        if (!Number.isFinite(assumedReturnMonthly) || assumedReturnMonthly <= 0) {
+          return { status: "invalid", zeroReturnMonthly: null, assumedReturnMonthly: null };
+        }
       }
       return { status: "ok", zeroReturnMonthly, assumedReturnMonthly };
     }
