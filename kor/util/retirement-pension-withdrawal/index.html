@@ -127,7 +127,13 @@
         return { status: "invalid", zeroReturnMonthly: null, assumedReturnMonthly: null };
       }
       const periods = years * 12;
+      if (!Number.isFinite(periods) || periods <= 0) {
+        return { status: "invalid", zeroReturnMonthly: null, assumedReturnMonthly: null };
+      }
       const zeroReturnMonthly = Math.round(balance / periods);
+      if (!Number.isFinite(zeroReturnMonthly) || zeroReturnMonthly <= 0) {
+        return { status: "invalid", zeroReturnMonthly: null, assumedReturnMonthly: null };
+      }
       let assumedReturnMonthly = null;
       if (hasAssumedReturn) {
         const monthlyRate = annualRate / 100 / 12;

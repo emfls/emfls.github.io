@@ -190,6 +190,21 @@ def test_pension_tool_requires_explicit_return_and_rejects_invalid_inputs():
         }
 
 
+@pytest.mark.parametrize(
+    "expression",
+    [
+        "calculatePensionIllustration(12000000,1e308,null)",
+        "calculatePensionIllustration(Number.MAX_VALUE,Number.MIN_VALUE,null)",
+    ],
+)
+def test_pension_tool_rejects_extreme_finite_inputs_with_invalid_monthly_amounts(expression):
+    assert run_pure(PAGES["pension"][0], expression) == {
+        "status": "invalid",
+        "zeroReturnMonthly": None,
+        "assumedReturnMonthly": None,
+    }
+
+
 def test_pension_page_uses_official_handoffs_and_dom_safe_output():
     html = read_page("pension")
     assert all(source in html_lib.unescape(html) for source in OFFICIAL_SOURCES["pension"])
@@ -198,3 +213,13 @@ def test_pension_page_uses_official_handoffs_and_dom_safe_output():
     assert ".innerHTML" not in html
     assert ".textContent" in html
     assert '"@type":"FAQPage"' in html
+
+
+def test_pension_page_leaves_assumed_return_blank_and_neutral_by_default():
+    html = read_page("pension")
+    rate_input = re.search(r'<input\b(?=[^>]*\bid="annual-rate")[^>]*>', html)
+    assert rate_input, "missing annual return input"
+    value = re.search(r'\bvalue\s*=\s*(["\'])(.*?)\1', rate_input.group(0))
+    assert value is None or value.group(2) == ""
+    initial_result = re.search(r'<strong id="assumed-result">([^<]*)</strong>', html)
+    assert initial_result and initial_result.group(1).strip() == "수익률을 입력하면 표시"
