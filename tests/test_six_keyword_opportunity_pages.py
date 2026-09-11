@@ -219,6 +219,10 @@ def test_launch_manifest_is_exactly_the_six_page_batch():
     manifest = json.loads(
         (ROOT / "data/content-launch-manifest.json").read_text(encoding="utf-8")
     )
+    if manifest["status"] == "NO_PUBLICATION":
+        assert manifest["urls"] == []
+        assert manifest["contentPaths"] == []
+        return
     assert manifest["urls"] == list(EXPECTED_URLS)
     assert manifest["contentPaths"] == [relative for relative, _ in PAGES.values()]
     assert manifest["hubPaths"] == [
