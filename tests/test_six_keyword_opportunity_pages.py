@@ -1,3 +1,4 @@
+import csv
 import html as html_lib
 import json
 import re
@@ -65,6 +66,49 @@ OFFICIAL_SOURCES = {
     ),
 }
 
+HUB_PATHS = {
+    "car": "kor/util/index.html",
+    "date": "kor/util/index.html",
+    "pension": "kor/util/index.html",
+    "camp": "kor/report/camp/index.html",
+    "esta": "kor/report/visa/index.html",
+    "pet": "kor/report/animal/index.html",
+}
+
+SITEMAP_PATHS = {
+    "car": "kor/sitemap.xml",
+    "date": "kor/sitemap.xml",
+    "pension": "kor/sitemap.xml",
+    "camp": "kor/report/camp/sitemap.xml",
+    "esta": "kor/report/visa/sitemap.xml",
+    "pet": "kor/report/animal/sitemap.xml",
+}
+
+
+def relevant_hub_text(key):
+    return (ROOT / HUB_PATHS[key]).read_text(encoding="utf-8")
+
+
+def relevant_sitemap_text(key):
+    return (ROOT / SITEMAP_PATHS[key]).read_text(encoding="utf-8")
+
+
+def metadata_entry(url):
+    metadata = json.loads((ROOT / "data/content-metadata.json").read_text(encoding="utf-8"))
+    return next(entry for entry in metadata if entry["url"] == url)
+
+
+def experiment_entry(url):
+    experiments = json.loads(
+        (ROOT / "data/content-launch-experiments.json").read_text(encoding="utf-8")
+    )["experiments"]
+    return next(entry for entry in experiments if entry["url"] == url)
+
+
+def keyword_rows_for_url(url):
+    with (ROOT / "data/keywords_master.csv").open(encoding="utf-8", newline="") as handle:
+        return [row for row in csv.DictReader(handle) if row["closest_url"] == url]
+
 
 def read_page(slug):
     relative, _ = PAGES[slug]
@@ -95,6 +139,41 @@ def test_all_pages_meet_shared_publication_contract():
         assert "2026-09-10" in html
         assert "application/ld+json" in html
         assert "개인정보" in html or "브라우저" in html
+
+
+def test_all_pages_are_discoverable_and_registered():
+    for key, (relative, _) in PAGES.items():
+        url = "/" + relative.removesuffix("index.html")
+        assert url in relevant_hub_text(key)
+        assert "https://emfls.github.io" + url in relevant_sitemap_text(key)
+        assert metadata_entry(url)["target_query"]
+        assert experiment_entry(url)["status"] == "OBSERVING"
+        assert keyword_rows_for_url(url)
+        assert all(row["status"] == "PUBLISHED" for row in keyword_rows_for_url(url))
+
+
+def test_launch_manifest_is_exactly_the_six_page_batch():
+    manifest = json.loads(
+        (ROOT / "data/content-launch-manifest.json").read_text(encoding="utf-8")
+    )
+    urls = ["/" + relative.removesuffix("index.html") for relative, _ in PAGES.values()]
+    assert manifest["urls"] == urls
+    assert manifest["contentPaths"] == [relative for relative, _ in PAGES.values()]
+    assert manifest["hubPaths"] == [
+        "kor/util/index.html",
+        "kor/report/camp/index.html",
+        "kor/report/visa/index.html",
+        "kor/report/animal/index.html",
+    ]
+    assert manifest["sitemapPaths"] == [
+        "kor/sitemap.xml",
+        "kor/report/camp/sitemap.xml",
+        "kor/report/visa/sitemap.xml",
+        "kor/report/animal/sitemap.xml",
+    ]
+    assert manifest["publishedToday"] == 6
+    assert manifest["dailyLimit"] is None
+    assert manifest["remainingCapacity"] is None
 
 
 def test_car_tool_has_bounded_fee_lookup_and_official_handoff():
