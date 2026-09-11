@@ -11,6 +11,7 @@ from pathlib import Path
 
 
 NAVER_DATALAB_URL = "https://openapi.naver.com/v1/datalab/search"
+NAVER_API_HUB_DATALAB_URL = "https://naverapihub.apigw.ntruss.com/search-trend/v1/search"
 
 
 def trend_window(run_at, window_days):
@@ -105,6 +106,7 @@ def collect_naver_datalab(
     client_id,
     client_secret,
     transport=None,
+    api_hub=False,
 ):
     """Collect relative Naver search interest; absolute volume is never inferred."""
     if not client_id or not client_secret:
@@ -132,13 +134,13 @@ def collect_naver_datalab(
         ensure_ascii=False,
     ).encode("utf-8")
     request = urllib.request.Request(
-        NAVER_DATALAB_URL,
+        NAVER_API_HUB_DATALAB_URL if api_hub else NAVER_DATALAB_URL,
         data=body,
         method="POST",
         headers={
             "Content-Type": "application/json",
-            "X-Naver-Client-Id": client_id,
-            "X-Naver-Client-Secret": client_secret,
+            ("X-NCP-APIGW-API-KEY-ID" if api_hub else "X-Naver-Client-Id"): client_id,
+            ("X-NCP-APIGW-API-KEY" if api_hub else "X-Naver-Client-Secret"): client_secret,
         },
     )
     try:

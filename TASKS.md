@@ -8,6 +8,17 @@
 
 ## P1 - High
 
+- [x] Keyword Hunter 생산 자동화 및 신규 수익 WINNER 발굴
+  - 목적: 검색량·트렌드·경쟁도·중복을 실측 검증하고 신규 Candidate/Winner와 기존 성과 페이지 개선 후보를 자동 분리한다.
+  - 완료 조건: Search Ads/DataLab 실사용, 웹문서 권한 진단, 2시간 GitHub Actions, 실제 1회 실행, 후보 목록·테스트·이력 기록.
+  - 관련 영역: `scripts/keyword_hunter*.py`, `.github/workflows/keyword-hunter.yml`, `data/`, `reports/keyword-hunter/`.
+  - 완료 기록: 2026-09-12. 실제 실행 신규 28, Candidate 2, Winner 2, 기존 개선 후보 20.
+
+- [ ] GitHub Actions 네이버 API secrets 및 웹문서 검색 권한 등록
+  - 목적: 로컬에서 정상인 Search Ads·DataLab을 무인 실행으로 옮기고 `NAVER_WEB_SEARCH AUTH_ERROR(401)`를 해소한다.
+  - 완료 조건: Search Ads 3개와 API HUB 2개 secret 등록, API HUB `Search > 웹문서 검색` 활성화, scheduled run 전체 `OK` 확인.
+  - 관련 영역: Repository Actions secrets, NAVER API HUB 애플리케이션.
+
 - [x] 미국주식 `dividendYield` 단위 및 validation 수정
   - 목적: AAPL 등 일부 종목에서 배당수익률이 약 36%처럼 비정상 표시될 가능성을 제거한다.
   - 완료 조건: 데이터 원본 단위 확인, normalize 로직 수정, 이상치 validation 추가, AAPL 포함 미국주식 샘플 검증.
