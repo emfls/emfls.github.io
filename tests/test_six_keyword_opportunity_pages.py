@@ -3,6 +3,7 @@ import html as html_lib
 import json
 import re
 import subprocess
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import pytest
@@ -191,6 +192,19 @@ def test_all_pages_are_discoverable_and_registered():
         assert experiment["cooldownUntil"] == "2026-10-08"
         assert keyword_rows_for_url(url)
         assert all(row["status"] == "PUBLISHED" for row in keyword_rows_for_url(url))
+
+
+def test_all_launch_urls_are_loc_entries_in_their_designated_sitemaps():
+    namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+
+    for key, url in zip(PAGES, EXPECTED_URLS):
+        sitemap = ET.parse(ROOT / SITEMAP_PATHS[key])
+        locations = {
+            node.text.strip()
+            for node in sitemap.findall("sm:url/sm:loc", namespace)
+            if node.text
+        }
+        assert "https://emfls.github.io" + url in locations
 
 
 def test_only_exact_canonical_keyword_set_is_published():
