@@ -60,7 +60,7 @@ class CampRevenueHubRoutingTest(unittest.TestCase):
         self.assertTrue(
             any(
                 item.get("@type") == "CollectionPage"
-                and item.get("dateModified") == "2026-08-24"
+                and item.get("dateModified") == "2026-09-10"
                 for item in parser.json_ld
             )
         )

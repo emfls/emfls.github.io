@@ -38,7 +38,7 @@ class FifthBatchPagesTest(unittest.TestCase):
     for x in ("G-QP5Q67GE5B","ca-pub-8830524482034754",'div[id^="aswift_"]'): self.assertIn(x,h)
  def test_visa_index(self):
   h=(ROOT/"kor/report/visa/index.html").read_text(); p=PageParser(); p.feed(h)
-  for x in ("국가 검색","공식","여행경보","2026-08-09"): self.assertIn(x,h)
+  for x in ("국가 검색","공식","여행경보","2026-09-10"): self.assertIn(x,h)
   self.assertEqual({x.get("@type") for x in p.json_ld},{"CollectionPage","FAQPage"})
   self.assertEqual(p.canonical,"https://emfls.github.io/kor/report/visa/")
 if __name__=="__main__": unittest.main()
