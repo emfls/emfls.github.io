@@ -94,7 +94,7 @@ def validate_launch(root, manifest, changed_paths):
 
 
 def _git_changes(root, base_ref):
-    result = subprocess.run(["git", "diff", "--name-status", base_ref], cwd=str(root), text=True, capture_output=True, check=True)
+    result = subprocess.run(["git", "diff", "--name-status", base_ref, "HEAD"], cwd=str(root), text=True, capture_output=True, check=True)
     rows = []
     for line in result.stdout.splitlines():
         parts = line.split("\t")

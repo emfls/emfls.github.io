@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from scripts.content_launch_guard import validate_launch
+from scripts.content_launch_guard import _git_changes, validate_launch
 
 
 def write_json(path, payload):
@@ -109,3 +109,15 @@ def test_regenerated_audit_does_not_treat_manifest_page_as_existing_duplicate(tm
     )
 
     assert validate_launch(tmp_path, manifest([url]), [("A", relative)]) == []
+
+
+def test_git_changes_ignore_ci_generated_worktree_files(monkeypatch, tmp_path):
+    captured = {}
+
+    def fake_run(command, **kwargs):
+        captured["command"] = command
+        return type("Result", (), {"stdout": "A\tkor/report/camp/new.html\n"})()
+
+    monkeypatch.setattr("scripts.content_launch_guard.subprocess.run", fake_run)
+    assert _git_changes(tmp_path, "base-sha") == [("A", "kor/report/camp/new.html")]
+    assert captured["command"] == ["git", "diff", "--name-status", "base-sha", "HEAD"]
