@@ -31,6 +31,33 @@ PAGES = {
     ),
 }
 
+EXPECTED_URLS = (
+    "/kor/util/car-inspection-cost/",
+    "/kor/util/date-calculator/",
+    "/kor/util/retirement-pension-withdrawal/",
+    "/kor/report/camp/carbon-monoxide-detector.html",
+    "/kor/report/visa/esta-application-checklist.html",
+    "/kor/report/animal/pet-food-selector.html",
+)
+
+EXPECTED_TARGET_QUERIES = {
+    "car": "자동차검사비용",
+    "date": "날짜계산",
+    "pension": "퇴직연금수령방법",
+    "camp": "캠핑일산화탄소경보기",
+    "esta": "ESTA신청",
+    "pet": "고양이사료추천",
+}
+
+EXPECTED_EXPERIMENT_IDS = {
+    "car": "EXP-CONTENT-20260910-01",
+    "date": "EXP-CONTENT-20260910-02",
+    "pension": "EXP-CONTENT-20260910-03",
+    "camp": "EXP-CONTENT-20260910-04",
+    "esta": "EXP-CONTENT-20260910-05",
+    "pet": "EXP-CONTENT-20260910-06",
+}
+
 OFFICIAL_SOURCES = {
     "car": (
         "https://main.kotsa.or.kr/portal/contents.do?menuCode=01010102",
@@ -110,6 +137,11 @@ def keyword_rows_for_url(url):
         return [row for row in csv.DictReader(handle) if row["closest_url"] == url]
 
 
+def keyword_rows():
+    with (ROOT / "data/keywords_master.csv").open(encoding="utf-8", newline="") as handle:
+        return list(csv.DictReader(handle))
+
+
 def read_page(slug):
     relative, _ = PAGES[slug]
     return (ROOT / relative).read_text(encoding="utf-8")
@@ -142,22 +174,38 @@ def test_all_pages_meet_shared_publication_contract():
 
 
 def test_all_pages_are_discoverable_and_registered():
-    for key, (relative, _) in PAGES.items():
-        url = "/" + relative.removesuffix("index.html")
+    for (key, (relative, _)), url in zip(PAGES.items(), EXPECTED_URLS):
+        assert url == "/" + relative.removesuffix("index.html")
         assert url in relevant_hub_text(key)
         assert "https://emfls.github.io" + url in relevant_sitemap_text(key)
-        assert metadata_entry(url)["target_query"]
-        assert experiment_entry(url)["status"] == "OBSERVING"
+        metadata = metadata_entry(url)
+        experiment = experiment_entry(url)
+        assert metadata["target_query"] == EXPECTED_TARGET_QUERIES[key]
+        assert {source["url"] for source in metadata["sources"]} == set(
+            OFFICIAL_SOURCES.get(key, ())
+        )
+        assert experiment["experimentId"] == EXPECTED_EXPERIMENT_IDS[key]
+        assert experiment["status"] == "OBSERVING"
+        assert experiment["publishedOn"] == "2026-09-10"
+        assert experiment["observeUntil"] == "2026-10-08"
+        assert experiment["cooldownUntil"] == "2026-10-08"
         assert keyword_rows_for_url(url)
         assert all(row["status"] == "PUBLISHED" for row in keyword_rows_for_url(url))
+
+
+def test_only_exact_canonical_keyword_set_is_published():
+    published_rows = [row for row in keyword_rows() if row["status"] == "PUBLISHED"]
+    expected_keyword_by_url = dict(zip(EXPECTED_URLS, EXPECTED_TARGET_QUERIES.values()))
+    assert {row["keyword"] for row in published_rows} == set(EXPECTED_TARGET_QUERIES.values())
+    assert {row["closest_url"]: row["keyword"] for row in published_rows} == expected_keyword_by_url
+    assert all(row["closest_url"] not in EXPECTED_URLS for row in keyword_rows() if row not in published_rows)
 
 
 def test_launch_manifest_is_exactly_the_six_page_batch():
     manifest = json.loads(
         (ROOT / "data/content-launch-manifest.json").read_text(encoding="utf-8")
     )
-    urls = ["/" + relative.removesuffix("index.html") for relative, _ in PAGES.values()]
-    assert manifest["urls"] == urls
+    assert manifest["urls"] == list(EXPECTED_URLS)
     assert manifest["contentPaths"] == [relative for relative, _ in PAGES.values()]
     assert manifest["hubPaths"] == [
         "kor/util/index.html",
