@@ -112,3 +112,10 @@
 - 이전 요구사항 및 기존 기록을 확인. HTML 19,079개와 기존 SEO/외부 기회/DataLab/발행 가드 구조를 조사했다.
 - Python 표준 라이브러리와 기존 모듈 재사용으로 구현한다. 설계·체크리스트: docs/keyword-hunter/design.md.
 - 기존 미추적 사용자 파일과 sources 참조 파일은 보존한다.
+
+## 2026-09-10 — 키워드 기회 페이지 6개 발행
+
+- `/kor/util/car-inspection-cost/`, `/kor/util/date-calculator/`, `/kor/util/retirement-pension-withdrawal/`, `/kor/report/camp/carbon-monoxide-detector.html`, `/kor/report/visa/esta-application-checklist.html`, `/kor/report/animal/pet-food-selector.html`을 발행하고 관련 허브·사이트맵·메타데이터·Keyword Hunter 발행 상태를 연결했다.
+- 자동차검사는 TS, 퇴직연금은 고용노동부·국가법령정보센터·국세청, 캠핑 안전은 소방청·CPSC·CDC, ESTA는 CBP, 반려동물 사료는 농림축산식품부·법령정보·FDA·AAHA의 공식 자료 범위만 사용했다. 개인별 검사 대상·세금·연금 적합성·ESTA 자격/승인·질환 진단이나 제품 순위는 계산하거나 보장하지 않는다.
+- 집중 회귀 테스트 67개가 통과했고 전체 SEO QA의 신규 critical/warning은 0건이었다. 사이트맵은 canonical 불일치와 미등록 URL이 각각 0건이며, 6페이지 모두 데스크톱 1440×900과 모바일 390×844에서 주요 상호작용·오류 분기·키보드 포커스·가로 넘침을 확인했다.
+- `EXP-CONTENT-20260910-01`~`06`은 2026-09-10부터 2026-10-08까지 28일 관찰한다. 색인·검색 노출·사용 행동은 아직 성과가 확정되지 않았으며, 수수료·법령·안전·ESTA·사료 표시 기준의 시점성 정보는 공식 출처 변경을 계속 모니터링해야 한다.
