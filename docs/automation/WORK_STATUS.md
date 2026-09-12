@@ -1,14 +1,14 @@
 ---
 phase: blog-home-index-finalization
-state: ACTIVE
+state: READY_FOR_MAIN_REVIEW
 branch: feature/blog-home-index
 worktree: ../emfls-blog-home-index
-last_verified_commit: 19e29bf387
+last_verified_commit: d4976f3acf
 last_verified_tests: "20 passed"
 content_index_entries: 7198
 home_feed_size: "19KB"
 blockers: []
-next_action: "commit_protocol_push_then_mark_ready"
+next_action: "await_main_merge_approval"
 ---
 
 # Work Status
