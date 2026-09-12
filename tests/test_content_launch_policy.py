@@ -28,3 +28,10 @@ def test_published_similar_intent_and_daily_limit():
     rows=[row(keyword="단위 계산 방법",suggested_url="/kor/a.html")]
     assert select_launch_candidate(rows,published_keywords={"단위계산방법론"})["excluded"]["similar_intent"] == 1
     assert select_launch_candidate(rows,daily_limit=1,launched_count=1)["queue"] == []
+
+def test_ymyl_calculators_block_but_unit_calculator_allowed():
+    blocked=["원천징수계산기","3.3%계산기","퇴직금세금계산기","부가세계산기","급여일할계산기","연장수당계산기","휴일수당계산기"]
+    for keyword in blocked:
+        result=select_launch_candidate([row(keyword=keyword,suggested_url="/kor/util/x.html")],daily_limit=1)
+        assert result["queue"] == [] and result["excluded"]["ymyl"] == 1
+    assert select_launch_candidate([row(keyword="단위계산기",suggested_url="/kor/util/unit.html")],daily_limit=1)["queue"]

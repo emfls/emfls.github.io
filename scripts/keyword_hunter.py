@@ -25,6 +25,10 @@ from scripts.keyword_hunter_improvements import select_improvement_candidates
 
 KST=timezone(timedelta(hours=9))
 
+def recovered_existing_count(baseline, after):
+    valid=lambda row: str(row.get('score_valid','')).casefold() in {'true','1','yes'}
+    return sum(1 for key,row in after.items() if key in baseline and not valid(baseline[key]) and valid(row))
+
 def load_env_file(root,environ=None):
     """Load local secrets for CLI runs without replacing exported variables."""
     import os
@@ -575,8 +579,7 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
                 'baseline_trend_missing_after':sum('trend_missing' in (r.get('score_invalid_reasons') or '') for r in cohort_after.values()),
                 'baseline_web_missing_before':sum('web_result_missing' in (r.get('score_invalid_reasons') or '') for r in baseline_master.values()),
                 'baseline_web_missing_after':sum('web_result_missing' in (r.get('score_invalid_reasons') or '') for r in cohort_after.values()),
-                'recovered_existing_keywords':sum(bool(baseline_master[k].get('score_valid') is not True and r.get('score_valid')) for k,r in cohort_after.items()),
-                'recovered_existing_keywords':0,
+                'recovered_existing_keywords':recovered_existing_count(baseline_master, cohort_after),
                 'datalab_candidates':len(trend_pool),'datalab_submitted':submitted,
                 'datalab_returned':getattr(client,'datalab_keywords_returned',0),
                 'datalab_empty':getattr(client,'datalab_keywords_empty',0),
