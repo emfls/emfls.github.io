@@ -290,3 +290,6 @@
 
 ## 2026-09-12 09:24 Keyword Hunter
 - Seeds: 40; New: 90; Rejected: 89; DB: 781; Errors: 1; Top: 정수기가격비교. Report: reports/keyword-hunter/2026-09-12-0924.md
+
+## 2026-09-12 10:46 Keyword Hunter
+- Seeds: 40; New: 20; Rejected: 17; DB: 801; Errors: 0; Top: none. Report: reports/keyword-hunter/2026-09-12-1046.md
