@@ -60,6 +60,7 @@ class Client:
         self.config=dict(config); self.env=os.environ if env is None else env
         self.transport=transport or self._transport; self.sleep=sleep; self.offline=offline
         self.calls=0; self.datalab_calls=0; self.datalab_keywords_submitted=0; self.datalab_keywords_validated=0
+        self.datalab_keywords_returned=0; self.datalab_keywords_empty=0; self.datalab_keywords_mapped=0; self.datalab_response_missing=0; self.datalab_parse_failures=0
         self.web_result_calls=0
         self.rate_limits=0; self.errors=[]; self.usage_tracker=usage_tracker
         self.source=''; self.seed=''
@@ -181,8 +182,15 @@ class Client:
                     warning=payload.get('warning','')
                     code=next((c for c in ['HTTP_401','HTTP_403','HTTP_429','CALL_BUDGET','DATALAB_BUDGET','NETWORK_ERROR','RETRY_AFTER_DEFERRED'] if c in warning),payload['status'])
                     self.error(code)
-                for signal in payload['signals']:
+                signals=payload.get('signals') if isinstance(payload,dict) else None
+                if not isinstance(signals,list):
+                    self.datalab_response_missing += len(batch); continue
+                returned_topics={s.get('topic') for s in signals if isinstance(s,dict)}
+                self.datalab_keywords_returned += len(returned_topics & set(batch))
+                self.datalab_keywords_empty += sum(1 for s in signals if s.get('topic') in batch and not s.get('points'))
+                for signal in signals:
                     if signal['topic'] in batch:
+                        self.datalab_keywords_mapped += 1
                         changes=trend_changes(signal['points'],end); result[signal['topic']]=changes
                         if any(changes.get(k) is not None for k in ('trend_1m','trend_3m')):
                             self.datalab_keywords_validated+=1
