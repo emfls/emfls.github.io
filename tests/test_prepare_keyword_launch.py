@@ -7,3 +7,8 @@ def test_prepare_queue_records_required_fields_and_preserves_excluded(tmp_path):
     item=out["queue"][0]
     for key in ("keyword","source","status","opportunity_score","confidence","category","intended_page_type","suggested_url","duplicate_check","reason","selected_at"): assert key in item
     assert item["status"] == "READY_TO_LAUNCH"
+
+def test_prepare_does_not_increment_launch_count():
+    rows=[{"keyword":"무료 계산기","status":"NEW","score_valid":"True","opportunity_score":"90","confidence":"HIGH","category":"tools","action":"NEW_PAGE","content_types":"calculator/tool","suggested_url":"/kor/util/free/index.html"}]
+    out=prepare_queue(rows,set(),set(),1,"2026-09-12T00:00:00+09:00",0)
+    assert out["dailyLimit"] == 1

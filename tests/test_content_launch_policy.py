@@ -19,3 +19,12 @@ def test_tool_priority_and_determinism():
 
 def test_normalize_keyword():
     assert normalize_keyword("  ETF-세금! ") == "etf세금"
+
+def test_winner_precedes_candidate():
+    rows=[row(keyword="후보",status="CANDIDATE",suggested_url="/kor/a.html"),row(keyword="승자",status="WINNER",suggested_url="/kor/b.html")]
+    assert select_launch_candidate(rows,daily_limit=1)["queue"][0]["keyword"] == "승자"
+
+def test_published_similar_intent_and_daily_limit():
+    rows=[row(keyword="단위 계산 방법",suggested_url="/kor/a.html")]
+    assert select_launch_candidate(rows,published_keywords={"단위계산방법론"})["excluded"]["similar_intent"] == 1
+    assert select_launch_candidate(rows,daily_limit=1,launched_count=1)["queue"] == []
