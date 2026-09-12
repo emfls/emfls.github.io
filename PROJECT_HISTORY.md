@@ -303,3 +303,11 @@
 - `pending_validation` 메타데이터(재시도 횟수·마지막 시각·만료 표시)를 추가했다. 검색량·경쟁 조건을 통과했지만 trend 또는 웹문서 결과가 결측인 후보는 다음 실행에서 두 API의 한도 내 우선 검증한다. 모든 실측값을 얻으면 즉시 pending을 해제하며, 3회 재시도 후에는 만료한다. 점수식·자동 발행 정책은 변경하지 않았다.
 - Production run `34666327352`: Search Ads/DataLab/Web Search 모두 `OK`; pending 21건 재검증, 실행 후 pending 8건, 만료 0건. `정수기가격비교`는 월 350, trend 1개월 -37.75 / 3개월 -43.21, 웹문서 4,379,512건, 점수 39.1 / HIGH로 최신 실측 기준 재판정됐다. Candidate 13, Winner 8이며 신규 콘텐츠는 발행하지 않았다.
 - 검증: pending 단위 테스트 2개 RED→GREEN 확인, Keyword Hunter 테스트 82개 통과. 다음 작업은 남은 pending 8건의 quota 내 재검증 결과를 관찰하고, 검증 완료 Candidate만 별도 콘텐츠 검토로 넘기는 것이다.
+
+## 2026-09-12 — 정수기 렌탈 가격 비교 계산기 발행
+
+- Production Keyword Hunter의 실측 Winner `정수기렌탈가격비교`(Opportunity Score 51.55, HIGH)를 단일 canonical 도구 페이지 `kor/util/water-purifier-rental-price-comparison/`로 발행했다. `정수기렌탈가격`·`정수기가격비교`·`정수기렌탈비교`·`정수기렌탈추천`은 같은 계약 비교 의도로 통합했으며, 별도 doorway 페이지는 만들지 않았다.
+- 사용자가 할인 전 월 렌탈료와 제휴카드 월 할인액을 직접 입력해 36·48·60·72개월의 할인 전/후 총비용을 같이 비교한다. 입력값은 저장하지 않고, 브랜드 순위·사은품·확인할 수 없는 프로모션·추정 가격은 제공하지 않는다.
+- 공식 참고 출처는 LG전자 베스트샵 구독 안내, 코웨이 제품 상세, SK매직 렌탈 계산기이며, 가격 확인 기준일은 2026-09-12로 페이지에 표시했다. 예시 공식 가격은 계산기 기본값·순위 근거로 사용하지 않았다.
+- sitemap·무료 도구 허브·launch manifest·content metadata·Keyword Hunter published 상태를 반영하고, 실험 `EXP-CONTENT-20260912-01`을 2026-10-10까지 OBSERVING/COOLDOWN으로 등록했다.
+- 검증: 전용 계산기/발행 메타데이터/legacy launch guard 테스트와 content launch guard를 통과했다. 전체 재스캔은 저장소에 남아 있는 기존 `.worktrees` 복제본의 대량 중복·깨진 링크를 재탐지하므로 이번 단일 페이지 회귀 판단에는 사용하지 않았다.
