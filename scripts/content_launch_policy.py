@@ -12,7 +12,7 @@ def _tool(row):
     return any(x in text for x in ("tool", "calculator", "계산기", "무료 도구"))
 def _ymyl(row):
     text=f"{row.get('keyword','')}|{row.get('category','')}|{row.get('content_types','')}".casefold()
-    return any(x in text for x in ("finance","금융","투자","주식","법률","legal","의료","health","medical","대출","보험"))
+    return any(x in text for x in ("finance","금융","투자","주식","법률","legal","의료","health","medical","대출","보험","세금","원천징수","소득세","부가세","종합소득세","퇴직금","퇴직소득","급여","임금","주휴수당","연장수당","휴일수당","법정수당","3.3"))
 
 def select_launch_candidate(rows, existing_urls=None, published_keywords=None, daily_limit=1, selected_at=None, max_age_days=30, launched_count=0):
     existing_urls={str(x).split('?',1)[0] for x in (existing_urls or set())}; published={normalize_keyword(x) for x in (published_keywords or set())}

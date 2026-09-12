@@ -5,6 +5,11 @@ import unittest
 from pathlib import Path
 from unittest.mock import Mock
 from scripts import keyword_hunter as h
+
+def test_recovered_existing_count_excludes_new_keywords():
+    baseline={'old': {'score_valid':'False'}, 'same': {'score_valid':'True'}}
+    after={'old': {'score_valid':'True'}, 'same': {'score_valid':'True'}, 'new': {'score_valid':'True'}}
+    assert h.recovered_existing_count(baseline, after) == 1
 from scripts.keyword_hunter_site import inventory, SiteIndex
 
 class HunterTests(unittest.TestCase):
