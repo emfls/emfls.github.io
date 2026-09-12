@@ -314,3 +314,6 @@
 
 ## 2026-09-12 13:41 Keyword Hunter
 - Seeds: 40; New: 27; Rejected: 20; DB: 851; Errors: 0; Top: 급여세금계산기. Report: reports/keyword-hunter/2026-09-12-1341.md
+
+## 2026-09-12 21:29 Keyword Hunter
+- Seeds: 40; New: 30; Rejected: 14; DB: 881; Errors: 0; Top: 원천징수계산기. Report: reports/keyword-hunter/2026-09-12-2129.md
