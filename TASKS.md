@@ -14,10 +14,11 @@
   - 관련 영역: `scripts/keyword_hunter*.py`, `.github/workflows/keyword-hunter.yml`, `data/`, `reports/keyword-hunter/`.
   - 완료 기록: 2026-09-12. 실제 실행 신규 28, Candidate 2, Winner 2, 기존 개선 후보 20.
 
-- [ ] GitHub Actions 네이버 API secrets 및 웹문서 검색 권한 등록
+- [x] GitHub Actions 네이버 API secrets 및 웹문서 검색 권한 등록
   - 목적: 로컬에서 정상인 Search Ads·DataLab을 무인 실행으로 옮기고 `NAVER_WEB_SEARCH AUTH_ERROR(401)`를 해소한다.
   - 완료 조건: Search Ads 3개와 API HUB 2개 secret 등록, API HUB `Search > 웹문서 검색` 활성화, scheduled run 전체 `OK` 확인.
   - 관련 영역: Repository Actions secrets, NAVER API HUB 애플리케이션.
+  - 완료 기록: 2026-09-12. Production Keyword Hunter에서 Search Ads·DataLab·NAVER Web Search가 모두 `OK`/`GRANTED`로 확인됐다.
 
 - [x] 미국주식 `dividendYield` 단위 및 validation 수정
   - 목적: AAPL 등 일부 종목에서 배당수익률이 약 36%처럼 비정상 표시될 가능성을 제거한다.
