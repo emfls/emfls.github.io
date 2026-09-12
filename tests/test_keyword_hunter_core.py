@@ -2,6 +2,10 @@ import unittest
 from scripts import keyword_hunter_core as c
 
 class CoreTests(unittest.TestCase):
+    def test_dedupe_keywords_keeps_latest_best(self):
+        rows=[{'keyword':'원천징수계산기','last_checked':'2026-09-12T01:00:00','confidence':'HIGH','opportunity_score':'70'}, {'keyword':'원천징수-계산기','last_checked':'2026-09-12T02:00:00','confidence':'MEDIUM','opportunity_score':'90'}]
+        self.assertEqual(len(c.dedupe_keywords(rows)),1)
+        self.assertEqual(c.dedupe_keywords(rows)[0]['opportunity_score'],'90')
     def test_normalization(self):
         self.assertEqual(c.normalize(' ＱＲ 코드!! '), c.normalize('qr코드'))
         self.assertEqual(c.normalize('팔월드'), c.normalize('팰월드'))

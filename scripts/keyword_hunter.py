@@ -14,7 +14,7 @@ from pathlib import Path
 
 if __package__ in (None,''):
     sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from scripts.keyword_hunter_core import DEFAULT_CONFIG, allocate, diverse, normalize, same_intent, score, transition, number
+from scripts.keyword_hunter_core import DEFAULT_CONFIG, allocate, diverse, normalize, same_intent, score, transition, number, dedupe_keywords
 from scripts.keyword_hunter_api import Client
 from scripts.keyword_hunter_quota import DataLabUsage
 from scripts.keyword_hunter_site import inventory, SiteIndex
@@ -203,6 +203,11 @@ def report(result,now):
     lines+=['','## DataLab quota','']
     for key in ['datalab_monthly_limit','datalab_used_this_month','datalab_remaining_quota','datalab_remaining_days','datalab_daily_budget','datalab_run_budget','datalab_actual_calls','datalab_validated_keywords','datalab_average_keywords_per_call']:
         lines.append('- {}: {}'.format(key,safe(result[key])))
+    lines += ['', '## Validation telemetry', '']
+    for key in ['datalab_candidates','datalab_submitted','datalab_returned','datalab_empty','datalab_mapped','datalab_skipped_recent','datalab_response_missing','datalab_parse_failures','datalab_actual_calls','web_candidates','web_submitted','web_cached','web_validated']:
+        lines.append('- {}: {}'.format(key, safe(result.get(key, 0))))
+    for key in ['baseline_cohort_size','baseline_invalid_before','baseline_invalid_after','baseline_score_valid_before','baseline_score_valid_after','baseline_trend_missing_before','baseline_trend_missing_after','baseline_web_missing_before','baseline_web_missing_after','recovered_existing_keywords']:
+        lines.append('- {}: {}'.format(key, safe(result.get(key, 0))))
     lines+=['','검색량은 월간 네이버 검색광고 수치. 광고 경쟁도는 SEO 경쟁 난이도의 대리 지표이며 수익 예측이 아니다.',
             '점수는 추정이며 결측을 0 검색량으로 표시하지 않는다. TOP은 적격 후보가 부족하면 짧아진다.','']
     for title,key in [('TOP 50 신규 키워드','top50'),('TOP 20 콘텐츠 후보','top20')]:
@@ -250,7 +255,7 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
     with (nullcontext() if dry_run else locked(root)):
         # History and persistent databases are read before discovery or API activity.
         history=(root/'PROJECT_HISTORY.md').read_text(encoding='utf-8') if (root/'PROJECT_HISTORY.md').exists() else '# PROJECT HISTORY\n'
-        master=read_master(root); seed_data=read_json(root/'data/keyword_seeds.json',{'seeds':[]})
+        master=read_master(root); baseline_master={normalize(r['keyword']):dict(r) for r in master}; seed_data=read_json(root/'data/keyword_seeds.json',{'seeds':[]})
         exploration_history=read_json(root/'data/recent_exploration_history.json',{'runs':[]}).get('runs',[])[-10:]
         recovery=recovery_active(exploration_history)
         excluded_roots={normalize(x) for x in read_json(root/'data/seed_exclusions.json',{'roots':[]}).get('roots',[])}
@@ -467,7 +472,7 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
                 seen_evaluation.add(key); evaluation_rows.append(row)
         # New discovery keeps the established MEDIUM-confidence ranking path; only
         # previously pending rows must complete every live measurement before return.
-        rankable_rows=fresh+[r for r in retried_pending if r.get('pending_validation')!='True']
+        rankable_rows=dedupe_keywords(fresh+[r for r in retried_pending if r.get('pending_validation')!='True'])
         initial_eligible=sorted([r for r in rankable_rows if r['status']=='NEW' and r['action']=='NEW_PAGE' and r['score_valid']],key=lambda r:(-r['opportunity_score'],r['keyword']))
         initial_winners=[r for r in initial_eligible if r['opportunity_score']>=config['min_score'] and r['confidence'] in {'HIGH','MEDIUM'}]
         fresh,dropped_by_saturation=enforce_candidate_shares(fresh,initial_winners)
@@ -478,7 +483,7 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
         top50=diverse(eligible,50,config['category_share'])
         top20=diverse([r for r in eligible if r['opportunity_score']>=config['min_score'] and r['confidence'] in {'HIGH','MEDIUM'}],20,config['category_share'])
         winners=top20
-        current_candidates=[r for r in rankable_rows if r['status']=='NEW' and r['action']=='NEW_PAGE' and r['score_valid']]
+        current_candidates=dedupe_keywords([r for r in rankable_rows if r['status']=='NEW' and r['action']=='NEW_PAGE' and r['score_valid']])
         fallback_candidates=sorted([r for r in active if r['status']=='NEW' and r.get('action')=='NEW_PAGE' and r.get('score_valid')],key=lambda r:(-(number(r.get('opportunity_score')) or 0),r['keyword']))[:10]
         candidate10=fallback_candidates if recovery['winner_zero_streak']>=3 else []
         winner_clusters={r['cluster'] for r in winners}
@@ -536,6 +541,7 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
         invalid_counts={key:invalid_counts.get(key,0) for key in
                         ('monthly_volume_missing','competition_missing','trend_missing','web_result_missing')}
         improvement_data=select_improvement_candidates(read_json(root/'data'/'page-performance.json',{}))
+        cohort_after={normalize(r['keyword']):r for r in active if normalize(r['keyword']) in baseline_master}
         result={'target':config['target'],'seeds_checked':len(selected),'new_keywords':len(fresh),'duplicates':duplicates,
                 'rejected':sum(r['status']=='REJECTED' for r in fresh),'db_total':len(active),'api_calls':client.calls,
                 'rate_limits':client.rate_limits,'errors':client.errors,'api_health':client.health() if hasattr(client,'health') and isinstance(client.health(),dict) else api_health,'strategy_counts':dict(counts),'new_categories':sorted({r['category'] for r in fresh}-old_categories),
@@ -560,10 +566,23 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
                 'datalab_remaining_quota':quota['remaining_quota'],'datalab_remaining_days':quota['remaining_days'],
                 'datalab_daily_budget':quota['daily_budget'],'datalab_run_budget':usage.allocated_run_budget,
                 'datalab_actual_calls':datalab_calls,'datalab_validated_keywords':validated,
+                'baseline_cohort_size':len(baseline_master),
+                'baseline_invalid_before':sum(not r.get('score_valid') for r in baseline_master.values()),
+                'baseline_invalid_after':sum(not r.get('score_valid') for r in cohort_after.values()),
+                'baseline_score_valid_before':sum(bool(r.get('score_valid')) for r in baseline_master.values()),
+                'baseline_score_valid_after':sum(bool(r.get('score_valid')) for r in cohort_after.values()),
+                'baseline_trend_missing_before':sum('trend_missing' in (r.get('score_invalid_reasons') or '') for r in baseline_master.values()),
+                'baseline_trend_missing_after':sum('trend_missing' in (r.get('score_invalid_reasons') or '') for r in cohort_after.values()),
+                'baseline_web_missing_before':sum('web_result_missing' in (r.get('score_invalid_reasons') or '') for r in baseline_master.values()),
+                'baseline_web_missing_after':sum('web_result_missing' in (r.get('score_invalid_reasons') or '') for r in cohort_after.values()),
+                'recovered_existing_keywords':sum(bool(baseline_master[k].get('score_valid') is not True and r.get('score_valid')) for k,r in cohort_after.items()),
+                'recovered_existing_keywords':0,
                 'datalab_candidates':len(trend_pool),'datalab_submitted':submitted,
                 'datalab_returned':getattr(client,'datalab_keywords_returned',0),
                 'datalab_empty':getattr(client,'datalab_keywords_empty',0),
                 'datalab_mapped':getattr(client,'datalab_keywords_mapped',0),
+                'datalab_response_missing':getattr(client,'datalab_response_missing',0),
+                'datalab_parse_failures':getattr(client,'datalab_parse_failures',0),
                 'datalab_skipped_recent':max(0,len(active)-len(trend_pool)),
                 'web_candidates':len(web_candidates),'web_submitted':getattr(client,'web_result_calls',0),
                 'web_cached':max(0,len(fast_passed)-len(web_candidates)),'web_validated':sum(1 for r in active if number(r.get('web_result_count')) is not None),
