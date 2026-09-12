@@ -278,3 +278,8 @@
 - Requested production dispatch could not start: GitHub default `main` does not yet contain/register `.github/workflows/keyword-hunter.yml` (`HTTP 404`).
 - No code, keyword data, or pages were changed; no new page was published.
 - API/Candidate/Winner production status remains unverified until the production branch is merged into `main` and the workflow is visible to Actions.
+## 2026-09-12 production merge and dispatch verification
+
+- Merged `feature/keyword-hunter-production-20260912` into `main` without conflicts and pushed commit `7e41634efa`.
+- `.github/workflows/keyword-hunter.yml` is present on `main`; manual run `34660554615` failed at credential validation before API calls.
+- GitHub repository secrets `NAVER_SEARCHAD_API_KEY`, `NAVER_SEARCHAD_SECRET_KEY`, and `NAVER_SEARCHAD_CUSTOMER_ID` were empty/missing. No content was published and no keyword results were generated.
