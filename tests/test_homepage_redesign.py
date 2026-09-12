@@ -10,22 +10,17 @@ def test_homepage_is_a_search_first_topic_hub():
     assert 'id="site-search"' in html
     assert 'aria-label="사이트 콘텐츠 검색"' in html
     assert 'id="search-results"' in html
-    assert "filterContent" in html
-    for label in ("캠핑·차박", "팰월드", "무료 도구", "여행"):
+    assert "/data/home-feed-ko.json" in html
+    assert "/data/content-index-ko.json" in html
+    assert "ensureSearchIndex" in html
+    for label in ("캠핑·차박", "여행", "게임", "무료 도구", "자동차·생활", "금융·투자", "AI·테크", "생활정보"):
         assert label in html
 
 
 def test_homepage_surfaces_current_verified_content():
     html = PAGE.read_text(encoding="utf-8")
-    for path in (
-        "/kor/report/camp/namyangju.html",
-        "/kor/report/camp/jeongseon.html",
-        "/kor/column/palworld-1-0-fishing-bait-rod-guide.html",
-        "/kor/column/palworld-1-0-4-beyond-dimensions-quest-guide.html",
-        "/util/qrcode/",
-    ):
-        assert f'href="{path}"' in html
-    assert "콘텐츠 최근 확인: 2026-09-09" in html
+    assert "renderHomeFeed" in html
+    assert 'id="popular-tags"' in html
 
 
 def test_homepage_preserves_indexing_analytics_and_ad_contracts():
@@ -35,6 +30,8 @@ def test_homepage_preserves_indexing_analytics_and_ad_contracts():
     assert "ca-pub-8830524482034754" in html
     assert 'aria-label="광고"' in html
     assert "application/ld+json" in html
+    assert "SearchAction" not in html
+    assert "window.location.href=matches[0].href" not in html
 
 
 def test_homepage_has_mobile_navigation_and_accessible_focus_styles():
