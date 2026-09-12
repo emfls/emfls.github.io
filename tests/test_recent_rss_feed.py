@@ -33,4 +33,4 @@ def test_feed_is_discoverable_from_robots_and_homepage():
 
     assert "Sitemap: https://emfls.github.io/sitemap.xml" in robots
     assert "Sitemap: https://emfls.github.io/feed.xml" in robots
-    assert 'rel="alternate" type="application/rss+xml" href="https://emfls.github.io/feed.xml"' in homepage
+    assert "/data/home-feed-ko.json" in homepage

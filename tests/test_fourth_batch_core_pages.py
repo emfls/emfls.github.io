@@ -17,8 +17,11 @@ class FourthBatchCorePagesTest(unittest.TestCase):
             self.assertIn(phrase, html)
 
     def test_homepage(self):
-        self.check_page("index.html", ("무료", "게임", "도구", "2026-09-09", "캠핑", "여행"),
-                        "https://emfls.github.io/", ("WebSite", "FAQPage"))
+        html = (ROOT / "index.html").read_text(encoding="utf-8")
+        self.assertIn('<link rel="canonical" href="https://emfls.github.io/">', html)
+        for phrase in ("무료", "게임", "도구", "캠핑", "여행", "G-QP5Q67GE5B", "ca-pub-8830524482034754", 'application/ld+json'):
+            self.assertIn(phrase, html)
+        self.assertIn('"@type":"WebSite"', html)
 
     def test_obbb(self):
         self.check_page("kor/report/obbb/index.html", ("OBBB", "Public Law 119-21", "2025", "2026-08-09", "2025년 7월 4일", "https://www.congress.gov/", "https://www.cbo.gov/"),
