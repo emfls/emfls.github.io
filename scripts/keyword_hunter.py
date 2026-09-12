@@ -426,7 +426,23 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
                         'result_count_checked_at':now.isoformat()})
                 health=client.health()
                 if health.get('NAVER_WEB_SEARCH') in {'AUTH_ERROR','RATE_LIMITED','NETWORK_ERROR','API_ERROR'}: break
-        submitted_trend_list=[r['keyword'] for r in pending_first(fast_passed,250)]
+        # Spend trend quota on pending rows first, then launch-capable and other
+        # measured-volume rows with missing trend; do not repeatedly resubmit
+        # recently checked complete/empty rows.
+        ttl=config.get('datalab_cache_ttl_hours',24)*3600
+        trend_pool=[]; trend_seen=set()
+        for row in pending_rows + prioritize_trend_rows(active, fresh):
+            key=normalize(row.get('keyword',''))
+            if key in trend_seen or row.get('status') in {'PUBLISHED','REJECTED'}: continue
+            if number(row.get('trend_1m')) is not None and number(row.get('trend_3m')) is not None: continue
+            checked=row.get('datalab_checked_at')
+            if checked and row.get('pending_validation')!='True':
+                try:
+                    if (now-datetime.fromisoformat(checked)).total_seconds()<ttl: continue
+                except ValueError: pass
+            trend_seen.add(key); trend_pool.append(row)
+            if len(trend_pool)>=250: break
+        submitted_trend_list=[r['keyword'] for r in trend_pool]
         trends=client.trends(submitted_trend_list,now.date()) if not status_change and not data_quality_only and api_health.get('NAVER_DATALAB')!='NOT_CONFIGURED' else {}
         for row in active:
             if row['keyword'] in trends:
@@ -544,6 +560,13 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
                 'datalab_remaining_quota':quota['remaining_quota'],'datalab_remaining_days':quota['remaining_days'],
                 'datalab_daily_budget':quota['daily_budget'],'datalab_run_budget':usage.allocated_run_budget,
                 'datalab_actual_calls':datalab_calls,'datalab_validated_keywords':validated,
+                'datalab_candidates':len(trend_pool),'datalab_submitted':submitted,
+                'datalab_returned':getattr(client,'datalab_keywords_returned',0),
+                'datalab_empty':getattr(client,'datalab_keywords_empty',0),
+                'datalab_mapped':getattr(client,'datalab_keywords_mapped',0),
+                'datalab_skipped_recent':max(0,len(active)-len(trend_pool)),
+                'web_candidates':len(web_candidates),'web_submitted':getattr(client,'web_result_calls',0),
+                'web_cached':max(0,len(fast_passed)-len(web_candidates)),'web_validated':sum(1 for r in active if number(r.get('web_result_count')) is not None),
                 'datalab_average_keywords_per_call':round(submitted/datalab_calls,2) if datalab_calls else 0.0,
                 'pending_validation_count':sum(r.get('pending_validation')=='True' for r in active),
                 'pending_validation_revalidated':len(retried_pending),
