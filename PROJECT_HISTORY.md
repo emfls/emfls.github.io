@@ -293,3 +293,6 @@
 
 ## 2026-09-12 10:46 Keyword Hunter
 - Seeds: 40; New: 20; Rejected: 17; DB: 801; Errors: 0; Top: none. Report: reports/keyword-hunter/2026-09-12-1046.md
+
+## 2026-09-12 10:58 Keyword Hunter
+- Seeds: 40; New: 23; Rejected: 20; DB: 824; Errors: 0; Top: 정수기렌탈가격. Report: reports/keyword-hunter/2026-09-12-1058.md
