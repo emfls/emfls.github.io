@@ -283,3 +283,7 @@
 - Merged `feature/keyword-hunter-production-20260912` into `main` without conflicts and pushed commit `7e41634efa`.
 - `.github/workflows/keyword-hunter.yml` is present on `main`; manual run `34660554615` failed at credential validation before API calls.
 - GitHub repository secrets `NAVER_SEARCHAD_API_KEY`, `NAVER_SEARCHAD_SECRET_KEY`, and `NAVER_SEARCHAD_CUSTOMER_ID` were empty/missing. No content was published and no keyword results were generated.
+## 2026-09-12 Keyword Hunter dispatch retry
+
+- Manual run `34660683267` on `main` failed at `Validate required credentials` before Search Ads/DataLab/Web Search calls.
+- GitHub Actions still receives empty `NAVER_SEARCHAD_API_KEY`, `NAVER_SEARCHAD_SECRET_KEY`, and `NAVER_SEARCHAD_CUSTOMER_ID`; no results were produced and no pages were published.
