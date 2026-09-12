@@ -273,3 +273,8 @@
 - 실제 실행: 신규 28, DB 691, Search Ads 검색량 보존 신규 13, DataLab 검증 2, Candidate 2, Winner 2, 신규 제작 우선 검토 `정수기렌탈가격`(월 580, score 52.22)과 `정수기비교`(월 1,210, score 36.7), 기존 페이지 개선 후보 20. 웹문서 경쟁도는 401로 미확인 상태를 유지했다.
 - GitHub Actions secrets에는 현재 `INDEXNOW_KEY`만 있어 Search Ads 3개와 API HUB 2개를 사람이 등록해야 한다. API HUB 웹문서 검색 권한 활성화 후 첫 scheduled run 전체 `OK` 확인이 다음 최우선 작업이다.
 - 검증: 최신 메인 병합 후 Keyword Hunter 관련 80개 및 전체 pytest 865개 통과, `git diff --check` 통과.
+## 2026-09-12 Keyword Hunter production verification
+
+- Requested production dispatch could not start: GitHub default `main` does not yet contain/register `.github/workflows/keyword-hunter.yml` (`HTTP 404`).
+- No code, keyword data, or pages were changed; no new page was published.
+- API/Candidate/Winner production status remains unverified until the production branch is merged into `main` and the workflow is visible to Actions.
