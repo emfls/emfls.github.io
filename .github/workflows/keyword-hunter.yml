@@ -1,0 +1,77 @@
+name: Keyword Hunter
+
+on:
+  schedule:
+    - cron: "17 */2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: keyword-hunter-production
+  cancel-in-progress: false
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      TZ: Asia/Seoul
+      NAVER_SEARCHAD_API_KEY: ${{ secrets.NAVER_SEARCHAD_API_KEY }}
+      NAVER_SEARCHAD_SECRET_KEY: ${{ secrets.NAVER_SEARCHAD_SECRET_KEY }}
+      NAVER_SEARCHAD_CUSTOMER_ID: ${{ secrets.NAVER_SEARCHAD_CUSTOMER_ID }}
+      NAVER_API_HUB_CLIENT_ID: ${{ secrets.NAVER_API_HUB_CLIENT_ID }}
+      NAVER_API_HUB_CLIENT_SECRET: ${{ secrets.NAVER_API_HUB_CLIENT_SECRET }}
+      NAVER_WEB_SEARCH_API_HUB_CLIENT_ID: ${{ secrets.NAVER_WEB_SEARCH_API_HUB_CLIENT_ID }}
+      NAVER_WEB_SEARCH_API_HUB_CLIENT_SECRET: ${{ secrets.NAVER_WEB_SEARCH_API_HUB_CLIENT_SECRET }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate required credentials
+        run: |
+          if [ -z "$NAVER_SEARCHAD_API_KEY" ] || [ -z "$NAVER_SEARCHAD_SECRET_KEY" ] || [ -z "$NAVER_SEARCHAD_CUSTOMER_ID" ]; then
+            echo "::error::Add the three NAVER_SEARCHAD repository secrets."
+            exit 1
+          fi
+          if [ -z "$NAVER_API_HUB_CLIENT_ID" ] || [ -z "$NAVER_API_HUB_CLIENT_SECRET" ]; then
+            echo "::error::Add the two NAVER_API_HUB repository secrets."
+            exit 1
+          fi
+
+      - name: Install test runner
+        run: python3 -m pip install pytest
+
+      - name: Run Keyword Hunter
+        run: python3 scripts/keyword_hunter.py
+
+      - name: Verify Keyword Hunter
+        run: python3 -m pytest tests/test_keyword_hunter*.py -q
+
+      - name: Persist measured state
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/keywords_master.csv data/keyword_seeds.json data/keyword_clusters.json
+          git add data/rejected_keywords.json data/published_keywords.json data/recent_exploration_history.json
+          git add data/api_usage.json data/existing-page-improvement-candidates.json reports/keyword-hunter PROJECT_HISTORY.md
+          git diff --cached --quiet || git commit -m "chore: update keyword hunter observations"
+          git push
+
+      - name: Upload latest reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: keyword-hunter-reports
+          path: |
+            reports/keyword-hunter/
+            data/existing-page-improvement-candidates.json
+          if-no-files-found: warn

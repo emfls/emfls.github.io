@@ -74,6 +74,9 @@ jobs:
       - name: Reject new SEO regressions
         run: python3 scripts/seo_qa.py . --audit data/site-audit.json --baseline data/seo-qa-baseline.json --report reports/seo-qa.md
 
+      - name: Validate Keyword Hunter without API or writes
+        run: python3 scripts/keyword_hunter.py --dry-run > /tmp/keyword-hunter-preview.md
+
       - name: Run unittest regression suite
         run: python3 -m unittest discover -s tests -q
 

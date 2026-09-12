@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="날짜 차이, 날짜 더하기·빼기, D-day, 주말 제외 평일 수를 UTC 기준으로 계산합니다.">
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+  <link rel="canonical" href="https://emfls.github.io/kor/util/date-calculator/">
+  <title>날짜 계산기 | 날짜 차이·D-day·평일 계산</title>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QP5Q67GE5B');</script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"날짜 계산기","url":"https://emfls.github.io/kor/util/date-calculator/","applicationCategory":"UtilityApplication","operatingSystem":"Any","inLanguage":"ko","dateModified":"2026-09-10","description":"UTC 달력일 기준의 날짜 차이, 날짜 이동, D-day, 평일 계산 도구"}
+  </script>
+  <style>
+    :root{color-scheme:light;--ink:#14213d;--muted:#52606d;--line:#d7e0ea;--paper:#fff;--soft:#f3f7fb;--brand:#075985;--focus:#f59e0b}
+    *{box-sizing:border-box} body{margin:0;background:var(--soft);color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Noto Sans KR",sans-serif}
+    main{max-width:840px;margin:auto;padding:28px 18px 48px} h1{font-size:clamp(1.75rem,5vw,2.6rem);line-height:1.2;margin:0 0 10px} h2{font-size:1.25rem;margin:0 0 12px} p{margin:0 0 14px}.lead{color:var(--muted)}
+    .notice,.panel,footer{background:var(--paper);border:1px solid var(--line);border-radius:14px}.notice{padding:14px 16px;margin:20px 0}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0 12px}.tab{border:1px solid #8aa4b8;border-radius:999px;background:#fff;color:var(--ink);padding:8px 12px;font:inherit;cursor:pointer}.tab[aria-selected="true"]{color:#fff;background:var(--brand);border-color:var(--brand)}button:focus-visible,input:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+    .panel{padding:20px}.panel[hidden]{display:none}label{font-weight:650;display:block;margin:12px 0 5px}input{width:100%;max-width:360px;padding:10px;border:1px solid #8aa4b8;border-radius:8px;font:inherit}.row{display:flex;gap:14px;align-items:end;flex-wrap:wrap}.row label{min-width:180px;flex:1}.check{display:flex;gap:8px;align-items:center;font-weight:400}.check input{width:auto}.action{margin-top:18px;border:0;border-radius:8px;background:var(--brand);color:#fff;padding:10px 15px;font:inherit;font-weight:700;cursor:pointer}.result{min-height:3.2em;margin-top:16px;padding:12px;background:#edf7fc;border-left:4px solid var(--brand);white-space:pre-wrap}.links{padding-left:20px}footer{padding:16px;margin-top:20px;color:var(--muted);font-size:.93rem}a{color:#075985}@media(max-width:520px){main{padding:20px 14px}.panel{padding:16px}}
+  </style>
+</head>
+<body>
+<main>
+  <h1>날짜 계산기</h1>
+  <p class="lead">날짜 차이, 날짜 이동, D-day와 주말을 제외한 평일 수를 달력일 기준으로 계산합니다.</p>
+  <div class="notice">계산은 이 브라우저 안에서만 처리됩니다. 입력한 날짜는 서버로 전송하거나 저장하지 않습니다. 공휴일은 자동으로 제외되지 않으므로, 근무일·마감일 판단에는 별도로 확인해 주세요.</div>
+
+  <div class="tabs" role="tablist" aria-label="날짜 계산 방식">
+    <button class="tab" id="difference-tab" role="tab" aria-selected="true" aria-controls="difference" type="button">날짜 차이</button>
+    <button class="tab" id="shift-tab" role="tab" aria-selected="false" aria-controls="shift" type="button">날짜 더하기·빼기</button>
+    <button class="tab" id="dday-tab" role="tab" aria-selected="false" aria-controls="dday" type="button">D-day</button>
+    <button class="tab" id="weekdays-tab" role="tab" aria-selected="false" aria-controls="weekdays" type="button">평일 수</button>
+  </div>
+
+  <section class="panel" id="difference" role="tabpanel" aria-labelledby="difference-tab">
+    <h2>두 날짜의 차이</h2><div class="row"><label>시작일<input id="diff-start" type="date"></label><label>종료일<input id="diff-end" type="date"></label></div><label class="check"><input id="diff-inclusive" type="checkbox"> 시작일과 종료일을 모두 포함</label><button class="action" data-action="difference" type="button">계산하기</button><output class="result" id="difference-result" aria-live="polite">날짜를 입력해 주세요.</output>
+  </section>
+  <section class="panel" id="shift" role="tabpanel" aria-labelledby="shift-tab" hidden>
+    <h2>날짜 더하기·빼기</h2><div class="row"><label>기준일<input id="shift-date" type="date"></label><label>이동 일수 (음수는 빼기)<input id="shift-days" type="number" step="1" value="0"></label></div><button class="action" data-action="shift" type="button">계산하기</button><output class="result" id="shift-result" aria-live="polite">기준일과 이동 일수를 입력해 주세요.</output>
+  </section>
+  <section class="panel" id="dday" role="tabpanel" aria-labelledby="dday-tab" hidden>
+    <h2>D-day</h2><div class="row"><label>오늘<input id="dday-today" type="date"></label><label>목표일<input id="dday-target" type="date"></label></div><label class="check"><input id="dday-inclusive" type="checkbox"> 오늘과 목표일을 모두 포함</label><button class="action" data-action="dday" type="button">계산하기</button><output class="result" id="dday-result" aria-live="polite">오늘과 목표일을 입력해 주세요.</output>
+  </section>
+  <section class="panel" id="weekdays" role="tabpanel" aria-labelledby="weekdays-tab" hidden>
+    <h2>주말 제외 평일 수</h2><div class="row"><label>시작일<input id="weekday-start" type="date"></label><label>종료일<input id="weekday-end" type="date"></label></div><label class="check"><input id="weekday-inclusive" type="checkbox"> 시작일과 종료일을 모두 포함</label><button class="action" data-action="weekdays" type="button">계산하기</button><output class="result" id="weekdays-result" aria-live="polite">날짜를 입력해 주세요.</output>
+  </section>
+
+  <section class="notice"><h2>함께 볼 시간 도구</h2><p>용도에 따라 기존 도구도 함께 사용할 수 있습니다.</p><ul class="links"><li><a href="/kor/util/time-diff/">시간 차이 계산기</a></li><li><a href="/kor/util/">무료 유틸리티 모음</a></li></ul></section>
+  <footer>기준일: 2026-09-10 · 결과는 일정 관리 참고용입니다. 법정 공휴일, 근로일·계약상 기한은 해당 기관 또는 계약 조건을 확인하세요.</footer>
+</main>
+
+<script>
+<!-- PURE_START -->
+  function parseUtcDate(value) {
+    if (typeof value !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
+    const [year, month, day] = value.split("-").map(Number);
+    const date = new Date(Date.UTC(year, month - 1, day));
+    return date.getUTCFullYear() === year && date.getUTCMonth() === month - 1 && date.getUTCDate() === day ? date : null;
+  }
+  function dateString(date) { return date.toISOString().slice(0, 10); }
+  function daysBetween(start, end, inclusive) {
+    const first = parseUtcDate(start), last = parseUtcDate(end);
+    if (!first || !last || typeof inclusive !== "boolean") return { error: "올바른 날짜와 포함 여부를 입력해 주세요." };
+    const days = Math.round((last - first) / 86400000);
+    return { days: inclusive ? (days === 0 ? 1 : days + Math.sign(days)) : days, error: null };
+  }
+  function shiftDate(value, days) {
+    const date = parseUtcDate(value);
+    if (!date || !Number.isInteger(days)) return { error: "올바른 날짜와 정수 일수를 입력해 주세요." };
+    date.setUTCDate(date.getUTCDate() + days);
+    if (Number.isNaN(date.getTime())) return { error: "표현 가능한 날짜 범위를 벗어났습니다." };
+    return { date: dateString(date), error: null };
+  }
+  function weekdaysBetween(start, end, inclusive) {
+    const first = parseUtcDate(start), last = parseUtcDate(end);
+    if (!first || !last || typeof inclusive !== "boolean") return { error: "올바른 날짜와 포함 여부를 입력해 주세요." };
+    const direction = last >= first ? 1 : -1;
+    const from = new Date(first), to = new Date(last);
+    if (!inclusive) { from.setUTCDate(from.getUTCDate() + direction); to.setUTCDate(to.getUTCDate() - direction); }
+    let days = 0;
+    for (let cursor = new Date(from); direction > 0 ? cursor <= to : cursor >= to; cursor.setUTCDate(cursor.getUTCDate() + direction)) { const day = cursor.getUTCDay(); if (day !== 0 && day !== 6) days += 1; }
+    return { days: direction * days, error: null };
+  }
+<!-- PURE_END -->
+  const byId = (id) => document.getElementById(id);
+  const show = (id, text) => { byId(id).textContent = text; };
+  document.querySelectorAll('[role="tab"]').forEach((tab) => tab.addEventListener('click', () => {
+    document.querySelectorAll('[role="tab"]').forEach((item) => { const selected = item === tab; item.setAttribute('aria-selected', String(selected)); byId(item.getAttribute('aria-controls')).hidden = !selected; });
+  }));
+  document.querySelectorAll('[data-action]').forEach((button) => button.addEventListener('click', () => {
+    const action = button.dataset.action;
+    if (action === 'difference') { const result = daysBetween(byId('diff-start').value, byId('diff-end').value, byId('diff-inclusive').checked); show('difference-result', result.error || `날짜 차이: ${result.days}일`); }
+    if (action === 'shift') { const result = shiftDate(byId('shift-date').value, Number(byId('shift-days').value)); show('shift-result', result.error || `계산 결과: ${result.date}`); }
+    if (action === 'dday') { const result = daysBetween(byId('dday-today').value, byId('dday-target').value, byId('dday-inclusive').checked); show('dday-result', result.error || (result.days >= 0 ? `D-${result.days}` : `D+${Math.abs(result.days)}`)); }
+    if (action === 'weekdays') { const result = weekdaysBetween(byId('weekday-start').value, byId('weekday-end').value, byId('weekday-inclusive').checked); show('weekdays-result', result.error || `주말 제외 평일 수: ${result.days}일`); }
+  }));
+</script>
+</body>
+</html>
