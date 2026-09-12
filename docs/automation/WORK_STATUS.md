@@ -1,14 +1,14 @@
 ---
-phase: content-launch-6a
+phase: content-launch-6b
 state: DEPLOYED
 branch: main
-worktree: ../emfls-blog-home-index
-last_verified_commit: eb2a335714
-last_verified_tests: "20 passed"
+worktree: ../emfls-main-phase6b-integration
+last_verified_commit: 57d83827e6
+last_verified_tests: "898 passed"
 content_index_entries: 7198
 home_feed_size: "19KB"
 blockers: []
-next_action: "design_phase_6b_html_generation"
+next_action: "main SEO QA verification"
 ---
 
 # Work Status
@@ -18,3 +18,5 @@ next_action: "design_phase_6b_html_generation"
 Phase 5 deployed: `/kor/**/*.html` 변경 시 인덱스를 재생성하고 테스트 통과 시에만 generated JSON을 커밋한다.
 
 Phase 6A deployed: 최신 검증 후보를 fail-closed launch queue로 변환하고 dailyLimit=1, 중복·유사 intent·YMYL·stale 검사를 적용한다. HTML 자동 생성과 발행은 아직 수행하지 않는다.
+
+Phase 6B deployed: validation coverage 개선, DataLab telemetry 추가, Winner/Candidate normalized dedupe, baseline cohort telemetry, YMYL launch queue 강화.
