@@ -296,3 +296,10 @@
 
 ## 2026-09-12 10:58 Keyword Hunter
 - Seeds: 40; New: 23; Rejected: 20; DB: 824; Errors: 0; Top: 정수기렌탈가격. Report: reports/keyword-hunter/2026-09-12-1058.md
+
+## 2026-09-12 — pending validation 우선 재검증
+
+- 원인: DataLab은 `fast_passed[:250]`, Web Search는 그 앞 후보만 검증해 과거 유망 키워드가 신규 탐색 결과에 밀리면 필요한 실측값 없이 남았다.
+- `pending_validation` 메타데이터(재시도 횟수·마지막 시각·만료 표시)를 추가했다. 검색량·경쟁 조건을 통과했지만 trend 또는 웹문서 결과가 결측인 후보는 다음 실행에서 두 API의 한도 내 우선 검증한다. 모든 실측값을 얻으면 즉시 pending을 해제하며, 3회 재시도 후에는 만료한다. 점수식·자동 발행 정책은 변경하지 않았다.
+- Production run `34666327352`: Search Ads/DataLab/Web Search 모두 `OK`; pending 21건 재검증, 실행 후 pending 8건, 만료 0건. `정수기가격비교`는 월 350, trend 1개월 -37.75 / 3개월 -43.21, 웹문서 4,379,512건, 점수 39.1 / HIGH로 최신 실측 기준 재판정됐다. Candidate 13, Winner 8이며 신규 콘텐츠는 발행하지 않았다.
+- 검증: pending 단위 테스트 2개 RED→GREEN 확인, Keyword Hunter 테스트 82개 통과. 다음 작업은 남은 pending 8건의 quota 내 재검증 결과를 관찰하고, 검증 완료 Candidate만 별도 콘텐츠 검토로 넘기는 것이다.
