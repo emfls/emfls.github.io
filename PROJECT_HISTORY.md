@@ -320,3 +320,6 @@
 
 ## 2026-09-13 03:27 Keyword Hunter
 - Seeds: 40; New: 30; Rejected: 20; DB: 911; Errors: 1; Top: 연차수당계산기. Report: reports/keyword-hunter/2026-09-13-0327.md
+
+## 2026-09-13 07:21 Keyword Hunter
+- Seeds: 40; New: 47; Rejected: 34; DB: 958; Errors: 1; Top: 사대보험계산기. Report: reports/keyword-hunter/2026-09-13-0721.md
