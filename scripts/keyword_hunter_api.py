@@ -195,7 +195,8 @@ class Client:
                         if any(changes.get(k) is not None for k in ('trend_1m','trend_3m')):
                             self.datalab_keywords_validated+=1
                 if payload['status']=='VERIFIED_SEARCH_DATA': self.statuses['NAVER_DATALAB']='OK'
-            except (ValueError,TypeError,KeyError,AttributeError): self.error('INVALID_RESPONSE')
+            except (ValueError,TypeError,KeyError,AttributeError):
+                self.datalab_parse_failures += len(batch); self.error('INVALID_RESPONSE')
             if self.statuses['NAVER_DATALAB'] in {'AUTH_ERROR','RATE_LIMITED','NETWORK_ERROR'}: break
             if self.calls>=self.config['max_api_calls'] or (self.usage_tracker and not self.usage_tracker.can_call()): break
         return result
