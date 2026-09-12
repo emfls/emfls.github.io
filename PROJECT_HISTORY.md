@@ -287,3 +287,6 @@
 
 - Manual run `34660683267` on `main` failed at `Validate required credentials` before Search Ads/DataLab/Web Search calls.
 - GitHub Actions still receives empty `NAVER_SEARCHAD_API_KEY`, `NAVER_SEARCHAD_SECRET_KEY`, and `NAVER_SEARCHAD_CUSTOMER_ID`; no results were produced and no pages were published.
+
+## 2026-09-12 09:24 Keyword Hunter
+- Seeds: 40; New: 90; Rejected: 89; DB: 781; Errors: 1; Top: 정수기가격비교. Report: reports/keyword-hunter/2026-09-12-0924.md
