@@ -42,6 +42,17 @@ def same_intent(a,b):
     if re.findall(r'\d+',a)!=re.findall(r'\d+',b): return False
     return normalize(a)==normalize(b) or (similarity(a,b)>=.86 and tags(a)==tags(b))
 
+def dedupe_keywords(rows):
+    """Keep one deterministic representative per normalized keyword."""
+    confidence={'HIGH':3,'MEDIUM':2,'LOW':1,'UNVERIFIED':0}
+    best={}
+    for row in rows:
+        key=normalize(row.get('keyword',''))
+        if not key: continue
+        rank=(str(row.get('last_checked') or ''), confidence.get(str(row.get('confidence')),0), number(row.get('opportunity_score')) or 0, str(row.get('keyword') or ''))
+        if key not in best or rank > best[key][0]: best[key]=(rank,row)
+    return [best[k][1] for k in sorted(best)]
+
 def tags(keyword, trend=None):
     rules={'calculator/tool':['계산','변환','도구'],'comparison':['비교','차이',' vs '],
            'how-to':['방법','신청','설정','사용법','하는법'],'troubleshooting':['오류','에러','안됨','안 될','해결','실패'],
