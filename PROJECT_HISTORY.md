@@ -311,3 +311,6 @@
 - 공식 참고 출처는 LG전자 베스트샵 구독 안내, 코웨이 제품 상세, SK매직 렌탈 계산기이며, 가격 확인 기준일은 2026-09-12로 페이지에 표시했다. 예시 공식 가격은 계산기 기본값·순위 근거로 사용하지 않았다.
 - sitemap·무료 도구 허브·launch manifest·content metadata·Keyword Hunter published 상태를 반영하고, 실험 `EXP-CONTENT-20260912-01`을 2026-10-10까지 OBSERVING/COOLDOWN으로 등록했다.
 - 검증: 전용 계산기/발행 메타데이터/legacy launch guard 테스트와 content launch guard를 통과했다. 전체 재스캔은 저장소에 남아 있는 기존 `.worktrees` 복제본의 대량 중복·깨진 링크를 재탐지하므로 이번 단일 페이지 회귀 판단에는 사용하지 않았다.
+
+## 2026-09-12 13:41 Keyword Hunter
+- Seeds: 40; New: 27; Rejected: 20; DB: 851; Errors: 0; Top: 급여세금계산기. Report: reports/keyword-hunter/2026-09-12-1341.md
