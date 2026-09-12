@@ -1,7 +1,9 @@
 # Keyword Validation Audit
 
+> Phase 6B 구현 전 baseline audit snapshot (최신 실행 결과가 아님)
+
 - 분석 기준: `data/keywords_master.csv` (851행)
-- `score_valid=false`: **{len(inv)}개**
+- `score_valid=false`: **834개**
 
 ## 원인 조합별 개수
 
@@ -25,7 +27,7 @@
 - C 검색량 비공개·검열·데이터 없음: `monthly_volume_missing` 포함 392개; Search Ads 재조회로 일부 확인 가능하나 보장 불가
 - D pending retry 미처리: pending_validation=true 9개; retry 우선 재검증 가능
 - E 필드 매핑/파싱/저장: 현재 행에서 확정 증거 없음
-- F 정상적으로 검증 불가능/선정 제외: trend 결측 825개 중 pending 아닌 후보 다수; DataLab 대상 선정 제한 가능성
+- F unresolved_validation: trend 결측 825개가 당시 pending retry 대상으로 선정되지 않음; DataLab 대상 선정 제한 가능성
 
 ## 이미 일부 데이터가 있는 invalid 후보
 
