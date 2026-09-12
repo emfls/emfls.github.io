@@ -286,6 +286,31 @@ class HunterTests(unittest.TestCase):
         _,passed=h.fast_filter_rows([row],[],now,h.DEFAULT_CONFIG)
         self.assertEqual(passed,[row])
 
+    def test_pending_validation_prioritizes_measured_commercial_rows_and_expires_retries(self):
+        from datetime import datetime, timezone
+        now=datetime(2026,9,12,12,0,tzinfo=timezone.utc)
+        rows=[
+            {'keyword':'정수기가격비교','monthly_total':350,'competition':'HIGH','commercial_intent':.9,
+             'opportunity_score':39.1,'trend_1m':-37.75,'trend_3m':-43.21,'web_result_count':'',
+             'pending_retry_count':1,'pending_last_attempt_at':'2026-09-11T12:00:00+00:00','status':'NEW'},
+            {'keyword':'저수요','monthly_total':20,'competition':'LOW','commercial_intent':.3,
+             'trend_1m':'','web_result_count':'','pending_retry_count':0,'status':'NEW'},
+            {'keyword':'만료','monthly_total':500,'competition':'LOW','commercial_intent':.9,
+             'trend_1m':'','web_result_count':'','pending_retry_count':3,'status':'NEW'},
+        ]
+        pending,expired=h.pending_validation_rows(rows,now,{**h.DEFAULT_CONFIG,'pending_validation_max_retries':3})
+        self.assertEqual([row['keyword'] for row in pending],['정수기가격비교','저수요'])
+        self.assertEqual([row['keyword'] for row in expired],['만료'])
+        self.assertEqual(pending[0]['pending_validation'],'True')
+
+    def test_pending_validation_clears_after_latest_measurements_are_present(self):
+        row={'keyword':'정수기가격비교','monthly_total':350,'competition':'HIGH',
+             'trend_1m':-37.75,'trend_3m':-43.21,'web_result_count':1000,
+             'pending_validation':'True','pending_retry_count':2,'pending_last_attempt_at':'2026-09-11T12:00:00+00:00'}
+        self.assertTrue(h.clear_pending_validation_if_complete(row))
+        self.assertEqual(row['pending_validation'],'False')
+        self.assertEqual(row['pending_retry_count'],0)
+
     def test_unsubmitted_row_keeps_existing_trend_data(self):
         from scripts.keyword_hunter_state import csv_text
         (self.root/'data/recent_exploration_history.json').write_text(json.dumps({'runs':[{'keywords':[],'winners':[]} for _ in range(3)]}))

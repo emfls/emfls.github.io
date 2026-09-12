@@ -16,11 +16,12 @@ DEFAULT_CONFIG = {
     'web_result_cache_ttl_hours': 168, 'web_result_validation_limit': 50,
     'fast_filter_min_monthly_total': 10,
     'max_unverified_candidates': 20, 'min_score': 35, 'min_data_coverage': 100,
+    'pending_validation_max_retries': 3,
     'fit_categories': ['camp','palworld','tools','travel','visa','window','gov','finance','animal','game'],
     'rss_feeds': ['https://www.moel.go.kr/rss/policy.do'],
     'synonyms': {'팔월드':'팰월드','palworld':'팰월드','에러':'오류','해결방법':'해결','해결법':'해결','신청방법':'신청','신청법':'신청'},
 }
-FIELDS = 'keyword parent_keyword cluster category monthly_pc monthly_mobile monthly_total competition source_seed trend_1m trend_3m trend_momentum seasonality web_result_count demand_supply_ratio competition_ratio result_count_checked_at commercial_intent freshness longtail_score content_fit opportunity_score score_valid score_invalid_reasons data_coverage novelty_score theme_state seed_source exploration_bucket status discovered_at last_checked source depth confidence content_types intent action closest_url overlap reason strategy volume_note search_ads_checked_at datalab_checked_at'.split()
+FIELDS = 'keyword parent_keyword cluster category monthly_pc monthly_mobile monthly_total competition source_seed trend_1m trend_3m trend_momentum seasonality web_result_count demand_supply_ratio competition_ratio result_count_checked_at commercial_intent freshness longtail_score content_fit opportunity_score score_valid score_invalid_reasons data_coverage novelty_score theme_state seed_source exploration_bucket status discovered_at last_checked source depth confidence content_types intent action closest_url overlap reason strategy volume_note search_ads_checked_at datalab_checked_at pending_validation pending_retry_count pending_last_attempt_at pending_validation_expired'.split()
 TRANSITIONS = {'NEW':{'REVIEWED','REJECTED'},'REVIEWED':{'QUEUED','REJECTED'},'QUEUED':{'PUBLISHED','REVIEWED','REJECTED'},'PUBLISHED':set(),'REJECTED':{'REVIEWED'}}
 
 def normalize(text, synonyms=None):

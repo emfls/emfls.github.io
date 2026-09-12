@@ -96,6 +96,41 @@ def fast_filter_rows(rows,fresh,now,config,recovery=False):
         passed.append(row)
     return ordered,passed
 
+def has_complete_validation(row):
+    return (number(row.get('monthly_total')) or 0)>0 and bool(row.get('competition')) and \
+        number(row.get('trend_1m')) is not None and number(row.get('trend_3m')) is not None and \
+        number(row.get('web_result_count')) is not None
+
+def clear_pending_validation_if_complete(row):
+    if not has_complete_validation(row): return False
+    row['pending_validation']='False'
+    row['pending_retry_count']=0
+    row['pending_last_attempt_at']=''
+    row['pending_validation_expired']='False'
+    return True
+
+def pending_validation_rows(rows,now,config):
+    """Return bounded, high-signal rows that lack a required live measurement."""
+    pending=[]; expired=[]; maximum=int(config.get('pending_validation_max_retries',3))
+    for row in rows:
+        if row.get('status') in {'REJECTED','PUBLISHED'} or has_complete_validation(row):
+            continue
+        if (number(row.get('monthly_total')) or 0)<config.get('fast_filter_min_monthly_total',10) or not row.get('competition'):
+            continue
+        missing_trend=number(row.get('trend_1m')) is None or number(row.get('trend_3m')) is None
+        missing_web=number(row.get('web_result_count')) is None
+        if not (missing_trend or missing_web): continue
+        retries=int(row.get('pending_retry_count') or 0)
+        if retries>=maximum:
+            row['pending_validation']='False'; row['pending_validation_expired']='True'
+            expired.append(row); continue
+        row['pending_validation']='True'; row['pending_validation_expired']='False'
+        pending.append(row)
+    pending.sort(key=lambda r:(-(number(r.get('opportunity_score')) or 0),
+                               -(number(r.get('commercial_intent')) or 0),
+                               -(number(r.get('monthly_total')) or 0),r.get('keyword','')))
+    return pending,expired
+
 def datalab_usage(root,config,now=None):
     limit=int(os.environ.get('DATALAB_MONTHLY_LIMIT',config.get('datalab_monthly_limit',50000)))
     reserve=float(os.environ.get('DATALAB_RESERVE_RATIO',config.get('datalab_reserve_ratio',.10)))
@@ -148,7 +183,7 @@ def report(result,now):
     for key in ['target','seeds_checked','new_keywords','duplicates','rejected','db_total','api_calls','rate_limits','api_health','strategy_counts','new_categories','shortfall','missing_data','site_pages','existing_page_improvement_candidates']:
         lines.append('- {}: {}'.format(key,safe(result[key])))
     lines+=['','## 자율 탐색 지표','']
-    for key in ['exploration_candidates','new_seed_count','repeated_seed_count','recent_seed_overlap','new_category_count','new_cluster_count','novelty_ratio','category_shares','source_shares','winner_count','new_theme_winners','cooldown_clusters','next_exploration_directions','random_seed']:
+    for key in ['exploration_candidates','new_seed_count','repeated_seed_count','recent_seed_overlap','new_category_count','new_cluster_count','novelty_ratio','category_shares','source_shares','winner_count','new_theme_winners','pending_validation_count','pending_validation_revalidated','pending_validation_expired','cooldown_clusters','next_exploration_directions','random_seed']:
         lines.append('- {}: {}'.format(key,safe(result[key])))
     lines+=['','## DISCOVERY FUNNEL','']
     funnel=result['discovery_funnel']; previous=None
@@ -358,13 +393,24 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
             for raw in client.related(row['keyword']):
                 if normalize(raw['keyword'])==normalize(row['keyword']):
                     merge_validation_data(row,{k:v for k,v in raw.items() if k!='keyword'});row['search_ads_checked_at']=now.isoformat();break
-        trend_rows,fast_passed=fast_filter_rows([r for r in active if r['status'] not in {'REJECTED','PUBLISHED'} and normalize(r['keyword']) not in excluded_keywords and not ({normalize(r.get(k) or '') for k in ('keyword','parent_keyword','cluster')} & anchored_clusters)],fresh,now,config,recovery=recovery['active'])
+        validation_pool=[r for r in active if r['status'] not in {'REJECTED','PUBLISHED'} and normalize(r['keyword']) not in excluded_keywords and not ({normalize(r.get(k) or '') for k in ('keyword','parent_keyword','cluster')} & anchored_clusters)]
+        pending_rows,expired_pending=pending_validation_rows(validation_pool,now,config)
+        trend_rows,fast_passed=fast_filter_rows(validation_pool,fresh,now,config,recovery=recovery['active'])
         funnel['fast_filter_entered']=len(trend_rows);funnel['fast_filter_passed']=len(fast_passed)
+        pending_keys={normalize(r['keyword']) for r in pending_rows}
+        def pending_first(rows,limit):
+            seen=set(); ordered=[]
+            for row in pending_rows+rows:
+                key=normalize(row['keyword'])
+                if key not in seen:
+                    seen.add(key); ordered.append(row)
+                if len(ordered)>=limit: break
+            return ordered
         web_limit=max(20,min(50,int(config.get('web_result_validation_limit',50))))
         web_candidates=[]
-        for row in fast_passed[:web_limit]:
+        for row in pending_first(fast_passed,web_limit):
             checked=row.get('result_count_checked_at')
-            if checked:
+            if checked and normalize(row['keyword']) not in pending_keys:
                 try:
                     if (now-datetime.fromisoformat(checked)).total_seconds()<config.get('web_result_cache_ttl_hours',168)*3600: continue
                 except ValueError: pass
@@ -380,7 +426,7 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
                         'result_count_checked_at':now.isoformat()})
                 health=client.health()
                 if health.get('NAVER_WEB_SEARCH') in {'AUTH_ERROR','RATE_LIMITED','NETWORK_ERROR','API_ERROR'}: break
-        submitted_trend_list=[r['keyword'] for r in fast_passed[:250]]
+        submitted_trend_list=[r['keyword'] for r in pending_first(fast_passed,250)]
         trends=client.trends(submitted_trend_list,now.date()) if not status_change and not data_quality_only and api_health.get('NAVER_DATALAB')!='NOT_CONFIGURED' else {}
         for row in active:
             if row['keyword'] in trends:
@@ -389,20 +435,34 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
             if checked and (now-datetime.fromisoformat(checked)).total_seconds()>config['search_ads_cache_ttl_hours']*3600:
                 for k in ['monthly_pc','monthly_mobile','monthly_total','competition']: row[k]=None
             row.update(score(row,config))
+            clear_pending_validation_if_complete(row)
             overlap=site.match(row['keyword']);row.update(overlap=overlap['level'],last_checked=now.isoformat())
             if row['status']!='PUBLISHED': row['closest_url']=overlap.get('closestUrl')
             if row['status'] not in {'REJECTED','PUBLISHED'}: row['action']='IMPROVE_EXISTING' if overlap['decision']=='REJECT' else overlap['decision']
-        initial_eligible=sorted([r for r in fresh if r['status']=='NEW' and r['action']=='NEW_PAGE' and r['score_valid']],key=lambda r:(-r['opportunity_score'],r['keyword']))
+        retried_pending=[r for r in active if normalize(r['keyword']) in pending_keys]
+        for row in retried_pending:
+            row['pending_retry_count']=int(row.get('pending_retry_count') or 0)+1
+            row['pending_last_attempt_at']=now.isoformat()
+            clear_pending_validation_if_complete(row)
+        evaluation_rows=[]; seen_evaluation=set()
+        for row in fresh+retried_pending:
+            key=normalize(row['keyword'])
+            if key not in seen_evaluation:
+                seen_evaluation.add(key); evaluation_rows.append(row)
+        # New discovery keeps the established MEDIUM-confidence ranking path; only
+        # previously pending rows must complete every live measurement before return.
+        rankable_rows=fresh+[r for r in retried_pending if r.get('pending_validation')!='True']
+        initial_eligible=sorted([r for r in rankable_rows if r['status']=='NEW' and r['action']=='NEW_PAGE' and r['score_valid']],key=lambda r:(-r['opportunity_score'],r['keyword']))
         initial_winners=[r for r in initial_eligible if r['opportunity_score']>=config['min_score'] and r['confidence'] in {'HIGH','MEDIUM'}]
         fresh,dropped_by_saturation=enforce_candidate_shares(fresh,initial_winners)
         funnel['category_saturation_excluded']+=len(dropped_by_saturation)
         for row in dropped_by_saturation: by_key.pop(normalize(row['keyword']),None)
         active=list(by_key.values())
-        eligible=sorted([r for r in fresh if r['status']=='NEW' and r['action']=='NEW_PAGE' and r['score_valid']],key=lambda r:(-r['opportunity_score'],r['keyword']))
+        eligible=sorted([r for r in rankable_rows if r['status']=='NEW' and r['action']=='NEW_PAGE' and r['score_valid']],key=lambda r:(-r['opportunity_score'],r['keyword']))
         top50=diverse(eligible,50,config['category_share'])
         top20=diverse([r for r in eligible if r['opportunity_score']>=config['min_score'] and r['confidence'] in {'HIGH','MEDIUM'}],20,config['category_share'])
         winners=top20
-        current_candidates=[r for r in fresh if r['status']=='NEW' and r['action']=='NEW_PAGE' and r['score_valid']]
+        current_candidates=[r for r in rankable_rows if r['status']=='NEW' and r['action']=='NEW_PAGE' and r['score_valid']]
         fallback_candidates=sorted([r for r in active if r['status']=='NEW' and r.get('action')=='NEW_PAGE' and r.get('score_valid')],key=lambda r:(-(number(r.get('opportunity_score')) or 0),r['keyword']))[:10]
         candidate10=fallback_candidates if recovery['winner_zero_streak']>=3 else []
         winner_clusters={r['cluster'] for r in winners}
@@ -484,7 +544,10 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
                 'datalab_remaining_quota':quota['remaining_quota'],'datalab_remaining_days':quota['remaining_days'],
                 'datalab_daily_budget':quota['daily_budget'],'datalab_run_budget':usage.allocated_run_budget,
                 'datalab_actual_calls':datalab_calls,'datalab_validated_keywords':validated,
-                'datalab_average_keywords_per_call':round(submitted/datalab_calls,2) if datalab_calls else 0.0}
+                'datalab_average_keywords_per_call':round(submitted/datalab_calls,2) if datalab_calls else 0.0,
+                'pending_validation_count':sum(r.get('pending_validation')=='True' for r in active),
+                'pending_validation_revalidated':len(retried_pending),
+                'pending_validation_expired':len(expired_pending)}
         output=report(result,now); result['report_text']=output
         if not dry_run:
             report_path='reports/keyword-hunter/'+now.strftime('%Y-%m-%d-%H%M')+'.md'
