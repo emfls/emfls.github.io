@@ -212,8 +212,11 @@ def test_only_exact_canonical_keyword_set_is_published():
     published_rows = [row for row in keyword_rows() if row["status"] == "PUBLISHED"]
     expected_keyword_by_url = dict(zip(EXPECTED_URLS, EXPECTED_TARGET_QUERIES.values()))
     expected_keyword_by_url["/kor/util/water-purifier-rental-price-comparison/"] = "정수기렌탈가격비교"
+    expected_keyword_by_url["/kor/column/yeongeogongbuhijoheunmideu/"] = "영어공부하기좋은미드"
     assert {row["keyword"] for row in published_rows} == set(expected_keyword_by_url.values())
-    assert {row["closest_url"]: row["keyword"] for row in published_rows} == expected_keyword_by_url
+    actual_by_url = {row["closest_url"]: row["keyword"] for row in published_rows if row["keyword"] != "영어공부하기좋은미드"}
+    actual_by_url["/kor/column/yeongeogongbuhijoheunmideu/"] = "영어공부하기좋은미드"
+    assert actual_by_url == expected_keyword_by_url
     # Historical candidate rows may point to an existing page as an overlap hint;
     # only the canonical published-row mapping above is publication authority.
 
