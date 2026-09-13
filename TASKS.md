@@ -6,6 +6,11 @@
 
 - 현재 확인된 배포 차단 또는 정책 위반 없음.
 
+- [x] Revenue Growth Sprint 1 — 기존 여행 허브 수익 경로 복구
+  - 목적: Search Console 노출이 있으나 탐색성이 낮은 `/kor/report/travel/`을 기존 canonical 그대로 실용적인 한국어 여행 정보 허브로 개선한다.
+  - 완료 조건: 30–50개 실제 링크, 준비·지역·목적·주요 콘텐츠 탐색, GA4·AdSense·모바일·구조화 데이터, sitemap/content-index 보존, 회귀 테스트와 캠핑 P1 진단.
+  - 완료 기록: 2026-09-13. 2.79MB/5,233링크 목록을 21.8KB/43개 고유 `/kor/` 목적지 허브로 교체하고 캠핑 후속 우선순위를 남양주→청주→담양→김포→경기도 광주로 정리했다.
+
 ## P1 - High
 
 - [x] Keyword Hunter 생산 자동화 및 신규 수익 WINNER 발굴

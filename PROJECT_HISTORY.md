@@ -335,3 +335,10 @@
 
 ## 2026-09-13 20:58 Keyword Hunter
 - Seeds: 40; New: 31; Rejected: 23; DB: 1082; Errors: 0; Top: none. Report: reports/keyword-hunter/2026-09-13-2058.md
+
+## 2026-09-13 — Revenue Growth Sprint 1 여행 허브
+
+- `/kor/report/travel/`의 2.79MB·5,233링크 전체 목록을 canonical URL을 유지한 21.8KB 큐레이션 허브로 교체했다. 준비 도구, 목적별 선택, 아시아·유럽·미주·오세아니아, 최근 점검·비자 섹션에 실제 기존 페이지만 일반 HTML 링크로 연결했다.
+- title/H1을 한국어 여행 정보 허브 의도에 맞추고 GA4·AdSense·모바일 CSS·`CollectionPage`+`ItemList`를 적용했다. sitemap에는 허브 URL을 추가하고 content-index를 재생성했으며 기존 5천여 여행 상세 URL과 4,809개 상세 페이지의 허브 역링크는 그대로 유지했다.
+- 30–50개 고유 `/kor/` 링크와 80KB 크기 상한, 실제 파일 존재, SEO·구조화 데이터·인벤토리 보존 회귀 테스트를 추가했다. 상세 기록: `reports/revenue-growth-sprint-1-travel.md`.
+- 캠핑 P1 다섯 후보는 진단만 수행했다. 우선순위는 남양주, 청주, 담양, 김포, 경기도 광주 순이며 명백한 기술 결함이 없어 이번 Sprint에서는 수정하지 않았다.
