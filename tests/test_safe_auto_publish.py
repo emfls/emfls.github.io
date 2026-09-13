@@ -1,4 +1,4 @@
-from scripts.safe_auto_publish import resolve_family, eligibility, generate_page, percentage_of, percentage_ratio, percentage_change, validate_generated_page
+from scripts.safe_auto_publish import resolve_family, eligibility, generate_page, percentage_of, percentage_ratio, percentage_change, validate_generated_page, validate_config
 CFG={'schemaVersion':2,'enabled':True,'dailyLimit':1,'maxPagesPerRun':1,'families':{'percentage_calculator':{'enabled':True,'allowedPatterns':['퍼센트계산기','비율계산기'],'blockedTerms':['세금','급여','대출','투자','보험','의료','bmi','퇴직','수당','추천'],'generator':'percentage_calculator','validationContract':'percentage_calculator_v1'}}}
 
 def candidate(keyword, **kw):
@@ -30,3 +30,8 @@ def test_resolver_is_strict_and_escapes_html():
     for k in ['세금 퍼센트 계산기','대출 비율 계산기','투자 수익률 계산기','보험료 비율 계산기','BMI 퍼센트 계산기','퇴직금 비율 계산기','급여 인상률 계산기','할인율 추천','퍼센트 추천']:
         assert resolve_family(k) is None
     assert '&lt;' in generate_page(candidate('퍼센트계산기', suggested_url='/kor/util/x?<x>'),CFG)
+
+def test_registry_disabled_future_families_valid_but_enabled_unimplemented_invalid():
+    assert validate_config({'schemaVersion':2,'enabled':False,'dailyLimit':1,'maxPagesPerRun':1,'families':{'unit_converter':{'enabled':False,'allowedPatterns':['단위계산기'],'blockedTerms':[],'generator':'unit_converter','validationContract':'unit_converter_v1'}}})
+    bad={**CFG,'families':{**CFG['families'],'unit_converter':{'enabled':True,'allowedPatterns':['단위계산기'],'blockedTerms':[],'generator':'unit_converter','validationContract':'unit_converter_v1'}}}
+    assert not validate_config(bad)
