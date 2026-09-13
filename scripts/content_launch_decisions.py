@@ -8,6 +8,6 @@ except ImportError:
 def load_decisions(path):
     try:
         data=json.loads(path.read_text(encoding='utf-8'))
-        return {normalize_keyword(x.get('keyword')): x.get('decision') for x in data.get('decisions',[]) if isinstance(x,dict) and x.get('decision') in {'HOLD','APPROVE'}}
+        return {normalize_keyword(x.get('keyword')): x for x in data.get('decisions',[]) if isinstance(x,dict) and x.get('decision') in {'HOLD','UPDATE_EXISTING','APPROVE'}}
     except (OSError, ValueError, TypeError):
         return {}
