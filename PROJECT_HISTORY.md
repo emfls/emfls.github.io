@@ -323,3 +323,6 @@
 
 ## 2026-09-13 07:21 Keyword Hunter
 - Seeds: 40; New: 47; Rejected: 34; DB: 958; Errors: 1; Top: 사대보험계산기. Report: reports/keyword-hunter/2026-09-13-0721.md
+
+## 2026-09-13 13:54 Keyword Hunter
+- Seeds: 40; New: 37; Rejected: 30; DB: 995; Errors: 0; Top: 퇴직금계산방법. Report: reports/keyword-hunter/2026-09-13-1354.md
