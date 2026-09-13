@@ -329,3 +329,6 @@
 
 ## 2026-09-13 19:41 Keyword Hunter
 - Seeds: 40; New: 28; Rejected: 19; DB: 1023; Errors: 1; Top: 주휴수당계산법. Report: reports/keyword-hunter/2026-09-13-1941.md
+
+## 2026-09-13 20:17 Keyword Hunter
+- Seeds: 40; New: 28; Rejected: 14; DB: 1051; Errors: 0; Top: 실업급여계산기. Report: reports/keyword-hunter/2026-09-13-2017.md
