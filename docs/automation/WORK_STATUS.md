@@ -3,7 +3,7 @@ phase: content-launch-6c7
 state: DEPLOYED
 branch: main
 worktree: ../emfls-phase6c7-publish-main
-last_verified_commit: a918593542
+last_verified_commit: ba5c7001bc
 last_verified_tests: "908 passed"
 content_index_entries: 7199
 home_feed_size: "19KB"
