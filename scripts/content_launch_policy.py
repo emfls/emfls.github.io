@@ -44,5 +44,5 @@ def select_launch_candidate(rows, existing_urls=None, published_keywords=None, d
     eligible.sort(key=rank)
     queue=[]
     for row in eligible[:max(0,int(daily_limit))]:
-        queue.append({"keyword":row["keyword"],"source":row.get("source") or "KEYWORD_HUNTER","status":"READY_TO_LAUNCH","opportunity_score":float(row["opportunity_score"]),"confidence":row.get("confidence"),"category":row.get("category"),"intended_page_type":"free_tool" if _tool(row) else "article","suggested_url":row.get("suggested_url"),"duplicate_check":"passed","reason":"winner/tool priority with verified score and no overlap","selected_at":selected_at})
+        queue.append({"keyword":row["keyword"],"source":row.get("source") or "KEYWORD_HUNTER","status":"READY_TO_LAUNCH","review_status":"PAGE_REVIEW_READY","opportunity_score":float(row["opportunity_score"]),"confidence":row.get("confidence"),"category":row.get("category"),"intended_page_type":"free_tool" if _tool(row) else "article","suggested_url":row.get("suggested_url"),"duplicate_check":"passed","reason":"winner/tool priority with verified score and no overlap","selected_at":selected_at})
     return {"queue":queue,"excluded":excluded,"dailyLimit":int(daily_limit)}

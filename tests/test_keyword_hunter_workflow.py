@@ -16,3 +16,6 @@ def test_keyword_hunter_has_bounded_scheduled_workflow():
     assert "git add data/keywords_master.csv" in text
     assert "git add ." not in text
     assert ".env" not in text
+    assert "prepare_keyword_launch.py" in text
+    assert "PAGE_REVIEW_READY" in text
+    assert "github-actions[bot]" in text
