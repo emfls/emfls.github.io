@@ -326,3 +326,6 @@
 
 ## 2026-09-13 13:54 Keyword Hunter
 - Seeds: 40; New: 37; Rejected: 30; DB: 995; Errors: 0; Top: 퇴직금계산방법. Report: reports/keyword-hunter/2026-09-13-1354.md
+
+## 2026-09-13 19:41 Keyword Hunter
+- Seeds: 40; New: 28; Rejected: 19; DB: 1023; Errors: 1; Top: 주휴수당계산법. Report: reports/keyword-hunter/2026-09-13-1941.md
