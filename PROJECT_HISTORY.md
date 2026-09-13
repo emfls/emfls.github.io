@@ -345,3 +345,6 @@
 
 ## 2026-09-14 01:23 Keyword Hunter
 - Seeds: 40; New: 47; Rejected: 27; DB: 1129; Errors: 0; Top: 근무기간계산기. Report: reports/keyword-hunter/2026-09-14-0123.md
+
+## 2026-09-14 05:54 Keyword Hunter
+- Seeds: 40; New: 28; Rejected: 20; DB: 1157; Errors: 1; Top: 지급명령신청비용. Report: reports/keyword-hunter/2026-09-14-0554.md
