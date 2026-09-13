@@ -226,6 +226,10 @@ def test_launch_manifest_is_exactly_the_current_launch_batch():
         assert manifest["urls"] == []
         assert manifest["contentPaths"] == []
         return
+    if manifest["status"] == "REVIEW_ONLY":
+        assert manifest["publishedToday"] == 0
+        return
+    assert manifest["status"] == "PUBLISHED"
     assert manifest["urls"] == ["/kor/util/water-purifier-rental-price-comparison/"]
     assert manifest["contentPaths"] == ["kor/util/water-purifier-rental-price-comparison/index.html"]
     assert manifest["hubPaths"] == ["kor/util/index.html"]
