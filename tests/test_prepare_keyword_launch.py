@@ -43,3 +43,8 @@ def test_car_check_cost_hold_does_not_block_distinct_inspection_keyword():
     rows=[{"keyword":"자동차점검비용","status":"NEW","score_valid":"True","opportunity_score":"90","action":"NEW_PAGE","content_types":"informational"}, {"keyword":"자동차검사비용","status":"NEW","score_valid":"True","opportunity_score":"80","action":"NEW_PAGE","content_types":"informational"}]
     out=prepare_queue(rows,set(),set(),1,"2026-09-13T00:00:00+00:00",0,None,[{"keyword":"자동차점검비용","decision":"HOLD"}])
     assert out["excluded"]["editorial_hold"] == 1 and out["queue"][0]["keyword"] == "자동차검사비용"
+
+def test_update_existing_is_separate_from_hold_and_preserves_target():
+    row={"keyword":"차량검사비용","status":"NEW","score_valid":"True","opportunity_score":"90","action":"NEW_PAGE"}
+    out=prepare_queue([row],set(),set(),1,"2026-09-13T00:00:00+00:00",0,None,[{"keyword":"차량검사비용","decision":"UPDATE_EXISTING","targetUrl":"/kor/util/car-inspection-cost/"}])
+    assert not out["queue"] and out["excluded"]["editorial_update_existing"] == 1 and out["excluded"]["editorial_hold"] == 0

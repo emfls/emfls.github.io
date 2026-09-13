@@ -17,19 +17,24 @@ except ModuleNotFoundError:
 
 def prepare_queue(rows, existing_urls=None, published_keywords=None, daily_limit=1, selected_at=None, launched_count=0, counter_date=None, editorial_decisions=None):
     effective_count = launched_count if counter_date and selected_at and str(counter_date) == str(selected_at)[:10] else 0
-    derived=[]; held=0
+    derived=[]; held=0; updated=0
     if isinstance(editorial_decisions,list):
         decisions={''.join(ch for ch in str(x.get('keyword','')).casefold() if ch.isalnum()):x.get('decision') for x in editorial_decisions if isinstance(x,dict)}
     else: decisions=editorial_decisions or {}
     for row in rows:
         item=dict(row)
-        if decisions.get(''.join(ch for ch in str(item.get('keyword','')).casefold() if ch.isalnum())) == 'HOLD':
-            held += 1; continue
+        decision=decisions.get(''.join(ch for ch in str(item.get('keyword','')).casefold() if ch.isalnum()))
+        decision=decision.get('decision') if isinstance(decision,dict) else decision
+        if decision in {'HOLD','UPDATE_EXISTING'}:
+            if decision == 'HOLD': held += 1
+            else: updated += 1
+            continue
         if item.get('action','NEW_PAGE') == 'NEW_PAGE' and not item.get('suggested_url'):
             item['suggested_url']=plan_url(item.get('keyword'),item.get('category'),item.get('content_types'),item.get('intent'))
         derived.append(item)
     result=select_launch_candidate(derived, existing_urls, published_keywords, daily_limit, selected_at, launched_count=effective_count)
     result['excluded']['editorial_hold']=held
+    result['excluded']['editorial_update_existing']=updated
     return result
 
 def main():
