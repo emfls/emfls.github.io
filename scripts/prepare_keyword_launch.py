@@ -2,6 +2,7 @@
 import argparse, csv, json
 from pathlib import Path
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 try:
     from scripts.content_launch_policy import select_launch_candidate
 except ModuleNotFoundError:
@@ -33,12 +34,22 @@ def prepare_queue(rows, existing_urls=None, published_keywords=None, daily_limit
     return result
 
 def main():
-    p=argparse.ArgumentParser(); p.add_argument('--root',type=Path,default=Path('.')); p.add_argument('--selected-at',default=datetime.now(timezone.utc).isoformat()); args=p.parse_args()
+    p=argparse.ArgumentParser(); p.add_argument('--root',type=Path,default=Path('.')); p.add_argument('--selected-at',default=datetime.now(ZoneInfo('Asia/Seoul')).isoformat()); args=p.parse_args()
     with (args.root/'data/keywords_master.csv').open(encoding='utf-8',newline='') as f: rows=list(csv.DictReader(f))
     index=json.loads((args.root/'data/content-index-ko.json').read_text(encoding='utf-8')) if (args.root/'data/content-index-ko.json').exists() else []
     published=json.loads((args.root/'data/published_keywords.json').read_text(encoding='utf-8')) if (args.root/'data/published_keywords.json').exists() else []
     decisions=load_decisions(args.root/'data/content-launch-decisions.json')
     counter=json.loads((args.root/'data/content-launch-counter.json').read_text(encoding='utf-8')) if (args.root/'data/content-launch-counter.json').exists() else {}
     result=prepare_queue(rows,{r.get('url') for r in index},{r.get('keyword') for r in published},int(counter.get('dailyLimit',1)),args.selected_at,int(counter.get('launchedCount',0)),counter.get('date'),decisions)
-    out=args.root/'data/content-launch-queue.json'; out.write_text(json.dumps({'schemaVersion':1,'selectedAt':args.selected_at,**result},ensure_ascii=False,indent=2,sort_keys=True)+'\n',encoding='utf-8'); print(json.dumps({'queue':len(result['queue']),'excluded':result['excluded']},ensure_ascii=False))
+    out=args.root/'data/content-launch-queue.json'
+    payload={'schemaVersion':1,'selectedAt':args.selected_at,**result}
+    if out.exists():
+        try:
+            previous=json.loads(out.read_text(encoding='utf-8'))
+            material=lambda x: {k:v for k,v in x.items() if k not in {'selectedAt','selected_at'}}
+            if material(previous) == material(payload):
+                payload['selectedAt']=previous.get('selectedAt', args.selected_at)
+        except (OSError, ValueError, TypeError):
+            pass
+    out.write_text(json.dumps(payload,ensure_ascii=False,indent=2,sort_keys=True)+'\n',encoding='utf-8'); print(json.dumps({'queue':len(result['queue']),'excluded':result['excluded']},ensure_ascii=False))
 if __name__=='__main__': main()

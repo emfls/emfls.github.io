@@ -7,6 +7,11 @@ def test_prepare_queue_records_required_fields_and_preserves_excluded(tmp_path):
     item=out["queue"][0]
     for key in ("keyword","source","status","opportunity_score","confidence","category","intended_page_type","suggested_url","duplicate_check","reason","selected_at"): assert key in item
     assert item["status"] == "READY_TO_LAUNCH"
+    assert item["review_status"] == "PAGE_REVIEW_READY"
+
+def test_kst_midnight_rollover_is_next_publication_day():
+    rows=[{"keyword":"새 도구","status":"NEW","score_valid":"True","opportunity_score":"90","action":"NEW_PAGE","content_types":"calculator/tool","suggested_url":"/kor/util/new/"}]
+    assert prepare_queue(rows,set(),set(),1,"2026-09-14T00:30:00+09:00",1,"2026-09-13")["queue"]
 
 def test_prepare_does_not_increment_launch_count():
     rows=[{"keyword":"무료 계산기","status":"NEW","score_valid":"True","opportunity_score":"90","confidence":"HIGH","category":"tools","action":"NEW_PAGE","content_types":"calculator/tool","suggested_url":"/kor/util/free/index.html"}]
