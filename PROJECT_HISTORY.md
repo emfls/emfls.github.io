@@ -342,3 +342,6 @@
 - title/H1을 한국어 여행 정보 허브 의도에 맞추고 GA4·AdSense·모바일 CSS·`CollectionPage`+`ItemList`를 적용했다. sitemap에는 허브 URL을 추가하고 content-index를 재생성했으며 기존 5천여 여행 상세 URL과 4,809개 상세 페이지의 허브 역링크는 그대로 유지했다.
 - 30–50개 고유 `/kor/` 링크와 80KB 크기 상한, 실제 파일 존재, SEO·구조화 데이터·인벤토리 보존 회귀 테스트를 추가했다. 상세 기록: `reports/revenue-growth-sprint-1-travel.md`.
 - 캠핑 P1 다섯 후보는 진단만 수행했다. 우선순위는 남양주, 청주, 담양, 김포, 경기도 광주 순이며 명백한 기술 결함이 없어 이번 Sprint에서는 수정하지 않았다.
+
+## 2026-09-14 01:23 Keyword Hunter
+- Seeds: 40; New: 47; Rejected: 27; DB: 1129; Errors: 0; Top: 근무기간계산기. Report: reports/keyword-hunter/2026-09-14-0123.md
