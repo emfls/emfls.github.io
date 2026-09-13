@@ -18,7 +18,7 @@ def select_launch_candidate(rows, existing_urls=None, published_keywords=None, d
     existing_urls={str(x).split('?',1)[0] for x in (existing_urls or set())}; published={normalize_keyword(x) for x in (published_keywords or set())}
     now=datetime.fromisoformat(selected_at) if selected_at else datetime.now(timezone.utc)
     if now.tzinfo is None: now=now.replace(tzinfo=timezone.utc)
-    excluded={"duplicate_url":0,"duplicate_keyword":0,"similar_intent":0,"invalid_score":0,"stale_winner":0,"ymyl":0,"ineligible":0,"daily_limit":0}
+    excluded={"duplicate_url":0,"missing_url":0,"duplicate_keyword":0,"similar_intent":0,"invalid_score":0,"stale_winner":0,"ymyl":0,"ineligible":0,"daily_limit":0,"overlap":0}
     if int(launched_count) >= int(daily_limit):
         excluded["daily_limit"] = 1
         return {"queue": [], "excluded": excluded, "dailyLimit": int(daily_limit)}
@@ -34,10 +34,12 @@ def select_launch_candidate(rows, existing_urls=None, published_keywords=None, d
                 checked=datetime.fromisoformat(str(row["last_checked"]).replace("Z","+00:00")); checked=checked if checked.tzinfo else checked.replace(tzinfo=timezone.utc)
                 if (now-checked).days > max_age_days: excluded["stale_winner"]+=1; continue
             except ValueError: excluded["stale_winner"]+=1; continue
-        if not url.startswith("/kor/") or url in existing_urls: excluded["duplicate_url"]+=1; continue
+        if _ymyl(row): excluded["ymyl"]+=1; continue
         if norm in published or any(norm == n for _,n in seen): excluded["duplicate_keyword"]+=1; continue
         if any(SequenceMatcher(None,norm,n).ratio() >= .86 for n in published_norm) or any(SequenceMatcher(None,norm,n).ratio() >= .86 for _,n in seen): excluded["similar_intent"]+=1; continue
-        if _ymyl(row): excluded["ymyl"]+=1; continue
+        if str(row.get("overlap") or "NO_OVERLAP") != "NO_OVERLAP": excluded["overlap"]+=1; continue
+        if not url.startswith("/kor/"): excluded["missing_url"]+=1; continue
+        if url in existing_urls: excluded["duplicate_url"]+=1; continue
         seen.append((keyword,norm)); eligible.append(row)
     eligible.sort(key=rank)
     queue=[]
