@@ -10,6 +10,16 @@ def test_recovered_existing_count_excludes_new_keywords():
     baseline={'old': {'score_valid':'False'}, 'same': {'score_valid':'True'}}
     after={'old': {'score_valid':'True'}, 'same': {'score_valid':'True'}, 'new': {'score_valid':'True'}}
     assert h.recovered_existing_count(baseline, after) == 1
+
+def test_published_ledger_is_unchanged_during_normal_run():
+    old=[{"keyword":"영어공부하기좋은미드","url":"/kor/column/yeongeogongbuhijoheunmideu/","reason":"supervised","at":"2026-09-13T12:10:00+09:00"}]
+    active=[{"keyword":"영어공부하기좋은미드","status":"PUBLISHED","closest_url":"/kor/report/gpt-stock-guide.html","reason":"measured","at":"new"}]
+    assert h.update_registry(old, active, "PUBLISHED") == old
+
+def test_published_ledger_explicit_status_change_updates_one_entry():
+    old=[{"keyword":"기존","url":"/kor/existing/","reason":"r","at":"t"}]
+    result=h.update_registry(old, [{"keyword":"새","status":"PUBLISHED","closest_url":"/kor/new/","reason":"r2"}], "PUBLISHED", status_change=("새","PUBLISHED","/kor/new/"))
+    assert next(x for x in result if x["keyword"] == "새")["url"] == "/kor/new/"
 from scripts.keyword_hunter_site import inventory, SiteIndex
 
 class HunterTests(unittest.TestCase):
