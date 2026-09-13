@@ -59,6 +59,7 @@ class SeoQaWorkflowTests(unittest.TestCase):
 
     def test_push_guard_fetches_event_before_commit_in_shallow_checkout(self):
         source = WORKFLOW.read_text(encoding="utf-8")
+        self.assertIn("fetch-depth: 0", source)
         push_branch = source.index('COMPARE_REF="$EVENT_BEFORE"')
         fetch_before = source.index('git fetch origin "$EVENT_BEFORE" --depth=1')
         guard = source.index("scripts/content_launch_guard.py")
