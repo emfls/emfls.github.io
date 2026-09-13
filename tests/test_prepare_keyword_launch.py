@@ -38,3 +38,8 @@ def test_unknown_editorial_decision_is_ignored_safely():
     row={"keyword":"안전한도구","status":"NEW","score_valid":"True","opportunity_score":"80","action":"NEW_PAGE","content_types":"calculator/tool"}
     out=prepare_queue([row],set(),set(),1,"2026-09-13T00:00:00+00:00",0,None,[{"keyword":"안전한도구","decision":"UNKNOWN"}])
     assert out["queue"] and out["excluded"]["editorial_hold"] == 0
+
+def test_car_check_cost_hold_does_not_block_distinct_inspection_keyword():
+    rows=[{"keyword":"자동차점검비용","status":"NEW","score_valid":"True","opportunity_score":"90","action":"NEW_PAGE","content_types":"informational"}, {"keyword":"자동차검사비용","status":"NEW","score_valid":"True","opportunity_score":"80","action":"NEW_PAGE","content_types":"informational"}]
+    out=prepare_queue(rows,set(),set(),1,"2026-09-13T00:00:00+00:00",0,None,[{"keyword":"자동차점검비용","decision":"HOLD"}])
+    assert out["excluded"]["editorial_hold"] == 1 and out["queue"][0]["keyword"] == "자동차검사비용"
