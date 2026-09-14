@@ -360,3 +360,6 @@
 
 ## 2026-09-15 04:26 Keyword Hunter
 - Seeds: 40; New: 98; Rejected: 77; DB: 1546; Errors: 0; Top: 알리바바구매대행. Report: reports/keyword-hunter/2026-09-15-0426.md
+
+## 2026-09-15 08:11 Keyword Hunter
+- Seeds: 40; New: 50; Rejected: 28; DB: 1596; Errors: 0; Top: 원천징수이행상황신고서. Report: reports/keyword-hunter/2026-09-15-0811.md
