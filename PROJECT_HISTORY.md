@@ -348,3 +348,6 @@
 
 ## 2026-09-14 05:54 Keyword Hunter
 - Seeds: 40; New: 28; Rejected: 20; DB: 1157; Errors: 1; Top: 지급명령신청비용. Report: reports/keyword-hunter/2026-09-14-0554.md
+
+## 2026-09-14 09:15 Keyword Hunter
+- Seeds: 40; New: 97; Rejected: 75; DB: 1254; Errors: 0; Top: 마진계산기. Report: reports/keyword-hunter/2026-09-14-0915.md
