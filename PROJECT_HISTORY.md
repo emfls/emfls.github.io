@@ -354,3 +354,6 @@
 
 ## 2026-09-14 14:06 Keyword Hunter
 - Seeds: 40; New: 115; Rejected: 92; DB: 1369; Errors: 0; Top: 해외구매대행. Report: reports/keyword-hunter/2026-09-14-1406.md
+
+## 2026-09-14 21:56 Keyword Hunter
+- Seeds: 40; New: 79; Rejected: 54; DB: 1448; Errors: 1; Top: 불법사금융피해구제센터. Report: reports/keyword-hunter/2026-09-14-2156.md
