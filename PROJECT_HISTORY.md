@@ -372,3 +372,6 @@
 
 ## 2026-09-16 02:04 Keyword Hunter
 - Seeds: 40; New: 28; Rejected: 24; DB: 1759; Errors: 0; Top: 국내리조트추천. Report: reports/keyword-hunter/2026-09-16-0204.md
+
+## 2026-09-16 06:25 Keyword Hunter
+- Seeds: 40; New: 37; Rejected: 29; DB: 1796; Errors: 0; Top: 3월여행지추천. Report: reports/keyword-hunter/2026-09-16-0625.md
