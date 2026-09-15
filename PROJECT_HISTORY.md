@@ -366,3 +366,6 @@
 
 ## 2026-09-15 13:59 Keyword Hunter
 - Seeds: 40; New: 28; Rejected: 15; DB: 1624; Errors: 0; Top: 유럽구매대행. Report: reports/keyword-hunter/2026-09-15-1359.md
+
+## 2026-09-15 20:50 Keyword Hunter
+- Seeds: 40; New: 107; Rejected: 88; DB: 1731; Errors: 0; Top: 독일구매대행. Report: reports/keyword-hunter/2026-09-15-2050.md
