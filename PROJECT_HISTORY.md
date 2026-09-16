@@ -378,3 +378,6 @@
 
 ## 2026-09-16 09:26 Keyword Hunter
 - Seeds: 40; New: 40; Rejected: 24; DB: 1836; Errors: 0; Top: 필리핀영어캠프비용. Report: reports/keyword-hunter/2026-09-16-0926.md
+
+## 2026-09-16 16:44 Keyword Hunter
+- Seeds: 40; New: 25; Rejected: 21; DB: 1861; Errors: 0; Top: none. Report: reports/keyword-hunter/2026-09-16-1644.md
