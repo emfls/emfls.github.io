@@ -31,6 +31,7 @@ class CollectGa4SnapshotTest(unittest.TestCase):
         self.assertEqual(snapshot["site"]["ga4"]["source"], "GOOGLE_ANALYTICS_DATA_API")
         self.assertEqual(snapshot["site"]["ga4"]["status"], "VERIFIED")
         self.assertEqual(snapshot["pages"][0]["ga4"]["views"], 10)
+        self.assertEqual(snapshot["pages"][0]["ga4"]["revenueMetric"], "totalAdRevenue")
         self.assertEqual(snapshot["collection"]["propertyId"], "226808916")
 
     def test_atomic_write_does_not_leave_partial_json(self):
@@ -38,6 +39,15 @@ class CollectGa4SnapshotTest(unittest.TestCase):
             path = Path(directory) / "snapshot.json"
             write_atomically(path, {"ok": True})
             self.assertEqual(json.loads(path.read_text()), {"ok": True})
+
+    def test_site_users_can_use_separate_no_dimension_row(self):
+        page = row("/a.html", [10, 8, 20, 0.1])
+        site = row("", [10, 5, 20, 0.1])
+        snapshot = build_snapshot(
+            [page], site_rows=[site], period_start="2026-09-01", period_end="2026-09-16",
+            collected_at="2026-09-17T00:00:00+00:00", property_id="226808916",
+        )
+        self.assertEqual(snapshot["site"]["ga4"]["users"], 5)
 
 
 if __name__ == "__main__":

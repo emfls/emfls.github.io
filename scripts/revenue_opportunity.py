@@ -58,6 +58,10 @@ def _verified(channel):
     return bool(channel and channel.get("status") == "VERIFIED")
 
 
+def _verified_ad_revenue(channel):
+    return _verified(channel) and channel.get("revenueMetric") == "totalAdRevenue"
+
+
 def _component(name, score, maximum, status, reason, inputs):
     return {
         "name": name,
@@ -120,7 +124,7 @@ def score_opportunity(record, cluster_medians):
 
     ga4 = record.get("ga4") or {}
     adsense = record.get("adsense") or {}
-    ga4_revenue = ga4.get("revenue") if _verified(ga4) else None
+    ga4_revenue = ga4.get("revenue") if _verified_ad_revenue(ga4) else None
     adsense_revenue = adsense.get("revenue") if _verified(adsense) else None
     revenue = adsense_revenue if adsense_revenue is not None else ga4_revenue
     revenue_status = "VERIFIED" if revenue is not None else "NOT_CONNECTED"
@@ -176,7 +180,7 @@ def classify_record(record, score):
     search_name, search = _best_search_channel(record)
     has_verified_visits = _verified(ga4) and (ga4.get("views") or 0) > 0
     has_verified_search = bool(search_name and ((search.get("impressions") or 0) > 0 or (search.get("clicks") or 0) > 0))
-    has_verified_revenue = _verified(ga4) and (ga4.get("revenue") or 0) > 0
+    has_verified_revenue = _verified_ad_revenue(ga4) and (ga4.get("revenue") or 0) > 0
     adsense = record.get("adsense") or {}
     has_verified_revenue = has_verified_revenue or (_verified(adsense) and (adsense.get("revenue") or 0) > 0)
     if has_verified_revenue and (has_verified_visits or has_verified_search):

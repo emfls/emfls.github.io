@@ -15,7 +15,7 @@ METRICS = (
     "screenPageViews",
     "totalUsers",
     "userEngagementDuration",
-    "totalRevenue",
+    "totalAdRevenue",
 )
 SCHEMA_VERSION = 2
 
@@ -53,35 +53,37 @@ def _dimension(row):
     return getattr(item, "value", None) if item is not None else None
 
 
-def build_snapshot(rows, *, period_start, period_end, collected_at, property_id):
-    pages = []
+def build_snapshot(rows, *, site_rows=None, period_start, period_end, collected_at, property_id):
+    aggregated = {}
     total = {name: 0.0 for name in METRICS}
     for row in rows:
         url = normalize_path(_dimension(row))
         values = [_number(_metric(row, i)) for i in range(len(METRICS))]
-        page = {
-            "url": url,
-            "ga4": {
-                "views": int(values[0]) if values[0] is not None else None,
-                "users": int(values[1]) if values[1] is not None else None,
-                "engagementSeconds": values[2],
-                "revenue": values[3],
-                "period": {"start": period_start, "end": period_end},
-                "source": "GOOGLE_ANALYTICS_DATA_API",
-                "status": "VERIFIED",
-            },
-        }
+        bucket = aggregated.setdefault(url, [0.0, 0.0, 0.0, 0.0])
         for name, value in zip(METRICS, values):
             if value is not None:
                 total[name] += value
-        pages.append(page)
-    total_users = int(total["totalUsers"])
-    total_views = int(total["screenPageViews"])
+        for index, value in enumerate(values):
+            if value is not None:
+                bucket[index] += value
+    pages = [{"url": url, "ga4": {
+        "views": int(values[0]), "users": int(values[1]),
+        "engagementSeconds": values[2], "revenue": values[3],
+        "revenueMetric": "totalAdRevenue",
+        "period": {"start": period_start, "end": period_end},
+        "source": "GOOGLE_ANALYTICS_DATA_API", "status": "VERIFIED",
+    }} for url, values in sorted(aggregated.items())]
+    site_values = total
+    if site_rows is not None:
+        site_values = {name: _number(_metric(next(iter(site_rows), None), i)) for i, name in enumerate(METRICS)}
+    total_users = int(site_values["totalUsers"] or 0)
+    total_views = int(site_values["screenPageViews"] or 0)
     site_ga4 = {
         "views": total_views,
         "users": total_users,
-        "engagementSeconds": total["userEngagementDuration"],
-        "revenue": total["totalRevenue"],
+        "engagementSeconds": site_values["userEngagementDuration"],
+        "revenue": site_values["totalAdRevenue"],
+        "revenueMetric": "totalAdRevenue",
         "viewsPerUser": round(total_views / total_users, 2) if total_users else None,
         "period": {"start": period_start, "end": period_end},
         "source": "GOOGLE_ANALYTICS_DATA_API",
@@ -115,7 +117,7 @@ def _credentials_from_env():
     return property_id, info
 
 
-def collect(property_id, service_account_info, period_start, period_end):
+def collect(property_id, service_account_info, period_start, period_end, *, include_dimension=True):
     from google.analytics.data_v1beta import BetaAnalyticsDataClient
     from google.analytics.data_v1beta.types import DateRange, Dimension, Metric, RunReportRequest
     from google.oauth2 import service_account
@@ -127,7 +129,7 @@ def collect(property_id, service_account_info, period_start, period_end):
     client = BetaAnalyticsDataClient(credentials=credentials)
     request = RunReportRequest(
         property=f"properties/{property_id}",
-        dimensions=[Dimension(name="pagePathPlusQueryString")],
+        dimensions=[Dimension(name="pagePathPlusQueryString")] if include_dimension else [],
         metrics=[Metric(name=name) for name in METRICS],
         date_ranges=[DateRange(start_date=period_start, end_date=period_end)],
         limit=100000,
@@ -154,8 +156,10 @@ def main():
     end = date.today() - timedelta(days=1)
     start = end - timedelta(days=max(1, args.days) - 1)
     response = collect(property_id, info, start.isoformat(), end.isoformat())
+    site_response = collect(property_id, info, start.isoformat(), end.isoformat(), include_dimension=False)
     snapshot = build_snapshot(
         response.rows,
+        site_rows=site_response.rows,
         period_start=start.isoformat(),
         period_end=end.isoformat(),
         collected_at=datetime.now(timezone.utc).replace(microsecond=0).isoformat(),

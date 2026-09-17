@@ -36,6 +36,7 @@ def performance_record(**overrides):
             "users": 80,
             "engagementSeconds": 50,
             "revenue": 0.2,
+            "revenueMetric": "totalAdRevenue",
             "status": "VERIFIED",
         },
         "adsense": {"revenue": None, "rpm": None, "status": "NOT_CONNECTED"},
@@ -107,6 +108,7 @@ class RevenueOpportunityBehaviorTest(unittest.TestCase):
                 "users": 117,
                 "engagementSeconds": 71,
                 "revenue": 0.88,
+                "revenueMetric": "totalAdRevenue",
                 "status": "VERIFIED",
             },
         )
@@ -117,6 +119,27 @@ class RevenueOpportunityBehaviorTest(unittest.TestCase):
 
         self.assertEqual(classification, "WINNER")
         self.assertEqual(action, "PROTECT")
+
+    def test_total_revenue_without_ad_metric_cannot_create_winner(self):
+        record = performance_record(ga4={
+            "views": 100, "users": 80, "engagementSeconds": 50,
+            "revenue": 0.2, "revenueMetric": None, "status": "VERIFIED",
+        })
+        classification, action, _ = classify_record(record, score_opportunity(record, {}))
+        self.assertNotEqual(classification, "WINNER")
+        self.assertEqual(action, "IMPROVE_SEARCH_CTR")
+
+    def test_duplicate_normalized_rows_are_aggregated(self):
+        from scripts.collect_ga4_snapshot import build_snapshot
+        from types import SimpleNamespace
+        rows = [
+            SimpleNamespace(dimension_values=[SimpleNamespace(value="/x?a=1")], metric_values=[SimpleNamespace(value="2"), SimpleNamespace(value="1"), SimpleNamespace(value="3"), SimpleNamespace(value="0.1")]),
+            SimpleNamespace(dimension_values=[SimpleNamespace(value="/x?a=2")], metric_values=[SimpleNamespace(value="4"), SimpleNamespace(value="2"), SimpleNamespace(value="5"), SimpleNamespace(value="0.2")]),
+        ]
+        snapshot = build_snapshot(rows, period_start="2026-09-01", period_end="2026-09-16", collected_at="2026-09-17T00:00:00+00:00", property_id="226808916")
+        self.assertEqual(len(snapshot["pages"]), 1)
+        self.assertEqual(snapshot["pages"][0]["ga4"]["views"], 6)
+        self.assertAlmostEqual(snapshot["pages"][0]["ga4"]["revenue"], 0.3)
 
     def test_cooldown_is_excluded_from_improvement_selection(self):
         record = performance_record(lastOptimizationDate="2026-08-25")
