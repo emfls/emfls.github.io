@@ -44,10 +44,25 @@ def paginate_query(fetch, *, row_limit=ROW_LIMIT):
         start_row += row_limit
 
 
-def _aggregate(rows):
+def _page_from_row(row, property_url=PROPERTY_URL):
+    keys = row.get("keys")
+    if not isinstance(keys, list) or not keys or not keys[0]:
+        return None
+    raw = str(keys[0]).strip()
+    expected = urlsplit(property_url)
+    parsed = urlsplit(raw)
+    if parsed.scheme not in {"http", "https"} or parsed.netloc.lower() != expected.netloc.lower():
+        return None
+    return raw
+
+
+def _aggregate(rows, property_url=PROPERTY_URL):
     grouped = {}
     for row in rows:
-        url = normalize_url(row.get("page"))
+        page = _page_from_row(row, property_url)
+        if page is None:
+            continue
+        url = normalize_url(page)
         bucket = grouped.setdefault(url, {"clicks": 0, "impressions": 0, "positions": []})
         clicks = int(row.get("clicks") or 0)
         impressions = int(row.get("impressions") or 0)
@@ -62,7 +77,10 @@ def build_snapshot(rows, *, period_start, period_end, generated_at, property_url
     if not rows:
         raise ValueError("Search Console API returned no page rows; existing snapshot was preserved")
     pages = []
-    for url, values in sorted(_aggregate(rows).items()):
+    grouped = _aggregate(rows, property_url)
+    if not grouped:
+        raise ValueError("Search Console API returned no valid page rows; existing snapshot was preserved")
+    for url, values in sorted(grouped.items()):
         impressions = values["impressions"]
         clicks = values["clicks"]
         position = (

@@ -14,6 +14,10 @@ The previous blocker is resolved. `scripts/collect_gsc_snapshot.py` now uses the
 
 Google's Search Console API requires a project credential and at least read access to the target property; the property identifier is the exact Search Console value, such as a URL-prefix URL or `sc-domain:` value. See [API prerequisites](https://developers.google.com/webmaster-tools/v1/prereqs) and [property permissions](https://developers.google.com/webmaster-tools/v1/sites).
 
+## Wave 5b parsing repair
+
+The first workflow run succeeded operationally but exposed a parser defect: Search Analytics returns the requested `page` dimension in `rows[].keys[0]`, not `rows[].page`. The old parser therefore normalized every row to `/` and silently collapsed the snapshot. The parser now reads `keys[0]`, rejects missing/empty keys and off-property URLs, and only then normalizes. A snapshot containing only malformed rows fails without replacing the existing file.
+
 ## Validation status
 
-Local fixture, pagination, normalization, duplicate aggregation, credential decoding, failure-safe, and pipeline integration tests pass. Actual GitHub Actions property read remains pending because the secret is not exposed to the local session.
+Local fixture, pagination, normalization, duplicate aggregation, credential decoding, failure-safe, parser regression, and pipeline integration tests pass. The existing bad snapshot was not manually edited; the next workflow run must regenerate it from the API.
