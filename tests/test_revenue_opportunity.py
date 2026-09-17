@@ -80,6 +80,13 @@ class RevenueOpportunityDataTest(unittest.TestCase):
         self.assertEqual(channel["impressions"], 0)
         self.assertEqual(channel["status"], "VERIFIED")
 
+    def test_normalization_preserves_ga4_revenue_metric_metadata(self):
+        channel = normalize_channel(
+            {"revenue": 0.2, "revenueMetric": "totalAdRevenue", "status": "VERIFIED", "period": {"start": "2026-08-20", "end": "2026-09-16"}},
+            ("revenue",), "2026-09-17", ("revenueMetric",),
+        )
+        self.assertEqual(channel["revenueMetric"], "totalAdRevenue")
+
 
 class RevenueOpportunityBehaviorTest(unittest.TestCase):
     def test_high_impressions_low_ctr_scores_above_low_demand_page(self):

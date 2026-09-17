@@ -29,21 +29,21 @@ def freshness_status(channel, as_of, max_age_days=7):
     return "STALE_DATA" if age > max_age_days else channel.get("status", "INSUFFICIENT_DATA")
 
 
-def empty_channel(fields, status="NOT_CONNECTED"):
+def empty_channel(fields, status="NOT_CONNECTED", metadata_fields=()):
     if status not in ALLOWED_STATUSES:
         raise ValueError(f"unsupported data status: {status}")
     return {
-        **{field: None for field in fields},
+        **{field: None for field in (*fields, *metadata_fields)},
         "status": status,
         "period": None,
         "source": None,
     }
 
 
-def normalize_channel(channel, fields, as_of):
+def normalize_channel(channel, fields, as_of, metadata_fields=()):
     if channel is None:
-        return empty_channel(fields)
-    result = {field: channel.get(field) for field in fields}
+        return empty_channel(fields, metadata_fields=metadata_fields)
+    result = {field: channel.get(field) for field in (*fields, *metadata_fields)}
     result.update(
         {
             "status": freshness_status(channel, as_of),

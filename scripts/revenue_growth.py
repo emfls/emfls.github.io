@@ -38,6 +38,7 @@ CHANNEL_FIELDS = {
     "ga4": ("views", "users", "engagementSeconds", "revenue"),
     "adsense": ("revenue", "rpm"),
 }
+CHANNEL_METADATA_FIELDS = {"ga4": ("revenueMetric",)}
 
 
 def content_growth_summary(experiments, as_of):
@@ -299,7 +300,8 @@ def run_revenue_growth(
         }
         for channel_name, fields in CHANNEL_FIELDS.items():
             channel = performance_row.get(channel_name)
-            record[channel_name] = normalize_channel(channel, fields, as_of) if channel else empty_channel(fields)
+            metadata = CHANNEL_METADATA_FIELDS.get(channel_name, ())
+            record[channel_name] = normalize_channel(channel, fields, as_of, metadata) if channel else empty_channel(fields, metadata_fields=metadata)
         if naver_match:
             naver_row = naver_match["matchedByUrl"].get(url)
             if naver_row:

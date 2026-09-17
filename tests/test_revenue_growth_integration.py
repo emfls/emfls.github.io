@@ -36,7 +36,7 @@ class RevenueGrowthIntegrationTest(unittest.TestCase):
             write_json(paths["scores"], {"pages": [{"url": url, "score": 20 if "winner" in url else 75, "type": "TRAFFIC"} for url in urls]})
             write_json(paths["audit"], {"pages": [{"url": url, "indexable": True, "duplicate": False} for url in urls]})
             period = {"start": "2026-08-03", "end": "2026-08-30"}
-            write_json(paths["performance"], {"site": {"ga4": {"views": 100, "users": 80, "period": period, "status": "VERIFIED"}}, "pages": [{"url": urls[0], "ga4": {"views": 10, "users": 8, "revenue": 0.5, "period": period, "status": "VERIFIED"}}]})
+            write_json(paths["performance"], {"site": {"ga4": {"views": 100, "users": 80, "period": period, "status": "VERIFIED"}}, "pages": [{"url": urls[0], "ga4": {"views": 10, "users": 8, "revenue": 0.5, "revenueMetric": "totalAdRevenue", "period": period, "status": "VERIFIED"}}]})
             write_json(paths["experiments"], {"experiments": []})
             write_json(paths["history"], {"pages": [{"url": urls[2], "lastOptimizationDate": "2026-08-25"}]})
             naver_rows = [
@@ -60,6 +60,7 @@ class RevenueGrowthIntegrationTest(unittest.TestCase):
             winner = next(row for row in pages["pages"] if row["url"] == urls[0])
             low_demand = next(row for row in pages["pages"] if row["url"] == urls[3])
             self.assertEqual((winner["classification"], winner["nextAction"]), ("WINNER", "PROTECT"))
+            self.assertEqual(winner["ga4"]["revenueMetric"], "totalAdRevenue")
             self.assertNotEqual(low_demand["classification"], "OPPORTUNITY")
             self.assertEqual(winner["naver"]["positionStatus"], "NOT_AVAILABLE")
             report = (root / "report.md").read_text(encoding="utf-8")
@@ -110,10 +111,10 @@ class RevenueGrowthIntegrationTest(unittest.TestCase):
                     "as_of": "2026-08-31",
                     "site": {
                         "adsense": {"revenue_28d": 13.88, "period": period, "status": "VERIFIED"},
-                        "ga4": {"views": 8090, "users": 6035, "revenue": 14.02, "period": period, "status": "VERIFIED"},
+                        "ga4": {"views": 8090, "users": 6035, "revenue": 14.02, "revenueMetric": "totalAdRevenue", "period": period, "status": "VERIFIED"},
                     },
                     "pages": [
-                        {"url": "/winner.html", "ga4": {"views": 143, "users": 117, "engagementSeconds": 71, "revenue": 0.88, "period": period, "status": "VERIFIED"}},
+                        {"url": "/winner.html", "ga4": {"views": 143, "users": 117, "engagementSeconds": 71, "revenue": 0.88, "revenueMetric": "totalAdRevenue", "period": period, "status": "VERIFIED"}},
                         {"url": "/kor/report/camp/opportunity.html", "naver": {"impressions": 18000, "clicks": 180, "ctr": 0.01, "position": 18, "period": period, "status": "VERIFIED"}},
                         {"url": "/kor/report/camp/cooldown.html", "naver": {"impressions": 17000, "clicks": 170, "ctr": 0.01, "position": 19, "period": period, "status": "VERIFIED"}},
                     ],
