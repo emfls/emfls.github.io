@@ -9,7 +9,7 @@ from pathlib import Path
 from statistics import median
 
 try:
-    from scripts.naver_performance import load_naver_snapshot, match_naver_rows
+    from scripts.naver_performance import load_naver_snapshot, match_naver_rows, snapshot_freshness
     from scripts.quality_site import normalize_url
     from scripts.revenue_opportunity import (
         classify_record,
@@ -20,7 +20,7 @@ try:
         select_improvements,
     )
 except ModuleNotFoundError:
-    from naver_performance import load_naver_snapshot, match_naver_rows
+    from naver_performance import load_naver_snapshot, match_naver_rows, snapshot_freshness
     from quality_site import normalize_url
     from revenue_opportunity import (
         classify_record,
@@ -305,6 +305,7 @@ def run_revenue_growth(
     history_map = _by_url(history.get("pages") or [])
     experiment_map = _by_url(experiments.get("experiments") or [])
     naver_snapshot = load_naver_snapshot(naver_snapshot_path) if naver_snapshot_path else None
+    naver_snapshot_status = snapshot_freshness(naver_snapshot, as_of) if naver_snapshot else "NOT_CONNECTED"
     canonical_map = {
         normalize_url(row.get("url")): normalize_url(row.get("canonical"))
         for row in audit.get("pages") or []
@@ -347,7 +348,7 @@ def run_revenue_growth(
                     "ctr": naver_row["ctr"],
                     "position": None,
                     "positionStatus": "NOT_AVAILABLE",
-                    "status": "VERIFIED",
+                    "status": naver_snapshot_status,
                     "period": naver_snapshot["period"],
                     "periodPreset": naver_snapshot["periodPreset"],
                     "source": naver_snapshot["source"],
@@ -373,7 +374,7 @@ def run_revenue_growth(
             "naver_max_clicks": naver_benchmarks["maxClicks"],
             "naver_percentiles": naver_benchmarks["percentiles"],
         })
-    naver_gate_passed = bool(naver_match and naver_match["quality"]["gatePassed"])
+    naver_gate_passed = bool(naver_match and naver_snapshot_status == "VERIFIED" and naver_match["quality"]["gatePassed"])
     for record in records:
         score = score_opportunity(record, medians)
         classification, action, reasons = classify_record(record, score)
@@ -391,7 +392,7 @@ def run_revenue_growth(
         if eligible:
             classification, action = "OPPORTUNITY", "IMPROVE_SEARCH_CTR"
             reasons = ["Naver impressions at or above camping median", "Naver CTR below camping median", "Verified camping demand"]
-        elif naver_match and classification == "OPPORTUNITY":
+        elif naver_match and naver_snapshot_status == "VERIFIED" and classification == "OPPORTUNITY":
             classification, action = "EXPERIMENT", "WAIT_FOR_DATA"
             reasons = ["Naver evidence does not satisfy the controlled Opportunity gate"]
         record.update(
@@ -409,7 +410,7 @@ def run_revenue_growth(
     active_experiment_count = sum(
         row.get("status") == "OBSERVING" for row in experiments.get("experiments") or []
     )
-    selected = select_improvements(records, active_experiments=active_experiment_count) if (not naver_match or naver_gate_passed) else []
+    selected = select_improvements(records, active_experiments=active_experiment_count) if (not naver_match or naver_snapshot_status != "VERIFIED" or naver_gate_passed) else []
     ranked = sorted(records, key=lambda row: (-row["revenueOpportunityScore"], row["url"]))
     site = performance.get("site") or {}
     adsense = site.get("adsense") or {}
@@ -466,6 +467,8 @@ def run_revenue_growth(
                 **(naver_match["quality"] if naver_match else {"gatePassed": False, "gateFailures": ["NOT_CONNECTED"]}),
                 "rankingReliable": bool(naver_gate_passed),
                 "limitations": (naver_snapshot or {}).get("limitations") or [],
+                "snapshotStatus": naver_snapshot_status,
+                "dataUpdatedAt": (naver_snapshot or {}).get("dataUpdatedAt"),
             }
         },
         "protectedWinners": [row for row in records if row.get("classification") == "WINNER"],

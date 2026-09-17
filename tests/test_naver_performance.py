@@ -9,6 +9,7 @@ from scripts.naver_performance import (
     load_naver_snapshot,
     match_naver_rows,
     normalize_naver_url,
+    snapshot_freshness,
     validate_naver_row,
 )
 
@@ -70,6 +71,18 @@ class NaverRowValidationTest(unittest.TestCase):
 
 
 class NaverMatchingQualityTest(unittest.TestCase):
+    def test_snapshot_freshness_uses_existing_seven_day_policy(self):
+        self.assertEqual(snapshot_freshness(snapshot_with_rows([]), "2026-09-05"), "VERIFIED")
+        self.assertEqual(snapshot_freshness(snapshot_with_rows([]), "2026-09-07"), "STALE_DATA")
+
+    def test_snapshot_without_or_with_invalid_update_date_is_not_verified(self):
+        missing = snapshot_with_rows([])
+        missing.pop("dataUpdatedAt")
+        self.assertEqual(snapshot_freshness(missing, "2026-09-05"), "NOT_AVAILABLE")
+        invalid = snapshot_with_rows([])
+        invalid["dataUpdatedAt"] = "not-a-date"
+        self.assertEqual(snapshot_freshness(invalid, "2026-09-05"), "NOT_AVAILABLE")
+
     def test_duplicate_normalized_urls_block_quality_gate(self):
         result = match_naver_rows(
             snapshot_with_rows(

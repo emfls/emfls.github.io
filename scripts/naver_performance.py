@@ -4,6 +4,7 @@
 import argparse
 import json
 from collections import Counter
+from datetime import date
 from pathlib import Path
 
 try:
@@ -18,6 +19,18 @@ def normalize_naver_url(url):
 
 def load_naver_snapshot(path):
     return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+def snapshot_freshness(snapshot, as_of, max_age_days=7):
+    """Return an explicit freshness state without changing the source metrics."""
+    updated = (snapshot or {}).get("dataUpdatedAt")
+    if not updated:
+        return "NOT_AVAILABLE"
+    try:
+        age = (date.fromisoformat(as_of) - date.fromisoformat(updated)).days
+    except (TypeError, ValueError):
+        return "NOT_AVAILABLE"
+    return "STALE_DATA" if age > max_age_days else "VERIFIED"
 
 
 def validate_naver_row(row):

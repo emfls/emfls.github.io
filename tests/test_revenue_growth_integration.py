@@ -11,6 +11,21 @@ def write_json(path, payload):
 
 
 class RevenueGrowthIntegrationTest(unittest.TestCase):
+    def test_stale_naver_is_preserved_but_does_not_demote_fresh_search_opportunity(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            paths = {name: root / f"{name}.json" for name in ("scores", "audit", "performance", "experiments", "history", "naver")}
+            write_json(paths["scores"], {"pages": [{"url": "/kor/report/camp/opportunity.html", "score": 75, "type": "TRAFFIC"}]})
+            write_json(paths["audit"], {"pages": [{"url": "/kor/report/camp/opportunity.html", "indexable": True}]})
+            write_json(paths["performance"], {"site": {}, "pages": [{"url": "/kor/report/camp/opportunity.html", "google": {"clicks": 20, "impressions": 100, "ctr": 0.2, "position": 5, "status": "VERIFIED", "period": {"start": "2026-08-19", "end": "2026-09-15"}}}]})
+            write_json(paths["experiments"], {"experiments": []})
+            write_json(paths["history"], {"pages": []})
+            write_json(paths["naver"], {"period": {"start": "2026-08-01", "end": "2026-08-30"}, "periodPreset": "RECENT_30_DAYS", "dataUpdatedAt": "2026-08-30", "source": "NAVER_SEARCH_ADVISOR_UI_TOP_30", "rows": [{"sourceUrl": "https://emfls.github.io/kor/report/camp/opportunity.html", "clicks": 5, "impressions": 100, "ctr": 0.05, "averageRank": None, "rankStatus": "NOT_AVAILABLE", "status": "VERIFIED"}]})
+            pages, summary = run_revenue_growth(page_scores_path=paths["scores"], audit_path=paths["audit"], performance_path=paths["performance"], experiments_path=paths["experiments"], optimization_history_path=paths["history"], naver_snapshot_path=paths["naver"], as_of="2026-09-18", page_output=root / "pages.json", opportunity_output=root / "opportunities.json", report_output=root / "report.md")
+            row = pages["pages"][0]
+            self.assertEqual(row["naver"]["status"], "STALE_DATA")
+            self.assertEqual(row["naver"]["clicks"], 5)
+            self.assertNotEqual(row["classification"], "EXPERIMENT")
     def test_period_alignment_distinguishes_match_offset_overlap_and_non_overlap(self):
         self.assertEqual(period_alignment({"start": "2026-08-01", "end": "2026-08-28"}, {"start": "2026-08-01", "end": "2026-08-28"}), "MATCH")
         self.assertEqual(period_alignment({"start": "2026-08-20", "end": "2026-09-16"}, {"start": "2026-08-19", "end": "2026-09-15"}), "ONE_DAY_OFFSET")
