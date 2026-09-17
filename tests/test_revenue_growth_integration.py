@@ -11,6 +11,18 @@ def write_json(path, payload):
 
 
 class RevenueGrowthIntegrationTest(unittest.TestCase):
+    def test_unmatched_top30_naver_row_does_not_demote_non_camping_opportunity(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            write_json(root / "scores.json", {"pages": [{"url": "/util/tool.html", "score": 75, "type": "TRAFFIC"}]})
+            write_json(root / "audit.json", {"pages": [{"url": "/util/tool.html", "indexable": True}]})
+            write_json(root / "performance.json", {"site": {}, "pages": [{"url": "/util/tool.html", "google": {"clicks": 20, "impressions": 100, "ctr": 0.2, "position": 5, "status": "VERIFIED", "period": {"start": "2026-08-19", "end": "2026-09-15"}}}]})
+            write_json(root / "experiments.json", {"experiments": []})
+            write_json(root / "history.json", {"pages": []})
+            write_json(root / "naver.json", {"source": "NAVER_SEARCH_ADVISOR_UI_TOP_30", "periodPreset": "RECENT_30_DAYS", "period": {"start": "2026-08-19", "end": "2026-09-17"}, "dataUpdatedAt": "2026-09-17", "rows": []})
+            pages, _ = run_revenue_growth(page_scores_path=root / "scores.json", audit_path=root / "audit.json", performance_path=root / "performance.json", experiments_path=root / "experiments.json", optimization_history_path=root / "history.json", naver_snapshot_path=root / "naver.json", as_of="2026-09-18", page_output=root / "pages.json", opportunity_output=root / "opp.json", report_output=root / "report.md")
+            self.assertNotEqual(pages["pages"][0]["classification"], "EXPERIMENT")
+
     def test_stale_naver_is_preserved_but_does_not_demote_fresh_search_opportunity(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

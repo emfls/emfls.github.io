@@ -392,7 +392,13 @@ def run_revenue_growth(
         if eligible:
             classification, action = "OPPORTUNITY", "IMPROVE_SEARCH_CTR"
             reasons = ["Naver impressions at or above camping median", "Naver CTR below camping median", "Verified camping demand"]
-        elif naver_match and naver_snapshot_status == "VERIFIED" and classification == "OPPORTUNITY":
+        elif (
+            naver_match
+            and naver_snapshot_status == "VERIFIED"
+            and record.get("cluster") == "camping"
+            and naver.get("status") == "VERIFIED"
+            and classification == "OPPORTUNITY"
+        ):
             classification, action = "EXPERIMENT", "WAIT_FOR_DATA"
             reasons = ["Naver evidence does not satisfy the controlled Opportunity gate"]
         record.update(
