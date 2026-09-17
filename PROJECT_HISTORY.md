@@ -399,3 +399,6 @@
 
 ## 2026-09-17 22:32 Keyword Hunter
 - Seeds: 40; New: 50; Rejected: 37; DB: 2084; Errors: 0; Top: 중고차매매사이트순위. Report: reports/keyword-hunter/2026-09-17-2232.md
+
+## 2026-09-18 03:18 Keyword Hunter
+- Seeds: 40; New: 11; Rejected: 7; DB: 2095; Errors: 0; Top: none. Report: reports/keyword-hunter/2026-09-18-0318.md
