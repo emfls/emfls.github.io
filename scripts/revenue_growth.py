@@ -9,7 +9,7 @@ from pathlib import Path
 from statistics import median
 
 try:
-    from scripts.naver_performance import load_naver_snapshot, match_naver_rows, snapshot_freshness
+    from scripts.naver_performance import latest_naver_snapshot_path, load_naver_snapshot, match_naver_rows, snapshot_freshness
     from scripts.quality_site import normalize_url
     from scripts.revenue_opportunity import (
         classify_record,
@@ -20,7 +20,7 @@ try:
         select_improvements,
     )
 except ModuleNotFoundError:
-    from naver_performance import load_naver_snapshot, match_naver_rows, snapshot_freshness
+    from naver_performance import latest_naver_snapshot_path, load_naver_snapshot, match_naver_rows, snapshot_freshness
     from quality_site import normalize_url
     from revenue_opportunity import (
         classify_record,
@@ -505,7 +505,7 @@ def main():
     parser.add_argument("--performance", type=Path, default=Path("data/performance/2026-08-31.json"))
     parser.add_argument("--experiments", type=Path, default=Path("data/experiments.json"))
     parser.add_argument("--optimization-history", type=Path, default=Path("data/optimization-history.json"))
-    parser.add_argument("--naver-snapshot", type=Path, default=Path("data/naver/search-advisor-2026-08-30.json"))
+    parser.add_argument("--naver-snapshot", type=Path, default=None)
     parser.add_argument("--content-experiments", type=Path, default=Path("data/content-launch-experiments.json"))
     parser.add_argument("--gsc-snapshot", type=Path)
     parser.add_argument("--as-of", required=True)
@@ -513,6 +513,8 @@ def main():
     parser.add_argument("--opportunity-output", type=Path, default=Path("data/revenue-opportunities.json"))
     parser.add_argument("--report", type=Path, default=Path("reports/revenue-growth-report.md"))
     args = parser.parse_args()
+    if args.naver_snapshot is None:
+        args.naver_snapshot = latest_naver_snapshot_path(Path("data/naver"))
     _, summary = run_revenue_growth(
         page_scores_path=args.page_scores,
         audit_path=args.audit,

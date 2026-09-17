@@ -40,10 +40,13 @@ jobs:
         run: python3 scripts/quality_audit.py --as-of "$(date +%F)" --dashboard /tmp/site-quality-dashboard.html
 
       - name: Validate Naver URL performance snapshot
-        run: python3 scripts/naver_performance.py --snapshot data/naver/search-advisor-2026-08-30.json --page-scores data/page-scores.json --report reports/naver-data-quality.md
+        run: python3 scripts/naver_performance.py --snapshot "$(ls data/naver/search-advisor-*.json | sort | tail -1)" --page-scores data/page-scores.json --report reports/naver-data-quality.md
 
       - name: Calculate revenue opportunities from available performance data
-        run: python3 scripts/revenue_growth.py --as-of "$(date +%F)" --naver-snapshot data/naver/search-advisor-2026-08-30.json
+        run: python3 scripts/revenue_growth.py --as-of "$(date +%F)"
+
+      - name: Validate generated URL performance artifact
+        run: python3 scripts/validate_measurement_artifact.py data/page-performance.json
 
       - name: Validate deterministic growth-run artifacts
         run: python3 scripts/daily_revenue_growth.py --run-at "$(date -Iseconds)" --research data/new-content-research.json

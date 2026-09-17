@@ -17,3 +17,12 @@ Using the latest GA4/GSC artifacts and the checked-in Naver snapshot, the previo
 ## Next action
 
 Obtain a fresh Naver Search Advisor export and add its dated snapshot; do not overwrite the existing artifact or fabricate dates.
+
+## Follow-up refresh — 2026-09-18
+
+- Fresh UI evidence: property `https://emfls.github.io`, recent 30 days, 2026-08-19 through 2026-09-17, updated 2026-09-17.
+- New snapshot: `data/naver/search-advisor-2026-09-17.json`; 30 input rows, 30 normalized, 30 matched, 0 unmatched, 0 duplicates, 0 invalid rows; freshness `VERIFIED`.
+- The prior 2026-08-30 snapshot remains unchanged and historical.
+- Classification replay against the latest remote GA4/GSC artifacts: WINNER 1,360; OPPORTUNITY 0; EXPERIMENT 36; INSUFFICIENT_DATA 17,668.
+- The 36 fresh-Naver controlled-gate experiments are: `/game/FlagQuest/`, `/game/FlappyDot/`, `/game/MBTI/`, `/game/MarbleFlick/`, `/jp/report/travel/singapore-visa.html`, `/kor/report/coin/solana-guide.html`, `/kor/report/gov/`, `/kor/report/health/`, `/kor/report/mabinogi-mobile-jobs.html`, `/kor/report/obbb/`, `/kor/report/seasonal/`, `/kor/report/stock/`, `/kor/report/stock/us/`, `/kor/report/travel/australia-adelaide.html`, `/kor/report/travel/australia-cairns.html`, `/kor/report/travel/australia-goldcoast.html`, `/kor/report/travel/australia-newcastle.html`, `/kor/report/travel/australia-sydney.html`, `/kor/report/travel/austria-bad-voeslau.html`, `/kor/report/visa/san-marino.html`, `/kor/report/visa/senegal.html`, `/kor/report/visa/sierra-leone.html`, `/kor/report/visa/singapore.html`, `/kor/report/visa/southsudan.html`, `/kor/report/visa/togo.html`, `/kor/report/visa/ukraine.html`, `/ru/game/MBTI/`, `/util/EasyLetterWordCounter/`, `/util/aspect-ratio/`, `/util/date-difference/`, `/util/loan-payment-calculator/`, `/util/percentage-calculator/`, `/util/reading-time/`, `/util/regex-tester/`, `/util/url-encoder/`, `/util/uuid-generator/`.
+- No HTML, title, meta, protected experiment, GA4, or GSC collection code was changed.

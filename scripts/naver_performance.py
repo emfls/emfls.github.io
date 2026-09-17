@@ -3,6 +3,7 @@
 
 import argparse
 import json
+import re
 from collections import Counter
 from datetime import date
 from pathlib import Path
@@ -19,6 +20,12 @@ def normalize_naver_url(url):
 
 def load_naver_snapshot(path):
     return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+def latest_naver_snapshot_path(directory):
+    candidates = sorted(Path(directory).glob("search-advisor-*.json"))
+    dated = [path for path in candidates if re.fullmatch(r"search-advisor-\d{4}-\d{2}-\d{2}\.json", path.name)]
+    return dated[-1] if dated else None
 
 
 def snapshot_freshness(snapshot, as_of, max_age_days=7):

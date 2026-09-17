@@ -9,6 +9,7 @@ from scripts.naver_performance import (
     load_naver_snapshot,
     match_naver_rows,
     normalize_naver_url,
+    latest_naver_snapshot_path,
     snapshot_freshness,
     validate_naver_row,
 )
@@ -71,6 +72,12 @@ class NaverRowValidationTest(unittest.TestCase):
 
 
 class NaverMatchingQualityTest(unittest.TestCase):
+    def test_latest_snapshot_selection_uses_dated_filename(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "search-advisor-2026-08-30.json").write_text("{}")
+            (root / "search-advisor-2026-09-17.json").write_text("{}")
+            self.assertEqual(latest_naver_snapshot_path(root).name, "search-advisor-2026-09-17.json")
     def test_snapshot_freshness_uses_existing_seven_day_policy(self):
         self.assertEqual(snapshot_freshness(snapshot_with_rows([]), "2026-09-05"), "VERIFIED")
         self.assertEqual(snapshot_freshness(snapshot_with_rows([]), "2026-09-07"), "STALE_DATA")
