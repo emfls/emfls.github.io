@@ -1,0 +1,67 @@
+name: GA4 Collection
+
+on:
+  schedule:
+    - cron: "17 2 * * *" # daily UTC 02:17
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ga4-collection
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TZ: Asia/Seoul
+      GA4_PROPERTY_ID: ${{ vars.GA4_PROPERTY_ID }}
+      GA4_SERVICE_ACCOUNT_JSON_B64: ${{ secrets.GA4_SERVICE_ACCOUNT_JSON_B64 }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install GA4 Data API client
+        run: python3 -m pip install google-analytics-data google-auth
+
+      - name: Collect GA4 latest snapshot
+        run: python3 scripts/collect_ga4_snapshot.py --output data/performance/ga4-latest.json --days 28
+
+      - name: Regenerate measurement artifacts from GA4 snapshot
+        run: |
+          python3 scripts/revenue_growth.py \
+            --as-of "$(date +%F)" \
+            --performance data/performance/ga4-latest.json \
+            --page-output data/page-performance.json \
+            --opportunity-output data/revenue-opportunities.json \
+            --report reports/revenue-growth-report.md
+
+      - name: Validate measurement artifacts
+        run: |
+          python3 scripts/validate_measurement_artifact.py data/page-performance.json
+          python3 - <<'PY'
+          import json
+          from datetime import date
+          p = json.load(open('data/performance/ga4-latest.json'))
+          assert p['site']['ga4']['status'] == 'VERIFIED'
+          assert p['site']['ga4']['source'] == 'GOOGLE_ANALYTICS_DATA_API'
+          end = date.fromisoformat(p['periods']['ga4']['end'])
+          as_of = date.fromisoformat(p['as_of'])
+          assert (as_of - end).days <= 7
+          PY
+
+      - name: Commit refreshed GA4 measurement artifacts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/performance/ga4-latest.json data/page-performance.json data/revenue-opportunities.json reports/revenue-growth-report.md
+          git diff --staged --quiet || git commit -m "chore: refresh GA4 measurement snapshot"
+          git push
