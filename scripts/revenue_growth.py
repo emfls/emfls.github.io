@@ -84,6 +84,25 @@ def _period_key(channel):
     return period.get("start"), period.get("end")
 
 
+def period_alignment(left, right):
+    """Describe period relationship without rewriting either source period."""
+    if not left or not right or not left.get("start") or not left.get("end") or not right.get("start") or not right.get("end"):
+        return "MISSING"
+    try:
+        left_start, left_end = date.fromisoformat(left["start"]), date.fromisoformat(left["end"])
+        right_start, right_end = date.fromisoformat(right["start"]), date.fromisoformat(right["end"])
+    except (TypeError, ValueError):
+        return "MISSING"
+    if (left_start, left_end) == (right_start, right_end):
+        return "MATCH"
+    overlap_start, overlap_end = max(left_start, right_start), min(left_end, right_end)
+    if overlap_start > overlap_end:
+        return "NON_OVERLAP"
+    if abs((left_start - right_start).days) == 1 and abs((left_end - right_end).days) == 1:
+        return "ONE_DAY_OFFSET"
+    return "OVERLAP"
+
+
 def _period_compatibility(site):
     periods = {
         _period_key(site.get(name))

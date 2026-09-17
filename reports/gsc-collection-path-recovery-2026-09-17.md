@@ -21,3 +21,17 @@ The first workflow run succeeded operationally but exposed a parser defect: Sear
 ## Validation status
 
 Local fixture, pagination, normalization, duplicate aggregation, credential decoding, failure-safe, parser regression, and pipeline integration tests pass. The existing bad snapshot was not manually edited; the next workflow run must regenerate it from the API.
+
+## P5 Wave 6 — Cross-source period audit
+
+| Source | Period | Days | Freshness at 2026-09-18 | Delay policy | VERIFIED pages |
+|---|---|---:|---:|---|---:|
+| GA4 | 2026-08-20 to 2026-09-16 | 28 | 2 days | previous complete day | 2,488 |
+| GSC | 2026-08-19 to 2026-09-15 | 28 | 3 days | three-day safety lag | 109 |
+| Naver | 2026-08-01 to 2026-08-30 | 30 | 19 days | native export period | 30 |
+
+GA4 and GSC have a one-day offset and overlap from 2026-08-20 to 2026-09-15. Their aggregate metrics cannot be relabeled as overlap data; native periods are retained. Naver is a separate 30-day export and is not forced to match either API.
+
+The current mismatch is produced in `revenue_growth.py`: `_period_compatibility()` uses exact `(start, end)` equality for available site channels, while `crossSourcePeriodAlignment` is set to `PERIOD_MISMATCH` whenever a Naver match exists. It is a report/metadata warning, not a date rewrite or metric aggregation.
+
+Impact audit: WINNER remains 1,360 and PROTECT/cooldown behavior is unchanged. With Naver matching enabled, 36 GSC-backed non-winners are classified as EXPERIMENT by the existing controlled Naver gate; without Naver input, the same replay yields 36 OPPORTUNITY. This is gate behavior, not evidence that the one-day GA4/GSC offset changed revenue or score values. Candidate selection is gated, while no content execution occurs automatically. The selected contract is `native periods + explicit mismatch metadata`; no tolerance or overlap substitution is introduced.

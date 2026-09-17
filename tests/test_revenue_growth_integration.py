@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.revenue_growth import content_growth_summary, run_revenue_growth
+from scripts.revenue_growth import content_growth_summary, period_alignment, run_revenue_growth
 
 
 def write_json(path, payload):
@@ -11,6 +11,13 @@ def write_json(path, payload):
 
 
 class RevenueGrowthIntegrationTest(unittest.TestCase):
+    def test_period_alignment_distinguishes_match_offset_overlap_and_non_overlap(self):
+        self.assertEqual(period_alignment({"start": "2026-08-01", "end": "2026-08-28"}, {"start": "2026-08-01", "end": "2026-08-28"}), "MATCH")
+        self.assertEqual(period_alignment({"start": "2026-08-20", "end": "2026-09-16"}, {"start": "2026-08-19", "end": "2026-09-15"}), "ONE_DAY_OFFSET")
+        self.assertEqual(period_alignment({"start": "2026-08-20", "end": "2026-09-16"}, {"start": "2026-08-25", "end": "2026-09-10"}), "OVERLAP")
+        self.assertEqual(period_alignment({"start": "2026-08-01", "end": "2026-08-10"}, {"start": "2026-08-11", "end": "2026-08-20"}), "NON_OVERLAP")
+        self.assertEqual(period_alignment({}, {"start": "2026-08-11", "end": "2026-08-20"}), "MISSING")
+
     def test_gsc_snapshot_propagates_verified_google_metrics_without_erasing_ga4(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
