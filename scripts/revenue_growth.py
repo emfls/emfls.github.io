@@ -93,6 +93,20 @@ def _period_compatibility(site):
     return "MATCH" if len(periods) <= 1 else "MISMATCH"
 
 
+def _merge_gsc_snapshot(performance, gsc):
+    if not gsc or gsc.get("status") != "VERIFIED":
+        return performance
+    by_url = {normalize_url(row.get("url")): row for row in performance.get("pages") or [] if row.get("url")}
+    for row in gsc.get("pages") or []:
+        url = normalize_url(row.get("url"))
+        if not url:
+            continue
+        target = by_url.setdefault(url, {"url": url})
+        if row.get("google"):
+            target["google"] = row["google"]
+    return {**performance, "pages": list(by_url.values())}
+
+
 def _cluster_medians(records):
     values = {}
     for channel_name in ("naver", "google"):
@@ -257,10 +271,13 @@ def run_revenue_growth(
     optimization_history_path=None,
     naver_snapshot_path=None,
     content_experiments_path=None,
+    gsc_snapshot_path=None,
 ):
     page_scores = _read_json(page_scores_path, {"pages": []})
     audit = _read_json(audit_path, {"pages": []})
     performance = _read_json(performance_path, {"site": {}, "pages": []})
+    gsc_snapshot = _read_json(gsc_snapshot_path, {}) if gsc_snapshot_path else {}
+    performance = _merge_gsc_snapshot(performance, gsc_snapshot)
     experiments = _read_json(experiments_path, {"experiments": []})
     content_experiments = _read_json(content_experiments_path, {"experiments": []})
     history = _read_json(optimization_history_path, {"pages": []})
@@ -468,6 +485,7 @@ def main():
     parser.add_argument("--optimization-history", type=Path, default=Path("data/optimization-history.json"))
     parser.add_argument("--naver-snapshot", type=Path, default=Path("data/naver/search-advisor-2026-08-30.json"))
     parser.add_argument("--content-experiments", type=Path, default=Path("data/content-launch-experiments.json"))
+    parser.add_argument("--gsc-snapshot", type=Path)
     parser.add_argument("--as-of", required=True)
     parser.add_argument("--page-output", type=Path, default=Path("data/page-performance.json"))
     parser.add_argument("--opportunity-output", type=Path, default=Path("data/revenue-opportunities.json"))
@@ -481,6 +499,7 @@ def main():
         optimization_history_path=args.optimization_history,
         naver_snapshot_path=args.naver_snapshot,
         content_experiments_path=args.content_experiments,
+        gsc_snapshot_path=args.gsc_snapshot,
         as_of=args.as_of,
         page_output=args.page_output,
         opportunity_output=args.opportunity_output,

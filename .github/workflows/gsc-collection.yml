@@ -1,0 +1,65 @@
+name: GSC Collection
+
+on:
+  schedule:
+    - cron: "47 2 * * *" # daily UTC 02:47, separate from GA4 collection
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gsc-collection
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TZ: Asia/Seoul
+      GOOGLE_SERVICE_ACCOUNT_JSON_B64: ${{ secrets.GA4_SERVICE_ACCOUNT_JSON_B64 }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Search Console API client
+        run: python3 -m pip install google-api-python-client google-auth
+
+      - name: Collect GSC page snapshot
+        run: python3 scripts/collect_gsc_snapshot.py --output data/performance/gsc-latest.json --days 28
+
+      - name: Regenerate measurement artifacts from GA4 and GSC snapshots
+        run: |
+          python3 scripts/revenue_growth.py \
+            --as-of "$(date +%F)" \
+            --performance data/performance/ga4-latest.json \
+            --gsc-snapshot data/performance/gsc-latest.json \
+            --page-output data/page-performance.json \
+            --opportunity-output data/revenue-opportunities.json \
+            --report reports/revenue-growth-report.md
+
+      - name: Validate GSC and measurement artifacts
+        run: |
+          python3 - <<'PY'
+          import json
+          p = json.load(open('data/performance/gsc-latest.json'))
+          assert p['status'] == 'VERIFIED'
+          assert p['source'] == 'GOOGLE_SEARCH_CONSOLE_API'
+          assert p['property'] == 'https://emfls.github.io/'
+          assert p['pages']
+          PY
+          python3 scripts/validate_measurement_artifact.py data/page-performance.json
+
+      - name: Commit refreshed GSC measurement artifacts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/performance/gsc-latest.json data/page-performance.json data/revenue-opportunities.json reports/revenue-growth-report.md
+          git diff --staged --quiet || git commit -m "chore: refresh GSC measurement snapshot"
+          git push

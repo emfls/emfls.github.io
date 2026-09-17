@@ -2,19 +2,18 @@
 
 ## Status
 
-`BLOCKED_PROPERTY_PERMISSION_REQUIRED`
+`COLLECTION_PATH_IMPLEMENTED` (workflow validation pending)
 
-The repository has a historical/manual GSC import path only. `scripts/import_performance_csv.py` parses a user-supplied Search Console ZIP export; there is no Search Console API collector, OAuth/service-account contract, GSC workflow, or GSC secret in the repository. `.github/workflows/seo-qa.yml` consumes generated data and does not collect it.
+The previous blocker is resolved. `scripts/collect_gsc_snapshot.py` now uses the existing service-account secret at runtime, verifies the exact URL-prefix property, paginates Search Analytics page rows, and writes an atomic snapshot. `.github/workflows/gsc-collection.yml` runs daily at a separate schedule and supports `workflow_dispatch`.
 
 ## Evidence
 
-- Current revenue measurement output has no connected GSC channel and keeps `NOT_CONNECTED`.
-- The only repository GSC period is in the historical CSV-import artifact (`2026-08-03` to `2026-08-30`), not an automated current snapshot.
-- No URL-prefix or Domain property identifier is stored in source, workflow, env contract, or reports. No property string was inferred from the production hostname.
-- The GA4 service account may technically be used with Search Console API credentials, but repository evidence does not show that it has Search Console property access. It must not be assumed.
+- Property is explicitly `https://emfls.github.io/` (URL-prefix).
+- Runtime alias `GOOGLE_SERVICE_ACCOUNT_JSON_B64` maps to the existing `GA4_SERVICE_ACCOUNT_JSON_B64` secret; no new key or service account is created.
+- Empty/API/permission failures stop before snapshot replacement and before artifact commit.
 
 Google's Search Console API requires a project credential and at least read access to the target property; the property identifier is the exact Search Console value, such as a URL-prefix URL or `sc-domain:` value. See [API prerequisites](https://developers.google.com/webmaster-tools/v1/prereqs) and [property permissions](https://developers.google.com/webmaster-tools/v1/sites).
 
-## Required external action
+## Validation status
 
-In Search Console, open the property that actually contains `emfls.github.io`, then add `emfls-ga4-reader@emfls-ga4.iam.gserviceaccount.com` with at least read permission. Record the exact property identifier and only then define a separate GSC credential/property secret contract. No API call or fabricated snapshot was made in this cycle.
+Local fixture, pagination, normalization, duplicate aggregation, credential decoding, failure-safe, and pipeline integration tests pass. Actual GitHub Actions property read remains pending because the secret is not exposed to the local session.

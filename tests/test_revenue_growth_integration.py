@@ -11,6 +11,23 @@ def write_json(path, payload):
 
 
 class RevenueGrowthIntegrationTest(unittest.TestCase):
+    def test_gsc_snapshot_propagates_verified_google_metrics_without_erasing_ga4(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            common = {
+                "pages": [{"url": "/a.html", "score": 70, "type": "TRAFFIC"}],
+            }
+            write_json(root / "scores.json", common)
+            write_json(root / "audit.json", {"pages": [{"url": "/a.html", "indexable": True}]})
+            write_json(root / "performance.json", {"site": {"ga4": {"views": 3, "users": 2, "status": "VERIFIED", "period": {"start": "2026-08-20", "end": "2026-09-16"}}}, "pages": [{"url": "/a.html", "ga4": {"views": 3, "users": 2, "status": "VERIFIED", "period": {"start": "2026-08-20", "end": "2026-09-16"}}}]})
+            write_json(root / "gsc.json", {"status": "VERIFIED", "pages": [{"url": "/a.html", "google": {"clicks": 4, "impressions": 20, "ctr": 0.2, "position": 5, "status": "VERIFIED", "period": {"start": "2026-08-20", "end": "2026-09-16"}, "source": "GOOGLE_SEARCH_CONSOLE_API"}}]})
+            write_json(root / "experiments.json", {"experiments": []})
+            write_json(root / "history.json", {"pages": []})
+            pages, _ = run_revenue_growth(page_scores_path=root / "scores.json", audit_path=root / "audit.json", performance_path=root / "performance.json", gsc_snapshot_path=root / "gsc.json", experiments_path=root / "experiments.json", optimization_history_path=root / "history.json", as_of="2026-09-17", page_output=root / "out.json", opportunity_output=root / "opp.json", report_output=root / "report.md")
+            self.assertEqual(pages["pages"][0]["google"]["status"], "VERIFIED")
+            self.assertEqual(pages["pages"][0]["google"]["clicks"], 4)
+            self.assertEqual(pages["pages"][0]["ga4"]["views"], 3)
+
     def test_content_growth_uses_only_mature_launches_for_win_rate(self):
         rows = [
             {"type": "CONTENT_LAUNCH_EXPERIMENT", "publishedOn": "2026-07-01", "status": "COMPLETE", "result": "WINNER", "revenue": None},
