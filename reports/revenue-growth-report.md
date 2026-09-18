@@ -8,10 +8,10 @@
 - Revenue per Indexed Page: N/A
 - Views per User: 1.37
 - WINNER: 1381
-- OPPORTUNITY: 0
+- OPPORTUNITY: 35
 - EXPERIMENT: 0
 - DEAD_CANDIDATE: 0
-- INSUFFICIENT_DATA: 17683
+- INSUFFICIENT_DATA: 17648
 
 ## TOP REVENUE OPPORTUNITIES
 
@@ -92,7 +92,18 @@
 - Naver: 1,904 impressions / 83 clicks / 4.4% CTR
 - Rank: N/A
 
-### 8. `/kor/report/camp/gunsan.html`
+### 8. `/kor/report/camp/gyeongnam-best.html`
+
+- Score: 49.77 / 100
+- Classification: WINNER
+- Why: Verified URL revenue; Verified traffic
+- Next Action: PROTECT
+- Cooldown: NO
+- Data Status: VERIFIED
+- Naver: NOT_AVAILABLE
+- Rank: N/A
+
+### 9. `/kor/report/camp/gunsan.html`
 
 - Score: 49.62 / 100
 - Classification: WINNER
@@ -103,26 +114,15 @@
 - Naver: 1,675 impressions / 67 clicks / 4.0% CTR
 - Rank: N/A
 
-### 9. `/kor/report/camp/miryang.html`
+### 10. `/kor/report/camp/yeongam.html`
 
-- Score: 49.48 / 100
+- Score: 49.52 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
 - Cooldown: NO
 - Data Status: VERIFIED
-- Naver: 1,661 impressions / 63 clicks / 3.8% CTR
-- Rank: N/A
-
-### 10. `/kor/report/camp/goyang.html`
-
-- Score: 49.42 / 100
-- Classification: WINNER
-- Why: Verified URL revenue; Verified traffic
-- Next Action: PROTECT
-- Cooldown: NO
-- Data Status: VERIFIED
-- Naver: 1,395 impressions / 142 clicks / 10.2% CTR
+- Naver: NOT_AVAILABLE
 - Rank: N/A
 
 ## Naver URL Data Quality
