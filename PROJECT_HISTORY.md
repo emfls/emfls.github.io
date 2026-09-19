@@ -423,3 +423,6 @@
 
 ## 2026-09-19 21:32 Keyword Hunter
 - Seeds: 40; New: 28; Rejected: 20; DB: 2296; Errors: 0; Top: 얼음정수기렌탈가격비교. Report: reports/keyword-hunter/2026-09-19-2132.md
+
+## 2026-09-20 02:19 Keyword Hunter
+- Seeds: 40; New: 21; Rejected: 8; DB: 2317; Errors: 0; Top: none. Report: reports/keyword-hunter/2026-09-20-0219.md
