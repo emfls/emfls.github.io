@@ -13,6 +13,10 @@
 
 ## P1 - High
 
+- [x] 02 · 우크라이나 비자 safety/discovery parity repair
+  - 완료: 2026-09-19. 최신 `origin/main` 기준 전용 branch에서 현행 여행금지 source·예외 문의·hub 카드·sitemap·중복 WebPage JSON-LD를 정합화하고 관련 회귀 테스트를 통과했다. `codex/visa-02-ukraine-20260919`에서 검수 대기; `main` merge 전.
+  - 후속: Production 배포 후 served HTML과 Search Console URL Inspection을 확인한다. Ukraine travel cluster는 이번 범위에서 수정하지 않는다.
+
 - [x] Keyword Hunter 생산 자동화 및 신규 수익 WINNER 발굴
   - 목적: 검색량·트렌드·경쟁도·중복을 실측 검증하고 신규 Candidate/Winner와 기존 성과 페이지 개선 후보를 자동 분리한다.
   - 완료 조건: Search Ads/DataLab 실사용, 웹문서 권한 진단, 2시간 GitHub Actions, 실제 1회 실행, 후보 목록·테스트·이력 기록.
