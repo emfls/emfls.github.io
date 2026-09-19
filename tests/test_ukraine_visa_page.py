@@ -20,14 +20,21 @@ class UkraineVisaPageTest(unittest.TestCase):
 
     def test_contract(self):
         self.assertEqual(self.page.canonical, "https://emfls.github.io/kor/report/visa/ukraine.html")
-        for marker in ("G-QP5Q67GE5B", "ca-pub-8830524482034754", "function filterVisas", "function toggleFAQ", "2026-08-13"):
+        for marker in ("G-QP5Q67GE5B", "ca-pub-8830524482034754", "function filterVisas", "function toggleFAQ", "2026-09-19"):
             self.assertIn(marker, self.html)
-        self.assertEqual({x.get("@type") for x in self.page.json_ld}, {"WebPage", "FAQPage"})
+        self.assertEqual([x.get("@type") for x in self.page.json_ld].count("WebPage"), 1)
+        self.assertEqual([x.get("@type") for x in self.page.json_ld].count("FAQPage"), 1)
         self.assertIn('div[id^="aswift_"]', self.html)
 
     def test_official_sources(self):
         official = [a for a in self.page.links if any(d in a.get("href", "") for d in ("mfa.gov.ua", "0404.go.kr", "overseas.mofa.go.kr"))]
         self.assertGreaterEqual(len(official), 7)
+
+    def test_current_safety_sources_and_exception_inquiry(self):
+        self.assertIn("여행금지 국가·지역 현황", self.html)
+        self.assertIn("2026-07-09", self.html)
+        self.assertIn("boho@mofa.go.kr", self.html)
+        self.assertIn("일반적인 웹 신청 안내와 다르게 처리", self.html)
 
     def test_removes_wrong_or_stale_claims(self):
         for phrase in ("ETIAS", "출발 96시간 전", "최소 월급 UAH 6,700", "미화 40달러", "HIV 검사 결과서", "WebSite", "SearchAction"):
