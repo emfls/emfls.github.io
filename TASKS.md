@@ -14,7 +14,7 @@
 ## P1 - High
 
 - [x] 02 · 우크라이나 비자 safety/discovery parity repair
-  - 완료: 2026-09-19. 최신 `origin/main` 기준 전용 branch에서 현행 여행금지 source·예외 문의·hub 카드·sitemap·중복 WebPage JSON-LD를 정합화하고 관련 회귀 테스트를 통과했다. `codex/visa-02-ukraine-final`에서 최신 main 재기반 완료; 최종 merge 검수 대기.
+  - 완료: 2026-09-20 최종 검증. 현행 여행금지 standing-state source와 2026-07-09 dated notice를 유지하고, 예외적 여권사용은 재외동포365민원포털 신청 안내와 `boho@mofa.go.kr` 문의처를 반영했다. visa hub 카드 정합화, Ukraine sitemap `lastmod=2026-09-20`, 중복 WebPage JSON-LD 제거 및 관련 테스트 12 passed를 확인했다. `codex/visa-02-ukraine-merge-20260920`에서 최종 검증 완료.
   - 후속: Production 배포 후 served HTML과 Search Console URL Inspection을 확인한다. Ukraine travel cluster는 이번 범위에서 수정하지 않는다.
 
 - [x] Keyword Hunter 생산 자동화 및 신규 수익 WINNER 발굴

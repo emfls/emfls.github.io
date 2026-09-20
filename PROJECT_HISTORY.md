@@ -1,15 +1,15 @@
 # PROJECT HISTORY
 
-## 2026-09-19 — 02 · 우크라이나 비자 safety/discovery parity repair
+## 2026-09-20 — 02 · 우크라이나 비자 safety/discovery parity repair
 
 ### 요청
-- 최신 `origin/main` 기준으로 `/kor/report/visa/ukraine.html`만 보수적으로 보강하고, `main`에는 merge하지 않은 검수용 branch를 push한다.
+- 최신 `origin/main` 기준으로 `/kor/report/visa/ukraine.html`만 보수적으로 보강하고, 최종 검증 후 `main`에 fast-forward 반영한다.
 
 ### 변경
 - landing에 대한민국 해외안전여행의 현행 여행금지 국가·지역 현황(standing-state)과 2026-07-09 정기조정 공지(dated notice)를 구분해 연결했다.
-- 예외적 여권사용허가가 일반 웹 신청 방식과 다르며 필요한 경우 `boho@mofa.go.kr`로 사전 문의해야 한다는 현재 안내를 추가했다.
-- `dateModified`·화면 최근 확인일을 2026-09-19로 갱신하고 body 하단 중복 WebPage JSON-LD를 제거했다.
-- 비자 허브의 Ukraine 카드만 90일 무비자·전역 여행금지 의미로 수정하고 Ukraine sitemap entry만 2026-09-19로 갱신했다.
+- 예외적 여권사용허가가 필요한 경우 외교부 현행 구비서류·신청요건을 확인하고 재외동포365민원포털에서 신청하도록 안내했으며, 우크라이나 관련 문의처 `boho@mofa.go.kr`와 신청·문의가 허가를 보장하지 않는다는 점을 명시했다.
+- `dateModified`·화면 최근 확인일을 2026-09-20으로 갱신하고 body 하단 중복 WebPage JSON-LD를 제거했다.
+- 비자 허브의 Ukraine 카드만 90일 무비자·전역 여행금지 의미로 수정하고 Ukraine sitemap entry만 2026-09-20으로 갱신했다.
 
 ### 보호·미수정
 - title/meta/H1 핵심 의미, canonical, GA4, AdSense, 여행금지 경고는 유지했다.
@@ -17,9 +17,10 @@
 
 ### 검증
 - `tests/test_ukraine_visa_page.py`, `tests/test_ukraine_zero_click_ctr.py`, `tests/test_gsc_opportunity_batch_02.py` 통과.
-- Production은 2026-08-13 버전으로 확인되어 branch 구현과는 `PRODUCTION_PARITY_NOT_VERIFIED` 상태다.
+- Production 및 Search Console은 배포 후 확인한다.
 - Search Console URL Inspection은 배포 후 수행한다.
-- 2026-09-20 최신 `origin/main` 위에 승인 commit을 cherry-pick한 `codex/visa-02-ukraine-final`로 재기반했으며, 최종 merge 검수 대기 상태다.
+- 관련 테스트는 12 passed였고 Ukraine travel cluster는 수정하지 않았다.
+- `codex/visa-02-ukraine-merge-20260920`에서 최종 검증 완료.
 
 ## 2026-09-09 — 미국주식 dividendYield 단위 및 validation 수정
 
