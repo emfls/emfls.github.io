@@ -19,6 +19,7 @@
 - `tests/test_ukraine_visa_page.py`, `tests/test_ukraine_zero_click_ctr.py`, `tests/test_gsc_opportunity_batch_02.py` 통과.
 - Production은 2026-08-13 버전으로 확인되어 branch 구현과는 `PRODUCTION_PARITY_NOT_VERIFIED` 상태다.
 - Search Console URL Inspection은 배포 후 수행한다.
+- 2026-09-20 최신 `origin/main` 위에 승인 commit을 cherry-pick한 `codex/visa-02-ukraine-final`로 재기반했으며, 최종 merge 검수 대기 상태다.
 
 ## 2026-09-09 — 미국주식 dividendYield 단위 및 validation 수정
 
