@@ -1,9 +1,9 @@
 # PROJECT HISTORY
 
-## 2026-09-20 — 03 · 토고 비자 freshness/discovery repair
+## 2026-09-20 — 03 · 토고 비자 freshness/discovery repair — MAIN CLOSURE
 
 ### 요청
-- 최신 `origin/main` 기준으로 `/kor/report/visa/togo.html`만 Cycle 2 명세에 맞춰 보강하고 review branch에서 검수 대기한다.
+- `/kor/report/visa/togo.html`만 Cycle 2 명세에 맞춰 보강하고 최종 검수 후 main에 반영한다.
 
 ### 변경
 - 한국 일반여권의 visa-required 선답과 Togo Voyage 사전 온라인 신청·승인 필요성을 명시하고, 출처별 안내를 홈페이지·alert 5일, Procedures 6일, About 6영업일, FAQ 7영업일로 분리하면서 7영업일 이상 여유와 신청 당일 live 재확인을 권고했다.
@@ -18,9 +18,11 @@
 ### 검증
 - `tests/test_priority_africa_visa_pages.py`, `tests/test_gsc_opportunity_batch_03.py`: 7 passed.
 - `git diff --check`: 통과.
-- RSS는 `scripts/generate_recent_rss.py`로 생성했다. clean base `65bc8a4c14`에서도 714 additions/696 deletions의 broad drift가 재현되어 `PRE_EXISTING_FEED_DRIFT`로 분류했으며, Togo 변경 후 generator output을 유지한다. 현재 branch는 아직 production에 배포되지 않았다.
-- 14/28/56일 측정과 Search Console 확인은 main 반영·배포 후 수행한다.
-- 상태: `codex/visa-03-togo-20260920` review branch, Notion Implementation History는 최종 main merge 전까지 업데이트하지 않는다.
+- RSS는 `scripts/generate_recent_rss.py`로 생성했다. clean base `65bc8a4c14`에서도 714 additions/696 deletions의 broad drift가 재현되어 `PRE_EXISTING_FEED_DRIFT`로 분류했고, RSS commit `339aa6638b`로 분리했다.
+- core `c51f156240`와 RSS `339aa6638b`를 `339aa6638bfc8bd7c7b4bccfbfbb7ec2a6723c23`까지 non-force fast-forward로 main에 반영했다. `origin/main`에서 두 commit의 ancestor 관계를 확인했다.
+- Pages `pages build and deployment` run `35495289653`: success. 실제 served HTML에서 새 title, 2026-09-20, arrival/express suspension, Contact, timing, 조건부 yellow fever, canonical, GA4, AdSense, WebPage 1개, FAQPage 1개를 확인했다.
+- Search Console URL Inspection은 아직 확인하지 않았으며, 14/28/56일 측정은 배포 후 수행한다.
+- 상태: main closure. Togo travel cluster 19개는 미수정이며 content-metadata 비자 YMYL 계약은 `FOLLOW_UP_REQUIRED`다.
 
 ## 2026-09-20 — 02 · 우크라이나 비자 safety/discovery parity repair
 
