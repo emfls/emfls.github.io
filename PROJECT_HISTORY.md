@@ -23,6 +23,14 @@
 - `scripts/generate_recent_rss.py` 실행 결과 Reading Time 단독 신규 item과 500-entry limit에 따른 Oracle tail eviction만 발생했다. RSS commit `a31048a13a`로 분리했다.
 - 상태: review branch / pending final review. Production parity와 runtime browser QA는 미검증이다.
 
+## 2026-09-20 — 04 · Reading Time Calculator — MAIN CLOSURE
+
+- 최종 구현 `497fd527fa7f09c7e19a590078243fa23f92a29a`를 non-force fast-forward로 main에 반영했다. Core correction `4d8bb11fca`, RSS `a31048a13a`를 보존했다.
+- Pages `pages build and deployment` run `35497086379`: success. 실제 served HTML에서 title/H1, 3 modes, 238/183 references, FAQ, canonical, GA4, AdSense, 2026-09-20 freshness를 확인했다.
+- Production runtime: text `one two three` → 3 words, word count 1,000 → 4:12/5:28, empty validation, zero accepted, target 5 minutes × 183 → 915 words를 확인했다. Mobile 390px에서 `scrollWidth=375`로 horizontal overflow가 없었다.
+- `tests/test_ten_new_english_tools.py tests/test_reading_time_calculator.py`: 8 passed. `git diff --check`: passed. Search Console과 Naver inspection은 확인하지 않아 각각 `SEARCH_CONSOLE_NOT_VERIFIED`, `NAVER_INDEX_NOT_CONFIRMED`로 유지한다.
+- TTS 링크는 별도 페이지의 claim/function mismatch 검토 대상이라 reading-time 페이지에서 제외했으며 TTS 페이지는 수정하지 않았다. Metadata는 `METADATA_NOT_IN_CURRENT_CONTRACT`. 14/28/56일 measurement를 진행한다.
+
 ## 2026-09-20 — 03 · 토고 비자 freshness/discovery repair — MAIN CLOSURE
 
 ### 요청
