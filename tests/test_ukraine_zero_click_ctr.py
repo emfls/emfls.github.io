@@ -22,7 +22,7 @@ class UkraineZeroClickCtrTest(unittest.TestCase):
         self.assertIn("현재 우크라이나 전역은 여행금지", self.html)
 
     def test_current_official_qualification_is_retained(self):
-        self.assertIn('dateModified":"2026-09-19"', self.html)
+        self.assertIn('dateModified":"2026-09-20"', self.html)
         self.assertIn("2027-01-31", self.html)
         self.assertIn("예외적 여권사용허가", self.html)
         self.assertIn("0404.go.kr", self.html)

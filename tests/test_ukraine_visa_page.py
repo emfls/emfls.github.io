@@ -20,7 +20,7 @@ class UkraineVisaPageTest(unittest.TestCase):
 
     def test_contract(self):
         self.assertEqual(self.page.canonical, "https://emfls.github.io/kor/report/visa/ukraine.html")
-        for marker in ("G-QP5Q67GE5B", "ca-pub-8830524482034754", "function filterVisas", "function toggleFAQ", "2026-09-19"):
+        for marker in ("G-QP5Q67GE5B", "ca-pub-8830524482034754", "function filterVisas", "function toggleFAQ", "2026-09-20"):
             self.assertIn(marker, self.html)
         self.assertEqual([x.get("@type") for x in self.page.json_ld].count("WebPage"), 1)
         self.assertEqual([x.get("@type") for x in self.page.json_ld].count("FAQPage"), 1)
@@ -34,7 +34,9 @@ class UkraineVisaPageTest(unittest.TestCase):
         self.assertIn("여행금지 국가·지역 현황", self.html)
         self.assertIn("2026-07-09", self.html)
         self.assertIn("boho@mofa.go.kr", self.html)
-        self.assertIn("일반적인 웹 신청 안내와 다르게 처리", self.html)
+        self.assertIn("재외동포365민원포털", self.html)
+        self.assertIn("MST0000000000102/2/detail", self.html)
+        self.assertIn("문의 또는 신청만으로 허가가 보장되는 것은 아닙니다", self.html)
 
     def test_removes_wrong_or_stale_claims(self):
         for phrase in ("ETIAS", "출발 96시간 전", "최소 월급 UAH 6,700", "미화 40달러", "HIV 검사 결과서", "WebSite", "SearchAction"):
