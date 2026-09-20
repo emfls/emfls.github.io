@@ -545,3 +545,6 @@
 
 ## 2026-09-20 13:58 Keyword Hunter
 - Seeds: 40; New: 14; Rejected: 11; DB: 2396; Errors: 0; Top: 4대보험계산. Report: reports/keyword-hunter/2026-09-20-1358.md
+
+## 2026-09-20 20:31 Keyword Hunter
+- Seeds: 40; New: 115; Rejected: 100; DB: 2511; Errors: 1; Top: 항공권가격비교사이트. Report: reports/keyword-hunter/2026-09-20-2031.md
