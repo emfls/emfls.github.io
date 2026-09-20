@@ -8,6 +8,14 @@
 - `All 16 types at a glance`를 16개 neutral one-line overview로 확장했다. 새 type별 URL은 만들지 않았다.
 - 관련 focused tests 14 passed, `git diff --check` passed. 상태는 main merge 전 `pending final review`다.
 
+## 2026-09-20 — 05 · Quick 16-Type Personality Quiz — MAIN CLOSURE
+
+- 승인된 core `35a3772098`, RSS `57b648b505`, correction `d047f3e8a3`를 non-force fast-forward로 `origin/main`에 반영했다. Pages deployment run `35507590941`는 success였고 remote main에서 승인 SHA의 ancestor 관계를 확인했다.
+- 20문항/축별 5문항 deterministic majority scoring, 3:2 close semantics, independent personality quiz rebrand, 공식 MBTI® 비제휴 disclosure, 16개 dedicated profiles, neutral all-16 overview, FAQ visible/schema parity, hidden legacy FAQ 제거, browser-side answer privacy, AdSense disabled를 확인했다.
+- `/game/` navigation, `/game/MBTI/` sitemap membership, RSS item parity를 유지했다. localized pages와 multilingual hreflang은 수정하지 않았다.
+- 관련 tests 14 passed, `git diff --check` passed. 실제 Production served HTML에서 새 title/H1, 20문항, trust disclosure, `Reviewed on September 20, 2026`, canonical, GA4, AdSense disabled를 확인했다.
+- Runtime UI/mobile 자동 검증은 `RUNTIME_UI_NOT_VERIFIED`, Google Search Console은 `SEARCH_CONSOLE_NOT_VERIFIED`, Naver는 `NAVER_INDEX_NOT_CONFIRMED`다. 28/56일 measurement를 후속 수행한다.
+
 ## 2026-09-20 — 05 · Quick 16-Type Personality Quiz — REVIEW BRANCH
 
 ### 요청

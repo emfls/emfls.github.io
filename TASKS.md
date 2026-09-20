@@ -13,9 +13,9 @@
 
 ## P1 - High
 
-- [ ] 05 · Quick 16-Type Personality Quiz trust/scoring repair
+- [x] 05 · Quick 16-Type Personality Quiz trust/scoring repair
   - 범위: 20 original questions / 5 per axis, tie-default 제거, independent personality quiz rebrand, axis counts/close result, result depth, MBTI® non-affiliation, FAQ parity, duplicate schema 제거, privacy, game hub, RSS.
-  - 상태: `codex/game-05-personality-quiz-20260920` review branch. Core와 final review correction을 반영했으며 remote review push 및 Production/runtime 검증 대기. Hidden legacy FAQ 제거, freshness parity, 16개 dedicated profiles, categorical copy 제거, 16-type overview 확장을 완료했다. AdSense는 계속 disabled, localized pages는 inventory만 수행한다.
+  - 완료: 2026-09-20. Core `35a3772098`, RSS `57b648b505`, final correction `d047f3e8a3`, closure는 `codex/game-05-personality-quiz-closure`에서 기록했다. 20 questions/5 per axis, tie-default 제거, trust rebrand, 3:2 close semantics, 16 dedicated profiles, FAQ Q+A parity, hidden legacy FAQ 제거, 16-type overview, privacy, AdSense disabled, game hub/RSS propagation을 반영했다. Pages `35507590941` success와 실제 Production served HTML을 확인했다. 관련 tests 14 passed. Runtime UI/mobile, Search Console, Naver는 이번 실행에서 미검증이며 각각 `RUNTIME_UI_NOT_VERIFIED`, `SEARCH_CONSOLE_NOT_VERIFIED`, `NAVER_INDEX_NOT_CONFIRMED`로 유지한다. localized pages와 multilingual hreflang은 별도 작업이다. 28/56일 measurement를 진행한다.
 
 - [x] 04 · Reading Time Calculator product-depth upgrade
   - 범위: 3 input modes, 238/183 research reference, reading/read-aloud results, reverse word target, FAQ schema parity, privacy contract, util hub/sitemap propagation, focused tests.
