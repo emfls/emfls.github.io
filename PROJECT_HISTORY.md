@@ -432,3 +432,6 @@
 
 ## 2026-09-20 09:10 Keyword Hunter
 - Seeds: 40; New: 41; Rejected: 29; DB: 2382; Errors: 1; Top: 통상임금계산. Report: reports/keyword-hunter/2026-09-20-0910.md
+
+## 2026-09-20 13:58 Keyword Hunter
+- Seeds: 40; New: 14; Rejected: 11; DB: 2396; Errors: 0; Top: 4대보험계산. Report: reports/keyword-hunter/2026-09-20-1358.md
