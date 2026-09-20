@@ -1,5 +1,24 @@
 # PROJECT HISTORY
 
+## 2026-09-20 — 07 · Aspect Ratio Calculator — REVIEW BRANCH
+
+### 요청·보호
+- `/util/aspect-ratio/`만 처리했다. 08번과 다른 utility page, main merge, Cloudflare Pages production deployment는 이번 실행에서 수행하지 않는다.
+- 기존 GA4 `G-QP5Q67GE5B`, AdSense `ca-pub-8830524482034754`, canonical과 기존 관련 링크 범위를 보존했다. 수동 광고 단위와 별도 percentage-calculator primary link는 추가하지 않았다.
+
+### 변경
+- Find ratio from dimensions 모드에서 양의 정수 width/height를 gcd로 정확히 축약하고 decimal ratio, orientation, preview를 제공한다.
+- Resize by ratio 모드에서 양의 유한 ratio, known-side, 양의 정수 dimension을 받아 missing dimension을 nearest whole pixel로 계산한다. 기존 ambiguous `targetWidth`/`targetHeight`와 silent target-width precedence를 제거했다.
+- 16:9, 9:16, 4:3, 3:2, 1:1, 4:5, 16:10, 21:9 preset을 동일 계산 엔진으로 연결하고 swap/reset/copy/live preview와 visible FAQ를 제공한다. 3440×1440은 21:9가 아닌 exact 43:18로 표시한다.
+- FAQPage JSON-LD는 0개, WebApplication JSON-LD는 1개, `dateModified=2026-09-20`으로 유지했다. privacy 문구는 browser-side calculation과 raw input telemetry 미수집을 명시하며 fetch/XHR/localStorage/sessionStorage를 사용하지 않는다.
+- util hub 카드, target sitemap lastmod, RSS generator 경로와 Aspect Ratio focused tests를 갱신했다. RSS는 core commit 이후 별도 commit으로 생성한다.
+
+### 검증·상태
+- `tests/test_ten_new_english_tools.py tests/test_aspect_ratio_calculator.py`: 7 passed. `git diff --check`: passed.
+- GSC snapshot은 323 clicks / 0.00% CTR / 62.22 average position으로 유지하며, 이번 구현은 opportunity evidence의 저위험 utility 개선이다.
+- Runtime UI/mobile, production served HTML, Cloudflare Pages deployment, Google/Naver inspection은 아직 검증하지 않았다. 각각 `RUNTIME_UI_NOT_VERIFIED`, `PRODUCTION_PARITY_NOT_VERIFIED`, `PAGES_DEPLOYMENT_NOT_RUN`, `SEARCH_CONSOLE_NOT_VERIFIED`, `NAVER_INDEX_NOT_CONFIRMED`로 유지한다.
+- 상태: review branch / `READY_FOR_REVIEW`. Notion은 승인·main 반영 전이므로 `NOT_UPDATED_PENDING_REVIEW`다. 14/28/56일 measurement는 배포 후 후속이다.
+
 ## 2026-09-20 — 06 · Japanese Singapore Entry Guide — MAIN CLOSURE
 
 - Base `c34d01b313` 이후 unrelated Keyword Hunter automation main `cb504962cb`를 흡수한 최신 main 위에 승인 Core `6a229cbc33`와 RSS `b84c73ef1f`를 cherry-pick했다. 통합 commit은 각각 `8951582161`과 `1c846e5ae9`이며, non-force로 `origin/main`에 반영했다.

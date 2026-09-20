@@ -38,6 +38,7 @@ class TenNewEnglishToolsTest(unittest.TestCase):
                     "url-encoder": "2026-08-14",
                     "unix-timestamp": "2026-08-15",
                     "date-difference": "2026-08-13",
+                    "aspect-ratio": "2026-09-20",
                 }
                 expected_date = expected_dates.get(slug, "2026-08-09")
                 if slug == "reading-time":
@@ -48,7 +49,10 @@ class TenNewEnglishToolsTest(unittest.TestCase):
                 blocks = re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)
                 schemas = [json.loads(block) for block in blocks]
                 self.assertIn("WebApplication", {x.get("@type") for x in schemas})
-                self.assertIn("FAQPage", {x.get("@type") for x in schemas})
+                if slug == "aspect-ratio":
+                    self.assertNotIn("FAQPage", {x.get("@type") for x in schemas})
+                else:
+                    self.assertIn("FAQPage", {x.get("@type") for x in schemas})
                 self.assertTrue(all(x.get("dateModified") == expected_date for x in schemas))
 
     def test_hub_and_sitemap_link_every_tool(self):

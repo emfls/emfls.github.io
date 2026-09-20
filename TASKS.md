@@ -13,6 +13,9 @@
 
 ## P1 - High
 
+- [ ] 07 · Aspect Ratio Calculator — `/util/aspect-ratio/`
+  - 리뷰 브랜치: 2026-09-20. 두 모드(이미지 크기에서 exact ratio, ratio로 resize), 8개 common preset, swap/reset/copy/live preview, visible FAQ와 WebApplication 1개, privacy/AdSense 보호, util hub/sitemap/RSS propagation을 구현했다. Core와 RSS는 별도 검증·커밋하며 main 반영 전 `READY_FOR_REVIEW` 상태다.
+
 - [x] 06 · Japanese Singapore Entry Guide — `/jp/report/travel/singapore-visa.html`
   - 완료: 2026-09-20. 일본인 입국 준비 중심으로 title/H1을 재정의하고, 일본 국적자 관광·상용 비자 면제·여권 6개월 기준, SG Arrival Card의 대상/3일 이내/무료/ICA·MyICA/통과 예외/acknowledgement/DE番号/Update SGAC/e-Pass 구분을 반영했다. `ko`·`x-default` hreflang을 제거하고 `ja` self만 유지했으며 FAQPage를 제거하고 WebPage 1개를 유지했다.
   - 승인 원본 Core `6a229cbc33`, RSS `b84c73ef1f`; main 통합 Core `8951582161`, RSS `1c846e5ae9`. 25개 Japanese Singapore city inbound links, sitemap, RSS를 보존·갱신했다. 관련 테스트 6 passed, Pages `35508797105` success, Production served HTML 최신 확인. Runtime/mobile `RUNTIME_UI_NOT_VERIFIED`, Google `NO_SUBMISSION / SEARCH_CONSOLE_NOT_VERIFIED`, Naver `NAVER_NOT_PRIMARY / INDEX_NOT_CONFIRMED`, metadata `METADATA_NOT_IN_CURRENT_CONTRACT`로 유지한다. 14/28/56일 measurement와 dedicated SGAC page gate는 후속이다.
