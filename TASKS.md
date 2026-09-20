@@ -15,7 +15,7 @@
 
 - [ ] 04 · Reading Time Calculator product-depth upgrade
   - 범위: 3 input modes, 238/183 research reference, reading/read-aloud results, reverse word target, FAQ schema parity, privacy contract, util hub/sitemap propagation, focused tests.
-  - 상태: `codex/util-04-reading-time-20260920` review branch / pending final review. Core correction과 RSS generator propagation은 별도 commit으로 재검증하며, Production parity와 runtime browser QA는 아직 미확인이다. TTS 링크는 현재 기능·주장 정합성 검토 대상이 아니어서 reading-time 페이지에서 제외했고 TTS 페이지 자체는 건드리지 않았다. `data/content-metadata.json`은 현재 contract row가 없어 건드리지 않았다.
+  - 상태: `codex/util-04-reading-time-20260920` review branch / pending final review. Core correction `4d8bb11fca`와 RSS generator propagation `a31048a13a`를 별도 commit으로 완료했다. Production parity와 runtime browser QA는 아직 미확인이다. TTS 링크는 현재 기능·주장 정합성이 확인되지 않아 reading-time 페이지에서 제외했고 TTS 페이지 자체는 건드리지 않았다. `data/content-metadata.json`은 현재 contract row가 없어 건드리지 않았다.
 
 - [x] 03 · 토고 비자 freshness/discovery repair
   - 완료: 2026-09-20 main 반영 완료. 한국 일반여권 visa-required 선답, Togo Voyage 공식 신청시기(홈페이지 5일/Procedures 6일/About 6영업일/FAQ 7영업일)와 7영업일 이상 권고, 현재 express visa·visa on arrival 중단 및 공식 Contact 안내, 승인 후 출발 체크리스트, 조건부 황열 안내를 반영했다. title/meta/OG·WebPage/FAQPage·hub 카드·Togo sitemap·RSS를 정합화했다.

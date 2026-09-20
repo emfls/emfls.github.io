@@ -16,11 +16,12 @@
 - 다른 utility page, 다른 sitemap entry, manual ad unit, feed.xml은 수정하지 않았다.
 
 ### 검증
-- `tests/test_reading_time_calculator.py`, `tests/test_ten_new_english_tools.py`: core implementation baseline 7 passed; final correction run pending.
-- `git diff --check`: final correction run pending.
+- `tests/test_reading_time_calculator.py`, `tests/test_ten_new_english_tools.py`: final correction run 8 passed.
+- `git diff --check`: passed after final correction and RSS generation.
 - Production parity pre-check 결과 live는 구현 전 구버전이므로 `PRODUCTION_PARITY_NOT_VERIFIED`; review branch push 후 Pages 배포 확인이 필요하다.
 - 브라우저 UI/mobile 390px runtime 검증은 현재 browser policy로 수행하지 못해 `RUNTIME_UI_NOT_VERIFIED`로 기록한다.
-- 상태: review branch / pending final review. Core correction 후 RSS generator를 실행하고 feed propagation 결과를 별도 기록한다. Production parity는 미검증이다.
+- `scripts/generate_recent_rss.py` 실행 결과 Reading Time 단독 신규 item과 500-entry limit에 따른 Oracle tail eviction만 발생했다. RSS commit `a31048a13a`로 분리했다.
+- 상태: review branch / pending final review. Production parity와 runtime browser QA는 미검증이다.
 
 ## 2026-09-20 — 03 · 토고 비자 freshness/discovery repair — MAIN CLOSURE
 
