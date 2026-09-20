@@ -63,3 +63,30 @@ def test_trust_privacy_and_navigation_contract():
     assert "My result from this quick 16-type personality quiz is" in source
     assert 'href="/game/"' in source
     assert "prefers-reduced-motion" in source
+
+
+def test_final_review_cleanup_and_profiles_are_complete():
+    source = page_html()
+    assert "legacy-faq" not in source
+    assert "There are 16 situational questions" not in source
+    assert "Reviewed on September 20, 2026" in source
+    assert "Reviewed on August 13, 2026" not in source
+    assert "All 16 types at a glance" in source
+    for type_code in (
+        "ISTJ", "ISFJ", "INFJ", "INTJ", "ISTP", "ISFP", "INFP", "INTP",
+        "ESTP", "ESFP", "ENFP", "ENTP", "ESTJ", "ESFJ", "ENFJ", "ENTJ",
+    ):
+        assert f"<strong>{type_code}</strong> —" in source
+
+    profile_script = re.findall(r"<script(?: [^>]*)?>(.*?)</script>", source, re.S)[-2].rsplit("showQuestion();", 1)[0]
+    values = subprocess.run(
+        ["node", "-e", profile_script + "\nconsole.log(JSON.stringify(profiles));"],
+        capture_output=True, text=True, check=True,
+    )
+    profiles = json.loads(values.stdout.strip().splitlines()[-1])
+    expected = {"ISTJ", "ISFJ", "INFJ", "INTJ", "ISTP", "ISFP", "INFP", "INTP", "ESTP", "ESFP", "ENFP", "ENTP", "ESTJ", "ESFJ", "ENFJ", "ENTJ"}
+    assert set(profiles) == expected
+    assert all(len(fields) == 4 and all(field.strip() for field in fields) for fields in profiles.values())
+    for phrase in ("ultimate people magnet", "Born to manage and lead", "Born to move and make things happen", "mastermind who always has a plan"):
+        assert phrase not in source
+    assert "const descriptions" not in source

@@ -1,5 +1,13 @@
 # PROJECT HISTORY
 
+## 2026-09-20 — 05 · Final Review Correction
+
+- `/game/MBTI/`의 hidden legacy FAQ DOM과 `.legacy-faq` CSS를 제거하고, 새 visible FAQ 하나와 JSON-LD question/answer parity를 유지했다.
+- 하단 freshness를 `Reviewed on September 20, 2026`으로 정합화했다.
+- 16개 type 모두에 overview, strengths to explore, possible blind spots, reflection prompt를 명시적으로 제공하고 legacy categorical descriptions를 제거했다.
+- `All 16 types at a glance`를 16개 neutral one-line overview로 확장했다. 새 type별 URL은 만들지 않았다.
+- 관련 focused tests 14 passed, `git diff --check` passed. 상태는 main merge 전 `pending final review`다.
+
 ## 2026-09-20 — 05 · Quick 16-Type Personality Quiz — REVIEW BRANCH
 
 ### 요청
