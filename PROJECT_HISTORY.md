@@ -8,7 +8,7 @@
 ### 변경
 - Reading Time & Speaking Time Calculator로 확장하고 Paste text, Enter word count, Target duration 3개 입력 모드를 추가했다.
 - silent 238 WPM, read-aloud 183 WPM을 Brysbaert (2019) 연구 reference로 표시하고 custom WPM, reverse word target, 500/1,000/1,500/2,000단어 예제를 제공했다.
-- Unicode-aware word counting, invalid/zero handling, FAQ visible/schema parity, local calculation privacy wording, Word Counter/TTS/All Tools 링크를 반영했다.
+- Unicode-aware word counting, invalid/zero handling, FAQ visible/schema parity, local calculation privacy wording, Word Counter/All Tools 링크를 반영했다. TTS 링크는 현재 기능·주장 정합성이 확인되지 않아 이 페이지에서 제외했으며 TTS 페이지 자체는 범위 밖으로 유지했다.
 - util hub card와 reading-time sitemap lastmod를 `2026-09-20`으로 정합화했다. `data/content-metadata.json`은 현재 contract row가 없어 변경하지 않았다.
 
 ### 보호·미수정
@@ -16,11 +16,11 @@
 - 다른 utility page, 다른 sitemap entry, manual ad unit, feed.xml은 수정하지 않았다.
 
 ### 검증
-- `tests/test_reading_time_calculator.py`, `tests/test_ten_new_english_tools.py`: 7 passed.
-- `git diff --check`: pending final run.
+- `tests/test_reading_time_calculator.py`, `tests/test_ten_new_english_tools.py`: core implementation baseline 7 passed; final correction run pending.
+- `git diff --check`: final correction run pending.
 - Production parity pre-check 결과 live는 구현 전 구버전이므로 `PRODUCTION_PARITY_NOT_VERIFIED`; review branch push 후 Pages 배포 확인이 필요하다.
 - 브라우저 UI/mobile 390px runtime 검증은 현재 browser policy로 수행하지 못해 `RUNTIME_UI_NOT_VERIFIED`로 기록한다.
-- 상태: review branch / pending final review. RSS는 generator 대상 여부를 확인하지 못해 실행하지 않았다.
+- 상태: review branch / pending final review. Core correction 후 RSS generator를 실행하고 feed propagation 결과를 별도 기록한다. Production parity는 미검증이다.
 
 ## 2026-09-20 — 03 · 토고 비자 freshness/discovery repair — MAIN CLOSURE
 

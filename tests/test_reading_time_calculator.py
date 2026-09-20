@@ -1,4 +1,5 @@
 import json
+import html
 import re
 import subprocess
 import unittest
@@ -34,10 +35,31 @@ class ReadingTimeCalculatorTest(unittest.TestCase):
         self.assertEqual(sum(x.get("@type") == "FAQPage" for x in schemas), 1)
         self.assertTrue(all(x.get("dateModified") == EXPECTED_DATE for x in schemas))
         faq = next(x for x in schemas if x.get("@type") == "FAQPage")
-        visible = re.findall(r'<summary>(.*?)</summary>', self.html, re.S)
-        schema_questions = [x["name"] for x in faq["mainEntity"]]
-        self.assertEqual(visible, schema_questions)
-        self.assertGreaterEqual(len(visible), 5)
+        visible_pairs = []
+        for question, answer in re.findall(r'<details><summary>(.*?)</summary><p>(.*?)</p></details>', self.html, re.S):
+            visible_pairs.append((html.unescape(re.sub(r'\s+', ' ', question).strip()), html.unescape(re.sub(r'\s+', ' ', answer).strip())))
+        schema_pairs = [(item["name"], item["acceptedAnswer"]["text"]) for item in faq["mainEntity"]]
+        self.assertEqual(visible_pairs, schema_pairs)
+        self.assertGreaterEqual(len(visible_pairs), 5)
+
+    def test_word_count_and_speaking_contracts(self):
+        self.assertIn("adjustable", self.html.lower())
+        self.assertIn("183 WPM is an English adult oral-reading research reference", self.html)
+        self.assertNotIn("/util/tts/", self.html)
+        runner = self.inline_js + "\n" + r'''
+console.log(JSON.stringify({
+  empty: validateCountInput(''),
+  zero: validateCountInput('0'),
+  negative: validateCountInput('-1'),
+  decimal: validateCountInput('1.5')
+}));
+'''
+        result = subprocess.run(["node", "-e", runner], capture_output=True, text=True, check=True)
+        values = json.loads(result.stdout.strip().splitlines()[-1])
+        self.assertFalse(values["empty"])
+        self.assertTrue(values["zero"])
+        self.assertFalse(values["negative"])
+        self.assertFalse(values["decimal"])
 
     def test_calculation_contract_with_node(self):
         runner = self.inline_js + "\n" + r'''
