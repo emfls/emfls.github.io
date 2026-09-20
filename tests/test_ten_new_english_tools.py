@@ -38,7 +38,7 @@ class TenNewEnglishToolsTest(unittest.TestCase):
                     "url-encoder": "2026-08-14",
                     "unix-timestamp": "2026-08-15",
                     "date-difference": "2026-08-13",
-                    "aspect-ratio": "2026-09-20",
+                    "aspect-ratio": "2026-09-21",
                 }
                 expected_date = expected_dates.get(slug, "2026-08-09")
                 if slug == "reading-time":

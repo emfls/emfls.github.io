@@ -1,5 +1,11 @@
 # PROJECT HISTORY
 
+## 2026-09-21 — 07 · Aspect Ratio Calculator — Final Review Correction
+
+- 최신 main의 Keyword Hunter append history를 보존한 새 final-review branch에서 07 core를 재적용했다. Mode A가 축약 ratio `16 × 9`를 실제 입력 dimensions로 잘못 재사용하던 표시·복사 버그를 `ratioWidth`/`ratioHeight`와 `outputWidth`/`outputHeight` 분리 모델로 수정했다.
+- Reset이 dimensions mode, 기본값 1920×1080 및 16:9, known width 1280, placeholder/error/copy/preview/orientation, preset selection을 모두 deterministic initial state로 복원하도록 수정했다. 2026-09-21 freshness를 WebApplication, Reviewed 문구, sitemap에 반영했다.
+- Mode A UI wiring과 Reset state regression을 추가하고 기존 math/property, exact 43:18, silent precedence, schema/privacy/ads 계약을 보호한다. 상태는 final review pending이며 main merge, Pages, production, Notion closure는 수행하지 않는다.
+
 ## 2026-09-20 — 07 · Aspect Ratio Calculator — REVIEW BRANCH
 
 ### 요청·보호

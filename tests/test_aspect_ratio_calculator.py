@@ -17,6 +17,29 @@ def node_values(expression):
     return json.loads(result.stdout.strip().splitlines()[-1])
 
 
+def node_ui_values(expression):
+    script = re.findall(r"<script(?: [^>]*)?>(.*?)</script>", source(), re.S)[-1]
+    harness = r'''
+class Element {
+  constructor(id, value = "") { this.id = id; this.value = value; this.hidden = false; this.textContent = ""; this.style = {}; this.attributes = {}; this.onclick = null; this.dataset = {}; this.classList = { values: new Set(), add: (...xs) => xs.forEach(x => this.classList.values.add(x)), remove: (...xs) => xs.forEach(x => this.classList.values.delete(x)), toggle: (x, force) => force === undefined ? (this.classList.values.has(x) ? this.classList.values.delete(x) : this.classList.values.add(x)) : (force ? this.classList.values.add(x) : this.classList.values.delete(x)) }; }
+  setAttribute(name, value) { this.attributes[name] = String(value); }
+  getAttribute(name) { return this.attributes[name]; }
+}
+const elements = {};
+const add = (id, value = "") => elements[id] = new Element(id, value);
+add("dimensions-tab"); elements["dimensions-tab"].attributes["aria-controls"] = "dimensions-mode"; elements["dimensions-tab"].attributes["aria-selected"] = "true";
+add("resize-tab"); elements["resize-tab"].attributes["aria-controls"] = "resize-mode"; elements["resize-tab"].attributes["aria-selected"] = "false";
+add("dimensions-mode"); add("resize-mode"); elements["resize-mode"].hidden = true;
+add("width", "1920"); add("height", "1080"); add("ratio-width", "16"); add("ratio-height", "9"); add("known-side", "width"); add("known-dimension", "1280");
+add("error"); elements["error"].hidden = true; add("result"); elements["result"].textContent = "Result appears here."; add("copy-status"); add("preview-rectangle"); add("orientation");
+["calculate-dimensions","calculate-resize","swap-dimensions","swap-ratio","copy-ratio","copy-dimensions","reset"].forEach(add);
+["16:9","9:16","4:3","3:2","1:1","4:5","16:10","21:9"].forEach((value, i) => { const item = add("preset-" + i); item.dataset.preset = value; });
+globalThis.document = { getElementById: id => elements[id], querySelectorAll: selector => selector === '[role="tab"]' ? [elements["dimensions-tab"], elements["resize-tab"]] : selector === "[data-preset]" ? Object.values(elements).filter(x => x.dataset.preset) : [], querySelector: selector => elements["dimensions-tab"] };
+'''
+    result = subprocess.run(["node", "-e", harness + script + "\n" + expression], capture_output=True, text=True, check=True)
+    return json.loads(result.stdout.strip().splitlines()[-1])
+
+
 def test_known_answers_and_exactness():
     values = node_values(r'''
 console.log(JSON.stringify({
@@ -88,3 +111,44 @@ def test_ui_contract_presets_accessibility_and_schema():
     assert "/util/ImageCompressor/" in html
     assert "/util/imageformatconverter/" in html
     assert "localStorage" not in html and "sessionStorage" not in html and "fetch(" not in html
+    assert 'dateModified":"2026-09-21"' in html
+    assert "Reviewed: 2026-09-21" in html
+    assert '<lastmod>2026-09-21</lastmod>' in (ROOT / "util/sitemap.xml").read_text(encoding="utf-8")
+
+
+def test_mode_a_uses_original_dimensions_for_display_and_copy():
+    values = node_ui_values(r'''
+elements["width"].value = "1920";
+elements["height"].value = "1080";
+runDimensions();
+console.log(JSON.stringify({result: elements["result"].textContent, lastResult, lastDimensions}));
+''')
+    assert "Exact ratio: 16:9" in values["result"]
+    assert "1920 × 1080" in values["result"]
+    assert values["lastResult"] == "16:9"
+    assert values["lastDimensions"] == "1920 × 1080"
+    assert "16 × 9" not in values["result"]
+
+
+def test_reset_restores_deterministic_initial_ui_state():
+    values = node_ui_values(r'''
+elements["resize-tab"].onclick();
+elements["preset-5"].onclick();
+elements["known-dimension"].value = "1080";
+runResize();
+resetAll();
+console.log(JSON.stringify({
+  dimensionsSelected: elements["dimensions-tab"].attributes["aria-selected"],
+  resizeSelected: elements["resize-tab"].attributes["aria-selected"],
+  dimensionsHidden: elements["dimensions-mode"].hidden,
+  resizeHidden: elements["resize-mode"].hidden,
+  selectedPresets: Object.values(elements).filter(x => x.dataset.preset && x.classList.values.has("is-selected")).length,
+  width: elements["width"].value, height: elements["height"].value,
+  ratioWidth: elements["ratio-width"].value, ratioHeight: elements["ratio-height"].value,
+  knownSide: elements["known-side"].value, knownDimension: elements["known-dimension"].value,
+  result: elements["result"].textContent, errorHidden: elements["error"].hidden, error: elements["error"].textContent,
+  copyStatus: elements["copy-status"].textContent, preview: elements["preview-rectangle"].style.aspectRatio,
+  orientation: elements["orientation"].textContent
+}));
+''')
+    assert values == {"dimensionsSelected": "true", "resizeSelected": "false", "dimensionsHidden": False, "resizeHidden": True, "selectedPresets": 0, "width": 1920, "height": 1080, "ratioWidth": 16, "ratioHeight": 9, "knownSide": "width", "knownDimension": 1280, "result": "Result appears here.", "errorHidden": True, "error": "", "copyStatus": "", "preview": "16 / 9", "orientation": "Orientation: Landscape"}
