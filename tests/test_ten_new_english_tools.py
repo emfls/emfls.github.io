@@ -40,6 +40,8 @@ class TenNewEnglishToolsTest(unittest.TestCase):
                     "date-difference": "2026-08-13",
                 }
                 expected_date = expected_dates.get(slug, "2026-08-09")
+                if slug == "reading-time":
+                    expected_date = "2026-09-20"
                 self.assertIn(f"Reviewed: {expected_date}", html)
                 self.assertIn("processed in your browser", html)
                 self.assertNotRegex(html, r"\.innerHTML\s*=")

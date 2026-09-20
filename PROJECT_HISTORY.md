@@ -1,5 +1,27 @@
 # PROJECT HISTORY
 
+## 2026-09-20 — 04 · Reading Time Calculator product-depth upgrade — REVIEW BRANCH
+
+### 요청
+- `/util/reading-time/` 하나의 canonical에서 text, word count, target duration을 지원하고 reading/read-aloud 계산을 제공한다.
+
+### 변경
+- Reading Time & Speaking Time Calculator로 확장하고 Paste text, Enter word count, Target duration 3개 입력 모드를 추가했다.
+- silent 238 WPM, read-aloud 183 WPM을 Brysbaert (2019) 연구 reference로 표시하고 custom WPM, reverse word target, 500/1,000/1,500/2,000단어 예제를 제공했다.
+- Unicode-aware word counting, invalid/zero handling, FAQ visible/schema parity, local calculation privacy wording, Word Counter/TTS/All Tools 링크를 반영했다.
+- util hub card와 reading-time sitemap lastmod를 `2026-09-20`으로 정합화했다. `data/content-metadata.json`은 현재 contract row가 없어 변경하지 않았다.
+
+### 보호·미수정
+- canonical, GA4 `G-QP5Q67GE5B`, AdSense `ca-pub-8830524482034754`, 별도 speaking URL는 유지·미생성했다.
+- 다른 utility page, 다른 sitemap entry, manual ad unit, feed.xml은 수정하지 않았다.
+
+### 검증
+- `tests/test_reading_time_calculator.py`, `tests/test_ten_new_english_tools.py`: 7 passed.
+- `git diff --check`: pending final run.
+- Production parity pre-check 결과 live는 구현 전 구버전이므로 `PRODUCTION_PARITY_NOT_VERIFIED`; review branch push 후 Pages 배포 확인이 필요하다.
+- 브라우저 UI/mobile 390px runtime 검증은 현재 browser policy로 수행하지 못해 `RUNTIME_UI_NOT_VERIFIED`로 기록한다.
+- 상태: review branch / pending final review. RSS는 generator 대상 여부를 확인하지 못해 실행하지 않았다.
+
 ## 2026-09-20 — 03 · 토고 비자 freshness/discovery repair — MAIN CLOSURE
 
 ### 요청
