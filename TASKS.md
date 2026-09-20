@@ -13,6 +13,11 @@
 
 ## P1 - High
 
+- [x] 03 · 토고 비자 freshness/discovery repair
+  - 완료: 2026-09-20 review branch. 한국 일반여권 visa-required 선답, Togo Voyage 공식 신청시기(5일/6일·6영업일/7영업일) 충돌과 7영업일 이상 권고, Visa Arrivée Express의 사전 온라인 긴급절차 구분, 승인 후 출발 체크리스트, 조건부 황열 안내를 반영했다. title/meta/OG·WebPage/FAQPage·hub 카드·Togo sitemap·RSS를 정합화하고 관련 테스트 7 passed 및 diff check를 확인했다.
+  - 보호: canonical, GA4, AdSense, CFA 비용표, 여권 유효기간, Togo travel cluster 19개, 다른 국가 페이지는 수정하지 않았다. content-metadata의 비자 YMYL 계약은 불명확해 전역 변경하지 않고 `FOLLOW_UP_REQUIRED`로 남겼다.
+  - 상태: 최신 `origin/main` 기반 `codex/visa-03-togo-20260920` review branch. Production은 이 브랜치 변경을 아직 서빙하지 않으며 main merge·Notion 완료 기록은 보류한다. 14/28/56일 측정은 배포 후 수행한다.
+
 - [x] 02 · 우크라이나 비자 safety/discovery parity repair
   - 완료: 2026-09-20 최종 검증. 현행 여행금지 standing-state source와 2026-07-09 dated notice를 유지하고, 예외적 여권사용은 재외동포365민원포털 신청 안내와 `boho@mofa.go.kr` 문의처를 반영했다. visa hub 카드 정합화, Ukraine sitemap `lastmod=2026-09-20`, 중복 WebPage JSON-LD 제거 및 관련 테스트 12 passed를 확인했다. `codex/visa-02-ukraine-merge-20260920`에서 최종 검증 완료.
   - 후속: Production 배포 후 served HTML과 Search Console URL Inspection을 확인한다. Ukraine travel cluster는 이번 범위에서 수정하지 않는다.

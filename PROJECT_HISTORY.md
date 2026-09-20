@@ -1,5 +1,27 @@
 # PROJECT HISTORY
 
+## 2026-09-20 — 03 · 토고 비자 freshness/discovery repair
+
+### 요청
+- 최신 `origin/main` 기준으로 `/kor/report/visa/togo.html`만 Cycle 2 명세에 맞춰 보강하고 review branch에서 검수 대기한다.
+
+### 변경
+- 한국 일반여권의 visa-required 선답과 Togo Voyage 사전 온라인 신청·승인 필요성을 명시하고, 공식 안내의 5일·6일/6영업일·7영업일 충돌을 보존하면서 7영업일 이상 여유와 신청 당일 live 재확인을 권고했다.
+- `Visa Arrivée Express`를 일반 도착비자가 아닌 출발 전 온라인 긴급절차로 구분하고, Visa Assistant부터 승인·immigration formalities·bordereau/QR·동일 여권·항공사 확인까지 출발 체크리스트를 추가했다. 황열 요건은 출발지·경유지·국적 조건별 재확인으로 수정했다.
+- title/meta/OG, head WebPage와 FAQPage를 정합화하고 bottom duplicate WebPage를 제거했다. Togo hub 카드, Togo sitemap `lastmod=2026-09-20`, 생성기 실행 RSS를 갱신했다.
+
+### 보호·미수정
+- canonical, GA4 `G-QP5Q67GE5B`, AdSense `ca-pub-8830524482034754`, CFA 비용표와 여권 유효기간 문구를 유지했다.
+- `kor/report/travel/togo-*` 19개 cluster, 다른 국가 visa 페이지, 다른 sitemap entry는 수정하지 않았다.
+- `data/content-metadata.json`의 비자 YMYL 계약은 전역 변경하지 않고 `FOLLOW_UP_REQUIRED`로 기록했다.
+
+### 검증
+- `tests/test_priority_africa_visa_pages.py`, `tests/test_gsc_opportunity_batch_03.py`: 7 passed.
+- `git diff --check`: 통과.
+- RSS는 `scripts/generate_recent_rss.py`로 생성했으며, 현재 branch는 아직 production에 배포되지 않았다.
+- 14/28/56일 측정과 Search Console 확인은 main 반영·배포 후 수행한다.
+- 상태: `codex/visa-03-togo-20260920` review branch, Notion Implementation History는 최종 main merge 전까지 업데이트하지 않는다.
+
 ## 2026-09-20 — 02 · 우크라이나 비자 safety/discovery parity repair
 
 ### 요청
