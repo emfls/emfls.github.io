@@ -558,3 +558,6 @@
 
 ## 2026-09-20 20:31 Keyword Hunter
 - Seeds: 40; New: 115; Rejected: 100; DB: 2511; Errors: 1; Top: 항공권가격비교사이트. Report: reports/keyword-hunter/2026-09-20-2031.md
+
+## 2026-09-21 01:12 Keyword Hunter
+- Seeds: 40; New: 42; Rejected: 14; DB: 2553; Errors: 0; Top: 조기재취업수당모의계산. Report: reports/keyword-hunter/2026-09-21-0112.md
