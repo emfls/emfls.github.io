@@ -1,5 +1,15 @@
 # PROJECT HISTORY
 
+## 2026-09-20 — 06 · Japanese Singapore Entry Guide — MAIN CLOSURE
+
+- Base `c34d01b313` 이후 unrelated Keyword Hunter automation main `cb504962cb`를 흡수한 최신 main 위에 승인 Core `6a229cbc33`와 RSS `b84c73ef1f`를 cherry-pick했다. 통합 commit은 각각 `8951582161`과 `1c846e5ae9`이며, non-force로 `origin/main`에 반영했다.
+- Primary role을 generic visa catalog에서 일본인 입국 준비 guide로 전환했다. title/H1, 일본 국적자 관광·상용 비자 불필요, 여권 6개월, SG Arrival Card, e-Pass, Work Pass 구분을 정합화하고 고정 90일 promise는 추가하지 않았다.
+- SG Arrival Card 대상, 도착일 포함 3일 이내, 무료 ICA e-Service/MyICA, transit 예외, acknowledgement email, DE番号, Update SGAC, SGAC와 e-Pass의 차이를 반영했다. Singapore Embassy in Tokyo, ICA, MOM 공식 링크를 유지·보강했다.
+- `ja` self만 유지하고 `ko`/`x-default`를 제거했다. FAQPage JSON-LD는 제거하고 WebPage 1개, canonical, `dateModified=2026-09-20`, `inLanguage=ja-JP`를 유지했다. 한국어 페이지는 수정하지 않았다.
+- 25개 Japanese Singapore city inbound link contract, sitemap target lastmod, RSS item parity를 확인했다. metadata target row는 없어 `METADATA_NOT_IN_CURRENT_CONTRACT`로 유지했다.
+- Core focused tests `6 passed`, `git diff --check` 통과. Pages run `35508797105` success, 실제 Production served HTML에서 새 title/H1, SGAC block, Tokyo Embassy source, `ja` only, FAQPage 부재를 확인했다.
+- Runtime/mobile은 `RUNTIME_UI_NOT_VERIFIED`, Google은 `NO_SUBMISSION / SEARCH_CONSOLE_NOT_VERIFIED`, Naver는 `NAVER_NOT_PRIMARY / INDEX_NOT_CONFIRMED`다. 14/28/56일 measurement와 dedicated SGAC page gate를 후속 수행한다. Notion closure는 `NOTION_CLOSURE_PENDING_CHATGPT`다.
+
 ## 2026-09-20 — 05 · Final Review Correction
 
 - `/game/MBTI/`의 hidden legacy FAQ DOM과 `.legacy-faq` CSS를 제거하고, 새 visible FAQ 하나와 JSON-LD question/answer parity를 유지했다.
