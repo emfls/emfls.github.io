@@ -1,0 +1,90 @@
+import json
+import re
+import subprocess
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+PAGE = ROOT / "util/aspect-ratio/index.html"
+
+
+def source():
+    return PAGE.read_text(encoding="utf-8")
+
+
+def node_values(expression):
+    script = re.findall(r"<script(?: [^>]*)?>(.*?)</script>", source(), re.S)[-1]
+    result = subprocess.run(["node", "-e", script + "\n" + expression], capture_output=True, text=True, check=True)
+    return json.loads(result.stdout.strip().splitlines()[-1])
+
+
+def test_known_answers_and_exactness():
+    values = node_values(r'''
+console.log(JSON.stringify({
+  landscape: ratioFromInputs("1920", "1080"),
+  portrait: ratioFromInputs("1080", "1350"),
+  square: ratioFromInputs("1000", "1000"),
+  width: resizeFromRatio("16", "9", "width", "1280"),
+  height: resizeFromRatio("9", "16", "height", "1920"),
+  portraitWidth: resizeFromRatio("4", "5", "width", "1080"),
+  ultrawide: ratioFromInputs("3440", "1440")
+}));
+''')
+    assert values["landscape"]["width"] == 16 and values["landscape"]["height"] == 9
+    assert values["portrait"]["width"] == 4 and values["portrait"]["height"] == 5
+    assert values["square"]["width"] == 1 and values["square"]["height"] == 1
+    assert values["width"]["height"] == 720
+    assert values["height"]["width"] == 1080
+    assert values["portraitWidth"]["height"] == 1350
+    assert values["ultrawide"]["width"] == 43 and values["ultrawide"]["height"] == 18
+
+
+def test_round_trip_swap_and_scale_invariants():
+    values = node_values(r'''
+const scaled = [[1920,1080],[3840,2160],[960,540]].map(([w,h]) => ratioFromInputs(String(w), String(h)));
+console.log(JSON.stringify({
+  roundTrip: resizeFromRatio("16", "9", "width", "1920").height,
+  swapped: ratioFromInputs("1080", "1920"),
+  scaled
+}));
+''')
+    assert values["roundTrip"] == 1080
+    assert (values["swapped"]["width"], values["swapped"]["height"]) == (9, 16)
+    assert all((item["width"], item["height"]) == (16, 9) for item in values["scaled"])
+
+
+def test_invalid_input_contract_and_no_legacy_precedence():
+    values = node_values(r'''
+const invalid = [
+  () => ratioFromInputs("", "1080"),
+  () => ratioFromInputs("0", "1080"),
+  () => ratioFromInputs("-1", "1080"),
+  () => ratioFromInputs("1920.5", "1080"),
+  () => resizeFromRatio("", "9", "width", "1280"),
+  () => resizeFromRatio("16", "0", "width", "1280"),
+  () => resizeFromRatio("16", "9", "width", "")
+];
+console.log(JSON.stringify({invalid: invalid.map(fn => { try { fn(); return false; } catch (error) { return true; } })}));
+''')
+    assert all(values["invalid"])
+    html = source()
+    assert "targetWidth" not in html and "targetHeight" not in html
+    assert "if(tw>0)" not in html and "else if(th>0)" not in html
+
+
+def test_ui_contract_presets_accessibility_and_schema():
+    html = source()
+    for preset in ("16:9", "9:16", "4:3", "3:2", "1:1", "4:5", "16:10", "21:9"):
+        assert f'data-preset="{preset}"' in html
+    assert len(re.findall(r'<button[^>]+role="tab"', html)) == 2
+    assert html.count('type="button"') >= 14
+    assert 'aria-live="polite"' in html
+    assert 'role="alert"' in html
+    assert '"@type":"WebApplication"' in html
+    assert '"@type":"FAQPage"' not in html
+    assert "3440×1440" in html and "43:18" in html
+    assert "21:9" in html and "common category label" in html
+    assert "percentage-calculator" not in html
+    assert "/util/imagetool/" in html
+    assert "/util/ImageCompressor/" in html
+    assert "/util/imageformatconverter/" in html
+    assert "localStorage" not in html and "sessionStorage" not in html and "fetch(" not in html
