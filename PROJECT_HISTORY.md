@@ -1,5 +1,22 @@
 # PROJECT HISTORY
 
+## 2026-09-20 — 05 · Quick 16-Type Personality Quiz — REVIEW BRANCH
+
+### 요청
+- `/game/MBTI/` 한 페이지에서 4문항/축의 deterministic tie-default bias를 제거하고, 독립적인 20문항 personality quiz로 신뢰·결과 깊이·구조화 데이터·navigation을 보강한다.
+
+### 변경
+- 기존 16개 original scenario에 축별 1개씩 자체 작성 문항을 추가해 20문항/축별 5문항으로 만들고, `>` majority scoring과 `Close result` 3:2 표시를 적용했다. random tie-break와 hidden weighting은 사용하지 않는다.
+- title/H1/OG/Twitter와 결과 문구를 `Quick 16-Type Personality Quiz`로 rebrand하고, 공식 MBTI® assessment가 아니며 The Myers-Briggs Company 또는 Myers & Briggs Foundation과 제휴하지 않는다는 disclosure와 trademark acknowledgement를 추가했다.
+- 결과에 four-letter quiz result, 축별 counts, close marker, preference explanation, strengths, possible blind spots, reflection prompt를 추가했다. career/hiring/clinical/compatibility/intelligence inference는 추가하지 않았다.
+- visible FAQ 7개와 FAQPage를 question+answer pair로 정합화하고 WebApplication 중복을 제거했다. `Other Games`는 `/game/`으로 이동하며 game hub card도 새 명칭과 20문항 promise로 맞췄다.
+- AdSense는 disabled 상태를 유지하고 answers/result를 telemetry로 보내지 않는다. localized MBTI pages는 inventory-only로 두고 bulk rewrite/hreflang은 하지 않았다.
+
+### 검증
+- `tests/test_quick_mbti_zero_click.py`, `tests/test_gsc_opportunity_batch_06.py`, `tests/test_mbti_game_page.py`, `tests/test_quick_personality_quiz.py`: 13 passed.
+- `git diff --check`: passed.
+- Production/runtime/mobile과 RSS는 core commit 후 별도 검증한다. 아직 main merge·Notion closure·Production verified가 아니다.
+
 ## 2026-09-20 — 04 · Reading Time Calculator product-depth upgrade — REVIEW BRANCH
 
 ### 요청
