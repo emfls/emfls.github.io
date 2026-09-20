@@ -429,3 +429,6 @@
 
 ## 2026-09-20 05:46 Keyword Hunter
 - Seeds: 40; New: 24; Rejected: 15; DB: 2341; Errors: 0; Top: 월급계산법. Report: reports/keyword-hunter/2026-09-20-0546.md
+
+## 2026-09-20 09:10 Keyword Hunter
+- Seeds: 40; New: 41; Rejected: 29; DB: 2382; Errors: 1; Top: 통상임금계산. Report: reports/keyword-hunter/2026-09-20-0910.md
