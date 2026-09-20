@@ -564,3 +564,6 @@
 
 ## 2026-09-21 03:51 Keyword Hunter
 - Seeds: 40; New: 20; Rejected: 11; DB: 2573; Errors: 0; Top: 비행기가격. Report: reports/keyword-hunter/2026-09-21-0351.md
+
+## 2026-09-21 07:30 Keyword Hunter
+- Seeds: 40; New: 60; Rejected: 56; DB: 2633; Errors: 0; Top: none. Report: reports/keyword-hunter/2026-09-21-0730.md
