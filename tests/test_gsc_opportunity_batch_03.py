@@ -45,7 +45,11 @@ class SearchOpportunityBatch03Test(unittest.TestCase):
         for relative_path in PAGES:
             with self.subTest(page=relative_path):
                 html, _ = parse(relative_path)
-                expected_date = "2026-08-13" if relative_path.endswith("rwanda.html") else "2026-08-12"
+                expected_date = (
+                    "2026-08-13" if relative_path.endswith("rwanda.html")
+                    else "2026-09-20" if relative_path.endswith("togo.html")
+                    else "2026-08-12"
+                )
                 self.assertIn(expected_date, html)
                 self.assertTrue(
                     any(label in html for label in ("먼저 답", "빠른 답", "핵심 답변"))
@@ -69,7 +73,9 @@ class SearchOpportunityBatch03Test(unittest.TestCase):
         tanzania, _ = parse("kor/report/visa/tanzania.html")
         self.assertIn("현재 ETIAS 신청을 받지 않습니다", switzerland)
         self.assertIn("여권 유효기간이 6개월 이상", rwanda)
-        self.assertIn("최소 5일 전", togo)
+        for phrase in ("visa-required", "최소 5일", "최소 6일", "최소 6영업일", "최소 7영업일", "Visa Arrivée Express", "visa on arrival와 express visa 모두 추후 공지까지 중단", "공식 Contact"):
+            self.assertIn(phrase, togo)
+        self.assertNotIn("출발 전 온라인으로 처리하는 긴급 절차", togo)
         self.assertIn("귀국 또는 제3국행 항공권", tanzania)
 
     def test_adelaide_plan_accounts_for_transport_market_and_eta(self):
