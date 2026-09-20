@@ -73,8 +73,9 @@ class SearchOpportunityBatch03Test(unittest.TestCase):
         tanzania, _ = parse("kor/report/visa/tanzania.html")
         self.assertIn("현재 ETIAS 신청을 받지 않습니다", switzerland)
         self.assertIn("여권 유효기간이 6개월 이상", rwanda)
-        for phrase in ("visa-required", "최소 5일", "6영업일", "7영업일", "Visa Arrivée Express", "일반 visa-on-arrival"):
+        for phrase in ("visa-required", "최소 5일", "최소 6일", "최소 6영업일", "최소 7영업일", "Visa Arrivée Express", "visa on arrival와 express visa 모두 추후 공지까지 중단", "공식 Contact"):
             self.assertIn(phrase, togo)
+        self.assertNotIn("출발 전 온라인으로 처리하는 긴급 절차", togo)
         self.assertIn("귀국 또는 제3국행 항공권", tanzania)
 
     def test_adelaide_plan_accounts_for_transport_market_and_eta(self):

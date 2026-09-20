@@ -29,8 +29,9 @@ class PriorityAfricaVisaPagesTest(unittest.TestCase):
 
     def test_togo_timing_and_online_process_are_explicit(self):
         html = (ROOT / "kor/report/visa/togo.html").read_text(encoding="utf-8")
-        for phrase in ("visa-required", "최소 5일", "6영업일", "7영업일", "Visa Arrivée Express", "일반 visa-on-arrival", "Togo Voyage"):
+        for phrase in ("visa-required", "최소 5일", "최소 6일", "최소 6영업일", "최소 7영업일", "Visa Arrivée Express", "visa on arrival와 express visa 모두 추후 공지까지 중단", "공식 Contact", "Togo Voyage"):
             self.assertIn(phrase, html)
+        self.assertNotIn("출발 전 온라인으로 처리하는 긴급 절차", html, msg="legacy available-now wording must not return")
 
 
 if __name__ == "__main__": unittest.main()
