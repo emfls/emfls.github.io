@@ -561,3 +561,6 @@
 
 ## 2026-09-21 01:12 Keyword Hunter
 - Seeds: 40; New: 42; Rejected: 14; DB: 2553; Errors: 0; Top: 조기재취업수당모의계산. Report: reports/keyword-hunter/2026-09-21-0112.md
+
+## 2026-09-21 03:51 Keyword Hunter
+- Seeds: 40; New: 20; Rejected: 11; DB: 2573; Errors: 0; Top: 비행기가격. Report: reports/keyword-hunter/2026-09-21-0351.md
