@@ -1,5 +1,13 @@
 # PROJECT HISTORY
 
+## 2026-09-21 — 07 · Aspect Ratio Calculator — MAIN CLOSURE
+
+- 승인 final chain을 최신 main `9e31ecf7c3161c78eb4a7194585d4a83543b848d` 위에 non-force로 반영했다. Integrated Core `bfca0d1a8d`, Final UI correction `881ebbc36d`, RSS `ec21c5b3c1`, 현재 main `ec21c5b3c1`이며 closure 문서 commit은 이 section을 포함한 closure commit이다. force push는 사용하지 않았다.
+- Mode A는 `1920×1080 → 16:9 / 1.7778 / 1920×1080 / Landscape`로 실제 표시·복사되며, `1080×1350 → 4:5`, `3440×1440 → exact 43:18`을 확인했다. Mode B는 `16:9 + width 1280 → 1280×720`, `9:16 + height 1920 → 1080×1920`, `4:5 + width 1080 → 1080×1350`이다. 8개 preset, swap, deterministic Reset, copy, preview를 유지했다.
+- `targetWidth`/`targetHeight`와 silent width precedence는 없다. WebApplication exactly 1, FAQPage 0, canonical/H1 exactly 1, `dateModified=2026-09-21`, visible Reviewed date, GA4 `G-QP5Q67GE5B`, AdSense `ca-pub-8830524482034754`, browser-side privacy 계약을 확인했다.
+- util hub description, Aspect Ratio sitemap lastmod `2026-09-21`, RSS title/description/canonical/pubDate `Mon, 21 Sep 2026 00:00:00 +0000`를 확인했다. metadata는 `METADATA_NOT_IN_CURRENT_CONTRACT`다.
+- Tests `9 passed`, `git diff --check` passed. GitHub Pages run `35545871611` success, 실제 Production served HTML 최신 확인, runtime Mode A/Mode B/Reset/Copy 기능 검증 success. 390px mobile은 viewport capability 부재로 `RUNTIME_UI_NOT_VERIFIED`다. Google `SEARCH_CONSOLE_NOT_VERIFIED`, Naver `NAVER_INDEX_NOT_CONFIRMED / SECONDARY`, 14/28/56일 measurement는 후속이다. Notion은 `NOTION_CLOSURE_PENDING_CHATGPT`이며 duplicate archive는 수정하지 않았다.
+
 ## 2026-09-21 — 07 · Aspect Ratio Calculator — Final Review Correction
 
 - 최신 main의 Keyword Hunter append history를 보존한 새 final-review branch에서 07 core를 재적용했다. Mode A가 축약 ratio `16 × 9`를 실제 입력 dimensions로 잘못 재사용하던 표시·복사 버그를 `ratioWidth`/`ratioHeight`와 `outputWidth`/`outputHeight` 분리 모델로 수정했다.

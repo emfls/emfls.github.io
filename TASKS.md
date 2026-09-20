@@ -13,8 +13,8 @@
 
 ## P1 - High
 
-- [ ] 07 · Aspect Ratio Calculator — `/util/aspect-ratio/`
-  - 리뷰 브랜치: 2026-09-20. 두 모드(이미지 크기에서 exact ratio, ratio로 resize), 8개 common preset, swap/reset/copy/live preview, visible FAQ와 WebApplication 1개, privacy/AdSense 보호, util hub/sitemap/RSS propagation을 구현했다. Core와 RSS는 별도 검증·커밋하며 main 반영 전 `READY_FOR_REVIEW` 상태다.
+- [x] 07 · Aspect Ratio Calculator — `/util/aspect-ratio/`
+  - 완료: 2026-09-21. 두 모드(이미지 크기에서 exact ratio, ratio로 resize), 8개 common preset, swap/reset/copy/live preview, visible FAQ와 WebApplication 1개, privacy/AdSense 보호, util hub/sitemap/RSS propagation을 반영했다. silent precedence를 제거하고 Mode A original dimensions 표시·복사 버그와 deterministic Reset을 수정했다. `3440×1440 → 43:18` exactness를 유지했으며 관련 테스트 9 passed, Pages `35545871611` success, Production/runtime 기능 검증을 완료했다. Mobile 390px은 viewport capability 부재로 `RUNTIME_UI_NOT_VERIFIED`, Google `SEARCH_CONSOLE_NOT_VERIFIED`, Naver `NAVER_INDEX_NOT_CONFIRMED`, metadata `METADATA_NOT_IN_CURRENT_CONTRACT`로 유지한다. 14/28/56일 measurement와 Notion final closure는 후속이다.
 
 - [x] 06 · Japanese Singapore Entry Guide — `/jp/report/travel/singapore-visa.html`
   - 완료: 2026-09-20. 일본인 입국 준비 중심으로 title/H1을 재정의하고, 일본 국적자 관광·상용 비자 면제·여권 6개월 기준, SG Arrival Card의 대상/3일 이내/무료/ICA·MyICA/통과 예외/acknowledgement/DE番号/Update SGAC/e-Pass 구분을 반영했다. `ko`·`x-default` hreflang을 제거하고 `ja` self만 유지했으며 FAQPage를 제거하고 WebPage 1개를 유지했다.
