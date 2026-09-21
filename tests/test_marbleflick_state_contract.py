@@ -16,33 +16,55 @@ const html = fs.readFileSync(process.argv[1], "utf8");
 const js = html.match(/<script>\s*\/\/ ===== Variables & Setup =====([\s\S]*?)<\/script>/)[1];
 const elements = {};
 const noop = () => {};
-function element(id) {
-  return elements[id] ||= { id, style: {}, disabled: false, textContent: "", onclick: null,
+function makeElement(id) {
+  return elements[id] = { id, style: {}, disabled: false, textContent: "", onclick: null,
     classList: { add: noop, remove: noop, toggle: noop }, setAttribute: noop,
     addEventListener: noop, getBoundingClientRect: () => ({ left: 0, top: 0 }) };
 }
 const ctx = new Proxy({}, { get: () => noop });
-element("board").getContext = () => ctx;
-const document = { getElementById: element, querySelector: () => null };
-const storage = { getItem: () => null, setItem: noop, removeItem: noop };
+for (const id of ["board","modeHuman","modeAI","descHuman","descAI","turn","winnerBanner","restartBtn"]) makeElement(id);
+elements.board.getContext = () => ctx;
+let domReady = null;
+const document = { readyState: "loading", getElementById: id => elements[id] || null, querySelector: () => null,
+  addEventListener: (name, fn) => { if (name === "DOMContentLoaded") domReady = fn; } };
+const storage = { getItem: () => JSON.stringify({ wins: 3, losses: 2, draws: 1 }), setItem: noop, removeItem: noop };
 const window = { innerWidth: 360, addEventListener: noop, MarbleFlickTest: null };
+let nextTimer = 1; const timers = new Map();
+const fakeSetTimeout = (fn) => { const id=nextTimer++; timers.set(id, fn); return id; };
+const fakeClearTimeout = (id) => timers.delete(id);
 const sandbox = { window, document, localStorage: storage, console, Math, JSON, Number,
-  setTimeout, clearTimeout, requestAnimationFrame: (fn) => setTimeout(fn, 0), cancelAnimationFrame: clearTimeout };
+  setTimeout: fakeSetTimeout, clearTimeout: fakeClearTimeout, requestAnimationFrame: fakeSetTimeout, cancelAnimationFrame: fakeClearTimeout };
 vm.runInNewContext(js, sandbox, { filename: "MarbleFlick/index.html" });
 const api = sandbox.window.MarbleFlickTest;
 if (!api) throw new Error("test API not exposed");
 const assert = (value, message) => { if (!value) throw new Error(message); };
+assert(api.getState().phase === "READY" && api.getState().turn === 0, "initial state");
+assert(api.getState().pieces === 8, "initial pieces");
+makeElement("aiStats"); makeElement("resetStatsBtn"); domReady();
+assert(elements.aiStats.textContent.includes("Wins: 3") && typeof elements.resetStatsBtn.onclick === "function", "DOMContentLoaded stats binding");
 assert(api.determineRoundResult(0, 0) === "draw", "0/0 draw");
 assert(api.determineRoundResult(0, 3) === "white", "0/>0 white");
 assert(api.determineRoundResult(2, 0) === "black", ">0/0 black");
 assert(api.determineRoundResult(2, 2) === null, ">0/>0 continue");
 assert(api.normalizeStats({ wins: 2, losses: 1, draws: 3 }).wins === 2, "stats normalize");
 assert(api.normalizeStats({ wins: -1, losses: "bad" }).wins === 0, "malformed stats safe default");
-let state = api.getState();
 api.setState({ aiMode: true, turn: 1, phase: "READY", winner: null, activeMotionCount: 0 });
-const scheduledVersion = api.getState().gameVersion;
-api.scheduleAiMove(0);
-api.setState({ gameVersion: scheduledVersion + 1, aiMode: false });
+const scheduledVersion = api.getState().gameVersion; api.scheduleAiMove(0);
+const oldAiCallback = [...timers.values()][0]; api.setMode(false); oldAiCallback();
+assert(api.getState().phase === "READY" && api.getState().turn === 0 && api.getState().aiMode === false, "actual AI to 2P stale callback");
+api.setMode(true); api.setState({ turn: 1, phase: "READY" }); api.scheduleAiMove(0);
+const oldRestartCallback = [...timers.values()][0]; api.resetGame(); oldRestartCallback();
+assert(api.getState().phase === "READY" && api.getState().turn === 0 && api.getState().activeMotionCount === 0, "actual restart stale callback");
+api.setState({ aiMode: true, turn: 1, phase: "ROUND_OVER", winner: "black" }); api.scheduleAiMove(0);
+const roundOverCallback = [...timers.values()][0]; roundOverCallback();
+assert(api.getState().activeMotionCount === 0, "round-over stale callback");
+api.setState({ aiMode: false, turn: 0, phase: "MOVING", winner: null, activeMotionCount: 2, activeShotToken: 9 });
+const versionBeforeModeAttempt=api.getState().gameVersion; api.setMode(true);
+assert(api.getState().gameVersion === versionBeforeModeAttempt && api.getState().phase === "MOVING", "moving mode toggle changed state");
+api.setState({ phase: "READY", activeMotionCount: 0 });
+api.setState({ aiMode: true, turn: 1, phase: "READY", winner: null });
+const capturedVersion = api.getState().gameVersion; api.scheduleAiMove(0); api.setState({ gameVersion: capturedVersion + 1, aiMode: false });
+for (const fn of timers.values()) fn();
 setTimeout(() => {
   const stale = api.getState();
   assert(stale.phase === "READY" && stale.activeMotionCount === 0, "stale AI callback mutated state");
@@ -55,7 +77,7 @@ setTimeout(() => {
   api.recordAiResult("black"); api.recordAiResult("black");
   assert(api.getState().stats.wins === 1, "winner stats double counted");
   console.log("actual-js-contract-pass");
-}, 15);
+}, 0);
 '''
     result = subprocess.run(["node", "-e", script, str(PAGE)], capture_output=True, text=True, timeout=5)
     assert result.returncode == 0, result.stderr or result.stdout

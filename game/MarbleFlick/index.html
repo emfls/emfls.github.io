@@ -295,6 +295,8 @@
       }
       function loadStats() { try { return normalizeStats(JSON.parse(localStorage.getItem(STATS_KEY) || "null")); } catch (e) { return normalizeStats(null); } }
       function saveStats() { try { localStorage.setItem(STATS_KEY, JSON.stringify(aiStats)); } catch (e) {} updateStatsText(); }
+      function resetLocalStats() { aiStats={wins:0,losses:0,draws:0}; roundStatsRecorded=false; try { localStorage.removeItem(STATS_KEY); } catch(e) {} updateStatsText(); }
+      function bindStatsUi() { const button=document.getElementById("resetStatsBtn"); if (button) button.onclick=resetLocalStats; updateStatsText(); }
       function updateStatsText() { const el=document.getElementById("aiStats"); if (el) el.textContent=`AI record — Wins: ${aiStats.wins} · Losses: ${aiStats.losses} · Draws: ${aiStats.draws}`; }
       function recordAiResult(result) { if (!aiMode || roundStatsRecorded) return; roundStatsRecorded=true; if(result === "black") aiStats.wins++; else if(result === "white") aiStats.losses++; else if(result === "draw") aiStats.draws++; saveStats(); }
       function cancelAiTimer() { if (aiTimeout !== null) { clearTimeout(aiTimeout); aiTimeout=null; } }
@@ -680,17 +682,16 @@
       }
 
       document.getElementById("restartBtn").onclick = resetGame;
-      document.getElementById("resetStatsBtn").onclick = () => { aiStats={wins:0,losses:0,draws:0}; try { localStorage.removeItem(STATS_KEY); } catch(e) {} updateStatsText(); };
-      updateStatsText();
 
       window.MarbleFlickTest = {
-        determineRoundResult, normalizeStats, canAiAct, scheduleAiMove, cancelAiTimer, settleShot, recordAiResult,
-        getState: () => ({ gameVersion, phase, turn, aiMode, winner, activeMotionCount, activeShotToken, stats: { ...aiStats } }),
+        determineRoundResult, normalizeStats, canAiAct, scheduleAiMove, cancelAiTimer, settleShot, recordAiResult, setMode, resetGame, resetLocalStats, loadStats, saveStats,
+        getState: () => ({ gameVersion, phase, turn, aiMode, winner, activeMotionCount, activeShotToken, pieces: pieces.filter(p=>p.alive).length, stats: { ...aiStats } }),
         setState: (next) => { if ("gameVersion" in next) gameVersion=next.gameVersion; if ("phase" in next) phase=next.phase; if ("turn" in next) turn=next.turn; if ("aiMode" in next) aiMode=next.aiMode; if ("winner" in next) winner=next.winner; if ("activeMotionCount" in next) activeMotionCount=next.activeMotionCount; if ("activeShotToken" in next) activeShotToken=next.activeShotToken; if ("roundStatsRecorded" in next) roundStatsRecorded=next.roundStatsRecorded; },
         resetStats: () => { aiStats={wins:0,losses:0,draws:0}; roundStatsRecorded=false; }
       };
       resizeCanvas();
       resetGame();
+      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bindStatsUi, { once: true }); else bindStatsUi();
     </script>
     <section
   style="
