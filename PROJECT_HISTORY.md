@@ -720,3 +720,6 @@
 
 ## 2026-09-21 21:55 Keyword Hunter
 - Seeds: 40; New: 41; Rejected: 26; DB: 2714; Errors: 0; Top: 임금계산기. Report: reports/keyword-hunter/2026-09-21-2155.md
+
+## 2026-09-22 04:32 Keyword Hunter
+- Seeds: 40; New: 20; Rejected: 19; DB: 2734; Errors: 0; Top: 몰디브리조트추천. Report: reports/keyword-hunter/2026-09-22-0432.md
