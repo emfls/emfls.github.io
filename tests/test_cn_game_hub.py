@@ -1,11 +1,30 @@
 import json
 import re
 import unittest
+from html.parser import HTMLParser
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 HUB = ROOT / "cn/game/index.html"
+
+
+class CardParser(HTMLParser):
+    def __init__(self):
+        super().__init__(); self.cards=[]; self.stack=[]; self.current=None; self.text=[]; self.categories_index=None; self.ul_index=None
+    def handle_starttag(self, tag, attrs):
+        attrs=dict(attrs)
+        if tag == "div" and "categories" in attrs.get("class", "").split(): self.categories_index=len(self.stack)
+        if tag == "ul" and self.ul_index is None: self.ul_index=len(self.stack)
+        if tag == "li" and "data-category" in attrs: self.current={"category":attrs["data-category"],"anchor":0,"classes":set(),"text":[]}; self.cards.append(self.current)
+        if self.current is not None:
+            if tag == "a" and "game-card" in attrs.get("class", "").split(): self.current["anchor"]+=1
+            if tag == "span": self.current["classes"].add(attrs.get("class", ""))
+            self.stack.append(tag)
+    def handle_endtag(self, tag):
+        if self.stack and self.stack[-1] == tag: self.stack.pop()
+    def handle_data(self, data):
+        if self.current is not None: self.current["text"].append(data.strip())
 
 
 class ChineseGameHubTest(unittest.TestCase):
@@ -41,6 +60,25 @@ class ChineseGameHubTest(unittest.TestCase):
         self.assertEqual(len(re.findall(r'class="game-card"', self.html)), 25)
         self.assertEqual(len(re.findall(r'<li data-category="[^"]+"', self.html)), 25)
         self.assertIn("function filterGames()", self.html)
+
+    def test_structured_cards_and_head_copy(self):
+        parser = CardParser(); parser.feed(self.html)
+        self.assertIsNotNone(parser.categories_index)
+        self.assertIsNotNone(parser.ul_index)
+        categories_start = self.html.index('<div class="categories"')
+        categories_end = self.html.index("</div>", categories_start)
+        ul_start = self.html.index("<ul>", categories_start)
+        self.assertLess(categories_start, categories_end)
+        self.assertLess(categories_end, ul_start)
+        self.assertNotIn("<ul>", self.html[categories_start:categories_end])
+        self.assertEqual(len(parser.cards), 25)
+        for card in parser.cards:
+            self.assertEqual(card["anchor"], 1)
+            self.assertEqual({"game-title", "game-description", "game-category", "game-cta"}, card["classes"])
+            self.assertIn(card["category"], card["text"])
+        self.assertIn("精选 25 款免费网页游戏", self.html)
+        self.assertIn('property="og:title" content="免费网页游戏 - 无需下载的在线小游戏 | QuickPlay"', self.html)
+        self.assertIn("浏览 25 款免费在线小游戏", self.html)
 
     def test_mbti_copy_is_trustworthy(self):
         self.assertIn("16类型性格小测", self.html)
