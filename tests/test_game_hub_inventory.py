@@ -10,18 +10,23 @@ CATEGORIES = {"Quick & Reflex", "Puzzle & Logic", "Classic & Board", "Action & A
 
 class HubParser(HTMLParser):
     def __init__(self):
-        super().__init__(); self.cards = []; self.card = None; self.anchor = None
+        super().__init__(); self.cards = []; self.card = None; self.anchor = None; self.category_span = None
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
         if tag == "li" and "data-category" in attrs:
             self.card = {"category": attrs["data-category"], "anchors": []}
         if self.card and tag == "a" and "game-card" in attrs.get("class", "").split():
             self.anchor = {"href": attrs.get("href"), "classes": set(), "text": ""}; self.card["anchors"].append(self.anchor)
+        if self.anchor and tag == "span" and "game-category" in attrs.get("class", "").split():
+            self.category_span = {"text": ""}; self.anchor.setdefault("category_spans", []).append(self.category_span)
         if self.anchor and "class" in attrs:
             self.anchor["classes"].update(set(attrs["class"].split()) & {"game-title", "game-description", "game-category", "game-cta"})
     def handle_data(self, data):
-        if self.anchor: self.anchor["text"] += data
+        if self.anchor:
+            self.anchor["text"] += data
+            if self.category_span: self.category_span["text"] += data
     def handle_endtag(self, tag):
+        if tag == "span" and self.category_span: self.category_span = None
         if tag == "a": self.anchor = None
         if tag == "li" and self.card: self.cards.append(self.card); self.card = None
 
@@ -30,16 +35,17 @@ def page_text(): return (ROOT / "game/index.html").read_text()
 def parse_hub():
     parser = HubParser(); parser.feed(page_text()); return parser.cards
 def repo_set(): return {f"{path.parent.name}/" for path in (ROOT / "game").glob("*/index.html")}
-def sitemap_set():
+def sitemap_children():
     root = ElementTree.parse(ROOT / "game/sitemap.xml").getroot()
     urls = {loc.text for loc in root.iter() if loc.tag.endswith("loc")}
-    return {url.removeprefix(BASE) for url in urls if url.startswith(BASE) and url != BASE}
+    return [url.removeprefix(BASE) for url in urls if url.startswith(BASE) and url != BASE]
 
 
 def test_three_way_inventory_parity_and_no_duplicates():
     cards = parse_hub(); hub = {a["href"] for c in cards for a in c["anchors"]}
-    repo, sitemap = repo_set(), sitemap_set()
-    assert len(repo) == len(sitemap) == len(hub) == 25
+    repo, sitemap_list = repo_set(), sitemap_children(); sitemap = set(sitemap_list)
+    assert len(repo) == len(sitemap_list) == len(hub) == 25
+    assert len(sitemap_list) == len(sitemap) == 25
     assert repo == sitemap == hub
     assert "LadderGame/" in repo
     assert len([a["href"] for c in cards for a in c["anchors"]]) == len(hub)
@@ -50,7 +56,8 @@ def test_card_anchor_and_category_contract():
     assert {c["category"] for c in cards} == CATEGORIES
     assert all(len(c["anchors"]) == 1 for c in cards)
     assert all(c["anchors"][0]["classes"] == expected for c in cards)
-    assert all(c["category"] in c["anchors"][0]["text"] for c in cards)
+    assert all(len(c["anchors"][0].get("category_spans", [])) == 1 for c in cards)
+    assert all(c["anchors"][0]["category_spans"][0]["text"].strip() == c["category"] for c in cards)
     ladder = next(c for c in cards if c["anchors"][0]["href"] == "LadderGame/")
     assert ladder["category"] == "Classic & Board"
     assert "Pick a number" in ladder["anchors"][0]["text"] and "ladder" in ladder["anchors"][0]["text"].lower()
