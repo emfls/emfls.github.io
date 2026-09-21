@@ -36,7 +36,7 @@ class SpanishStopAt5Test(unittest.TestCase):
         self.assertIn("antes", self.html)
         self.assertIn("tarde", self.html)
         self.assertIn("exacto", self.html)
-        self.assertIn("El dispositivo y la latencia de entrada pueden influir", self.html)
+        self.assertIn("el dispositivo y la latencia de entrada pueden influir", self.html)
         self.assertNotIn("precisión certificada", self.html.lower())
         self.assertNotIn("leaderboard", self.html.lower())
 
@@ -99,6 +99,25 @@ checks.push(JSON.stringify(normalizeRecord(null)) === JSON.stringify({error:null
 checks.push(JSON.stringify(normalizeRecord('{bad')) === JSON.stringify({error:null,level:0}));
 checks.push(JSON.stringify(normalizeRecord('{"error":"x","level":"y"}')) === JSON.stringify({error:null,level:0}));
 if (!checks.every(Boolean)) process.exit(1);
+'''
+        completed = subprocess.run(["node", "-e", harness], capture_output=True, text=True)
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+
+    def test_actual_js_storage_failures_and_restart(self):
+        storage = re.search(r"function normalizeRecord.*?/\* STORAGE_FUNCTIONS_END \*/", self.html, re.S).group(0)
+        restart = re.search(r"/\* RESTART_FUNCTIONS_START \*/(.*?)/\* RESTART_FUNCTIONS_END \*/", self.html, re.S).group(1)
+        reset = re.search(r"/\* RESET_FUNCTION_START \*/(.*?)/\* RESET_FUNCTION_END \*/", self.html, re.S).group(1)
+        harness = r'''const STORAGE_KEY="emfls:es:stopat5:v1"; let best={error:.021,level:5}; let level=4; let running=true; let startTime=123; let updated=false;
+const timer={textContent:"9.999 s"}, result={textContent:"old"}, gameOverArea={hidden:false}, startBtn={disabled:true,textContent:"Detener",focus(){this.focused=true}}, levelLabel={}, toleranceInfo={}, bestInfo={};
+    let animationFrame=null; function updateLevel(){updated=true} function updateBest(){} function cancelAnimationFrame(){}
+    ''' + storage + restart + reset + r'''
+let localStorage={getItem(){throw new Error("blocked")},setItem(){throw new Error("quota")},removeItem(key){this.removed=key;throw new Error("blocked")}};
+if (JSON.stringify(safeReadRecord())!==JSON.stringify({error:null,level:0})) process.exit(1);
+if (safeWriteRecord()!==undefined) process.exit(2);
+resetRecord();
+if (best.error!==null||best.level!==0||localStorage.removed!==STORAGE_KEY) process.exit(3);
+best={error:.021,level:5};level=4;running=true;startTime=123;restartGame();
+if (level!==1||running!==false||startTime!==null||timer.textContent!=="0.000 s"||result.textContent!==""||gameOverArea.hidden!==true||startBtn.disabled!==false||best.error!==.021||best.level!==5||!startBtn.focused) process.exit(4);
 '''
         completed = subprocess.run(["node", "-e", harness], capture_output=True, text=True)
         self.assertEqual(completed.returncode, 0, completed.stderr)
