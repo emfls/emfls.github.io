@@ -47,6 +47,7 @@ def test_trust_metadata_privacy_and_navigation_contract():
 
 def test_profiles_and_static_sections_are_complete():
     text = source()
+    assert "forEach((type" not in text
     for code in ("ISTJ", "ISFJ", "INFJ", "INTJ", "ISTP", "ISFP", "INFP", "INTP", "ESTP", "ESFP", "ENFP", "ENTP", "ESTJ", "ESFJ", "ENFJ", "ENTJ"):
         assert f'<strong>{code}</strong>' in text
     assert all(label in text for label in ("Bài quiz này hoạt động như thế nào?", "4 cặp xu hướng", "Cách chấm điểm", "Khi hai phía gần nhau", "Giới hạn của bài quiz", "Quyền riêng tư"))
@@ -54,6 +55,7 @@ def test_profiles_and_static_sections_are_complete():
     profiles = json.loads(values.stdout.strip().splitlines()[-1])
     assert len(profiles) == 16
     assert all(len(fields) == 4 and all(field.strip() for field in fields) for fields in profiles.values())
+    assert len({fields[0] for fields in profiles.values()}) == 16
 
 
 def test_hub_and_sitemap_keep_vietnamese_target_once():
