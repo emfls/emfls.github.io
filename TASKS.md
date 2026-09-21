@@ -87,9 +87,9 @@
 
 ## P2 - Medium
 
-- [ ] 13 · English Game Hub — /game/
-  - Review branch only: rebuild the English game directory around the complete 25-game inventory, including LadderGame, searchable category filtering, full-card anchors, trust copy, and CollectionPage metadata.
-  - Main merge, Pages deployment, runtime/mobile QA, and task 14 remain pending final review.
+- [x] 13 · English Game Hub — /game/
+  - Closed on main after the approved five-commit chain: 25-way repo/sitemap/hub parity with raw duplicate fail-closed checks, LadderGame repair, title/H1/trust copy, category/search UX, full-card anchors, exact category parity, MBTI boundary, CollectionPage-only schema, privacy/ad state, and RSS metadata parity.
+  - Pages run `35593108059` succeeded for main SHA `eaf5f81d98`; production served 25 unique cards including LadderGame. Runtime/mobile and Search Console evidence are recorded as partial or not verified where unavailable. Child-to-hub recirculation remains a coordinated follow-up; 14/28/56-day checks remain pending.
 
 - [ ] 주식 데이터 공통 Validation Layer 구축
   - 목적: ticker, company, exchange, price, market cap, PER, dividend yield, 52주 범위, 연간·분기 매출과 earnings를 한 규칙으로 검증한다.
