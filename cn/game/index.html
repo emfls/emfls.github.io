@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh">
+<html lang="zh-CN">
   <head>
     <!-- Google 标签 (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -14,7 +14,7 @@
     </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>QuickPlay 街机 – 简易网页游戏合集</title>
+    <title>免费网页游戏 - 无需下载的在线小游戏 | QuickPlay</title>
 
     <!-- ✨ SEO: 搜索引擎优化 -->
     <meta
@@ -39,11 +39,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
     <link rel="canonical" href="https://emfls.github.io/cn/game/" />
 <style>
-      * {
-        box-sizing: border-box;
-        -webkit-user-select: none;
-        user-select: none;
-      }
+      * { box-sizing: border-box; }
 
       body {
         margin: 0;
@@ -136,6 +132,17 @@
         color: #aaa;
       }
 
+      #searchInput:focus-visible, .category-button:focus-visible, .game-card:focus-visible { outline: 3px solid #ffd166; outline-offset: 3px; }
+      .category-button { padding: .55rem .8rem; border: 1px solid #777; border-radius: 999px; background: #292929; color: #fff; cursor: pointer; }
+      .category-button[aria-pressed="true"] { background: #686fe0; border-color: #aab0ff; }
+      .categories { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0; }
+      .game-card { display: block; height: 100%; color: #fff; text-decoration: none; }
+      .game-title, .game-description, .game-category, .game-cta { display: block; }
+      .game-title { color: #a0a8ff; font-size: 1.1rem; font-weight: 700; }
+      .game-description { margin: .6rem 0; line-height: 1.5; color: #ccc; }
+      .game-category { color: #ddd; font-size: .85rem; }
+      .game-cta { margin-top: .8rem; color: #ffd166; font-weight: 700; }
+
       ul {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -206,163 +213,167 @@
         background: #181818;
         border-top: 1px solid #333;
       }
-    </style>
+          .categories{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0}.category-button{padding:.55rem .8rem;border:1px solid #777;border-radius:999px;background:#292929;color:#fff}.category-button:focus-visible,.game-card:focus-visible,#searchInput:focus-visible{outline:3px solid #ffd166;outline-offset:3px}.game-card{display:block;height:100%;color:#fff;text-decoration:none}.game-title,.game-description,.game-category,.game-cta{display:block}.game-title{color:#a0a8ff;font-weight:700}.game-cta{margin-top:.8rem;color:#ffd166;font-weight:700}</style>
 
     <script>
-      function launchGame(url) {
-        window.location.href = url;
-      }
-
+      let selectedCategory = "all";
       function filterGames() {
-        const input = document.getElementById("searchInput").value.toLowerCase();
+        const input = document.getElementById("searchInput").value.trim().toLowerCase();
         const items = document.querySelectorAll("ul li");
         const noResult = document.getElementById("noResultMessage");
-
-        let anyVisible = false;
-
+        let anyVisible = 0;
         items.forEach((item) => {
-          const text = item.textContent.toLowerCase();
-          if (text.includes(input)) {
-            item.style.display = "block";
-            anyVisible = true;
-          } else {
-            item.style.display = "none";
-          }
+          const visible = item.textContent.toLowerCase().includes(input) && (selectedCategory === "all" || item.dataset.category === selectedCategory);
+          item.style.display = visible ? "block" : "none";
+          if (visible) anyVisible += 1;
         });
-
         noResult.style.display = anyVisible ? "none" : "block";
       }
+
+      document.addEventListener("DOMContentLoaded", () => document.querySelectorAll(".category-button").forEach((button) => button.addEventListener("click", () => {
+        selectedCategory = button.dataset.category;
+        document.querySelectorAll(".category-button").forEach((item) => item.setAttribute("aria-pressed", item === button ? "true" : "false"));
+        filterGames();
+      })));
     </script>
     <style>div[id^="aswift_"]{max-width:100%!important;overflow:hidden}</style>
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"QuickPlay 中文网页游戏目录","url":"https://emfls.github.io/cn/game/","inLanguage":"zh-CN"}</script>
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"这些游戏需要安装吗？","acceptedAnswer":{"@type":"Answer","text":"不需要。可直接在现代浏览器中打开；不同游戏的键盘、触控和声音支持可能不同。"}}]}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"免费网页游戏 - 无需下载的在线小游戏","url":"https://emfls.github.io/cn/game/","inLanguage":"zh-CN","dateModified":"2026-09-21"}</script>
   <!-- AdSense disabled on this interactive or sensitive page: ca-pub-8830524482034754 -->
 </head>
 
   <body>
     <header>
-      <h1>QuickPlay 街机</h1>
-      <p>轻触即可开始游戏的迷你游戏集合。无需登录或下载！</p>
+      <h1>免费网页游戏 · 无需下载，打开即玩</h1>
+      <p>免费在线小游戏目录，无需下载、无需注册，直接在浏览器打开即可游玩。不同游戏支持触屏、键盘或鼠标操作，请查看卡片或游戏页面说明。</p>
       <a href="https://emfls.github.io/cn/util/" id="gotoUtilBtn">前往实用工具</a>
     </header>
 
     <main>
       <section>
         <h2>介绍</h2>
-        <p>在休息时间即可轻松享受，集合了操作简单且速度快的触屏浏览器游戏。无需键盘，直观易玩。</p>
+        <p>这里收录免费网页游戏和在线小游戏，涵盖经典、益智棋盘、反应短局、动作街机与测验知识等类型。浏览器直接打开即可开始，具体操作方式以每个游戏的说明为准。</p>
       </section>
 
       <section>
         <h2>游戏列表</h2>
 
         <!-- 🔍 搜索栏 -->
-        <input type="text" id="searchInput" placeholder="搜索游戏..." oninput="filterGames()" />
+        <label for="searchInput">搜索游戏</label>
+        <input type="search" id="searchInput" placeholder="按名称或目标搜索" oninput="filterGames()" />
+        <div class="categories" aria-label="游戏分类">
+          <button class="category-button" type="button" data-category="all" aria-pressed="true">全部</button>
+          <button class="category-button" type="button" data-category="经典" aria-pressed="false">经典</button>
+          <button class="category-button" type="button" data-category="益智·棋盘" aria-pressed="false">益智·棋盘</button>
+          <button class="category-button" type="button" data-category="反应·短局" aria-pressed="false">反应·短局</button>
+          <button class="category-button" type="button" data-category="动作·街机" aria-pressed="false">动作·街机</button>
+          <button class="category-button" type="button" data-category="测验·知识" aria-pressed="false">测验·知识</button>
 
         <!-- 🎮 游戏列表 -->
         <ul>
-          <li onclick="launchGame('SnakeGame/')">
-            <a href="SnakeGame/">🐍 贪吃蛇</a>
+          <li data-category="经典">
+            <a class="game-card" href="SnakeGame/"><span class="game-title">🐍 贪吃蛇</span><span class="game-cta">开始游戏</span></a>
             <p>吃食物使身体变长，避免碰撞。愿好运相伴！</p>
           </li>
-          <li onclick="launchGame('TetrisGame/')">
-            <a href="TetrisGame/">🧱 俄罗斯方块</a>
+          <li data-category="经典">
+            <a class="game-card" href="TetrisGame/"><span class="game-title">🧱 俄罗斯方块</span><span class="game-cta">开始游戏</span></a>
             <p>堆叠方块消除行。经典名作！</p>
           </li>
-          <li onclick="launchGame('MBTI/')">
-            <a href="MBTI/">🧠 MBTI 测试</a>
-            <p>通过简单问题诊断你的 MBTI 类型！</p>
+          <li data-category="测验·知识">
+            <a class="game-card" href="MBTI/"><span class="game-title">🧠 16类型性格小测</span><span class="game-cta">开始游戏</span></a>
+            <p>通过简短情境题了解四个偏好维度；这是独立自测，不是官方 MBTI® 评估。</p>
           </li>
-          <li onclick="launchGame('2048/')">
-            <a href="2048/">🔢 2048 游戏</a>
+          <li data-category="益智·棋盘">
+            <a class="game-card" href="2048/"><span class="game-title">🔢 2048 游戏</span><span class="game-cta">开始游戏</span></a>
             <p>合并数字，目标是 2048！</p>
           </li>
-          <li onclick="launchGame('FlappyDot/')">
-            <a href="FlappyDot/">💥 Flappy Dot</a>
+          <li data-category="动作·街机">
+            <a class="game-card" href="FlappyDot/"><span class="game-title">💥 Flappy Dot</span><span class="game-cta">开始游戏</span></a>
             <p>躲避炸弹，挑战飞得更远！</p>
           </li>
-          <li onclick="launchGame('Minesweeper/')">
-            <a href="Minesweeper/">💣 扫雷</a>
+          <li data-category="益智·棋盘">
+            <a class="game-card" href="Minesweeper/"><span class="game-title">💣 扫雷</span><span class="game-cta">开始游戏</span></a>
             <p>打开方块，避免踩雷。</p>
           </li>
-          <li onclick="launchGame('QuickDraw/')">
-            <a href="QuickDraw/">🔫 快速射击</a>
+          <li data-category="反应·短局">
+            <a class="game-card" href="QuickDraw/"><span class="game-title">🔫 快速射击</span><span class="game-cta">开始游戏</span></a>
             <p>等待“DRAW”信号，比对手先开枪！</p>
           </li>
-          <li onclick="launchGame('GREENClick/')">
-            <a href="GREENClick/">🟩 绿色点击</a>
+          <li data-category="反应·短局">
+            <a class="game-card" href="GREENClick/"><span class="game-title">🟩 绿色点击</span><span class="game-cta">开始游戏</span></a>
             <p>眼睛可能会骗你，信任文字“GREEN”并点击！</p>
           </li>
-          <li onclick="launchGame('STOPat5/')">
-            <a href="STOPat5/">5️⃣ 停在 5</a>
+          <li data-category="反应·短局">
+            <a class="game-card" href="STOPat5/"><span class="game-title">5️⃣ 停在 5</span><span class="game-cta">开始游戏</span></a>
             <p>精准停止于 5.000 秒！</p>
           </li>
-          <li onclick="launchGame('SpeedTap/')">
-            <a href="SpeedTap/">👆 极速点击</a>
+          <li data-category="反应·短局">
+            <a class="game-card" href="SpeedTap/"><span class="game-title">👆 极速点击</span><span class="game-cta">开始游戏</span></a>
             <p>在 5 秒内尽可能多地点击！</p>
           </li>
-          <li onclick="launchGame('NumberHunt/')">
-            <a href="NumberHunt/">⏱️ 数字狩猎</a>
+          <li data-category="反应·短局">
+            <a class="game-card" href="NumberHunt/"><span class="game-title">⏱️ 数字狩猎</span><span class="game-cta">开始游戏</span></a>
             <p>从 1 到 50 按顺序尽快点击数字！</p>
           </li>
-          <li onclick="launchGame('TicTacToe/')">
-            <a href="TicTacToe/">❌⭕️ 井字棋</a>
+          <li data-category="经典">
+            <a class="game-card" href="TicTacToe/"><span class="game-title">❌⭕️ 井字棋</span><span class="game-cta">开始游戏</span></a>
             <p>挑战 AI 的经典井字棋！</p>
           </li>
-          <li onclick="launchGame('Gomoku/')">
-            <a href="Gomoku/">⚪⚫ 五子棋</a>
+          <li data-category="经典">
+            <a class="game-card" href="Gomoku/"><span class="game-title">⚪⚫ 五子棋</span><span class="game-cta">开始游戏</span></a>
             <p>率先连成五子获胜。</p>
           </li>
-          <li onclick="launchGame('FlagQuest/')">
-            <a href="FlagQuest/">🏁 旗帜任务</a>
+          <li data-category="测验·知识">
+            <a class="game-card" href="FlagQuest/"><span class="game-title">🏁 旗帜任务</span><span class="game-cta">开始游戏</span></a>
             <p>通过国旗猜测国家名称！</p>
           </li>
-          <li onclick="launchGame('CardMatch/')">
-            <a href="CardMatch/">🃏 翻牌配对</a>
+          <li data-category="益智·棋盘">
+            <a class="game-card" href="CardMatch/"><span class="game-title">🃏 翻牌配对</span><span class="game-cta">开始游戏</span></a>
             <p>翻开配对相同图案的卡牌，挑战限时！</p>
           </li>
-          <li onclick="launchGame('AeroJump/')">
-            <a href="AeroJump/">🧗‍⬆️ 空中跳跃</a>
+          <li data-category="动作·街机">
+            <a class="game-card" href="AeroJump/"><span class="game-title">🧗‍⬆️ 空中跳跃</span><span class="game-cta">开始游戏</span></a>
             <p>不断往上跳，避免掉落！</p>
           </li>
-          <li onclick="launchGame('BlockBreaker/')">
-            <a href="BlockBreaker/">🧱🏓 打砖块</a>
+          <li data-category="动作·街机">
+            <a class="game-card" href="BlockBreaker/"><span class="game-title">🧱🏓 打砖块</span><span class="game-cta">开始游戏</span></a>
             <p>用球击碎所有砖块！</p>
           </li>
-          <li onclick="launchGame('PONGvsAI/')">
-            <a href="PONGvsAI/">🏓🤖 AI 对战乒乓</a>
+          <li data-category="经典">
+            <a class="game-card" href="PONGvsAI/"><span class="game-title">🏓🤖 AI 对战乒乓</span><span class="game-cta">开始游戏</span></a>
             <p>先得 10 分者获胜！</p>
           </li>
-          <li onclick="launchGame('ConnectFour/')">
-            <a href="ConnectFour/">🔵🟡 四子连珠</a>
+          <li data-category="益智·棋盘">
+            <a class="game-card" href="ConnectFour/"><span class="game-title">🔵🟡 四子连珠</span><span class="game-cta">开始游戏</span></a>
             <p>连成四子，夺取胜利！</p>
           </li>
-          <li onclick="launchGame('LandGrab/')">
-            <a href="LandGrab/">🟦🚩 领地争夺</a>
+          <li data-category="益智·棋盘">
+            <a class="game-card" href="LandGrab/"><span class="game-title">🟦🚩 领地争夺</span><span class="game-cta">开始游戏</span></a>
             <p>扩张领地，同时躲避红球！</p>
           </li>
-          <li onclick="launchGame('MatrixDefense/')">
-            <a href="MatrixDefense/">🛡️⚡ 矩阵防御</a>
+          <li data-category="动作·街机">
+            <a class="game-card" href="MatrixDefense/"><span class="game-title">🛡️⚡ 矩阵防御</span><span class="game-cta">开始游戏</span></a>
             <p>维持等离子防线，抵御攻势！</p>
           </li>
-          <li onclick="launchGame('MarbleFlick/')">
-            <a href="MarbleFlick/">⚪⚫👆 大理石弹射</a>
+          <li data-category="益智·棋盘">
+            <a class="game-card" href="MarbleFlick/"><span class="game-title">⚪⚫👆 大理石弹射</span><span class="game-cta">开始游戏</span></a>
             <p>简单快速的在线弹珠对战游戏！</p>
           </li>
-          <li onclick="launchGame('ZombieSurvival/')">
-            <a href="ZombieSurvival/">🧟 僵尸生存</a>
+          <li data-category="动作·街机">
+            <a class="game-card" href="ZombieSurvival/"><span class="game-title">🧟 僵尸生存</span><span class="game-cta">开始游戏</span></a>
             <p>在文字版僵尸末世中尽力生存更久！</p>
           </li>
-          <li onclick="launchGame('SurvivorMini/')">
-            <a href="SurvivorMini/">🔫 生存小兵</a>
+          <li data-category="动作·街机">
+            <a class="game-card" href="SurvivorMini/"><span class="game-title">🔫 生存小兵</span><span class="game-cta">开始游戏</span></a>
             <p>节奏快速的动作生存游戏。躲避怪物，升级生存更久！</p>
           </li>
+          <li data-category="反应·短局"><a class="game-card" href="LadderGame/"><span class="game-title">🪜 阶梯游戏</span><span class="game-description">选择数字，体验轻量的阶梯挑战。</span><span class="game-category">反应·短局</span><span class="game-cta">开始游戏</span></a></li>
         </ul>
         <!-- ❌ 无搜索结果时显示 -->
-        <div id="noResultMessage">暂无匹配的游戏。</div>
+        <div id="noResultMessage" aria-live="polite">暂无匹配的游戏。</div>
       </section>
     </main>
 
-    <section style="max-width:900px;margin:24px auto;padding:20px;background:#1e1e1e;border-radius:16px;color:#f0f0f0"><h2>中文网页游戏目录</h2><p>使用搜索框按名称筛选游戏，然后点击卡片开始。游戏无需注册，但进度是否保存在本机取决于具体游戏；清除浏览器数据可能移除本地记录。本站使用 Google Analytics 和广告服务。</p><p><small>目录复核：2026-08-09</small></p></section>
+    <section style="max-width:900px;margin:24px auto;padding:20px;background:#1e1e1e;border-radius:16px;color:#f0f0f0"><h2>中文网页游戏目录</h2><p>使用搜索框按名称筛选游戏，然后点击卡片开始。游戏无需注册，但进度是否保存在本机取决于具体游戏；清除浏览器数据可能移除本地记录。本目录使用 Google Analytics 获取普通的页面和设备使用信息。此目录页当前未加载广告。</p><p><small>目录复核：2026-09-21</small></p></section>
     <footer>
       © 2025 QuickPlay 街机 · 制作者: Itagi<br />
       Email : emfls24777@daum.net

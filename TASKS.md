@@ -13,6 +13,9 @@
 
 ## P1 - High
 
+- [ ] 11 · Chinese Game Hub — `/cn/game/`
+  - review branch only: inventory/sitemap/hub parity for 25 games including LadderGame; exact title/H1, category/search intersection, static anchors, honest controls, MBTI® trust copy, CollectionPage-only schema, privacy/AdSense state, and stale batch regression. Main merge and deployment remain pending review.
+
 - [x] 10 · Russian 16-Type Personality Quiz — `/ru/game/MBTI/`
   - 완료: 2026-09-21. 승인된 3-commit chain을 최신 main에 non-force 반영했다: Core `0f3929cce5`, RSS `f877497aa9`, scoring-symmetry regression `263efd3600`. 20 questions / 5 per axis, strict-majority, root/RU equivalence, all-first/all-second actual mapping regression, mirrored counts, independent identity/trust, 16 dedicated unique profiles, privacy/ad-state correction, WebApplication-only schema, RU hub/RSS propagation, and RU-specific stale batch policy를 반영했다. Focused suite 20 passed, Pages `35555715057` success, production served HTML 최신 확인, runtime ESTJ/INFP·axis counts·close·profiles·restart·navigation 검증. Mobile 390px `MOBILE_390_NOT_VERIFIED`, share/clipboard `SHARE_RUNTIME_NOT_VERIFIED`; Google `SEARCH_VISIBLE_LOW_SAMPLE / INDEXED_QUERY_UNKNOWN`, `NO_SUBMISSION`, Naver `NAVER_NOT_PRIMARY`. Notion은 `NOTION_CLOSURE_PENDING_CHATGPT`; 다른 locale audit와 14/28/56일 measurement는 후속이며 11번은 시작하지 않았다.
 

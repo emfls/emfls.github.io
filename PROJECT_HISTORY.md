@@ -656,6 +656,12 @@
 - `tests/test_sixth_ga4_priority_batch.py` is policy-specific for RU (`2026-09-21`, WebApplication, no FAQPage/VideoGame) while all unrelated page contracts remain unchanged. Metadata remains `METADATA_NOT_IN_CURRENT_CONTRACT`; Google submission is `NO_SUBMISSION`; production/runtime/mobile are pending review.
 - Validation so far: RU + root 05 + VN 09 + sixth batch focused suite `19 passed`; `git diff --check` passed. Review branch is `codex/ru-10-personality-quiz-20260921`; status remains `READY_FOR_REVIEW`, not `DONE`.
 
+## 2026-09-21 — 11 · Chinese Game Hub — REVIEW BRANCH
+- Scope is only `/cn/game/` on review branch `codex/cn-11-game-hub-20260921`; task 12, main merge, deployment, and Notion write are not part of this execution.
+- Baseline parity found 25 repository child pages and 25 sitemap entries but only 24 visible hub links; `LadderGame` was missing. The hub now exposes all 25 static child anchors, with category labels, search/category intersection, visible accessible search label, no-result live region, and keyboard focus styling.
+- Core copy now uses the exact free/no-download title and H1, honest per-game control guidance, no universal keyboard claim, MBTI® independent self-test boundary, and no speculative popularity/device claims. `CollectionPage` is the sole schema with `zh-CN` and `2026-09-21`; FAQPage remains absent. GA4 `G-QP5Q67GE5B`, privacy meaning, AdSense-disabled state, canonical/OG, and no-lastmod sitemap policy are preserved.
+- Validation: new `tests/test_cn_game_hub.py` plus `tests/test_sixth_ga4_priority_batch.py` = `6 passed`; `git diff --check` passed. RSS/metadata contracts were not regenerated or manually edited. Status is `READY_FOR_REVIEW`; main/deployment/runtime/mobile/Google verification remain pending.
+
 ## 2026-09-21 — 09 Vietnamese 16-Type Personality Quiz review
 - Review branch `codex/vn-09-personality-quiz-20260921` only; scope is `/vn/game/MBTI/` plus the single Vietnamese game-hub card and the new focused test. Task 10 and `main` merge are not part of this execution.
 - Implemented 20 original Vietnamese situational questions with 5 per E/I, S/N, T/F, J/P axis, strict-majority scoring, explicit 3:2 close-axis copy, deterministic retry, keyboard-focusable controls, independent quiz rebrand, visible MBTI® non-affiliation and entertainment/self-reflection boundary, four-field result profiles, privacy disclosure, no raw-answer telemetry, no AdSense, canonical/OG/sitemap preservation, and one WebApplication JSON-LD block. `FAQPage` is intentionally absent and no hreflang was added.
