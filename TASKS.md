@@ -87,9 +87,9 @@
 
 ## P2 - Medium
 
-- [ ] 14 · Marble Flick — /game/MarbleFlick/
-  - Review branch only: protect the indexed low-sample page-one signal while repairing stale AI callbacks, chained-motion settlement, winner/turn authority, replay-local stats, semantics, accessibility, schema, and RSS propagation.
-  - English canary only; main merge, deployment, runtime/mobile QA, Google inspection, and coordinated locale rollout remain pending review.
+- [x] 14 · Marble Flick — /game/MarbleFlick/
+  - Closed on main after the approved four-commit chain: title-frozen English canary with generation-guarded AI callbacks, stale-collision isolation, chained-motion settlement barrier, live-count winner matrix, delayed turn handoff, AI-only local replay stats, DOM-safe initialization, H1/breadcrumb semantics, accessibility, VideoGame/BreadcrumbList schema, and RSS parity.
+  - Pages run `35596795290` succeeded for product SHA `7dcfc1fd65`; production served the final title, one H1, Games breadcrumb, board, mode controls, instructions, local stats, and crawlable `/game/` navigation. Runtime/mobile and Search Console evidence are recorded as partial or unavailable where applicable; 15 and coordinated locale rollout remain out of scope.
 
 - [x] 13 · English Game Hub — /game/
   - Closed on main after the approved five-commit chain: 25-way repo/sitemap/hub parity with raw duplicate fail-closed checks, LadderGame repair, title/H1/trust copy, category/search UX, full-card anchors, exact category parity, MBTI boundary, CollectionPage-only schema, privacy/ad state, and RSS metadata parity.
