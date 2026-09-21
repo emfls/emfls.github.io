@@ -1,5 +1,22 @@
 # PROJECT HISTORY
 
+## 2026-09-21 — 08 · Date Difference Calculator — REVIEW BRANCH
+
+### 요청·보호
+- `/util/date-difference/`만 처리한다. 09번, main merge, Pages 배포는 이번 실행 범위 밖이다.
+- date-only 계산은 `Date.UTC(year, month, day)`와 UTC 날짜 iteration을 사용한다. time-of-day, timezone selector, countdown, hours/minutes/seconds, add/subtract date mode는 추가하지 않는다.
+- Cycle 2 상태는 `SCALE-CANARY / DATE-ONLY TASK COMPLETION / INDEXED_LOW_VISIBILITY`이며 최신 GSC는 197 impressions / 0 clicks / 0% CTR / position 58.18이다. Naver는 `NAVER_INDEX_NOT_CONFIRMED / TOP30_ONLY_NOT_AVAILABLE`로 유지한다.
+
+### 구현 계약
+- Start/End, Start = Today, End = Today, Swap dates, `Include end date in range counts`, Calculate, Copy result, Reset을 제공한다. Include-end 기본값은 OFF다.
+- Direction, signed/absolute elapsed days, selected range, elapsed weeks+days, calendar years/months/days, Weekdays (Mon–Fri), Weekend days를 표시한다. Weekdays는 public holidays를 제외하지 않는 단순 추정임을 명시한다.
+- Calendar span은 고정 30일 나눗셈이 아니라 whole years → whole months → remaining UTC days 순서와 month-end clamp convention을 사용한다. Jan 1→Jan 3의 elapsed 2 / inclusive 3 semantics와 legal/tax/court/contractual deadline 비보장 문구를 visible하게 둔다.
+- FAQ는 visible only, JSON-LD는 WebApplication exactly 1 / FAQPage 0, `dateModified=2026-09-21`이다. `/util/time-diff/`, `/util/age/`, `/util/unix-timestamp/`, `/util/` 역할 링크를 유지하며 다른 date tool은 수정하지 않는다.
+
+### 보호·검증 상태
+- GA4 `G-QP5Q67GE5B`, AdSense `ca-pub-8830524482034754`, browser-side privacy 문구를 유지하고 raw date telemetry, fetch/XHR, localStorage/sessionStorage, manual ad unit, holiday dataset을 추가하지 않는다.
+- 상태: review branch / `READY_FOR_REVIEW`. Core/RSS commit과 remote branch push 전이다. Pages, Production, runtime/mobile은 아직 검증하지 않았다. Notion write는 하지 않으며 `NOT_UPDATED_PENDING_REVIEW`다.
+
 ## 2026-09-21 — 07 · Aspect Ratio Calculator — MAIN CLOSURE
 
 - 승인 final chain을 최신 main `9e31ecf7c3161c78eb4a7194585d4a83543b848d` 위에 non-force로 반영했다. Integrated Core `bfca0d1a8d`, Final UI correction `881ebbc36d`, RSS `ec21c5b3c1`, 현재 main `ec21c5b3c1`이며 closure 문서 commit은 이 section을 포함한 closure commit이다. force push는 사용하지 않았다.

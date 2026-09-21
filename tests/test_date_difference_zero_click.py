@@ -1,8 +1,9 @@
+import json
+import re
 import unittest
 from pathlib import Path
 
 from tests.test_gapyeong_camping_page import PageParser
-
 
 PAGE = Path(__file__).resolve().parents[1] / "util/date-difference/index.html"
 
@@ -14,27 +15,25 @@ class DateDifferenceZeroClickTest(unittest.TestCase):
         cls.page = PageParser()
         cls.page.feed(cls.html)
 
-    def test_search_snippet_matches_diff_and_comparison_intent(self):
-        self.assertIn("Date Diff", self.page.title)
-        self.assertIn("Date Comparison", self.page.title)
-        self.assertIn("Date Difference, Date Diff & Comparison Calculator", self.page.h1)
-        self.assertIn("Quick answer: choose two dates to compare their order", self.html)
+    def test_search_snippet_matches_date_only_intent(self):
+        self.assertIn("Date Difference Calculator", self.page.title)
+        self.assertIn("Days Between Dates", self.page.title)
+        self.assertEqual(self.page.h1, "Date Difference Calculator")
+        self.assertIn("date-only elapsed days", self.html)
 
-    def test_result_contract_includes_comparison(self):
-        for phrase in (
-            "Comparison:",
-            "End date is later",
-            "End date is earlier",
-            "Dates are the same",
-            "Inclusive count example",
-        ):
+    def test_result_contract_and_semantics_are_visible(self):
+        for phrase in ("Include end date in range counts", "Weekdays (Mon–Fri)", "public holidays are not excluded", "Calendar span is not the same as dividing total days into fixed 30-day months", "general calendar-planning estimate"):
             self.assertIn(phrase, self.html)
 
-    def test_contract_stays_current(self):
-        self.assertIn('dateModified":"2026-08-13"', self.html)
-        self.assertIn("function calculateDateDifference", self.html)
-        self.assertIn("processed in your browser", self.html)
-        self.assertIn('href="/util/unix-timestamp/"', self.html)
+    def test_schema_and_freshness_contract(self):
+        self.assertIn('dateModified":"2026-09-21"', self.html)
+        self.assertIn("Reviewed: 2026-09-21", self.html)
+        blocks = re.findall(r'<script type="application/ld\+json">(.*?)</script>', self.html, re.S)
+        schemas = [json.loads(block) for block in blocks]
+        self.assertEqual([schema.get("@type") for schema in schemas], ["WebApplication"])
+        self.assertNotIn("FAQPage", self.html)
+        for href in ("/util/time-diff/", "/util/age/", "/util/unix-timestamp/"):
+            self.assertIn(f'href="{href}"', self.html)
 
 
 if __name__ == "__main__":

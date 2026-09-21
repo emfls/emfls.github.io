@@ -1,59 +1,44 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Date Difference (Date Diff) & Date Comparison Calculator</title>
-<meta name="description" content="Compare two dates and calculate signed elapsed days, absolute days, and an inclusive calendar day count. Free date diff calculator.">
-<link rel="canonical" href="https://emfls.github.io/util/date-difference/">
-<link rel="stylesheet" href="../new-tools.css">
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QP5Q67GE5B')</script>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Date Difference Calculator – Days Between Dates</title>
+<meta name="description" content="Calculate days between two dates, inclusive range days, calendar years/months/days, weeks, weekdays and weekends. Runs in your browser.">
+<link rel="canonical" href="https://emfls.github.io/util/date-difference/"><link rel="stylesheet" href="../new-tools.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QP5Q67GE5B')</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Date Difference, Date Diff & Comparison Calculator","url":"https://emfls.github.io/util/date-difference/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","dateModified":"2026-08-13"}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","dateModified":"2026-08-13","mainEntity":[{"@type":"Question","name":"Does the count include both dates?","acceptedAnswer":{"@type":"Answer","text":"The tool shows both exclusive elapsed days and an inclusive calendar count."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Date Difference Calculator","url":"https://emfls.github.io/util/date-difference/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","dateModified":"2026-09-21"}</script>
+<style>.date-grid,.date-actions,.result-actions,.links{display:flex;gap:.65rem;flex-wrap:wrap}.date-grid>div{flex:1 1 220px}.date-grid label{display:block;font-weight:700}.date-grid input{width:100%;padding:.65rem;border:1px solid #9aa9bb;border-radius:.45rem;font:inherit}.date-actions button,.result-actions button{padding:.55rem .8rem;border:1px solid #9aa9bb;border-radius:.45rem;background:#fff;font:inherit;cursor:pointer}.date-actions button.primary{background:#075ea8;color:#fff}.result{min-height:12rem;white-space:pre-wrap}.range-option{display:flex;gap:.5rem;align-items:flex-start;margin:1rem 0}.range-option input{margin-top:.3rem}.status{min-height:1.4rem}.links a{display:inline-block;background:#075ea8;color:#fff!important;border-radius:.45rem;padding:.55rem .8rem;font-weight:700}@media(max-width:640px){.date-actions button,.result-actions button{flex:1 1 40%}}
+</style>
 </head>
-<body>
-<main class="tool-shell">
-<header class="hero">
-<h1>Date Difference, Date Diff &amp; Comparison Calculator</h1>
-<p><strong>Quick answer: choose two dates to compare their order</strong> and calculate signed, absolute, and inclusive calendar days.</p>
-</header>
-<section class="panel">
-<div class="grid">
-<div><label for="start">Start date</label><input id="start" type="date"></div>
-<div><label for="end">End date</label><input id="end" type="date"></div>
-</div>
-<button onclick="calculateDateDifference()">Calculate days</button>
-<div id="error" class="error hidden" role="alert"></div>
-<pre id="result" class="result" aria-live="polite">Choose two dates.</pre>
-</section>
-<section class="panel">
-<h2>How date comparison and day counts work</h2>
-<p>The comparison states whether the end date is later, earlier, or the same. The signed result is positive when the end is later and negative when it is earlier.</p>
-<p><strong>Inclusive count example:</strong> January 1 to January 3 has 2 elapsed days but 3 inclusive calendar days because both boundary dates are counted.</p>
-<p>Calendar dates are converted through UTC date components so daylight-saving transitions do not change a whole-day count.</p>
-<p class="note">Your tool input is processed in your browser. Analytics and advertising may receive ordinary usage and device data.</p>
-<div class="links"><a href="/util/unix-timestamp/">Timestamp converter</a><a href="/util/">All tools</a></div>
-</section>
-<section class="panel faq">
-<h2>FAQ</h2>
-<details><summary>Are weekends excluded?</summary><p>No. Every calendar day is counted.</p></details>
-<details><summary>Does the order matter?</summary><p>Yes. Reversing the dates reverses the sign of the elapsed result.</p></details>
-<p class="note">Reviewed: 2026-08-13</p>
-</section>
-</main>
-<footer>Free browser utility · emfls.github.io</footer>
+<body><main class="tool-shell">
+<header class="hero"><h1>Date Difference Calculator</h1><p>Calculate date-only elapsed days, selected range days, calendar spans, weeks, weekdays and weekends.</p></header>
+<section class="panel" aria-labelledby="calculator-heading"><h2 id="calculator-heading">Compare two dates</h2>
+<div class="date-grid"><div><label for="start">Start date</label><input id="start" type="date"></div><div><label for="end">End date</label><input id="end" type="date"></div></div>
+<div class="date-actions"><button type="button" id="today-start">Start = Today</button><button type="button" id="today-end">End = Today</button><button type="button" id="swap">Swap dates</button></div>
+<label class="range-option"><input id="include-end" type="checkbox"><span>Include end date in range counts</span></label>
+<div class="date-actions"><button type="button" class="primary" id="calculate">Calculate</button><button type="button" id="reset">Reset</button></div><div id="error" role="alert" hidden></div>
+<pre id="result" class="result" aria-live="polite">Choose two dates.</pre><div class="result-actions"><button type="button" id="copy">Copy result</button><span id="copy-status" class="status" role="status" aria-live="polite"></span></div></section>
+<section class="panel"><h2>How the count works</h2><p><strong>Why Jan 1 to Jan 3 can be 2 or 3 days:</strong> the elapsed gap is 2 days. When you turn on <em>Include end date in range counts</em>, the selected range contains 3 calendar dates.</p><p>Elapsed days and weeks use the absolute date-only gap. Weekdays (Mon–Fri) and weekend days use the selected range; public holidays are not excluded.</p><p>Calendar span is not the same as dividing total days into fixed 30-day months. This tool uses a deterministic calendar decomposition with month-end clamping. Date-only calculations use UTC calendar components, so daylight-saving changes do not alter a whole-day result.</p><p>This is a general calendar-planning estimate, not an official legal, court, tax or contractual deadline calculation.</p><p>Your tool input is processed in your browser. Analytics and advertising may receive ordinary usage and device data.</p></section>
+<section class="panel"><h2>Date calculator roles</h2><p>Need hours, minutes, seconds or a countdown? Use the <a href="/util/time-diff/">Time Difference Calculator</a>. For birthdays and age, use the <a href="/util/age/">Age Calculator</a>. For Unix timestamps and date conversion, use the <a href="/util/unix-timestamp/">Unix Timestamp Converter</a>.</p></section>
+<section class="panel faq"><h2>FAQ</h2><details><summary>Does the count include the end date?</summary><p>Only when you select Include end date in range counts. Otherwise the selected range uses the elapsed gap.</p></details><details><summary>Are weekends counted?</summary><p>Yes. Weekday and weekend rows count calendar dates in the selected range.</p></details><details><summary>Are public holidays excluded?</summary><p>No. Weekdays are a simple Mon–Fri estimate and public holidays are not excluded.</p></details><details><summary>Why can calendar months differ from total days?</summary><p>Calendar spans use actual month lengths and a month-end clamp, not fixed 30-day months.</p></details><details><summary>Does daylight saving time affect this?</summary><p>No. The calculator uses date-only UTC math rather than local midnight durations.</p></details><details><summary>What if the end date is earlier?</summary><p>The direction and signed elapsed result reverse, while absolute range counts stay the same.</p></details><p class="note">Reviewed: 2026-09-21</p></section>
+<nav class="panel links" aria-label="Related date tools"><a href="/util/time-diff/">Time difference and countdown</a><a href="/util/age/">Age and birthday calculator</a><a href="/util/unix-timestamp/">Unix timestamp converter</a><a href="/util/">All tools</a></nav>
+</main><footer>Free browser utility · emfls.github.io</footer>
 <script>
-function parseDate(value){const p=value.split('-').map(Number);return p.length===3?Date.UTC(p[0],p[1]-1,p[2]):NaN}
-function calculateDateDifference(){
-  const a=parseDate(document.getElementById('start').value),b=parseDate(document.getElementById('end').value),result=document.getElementById('result'),error=document.getElementById('error');
-  error.classList.add('hidden');
-  if(!Number.isFinite(a)||!Number.isFinite(b)){error.textContent='Choose both dates.';error.classList.remove('hidden');return}
-  const days=(b-a)/86400000;
-  const comparison=days>0?'End date is later':days<0?'End date is earlier':'Dates are the same';
-  result.textContent=`Comparison: ${comparison}\nSigned elapsed days: ${days}\nAbsolute elapsed days: ${Math.abs(days)}\nInclusive calendar days: ${Math.abs(days)+1}`;
-}
-</script>
-</body>
-</html>
+const DAY_MS=86400000;
+function parseDate(value){if(!/^\d{4}-\d{2}-\d{2}$/.test(String(value)))return NaN;const [year,month,day]=value.split('-').map(Number),time=Date.UTC(year,month-1,day);const date=new Date(time);return date.getUTCFullYear()===year&&date.getUTCMonth()===month-1&&date.getUTCDate()===day?time:NaN}
+function parts(time){const d=new Date(time);return {year:d.getUTCFullYear(),month:d.getUTCMonth(),day:d.getUTCDate()}}
+function daysInUTCMonth(year,month){return new Date(Date.UTC(year,month+1,0)).getUTCDate()}
+function addCalendarYearsClamped(time,years){const p=parts(time),year=p.year+years;return Date.UTC(year,p.month,Math.min(p.day,daysInUTCMonth(year,p.month)))}
+function addCalendarMonthsClamped(time,months){const p=parts(time),index=p.year*12+p.month+months,year=Math.floor(index/12),month=index%12;return Date.UTC(year,month,Math.min(p.day,daysInUTCMonth(year,month)))}
+function calendarSpan(earlier,later){let years=0,months=0,cursor=earlier;while(addCalendarYearsClamped(earlier,years+1)<=later){years++;cursor=addCalendarYearsClamped(earlier,years)}while(addCalendarMonthsClamped(cursor,1)<=later){months++;cursor=addCalendarMonthsClamped(cursor,1)}return {years,months,days:Math.round((later-cursor)/DAY_MS)}}
+function countWeekdays(earlier,later,includeEnd){const boundary=later+(includeEnd?DAY_MS:0);let weekdays=0,weekends=0;for(let time=earlier;time<boundary;time+=DAY_MS){const day=new Date(time).getUTCDay();if(day===0||day===6)weekends++;else weekdays++}return {weekdays,weekends}}
+function calculateValues(startValue,endValue,includeEnd){const start=parseDate(startValue),end=parseDate(endValue);if(!Number.isFinite(start)||!Number.isFinite(end))throw new Error('Choose two valid dates.');const signedDays=Math.round((end-start)/DAY_MS),absDays=Math.abs(signedDays),earlier=Math.min(start,end),later=Math.max(start,end),selectedRangeDays=absDays+(includeEnd?1:0),weekdays=countWeekdays(earlier,later,includeEnd),span=calendarSpan(earlier,later);return {signedDays,absDays,selectedRangeDays,weeks:Math.floor(absDays/7),remainingDays:absDays%7,weekdays:weekdays.weekdays,weekends:weekdays.weekends,calendar:span,direction:signedDays>0?'End date is later':signedDays<0?'End date is earlier':'Dates are the same',start:startValue,end:endValue}}
+function localToday(date=new Date()){const pad=n=>String(n).padStart(2,'0');return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}`}
+function resultText(value,includeEnd){const c=value.calendar;return `Direction: ${value.direction}\nSigned elapsed days: ${value.signedDays}\nTotal elapsed days: ${value.absDays}\nSelected range days: ${value.selectedRangeDays}\nElapsed span: ${value.weeks} week${value.weeks===1?'':'s'} ${value.remainingDays} day${value.remainingDays===1?'':'s'}\nCalendar span: ${c.years} year${c.years===1?'':'s'}, ${c.months} month${c.months===1?'':'s'}, ${c.days} day${c.days===1?'':'s'}\nWeekdays (Mon–Fri): ${value.weekdays}\nWeekend days: ${value.weekends}\n\n${value.start} → ${value.end}\nInclude end date: ${includeEnd?'Yes':'No'}`}
+function copyResult(){if(!lastText)return;const status=document.getElementById('copy-status'),done=message=>status.textContent=message;if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(lastText).then(()=>done('Copied')).catch(()=>done('Could not copy. Select the result manually.'))}else done('Could not copy. Select the result manually.')}
+let lastText='';
+function calculateDateDifference(){const start=document.getElementById('start').value,end=document.getElementById('end').value,includeEnd=document.getElementById('include-end').checked,error=document.getElementById('error'),result=document.getElementById('result');error.hidden=true;error.textContent='';try{const value=calculateValues(start,end,includeEnd);lastText=resultText(value,includeEnd);result.textContent=lastText}catch(e){lastText='';result.textContent='Choose two dates.';error.textContent=e.message;error.hidden=false;document.getElementById('copy-status').textContent=''}}
+function resetAll(){document.getElementById('start').value='';document.getElementById('end').value='';document.getElementById('include-end').checked=false;document.getElementById('result').textContent='Choose two dates.';document.getElementById('error').hidden=true;document.getElementById('error').textContent='';document.getElementById('copy-status').textContent='';lastText=''}
+if(typeof document!=='undefined'){const $=id=>document.getElementById(id);$('today-start').onclick=()=>{$('start').value=localToday();calculateDateDifference()};$('today-end').onclick=()=>{$('end').value=localToday();calculateDateDifference()};$('swap').onclick=()=>{[$('start').value,$('end').value]=[$('end').value,$('start').value];if($('start').value&&$('end').value)calculateDateDifference();else resetAll()};$('calculate').onclick=calculateDateDifference;$('copy').onclick=copyResult;$('reset').onclick=resetAll}
+</script></body></html>

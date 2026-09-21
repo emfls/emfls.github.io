@@ -37,7 +37,7 @@ class TenNewEnglishToolsTest(unittest.TestCase):
                 expected_dates = {
                     "url-encoder": "2026-08-14",
                     "unix-timestamp": "2026-08-15",
-                    "date-difference": "2026-08-13",
+                    "date-difference": "2026-09-21",
                     "aspect-ratio": "2026-09-21",
                 }
                 expected_date = expected_dates.get(slug, "2026-08-09")
@@ -49,7 +49,7 @@ class TenNewEnglishToolsTest(unittest.TestCase):
                 blocks = re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)
                 schemas = [json.loads(block) for block in blocks]
                 self.assertIn("WebApplication", {x.get("@type") for x in schemas})
-                if slug == "aspect-ratio":
+                if slug in {"aspect-ratio", "date-difference"}:
                     self.assertNotIn("FAQPage", {x.get("@type") for x in schemas})
                 else:
                     self.assertIn("FAQPage", {x.get("@type") for x in schemas})
