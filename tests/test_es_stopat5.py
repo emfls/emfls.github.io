@@ -1,6 +1,7 @@
 import json
 import re
 import unittest
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
@@ -66,6 +67,19 @@ class SpanishStopAt5Test(unittest.TestCase):
         self.assertIn("G-QP5Q67GE5B", self.html)
         self.assertNotIn("pagead2.googlesyndication.com/pagead/js/adsbygoogle.js", self.html)
         self.assertNotIn("adsbygoogle.push", self.html)
+
+    def test_generated_rss_parity(self):
+        feed = ET.parse(ROOT / "feed.xml").getroot()
+        canonical = "https://emfls.github.io/es/game/STOPat5/"
+        items = [item for item in feed.findall("./channel/item") if item.findtext("link") == canonical]
+        self.assertEqual(len(items), 1)
+        item = items[0]
+        title = re.search(r"<title>(.*?)</title>", self.html, re.S).group(1).strip()
+        description = re.search(r'<meta name="description" content="([^"]+)"', self.html).group(1)
+        self.assertEqual(item.findtext("title"), title)
+        self.assertEqual(item.findtext("description"), description)
+        self.assertEqual(item.findtext("guid"), canonical)
+        self.assertEqual(item.findtext("pubDate"), "Mon, 21 Sep 2026 00:00:00 +0000")
 
 
 if __name__ == "__main__":
