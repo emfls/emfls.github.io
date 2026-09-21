@@ -723,3 +723,6 @@
 
 ## 2026-09-22 04:32 Keyword Hunter
 - Seeds: 40; New: 20; Rejected: 19; DB: 2734; Errors: 0; Top: 몰디브리조트추천. Report: reports/keyword-hunter/2026-09-22-0432.md
+
+## 2026-09-22 08:20 Keyword Hunter
+- Seeds: 40; New: 61; Rejected: 51; DB: 2795; Errors: 1; Top: 신용회복위원회채무조정. Report: reports/keyword-hunter/2026-09-22-0820.md
