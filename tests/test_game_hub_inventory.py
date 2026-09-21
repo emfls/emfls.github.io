@@ -37,16 +37,16 @@ def parse_hub():
 def repo_set(): return {f"{path.parent.name}/" for path in (ROOT / "game").glob("*/index.html")}
 def sitemap_children():
     root = ElementTree.parse(ROOT / "game/sitemap.xml").getroot()
-    urls = {loc.text for loc in root.iter() if loc.tag.endswith("loc")}
+    urls = [loc.text for loc in root.iter() if loc.tag.endswith("loc")]
     return [url.removeprefix(BASE) for url in urls if url.startswith(BASE) and url != BASE]
 
 
 def test_three_way_inventory_parity_and_no_duplicates():
-    cards = parse_hub(); hub = {a["href"] for c in cards for a in c["anchors"]}
+    cards = parse_hub(); hub_list = [a["href"] for c in cards for a in c["anchors"]]; hub = set(hub_list)
     repo, sitemap_list = repo_set(), sitemap_children(); sitemap = set(sitemap_list)
-    assert len(repo) == len(sitemap_list) == len(hub) == 25
+    assert len(repo) == len(sitemap_list) == len(hub_list) == 25
     assert len(sitemap_list) == len(sitemap) == 25
-    assert repo == sitemap == hub
+    assert len(hub_list) == len(hub) and repo == sitemap == hub
     assert "LadderGame/" in repo
     assert len([a["href"] for c in cards for a in c["anchors"]]) == len(hub)
 
