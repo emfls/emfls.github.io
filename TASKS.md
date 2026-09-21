@@ -13,6 +13,9 @@
 
 ## P1 - High
 
+- [ ] 09 · Vietnamese 16-Type Personality Quiz — `/vn/game/MBTI/`
+  - review branch only: 20 questions / 5 per axis, strict-majority scoring, independent Vietnamese quiz rebrand, result depth, privacy and no raw-answer telemetry, VN game hub propagation, sitemap/RSS contract, focused tests. Main merge, production deployment, Notion review, and 10번 작업은 후속 승인 이후 진행한다.
+
 - [x] 08 · Date Difference Calculator — `/util/date-difference/`
   - 완료: 2026-09-21. date-only UTC whole-day math, explicit include-end semantics, calendar Y/M/D with month-end clamp, weeks, weekdays/weekends with Mon–Fri/public-holiday caveat, Today/Swap/Copy/Reset, date-tool cluster links, WebApplication-only schema, hub/sitemap/RSS propagation을 반영했다. Final review correction에서 partial Swap input 보존, Today partial neutral state, stale Copy status clear와 handler regression을 추가했다. Tests 13 passed, Pages `35547351347` success, Production/runtime 기본·leap·month-end·weekday·Swap·Today·Copy·Reset 검증을 완료했다. Mobile 390px은 viewport capability 부재로 `MOBILE_390_NOT_VERIFIED`, Google `SEARCH_CONSOLE_NOT_VERIFIED`, Naver `NAVER_INDEX_NOT_CONFIRMED / SECONDARY`, metadata `METADATA_NOT_IN_CURRENT_CONTRACT`로 유지한다. 14/28/56일 measurement와 Notion final closure는 후속이다.
 

@@ -633,3 +633,9 @@
 
 ## 2026-09-21 07:30 Keyword Hunter
 - Seeds: 40; New: 60; Rejected: 56; DB: 2633; Errors: 0; Top: none. Report: reports/keyword-hunter/2026-09-21-0730.md
+
+## 2026-09-21 — 09 Vietnamese 16-Type Personality Quiz review
+- Review branch `codex/vn-09-personality-quiz-20260921` only; scope is `/vn/game/MBTI/` plus the single Vietnamese game-hub card and the new focused test. Task 10 and `main` merge are not part of this execution.
+- Implemented 20 original Vietnamese situational questions with 5 per E/I, S/N, T/F, J/P axis, strict-majority scoring, explicit 3:2 close-axis copy, deterministic retry, keyboard-focusable controls, independent quiz rebrand, visible MBTI® non-affiliation and entertainment/self-reflection boundary, four-field result profiles, privacy disclosure, no raw-answer telemetry, no AdSense, canonical/OG/sitemap preservation, and one WebApplication JSON-LD block. `FAQPage` is intentionally absent and no hreflang was added.
+- Measurement context remains `GA4 50 views / 33 users / $0`, `CURRENT_GSC_ROW_ABSENT / GOOGLE_INDEX_NOT_CONFIRMED`, `NAVER_NOT_PRIMARY`, and `METADATA_NOT_IN_CURRENT_CONTRACT`; 13-locale blast radius was read-only and no other locale page was changed. Production, Pages deployment, runtime UI, and 390px mobile are pending review; Notion is `NOT_UPDATED_PENDING_REVIEW`.
+- Validation: `tests/test_vn_mbti_page.py` + `tests/test_quick_personality_quiz.py` = 10 passed; `git diff --check` passed. Status is `READY_FOR_REVIEW`, not `DONE`.
