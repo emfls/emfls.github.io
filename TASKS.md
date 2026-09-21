@@ -13,8 +13,8 @@
 
 ## P1 - High
 
-- [ ] 08 · Date Difference Calculator — `/util/date-difference/`
-  - 리뷰 브랜치: 2026-09-21. date-only UTC whole-day math, explicit include-end semantics, calendar Y/M/D with month-end clamp, weeks, weekdays/weekends with Mon–Fri/public-holiday caveat, Today/Swap/Copy/Reset, date-tool cluster links, WebApplication-only schema, hub/sitemap/RSS propagation을 구현했다. Final review correction에서 partial Swap input 보존, Today partial neutral state, stale Copy status clear와 handler regression을 추가했다. 상태는 review branch / `READY_FOR_FINAL_REVIEW`이며 main merge 전이다.
+- [x] 08 · Date Difference Calculator — `/util/date-difference/`
+  - 완료: 2026-09-21. date-only UTC whole-day math, explicit include-end semantics, calendar Y/M/D with month-end clamp, weeks, weekdays/weekends with Mon–Fri/public-holiday caveat, Today/Swap/Copy/Reset, date-tool cluster links, WebApplication-only schema, hub/sitemap/RSS propagation을 반영했다. Final review correction에서 partial Swap input 보존, Today partial neutral state, stale Copy status clear와 handler regression을 추가했다. Tests 13 passed, Pages `35547351347` success, Production/runtime 기본·leap·month-end·weekday·Swap·Today·Copy·Reset 검증을 완료했다. Mobile 390px은 viewport capability 부재로 `MOBILE_390_NOT_VERIFIED`, Google `SEARCH_CONSOLE_NOT_VERIFIED`, Naver `NAVER_INDEX_NOT_CONFIRMED / SECONDARY`, metadata `METADATA_NOT_IN_CURRENT_CONTRACT`로 유지한다. 14/28/56일 measurement와 Notion final closure는 후속이다.
 
 - [x] 07 · Aspect Ratio Calculator — `/util/aspect-ratio/`
   - 완료: 2026-09-21. 두 모드(이미지 크기에서 exact ratio, ratio로 resize), 8개 common preset, swap/reset/copy/live preview, visible FAQ와 WebApplication 1개, privacy/AdSense 보호, util hub/sitemap/RSS propagation을 반영했다. silent precedence를 제거하고 Mode A original dimensions 표시·복사 버그와 deterministic Reset을 수정했다. `3440×1440 → 43:18` exactness를 유지했으며 관련 테스트 9 passed, Pages `35545871611` success, Production/runtime 기능 검증을 완료했다. Mobile 390px은 viewport capability 부재로 `RUNTIME_UI_NOT_VERIFIED`, Google `SEARCH_CONSOLE_NOT_VERIFIED`, Naver `NAVER_INDEX_NOT_CONFIRMED`, metadata `METADATA_NOT_IN_CURRENT_CONTRACT`로 유지한다. 14/28/56일 measurement와 Notion final closure는 후속이다.

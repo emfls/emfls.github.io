@@ -1,5 +1,14 @@
 # PROJECT HISTORY
 
+## 2026-09-21 — 08 · Date Difference Calculator — MAIN CLOSURE
+
+- Previous main `aab3343cb8`에 승인 Core `01bb82270b`, RSS `a4674597d5`, Final UI correction `2a561dee37`을 non-force로 반영했다. 현재 main은 `2a561dee37`이며 force push는 사용하지 않았다. Closure commit은 이 section을 포함한 closure commit이다.
+- Date Difference를 date-only 전문 calculator로 유지했다. `Date.UTC` whole-day math, time-of-day/timezone/countdown/add-subtract 미추가, elapsed/signed/selected range, weeks, calendar Y/M/D, weekdays/weekends를 확인했다. Include-end OFF/ON semantics, reverse sign/absolute preservation, leap/non-leap/DST, Jan 31→Mar 1의 `29일 / 0년 1개월 1일` clamp convention을 보존했다.
+- Weekdays는 Mon–Fri estimate이며 public holidays를 제외하지 않는다. legal/court/tax/contractual deadline 공식 계산을 보장하지 않는다는 문구와 `/util/time-diff/`, `/util/age/`, `/util/unix-timestamp/`, `/util/` cluster links를 유지했다.
+- Partial Swap은 입력을 삭제하지 않고 위치만 교환하며, Today partial은 premature error 없이 neutral state를 유지한다. 새 계산/invalid/Reset에서 stale Copy status와 payload를 지운다. UI runtime에서 full/partial Swap, Today, Copy, Reset을 확인했다.
+- WebApplication exactly 1, FAQPage 0, title/H1/canonical, `dateModified=2026-09-21`, hub/sitemap/RSS freshness, GA4/AdSense/privacy 계약을 확인했다. Tests `13 passed`, Pages run `35547351347` success, 실제 Production served HTML과 runtime 기능은 최신이다.
+- Mobile 390px은 viewport capability 부재로 `MOBILE_390_NOT_VERIFIED`, Google `SEARCH_CONSOLE_NOT_VERIFIED`, Naver `NAVER_INDEX_NOT_CONFIRMED / SECONDARY`, metadata `METADATA_NOT_IN_CURRENT_CONTRACT`다. Notion은 `NOTION_CLOSURE_PENDING_CHATGPT`이며 duplicate archive는 수정하지 않았다. 14/28/56일 measurement와 add/subtract feature gate는 후속이다.
+
 ## 2026-09-21 — 08 · Date Difference Calculator — Final Review Correction
 
 - partial Swap이 한쪽 날짜만 입력된 상태에서 `resetAll()`을 호출해 사용자 값을 지우던 문제를 수정했다. Start-only와 End-only는 값을 반대 필드로 보존하고, 양쪽 날짜가 있으면 즉시 재계산하며, 둘 다 비어 있으면 그대로 유지한다.
