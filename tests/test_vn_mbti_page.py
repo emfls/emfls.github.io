@@ -6,10 +6,16 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PAGE = ROOT / "vn/game/MBTI/index.html"
+EN_PAGE = ROOT / "game/MBTI/index.html"
 
 
 def source():
     return PAGE.read_text(encoding="utf-8")
+
+
+def axis_sequence(path):
+    text = path.read_text(encoding="utf-8")
+    return re.findall(r'\{\s*q\s*:\s*".*?",\s*a\s*:\s*\[.*?\],\s*t\s*:\s*\["([EISNTFJP])",\s*"([EISNTFJP])"\s*\]', text, re.S)
 
 
 def script_source():
@@ -21,6 +27,14 @@ def test_inventory_is_twenty_and_balanced():
     assert len(questions) == 20
     axes = [tuple(item[3:5]) for item in questions]
     assert {letter: sum(letter in axis for axis in axes) for letter in "EISNTFJP"} == {letter: 5 for letter in "EISNTFJP"}
+
+
+def test_vietnamese_axis_sequence_matches_english_contract():
+    en_axes = axis_sequence(EN_PAGE)
+    vn_axes = axis_sequence(PAGE)
+    assert len(en_axes) == 20
+    assert len(vn_axes) == 20
+    assert vn_axes == en_axes
 
 
 def test_scoring_is_strict_majority_and_close_is_explicit():
@@ -56,6 +70,7 @@ def test_profiles_and_static_sections_are_complete():
     assert len(profiles) == 16
     assert all(len(fields) == 4 and all(field.strip() for field in fields) for fields in profiles.values())
     assert len({fields[0] for fields in profiles.values()}) == 16
+    assert len({tuple(fields) for fields in profiles.values()}) == 16
 
 
 def test_hub_and_sitemap_keep_vietnamese_target_once():
