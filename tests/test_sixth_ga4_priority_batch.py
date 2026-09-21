@@ -7,7 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 PAGES = {
-    "ru/game/MBTI/index.html": ("https://emfls.github.io/ru/game/MBTI/", "VideoGame", "развлеч"),
+    "ru/game/MBTI/index.html": ("https://emfls.github.io/ru/game/MBTI/", "WebApplication", "саморефлексии"),
     "es/game/STOPat5/index.html": ("https://emfls.github.io/es/game/STOPat5/", "VideoGame", "navegador"),
     "report/sec/nvda-10k-202601.html": ("https://emfls.github.io/report/sec/nvda-10k-202601.html", "Article", "000104581026000021"),
     "cn/game/index.html": ("https://emfls.github.io/cn/game/", "CollectionPage", "游戏目录"),
@@ -26,7 +26,7 @@ class SixthGa4PriorityBatchTest(unittest.TestCase):
             with self.subTest(page=rel):
                 html = (ROOT / rel).read_text(encoding="utf-8")
                 self.assertIn(f'href="{canonical}"', html)
-                expected_date = "2026-08-25" if rel == "util/qrcode/index.html" else "2026-08-09"
+                expected_date = "2026-09-21" if rel == "ru/game/MBTI/index.html" else ("2026-08-25" if rel == "util/qrcode/index.html" else "2026-08-09")
                 self.assertIn(expected_date, html)
                 self.assertIn(limitation, html)
                 self.assertIn("googletagmanager.com/gtag/js", html)
@@ -35,12 +35,17 @@ class SixthGa4PriorityBatchTest(unittest.TestCase):
                     self.assertNotIn("adsbygoogle", html)
                 else:
                     self.assertIn("pagead2.googlesyndication.com", html)
-                self.assertIn('div[id^="aswift_"]', html)
+                if rel != "ru/game/MBTI/index.html":
+                    self.assertIn('div[id^="aswift_"]', html)
                 schemas = re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)
                 parsed = [json.loads(item) for item in schemas]
                 schema_types = {item.get("@type") for item in parsed}
                 self.assertIn(schema_type, schema_types)
-                self.assertIn("FAQPage", schema_types)
+                if rel == "ru/game/MBTI/index.html":
+                    self.assertNotIn("VideoGame", schema_types)
+                    self.assertNotIn("FAQPage", schema_types)
+                else:
+                    self.assertIn("FAQPage", schema_types)
 
     def test_core_functions_remain(self):
         markers = {
