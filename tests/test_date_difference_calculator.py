@@ -17,6 +17,19 @@ def node_values(expression):
     return json.loads(result.stdout.strip().splitlines()[-1])
 
 
+def node_ui_values(expression):
+    script = re.findall(r"<script(?: [^>]*)?>(.*?)</script>", source(), re.S)[-1]
+    harness = r'''
+class Element { constructor(id, value = "") { this.id=id; this.value=value; this.checked=false; this.hidden=false; this.textContent=""; this.onclick=null; this.classList={add:()=>{},remove:()=>{}}; } }
+const elements={}; const add=(id,value="")=>elements[id]=new Element(id,value);
+["start","end","today-start","today-end","swap","include-end","calculate","copy","reset","copy-status","error","result"].forEach(id=>add(id));
+elements["error"].hidden=true; elements["result"].textContent="Choose two dates.";
+globalThis.document={getElementById:id=>elements[id]}; globalThis.navigator={clipboard:{writeText:async()=>{}}};
+'''
+    result = subprocess.run(["node", "-e", harness + script + "\n" + expression], capture_output=True, text=True, check=True)
+    return json.loads(result.stdout.strip().splitlines()[-1])
+
+
 def test_known_dates_and_counting_semantics():
     values = node_values(r'''
 const cases = [
@@ -69,3 +82,41 @@ def test_ui_and_privacy_contract():
     assert "targetWidth" not in html and "targetHeight" not in html
     assert "fetch(" not in html and "localStorage" not in html and "sessionStorage" not in html
     assert "G-QP5Q67GE5B" in html and "ca-pub-8830524482034754" in html
+
+
+def test_partial_swap_preserves_values_and_clears_neutral_state():
+    values = node_ui_values(r'''
+elements["start"].value="2026-01-01"; elements["swap"].onclick();
+const startOnly={start:elements["start"].value,end:elements["end"].value,result:elements["result"].textContent,error:elements["error"].hidden,lastText};
+elements["start"].value=""; elements["end"].value="2026-01-03"; elements["swap"].onclick();
+console.log(JSON.stringify({startOnly,endOnly:{start:elements["start"].value,end:elements["end"].value,result:elements["result"].textContent,error:elements["error"].hidden,lastText}}));
+''')
+    assert values["startOnly"] == {"start": "", "end": "2026-01-01", "result": "Choose two dates.", "error": True, "lastText": ""}
+    assert values["endOnly"] == {"start": "2026-01-03", "end": "", "result": "Choose two dates.", "error": True, "lastText": ""}
+
+
+def test_full_swap_today_shortcuts_and_copy_status_regressions():
+    values = node_ui_values(r'''
+elements["start"].value="2026-01-01"; elements["end"].value="2026-01-03"; elements["calculate"].onclick();
+const before=JSON.parse(JSON.stringify({text:elements["result"].textContent,lastText})); elements["copy-status"].textContent="Copied"; elements["swap"].onclick();
+const swapped={start:elements["start"].value,end:elements["end"].value,text:elements["result"].textContent};
+elements["start"].value=""; elements["end"].value=""; elements["today-start"].onclick(); const startToday={start:elements["start"].value,end:elements["end"].value,error:elements["error"].hidden,result:elements["result"].textContent,lastText};
+elements["today-end"].onclick(); const bothToday={start:elements["start"].value,end:elements["end"].value,result:elements["result"].textContent};
+console.log(JSON.stringify({before,swapped,startToday,bothToday,copyStatus:elements["copy-status"].textContent}));
+''')
+    assert "Signed elapsed days: 2" in values["before"]["text"]
+    assert values["swapped"]["start"] == "2026-01-03" and values["swapped"]["end"] == "2026-01-01"
+    assert "Signed elapsed days: -2" in values["swapped"]["text"]
+    assert values["startToday"]["start"] and values["startToday"]["end"] == "" and values["startToday"]["error"] is True and values["startToday"]["lastText"] == ""
+    assert values["bothToday"]["start"] == values["bothToday"]["end"] and "Dates are the same" in values["bothToday"]["result"]
+    assert values["copyStatus"] == ""
+
+
+def test_explicit_invalid_calculation_and_reset_clear_stale_state():
+    values = node_ui_values(r'''
+elements["start"].value="2026-01-01"; elements["end"].value="2026-01-03"; elements["calculate"].onclick(); elements["copy-status"].textContent="Copied"; elements["end"].value=""; elements["calculate"].onclick();
+const invalid={error:elements["error"].hidden,result:elements["result"].textContent,lastText,copy:elements["copy-status"].textContent}; elements["include-end"].checked=true; elements["reset"].onclick();
+console.log(JSON.stringify({invalid,reset:{start:elements["start"].value,end:elements["end"].value,includeEnd:elements["include-end"].checked,result:elements["result"].textContent,error:elements["error"].hidden,copy:elements["copy-status"].textContent,lastText}}));
+''')
+    assert values["invalid"]["error"] is False and values["invalid"]["result"] == "Choose two dates." and values["invalid"]["lastText"] == "" and values["invalid"]["copy"] == ""
+    assert values["reset"] == {"start":"","end":"","includeEnd":False,"result":"Choose two dates.","error":True,"copy":"","lastText":""}

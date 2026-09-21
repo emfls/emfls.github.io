@@ -1,5 +1,12 @@
 # PROJECT HISTORY
 
+## 2026-09-21 — 08 · Date Difference Calculator — Final Review Correction
+
+- partial Swap이 한쪽 날짜만 입력된 상태에서 `resetAll()`을 호출해 사용자 값을 지우던 문제를 수정했다. Start-only와 End-only는 값을 반대 필드로 보존하고, 양쪽 날짜가 있으면 즉시 재계산하며, 둘 다 비어 있으면 그대로 유지한다.
+- `clearCalculationState()`와 `recalculateIfReady()`를 분리해 Today shortcut이 상대 날짜가 없을 때 premature validation error를 띄우지 않도록 했다. 명시적 Calculate의 missing/invalid input error contract는 유지한다.
+- 새 계산 진입 시 copy status를 비우고, invalid calculation과 Reset에서도 `lastText`/result/error/copy state를 정리한다. UI handler harness를 추가해 13 tests passed를 확인했다.
+- title, schema, `dateModified`, RSS `a4674597d5`, hub, sitemap, date-only math, calendar clamp와 다른 tool scope는 변경하지 않았다. 상태는 final review pending이며 main merge와 09번은 수행하지 않는다.
+
 ## 2026-09-21 — 08 · Date Difference Calculator — REVIEW BRANCH
 
 ### 요청·보호
