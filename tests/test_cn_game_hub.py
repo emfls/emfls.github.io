@@ -1,6 +1,7 @@
 import json
 import re
 import unittest
+import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -100,6 +101,18 @@ class ChineseGameHubTest(unittest.TestCase):
         self.assertIn("此目录页当前未加载广告", self.html)
         self.assertNotIn("pagead2.googlesyndication.com/pagead/js/adsbygoogle.js", self.html)
         self.assertNotIn("adsbygoogle.push", self.html)
+
+    def test_generated_rss_matches_hub_metadata(self):
+        feed = ET.parse(ROOT / "feed.xml").getroot()
+        items = [item for item in feed.findall("./channel/item") if item.findtext("link") == "https://emfls.github.io/cn/game/"]
+        self.assertEqual(len(items), 1)
+        item = items[0]
+        title = re.search(r"<title>(.*?)</title>", self.html, re.S).group(1).strip()
+        description = re.search(r'<meta name="description" content="([^"]+)"', self.html).group(1)
+        self.assertEqual(item.findtext("title"), title)
+        self.assertEqual(item.findtext("description"), description)
+        self.assertEqual(item.findtext("guid"), "https://emfls.github.io/cn/game/")
+        self.assertEqual(item.findtext("pubDate"), "Mon, 21 Sep 2026 00:00:00 +0000")
 
 
 if __name__ == "__main__":
