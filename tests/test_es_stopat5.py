@@ -1,5 +1,6 @@
 import json
 import re
+import subprocess
 import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -80,6 +81,27 @@ class SpanishStopAt5Test(unittest.TestCase):
         self.assertEqual(item.findtext("description"), description)
         self.assertEqual(item.findtext("guid"), canonical)
         self.assertEqual(item.findtext("pubDate"), "Mon, 21 Sep 2026 00:00:00 +0000")
+
+    def test_actual_js_behavioral_contract(self):
+        script = re.search(r"const TARGET_SECONDS = 5;.*?/\* TESTABLE_HELPERS_END \*/", self.html, re.S).group(0)
+        script = "const TARGET_SECONDS = 5; const TOLERANCES={1:.5,2:.3,3:.1,4:.05,5:.02};" + re.search(r"/\* TESTABLE_HELPERS_START \*/(.*?)/\* TESTABLE_HELPERS_END \*/", script, re.S).group(1)
+        harness = script + r'''
+const checks = [];
+checks.push(JSON.stringify([toleranceByLevel(1), toleranceByLevel(2), toleranceByLevel(3), toleranceByLevel(4), toleranceByLevel(5), toleranceByLevel(6), toleranceByLevel(20)]) === JSON.stringify([.5,.3,.1,.05,.02,.01,.01]));
+checks.push(classifyAttempt(5.5, 1).success === true && classifyAttempt(5.5001, 1).success === false);
+checks.push(classifyAttempt(4.9, 1).direction === "antes" && classifyAttempt(5.1, 1).direction === "tarde" && classifyAttempt(5, 1).direction === "exacto");
+checks.push(Math.abs(classifyAttempt(4.9, 1).absError - .1) < 1e-9 && Math.abs(classifyAttempt(5.1, 1).absError - .1) < 1e-9);
+checks.push(nextBestRecord({error:.05,level:3}, {absError:.08,success:false}, 4).error === .05);
+checks.push(nextBestRecord({error:.05,level:3}, {absError:.02,success:false}, 4).error === .02);
+checks.push(nextBestRecord({error:.05,level:1}, {absError:.02,success:true}, 1).level === 2);
+checks.push(nextBestRecord({error:.05,level:5}, {absError:.08,success:true}, 1).level === 5);
+checks.push(JSON.stringify(normalizeRecord(null)) === JSON.stringify({error:null,level:0}));
+checks.push(JSON.stringify(normalizeRecord('{bad')) === JSON.stringify({error:null,level:0}));
+checks.push(JSON.stringify(normalizeRecord('{"error":"x","level":"y"}')) === JSON.stringify({error:null,level:0}));
+if (!checks.every(Boolean)) process.exit(1);
+'''
+        completed = subprocess.run(["node", "-e", harness], capture_output=True, text=True)
+        self.assertEqual(completed.returncode, 0, completed.stderr)
 
 
 if __name__ == "__main__":
