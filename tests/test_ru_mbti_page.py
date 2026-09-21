@@ -23,6 +23,30 @@ def script_source():
     return re.findall(r"<script(?: [^>]*)?>(.*?)</script>", source(), re.S)[-1].rsplit("showQuestion();", 1)[0]
 
 
+def question_pairs():
+    return re.findall(r'\{\s*q\s*:\s*".*?",\s*a\s*:\s*\[.*?\],\s*t\s*:\s*\["([EISNTFJP])",\s*"([EISNTFJP])"\s*\]', source(), re.S)
+
+
+def calculate_type(counts):
+    expression = json.dumps(counts, ensure_ascii=False)
+    result = subprocess.run(["node", "-e", "const retry={}; const share={};" + script_source() + f"\nconsole.log(calculateType({expression}));"], capture_output=True, text=True, check=True)
+    return result.stdout.strip().splitlines()[-1]
+
+
+def counts_for(option_index):
+    counts = {letter: 0 for letter in "EISNTFJP"}
+    for pair in question_pairs():
+        counts[pair[option_index]] += 1
+    return counts
+
+
+def assert_pair_totals(counts):
+    assert counts["E"] + counts["I"] == 5
+    assert counts["S"] + counts["N"] == 5
+    assert counts["T"] + counts["F"] == 5
+    assert counts["J"] + counts["P"] == 5
+
+
 def test_question_inventory_is_twenty_and_balanced():
     questions = re.findall(r'\{\s*q\s*:\s*"(.*?)",\s*a\s*:\s*\[(.*?),\s*(.*?)\],\s*t\s*:\s*\["([EISNTFJP])",\s*"([EISNTFJP])"\]', source(), re.S)
     assert len(questions) == 20
@@ -42,6 +66,22 @@ def test_scoring_is_strict_majority_and_close_is_explicit():
         capture_output=True, text=True, check=True,
     )
     assert json.loads(result.stdout.strip().splitlines()[-1]) == {"a": "ESTJ", "b": "INFP", "close": [True, True, False, False]}
+
+
+def test_real_question_mappings_cover_all_first_second_and_mirrored_paths():
+    first = counts_for(0)
+    second = counts_for(1)
+    assert_pair_totals(first)
+    assert_pair_totals(second)
+    assert calculate_type(first) == "".join(max((letter for letter in pair), key=lambda letter: first[letter]) for pair in (("E", "I"), ("S", "N"), ("T", "F"), ("J", "P")))
+    assert calculate_type(second) == "".join(max((letter for letter in pair), key=lambda letter: second[letter]) for pair in (("E", "I"), ("S", "N"), ("T", "F"), ("J", "P")))
+    mirrored = {"E": 2, "I": 3, "S": 1, "N": 4, "T": 3, "F": 2, "J": 2, "P": 3}
+    original = {"E": 3, "I": 2, "S": 4, "N": 1, "T": 2, "F": 3, "J": 3, "P": 2}
+    assert_pair_totals(original)
+    assert_pair_totals(mirrored)
+    assert calculate_type(original) == "ESFJ"
+    assert calculate_type(mirrored) == "INTP"
+    assert calculate_type(mirrored) == "".join({"E": "I", "I": "E"}[letter] for letter in calculate_type(original)[:1]) + "".join({"S": "N", "N": "S"}[letter] for letter in calculate_type(original)[1:2]) + "".join({"T": "F", "F": "T"}[letter] for letter in calculate_type(original)[2:3]) + "".join({"J": "P", "P": "J"}[letter] for letter in calculate_type(original)[3:4])
 
 
 def test_profiles_are_explicit_unique_and_complete():
