@@ -1,5 +1,7 @@
 from pathlib import Path
 import subprocess
+from html.parser import HTMLParser
+from xml.etree import ElementTree
 
 ROOT = Path(__file__).parents[1]
 PAGE = ROOT / "game/MarbleFlick/index.html"
@@ -78,3 +80,25 @@ def test_marbleflick_page_contract():
     assert '"@type":"VideoGame"' in text and '"dateModified":"2026-09-21"' in text
     assert '"@type": "FAQPage"' not in text
     assert 'window.location.href=\'../\'' not in text
+
+
+def test_marbleflick_rss_item_matches_page_metadata():
+    class Metadata(HTMLParser):
+        def __init__(self): super().__init__(); self.title=""; self.description=""; self.in_title=False
+        def handle_starttag(self, tag, attrs):
+            attrs=dict(attrs)
+            if tag == "title": self.in_title=True
+            if tag == "meta" and attrs.get("name") == "description": self.description=attrs["content"]
+        def handle_endtag(self, tag):
+            if tag == "title": self.in_title=False
+        def handle_data(self, data):
+            if self.in_title: self.title += data
+    metadata=Metadata(); metadata.feed(PAGE.read_text())
+    canonical="https://emfls.github.io/game/MarbleFlick/"
+    items=[item for item in ElementTree.parse(ROOT/"feed.xml").getroot().iter("item") if item.findtext("link") == canonical]
+    assert len(items) == 1
+    item=items[0]
+    assert item.findtext("title") == metadata.title
+    assert item.findtext("description") == metadata.description
+    assert item.findtext("guid") == canonical
+    assert item.findtext("pubDate") == "Mon, 21 Sep 2026 00:00:00 +0000"
