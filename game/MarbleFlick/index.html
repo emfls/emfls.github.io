@@ -15,7 +15,7 @@
     <link rel="canonical" href="https://emfls.github.io/game/MarbleFlick/" />
 
     <!-- Open Graph (Facebook, KakaoTalk, LinkedIn, etc.) -->
-    <meta property="og:title" content="Marble Flick - Free Mobile Web Game" />
+    <meta property="og:title" content="Marble Flick – Free Browser Marble Game for 2 Players or AI" />
     <meta
       property="og:description"
       content="Enjoy Marble Flick, a quick and fun mobile board game. Play 1v1 or versus AI online for free!" />
@@ -26,7 +26,7 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Marble Flick - Free Mobile Web Game" />
+    <meta name="twitter:title" content="Marble Flick – Free Browser Marble Game for 2 Players or AI" />
     <meta
       name="twitter:description"
       content="Challenge a friend or AI in this free mobile flick game. No download, just fun!" />
@@ -215,7 +215,7 @@
     {
       "@type": "ListItem",
       "position": 2,
-      "name": "게임",
+      "name": "Games",
       "item": "https://emfls.github.io/game/"
     },
     {
@@ -228,31 +228,32 @@
 }</script>
 </head>
   <body>
-<nav data-seo-breadcrumb="pilot" aria-label="Breadcrumb" style="max-width:860px;margin:16px auto 32px;padding:0 16px;font-size:.85rem;line-height:1.6"><a href="/">Home</a> <span aria-hidden="true">›</span> <a href="/game/">게임</a> <span aria-hidden="true">›</span> <span aria-current="page">Marble Flick – Free Browser Marble Game for 2 Players or AI</span></nav>
+<nav data-seo-breadcrumb="pilot" aria-label="Breadcrumb" style="max-width:860px;margin:16px auto 32px;padding:0 16px;font-size:.85rem;line-height:1.6"><a href="/">Home</a> <span aria-hidden="true">›</span> <a href="/game/">Games</a> <span aria-hidden="true">›</span> <span aria-current="page">Marble Flick – Free Browser Marble Game for 2 Players or AI</span></nav>
 
     <div id="gameWrap">
-      <h2>Marble Flick</h2>
+      <h1>Marble Flick – 2 Player &amp; AI Browser Game</h1>
       <div id="aiBar">
-        <button class="ai-btn active" id="modeHuman">2P Mode</button>
-        <button class="ai-btn" id="modeAI">AI Mode</button>
+        <button type="button" class="ai-btn active" id="modeHuman" aria-pressed="true">2P Mode</button>
+        <button type="button" class="ai-btn" id="modeAI" aria-pressed="false">AI Mode</button>
       </div>
+      <div id="marbleFlickInstructions">Drag one of your marbles backward, then release to flick. Knock all opponent marbles outside the circle.</div>
       <div id="info">
         <span id="descHuman"> Both play manually.<br />Drag inside the circle! </span>
         <span id="descAI" style="display: none"> You (black), AI (white).<br />Drag inside the circle! </span>
       </div>
-      <div id="turn">Black's Turn ●</div>
-      <canvas id="board" width="360" height="360"></canvas>
-      <div id="winnerBanner"></div>
+      <div id="turn" aria-live="polite">Black's Turn ●</div>
+      <canvas id="board" width="360" height="360" aria-label="Marble Flick game board" aria-describedby="marbleFlickInstructions"></canvas>
+      <div id="winnerBanner" role="status" aria-live="polite"></div>
       <div class="btn-group">
-        <button id="restartBtn">Restart</button>
-        <button id="otherGamesBtn" onclick="window.location.href='../'">Other Games</button>
+        <button type="button" id="restartBtn">Restart</button>
+        <a id="otherGamesBtn" href="/game/">Browse all games</a>
       </div>
     </div>
     <section style="max-width:470px;margin:18px auto;padding:18px;background:#fff;border-radius:16px;line-height:1.6;font-family:system-ui,sans-serif">
-      <h1>How to play Marble Flick</h1>
+      <h2>How to play Marble Flick</h2>
       <p>Choose 2P Mode or AI Mode. With a mouse or touch, pull one of your marbles backward and release to flick it. Knock your opponent's marbles outside the circle while keeping at least one of yours inside.</p>
       <p>The turn changes after each shot. Use Restart to reset the board. No account or download is required.</p>
-      <p>Game guide reviewed: 2026-08-12</p>
+      <p>Game guide reviewed: 2026-09-21</p>
     </section>
     <script>
       // ===== Variables & Setup =====
@@ -269,11 +270,38 @@
         dragFrom = null,
         dragTo = null;
       let animation = false;
+      let phase = "READY";
+      let gameVersion = 0;
+      let activeMotionCount = 0;
+      let activeShotToken = 0;
       let aiMode = false;
       let particles = [];
       let aiTimeout = null;
       let winner = null;
       let lastSurvivorColor = null;
+      const STATS_KEY = "emfls:game:marbleflick:v1";
+      let aiStats = loadStats();
+      let roundStatsRecorded = false;
+
+      function determineRoundResult(blackAlive, whiteAlive) {
+        if (blackAlive === 0 && whiteAlive === 0) return "draw";
+        if (blackAlive === 0 && whiteAlive > 0) return "white";
+        if (whiteAlive === 0 && blackAlive > 0) return "black";
+        return null;
+      }
+      function normalizeStats(value) {
+        if (!value || typeof value !== "object") return { wins: 0, losses: 0, draws: 0 };
+        return { wins: Number.isFinite(value.wins) && value.wins >= 0 ? value.wins : 0, losses: Number.isFinite(value.losses) && value.losses >= 0 ? value.losses : 0, draws: Number.isFinite(value.draws) && value.draws >= 0 ? value.draws : 0 };
+      }
+      function loadStats() { try { return normalizeStats(JSON.parse(localStorage.getItem(STATS_KEY) || "null")); } catch (e) { return normalizeStats(null); } }
+      function saveStats() { try { localStorage.setItem(STATS_KEY, JSON.stringify(aiStats)); } catch (e) {} updateStatsText(); }
+      function updateStatsText() { const el=document.getElementById("aiStats"); if (el) el.textContent=`AI record — Wins: ${aiStats.wins} · Losses: ${aiStats.losses} · Draws: ${aiStats.draws}`; }
+      function recordAiResult(result) { if (!aiMode || roundStatsRecorded) return; roundStatsRecorded=true; if(result === "black") aiStats.wins++; else if(result === "white") aiStats.losses++; else if(result === "draw") aiStats.draws++; saveStats(); }
+      function cancelAiTimer() { if (aiTimeout !== null) { clearTimeout(aiTimeout); aiTimeout=null; } }
+      function canAiAct(scheduledVersion) { return scheduledVersion === gameVersion && aiMode && turn === 1 && phase === "READY" && winner === null && activeMotionCount === 0 && !dragging; }
+      function scheduleAiMove(delay=700) { cancelAiTimer(); const scheduledVersion=gameVersion; aiTimeout=setTimeout(()=>{ aiTimeout=null; aiAuto(scheduledVersion, true); }, delay); }
+      function setModeState() { document.getElementById("modeHuman").setAttribute("aria-pressed", String(!aiMode)); document.getElementById("modeAI").setAttribute("aria-pressed", String(aiMode)); }
+      function settleShot(token) { if (token !== activeShotToken || phase !== "MOVING" || activeMotionCount !== 0) return; const blacks=pieces.filter(p=>p.alive&&p.color==="black").length; const whites=pieces.filter(p=>p.alive&&p.color==="white").length; const result=determineRoundResult(blacks,whites); if(result){ phase="ROUND_OVER"; document.getElementById("modeHuman").disabled=false; document.getElementById("modeAI").disabled=false; showWinner(result); recordAiResult(result); return; } phase="READY"; document.getElementById("modeHuman").disabled=false; document.getElementById("modeAI").disabled=false; turn=1-turn; updateTurnText(); if(aiMode) scheduleAiMove(550); }
 
       function resizeCanvas() {
         let minEdge = Math.min(window.innerWidth * 0.94, 360);
@@ -287,6 +315,7 @@
       window.addEventListener("resize", resizeCanvas);
 
       function resetGame() {
+        gameVersion++; activeShotToken++; phase="READY"; activeMotionCount=0; cancelAiTimer(); roundStatsRecorded=false; document.getElementById("modeHuman").disabled=false; document.getElementById("modeAI").disabled=false;
         let anglesBlack = [0, 45, 90, 135];
         let anglesWhite = [180, 225, 270, 315];
         let gap = radius - pieceRadius - 70;
@@ -311,13 +340,13 @@
         dragging = animation = false;
         dragPiece = dragFrom = dragTo = null;
         clearParticles();
-        if (aiTimeout) clearTimeout(aiTimeout);
         winner = null;
         lastSurvivorColor = null;
         document.getElementById("winnerBanner").style.display = "none";
         updateTurnText();
         draw();
-        setTimeout(aiAuto, 600);
+        updateStatsText();
+        if (aiMode) scheduleAiMove(600);
       }
 
       function updateTurnText() {
@@ -461,67 +490,24 @@
         }
       }
 
-      function flickPiece(piece, dx, dy) {
-        let vx = dx * 0.39,
-          vy = dy * 0.39;
-        let running = true;
-        dragPiece = piece;
-        animation = true;
-
-        function animate() {
-          updateParticles();
-          piece.x += vx;
-          piece.y += vy;
-          vx *= 0.92;
-          vy *= 0.92;
-          for (const other of pieces) {
-            if (other === piece || !other.alive) continue;
-            const dist = Math.hypot(piece.x - other.x, piece.y - other.y);
-            if (dist < pieceRadius * 2) {
-              const angle = Math.atan2(other.y - piece.y, other.x - piece.x);
-              const overlap = pieceRadius * 2 - dist;
-              piece.x -= (Math.cos(angle) * overlap) / 2;
-              piece.y -= (Math.sin(angle) * overlap) / 2;
-              other.x += (Math.cos(angle) * overlap) / 2;
-              other.y += (Math.sin(angle) * overlap) / 2;
-              let power = Math.sqrt(vx * vx + vy * vy) * 0.92;
-              let transmitVx = Math.cos(angle) * power;
-              let transmitVy = Math.sin(angle) * power;
-              vx *= 0.22;
-              vy *= 0.22;
-              addParticle(other.x, other.y, other.color === "black" ? "#2b75ff" : "#f2c301", 14);
-              setTimeout(() => flickPiece(other, transmitVx, transmitVy), 8);
-            }
-          }
-          if (!isInsideBoard(piece.x, piece.y)) {
-            piece.alive = false;
-            addParticle(piece.x, piece.y, piece.color === "black" ? "#3058ff" : "#ffcc00", 26);
-            running = false;
-          }
-          let aliveColors = [...new Set(pieces.filter((p) => p.alive).map((p) => p.color))];
-          if (aliveColors.length === 1) {
-            lastSurvivorColor = aliveColors[0];
-          }
-          draw();
-
-          if (Math.abs(vx) < 0.5 && Math.abs(vy) < 0.5) {
-            running = false;
-          }
-          if (running) {
-            requestAnimationFrame(animate);
-          } else {
-            dragPiece = null;
-            animation = false;
-            clearParticles();
-            draw();
-            checkWin();
-            setTimeout(aiAuto, 550);
-          }
+      function flickPiece(piece, dx, dy, token = null, alreadyCounted = false) {
+        if (token === null) { activeShotToken++; token=activeShotToken; activeMotionCount=0; phase="MOVING"; document.getElementById("modeHuman").disabled=true; document.getElementById("modeAI").disabled=true; }
+        if (token !== activeShotToken || gameVersion < 0) return;
+        if (!alreadyCounted) activeMotionCount++;
+        let vx=dx*0.39, vy=dy*0.39; let running=true; dragPiece=piece; animation=true;
+        function animate(){
+          if(token!==activeShotToken || phase!=="MOVING") return;
+          updateParticles(); piece.x+=vx; piece.y+=vy; vx*=0.92; vy*=0.92;
+          for(const other of pieces){ if(other===piece||!other.alive) continue; const dist=Math.hypot(piece.x-other.x,piece.y-other.y); if(dist<pieceRadius*2){ const angle=Math.atan2(other.y-piece.y,other.x-piece.x); const overlap=pieceRadius*2-dist; piece.x-=Math.cos(angle)*overlap/2; piece.y-=Math.sin(angle)*overlap/2; other.x+=Math.cos(angle)*overlap/2; other.y+=Math.sin(angle)*overlap/2; const power=Math.sqrt(vx*vx+vy*vy)*0.92; const transmitVx=Math.cos(angle)*power, transmitVy=Math.sin(angle)*power; vx*=0.22; vy*=0.22; addParticle(other.x,other.y,other.color==="black"?"#2b75ff":"#f2c301",14); activeMotionCount++; setTimeout(()=>{ if(token===activeShotToken && phase==="MOVING") flickPiece(other,transmitVx,transmitVy,token,true); else activeMotionCount--; },8); } }
+          if(!isInsideBoard(piece.x,piece.y)){ piece.alive=false; addParticle(piece.x,piece.y,piece.color==="black"?"#3058ff":"#ffcc00",26); running=false; }
+          draw(); if(Math.abs(vx)<0.5&&Math.abs(vy)<0.5) running=false;
+          if(running) requestAnimationFrame(animate); else { activeMotionCount--; if(activeMotionCount===0){ dragPiece=null; animation=false; clearParticles(); draw(); settleShot(token); } }
         }
         animate();
       }
 
       function showWinner(winnerColor) {
+        if (winner !== null) return;
         const banner = document.getElementById("winnerBanner");
         if (winnerColor === "white") {
           banner.textContent = "White Wins! 🎉";
@@ -541,35 +527,12 @@
       }
 
       function checkWin() {
-        const blacks = pieces.filter((p) => p.alive && p.color === "black").length;
-        const whites = pieces.filter((p) => p.alive && p.color === "white").length;
-        if (blacks === 0 || whites === 0) {
-          setTimeout(() => {
-            if (lastSurvivorColor) {
-              showWinner(lastSurvivorColor);
-            } else {
-              showWinner(null);
-            }
-          }, 350);
-        }
+        const blacks=pieces.filter(p=>p.alive&&p.color==="black").length; const whites=pieces.filter(p=>p.alive&&p.color==="white").length; const result=determineRoundResult(blacks,whites); if(result) settleShot(activeShotToken);
       }
 
-      document.getElementById("modeHuman").onclick = () => {
-        aiMode = false;
-        document.getElementById("modeHuman").classList.add("active");
-        document.getElementById("modeAI").classList.remove("active");
-        document.getElementById("descHuman").style.display = "";
-        document.getElementById("descAI").style.display = "none";
-        setTimeout(aiAuto, 300);
-      };
-      document.getElementById("modeAI").onclick = () => {
-        aiMode = true;
-        document.getElementById("modeHuman").classList.remove("active");
-        document.getElementById("modeAI").classList.add("active");
-        document.getElementById("descHuman").style.display = "none";
-        document.getElementById("descAI").style.display = "";
-        setTimeout(aiAuto, 300);
-      };
+      function setMode(nextAiMode) { if (phase === "MOVING") return; cancelAiTimer(); gameVersion++; aiMode=nextAiMode; setModeState(); document.getElementById("modeHuman").classList.toggle("active",!aiMode); document.getElementById("modeAI").classList.toggle("active",aiMode); document.getElementById("descHuman").style.display=aiMode?"none":""; document.getElementById("descAI").style.display=aiMode?"":"none"; resetGame(); }
+      document.getElementById("modeHuman").onclick=()=>setMode(false);
+      document.getElementById("modeAI").onclick=()=>setMode(true);
 
       function simulateShot(sel, angle, power, my, op) {
         let victims = [];
@@ -594,10 +557,9 @@
         return victims;
       }
 
-      function aiAuto() {
-        if (animation || dragging || !aiMode || turn !== 1 || winner) return;
-        if (aiTimeout) clearTimeout(aiTimeout);
-        aiTimeout = setTimeout(() => {
+      function aiAuto(scheduledVersion = gameVersion, executeNow = false) {
+        if (!canAiAct(scheduledVersion)) return;
+        if (!executeNow) { scheduleAiMove(700); return; }
           let my = pieces.filter((p) => p.alive && p.color === "white");
           let op = pieces.filter((p) => p.alive && p.color === "black");
           if (my.length == 0 || op.length == 0) return;
@@ -655,9 +617,6 @@
           let start = clampInBoard(sel.x, sel.y);
           let end = clampInBoard(dragX, dragY);
           flickPiece(sel, start.x - end.x, start.y - end.y);
-          turn = 0;
-          updateTurnText();
-        }, 700);
       }
 
       function pointerPos(e) {
@@ -675,6 +634,7 @@
       canvas.addEventListener("touchstart", onPointerDown, { passive: false });
       canvas.addEventListener("touchmove", onPointerMove, { passive: false });
       canvas.addEventListener("touchend", onPointerUp, { passive: false });
+      canvas.addEventListener("touchcancel", (e) => { dragging=false; dragPiece=null; dragFrom=null; dragTo=null; draw(); e.preventDefault(); }, { passive: false });
 
       function onPointerDown(e) {
         if (dragging || animation || (aiMode && turn === 1) || winner) return;
@@ -710,8 +670,6 @@
             dy *= maxPow / dragLen;
           }
           flickPiece(dragPiece, dx, dy);
-          turn = 1 - turn;
-          updateTurnText();
         }
         dragPiece = null;
         dragging = false;
@@ -722,7 +680,15 @@
       }
 
       document.getElementById("restartBtn").onclick = resetGame;
+      document.getElementById("resetStatsBtn").onclick = () => { aiStats={wins:0,losses:0,draws:0}; try { localStorage.removeItem(STATS_KEY); } catch(e) {} updateStatsText(); };
+      updateStatsText();
 
+      window.MarbleFlickTest = {
+        determineRoundResult, normalizeStats, canAiAct, scheduleAiMove, cancelAiTimer, settleShot, recordAiResult,
+        getState: () => ({ gameVersion, phase, turn, aiMode, winner, activeMotionCount, activeShotToken, stats: { ...aiStats } }),
+        setState: (next) => { if ("gameVersion" in next) gameVersion=next.gameVersion; if ("phase" in next) phase=next.phase; if ("turn" in next) turn=next.turn; if ("aiMode" in next) aiMode=next.aiMode; if ("winner" in next) winner=next.winner; if ("activeMotionCount" in next) activeMotionCount=next.activeMotionCount; if ("activeShotToken" in next) activeShotToken=next.activeShotToken; if ("roundStatsRecorded" in next) roundStatsRecorded=next.roundStatsRecorded; },
+        resetStats: () => { aiStats={wins:0,losses:0,draws:0}; roundStatsRecorded=false; }
+      };
       resizeCanvas();
       resetGame();
     </script>
@@ -797,11 +763,13 @@
 
 <!-- sixth-hundred-ga4-priority-2026-08-11 -->
 <style>div[id^="aswift_"]{max-width:100%!important;overflow:hidden}</style>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","dateModified":"2026-08-11","url":"https://emfls.github.io/game/MarbleFlick/"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"Marble Flick","description":"Play Marble Flick, a fast and simple online flicking board game! Challenge a friend or AI on mobile. Fun, quick, and totally free. No download needed.","url":"https://emfls.github.io/game/MarbleFlick/","inLanguage":"en","gamePlatform":"Web Browser","isAccessibleForFree":true,"dateModified":"2026-09-21","playMode":["SinglePlayer","MultiPlayer"]}</script>
 <section data-trust-category="game" style="max-width:860px;margin:24px auto;padding:20px;border:1px solid #dbe3ee;border-radius:12px;background:#f8fafc;color:#263238;line-height:1.7">
   <h2 style="margin-top:0">Scope and limitations</h2>
-  <p>Reviewed on August 11, 2026. This game is for entertainment and practice; random, timing, and control results can vary by device, browser, and input method.</p>
-  <p><a href="/game/MarbleFlick/">Related games</a></p>
+  <p>Reviewed on September 21, 2026. This game is for entertainment and practice; random, timing, and control results can vary by device, browser, and input method.</p>
+  <p>AI record is stored only in this browser on this device.</p>
+  <p id="aiStats">AI record — Wins: 0 · Losses: 0 · Draws: 0</p><button type="button" id="resetStatsBtn">Reset local stats</button>
+  <p><a href="/game/">Browse all games</a></p>
 </section>
 
 <section data-related-reading="seo-pilot" aria-labelledby="related-reading-title" style="max-width:860px;margin:80px auto;padding:24px;border:1px solid #dbe3ee;border-radius:12px;background:#f8fafc;line-height:1.7;clear:both">

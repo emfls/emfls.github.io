@@ -87,6 +87,10 @@
 
 ## P2 - Medium
 
+- [ ] 14 · Marble Flick — /game/MarbleFlick/
+  - Review branch only: protect the indexed low-sample page-one signal while repairing stale AI callbacks, chained-motion settlement, winner/turn authority, replay-local stats, semantics, accessibility, schema, and RSS propagation.
+  - English canary only; main merge, deployment, runtime/mobile QA, Google inspection, and coordinated locale rollout remain pending review.
+
 - [x] 13 · English Game Hub — /game/
   - Closed on main after the approved five-commit chain: 25-way repo/sitemap/hub parity with raw duplicate fail-closed checks, LadderGame repair, title/H1/trust copy, category/search UX, full-card anchors, exact category parity, MBTI boundary, CollectionPage-only schema, privacy/ad state, and RSS metadata parity.
   - Pages run `35593108059` succeeded for main SHA `eaf5f81d98`; production served 25 unique cards including LadderGame. Runtime/mobile and Search Console evidence are recorded as partial or not verified where unavailable. Child-to-hub recirculation remains a coordinated follow-up; 14/28/56-day checks remain pending.
