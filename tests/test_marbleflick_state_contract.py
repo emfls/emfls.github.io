@@ -58,6 +58,12 @@ assert(api.getState().phase === "READY" && api.getState().turn === 0 && api.getS
 api.setState({ aiMode: true, turn: 1, phase: "ROUND_OVER", winner: "black" }); api.scheduleAiMove(0);
 const roundOverCallback = [...timers.values()][0]; roundOverCallback();
 assert(api.getState().activeMotionCount === 0, "round-over stale callback");
+api.setState({ aiMode: true, turn: 1, phase: "MOVING", winner: null, activeMotionCount: 1, activeShotToken: 20 });
+api.scheduleTransferredMotion({}, 1, 1, 20, 8);
+const oldCollisionCallback = [...timers.values()][0]; api.resetGame(); oldCollisionCallback();
+assert(api.getState().activeMotionCount === 0 && api.getState().phase === "READY", "stale collision poisoned new round");
+api.setState({ aiMode: true, turn: 1, phase: "READY", winner: null, activeMotionCount: 0 });
+assert(api.canAiAct(api.getState().gameVersion), "new round AI eligibility poisoned by stale collision");
 api.setState({ aiMode: false, turn: 0, phase: "MOVING", winner: null, activeMotionCount: 2, activeShotToken: 9 });
 const versionBeforeModeAttempt=api.getState().gameVersion; api.setMode(true);
 assert(api.getState().gameVersion === versionBeforeModeAttempt && api.getState().phase === "MOVING", "moving mode toggle changed state");
@@ -73,6 +79,7 @@ setTimeout(() => {
   assert(api.getState().turn === 0, "early settlement changed turn");
   api.setState({ activeMotionCount: 0 }); api.settleShot(9);
   assert(api.getState().turn === 1, "final settlement did not hand off turn");
+  const isolatedStats = api.getState().stats; api.setState({ aiMode: false, roundStatsRecorded: false }); api.recordAiResult("black"); api.recordAiResult("white"); api.recordAiResult("draw"); assert(JSON.stringify(api.getState().stats) === JSON.stringify(isolatedStats), "2P changed AI stats");
   api.resetStats(); api.setState({ aiMode: true, roundStatsRecorded: false });
   api.recordAiResult("black"); api.recordAiResult("black");
   assert(api.getState().stats.wins === 1, "winner stats double counted");
@@ -84,8 +91,20 @@ setTimeout(() => {
     assert "actual-js-contract-pass" in result.stdout
 
 
+def run_storage_failure_checks():
+    script = r'''
+const fs=require("fs"),vm=require("vm"); const html=fs.readFileSync(process.argv[1],"utf8"); const js=html.match(/<script>\s*\/\/ ===== Variables & Setup =====([\s\S]*?)<\/script>/)[1]; const assert=(v,m)=>{if(!v)throw Error(m)};
+function boot(mode){ const elements={}; const noop=()=>{}; const make=id=>elements[id]={id,style:{},disabled:false,textContent:"",classList:{add:noop,remove:noop,toggle:noop},setAttribute:noop,addEventListener:noop,getBoundingClientRect:()=>({left:0,top:0})}; ["board","modeHuman","modeAI","descHuman","descAI","turn","winnerBanner","restartBtn"].forEach(make); elements.board.getContext=()=>new Proxy({}, {get:()=>noop}); let timers=new Map(), n=1; const document={readyState:"loading",getElementById:id=>elements[id]||null,querySelector:()=>null,addEventListener:noop}; let removed=null; const storage={getItem:()=>{if(mode==="get")throw Error("blocked");return null},setItem:()=>{if(mode==="set")throw Error("quota")},removeItem:key=>{removed=key;if(mode==="remove")throw Error("blocked")}}; const sandbox={window:{innerWidth:360,addEventListener:noop},document,localStorage:storage,console,Math,JSON,Number,setTimeout:fn=>{let id=n++;timers.set(id,fn);return id},clearTimeout:id=>timers.delete(id),requestAnimationFrame:fn=>{let id=n++;timers.set(id,fn);return id},cancelAnimationFrame:id=>timers.delete(id)}; vm.runInNewContext(js,sandbox); const api=sandbox.window.MarbleFlickTest; assert(api.getState().phase==="READY"&&api.getState().pieces===8,mode+" init"); if(mode==="set"){api.setState({aiMode:true,roundStatsRecorded:false}); api.recordAiResult("black"); assert(api.getState().stats.wins===1,"set throw lost memory stat")} if(mode==="remove"){api.resetLocalStats(); assert(removed==="emfls:game:marbleflick:v1"&&api.getState().stats.wins===0,"remove throw reset")} }
+boot("get"); boot("set"); boot("remove"); console.log("storage-failure-pass");
+'''
+    result=subprocess.run(["node","-e",script,str(PAGE)],capture_output=True,text=True,timeout=5)
+    assert result.returncode == 0, result.stderr or result.stdout
+    assert "storage-failure-pass" in result.stdout
+
+
 def test_marbleflick_actual_js_state_contract():
     run_node_checks()
+    run_storage_failure_checks()
 
 
 def test_marbleflick_page_contract():

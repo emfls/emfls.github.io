@@ -492,6 +492,14 @@
         }
       }
 
+      function scheduleTransferredMotion(piece, vx, vy, token, delay = 8) {
+        activeMotionCount++;
+        setTimeout(() => {
+          if (token !== activeShotToken || phase !== "MOVING") return;
+          flickPiece(piece, vx, vy, token, true);
+        }, delay);
+      }
+
       function flickPiece(piece, dx, dy, token = null, alreadyCounted = false) {
         if (token === null) { activeShotToken++; token=activeShotToken; activeMotionCount=0; phase="MOVING"; document.getElementById("modeHuman").disabled=true; document.getElementById("modeAI").disabled=true; }
         if (token !== activeShotToken || gameVersion < 0) return;
@@ -500,7 +508,7 @@
         function animate(){
           if(token!==activeShotToken || phase!=="MOVING") return;
           updateParticles(); piece.x+=vx; piece.y+=vy; vx*=0.92; vy*=0.92;
-          for(const other of pieces){ if(other===piece||!other.alive) continue; const dist=Math.hypot(piece.x-other.x,piece.y-other.y); if(dist<pieceRadius*2){ const angle=Math.atan2(other.y-piece.y,other.x-piece.x); const overlap=pieceRadius*2-dist; piece.x-=Math.cos(angle)*overlap/2; piece.y-=Math.sin(angle)*overlap/2; other.x+=Math.cos(angle)*overlap/2; other.y+=Math.sin(angle)*overlap/2; const power=Math.sqrt(vx*vx+vy*vy)*0.92; const transmitVx=Math.cos(angle)*power, transmitVy=Math.sin(angle)*power; vx*=0.22; vy*=0.22; addParticle(other.x,other.y,other.color==="black"?"#2b75ff":"#f2c301",14); activeMotionCount++; setTimeout(()=>{ if(token===activeShotToken && phase==="MOVING") flickPiece(other,transmitVx,transmitVy,token,true); else activeMotionCount--; },8); } }
+          for(const other of pieces){ if(other===piece||!other.alive) continue; const dist=Math.hypot(piece.x-other.x,piece.y-other.y); if(dist<pieceRadius*2){ const angle=Math.atan2(other.y-piece.y,other.x-piece.x); const overlap=pieceRadius*2-dist; piece.x-=Math.cos(angle)*overlap/2; piece.y-=Math.sin(angle)*overlap/2; other.x+=Math.cos(angle)*overlap/2; other.y+=Math.sin(angle)*overlap/2; const power=Math.sqrt(vx*vx+vy*vy)*0.92; const transmitVx=Math.cos(angle)*power, transmitVy=Math.sin(angle)*power; vx*=0.22; vy*=0.22; addParticle(other.x,other.y,other.color==="black"?"#2b75ff":"#f2c301",14); scheduleTransferredMotion(other,transmitVx,transmitVy,token,8); } }
           if(!isInsideBoard(piece.x,piece.y)){ piece.alive=false; addParticle(piece.x,piece.y,piece.color==="black"?"#3058ff":"#ffcc00",26); running=false; }
           draw(); if(Math.abs(vx)<0.5&&Math.abs(vy)<0.5) running=false;
           if(running) requestAnimationFrame(animate); else { activeMotionCount--; if(activeMotionCount===0){ dragPiece=null; animation=false; clearParticles(); draw(); settleShot(token); } }
@@ -684,7 +692,7 @@
       document.getElementById("restartBtn").onclick = resetGame;
 
       window.MarbleFlickTest = {
-        determineRoundResult, normalizeStats, canAiAct, scheduleAiMove, cancelAiTimer, settleShot, recordAiResult, setMode, resetGame, resetLocalStats, loadStats, saveStats,
+        determineRoundResult, normalizeStats, canAiAct, scheduleAiMove, scheduleTransferredMotion, cancelAiTimer, settleShot, recordAiResult, setMode, resetGame, resetLocalStats, loadStats, saveStats,
         getState: () => ({ gameVersion, phase, turn, aiMode, winner, activeMotionCount, activeShotToken, pieces: pieces.filter(p=>p.alive).length, stats: { ...aiStats } }),
         setState: (next) => { if ("gameVersion" in next) gameVersion=next.gameVersion; if ("phase" in next) phase=next.phase; if ("turn" in next) turn=next.turn; if ("aiMode" in next) aiMode=next.aiMode; if ("winner" in next) winner=next.winner; if ("activeMotionCount" in next) activeMotionCount=next.activeMotionCount; if ("activeShotToken" in next) activeShotToken=next.activeShotToken; if ("roundStatsRecorded" in next) roundStatsRecorded=next.roundStatsRecorded; },
         resetStats: () => { aiStats={wins:0,losses:0,draws:0}; roundStatsRecorded=false; }
