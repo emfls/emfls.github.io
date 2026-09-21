@@ -26,7 +26,7 @@ class SixthGa4PriorityBatchTest(unittest.TestCase):
             with self.subTest(page=rel):
                 html = (ROOT / rel).read_text(encoding="utf-8")
                 self.assertIn(f'href="{canonical}"', html)
-                expected_date = "2026-09-21" if rel in {"ru/game/MBTI/index.html", "cn/game/index.html"} else ("2026-08-25" if rel == "util/qrcode/index.html" else "2026-08-09")
+                expected_date = "2026-09-21" if rel in {"ru/game/MBTI/index.html", "es/game/STOPat5/index.html", "cn/game/index.html"} else ("2026-08-25" if rel == "util/qrcode/index.html" else "2026-08-09")
                 self.assertIn(expected_date, html)
                 self.assertIn(limitation, html)
                 self.assertIn("googletagmanager.com/gtag/js", html)
@@ -35,7 +35,7 @@ class SixthGa4PriorityBatchTest(unittest.TestCase):
                     self.assertNotIn("adsbygoogle", html)
                 else:
                     self.assertIn("pagead2.googlesyndication.com", html)
-                if rel not in {"ru/game/MBTI/index.html", "cn/game/index.html"}:
+                if rel not in {"ru/game/MBTI/index.html", "es/game/STOPat5/index.html", "cn/game/index.html"}:
                     self.assertIn('div[id^="aswift_"]', html)
                 schemas = re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)
                 parsed = [json.loads(item) for item in schemas]
@@ -43,6 +43,9 @@ class SixthGa4PriorityBatchTest(unittest.TestCase):
                 self.assertIn(schema_type, schema_types)
                 if rel in {"ru/game/MBTI/index.html", "cn/game/index.html"}:
                     self.assertNotIn("VideoGame", schema_types)
+                    self.assertNotIn("FAQPage", schema_types)
+                elif rel == "es/game/STOPat5/index.html":
+                    self.assertIn("VideoGame", schema_types)
                     self.assertNotIn("FAQPage", schema_types)
                 else:
                     self.assertIn("FAQPage", schema_types)

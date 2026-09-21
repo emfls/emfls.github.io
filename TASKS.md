@@ -13,6 +13,9 @@
 
 ## P1 - High
 
+- [ ] 12 · Spanish STOPat5 — `/es/game/STOPat5/`
+  - review branch only: preserve the fixed 5.000-second `performance.now()` ladder while adding signed early/late error, local personal best/level with safe storage, replay/reset/share/navigation, Spanish search identity, trust/accessibility/privacy copy, VideoGame-only schema, ES-specific stale batch repair, and focused regressions. Main merge/deployment remain pending review.
+
 - [x] 11 · Chinese Game Hub — `/cn/game/`
   - 완료: 2026-09-21. 승인 4-commit chain을 최신 main에 non-force 반영하고 Pages run `35568403530` success 및 production served HTML을 확인했다. Repo/sitemap/hub 25-way parity와 LadderGame, exact title/H1/lang, category/search intersection, 25 full-card anchors, visible category parity, honest controls, MBTI® trust copy, CollectionPage-only schema, privacy/AdSense state, generated RSS metadata parity, focused tests 8 passed를 확인했다. Runtime/mobile 390px은 `RUNTIME_NOT_VERIFIED` / `MOBILE_390_NOT_VERIFIED`, Google URL Inspection은 `SEARCH_CONSOLE_NOT_VERIFIED`, submission 없음, Naver는 `NAVER_NOT_PRIMARY`. 14/28/56일 measurement와 Notion final closure는 후속이다.
 
