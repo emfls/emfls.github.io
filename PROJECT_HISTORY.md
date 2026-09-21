@@ -689,3 +689,9 @@
 
 ## 2026-09-21 14:03 Keyword Hunter
 - Seeds: 40; New: 40; Rejected: 27; DB: 2673; Errors: 1; Top: 퇴직소득세계산기. Report: reports/keyword-hunter/2026-09-21-1403.md
+
+## 2026-09-21 — 13 · English Game Hub — REVIEW BRANCH
+- Scope is only `/game/` on `codex/en-13-game-hub-20260921`; main merge, deployment, Notion write, child pages, other locale hubs, and task 14 are out of scope. Baseline was GSC `CURRENT_GSC_ROW_ABSENT / GOOGLE_INDEX_NOT_CONFIRMED`, GA4 `78 views / 25 users / $0 / pageScore 73`, and `NAVER_NOT_PRIMARY`.
+- The review branch repairs the systemic directory omission: repo, sitemap, and hub inventory are contract-tested at 25 games with LadderGame included and no duplicate/ghost card. Cards are static full-card anchors with visible category labels, keyboard focus, exact category buttons, category/search intersection, and a polite empty state.
+- Search identity now states free/no-download/no-login browser play; the former “for killing time” positioning and speculative claims are removed. MBTI is explicitly an independent personality quiz, not the official MBTI assessment. CollectionPage remains the sole schema; canonical/OG, GA4 `G-QP5Q67GE5B`, privacy meaning, and ads-disabled directory state are preserved.
+- Child-to-hub recirculation remains a follow-up because multiple English child pages still link to `/`; child pages and `game/sitemap.xml` were not modified. RSS outcome is pending the clean-tree generator check; no manual feed edit is authorized. Focused tests and final review remain pending; status is `READY_FOR_REVIEW`, Notion `NOT_UPDATED_PENDING_REVIEW`.

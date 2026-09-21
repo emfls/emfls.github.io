@@ -87,6 +87,10 @@
 
 ## P2 - Medium
 
+- [ ] 13 · English Game Hub — /game/
+  - Review branch only: rebuild the English game directory around the complete 25-game inventory, including LadderGame, searchable category filtering, full-card anchors, trust copy, and CollectionPage metadata.
+  - Main merge, Pages deployment, runtime/mobile QA, and task 14 remain pending final review.
+
 - [ ] 주식 데이터 공통 Validation Layer 구축
   - 목적: ticker, company, exchange, price, market cap, PER, dividend yield, 52주 범위, 연간·분기 매출과 earnings를 한 규칙으로 검증한다.
   - 완료 조건: `NORMAL`, `MISSING`, `SUSPECT`, `ERROR` 상태 정의와 생성 차단·N/A 표시 정책, 샘플 회귀 테스트 구현.
