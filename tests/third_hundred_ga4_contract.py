@@ -1,5 +1,5 @@
-import json
 from pathlib import Path
+from tests.ga4_contract_helpers import assert_page_json_ld_contract
 ROOT = Path(__file__).resolve().parents[1]
 MARKER = "third-hundred-ga4-priority-2026-08-11"
 def assert_batch(test, batch):
@@ -14,7 +14,4 @@ def assert_batch(test, batch):
         test.assertIn(f"href=\"{hub}\"", source, relative)
         test.assertIn("G-QP5Q67GE5B", source, relative)
         test.assertIn("ca-pub-8830524482034754", source, relative)
-        start=source.index(f"<!-- {MARKER} -->"); a=source.index("<script type=\"application/ld+json\">",start)+len("<script type=\"application/ld+json\">"); b=source.index("</script>",a)
-        payload = json.loads(source[a:b])
-        test.assertEqual(payload["@type"], schema_type, relative)
-        test.assertGreaterEqual(payload["dateModified"], "2026-08-11", relative)
+        assert_page_json_ld_contract(test, source, relative, schema_type)

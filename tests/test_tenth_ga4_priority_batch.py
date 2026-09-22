@@ -12,7 +12,7 @@ PAGES = {
     "util/time-diff/index.html": ("WebApplication", "time zone", "Related"),
     "cn/game/TetrisGame/index.html": ("VideoGame", "操作", "相关"),
     "cn/util/index.html": ("CollectionPage", "浏览器", "相关"),
-    "game/index.html": ("CollectionPage", "browser", "Related"),
+    "game/index.html": ("CollectionPage", "browser", "game-discovery"),
     "kor/report/camp/bonghwa.html": ("WebPage", "야영", "관련"),
     "kor/report/camp/cheongsong.html": ("WebPage", "야영", "관련"),
 }
@@ -29,8 +29,16 @@ class TenthGa4PriorityBatchTest(unittest.TestCase):
                 self.assertGreaterEqual(max(review_dates), "2026-08-10")
                 self.assertIn(f'"@type":"{schema_type}"', compact)
                 self.assertIn(limitation.lower(), html.lower())
-                self.assertIn(related_label, html)
-                self.assertIn("max-width:100%", compact)
+                if related_label == "game-discovery":
+                    self.assertIn('id="searchInput"', html)
+                    self.assertIn('class="category-button"', html)
+                    self.assertIn('class="game-card"', html)
+                    self.assertIn('href="MarbleFlick/"', html)
+                    self.assertIn(".filters{display:flex;flex-wrap:wrap;", compact)
+                    self.assertIn("grid-template-columns:repeat(auto-fit,minmax(250px,1fr))", compact)
+                else:
+                    self.assertIn(related_label, html)
+                    self.assertIn("max-width:100%", compact)
 
 
 if __name__ == "__main__":

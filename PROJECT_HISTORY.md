@@ -1,5 +1,13 @@
 # PROJECT HISTORY
 
+## 2026-09-22 — P0 Support — CI Baseline GA4 Contract Repair
+
+- PR #1의 SEO QA run `35706259953`은 `Run unittest regression suite`에서 694 tests, 2 failures / 3 errors로 실패했다. affected five cases는 PR #1 diff에 없는 main 기존 페이지와 legacy GA4 batch contract였으며, main `11f3d74ad4a1586f0f6b034e2fb4f6d737ccc622`에서 재현했다.
+- Ukraine, Togo, MBTI의 기대 JSON-LD는 유효하고 canonical/date 기준을 만족하지만 GA4 marker 앞에 있어 old helpers의 marker-after positional lookup이 실패했다. MarbleFlick은 dedicated page contract와 PROJECT_HISTORY main closure가 `/game/` breadcrumb를 정의하는데 sixth-hundred manifest가 self-link를 요구했다. English game hub는 dedicated inventory contract가 25개 게임 카드, 검색/카테고리 탐색 및 반응형 grid를 정의하는데 old batch test는 literal `Related`와 `max-width:100%`를 요구했다. 다섯 건 모두 `STALE_TEST_CONTRACT`로 확정했으며 user-facing HTML은 수정하지 않았다.
+- `tests/ga4_contract_helpers.py`를 추가해 페이지 내 JSON-LD 위치와 무관하게 valid expected-type payload를 파싱하고 canonical URL과 `dateModified >= 2026-08-11`을 검증한다. 기존 marker exactly-once, expected type, trust category, responsive constraint, hub link, GA4/AdSense IDs 계약은 유지했다. MarbleFlick hub expectation은 `/game/`로 수정했고 game hub는 검색 input, category control, game-card link, flex-wrap/auto-fit responsive grid를 검증한다.
+- Exact five tests 통과; MarbleFlick state/page/RSS 및 game hub inventory tests 8 passed; full unittest 694 passed; full pytest 1,006 passed; `git diff --check` 통과. No page/content/production change.
+- 별도 branch `codex/ci-baseline-ga4-contract-repair`는 origin/main SHA `11f3d74ad4a1586f0f6b034e2fb4f6d737ccc622` 기반이다. GitHub push/PR 및 실제 SEO QA 결과는 아직 pending이며, PR #1은 수정/merge하지 않는다.
+
 ## 2026-09-21 — 08 · Date Difference Calculator — MAIN CLOSURE
 
 - Previous main `aab3343cb8`에 승인 Core `01bb82270b`, RSS `a4674597d5`, Final UI correction `2a561dee37`을 non-force로 반영했다. 현재 main은 `2a561dee37`이며 force push는 사용하지 않았다. Closure commit은 이 section을 포함한 closure commit이다.
