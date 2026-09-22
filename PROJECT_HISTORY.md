@@ -6,6 +6,7 @@
 - Ukraine, Togo, MBTI의 기대 JSON-LD는 유효하고 canonical/date 기준을 만족하지만 GA4 marker 앞에 있어 old helpers의 marker-after positional lookup이 실패했다. MarbleFlick은 dedicated page contract와 PROJECT_HISTORY main closure가 `/game/` breadcrumb를 정의하는데 sixth-hundred manifest가 self-link를 요구했다. English game hub는 dedicated inventory contract가 25개 게임 카드, 검색/카테고리 탐색 및 반응형 grid를 정의하는데 old batch test는 literal `Related`와 `max-width:100%`를 요구했다. 다섯 건 모두 `STALE_TEST_CONTRACT`로 확정했으며 user-facing HTML은 수정하지 않았다.
 - `tests/schema_contract_helpers.py`를 추가해 페이지 내 JSON-LD 위치와 무관하게 valid expected-type payload를 파싱하고 canonical URL과 `dateModified >= 2026-08-11`을 검증한다. 기존 marker exactly-once, expected type, trust category, responsive constraint, hub link, GA4/AdSense IDs 계약은 유지했다. MarbleFlick hub expectation은 `/game/`로 수정했고 game hub는 검색 input, category control, game-card link, flex-wrap/auto-fit responsive grid를 검증한다.
 - Exact five tests 통과; MarbleFlick state/page/RSS 및 game hub inventory tests 8 passed; full unittest 694 passed; full pytest 1,006 passed; `git diff --check` 통과. No page/content/production change.
+- 최종 SEO QA run `35712200413`은 SUCCESS (full unittest 694 passed, full pytest 1,006 passed)였고 PR #2는 squash merge됐다. main merge commit은 `16c88b0e426c8283f54c757b7721b225a93c49cb`이다. PR #1은 이 main 위에 rebase 후 head `3bad46fd82cf94a43ae1f7ac07da2e7b9afdecea`로 갱신했으며 revalidation SEO QA run `35714221956`도 SUCCESS였다.
 
 ## 2026-09-22 — P0 Revenue Growth #02 — CI guard false positive follow-up
 

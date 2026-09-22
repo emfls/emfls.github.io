@@ -4,11 +4,11 @@
 
 ## P0 - Critical
 
-- [ ] P0 Support — CI Baseline GA4 Contract 5건 복구
+- [x] P0 Support — CI Baseline GA4 Contract 5건 복구
   - 목적: 기존 main의 unittest baseline에서 실패한 5개 GA4 batch contract를 최신 페이지 의미와 정합화해 P0 Revenue Growth #02 PR을 재검증한다.
   - 분류: Ukraine / Togo / MBTI JSON-LD 위치 검사는 `STALE_TEST_CONTRACT`; MarbleFlick의 자기 링크 및 English game hub의 `Related`/고정 max-width 문구 검사는 최근 전용 페이지 계약과 충돌하는 `STALE_TEST_CONTRACT`. 페이지 파일은 수정하지 않는다.
   - 변경: 공통 semantic JSON-LD parser가 페이지 내 JSON-LD 스크립트 위치와 무관하게 기대 `@type`, canonical URL, 유효 JSON 및 `dateModified >= 2026-08-11`을 확인한다. MarbleFlick expected hub를 `/game/`로 맞추고 game hub 배치 검사는 실제 검색/필터/게임카드/반응형 grid affordance를 확인한다.
-  - 검증: exact 5 tests 및 MarbleFlick/game hub 전용 테스트 통과; 전체 unittest 694 passed; 전체 pytest 1,006 passed; `git diff --check` 통과. PR #2 run `35709859333`에서 helper 경로명 때문에 guard 오탐이 확인되어 파일명을 `schema_contract_helpers.py`로 바꿨다. 재실행 SEO QA pending.
+  - 검증: exact 5 tests 및 MarbleFlick/game hub 전용 테스트 통과; 전체 unittest 694 passed; 전체 pytest 1,006 passed; `git diff --check` 통과. PR #2 SEO QA run `35712200413` SUCCESS 후 squash merge (`16c88b0e426c8283f54c757b7721b225a93c49cb`). PR #1은 새 main 위로 rebase한 head `3bad46fd82cf94a43ae1f7ac07da2e7b9afdecea`에서 SEO QA run `35714221956` SUCCESS.
 
 - 현재 확인된 배포 차단 또는 정책 위반 없음.
 

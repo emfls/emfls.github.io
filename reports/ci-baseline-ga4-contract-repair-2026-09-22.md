@@ -34,8 +34,8 @@ The five pre-existing main-branch unittest failures were stale test contracts, n
 - Full unittest: 694 passed.
 - Full pytest: 1,006 passed.
 - `git diff --check`: PASS.
-- First GitHub Actions SEO QA run `35709859333`: the guard rejected the newly named `ga4_contract_helpers.py` with `MONETIZATION_OR_ANALYTICS_CHANGED`. No guard change was made; the shared helper was renamed `schema_contract_helpers.py` and the exact/full local suites were rerun successfully. A new SEO QA run on PR #2 is pending.
+- First GitHub Actions SEO QA run `35709859333`: the guard rejected the newly named `ga4_contract_helpers.py` with `MONETIZATION_OR_ANALYTICS_CHANGED`. No guard change was made; the shared helper was renamed `schema_contract_helpers.py` and the exact/full local suites were rerun successfully. PR #2 final SEO QA run `35712200413` succeeded, including full unittest 694 and full pytest 1,006, and was squash-merged as `16c88b0e426c8283f54c757b7721b225a93c49cb`. PR #1 was rebased to main and its new head passed SEO QA run `35714221956`.
 
 ## Relation to P0 Revenue Growth #02
 
-This support branch is isolated from PR #1. Once this baseline repair is reviewed and merged, PR #1 must be updated onto the resulting main and its SEO QA rerun. Do not merge PR #1 as part of this repair. Do not begin P0 #03 until #02 has passed CI and post-merge GA4 Collection validation.
+This support work is complete and separate from PR #1. PR #1 revalidation passed after rebase; PR #1 itself remains open/draft pending the separately authorized merge and post-merge GA4 Collection validation. P0 #03 remains gated on that production validation.
