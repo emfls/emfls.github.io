@@ -34,6 +34,33 @@ def test_guard_rejects_protected_pages_and_monetization_code(tmp_path):
     assert {"PROTECTED_EXPERIMENT_CHANGED", "PROTECTED_WINNER_CHANGED", "MONETIZATION_OR_ANALYTICS_CHANGED"} <= set(errors)
 
 
+def test_guard_allows_only_ga4_collection_orchestration_workflow(tmp_path):
+    setup_data(tmp_path)
+
+    assert validate_launch(
+        tmp_path,
+        manifest([]),
+        [("M", ".github/workflows/ga4-collection.yml")],
+    ) == []
+    assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
+        tmp_path,
+        manifest([]),
+        [("M", ".github/workflows/ga4-collection.yaml")],
+    )
+
+
+def test_guard_continues_blocking_ads_runtime_assets(tmp_path):
+    setup_data(tmp_path)
+
+    errors = validate_launch(
+        tmp_path,
+        manifest([]),
+        [("M", "assets/js/adsense.js"), ("M", "assets/js/ad-loader.js")],
+    )
+
+    assert "MONETIZATION_OR_ANALYTICS_CHANGED" in errors
+
+
 def test_guard_allows_bounded_tool_completion_allowlist_for_new_tool(tmp_path):
     setup_data(tmp_path)
     assert validate_launch(

@@ -4,11 +4,11 @@
 
 ## P0 - Critical
 
-- [ ] P0 Support — CI Baseline GA4 Contract 5건 복구
+- [x] P0 Support — CI Baseline GA4 Contract 5건 복구
   - 목적: 기존 main의 unittest baseline에서 실패한 5개 GA4 batch contract를 최신 페이지 의미와 정합화해 P0 Revenue Growth #02 PR을 재검증한다.
   - 분류: Ukraine / Togo / MBTI JSON-LD 위치 검사는 `STALE_TEST_CONTRACT`; MarbleFlick의 자기 링크 및 English game hub의 `Related`/고정 max-width 문구 검사는 최근 전용 페이지 계약과 충돌하는 `STALE_TEST_CONTRACT`. 페이지 파일은 수정하지 않는다.
   - 변경: 공통 semantic JSON-LD parser가 페이지 내 JSON-LD 스크립트 위치와 무관하게 기대 `@type`, canonical URL, 유효 JSON 및 `dateModified >= 2026-08-11`을 확인한다. MarbleFlick expected hub를 `/game/`로 맞추고 game hub 배치 검사는 실제 검색/필터/게임카드/반응형 grid affordance를 확인한다.
-  - 검증: exact 5 tests 및 MarbleFlick/game hub 전용 테스트 통과; 전체 unittest 694 passed; 전체 pytest 1,006 passed; `git diff --check` 통과. PR #2 run `35709859333`에서 helper 경로명 때문에 guard 오탐이 확인되어 파일명을 `schema_contract_helpers.py`로 바꿨다. 재실행 SEO QA pending.
+  - 검증: exact 5 tests 및 MarbleFlick/game hub 전용 테스트 통과; 전체 unittest 694 passed; 전체 pytest 1,006 passed; `git diff --check` 통과. PR #2 SEO QA run `35712200413` SUCCESS 후 squash merge (`16c88b0e426c8283f54c757b7721b225a93c49cb`). PR #1은 새 main 위로 rebase한 head `3bad46fd82cf94a43ae1f7ac07da2e7b9afdecea`에서 SEO QA run `35714221956` SUCCESS.
 
 - 현재 확인된 배포 차단 또는 정책 위반 없음.
 
@@ -16,6 +16,12 @@
   - 목적: Search Console 노출이 있으나 탐색성이 낮은 `/kor/report/travel/`을 기존 canonical 그대로 실용적인 한국어 여행 정보 허브로 개선한다.
   - 완료 조건: 30–50개 실제 링크, 준비·지역·목적·주요 콘텐츠 탐색, GA4·AdSense·모바일·구조화 데이터, sitemap/content-index 보존, 회귀 테스트와 캠핑 P1 진단.
   - 완료 기록: 2026-09-13. 2.79MB/5,233링크 목록을 21.8KB/43개 고유 `/kor/` 목적지 허브로 교체하고 캠핑 후속 우선순위를 남양주→청주→담양→김포→경기도 광주로 정리했다.
+
+- [ ] P0 Revenue Growth #02 — GA4 refresh에서 최신 GSC 기회 신호 보존
+  - 근거: live main의 GA4 workflow가 `revenue_growth.py`에 GSC snapshot을 전달하지 않아 GA4 실행 후 page-performance의 Google 채널이 `NOT_CONNECTED`로 재생성될 수 있다. latest `gsc-latest.json` 110 rows를 병합한 temporary regeneration에서는 VERIFIED Google URL 106개와 OPPORTUNITY 38개가 확인됐다.
+  - 변경: GA4 workflow가 `data/performance/gsc-latest.json`을 함께 전달하도록 수정하고 workflow 계약 회귀 테스트를 추가했다. 콘텐츠 URL은 수정하지 않았다.
+  - 상태: `codex/p0-revenue-growth-02`에서 구현·검증; 아직 main 배포 전. GA4 Collection 1회 재실행 후 실제 artifact와 분류를 확인한다.
+  - CI follow-up: SEO QA run `35703819990`에서 `scripts/content_launch_guard.py`가 workflow 파일명 `ga4-collection.yml`을 analytics runtime 변경으로 오탐했다. exact-path allowlist와 runtime asset 차단 회귀를 같은 PR에 추가했으며, 새 원격 SEO QA green 확인 전 merge 금지.
 
 ## P1 - High
 

@@ -6,7 +6,26 @@
 - Ukraine, Togo, MBTI의 기대 JSON-LD는 유효하고 canonical/date 기준을 만족하지만 GA4 marker 앞에 있어 old helpers의 marker-after positional lookup이 실패했다. MarbleFlick은 dedicated page contract와 PROJECT_HISTORY main closure가 `/game/` breadcrumb를 정의하는데 sixth-hundred manifest가 self-link를 요구했다. English game hub는 dedicated inventory contract가 25개 게임 카드, 검색/카테고리 탐색 및 반응형 grid를 정의하는데 old batch test는 literal `Related`와 `max-width:100%`를 요구했다. 다섯 건 모두 `STALE_TEST_CONTRACT`로 확정했으며 user-facing HTML은 수정하지 않았다.
 - `tests/schema_contract_helpers.py`를 추가해 페이지 내 JSON-LD 위치와 무관하게 valid expected-type payload를 파싱하고 canonical URL과 `dateModified >= 2026-08-11`을 검증한다. 기존 marker exactly-once, expected type, trust category, responsive constraint, hub link, GA4/AdSense IDs 계약은 유지했다. MarbleFlick hub expectation은 `/game/`로 수정했고 game hub는 검색 input, category control, game-card link, flex-wrap/auto-fit responsive grid를 검증한다.
 - Exact five tests 통과; MarbleFlick state/page/RSS 및 game hub inventory tests 8 passed; full unittest 694 passed; full pytest 1,006 passed; `git diff --check` 통과. No page/content/production change.
-- 별도 branch `codex/ci-baseline-ga4-contract-repair`는 origin/main SHA `11f3d74ad4a1586f0f6b034e2fb4f6d737ccc622` 기반이며 PR #2로 push했다. 첫 SEO QA run `35709859333`은 새 helper 파일명에 `ga4` component가 있어 guard가 `MONETIZATION_OR_ANALYTICS_CHANGED`로 실패했다. 보호 규칙은 바꾸지 않고 helper 경로명을 `schema_contract_helpers.py`로 이동했으며 exact 5, dedicated 8, full unittest 694, full pytest 1,006 재통과했다. 같은 PR의 새 SEO QA 결과는 pending이다. PR #1은 수정/merge하지 않는다.
+- 최종 SEO QA run `35712200413`은 SUCCESS (full unittest 694 passed, full pytest 1,006 passed)였고 PR #2는 squash merge됐다. main merge commit은 `16c88b0e426c8283f54c757b7721b225a93c49cb`이다. PR #1은 이 main 위에 rebase 후 head `3bad46fd82cf94a43ae1f7ac07da2e7b9afdecea`로 갱신했으며 revalidation SEO QA run `35714221956`도 SUCCESS였다.
+
+## 2026-09-22 — P0 Revenue Growth #02 — CI guard false positive follow-up
+
+- Draft PR #1 head `10e4fc3a28b3dd93a5c98c0ca052da14569e81ec` failed SEO QA run `35703819990` at `Guard automated content launch changes` with `MONETIZATION_OR_ANALYTICS_CHANGED`. Earlier deterministic audit, quality, Naver, opportunity, measurement validation, and growth artifact steps passed.
+- Root cause: the existing path regex treated `.github/workflows/ga4-collection.yml` as a GA4 runtime asset based on the `ga4` filename component.
+- Added a single exact-path exception for `.github/workflows/ga4-collection.yml`; the GSC workflow is not allowlisted because this PR does not change it. Kept the generic monetization/analytics path guard intact.
+- Added regression coverage that allows only the exact GA4 collection workflow, rejects a similarly named alternate extension, continues rejecting `assets/js/ga4.js`, and rejects AdSense/ad-loader runtime assets. Existing protected experiment/winner coverage remains active; existing measurement workflow tests still require both GA4 and GSC workflows to pass the GSC snapshot path.
+- Full local `pytest -q`: 1,005 passed, 5 failed in unrelated GA4 page-batch contract tests (SEO/schema/hub assertions on existing content files). Targeted guard + measurement workflow suite: 13 passed. `git diff --check` and full diff-based local guard remain to be verified after commit.
+- Status: same branch/PR #1 only; not merged. Await actual GitHub Actions result for the new head before considering merge readiness.
+
+## 2026-09-22 — P0 Revenue Growth #02 — GA4 재생성에서 GSC 신호 보존
+
+- 최신 live main `9f7fb892b04cab4d408aa49942abb8a284c7a9a5`의 measurement artifact를 확인했다. GA4 snapshot은 2026-08-25..2026-09-21, 2,960 rows; GSC snapshot은 2026-08-22..2026-09-18, 109 URL rows / generatedAt `2026-09-21T08:13:09+00:00`였다.
+- 기존 `data/page-performance.json`에서는 Google `VERIFIED` URL이 0/19,064이고 전부 `NOT_CONNECTED`였지만, 별도 GSC snapshot은 실제 repo URL 105개에서 `VERIFIED`였다. 원인은 `.github/workflows/ga4-collection.yml` 재생성 명령이 GSC workflow와 달리 `--gsc-snapshot` 인자를 누락한 것.
+- 동일 원본으로 `/private/tmp` 출력만 재생성해 GA4/GSC 데이터가 각각 보존되고 counts가 WINNER 1,466 / OPPORTUNITY 37 / EXPERIMENT 0 / INSUFFICIENT_DATA 17,561임을 확인했다. 체크인된 원본 산출물은 덮어쓰지 않았다.
+- 최대 5개 search opportunity를 비교했다. 최상단 Singapore는 200 impressions / 0 clicks / position 23.8 / GA4 3 views로 score 42.21이지만, 사이트 목표를 움직일 절대 upside 증거와 현행 query mix가 부족해 기존 blocked #01을 자동 재개하지 않았다. 다음 수치 후보들은 9 impressions 이하 또는 2026-09-20 직전 변경 페이지여서 재수정하지 않았다.
+- `.github/workflows/ga4-collection.yml`에 latest GSC snapshot 인자를 추가하고 두 measurement workflow의 입력 전달을 고정하는 테스트를 추가했다. HTML/콘텐츠, protected pages, credentials, ad placement는 변경하지 않았다.
+- 상태: 격리 branch `codex/p0-revenue-growth-02`; main/production 미변경. Focused regression, artifact validator, revenue pipeline, diff 확인 후 PR/review 및 main 반영을 대기한다. 수익 직접 증가나 인과효과는 주장하지 않는다.
+- 조사 중 live main이 GSC workflow refresh commit `11f3d74ad4a1586f0f6b034e2fb4f6d737ccc622`로 갱신됐다. 최신 GSC는 2026-08-23..2026-09-19, 110 rows / 106 matched URLs이고 GSC 재생성 직후 분류는 WINNER 1,466 / OPPORTUNITY 38 / EXPERIMENT 0 / INSUFFICIENT_DATA 17,560이다. 이 새 상태도 temporary output으로 validator 통과를 확인했다. 다음 GA4-only refresh에서 재발하지 않도록 이번 변경을 최신 main 위에 rebase했다.
 
 ## 2026-09-21 — 08 · Date Difference Calculator — MAIN CLOSURE
 

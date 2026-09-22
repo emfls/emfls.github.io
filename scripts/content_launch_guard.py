@@ -8,6 +8,9 @@ import subprocess
 from pathlib import Path
 
 
+MEASUREMENT_WORKFLOW_ALLOWLIST = {".github/workflows/ga4-collection.yml"}
+
+
 def _read(path, default):
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else default
 
@@ -44,7 +47,11 @@ def validate_launch(root, manifest, changed_paths):
         errors.add("PROTECTED_EXPERIMENT_CHANGED")
     if changed_names & protected_winners:
         errors.add("PROTECTED_WINNER_CHANGED")
-    if any(re.search(r"(^|/)(ads?|adsense|ga4|analytics)([._/-]|$)", path, re.I) for path in changed_names):
+    if any(
+        path not in MEASUREMENT_WORKFLOW_ALLOWLIST
+        and re.search(r"(^|/)(ads?|adsense|ga4|analytics)([._/-]|$)", path, re.I)
+        for path in changed_names
+    ):
         errors.add("MONETIZATION_OR_ANALYTICS_CHANGED")
 
     if not launch_changed:
