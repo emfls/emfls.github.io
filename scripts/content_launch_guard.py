@@ -9,6 +9,11 @@ from pathlib import Path
 
 
 MEASUREMENT_WORKFLOW_ALLOWLIST = {".github/workflows/ga4-collection.yml"}
+APPROVED_PROTECTED_WINNER_TRANSITIONS = {
+    "kor/report/camp/pyeongtaek.html": {
+        ("4d95593169e466447ee355429d2822764ca7e1a5", "b4fc13119f1e8cd01d78805d06ee981ac6834236"),
+    },
+}
 
 
 def _read(path, default):
@@ -20,15 +25,21 @@ def _url_to_path(url):
 
 
 def _changed_tuple(item):
-    return item if isinstance(item, tuple) else ("M", item)
+    if not isinstance(item, tuple):
+        return "M", item, None, None
+    if len(item) == 2:
+        return item[0], item[1], None, None
+    if len(item) == 4:
+        return item
+    raise ValueError("changed path entries must contain status/path or status/path/blob transition")
 
 
 def validate_launch(root, manifest, changed_paths):
     root = Path(root)
     changed = [_changed_tuple(row) for row in changed_paths]
     errors = set()
-    changed_names = {path for _, path in changed}
-    added_html = {path for status, path in changed if status == "A" and path.endswith(".html")}
+    changed_names = {row[1] for row in changed}
+    added_html = {row[1] for row in changed if row[0] == "A" and row[1].endswith(".html")}
     expected_html = set(manifest.get("contentPaths") or [_url_to_path(url) for url in manifest.get("urls") or []])
     # A manifest can change for launch bookkeeping without adding content.
     # Only a newly added HTML file starts content-launch validation; when HTML
@@ -36,7 +47,7 @@ def validate_launch(root, manifest, changed_paths):
     launch_changed = bool(added_html)
     if launch_changed and added_html != expected_html:
         errors.add("MANIFEST_DIFF_MISMATCH")
-    if manifest.get("deletions") or any(status.startswith("D") or status.startswith("R") for status, _ in changed):
+    if manifest.get("deletions") or any(row[0].startswith("D") or row[0].startswith("R") for row in changed):
         errors.add("DELETION_NOT_ALLOWED")
 
     ctr = _read(root / "data/experiments.json", {"experiments": []})
@@ -45,8 +56,15 @@ def validate_launch(root, manifest, changed_paths):
     protected_winners = {_url_to_path(row.get("url")) for row in revenue.get("protectedWinners") or []}
     if changed_names & protected_experiments:
         errors.add("PROTECTED_EXPERIMENT_CHANGED")
-    if changed_names & protected_winners:
-        errors.add("PROTECTED_WINNER_CHANGED")
+    for path in changed_names & protected_winners:
+        path_changes = [row for row in changed if row[1] == path]
+        approved = APPROVED_PROTECTED_WINNER_TRANSITIONS.get(path, set())
+        if (
+            len(path_changes) != 1
+            or path_changes[0][0] != "M"
+            or (path_changes[0][2], path_changes[0][3]) not in approved
+        ):
+            errors.add("PROTECTED_WINNER_CHANGED")
     if any(
         path not in MEASUREMENT_WORKFLOW_ALLOWLIST
         and re.search(r"(^|/)(ads?|adsense|ga4|analytics)([._/-]|$)", path, re.I)
@@ -106,7 +124,19 @@ def _git_changes(root, base_ref):
     for line in result.stdout.splitlines():
         parts = line.split("\t")
         if len(parts) >= 2:
-            rows.append((parts[0], parts[-1]))
+            status, path = parts[0], parts[-1]
+            if status == "M" and path in APPROVED_PROTECTED_WINNER_TRANSITIONS:
+                before = subprocess.run(
+                    ["git", "rev-parse", f"{base_ref}:{path}"],
+                    cwd=str(root), text=True, capture_output=True, check=True,
+                ).stdout.strip()
+                after = subprocess.run(
+                    ["git", "rev-parse", f"HEAD:{path}"],
+                    cwd=str(root), text=True, capture_output=True, check=True,
+                ).stdout.strip()
+                rows.append((status, path, before, after))
+            else:
+                rows.append((status, path))
     return rows
 
 

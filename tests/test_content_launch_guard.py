@@ -11,7 +11,10 @@ def write_json(path, payload):
 
 def setup_data(root):
     write_json(root / "data/experiments.json", {"experiments": [{"url": "/kor/report/camp/nonsan.html", "status": "OBSERVING"}]})
-    write_json(root / "data/revenue-opportunities.json", {"protectedWinners": [{"url": "/kor/report/camp/namyangju.html"}]})
+    write_json(root / "data/revenue-opportunities.json", {"protectedWinners": [
+        {"url": "/kor/report/camp/namyangju.html"},
+        {"url": "/kor/report/camp/pyeongtaek.html"},
+    ]})
     write_json(root / "data/site-audit.json", {"pages": []})
 
 
@@ -32,6 +35,36 @@ def test_guard_rejects_protected_pages_and_monetization_code(tmp_path):
     changed = [("M", "kor/report/camp/nonsan.html"), ("M", "kor/report/camp/namyangju.html"), ("M", "assets/js/ga4.js")]
     errors = validate_launch(tmp_path, manifest([]), changed)
     assert {"PROTECTED_EXPERIMENT_CHANGED", "PROTECTED_WINNER_CHANGED", "MONETIZATION_OR_ANALYTICS_CHANGED"} <= set(errors)
+
+
+def test_guard_allows_only_approved_pyeongtaek_blob_transition(tmp_path):
+    setup_data(tmp_path)
+    changed = [("M", "kor/report/camp/pyeongtaek.html", "4d95593169e466447ee355429d2822764ca7e1a5", "b4fc13119f1e8cd01d78805d06ee981ac6834236")]
+
+    assert validate_launch(tmp_path, manifest([]), changed) == []
+
+
+def test_guard_rejects_pyeongtaek_with_different_result_blob(tmp_path):
+    setup_data(tmp_path)
+    changed = [("M", "kor/report/camp/pyeongtaek.html", "4d95593169e466447ee355429d2822764ca7e1a5", "a" * 40)]
+
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(tmp_path, manifest([]), changed)
+
+
+def test_guard_rejects_pyeongtaek_with_different_base_blob(tmp_path):
+    setup_data(tmp_path)
+    changed = [("M", "kor/report/camp/pyeongtaek.html", "b" * 40, "b4fc13119f1e8cd01d78805d06ee981ac6834236")]
+
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(tmp_path, manifest([]), changed)
+
+
+def test_guard_rejects_other_protected_winner_and_missing_blob_proof(tmp_path):
+    setup_data(tmp_path)
+    other_winner = [("M", "kor/report/camp/namyangju.html", "4d95593169e466447ee355429d2822764ca7e1a5", "b4fc13119f1e8cd01d78805d06ee981ac6834236")]
+    unproven_pyeongtaek = [("M", "kor/report/camp/pyeongtaek.html")]
+
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(tmp_path, manifest([]), other_winner)
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(tmp_path, manifest([]), unproven_pyeongtaek)
 
 
 def test_guard_allows_only_ga4_collection_orchestration_workflow(tmp_path):

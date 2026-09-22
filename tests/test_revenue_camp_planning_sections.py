@@ -30,7 +30,7 @@ PAGES = {
     "gangwon-best.html": ({"jeongseon.html", "taebaek.html", "pyeongchang.html"}, "2026-08-23"),
     "uijeongbu.html": ({"gyeonggi-best.html", "namyangju.html", "goyang.html"}, "2026-08-24"),
     "yeongdong.html": ({"chungcheong-camping-best.html", "geumsan.html", "okcheon.html"}, "2026-08-24"),
-    "pyeongtaek.html": ({"gyeonggi-best.html", "goyang.html", "namyangju.html"}, "2026-08-24"),
+    "pyeongtaek.html": ({"gyeonggi-best.html", "goyang.html", "namyangju.html", "free-camping-top20.html"}, "2026-08-24"),
     "hoengseong.html": ({"gangwon-best.html", "pyeongchang.html", "wonju.html"}, "2026-08-24"),
     "jeonnam-best.html": ({"jangseong.html", "hwasun.html", "gwangyang.html"}, "2026-08-26"),
     "incheon.html": ({"gyeonggi-best.html", "goyang.html", "pyeongtaek.html"}, "2026-08-26"),
@@ -152,6 +152,21 @@ class RevenueCampPlanningSectionsTest(unittest.TestCase):
                 and item.get("dateModified") == "2026-08-26"
                 for item in parser.json_ld
             )
+        )
+
+    def test_pyeongtaek_adds_exactly_one_contextual_free_camping_link(self):
+        source = ROOT / "kor/report/camp/pyeongtaek.html"
+        destination = ROOT / "kor/report/camp/free-camping-top20.html"
+        html = source.read_text(encoding="utf-8")
+        self.assertTrue(destination.is_file())
+        self.assertEqual(
+            1,
+            html.count('<a href="/kor/report/camp/free-camping-top20.html">전국 무료캠핑 비교</a>'),
+        )
+        destination_html = destination.read_text(encoding="utf-8")
+        self.assertIn(
+            '<link rel="canonical" href="https://emfls.github.io/kor/report/camp/free-camping-top20.html">',
+            destination_html,
         )
 
 
