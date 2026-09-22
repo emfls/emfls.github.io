@@ -1,5 +1,5 @@
 from pathlib import Path
-from tests.ga4_contract_helpers import assert_page_json_ld_contract
+from tests.schema_contract_helpers import assert_page_json_ld_contract
 ROOT = Path(__file__).resolve().parents[1]
 MARKER = "third-hundred-ga4-priority-2026-08-11"
 def assert_batch(test, batch):
