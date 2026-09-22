@@ -762,3 +762,6 @@
 
 ## 2026-09-23 02:01 Keyword Hunter
 - Seeds: 40; New: 20; Rejected: 12; DB: 2875; Errors: 0; Top: none. Report: reports/keyword-hunter/2026-09-23-0201.md
+
+## 2026-09-23 06:23 Keyword Hunter
+- Seeds: 40; New: 20; Rejected: 17; DB: 2895; Errors: 0; Top: 국가평생교육진흥원학점은행제. Report: reports/keyword-hunter/2026-09-23-0623.md
