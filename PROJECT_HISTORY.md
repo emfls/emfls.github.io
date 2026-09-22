@@ -7,6 +7,15 @@
 - `tests/schema_contract_helpers.py`를 추가해 페이지 내 JSON-LD 위치와 무관하게 valid expected-type payload를 파싱하고 canonical URL과 `dateModified >= 2026-08-11`을 검증한다. 기존 marker exactly-once, expected type, trust category, responsive constraint, hub link, GA4/AdSense IDs 계약은 유지했다. MarbleFlick hub expectation은 `/game/`로 수정했고 game hub는 검색 input, category control, game-card link, flex-wrap/auto-fit responsive grid를 검증한다.
 - Exact five tests 통과; MarbleFlick state/page/RSS 및 game hub inventory tests 8 passed; full unittest 694 passed; full pytest 1,006 passed; `git diff --check` 통과. No page/content/production change.
 
+## 2026-09-22 — P0 Revenue Growth #02 — CI guard false positive follow-up
+
+- Draft PR #1 head `10e4fc3a28b3dd93a5c98c0ca052da14569e81ec` failed SEO QA run `35703819990` at `Guard automated content launch changes` with `MONETIZATION_OR_ANALYTICS_CHANGED`. Earlier deterministic audit, quality, Naver, opportunity, measurement validation, and growth artifact steps passed.
+- Root cause: the existing path regex treated `.github/workflows/ga4-collection.yml` as a GA4 runtime asset based on the `ga4` filename component.
+- Added a single exact-path exception for `.github/workflows/ga4-collection.yml`; the GSC workflow is not allowlisted because this PR does not change it. Kept the generic monetization/analytics path guard intact.
+- Added regression coverage that allows only the exact GA4 collection workflow, rejects a similarly named alternate extension, continues rejecting `assets/js/ga4.js`, and rejects AdSense/ad-loader runtime assets. Existing protected experiment/winner coverage remains active; existing measurement workflow tests still require both GA4 and GSC workflows to pass the GSC snapshot path.
+- Full local `pytest -q`: 1,005 passed, 5 failed in unrelated GA4 page-batch contract tests (SEO/schema/hub assertions on existing content files). Targeted guard + measurement workflow suite: 13 passed. `git diff --check` and full diff-based local guard remain to be verified after commit.
+- Status: same branch/PR #1 only; not merged. Await actual GitHub Actions result for the new head before considering merge readiness.
+
 ## 2026-09-22 — P0 Revenue Growth #02 — GA4 재생성에서 GSC 신호 보존
 
 - 최신 live main `9f7fb892b04cab4d408aa49942abb8a284c7a9a5`의 measurement artifact를 확인했다. GA4 snapshot은 2026-08-25..2026-09-21, 2,960 rows; GSC snapshot은 2026-08-22..2026-09-18, 109 URL rows / generatedAt `2026-09-21T08:13:09+00:00`였다.

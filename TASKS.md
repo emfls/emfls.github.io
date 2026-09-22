@@ -21,6 +21,7 @@
   - 근거: live main의 GA4 workflow가 `revenue_growth.py`에 GSC snapshot을 전달하지 않아 GA4 실행 후 page-performance의 Google 채널이 `NOT_CONNECTED`로 재생성될 수 있다. latest `gsc-latest.json` 110 rows를 병합한 temporary regeneration에서는 VERIFIED Google URL 106개와 OPPORTUNITY 38개가 확인됐다.
   - 변경: GA4 workflow가 `data/performance/gsc-latest.json`을 함께 전달하도록 수정하고 workflow 계약 회귀 테스트를 추가했다. 콘텐츠 URL은 수정하지 않았다.
   - 상태: `codex/p0-revenue-growth-02`에서 구현·검증; 아직 main 배포 전. GA4 Collection 1회 재실행 후 실제 artifact와 분류를 확인한다.
+  - CI follow-up: SEO QA run `35703819990`에서 `scripts/content_launch_guard.py`가 workflow 파일명 `ga4-collection.yml`을 analytics runtime 변경으로 오탐했다. exact-path allowlist와 runtime asset 차단 회귀를 같은 PR에 추가했으며, 새 원격 SEO QA green 확인 전 merge 금지.
 
 ## P1 - High
 
