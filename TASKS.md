@@ -18,7 +18,7 @@
   - 완료 기록: 2026-09-13. 2.79MB/5,233링크 목록을 21.8KB/43개 고유 `/kor/` 목적지 허브로 교체하고 캠핑 후속 우선순위를 남양주→청주→담양→김포→경기도 광주로 정리했다.
 
 - [ ] P0 Revenue Growth #02 — GA4 refresh에서 최신 GSC 기회 신호 보존
-  - 근거: live main의 GA4 workflow가 `revenue_growth.py`에 GSC snapshot을 전달하지 않아 page-performance의 Google 채널 19,064개가 `NOT_CONNECTED`로 재생성됐다. 동일 입력을 임시 출력으로 재실행하면 VERIFIED Google URL 105개와 OPPORTUNITY 37개가 복원된다.
+  - 근거: live main의 GA4 workflow가 `revenue_growth.py`에 GSC snapshot을 전달하지 않아 GA4 실행 후 page-performance의 Google 채널이 `NOT_CONNECTED`로 재생성될 수 있다. latest `gsc-latest.json` 110 rows를 병합한 temporary regeneration에서는 VERIFIED Google URL 106개와 OPPORTUNITY 38개가 확인됐다.
   - 변경: GA4 workflow가 `data/performance/gsc-latest.json`을 함께 전달하도록 수정하고 workflow 계약 회귀 테스트를 추가했다. 콘텐츠 URL은 수정하지 않았다.
   - 상태: `codex/p0-revenue-growth-02`에서 구현·검증; 아직 main 배포 전. GA4 Collection 1회 재실행 후 실제 artifact와 분류를 확인한다.
 

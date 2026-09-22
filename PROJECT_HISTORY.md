@@ -15,6 +15,7 @@
 - 최대 5개 search opportunity를 비교했다. 최상단 Singapore는 200 impressions / 0 clicks / position 23.8 / GA4 3 views로 score 42.21이지만, 사이트 목표를 움직일 절대 upside 증거와 현행 query mix가 부족해 기존 blocked #01을 자동 재개하지 않았다. 다음 수치 후보들은 9 impressions 이하 또는 2026-09-20 직전 변경 페이지여서 재수정하지 않았다.
 - `.github/workflows/ga4-collection.yml`에 latest GSC snapshot 인자를 추가하고 두 measurement workflow의 입력 전달을 고정하는 테스트를 추가했다. HTML/콘텐츠, protected pages, credentials, ad placement는 변경하지 않았다.
 - 상태: 격리 branch `codex/p0-revenue-growth-02`; main/production 미변경. Focused regression, artifact validator, revenue pipeline, diff 확인 후 PR/review 및 main 반영을 대기한다. 수익 직접 증가나 인과효과는 주장하지 않는다.
+- 조사 중 live main이 GSC workflow refresh commit `11f3d74ad4a1586f0f6b034e2fb4f6d737ccc622`로 갱신됐다. 최신 GSC는 2026-08-23..2026-09-19, 110 rows / 106 matched URLs이고 GSC 재생성 직후 분류는 WINNER 1,466 / OPPORTUNITY 38 / EXPERIMENT 0 / INSUFFICIENT_DATA 17,560이다. 이 새 상태도 temporary output으로 validator 통과를 확인했다. 다음 GA4-only refresh에서 재발하지 않도록 이번 변경을 최신 main 위에 rebase했다.
 
 ## 2026-09-21 — 08 · Date Difference Calculator — MAIN CLOSURE
 
