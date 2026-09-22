@@ -1,8 +1,8 @@
 # CI Baseline Repair — GA4 Batch Contract Failures
 
-Date: 2026-09-22  
-Repository: `emfls/emfls.github.io`  
-Base: `origin/main` — `11f3d74ad4a1586f0f6b034e2fb4f6d737ccc622`  
+Date: 2026-09-22
+Repository: `emfls/emfls.github.io`
+Base: `origin/main` — `11f3d74ad4a1586f0f6b034e2fb4f6d737ccc622`
 Branch: `codex/ci-baseline-ga4-contract-repair`
 
 ## Result
