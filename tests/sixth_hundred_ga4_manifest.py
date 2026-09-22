@@ -65,7 +65,7 @@ PAGES = [
     ('cn/game/FlagQuest/index.html', 'VideoGame', 'game', '/cn/game/FlagQuest/'),
     ('cn/util/EasyLetterWordCounter/index.html', 'WebApplication', 'tool', '/cn/util/EasyLetterWordCounter/'),
     ('game/Gomoku/index.html', 'VideoGame', 'game', '/game/Gomoku/'),
-    ('game/MarbleFlick/index.html', 'VideoGame', 'game', '/game/MarbleFlick/'),
+    ('game/MarbleFlick/index.html', 'VideoGame', 'game', '/game/'),
     ('game/Minesweeper/index.html', 'VideoGame', 'game', '/game/Minesweeper/'),
     ('game/TicTacToe/index.html', 'VideoGame', 'game', '/game/TicTacToe/'),
     ('jp/game/LandGrab/index.html', 'VideoGame', 'game', '/jp/game/LandGrab/'),
