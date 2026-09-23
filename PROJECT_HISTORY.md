@@ -774,3 +774,6 @@
 
 ## 2026-09-23 21:22 Keyword Hunter
 - Seeds: 40; New: 102; Rejected: 80; DB: 3037; Errors: 0; Top: 전자세금계산서발급용인증서. Report: reports/keyword-hunter/2026-09-23-2122.md
+
+## 2026-09-23 22:42 Keyword Hunter
+- Seeds: 40; New: 60; Rejected: 48; DB: 3097; Errors: 0; Top: 해외구매대행쇼핑몰. Report: reports/keyword-hunter/2026-09-23-2242.md
