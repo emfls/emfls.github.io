@@ -771,3 +771,6 @@
 
 ## 2026-09-23 14:26 Keyword Hunter
 - Seeds: 40; New: 40; Rejected: 29; DB: 2935; Errors: 0; Top: 타오바오배대지추천. Report: reports/keyword-hunter/2026-09-23-1426.md
+
+## 2026-09-23 21:22 Keyword Hunter
+- Seeds: 40; New: 102; Rejected: 80; DB: 3037; Errors: 0; Top: 전자세금계산서발급용인증서. Report: reports/keyword-hunter/2026-09-23-2122.md
