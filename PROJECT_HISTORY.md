@@ -783,3 +783,6 @@
 
 ## 2026-09-24 06:12 Keyword Hunter
 - Seeds: 40; New: 40; Rejected: 34; DB: 3137; Errors: 0; Top: 자동차폐차비용. Report: reports/keyword-hunter/2026-09-24-0612.md
+
+## 2026-09-24 07:59 Keyword Hunter
+- Seeds: 40; New: 40; Rejected: 33; DB: 3177; Errors: 0; Top: 호주워홀신청. Report: reports/keyword-hunter/2026-09-24-0759.md
