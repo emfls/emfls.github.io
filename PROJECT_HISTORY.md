@@ -780,3 +780,6 @@
 
 ## 2026-09-24 03:25 Keyword Hunter
 - Seeds: 40; New: 0; Rejected: 0; DB: 3097; Errors: 0; Top: 세금계산서인증서. Report: reports/keyword-hunter/2026-09-24-0325.md
+
+## 2026-09-24 06:12 Keyword Hunter
+- Seeds: 40; New: 40; Rejected: 34; DB: 3137; Errors: 0; Top: 자동차폐차비용. Report: reports/keyword-hunter/2026-09-24-0612.md
