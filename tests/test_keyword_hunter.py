@@ -244,6 +244,21 @@ class HunterTests(unittest.TestCase):
         history=json.loads((self.root/'data/recent_exploration_history.json').read_text())
         self.assertEqual(len(history['runs']),1)
 
+    def test_owner_watchlist_seed_is_not_treated_as_anchored(self):
+        from scripts.keyword_hunter_exploration import select_exploration_seeds
+        candidates=[{
+            'keyword':'애니모', 'source':'OWNER_WATCHLIST', 'category':'game',
+            'cluster':'aniimo', 'strategy':'trend', 'depth':0,
+            'bucket':'new_theme', 'opportunity_score':0,
+        }]
+        diagnostics={}
+        selected=select_exploration_seeds(
+            candidates, [], [], 1, 7,
+            '2026-09-23T21:04:42+09:00', diagnostics=diagnostics,
+        )
+        self.assertEqual([seed['keyword'] for seed in selected], ['애니모'])
+        self.assertEqual(diagnostics['anchored_excluded'], 0)
+
     def test_report_contains_discovery_funnel_and_candidate_fallback(self):
         (self.root/'data/recent_exploration_history.json').write_text(json.dumps({'runs':[{'keywords':[],'winners':[]} for _ in range(3)]}))
         client=Mock(errors=[],rate_limits=0,calls=2,datalab_calls=1,datalab_keywords_validated=1)
