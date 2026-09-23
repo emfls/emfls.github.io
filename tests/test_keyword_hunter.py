@@ -23,6 +23,33 @@ def test_published_ledger_explicit_status_change_updates_one_entry():
 from scripts.keyword_hunter_site import inventory, SiteIndex
 
 class HunterTests(unittest.TestCase):
+    def test_measured_watchlist_root_is_validation_only(self):
+        row={'keyword':'애니모','status':'REJECTED','action':'REJECT',
+             'reason':'UNCLEAR_OR_BROAD_INTENT','seed_source':'OWNER_WATCHLIST',
+             'parent_keyword':'','monthly_total':97800,'competition':'중간',
+             'longtail_score':.12}
+        self.assertTrue(h.is_validation_only_watchlist_root(row, h.DEFAULT_CONFIG))
+
+    def test_validation_only_watchlist_root_rejects_non_root_or_unmeasured_rows(self):
+        base={'keyword':'애니모','status':'REJECTED','action':'REJECT',
+              'reason':'UNCLEAR_OR_BROAD_INTENT','seed_source':'OWNER_WATCHLIST',
+              'parent_keyword':'','monthly_total':900,'competition':'중간'}
+        self.assertFalse(h.is_validation_only_watchlist_root({**base,'seed_source':'NAVER_SEARCHAD'}, h.DEFAULT_CONFIG))
+        self.assertFalse(h.is_validation_only_watchlist_root({**base,'keyword':'애니모공략','parent_keyword':'애니모'}, h.DEFAULT_CONFIG))
+        self.assertFalse(h.is_validation_only_watchlist_root({**base,'monthly_total':''}, h.DEFAULT_CONFIG))
+        self.assertFalse(h.is_validation_only_watchlist_root({**base,'competition':''}, h.DEFAULT_CONFIG))
+
+    def test_pending_validation_includes_only_measured_watchlist_rejected_root(self):
+        from datetime import datetime, timezone
+        now=datetime(2026,9,12,12,0,tzinfo=timezone.utc)
+        watch={'keyword':'애니모','status':'REJECTED','action':'REJECT',
+               'reason':'UNCLEAR_OR_BROAD_INTENT','seed_source':'OWNER_WATCHLIST',
+               'parent_keyword':'','monthly_total':900,'competition':'중간',
+               'trend_1m':'','trend_3m':'','web_result_count':'','pending_retry_count':0}
+        ordinary={**watch,'keyword':'짧은','seed_source':'NAVER_SEARCHAD'}
+        pending,_=h.pending_validation_rows([watch,ordinary],now,h.DEFAULT_CONFIG)
+        self.assertEqual([r['keyword'] for r in pending],['애니모'])
+
     def test_csv_state_uses_repository_lf_line_endings(self):
         from scripts.keyword_hunter_state import csv_text
         text = csv_text([{"keyword": "테스트", "status": "NEW"}])
