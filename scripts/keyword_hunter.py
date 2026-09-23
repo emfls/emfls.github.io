@@ -151,6 +151,31 @@ def pending_validation_rows(rows,now,config):
                                -(number(r.get('monthly_total')) or 0),r.get('keyword','')))
     return pending,expired
 
+def priority_revalidation_rows(rows, now, config):
+    """Select a bounded stale high-volume cohort before ordinary refresh work."""
+    threshold = int(config.get('p0_revalidation_min_monthly_total', 500))
+    cap = int(config.get('p0_revalidation_max_search_ads', 15))
+    ttl = int(config.get('search_ads_cache_ttl_hours', 168)) * 3600
+    eligible=[]
+    for row in rows:
+        if row.get('status') in {'REJECTED','PUBLISHED'} or not row.get('competition'):
+            continue
+        volume = number(row.get('monthly_total'))
+        if volume is None or volume < threshold:
+            continue
+        checked = row.get('search_ads_checked_at') or row.get('metrics_checked_at')
+        stale = not checked
+        if checked:
+            try:
+                stale = (now - datetime.fromisoformat(checked)).total_seconds() >= ttl
+            except ValueError:
+                stale = True
+        if stale:
+            eligible.append(row)
+    return sorted(eligible, key=lambda r: (-(number(r.get('monthly_total')) or 0),
+                                           -(number(r.get('opportunity_score')) or 0),
+                                           r.get('keyword','')))[:cap]
+
 def datalab_usage(root,config,now=None):
     limit=int(os.environ.get('DATALAB_MONTHLY_LIMIT',config.get('datalab_monthly_limit',50000)))
     reserve=float(os.environ.get('DATALAB_RESERVE_RATIO',config.get('datalab_reserve_ratio',.10)))
@@ -224,7 +249,7 @@ def report(result,now):
     for key in ['datalab_monthly_limit','datalab_used_this_month','datalab_remaining_quota','datalab_remaining_days','datalab_daily_budget','datalab_run_budget','datalab_actual_calls','datalab_validated_keywords','datalab_average_keywords_per_call']:
         lines.append('- {}: {}'.format(key,safe(result[key])))
     lines += ['', '## Validation telemetry', '']
-    for key in ['datalab_candidates','datalab_submitted','datalab_returned','datalab_empty','datalab_mapped','datalab_skipped_recent','datalab_response_missing','datalab_parse_failures','datalab_actual_calls','web_candidates','web_submitted','web_cached','web_validated']:
+    for key in ['datalab_candidates','datalab_submitted','datalab_returned','datalab_empty','datalab_mapped','datalab_skipped_recent','datalab_response_missing','datalab_parse_failures','datalab_actual_calls','web_candidates','web_submitted','web_cached','web_validated','priority_revalidation_candidates']:
         lines.append('- {}: {}'.format(key, safe(result.get(key, 0))))
     for key in ['baseline_cohort_size','baseline_invalid_before','baseline_invalid_after','baseline_score_valid_before','baseline_score_valid_after','baseline_trend_missing_before','baseline_trend_missing_after','baseline_web_missing_before','baseline_web_missing_after','recovered_existing_keywords']:
         lines.append('- {}: {}'.format(key, safe(result.get(key, 0))))
@@ -413,7 +438,12 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
             checked=row.get('search_ads_checked_at') or row.get('metrics_checked_at')
             if not checked or (now-datetime.fromisoformat(checked)).total_seconds()>=config['search_ads_cache_ttl_hours']*3600:
                 due.append(row)
-        due_rows=[] if data_quality_only or api_health.get('NAVER_SEARCH_ADS')=='NOT_CONFIGURED' else sorted(due,key=lambda r:-(number(r.get('opportunity_score')) or 0))[:20]
+        priority_rows=[] if data_quality_only or api_health.get('NAVER_SEARCH_ADS')=='NOT_CONFIGURED' else priority_revalidation_rows(due, now, config)
+        priority_keys={normalize(r['keyword']) for r in priority_rows}
+        ordinary_limit=max(0, int(config.get('max_api_calls',100))-len(priority_rows))
+        ordinary_rows=sorted((r for r in due if normalize(r['keyword']) not in priority_keys),
+                             key=lambda r:-(number(r.get('opportunity_score')) or 0))[:ordinary_limit]
+        due_rows=priority_rows+ordinary_rows
         for row in due_rows if not status_change else []:
             for raw in client.related(row['keyword']):
                 if normalize(raw['keyword'])==normalize(row['keyword']):
@@ -606,6 +636,7 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
                 'web_candidates':len(web_candidates),'web_submitted':getattr(client,'web_result_calls',0),
                 'web_cached':max(0,len(fast_passed)-len(web_candidates)),'web_validated':sum(1 for r in active if number(r.get('web_result_count')) is not None),
                 'datalab_average_keywords_per_call':round(submitted/datalab_calls,2) if datalab_calls else 0.0,
+                'priority_revalidation_candidates':len(priority_rows),
                 'pending_validation_count':sum(r.get('pending_validation')=='True' for r in active),
                 'pending_validation_revalidated':len(retried_pending),
                 'pending_validation_expired':len(expired_pending)}

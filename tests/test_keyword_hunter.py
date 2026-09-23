@@ -282,6 +282,31 @@ class HunterTests(unittest.TestCase):
         ordered=h.prioritize_trend_rows(old+fresh,fresh)
         self.assertEqual(ordered[0]['keyword'],'신규 고수요')
 
+    def test_priority_revalidation_prefers_stale_high_volume_and_caps_queue(self):
+        from datetime import datetime, timezone
+        now=datetime(2026,9,23,12,0,tzinfo=timezone.utc)
+        rows=[
+            {'keyword':'큰 수요','monthly_total':20000,'competition':'LOW',
+             'opportunity_score':10,'search_ads_checked_at':'2026-09-01T00:00:00+00:00'},
+            {'keyword':'작은 수요','monthly_total':600,'competition':'LOW',
+             'opportunity_score':99,'search_ads_checked_at':'2026-09-01T00:00:00+00:00'},
+            {'keyword':'최신 큰 수요','monthly_total':30000,'competition':'LOW',
+             'opportunity_score':1,'search_ads_checked_at':'2026-09-23T11:00:00+00:00'},
+        ]
+        result=h.priority_revalidation_rows(rows,now,{**h.DEFAULT_CONFIG,
+            'p0_revalidation_min_monthly_total':500,'p0_revalidation_max_search_ads':1})
+        self.assertEqual([r['keyword'] for r in result],['큰 수요'])
+
+    def test_priority_revalidation_does_not_promote_missing_current_evidence(self):
+        from datetime import datetime, timezone
+        now=datetime(2026,9,23,12,0,tzinfo=timezone.utc)
+        row={'keyword':'historical only','monthly_total':5000,'competition':'LOW',
+             'trend_1m':'','trend_3m':'','web_result_count':'',
+             'score_valid':False,'search_ads_checked_at':'2026-09-01T00:00:00+00:00'}
+        result=h.priority_revalidation_rows([row],now,{**h.DEFAULT_CONFIG})
+        self.assertEqual([r['keyword'] for r in result],['historical only'])
+        self.assertFalse(row['score_valid'])
+
     def test_fast_filter_skips_recent_validation_and_only_relaxes_in_recovery(self):
         from datetime import datetime, timezone
         now=datetime(2026,9,11,20,0,tzinfo=timezone.utc)
