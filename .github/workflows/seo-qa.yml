@@ -71,7 +71,8 @@ jobs:
           else
             COMPARE_REF="HEAD^"
           fi
-          python3 scripts/content_launch_guard.py --root . --manifest data/content-launch-manifest.json --base-ref "$COMPARE_REF"
+          git show HEAD:data/content-launch-manifest.json > /tmp/content-launch-manifest.json
+          python3 scripts/content_launch_guard.py --root . --manifest /tmp/content-launch-manifest.json --base-ref "$COMPARE_REF"
 
       - name: Render revenue growth control center
         run: python3 scripts/quality_audit.py --as-of "$(date +%F)" --revenue data/revenue-opportunities.json --dashboard reports/site-quality-dashboard.html

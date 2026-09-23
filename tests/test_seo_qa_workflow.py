@@ -66,6 +66,13 @@ class SeoQaWorkflowTests(unittest.TestCase):
         self.assertLess(fetch_before, push_branch)
         self.assertLess(push_branch, guard)
 
+    def test_guard_reads_committed_manifest_snapshot(self):
+        source = WORKFLOW.read_text(encoding="utf-8")
+        snapshot = source.index("git show HEAD:data/content-launch-manifest.json > /tmp/content-launch-manifest.json")
+        guard = source.index("scripts/content_launch_guard.py")
+        self.assertLess(snapshot, guard)
+        self.assertIn("--manifest /tmp/content-launch-manifest.json", source)
+
 
 if __name__ == "__main__":
     unittest.main()
