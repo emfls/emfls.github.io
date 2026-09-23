@@ -6,18 +6,18 @@
 - 28d Daily Average: N/A
 - Indexed Pages: 19,064
 - Revenue per Indexed Page: N/A
-- Views per User: 1.32
-- WINNER: 1466
+- Views per User: 1.33
+- WINNER: 1470
 - OPPORTUNITY: 38
 - EXPERIMENT: 0
 - DEAD_CANDIDATE: 0
-- INSUFFICIENT_DATA: 17560
+- INSUFFICIENT_DATA: 17556
 
 ## TOP REVENUE OPPORTUNITIES
 
 ### 1. `/kor/report/camp/gyeonggi-best.html`
 
-- Score: 59.68 / 100
+- Score: 59.8 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -28,7 +28,7 @@
 
 ### 2. `/kor/report/camp/namyangju.html`
 
-- Score: 57.58 / 100
+- Score: 57.79 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -39,7 +39,7 @@
 
 ### 3. `/kor/report/camp/pyeongtaek.html`
 
-- Score: 56.51 / 100
+- Score: 56.5 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -48,20 +48,9 @@
 - Naver: 2,955 impressions / 269 clicks / 9.1% CTR
 - Rank: N/A
 
-### 4. `/kor/report/camp/daebudo-camping.html`
+### 4. `/kor/report/camp/cheorwon.html`
 
-- Score: 54.31 / 100
-- Classification: WINNER
-- Why: Verified URL revenue; Verified traffic
-- Next Action: PROTECT
-- Cooldown: NO
-- Data Status: VERIFIED
-- Naver: 2,093 impressions / 69 clicks / 3.3% CTR
-- Rank: N/A
-
-### 5. `/kor/report/camp/cheorwon.html`
-
-- Score: 54.12 / 100
+- Score: 54.28 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -70,9 +59,20 @@
 - Naver: 2,216 impressions / 67 clicks / 3.0% CTR
 - Rank: N/A
 
+### 5. `/kor/report/camp/daebudo-camping.html`
+
+- Score: 54.22 / 100
+- Classification: WINNER
+- Why: Verified URL revenue; Verified traffic
+- Next Action: PROTECT
+- Cooldown: NO
+- Data Status: VERIFIED
+- Naver: 2,093 impressions / 69 clicks / 3.3% CTR
+- Rank: N/A
+
 ### 6. `/kor/report/camp/chungcheong-camping-best.html`
 
-- Score: 51.81 / 100
+- Score: 51.82 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -83,7 +83,7 @@
 
 ### 7. `/kor/report/camp/sokcho.html`
 
-- Score: 50.51 / 100
+- Score: 50.53 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -105,7 +105,7 @@
 
 ### 9. `/kor/report/camp/miryang.html`
 
-- Score: 49.54 / 100
+- Score: 49.52 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -116,7 +116,7 @@
 
 ### 10. `/kor/report/camp/goyang.html`
 
-- Score: 48.91 / 100
+- Score: 48.95 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -178,8 +178,6 @@
 - `/jp/report/travel/egypt-shebin-el-kom.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/jp/report/travel/greece-katerini.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/jp/report/travel/indonesia-kupang.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/jp/report/travel/iraq-erbil.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/jp/report/travel/kenya-laikipia.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/jp/report/travel/korea-gumi.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/jp/report/travel/korea-naju.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/jp/report/travel/morocco-oujda.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -189,7 +187,6 @@
 - `/jp/report/travel/philippines-lipa.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/jp/report/travel/singapore-clementi.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/jp/report/travel/singapore-sembawang.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/jp/report/travel/south-africa-kimberley.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/jp/report/travel/uk-warrington.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/jp/util/crc/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/jp/util/fin-calc/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -212,7 +209,6 @@
 - `/kor/column/elden-ring-ainsel-river-well-revised-2026.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/column/elden-ring-limgrave-west-full-guide-2026.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/column/elden-ring-liurnia-north-part1-guide-2026.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/kor/column/elden-ring-stormhill-full-guide-2026.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/column/elden-ring-stormveil-castle-full-guide-2026.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/column/elden-ring-weeping-peninsula-full-guide-2026.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/column/google-tv-app-install-delete-permission-2026.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -256,7 +252,6 @@
 - `/kor/column/pokemon-legends-za-tips-guide-2026.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/column/premature-baby-care-guide-2026.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/column/real-estate-study-guide-2026.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/kor/column/sacral-dimple-baby-guide-2026.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/column/terraria-beginner-complete-guide-2026.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/column/wedding-director-parent-entrance-song-2026.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/ai/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -461,6 +456,7 @@
 - `/kor/report/camp/차박.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/car/electric-car-compare-2026.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/car/ioniq6-spec-2026.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/car/palisade-vs-sorento-2026.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/car/sorento-spec-2026.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/car/tesla-modely-spec-2026.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/coin/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -500,6 +496,7 @@
 - `/kor/report/condolence-messages.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/costco/costco-beauty-2026.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/costco/costco-health-2026.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/finance/saving-100m-salary-plan-2026.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/finance/saving-100m-side-income-2026.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/health/blood-pressure-monitor.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/maple/maple-raising-daily-2026.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -523,10 +520,10 @@
 - `/kor/report/travel/albania-kucove.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/algeria-algiers.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/algeria-bejaia.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/kor/report/travel/algeria-saida.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/algeria-setif.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/angola-luanda.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/argentina-bariloche.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/travel/argentina-buenosaires.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/argentina-laplata.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/argentina-larioja.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/argentina-mardelplata.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -571,6 +568,7 @@
 - `/kor/report/travel/bangladesh-dhaka.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/bangladesh-jessore.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/bangladesh-meherpur.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/travel/bangladesh-pabna.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/bangladesh-sylhet.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/barbados-diamond-valley.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/belarus-bereyki.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -585,10 +583,8 @@
 - `/kor/report/travel/belgium-leuven.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/belgium-mons.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/benin-savanna.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/kor/report/travel/bhutan-gasa.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/bhutan-ha.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/bhutan-thimphu.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/kor/report/travel/bolivia-cochabamba.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/bolivia-potosi.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/bolivia-tarija.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/bosnia-east-sarajevo.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -609,7 +605,6 @@
 - `/kor/report/travel/bulgaria-shumen.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/bulgaria-varna.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/bulgaria-veliko-tarnovo.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/kor/report/travel/cambodia-banteay-meanchey.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/cambodia-battambang.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/cambodia-kampong-cham.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/cambodia-kampong-chhnang.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -623,13 +618,11 @@
 - `/kor/report/travel/canada-abbotsford.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/canada-calgary.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/canada-coquitlam.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/kor/report/travel/canada-edmonton.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/canada-fredericton.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/canada-halifax.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/canada-hamilton.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/canada-iqaluit.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/canada-kingston.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/kor/report/travel/canada-kitchener.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/canada-london.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/canada-mississauga.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/canada-montreal.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -756,9 +749,9 @@
 - `/kor/report/travel/france-argenteuil.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/france-arles.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/france-avignon.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/kor/report/travel/france-bayonne.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/france-bourges.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/france-brest.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/travel/france-chamonix.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/france-colmar.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/france-dijon.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/france-dunkirk.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -783,6 +776,7 @@
 - `/kor/report/travel/germany-dusseldorf.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/germany-erfurt.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/germany-essen.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/travel/germany-freiburg.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/germany-halle.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/germany-hamburg.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/germany-heilbronn.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -791,6 +785,7 @@
 - `/kor/report/travel/germany-leipzig.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/germany-luebeck.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/germany-mannheim.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/travel/germany-stuttgart.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/germany-ulm.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/ghana-akosombo.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/ghana-koforidua.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -818,6 +813,7 @@
 - `/kor/report/travel/hungary-budapest.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/hungary-debrecen.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/hungary-hortobagy.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/travel/hungary-keszthely.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/hungary-mor.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/hungary-szentendre.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/hungary-szolnok.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -856,9 +852,9 @@
 - `/kor/report/travel/indonesia-tanjung-pinang.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/iran-arak.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/iran-sari.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/kor/report/travel/iran-yasuj.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/iran-yazd.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/iraq-anbar.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/travel/iraq-babil.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/iraq-dohuk.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/iraq-erbil.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/iraq-karbala.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -902,8 +898,6 @@
 - `/kor/report/travel/japan-sagamihara.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/japan-saitama.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/japan-sapporo.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/kor/report/travel/japan-sendai.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/kor/report/travel/japan-shizuoka.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/japan-takamatsu.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/japan-tokyo.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/japan-utsunomiya.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -930,6 +924,7 @@
 - `/kor/report/travel/kiribati-kiritimati.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/kiribati-north-tarawa.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/kiribati-south-tarawa.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/travel/korea-bonghwa.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/korea-buan.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/korea-cheongdo.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/korea-cheongju.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -947,6 +942,7 @@
 - `/kor/report/travel/korea-jeungpyeong.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/korea-mokpo.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/korea-namhae.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/travel/korea-osan.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/korea-pyeongchang.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/korea-pyeongtaek.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/korea-sancheong.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -954,6 +950,7 @@
 - `/kor/report/travel/korea-seoul.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/korea-sinan.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/korea-sokcho.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/travel/korea-tongyeong.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/korea-uljin.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/korea-yecheon.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/korea-yeosu.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -995,6 +992,7 @@
 - `/kor/report/travel/malaysia-kajang.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/malaysia-kota-bharu.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/malaysia-kota-kinabalu.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/travel/malaysia-kuala-terengganu.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/malaysia-kualalumpur.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/malaysia-kuching.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/malaysia-pasir-gudang.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1013,7 +1011,6 @@
 - `/kor/report/travel/mexico-monterrey.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/mexico-playadelcarmen.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/mexico-saltillo.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/kor/report/travel/mexico-sanluispotosi.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/mexico-tijuana.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/mexico-torreon.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/micronesia-palikir.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1029,7 +1026,6 @@
 - `/kor/report/travel/mongolia-sainshand.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/mongolia-sukhbaatar.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/montenegro-cetinje.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/kor/report/travel/montenegro-zabljak.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/morocco-dar-bouazza.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/morocco-meknes.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/morocco-oujda.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1061,7 +1057,6 @@
 - `/kor/report/travel/newzealand-dunedin.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/newzealand-hamilton.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/newzealand-queenstown.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/kor/report/travel/niger-goure.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/nigeria-lagos.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/nigeria-osogbo.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/north-korea-anju.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1075,7 +1070,6 @@
 - `/kor/report/travel/norway-bodo.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/norway-haugesund.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/norway-horten.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/kor/report/travel/norway-molde.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/norway-tromso.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/norway-vennesla.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/oman-duqm.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1100,6 +1094,8 @@
 - `/kor/report/travel/papua-new-guinea-port-moresby.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/papua-vanimo.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/paraguay-caacupe.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/travel/paraguay-capiata.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/travel/peru-cusco.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/peru-huaraz.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/peru-iquitos.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/peru-piura.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1107,7 +1103,6 @@
 - `/kor/report/travel/peru-tumbes.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/philippines-baguio.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/philippines-bulacan.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/kor/report/travel/philippines-caloocan.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/philippines-carmona.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/philippines-cavite.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/philippines-davao.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1136,6 +1131,7 @@
 - `/kor/report/travel/portugal-lisbon.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/portugal-matosinhos.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/portugal-obidos.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/travel/portugal-portimao.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/portugal-silves.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/puerto-rico-arecibo.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/puerto-rico-san-juan.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1167,6 +1163,7 @@
 - `/kor/report/travel/saudi-jubail.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/saudi-khamis-mushait.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/saudi-mecca.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/travel/saudi-qatif.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/saudi-riyadh.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/senegal-dakar.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/senegal-joal-fadiout.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1178,7 +1175,6 @@
 - `/kor/report/travel/singapore-jurong-east.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/singapore-marinabay.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/singapore-pasir-ris.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/kor/report/travel/singapore-punggol.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/singapore-tiong-bahru.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/singapore-woodlands.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/slovakia-bardejov.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1187,6 +1183,7 @@
 - `/kor/report/travel/slovenia-maribor.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/slovenia-nova-gorica.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/slovenia-postojna.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/travel/slovenia-ptuj.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/solomon-gizo.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/somalia-galkayo.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/somalia-luuq.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1194,7 +1191,6 @@
 - `/kor/report/travel/south-africa-cape-town.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/south-africa-durban.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/south-africa-knysna.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/kor/report/travel/south-africa-polokwane.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/spain-alicante.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/spain-barcelona.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/spain-burgos.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1216,7 +1212,7 @@
 - `/kor/report/travel/srilanka-kalutara.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/srilanka-kandy.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/srilanka-mullaitivu.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/kor/report/travel/srilanka-ratnapura.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/travel/srilanka-trincomalee.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/sudan-kosti.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/svg-mustique-island.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/sweden-gothenburg.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1231,10 +1227,12 @@
 - `/kor/report/travel/switzerland-interlaken.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/switzerland-lausanne.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/switzerland-locarno.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/travel/switzerland-steinamrhein.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/switzerland-stgallen.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/switzerland-winterthur.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/syria-aleppo.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/syria-kobani.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/travel/taiwan-banqiao.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/taiwan-chiayi.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/taiwan-fulong.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/taiwan-hsinchu.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1278,6 +1276,7 @@
 - `/kor/report/travel/thailand-udonthani.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/thailand-uthaithani.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/togo-lome.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/travel/tunisia-carthage.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/tunisia-djerba.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/tunisia-lagoulette.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/tunisia-matmata.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1307,6 +1306,7 @@
 - `/kor/report/travel/tuvalu-funafuti.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/tuvalu-niutao.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/tuvalu-nukufetau.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/travel/tuvalu-nukulaelae.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/uae-abudhabi.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/uae-khorfakkan.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/uae-sharjah.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1350,7 +1350,6 @@
 - `/kor/report/travel/usa-philadelphia.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/usa-phoenix.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/usa-portland.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/kor/report/travel/usa-raleigh.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/usa-sanantonio.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/usa-sanfrancisco.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/usa-sanjose.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1385,6 +1384,7 @@
 - `/kor/report/travel/vietnam-tanan.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/vietnam-thainguyen.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/vietnam-thanhhoa.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/travel/vietnam-vinh.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/weekend-travel-korea-2025.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/zimbabwe-gweru.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/travel/zimbabwe-victoria-falls.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1488,12 +1488,15 @@
 - `/kor/report/visa/uruguay.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/visa/uzbekistan.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/window/windows-11-installation-checklist.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/window/windows-bsod-error-0x0000000A-fix.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/window/windows-bsod-error-0x0000001E-fix.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/window/windows-bsod-error-0x0000007E-fix.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/window/windows-update-error-0x80070020-fix.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/window/windows-update-error-0x8024000E-fix.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/window/windows-update-error-0x80240017-fix.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/window/windows-update-error-0x8024001D-fix.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/window/windows-update-error-0x80240021-fix.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/window/windows-update-error-0x80240031-fix.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/window/windows-update-error-0x80240035-fix.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/window/windows11-access-denied-error-0x80004005-fix.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/window/windows11-boot-configuration-data-error-fix.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1523,6 +1526,7 @@
 - `/kor/report/window/windows11-update-error-0x800f0905-fix.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/window/windows11-update-error-generic-0x800705b9-fix.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/window/windows11-usb-installation-media-guide.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/kor/report/window/windows11-windows-update-service-stopped-error-0x80070422-fix.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/window/windows11-wu-e-call-cancelled-error-0x8024000b-fix.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/window/windows11-wu-e-itemnotfound-error-0x80240008-fix.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/kor/report/window/windows11-wu-e-operationinprogress-error-0x80240009-fix.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1555,7 +1559,6 @@
 - `/report/travel/cabo-verde-vila-do-maio.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/report/travel/estonia-keila.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/report/travel/japan-hachioji.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/report/travel/japan-nishinomiya.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/report/travel/korea-gwangyang.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/report/travel/laos-oudomxay.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/report/travel/liechtenstein-mauren.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1566,6 +1569,7 @@
 - `/report/travel/portugal-amadora.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/report/travel/portugal-evora.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/report/travel/portugal-fatima.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/report/travel/portugal-guimaraes.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/report/travel/portugal-obidos.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/report/travel/portugal-portimao.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/report/travel/portugal-porto.html` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1577,7 +1581,6 @@
 - `/ru/util/EasyLetterWordCounter/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/ru/util/barcode/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/ru/util/cardgen/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/ru/util/crc/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/ru/util/dice3d/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/ru/util/diff/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/ru/util/nicknamegen/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1601,6 +1604,7 @@
 - `/util/nicknamegen/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/util/qrcode/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/util/quickmemo/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
+- `/util/text-cleaner/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/util/text-shuffle-sort/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/util/textcrypto/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/util/thumbnailgrabber/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
@@ -1614,7 +1618,7 @@
 ## Camping Cluster
 
 - Pages: 171
-- Revenue: 22.893
+- Revenue: 23.3288
 - Naver URL data: PARTIAL
 
 ## Growth Drivers
