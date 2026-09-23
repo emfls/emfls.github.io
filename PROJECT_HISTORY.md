@@ -765,3 +765,8 @@
 
 ## 2026-09-23 06:23 Keyword Hunter
 - Seeds: 40; New: 20; Rejected: 17; DB: 2895; Errors: 0; Top: 국가평생교육진흥원학점은행제. Report: reports/keyword-hunter/2026-09-23-0623.md
+
+## 2026-09-23 — P0 Revenue Growth #04 candidate selection
+- Latest artifacts contain no eligible camping `OPPORTUNITY`; stored camping/new-intent evidence is missing sufficient verified volume/trend, so no new camping URL was created.
+- Fallback selected `/util/reading-time/` as the largest threshold-qualified unprotected opportunity: Google 435 impressions / 0 clicks / position 60.87, GA4 3 views / 3 users, `OPPORTUNITY`, `VERIFIED`. The single lever is a clearer existing next-step label, `Word counter` → `Count words first`; URL, metadata, schema, GA4, AdSense, protected pages, experiments, and hubs remain unchanged.
+- Branch: `codex/p0-revenue-growth-04-search-demand`; targeted tests 23 passed, full pytest 1,016 passed, and `git diff --check` passed. PR/CI/merge/production remain pending.

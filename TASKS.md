@@ -23,6 +23,13 @@
   - 상태: `codex/p0-revenue-growth-02`에서 구현·검증; 아직 main 배포 전. GA4 Collection 1회 재실행 후 실제 artifact와 분류를 확인한다.
   - CI follow-up: SEO QA run `35703819990`에서 `scripts/content_launch_guard.py`가 workflow 파일명 `ga4-collection.yml`을 analytics runtime 변경으로 오탐했다. exact-path allowlist와 runtime asset 차단 회귀를 같은 PR에 추가했으며, 새 원격 SEO QA green 확인 전 merge 금지.
 
+- [ ] P0 Revenue Growth #04 — 비보호 캠핑 검색수요 확장
+  - baseline: latest main `fadfecbba0d19dfaa3644f4e725b930da06c6152`; latest GA4 `2026-08-25..2026-09-21`; GSC `2026-08-23..2026-09-19`.
+  - filter result: camping OPPORTUNITY `0`; threshold-qualified unprotected OPPORTUNITY was `/util/reading-time/` (Google 435 impressions, 0 clicks, position 60.87; GA4 3 views / 3 users). `/game/MBTI/` was the other threshold-qualified candidate (306 impressions) but had lower absolute exposure and no relevant next-step lever.
+  - selected lever: change the existing Word counter related-link label to `Count words first`; no URL, metadata, schema, analytics, ads, protected page, experiment, or hub change.
+  - verified camping intent: none strong enough in stored Keyword Hunter evidence; seasonal/camping suggestions with missing volume/trend were rejected.
+  - branch: `codex/p0-revenue-growth-04-search-demand`; status: implementation validation pending PR.
+
 ## P1 - High
 
 - [x] 12 · Spanish STOPat5 — `/es/game/STOPat5/`
