@@ -25,6 +25,18 @@ from scripts.keyword_hunter_improvements import select_improvement_candidates
 
 KST=timezone(timedelta(hours=9))
 
+def is_validation_only_watchlist_root(row, config):
+    """Allow measured owner roots to receive evidence without changing rejection semantics."""
+    return (
+        row.get('status') == 'REJECTED'
+        and row.get('reason') == 'UNCLEAR_OR_BROAD_INTENT'
+        and row.get('action') == 'REJECT'
+        and row.get('seed_source') == 'OWNER_WATCHLIST'
+        and not normalize(row.get('parent_keyword') or '')
+        and (number(row.get('monthly_total')) or 0) >= config.get('fast_filter_min_monthly_total', 10)
+        and bool(row.get('competition'))
+    )
+
 def update_registry(old, active, status, status_change=None, now=None):
     """Preserve durable ledgers during measurement; mutate only explicit target."""
     rows={normalize(r['keyword']):dict(r) for r in (old or [])}
@@ -133,7 +145,7 @@ def pending_validation_rows(rows,now,config):
     """Return bounded, high-signal rows that lack a required live measurement."""
     pending=[]; expired=[]; maximum=int(config.get('pending_validation_max_retries',3))
     for row in rows:
-        if row.get('status') in {'REJECTED','PUBLISHED'} or has_complete_validation(row):
+        if (row.get('status') in {'REJECTED','PUBLISHED'} and not is_validation_only_watchlist_root(row, config)) or has_complete_validation(row):
             continue
         if (number(row.get('monthly_total')) or 0)<config.get('fast_filter_min_monthly_total',10) or not row.get('competition'):
             continue
@@ -456,7 +468,7 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
             for raw in client.related(row['keyword']):
                 if normalize(raw['keyword'])==normalize(row['keyword']):
                     merge_validation_data(row,{k:v for k,v in raw.items() if k!='keyword'});row['search_ads_checked_at']=now.isoformat();break
-        validation_pool=[r for r in active if r['status'] not in {'REJECTED','PUBLISHED'} and normalize(r['keyword']) not in excluded_keywords and not ({normalize(r.get(k) or '') for k in ('keyword','parent_keyword','cluster')} & anchored_clusters)]
+        validation_pool=[r for r in active if (r['status'] not in {'REJECTED','PUBLISHED'} or is_validation_only_watchlist_root(r, config)) and normalize(r['keyword']) not in excluded_keywords and not ({normalize(r.get(k) or '') for k in ('keyword','parent_keyword','cluster')} & anchored_clusters)]
         pending_rows,expired_pending=pending_validation_rows(validation_pool,now,config)
         trend_rows,fast_passed=fast_filter_rows(validation_pool,fresh,now,config,recovery=recovery['active'])
         funnel['fast_filter_entered']=len(trend_rows);funnel['fast_filter_passed']=len(fast_passed)
@@ -496,7 +508,7 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
         trend_pool=[]; trend_seen=set()
         for row in pending_rows + prioritize_trend_rows(active, fresh):
             key=normalize(row.get('keyword',''))
-            if key in trend_seen or row.get('status') in {'PUBLISHED','REJECTED'}: continue
+            if key in trend_seen or (row.get('status') in {'PUBLISHED','REJECTED'} and not is_validation_only_watchlist_root(row, config)): continue
             if number(row.get('trend_1m')) is not None and number(row.get('trend_3m')) is not None: continue
             checked=row.get('datalab_checked_at')
             if checked and row.get('pending_validation')!='True':
