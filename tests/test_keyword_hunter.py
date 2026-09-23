@@ -307,6 +307,44 @@ class HunterTests(unittest.TestCase):
         self.assertEqual([r['keyword'] for r in result],['historical only'])
         self.assertFalse(row['score_valid'])
 
+    def test_search_ads_refresh_preserves_total_envelope_and_priority_allocation(self):
+        due=[{'keyword':f'ordinary-{i}','opportunity_score':100-i} for i in range(100)]
+        priority=[{'keyword':f'priority-{i}','monthly_total':10000-i,
+                   'opportunity_score':i} for i in range(15)]
+        rows=h.allocate_search_ads_refresh_rows(due,priority,{**h.DEFAULT_CONFIG,
+            'search_ads_refresh_limit':20})
+        self.assertEqual(len(rows),20)
+        self.assertEqual(sum(r['keyword'].startswith('priority-') for r in rows),15)
+        self.assertEqual(sum(r['keyword'].startswith('ordinary-') for r in rows),5)
+
+    def test_search_ads_refresh_fills_remainder_when_priority_is_small(self):
+        due=[{'keyword':f'ordinary-{i}','opportunity_score':100-i} for i in range(100)]
+        priority=[{'keyword':f'priority-{i}','monthly_total':10000-i,
+                   'opportunity_score':i} for i in range(4)]
+        rows=h.allocate_search_ads_refresh_rows(due,priority,{**h.DEFAULT_CONFIG,
+            'search_ads_refresh_limit':20})
+        self.assertEqual(len(rows),20)
+        self.assertEqual(sum(r['keyword'].startswith('priority-') for r in rows),4)
+        self.assertEqual(sum(r['keyword'].startswith('ordinary-') for r in rows),16)
+
+    def test_search_ads_refresh_caps_priority_above_total_limit(self):
+        due=[{'keyword':f'ordinary-{i}','opportunity_score':i} for i in range(100)]
+        priority=[{'keyword':f'priority-{i}','monthly_total':20000-i,
+                   'opportunity_score':i} for i in range(30)]
+        rows=h.allocate_search_ads_refresh_rows(due,priority,{**h.DEFAULT_CONFIG,
+            'search_ads_refresh_limit':20})
+        self.assertEqual(len(rows),20)
+        self.assertTrue(all(r['keyword'].startswith('priority-') for r in rows))
+
+    def test_search_ads_refresh_does_not_reserve_global_api_budget(self):
+        due=[{'keyword':f'ordinary-{i}','opportunity_score':i} for i in range(100)]
+        priority=[{'keyword':f'priority-{i}','monthly_total':20000-i,
+                   'opportunity_score':i} for i in range(15)]
+        rows=h.allocate_search_ads_refresh_rows(due,priority,{**h.DEFAULT_CONFIG,
+            'max_api_calls':100,'search_ads_refresh_limit':20})
+        self.assertEqual(len(rows),20)
+        self.assertEqual(h.DEFAULT_CONFIG['max_api_calls'],100)
+
     def test_fast_filter_skips_recent_validation_and_only_relaxes_in_recovery(self):
         from datetime import datetime, timezone
         now=datetime(2026,9,11,20,0,tzinfo=timezone.utc)

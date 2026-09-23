@@ -176,6 +176,18 @@ def priority_revalidation_rows(rows, now, config):
                                            -(number(r.get('opportunity_score')) or 0),
                                            r.get('keyword','')))[:cap]
 
+def allocate_search_ads_refresh_rows(due, priority_rows, config):
+    """Keep stale Search Ads refresh inside its historical envelope."""
+    refresh_limit = int(config.get('search_ads_refresh_limit', 20))
+    priority_rows = list(priority_rows)[:refresh_limit]
+    priority_keys = {normalize(r['keyword']) for r in priority_rows}
+    ordinary_limit = max(0, refresh_limit - len(priority_rows))
+    ordinary_rows = sorted(
+        (r for r in due if normalize(r['keyword']) not in priority_keys),
+        key=lambda r: -(number(r.get('opportunity_score')) or 0)
+    )[:ordinary_limit]
+    return priority_rows + ordinary_rows
+
 def datalab_usage(root,config,now=None):
     limit=int(os.environ.get('DATALAB_MONTHLY_LIMIT',config.get('datalab_monthly_limit',50000)))
     reserve=float(os.environ.get('DATALAB_RESERVE_RATIO',config.get('datalab_reserve_ratio',.10)))
@@ -439,11 +451,7 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
             if not checked or (now-datetime.fromisoformat(checked)).total_seconds()>=config['search_ads_cache_ttl_hours']*3600:
                 due.append(row)
         priority_rows=[] if data_quality_only or api_health.get('NAVER_SEARCH_ADS')=='NOT_CONFIGURED' else priority_revalidation_rows(due, now, config)
-        priority_keys={normalize(r['keyword']) for r in priority_rows}
-        ordinary_limit=max(0, int(config.get('max_api_calls',100))-len(priority_rows))
-        ordinary_rows=sorted((r for r in due if normalize(r['keyword']) not in priority_keys),
-                             key=lambda r:-(number(r.get('opportunity_score')) or 0))[:ordinary_limit]
-        due_rows=priority_rows+ordinary_rows
+        due_rows=allocate_search_ads_refresh_rows(due, priority_rows, config)
         for row in due_rows if not status_change else []:
             for raw in client.related(row['keyword']):
                 if normalize(raw['keyword'])==normalize(row['keyword']):
