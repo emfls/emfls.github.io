@@ -786,3 +786,6 @@
 
 ## 2026-09-24 07:59 Keyword Hunter
 - Seeds: 40; New: 40; Rejected: 33; DB: 3177; Errors: 0; Top: 호주워홀신청. Report: reports/keyword-hunter/2026-09-24-0759.md
+
+## 2026-09-24 13:58 Keyword Hunter
+- Seeds: 40; New: 20; Rejected: 16; DB: 3197; Errors: 0; Top: 자동차도색비용. Report: reports/keyword-hunter/2026-09-24-1358.md
