@@ -810,3 +810,6 @@
 
 ## 2026-09-25 22:53 Keyword Hunter
 - Seeds: 40; New: 20; Rejected: 17; DB: 3331; Errors: 0; Top: 캠핑장추천. Report: reports/keyword-hunter/2026-09-25-2253.md
+
+## 2026-09-26 03:41 Keyword Hunter
+- Seeds: 40; New: 129; Rejected: 107; DB: 3460; Errors: 0; Top: 아반떼중고차가격. Report: reports/keyword-hunter/2026-09-26-0341.md
