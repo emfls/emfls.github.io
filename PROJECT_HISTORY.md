@@ -813,3 +813,6 @@
 
 ## 2026-09-26 03:41 Keyword Hunter
 - Seeds: 40; New: 129; Rejected: 107; DB: 3460; Errors: 0; Top: 아반떼중고차가격. Report: reports/keyword-hunter/2026-09-26-0341.md
+
+## 2026-09-26 08:20 Keyword Hunter
+- Seeds: 40; New: 56; Rejected: 43; DB: 3516; Errors: 1; Top: 개인회생신청비용. Report: reports/keyword-hunter/2026-09-26-0820.md
