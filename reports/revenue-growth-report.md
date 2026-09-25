@@ -26,9 +26,9 @@
 - Naver: 980 impressions / 65 clicks / 6.6% CTR
 - Rank: N/A
 
-### 2. `/kor/report/camp/muju.html`
+### 2. `/kor/report/camp/gyeongnam-best.html`
 
-- Score: 47.46 / 100
+- Score: 50.13 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -37,9 +37,9 @@
 - Naver: NOT_AVAILABLE
 - Rank: N/A
 
-### 3. `/kor/report/camp/hoengseong.html`
+### 3. `/kor/report/camp/muju.html`
 
-- Score: 47.33 / 100
+- Score: 47.41 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -70,7 +70,18 @@
 - Naver: NOT_AVAILABLE
 - Rank: N/A
 
-### 6. `/kor/report/camp/yeongam.html`
+### 6. `/kor/report/camp/hoengseong.html`
+
+- Score: 46.87 / 100
+- Classification: WINNER
+- Why: Verified URL revenue; Verified traffic
+- Next Action: PROTECT
+- Cooldown: NO
+- Data Status: VERIFIED
+- Naver: NOT_AVAILABLE
+- Rank: N/A
+
+### 7. `/kor/report/camp/yeongam.html`
 
 - Score: 46.38 / 100
 - Classification: WINNER
@@ -81,29 +92,7 @@
 - Naver: NOT_AVAILABLE
 - Rank: N/A
 
-### 7. `/kor/report/camp/gyeongnam-best.html`
-
-- Score: 46.21 / 100
-- Classification: WINNER
-- Why: Verified URL revenue; Verified traffic
-- Next Action: PROTECT
-- Cooldown: NO
-- Data Status: VERIFIED
-- Naver: NOT_AVAILABLE
-- Rank: N/A
-
-### 8. `/kor/report/camp/taebaek.html`
-
-- Score: 45.89 / 100
-- Classification: WINNER
-- Why: Verified URL revenue; Verified traffic
-- Next Action: PROTECT
-- Cooldown: NO
-- Data Status: VERIFIED
-- Naver: NOT_AVAILABLE
-- Rank: N/A
-
-### 9. `/kor/report/camp/andong.html`
+### 8. `/kor/report/camp/andong.html`
 
 - Score: 45.51 / 100
 - Classification: WINNER
@@ -114,9 +103,20 @@
 - Naver: NOT_AVAILABLE
 - Rank: N/A
 
+### 9. `/kor/report/camp/taebaek.html`
+
+- Score: 45.45 / 100
+- Classification: WINNER
+- Why: Verified URL revenue; Verified traffic
+- Next Action: PROTECT
+- Cooldown: NO
+- Data Status: VERIFIED
+- Naver: NOT_AVAILABLE
+- Rank: N/A
+
 ### 10. `/kor/report/travel/`
 
-- Score: 45.41 / 100
+- Score: 45.2 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
