@@ -257,6 +257,14 @@ def test_launch_manifest_is_exactly_the_current_launch_batch():
         assert manifest["dailyLimit"] == 1
         assert manifest["remainingCapacity"] == 0
         return
+    if manifest["urls"] == ["/kor/report/car/car-full-paint-cost-guide.html"]:
+        assert manifest["contentPaths"] == ["kor/report/car/car-full-paint-cost-guide.html"]
+        assert manifest["hubPaths"] == ["kor/report/car/index.html"]
+        assert manifest["sitemapPaths"] == ["kor/sitemap.xml"]
+        assert manifest["publishedToday"] == 1
+        assert manifest["dailyLimit"] == 1
+        assert manifest["remainingCapacity"] == 0
+        return
     assert manifest["urls"] == ["/kor/util/water-purifier-rental-price-comparison/"]
     assert manifest["contentPaths"] == ["kor/util/water-purifier-rental-price-comparison/index.html"]
     assert manifest["hubPaths"] == ["kor/util/index.html"]
