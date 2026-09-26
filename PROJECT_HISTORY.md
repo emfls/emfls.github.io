@@ -825,3 +825,6 @@
 
 ## 2026-09-27 01:28 Keyword Hunter
 - Seeds: 40; New: 60; Rejected: 54; DB: 3716; Errors: 0; Top: 가압류신청. Report: reports/keyword-hunter/2026-09-27-0128.md
+
+## 2026-09-27 06:15 Keyword Hunter
+- Seeds: 40; New: 28; Rejected: 21; DB: 3744; Errors: 0; Top: 사업소득계산기. Report: reports/keyword-hunter/2026-09-27-0615.md
