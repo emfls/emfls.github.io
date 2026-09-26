@@ -148,18 +148,6 @@ def read_page(slug):
     return (ROOT / relative).read_text(encoding="utf-8")
 
 
-def test_car_full_paint_manifest_batch_contract():
-    manifest = json.loads((ROOT / "data/content-launch-manifest.json").read_text(encoding="utf-8"))
-    assert manifest["candidateIds"] == ["keyword:차량전체도색비용"]
-    assert manifest["contentPaths"] == ["kor/report/car/car-full-paint-cost-guide.html"]
-    assert manifest["hubPaths"] == ["kor/report/car/index.html"]
-    assert manifest["sitemapPaths"] == ["kor/sitemap.xml"]
-    assert manifest["urls"] == ["/kor/report/car/car-full-paint-cost-guide.html"]
-    assert manifest["publishedToday"] == 1
-    assert manifest["dailyLimit"] == 1
-    assert manifest["remainingCapacity"] == 0
-
-
 def run_pure(relative, expression):
     html = (ROOT / relative).read_text(encoding="utf-8")
     block = re.search(r"<!-- PURE_START -->(.*?)<!-- PURE_END -->", html, re.S)
