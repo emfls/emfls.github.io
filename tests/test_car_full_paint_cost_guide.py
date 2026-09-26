@@ -1,11 +1,23 @@
 import json
 import re
+import subprocess
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 PAGE = ROOT / "kor/report/car/car-full-paint-cost-guide.html"
 URL = "https://emfls.github.io/kor/report/car/car-full-paint-cost-guide.html"
+
+
+def _read_committed_launch_manifest():
+    result = subprocess.run(
+        ["git", "show", "HEAD:data/content-launch-manifest.json"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return json.loads(result.stdout)
 
 
 def test_full_paint_guide_contract():
@@ -34,7 +46,7 @@ def test_full_paint_discovery_and_sitemaps():
 
 
 def test_full_paint_launch_manifest():
-    manifest = json.loads((ROOT / "data/content-launch-manifest.json").read_text(encoding="utf-8"))
+    manifest = _read_committed_launch_manifest()
     assert manifest["candidateIds"] == ["keyword:차량전체도색비용"]
     assert manifest["contentPaths"] == ["kor/report/car/car-full-paint-cost-guide.html"]
     assert manifest["hubPaths"] == ["kor/report/car/index.html"]
@@ -44,3 +56,5 @@ def test_full_paint_launch_manifest():
     assert manifest["dailyLimit"] == 1
     assert manifest["remainingCapacity"] == 0
     assert manifest["status"] == "PUBLISHED"
+    assert manifest["runAt"] == "2026-09-26T09:03:00+09:00"
+    assert manifest["runId"] == "P0-20260926-CAR-FULL-PAINT"
