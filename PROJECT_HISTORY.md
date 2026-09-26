@@ -819,3 +819,6 @@
 
 ## 2026-09-26 14:06 Keyword Hunter
 - Seeds: 40; New: 0; Rejected: 0; DB: 3516; Errors: 0; Top: none. Report: reports/keyword-hunter/2026-09-26-1406.md
+
+## 2026-09-26 20:30 Keyword Hunter
+- Seeds: 40; New: 140; Rejected: 113; DB: 3656; Errors: 0; Top: 모닝중고차가격. Report: reports/keyword-hunter/2026-09-26-2030.md
