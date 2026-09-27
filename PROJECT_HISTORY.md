@@ -840,3 +840,6 @@
 
 ## 2026-09-28 03:28 Keyword Hunter
 - Seeds: 40; New: 40; Rejected: 28; DB: 3826; Errors: 0; Top: 야간근로수당계산. Report: reports/keyword-hunter/2026-09-28-0328.md
+
+## 2026-09-28 08:06 Keyword Hunter
+- Seeds: 40; New: 40; Rejected: 21; DB: 3866; Errors: 1; Top: 휴일근무수당계산. Report: reports/keyword-hunter/2026-09-28-0806.md
