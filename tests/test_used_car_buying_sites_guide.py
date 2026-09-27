@@ -1,11 +1,23 @@
 import json
 import re
+import subprocess
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 PAGE = ROOT / "kor/report/car/used-car-buying-sites-guide.html"
 URL = "https://emfls.github.io/kor/report/car/used-car-buying-sites-guide.html"
+
+
+def _committed_manifest() -> dict:
+    result = subprocess.run(
+        ["git", "show", "HEAD:data/content-launch-manifest.json"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return json.loads(result.stdout)
 
 
 def _article_json_ld(html: str) -> dict:
@@ -47,7 +59,7 @@ def test_used_car_buying_sites_guide_contract():
         "동일 조건",
         "계약 조건",
         "공식 출처",
-        "정보 확인일: 2026-09-26",
+        "정보 확인일: 2026-09-27",
         "https://www.encar.com/sg/sg_index_v01.html",
         "https://www.kcar.com/bc/homeSvc/main",
         "https://www.kbchachacha.com/",
@@ -99,3 +111,34 @@ def test_used_car_buying_sites_guide_explains_verification_flow():
         "환불",
     ):
         assert step in html
+
+
+def test_used_car_buying_sites_launch_wiring_contract():
+    manifest = _committed_manifest()
+    assert manifest["candidateIds"] == ["keyword:중고차구매사이트"]
+    assert manifest["contentPaths"] == [
+        "kor/report/car/used-car-buying-sites-guide.html"
+    ]
+    assert manifest["hubPaths"] == ["kor/report/car/index.html"]
+    assert manifest["sitemapPaths"] == ["kor/sitemap.xml"]
+    assert manifest["urls"] == ["/kor/report/car/used-car-buying-sites-guide.html"]
+    assert manifest["dailyLimit"] == 1
+    assert manifest["publishedToday"] == 1
+    assert manifest["remainingCapacity"] == 0
+    assert manifest["status"] == "PUBLISHED"
+    assert manifest["runId"] == "P0-20260927-USED-CAR-BUYING-SITES"
+    assert re.fullmatch(
+        r"2026-09-27T\d{2}:\d{2}:\d{2}\+09:00", manifest["runAt"]
+    )
+
+    hub = (ROOT / "kor/report/car/index.html").read_text(encoding="utf-8")
+    assert hub.count(
+        'href="/kor/report/car/used-car-buying-sites-guide.html"'
+    ) == 1
+    assert len(re.findall(r'<a class="card" href=', hub)) == 18
+    assert "총 18개 콘텐츠" in hub
+
+    car_sitemap = (ROOT / "kor/report/car/sitemap.xml").read_text(encoding="utf-8")
+    root_sitemap = (ROOT / "kor/sitemap.xml").read_text(encoding="utf-8")
+    assert car_sitemap.count(f"<loc>{URL}</loc>") == 1
+    assert root_sitemap.count(f"<loc>{URL}</loc>") == 1
