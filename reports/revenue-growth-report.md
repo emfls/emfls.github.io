@@ -8,16 +8,16 @@
 - Revenue per Indexed Page: N/A
 - Views per User: 1.33
 - WINNER: 1508
-- OPPORTUNITY: 38
+- OPPORTUNITY: 37
 - EXPERIMENT: 0
 - DEAD_CANDIDATE: 0
-- INSUFFICIENT_DATA: 17518
+- INSUFFICIENT_DATA: 17519
 
 ## TOP REVENUE OPPORTUNITIES
 
 ### 1. `/kor/report/camp/hadong.html`
 
-- Score: 53.85 / 100
+- Score: 53.93 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -37,9 +37,9 @@
 - Naver: NOT_AVAILABLE
 - Rank: N/A
 
-### 3. `/kor/report/camp/muju.html`
+### 3. `/kor/report/travel/sweden-malmo.html`
 
-- Score: 47.64 / 100
+- Score: 47.59 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -48,9 +48,9 @@
 - Naver: NOT_AVAILABLE
 - Rank: N/A
 
-### 4. `/kor/report/travel/sweden-malmo.html`
+### 4. `/kor/report/camp/muju.html`
 
-- Score: 47.3 / 100
+- Score: 47.58 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -61,7 +61,7 @@
 
 ### 5. `/kor/report/camp/yeongam.html`
 
-- Score: 46.9 / 100
+- Score: 47.02 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -83,7 +83,7 @@
 
 ### 7. `/kor/report/camp/icheon.html`
 
-- Score: 46.58 / 100
+- Score: 46.55 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -105,7 +105,7 @@
 
 ### 9. `/kor/report/camp/taebaek.html`
 
-- Score: 45.62 / 100
+- Score: 45.35 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -116,7 +116,7 @@
 
 ### 10. `/kor/report/travel/`
 
-- Score: 44.94 / 100
+- Score: 44.56 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
