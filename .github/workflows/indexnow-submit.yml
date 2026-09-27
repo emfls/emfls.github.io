@@ -1,0 +1,61 @@
+name: IndexNow Submit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**/*.html"
+      - "**/index.html"
+      - "data/content-launch-manifest.json"
+  workflow_dispatch:
+    inputs:
+      backfill_urls:
+        description: "Optional newline-separated production URLs for verified recovery/backfill"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: indexnow-submit
+  cancel-in-progress: false
+
+jobs:
+  submit:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      EVENT_BEFORE: ${{ github.event.before }}
+      BACKFILL_URLS: ${{ inputs.backfill_urls }}
+      INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+    steps:
+      - name: Check out full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Submit verified launch URLs to IndexNow
+        run: |
+          mkdir -p artifacts
+          before="${EVENT_BEFORE:-$(git rev-parse HEAD^)}"
+          python3 scripts/indexnow_submit.py \
+            --root . \
+            --before "$before" \
+            --sha "$GITHUB_SHA" \
+            --backfill-urls "$BACKFILL_URLS" \
+            --report artifacts/indexnow-report.json
+
+      - name: Upload IndexNow report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: indexnow-report-${{ github.run_id }}
+          path: artifacts/indexnow-report.json
+          if-no-files-found: warn
