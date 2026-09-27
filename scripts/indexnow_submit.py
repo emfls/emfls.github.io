@@ -20,6 +20,9 @@ KEY_PATH = "/indexnow-key.txt"
 INDEXNOW_ENDPOINT = "https://api.indexnow.org/indexnow"
 REQUEST_TIMEOUT = 20
 MAX_429_RETRIES = 2
+PRODUCTION_POLL_ATTEMPTS = 20
+PRODUCTION_POLL_INTERVAL = 30
+REPORT_SCHEMA_VERSION = 1
 
 
 class GateError(RuntimeError):
@@ -146,6 +149,38 @@ def validate_production_page(url, key, opener=urlopen, check_key=True):
     return {"url": url, "status": "VERIFIED", "httpStatus": status}
 
 
+def wait_for_production_ready(
+    urls,
+    key,
+    opener=urlopen,
+    sleep=time.sleep,
+    attempts=PRODUCTION_POLL_ATTEMPTS,
+    interval=PRODUCTION_POLL_INTERVAL,
+):
+    """Poll Pages propagation without retrying invalid input or unsafe URLs."""
+    if not urls:
+        raise GateError("INDEXNOW_URL_LIST_EMPTY")
+    for url in urls:
+        ensure_same_host_https(url)
+
+    last_error = None
+    for attempt in range(attempts):
+        try:
+            verify_key_file(key, opener=opener)
+            return [
+                validate_production_page(url, key, opener=opener, check_key=False)
+                for url in urls
+            ]
+        except GateError as error:
+            if str(error) in {"INDEXNOW_KEY_INVALID", "URL_HOST_OR_SCHEME_INVALID"}:
+                raise
+            last_error = error
+            if attempt + 1 < attempts:
+                sleep(interval)
+
+    raise GateError("PRODUCTION_NOT_READY") from last_error
+
+
 def submit_urls(urls, key, opener=urlopen, sleep=time.sleep, max_retries=MAX_429_RETRIES):
     if not urls:
         raise GateError("INDEXNOW_URL_LIST_EMPTY")
@@ -189,13 +224,31 @@ def submit_urls(urls, key, opener=urlopen, sleep=time.sleep, max_retries=MAX_429
     raise GateError("INDEXNOW_429_RETRIES_EXHAUSTED")
 
 
-def build_report(status, candidates, submitted, errors):
+def build_report(
+    status,
+    candidates,
+    submitted,
+    errors,
+    mode="auto",
+    before_sha="",
+    after_sha="",
+    indexnow_status="NOT_SENT",
+):
     return {
+        "schemaVersion": REPORT_SCHEMA_VERSION,
+        "mode": mode,
         "generatedAt": datetime.now(timezone.utc).isoformat(),
-        "status": status,
+        "beforeSha": before_sha,
+        "afterSha": after_sha,
+        "host": PUBLIC_HOST,
+        "keyLocation": PUBLIC_ORIGIN + KEY_PATH,
+        "candidateCount": len(candidates),
         "candidates": list(candidates),
         "submitted": list(submitted),
         "errors": list(errors),
+        "status": status,
+        "finalStatus": status,
+        "indexnowStatus": indexnow_status,
     }
 
 
@@ -235,9 +288,10 @@ def main(argv=None):
     args = parser.parse_args(argv)
     root = args.root.resolve()
     report_path = args.report if args.report.is_absolute() else root / args.report
+    mode = "manual" if os.environ.get("GITHUB_EVENT_NAME") == "workflow_dispatch" else "auto"
 
     if should_skip_actor(args.actor):
-        report = build_report("SKIP_BOT_COMMIT", [], [], [])
+        report = build_report("SKIP_BOT_COMMIT", [], [], [], mode=mode, before_sha=args.before, after_sha=args.sha)
         _write_report(report_path, report)
         print("SKIP_BOT_COMMIT")
         return 0
@@ -252,23 +306,55 @@ def main(argv=None):
             candidates.append(url)
 
     if not candidates:
-        report = build_report("SKIP_NO_CHANGED_LAUNCH_URL", [], [], [])
+        report = build_report(
+            "SKIP_NO_CHANGED_LAUNCH_URL",
+            [],
+            [],
+            [],
+            mode=mode,
+            before_sha=args.before,
+            after_sha=args.sha,
+        )
         _write_report(report_path, report)
         print("SKIP_NO_CHANGED_LAUNCH_URL")
         return 0
 
     key = os.environ.get("INDEXNOW_KEY", "")
     try:
-        verify_key_file(key)
-        verified = [validate_production_page(url, key, check_key=False) for url in candidates]
+        wait_for_production_ready(candidates, key)
         if args.dry_run:
-            report = build_report("DRY_RUN_VERIFIED", candidates, [], [])
+            report = build_report(
+                "DRY_RUN_VERIFIED",
+                candidates,
+                [],
+                [],
+                mode=mode,
+                before_sha=args.before,
+                after_sha=args.sha,
+            )
         else:
             submitted = submit_urls(candidates, key)
-            report = build_report("SUBMITTED", candidates, verified, [])
+            report = build_report(
+                "SUBMITTED",
+                candidates,
+                candidates,
+                [],
+                mode=mode,
+                before_sha=args.before,
+                after_sha=args.sha,
+                indexnow_status=submitted["status"],
+            )
             report["submission"] = submitted
     except GateError as error:
-        report = build_report("FAILED", candidates, [], [str(error)])
+        report = build_report(
+            "FAILED",
+            candidates,
+            [],
+            [str(error)],
+            mode=mode,
+            before_sha=args.before,
+            after_sha=args.sha,
+        )
         _write_report(report_path, report)
         print(json.dumps(report, ensure_ascii=False))
         return 1

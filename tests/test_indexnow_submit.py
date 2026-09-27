@@ -13,6 +13,7 @@ from scripts.indexnow_submit import (
     should_skip_actor,
     submit_urls,
     validate_production_page,
+    wait_for_production_ready,
 )
 
 
@@ -115,6 +116,78 @@ def test_production_gate_rejects_key_mismatch_noindex_and_canonical_mismatch():
         validate_production_page(page_url, "a" * 32, opener=bad_page_opener)
 
 
+def test_production_polling_retries_until_ready_then_submits():
+    key = "a" * 32
+    page_url = "https://emfls.github.io/kor/new/"
+    html = '<link rel="canonical" href="%s">' % page_url
+    page_attempts = []
+    sleeps = []
+
+    def opener(request, timeout=0):
+        url = request.full_url
+        if url.endswith("/indexnow-key.txt"):
+            return FakeResponse(body=key, url=url)
+        if url == page_url:
+            page_attempts.append(1)
+            if len(page_attempts) < 3:
+                return FakeResponse(status=404, url=url)
+            return FakeResponse(body=html, url=page_url)
+        return FakeResponse(status=202, body="accepted", url=url)
+
+    verified = wait_for_production_ready(
+        [page_url],
+        key,
+        opener=opener,
+        sleep=sleeps.append,
+        attempts=3,
+        interval=30,
+    )
+    submission = submit_urls([item["url"] for item in verified], key, opener=opener, sleep=lambda _: None)
+
+    assert verified == [{"url": page_url, "status": "VERIFIED", "httpStatus": 200}]
+    assert submission == {"status": 202, "submitted": 1}
+    assert page_attempts == [1, 1, 1]
+    assert sleeps == [30, 30]
+
+
+def test_production_polling_fails_closed_after_max_attempts():
+    key = "a" * 32
+    page_url = "https://emfls.github.io/kor/new/"
+    sleeps = []
+
+    def opener(request, timeout=0):
+        if request.full_url.endswith("/indexnow-key.txt"):
+            return FakeResponse(body=key, url=request.full_url)
+        return FakeResponse(status=404, url=request.full_url)
+
+    with pytest.raises(GateError, match="PRODUCTION_NOT_READY"):
+        wait_for_production_ready(
+            [page_url],
+            key,
+            opener=opener,
+            sleep=sleeps.append,
+            attempts=3,
+            interval=30,
+        )
+
+    assert sleeps == [30, 30]
+
+
+def test_invalid_input_fails_without_polling():
+    sleeps = []
+
+    with pytest.raises(GateError, match="INDEXNOW_KEY_INVALID"):
+        wait_for_production_ready(
+            ["https://emfls.github.io/kor/new/"],
+            "bad key",
+            sleep=sleeps.append,
+            attempts=3,
+            interval=30,
+        )
+
+    assert sleeps == []
+
+
 def test_bulk_submission_accepts_200_and_202():
     requests = []
 
@@ -163,6 +236,31 @@ def test_artifact_report_never_contains_key():
     assert "aaaaaaaa" not in encoded
 
 
+def test_report_contract_contains_runtime_fields_without_secret():
+    report = build_report(
+        status="SUBMITTED",
+        candidates=["https://emfls.github.io/kor/new/"],
+        submitted=["https://emfls.github.io/kor/new/"],
+        errors=[],
+        mode="manual",
+        before_sha="before",
+        after_sha="after",
+        indexnow_status=202,
+    )
+
+    assert report["schemaVersion"] == 1
+    assert report["mode"] == "manual"
+    assert report["beforeSha"] == "before"
+    assert report["afterSha"] == "after"
+    assert report["host"] == "emfls.github.io"
+    assert report["keyLocation"] == "https://emfls.github.io/indexnow-key.txt"
+    assert report["candidateCount"] == 1
+    assert report["submitted"] == ["https://emfls.github.io/kor/new/"]
+    assert report["finalStatus"] == "SUBMITTED"
+    assert report["indexnowStatus"] == 202
+    assert "aaaaaaaa" not in json.dumps(report)
+
+
 def test_workflow_contract_is_present():
     source = WORKFLOW.read_text(encoding="utf-8")
     script = (ROOT / "scripts/indexnow_submit.py").read_text(encoding="utf-8")
@@ -172,6 +270,10 @@ def test_workflow_contract_is_present():
     assert "api.indexnow.org/indexnow" in script
     assert "upload-artifact@v4" in source
     assert "github-actions[bot]" in source
+    assert "timeout-minutes: 15" in source
+    assert "GITHUB_STEP_SUMMARY" in source
+    assert "submitted URLs" in source
+    assert "IndexNow HTTP status" in source
 
 
 def test_cli_dry_run_reports_no_changed_launch_url(tmp_path):

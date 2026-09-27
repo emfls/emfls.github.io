@@ -25,7 +25,7 @@ jobs:
   submit:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     env:
       EVENT_BEFORE: ${{ github.event.before }}
       BACKFILL_URLS: ${{ inputs.backfill_urls }}
@@ -59,3 +59,30 @@ jobs:
           name: indexnow-report-${{ github.run_id }}
           path: artifacts/indexnow-report.json
           if-no-files-found: warn
+
+      - name: Write IndexNow step summary
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          report_path = Path("artifacts/indexnow-report.json")
+          if report_path.exists():
+              report = json.loads(report_path.read_text(encoding="utf-8"))
+          else:
+              report = {"mode": "unknown", "candidateCount": 0, "submitted": [], "indexnowStatus": "NOT_SENT", "status": "REPORT_MISSING"}
+
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as summary:
+              summary.write("## IndexNow\n\n")
+              summary.write(f"- mode: {report.get('mode', 'unknown')}\n")
+              summary.write(f"- candidate count: {report.get('candidateCount', 0)}\n")
+              submitted = report.get("submitted", [])
+              summary.write(f"- submitted URL count: {len(submitted)}\n")
+              summary.write("- submitted URLs:\n")
+              for url in submitted:
+                  summary.write(f"  - {url}\n")
+              summary.write(f"- IndexNow HTTP status: {report.get('indexnowStatus', 'NOT_SENT')}\n")
+              summary.write(f"- final status: {report.get('status', 'UNKNOWN')}\n")
+          PY
