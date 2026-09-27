@@ -831,3 +831,6 @@
 
 ## 2026-09-27 09:40 Keyword Hunter
 - Seeds: 40; New: 20; Rejected: 16; DB: 3764; Errors: 0; Top: 연말정산계산기. Report: reports/keyword-hunter/2026-09-27-0940.md
+
+## 2026-09-27 17:16 Keyword Hunter
+- Seeds: 40; New: 22; Rejected: 6; DB: 3786; Errors: 0; Top: 월급일할계산. Report: reports/keyword-hunter/2026-09-27-1716.md
