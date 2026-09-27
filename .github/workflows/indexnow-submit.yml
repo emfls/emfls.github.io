@@ -1,0 +1,88 @@
+name: IndexNow Submit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "**/*.html"
+      - "**/index.html"
+      - "data/content-launch-manifest.json"
+  workflow_dispatch:
+    inputs:
+      backfill_urls:
+        description: "Optional newline-separated production URLs for verified recovery/backfill"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: indexnow-submit
+  cancel-in-progress: false
+
+jobs:
+  submit:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      EVENT_BEFORE: ${{ github.event.before }}
+      BACKFILL_URLS: ${{ inputs.backfill_urls }}
+      INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+    steps:
+      - name: Check out full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Submit verified launch URLs to IndexNow
+        run: |
+          mkdir -p artifacts
+          before="${EVENT_BEFORE:-$(git rev-parse HEAD^)}"
+          python3 scripts/indexnow_submit.py \
+            --root . \
+            --before "$before" \
+            --sha "$GITHUB_SHA" \
+            --backfill-urls "$BACKFILL_URLS" \
+            --report artifacts/indexnow-report.json
+
+      - name: Upload IndexNow report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: indexnow-report-${{ github.run_id }}
+          path: artifacts/indexnow-report.json
+          if-no-files-found: warn
+
+      - name: Write IndexNow step summary
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          report_path = Path("artifacts/indexnow-report.json")
+          if report_path.exists():
+              report = json.loads(report_path.read_text(encoding="utf-8"))
+          else:
+              report = {"mode": "unknown", "candidateCount": 0, "submitted": [], "indexnowStatus": "NOT_SENT", "status": "REPORT_MISSING"}
+
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as summary:
+              summary.write("## IndexNow\n\n")
+              summary.write(f"- mode: {report.get('mode', 'unknown')}\n")
+              summary.write(f"- candidate count: {report.get('candidateCount', 0)}\n")
+              submitted = report.get("submitted", [])
+              summary.write(f"- submitted URL count: {len(submitted)}\n")
+              summary.write("- submitted URLs:\n")
+              for url in submitted:
+                  summary.write(f"  - {url}\n")
+              summary.write(f"- IndexNow HTTP status: {report.get('indexnowStatus', 'NOT_SENT')}\n")
+              summary.write(f"- final status: {report.get('status', 'UNKNOWN')}\n")
+          PY
