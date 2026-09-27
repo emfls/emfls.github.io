@@ -837,3 +837,6 @@
 
 ## 2026-09-27 23:05 Keyword Hunter
 - Seeds: 40; New: 0; Rejected: 0; DB: 3786; Errors: 0; Top: none. Report: reports/keyword-hunter/2026-09-27-2305.md
+
+## 2026-09-28 03:28 Keyword Hunter
+- Seeds: 40; New: 40; Rejected: 28; DB: 3826; Errors: 0; Top: 야간근로수당계산. Report: reports/keyword-hunter/2026-09-28-0328.md
