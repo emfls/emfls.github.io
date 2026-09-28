@@ -853,3 +853,6 @@
 
 ## 2026-09-28 14:30 Keyword Hunter
 - Seeds: 40; New: 20; Rejected: 18; DB: 3886; Errors: 0; Top: 노무사비용. Report: reports/keyword-hunter/2026-09-28-1430.md
+
+## 2026-09-28 23:04 Keyword Hunter
+- Seeds: 40; New: 40; Rejected: 30; DB: 3926; Errors: 0; Top: 연차수당계산. Report: reports/keyword-hunter/2026-09-28-2304.md
