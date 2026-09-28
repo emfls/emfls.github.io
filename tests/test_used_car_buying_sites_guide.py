@@ -1,23 +1,11 @@
 import json
 import re
-import subprocess
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 PAGE = ROOT / "kor/report/car/used-car-buying-sites-guide.html"
 URL = "https://emfls.github.io/kor/report/car/used-car-buying-sites-guide.html"
-
-
-def _committed_manifest() -> dict:
-    result = subprocess.run(
-        ["git", "show", "HEAD:data/content-launch-manifest.json"],
-        cwd=ROOT,
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    return json.loads(result.stdout)
 
 
 def _article_json_ld(html: str) -> dict:
@@ -113,24 +101,7 @@ def test_used_car_buying_sites_guide_explains_verification_flow():
         assert step in html
 
 
-def test_used_car_buying_sites_launch_wiring_contract():
-    manifest = _committed_manifest()
-    assert manifest["candidateIds"] == ["keyword:중고차구매사이트"]
-    assert manifest["contentPaths"] == [
-        "kor/report/car/used-car-buying-sites-guide.html"
-    ]
-    assert manifest["hubPaths"] == ["kor/report/car/index.html"]
-    assert manifest["sitemapPaths"] == ["kor/sitemap.xml"]
-    assert manifest["urls"] == ["/kor/report/car/used-car-buying-sites-guide.html"]
-    assert manifest["dailyLimit"] == 1
-    assert manifest["publishedToday"] == 1
-    assert manifest["remainingCapacity"] == 0
-    assert manifest["status"] == "PUBLISHED"
-    assert manifest["runId"] == "P0-20260927-USED-CAR-BUYING-SITES"
-    assert re.fullmatch(
-        r"2026-09-27T\d{2}:\d{2}:\d{2}\+09:00", manifest["runAt"]
-    )
-
+def test_used_car_buying_sites_discovery_wiring_contract():
     hub = (ROOT / "kor/report/car/index.html").read_text(encoding="utf-8")
     assert hub.count(
         'href="/kor/report/car/used-car-buying-sites-guide.html"'

@@ -11,6 +11,18 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 
+
+def _committed_launch_manifest():
+    result = subprocess.run(
+        ["git", "show", "HEAD:data/content-launch-manifest.json"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return json.loads(result.stdout)
+
+
 PAGES = {
     "car": ("kor/util/car-inspection-cost/index.html", "자동차검사 비용·예약 도우미"),
     "date": ("kor/util/date-calculator/index.html", "날짜 계산기"),
@@ -275,6 +287,17 @@ def test_launch_manifest_is_exactly_the_current_launch_batch():
         assert manifest["dailyLimit"] == 1
         assert manifest["remainingCapacity"] == 0
         return
+    if manifest["urls"] == ["/kor/column/1688gumaedaehaeng/"]:
+        assert manifest["candidateIds"] == ["keyword:1688구매대행"]
+        assert manifest["contentPaths"] == [
+            "kor/column/1688gumaedaehaeng/index.html"
+        ]
+        assert manifest["hubPaths"] == ["kor/column/index.html"]
+        assert manifest["sitemapPaths"] == ["kor/sitemap.xml"]
+        assert manifest["publishedToday"] == 1
+        assert manifest["dailyLimit"] == 1
+        assert manifest["remainingCapacity"] == 0
+        return
     assert manifest["urls"] == ["/kor/util/water-purifier-rental-price-comparison/"]
     assert manifest["contentPaths"] == ["kor/util/water-purifier-rental-price-comparison/index.html"]
     assert manifest["hubPaths"] == ["kor/util/index.html"]
@@ -282,6 +305,43 @@ def test_launch_manifest_is_exactly_the_current_launch_batch():
     assert manifest["publishedToday"] == 1
     assert manifest["dailyLimit"] is None
     assert manifest["remainingCapacity"] is None
+
+
+def test_1688_launch_manifest_contract():
+    manifest = _committed_launch_manifest()
+    assert manifest["candidateIds"] == ["keyword:1688구매대행"]
+    assert manifest["contentPaths"] == ["kor/column/1688gumaedaehaeng/index.html"]
+    assert manifest["hubPaths"] == ["kor/column/index.html"]
+    assert manifest["sitemapPaths"] == ["kor/sitemap.xml"]
+    assert manifest["urls"] == ["/kor/column/1688gumaedaehaeng/"]
+    assert manifest["status"] == "PUBLISHED"
+    assert manifest["runAt"].startswith("2026-09-28T")
+    assert manifest["runId"] == "P0-20260928-1688-PURCHASE-AGENCY"
+    assert manifest["dailyLimit"] == 1
+    assert manifest["publishedToday"] == 1
+    assert manifest["remainingCapacity"] == 0
+
+
+def test_1688_launch_discovery_contract():
+    url = "/kor/column/1688gumaedaehaeng/"
+    index_url = "/kor/column/1688gumaedaehaeng/index.html"
+    canonical = "https://emfls.github.io" + url
+    assert (ROOT / "kor/column/1688gumaedaehaeng/index.html").is_file()
+    assert 'href="/kor/column/1688gumaedaehaeng/"' in (
+        ROOT / "kor/column/index.html"
+    ).read_text(encoding="utf-8")
+    sitemap = (ROOT / "kor/sitemap.xml").read_text(encoding="utf-8")
+    assert sitemap.count(canonical) == 1
+    sitemap_index = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
+    assert sitemap_index.count("https://emfls.github.io/kor/sitemap.xml") == 1
+    search_index = json.loads(
+        (ROOT / "data/content-index-ko.json").read_text(encoding="utf-8")
+    )
+    assert sum(entry["url"] == index_url for entry in search_index) == 1
+    home_latest = json.loads(
+        (ROOT / "data/home-feed-ko.json").read_text(encoding="utf-8")
+    )["latest"]
+    assert home_latest[0]["url"] == index_url
 
 
 def test_car_tool_has_bounded_fee_lookup_and_official_handoff():

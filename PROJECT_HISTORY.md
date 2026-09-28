@@ -844,5 +844,12 @@
 ## 2026-09-28 08:06 Keyword Hunter
 - Seeds: 40; New: 40; Rejected: 21; DB: 3866; Errors: 1; Top: 휴일근무수당계산. Report: reports/keyword-hunter/2026-09-28-0806.md
 
+## 2026-09-28 P0 Revenue Growth #23 — 1688 구매대행 공개 준비
+- 최신 기준: `origin/main` `5d8bc85f9987b7fbe9ceebc735c8a2092413ab7e`; queue는 `1688구매대행` HIGH · 59.92 · `PAGE_REVIEW_READY` · `READY_TO_LAUNCH`, duplicate check passed. 현재 volume은 `NOT_AVAILABLE`; 3,740/month는 2026-09-14 historical evidence다. 일일 counter 날짜가 2026-09-13이어서 date-aware 정책 기준 2026-09-28 유효 사용량은 0/1이다.
+- 새 canonical `/kor/column/1688gumaedaehaeng/`는 main에 없었고, Taobao forwarder 가이드는 인접 물류 intent로 판단해 별도 intent를 유지했다. 관세청 통관/예상세액, Safety Korea 품목별 안전 요건, WorldFirst 파트너 결제 안내를 구분해 연결했다. 고정 비용·환율·세율, 업체 순위/추천, 보편적 KC 주장, affiliate CTA는 없다.
+- 현재 main에서 본문·칼럼 카드·`kor/sitemap.xml`·launch manifest·검색 index/home feed와 regression tests를 준비했다. blank worksheet는 0원으로 오인 표시하지 않도록 하고, 기존 GA4/AdSense 코드는 보존했다.
+- CI root cause/fix: SEO QA `36364464129`는 generator 실행 후 mutable manifest를 읽은 #23 테스트와 #17의 historical launch를 latest manifest에 영구 고정한 테스트만 실패했다. `ea0600b299c936f20ce2919f73407968e706c45b`에서 #23은 committed HEAD manifest를 검증하고 #17은 durable page/discovery wiring만 검증하도록 수정했다. 다른 historical-current-manifest 결함은 추가 발견되지 않았다.
+- 검증/전달: CI-like generation 후 focused tests 110, unittest 715, pytest 1,064, launch guard, `git diff --check` 모두 PASS. PR #15 HEAD `ea0600b299c936f20ce2919f73407968e706c45b` / base `5d8bc85f9987b7fbe9ceebc735c8a2092413ab7e`, 11 files, OPEN·mergeable. SEO QA `36373607848` COMPLETED/SUCCESS; 최신 main drift/overlap 없음. Queue는 1688 HIGH · 59.92 · `READY_TO_LAUNCH`; PR manifest는 2026-09-28 dailyLimit 1/1을 기록한다. PR은 미병합·production 미게시, Revenue `NO_CONCLUSION`; Sol 최종 검토 대기.
+
 ## 2026-09-28 14:30 Keyword Hunter
 - Seeds: 40; New: 20; Rejected: 18; DB: 3886; Errors: 0; Top: 노무사비용. Report: reports/keyword-hunter/2026-09-28-1430.md
