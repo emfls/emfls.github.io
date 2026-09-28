@@ -26,7 +26,8 @@
 - [ ] P0 Revenue Growth #23 — 1688 구매대행 검증가이드
   - 근거: 최신 main queue에서 `1688구매대행` HIGH · 59.92 · `READY_TO_LAUNCH`; current volume은 `NOT_AVAILABLE`, 3,740/month는 2026-09-14 historical evidence만 확인됐다. 새 URL의 동일 intent overlap은 확인되지 않았다.
   - 변경: 검증 가이드, 칼럼 허브, sitemap, 검색 index/home feed 및 launch-manifest regression을 current-main worktree에 준비했다. 비용·환율·통관·품목 안전은 공식 자료로 확인하도록 하고 업체 순위·고정 비용/세율·affiliate 표현은 넣지 않았다.
-  - 상태: 최신 main 기준 local worktree에서 구현. unittest 715, pytest 1,064, diff check 통과; local launch guard와 remote PR/SEO QA는 후속 확인 대상이다. merge/production 전이므로 `[ ]` 및 `NO_CONCLUSION`을 유지한다.
+  - CI root cause / repair: SEO QA `36364464129`의 2개 pytest 실패는 #23 테스트가 generator-mutated manifest를 읽고 #17의 과거 launch 기록을 mutable latest manifest에 고정한 test-contract 결함이었다. #23은 `HEAD`의 committed manifest를 검증하고 #17 테스트는 현재 페이지·허브·sitemap 계약만 검증하도록 수정했다.
+  - 상태: PR #15 (`codex/p0-revenue-growth-23-1688-launch-20260928`) OPEN, HEAD `ea0600b299c936f20ce2919f73407968e706c45b`, base `5d8bc85f9987b7fbe9ceebc735c8a2092413ab7e`, 11 files, mergeable. SEO QA `36373607848` SUCCESS (guard, SEO regression, Keyword Hunter, unittest, pytest 모두 통과). 최신 main drift/overlap 없음. Queue의 1688 HIGH · 59.92 · `READY_TO_LAUNCH` 확인; PR manifest는 2026-09-28 dailyLimit 1/1을 기록하지만 PR은 미병합·production 미게시다. Sol 최종 검토 대기; `[ ]`, Revenue `NO_CONCLUSION`, merge/production 미완료를 유지한다.
 
 ## P1 - High
 
