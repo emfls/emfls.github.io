@@ -76,12 +76,13 @@ def _ymyl(row):
 
 def select_launch_candidate(rows, existing_urls=None, published_keywords=None, daily_limit=1, selected_at=None, max_age_days=30, launched_count=0):
     existing_urls={identity for x in (existing_urls or set()) if (identity := normalize_url_identity(x)) is not None}; published={normalize_keyword(x) for x in (published_keywords or set())}
+    daily_limit=max(0,int(daily_limit)); launched_count=max(0,int(launched_count)); remaining_capacity=max(0,daily_limit-launched_count)
     now=datetime.fromisoformat(selected_at) if selected_at else datetime.now(timezone.utc)
     if now.tzinfo is None: now=now.replace(tzinfo=timezone.utc)
     excluded={"duplicate_url":0,"missing_url":0,"duplicate_keyword":0,"similar_intent":0,"invalid_score":0,"stale_winner":0,"ymyl":0,"ineligible":0,"daily_limit":0,"overlap":0}
-    if int(launched_count) >= int(daily_limit):
+    if remaining_capacity == 0:
         excluded["daily_limit"] = 1
-        return {"queue": [], "excluded": excluded, "dailyLimit": int(daily_limit)}
+        return {"queue": [], "excluded": excluded, "dailyLimit": daily_limit}
     published_norm=list(published)
     def rank(r): return (-(1 if r.get("status")=="WINNER" else 0), -(1 if r.get("status")=="CANDIDATE" else 0), -(1 if _tool(r) else 0), -float(r.get("opportunity_score") or 0), normalize_keyword(r.get("keyword")))
     eligible=[]; seen=[]
@@ -103,6 +104,6 @@ def select_launch_candidate(rows, existing_urls=None, published_keywords=None, d
         seen.append((keyword,norm)); eligible.append(row)
     eligible.sort(key=rank)
     queue=[]
-    for row in eligible[:max(0,int(daily_limit))]:
+    for row in eligible[:remaining_capacity]:
         queue.append({"keyword":row["keyword"],"source":row.get("source") or "KEYWORD_HUNTER","status":"READY_TO_LAUNCH","review_status":"PAGE_REVIEW_READY","opportunity_score":float(row["opportunity_score"]),"confidence":row.get("confidence"),"category":row.get("category"),"intended_page_type":"free_tool" if _tool(row) else "article","suggested_url":row.get("suggested_url"),"duplicate_check":"passed","reason":"winner/tool priority with verified score and no overlap","selected_at":selected_at})
-    return {"queue":queue,"excluded":excluded,"dailyLimit":int(daily_limit)}
+    return {"queue":queue,"excluded":excluded,"dailyLimit":daily_limit}

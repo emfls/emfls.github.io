@@ -29,6 +29,11 @@ def test_published_similar_intent_and_daily_limit():
     assert select_launch_candidate(rows,published_keywords={"단위계산방법론"})["excluded"]["similar_intent"] == 1
     assert select_launch_candidate(rows,daily_limit=1,launched_count=1)["queue"] == []
 
+def test_queue_size_is_bounded_by_remaining_daily_capacity():
+    rows=[row(keyword="산책길지도",suggested_url="/kor/column/walking-route/"),row(keyword="등산준비목록",suggested_url="/kor/column/hiking-checklist/")]
+    result=select_launch_candidate(rows,daily_limit=2,launched_count=1)
+    assert len(result["queue"]) == 1
+
 def test_ymyl_calculators_block_but_unit_calculator_allowed():
     blocked=["원천징수계산기","3.3%계산기","퇴직금세금계산기","부가세계산기","급여일할계산기","연장수당계산기","휴일수당계산기"]
     for keyword in blocked:

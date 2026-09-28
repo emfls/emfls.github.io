@@ -92,6 +92,12 @@ def test_same_day_published_manifest_capacity_overrides_stale_counter():
     assert result["queue"] == []
     assert result["excluded"]["daily_limit"] == 1
 
+def test_manifest_usage_reduces_queue_to_remaining_capacity():
+    manifest=published_manifest(candidateIds=["keyword:already-published"],urls=["/kor/column/already-published/"],dailyLimit=2)
+    rows=[launch_row("산책길지도","/kor/column/walking-route/"),launch_row("등산준비목록","/kor/column/hiking-checklist/")]
+    result=prepare_queue(rows,set(),set(),2,"2026-09-28T12:00:00+09:00",0,"2026-09-13",published_manifest=manifest)
+    assert len(result["queue"]) == 1
+
 def test_same_day_published_manifest_unknown_candidate_still_consumes_capacity():
     manifest=published_manifest(candidateIds=["external:opaque-id"],urls=[])
     manifest.pop("publishedToday")
