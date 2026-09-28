@@ -11,6 +11,18 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 
+
+def _committed_launch_manifest():
+    result = subprocess.run(
+        ["git", "show", "HEAD:data/content-launch-manifest.json"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return json.loads(result.stdout)
+
+
 PAGES = {
     "car": ("kor/util/car-inspection-cost/index.html", "자동차검사 비용·예약 도우미"),
     "date": ("kor/util/date-calculator/index.html", "날짜 계산기"),
@@ -296,9 +308,7 @@ def test_launch_manifest_is_exactly_the_current_launch_batch():
 
 
 def test_1688_launch_manifest_contract():
-    manifest = json.loads(
-        (ROOT / "data/content-launch-manifest.json").read_text(encoding="utf-8")
-    )
+    manifest = _committed_launch_manifest()
     assert manifest["candidateIds"] == ["keyword:1688구매대행"]
     assert manifest["contentPaths"] == ["kor/column/1688gumaedaehaeng/index.html"]
     assert manifest["hubPaths"] == ["kor/column/index.html"]
