@@ -850,3 +850,6 @@
 - 현재 main에서 본문·칼럼 카드·`kor/sitemap.xml`·launch manifest·검색 index/home feed와 regression tests를 준비했다. blank worksheet는 0원으로 오인 표시하지 않도록 하고, 기존 GA4/AdSense 코드는 보존했다.
 - CI root cause/fix: SEO QA `36364464129`는 generator 실행 후 mutable manifest를 읽은 #23 테스트와 #17의 historical launch를 latest manifest에 영구 고정한 테스트만 실패했다. `ea0600b299c936f20ce2919f73407968e706c45b`에서 #23은 committed HEAD manifest를 검증하고 #17은 durable page/discovery wiring만 검증하도록 수정했다. 다른 historical-current-manifest 결함은 추가 발견되지 않았다.
 - 검증/전달: CI-like generation 후 focused tests 110, unittest 715, pytest 1,064, launch guard, `git diff --check` 모두 PASS. PR #15 HEAD `ea0600b299c936f20ce2919f73407968e706c45b` / base `5d8bc85f9987b7fbe9ceebc735c8a2092413ab7e`, 11 files, OPEN·mergeable. SEO QA `36373607848` COMPLETED/SUCCESS; 최신 main drift/overlap 없음. Queue는 1688 HIGH · 59.92 · `READY_TO_LAUNCH`; PR manifest는 2026-09-28 dailyLimit 1/1을 기록한다. PR은 미병합·production 미게시, Revenue `NO_CONCLUSION`; Sol 최종 검토 대기.
+
+## 2026-09-28 14:30 Keyword Hunter
+- Seeds: 40; New: 20; Rejected: 18; DB: 3886; Errors: 0; Top: 노무사비용. Report: reports/keyword-hunter/2026-09-28-1430.md
