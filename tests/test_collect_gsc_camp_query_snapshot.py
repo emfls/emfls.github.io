@@ -1,4 +1,7 @@
 from datetime import date
+from pathlib import Path
+import subprocess
+import sys
 
 import pytest
 
@@ -9,6 +12,8 @@ from scripts.collect_gsc_camp_query_snapshot import (
     get_collection_period,
     write_atomically,
 )
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 class _Request:
@@ -63,6 +68,18 @@ def _row(page, query, clicks, impressions, position):
 
 def test_period_uses_established_28_day_window_and_three_day_lag():
     assert get_collection_period(date(2026, 9, 28)) == ("2026-08-29", "2026-09-25")
+
+
+def test_collector_script_can_run_as_a_file_from_repo_root():
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "collect_gsc_camp_query_snapshot.py"), "--help"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stderr
 
 
 def test_collect_requests_exact_property_camping_pages_and_page_query_dimensions():

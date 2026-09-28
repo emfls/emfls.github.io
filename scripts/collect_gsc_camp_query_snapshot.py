@@ -10,7 +10,24 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlsplit
 
-from scripts.collect_gsc_snapshot import PROPERTY_URL, ROW_LIMIT, SOURCE, normalize_url, paginate_query
+if __package__:
+    from scripts.collect_gsc_snapshot import (
+        PROPERTY_URL,
+        ROW_LIMIT,
+        SOURCE,
+        decode_service_account,
+        normalize_url,
+        paginate_query,
+    )
+else:
+    from collect_gsc_snapshot import (
+        PROPERTY_URL,
+        ROW_LIMIT,
+        SOURCE,
+        decode_service_account,
+        normalize_url,
+        paginate_query,
+    )
 
 
 CAMPING_PATH_PREFIX = "/kor/report/camp/"
@@ -262,8 +279,6 @@ def main():
     encoded = os.environ.get("GOOGLE_SERVICE_ACCOUNT_JSON_B64") or os.environ.get("GA4_SERVICE_ACCOUNT_JSON_B64")
     if not encoded:
         raise RuntimeError("GOOGLE_SERVICE_ACCOUNT_JSON_B64 or GA4_SERVICE_ACCOUNT_JSON_B64 is required")
-    from scripts.collect_gsc_snapshot import decode_service_account
-
     start, end = get_collection_period()
     rows = collect(PROPERTY_URL, decode_service_account(encoded), start, end)
     generated_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
