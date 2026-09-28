@@ -4,6 +4,13 @@ on:
   schedule:
     - cron: "47 2 * * *" # daily UTC 02:47, separate from GA4 collection
   workflow_dispatch:
+    inputs:
+      collection_mode:
+        description: "Collection scope"
+        required: true
+        type: choice
+        options: [page, camping-query]
+        default: page
 
 permissions:
   contents: write
@@ -32,12 +39,15 @@ jobs:
         run: python3 -m pip install google-api-python-client google-auth
 
       - name: Collect GSC page snapshot
+        if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'page'
         run: python3 scripts/collect_gsc_snapshot.py --output data/performance/gsc-latest.json --days 28
 
       - name: Collect camping query evidence snapshot
+        if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'camping-query'
         run: python3 scripts/collect_gsc_camp_query_snapshot.py --output data/performance/gsc-camp-query-latest.json
 
       - name: Regenerate measurement artifacts from GA4 and GSC snapshots
+        if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'page'
         run: |
           python3 scripts/revenue_growth.py \
             --as-of "$(date +%F)" \
@@ -48,25 +58,43 @@ jobs:
             --report reports/revenue-growth-report.md
 
       - name: Validate GSC and measurement artifacts
+        if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'page'
         run: |
           python3 - <<'PY'
           import json
-          from pathlib import Path
-          from scripts.collect_gsc_camp_query_snapshot import validate_snapshot
           p = json.load(open('data/performance/gsc-latest.json'))
           assert p['status'] == 'VERIFIED'
           assert p['source'] == 'GOOGLE_SEARCH_CONSOLE_API'
           assert p['property'] == 'https://emfls.github.io/'
           assert p['pages']
-          q = json.load(open('data/performance/gsc-camp-query-latest.json'))
-          print(json.dumps(validate_snapshot(q), ensure_ascii=False))
           PY
           python3 scripts/validate_measurement_artifact.py data/page-performance.json
 
+      - name: Validate camping query evidence snapshot
+        if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'camping-query'
+        run: |
+          python3 - <<'PY'
+          import json
+          from scripts.collect_gsc_camp_query_snapshot import validate_snapshot
+          with open('data/performance/gsc-camp-query-latest.json', encoding='utf-8') as handle:
+              snapshot = json.load(handle)
+          print(json.dumps(validate_snapshot(snapshot), ensure_ascii=False))
+          PY
+
       - name: Commit refreshed GSC measurement artifacts
+        if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'page'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/performance/gsc-latest.json data/performance/gsc-camp-query-latest.json data/page-performance.json data/revenue-opportunities.json reports/revenue-growth-report.md
+          git add data/performance/gsc-latest.json data/page-performance.json data/revenue-opportunities.json reports/revenue-growth-report.md
+          git diff --staged --quiet || git commit -m "chore: refresh GSC measurement snapshot"
+          git push
+
+      - name: Commit camping query evidence snapshot
+        if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'camping-query'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/performance/gsc-camp-query-latest.json
           git diff --staged --quiet || git commit -m "chore: refresh GSC measurement snapshot"
           git push
