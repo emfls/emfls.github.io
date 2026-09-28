@@ -863,3 +863,9 @@
 - Base: local cached `origin/main` `8f677d0572dd7d2cc326e616ef7b4e2c1b709302` (handoff SHA와 일치; live remote main은 DNS 오류로 확인 불가). Worktree/branch: `/private/tmp/emfls-p0-published-queue-dedupe` / `codex/p0-support-published-queue-dedupe-20260928`.
 - 후속 리뷰에서 daily limit 대비 이미 사용한 슬롯만큼 큐 길이를 줄이지 않는 결함이 확인되어 `daily_limit - launched_count`로 남은 용량을 제한하고 회귀 2개를 추가했다. 독립 재검토 결과 추가 Critical/High/Important/Minor finding 없음. 2026-09-28 current queue는 0, 2026-09-29 preview는 #23 없이 `글램핑장추천` 1개다.
 - 검증/전달: targeted tests 53 passed, full unittest 715 passed, full pytest 1,106 passed, content-launch guard PASS, `git diff --check` PASS. Implementation `d96df133b14b4e7a5d470dc8001178c3ac900193`, 용량 수정 `272ebaed08`, TASKS/history 기록 commit `4435e01aaddd8f018f86afe6a7908ef7337a8454`. Local normal push 및 PR #17 생성 성공; 원격에서 OPEN, base `main`, 7개 파일 확인. latest-head SEO QA가 실행 중이며 PR에서 완료를 추적한다. merge하지 않았으며 CI 완료 전 검토 대기.
+
+## 2026-09-28 23:04 Keyword Hunter
+- Seeds: 40; New: 40; Rejected: 30; DB: 3926; Errors: 0; Top: 연차수당계산. Report: reports/keyword-hunter/2026-09-28-2304.md
+
+## 2026-09-29 05:35 Keyword Hunter
+- Seeds: 40; New: 3; Rejected: 3; DB: 3929; Errors: 0; Top: none. Report: reports/keyword-hunter/2026-09-29-0535.md
