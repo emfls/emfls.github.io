@@ -10,6 +10,7 @@ from scripts.collect_gsc_camp_query_snapshot import (
     build_snapshot,
     collect_with_service,
     get_collection_period,
+    validate_snapshot,
     write_atomically,
 )
 
@@ -164,6 +165,11 @@ def test_snapshot_preserves_query_text_and_aggregates_duplicate_page_query_rows(
     assert merged["ctr"] == 0.2
     assert merged["position"] == 6
     assert snapshot["limitations"]["notForRevenueClassification"] is True
+    assert validate_snapshot(snapshot) == {
+        "rows": 2,
+        "uniquePages": 1,
+        "period": {"start": "2026-08-29", "end": "2026-09-25"},
+    }
 
 
 def test_empty_or_invalid_response_does_not_overwrite_previous_artifact(tmp_path):

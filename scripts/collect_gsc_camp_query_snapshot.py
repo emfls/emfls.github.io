@@ -66,6 +66,18 @@ def _page_query_from_row(row, property_url=PROPERTY_URL):
     return page, query
 
 
+def _page_query_from_snapshot_row(row):
+    page = row.get("page") if isinstance(row, dict) else None
+    query = row.get("query") if isinstance(row, dict) else None
+    if not isinstance(page, str) or not page.strip():
+        raise ValueError("camping query artifact has an empty normalized page path")
+    if normalize_url(page) != page or not page.startswith(CAMPING_PATH_PREFIX):
+        raise ValueError("camping query artifact page path is not a normalized camping path")
+    if not isinstance(query, str) or not query.strip():
+        raise ValueError("camping query artifact has an empty query")
+    return page, query
+
+
 def _count_metric(row, name):
     value = row.get(name)
     if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
@@ -189,7 +201,7 @@ def validate_snapshot(payload):
         raise ValueError("refusing to write an empty camping query artifact")
     seen = set()
     for row in rows:
-        page, query = _page_query_from_row({"keys": [row.get("page"), row.get("query")]})
+        page, query = _page_query_from_snapshot_row(row)
         key = (page, query)
         if key in seen:
             raise ValueError("camping query artifact contains duplicate page/query rows")
