@@ -23,6 +23,11 @@
   - 상태: `codex/p0-revenue-growth-02`에서 구현·검증; 아직 main 배포 전. GA4 Collection 1회 재실행 후 실제 artifact와 분류를 확인한다.
   - CI follow-up: SEO QA run `35703819990`에서 `scripts/content_launch_guard.py`가 workflow 파일명 `ga4-collection.yml`을 analytics runtime 변경으로 오탐했다. exact-path allowlist와 runtime asset 차단 회귀를 같은 PR에 추가했으며, 새 원격 SEO QA green 확인 전 merge 금지.
 
+- [ ] P0 Revenue Growth #23 — 1688 구매대행 검증가이드
+  - 근거: 최신 main queue에서 `1688구매대행` HIGH · 59.92 · `READY_TO_LAUNCH`; current volume은 `NOT_AVAILABLE`, 3,740/month는 2026-09-14 historical evidence만 확인됐다. 새 URL의 동일 intent overlap은 확인되지 않았다.
+  - 변경: 검증 가이드, 칼럼 허브, sitemap, 검색 index/home feed 및 launch-manifest regression을 current-main worktree에 준비했다. 비용·환율·통관·품목 안전은 공식 자료로 확인하도록 하고 업체 순위·고정 비용/세율·affiliate 표현은 넣지 않았다.
+  - 상태: 최신 main 기준 local worktree에서 구현. unittest 715, pytest 1,064, diff check 통과; local launch guard와 remote PR/SEO QA는 후속 확인 대상이다. merge/production 전이므로 `[ ]` 및 `NO_CONCLUSION`을 유지한다.
+
 ## P1 - High
 
 - [x] 12 · Spanish STOPat5 — `/es/game/STOPat5/`

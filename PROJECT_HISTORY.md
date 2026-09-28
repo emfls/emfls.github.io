@@ -843,3 +843,10 @@
 
 ## 2026-09-28 08:06 Keyword Hunter
 - Seeds: 40; New: 40; Rejected: 21; DB: 3866; Errors: 1; Top: 휴일근무수당계산. Report: reports/keyword-hunter/2026-09-28-0806.md
+
+## 2026-09-28 P0 Revenue Growth #23 — 1688 구매대행 공개 준비
+- 최신 기준: `origin/main` `5d8bc85f9987b7fbe9ceebc735c8a2092413ab7e`; queue는 `1688구매대행` HIGH · 59.92 · `PAGE_REVIEW_READY` · `READY_TO_LAUNCH`, duplicate check passed. 현재 volume은 `NOT_AVAILABLE`; 3,740/month는 2026-09-14 historical evidence다. 일일 counter 날짜가 2026-09-13이어서 date-aware 정책 기준 2026-09-28 유효 사용량은 0/1이다.
+- 새 canonical `/kor/column/1688gumaedaehaeng/`는 main에 없었고, Taobao forwarder 가이드는 인접 물류 intent로 판단해 별도 intent를 유지했다. 관세청 통관/예상세액, Safety Korea 품목별 안전 요건, WorldFirst 파트너 결제 안내를 구분해 연결했다. 고정 비용·환율·세율, 업체 순위/추천, 보편적 KC 주장, affiliate CTA는 없다.
+- 현재 main에서 본문·칼럼 카드·`kor/sitemap.xml`·launch manifest·검색 index/home feed와 regression tests를 준비했다. blank worksheet는 0원으로 오인 표시하지 않도록 하고, 기존 GA4/AdSense 코드는 보존했다.
+- 검증: 변경 전 최신 main baseline pytest 1,053 passed; 1688/launch/discovery 관련 pytest 66 passed; 변경 후 unittest 715 passed, 전체 pytest 1,064 passed, `git diff --check` PASS. Local content launch guard와 remote SEO QA는 별도 확인 대상이다.
+- 전달 상태: 별도 branch `codex/p0-revenue-growth-23-1688-launch-20260928`; production 미반영, merge/Revenue WIN 없음. remote PR/SEO QA는 이 local checkpoint 이후 별도 확인한다.

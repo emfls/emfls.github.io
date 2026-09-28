@@ -1,5 +1,6 @@
 import json
 import re
+import subprocess
 import unittest
 from html import unescape
 from pathlib import Path
@@ -43,8 +44,8 @@ class PurchaseAgencyGuideTest(unittest.TestCase):
         self.assertIsNotNone(article)
         self.assertEqual(article["@type"], "Article")
         self.assertEqual(article["mainEntityOfPage"], CANONICAL)
-        self.assertEqual(article["datePublished"], "2026-09-27")
-        self.assertEqual(article["dateModified"], "2026-09-27")
+        self.assertEqual(article["datePublished"], "2026-09-28")
+        self.assertEqual(article["dateModified"], "2026-09-28")
 
     def test_measurement_contract(self):
         self.assertIn("G-QP5Q67GE5B", self.html)
@@ -52,8 +53,8 @@ class PurchaseAgencyGuideTest(unittest.TestCase):
 
     def test_official_sources_are_present(self):
         sources = (
-            "https://customs.go.kr/kcs/ad/tax/BuyTaxCalculation.do",
-            "https://www.customs.go.kr/kcs/cm/cntnts/cntntsView.do?cntntsId=817&mi=2819",
+            "https://www.customs.go.kr/kcs/ad/tax/BuyTaxCalculation.do",
+            "https://www.customs.go.kr/kcs/cm/cntnts/cntntsView.do?cntntsId=827&mi=2835",
             "https://www.safetykorea.kr/policy/targetsSafetyProvider",
             "https://www.worldfirst.com/kr/help-center/1688/what-is-1688/",
             "https://www.worldfirst.com/kr/help-center/1688/1688-payment-solutions/",
@@ -87,6 +88,28 @@ class PurchaseAgencyGuideTest(unittest.TestCase):
         self.assertIn("입력한 항목 합계", self.html)
         self.assertNotIn("fetch(", self.html)
         self.assertNotIn("XMLHttpRequest", self.html)
+
+    def test_blank_worksheet_does_not_report_a_zero_cost(self):
+        scripts = re.findall(r"<script>(.*?)</script>", self.html, re.I | re.S)
+        self.assertTrue(scripts)
+        harness = r'''const script = SCRIPT;
+const inputs = Array.from({length: 9}, () => ({value: ""}));
+const output = {textContent: ""};
+let submitHandler;
+const form = {
+  addEventListener(name, handler) { if (name === "submit") submitHandler = handler; },
+  querySelectorAll() { return inputs; }
+};
+const document = {getElementById(id) { return id === "landed-cost-form" ? form : output; }};
+eval(script);
+submitHandler.call(form, {preventDefault() {}});
+process.stdout.write(output.textContent);
+'''.replace("SCRIPT", json.dumps(scripts[-1]))
+        result = subprocess.run(
+            ["node", "-e", harness], text=True, capture_output=True, check=True
+        )
+        self.assertIn("입력", result.stdout)
+        self.assertNotIn("0원", result.stdout)
 
     def test_no_provider_ranking_or_marketing_claims(self):
         forbidden = (
