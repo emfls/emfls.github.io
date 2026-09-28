@@ -34,6 +34,9 @@ jobs:
       - name: Collect GSC page snapshot
         run: python3 scripts/collect_gsc_snapshot.py --output data/performance/gsc-latest.json --days 28
 
+      - name: Collect camping query evidence snapshot
+        run: python3 scripts/collect_gsc_camp_query_snapshot.py --output data/performance/gsc-camp-query-latest.json
+
       - name: Regenerate measurement artifacts from GA4 and GSC snapshots
         run: |
           python3 scripts/revenue_growth.py \
@@ -48,11 +51,15 @@ jobs:
         run: |
           python3 - <<'PY'
           import json
+          from pathlib import Path
+          from scripts.collect_gsc_camp_query_snapshot import validate_snapshot
           p = json.load(open('data/performance/gsc-latest.json'))
           assert p['status'] == 'VERIFIED'
           assert p['source'] == 'GOOGLE_SEARCH_CONSOLE_API'
           assert p['property'] == 'https://emfls.github.io/'
           assert p['pages']
+          q = json.load(open('data/performance/gsc-camp-query-latest.json'))
+          print(json.dumps(validate_snapshot(q), ensure_ascii=False))
           PY
           python3 scripts/validate_measurement_artifact.py data/page-performance.json
 
@@ -60,6 +67,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/performance/gsc-latest.json data/page-performance.json data/revenue-opportunities.json reports/revenue-growth-report.md
+          git add data/performance/gsc-latest.json data/performance/gsc-camp-query-latest.json data/page-performance.json data/revenue-opportunities.json reports/revenue-growth-report.md
           git diff --staged --quiet || git commit -m "chore: refresh GSC measurement snapshot"
           git push
