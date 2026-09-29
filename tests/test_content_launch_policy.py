@@ -1,5 +1,7 @@
 import copy
+
 from scripts.content_launch_policy import select_launch_candidate, normalize_keyword
+from scripts.content_launch_guard import validate_launch
 
 def row(**kw):
     base = {"keyword":"계산기", "status":"NEW", "score_valid":"True", "opportunity_score":"80", "confidence":"HIGH", "category":"tools", "action":"NEW_PAGE", "content_types":"calculator/tool|evergreen", "closest_url":"", "overlap":"NO_OVERLAP"}
@@ -40,6 +42,51 @@ def test_ymyl_calculators_block_but_unit_calculator_allowed():
         result=select_launch_candidate([row(keyword=keyword,suggested_url="/kor/util/x.html")],daily_limit=1)
         assert result["queue"] == [] and result["excluded"]["ymyl"] == 1
     assert select_launch_candidate([row(keyword="단위계산기",suggested_url="/kor/util/unit.html")],daily_limit=1)["queue"]
+
+def test_parental_leave_application_variants_are_blocked_as_ymyl():
+    for keyword in ("육아휴직신청서양식", "육아휴직신청서", "육아휴직급여"):
+        result = select_launch_candidate(
+            [row(keyword=keyword, category="recovery:인지대", content_types="form/template", suggested_url="/kor/parenting/x.html")],
+            daily_limit=1,
+        )
+        assert result["queue"] == []
+        assert result["excluded"]["ymyl"] == 1
+
+def test_ymyl_queue_block_does_not_disable_separately_approved_manual_launch(tmp_path):
+    url = "/kor/report/parenting/manual.html"
+    relative_path = "kor/report/parenting/manual.html"
+    html_path = tmp_path / relative_path
+    html_path.parent.mkdir(parents=True)
+    html_path.write_text(
+        '<html><head><meta name="viewport" content="width=device-width">'
+        '<title>수동 승인 가이드</title>'
+        f'<link rel="canonical" href="https://emfls.github.io{url}">'
+        '<script type="application/ld+json">{}</script></head>'
+        '<body><h1>수동 승인 가이드</h1></body></html>',
+        encoding="utf-8",
+    )
+    sitemap_path = "kor/report/parenting/sitemap.xml"
+    hub_path = "kor/report/parenting/index.html"
+    for relative in (sitemap_path, hub_path):
+        (tmp_path / relative).parent.mkdir(parents=True, exist_ok=True)
+    (tmp_path / sitemap_path).write_text(
+        f"<urlset><loc>https://emfls.github.io{url}</loc></urlset>", encoding="utf-8"
+    )
+    (tmp_path / hub_path).write_text(f'<a href="{url}">가이드</a>', encoding="utf-8")
+    manifest = {
+        "urls": [url],
+        "contentPaths": [relative_path],
+        "sitemapPaths": [sitemap_path],
+        "hubPaths": [hub_path],
+    }
+    assert validate_launch(tmp_path, manifest, [("A", relative_path)]) == []
+
+def test_non_ymyl_candidate_remains_eligible_after_parental_leave_block():
+    result = select_launch_candidate(
+        [row(keyword="산책길지도", category="outdoors", content_types="informational", suggested_url="/kor/column/walking-route/")],
+        daily_limit=1,
+    )
+    assert [item["keyword"] for item in result["queue"]] == ["산책길지도"]
 
 def test_url_identity_blocks_exact_duplicate():
     result=select_launch_candidate([row(keyword="새 후보",suggested_url="/kor/column/example/")],existing_urls={"/kor/column/example/"})
