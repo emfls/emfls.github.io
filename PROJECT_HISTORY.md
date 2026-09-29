@@ -873,3 +873,12 @@
 
 ## 2026-09-29 11:02 Keyword Hunter
 - Seeds: 40; New: 40; Rejected: 29; DB: 3969; Errors: 0; Top: 월급세후계산기. Report: reports/keyword-hunter/2026-09-29-1102.md
+
+## 2026-09-29 P0 Safety — 기존 육아휴직·출산휴가 안내 YMYL 정확성 보정 (Task 2)
+- 기존 `/kor/report/parenting/parenting-subsidy-2026.html`의 `육아휴직·출산휴가 급여` 단락만 현행 기준으로 정리했다. 일반 육아휴직급여 상한/비율, 조건부 6+6·한부모 특례, 사업주 휴직 신청과 고용24 급여 신청의 구분, 출산전후휴가와 보험급여 요건을 분리해 기술했다.
+- 기준일은 시행령 전체 시행일 2026-09-18이며 일부 제11조·제13조 개정 조항만 2026-08-20 시행으로 구분했다. 배우자 출산휴가 링크와 회귀 테스트를 현행 공식 조문 URL `https://law.go.kr/LSW/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1000446318`로 맞췄다.
+- 확인 근거: [근로기준법 제74조](https://law.go.kr/LSW/lsLawLinkInfo.do?chrClsCd=010202&lsId=001872&lsJoLnkSeq=900552022&print=print), [고용노동부 1350 미숙아 안내](https://1350.moel.go.kr/rtmview.do?id=1000314298), [고용24 육아휴직급여](https://m.work24.go.kr/cm/c/f/1100/selecSystInfo.do?systClId=SC00000251&systId=SI00000402), [시행령 제11조](https://www.law.go.kr/lsLinkCommonInfo.do?lspttninfSeq=71235&chrClsCd=010202), [배우자 출산휴가 제18조의2](https://law.go.kr/LSW/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1000446318). 고용24 일반 급여 페이지의 최종 수정 표시는 2025-09-15이며, 최종 확인일은 2026-09-29다.
+- 후속 YMYL 리뷰의 단일 누락(제19조제6항 특례 육아휴직 7일 요건)을 보완했다. 현행 고용보험법 제70조제1항은 30일 일반 육아휴직 또는 출산전후휴가 중복기간을 뺀 특례 7일과 피보험단위기간 180일 요건을 둔다. 공식 [제70조제1항](https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1021698255)을 연결했다.
+- Fix round 3: 고용보험법 제70조제1항에 맞춰 일반 30일과 특례 7일 각각에서 출산전후휴가 중복기간을 제외하고, 두 경로 모두 육아휴직 시작 전 피보험단위기간 합산 180일 이상이 필요함을 명확히 했다. 2026-08-20 일부 조항 시행일은 공식 [시행령 개정문·부칙](https://www.law.go.kr/lsInfoP.do?lsiSeq=288719&viewCls=lsRvsDocInfoR) 링크를 직접 연결했다.
+- Fresh local QA: focused 5 passed; unittest 715 OK; pytest 1,113 passed. Content-launch guard CLI `--base-ref HEAD` PASS and explicit working-diff path validation PASS. Deterministic SEO audit: 19,091 pages, parser errors 0; SEO QA `failed=false`, 신규 critical/warning 0, 기존 800 critical/424 warnings. `git diff --check` PASS. 상세 명령/출력은 `.superpowers/sdd/2026-09-29-p0-parental-leave-ymyl-repair-and-prep/task-2-report.md`에 기록.
+- 상태는 `YMYL_ACCURACY_REPAIR / REVIEW_PENDING`. Fix round 3 이후 독립 YMYL 재검토와 Task 2 재전달 게이트는 대기 중이며 PR/commit/push/merge는 하지 않았다. 신규 신청서 가이드는 계속 `PREP ONLY / NOT PUBLISHED`.
