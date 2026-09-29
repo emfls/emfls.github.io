@@ -35,6 +35,10 @@
   - CI root cause / repair: SEO QA `36364464129`의 2개 pytest 실패는 #23 테스트가 generator-mutated manifest를 읽고 #17의 과거 launch 기록을 mutable latest manifest에 고정한 test-contract 결함이었다. #23은 `HEAD`의 committed manifest를 검증하고 #17 테스트는 현재 페이지·허브·sitemap 계약만 검증하도록 수정했다.
   - 상태: PR #15 (`codex/p0-revenue-growth-23-1688-launch-20260928`) OPEN, HEAD `ea0600b299c936f20ce2919f73407968e706c45b`, base `5d8bc85f9987b7fbe9ceebc735c8a2092413ab7e`, 11 files, mergeable. SEO QA `36373607848` SUCCESS (guard, SEO regression, Keyword Hunter, unittest, pytest 모두 통과). 최신 main drift/overlap 없음. Queue의 1688 HIGH · 59.92 · `READY_TO_LAUNCH` 확인; PR manifest는 2026-09-28 dailyLimit 1/1을 기록하지만 PR은 미병합·production 미게시다. Sol 최종 검토 대기; `[ ]`, Revenue `NO_CONCLUSION`, merge/production 미완료를 유지한다.
 
+- [ ] P0 Safety — 기존 육아휴직·출산휴가 급여 안내의 YMYL 정확성 보정
+  - 범위: `kor/report/parenting/parenting-subsidy-2026.html`의 기존 급여 안내 단락만 갱신. 신규 신청서 경로와 콘텐츠는 계속 `PREP ONLY / NOT PUBLISHED`이며 제목·메타·허브·sitemap·광고/분석 코드는 변경하지 않는다.
+  - 검증 상태(2026-09-29 fix round 3): 고용보험법 제70조제1항에 따라 일반 30일·특례 7일 각각의 출산전후휴가 중복기간 제외와 두 경로 공통 사전 피보험단위기간 180일 요건을 명시하고, 시행령 날짜 분할을 공식 개정문·부칙 링크로 연결했다. focused 5 passed; unittest 715 OK; pytest 1,113 passed; launch guard PASS; deterministic SEO audit 19,091 pages; SEO QA `failed=false`, 신규 critical/warning 0 (기존 800/424); `git diff --check` PASS. independent re-review 및 Task 2 delivery gate는 pending; PR/commit/push/merge 없음. 신청서 후보는 `PREP ONLY / NOT PUBLISHED`.
+
 ## P1 - High
 
 - [x] 12 · Spanish STOPat5 — `/es/game/STOPat5/`
