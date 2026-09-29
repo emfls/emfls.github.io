@@ -36,10 +36,13 @@ def _publication_day(value):
         parsed = parsed.astimezone(SEOUL)
     return parsed.date()
 
-def _manifest_publication_count(manifest, selected_day):
+def _manifest_publication_count(manifest, selected_day, daily_limit):
     if not isinstance(manifest, dict) or str(manifest.get("status") or "").upper() not in FINAL_PUBLICATION_STATUSES:
         return 0
-    if _publication_day(manifest.get("runAt")) != selected_day:
+    publication_day = _publication_day(manifest.get("runAt"))
+    if publication_day is None:
+        return max(0, daily_limit)
+    if publication_day != selected_day:
         return 0
     counts = []
     published_today = manifest.get("publishedToday")
@@ -61,7 +64,7 @@ def prepare_queue(rows, existing_urls=None, published_keywords=None, daily_limit
             counter_count = max(0, int(launched_count))
         except (TypeError, ValueError):
             counter_count = 0
-    manifest_count = _manifest_publication_count(published_manifest, selected_day)
+    manifest_count = _manifest_publication_count(published_manifest, selected_day, daily_limit)
     effective_count = max(counter_count, manifest_count)
     manifest_urls, manifest_keywords = published_manifest_dedupe_keys(published_manifest)
     existing_urls = set(existing_urls or set()) | manifest_urls

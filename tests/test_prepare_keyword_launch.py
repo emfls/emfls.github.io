@@ -92,6 +92,20 @@ def test_same_day_published_manifest_capacity_overrides_stale_counter():
     assert result["queue"] == []
     assert result["excluded"]["daily_limit"] == 1
 
+def test_final_manifest_with_missing_run_at_fails_closed_for_daily_capacity():
+    manifest=published_manifest(candidateIds=["keyword:already-published"],urls=["/kor/column/already-published/"])
+    manifest.pop("runAt")
+    result=prepare_queue([launch_row("새 후보","/kor/column/new/")],set(),set(),1,"2026-09-29T12:00:00+09:00",0,"2026-09-13",published_manifest=manifest)
+    assert result["queue"] == []
+    assert result["excluded"]["daily_limit"] == 1
+
+def test_final_manifest_with_malformed_run_at_fails_closed_for_daily_capacity():
+    manifest=published_manifest(candidateIds=["keyword:already-published"],urls=["/kor/column/already-published/"])
+    manifest["runAt"]="not-a-date"
+    result=prepare_queue([launch_row("새 후보","/kor/column/new/")],set(),set(),1,"2026-09-29T12:00:00+09:00",0,"2026-09-13",published_manifest=manifest)
+    assert result["queue"] == []
+    assert result["excluded"]["daily_limit"] == 1
+
 def test_manifest_usage_reduces_queue_to_remaining_capacity():
     manifest=published_manifest(candidateIds=["keyword:already-published"],urls=["/kor/column/already-published/"],dailyLimit=2)
     rows=[launch_row("산책길지도","/kor/column/walking-route/"),launch_row("등산준비목록","/kor/column/hiking-checklist/")]
