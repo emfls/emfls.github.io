@@ -41,6 +41,18 @@ def test_ymyl_calculators_block_but_unit_calculator_allowed():
         assert result["queue"] == [] and result["excluded"]["ymyl"] == 1
     assert select_launch_candidate([row(keyword="단위계산기",suggested_url="/kor/util/unit.html")],daily_limit=1)["queue"]
 
+def test_parental_leave_application_keyword_is_excluded_as_ymyl():
+    candidate=row(
+        keyword="육아휴직신청서양식",
+        category="recovery:인지대",
+        content_types="evergreen|how-to|informational",
+        intent="how-to",
+        suggested_url="/kor/column/yugahyujigsinceongseoyangsig/",
+    )
+    result=select_launch_candidate([candidate],daily_limit=1)
+    assert result["queue"] == []
+    assert result["excluded"]["ymyl"] == 1
+
 def test_url_identity_blocks_exact_duplicate():
     result=select_launch_candidate([row(keyword="새 후보",suggested_url="/kor/column/example/")],existing_urls={"/kor/column/example/"})
     assert result["queue"] == [] and result["excluded"]["duplicate_url"] == 1

@@ -114,6 +114,111 @@ def test_new_page_requires_canonical_sitemap_hub_and_viewport(tmp_path):
     assert {"CANONICAL_MISMATCH", "SITEMAP_ENTRY_MISSING", "HUB_LINK_MISSING", "VIEWPORT_MISSING"} <= set(errors)
 
 
+def test_guard_allows_only_explicit_noindex_prep_candidate_without_launch_wiring(tmp_path):
+    setup_data(tmp_path)
+    relative = "kor/report/parenting/parental-leave-application-form-2026.html"
+    page = tmp_path / relative
+    page.parent.mkdir(parents=True)
+    page.write_text(
+        '<meta name="robots" content="noindex,follow">'
+        '<p>PREP ONLY / NOT PUBLISHED</p>',
+        encoding="utf-8",
+    )
+
+    assert validate_launch(
+        tmp_path,
+        manifest([]),
+        [("A", relative)],
+    ) == []
+
+
+def test_guard_does_not_allow_other_noindex_html_to_bypass_launch_manifest(tmp_path):
+    setup_data(tmp_path)
+    relative = "kor/report/parenting/other-prep-page.html"
+    page = tmp_path / relative
+    page.parent.mkdir(parents=True)
+    page.write_text(
+        '<meta name="robots" content="noindex,follow">'
+        '<p>PREP ONLY / NOT PUBLISHED</p>',
+        encoding="utf-8",
+    )
+
+    assert "MANIFEST_DIFF_MISMATCH" in validate_launch(
+        tmp_path,
+        manifest([]),
+        [("A", relative)],
+    )
+
+
+def test_prep_candidate_does_not_bypass_publication_wiring_changes(tmp_path):
+    setup_data(tmp_path)
+    relative = "kor/report/parenting/parental-leave-application-form-2026.html"
+    page = tmp_path / relative
+    page.parent.mkdir(parents=True)
+    page.write_text(
+        '<meta name="robots" content="noindex,follow">'
+        '<p>PREP ONLY / NOT PUBLISHED</p>',
+        encoding="utf-8",
+    )
+
+    errors = validate_launch(
+        tmp_path,
+        manifest([]),
+        [
+            ("A", relative),
+            ("M", "data/content-launch-manifest.json"),
+            ("M", "kor/report/parenting/index.html"),
+            ("M", "kor/report/parenting/sitemap.xml"),
+        ],
+    )
+
+    assert "PREP_ONLY_PUBLICATION_WIRING_CHANGED" in errors
+    assert "PREP_ONLY_CONTENT_CONTRACT_MISSING" not in errors
+    assert "MANIFEST_DIFF_MISMATCH" in errors
+
+
+def test_prep_candidate_rejects_content_indexes_and_home_feeds_for_any_locale(tmp_path):
+    setup_data(tmp_path)
+    relative = "kor/report/parenting/parental-leave-application-form-2026.html"
+    page = tmp_path / relative
+    page.parent.mkdir(parents=True)
+    page.write_text(
+        '<meta name="robots" content="noindex,follow">'
+        '<p>PREP ONLY / NOT PUBLISHED</p>',
+        encoding="utf-8",
+    )
+
+    for path in (
+        "data/content-index-en.json",
+        "data/content-index.json",
+        "data/home-feed-jp.json",
+        "data/home-feed.json",
+    ):
+        errors = validate_launch(
+            tmp_path,
+            manifest([]),
+            [("A", relative), ("M", path)],
+        )
+        assert "PREP_ONLY_PUBLICATION_WIRING_CHANGED" in errors, path
+
+
+def test_allowlisted_prep_candidate_requires_noindex_and_not_published_marker(tmp_path):
+    setup_data(tmp_path)
+    relative = "kor/report/parenting/parental-leave-application-form-2026.html"
+    page = tmp_path / relative
+    page.parent.mkdir(parents=True)
+    page.write_text('<p>Draft</p>', encoding="utf-8")
+
+    errors = validate_launch(
+        tmp_path,
+        manifest([]),
+        [("A", relative)],
+    )
+
+    assert "PREP_ONLY_CONTENT_CONTRACT_MISSING" in errors
+    assert "MANIFEST_DIFF_MISMATCH" in errors
+
+
 def test_no_publication_manifest_passes_without_html_changes(tmp_path):
     setup_data(tmp_path)
     assert validate_launch(tmp_path, manifest([]), [("M", "reports/daily-revenue-growth.md")]) == []

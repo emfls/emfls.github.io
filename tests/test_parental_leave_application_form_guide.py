@@ -205,6 +205,16 @@ def test_current_article_11_fields_and_deadline_are_present():
     assert "3쪽 신청인 첨부서류란 육아휴직 급여 신청 시 제9호" in text
 
 
+def test_rule_source_dates_distinguish_whole_rule_and_early_amendments():
+    text = visible_text(parsed_page())
+
+    assert "남녀고용평등법 시행규칙 전체 시행일은 2026-09-18" in text
+    assert (
+        "제15조, 제15조의2 및 별지 제7호의2서식 작성방법란 제5호의 개정규정은 "
+        "2026-08-20부터 시행"
+    ) in text
+
+
 def test_prep_page_has_no_publication_wiring():
     parser = parsed_page()
     text = visible_text(parser)

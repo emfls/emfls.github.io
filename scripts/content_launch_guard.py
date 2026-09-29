@@ -9,6 +9,12 @@ from pathlib import Path
 
 
 MEASUREMENT_WORKFLOW_ALLOWLIST = {".github/workflows/ga4-collection.yml"}
+PREP_ONLY_HTML_ALLOWLIST = {
+    "kor/report/parenting/parental-leave-application-form-2026.html",
+}
+PREP_ONLY_DISCOVERY_PATHS = {
+    "data/content-launch-manifest.json",
+}
 APPROVED_PROTECTED_WINNER_TRANSITIONS = {
     "kor/report/camp/pyeongtaek.html": {
         ("4d95593169e466447ee355429d2822764ca7e1a5", "b4fc13119f1e8cd01d78805d06ee981ac6834236"),
@@ -34,6 +40,33 @@ def _changed_tuple(item):
     raise ValueError("changed path entries must contain status/path or status/path/blob transition")
 
 
+def _has_prep_only_contract(root, path):
+    candidate = Path(root) / path
+    if not candidate.is_file():
+        return False
+    html = candidate.read_text(encoding="utf-8")
+    noindex_follow = re.search(
+        r'<meta\b(?=[^>]*\bname=["\']robots["\'])(?=[^>]*\bcontent=["\']noindex\s*,\s*follow["\'])[^>]*>',
+        html,
+        re.I,
+    )
+    return bool(noindex_follow and "PREP ONLY / NOT PUBLISHED" in html)
+
+
+def _is_publication_wiring_path(path):
+    normalized = str(path).lower()
+    filename = Path(normalized).name
+    return (
+        normalized in PREP_ONLY_DISCOVERY_PATHS
+        or filename == "index.html"
+        or ("sitemap" in filename and filename.endswith(".xml"))
+        or (filename.startswith("content-index") and filename.endswith(".json"))
+        or (filename.startswith("home-feed") and filename.endswith(".json"))
+        or filename in {"feed.xml", "rss.xml", "atom.xml"}
+        or "indexnow" in normalized
+    )
+
+
 def validate_launch(root, manifest, changed_paths):
     root = Path(root)
     changed = [_changed_tuple(row) for row in changed_paths]
@@ -43,8 +76,19 @@ def validate_launch(root, manifest, changed_paths):
     expected_html = set(manifest.get("contentPaths") or [_url_to_path(url) for url in manifest.get("urls") or []])
     # A manifest can change for launch bookkeeping without adding content.
     # Only a newly added HTML file starts content-launch validation; when HTML
-    # is added, it must still match the manifest exactly.
-    launch_changed = bool(added_html)
+    # is added, it must still match the manifest exactly. One exact review-only
+    # candidate may bypass launch wiring only while its explicit noindex/PREP
+    # contract is present and no discovery wiring changed; all other added HTML
+    # remains launch-gated.
+    prep_only_added = added_html == PREP_ONLY_HTML_ALLOWLIST
+    prep_wiring_changed = any(_is_publication_wiring_path(path) for path in changed_names)
+    prep_contract_present = prep_only_added and _has_prep_only_contract(root, next(iter(added_html)))
+    prep_only_valid = prep_contract_present and not prep_wiring_changed
+    if prep_only_added and not prep_contract_present:
+        errors.add("PREP_ONLY_CONTENT_CONTRACT_MISSING")
+    if prep_only_added and prep_wiring_changed:
+        errors.add("PREP_ONLY_PUBLICATION_WIRING_CHANGED")
+    launch_changed = bool(added_html) and not prep_only_valid
     if launch_changed and added_html != expected_html:
         errors.add("MANIFEST_DIFF_MISMATCH")
     if manifest.get("deletions") or any(row[0].startswith("D") or row[0].startswith("R") for row in changed):
