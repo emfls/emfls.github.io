@@ -149,6 +149,8 @@ def test_integrated_form_is_not_called_universal():
     assert "사업주가 별도의 서식을 정한 경우" in text
     assert "모든 단독 신청의 필수 서식은 아닙니다" in text
     assert "유일한 필수 서식" not in text
+    assert "시행규칙 제14조의3" in text
+    assert "시행령 제11조제5항" in text
 
 
 def test_sample_is_prominently_non_official():
@@ -197,7 +199,10 @@ def test_current_article_11_fields_and_deadline_are_present():
     assert "일반 신청 전체에 대한 포괄적 예외가 아닙니다" in text
     assert "방학 사유는 이 당일 신청 예외와 구분" in text
     assert "고용보험법 시행규칙 전체 시행일은 2026-09-18" in text
-    assert "별지 제100호서식의 지정된 쪽·작성방법·첨부서류 개정사항은 2026-08-20부터 시행" in text
+    assert "별지 제100호서식 1쪽, 같은 서식 2쪽 작성방법란 제5호부터 제14호까지, 3쪽 신청인 첨부서류란 육아휴직 급여 신청 시 제9호의 개정사항은 2026-08-20부터 시행" in text
+    assert "별지 제100호서식 1쪽" in text
+    assert "같은 서식 2쪽 작성방법란 제5호부터 제14호까지" in text
+    assert "3쪽 신청인 첨부서류란 육아휴직 급여 신청 시 제9호" in text
 
 
 def test_prep_page_has_no_publication_wiring():
