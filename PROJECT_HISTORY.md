@@ -882,3 +882,6 @@
 - Fix round 3: 고용보험법 제70조제1항에 맞춰 일반 30일과 특례 7일 각각에서 출산전후휴가 중복기간을 제외하고, 두 경로 모두 육아휴직 시작 전 피보험단위기간 합산 180일 이상이 필요함을 명확히 했다. 2026-08-20 일부 조항 시행일은 공식 [시행령 개정문·부칙](https://www.law.go.kr/lsInfoP.do?lsiSeq=288719&viewCls=lsRvsDocInfoR) 링크를 직접 연결했다.
 - Fresh local QA: focused 5 passed; unittest 715 OK; pytest 1,113 passed. Content-launch guard CLI `--base-ref HEAD` PASS and explicit working-diff path validation PASS. Deterministic SEO audit: 19,091 pages, parser errors 0; SEO QA `failed=false`, 신규 critical/warning 0, 기존 800 critical/424 warnings. `git diff --check` PASS. 상세 명령/출력은 `.superpowers/sdd/2026-09-29-p0-parental-leave-ymyl-repair-and-prep/task-2-report.md`에 기록.
 - 상태는 `YMYL_ACCURACY_REPAIR / REVIEW_PENDING`. Fix round 3 이후 독립 YMYL 재검토와 Task 2 재전달 게이트는 대기 중이며 PR/commit/push/merge는 하지 않았다. 신규 신청서 가이드는 계속 `PREP ONLY / NOT PUBLISHED`.
+
+## 2026-09-30 01:32 Keyword Hunter
+- Seeds: 40; New: 20; Rejected: 14; DB: 3989; Errors: 0; Top: 사실조회신청. Report: reports/keyword-hunter/2026-09-30-0132.md
