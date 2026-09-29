@@ -862,7 +862,8 @@
 - Workflow guard는 그대로이며 publication state 4개와 `kor/**/*.html` 변경 차단을 회귀 테스트로 고정했다.
 - Base: local cached `origin/main` `8f677d0572dd7d2cc326e616ef7b4e2c1b709302` (handoff SHA와 일치; live remote main은 DNS 오류로 확인 불가). Worktree/branch: `/private/tmp/emfls-p0-published-queue-dedupe` / `codex/p0-support-published-queue-dedupe-20260928`.
 - 후속 리뷰에서 daily limit 대비 이미 사용한 슬롯만큼 큐 길이를 줄이지 않는 결함이 확인되어 `daily_limit - launched_count`로 남은 용량을 제한하고 회귀 2개를 추가했다. 독립 재검토 결과 추가 Critical/High/Important/Minor finding 없음. 2026-09-28 current queue는 0, 2026-09-29 preview는 #23 없이 `글램핑장추천` 1개다.
-- 검증/전달: targeted tests 53 passed, full unittest 715 passed, full pytest 1,106 passed, content-launch guard PASS, `git diff --check` PASS. Implementation `d96df133b14b4e7a5d470dc8001178c3ac900193`, 용량 수정 `272ebaed08`, TASKS/history 기록 commit `4435e01aaddd8f018f86afe6a7908ef7337a8454`. Local normal push 및 PR #17 생성 성공; 원격에서 OPEN, base `main`, 7개 파일 확인. latest-head SEO QA가 실행 중이며 PR에서 완료를 추적한다. merge하지 않았으며 CI 완료 전 검토 대기.
+- Final review에서 manifest `runAt` 누락/무효 시 fail-closed 처리 공백을 확인해 merge 전에 보완했다. 최종 PR head `966d1a1e38c9d14b8367b97b9bde1f41db2adf62`; SEO QA `36501567865` SUCCESS. 최종 회귀: focused 40, unittest 715, pytest 1,108 모두 통과; content-launch guard와 `git diff --check` PASS.
+- 전달/종결: PR #17 normal merge, merge SHA `c16677a74e3e2ef645d440cdfb044e1202f4c1fb`. Post-merge validation에서 #23 재등재 방지, `/route/`·`/route/index.html` alias dedupe, 9/28 manifest가 9/29 daily capacity를 소비하지 않아 slot이 available인 점을 확인했다. 9/29 queue 후보 `글램핑장추천`은 기존 전국 추천 콘텐츠와의 intent overlap 및 신뢰할 수 없는 `recovery:방염` lineage로 `CANNIBALIZATION_RISK`; 신규 페이지는 승인·발행하지 않았다. Revenue WIN은 주장하지 않는다.
 
 ## 2026-09-28 23:04 Keyword Hunter
 - Seeds: 40; New: 40; Rejected: 30; DB: 3926; Errors: 0; Top: 연차수당계산. Report: reports/keyword-hunter/2026-09-28-2304.md
