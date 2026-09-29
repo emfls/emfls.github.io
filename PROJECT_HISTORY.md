@@ -869,3 +869,6 @@
 
 ## 2026-09-29 05:35 Keyword Hunter
 - Seeds: 40; New: 3; Rejected: 3; DB: 3929; Errors: 0; Top: none. Report: reports/keyword-hunter/2026-09-29-0535.md
+
+## 2026-09-29 11:02 Keyword Hunter
+- Seeds: 40; New: 40; Rejected: 29; DB: 3969; Errors: 0; Top: 월급세후계산기. Report: reports/keyword-hunter/2026-09-29-1102.md
