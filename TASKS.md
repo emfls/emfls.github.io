@@ -23,6 +23,12 @@
   - 상태: `codex/p0-revenue-growth-02`에서 구현·검증; 아직 main 배포 전. GA4 Collection 1회 재실행 후 실제 artifact와 분류를 확인한다.
   - CI follow-up: SEO QA run `35703819990`에서 `scripts/content_launch_guard.py`가 workflow 파일명 `ga4-collection.yml`을 analytics runtime 변경으로 오탐했다. exact-path allowlist와 runtime asset 차단 회귀를 같은 PR에 추가했으며, 새 원격 SEO QA green 확인 전 merge 금지.
 
+- [ ] P0 Support #25 — Published Content Dedupe Hardening
+  - Root cause: queue preparation은 published registry와 content index만 dedupe source로 사용하고 final `PUBLISHED` manifest의 `candidateIds`/`urls`를 무시했다. URL identity가 query만 제거해 `/route/`와 `/route/index.html`도 같게 보지 않았으며, stale counter는 same-day manifest의 1/1 publication을 놓쳤다.
+  - 변경: 공통 policy helper에 conservative same-site HTTPS URL identity, 명시적 `keyword:` ID parsing, final `PUBLISHED`/`LAUNCHED` manifest key 추출을 추가했다. preparation path는 해당 keys를 기존 입력과 합치고 KST same-day effective usage를 counter/manifest 중 큰 값으로 fail-closed 계산한다. review-queue 외 발행 기능은 추가하지 않았다.
+  - 검증: exact/index aliases, query/fragment, `.html` 분리, case/domain 보존, manifest states/IDs, KST daily slot, remaining-capacity 상한, next-day dedupe 및 workflow publication-state guard 회귀 추가. targeted 53 passed, full unittest 715 passed, full pytest 1,106 passed, content-launch guard PASS, `git diff --check` PASS. 2026-09-28 current queue 안전 재현은 queue `0` / daily slot full; 2026-09-29는 #23 재등재 없이 `글램핑장추천`만 `NEXT_DAY_QUEUE_PREVIEW`로 확인했다. preview는 발행 승인 아님.
+  - 전달: branch `codex/p0-support-published-queue-dedupe-20260928`, PR #17 OPEN, base `main`, remote changed files 7. 로컬 검증 뒤 정상 push/PR 생성 완료; latest-head SEO QA 대기이며 새 push는 QA를 갱신한다. Implementation `d96df133b14b4e7a5d470dc8001178c3ac900193`, 용량 수정 `272ebaed08`; independent review에서 추가 finding 없음. Merge 없음. CI 완료 전 task 미완료 유지.
+
 - [ ] P0 Revenue Growth #23 — 1688 구매대행 검증가이드
   - 근거: 최신 main queue에서 `1688구매대행` HIGH · 59.92 · `READY_TO_LAUNCH`; current volume은 `NOT_AVAILABLE`, 3,740/month는 2026-09-14 historical evidence만 확인됐다. 새 URL의 동일 intent overlap은 확인되지 않았다.
   - 변경: 검증 가이드, 칼럼 허브, sitemap, 검색 index/home feed 및 launch-manifest regression을 current-main worktree에 준비했다. 비용·환율·통관·품목 안전은 공식 자료로 확인하도록 하고 업체 순위·고정 비용/세율·affiliate 표현은 넣지 않았다.

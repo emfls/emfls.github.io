@@ -22,3 +22,17 @@ def test_keyword_hunter_has_bounded_scheduled_workflow():
     assert "prepare_keyword_launch.py" in text
     assert "PAGE_REVIEW_READY" in text
     assert "github-actions[bot]" in text
+
+def test_keyword_hunter_workflow_keeps_publication_state_and_content_protected():
+    text = (ROOT / ".github/workflows/keyword-hunter.yml").read_text(encoding="utf-8")
+    guard = text.split("- name: Protect publication state", 1)[1].split("- name: Persist measured state", 1)[0]
+    for path in (
+        "data/published_keywords.json",
+        "data/content-launch-counter.json",
+        "data/content-launch-manifest.json",
+        "data/content-launch-decisions.json",
+    ):
+        assert path in guard
+    assert "^kor/.*\\.html$" in guard
+    assert "git add data/content-launch-manifest.json" not in text
+    assert "git add data/content-launch-counter.json" not in text

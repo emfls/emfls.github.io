@@ -854,6 +854,16 @@
 ## 2026-09-28 14:30 Keyword Hunter
 - Seeds: 40; New: 20; Rejected: 18; DB: 3886; Errors: 0; Top: 노무사비용. Report: reports/keyword-hunter/2026-09-28-1430.md
 
+## 2026-09-28 P0 Support #25 — Published Content Dedupe Hardening
+- 재현: main의 manifest는 `PUBLISHED`, candidate `keyword:1688구매대행`, URL `/kor/column/1688gumaedaehaeng/`, 1/1이지만 master row는 `NEW`, `published_keywords.json`에는 없음. 기존 CLI를 입력 데이터만 복사한 임시 root에서 실행했을 때 `1688구매대행`이 `READY_TO_LAUNCH`로 재등재되고 stale counter 때문에 `daily_limit=0`이었다.
+- Root cause: queue 준비기가 final manifest를 dedupe union에 넣지 않았고 기존 URL 비교는 query만 제거해 trailing-slash/`index.html` alias를 놓쳤다. stale prior-date counter와 same-day published manifest usage도 결합하지 않았다.
+- 수정: `content_launch_policy.py`에 conservative URL identity (same-site HTTPS only, query/fragment 제거, `/index.html` alias, `.html`·path case 보존), explicit `keyword:` candidate parser, final `PUBLISHED`/`LAUNCHED` manifest key helper를 추가했다. `prepare_keyword_launch.py`가 final manifest를 읽고 기존 registry/index와 union하며, KST same-day counter/manifest usage의 max를 daily limit에 적용한다. unknown candidate namespaces는 keyword로 변환하지 않지만 final same-day publication count에는 fail-closed로 반영한다.
+- 회귀: 2026-09-28 안전한 임시 root CLI는 queue 0, `daily_limit=1` exclusion, #23 재등재 없음. 2026-09-29 pure preview는 #23 재등재/당일 슬롯 소비 없이 `글램핑장추천`을 `NEXT_DAY_QUEUE_PREVIEW`로만 반환; publication approval이 아니다. `published_keywords.json`, counter, manifest, decisions, content HTML, sitemap은 변경하지 않았다.
+- Workflow guard는 그대로이며 publication state 4개와 `kor/**/*.html` 변경 차단을 회귀 테스트로 고정했다.
+- Base: local cached `origin/main` `8f677d0572dd7d2cc326e616ef7b4e2c1b709302` (handoff SHA와 일치; live remote main은 DNS 오류로 확인 불가). Worktree/branch: `/private/tmp/emfls-p0-published-queue-dedupe` / `codex/p0-support-published-queue-dedupe-20260928`.
+- 후속 리뷰에서 daily limit 대비 이미 사용한 슬롯만큼 큐 길이를 줄이지 않는 결함이 확인되어 `daily_limit - launched_count`로 남은 용량을 제한하고 회귀 2개를 추가했다. 독립 재검토 결과 추가 Critical/High/Important/Minor finding 없음. 2026-09-28 current queue는 0, 2026-09-29 preview는 #23 없이 `글램핑장추천` 1개다.
+- 검증/전달: targeted tests 53 passed, full unittest 715 passed, full pytest 1,106 passed, content-launch guard PASS, `git diff --check` PASS. Implementation `d96df133b14b4e7a5d470dc8001178c3ac900193`, 용량 수정 `272ebaed08`, TASKS/history 기록 commit `4435e01aaddd8f018f86afe6a7908ef7337a8454`. Local normal push 및 PR #17 생성 성공; 원격에서 OPEN, base `main`, 7개 파일 확인. latest-head SEO QA가 실행 중이며 PR에서 완료를 추적한다. merge하지 않았으며 CI 완료 전 검토 대기.
+
 ## 2026-09-28 23:04 Keyword Hunter
 - Seeds: 40; New: 40; Rejected: 30; DB: 3926; Errors: 0; Top: 연차수당계산. Report: reports/keyword-hunter/2026-09-28-2304.md
 
