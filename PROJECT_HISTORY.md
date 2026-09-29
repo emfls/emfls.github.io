@@ -885,3 +885,6 @@
 
 ## 2026-09-30 01:32 Keyword Hunter
 - Seeds: 40; New: 20; Rejected: 14; DB: 3989; Errors: 0; Top: 사실조회신청. Report: reports/keyword-hunter/2026-09-30-0132.md
+
+## 2026-09-30 07:20 Keyword Hunter
+- Seeds: 40; New: 60; Rejected: 41; DB: 4049; Errors: 0; Top: LG퓨리케어오브제컬렉션정수기. Report: reports/keyword-hunter/2026-09-30-0720.md
