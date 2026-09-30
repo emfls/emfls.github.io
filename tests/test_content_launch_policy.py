@@ -52,6 +52,75 @@ def test_parental_leave_application_variants_are_blocked_as_ymyl():
         assert result["queue"] == []
         assert result["excluded"]["ymyl"] == 1
 
+def test_clear_legal_debt_and_family_leave_intent_is_blocked_even_in_noisy_recovery_categories():
+    cases = [
+        ("출산휴가신청서", "recovery:인지대"),
+        ("배우자출산휴가신청서", "recovery:인지대"),
+        ("가압류비용", "recovery:인지대"),
+        ("지급명령신청", "recovery:인지대"),
+        ("행정소송비용", "recovery:인지대"),
+        ("불법사채해결", "recovery:피해구제"),
+        ("신용회복위원회채무조정", "recovery:피해구제"),
+        ("개인회생신청자격", "recovery:피해구제"),
+        ("재산명시신청서", "recovery:인지대"),
+        ("사실조회신청서", "recovery:인지대"),
+        ("통장압류방법", "recovery:피해구제"),
+        ("채권추심비용", "recovery:피해구제"),
+        ("저당권설정자", "recovery:인지대"),
+    ]
+
+    for keyword, category in cases:
+        result = select_launch_candidate(
+            [row(keyword=keyword, category=category, suggested_url="/kor/guide/example.html")],
+            daily_limit=1,
+        )
+        assert result["queue"] == [], keyword
+        assert result["excluded"]["ymyl"] == 1, keyword
+
+def test_clear_legal_content_type_blocks_candidate_without_noisy_category_false_signal():
+    result = select_launch_candidate(
+        [row(keyword="업무 절차 안내", category="recovery:인지대", content_types="legal/procedure", suggested_url="/kor/guide/legal-process.html")],
+        daily_limit=1,
+    )
+    assert result["queue"] == []
+    assert result["excluded"]["ymyl"] == 1
+
+def test_noisy_recovery_category_alone_does_not_block_safe_query():
+    result = select_launch_candidate(
+        [row(keyword="글자수계산기", category="recovery:세금", suggested_url="/kor/util/character-count.html")],
+        daily_limit=1,
+    )
+    assert [item["keyword"] for item in result["queue"]] == ["글자수계산기"]
+    assert result["excluded"]["ymyl"] == 0
+
+def test_ambiguous_recovery_queries_are_not_assumed_to_be_ymyl():
+    for keyword in ("휴가신청서양식", "피해구제신청"):
+        result = select_launch_candidate(
+            [row(keyword=keyword, category="recovery:인지대", suggested_url="/kor/guide/example.html")],
+            daily_limit=1,
+        )
+        assert [item["keyword"] for item in result["queue"]] == [keyword]
+        assert result["excluded"]["ymyl"] == 0
+
+def test_explicit_ymyl_category_and_safe_controls_keep_expected_eligibility():
+    explicit_category = select_launch_candidate(
+        [row(keyword="단순 안내", category="finance", suggested_url="/kor/guide/finance.html")],
+        daily_limit=1,
+    )
+    assert explicit_category["queue"] == []
+    assert explicit_category["excluded"]["ymyl"] == 1
+
+    for keyword, category, content_types, url in (
+        ("단위계산기", "tools", "calculator/tool", "/kor/util/unit.html"),
+        ("산책길지도", "outdoors", "informational", "/kor/column/walking-route/"),
+    ):
+        result = select_launch_candidate(
+            [row(keyword=keyword, category=category, content_types=content_types, suggested_url=url)],
+            daily_limit=1,
+        )
+        assert [item["keyword"] for item in result["queue"]] == [keyword]
+        assert result["excluded"]["ymyl"] == 0
+
 def test_ymyl_queue_block_does_not_disable_separately_approved_manual_launch(tmp_path):
     url = "/kor/report/parenting/manual.html"
     relative_path = "kor/report/parenting/manual.html"
