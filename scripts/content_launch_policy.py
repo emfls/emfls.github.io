@@ -7,8 +7,59 @@ from urllib.parse import urlsplit
 SITE_HOST = "emfls.github.io"
 FINAL_PUBLICATION_STATUSES = {"PUBLISHED", "LAUNCHED"}
 
+# Query/content-type evidence is evaluated independently from the broad
+# recovery taxonomy, whose subcategories (for example recovery:세금) are not
+# reliable evidence about an individual query's intent.
+_YMYL_TEXT_SIGNAL_GROUPS = (
+    (
+        "finance and tax",
+        (
+            "finance", "금융", "투자", "주식", "대출", "보험", "세금", "원천징수", "원천세",
+            "갑근세", "소득세", "부가세", "종합소득세", "연말정산", "증여세", "양도세",
+            "사업소득계산", "전자계산서", "계산서발행", "3.3",
+        ),
+    ),
+    (
+        "legal procedure",
+        (
+            "legal", "법률", "가압류", "가처분", "지급명령", "행정소송", "민사소송", "형사소송",
+            "재산명시", "사실조회", "전자소송", "후견인", "법원", "소송", "압류", "채권추심",
+            "저당권", "근저당", "이전등록", "피해구제신청", "자동차등록", "자동차구조변경",
+            "자동차정기검사", "자동차종합검사", "자동차검사대행", "폐차서류", "폐차방법",
+            "폐차하는법", "자동차매도서류", "비자신청", "워홀신청", "워킹홀리데이신청",
+        ),
+    ),
+    (
+        "debt and credit",
+        ("불법사채", "사채", "채무조정", "개인회생", "개인파산", "파산신청", "회생신청", "신용회복", "채무", "채권", "못받은돈"),
+    ),
+    (
+        "health, labor, and family leave",
+        (
+            "의료", "health", "medical", "육아휴직", "출산휴가", "배우자출산", "난임치료휴가",
+            "가족돌봄휴가", "휴가신청서", "노무사상담", "노무사비용", "실업급여", "퇴직금", "퇴직소득", "급여", "임금", "주휴수당",
+            "연장수당", "휴일수당", "법정수당", "근로계약", "근로기준", "산재",
+            "연차계산", "연차수당", "연차휴가", "연차일수", "회계년도연차", "시급계산", "실수령액",
+            "시간외수당", "월급", "연봉", "연장근로수당", "조기재취업수당", "수급자격신청",
+            "알바비", "세후", "야간근로수당", "야간수당", "휴일근무수당", "노동청신고",
+        ),
+    ),
+    (
+        "regulated business filing",
+        ("통신판매업신고",),
+    ),
+)
+_NOISY_CATEGORY_PREFIXES = ("recovery:",)
+
 def normalize_keyword(value):
     return re.sub(r"[^0-9a-z가-힣]", "", str(value or "").casefold())
+
+_YMYL_NORMALIZED_HANGUL_SIGNALS = tuple(
+    normalize_keyword(signal)
+    for _, signals in _YMYL_TEXT_SIGNAL_GROUPS
+    for signal in signals
+    if re.search(r"[가-힣]", signal)
+)
 
 def normalize_url_identity(value):
     """Return the conservative same-site route identity used for deduplication."""
@@ -70,9 +121,24 @@ def _truthy(value): return str(value).casefold() in {"true", "1", "yes"}
 def _tool(row):
     text = f"{row.get('category','')}|{row.get('content_types','')}|{row.get('intent','')}".casefold()
     return any(x in text for x in ("tool", "calculator", "계산기", "무료 도구"))
+
+def _has_ymyl_text_signal(text):
+    raw_text = str(text or "").casefold()
+    if any(signal in raw_text for _, signals in _YMYL_TEXT_SIGNAL_GROUPS for signal in signals):
+        return True
+    normalized_text = normalize_keyword(raw_text)
+    return any(signal in normalized_text for signal in _YMYL_NORMALIZED_HANGUL_SIGNALS)
+
 def _ymyl(row):
-    text=f"{row.get('keyword','')}|{row.get('category','')}|{row.get('content_types','')}".casefold()
-    return any(x in text for x in ("finance","금융","투자","주식","법률","legal","의료","health","medical","대출","보험","세금","원천징수","소득세","부가세","종합소득세","퇴직금","퇴직소득","급여","임금","주휴수당","연장수당","휴일수당","법정수당","육아휴직","3.3"))
+    keyword = str(row.get("keyword") or "").casefold()
+    content_types = str(row.get("content_types") or "").casefold()
+    category = str(row.get("category") or "").strip().casefold()
+    category_evidence = "" if category.startswith(_NOISY_CATEGORY_PREFIXES) else category
+    return (
+        _has_ymyl_text_signal(keyword)
+        or _has_ymyl_text_signal(content_types)
+        or _has_ymyl_text_signal(category_evidence)
+    )
 
 def select_launch_candidate(rows, existing_urls=None, published_keywords=None, daily_limit=1, selected_at=None, max_age_days=30, launched_count=0):
     existing_urls={identity for x in (existing_urls or set()) if (identity := normalize_url_identity(x)) is not None}; published={normalize_keyword(x) for x in (published_keywords or set())}
