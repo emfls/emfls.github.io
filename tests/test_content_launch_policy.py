@@ -164,9 +164,8 @@ def test_noisy_recovery_category_alone_does_not_block_safe_query():
     assert [item["keyword"] for item in result["queue"]] == ["글자수계산기"]
     assert result["excluded"]["ymyl"] == 0
 
-def test_ambiguous_recovery_queries_are_not_assumed_to_be_ymyl():
+def test_safe_recovery_queries_are_not_assumed_to_be_ymyl():
     for keyword in (
-        "피해구제신청",
         "근무기간계산기",
         "시급한문서복구방법",
     ):
@@ -218,6 +217,92 @@ def test_current_master_high_risk_rows_fail_closed_before_queue_selection():
         )
         assert result["queue"] == [], keyword
         assert result["excluded"]["ymyl"] == 1, keyword
+
+def test_current_master_vehicle_transfer_registration_application_is_blocked_as_legal_ymyl():
+    master_path = Path(__file__).resolve().parents[1] / "data" / "keywords_master.csv"
+    with master_path.open(encoding="utf-8-sig", newline="") as source:
+        candidate = next(item for item in csv.DictReader(source) if item["keyword"] == "이전등록신청서")
+
+    assert candidate["score_valid"] == "True"
+    assert float(candidate["opportunity_score"]) > 0
+    assert candidate["action"] == "NEW_PAGE"
+    assert candidate["status"] == "NEW"
+    assert candidate["overlap"] == "NO_OVERLAP"
+
+    result = prepare_queue(
+        [candidate],
+        existing_urls=set(),
+        published_keywords=set(),
+        daily_limit=1,
+        selected_at="2026-09-30T15:50:00+09:00",
+        editorial_decisions=[],
+        published_manifest={},
+    )
+    assert result["queue"] == []
+    assert result["excluded"]["ymyl"] == 1
+
+def test_current_master_consumer_and_vehicle_procedure_rows_are_blocked_as_legal_ymyl():
+    keywords = (
+        "피해구제신청",
+        "자동차등록비용",
+        "자동차구조변경비용",
+        "자동차종합검사비용",
+        "자동차정기검사비용",
+        "자동차검사대행비용",
+        "폐차서류",
+        "자동차폐차서류",
+        "폐차방법",
+        "자동차폐차방법",
+        "폐차하는법",
+        "자동차매도서류",
+    )
+    master_path = Path(__file__).resolve().parents[1] / "data" / "keywords_master.csv"
+    with master_path.open(encoding="utf-8-sig", newline="") as source:
+        rows = {item["keyword"]: item for item in csv.DictReader(source)}
+
+    assert set(keywords) <= rows.keys()
+    failures = []
+    for keyword in keywords:
+        candidate = rows[keyword]
+        assert candidate["score_valid"] == "True", keyword
+        assert float(candidate["opportunity_score"]) > 0, keyword
+        assert candidate["action"] == "NEW_PAGE", keyword
+        assert candidate["status"] == "NEW", keyword
+
+        result = prepare_queue(
+            [candidate],
+            existing_urls=set(),
+            published_keywords=set(),
+            daily_limit=1,
+            selected_at="2026-09-30T15:50:00+09:00",
+            editorial_decisions=[],
+            published_manifest={},
+        )
+        if result["queue"] or result["excluded"]["ymyl"] != 1:
+            failures.append((keyword, result["queue"], result["excluded"]))
+
+    assert failures == []
+
+def test_safe_master_controls_remain_eligible_with_noisy_recovery_category():
+    keywords = ("서류양식", "글자수계산기", "자동차점검비용")
+    master_path = Path(__file__).resolve().parents[1] / "data" / "keywords_master.csv"
+    with master_path.open(encoding="utf-8-sig", newline="") as source:
+        rows = {item["keyword"]: item for item in csv.DictReader(source)}
+
+    assert set(keywords) <= rows.keys()
+    for keyword in keywords:
+        candidate = dict(rows[keyword], category="recovery:regression-control")
+        result = prepare_queue(
+            [candidate],
+            existing_urls=set(),
+            published_keywords=set(),
+            daily_limit=1,
+            selected_at="2026-09-30T15:50:00+09:00",
+            editorial_decisions=[],
+            published_manifest={},
+        )
+        assert [item["keyword"] for item in result["queue"]] == [keyword]
+        assert result["excluded"]["ymyl"] == 0
 
 def test_general_vacation_planning_remains_queue_eligible():
     result = select_launch_candidate(
