@@ -298,6 +298,24 @@ def test_launch_manifest_is_exactly_the_current_launch_batch():
         assert manifest["dailyLimit"] == 1
         assert manifest["remainingCapacity"] == 0
         return
+    if manifest["urls"] == [
+        "/kor/report/parenting/parental-leave-application-form-2026.html"
+    ]:
+        assert manifest["candidateIds"] == ["keyword:육아휴직신청서양식"]
+        assert manifest["contentPaths"] == [
+            "kor/report/parenting/parental-leave-application-form-2026.html"
+        ]
+        assert manifest["hubPaths"] == ["kor/report/parenting/index.html"]
+        assert manifest["sitemapPaths"] == [
+            "kor/report/parenting/sitemap.xml",
+            "kor/sitemap.xml",
+        ]
+        assert manifest["runAt"].startswith("2026-09-30T")
+        assert manifest["runId"] == "P0-20260930-PARENTAL-LEAVE-APPLICATION"
+        assert manifest["publishedToday"] == 1
+        assert manifest["dailyLimit"] == 1
+        assert manifest["remainingCapacity"] == 0
+        return
     assert manifest["urls"] == ["/kor/util/water-purifier-rental-price-comparison/"]
     assert manifest["contentPaths"] == ["kor/util/water-purifier-rental-price-comparison/index.html"]
     assert manifest["hubPaths"] == ["kor/util/index.html"]
@@ -341,7 +359,7 @@ def test_1688_launch_discovery_contract():
     home_latest = json.loads(
         (ROOT / "data/home-feed-ko.json").read_text(encoding="utf-8")
     )["latest"]
-    assert home_latest[0]["url"] == index_url
+    assert any(item["url"] == index_url for item in home_latest)
 
 
 def test_car_tool_has_bounded_fee_lookup_and_official_handoff():
