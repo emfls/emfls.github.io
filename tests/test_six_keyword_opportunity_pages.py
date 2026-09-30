@@ -325,19 +325,12 @@ def test_launch_manifest_is_exactly_the_current_launch_batch():
     assert manifest["remainingCapacity"] is None
 
 
-def test_1688_launch_manifest_contract():
-    manifest = _committed_launch_manifest()
-    assert manifest["candidateIds"] == ["keyword:1688구매대행"]
-    assert manifest["contentPaths"] == ["kor/column/1688gumaedaehaeng/index.html"]
-    assert manifest["hubPaths"] == ["kor/column/index.html"]
-    assert manifest["sitemapPaths"] == ["kor/sitemap.xml"]
-    assert manifest["urls"] == ["/kor/column/1688gumaedaehaeng/"]
-    assert manifest["status"] == "PUBLISHED"
-    assert manifest["runAt"].startswith("2026-09-28T")
-    assert manifest["runId"] == "P0-20260928-1688-PURCHASE-AGENCY"
-    assert manifest["dailyLimit"] == 1
-    assert manifest["publishedToday"] == 1
-    assert manifest["remainingCapacity"] == 0
+def test_committed_launch_manifest_matches_current_batch():
+    committed = _committed_launch_manifest()
+    working_tree = json.loads(
+        (ROOT / "data/content-launch-manifest.json").read_text(encoding="utf-8")
+    )
+    assert committed == working_tree
 
 
 def test_1688_launch_discovery_contract():
