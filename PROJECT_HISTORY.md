@@ -891,3 +891,6 @@
 
 ## 2026-09-30 14:38 Keyword Hunter
 - Seeds: 40; New: 20; Rejected: 18; DB: 4069; Errors: 0; Top: none. Report: reports/keyword-hunter/2026-09-30-1438.md
+
+## 2026-09-30 21:42 Keyword Hunter
+- Seeds: 40; New: 20; Rejected: 18; DB: 4089; Errors: 0; Top: 가을여행추천. Report: reports/keyword-hunter/2026-09-30-2142.md
