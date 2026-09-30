@@ -233,10 +233,10 @@ def test_only_exact_canonical_keyword_set_is_published():
     # only the canonical published-row mapping above is publication authority.
 
 
-def test_launch_manifest_is_exactly_the_current_launch_batch():
-    manifest = json.loads(
-        (ROOT / "data/content-launch-manifest.json").read_text(encoding="utf-8")
-    )
+def test_committed_launch_manifest_is_exactly_the_current_launch_batch():
+    # CI regenerates the working-tree manifest before pytest. Publication
+    # authority for this PR is the manifest committed with the launch diff.
+    manifest = _committed_launch_manifest()
     if manifest["status"] == "NO_PUBLICATION":
         assert manifest["urls"] == []
         assert manifest["contentPaths"] == []
@@ -298,6 +298,24 @@ def test_launch_manifest_is_exactly_the_current_launch_batch():
         assert manifest["dailyLimit"] == 1
         assert manifest["remainingCapacity"] == 0
         return
+    if manifest["urls"] == [
+        "/kor/report/parenting/parental-leave-application-form-2026.html"
+    ]:
+        assert manifest["candidateIds"] == ["keyword:육아휴직신청서양식"]
+        assert manifest["contentPaths"] == [
+            "kor/report/parenting/parental-leave-application-form-2026.html"
+        ]
+        assert manifest["hubPaths"] == ["kor/report/parenting/index.html"]
+        assert manifest["sitemapPaths"] == [
+            "kor/report/parenting/sitemap.xml",
+            "kor/sitemap.xml",
+        ]
+        assert manifest["runAt"].startswith("2026-10-01T")
+        assert manifest["runId"] == "P0-20261001-PARENTAL-LEAVE-APPLICATION"
+        assert manifest["publishedToday"] == 1
+        assert manifest["dailyLimit"] == 1
+        assert manifest["remainingCapacity"] == 0
+        return
     assert manifest["urls"] == ["/kor/util/water-purifier-rental-price-comparison/"]
     assert manifest["contentPaths"] == ["kor/util/water-purifier-rental-price-comparison/index.html"]
     assert manifest["hubPaths"] == ["kor/util/index.html"]
@@ -305,21 +323,6 @@ def test_launch_manifest_is_exactly_the_current_launch_batch():
     assert manifest["publishedToday"] == 1
     assert manifest["dailyLimit"] is None
     assert manifest["remainingCapacity"] is None
-
-
-def test_1688_launch_manifest_contract():
-    manifest = _committed_launch_manifest()
-    assert manifest["candidateIds"] == ["keyword:1688구매대행"]
-    assert manifest["contentPaths"] == ["kor/column/1688gumaedaehaeng/index.html"]
-    assert manifest["hubPaths"] == ["kor/column/index.html"]
-    assert manifest["sitemapPaths"] == ["kor/sitemap.xml"]
-    assert manifest["urls"] == ["/kor/column/1688gumaedaehaeng/"]
-    assert manifest["status"] == "PUBLISHED"
-    assert manifest["runAt"].startswith("2026-09-28T")
-    assert manifest["runId"] == "P0-20260928-1688-PURCHASE-AGENCY"
-    assert manifest["dailyLimit"] == 1
-    assert manifest["publishedToday"] == 1
-    assert manifest["remainingCapacity"] == 0
 
 
 def test_1688_launch_discovery_contract():
@@ -341,7 +344,7 @@ def test_1688_launch_discovery_contract():
     home_latest = json.loads(
         (ROOT / "data/home-feed-ko.json").read_text(encoding="utf-8")
     )["latest"]
-    assert home_latest[0]["url"] == index_url
+    assert any(item["url"] == index_url for item in home_latest)
 
 
 def test_car_tool_has_bounded_fee_lookup_and_official_handoff():
