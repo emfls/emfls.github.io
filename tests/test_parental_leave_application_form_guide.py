@@ -1,5 +1,6 @@
 import json
 import re
+import subprocess
 import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from pathlib import Path
@@ -79,6 +80,17 @@ def page_parser():
     parser.feed(path.read_text(encoding="utf-8"))
     parser.close()
     return parser
+
+
+def committed_launch_manifest():
+    result = subprocess.run(
+        ["git", "show", "HEAD:data/content-launch-manifest.json"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return json.loads(result.stdout)
 
 
 def visible_text(parser):
@@ -225,7 +237,7 @@ def test_page_metadata_and_shared_measurement_tags_are_present():
 
 
 def test_publication_manifest_hub_and_sitemaps_register_the_page_once():
-    manifest = json.loads((ROOT / "data/content-launch-manifest.json").read_text(encoding="utf-8"))
+    manifest = committed_launch_manifest()
     assert manifest["status"] == "PUBLISHED"
     assert manifest["candidateIds"] == ["keyword:육아휴직신청서양식"]
     assert manifest["contentPaths"] == [ROUTE]

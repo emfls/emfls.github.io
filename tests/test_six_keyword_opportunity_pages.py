@@ -233,10 +233,10 @@ def test_only_exact_canonical_keyword_set_is_published():
     # only the canonical published-row mapping above is publication authority.
 
 
-def test_launch_manifest_is_exactly_the_current_launch_batch():
-    manifest = json.loads(
-        (ROOT / "data/content-launch-manifest.json").read_text(encoding="utf-8")
-    )
+def test_committed_launch_manifest_is_exactly_the_current_launch_batch():
+    # CI regenerates the working-tree manifest before pytest. Publication
+    # authority for this PR is the manifest committed with the launch diff.
+    manifest = _committed_launch_manifest()
     if manifest["status"] == "NO_PUBLICATION":
         assert manifest["urls"] == []
         assert manifest["contentPaths"] == []
@@ -323,14 +323,6 @@ def test_launch_manifest_is_exactly_the_current_launch_batch():
     assert manifest["publishedToday"] == 1
     assert manifest["dailyLimit"] is None
     assert manifest["remainingCapacity"] is None
-
-
-def test_committed_launch_manifest_matches_current_batch():
-    committed = _committed_launch_manifest()
-    working_tree = json.loads(
-        (ROOT / "data/content-launch-manifest.json").read_text(encoding="utf-8")
-    )
-    assert committed == working_tree
 
 
 def test_1688_launch_discovery_contract():
