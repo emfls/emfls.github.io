@@ -166,11 +166,8 @@ def test_noisy_recovery_category_alone_does_not_block_safe_query():
 
 def test_ambiguous_recovery_queries_are_not_assumed_to_be_ymyl():
     for keyword in (
-        "휴가신청서양식",
         "피해구제신청",
         "근무기간계산기",
-        "노무사상담비용",
-        "노무사비용",
         "시급한문서복구방법",
     ):
         result = select_launch_candidate(
@@ -180,12 +177,30 @@ def test_ambiguous_recovery_queries_are_not_assumed_to_be_ymyl():
         assert [item["keyword"] for item in result["queue"]] == [keyword]
         assert result["excluded"]["ymyl"] == 0
 
-def test_current_master_debt_and_visa_rows_fail_closed_before_queue_selection():
+def test_vacation_application_form_candidates_fail_closed_for_labor_review():
+    for keyword in ("휴가신청서", "휴가신청서양식"):
+        result = select_launch_candidate(
+            [row(keyword=keyword, category="recovery:인지대", suggested_url="/kor/guide/leave-request.html")],
+            daily_limit=1,
+        )
+        assert result["queue"] == [], keyword
+        assert result["excluded"]["ymyl"] == 1, keyword
+
+def test_labor_professional_fee_queries_fail_closed_for_labor_review():
+    for keyword in ("노무사상담비용", "노무사비용"):
+        result = select_launch_candidate(
+            [row(keyword=keyword, category="recovery:세금", content_types="commercial|evergreen|informational", suggested_url="/kor/report/labor-cost.html")],
+            daily_limit=1,
+        )
+        assert result["queue"] == [], keyword
+        assert result["excluded"]["ymyl"] == 1, keyword
+
+def test_current_master_high_risk_rows_fail_closed_before_queue_selection():
     master_path = Path(__file__).resolve().parents[1] / "data" / "keywords_master.csv"
     with master_path.open(encoding="utf-8-sig", newline="") as source:
         rows = {item["keyword"]: item for item in csv.DictReader(source)}
 
-    for keyword in ("회생신청", "호주워홀비자신청", "호주워홀신청", "못받은돈받아드립니다"):
+    for keyword in ("회생신청", "호주워홀비자신청", "호주워홀신청", "못받은돈받아드립니다", "휴가신청서양식", "노무사상담비용", "노무사비용"):
         candidate = rows[keyword]
         assert candidate["score_valid"] == "True"
         assert float(candidate["opportunity_score"]) > 0
@@ -203,6 +218,14 @@ def test_current_master_debt_and_visa_rows_fail_closed_before_queue_selection():
         )
         assert result["queue"] == [], keyword
         assert result["excluded"]["ymyl"] == 1, keyword
+
+def test_general_vacation_planning_remains_queue_eligible():
+    result = select_launch_candidate(
+        [row(keyword="여름휴가계획", category="recovery:인지대", suggested_url="/kor/guide/summer-vacation-plan.html")],
+        daily_limit=1,
+    )
+    assert [item["keyword"] for item in result["queue"]] == ["여름휴가계획"]
+    assert result["excluded"]["ymyl"] == 0
 
 def test_latest_master_working_holiday_application_rows_fail_closed_before_overlap_gate():
     # These exact rows were present in the 2026-09-30 latest-main master blob;
