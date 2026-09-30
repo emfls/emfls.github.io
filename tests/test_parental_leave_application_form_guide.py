@@ -244,8 +244,8 @@ def test_publication_manifest_hub_and_sitemaps_register_the_page_once():
     assert manifest["urls"] == [f"/{ROUTE}"]
     assert manifest["hubPaths"] == ["kor/report/parenting/index.html"]
     assert manifest["sitemapPaths"] == ["kor/report/parenting/sitemap.xml", "kor/sitemap.xml"]
-    assert manifest["runAt"].startswith("2026-09-30T")
-    assert manifest["runId"] == "P0-20260930-PARENTAL-LEAVE-APPLICATION"
+    assert manifest["runAt"].startswith("2026-10-01T")
+    assert manifest["runId"] == "P0-20261001-PARENTAL-LEAVE-APPLICATION"
     assert manifest["dailyLimit"] == 1
     assert manifest["publishedToday"] == 1 and manifest["remainingCapacity"] == 0
 

@@ -310,8 +310,8 @@ def test_committed_launch_manifest_is_exactly_the_current_launch_batch():
             "kor/report/parenting/sitemap.xml",
             "kor/sitemap.xml",
         ]
-        assert manifest["runAt"].startswith("2026-09-30T")
-        assert manifest["runId"] == "P0-20260930-PARENTAL-LEAVE-APPLICATION"
+        assert manifest["runAt"].startswith("2026-10-01T")
+        assert manifest["runId"] == "P0-20261001-PARENTAL-LEAVE-APPLICATION"
         assert manifest["publishedToday"] == 1
         assert manifest["dailyLimit"] == 1
         assert manifest["remainingCapacity"] == 0
