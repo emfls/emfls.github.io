@@ -48,6 +48,13 @@ _NOISY_CATEGORY_PREFIXES = ("recovery:",)
 def normalize_keyword(value):
     return re.sub(r"[^0-9a-z가-힣]", "", str(value or "").casefold())
 
+_YMYL_NORMALIZED_HANGUL_SIGNALS = tuple(
+    normalize_keyword(signal)
+    for _, signals in _YMYL_TEXT_SIGNAL_GROUPS
+    for signal in signals
+    if re.search(r"[가-힣]", signal)
+)
+
 def normalize_url_identity(value):
     """Return the conservative same-site route identity used for deduplication."""
     text = str(value or "").strip()
@@ -110,13 +117,22 @@ def _tool(row):
     return any(x in text for x in ("tool", "calculator", "계산기", "무료 도구"))
 
 def _has_ymyl_text_signal(text):
-    return any(signal in text for _, signals in _YMYL_TEXT_SIGNAL_GROUPS for signal in signals)
+    raw_text = str(text or "").casefold()
+    if any(signal in raw_text for _, signals in _YMYL_TEXT_SIGNAL_GROUPS for signal in signals):
+        return True
+    normalized_text = normalize_keyword(raw_text)
+    return any(signal in normalized_text for signal in _YMYL_NORMALIZED_HANGUL_SIGNALS)
 
 def _ymyl(row):
-    keyword_content = f"{row.get('keyword', '')}|{row.get('content_types', '')}".casefold()
+    keyword = str(row.get("keyword") or "").casefold()
+    content_types = str(row.get("content_types") or "").casefold()
     category = str(row.get("category") or "").strip().casefold()
     category_evidence = "" if category.startswith(_NOISY_CATEGORY_PREFIXES) else category
-    return _has_ymyl_text_signal(keyword_content) or _has_ymyl_text_signal(category_evidence)
+    return (
+        _has_ymyl_text_signal(keyword)
+        or _has_ymyl_text_signal(content_types)
+        or _has_ymyl_text_signal(category_evidence)
+    )
 
 def select_launch_candidate(rows, existing_urls=None, published_keywords=None, daily_limit=1, selected_at=None, max_age_days=30, launched_count=0):
     existing_urls={identity for x in (existing_urls or set()) if (identity := normalize_url_identity(x)) is not None}; published={normalize_keyword(x) for x in (published_keywords or set())}

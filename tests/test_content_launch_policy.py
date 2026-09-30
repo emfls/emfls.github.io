@@ -228,6 +228,63 @@ def test_latest_master_working_holiday_application_rows_fail_closed_before_overl
         assert result["queue"] == [], keyword
         assert result["excluded"]["ymyl"] == 1, keyword
 
+def test_spaced_specific_visa_working_holiday_and_debt_signals_are_excluded_as_ymyl():
+    cases = (
+        ("비자 신청", "/kor/report/visa/application.html"),
+        ("워킹홀리데이 신청", "/kor/report/visa/working-holiday.html"),
+        ("못 받은 돈", "/kor/report/legal/unpaid-money.html"),
+    )
+
+    for keyword, suggested_url in cases:
+        candidate = row(
+            keyword=keyword,
+            category="recovery:미국",
+            score_valid="True",
+            opportunity_score="42.5",
+            action="NEW_PAGE",
+            status="NEW",
+            overlap="NO_OVERLAP",
+            suggested_url=suggested_url,
+        )
+        result = select_launch_candidate([candidate], daily_limit=1)
+        assert result["queue"] == [], keyword
+        assert result["excluded"]["ymyl"] == 1, keyword
+
+def test_numeric_3_3_signal_stays_literal_and_does_not_match_33():
+    exact_signal = select_launch_candidate(
+        [row(keyword="3.3%계산기", suggested_url="/kor/util/tax.html")],
+        daily_limit=1,
+    )
+    assert exact_signal["queue"] == []
+    assert exact_signal["excluded"]["ymyl"] == 1
+
+    numeric_near_miss = select_launch_candidate(
+        [row(keyword="33계산기", suggested_url="/kor/util/number-33.html")],
+        daily_limit=1,
+    )
+    assert [item["keyword"] for item in numeric_near_miss["queue"]] == ["33계산기"]
+    assert numeric_near_miss["excluded"]["ymyl"] == 0
+
+def test_hangul_signal_normalization_respects_keyword_and_content_type_boundaries():
+    split_fields = select_launch_candidate(
+        [row(keyword="비자", content_types="신청", category="recovery:미국", suggested_url="/kor/report/visa/keyword.html")],
+        daily_limit=1,
+    )
+    assert [item["keyword"] for item in split_fields["queue"]] == ["비자"]
+    assert split_fields["excluded"]["ymyl"] == 0
+
+    for keyword, suggested_url in (
+        ("비자 신청", "/kor/report/visa/application.html"),
+        ("워킹홀리데이 신청", "/kor/report/visa/working-holiday.html"),
+        ("못 받은 돈", "/kor/report/legal/unpaid-money.html"),
+    ):
+        result = select_launch_candidate(
+            [row(keyword=keyword, suggested_url=suggested_url)],
+            daily_limit=1,
+        )
+        assert result["queue"] == [], keyword
+        assert result["excluded"]["ymyl"] == 1, keyword
+
 def test_current_master_safe_controls_remain_queue_eligible():
     master_path = Path(__file__).resolve().parents[1] / "data" / "keywords_master.csv"
     with master_path.open(encoding="utf-8-sig", newline="") as source:
