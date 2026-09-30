@@ -888,3 +888,6 @@
 
 ## 2026-09-30 07:20 Keyword Hunter
 - Seeds: 40; New: 60; Rejected: 41; DB: 4049; Errors: 0; Top: LG퓨리케어오브제컬렉션정수기. Report: reports/keyword-hunter/2026-09-30-0720.md
+
+## 2026-09-30 14:38 Keyword Hunter
+- Seeds: 40; New: 20; Rejected: 18; DB: 4069; Errors: 0; Top: none. Report: reports/keyword-hunter/2026-09-30-1438.md
