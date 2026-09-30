@@ -1,7 +1,10 @@
 import copy
+import csv
+from pathlib import Path
 
 from scripts.content_launch_policy import select_launch_candidate, normalize_keyword
 from scripts.content_launch_guard import validate_launch
+from scripts.prepare_keyword_launch import prepare_queue
 
 def row(**kw):
     base = {"keyword":"계산기", "status":"NEW", "score_valid":"True", "opportunity_score":"80", "confidence":"HIGH", "category":"tools", "action":"NEW_PAGE", "content_types":"calculator/tool|evergreen", "closest_url":"", "overlap":"NO_OVERLAP"}
@@ -85,6 +88,74 @@ def test_clear_legal_content_type_blocks_candidate_without_noisy_category_false_
     assert result["queue"] == []
     assert result["excluded"]["ymyl"] == 1
 
+def test_real_master_tax_and_labor_entitlement_queries_fail_closed_despite_noisy_category():
+    cases = (
+        ("연차계산기", "calculator/tool|evergreen|informational"),
+        ("연차수당계산기", "calculator/tool|evergreen|informational"),
+        ("연차계산법", "calculator/tool|evergreen|informational"),
+        ("원천세계산기", "calculator/tool|evergreen|informational"),
+        ("연차수당계산법", "calculator/tool|informational|trending"),
+        ("회계년도연차계산기", "calculator/tool|evergreen|informational"),
+        ("연차계산", "calculator/tool|evergreen|informational"),
+        ("시급계산기", "calculator/tool|evergreen|informational"),
+        ("갑근세계산기", "calculator/tool|evergreen|informational"),
+        ("시급계산", "calculator/tool|evergreen|informational"),
+        ("연말정산하는법", "how-to|informational|trending"),
+        ("노동청신고방법", "evergreen|how-to|informational"),
+        ("실수령액계산기", "calculator/tool|evergreen|informational"),
+        ("시간외수당계산기", "calculator/tool|evergreen|informational"),
+        ("연차휴가계산기", "calculator/tool|evergreen|informational"),
+        ("연차일수계산", "calculator/tool|evergreen|informational"),
+        ("월급계산법", "calculator/tool|evergreen|informational"),
+        ("연봉계산기", "calculator/tool|evergreen|informational"),
+        ("연장근로수당계산", "calculator/tool|evergreen|informational"),
+        ("조기재취업수당모의계산", "calculator/tool|evergreen|informational"),
+        ("수급자격신청자온라인교육", "evergreen|how-to|informational"),
+        ("증여세계산기", "calculator/tool|evergreen|informational"),
+        ("알바비계산기", "calculator/tool|evergreen|informational"),
+        ("세후계산기", "calculator/tool|evergreen|informational"),
+        ("월급계산기", "calculator/tool|evergreen|informational"),
+        ("전자계산서발행", "calculator/tool|evergreen|informational"),
+        ("계산서발행", "calculator/tool|evergreen|informational"),
+        ("통신판매업신고방법", "evergreen|how-to|informational"),
+        ("양도세계산기", "calculator/tool|evergreen|informational"),
+        ("사업소득계산기", "calculator/tool|informational|trending"),
+        ("연말정산계산기", "calculator/tool|informational|trending"),
+        ("월급일할계산", "calculator/tool|evergreen|informational"),
+        ("야간근로수당계산", "calculator/tool|informational|trending"),
+        ("야간수당계산", "calculator/tool|evergreen|informational"),
+        ("휴일근무수당계산", "calculator/tool|informational|trending"),
+        ("야간수당계산기", "calculator/tool|evergreen|informational"),
+        ("월급계산", "calculator/tool|evergreen|informational"),
+        ("연차수당계산", "calculator/tool|evergreen|informational"),
+        ("미사용연차수당계산", "calculator/tool|evergreen|informational"),
+        ("월급세후계산기", "calculator/tool|evergreen|informational"),
+    )
+
+    for index, (keyword, content_types) in enumerate(cases):
+        result = select_launch_candidate(
+            [row(keyword=keyword, category="recovery:세금", content_types=content_types, suggested_url=f"/kor/guide/master-{index}.html")],
+            daily_limit=1,
+        )
+        assert result["queue"] == [], keyword
+        assert result["excluded"]["ymyl"] == 1, keyword
+
+def test_real_master_non_ymyl_controls_remain_eligible_despite_noisy_category():
+    cases = (
+        ("근무일수계산기", "calculator/tool|evergreen|informational"),
+        ("글자수계산기", "calculator/tool|informational|trending"),
+        ("지문인식출퇴근기록기", "evergreen|informational"),
+        ("근무일수계산", "calculator/tool|evergreen|informational"),
+    )
+
+    for index, (keyword, content_types) in enumerate(cases):
+        result = select_launch_candidate(
+            [row(keyword=keyword, category="recovery:세금", content_types=content_types, suggested_url=f"/kor/tool/master-{index}.html")],
+            daily_limit=1,
+        )
+        assert [item["keyword"] for item in result["queue"]] == [keyword]
+        assert result["excluded"]["ymyl"] == 0
+
 def test_noisy_recovery_category_alone_does_not_block_safe_query():
     result = select_launch_candidate(
         [row(keyword="글자수계산기", category="recovery:세금", suggested_url="/kor/util/character-count.html")],
@@ -94,10 +165,83 @@ def test_noisy_recovery_category_alone_does_not_block_safe_query():
     assert result["excluded"]["ymyl"] == 0
 
 def test_ambiguous_recovery_queries_are_not_assumed_to_be_ymyl():
-    for keyword in ("휴가신청서양식", "피해구제신청"):
+    for keyword in (
+        "휴가신청서양식",
+        "피해구제신청",
+        "근무기간계산기",
+        "노무사상담비용",
+        "노무사비용",
+        "시급한문서복구방법",
+    ):
         result = select_launch_candidate(
             [row(keyword=keyword, category="recovery:인지대", suggested_url="/kor/guide/example.html")],
             daily_limit=1,
+        )
+        assert [item["keyword"] for item in result["queue"]] == [keyword]
+        assert result["excluded"]["ymyl"] == 0
+
+def test_current_master_debt_and_visa_rows_fail_closed_before_queue_selection():
+    master_path = Path(__file__).resolve().parents[1] / "data" / "keywords_master.csv"
+    with master_path.open(encoding="utf-8-sig", newline="") as source:
+        rows = {item["keyword"]: item for item in csv.DictReader(source)}
+
+    for keyword in ("회생신청", "호주워홀비자신청", "호주워홀신청", "못받은돈받아드립니다"):
+        candidate = rows[keyword]
+        assert candidate["score_valid"] == "True"
+        assert float(candidate["opportunity_score"]) > 0
+        assert candidate["action"] == "NEW_PAGE"
+        assert candidate["status"] == "NEW"
+        assert candidate["overlap"] == "NO_OVERLAP"
+        result = prepare_queue(
+            [candidate],
+            existing_urls=set(),
+            published_keywords=set(),
+            daily_limit=1,
+            selected_at="2026-09-30T15:50:00+09:00",
+            editorial_decisions=[],
+            published_manifest={},
+        )
+        assert result["queue"] == [], keyword
+        assert result["excluded"]["ymyl"] == 1, keyword
+
+def test_latest_master_working_holiday_application_rows_fail_closed_before_overlap_gate():
+    # These exact rows were present in the 2026-09-30 latest-main master blob;
+    # the local branch snapshot predates that generated 20-row update.
+    cases = (
+        ("호주워킹홀리데이신청", "37.35", "LOW_OVERLAP"),
+        ("캐나다워킹홀리데이신청", "38.43", "LOW_OVERLAP"),
+    )
+
+    for keyword, opportunity_score, overlap in cases:
+        candidate = row(
+            keyword=keyword,
+            category="recovery:미국",
+            score_valid="True",
+            opportunity_score=opportunity_score,
+            action="NEW_PAGE",
+            status="NEW",
+            overlap=overlap,
+            content_types="evergreen|how-to|informational",
+            suggested_url="/kor/report/visa/working-holiday.html",
+        )
+        result = select_launch_candidate([candidate], daily_limit=1)
+        assert result["queue"] == [], keyword
+        assert result["excluded"]["ymyl"] == 1, keyword
+
+def test_current_master_safe_controls_remain_queue_eligible():
+    master_path = Path(__file__).resolve().parents[1] / "data" / "keywords_master.csv"
+    with master_path.open(encoding="utf-8-sig", newline="") as source:
+        rows = {item["keyword"]: item for item in csv.DictReader(source)}
+
+    for keyword in ("근무일수계산기", "글자수계산기", "지문인식출퇴근기록기", "근무일수계산"):
+        result = prepare_queue(
+            [rows[keyword]],
+            existing_urls=set(),
+            published_keywords=set(),
+            daily_limit=1,
+            selected_at="2026-09-30T15:50:00+09:00",
+            editorial_decisions=[],
+            published_manifest={},
         )
         assert [item["keyword"] for item in result["queue"]] == [keyword]
         assert result["excluded"]["ymyl"] == 0
