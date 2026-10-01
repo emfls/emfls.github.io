@@ -898,6 +898,9 @@
 ## 2026-10-01 04:26 Keyword Hunter
 - Seeds: 40; New: 40; Rejected: 35; DB: 4129; Errors: 0; Top: 가을여행지추천. Report: reports/keyword-hunter/2026-10-01-0426.md
 
+## 2026-10-01 08:55 Keyword Hunter
+- Seeds: 40; New: 60; Rejected: 49; DB: 4189; Errors: 0; Top: 10월여행지추천. Report: reports/keyword-hunter/2026-10-01-0855.md
+
 ## 2026-10-01 P0 Revenue Growth #26 — 육아휴직신청서양식 closure
 - PR #24 normal merge: launch head `dc9760f9a9422766b3b04470364ec577024c83e9`, merge SHA `d7d220cf24e0500ed77dc8f91bfff1a6227ab201`, 9 changed files. Publication manifest records `2026-10-01T02:43:35+09:00`; 10/1 daily publication capacity is consumed (1/1).
 - Exact post-merge evidence: SEO QA `36756262591` SUCCESS, Pages `36756260669` SUCCESS, IndexNow `36756262880` SUCCESS/accepted. On 2026-10-01, `https://emfls.github.io/kor/report/parenting/parental-leave-application-form-2026.html` and `https://emfls.github.io/kor/report/parenting/parenting-subsidy-2026.html` each returned HTTP 200. #26 is `TECHNICAL_DONE`; Revenue remains `NO_CONCLUSION`.
