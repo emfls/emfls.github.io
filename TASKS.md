@@ -17,11 +17,11 @@
   - 완료 조건: 30–50개 실제 링크, 준비·지역·목적·주요 콘텐츠 탐색, GA4·AdSense·모바일·구조화 데이터, sitemap/content-index 보존, 회귀 테스트와 캠핑 P1 진단.
   - 완료 기록: 2026-09-13. 2.79MB/5,233링크 목록을 21.8KB/43개 고유 `/kor/` 목적지 허브로 교체하고 캠핑 후속 우선순위를 남양주→청주→담양→김포→경기도 광주로 정리했다.
 
-- [ ] P0 Revenue Growth #02 — GA4 refresh에서 최신 GSC 기회 신호 보존
+- [x] P0 Revenue Growth #02 — GA4 refresh에서 최신 GSC 기회 신호 보존
   - 근거: live main의 GA4 workflow가 `revenue_growth.py`에 GSC snapshot을 전달하지 않아 GA4 실행 후 page-performance의 Google 채널이 `NOT_CONNECTED`로 재생성될 수 있다. latest `gsc-latest.json` 110 rows를 병합한 temporary regeneration에서는 VERIFIED Google URL 106개와 OPPORTUNITY 38개가 확인됐다.
   - 변경: GA4 workflow가 `data/performance/gsc-latest.json`을 함께 전달하도록 수정하고 workflow 계약 회귀 테스트를 추가했다. 콘텐츠 URL은 수정하지 않았다.
-  - 상태: `codex/p0-revenue-growth-02`에서 구현·검증; 아직 main 배포 전. GA4 Collection 1회 재실행 후 실제 artifact와 분류를 확인한다.
-  - CI follow-up: SEO QA run `35703819990`에서 `scripts/content_launch_guard.py`가 workflow 파일명 `ga4-collection.yml`을 analytics runtime 변경으로 오탐했다. exact-path allowlist와 runtime asset 차단 회귀를 같은 PR에 추가했으며, 새 원격 SEO QA green 확인 전 merge 금지.
+  - 완료/배포: PR #1 normal merge, merge SHA `d4d26888e799cd1070357ec4f150287408cdfe4f`. GA4 Collection run `36690479897` SUCCESS; 2026-09-30 `page-performance.json`에 Google `VERIFIED` 100개가 기록됐다. 최신 main `5481894b01c2685f281121571169cb226645ec14`에서 workflow가 GSC snapshot 입력을 유지한다.
+  - CI follow-up 완료: workflow orchestration에만 exact-path 예외를 좁게 적용하고 실제 `assets/js/ga4.js` 등 analytics runtime asset은 회귀 테스트로 계속 차단한다.
 
 - [x] P0 Support #25 — Published Content Dedupe Hardening
   - Root cause: queue preparation은 published registry와 content index만 dedupe source로 사용하고 final `PUBLISHED` manifest의 `candidateIds`/`urls`를 무시했다. URL identity가 query만 제거해 `/route/`와 `/route/index.html`도 같게 보지 않았으며, stale counter는 same-day manifest의 1/1 publication을 놓쳤다.
@@ -29,15 +29,15 @@
   - 최종 검증: focused 40 passed, unittest 715 passed, pytest 1,108 passed, content-launch guard PASS, `git diff --check` PASS. Final PR head `966d1a1e38c9d14b8367b97b9bde1f41db2adf62`의 SEO QA `36501567865` SUCCESS.
   - 전달/종결: PR #17 normal merge 완료. merge SHA `c16677a74e3e2ef645d440cdfb044e1202f4c1fb`. Post-merge queue proof에서 #23은 재등재되지 않았고 `/route/`·`/route/index.html` alias dedupe를 확인했다. 9/28 manifest는 9/29 daily capacity를 소비하지 않아 slot은 available이었다. `글램핑장추천`은 별도 후보로 남았지만 `CANNIBALIZATION_RISK`로 분류되어 새 페이지/콘텐츠는 승인·발행하지 않았다. `TECHNICAL_DONE`; Revenue WIN 주장은 하지 않았다.
 
-- [ ] P0 Revenue Growth #23 — 1688 구매대행 검증가이드
+- [x] P0 Revenue Growth #23 — 1688 구매대행 검증가이드
   - 근거: 최신 main queue에서 `1688구매대행` HIGH · 59.92 · `READY_TO_LAUNCH`; current volume은 `NOT_AVAILABLE`, 3,740/month는 2026-09-14 historical evidence만 확인됐다. 새 URL의 동일 intent overlap은 확인되지 않았다.
   - 변경: 검증 가이드, 칼럼 허브, sitemap, 검색 index/home feed 및 launch-manifest regression을 current-main worktree에 준비했다. 비용·환율·통관·품목 안전은 공식 자료로 확인하도록 하고 업체 순위·고정 비용/세율·affiliate 표현은 넣지 않았다.
   - CI root cause / repair: SEO QA `36364464129`의 2개 pytest 실패는 #23 테스트가 generator-mutated manifest를 읽고 #17의 과거 launch 기록을 mutable latest manifest에 고정한 test-contract 결함이었다. #23은 `HEAD`의 committed manifest를 검증하고 #17 테스트는 현재 페이지·허브·sitemap 계약만 검증하도록 수정했다.
-  - 상태: PR #15 (`codex/p0-revenue-growth-23-1688-launch-20260928`) OPEN, HEAD `ea0600b299c936f20ce2919f73407968e706c45b`, base `5d8bc85f9987b7fbe9ceebc735c8a2092413ab7e`, 11 files, mergeable. SEO QA `36373607848` SUCCESS (guard, SEO regression, Keyword Hunter, unittest, pytest 모두 통과). 최신 main drift/overlap 없음. Queue의 1688 HIGH · 59.92 · `READY_TO_LAUNCH` 확인; PR manifest는 2026-09-28 dailyLimit 1/1을 기록하지만 PR은 미병합·production 미게시다. Sol 최종 검토 대기; `[ ]`, Revenue `NO_CONCLUSION`, merge/production 미완료를 유지한다.
+  - 완료/배포: PR #15 normal merge, merge SHA `f306bedf0cb62bc39bb1e370272379a474afe9a0` (11 files). SEO QA `36387011884`, Pages `36387010988`, IndexNow `36387011935` 모두 SUCCESS; 2026-10-01 `https://emfls.github.io/kor/column/1688gumaedaehaeng/` HTTP 200. Current volume은 `NOT_AVAILABLE`, 3,740/month는 2026-09-14 historical evidence이므로 Revenue `NO_CONCLUSION`.
 
-- [ ] P0 Safety — 기존 육아휴직·출산휴가 급여 안내의 YMYL 정확성 보정
-  - 범위: `kor/report/parenting/parenting-subsidy-2026.html`의 기존 급여 안내 단락만 갱신. 신규 신청서 경로와 콘텐츠는 계속 `PREP ONLY / NOT PUBLISHED`이며 제목·메타·허브·sitemap·광고/분석 코드는 변경하지 않는다.
-  - 검증 상태(2026-09-29 fix round 3): 고용보험법 제70조제1항에 따라 일반 30일·특례 7일 각각의 출산전후휴가 중복기간 제외와 두 경로 공통 사전 피보험단위기간 180일 요건을 명시하고, 시행령 날짜 분할을 공식 개정문·부칙 링크로 연결했다. focused 5 passed; unittest 715 OK; pytest 1,113 passed; launch guard PASS; deterministic SEO audit 19,091 pages; SEO QA `failed=false`, 신규 critical/warning 0 (기존 800/424); `git diff --check` PASS. independent re-review 및 Task 2 delivery gate는 pending; PR/commit/push/merge 없음. 신청서 후보는 `PREP ONLY / NOT PUBLISHED`.
+- [x] P0 Safety — 기존 육아휴직·출산휴가 급여 안내의 YMYL 정확성 보정
+  - 범위: `kor/report/parenting/parenting-subsidy-2026.html`의 기존 급여 안내 단락만 갱신했다. 당시 해당 repair는 제목·메타·허브·sitemap·광고/분석 코드를 변경하지 않았다. 신청서 가이드는 별도 P0 #26으로 이후 공개됐다.
+  - 완료/배포: 후속 YMYL 검토·전달 완료 후 PR #20 normal merge, merge SHA `8d71c7d2cc1fef374443c26b0108bb2c55a3b59f`. SEO QA `36545079003`, Pages `36545078240`, IndexNow `36545078922` 모두 SUCCESS; 2026-10-01 `https://emfls.github.io/kor/report/parenting/parenting-subsidy-2026.html` HTTP 200. 신청서 가이드는 별도 #26 공개 작업 기록을 참조.
 
 ## P1 - High
 
