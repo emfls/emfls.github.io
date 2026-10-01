@@ -35,11 +35,26 @@ jobs:
       - name: Collect GA4 latest snapshot
         run: python3 scripts/collect_ga4_snapshot.py --output data/performance/ga4-latest.json --days 28
 
+      - name: Regenerate current site audit for GA4 measurement
+        run: python3 scripts/seo_audit.py . --json /tmp/ga4-site-audit.json --markdown /tmp/ga4-site-audit.md
+
+      - name: Regenerate current page scores for GA4 measurement
+        run: |
+          python3 scripts/quality_audit.py \
+            --audit /tmp/ga4-site-audit.json \
+            --as-of "$(date +%F)" \
+            --page-output /tmp/ga4-page-scores.json \
+            --site-output /tmp/ga4-site-score.json \
+            --report /tmp/ga4-site-score.md \
+            --dashboard /tmp/ga4-site-dashboard.html
+
       - name: Regenerate measurement artifacts from GA4 snapshot
         run: |
           python3 scripts/revenue_growth.py \
             --as-of "$(date +%F)" \
             --performance data/performance/ga4-latest.json \
+            --audit /tmp/ga4-site-audit.json \
+            --page-scores /tmp/ga4-page-scores.json \
             --gsc-snapshot data/performance/gsc-latest.json \
             --page-output data/page-performance.json \
             --opportunity-output data/revenue-opportunities.json \

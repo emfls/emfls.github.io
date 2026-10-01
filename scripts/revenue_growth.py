@@ -79,6 +79,38 @@ def _by_url(rows):
     return {normalize_url(row.get("url")): row for row in rows if row.get("url")}
 
 
+def _performance_by_url(rows):
+    by_url = {}
+    for row in rows:
+        if not row.get("url"):
+            continue
+        url = normalize_url(row.get("url"))
+        if url not in by_url:
+            by_url[url] = {**row, "url": url}
+            continue
+
+        target = by_url[url]
+        incoming = row.get("ga4")
+        existing = target.get("ga4")
+        if not incoming:
+            continue
+        if not existing:
+            target["ga4"] = dict(incoming)
+            continue
+
+        if any(existing.get(key) != incoming.get(key) for key in ("period", "source", "revenueMetric", "status")):
+            raise ValueError(f"Conflicting GA4 metadata for normalized URL {url}")
+
+        combined = dict(existing)
+        for field in ("views", "engagementSeconds", "revenue"):
+            left, right = existing.get(field), incoming.get(field)
+            combined[field] = left + right if isinstance(left, (int, float)) and isinstance(right, (int, float)) else None
+        # GA4 users are not additive across URL aliases; the API does not expose their deduplicated union here.
+        combined["users"] = None
+        target["ga4"] = combined
+    return by_url
+
+
 def _period_key(channel):
     period = (channel or {}).get("period") or {}
     return period.get("start"), period.get("end")
@@ -115,7 +147,7 @@ def _period_compatibility(site):
 def _merge_gsc_snapshot(performance, gsc):
     if not gsc or gsc.get("status") != "VERIFIED":
         return performance
-    by_url = {normalize_url(row.get("url")): row for row in performance.get("pages") or [] if row.get("url")}
+    by_url = _performance_by_url(performance.get("pages") or [])
     for row in gsc.get("pages") or []:
         url = normalize_url(row.get("url"))
         if not url:
@@ -301,7 +333,7 @@ def run_revenue_growth(
     content_experiments = _read_json(content_experiments_path, {"experiments": []})
     history = _read_json(optimization_history_path, {"pages": []})
     audit_map = _by_url(audit.get("pages") or [])
-    performance_map = _by_url(performance.get("pages") or [])
+    performance_map = _performance_by_url(performance.get("pages") or [])
     history_map = _by_url(history.get("pages") or [])
     experiment_map = _by_url(experiments.get("experiments") or [])
     naver_snapshot = load_naver_snapshot(naver_snapshot_path) if naver_snapshot_path else None

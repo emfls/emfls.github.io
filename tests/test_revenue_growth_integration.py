@@ -11,6 +11,43 @@ def write_json(path, payload):
 
 
 class RevenueGrowthIntegrationTest(unittest.TestCase):
+    def test_ga4_index_alias_rows_aggregate_additive_metrics_without_summing_users(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            url = "/kor/util/date-calculator/"
+            period = {"start": "2026-09-02", "end": "2026-09-29"}
+            ga4 = {
+                "status": "VERIFIED",
+                "source": "GOOGLE_ANALYTICS_DATA_API",
+                "revenueMetric": "totalAdRevenue",
+                "period": period,
+            }
+            write_json(root / "scores.json", {"pages": [{"url": url, "score": 80, "type": "UTILITY"}]})
+            write_json(root / "audit.json", {"pages": [{"url": url, "indexable": True, "canonical": f"https://emfls.github.io{url}"}]})
+            write_json(root / "performance.json", {
+                "site": {"ga4": {"views": 6, "users": 5, **ga4}},
+                "pages": [
+                    {"url": url, "ga4": {"views": 4, "users": 4, "engagementSeconds": 18.0, "revenue": 0.0, **ga4}},
+                    {"url": "/kor/util/date-calculator/index.html", "ga4": {"views": 2, "users": 2, "engagementSeconds": 0.0, "revenue": 0.0, **ga4}},
+                ],
+            })
+            write_json(root / "experiments.json", {"experiments": []})
+            write_json(root / "history.json", {"pages": []})
+
+            pages, _ = run_revenue_growth(
+                page_scores_path=root / "scores.json", audit_path=root / "audit.json",
+                performance_path=root / "performance.json", experiments_path=root / "experiments.json",
+                optimization_history_path=root / "history.json", as_of="2026-09-30",
+                page_output=root / "pages.json", opportunity_output=root / "opp.json", report_output=root / "report.md",
+            )
+
+            row = next(item for item in pages["pages"] if item["url"] == url)
+            self.assertEqual(row["ga4"]["views"], 6)
+            self.assertEqual(row["ga4"]["engagementSeconds"], 18.0)
+            self.assertEqual(row["ga4"]["revenue"], 0.0)
+            self.assertIsNone(row["ga4"]["users"])
+            self.assertEqual(row["ga4"]["status"], "VERIFIED")
+
     def test_unmatched_top30_naver_row_does_not_demote_non_camping_opportunity(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
