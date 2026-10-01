@@ -29,6 +29,26 @@ def test_ga4_refresh_regenerates_measurements_with_latest_gsc_snapshot():
     assert "--page-output data/page-performance.json" in command
 
 
+def test_ga4_refresh_scores_current_html_inventory_before_joining_snapshot_rows():
+    workflow = (ROOT / ".github" / "workflows" / "ga4-collection.yml").read_text(encoding="utf-8")
+    audit_step = _step_block(workflow, "Regenerate current site audit for GA4 measurement")
+    scores_step = _step_block(workflow, "Regenerate current page scores for GA4 measurement")
+    revenue_step = _step_block(workflow, "Regenerate measurement artifacts from GA4 snapshot")
+    commit_step = _step_block(workflow, "Commit refreshed GA4 measurement artifacts")
+
+    assert "scripts/seo_audit.py . --json /tmp/ga4-site-audit.json" in audit_step
+    assert "scripts/quality_audit.py" in scores_step
+    assert "--audit /tmp/ga4-site-audit.json" in scores_step
+    assert "--page-output /tmp/ga4-page-scores.json" in scores_step
+    assert "--audit /tmp/ga4-site-audit.json" in revenue_step
+    assert "--page-scores /tmp/ga4-page-scores.json" in revenue_step
+    assert "ga4-site-audit.json" not in commit_step
+    assert "ga4-page-scores.json" not in commit_step
+    assert workflow.index("Regenerate current site audit for GA4 measurement") < workflow.index(
+        "Regenerate current page scores for GA4 measurement"
+    ) < workflow.index("Regenerate measurement artifacts from GA4 snapshot")
+
+
 def test_gsc_refresh_keeps_using_gsc_snapshot_for_measurement_regeneration():
     command = _measurement_command("gsc-collection.yml")
 
