@@ -906,3 +906,6 @@
 - Exact post-merge evidence: SEO QA `36756262591` SUCCESS, Pages `36756260669` SUCCESS, IndexNow `36756262880` SUCCESS/accepted. On 2026-10-01, `https://emfls.github.io/kor/report/parenting/parental-leave-application-form-2026.html` and `https://emfls.github.io/kor/report/parenting/parenting-subsidy-2026.html` each returned HTTP 200. #26 is `TECHNICAL_DONE`; Revenue remains `NO_CONCLUSION`.
 - PR #21 was closed without merge. Its original worktree remains preserved with four dirty tracked files; no reset/clean/delete was performed.
 - New parental-leave application guide is now PUBLISHED through #26; the older PREP-only state is superseded by this verified launch. No second public launch is authorized for 2026-10-01.
+
+## 2026-10-01 22:25 Keyword Hunter
+- Seeds: 40; New: 21; Rejected: 15; DB: 4210; Errors: 0; Top: 원천세가산세계산기. Report: reports/keyword-hunter/2026-10-01-2225.md
