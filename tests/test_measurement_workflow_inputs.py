@@ -49,10 +49,45 @@ def test_ga4_refresh_scores_current_html_inventory_before_joining_snapshot_rows(
     ) < workflow.index("Regenerate measurement artifacts from GA4 snapshot")
 
 
+def test_seo_qa_measurement_validator_uses_fresh_page_scores():
+    workflow = (ROOT / ".github" / "workflows" / "seo-qa.yml").read_text(encoding="utf-8")
+
+    assert "python3 scripts/validate_measurement_artifact.py data/page-performance.json --page-scores data/page-scores.json" in workflow
+
+
+def test_ga4_measurement_validator_uses_the_fresh_temporary_page_scores():
+    workflow = (ROOT / ".github" / "workflows" / "ga4-collection.yml").read_text(encoding="utf-8")
+    validation = _step_block(workflow, "Validate measurement artifacts")
+
+    assert "data/page-performance.json --page-scores /tmp/ga4-page-scores.json" in validation
+
+
 def test_gsc_refresh_keeps_using_gsc_snapshot_for_measurement_regeneration():
     command = _measurement_command("gsc-collection.yml")
 
     assert "--gsc-snapshot data/performance/gsc-latest.json" in command
+
+
+def test_gsc_page_refresh_generates_and_uses_a_fresh_indexable_inventory():
+    workflow = _workflow_text()
+    audit_step = _step_block(workflow, "Regenerate current site audit for GSC measurement")
+    scores_step = _step_block(workflow, "Regenerate current page scores for GSC measurement")
+    revenue_step = _step_block(workflow, "Regenerate measurement artifacts from GA4 and GSC snapshots")
+    validation_step = _step_block(workflow, "Validate GSC and measurement artifacts")
+    page_only = "if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'page'"
+
+    assert page_only in audit_step
+    assert page_only in scores_step
+    assert "scripts/seo_audit.py . --json /tmp/gsc-site-audit.json" in audit_step
+    assert "scripts/quality_audit.py" in scores_step
+    assert "--audit /tmp/gsc-site-audit.json" in scores_step
+    assert "--page-output /tmp/gsc-page-scores.json" in scores_step
+    assert "--audit /tmp/gsc-site-audit.json" in revenue_step
+    assert "--page-scores /tmp/gsc-page-scores.json" in revenue_step
+    assert "data/page-performance.json --page-scores /tmp/gsc-page-scores.json" in validation_step
+    assert workflow.index("Regenerate current site audit for GSC measurement") < workflow.index(
+        "Regenerate current page scores for GSC measurement"
+    ) < workflow.index("Regenerate measurement artifacts from GA4 and GSC snapshots")
 
 
 def test_gsc_workflow_defaults_to_page_mode_for_schedule_and_manual_runs():
