@@ -916,6 +916,9 @@
 ## 2026-10-02 08:56 Keyword Hunter
 - Seeds: 40; New: 61; Rejected: 49; DB: 4271; Errors: 0; Top: 퇴직금계산기준. Report: reports/keyword-hunter/2026-10-02-0856.md
 
+## 2026-10-02 14:46 Keyword Hunter
+- Seeds: 40; New: 20; Rejected: 20; DB: 4291; Errors: 0; Top: none. Report: reports/keyword-hunter/2026-10-02-1446.md
+
 ## 2026-10-02 P0 Support — Keyword Hunter DataLab freshness audit
 - Root cause: `score()` accepted numeric DataLab trend values without checking the configured 24-hour snapshot TTL; retained values from partial responses could also inherit a newly advanced shared `datalab_checked_at`. This could make stale trend evidence influence score validity, confidence, and candidate ordering.
 - Minimal fix in isolated branch `codex/p0-keyword-datalab-freshness-20261002`: score only timestamped, timezone-aware, non-future trend snapshots within TTL; fail closed for stale/missing/invalid timestamps; do not advance freshness when a partial response retains an old trend metric. No content, publication manifest, or live API data changed.
