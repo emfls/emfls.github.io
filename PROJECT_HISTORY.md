@@ -918,3 +918,9 @@
 
 ## 2026-10-02 14:46 Keyword Hunter
 - Seeds: 40; New: 20; Rejected: 20; DB: 4291; Errors: 0; Top: none. Report: reports/keyword-hunter/2026-10-02-1446.md
+
+## 2026-10-02 P0 Support — Keyword Hunter DataLab freshness audit
+- Root cause: `score()` accepted numeric DataLab trend values without checking the configured 24-hour snapshot TTL; retained values from partial responses could also inherit a newly advanced shared `datalab_checked_at`. This could make stale trend evidence influence score validity, confidence, and candidate ordering.
+- Minimal fix in isolated branch `codex/p0-keyword-datalab-freshness-20261002`: score only timestamped, timezone-aware, non-future trend snapshots within TTL; fail closed for stale/missing/invalid timestamps; do not advance freshness when a partial response retains an old trend metric. No content, publication manifest, or live API data changed.
+- Validation on base `83346ac4441b19b1764816c75a099c49ac35c85e`: focused Keyword Hunter suites 64 passed, full unittest 730 passed, full pytest 1,164 passed, four focused stale/future/partial-refresh/dry-run regressions passed, `git diff --check` passed. PR #30 exact head `e1947c08f713fc69eb011f96fd08149ba3175bf3`; SEO QA `36975353397` SUCCESS; focused 64, unittest 730, pytest 1,164, and `git diff --check` PASS. Sol code/CI review PASS; merge pending.
+- Candidate supply: freshness re-evaluation leaves no clearly evidenced low-maintenance non-YMYL candidate ready for new PREP; existing Incheon PREP remains the backup. October 2 publication capacity remains consumed 1/1; no second public page. Revenue remains `NO_CONCLUSION`.
