@@ -247,6 +247,18 @@ def merge_validation_data(row,updates):
             row[key]=value
     return row
 
+def merge_datalab_result(row,updates,checked_at):
+    """Advance shared trend freshness only when no old metric is retained."""
+    trend_fields=('trend_1m','trend_3m')
+    retained_old_metric=any(
+        number(row.get(key)) is not None and number(updates.get(key)) is None
+        for key in trend_fields
+    )
+    merge_validation_data(row,updates)
+    if not retained_old_metric and any(number(updates.get(key)) is not None for key in trend_fields):
+        row['datalab_checked_at']=checked_at.isoformat()
+    return row
+
 def report(result,now):
     lines=['# Keyword Hunter', '', '- 실행: '+now.isoformat()]
     for key in ['target','seeds_checked','new_keywords','duplicates','rejected','db_total','api_calls','rate_limits','api_health','strategy_counts','new_categories','shortfall','missing_data','site_pages','existing_page_improvement_candidates']:
@@ -341,7 +353,7 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
         if not 0<config['category_share']<=1: raise ValueError('category_share must be 0..1')
         if config['max_depth']<1 or config['max_seeds']<1: raise ValueError('Invalid depth/seed budget')
         allocate(config['target'],config['exploration'])
-        score({'keyword':'검증'},config)
+        score({'keyword':'검증'},config,now=now)
         usage=datalab_usage(root,config,now)
         client=Client(config,offline=dry_run or offline,usage_tracker=usage) if dry_run or client is None else client
         api_health=client.health() if hasattr(client,'health') and isinstance(client.health(),dict) else {}
@@ -361,7 +373,7 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
             if normalize(row['keyword']) in blocked and not (status_change and normalize(status_change[0])==normalize(row['keyword'])):
                 row['status']=blocked[normalize(row['keyword'])]
         for row in master:
-            row.update(score(row,config))
+            row.update(score(row,config,now=now))
         old_categories={r['category'] for r in master}; old_clusters={r.get('cluster') for r in master}
         anchored_clusters={normalize(s['keyword']) for s in seed_data['seeds'] if s.get('source') in ANCHORED_SOURCES}|excluded_roots
         master_by_key={normalize(r['keyword']):r for r in master}
@@ -432,7 +444,7 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
                  'seed_source':seed.get('source') or 'unknown','exploration_bucket':seed.get('bucket') or 'backlog',
                  'search_ads_checked_at':now.isoformat() if raw.get('source')=='NAVER_SEARCHAD' else '',
                  'datalab_checked_at':''}
-            row.update(score(row,config))
+            row.update(score(row,config,now=now))
             if len(key)<4 or (row['intent']=='informational' and row['longtail_score']<.2):
                 row.update(status='REJECTED',action='REJECT',reason='UNCLEAR_OR_BROAD_INTENT')
             by_key[key]=row;fresh.append(row);accepted_keys.add(key);counts[strategy]+=1;cats[cat]+=1;generated_clusters[cluster]+=1
@@ -522,11 +534,11 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
         trends=client.trends(submitted_trend_list,now.date()) if not status_change and not data_quality_only and api_health.get('NAVER_DATALAB')!='NOT_CONFIGURED' else {}
         for row in active:
             if row['keyword'] in trends:
-                merge_validation_data(row,trends[row['keyword']]); row['datalab_checked_at']=now.isoformat()
+                merge_datalab_result(row,trends[row['keyword']],now)
             checked=row.get('search_ads_checked_at') or row.get('metrics_checked_at')
             if checked and (now-datetime.fromisoformat(checked)).total_seconds()>config['search_ads_cache_ttl_hours']*3600:
                 for k in ['monthly_pc','monthly_mobile','monthly_total','competition']: row[k]=None
-            row.update(score(row,config))
+            row.update(score(row,config,now=now))
             clear_pending_validation_if_complete(row)
             overlap=site.match(row['keyword']);row.update(overlap=overlap['level'],last_checked=now.isoformat())
             if row['status']!='PUBLISHED': row['closest_url']=overlap.get('closestUrl')

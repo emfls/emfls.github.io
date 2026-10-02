@@ -3,6 +3,7 @@ import math
 import re
 import unicodedata
 from collections import Counter
+from datetime import datetime, timezone
 
 DEFAULT_CONFIG = {
     'target': 200, 'max_depth': 4, 'category_share': .20, 'max_seeds': 40,
@@ -76,11 +77,32 @@ def number(value):
         return v if math.isfinite(v) else None
     except (ValueError,TypeError): return None
 
-def score(row, config):
-    ts=tags(row['keyword'],number(row.get('trend_1m')))
+def score(row, config, now=None):
     total=number(row.get('monthly_total'))
     trends=[number(row.get(k)) for k in ('trend_1m','trend_3m')]
-    measured=[x for x in trends if x is not None]
+    measured_values=[x for x in trends if x is not None]
+    now=now or datetime.now(timezone.utc)
+    freshness_issue=''
+    trend_snapshot_fresh=False
+    if measured_values:
+        checked=row.get('datalab_checked_at')
+        if not checked:
+            freshness_issue='trend_freshness_missing'
+        else:
+            try:
+                checked_at=datetime.fromisoformat(str(checked))
+                if checked_at.tzinfo is None or now.tzinfo is None:
+                    freshness_issue='trend_timestamp_invalid'
+                else:
+                    age=(now.astimezone(timezone.utc)-checked_at.astimezone(timezone.utc)).total_seconds()
+                    ttl=config.get('datalab_cache_ttl_hours',24)*3600
+                    if age<0: freshness_issue='trend_timestamp_in_future'
+                    elif age>=ttl: freshness_issue='trend_stale'
+                    else: trend_snapshot_fresh=True
+            except (TypeError,ValueError,OverflowError):
+                freshness_issue='trend_timestamp_invalid'
+    measured=measured_values if trend_snapshot_fresh else []
+    ts=tags(row['keyword'],number(row.get('trend_1m')) if trend_snapshot_fresh else None)
     competition={'낮음':1,'중간':.5,'높음':0,'LOW':1,'MEDIUM':.5,'HIGH':0}.get(row.get('competition'))
     web_total=number(row.get('web_result_count'))
     specific=min(1,len(normalize(row['keyword']))/20)*(.9 if len(ts)>2 else .4)
@@ -96,13 +118,15 @@ def score(row, config):
     trend_ok=bool(measured)
     web_ok=web_total is not None
     coverage=(30*int(volume_ok)+20*int(competition is not None)+
-              15*int(trends[0] is not None)+15*int(trends[1] is not None)+20*int(web_ok))
+              15*int(trends[0] is not None and trend_snapshot_fresh)+
+              15*int(trends[1] is not None and trend_snapshot_fresh)+20*int(web_ok))
     confidence='HIGH' if volume_ok and trend_ok and web_ok else 'MEDIUM' if volume_ok and trend_ok else 'LOW' if volume_ok else 'UNVERIFIED'
     valid=volume_ok and trend_ok
     missing=[]
     if not volume_ok: missing.append('monthly_volume_missing')
     if competition is None: missing.append('competition_missing')
-    if not trend_ok: missing.append('trend_missing')
+    if not measured_values: missing.append('trend_missing')
+    elif not trend_snapshot_fresh: missing.append(freshness_issue or 'trend_stale')
     if not web_ok: missing.append('web_result_missing')
     invalid_reasons='|'.join(missing) if not valid else ''
     return {'opportunity_score':round(value,2) if valid else None,'score_valid':valid,

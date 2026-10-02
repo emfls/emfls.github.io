@@ -551,6 +551,35 @@ class HunterTests(unittest.TestCase):
         self.assertEqual(row['trend_1m'],12)
         self.assertEqual(row['web_result_count'],900)
 
+    def test_stale_datalab_values_do_not_produce_a_valid_candidate_score(self):
+        from datetime import datetime, timezone
+        now=datetime(2026,10,2,12,0,tzinfo=timezone.utc)
+        row={'keyword':'글자수계산기','monthly_total':90800,'competition':'LOW',
+             'trend_1m':12,'trend_3m':20,'web_result_count':2500,
+             'datalab_checked_at':'2020-01-01T00:00:00+00:00'}
+        result=h.score(row,h.DEFAULT_CONFIG,now=now)
+        self.assertFalse(result['score_valid'])
+        self.assertIsNone(result['opportunity_score'])
+        self.assertEqual(result['confidence'],'LOW')
+        self.assertEqual(result['data_coverage'],70)
+        self.assertIn('trend_stale',result['score_invalid_reasons'])
+
+    def test_partial_datalab_refresh_does_not_make_retained_trend_value_fresh(self):
+        from datetime import datetime, timezone
+        now=datetime(2026,10,2,12,0,tzinfo=timezone.utc)
+        previous_checked='2026-10-01T00:00:00+00:00'
+        row={'keyword':'글자수계산기','monthly_total':90800,'competition':'LOW',
+             'trend_1m':12,'trend_3m':20,'web_result_count':2500,
+             'datalab_checked_at':previous_checked}
+        h.merge_datalab_result(row,{'trend_1m':15,'trend_3m':None},now)
+        self.assertEqual(row['trend_1m'],15)
+        self.assertEqual(row['trend_3m'],20)
+        self.assertEqual(row['datalab_checked_at'],previous_checked)
+        result=h.score(row,h.DEFAULT_CONFIG,now=now)
+        self.assertFalse(result['score_valid'])
+        self.assertIsNone(result['opportunity_score'])
+        self.assertIn('trend_stale',result['score_invalid_reasons'])
+
     def test_status_command_persists_registry(self):
         client=Mock(errors=[],rate_limits=0,calls=0)
         client.feed.return_value=[];client.trends.return_value={}
