@@ -29,6 +29,7 @@ class SitemapAuditTests(unittest.TestCase):
         root = Path(__file__).resolve().parents[1]
         result = audit_local_sitemaps(root)
         self.assertEqual(result["omitted_from_root"], [])
+        self.assertEqual(result["duplicate_url_entries"], 0)
 
     def test_ignores_sitemaps_inside_isolated_worktrees(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -48,6 +49,26 @@ class SitemapAuditTests(unittest.TestCase):
 
             self.assertEqual(result["sitemap_files"], 1)
             self.assertNotIn("/.worktrees/feature/sitemap.xml", render_root_index(root))
+
+    def test_reports_duplicate_url_entries_across_leaf_sitemaps(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            namespace = 'xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"'
+            (root / "sitemap.xml").write_text(
+                f'<sitemapindex {namespace}><sitemap><loc>https://emfls.github.io/a/sitemap.xml</loc></sitemap>'
+                f'<sitemap><loc>https://emfls.github.io/b/sitemap.xml</loc></sitemap></sitemapindex>',
+                encoding="utf-8",
+            )
+            for name in ("a", "b"):
+                (root / name).mkdir()
+                (root / name / "sitemap.xml").write_text(
+                    f'<urlset {namespace}><url><loc>https://emfls.github.io/shared/</loc></url></urlset>',
+                    encoding="utf-8",
+                )
+
+            result = audit_local_sitemaps(root)
+
+        self.assertEqual(result["duplicate_url_entries"], 1)
 
     def test_directory_hubs_use_canonical_slash_urls(self):
         root = Path(__file__).resolve().parents[1]

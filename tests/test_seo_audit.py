@@ -3,10 +3,18 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.seo_audit import audit_site, parse_html
+from scripts.seo_audit import MAX_AUDIT_FILE_BYTES, audit_site, parse_html, serialize_audit
 
 
 class SeoAuditParserTests(unittest.TestCase):
+    def test_site_audit_artifact_stays_below_git_host_blob_limit(self):
+        path = Path(__file__).resolve().parents[1] / "data/site-audit.json"
+        self.assertLess(path.stat().st_size, MAX_AUDIT_FILE_BYTES)
+
+    def test_site_audit_serializer_rejects_oversized_output(self):
+        with self.assertRaisesRegex(ValueError, "site audit is"):
+            serialize_audit({"payload": "x" * 20}, max_bytes=10)
+
     def test_visible_text_prefix_is_bounded_to_250_words(self):
         body = " ".join(f"word{index}" for index in range(500))
         page = parse_html(f"<html><body><main>{body}</main></body></html>", Path("long.html"))

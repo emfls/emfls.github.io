@@ -14,6 +14,7 @@ PUBLIC_HOSTS = {"emfls.github.io", "www.emfls.github.io"}
 LANG_DIRS = {"cn", "de", "es", "fr", "id", "in", "jp", "kor", "pt", "ru", "vn"}
 WORD_RE = re.compile(r"[A-Za-z0-9]+|[가-힣]+|[\u3040-\u30ff\u3400-\u9fff]+")
 VISIBLE_TEXT_PREFIX_WORD_LIMIT = 250
+MAX_AUDIT_FILE_BYTES = 100 * 1024 * 1024
 
 
 def _attrs(items):
@@ -370,6 +371,13 @@ This is a read-only inventory. It does not modify, publish, noindex, merge, or d
 """
 
 
+def serialize_audit(audit, max_bytes=MAX_AUDIT_FILE_BYTES):
+    content = (json.dumps(audit, ensure_ascii=False, separators=(",", ":")) + "\n").encode("utf-8")
+    if len(content) > max_bytes:
+        raise ValueError(f"site audit is {len(content):,} bytes; maximum is {max_bytes:,}")
+    return content
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("root", type=Path, nargs="?", default=Path("."))
@@ -379,7 +387,7 @@ def main():
     audit = audit_site(args.root)
     args.json.parent.mkdir(parents=True, exist_ok=True)
     args.markdown.parent.mkdir(parents=True, exist_ok=True)
-    args.json.write_text(json.dumps(audit, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+    args.json.write_bytes(serialize_audit(audit))
     args.markdown.write_text(render_markdown(audit), encoding="utf-8")
     print(json.dumps(audit["summary"], ensure_ascii=False, indent=2))
 

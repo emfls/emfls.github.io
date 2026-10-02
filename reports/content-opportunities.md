@@ -1,5 +1,7 @@
 # Content Opportunities
 
+> Historical GSC/GA4 opportunity snapshot captured before the 2026-10-02 Arabic locale retirement. Any `/ae/` URL below is historical evidence, not an active URL or pruning candidate.
+
 - GSC period: 2026-04-30 to 2026-07-29
 - GA4 period: 2026-07-04 to 2026-07-31
 - URL rows merged: 5,590

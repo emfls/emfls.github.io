@@ -5,6 +5,7 @@ import argparse
 import json
 import urllib.request
 import xml.etree.ElementTree as ET
+from collections import Counter
 from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlparse
@@ -78,6 +79,7 @@ def audit_local_sitemaps(root, site_audit=None):
         "invalid_xml": sorted(invalid_xml),
         "over_protocol_limit": sorted(over_limit),
         "total_url_entries": total_urls,
+        "duplicate_url_entries": sum(count - 1 for count in Counter(sitemap_urls).values() if count > 1),
         "missing_lastmod": missing_lastmod,
         "invalid_lastmod": invalid_lastmod,
     }
@@ -132,6 +134,7 @@ def render_markdown(local, live):
 - Leaf URL sitemaps: {local['leaf_sitemaps']:,}
 - Root-index references: {local['indexed_sitemaps']:,}
 - URLs listed: {local['total_url_entries']:,}
+- Duplicate URL entries: {local['duplicate_url_entries']:,}
 - Omitted leaf sitemaps: {len(local['omitted_from_root']):,}
 - Invalid XML: {len(local['invalid_xml']):,}
 - Protocol-limit violations: {len(local['over_protocol_limit']):,}

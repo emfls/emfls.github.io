@@ -3,7 +3,8 @@
 - Local sitemap files: 47
 - Leaf URL sitemaps: 46
 - Root-index references: 46
-- URLs listed: 18,829
+- URLs listed: 18,806
+- Duplicate URL entries: 0
 - Omitted leaf sitemaps: 0
 - Invalid XML: 0
 - Protocol-limit violations: 0
