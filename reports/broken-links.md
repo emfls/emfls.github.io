@@ -1,9 +1,7 @@
 # Broken Internal Links
 
-- Unique source-target failures: 278
+- Unique source-target failures: 276
 
-- `/ae/game/AeroJump/` → `/ae/game/AeroJump/'`
-- `/ae/game/LandGrab/` → `/ae/game/ae/game/`
 - `/cn/game/AeroJump/` → `/cn/`
 - `/cn/game/LandGrab/` → `/cn/game/cn/game/`
 - `/de/game/AeroJump/` → `/de/game/AeroJump/'`

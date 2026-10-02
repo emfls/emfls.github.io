@@ -2,7 +2,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-LANGS = ("", "ae", "cn", "de", "es", "fr", "id", "in", "jp", "kor", "pt", "ru", "vn")
+LANGS = ("", "cn", "de", "es", "fr", "id", "in", "jp", "kor", "pt", "ru", "vn")
 
 
 def interactive_pages():

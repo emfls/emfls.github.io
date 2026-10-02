@@ -7,6 +7,12 @@ from scripts.seo_audit import audit_site, parse_html
 
 
 class SeoAuditParserTests(unittest.TestCase):
+    def test_visible_text_prefix_is_bounded_to_250_words(self):
+        body = " ".join(f"word{index}" for index in range(500))
+        page = parse_html(f"<html><body><main>{body}</main></body></html>", Path("long.html"))
+
+        self.assertEqual(len(page["visible_text_prefix"].split()), 250)
+
     def test_extracts_quality_scoring_signals(self):
         html = """<!doctype html><html lang="en"><head>
         <title>Example Calculator</title><meta name="viewport" content="width=device-width">

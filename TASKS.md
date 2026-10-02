@@ -4,6 +4,13 @@
 
 ## P0 - Critical
 
+- [ ] P0 Arabic Locale Retire — `/ae/`
+  - 목적: 저가치 Arabic locale 전체를 retire하고 현재 sitemap/feed/파생 인벤토리와 생성기 의존성을 정합화한다. 승자 4개도 Korean-first `PROTECT_OVERRIDE_REVIEW → RETIRE` 결정에 따라 제거한다.
+  - 범위: 최신 `origin/main` `83346ac4441b19b1764816c75a099c49ac35c85e` 기준 Arabic 63 HTML + locale-only JS 2개 + sitemap 1개, 총 66 files / 1,209,448 bytes. Korean/EN/JP HTML과 raw analytics snapshots는 보존한다.
+  - 로컬 완료: active Arabic page/data rows, sitemap, RSS, breadcrumb/GA4 manifest dependency를 제거하고 current derived reports를 재생성했다. Sitemap 46 leaf / 18,829 URLs; feed 500 items / Arabic 0.
+  - 검증: full unittest 728 passed, full pytest 1,167 passed, SEO QA PASS (new critical/warning 0), `git diff --check` PASS. SEO inventory prefix는 250 words로 제한했으며 기존 400-word 기준과 page scores가 동일하다. Metadata validator의 기존 `invalid_intent` 2건, 비-Arabic 기존 sitemap duplicate 23건은 이 작업에서 수정하지 않았다.
+  - 상태: local branch `codex/p0-retire-arabic-locale-r2`의 QA는 완료했지만 `gh auth status`가 저장 credential invalid를 보고해 push/PR 생성 대기 중이다. Active Queue 제거, Completed Log 기록, Arabic analysis archive 이동은 merge 후 수행한다.
+
 - [x] P0 Support — CI Baseline GA4 Contract 5건 복구
   - 목적: 기존 main의 unittest baseline에서 실패한 5개 GA4 batch contract를 최신 페이지 의미와 정합화해 P0 Revenue Growth #02 PR을 재검증한다.
   - 분류: Ukraine / Togo / MBTI JSON-LD 위치 검사는 `STALE_TEST_CONTRACT`; MarbleFlick의 자기 링크 및 English game hub의 `Related`/고정 max-width 문구 검사는 최근 전용 페이지 계약과 충돌하는 `STALE_TEST_CONTRACT`. 페이지 파일은 수정하지 않는다.

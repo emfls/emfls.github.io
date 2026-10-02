@@ -20,7 +20,6 @@ PAGES = [
     ('kor/column/korean-retail-investor-leveraged-etf-2026.html', 'WebPage', 'article', '/kor/column/'),
     ('kor/report/travel/vietnam-hongai.html', 'WebPage', 'travel', '/kor/report/travel/'),
     ('kor/report/travel/taiwan-kaohsiung.html', 'WebPage', 'travel', '/kor/report/travel/'),
-    ('ae/util/qrcode/index.html', 'WebApplication', 'tool', '/ae/util/'),
     ('vn/util/ipa-convert/index.html', 'WebApplication', 'tool', '/vn/util/'),
     ('jp/util/ipa-convert/index.html', 'WebApplication', 'tool', '/jp/util/'),
     ('kor/report/travel/thailand-lopburi.html', 'WebPage', 'travel', '/kor/report/travel/'),
@@ -101,9 +100,14 @@ PAGES = [
     ('report/sec/aapl-10q-202603.html', 'WebPage', 'finance', '/report/sec/'),
 ]
 
-BATCHES = [PAGES[i:i + 10] for i in range(0, 100, 10)]
-assert len(PAGES) == 100
-assert len({row[0] for row in PAGES}) == 100
-assert all(len(batch) == 10 for batch in BATCHES)
+BATCH_SIZES = (10, 10, 9, 10, 10, 10, 10, 10, 10, 10)
+BATCHES = []
+offset = 0
+for size in BATCH_SIZES:
+    BATCHES.append(PAGES[offset:offset + size])
+    offset += size
+assert offset == len(PAGES) == 99
+assert len({row[0] for row in PAGES}) == 99
+assert all(len(batch) == size for batch, size in zip(BATCHES, BATCH_SIZES))
 assert PAGES[0][0] == 'kor/report/travel/namibia-okakara.html'
 assert PAGES[-1][0] == 'report/sec/aapl-10q-202603.html'

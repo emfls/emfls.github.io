@@ -28,8 +28,8 @@ def trust_copy(relative: str, category: str) -> tuple[str, str, str]:
 
 
 def main() -> None:
-    if len(PAGES) != 100 or len({row[0] for row in PAGES}) != 100:
-        raise SystemExit("manifest must contain exactly 100 unique pages")
+    if len(PAGES) != 99 or len({row[0] for row in PAGES}) != 99:
+        raise SystemExit("manifest must contain exactly 99 active unique pages")
     sources: dict[str, str] = {}
     for relative, _, _, _ in PAGES:
         path = ROOT / relative

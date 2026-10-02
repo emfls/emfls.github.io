@@ -5,6 +5,7 @@
 - Non-Article game/tool pages: 3
 - Published dates: first Git commit date; no dates were invented
 - Breadcrumb JSON-LD matches the visible breadcrumb
+- Status: Historical pilot record; `/ae/game/2048/` was later retired with the Arabic locale on 2026-10-02.
 
 - `/kor/report/visa/nigeria.html`
 - `/kor/report/visa/rwanda.html`

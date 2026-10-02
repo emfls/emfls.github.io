@@ -11,8 +11,9 @@ from urllib.parse import urljoin, urlparse
 
 
 PUBLIC_HOSTS = {"emfls.github.io", "www.emfls.github.io"}
-LANG_DIRS = {"ae", "cn", "de", "es", "fr", "id", "in", "jp", "kor", "pt", "ru", "vn"}
+LANG_DIRS = {"cn", "de", "es", "fr", "id", "in", "jp", "kor", "pt", "ru", "vn"}
 WORD_RE = re.compile(r"[A-Za-z0-9]+|[가-힣]+|[\u3040-\u30ff\u3400-\u9fff]+")
+VISIBLE_TEXT_PREFIX_WORD_LIMIT = 250
 
 
 def _attrs(items):
@@ -216,7 +217,7 @@ def _language(relative_path, declared):
     if declared:
         return declared
     first = relative_path.parts[0] if relative_path.parts else ""
-    return {"kor": "ko", "jp": "ja", "cn": "zh", "ae": "ar"}.get(first, first if first in LANG_DIRS else "en")
+    return {"kor": "ko", "jp": "ja", "cn": "zh"}.get(first, first if first in LANG_DIRS else "en")
 
 
 def _category(relative_path):
@@ -292,7 +293,7 @@ def parse_html(html, relative_path):
         "has_parent_hub_link": parser.has_parent_hub_link,
         "has_intrusive_popup": parser.has_intrusive_popup,
         "interactive_controls": parser.interactive_controls,
-        "visible_text_prefix": " ".join(normalized_text.split()[:400]),
+        "visible_text_prefix": " ".join(normalized_text.split()[:VISIBLE_TEXT_PREFIX_WORD_LIMIT]),
         "structured_data_types": sorted(parser.json_ld_types),
         "canonical": parser.canonical,
         "indexable": "noindex" not in robots,

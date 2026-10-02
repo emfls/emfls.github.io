@@ -10,7 +10,6 @@ TRAVEL={
 APPS={
 "jp/util/passwordgen/index.html":("パスワード","randomPassword","WebApplication"),
 "game/CardMatch/index.html":("Card Match","function startGame","VideoGame"),
-"ae/game/2048/index.html":("2048","function moveLeft","VideoGame"),
 "game/TetrisGame/index.html":("Tetris","function clearLines","VideoGame"),
 "util/dice3d/index.html":("Dice","function rollDice","WebApplication"),
 "jp/game/TetrisGame/index.html":("テトリス","function clearLines","VideoGame"),}
@@ -33,7 +32,7 @@ class FifthBatchPagesTest(unittest.TestCase):
     self.assertIn(name.lower(),(p.title+p.h1+p.meta.get("description","")).lower())
     for x in (fn,"2026-08-09","privacy"): self.assertIn(x.lower(),h.lower())
     expected={typ,"FAQPage"}
-    if path in {"jp/util/passwordgen/index.html","ae/game/2048/index.html"}: expected.add("BreadcrumbList")
+    if path=="jp/util/passwordgen/index.html": expected.add("BreadcrumbList")
     self.assertEqual({x.get("@type") for x in p.json_ld},expected)
     for x in ("G-QP5Q67GE5B","ca-pub-8830524482034754",'div[id^="aswift_"]'): self.assertIn(x,h)
  def test_visa_index(self):

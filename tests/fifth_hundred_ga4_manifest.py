@@ -63,7 +63,6 @@ PAGES = [
     ('kor/game/GREENClick/index.html', 'VideoGame', 'game', '/kor/game/GREENClick/'),
     ('kor/column/stock-ai-assistant-gemini-2026.html', 'WebPage', 'article', '/kor/column/'),
     ('kor/column/no-code-ai-stock-agent-claude-2026.html', 'WebPage', 'article', '/kor/column/'),
-    ('ae/util/text-cleaner/index.html', 'WebApplication', 'tool', '/ae/util/text-cleaner/'),
     ('kor/report/travel/india-varanasi.html', 'WebPage', 'travel', '/kor/report/travel/'),
     ('jp/report/travel/singapore-punggol.html', 'WebPage', 'travel', '/jp/report/travel/'),
     ('kor/report/visa/mexico.html', 'WebPage', 'visa', '/kor/report/visa/'),
@@ -101,4 +100,12 @@ PAGES = [
     ('jp/game/STOPat5/index.html', 'VideoGame', 'game', '/jp/game/STOPat5/'),
 ]
 
-BATCHES = [PAGES[index:index + 10] for index in range(0, 100, 10)]
+BATCH_SIZES = (10, 10, 10, 10, 10, 10, 9, 10, 10, 10)
+BATCHES = []
+offset = 0
+for size in BATCH_SIZES:
+    BATCHES.append(PAGES[offset:offset + size])
+    offset += size
+assert offset == len(PAGES) == 99
+assert len({row[0] for row in PAGES}) == 99
+assert all(len(batch) == size for batch, size in zip(BATCHES, BATCH_SIZES))

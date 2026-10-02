@@ -1,7 +1,7 @@
 # SEO QA Result
 
 - Status: PASS
-- Current baseline-managed critical issues: 800
+- Current baseline-managed critical issues: 767
 - Current warnings: 424
 - New critical issues: 0
 - New warnings: 0

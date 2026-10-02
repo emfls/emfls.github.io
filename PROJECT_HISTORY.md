@@ -1,5 +1,13 @@
 # PROJECT HISTORY
 
+## 2026-10-02 — P0 Arabic Locale Retire — LOCAL QA COMPLETE, PR AUTH BLOCKED
+
+- 최신 `origin/main` `83346ac4441b19b1764816c75a099c49ac35c85e`를 기준으로 Arabic `/ae/` 63 HTML, locale 전용 JS 2개, sitemap 1개(총 66 files / 1,209,448 bytes)를 제거했다. Korean/English/Japanese HTML과 raw GA4/GSC snapshots는 수정하지 않았다.
+- Current-state audit와 파생 인벤토리·보고서(site/page scores, performance, priority, revenue opportunities, sitemap, SEO QA baseline, internal links, cannibalization, broken links, RSS)를 재생성했다. `data/site-audit.json`은 19,030 pages이며, page-score 결과를 400-word 원본과 비교해 동일하게 유지하는 250-word visible-text prefix를 사용해 파일을 100,167,019 bytes로 제한했다.
+- Sitemap은 46 leaf / 18,829 URL entries, RSS는 500 items / Arabic 0개다. 기존 sitemap의 23 duplicate URL은 base에도 동일했고 이번 변경으로 추가되지 않았다. non-Arabic → Arabic static link와 Arabic hreflang은 없다. Korean 금융 페이지 2개의 기존 canonical override는 변경하지 않았다.
+- QA: focused pytest 9 passed, related unittest 7 passed; full unittest 728 passed, full pytest 1,167 passed; SEO QA baseline comparison PASS (new critical/warning 0). Metadata validator에는 base에서 남아 있던 `invalid_intent` 2건만 남고 새 오류는 없다. Raw GA4/GSC snapshots는 base와 byte-identical이다.
+- Branch `codex/p0-retire-arabic-locale-r2`는 local only다. `gh auth status`에서 저장된 CLI credential이 invalid로 확인되어 push/PR은 아직 하지 못했다. Notion Active Queue는 유지하며 Completed Log와 Arabic analysis archive는 merge 뒤에만 정리한다. 재인증 후 같은 branch를 push하고 PR을 열며, merge 뒤 다음 작업은 JP First 50 Canary만 진행한다.
+
 ## 2026-09-22 — P0 Support — CI Baseline GA4 Contract Repair
 
 - PR #1의 SEO QA run `35706259953`은 `Run unittest regression suite`에서 694 tests, 2 failures / 3 errors로 실패했다. affected five cases는 PR #1 diff에 없는 main 기존 페이지와 legacy GA4 batch contract였으며, main `11f3d74ad4a1586f0f6b034e2fb4f6d737ccc622`에서 재현했다.
