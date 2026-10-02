@@ -1,5 +1,6 @@
 import json
 import re
+import subprocess
 import unittest
 from html.parser import HTMLParser
 from pathlib import Path
@@ -8,6 +9,17 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PAGE = ROOT / "kor/report/travel/october-korea-travel-2026.html"
 URL = "https://emfls.github.io/kor/report/travel/october-korea-travel-2026.html"
+
+
+def committed_launch_manifest():
+    result = subprocess.run(
+        ["git", "show", "HEAD:data/content-launch-manifest.json"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return json.loads(result.stdout)
 
 
 class DocumentParser(HTMLParser):
@@ -123,7 +135,7 @@ class OctoberKoreaTravelLaunchTest(unittest.TestCase):
         home_feed = json.loads((ROOT / "data/home-feed-ko.json").read_text(encoding="utf-8"))
         self.assertEqual(home_feed["latest"][0]["url"], relative_url)
 
-        manifest = json.loads((ROOT / "data/content-launch-manifest.json").read_text(encoding="utf-8"))
+        manifest = committed_launch_manifest()
         self.assertEqual(manifest["candidateIds"], ["keyword:10월여행지추천"])
         self.assertEqual(manifest["contentPaths"], ["kor/report/travel/october-korea-travel-2026.html"])
         self.assertEqual(manifest["hubPaths"], ["kor/report/travel/index.html"])
