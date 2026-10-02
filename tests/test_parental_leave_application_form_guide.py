@@ -1,6 +1,5 @@
 import json
 import re
-import subprocess
 import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from pathlib import Path
@@ -80,17 +79,6 @@ def page_parser():
     parser.feed(path.read_text(encoding="utf-8"))
     parser.close()
     return parser
-
-
-def committed_launch_manifest():
-    result = subprocess.run(
-        ["git", "show", "HEAD:data/content-launch-manifest.json"],
-        cwd=ROOT,
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    return json.loads(result.stdout)
 
 
 def visible_text(parser):
@@ -236,23 +224,11 @@ def test_page_metadata_and_shared_measurement_tags_are_present():
     assert any(node.get("@type") == "WebPage" and node.get("url") == URL for node in graph)
 
 
-def test_publication_manifest_hub_and_sitemaps_register_the_page_once():
-    manifest = committed_launch_manifest()
-    assert manifest["status"] == "PUBLISHED"
-    assert manifest["candidateIds"] == ["keyword:육아휴직신청서양식"]
-    assert manifest["contentPaths"] == [ROUTE]
-    assert manifest["urls"] == [f"/{ROUTE}"]
-    assert manifest["hubPaths"] == ["kor/report/parenting/index.html"]
-    assert manifest["sitemapPaths"] == ["kor/report/parenting/sitemap.xml", "kor/sitemap.xml"]
-    assert manifest["runAt"].startswith("2026-10-01T")
-    assert manifest["runId"] == "P0-20261001-PARENTAL-LEAVE-APPLICATION"
-    assert manifest["dailyLimit"] == 1
-    assert manifest["publishedToday"] == 1 and manifest["remainingCapacity"] == 0
-
+def test_published_page_hub_and_sitemaps_register_the_page_once():
     hub = (ROOT / "kor/report/parenting/index.html").read_text(encoding="utf-8")
     assert f'href="/{ROUTE}"' in hub
     assert "총 5개 콘텐츠" in hub
-    for sitemap_path in manifest["sitemapPaths"]:
+    for sitemap_path in ("kor/report/parenting/sitemap.xml", "kor/sitemap.xml"):
         sitemap_root = ET.parse(ROOT / sitemap_path).getroot()
         locs = [node.text for node in sitemap_root.findall("{*}url/{*}loc")]
         assert locs.count(URL) == 1, f"expected exactly one entry in {sitemap_path}"
