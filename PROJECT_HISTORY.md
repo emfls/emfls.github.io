@@ -1,12 +1,12 @@
 # PROJECT HISTORY
 
-## 2026-10-02 — P0 Arabic Locale Retire — PR OPEN, CI GUARD FIX PENDING PUSH
+## 2026-10-02 — P0 Arabic Locale Retire — PR OPEN, CI SUCCESS
 
 - 최신 `origin/main` `83346ac4441b19b1764816c75a099c49ac35c85e`를 기준으로 Arabic `/ae/` 63 HTML, locale 전용 JS 2개, sitemap 1개(총 66 files / 1,209,448 bytes)를 제거했다. Korean/English/Japanese HTML과 raw GA4/GSC snapshots는 수정하지 않았다.
 - Current-state audit와 파생 인벤토리·보고서(site/page scores, performance, priority, revenue opportunities, sitemap, SEO QA baseline, internal links, cannibalization, broken links, RSS)를 재생성했다. `data/site-audit.json`은 19,030 pages이며, page-score 결과를 400-word 원본과 비교해 동일하게 유지하는 250-word visible-text prefix를 사용한다. serializer와 회귀 테스트가 Git 호스트 100 MiB 파일 한도를 넘는 audit 산출물을 거부한다.
 - Sitemap은 46 leaf / 18,806 URL entries / duplicate 0, RSS는 500 items / Arabic 0개다. base에 이미 있던 중복 URL 23건은 사용자 acceptance 기준을 충족하기 위해 sitemap에서 제거했다. non-Arabic → Arabic static link와 Arabic hreflang은 없다. Korean 금융 페이지 2개의 기존 canonical override는 변경하지 않았다.
-- QA: focused sitemap/publication tests 26 passed; full unittest 731 passed, full pytest 1,170 passed; SEO QA baseline comparison PASS (new critical/warning 0). First PR CI run `36970622647` stopped at `content_launch_guard.py` because the all-deletions policy rejected the explicitly authorized `/ae/` retire. A scoped `ae/`-only deletion exception now passes locally; all other deletions and renames remain blocked. The added regression test brings the latest full pytest result to 1,171 passed. Metadata validation retains two baseline `invalid_intent` errors; raw GA4/GSC snapshots remain byte-identical to base.
-- Branch `codex/p0-retire-arabic-locale-r2` is pushed and PR #31 is open; the guard-fix follow-up commit is awaiting push and CI rerun. Do not merge. Notion Active Queue remains until merge; Completed Log and Arabic analysis archive remain unchanged. After merge, the next work item is JP First 50 Canary only.
+- QA: focused sitemap/publication tests 26 passed; latest CI run `36971590893` succeeded with unittest 731 passed, pytest 1,171 passed (494 subtests), SEO QA baseline comparison PASS (new critical/warnings 0), and QA report artifact uploaded. First CI run `36970622647` stopped at `content_launch_guard.py` because the all-deletions policy rejected the explicitly authorized `/ae/` retire. The scoped `ae/`-only deletion exception now passes; all other deletions and renames remain blocked. Metadata validation retains two baseline `invalid_intent` errors; raw GA4/GSC snapshots remain byte-identical to base.
+- Branch `codex/p0-retire-arabic-locale-r2` is pushed at `3a7a0e9d8940ba1bfdfd7e29df674c972dfd7cdd` and PR #31 is open with CI success. Do not merge. Notion Active Queue remains until merge; Completed Log and Arabic analysis archive remain unchanged. After merge, the next work item is JP First 50 Canary only.
 
 ## 2026-09-22 — P0 Support — CI Baseline GA4 Contract Repair
 
