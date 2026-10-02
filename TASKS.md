@@ -7,7 +7,7 @@
 - [ ] P0 Support — Keyword Hunter DataLab freshness contract
   - 목적: 만료·미래·기준시각 누락 DataLab trend 값을 현재 검증 신호와 후보 점수로 오인하지 않도록 한다.
   - 범위: score freshness 검증과 부분 응답 병합 계약만 수정한다. 콘텐츠·발행 데이터는 변경하지 않는다.
-  - 진행: isolated branch `codex/p0-keyword-datalab-freshness-20261002`; local full unittest/pytest 및 dry-run safety 통과. PR/원격 CI와 main 반영은 대기 중.
+  - 진행: isolated branch `codex/p0-keyword-datalab-freshness-20261002`; PR #30 exact-head SEO QA `36975353397` SUCCESS. Sol code/CI review PASS; main merge/반영만 대기 중.
 
 - [x] P0 Support — CI Baseline GA4 Contract 5건 복구
   - 목적: 기존 main의 unittest baseline에서 실패한 5개 GA4 batch contract를 최신 페이지 의미와 정합화해 P0 Revenue Growth #02 PR을 재검증한다.
