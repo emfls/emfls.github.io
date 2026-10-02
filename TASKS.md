@@ -14,7 +14,7 @@
 - [x] P0 Support — Keyword Hunter DataLab freshness contract
   - 목적: 만료·미래·기준시각 누락 DataLab trend 값을 현재 검증 신호와 후보 점수로 오인하지 않도록 한다.
   - 범위: score freshness 검증과 부분 응답 병합 계약만 수정한다. 콘텐츠·발행 데이터는 변경하지 않는다.
-  - 완료: PR #30 normal merge `0bb519d6b8eb206997e238528bd8bd7e0d75b9ff`; exact-head SEO QA `36975353397` SUCCESS. Freshness changes remain present in latest main `af341dc20cffcb7f85b59bd0483f9bdf58f35374`.
+  - 완료: PR #30 normal merge `0bb519d6b8eb206997e238528bd8bd7e0d75b9ff`; post-merge SEO QA run `36982375937` SUCCESS (Keyword Hunter validation, unittest, full pytest, SEO regression, launch guard, QA upload). Freshness changes remain present in latest main.
 
 - [x] P0 Support — CI Baseline GA4 Contract 5건 복구
   - 목적: 기존 main의 unittest baseline에서 실패한 5개 GA4 batch contract를 최신 페이지 의미와 정합화해 P0 Revenue Growth #02 PR을 재검증한다.
