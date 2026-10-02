@@ -7,8 +7,9 @@
 - [ ] P0 Arabic Locale Retire — `/ae/`
   - 목적: `/ae/` locale의 현재 사이트 콘텐츠와 파생 인벤토리 의존성을 retire한다. JP First 50 및 다른 locale pruning은 제외한다.
   - 범위: Arabic HTML 63개 삭제, locale 전용 JS 2개 삭제, `ae/sitemap.xml` 삭제. Raw GA4/GSC snapshots와 non-Arabic HTML을 보존하고 compact `data/site-audit.json`을 약 16 MB 수준으로 유지한다.
-  - 동기화: PR #31 branch `codex/p0-retire-arabic-locale-r2`에서 최신 fetched `origin/main` `af341dc20cffcb7f85b59bd0483f9bdf58f35374`를 regular merge 중이다. PR #30 Keyword Hunter/DataLab freshness changes와 2026-10-02 GA4/GSC refresh를 보존한다.
-  - 상태: `SYNCING_WITH_LATEST_MAIN`; merge와 full QA, current-head CI가 끝날 때까지 Active Queue에 유지한다.
+  - 동기화: latest fetched `origin/main` `af341dc20cffcb7f85b59bd0483f9bdf58f35374`를 regular merge commit `3c6d690baf`로 통합했다. PR #30 Keyword Hunter/DataLab freshness changes와 2026-10-02 GA4/GSC refresh를 보존하고 raw measurement snapshots를 latest main과 byte-identical로 확인했다.
+  - 검증: unittest 741, pytest 1,181; SEO QA new critical/warning 0; sitemap 46 leaf / 18,806 URLs / duplicate 0 / Arabic 0; broken links 276 (main 278); Keyword Hunter dry-run 0 API / 0 writes; launch guard PASS. Tracked tree 508,646,509 B (latest main 510,019,139 B; net -1,372,630 B); compact site audit 16,270,166 B.
+  - 상태: `WAITING_FOR_CURRENT_HEAD_CI`; PR #31 remains open/unmerged and this task stays in Active Queue. No JP First 50 or other locale pruning in this task.
 
 - [x] P0 Support — Keyword Hunter DataLab freshness contract
   - 목적: 만료·미래·기준시각 누락 DataLab trend 값을 현재 검증 신호와 후보 점수로 오인하지 않도록 한다.
