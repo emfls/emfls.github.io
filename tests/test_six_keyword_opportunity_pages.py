@@ -316,6 +316,22 @@ def test_committed_launch_manifest_is_exactly_the_current_launch_batch():
         assert manifest["dailyLimit"] == 1
         assert manifest["remainingCapacity"] == 0
         return
+    if manifest["urls"] == ["/kor/report/travel/october-korea-travel-2026.html"]:
+        assert manifest["candidateIds"] == ["keyword:10월여행지추천"]
+        assert manifest["contentPaths"] == [
+            "kor/report/travel/october-korea-travel-2026.html"
+        ]
+        assert manifest["hubPaths"] == ["kor/report/travel/index.html"]
+        assert manifest["sitemapPaths"] == [
+            "kor/report/travel/sitemap.xml",
+            "kor/sitemap.xml",
+        ]
+        assert manifest["runAt"].startswith("2026-10-02T")
+        assert manifest["runId"] == "P0-20261002-OCTOBER-KOREA-TRAVEL"
+        assert manifest["publishedToday"] == 1
+        assert manifest["dailyLimit"] == 1
+        assert manifest["remainingCapacity"] == 0
+        return
     assert manifest["urls"] == ["/kor/util/water-purifier-rental-price-comparison/"]
     assert manifest["contentPaths"] == ["kor/util/water-purifier-rental-price-comparison/index.html"]
     assert manifest["hubPaths"] == ["kor/util/index.html"]
