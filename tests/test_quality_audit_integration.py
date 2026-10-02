@@ -61,6 +61,33 @@ class QualityAuditIntegrationTest(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 0, result.stderr)
 
+    def test_omitted_audit_path_rebuilds_full_scoring_input_from_html(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / "index.html").write_text(
+                "<html><head><title>Useful example</title></head><body>"
+                "<main><h1>Useful example</h1><p>Immediate useful answer with enough words.</p></main>"
+                "</body></html>",
+                encoding="utf-8",
+            )
+            page_output = root / "page-scores.json"
+            site_output = root / "site-score.json"
+
+            page_payload, _ = run_quality_audit(
+                root=root,
+                audit_path=None,
+                metadata_path=root / "missing-metadata.json",
+                performance_dir=root / "missing-performance",
+                cannibalization_path=root / "missing-cannibalization.json",
+                as_of="2026-10-02",
+                page_output=page_output,
+                site_output=site_output,
+            )
+
+            self.assertEqual(page_payload["summary"]["evaluated_indexable_pages"], 1)
+            self.assertTrue(page_output.exists())
+            self.assertTrue(site_output.exists())
+
     def test_writes_every_indexable_page_once_and_is_deterministic(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

@@ -27,6 +27,20 @@ class SeoQaWorkflowTests(unittest.TestCase):
         source = WORKFLOW.read_text(encoding="utf-8")
         self.assertIn("TZ: Asia/Seoul", source)
 
+    def test_workflow_keeps_compact_inventory_committed_and_scores_from_full_transient_audit(self):
+        source = WORKFLOW.read_text(encoding="utf-8")
+        self.assertIn(
+            "scripts/seo_audit.py . --json /tmp/site-audit-full.json --compact-json data/site-audit.json",
+            source,
+        )
+        self.assertEqual(source.count("--audit /tmp/site-audit-full.json"), 2)
+        self.assertIn("--audit data/site-audit.json", source)
+
+    def test_default_quality_cli_rebuilds_transient_audit_when_no_path_is_supplied(self):
+        quality = (ROOT / "scripts" / "quality_audit.py").read_text(encoding="utf-8")
+        self.assertIn("audit = audit_site(root) if audit_path is None", quality)
+        self.assertIn('parser.add_argument("--audit", type=Path, help=', quality)
+
     def test_workflow_generates_revenue_opportunities_before_final_dashboard_and_tests(self):
         source = WORKFLOW.read_text(encoding="utf-8")
         audit = source.index("scripts/seo_audit.py")
