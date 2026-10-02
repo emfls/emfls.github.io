@@ -569,8 +569,8 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
         overlap_count=len(selected_keys & recent_seed_keys)
         category_counts=Counter(r['category'] for r in fresh); source_counts=Counter(s.get('source') or 'unknown' for s in selected)
         pct=lambda count,total: round(100*count/total,2) if total else 0.0
-        duplicate_keys=(database_duplicate_keys & normalized_seen)-accepted_keys
-        category_saturated_keys=(saturation_excluded_keys & normalized_seen)-accepted_keys-duplicate_keys
+        category_saturated_keys=(saturation_excluded_keys & normalized_seen)-accepted_keys
+        duplicate_keys=(database_duplicate_keys & normalized_seen)-accepted_keys-category_saturated_keys
         funnel.update({'db_duplicates_removed':len(duplicate_keys),
                        'category_saturation_excluded':len(category_saturated_keys),
                        'novelty_passed':max(0,funnel['normalized_keywords']-len(duplicate_keys)-len(category_saturated_keys)),
