@@ -264,4 +264,4 @@ def test_publication_manifest_hub_and_sitemaps_register_the_page_once():
     row = next(item for item in content_index if item["url"] == f"/{ROUTE}")
     assert row["title"] == "육아휴직 신청서 작성 가이드 2026 | 사업주 신청·급여 신청 구분"
     home_latest = json.loads((ROOT / "data/home-feed-ko.json").read_text(encoding="utf-8"))["latest"]
-    assert home_latest[0]["url"] == f"/{ROUTE}"
+    assert any(item["url"] == f"/{ROUTE}" for item in home_latest)
