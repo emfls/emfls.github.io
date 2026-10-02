@@ -1,18 +1,19 @@
 # Sitemap Collection Diagnostic
 
-- Local sitemap files: 48
-- Leaf URL sitemaps: 47
-- Root-index references: 47
-- URLs listed: 18,858
+- Local sitemap files: 47
+- Leaf URL sitemaps: 46
+- Root-index references: 46
+- URLs listed: 18,806
+- Duplicate URL entries: 0
 - Omitted leaf sitemaps: 0
 - Invalid XML: 0
 - Protocol-limit violations: 0
-- Missing lastmod: 833
+- Missing lastmod: 770
 - Invalid lastmod: 0
-- Live endpoints checked: 48
+- Live endpoints checked: 0
 - Live HTTP/MIME failures: 0
 - Noncanonical URL entries: 0
-- Unknown URL entries: 23
+- Unknown URL entries: 0
 
 ## Interpretation
 

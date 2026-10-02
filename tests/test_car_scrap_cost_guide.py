@@ -30,7 +30,7 @@ def test_car_scrap_guide_publication_contract():
 def test_car_scrap_guide_is_in_car_discoverability_and_sitemaps_once():
     hub = (ROOT / "kor/report/car/index.html").read_text(encoding="utf-8")
     sitemap = (ROOT / "kor/report/car/sitemap.xml").read_text(encoding="utf-8")
-    root_sitemap = (ROOT / "kor/sitemap.xml").read_text(encoding="utf-8")
+    kor_sitemap = (ROOT / "kor/sitemap.xml").read_text(encoding="utf-8")
     assert 'href="/kor/report/car/car-scrap-cost-guide.html"' in hub
     assert sitemap.count(URL) == 1
-    assert root_sitemap.count(URL) == 1
+    assert kor_sitemap.count(URL) == 0

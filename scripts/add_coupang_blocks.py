@@ -24,7 +24,7 @@ MARKER_TOP = "cp-injected-top"
 MARKER_MID = "cp-injected-mid"
 MARKER_BOT = "cp-injected-bot"
 
-# 실제 플레이어블 게임 페이지 폴더 (제외) — /game/, /vn/game/, /ae/game/ 등
+# 실제 플레이어블 게임 페이지 폴더 (제외) — /game/, /vn/game/ 등
 GAME_DIR_PATTERN = re.compile(r'[\\/]game[\\/]')
 
 # ── 카테고리별 상단/중간/하단 키워드 정의 ─────────────────────────────

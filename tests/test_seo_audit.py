@@ -1,12 +1,115 @@
 import json
+import os
+import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
-from scripts.seo_audit import audit_site, parse_html
+from scripts.seo_audit import (
+    MAX_AUDIT_FILE_BYTES,
+    audit_site,
+    compact_audit,
+    main,
+    parse_html,
+    serialize_audit,
+    serialize_compact_audit,
+)
+
+
+BASE_COMMITTED_PAGE_FIELDS = (
+    "path", "url", "title", "description", "language", "category", "published_date",
+    "updated_date", "word_count", "h1_count", "h2_count", "internal_links",
+    "external_links", "images", "structured_data_types", "canonical", "indexable",
+    "adsense", "ga4", "parse_warnings",
+)
 
 
 class SeoAuditParserTests(unittest.TestCase):
+    def test_site_audit_artifact_stays_below_git_host_blob_limit(self):
+        path = Path(__file__).resolve().parents[1] / "data/site-audit.json"
+        self.assertLess(path.stat().st_size, MAX_AUDIT_FILE_BYTES)
+
+    def test_committed_site_audit_stays_below_25_mb_target(self):
+        path = Path(__file__).resolve().parents[1] / "data/site-audit.json"
+        self.assertLess(path.stat().st_size, 25 * 1024 * 1024)
+
+    def test_site_audit_serializer_rejects_oversized_output(self):
+        with self.assertRaisesRegex(ValueError, "site audit is"):
+            serialize_audit({"payload": "x" * 20}, max_bytes=10)
+
+    def test_compact_audit_keeps_the_legacy_contract_and_drops_scoring_payloads(self):
+        legacy_page = {field: f"legacy-{field}" for field in BASE_COMMITTED_PAGE_FIELDS}
+        full_page = {
+            **legacy_page,
+            "h3_count": 4,
+            "internal_link_targets": ["/kor/"],
+            "has_author_signal": True,
+            "visible_text_prefix": "private long excerpt " * 1000,
+        }
+        full_audit = {"summary": {"total_pages": 1}, "parser_errors": [], "pages": [full_page]}
+
+        compact = compact_audit(full_audit)
+        compact_page = compact["pages"][0]
+
+        self.assertEqual(tuple(compact_page), BASE_COMMITTED_PAGE_FIELDS)
+        self.assertEqual(compact["summary"], full_audit["summary"])
+        self.assertEqual(compact["parser_errors"], full_audit["parser_errors"])
+        self.assertNotIn("visible_text_prefix", compact_page)
+        self.assertNotIn("internal_link_targets", compact_page)
+        self.assertNotIn("private long excerpt", serialize_compact_audit(full_audit).decode("utf-8"))
+        self.assertIn("visible_text_prefix", json.loads(serialize_audit(full_audit))["pages"][0])
+
+    def test_cli_writes_compact_committed_and_full_transient_outputs(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary) / "site"
+            root.mkdir()
+            (root / "index.html").write_text(
+                "<html><body><main>Transient scoring excerpt.</main></body></html>", encoding="utf-8"
+            )
+            compact_path = Path(temporary) / "site-audit.json"
+            full_path = Path(temporary) / "site-audit-full.json"
+            markdown_path = Path(temporary) / "seo-audit.md"
+            argv = [
+                "seo_audit.py", str(root), "--compact-json", str(compact_path),
+                "--json", str(full_path), "--markdown", str(markdown_path),
+            ]
+
+            with patch.object(sys, "argv", argv):
+                main()
+
+            compact_page = json.loads(compact_path.read_text(encoding="utf-8"))["pages"][0]
+            full_page = json.loads(full_path.read_text(encoding="utf-8"))["pages"][0]
+            self.assertNotIn("visible_text_prefix", compact_page)
+            self.assertIn("visible_text_prefix", full_page)
+            self.assertTrue(markdown_path.exists())
+
+    def test_cli_defaults_to_the_compact_committed_inventory(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary) / "site"
+            root.mkdir()
+            (root / "index.html").write_text(
+                "<html><body><main>Transient scoring excerpt.</main></body></html>", encoding="utf-8"
+            )
+            previous_cwd = Path.cwd()
+            try:
+                os.chdir(temporary)
+                with patch.object(sys, "argv", ["seo_audit.py", str(root)]):
+                    main()
+            finally:
+                os.chdir(previous_cwd)
+
+            compact_page = json.loads(
+                (Path(temporary) / "data/site-audit.json").read_text(encoding="utf-8")
+            )["pages"][0]
+            self.assertNotIn("visible_text_prefix", compact_page)
+
+    def test_visible_text_prefix_is_bounded_to_250_words(self):
+        body = " ".join(f"word{index}" for index in range(500))
+        page = parse_html(f"<html><body><main>{body}</main></body></html>", Path("long.html"))
+
+        self.assertEqual(len(page["visible_text_prefix"].split()), 250)
+
     def test_extracts_quality_scoring_signals(self):
         html = """<!doctype html><html lang="en"><head>
         <title>Example Calculator</title><meta name="viewport" content="width=device-width">

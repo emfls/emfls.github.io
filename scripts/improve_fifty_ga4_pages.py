@@ -21,7 +21,7 @@ def public_url(relative: str) -> str:
 
 
 def language(relative: str) -> str:
-    return relative.split("/", 1)[0] if relative.split("/", 1)[0] in {"vn", "ae", "cn", "de", "kor"} else "en"
+    return relative.split("/", 1)[0] if relative.split("/", 1)[0] in {"vn", "cn", "de", "kor"} else "en"
 
 
 def copy_for(relative: str, category: str, hub: str) -> tuple[str, str, str]:
@@ -62,11 +62,6 @@ def copy_for(relative: str, category: str, hub: str) -> tuple[str, str, str]:
             "Phạm vi và giới hạn",
             "Nội dung được kiểm tra lại ngày 11/08/2026. Công cụ chạy trong trình duyệt và kết quả có thể khác theo thiết bị, trình duyệt hoặc dữ liệu nhập; hãy kiểm tra lại trước khi dùng cho quyết định quan trọng.",
             "Công cụ liên quan",
-        ),
-        "ae": (
-            "النطاق والقيود",
-            "تمت مراجعة الصفحة في 11 أغسطس 2026. تعمل الأداة داخل المتصفح وقد تختلف النتائج باختلاف الجهاز أو المتصفح أو البيانات المدخلة؛ تحقق من النتيجة قبل استخدامها في قرار مهم.",
-            "أدوات ذات صلة",
         ),
         "cn": (
             "使用范围与限制",
@@ -119,8 +114,8 @@ def block(relative: str, schema_type: str, category: str, hub: str) -> str:
 
 
 def main() -> None:
-    if len(PAGES) != 50 or len({row[0] for row in PAGES}) != 50:
-        raise SystemExit("manifest must contain exactly 50 unique pages")
+    if len(PAGES) != 49 or len({row[0] for row in PAGES}) != 49:
+        raise SystemExit("manifest must contain exactly 49 active unique pages")
     changed = skipped = 0
     for relative, schema_type, category, hub in PAGES:
         path = ROOT / relative

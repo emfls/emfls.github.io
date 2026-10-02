@@ -228,10 +228,10 @@ def test_published_page_hub_and_sitemaps_register_the_page_once():
     hub = (ROOT / "kor/report/parenting/index.html").read_text(encoding="utf-8")
     assert f'href="/{ROUTE}"' in hub
     assert "총 5개 콘텐츠" in hub
-    for sitemap_path in ("kor/report/parenting/sitemap.xml", "kor/sitemap.xml"):
+    for sitemap_path, expected_count in (("kor/report/parenting/sitemap.xml", 1), ("kor/sitemap.xml", 0)):
         sitemap_root = ET.parse(ROOT / sitemap_path).getroot()
         locs = [node.text for node in sitemap_root.findall("{*}url/{*}loc")]
-        assert locs.count(URL) == 1, f"expected exactly one entry in {sitemap_path}"
+        assert locs.count(URL) == expected_count, f"expected {expected_count} entries in {sitemap_path}"
     sitemap_index = ET.parse(ROOT / "sitemap.xml").getroot()
     indexes = [node.text for node in sitemap_index.findall("{*}sitemap/{*}loc")]
     assert indexes.count("https://emfls.github.io/kor/report/parenting/sitemap.xml") == 1

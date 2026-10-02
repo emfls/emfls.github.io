@@ -12,7 +12,7 @@ from pathlib import Path
 ORIGIN = "https://emfls.github.io"
 MARKER = 'data-seo-breadcrumb="pilot"'
 LABELS = {
-    "kor": "한국어", "jp": "日本語", "ae": "العربية", "game": "게임",
+    "kor": "한국어", "jp": "日本語", "game": "게임",
     "util": "도구", "visa": "비자", "camp": "캠핑", "travel": "여행",
 }
 

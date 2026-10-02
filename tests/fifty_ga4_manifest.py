@@ -2,7 +2,6 @@ PAGES = [
  ("util/text-shuffle-sort/index.html","WebApplication","tool","/util/"),
  ("vn/util/dice3d/index.html","WebApplication","tool","/vn/util/"),
  ("vn/util/text-shuffle-sort/index.html","WebApplication","tool","/vn/util/"),
- ("ae/util/dice3d/index.html","WebApplication","tool","/ae/util/"),
  ("cn/game/MBTI/index.html","VideoGame","game","/cn/game/"),
  ("cn/util/barcode/index.html","WebApplication","tool","/cn/util/"),
  ("cn/util/compound-interest/index.html","WebApplication","finance","/cn/util/"),
@@ -50,5 +49,12 @@ PAGES = [
  ("kor/report/coin/bitcoin-guide.html","WebPage","coin","/kor/report/coin/solana-guide.html"),
  ("kor/report/coin/solana-guide.html","WebPage","coin","/kor/report/coin/bitcoin-guide.html"),
 ]
-BATCHES=[PAGES[i:i+10] for i in range(0,50,10)]
-assert len(PAGES)==50 and len({x[0] for x in PAGES})==50 and all(len(x)==10 for x in BATCHES)
+BATCH_SIZES = (9, 10, 10, 10, 10)
+BATCHES = []
+offset = 0
+for size in BATCH_SIZES:
+ BATCHES.append(PAGES[offset:offset + size])
+ offset += size
+assert offset == len(PAGES) == 49
+assert len({row[0] for row in PAGES}) == 49
+assert all(len(batch) == size for batch, size in zip(BATCHES, BATCH_SIZES))

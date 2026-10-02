@@ -6,16 +6,16 @@ Exact duplicates are review candidates, not automatic merge or deletion instruct
 
 - Duplicate groups: 301
 
-- `AeroJump` — 10 URLs
-- `Marble Flick` — 9 URLs
-- `QuickPlay: Flappy Dot` — 9 URLs
-- `Land Grab` — 8 URLs
+- `AeroJump` — 9 URLs
+- `Marble Flick` — 8 URLs
 - `Matrix Defense` — 8 URLs
+- `QuickPlay: Flappy Dot` — 8 URLs
 - `Gomoku` — 7 URLs
-- `BlockBreaker` — 6 URLs
+- `Land Grab` — 7 URLs
 - `Congo Democratic Republic Perfect Guide | Travel course, preparations, precautions` — 6 URLs
 - `PONG vs AI` — 6 URLs
 - `コンゴ民主共和国パーフェクトガイド|旅行コース、準備、予防策` — 6 URLs
+- `BlockBreaker` — 5 URLs
 - `CardMatch` — 5 URLs
 - `Error 500 (Server Error)!!1500.That’s an error.There was an error. Please try again later.That’s all we know.` — 5 URLs
 - `FlagQuest` — 5 URLs
@@ -24,7 +24,6 @@ Exact duplicates are review candidates, not automatic merge or deletion instruct
 - `PONG vs IA` — 3 URLs
 - `Perfect Guide to Travel Australia | Travel course, preparations, precautions` — 3 URLs
 - `QuickPlay: Minesweeper` — 3 URLs
-- `○× (Tic Tac Toe)` — 3 URLs
 - `オーストラリア旅行への完璧なガイド|旅行コース、準備、予防策` — 3 URLs
 - `コンゴ民主共和国ツアーパーフェクトガイド|旅行コース、準備、予防策` — 3 URLs
 - `Be -Cold Grand Popo Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
@@ -106,6 +105,7 @@ Exact duplicates are review candidates, not automatic merge or deletion instruct
 - `Sudan Sudan Travel Perfect Guide | Travel course, preparations, precautions` — 2 URLs
 - `Survivor Mini` — 2 URLs
 - `SurvivorMini` — 2 URLs
+- `Syria Maarat Miss Lin Perfect Guide | Travel course, preparations, precautions` — 2 URLs
 
 ## Descriptions
 
@@ -214,4 +214,7 @@ Exact duplicates are review candidates, not automatic merge or deletion instruct
 
 ## Canonicals
 
-- Duplicate groups: 0
+- Duplicate groups: 2
+
+- `https://emfls.github.io/kor/report/finance/dividend-stocks-2026.html` — 2 URLs
+- `https://emfls.github.io/kor/report/finance/etf-recommendations-2026.html` — 2 URLs

@@ -37,10 +37,10 @@ def test_full_paint_guide_contract():
 def test_full_paint_discovery_and_sitemaps():
     hub = (ROOT / "kor/report/car/index.html").read_text(encoding="utf-8")
     car_sitemap = (ROOT / "kor/report/car/sitemap.xml").read_text(encoding="utf-8")
-    root_sitemap = (ROOT / "kor/sitemap.xml").read_text(encoding="utf-8")
+    kor_sitemap = (ROOT / "kor/sitemap.xml").read_text(encoding="utf-8")
     assert 'href="/kor/report/car/car-full-paint-cost-guide.html"' in hub
     assert car_sitemap.count(URL) == 1
-    assert root_sitemap.count(URL) == 1
+    assert kor_sitemap.count(URL) == 0
     card_count = hub.count('class="card"')
     assert card_count >= 17
     assert f"총 {card_count}개 콘텐츠" in hub

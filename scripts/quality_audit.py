@@ -10,6 +10,7 @@ from urllib.parse import urlparse
 from xml.etree import ElementTree
 
 try:
+    from scripts.seo_audit import audit_site
     from scripts.quality_scoring import CATEGORY_MAX, score_page
     from scripts.quality_reports import render_dashboard, render_site_markdown
     from scripts.quality_site import (
@@ -22,6 +23,7 @@ try:
         rank_priority,
     )
 except ModuleNotFoundError:
+    from seo_audit import audit_site
     from quality_scoring import CATEGORY_MAX, score_page
     from quality_reports import render_dashboard, render_site_markdown
     from quality_site import (
@@ -170,7 +172,7 @@ def run_quality_audit(
     revenue_path=None,
 ):
     root = Path(root)
-    audit = _read_json(audit_path, {"pages": []})
+    audit = audit_site(root) if audit_path is None else _read_json(audit_path, {"pages": []})
     pages = sorted((page for page in audit.get("pages", []) if page.get("indexable", True)), key=lambda row: row["url"])
     metadata_rows = _read_json(metadata_path, [])
     metadata = {normalize_url(row["url"]): row for row in metadata_rows if row.get("url")}
@@ -244,7 +246,7 @@ def run_quality_audit(
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, default=Path("."))
-    parser.add_argument("--audit", type=Path, default=Path("data/site-audit.json"))
+    parser.add_argument("--audit", type=Path, help="full audit JSON; omitted to parse the current HTML directly")
     parser.add_argument("--metadata", type=Path, default=Path("data/content-metadata.json"))
     parser.add_argument("--performance-dir", type=Path, default=Path("data/performance"))
     parser.add_argument("--cannibalization", type=Path, default=Path("data/cannibalization-report.json"))

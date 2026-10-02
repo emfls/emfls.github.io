@@ -4,14 +4,14 @@
 
 - 28d Revenue: N/A
 - 28d Daily Average: N/A
-- Indexed Pages: 19,090
+- Indexed Pages: 19,027
 - Revenue per Indexed Page: N/A
 - Views per User: 1.33
-- WINNER: 1572
+- WINNER: 1568
 - OPPORTUNITY: 35
 - EXPERIMENT: 0
 - DEAD_CANDIDATE: 0
-- INSUFFICIENT_DATA: 17483
+- INSUFFICIENT_DATA: 17424
 
 ## TOP REVENUE OPPORTUNITIES
 
@@ -145,10 +145,6 @@
 ## PROTECTED WINNERS
 
 - `/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/ae/util/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/ae/util/dice3d/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/ae/util/text-cleaner/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
-- `/ae/util/text-shuffle-sort/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/cn/util/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/cn/util/EasyLetterWordCounter/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지
 - `/cn/util/cardgen/` — 검증된 페이지 수익과 방문이 있어 대규모 rewrite 금지

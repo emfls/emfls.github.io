@@ -124,7 +124,7 @@ class OctoberKoreaTravelLaunchTest(unittest.TestCase):
         kor_sitemap = (ROOT / "kor/sitemap.xml").read_text(encoding="utf-8")
         sitemap_index = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
         self.assertEqual(travel_sitemap.count(canonical), 1)
-        self.assertEqual(kor_sitemap.count(canonical), 1)
+        self.assertEqual(kor_sitemap.count(canonical), 0)
         self.assertEqual(sitemap_index.count("https://emfls.github.io/kor/report/travel/sitemap.xml"), 1)
         self.assertEqual(sitemap_index.count("https://emfls.github.io/kor/sitemap.xml"), 1)
 

@@ -14,7 +14,6 @@ PAGES = [
     ('kor/report/travel/bangladesh-pirojpur.html', 'WebPage', 'travel', '/kor/report/travel/'),
     ('kor/report/travel/austria-gmunden.html', 'WebPage', 'travel', '/kor/report/travel/'),
     ('cn/util/color-extractor/index.html', 'WebApplication', 'tool', '/cn/util/'),
-    ('ae/util/textsummarizer/index.html', 'WebApplication', 'tool', '/ae/util/'),
     ('util/tts/index.html', 'WebApplication', 'tool', '/util/'),
     ('util/text-cleaner/index.html', 'WebApplication', 'tool', '/util/'),
     ('util/recipe-finder/index.html', 'WebApplication', 'tool', '/util/'),
@@ -101,9 +100,14 @@ PAGES = [
     ('kor/report/travel/angola-lobito.html', 'WebPage', 'travel', '/kor/report/travel/'),
 ]
 
-BATCHES = [PAGES[i:i + 10] for i in range(0, 100, 10)]
-assert len(PAGES) == 100
-assert len({row[0] for row in PAGES}) == 100
-assert all(len(batch) == 10 for batch in BATCHES)
+BATCH_SIZES = (10, 9, 10, 10, 10, 10, 10, 10, 10, 10)
+BATCHES = []
+offset = 0
+for size in BATCH_SIZES:
+    BATCHES.append(PAGES[offset:offset + size])
+    offset += size
+assert offset == len(PAGES) == 99
+assert len({row[0] for row in PAGES}) == 99
+assert all(len(batch) == size for batch, size in zip(BATCHES, BATCH_SIZES))
 assert PAGES[0][0] == 'kor/report/travel/tajikistan-farkhor.html'
 assert PAGES[-1][0] == 'kor/report/travel/angola-lobito.html'

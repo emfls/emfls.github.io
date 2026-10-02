@@ -11,8 +11,33 @@ from urllib.parse import urljoin, urlparse
 
 
 PUBLIC_HOSTS = {"emfls.github.io", "www.emfls.github.io"}
-LANG_DIRS = {"ae", "cn", "de", "es", "fr", "id", "in", "jp", "kor", "pt", "ru", "vn"}
+LANG_DIRS = {"cn", "de", "es", "fr", "id", "in", "jp", "kor", "pt", "ru", "vn"}
 WORD_RE = re.compile(r"[A-Za-z0-9]+|[가-힣]+|[\u3040-\u30ff\u3400-\u9fff]+")
+VISIBLE_TEXT_PREFIX_WORD_LIMIT = 250
+MAX_AUDIT_FILE_BYTES = 100 * 1024 * 1024
+MAX_COMPACT_AUDIT_FILE_BYTES = 25 * 1024 * 1024
+COMPACT_PAGE_FIELDS = (
+    "path",
+    "url",
+    "title",
+    "description",
+    "language",
+    "category",
+    "published_date",
+    "updated_date",
+    "word_count",
+    "h1_count",
+    "h2_count",
+    "internal_links",
+    "external_links",
+    "images",
+    "structured_data_types",
+    "canonical",
+    "indexable",
+    "adsense",
+    "ga4",
+    "parse_warnings",
+)
 
 
 def _attrs(items):
@@ -216,7 +241,7 @@ def _language(relative_path, declared):
     if declared:
         return declared
     first = relative_path.parts[0] if relative_path.parts else ""
-    return {"kor": "ko", "jp": "ja", "cn": "zh", "ae": "ar"}.get(first, first if first in LANG_DIRS else "en")
+    return {"kor": "ko", "jp": "ja", "cn": "zh"}.get(first, first if first in LANG_DIRS else "en")
 
 
 def _category(relative_path):
@@ -292,7 +317,7 @@ def parse_html(html, relative_path):
         "has_parent_hub_link": parser.has_parent_hub_link,
         "has_intrusive_popup": parser.has_intrusive_popup,
         "interactive_controls": parser.interactive_controls,
-        "visible_text_prefix": " ".join(normalized_text.split()[:400]),
+        "visible_text_prefix": " ".join(normalized_text.split()[:VISIBLE_TEXT_PREFIX_WORD_LIMIT]),
         "structured_data_types": sorted(parser.json_ld_types),
         "canonical": parser.canonical,
         "indexable": "noindex" not in robots,
@@ -369,16 +394,49 @@ This is a read-only inventory. It does not modify, publish, noindex, merge, or d
 """
 
 
+def serialize_audit(audit, max_bytes=MAX_AUDIT_FILE_BYTES):
+    content = (json.dumps(audit, ensure_ascii=False, separators=(",", ":")) + "\n").encode("utf-8")
+    if len(content) > max_bytes:
+        raise ValueError(f"site audit is {len(content):,} bytes; maximum is {max_bytes:,}")
+    return content
+
+
+def compact_audit(audit):
+    """Return the stable committed inventory without transient scoring details."""
+    return {
+        "summary": audit["summary"],
+        "parser_errors": audit["parser_errors"],
+        "pages": [
+            {field: page[field] for field in COMPACT_PAGE_FIELDS}
+            for page in audit["pages"]
+        ],
+    }
+
+
+def serialize_compact_audit(audit, max_bytes=MAX_COMPACT_AUDIT_FILE_BYTES):
+    content = (json.dumps(compact_audit(audit), ensure_ascii=False, separators=(",", ":")) + "\n").encode("utf-8")
+    if len(content) > max_bytes:
+        raise ValueError(f"compact site audit is {len(content):,} bytes; maximum is {max_bytes:,}")
+    return content
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("root", type=Path, nargs="?", default=Path("."))
-    parser.add_argument("--json", type=Path, default=Path("data/site-audit.json"))
+    parser.add_argument("--json", type=Path, help="write the full audit JSON (use a transient path in CI)")
+    parser.add_argument("--compact-json", type=Path, help="write the compact committed inventory")
     parser.add_argument("--markdown", type=Path, default=Path("reports/seo-audit.md"))
     args = parser.parse_args()
     audit = audit_site(args.root)
-    args.json.parent.mkdir(parents=True, exist_ok=True)
+    if args.json is None and args.compact_json is None:
+        args.compact_json = Path("data/site-audit.json")
+    if args.json is not None:
+        args.json.parent.mkdir(parents=True, exist_ok=True)
+        args.json.write_bytes(serialize_audit(audit))
+    if args.compact_json is not None:
+        args.compact_json.parent.mkdir(parents=True, exist_ok=True)
+        args.compact_json.write_bytes(serialize_compact_audit(audit))
     args.markdown.parent.mkdir(parents=True, exist_ok=True)
-    args.json.write_text(json.dumps(audit, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
     args.markdown.write_text(render_markdown(audit), encoding="utf-8")
     print(json.dumps(audit["summary"], ensure_ascii=False, indent=2))
 

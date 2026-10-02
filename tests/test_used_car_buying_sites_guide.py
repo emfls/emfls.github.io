@@ -110,6 +110,6 @@ def test_used_car_buying_sites_discovery_wiring_contract():
     assert "총 18개 콘텐츠" in hub
 
     car_sitemap = (ROOT / "kor/report/car/sitemap.xml").read_text(encoding="utf-8")
-    root_sitemap = (ROOT / "kor/sitemap.xml").read_text(encoding="utf-8")
+    kor_sitemap = (ROOT / "kor/sitemap.xml").read_text(encoding="utf-8")
     assert car_sitemap.count(f"<loc>{URL}</loc>") == 1
-    assert root_sitemap.count(f"<loc>{URL}</loc>") == 1
+    assert kor_sitemap.count(f"<loc>{URL}</loc>") == 0
