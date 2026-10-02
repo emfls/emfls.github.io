@@ -30,6 +30,18 @@ def test_guard_allows_more_than_three_pages_but_rejects_deletion(tmp_path):
     assert "DELETION_NOT_ALLOWED" in validate_launch(tmp_path, {**manifest([]), "deletions": ["old.html"]}, [("D", "old.html")])
 
 
+def test_guard_allows_authorized_arabic_retirement_only(tmp_path):
+    setup_data(tmp_path)
+
+    assert validate_launch(tmp_path, manifest([]), [("D", "ae/util/example/index.html")]) == []
+    errors = validate_launch(
+        tmp_path,
+        manifest([]),
+        [("D", "ae/util/example/index.html"), ("D", "kor/report/example.html")],
+    )
+    assert "DELETION_NOT_ALLOWED" in errors
+
+
 def test_guard_rejects_protected_pages_and_monetization_code(tmp_path):
     setup_data(tmp_path)
     changed = [("M", "kor/report/camp/nonsan.html"), ("M", "kor/report/camp/namyangju.html"), ("M", "assets/js/ga4.js")]

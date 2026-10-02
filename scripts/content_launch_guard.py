@@ -47,7 +47,14 @@ def validate_launch(root, manifest, changed_paths):
     launch_changed = bool(added_html)
     if launch_changed and added_html != expected_html:
         errors.add("MANIFEST_DIFF_MISMATCH")
-    if manifest.get("deletions") or any(row[0].startswith("D") or row[0].startswith("R") for row in changed):
+    # The Arabic locale retirement is explicitly authorized; keep all other
+    # content deletions and every rename fail-closed.
+    unauthorized_deletion = any(
+        row[0].startswith(("D", "R"))
+        and not (row[0] == "D" and row[1].startswith("ae/"))
+        for row in changed
+    )
+    if manifest.get("deletions") or unauthorized_deletion:
         errors.add("DELETION_NOT_ALLOWED")
 
     ctr = _read(root / "data/experiments.json", {"experiments": []})

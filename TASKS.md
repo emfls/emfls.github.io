@@ -8,8 +8,8 @@
   - 목적: 저가치 Arabic locale 전체를 retire하고 현재 sitemap/feed/파생 인벤토리와 생성기 의존성을 정합화한다. 승자 4개도 Korean-first `PROTECT_OVERRIDE_REVIEW → RETIRE` 결정에 따라 제거한다.
   - 범위: 최신 `origin/main` `83346ac4441b19b1764816c75a099c49ac35c85e` 기준 Arabic 63 HTML + locale-only JS 2개 + sitemap 1개, 총 66 files / 1,209,448 bytes. Korean/EN/JP HTML과 raw analytics snapshots는 보존한다.
   - 로컬 완료: active Arabic page/data rows, sitemap, RSS, breadcrumb/GA4 manifest dependency를 제거하고 current derived reports를 재생성했다. Sitemap 46 leaf / 18,806 URLs / duplicate 0; feed 500 items / Arabic 0. 과거 기회 보고서는 historical snapshot임을 표기했다.
-  - 검증: full unittest 731 passed, full pytest 1,170 passed, SEO QA PASS (new critical/warning 0), `git diff --check` PASS. SEO inventory prefix는 250 words로 제한했으며 기존 400-word 기준과 page scores가 동일하다. serializer/test는 100 MiB 초과 audit 파일을 거부한다. Metadata validator의 기존 `invalid_intent` 2건은 남았다. 기존 sitemap duplicate 23건은 explicit no-duplicate acceptance를 맞추기 위해 제거했다.
-  - 상태: local branch `codex/p0-retire-arabic-locale-r2`의 QA는 완료했지만 `gh auth status`가 저장 credential invalid를 보고해 push/PR 생성 대기 중이다. Active Queue 제거, Completed Log 기록, Arabic analysis archive 이동은 merge 후 수행한다.
+  - 검증: full unittest 731 passed, full pytest 1,171 passed, SEO QA PASS (new critical/warning 0), `git diff --check` PASS. SEO inventory prefix는 250 words로 제한했으며 기존 400-word 기준과 page scores가 동일하다. serializer/test는 100 MiB 초과 audit 파일을 거부한다. Metadata validator의 기존 `invalid_intent` 2건은 남았다. 기존 sitemap duplicate 23건은 explicit no-duplicate acceptance를 맞추기 위해 제거했다.
+  - 상태: branch `codex/p0-retire-arabic-locale-r2` is pushed and PR #31 is open. First CI run failed because the launch guard blocked the authorized `/ae/` deletions; a narrow `ae/`-only deletion exception now passes its local regression and branch comparison checks. Follow-up commit push and CI rerun remain; do not merge until required checks pass. Active Queue removal, Completed Log entry, and Arabic analysis archive move remain post-merge only.
 
 - [x] P0 Support — CI Baseline GA4 Contract 5건 복구
   - 목적: 기존 main의 unittest baseline에서 실패한 5개 GA4 batch contract를 최신 페이지 의미와 정합화해 P0 Revenue Growth #02 PR을 재검증한다.
