@@ -5,12 +5,15 @@
 ## P0 - Critical
 
 - [ ] P0 Arabic Locale Retire — `/ae/`
-  - 목적: 저가치 Arabic locale 전체를 retire하고 현재 sitemap/feed/파생 인벤토리와 생성기 의존성을 정합화한다. 승자 4개도 Korean-first `PROTECT_OVERRIDE_REVIEW → RETIRE` 결정에 따라 제거한다.
-  - 범위: 최신 `origin/main` `83346ac4441b19b1764816c75a099c49ac35c85e` 기준 Arabic 63 HTML + locale-only JS 2개 + sitemap 1개, 총 66 files / 1,209,448 bytes. Korean/EN/JP HTML과 raw analytics snapshots는 보존한다.
-  - 로컬 완료: active Arabic page/data rows, sitemap, RSS, breadcrumb/GA4 manifest dependency를 제거하고 current derived reports를 재생성했다. Sitemap 46 leaf / 18,806 URLs / duplicate 0; feed 500 items / Arabic 0. 과거 기회 보고서는 historical snapshot임을 표기했다.
-  - Size blocker 해결: 19,030 rows의 committed `data/site-audit.json`은 16,270,166 B로 축소했다. Scoring용 `visible_text_prefix`, `internal_link_targets`, quality diagnostics는 `/tmp/site-audit-full.json`에서만 사용한다. Base 대비 전체 working-tree tracked bytes는 1,369,083 B 감소했다. Field consumer 표는 `docs/audits/site-audit-field-consumers.md`에 있다.
-  - 검증: full unittest 738 passed, full pytest 1,178 passed, SEO QA PASS (new critical/warning 0), full transient scoring 19,027 indexable pages, Keyword Hunter dry-run PASS (0 API calls, no writes), launch guard PASS, sitemap audit 46 leaf / 18,806 URLs / duplicate 0 / Arabic 0, feed Arabic 0, `git diff --check` PASS. Raw GA4/GSC snapshots unchanged; HTML diff는 `/ae/` 63 deletions만 포함한다.
-  - 상태: existing branch `codex/p0-retire-arabic-locale-r2` / PR #31 only; open/unmerged. Latest size-fix commit and its CI result are tracked in Notion page 96. Keep this item in Active Queue until merge; do not move it to Completed Log or archive. JP First 50 and other locale pruning remain out of scope.
+  - 목적: `/ae/` locale의 현재 사이트 콘텐츠와 파생 인벤토리 의존성을 retire한다. JP First 50 및 다른 locale pruning은 제외한다.
+  - 범위: Arabic HTML 63개 삭제, locale 전용 JS 2개 삭제, `ae/sitemap.xml` 삭제. Raw GA4/GSC snapshots와 non-Arabic HTML을 보존하고 compact `data/site-audit.json`을 약 16 MB 수준으로 유지한다.
+  - 동기화: PR #31 branch `codex/p0-retire-arabic-locale-r2`에서 최신 fetched `origin/main` `af341dc20cffcb7f85b59bd0483f9bdf58f35374`를 regular merge 중이다. PR #30 Keyword Hunter/DataLab freshness changes와 2026-10-02 GA4/GSC refresh를 보존한다.
+  - 상태: `SYNCING_WITH_LATEST_MAIN`; merge와 full QA, current-head CI가 끝날 때까지 Active Queue에 유지한다.
+
+- [x] P0 Support — Keyword Hunter DataLab freshness contract
+  - 목적: 만료·미래·기준시각 누락 DataLab trend 값을 현재 검증 신호와 후보 점수로 오인하지 않도록 한다.
+  - 범위: score freshness 검증과 부분 응답 병합 계약만 수정한다. 콘텐츠·발행 데이터는 변경하지 않는다.
+  - 완료: PR #30 normal merge `0bb519d6b8eb206997e238528bd8bd7e0d75b9ff`; exact-head SEO QA `36975353397` SUCCESS. Freshness changes remain present in latest main `af341dc20cffcb7f85b59bd0483f9bdf58f35374`.
 
 - [x] P0 Support — CI Baseline GA4 Contract 5건 복구
   - 목적: 기존 main의 unittest baseline에서 실패한 5개 GA4 batch contract를 최신 페이지 의미와 정합화해 P0 Revenue Growth #02 PR을 재검증한다.

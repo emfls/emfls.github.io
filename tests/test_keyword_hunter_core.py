@@ -1,5 +1,9 @@
 import unittest
+from datetime import datetime, timezone
 from scripts import keyword_hunter_core as c
+
+NOW=datetime(2026,10,2,12,0,tzinfo=timezone.utc)
+FRESH_DATALAB='2026-10-02T11:45:00+00:00'
 
 class CoreTests(unittest.TestCase):
     def test_dedupe_keywords_keeps_latest_best(self):
@@ -18,7 +22,7 @@ class CoreTests(unittest.TestCase):
 
     def test_score_missing_does_not_invent(self):
         empty = c.score({'keyword': '전기요금 계산 방법', 'category':'tools'}, c.DEFAULT_CONFIG)
-        full = c.score({'keyword':'전기요금 계산 방법','category':'tools','monthly_total':10000,'competition':'낮음','trend_1m':30,'trend_3m':20},c.DEFAULT_CONFIG)
+        full = c.score({'keyword':'전기요금 계산 방법','category':'tools','monthly_total':10000,'competition':'낮음','trend_1m':30,'trend_3m':20,'datalab_checked_at':FRESH_DATALAB},c.DEFAULT_CONFIG,now=NOW)
         self.assertEqual(empty['confidence'], 'UNVERIFIED')
         self.assertEqual(empty['data_coverage'], 0)
         self.assertFalse(empty['score_valid'])
@@ -27,14 +31,14 @@ class CoreTests(unittest.TestCase):
         self.assertEqual(full['data_coverage'], 80)
         self.assertTrue(full['score_valid'])
         self.assertLessEqual(full['opportunity_score'],100)
-        high = c.score({'keyword':'전기요금 계산 방법','category':'tools','monthly_total':10000,'competition':'높음','trend_1m':30,'trend_3m':20},c.DEFAULT_CONFIG)
+        high = c.score({'keyword':'전기요금 계산 방법','category':'tools','monthly_total':10000,'competition':'높음','trend_1m':30,'trend_3m':20,'datalab_checked_at':FRESH_DATALAB},c.DEFAULT_CONFIG,now=NOW)
         self.assertLess(high['opportunity_score'],full['opportunity_score'])
 
     def test_partial_api_confidence(self):
         ads = c.score({'keyword':'육아휴직 조건','category':'gov','monthly_total':500,'competition':'LOW'}, c.DEFAULT_CONFIG)
         trend = c.score({'keyword':'육아휴직 조건','category':'gov','trend_1m':10,'trend_3m':20}, c.DEFAULT_CONFIG)
         medium = c.score({'keyword':'육아휴직 조건','category':'gov','monthly_total':500,
-                          'competition':'LOW','trend_1m':10,'trend_3m':20}, c.DEFAULT_CONFIG)
+                          'competition':'LOW','trend_1m':10,'trend_3m':20,'datalab_checked_at':FRESH_DATALAB}, c.DEFAULT_CONFIG,now=NOW)
         self.assertEqual(ads['confidence'], 'LOW')
         self.assertEqual(trend['confidence'], 'UNVERIFIED')
         self.assertFalse(ads['score_valid'])
@@ -44,9 +48,9 @@ class CoreTests(unittest.TestCase):
 
     def test_web_result_upgrades_confidence_but_is_not_required_for_valid_score(self):
         medium = c.score({'keyword':'명확한 검색 의도','category':'tools','monthly_total':500,
-                          'trend_1m':10}, c.DEFAULT_CONFIG)
+                          'trend_1m':10,'datalab_checked_at':FRESH_DATALAB}, c.DEFAULT_CONFIG,now=NOW)
         high = c.score({'keyword':'명확한 검색 의도','category':'tools','monthly_total':500,
-                        'trend_1m':10,'web_result_count':1000}, c.DEFAULT_CONFIG)
+                        'trend_1m':10,'web_result_count':1000,'datalab_checked_at':FRESH_DATALAB}, c.DEFAULT_CONFIG,now=NOW)
         self.assertTrue(medium['score_valid'])
         self.assertEqual(medium['confidence'],'MEDIUM')
         self.assertEqual(high['confidence'],'HIGH')
@@ -57,6 +61,23 @@ class CoreTests(unittest.TestCase):
         self.assertFalse(result['score_valid'])
         self.assertEqual(set(result['score_invalid_reasons'].split('|')),
                          {'monthly_volume_missing','trend_missing','web_result_missing'})
+
+    def test_stale_missing_and_future_trend_timestamps_fail_closed(self):
+        cases=[
+            ('2026-10-01T12:00:00+00:00','trend_stale'),
+            ('','trend_freshness_missing'),
+            ('2026-10-02T12:00:01+00:00','trend_timestamp_in_future'),
+        ]
+        for checked_at,reason in cases:
+            with self.subTest(checked_at=checked_at or 'missing'):
+                result=c.score({'keyword':'검색 수요 후보','category':'tools',
+                                'monthly_total':500,'competition':'LOW',
+                                'trend_1m':10,'datalab_checked_at':checked_at},
+                               c.DEFAULT_CONFIG,now=NOW)
+                self.assertFalse(result['score_valid'])
+                self.assertIsNone(result['opportunity_score'])
+                self.assertEqual(result['confidence'],'LOW')
+                self.assertIn(reason,result['score_invalid_reasons'])
 
     def test_status_transition(self):
         row={'status':'NEW','score_valid':True}
