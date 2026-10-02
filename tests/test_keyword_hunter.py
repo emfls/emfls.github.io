@@ -113,6 +113,80 @@ class HunterTests(unittest.TestCase):
         seeds=[{'keyword':'deep','depth':4,'strategy':'longtail','category':'camp'}]
         self.assertEqual(h.choose_seeds(seeds,[],h.DEFAULT_CONFIG),[])
 
+    def test_novelty_funnel_counts_unique_category_saturation_exclusions(self):
+        (self.root/'data/keyword_seeds.json').write_text(json.dumps({'seeds':[
+            {'keyword':'초기 탐색 seed','category':'tools','strategy':'longtail','depth':0},
+        ]}))
+        (self.root/'data/keyword_hunter_config.json').write_text(json.dumps({
+            'target':100,'category_share':0.01,'max_seeds':1,
+        }))
+        client=Mock(errors=[],rate_limits=0,calls=0)
+        client.health.return_value={'NAVER_SEARCH_ADS':'OK','NAVER_DATALAB':'NOT_CONFIGURED','NAVER_WEB_SEARCH':'NOT_CONFIGURED'}
+        client.feed.return_value=[]
+        client.related.return_value=[
+            {'keyword':'첫번째 신규 검색어','source':'NAVER_SEARCHAD','monthly_total':500,'competition':'LOW'},
+            {'keyword':'두번째 신규 검색어','source':'NAVER_SEARCHAD','monthly_total':500,'competition':'LOW'},
+            {'keyword':'두번째 신규 검색어','source':'NAVER_SEARCHAD','monthly_total':500,'competition':'LOW'},
+            {'keyword':'세번째 신규 검색어','source':'NAVER_SEARCHAD','monthly_total':500,'competition':'LOW'},
+        ]
+        client.trends.return_value={}
+
+        result=h.run(self.root,client=client,run_at='2026-10-02T08:56:00+09:00')
+
+        funnel=result['discovery_funnel']
+        self.assertEqual(result['new_keywords'],1)
+        self.assertEqual(funnel['normalized_keywords'],3)
+        self.assertEqual(funnel['db_duplicates_removed'],0)
+        self.assertEqual(funnel['category_saturation_excluded'],2)
+        self.assertEqual(funnel['novelty_passed'],1)
+
+    def test_share_gate_saturation_takes_precedence_over_later_duplicate_attempt(self):
+        seeds=[
+            {'keyword':'캠핑 실험 seed','category':'camp','strategy':'longtail','depth':0,'source':'TEST_FIXTURE','bucket':'new_theme'},
+            {'keyword':'여행 실험 seed','category':'travel','strategy':'longtail','depth':0,'source':'TEST_FIXTURE','bucket':'new_theme'},
+            {'keyword':'비자 실험 seed','category':'visa','strategy':'longtail','depth':0,'source':'TEST_FIXTURE','bucket':'new_theme'},
+            {'keyword':'윈도우 실험 seed','category':'window','strategy':'longtail','depth':0,'source':'TEST_FIXTURE','bucket':'new_theme'},
+            {'keyword':'계산기 실험 seed','category':'tools','strategy':'longtail','depth':0,'source':'TEST_FIXTURE','bucket':'new_theme'},
+        ]
+        (self.root/'data/keyword_seeds.json').write_text(json.dumps({'seeds':seeds}))
+        (self.root/'data/keyword_hunter_config.json').write_text(json.dumps({
+            'target':100,'category_share':1,'max_seeds':5,'min_score':101,
+        }))
+        target='캠핑 낮은 점수 검색어'
+        related_by_seed={
+            '캠핑 실험 seed':[
+                {'keyword':target,'source':'NAVER_SEARCHAD','monthly_total':10,'competition':'낮음'},
+                *[{'keyword':'캠핑 높은 점수 검색어 '+str(i),'source':'NAVER_SEARCHAD','monthly_total':10000,'competition':'낮음'} for i in range(5)],
+                {'keyword':target,'source':'NAVER_SEARCHAD','monthly_total':10,'competition':'낮음'},
+            ],
+            '여행 실험 seed':[{'keyword':'여행 신규 검색어','source':'NAVER_SEARCHAD','monthly_total':10000,'competition':'낮음'}],
+            '비자 실험 seed':[{'keyword':'비자 신규 검색어','source':'NAVER_SEARCHAD','monthly_total':10000,'competition':'낮음'}],
+            '윈도우 실험 seed':[{'keyword':'윈도우 신규 검색어','source':'NAVER_SEARCHAD','monthly_total':10000,'competition':'낮음'}],
+            '계산기 실험 seed':[{'keyword':'계산기 신규 검색어','source':'NAVER_SEARCHAD','monthly_total':10000,'competition':'낮음'}],
+        }
+        client=Mock(errors=[],rate_limits=0,calls=0)
+        client.health.return_value={'NAVER_SEARCH_ADS':'OK','NAVER_DATALAB':'OK','NAVER_WEB_SEARCH':'NOT_CONFIGURED'}
+        client.feed.return_value=[]
+        client.related.side_effect=lambda keyword: related_by_seed[keyword]
+        client.trends.side_effect=lambda keywords, _: {
+            keyword:{'trend_1m':10,'trend_3m':20} for keyword in keywords
+        }
+
+        result=h.run(self.root,client=client,run_at='2026-10-02T08:56:00+09:00')
+
+        funnel=result['discovery_funnel']
+        self.assertEqual(funnel['normalized_keywords'],10)
+        self.assertEqual(funnel['category_saturation_excluded'],5)
+        self.assertEqual(funnel['db_duplicates_removed'],0)
+        self.assertEqual(funnel['novelty_passed'],5)
+        self.assertGreaterEqual(funnel['novelty_passed'],0)
+        self.assertEqual(
+            funnel['category_saturation_excluded']+
+            funnel['db_duplicates_removed']+
+            funnel['novelty_passed'],
+            funnel['normalized_keywords'],
+        )
+
     def test_recovery_completes_interrupted_transaction(self):
         from scripts.keyword_hunter_state import recover
         folder=self.root/'.keyword-hunter';folder.mkdir()

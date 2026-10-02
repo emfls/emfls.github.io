@@ -391,6 +391,7 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
         selected=[] if status_change or data_quality_only else select_exploration_seeds(candidates,master,exploration_history,config['max_seeds'],random_seed,now,recovery=recovery['active'],diagnostics=selection_diag)
         counts=Counter(); cats=Counter(); generated_clusters=Counter()
         by_key={normalize(r['keyword']):r for r in master}; fresh=[]; duplicates=0
+        database_duplicate_keys=set(); saturation_excluded_keys=set(); accepted_keys=set()
         funnel={'seeds_considered':len(candidates),'cooldown_excluded':0,**selection_diag,
                 'seeds_queried':0,'raw_keywords':0,'normalized_keywords':0,
                 'db_duplicates_removed':0,'category_saturation_excluded':0,'novelty_excluded':0,
@@ -400,9 +401,9 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
             keyword=str(raw.get('keyword') or '').strip(); key=normalize(keyword)
             strategy=seed.get('strategy','longtail'); cat=seed.get('category') or category(keyword)
             if not key: return
-            if key in blocked: duplicates+=1;funnel['db_duplicates_removed']+=1;return
+            if key in blocked: duplicates+=1;funnel['db_duplicates_removed']+=1;database_duplicate_keys.add(key);return
             if key in by_key:
-                duplicates+=1;funnel['db_duplicates_removed']+=1
+                duplicates+=1;funnel['db_duplicates_removed']+=1;database_duplicate_keys.add(key)
                 row=by_key[key]
                 if raw.get('source')=='NAVER_SEARCHAD':
                     merge_validation_data(row,{k:v for k,v in raw.items() if k in {'monthly_pc','monthly_mobile','monthly_total','competition','volume_note','source_seed'}})
@@ -413,10 +414,10 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
                 if unverified>=config['max_unverified_candidates']: return
             cluster=seed.get('cluster') or normalize(seed['keyword'])
             if len(fresh)>=config['target'] or cats[cat]>=math.ceil(config['target']*config['category_share']) or generated_clusters[cluster]>=math.ceil(config['target']*.10):
-                funnel['category_saturation_excluded']+=1; return
+                funnel['category_saturation_excluded']+=1;saturation_excluded_keys.add(key);return
             if len(keyword)>80: return
             duplicate=next((r for r in by_key.values() if same_intent(keyword,r['keyword'])),None)
-            if duplicate: duplicates+=1;funnel['db_duplicates_removed']+=1;return
+            if duplicate: duplicates+=1;funnel['db_duplicates_removed']+=1;database_duplicate_keys.add(key);return
             depth=int(seed.get('depth') or 0)+(0 if direct or key==normalize(seed['keyword']) else 1)
             if depth>config['max_depth']: return
             overlap=site.match(keyword)
@@ -434,7 +435,7 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
             row.update(score(row,config))
             if len(key)<4 or (row['intent']=='informational' and row['longtail_score']<.2):
                 row.update(status='REJECTED',action='REJECT',reason='UNCLEAR_OR_BROAD_INTENT')
-            by_key[key]=row;fresh.append(row);counts[strategy]+=1;cats[cat]+=1;generated_clusters[cluster]+=1
+            by_key[key]=row;fresh.append(row);accepted_keys.add(key);counts[strategy]+=1;cats[cat]+=1;generated_clusters[cluster]+=1
         for seed in selected:
             key=normalize(seed['keyword']); pool[key]=seed
             if seed_is_cached(seed,now,config['search_ads_cache_ttl_hours']): continue
@@ -547,6 +548,9 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
         initial_winners=[r for r in initial_eligible if r['opportunity_score']>=config['min_score'] and r['confidence'] in {'HIGH','MEDIUM'}]
         fresh,dropped_by_saturation=enforce_candidate_shares(fresh,initial_winners)
         funnel['category_saturation_excluded']+=len(dropped_by_saturation)
+        dropped_keys={normalize(row['keyword']) for row in dropped_by_saturation}
+        saturation_excluded_keys.update(dropped_keys)
+        accepted_keys.difference_update(dropped_keys)
         for row in dropped_by_saturation: by_key.pop(normalize(row['keyword']),None)
         active=list(by_key.values())
         eligible=sorted([r for r in rankable_rows if r['status']=='NEW' and r['action']=='NEW_PAGE' and r['score_valid']],key=lambda r:(-r['opportunity_score'],r['keyword']))
@@ -565,7 +569,11 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
         overlap_count=len(selected_keys & recent_seed_keys)
         category_counts=Counter(r['category'] for r in fresh); source_counts=Counter(s.get('source') or 'unknown' for s in selected)
         pct=lambda count,total: round(100*count/total,2) if total else 0.0
-        funnel.update({'novelty_passed':max(0,funnel['normalized_keywords']-funnel['db_duplicates_removed']-funnel['category_saturation_excluded']),
+        category_saturated_keys=(saturation_excluded_keys & normalized_seen)-accepted_keys
+        duplicate_keys=(database_duplicate_keys & normalized_seen)-accepted_keys-category_saturated_keys
+        funnel.update({'db_duplicates_removed':len(duplicate_keys),
+                       'category_saturation_excluded':len(category_saturated_keys),
+                       'novelty_passed':max(0,funnel['normalized_keywords']-len(duplicate_keys)-len(category_saturated_keys)),
                        'datalab_verified':getattr(client,'datalab_keywords_validated',0) if isinstance(getattr(client,'datalab_keywords_validated',0),(int,float)) else len(trends),
                        'naver_web_result_count_calls':getattr(client,'web_result_calls',0) if isinstance(getattr(client,'web_result_calls',0),(int,float)) else 0,
                        'score_valid_count':len(current_candidates),'winner_threshold_excluded':max(0,len(current_candidates)-len(winners)),
