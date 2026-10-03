@@ -962,3 +962,6 @@
 - **Verification:** focused camping/revenue/policy suite 67 passed; unittest 742 passed; full pytest 1,183 passed; content launch guard PASS; measurement validator PASS; `git diff --check` PASS. Fresh-generated artifacts include page scores, page performance, revenue opportunities and report. Local delivery still pending: no commit/push/PR or remote exact-head SEO QA yet. TASKS remains unchecked until remote gates pass.
 - **Publication:** additional public pages = 0. No public content, sitemap, hub, manifest, IndexNow, or protected page changes.
 - **Next:** re-fetch latest main, inspect final file scope and all generated diffs, verify the original dirty worktree checksum again, then commit/push and open a separate PR only if no drift/contract issue exists; leave it unmerged pending fresh exact-head SEO QA.
+
+## 2026-10-03 14:24 Keyword Hunter
+- Seeds: 40; New: 11; Rejected: 11; DB: 4322; Errors: 0; Top: none. Report: reports/keyword-hunter/2026-10-03-1424.md
