@@ -4,12 +4,21 @@
 
 ## P0 - Critical
 
-- [ ] P0 Arabic Locale Retire — `/ae/`
-  - 목적: `/ae/` locale의 현재 사이트 콘텐츠와 파생 인벤토리 의존성을 retire한다. JP First 50 및 다른 locale pruning은 제외한다.
+- [x] P0 Arabic Locale Retire — `/ae/`
+  - 완료: PR #31 regular merge `9e3911eeff26330e262653c43e7e115853d3493e`; final PR head `83219b52ff308347e3469b6e6f56e9a686eb8ee8`; exact-head CI run `37001453254` SUCCESS. Completed Log page 93에 기록됨.
   - 범위: Arabic HTML 63개 삭제, locale 전용 JS 2개 삭제, `ae/sitemap.xml` 삭제. Raw GA4/GSC snapshots와 non-Arabic HTML을 보존하고 compact `data/site-audit.json`을 약 16 MB 수준으로 유지한다.
   - 동기화: latest fetched `origin/main` `af341dc20cffcb7f85b59bd0483f9bdf58f35374`를 regular merge commit `3c6d690baf`로 통합했다. PR #30 Keyword Hunter/DataLab freshness changes와 2026-10-02 GA4/GSC refresh를 보존하고 raw measurement snapshots를 latest main과 byte-identical로 확인했다.
   - 검증: unittest 741, pytest 1,181; SEO QA new critical/warning 0; sitemap 46 leaf / 18,806 URLs / duplicate 0 / Arabic 0; broken links 276 (main 278); Keyword Hunter dry-run 0 API / 0 writes; launch guard PASS. Tracked tree 508,646,509 B (latest main 510,019,139 B; net -1,372,630 B); compact site audit 16,270,166 B.
-  - 상태: `WAITING_FOR_CURRENT_HEAD_CI`; PR #31 remains open/unmerged and this task stays in Active Queue. No JP First 50 or other locale pruning in this task.
+  - 상태: `ARABIC_PRUNING_CLOSED`. PR #31 병합과 exact-head CI가 완료됐으며 Arabic 결과는 Completed Log page 93에 보존한다.
+
+- [ ] P0 JP Travel First 50 Canary — PR #34
+  - 최신 base `138406881b086e53093e705dd6258dc7d3103699`; PR #34 base와 일치. Branch `codex/p0-jp-travel-canary-01`; 구현 commit `e0e61b1181a2e26e3ce028cd09a90b4cf7b14507`.
+  - First 50 gate: 49 HTML / 1,036,400 B와 JP sitemap 49 URL을 feature branch에서 제거. Malaysia Kuala Terengganu 1개는 score-invalid Keyword Hunter association으로 HOLD; direct-feed HOLD 4개와 protected WINNER 17개는 제외. Merge 전이므로 production 완료로 표시하지 않는다.
+  - Analytics: missing GA4/GSC rows는 `NO_ROW`이며 zero가 아니다. Raw historical GA4/GSC 및 current-main Keyword Hunter/DataLab data는 보존.
+  - Local QA: unittest 742, pytest 1,183, SEO QA new critical/warnings 0, sitemap 46 leaves / 18,757 URLs / 0 duplicates / 0 unknown, broken links 276 (no increase), Keyword Hunter dry-run 0 API / 0 writes, launch guard PASS, `git diff --check` PASS. Exact-head CI must match the final post-checkpoint commit.
+  - 상태: PR #34 OPEN / UNMERGED. No next cohort before merge. Next action: PR final main review only.
+
+
 
 - [x] P0 Support — Keyword Hunter DataLab freshness contract
   - 목적: 만료·미래·기준시각 누락 DataLab trend 값을 현재 검증 신호와 후보 점수로 오인하지 않도록 한다.
