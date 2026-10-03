@@ -1,5 +1,15 @@
 # PROJECT HISTORY
 
+## 2026-10-03 — JP Travel First 50 Canary — PR #34 OPEN
+
+- Rechecked the live GitHub `main` ref at `138406881b086e53093e705dd6258dc7d3103699`; PR #34 base matches it. The request's `55066a4fe6198ec1f51e1a81b3ed230e8e155ef9` is an earlier Keyword Hunter observation commit, and current `main` has advanced beyond it.
+- Final-gated the 50-row JP Travel canary against current main and current GA4/GSC snapshots: 49 exact allowlisted pages were removed from the feature branch and their 49 entries removed from `jp/report/travel/sitemap.xml`; `malaysia-kuala-terengganu.html` remains HOLD because of an unresolved score-invalid Keyword Hunter association. Four feed-dependent rows and 17 protected WINNER pages remain excluded. Missing GA4/GSC rows remain NO_ROW, not zero.
+- Implementation commit `e0e61b1181a2e26e3ce028cd09a90b4cf7b14507`; PR #34 is open and not merged. The 49 URLs are absent only from this review branch until merge. Raw historical GA4/GSC snapshots and latest-main Keyword Hunter/DataLab state are preserved.
+- Scope/size: 49 HTML / 1,036,400 B and 49 JP sitemap URLs removed; no non-JP HTML change; current compact `data/site-audit.json` is 16,224,376 B; tracked tree delta from current main is -1,306,892 B. Four non-canary feed holds and all 17 protected winners remain.
+- Local QA: unittest 742; pytest 1,183; SEO QA 0 new criticals / 0 new warnings; sitemap 46 leaves / 18,757 URLs / 0 duplicates / 0 unknown; broken internal links 276 (no increase); Keyword Hunter dry-run 0 API calls / 0 writes; launch guard PASS; `git diff --check` PASS. Full audit remains transient under `/tmp`.
+- GitHub Actions run `37085196590` was triggered for the initial implementation SHA and is not final evidence after this checkpoint update. Check the exact final PR HEAD run before marking `READY_FOR_MAIN_REVIEW`. No merge and no next cohort; next action is PR final main review only.
+
+
 ## 2026-10-02 — P0 Arabic Locale Retire and Site-Audit Size Fix — PR #31 OPEN
 
 - 기준 `origin/main` `83346ac4441b19b1764816c75a099c49ac35c85e` 대비 Arabic `/ae/` 63 HTML, locale 전용 JS 2개, sitemap 1개(총 66 files / 1,209,448 bytes)를 retire했다. Korean/English/Japanese HTML 및 raw GA4/GSC snapshots는 변경하지 않았다.
