@@ -1021,3 +1021,6 @@
 
 ## 2026-10-04 01:26 Keyword Hunter
 - Seeds: 40; New: 0; Rejected: 0; DB: 4342; Errors: 1; Top: none. Report: reports/keyword-hunter/2026-10-04-0126.md
+
+## 2026-10-04 06:22 Keyword Hunter
+- Seeds: 40; New: 10; Rejected: 5; DB: 4352; Errors: 0; Top: 중고차추천. Report: reports/keyword-hunter/2026-10-04-0622.md
