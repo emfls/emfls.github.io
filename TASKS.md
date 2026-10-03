@@ -4,6 +4,14 @@
 
 ## P0 - Critical
 
+- [ ] P0 Revenue Evidence Upgrade — GSC query-level evidence for current opportunities
+  - 목적: exact-period Search Console query evidence를 현재 `OPPORTUNITY` URL별 sidecar에 수집해 snippet/query mismatch 검토 근거를 만든다. 기존 page-level snapshot은 유지하고 콘텐츠는 수정하지 않는다.
+  - 최신 기준: `origin/main` `ffe6c429a80cabca14ff9231af9cb2c86a1a33a6`; GSC `2026-09-03..2026-09-30`; complete page-performance inventory에서 OPPORTUNITY 34개, revenue summary count와 일치.
+  - 로컬 구현: per-URL exact page filter/query collector, explicit no-query status, API failure 시 last-good artifact 보존, isolated `opportunity-query` workflow mode 및 회귀 테스트. 수정 후 focused 44, unittest 742, pytest 1,193, measurement validator, content launch guard, `git diff --check` PASS.
+  - 실제 수집: GSC Collection run `37112076773` SUCCESS. `data/performance/gsc-opportunity-queries-latest.json`은 34 URL, 12 URL에 query row, 22 `NO_QUERY_ROWS_RETURNED`, 총 110 query rows(393 impressions / 1 click)를 기록한다. Page-level 합계 571 impressions / 7 clicks와 query subtotal 차이는 privacy/top-row filtering으로 가능한 부분 응답이며 불일치 오류나 누락 0으로 해석하지 않는다.
+  - 근거 판정: `YMYL_HOLD` 11, `NO_MISMATCH` 2(URL Encoder·영문 MBTI), `INSUFFICIENT_QUERY_EVIDENCE` 21, `ACTIONABLE_CTR` 0. URL Encoder 실제 query는 encode/decode 의도와 title/meta/H1이 맞고, MBTI query도 현재 16-type quiz 의도와 맞지만 평균 순위 75.18이어서 snippet 원인으로 귀속하지 않았다. 낮은 표본/미반환 query는 수요 0이 아니다. AdSense URL revenue는 계속 `NOT_CONNECTED`; GA4 `totalAdRevenue`를 AdSense 수익으로 사용하지 않았다. 페이지 변경 0, Revenue `NO_CONCLUSION`.
+  - PR/CI: PR #37은 open. 최초 exact-head SEO QA `37112666746`은 마지막 full pytest에서 dry-run 테스트 1건 실패, 나머지 1,192 passed; 원인은 QA가 먼저 revenue artifact를 재생성해 `OPPORTUNITY=0`인 run에서 CLI가 정확히 `plannedUrls=0`을 반환했지만 테스트가 이전 artifact의 고정값 34를 요구한 것. production code는 변경하지 않고 dry-run test를 안정적인 temporary inventory fixture(2 current opportunities)로 분리했다. 수정 후 focused 44, unittest 742, pytest 1,193 PASS. Corrective test commit을 같은 PR branch에 push한 뒤 새 exact-head SEO QA를 확인할 것; PR merge 금지.
+
 - [x] P0 Arabic Locale Retire — `/ae/`
   - 완료: PR #31 regular merge `9e3911eeff26330e262653c43e7e115853d3493e`; final PR head `83219b52ff308347e3469b6e6f56e9a686eb8ee8`; exact-head CI run `37001453254` SUCCESS. Completed Log page 93에 기록됨.
   - 범위: Arabic HTML 63개 삭제, locale 전용 JS 2개 삭제, `ae/sitemap.xml` 삭제. Raw GA4/GSC snapshots와 non-Arabic HTML을 보존하고 compact `data/site-audit.json`을 약 16 MB 수준으로 유지한다.
@@ -18,6 +26,11 @@
   - QA: unittest 743; pytest 1,189; SEO QA 신규 critical/warning 0 (767/420); sitemap 46 leaves / 18,757 URLs / duplicate 0 / unknown 0; broken links 276 (latest main 276); Keyword Hunter dry-run 0 API / 0 writes, tracked worktree unchanged; launch guard PASS; `git diff --check` PASS. Compact site audit 16,224,376 B; full audit는 `/tmp`에 유지한다.
   - 크기: latest main tracked tree 508,832,738 B; PR tree 507,538,309 B; net -1,294,429 B; 49 HTML 1,036,400 B. 수치는 2026-10-03 final documentation closure 전 HEAD `826c48130bfc0f52027ed93501a0098a99522859` 기준이다.
   - 상태: latest main merge 및 full QA PASS. PR #34 OPEN / UNMERGED / mergeable. Exact-head CI 결과와 최종 현재 HEAD 및 `READY_FOR_MAIN_REVIEW` 상태는 Notion page 98에 기록하며, project description은 알려진 GitHub API 403으로 stale 상태라 재시도하지 않는다. PR은 merge하지 않고 다음은 PR #34 final main review only다.
+
+- [ ] P0 JP Travel First 50 Canary — PR #34
+  - 동기화 복구: PR branch `0438379277b2ce69724222c959d9eb6380f0b198`에 최신 fetched `origin/main` `bdf76120dac725fca0ac955929626c5378648055`를 regular merge 중이다. 문서 충돌 2건을 의미에 맞게 해결하고 latest-main PR #37 GSC workflow/collector/sidecar/tests를 보존했다. merge commit 후 full QA와 exact-head CI는 아직 pending이다.
+  - 범위: 기존 49 JP Travel HTML / 1,036,400 B 및 sitemap 49 entries 삭제만 유지한다. Protected / Keep Archive 17개와 별도 dependency HOLD 5개를 보존하며, 추가 canary 삭제는 이번 단계에 포함하지 않는다.
+  - 상태: `CURRENT_MAIN_RESYNC_IN_PROGRESS`; PR #34 OPEN / UNMERGED. 기존 CI는 새 merge head의 증거가 아니다. latest-main regression, full QA, exact-head Actions, post-merge verification을 순서대로 완료한 뒤에만 closeout/Notion 업데이트를 진행한다.
 
 - [x] P0 Support — Keyword Hunter DataLab freshness contract
   - 목적: 만료·미래·기준시각 누락 DataLab trend 값을 현재 검증 신호와 후보 점수로 오인하지 않도록 한다.
