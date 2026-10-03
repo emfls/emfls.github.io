@@ -12,12 +12,12 @@
   - 상태: `ARABIC_PRUNING_CLOSED`. PR #31 병합과 exact-head CI가 완료됐으며 Arabic 결과는 Completed Log page 93에 보존한다.
 
 - [ ] P0 JP Travel First 50 Canary — PR #34
-  - 동기화: latest GitHub `main` `a0f5a38303d18e7661b5b97f429d7a99f6891774`의 GA4 refresh를 기존 branch에 일반 merge로 통합 중이다. 3개 파생 파일 충돌은 latest-main 입력과 49개 삭제 트리를 기준으로 공식 생성기로 재생성했다. PR #36 closure 및 latest Keyword Hunter/DataLab state를 보존했다.
+  - 동기화: 확인된 최신 `origin/main` `a0f5a38303d18e7661b5b97f429d7a99f6891774`를 기존 branch에 regular merge commit `e5fa64ceb350bdc6ec29a01f13b4dcd5349bdc55`로 통합했다. `data/page-performance.json`, `data/revenue-opportunities.json`, `reports/revenue-growth-report.md`의 3개 파생 충돌은 최신 main 입력과 49개 삭제 트리를 기준으로 공식 생성기로 재생성했다. PR #36 closure 및 latest Keyword Hunter/DataLab state를 보존했다.
   - 범위: 49 HTML / 1,036,400 B와 JP Travel sitemap 49 entries 삭제. Malaysia Keyword Hunter association 1개 및 별도 direct-feed HOLD 4개, Protected / Keep Archive의 17개 JP URL은 제외한다. 아직 production-complete로 표시하지 않는다.
   - 최신 증거: 보호 아카이브 17개 중 latest revenue 산출물의 current JP Travel WINNER는 15개다. `/greece-katerini.html`과 `/korea-naju.html`은 latest snapshot에 현재 URL 행이 없어도 계속 보호한다. 삭제 후보와 protected set 교집합 0, GA4/GSC explicit rows 0/49이며 이를 zero로 해석하지 않는다. Raw snapshots는 latest main과 byte-identical이다.
-  - QA: unittest 743; pytest 1,189; SEO QA 신규 critical/warning 0 (현재 767/420); sitemap 46 leaves / 18,757 URLs / duplicate 0 / unknown 0; broken links 276 (latest main 276); Keyword Hunter dry-run 0 API / 0 writes, tracked worktree unchanged. Committed merge tree에서 launch guard와 `git diff --check` 최종 확인한다. Compact site audit 16,224,376 B; full audit는 `/tmp`에 유지한다.
-  - 크기: latest main tracked tree 508,833,978 B; PR tree including checkpoint 507,538,756 B; net -1,295,222 B; 49 HTML 1,036,400 B.
-  - 상태: PR #34 OPEN / UNMERGED. Latest-main merge와 전체 local QA를 완료했으며, merge gate는 현재 PR HEAD에서의 Actions SUCCESS와 Notion checkpoint다. GitHub PR 설명은 앞선 API 403으로 갱신하지 않으며 Notion에 stale 상태를 기록한다. 다음 작업은 PR #34 final main review만이며 다른 locale/canary는 시작하지 않는다.
+  - QA: unittest 743; pytest 1,189; SEO QA 신규 critical/warning 0 (767/420); sitemap 46 leaves / 18,757 URLs / duplicate 0 / unknown 0; broken links 276 (latest main 276); Keyword Hunter dry-run 0 API / 0 writes, tracked worktree unchanged. Merge commit tree에서 launch guard PASS 및 `git diff --check` PASS. Compact site audit 16,224,376 B; full audit는 `/tmp`에 유지한다.
+  - 크기: latest main tracked tree 508,833,978 B; PR tree 507,538,756 B; net -1,295,222 B; 49 HTML 1,036,400 B. 위 tree 측정은 후속 checkpoint 문서 수정 전 기준이며 문서 commit 후 다시 계산한다.
+  - 상태: PR #34 OPEN / UNMERGED. 로컬 merge 및 full QA는 완료했지만 현재 환경에서 GitHub DNS 조회가 실패해 원격 main 재확인과 push를 아직 완료하지 못했다. final PR HEAD에서 fresh Actions SUCCESS 및 Notion 갱신 전까지 `READY_FOR_MAIN_REVIEW`가 아니다. PR 설명은 알려진 GitHub API 403으로 stale 상태이며 재시도하지 않는다. 다음 단계는 원격 freshness 확인, 정상 push, exact-head CI, Notion checkpoint 갱신이며 PR은 merge하지 않는다.
 
 - [x] P0 Support — Keyword Hunter DataLab freshness contract
   - 목적: 만료·미래·기준시각 누락 DataLab trend 값을 현재 검증 신호와 후보 점수로 오인하지 않도록 한다.
