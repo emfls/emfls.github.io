@@ -12,12 +12,19 @@
   - 근거 판정: `YMYL_HOLD` 11, `NO_MISMATCH` 2(URL Encoder·영문 MBTI), `INSUFFICIENT_QUERY_EVIDENCE` 21, `ACTIONABLE_CTR` 0. URL Encoder 실제 query는 encode/decode 의도와 title/meta/H1이 맞고, MBTI query도 현재 16-type quiz 의도와 맞지만 평균 순위 75.18이어서 snippet 원인으로 귀속하지 않았다. 낮은 표본/미반환 query는 수요 0이 아니다. AdSense URL revenue는 계속 `NOT_CONNECTED`; GA4 `totalAdRevenue`를 AdSense 수익으로 사용하지 않았다. 페이지 변경 0, Revenue `NO_CONCLUSION`.
   - PR/CI: PR #37은 open. 최초 exact-head SEO QA `37112666746`은 마지막 full pytest에서 dry-run 테스트 1건 실패, 나머지 1,192 passed; 원인은 QA가 먼저 revenue artifact를 재생성해 `OPPORTUNITY=0`인 run에서 CLI가 정확히 `plannedUrls=0`을 반환했지만 테스트가 이전 artifact의 고정값 34를 요구한 것. production code는 변경하지 않고 dry-run test를 안정적인 temporary inventory fixture(2 current opportunities)로 분리했다. 수정 후 focused 44, unittest 742, pytest 1,193 PASS. Corrective test commit을 같은 PR branch에 push한 뒤 새 exact-head SEO QA를 확인할 것; PR merge 금지.
 
-- [ ] P0 Arabic Locale Retire — `/ae/`
-  - 목적: `/ae/` locale의 현재 사이트 콘텐츠와 파생 인벤토리 의존성을 retire한다. JP First 50 및 다른 locale pruning은 제외한다.
+- [x] P0 Arabic Locale Retire — `/ae/`
+  - 완료: PR #31 regular merge `9e3911eeff26330e262653c43e7e115853d3493e`; final PR head `83219b52ff308347e3469b6e6f56e9a686eb8ee8`; exact-head CI run `37001453254` SUCCESS. Completed Log page 93에 기록됨.
   - 범위: Arabic HTML 63개 삭제, locale 전용 JS 2개 삭제, `ae/sitemap.xml` 삭제. Raw GA4/GSC snapshots와 non-Arabic HTML을 보존하고 compact `data/site-audit.json`을 약 16 MB 수준으로 유지한다.
   - 동기화: latest fetched `origin/main` `af341dc20cffcb7f85b59bd0483f9bdf58f35374`를 regular merge commit `3c6d690baf`로 통합했다. PR #30 Keyword Hunter/DataLab freshness changes와 2026-10-02 GA4/GSC refresh를 보존하고 raw measurement snapshots를 latest main과 byte-identical로 확인했다.
   - 검증: unittest 741, pytest 1,181; SEO QA new critical/warning 0; sitemap 46 leaf / 18,806 URLs / duplicate 0 / Arabic 0; broken links 276 (main 278); Keyword Hunter dry-run 0 API / 0 writes; launch guard PASS. Tracked tree 508,646,509 B (latest main 510,019,139 B; net -1,372,630 B); compact site audit 16,270,166 B.
-  - 상태: `WAITING_FOR_CURRENT_HEAD_CI`; PR #31 remains open/unmerged and this task stays in Active Queue. No JP First 50 or other locale pruning in this task.
+  - 상태: `ARABIC_PRUNING_CLOSED`. PR #31 병합과 exact-head CI가 완료됐으며 Arabic 결과는 Completed Log page 93에 보존한다.
+
+- [ ] P0 JP Travel First 50 Canary — PR #34
+  - 동기화: 이전 PR head `0438379277b2ce69724222c959d9eb6380f0b198`와 latest fetched `origin/main` `bdf76120dac725fca0ac955929626c5378648055`를 regular merge commit `3d0f1d3a77e5764152beb2b245dccf9dcf180808`로 통합했다. 문서 conflict 2건은 의미에 맞게 해결했고 PR #37 GSC workflow/collector/sidecar/tests는 latest main과 byte-identical이다.
+  - 범위: 49 JP Travel HTML / 1,036,400 B 삭제 및 sitemap 49 entries 제거만. non-JP HTML diff 0. 현재 JP WINNER 15개와 별도 protected no-row 2개는 모두 보존했다. 추가 canary 삭제 없음.
+  - 검증: unittest 743; pytest 1,199; SEO QA 신규 critical/warning 0 (767/420); sitemap 46 leaf / 18,757 URLs / duplicate 0 / unknown 0; broken links 276; Keyword Hunter dry-run 0 API / 0 DataLab / 0 writes; launch guard PASS; `git diff --check` PASS. Compact site audit 16,224,376 B; full audit 99,621,796 B at `/tmp`.
+  - 크기 (sync merge commit): latest main tracked tree 508,890,557 B; PR tree 507,598,055 B; net -1,292,502 B. Raw historical GA4/GSC snapshots are unchanged from latest main.
+  - 상태: `READY_FOR_EXACT_HEAD_CI`; PR #34 OPEN / UNMERGED. Push the regular merge plus this checkpoint, require new exact-head Actions SUCCESS, then perform regular merge and post-merge Notion/JP canary closeout. No new deletion batch.
 
 - [x] P0 Support — Keyword Hunter DataLab freshness contract
   - 목적: 만료·미래·기준시각 누락 DataLab trend 값을 현재 검증 신호와 후보 점수로 오인하지 않도록 한다.

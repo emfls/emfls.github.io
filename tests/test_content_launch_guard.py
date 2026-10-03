@@ -1,7 +1,11 @@
 import json
 from pathlib import Path
 
-from scripts.content_launch_guard import _git_changes, validate_launch
+from scripts.content_launch_guard import (
+    APPROVED_JP_TRAVEL_CANARY_DELETIONS,
+    _git_changes,
+    validate_launch,
+)
 
 
 def write_json(path, payload):
@@ -40,6 +44,27 @@ def test_guard_allows_authorized_arabic_retirement_only(tmp_path):
         [("D", "ae/util/example/index.html"), ("D", "kor/report/example.html")],
     )
     assert "DELETION_NOT_ALLOWED" in errors
+
+
+def test_guard_allows_only_exact_jp_travel_canary_deletions(tmp_path):
+    setup_data(tmp_path)
+    assert len(APPROVED_JP_TRAVEL_CANARY_DELETIONS) == 49
+    assert "jp/report/travel/malaysia-kuala-terengganu.html" not in APPROVED_JP_TRAVEL_CANARY_DELETIONS
+
+    allowed = [("D", path) for path in sorted(APPROVED_JP_TRAVEL_CANARY_DELETIONS)]
+    assert validate_launch(tmp_path, manifest([]), allowed) == []
+
+    for path in (
+        "jp/report/travel/malaysia-kuala-terengganu.html",
+        "jp/report/travel/unreviewed.html",
+        "kor/report/travel/unreviewed.html",
+    ):
+        assert "DELETION_NOT_ALLOWED" in validate_launch(tmp_path, manifest([]), [("D", path)])
+    assert "DELETION_NOT_ALLOWED" in validate_launch(
+        tmp_path,
+        manifest([]),
+        [("R100", "jp/report/travel/bangladesh-satkhira.html")],
+    )
 
 
 def test_guard_rejects_protected_pages_and_monetization_code(tmp_path):

@@ -497,3 +497,112 @@ def test_url_identity_preserves_case_sensitive_paths():
 def test_url_identity_does_not_collapse_arbitrary_external_hosts():
     result=select_launch_candidate([row(keyword="새 후보",suggested_url="/kor/column/example/")],existing_urls={"https://other.example/kor/column/example/"})
     assert result["queue"] and result["excluded"]["duplicate_url"] == 0
+
+# These real-master checks force otherwise-eligible fixtures through keyword policy gates, independent of volatile freshness scores.
+
+def launchable_master_row(candidate, suggested_url):
+    """Keep policy tests independent of the volatile DataLab freshness snapshot."""
+    return {
+        **candidate,
+        "score_valid": "True",
+        "opportunity_score": "1",
+        "action": "NEW_PAGE",
+        "status": "NEW",
+        "overlap": "NO_OVERLAP",
+        "suggested_url": suggested_url,
+    }
+
+def test_master_high_risk_keywords_fail_closed_before_queue_selection():
+    master_path = Path(__file__).resolve().parents[1] / "data" / "keywords_master.csv"
+    with master_path.open(encoding="utf-8-sig", newline="") as source:
+        rows = {item["keyword"]: item for item in csv.DictReader(source)}
+
+    for keyword in ("회생신청", "호주워홀비자신청", "호주워홀신청", "못받은돈받아드립니다", "휴가신청서양식", "노무사상담비용", "노무사비용"):
+        candidate = launchable_master_row(rows[keyword], f"/kor/guide/master-{keyword}.html")
+        result = prepare_queue(
+            [candidate],
+            existing_urls=set(),
+            published_keywords=set(),
+            daily_limit=1,
+            selected_at="2026-09-30T15:50:00+09:00",
+            editorial_decisions=[],
+            published_manifest={},
+        )
+        assert result["queue"] == [], keyword
+        assert result["excluded"]["ymyl"] == 1, keyword
+
+def test_master_vehicle_transfer_registration_application_is_blocked_as_legal_ymyl():
+    master_path = Path(__file__).resolve().parents[1] / "data" / "keywords_master.csv"
+    with master_path.open(encoding="utf-8-sig", newline="") as source:
+        candidate = next(item for item in csv.DictReader(source) if item["keyword"] == "이전등록신청서")
+
+    candidate = launchable_master_row(candidate, "/kor/guide/vehicle/transfer-registration.html")
+
+    result = prepare_queue(
+        [candidate],
+        existing_urls=set(),
+        published_keywords=set(),
+        daily_limit=1,
+        selected_at="2026-09-30T15:50:00+09:00",
+        editorial_decisions=[],
+        published_manifest={},
+    )
+    assert result["queue"] == []
+    assert result["excluded"]["ymyl"] == 1
+
+def test_master_consumer_and_vehicle_procedure_keywords_are_blocked_as_legal_ymyl():
+    keywords = (
+        "피해구제신청",
+        "자동차등록비용",
+        "자동차구조변경비용",
+        "자동차종합검사비용",
+        "자동차정기검사비용",
+        "자동차검사대행비용",
+        "폐차서류",
+        "자동차폐차서류",
+        "폐차방법",
+        "자동차폐차방법",
+        "폐차하는법",
+        "자동차매도서류",
+    )
+    master_path = Path(__file__).resolve().parents[1] / "data" / "keywords_master.csv"
+    with master_path.open(encoding="utf-8-sig", newline="") as source:
+        rows = {item["keyword"]: item for item in csv.DictReader(source)}
+
+    assert set(keywords) <= rows.keys()
+    failures = []
+    for keyword in keywords:
+        candidate = launchable_master_row(rows[keyword], f"/kor/guide/master-{keyword}.html")
+
+        result = prepare_queue(
+            [candidate],
+            existing_urls=set(),
+            published_keywords=set(),
+            daily_limit=1,
+            selected_at="2026-09-30T15:50:00+09:00",
+            editorial_decisions=[],
+            published_manifest={},
+        )
+        if result["queue"] or result["excluded"]["ymyl"] != 1:
+            failures.append((keyword, result["queue"], result["excluded"]))
+
+    assert failures == []
+
+def test_master_safe_controls_remain_queue_eligible():
+    master_path = Path(__file__).resolve().parents[1] / "data" / "keywords_master.csv"
+    with master_path.open(encoding="utf-8-sig", newline="") as source:
+        rows = {item["keyword"]: item for item in csv.DictReader(source)}
+
+    for keyword in ("근무일수계산기", "글자수계산기", "지문인식출퇴근기록기", "근무일수계산"):
+        candidate = launchable_master_row(rows[keyword], f"/kor/tool/master-{keyword}.html")
+        result = prepare_queue(
+            [candidate],
+            existing_urls=set(),
+            published_keywords=set(),
+            daily_limit=1,
+            selected_at="2026-09-30T15:50:00+09:00",
+            editorial_decisions=[],
+            published_manifest={},
+        )
+        assert [item["keyword"] for item in result["queue"]] == [keyword]
+        assert result["excluded"]["ymyl"] == 0
