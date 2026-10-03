@@ -963,6 +963,9 @@
 - **Publication:** additional public pages = 0. No public content, sitemap, hub, manifest, IndexNow, or protected page changes.
 - **Next:** re-fetch latest main, inspect final file scope and all generated diffs, verify the original dirty worktree checksum again, then commit/push and open a separate PR only if no drift/contract issue exists; leave it unmerged pending fresh exact-head SEO QA.
 
+## 2026-10-03 14:24 Keyword Hunter
+- Seeds: 40; New: 11; Rejected: 11; DB: 4322; Errors: 0; Top: none. Report: reports/keyword-hunter/2026-10-03-1424.md
+
 ## 2026-10-03 P0 Revenue Growth — Camping CTR closure FINAL
 - PR #35 normal merged; merge SHA `0156625d002654271046b20b7c874ea328d071d2`.
 - Post-merge SEO QA `37095932102` completed SUCCESS, including launch guard, SEO regression, Keyword Hunter validation, unittest, and full pytest.
