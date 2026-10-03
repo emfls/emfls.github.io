@@ -173,15 +173,23 @@ def test_api_error_preserves_last_good_sidecar(tmp_path):
 
 def test_dry_run_needs_no_secret_and_does_not_write_artifact(tmp_path):
     output = tmp_path / "should-not-exist.json"
+    page_performance = tmp_path / "page-performance.json"
+    opportunity_summary = tmp_path / "revenue-opportunities.json"
+    page_performance.write_text(json.dumps({"pages": [
+        _opportunity("/util/a/"), _opportunity("/util/b/"), _opportunity("/util/winner/", "WINNER"),
+    ]}), encoding="utf-8")
+    opportunity_summary.write_text(json.dumps(_summary(2)), encoding="utf-8")
     env = os.environ.copy()
     env.pop("GOOGLE_SERVICE_ACCOUNT_JSON_B64", None)
     env.pop("GA4_SERVICE_ACCOUNT_JSON_B64", None)
     result = subprocess.run(
         [sys.executable, str(ROOT / "scripts/collect_gsc_opportunity_query_snapshot.py"),
-         "--dry-run", "--output", str(output)], cwd=ROOT, env=env, capture_output=True, text=True, check=False,
+         "--dry-run", "--page-performance", str(page_performance),
+         "--revenue-opportunities", str(opportunity_summary),
+         "--output", str(output)], cwd=ROOT, env=env, capture_output=True, text=True, check=False,
     )
     assert result.returncode == 0, result.stderr
-    assert '"plannedUrls": 34' in result.stdout
+    assert json.loads(result.stdout)["plannedUrls"] == 2
     assert not output.exists()
     assert "private_key" not in result.stdout
 
