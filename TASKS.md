@@ -51,11 +51,10 @@
   - 범위: `kor/report/parenting/parenting-subsidy-2026.html`의 기존 급여 안내 단락만 갱신했다. 당시 해당 repair는 제목·메타·허브·sitemap·광고/분석 코드를 변경하지 않았다. 신청서 가이드는 별도 P0 #26으로 이후 공개됐다.
   - 완료/배포: 후속 YMYL 검토·전달 완료 후 PR #20 normal merge, merge SHA `8d71c7d2cc1fef374443c26b0108bb2c55a3b59f`. SEO QA `36545079003`, Pages `36545078240`, IndexNow `36545078922` 모두 SUCCESS; 2026-10-01 `https://emfls.github.io/kor/report/parenting/parenting-subsidy-2026.html` HTTP 200. 신청서 가이드는 별도 #26 공개 작업 기록을 참조.
 
-- [ ] P0 Revenue Growth — 세 캠핑 CTR 실험의 비교 불가 수동 종료
+- [x] P0 Revenue Growth — 세 캠핑 CTR 실험의 비교 불가 수동 종료
   - 목적: Nonsan/Cheorwon/Uljin 실험을 없는 matched-period Naver 수치로 판정하지 않고 terminal state로 닫아 실험 slot을 해제한다.
-  - 현재 구현: 최신 main `255e4b543ec9c4d82988a6ad6fa5dc0541ccef4b` 기준 세 레코드를 `INCONCLUSIVE / COMPARABLE_MATCHED_PERIOD_NAVER_DATA_UNAVAILABLE`로 갱신했고, `before` 보존·`after` 미생성을 확인했다. selector active slots 3→0, 가용 slots 0→3; 최신 revenue artifact는 WINNER 1,568 / OPPORTUNITY 35 / EXPERIMENT 0이다.
-  - 범위 보호: 세 대상 HTML, protected pages, sitemap/hub/manifest/IndexNow 변경 없음. 최대 3개 selector 제안을 검토했으며 actionable content edit는 0; Revenue `NO_CONCLUSION`, 추가 public pages 0.
-  - Local gates PASS: focused 67, unittest 742, pytest 1,183, measurement validator 19,027 URLs, launch guard, `git diff --check`. Clean branch commit/push/PR 및 fresh exact-head SEO QA 완료 후에만 이 항목을 `[x]`로 바꾼다.
+  - 최종 전달: PR #35 normal merge, merge SHA `0156625d002654271046b20b7c874ea328d071d2`; post-merge SEO QA `37095932102` SUCCESS. 세 실험은 `INCONCLUSIVE / COMPARABLE_MATCHED_PERIOD_NAVER_DATA_UNAVAILABLE`로 종결했고, active experiments 3→0 및 selector capacity 0→3을 확인했다.
+  - 범위/결과: 실제 콘텐츠 수정 0, 추가 공개 페이지 0. 대상 HTML·protected pages·sitemap/hub/manifest/IndexNow 변경 없음. matched-period Naver 값을 만들지 않았으며 Revenue는 `NO_CONCLUSION`.
 
 ## P1 - High
 
