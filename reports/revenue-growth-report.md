@@ -6,7 +6,7 @@
 - 28d Daily Average: N/A
 - Indexed Pages: 18,978
 - Revenue per Indexed Page: N/A
-- Views per User: N/A
+- Views per User: 1.33
 - WINNER: 1568
 - OPPORTUNITY: 35
 - EXPERIMENT: 0
@@ -135,7 +135,7 @@
 
 ## 다음 콘텐츠 실험 후보
 
-- 0페이지 (최대 3)
+- 3페이지 (최대 3)
 
 ## 이번 실행 실제 콘텐츠 수정
 

@@ -11,6 +11,76 @@ def write_json(path, payload):
 
 
 class RevenueGrowthIntegrationTest(unittest.TestCase):
+    def test_terminal_inconclusive_camping_experiments_release_selector_slots(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            paths = {
+                name: root / f"{name}.json"
+                for name in ("scores", "audit", "performance", "experiments", "history")
+            }
+            url = "/util/verified-search-tool.html"
+            period = {"start": "2026-09-02", "end": "2026-09-29"}
+            write_json(paths["scores"], {"pages": [{"url": url, "score": 75, "type": "UTILITY"}]})
+            write_json(paths["audit"], {"pages": [{"url": url, "indexable": True}]})
+            write_json(paths["performance"], {
+                "site": {},
+                "pages": [{
+                    "url": url,
+                    "google": {
+                        "clicks": 5,
+                        "impressions": 100,
+                        "ctr": 0.05,
+                        "position": 10,
+                        "period": period,
+                        "status": "VERIFIED",
+                    },
+                }],
+            })
+            write_json(paths["history"], {"pages": []})
+
+            def registry(status, result):
+                return {
+                    "experiments": [
+                        {
+                            "experiment_id": f"EXP-CAMP-{name.upper()}-CTR-20260901",
+                            "url": f"/kor/report/camp/{name}.html",
+                            "status": status,
+                            "result": result,
+                        }
+                        for name in ("nonsan", "cheorwon", "uljin")
+                    ]
+                }
+
+            common = {
+                "page_scores_path": paths["scores"],
+                "audit_path": paths["audit"],
+                "performance_path": paths["performance"],
+                "experiments_path": paths["experiments"],
+                "optimization_history_path": paths["history"],
+                "as_of": "2026-09-30",
+            }
+            write_json(paths["experiments"], registry("OBSERVING", None))
+            _, observing = run_revenue_growth(
+                **common,
+                page_output=root / "observing-pages.json",
+                opportunity_output=root / "observing-opportunities.json",
+                report_output=root / "observing-report.md",
+            )
+            self.assertEqual(observing["selectedImprovements"], [])
+            self.assertEqual(sum(row["status"] == "OBSERVING" for row in observing["activeExperiments"]), 3)
+
+            write_json(paths["experiments"], registry("INCONCLUSIVE", "INCONCLUSIVE"))
+            pages, closed = run_revenue_growth(
+                **common,
+                page_output=root / "closed-pages.json",
+                opportunity_output=root / "closed-opportunities.json",
+                report_output=root / "closed-report.md",
+            )
+            self.assertEqual(sum(row["status"] == "OBSERVING" for row in closed["activeExperiments"]), 0)
+            self.assertEqual([row["url"] for row in closed["selectedImprovements"]], [url])
+            self.assertIsNone(pages["pages"][0]["ga4"]["revenue"])
+            self.assertEqual(pages["pages"][0]["ga4"]["status"], "NOT_CONNECTED")
+
     def test_ga4_index_alias_rows_aggregate_additive_metrics_without_summing_users(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

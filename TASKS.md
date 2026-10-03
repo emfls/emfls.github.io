@@ -12,13 +12,11 @@
   - 상태: `ARABIC_PRUNING_CLOSED`. PR #31 병합과 exact-head CI가 완료됐으며 Arabic 결과는 Completed Log page 93에 보존한다.
 
 - [ ] P0 JP Travel First 50 Canary — PR #34
-  - 최신 base `138406881b086e53093e705dd6258dc7d3103699`; PR #34 base와 일치. Branch `codex/p0-jp-travel-canary-01`; 구현 commit `e0e61b1181a2e26e3ce028cd09a90b4cf7b14507`.
-  - First 50 gate: 49 HTML / 1,036,400 B와 JP sitemap 49 URL을 feature branch에서 제거. Malaysia Kuala Terengganu 1개는 score-invalid Keyword Hunter association으로 HOLD; direct-feed HOLD 4개와 protected WINNER 17개는 제외. Merge 전이므로 production 완료로 표시하지 않는다.
-  - Analytics: missing GA4/GSC rows는 `NO_ROW`이며 zero가 아니다. Raw historical GA4/GSC 및 current-main Keyword Hunter/DataLab data는 보존.
-  - Local QA: unittest 742, pytest 1,183, SEO QA new critical/warnings 0, sitemap 46 leaves / 18,757 URLs / 0 duplicates / 0 unknown, broken links 276 (no increase), Keyword Hunter dry-run 0 API / 0 writes, launch guard PASS, `git diff --check` PASS. Exact-head CI must match the final post-checkpoint commit.
-  - 상태: PR #34 OPEN / UNMERGED. No next cohort before merge. Next action: PR final main review only.
-
-
+  - 동기화: 최신 GitHub `main` `0156625d002654271046b20b7c874ea328d071d2`까지 기존 branch `codex/p0-jp-travel-canary-01`에 일반 merge로 반영했다. PR #35의 세 camping experiment `INCONCLUSIVE` 기록과 Keyword Hunter/DataLab current state를 보존했다.
+  - 범위: 49 HTML / 1,036,400 B와 JP Travel sitemap 49 entries 삭제. Malaysia Keyword Hunter association 1개 및 별도 direct-feed HOLD 4개, protected JP Travel WINNER 17개는 제외한다. 아직 production-complete로 표시하지 않는다.
+  - 최신 증거: current protected set 1,568 중 JP Travel 17, deletion intersection 0. 삭제 후보의 명시 GA4/GSC rows 0/49이며 이를 zero로 해석하지 않는다. raw snapshots는 latest main과 byte-identical이다. 18,978-row page-performance/page-score inventories에서 삭제 후보 URL은 제거됐다.
+  - QA: unittest 743; pytest 1,189; SEO QA 신규 critical/warning 0; sitemap 46 leaves / 18,757 URLs / duplicate 0 / unknown 0; broken links 276 (latest main 276); Keyword Hunter dry-run 0 API / 0 writes. Compact site audit 16,224,376 B; full audit는 `/tmp`에 유지한다.
+  - 상태: PR #34 OPEN / UNMERGED. 최종 committed tree에서 launch guard와 `git diff --check`를 확인한 뒤 normal push하고 exact final HEAD Actions SUCCESS를 기다린다. 다음 작업은 PR #34 final main review만이며 다른 locale/canary는 시작하지 않는다.
 
 - [x] P0 Support — Keyword Hunter DataLab freshness contract
   - 목적: 만료·미래·기준시각 누락 DataLab trend 값을 현재 검증 신호와 후보 점수로 오인하지 않도록 한다.
@@ -59,6 +57,12 @@
 - [x] P0 Safety — 기존 육아휴직·출산휴가 급여 안내의 YMYL 정확성 보정
   - 범위: `kor/report/parenting/parenting-subsidy-2026.html`의 기존 급여 안내 단락만 갱신했다. 당시 해당 repair는 제목·메타·허브·sitemap·광고/분석 코드를 변경하지 않았다. 신청서 가이드는 별도 P0 #26으로 이후 공개됐다.
   - 완료/배포: 후속 YMYL 검토·전달 완료 후 PR #20 normal merge, merge SHA `8d71c7d2cc1fef374443c26b0108bb2c55a3b59f`. SEO QA `36545079003`, Pages `36545078240`, IndexNow `36545078922` 모두 SUCCESS; 2026-10-01 `https://emfls.github.io/kor/report/parenting/parenting-subsidy-2026.html` HTTP 200. 신청서 가이드는 별도 #26 공개 작업 기록을 참조.
+
+- [ ] P0 Revenue Growth — 세 캠핑 CTR 실험의 비교 불가 수동 종료
+  - 목적: Nonsan/Cheorwon/Uljin 실험을 없는 matched-period Naver 수치로 판정하지 않고 terminal state로 닫아 실험 slot을 해제한다.
+  - 현재 구현: 최신 main `255e4b543ec9c4d82988a6ad6fa5dc0541ccef4b` 기준 세 레코드를 `INCONCLUSIVE / COMPARABLE_MATCHED_PERIOD_NAVER_DATA_UNAVAILABLE`로 갱신했고, `before` 보존·`after` 미생성을 확인했다. selector active slots 3→0, 가용 slots 0→3; 최신 revenue artifact는 WINNER 1,568 / OPPORTUNITY 35 / EXPERIMENT 0이다.
+  - 범위 보호: 세 대상 HTML, protected pages, sitemap/hub/manifest/IndexNow 변경 없음. 최대 3개 selector 제안을 검토했으며 actionable content edit는 0; Revenue `NO_CONCLUSION`, 추가 public pages 0.
+  - Local gates PASS: focused 67, unittest 742, pytest 1,183, measurement validator 19,027 URLs, launch guard, `git diff --check`. Clean branch commit/push/PR 및 fresh exact-head SEO QA 완료 후에만 이 항목을 `[x]`로 바꾼다.
 
 ## P1 - High
 
