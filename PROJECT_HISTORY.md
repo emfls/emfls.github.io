@@ -1,6 +1,16 @@
 # PROJECT HISTORY
 
-## 2026-10-03 — JP Travel First 50 Canary — PR #34 latest-main revalidation
+## 2026-10-03 — PR #34 latest-main sync and full local revalidation
+
+- Merged current GitHub `main` `3b22d7ac24733126584d47c17e174eb1194aa363` into `codex/p0-jp-travel-canary-01` with regular merge commit `3654c1560a87d5917785f6a5491960360c9aa17d`; no conflicts. PR #35's three camping experiments remain `INCONCLUSIVE`, and all eight latest-main Keyword Hunter state/report files plus raw GA4/GSC snapshots are byte-identical to main.
+- The canary remains exactly 49 JP Travel HTML deletions / 1,036,400 B plus 49 JP Travel sitemap entries. Non-JP or modified HTML diffs: 0. All 17 protected JP Travel WINNER pages remain on disk and in the sitemap; deletion overlap is 0. Five dependency/association HOLD pages remain present. Missing GA4/GSC rows stay `NO_ROW`.
+- Re-generated transient full audit `/tmp/site-audit-full.json` (99,621,796 B) and compact audit `/tmp/site-audit-compact.json`; compact output matches committed `data/site-audit.json` byte-for-byte at 16,224,376 B. The full audit remains transient.
+- Local QA: unittest 743; pytest 1,189; SEO QA 0 new criticals / 0 new warnings (767 existing criticals / 420 warnings); sitemap 46 leaf files / 18,757 URLs / 0 duplicates / 0 unknown URLs; broken internal links 276 (latest main 276); Keyword Hunter dry-run 0 API calls / 0 writes with unchanged tracked state; content launch guard PASS; `git diff --check` PASS.
+- Tracked tree including this checkpoint: latest main 508,747,671 B; PR tree 507,451,664 B; net -1,296,007 B. The 49 HTML deletions account for 1,036,400 B.
+- PR #34 remains open and unmerged. This sync/revalidation is local until the normal push. Fresh exact-final-HEAD Actions SUCCESS and Notion final checkpoint remain required; the previous exact-head run is stale. PR description is stale after the known GitHub API 403 and will be recorded in Notion without retrying the blocked update.
+- Next action at checkpoint time: push normally, verify Actions SUCCESS for that exact final SHA, update the existing Notion checkpoint to `READY_FOR_MAIN_REVIEW`, then stop at PR #34 final main review. Do not merge or begin another locale/canary.
+
+## 2026-10-03 — JP Travel First 50 Canary — pre-resync checkpoint (superseded)
 
 - Rechecked live GitHub `main` at `0156625d002654271046b20b7c874ea328d071d2` after PR #35 merged. Existing branch `codex/p0-jp-travel-canary-01` is synchronized by regular merge commits; the first sync commit `59454da841` incorporated `255e4b543ec9c4d82988a6ad6fa5dc0541ccef4b`, and this checkpoint integrates `0156625...`. One test conflict was resolved by retaining current-main Keyword Hunter policy tests and the PR-specific regression fixtures. Two derived JSON conflicts were resolved by regenerating current artifacts from the latest raw snapshots and full transient site audit.
 - Preserved the latest-main PR #35 closure: all three camping experiments remain `INCONCLUSIVE`. Raw GA4 and GSC snapshots are byte-identical to latest main. Missing candidate rows remain `NO_ROW`, not zero.
