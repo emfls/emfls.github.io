@@ -1,11 +1,13 @@
 # PROJECT HISTORY
 
-## 2026-10-03 — PR #34 current-main merge recovery (revalidation pending)
+## 2026-10-03 — PR #34 current-main sync and local revalidation (exact-head Actions pending)
 
-- PR #34 branch `codex/p0-jp-travel-canary-01` was at `0438379277b2ce69724222c959d9eb6380f0b198`; fetched `origin/main` advanced to `bdf76120dac725fca0ac955929626c5378648055` after PR #37 GSC opportunity query evidence landed. Started a regular `git merge origin/main`; it has exactly two content conflicts, in `PROJECT_HISTORY.md` and `TASKS.md`.
-- Preserved all non-conflicting latest-main PR #37 files, including the GSC workflow, query sidecar, collector, and tests. This resolution retains the full PR #37 evidence record and the prior PR #34 canary evidence below as historical checkpoints.
-- PR #34 remains open and unmerged. Previous CI results are stale for the upcoming merge head. Full scope and QA revalidation are pending; no Notion checkpoint or queue change has been made during sync.
-- Existing PR #34 scope remains 49 JP Travel HTML deletions / 1,036,400 B and 49 sitemap entries, excluding protected and HOLD pages. No additional locale or deletion scope is authorized.
+- Previous PR #34 branch head `0438379277b2ce69724222c959d9eb6380f0b198`; fetched latest `origin/main` `bdf76120dac725fca0ac955929626c5378648055`. Integrated it by regular merge commit `3d0f1d3a77e5764152beb2b245dccf9dcf180808`. Two documentation conflicts (`PROJECT_HISTORY.md`, `TASKS.md`) were resolved semantically; the five non-conflicting latest-main PR #37 GSC workflow/sidecar/collector/test paths match `origin/main` byte-for-byte.
+- Scope remains exactly 49 JP Travel HTML deletions / 1,036,400 B and 49 sitemap URL removals. No other HTML was modified or added. The protected set has 15 current JP Travel WINNER rows plus two protected no-current-row pages (`greece-katerini`, `korea-naju`); all remain on disk and the winners remain in sitemap. Deleted paths intersect current winner rows by 0. Separate HOLD pages are preserved; no additional canary was added.
+- JP Travel sitemap delta: 49 removed, 0 added; 46 leaf sitemaps, 18,757 URL entries, 0 duplicates, 0 unknown/noncanonical entries. Current derived inventories and feed contain none of the 49 deleted paths. Broken internal links: 276, unchanged from the latest-main baseline.
+- Raw historical GA4/GSC/performance files are byte-identical to latest main. GA4 and GSC collection workflows retain their full `/tmp/ga4-site-audit.json` and `/tmp/gsc-site-audit.json` audit inputs. Keyword Hunter/DataLab paths have no diff against latest main; full Keyword Hunter dry-run inspected 18,981 pages with 0 API calls, 0 DataLab calls, and no persistent state/report writes.
+- Local SEO QA: unittest 743 passed; pytest 1,199 passed; SEO QA 0 new criticals / 0 new warnings (767 existing criticals / 420 warnings); launch guard PASS; `git diff --check` PASS. Compact `data/site-audit.json` is 16,224,376 B and matches generated output; full 99,621,796 B audit is transient at `/tmp/site-audit-full.json`.
+- Tracked-tree comparison at sync merge commit `3d0f1d3a77e5764152beb2b245dccf9dcf180808`: latest main 508,890,557 B; PR tree 507,598,055 B; net -1,292,502 B. The deleted 49 HTML files total 1,036,400 B. GitHub PR #34 is still open/unmerged at its old remote head until a normal push; exact-head Actions on the final pushed SHA are pending. Notion remains unchanged pending post-merge verification.
 
 ## 2026-10-03 — P0 Revenue Evidence Upgrade — GSC opportunity query evidence (live collection complete; PR pending)
 

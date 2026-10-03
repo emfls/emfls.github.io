@@ -20,17 +20,11 @@
   - 상태: `ARABIC_PRUNING_CLOSED`. PR #31 병합과 exact-head CI가 완료됐으며 Arabic 결과는 Completed Log page 93에 보존한다.
 
 - [ ] P0 JP Travel First 50 Canary — PR #34
-  - 동기화: 확인된 최신 `origin/main` `ffe6c429a80cabca14ff9231af9cb2c86a1a33a6`까지 기존 branch에 regular merge commit `9dd23d286a0f250afd3111e8e53afd27bc4f94fd`로 통합했다. `data/page-performance.json`, `data/revenue-opportunities.json`, `reports/revenue-growth-report.md`는 두 번의 main 동기화에서 발생한 6개 derived-file conflict를 최신 raw measurement와 49개 삭제 트리 기준으로 공식 생성기로 재생성했다. 최신 GSC snapshot을 보존하고 PR #36 closure 및 latest Keyword Hunter/DataLab state도 유지했다.
-  - 범위: 49 HTML / 1,036,400 B와 JP Travel sitemap 49 entries 삭제. Malaysia Keyword Hunter association 1개 및 별도 direct-feed HOLD 4개, Protected / Keep Archive의 17개 JP URL은 제외한다. 아직 production-complete로 표시하지 않는다.
-  - 최신 증거: 보호 아카이브 17개 중 latest revenue 산출물의 current JP Travel WINNER는 15개다. `/greece-katerini.html`과 `/korea-naju.html`은 latest snapshot에 현재 URL 행이 없어도 계속 보호한다. 삭제 후보와 protected set 교집합 0, GA4/GSC explicit rows 0/49이며 이를 zero로 해석하지 않는다. Raw snapshots는 latest main과 byte-identical이다.
-  - QA: unittest 743; pytest 1,189; SEO QA 신규 critical/warning 0 (767/420); sitemap 46 leaves / 18,757 URLs / duplicate 0 / unknown 0; broken links 276 (latest main 276); Keyword Hunter dry-run 0 API / 0 writes, tracked worktree unchanged; launch guard PASS; `git diff --check` PASS. Compact site audit 16,224,376 B; full audit는 `/tmp`에 유지한다.
-  - 크기: latest main tracked tree 508,832,738 B; PR tree 507,538,309 B; net -1,294,429 B; 49 HTML 1,036,400 B. 수치는 2026-10-03 final documentation closure 전 HEAD `826c48130bfc0f52027ed93501a0098a99522859` 기준이다.
-  - 상태: latest main merge 및 full QA PASS. PR #34 OPEN / UNMERGED / mergeable. Exact-head CI 결과와 최종 현재 HEAD 및 `READY_FOR_MAIN_REVIEW` 상태는 Notion page 98에 기록하며, project description은 알려진 GitHub API 403으로 stale 상태라 재시도하지 않는다. PR은 merge하지 않고 다음은 PR #34 final main review only다.
-
-- [ ] P0 JP Travel First 50 Canary — PR #34
-  - 동기화 복구: PR branch `0438379277b2ce69724222c959d9eb6380f0b198`에 최신 fetched `origin/main` `bdf76120dac725fca0ac955929626c5378648055`를 regular merge 중이다. 문서 충돌 2건을 의미에 맞게 해결하고 latest-main PR #37 GSC workflow/collector/sidecar/tests를 보존했다. merge commit 후 full QA와 exact-head CI는 아직 pending이다.
-  - 범위: 기존 49 JP Travel HTML / 1,036,400 B 및 sitemap 49 entries 삭제만 유지한다. Protected / Keep Archive 17개와 별도 dependency HOLD 5개를 보존하며, 추가 canary 삭제는 이번 단계에 포함하지 않는다.
-  - 상태: `CURRENT_MAIN_RESYNC_IN_PROGRESS`; PR #34 OPEN / UNMERGED. 기존 CI는 새 merge head의 증거가 아니다. latest-main regression, full QA, exact-head Actions, post-merge verification을 순서대로 완료한 뒤에만 closeout/Notion 업데이트를 진행한다.
+  - 동기화: 이전 PR head `0438379277b2ce69724222c959d9eb6380f0b198`와 latest fetched `origin/main` `bdf76120dac725fca0ac955929626c5378648055`를 regular merge commit `3d0f1d3a77e5764152beb2b245dccf9dcf180808`로 통합했다. 문서 conflict 2건은 의미에 맞게 해결했고 PR #37 GSC workflow/collector/sidecar/tests는 latest main과 byte-identical이다.
+  - 범위: 49 JP Travel HTML / 1,036,400 B 삭제 및 sitemap 49 entries 제거만. non-JP HTML diff 0. 현재 JP WINNER 15개와 별도 protected no-row 2개는 모두 보존했다. 추가 canary 삭제 없음.
+  - 검증: unittest 743; pytest 1,199; SEO QA 신규 critical/warning 0 (767/420); sitemap 46 leaf / 18,757 URLs / duplicate 0 / unknown 0; broken links 276; Keyword Hunter dry-run 0 API / 0 DataLab / 0 writes; launch guard PASS; `git diff --check` PASS. Compact site audit 16,224,376 B; full audit 99,621,796 B at `/tmp`.
+  - 크기 (sync merge commit): latest main tracked tree 508,890,557 B; PR tree 507,598,055 B; net -1,292,502 B. Raw historical GA4/GSC snapshots are unchanged from latest main.
+  - 상태: `READY_FOR_EXACT_HEAD_CI`; PR #34 OPEN / UNMERGED. Push the regular merge plus this checkpoint, require new exact-head Actions SUCCESS, then perform regular merge and post-merge Notion/JP canary closeout. No new deletion batch.
 
 - [x] P0 Support — Keyword Hunter DataLab freshness contract
   - 목적: 만료·미래·기준시각 누락 DataLab trend 값을 현재 검증 신호와 후보 점수로 오인하지 않도록 한다.
