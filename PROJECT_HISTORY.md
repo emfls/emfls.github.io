@@ -1,5 +1,13 @@
 # PROJECT HISTORY
 
+## 2026-10-03 — P0 Revenue Evidence Upgrade — GSC opportunity query evidence (local implementation; delivery blocked)
+
+- 최신 fetched `origin/main`은 `ffe6c429a80cabca14ff9231af9cb2c86a1a33a6`; 격리 branch `codex/p0-gsc-opportunity-query-evidence-20261003`는 이 SHA에서 시작했다. Current GSC page snapshot은 `2026-09-03..2026-09-30`, generated `2026-10-03T08:34:31Z`이며 full `data/page-performance.json`에서 OPPORTUNITY 34개를 읽어 `data/revenue-opportunities.json`의 `classificationCounts.OPPORTUNITY`와 교차검증했다. Summary artifact 자체는 전체 URL inventory를 싣지 않아 URL source로 오인하지 않는다.
+- 새 `scripts/collect_gsc_opportunity_query_snapshot.py`는 현재 opportunity URL별 canonical HTTPS page `equals` filter와 query dimension으로 같은 period를 요청하고 sidecar `data/performance/gsc-opportunity-queries-latest.json`에 저장한다. Page-level `gsc-latest.json` 스키마는 그대로 둔다. Empty query response는 `NO_QUERY_ROWS_RETURNED`; query row가 있어도 `PARTIAL_QUERY_EVIDENCE`이며 완전한 검색어 목록으로 주장하지 않는다. Query row subtotal을 page totals/revenue와 비교하지 않고, API 실패 시 atomic write 이전에 중단해 기존 sidecar를 보존한다. Collector는 YMYL 분류를 하지 않는다.
+- `.github/workflows/gsc-collection.yml`에 수동 `opportunity-query` scope를 추가했다. 해당 mode는 sidecar만 검증·commit하며 기존 page measurement refresh와 camping query path는 별도 유지된다. [Google Search Analytics API contract](https://developers.google.com/webmaster-tools/v1/searchanalytics/query)에 맞춰 page filter 시 `aggregationType=auto`를 사용한다.
+- 회귀 검증: focused GSC/measurement/workflow tests 44 passed; full unittest 742 passed; full pytest 1,193 passed; existing page-performance measurement validator 19,027 URLs PASS; content launch guard PASS; `git diff --check` PASS; dry-run은 secret 없이 34 URLs와 정확한 GSC period를 계획했고 파일을 쓰지 않았다. HTML/public content/sitemap/manifest/page aggregate/revenue artifacts는 수정하지 않았다.
+- Delivery/live evidence blocker: local `gh auth status` returned `Failed to log in to github.com account emfls (default); The token in default is invalid.` No credential value was inspected or changed. No push/PR/workflow dispatch, sidecar query data, URL-level query analysis, or exact-head remote SEO QA has occurred. Revenue remains `NO_CONCLUSION`; no page edit is approved.
+
 ## 2026-10-02 — P0 Arabic Locale Retire and Site-Audit Size Fix — PR #31 OPEN
 
 - 기준 `origin/main` `83346ac4441b19b1764816c75a099c49ac35c85e` 대비 Arabic `/ae/` 63 HTML, locale 전용 JS 2개, sitemap 1개(총 66 files / 1,209,448 bytes)를 retire했다. Korean/English/Japanese HTML 및 raw GA4/GSC snapshots는 변경하지 않았다.

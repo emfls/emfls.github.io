@@ -9,7 +9,7 @@ on:
         description: "Collection scope"
         required: true
         type: choice
-        options: [page, camping-query]
+        options: [page, camping-query, opportunity-query]
         default: page
 
 permissions:
@@ -45,6 +45,10 @@ jobs:
       - name: Collect camping query evidence snapshot
         if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'camping-query'
         run: python3 scripts/collect_gsc_camp_query_snapshot.py --output data/performance/gsc-camp-query-latest.json
+
+      - name: Collect current revenue opportunity query evidence
+        if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'opportunity-query'
+        run: python3 scripts/collect_gsc_opportunity_query_snapshot.py --output data/performance/gsc-opportunity-queries-latest.json
 
       - name: Regenerate current site audit for GSC measurement
         if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'page'
@@ -98,6 +102,17 @@ jobs:
           print(json.dumps(validate_snapshot(snapshot), ensure_ascii=False))
           PY
 
+      - name: Validate revenue opportunity query evidence snapshot
+        if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'opportunity-query'
+        run: |
+          python3 - <<'PY'
+          import json
+          from scripts.collect_gsc_opportunity_query_snapshot import validate_snapshot
+          with open('data/performance/gsc-opportunity-queries-latest.json', encoding='utf-8') as handle:
+              snapshot = json.load(handle)
+          print(json.dumps(validate_snapshot(snapshot), ensure_ascii=False))
+          PY
+
       - name: Commit refreshed GSC measurement artifacts
         if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'page'
         run: |
@@ -114,4 +129,13 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/performance/gsc-camp-query-latest.json
           git diff --staged --quiet || git commit -m "chore: refresh GSC measurement snapshot"
+          git push
+
+      - name: Commit revenue opportunity query evidence snapshot
+        if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'opportunity-query'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/performance/gsc-opportunity-queries-latest.json
+          git diff --staged --quiet || git commit -m "chore: refresh GSC opportunity query evidence"
           git push

@@ -4,6 +4,12 @@
 
 ## P0 - Critical
 
+- [ ] P0 Revenue Evidence Upgrade — GSC query-level evidence for current opportunities
+  - 목적: exact-period Search Console query evidence를 현재 `OPPORTUNITY` URL별 sidecar에 수집해 snippet/query mismatch 검토 근거를 만든다. 기존 page-level snapshot은 유지하고 콘텐츠는 수정하지 않는다.
+  - 최신 기준: `origin/main` `ffe6c429a80cabca14ff9231af9cb2c86a1a33a6`; GSC `2026-09-03..2026-09-30`; complete page-performance inventory에서 OPPORTUNITY 34개, revenue summary count와 일치.
+  - 로컬 구현: per-URL exact page filter/query collector, explicit no-query status, API failure 시 last-good artifact 보존, isolated `opportunity-query` workflow mode 및 회귀 테스트. Focused 44, unittest 742, pytest 1,193, measurement validator, content launch guard, `git diff --check` PASS.
+  - 대기: GitHub CLI가 `gh auth status`에서 emfls 토큰 invalid를 보고해 push/PR/Actions live query 수집 및 exact-head CI는 미실행. Secret 값은 읽지 않았고, query artifact/실제 수요·CTR 판정은 미생성. Revenue `NO_CONCLUSION`.
+
 - [ ] P0 Arabic Locale Retire — `/ae/`
   - 목적: `/ae/` locale의 현재 사이트 콘텐츠와 파생 인벤토리 의존성을 retire한다. JP First 50 및 다른 locale pruning은 제외한다.
   - 범위: Arabic HTML 63개 삭제, locale 전용 JS 2개 삭제, `ae/sitemap.xml` 삭제. Raw GA4/GSC snapshots와 non-Arabic HTML을 보존하고 compact `data/site-audit.json`을 약 16 MB 수준으로 유지한다.

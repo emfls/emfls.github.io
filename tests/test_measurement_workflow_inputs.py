@@ -95,7 +95,7 @@ def test_gsc_workflow_defaults_to_page_mode_for_schedule_and_manual_runs():
 
     assert "collection_mode:" in workflow
     assert "default: page" in workflow
-    assert "options: [page, camping-query]" in workflow
+    assert "options: [page, camping-query, opportunity-query]" in workflow
     assert "schedule:" in workflow
     assert "workflow_dispatch:" in workflow
 
@@ -153,3 +153,30 @@ def test_camping_query_mode_skips_all_page_mode_collection_steps():
         "Commit refreshed GSC measurement artifacts",
     ):
         assert page_only in _step_block(workflow, name)
+
+
+def test_opportunity_query_mode_isolated_and_commits_only_sidecar_artifact():
+    workflow = _workflow_text()
+    query_only = "if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'opportunity-query'"
+
+    for name in (
+        "Collect current revenue opportunity query evidence",
+        "Validate revenue opportunity query evidence snapshot",
+        "Commit revenue opportunity query evidence snapshot",
+    ):
+        assert query_only in _step_block(workflow, name)
+    collection = _step_block(workflow, "Collect current revenue opportunity query evidence")
+    assert "scripts/collect_gsc_opportunity_query_snapshot.py" in collection
+    commit = _step_block(workflow, "Commit revenue opportunity query evidence snapshot")
+    assert "git add data/performance/gsc-opportunity-queries-latest.json" in commit
+    for forbidden in (
+        "gsc-latest.json",
+        "page-performance.json",
+        "revenue-opportunities.json",
+        "revenue-growth-report.md",
+        "gsc-camp-query-latest.json",
+    ):
+        assert forbidden not in commit
+    page_only = "if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'page'"
+    assert page_only in _step_block(workflow, "Collect GSC page snapshot")
+    assert "opportunity-query" in workflow
