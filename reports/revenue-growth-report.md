@@ -8,16 +8,16 @@
 - Revenue per Indexed Page: N/A
 - Views per User: N/A
 - WINNER: 1580
-- OPPORTUNITY: 35
+- OPPORTUNITY: 34
 - EXPERIMENT: 0
 - DEAD_CANDIDATE: 0
-- INSUFFICIENT_DATA: 17363
+- INSUFFICIENT_DATA: 17364
 
 ## TOP REVENUE OPPORTUNITIES
 
-### 1. `/kor/report/camp/muju.html`
+### 1. `/kor/report/camp/gyeongnam-best.html`
 
-- Score: 47.69 / 100
+- Score: 50.71 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -26,9 +26,9 @@
 - Naver: NOT_AVAILABLE
 - Rank: N/A
 
-### 2. `/kor/report/camp/gyeongnam-best.html`
+### 2. `/kor/report/camp/muju.html`
 
-- Score: 46.75 / 100
+- Score: 47.63 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -37,9 +37,9 @@
 - Naver: NOT_AVAILABLE
 - Rank: N/A
 
-### 3. `/kor/report/camp/asan.html`
+### 3. `/kor/report/camp/seongnam.html`
 
-- Score: 46.32 / 100
+- Score: 46.84 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -48,7 +48,18 @@
 - Naver: NOT_AVAILABLE
 - Rank: N/A
 
-### 4. `/kor/report/camp/andong.html`
+### 4. `/kor/report/camp/asan.html`
+
+- Score: 46.29 / 100
+- Classification: WINNER
+- Why: Verified URL revenue; Verified traffic
+- Next Action: PROTECT
+- Cooldown: NO
+- Data Status: VERIFIED
+- Naver: NOT_AVAILABLE
+- Rank: N/A
+
+### 5. `/kor/report/camp/andong.html`
 
 - Score: 45.23 / 100
 - Classification: WINNER
@@ -59,26 +70,15 @@
 - Naver: NOT_AVAILABLE
 - Rank: N/A
 
-### 5. `/kor/report/camp/gimje.html`
+### 6. `/kor/report/camp/gimje.html`
 
-- Score: 45.18 / 100
+- Score: 45.1 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
 - Cooldown: NO
 - Data Status: VERIFIED
 - Naver: NOT_AVAILABLE
-- Rank: N/A
-
-### 6. `/kor/report/camp/gimhae.html`
-
-- Score: 44.97 / 100
-- Classification: WINNER
-- Why: Verified URL revenue; Verified traffic
-- Next Action: PROTECT
-- Cooldown: NO
-- Data Status: VERIFIED
-- Naver: 698 impressions / 48 clicks / 6.9% CTR
 - Rank: N/A
 
 ### 7. `/kor/report/camp/pyeongchang.html`
@@ -92,9 +92,20 @@
 - Naver: NOT_AVAILABLE
 - Rank: N/A
 
-### 8. `/kor/report/travel/`
+### 8. `/kor/report/camp/gimhae.html`
 
-- Score: 42.73 / 100
+- Score: 44.85 / 100
+- Classification: WINNER
+- Why: Verified URL revenue; Verified traffic
+- Next Action: PROTECT
+- Cooldown: NO
+- Data Status: VERIFIED
+- Naver: 698 impressions / 48 clicks / 6.9% CTR
+- Rank: N/A
+
+### 9. `/kor/report/travel/`
+
+- Score: 42.13 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -103,20 +114,9 @@
 - Naver: NOT_AVAILABLE
 - Rank: N/A
 
-### 9. `/kor/report/camp/hoengseong.html`
+### 10. `/kor/report/camp/hoengseong.html`
 
-- Score: 42.07 / 100
-- Classification: WINNER
-- Why: Verified URL revenue; Verified traffic
-- Next Action: PROTECT
-- Cooldown: NO
-- Data Status: VERIFIED
-- Naver: NOT_AVAILABLE
-- Rank: N/A
-
-### 10. `/kor/report/camp/naju.html`
-
-- Score: 41.29 / 100
+- Score: 41.76 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
