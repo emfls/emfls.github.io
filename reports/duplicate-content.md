@@ -4,7 +4,7 @@ Exact duplicates are review candidates, not automatic merge or deletion instruct
 
 ## Titles
 
-- Duplicate groups: 301
+- Duplicate groups: 300
 
 - `AeroJump` — 9 URLs
 - `Marble Flick` — 8 URLs
@@ -17,7 +17,6 @@ Exact duplicates are review candidates, not automatic merge or deletion instruct
 - `コンゴ民主共和国パーフェクトガイド|旅行コース、準備、予防策` — 6 URLs
 - `BlockBreaker` — 5 URLs
 - `CardMatch` — 5 URLs
-- `Error 500 (Server Error)!!1500.That’s an error.There was an error. Please try again later.That’s all we know.` — 5 URLs
 - `FlagQuest` — 5 URLs
 - `GREEN Click` — 3 URLs
 - `Milton Keynes Travel Perfect Guide | Itinerary, Essentials, Tips` — 3 URLs
@@ -106,10 +105,11 @@ Exact duplicates are review candidates, not automatic merge or deletion instruct
 - `Survivor Mini` — 2 URLs
 - `SurvivorMini` — 2 URLs
 - `Syria Maarat Miss Lin Perfect Guide | Travel course, preparations, precautions` — 2 URLs
+- `The perfect guide to the British button on trent travel | Travel course, preparations, precautions` — 2 URLs
 
 ## Descriptions
 
-- Duplicate groups: 123
+- Duplicate groups: 120
 
 - `Error 500 (Server Error)!!1500.That’s an error.There was an error. Please try again later.That’s all we know.` — 4 URLs
 - `A complete guide for traveling Milton Keynes, UK. 2-night 3-day itinerary, essential items, safety tips, and must-see attractions including Bletchley Park, Xscape, Willen Lake, and more.` — 3 URLs
@@ -133,15 +133,12 @@ Exact duplicates are review candidates, not automatic merge or deletion instruct
 - `루마니아 비스트리차 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 드라큘라 성, 복음주의 교회, 중앙 광장, 쿠퍼스 타워 등 비스트리차 핵심 명소 정보 제공.` — 2 URLs
 - `루마니아 아라드 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 아브람 이안쿠 광장, 레볼루티에이 거리, 문화 궁전 등 아라드 핵심 명소 정보 제공.` — 2 URLs
 - `루마니아 알바이울리아 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 알바 카롤리나 요새, 통일 대성당, 국립 통일 박물관, 후냐디 성 등 알바이울리아 핵심 명소 정보 제공.` — 2 URLs
-- `바베이도스 밧세바 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 밧세바 해변, 수프 보울, 안드로메다 식물원, 애틀란티스 레스토랑 등 밧세바 핵심 명소 정보 제공.` — 2 URLs
 - `방글라데시 라지샤히 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 실크시티 라지샤히, 파드마강, 바렌드라 박물관, 푸티아 라즈바리 등 라지샤히 핵심 명소 정보 제공.` — 2 URLs
 - `방글라데시 라크샤미푸르 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 라크샤미푸르 강변, 전통 시장, 모스크, 릭샤 체험 등 라크샤미푸르 핵심 명소 정보 제공.` — 2 URLs
-- `방글라데시 랄모니르하트 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 티스타 댐, 칸타지 사원, 독립 박물관, 갈리간지 공원 등 랄모니르하트 핵심 명소 정보 제공.` — 2 URLs
 - `방글라데시 랑가마티 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 캅타이 호수, 흔들다리, 불교사원, 차크마족 문화 등 랑가마티 핵심 명소 정보 제공.` — 2 URLs
 - `방글라데시 랑푸르 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 랑푸르 궁전, 타지하트 궁전, 케라니고니 모스크, 랑푸르 박물관 등 랑푸르 핵심 명소 정보 제공.` — 2 URLs
 - `방글라데시 마다리푸르 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 마다리푸르 강, 전통 시장, 모스크, 농촌 마을 등 마다리푸르 핵심 명소 정보 제공.` — 2 URLs
 - `방글라데시 메헤르푸르 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 메헤르푸르 강, 쿠스티아 지역, 라론 샤 모스크, 라비드라 쿠티르 등 메헤르푸르 핵심 명소 정보 제공.` — 2 URLs
-- `방글라데시 시라지간지 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 자무나강, 바랄강, 손놀림 코티지 산업, 전통 시장 등 시라지간지 핵심 명소 정보 제공.` — 2 URLs
 - `방글라데시 조이푸르하트 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 파하르푸르 불교 사원, 소마푸르 마하비하라, 칸타지우 사원, 아스랑가 디기 등 조이푸르하트 핵심 명소 정보 제공.` — 2 URLs
 - `방글라데시 카그라차리 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 카그라차리 호수, 차크마 왕궁, 부족 문화 박물관, 하자차라 폭포 등 카그라차리 핵심 명소 정보 제공.` — 2 URLs
 - `방글라데시 쿠리그람 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 브라마푸트라 강, 쿠리그람 제방, 로얄 벵골 타이거 보호구역, 전통 시장 등 쿠리그람 핵심 명소 정보 제공.` — 2 URLs
@@ -211,6 +208,9 @@ Exact duplicates are review candidates, not automatic merge or deletion instruct
 - `포르투갈 산타마리아다페이라 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항, 산타마리아다페이라 성, 에스피리투 산투 수도원 등 핵심 명소 정보 제공.` — 2 URLs
 - `포르투갈 세이샬 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 세이샬 선착장, 바스코 다 가마 유적, 현지 레스토랑 등 세이샬 핵심 명소 정보 제공.` — 2 URLs
 - `포르투갈 세투발 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 세투발 항구, 아라비다 자연공원, 트로이아 반도 등 세투발 핵심 명소 정보 제공.` — 2 URLs
+- `포르투갈 신트라 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 페나 궁전, 헤갈레이라 별장, 신트라 궁전 등 신트라 핵심 명소 정보 제공.` — 2 URLs
+- `포르투갈 실베스 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. 실베스 성, 대성당, 아라데 강, 현지 축제 등 실베스 핵심 명소 정보 제공.` — 2 URLs
+- `포르투갈 아마도라 여행을 위한 완벽한 가이드. 2박 3일 여행코스, 필수 준비물, 안전 주의사항을 한눈에 확인하세요. UBBO 쇼핑센터, 아트&스포츠파크, 코믹파크, 로케 가메이루 하우스 등 아마도라 핵심 명소 정보 제공.` — 2 URLs
 
 ## Canonicals
 

@@ -4,14 +4,14 @@
 
 - 28d Revenue: N/A
 - 28d Daily Average: N/A
-- Indexed Pages: 19,027
+- Indexed Pages: 18,978
 - Revenue per Indexed Page: N/A
-- Views per User: 1.33
+- Views per User: N/A
 - WINNER: 1568
 - OPPORTUNITY: 35
 - EXPERIMENT: 0
 - DEAD_CANDIDATE: 0
-- INSUFFICIENT_DATA: 17424
+- INSUFFICIENT_DATA: 17375
 
 ## TOP REVENUE OPPORTUNITIES
 
