@@ -1,14 +1,15 @@
 # PROJECT HISTORY
 
-## 2026-10-03 — PR #34 latest-main sync and full local revalidation
+## 2026-10-03 — PR #34 GA4 refresh sync and final revalidation
 
-- Merged current GitHub `main` `3b22d7ac24733126584d47c17e174eb1194aa363` into `codex/p0-jp-travel-canary-01` with regular merge commit `3654c1560a87d5917785f6a5491960360c9aa17d`; no conflicts. PR #35's three camping experiments remain `INCONCLUSIVE`, and all eight latest-main Keyword Hunter state/report files plus raw GA4/GSC snapshots are byte-identical to main.
-- The canary remains exactly 49 JP Travel HTML deletions / 1,036,400 B plus 49 JP Travel sitemap entries. Non-JP or modified HTML diffs: 0. All 17 protected JP Travel WINNER pages remain on disk and in the sitemap; deletion overlap is 0. Five dependency/association HOLD pages remain present. Missing GA4/GSC rows stay `NO_ROW`.
-- Re-generated transient full audit `/tmp/site-audit-full.json` (99,621,796 B) and compact audit `/tmp/site-audit-compact.json`; compact output matches committed `data/site-audit.json` byte-for-byte at 16,224,376 B. The full audit remains transient.
-- Local QA: unittest 743; pytest 1,189; SEO QA 0 new criticals / 0 new warnings (767 existing criticals / 420 warnings); sitemap 46 leaf files / 18,757 URLs / 0 duplicates / 0 unknown URLs; broken internal links 276 (latest main 276); Keyword Hunter dry-run 0 API calls / 0 writes with unchanged tracked state; content launch guard PASS; `git diff --check` PASS.
-- Tracked tree including this checkpoint: latest main 508,747,671 B; PR tree 507,451,664 B; net -1,296,007 B. The 49 HTML deletions account for 1,036,400 B.
-- PR #34 remains open and unmerged. This sync/revalidation is local until the normal push. Fresh exact-final-HEAD Actions SUCCESS and Notion final checkpoint remain required; the previous exact-head run is stale. PR description is stale after the known GitHub API 403 and will be recorded in Notion without retrying the blocked update.
-- Next action at checkpoint time: push normally, verify Actions SUCCESS for that exact final SHA, update the existing Notion checkpoint to `READY_FOR_MAIN_REVIEW`, then stop at PR #34 final main review. Do not merge or begin another locale/canary.
+- Integrated latest GitHub `main` `a0f5a38303d18e7661b5b97f429d7a99f6891774` into existing branch `codex/p0-jp-travel-canary-01` with a regular merge. PR #36's closure and latest GA4 refresh are preserved. Three conflicts in derived `data/page-performance.json`, `data/revenue-opportunities.json`, and `reports/revenue-growth-report.md` were resolved by regenerating from the latest-main inputs and the 49-page-pruned tree.
+- The canary remains exactly 49 JP Travel HTML deletions / 1,036,400 B plus 49 JP Travel sitemap entries. Non-JP or modified HTML diffs: 0. All 17 URLs in Protected / Keep Archive remain on disk and in the sitemap; deletion overlap is 0. Latest revenue data lists 15 current JP Travel WINNER rows; `/greece-katerini.html` and `/korea-naju.html` now have no current URL row and remain protected rather than being treated as zero-value. Five dependency/association HOLD pages remain present.
+- Latest GA4 and GSC snapshots and the rest of `data/performance/` match current main byte-for-byte. The 49 candidates have no explicit GA4/GSC rows in the refreshed snapshots; `NO_ROW` remains distinct from zero. All eight latest-main Keyword Hunter state/report paths are byte-identical.
+- Re-generated transient full audit `/tmp/site-audit-full.json` (99,621,796 B); its compact output matches `data/site-audit.json` byte-for-byte at 16,224,376 B. The full audit remains transient. Page-performance and page-score inventories contain 18,978 rows and exclude all 49 removed URLs; regenerated cannibalization data has no candidate references.
+- Size against latest main (including this checkpoint): main 508,833,978 B; PR 507,538,756 B; net -1,295,222 B. The 49 HTML deletions account for 1,036,400 B.
+- Local QA after the refresh: unittest 743; pytest 1,189; SEO QA 0 new criticals / 0 new warnings (767 existing criticals / 420 warnings); sitemap 46 leaf files / 18,757 URLs / 0 duplicates / 0 unknown URLs; broken internal links 276 (latest main 276). Keyword Hunter dry-run returned 0 API calls / 0 writes and left tracked status, diff, and Keyword Hunter state hashes unchanged. Launch guard and `git diff --check` will be repeated on the committed merge tree.
+- PR #34 remains open and unmerged. The earlier run is stale, and exact-final-HEAD Actions SUCCESS plus the existing Notion checkpoint remain required. PR description is stale after the known GitHub API 403; do not retry that update.
+- Next action at checkpoint time: complete the remaining local gates, commit the regular main merge, push normally, verify Actions SUCCESS for the exact final SHA, and update the existing Notion checkpoint to `READY_FOR_MAIN_REVIEW`. Do not merge or begin another locale/canary.
 
 ## 2026-10-03 — JP Travel First 50 Canary — pre-resync checkpoint (superseded)
 
@@ -983,3 +984,11 @@
 
 ## 2026-10-03 14:24 Keyword Hunter
 - Seeds: 40; New: 11; Rejected: 11; DB: 4322; Errors: 0; Top: none. Report: reports/keyword-hunter/2026-10-03-1424.md
+
+## 2026-10-03 P0 Revenue Growth — Camping CTR closure FINAL
+- PR #35 normal merged; merge SHA `0156625d002654271046b20b7c874ea328d071d2`.
+- Post-merge SEO QA `37095932102` completed SUCCESS, including launch guard, SEO regression, Keyword Hunter validation, unittest, and full pytest.
+- Nonsan, Cheorwon, and Uljin CTR experiments remain terminal `INCONCLUSIVE` because comparable matched-period Naver data was unavailable; no after-period values were fabricated.
+- Active experiment slots 3→0; selector capacity reopened 0→3.
+- Manual review produced 0 actionable content edits; additional public pages 0. No camping HTML, public content, sitemap, manifest, or IndexNow changes.
+- Revenue remains `NO_CONCLUSION`; TASKS closure complete.

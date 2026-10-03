@@ -12,11 +12,11 @@
   - 상태: `ARABIC_PRUNING_CLOSED`. PR #31 병합과 exact-head CI가 완료됐으며 Arabic 결과는 Completed Log page 93에 보존한다.
 
 - [ ] P0 JP Travel First 50 Canary — PR #34
-  - 동기화: latest GitHub `main` `3b22d7ac24733126584d47c17e174eb1194aa363`를 기존 branch `codex/p0-jp-travel-canary-01`에 merge commit `3654c1560a87d5917785f6a5491960360c9aa17d`로 통합했다. 충돌은 없었고 PR #35의 세 camping experiment `INCONCLUSIVE` 기록과 최신 Keyword Hunter/DataLab 상태를 보존했다.
-  - 범위: 49 HTML / 1,036,400 B와 JP Travel sitemap 49 entries 삭제. Malaysia Keyword Hunter association 1개 및 별도 direct-feed HOLD 4개, protected JP Travel WINNER 17개는 제외한다. 아직 production-complete로 표시하지 않는다.
-  - 최신 증거: current protected set 1,568 중 JP Travel 17, deletion intersection 0. 삭제 후보의 명시 GA4/GSC rows 0/49이며 이를 zero로 해석하지 않는다. raw snapshots는 latest main과 byte-identical이다. page-performance/page-score inventories에서 삭제 후보 URL은 제거됐다.
-  - QA: unittest 743; pytest 1,189; SEO QA 신규 critical/warning 0 (현재 767/420); sitemap 46 leaves / 18,757 URLs / duplicate 0 / unknown 0; broken links 276 (latest main 276); Keyword Hunter dry-run 0 API / 0 writes, tracked state unchanged; launch guard PASS; `git diff --check` PASS. Compact site audit 16,224,376 B; full audit는 `/tmp`에 유지한다.
-  - 크기: latest main tracked tree 508,747,671 B; PR tree including this checkpoint 507,451,664 B; net -1,296,007 B; 49 HTML 1,036,400 B.
+  - 동기화: latest GitHub `main` `a0f5a38303d18e7661b5b97f429d7a99f6891774`의 GA4 refresh를 기존 branch에 일반 merge로 통합 중이다. 3개 파생 파일 충돌은 latest-main 입력과 49개 삭제 트리를 기준으로 공식 생성기로 재생성했다. PR #36 closure 및 latest Keyword Hunter/DataLab state를 보존했다.
+  - 범위: 49 HTML / 1,036,400 B와 JP Travel sitemap 49 entries 삭제. Malaysia Keyword Hunter association 1개 및 별도 direct-feed HOLD 4개, Protected / Keep Archive의 17개 JP URL은 제외한다. 아직 production-complete로 표시하지 않는다.
+  - 최신 증거: 보호 아카이브 17개 중 latest revenue 산출물의 current JP Travel WINNER는 15개다. `/greece-katerini.html`과 `/korea-naju.html`은 latest snapshot에 현재 URL 행이 없어도 계속 보호한다. 삭제 후보와 protected set 교집합 0, GA4/GSC explicit rows 0/49이며 이를 zero로 해석하지 않는다. Raw snapshots는 latest main과 byte-identical이다.
+  - QA: unittest 743; pytest 1,189; SEO QA 신규 critical/warning 0 (현재 767/420); sitemap 46 leaves / 18,757 URLs / duplicate 0 / unknown 0; broken links 276 (latest main 276); Keyword Hunter dry-run 0 API / 0 writes, tracked worktree unchanged. Committed merge tree에서 launch guard와 `git diff --check` 최종 확인한다. Compact site audit 16,224,376 B; full audit는 `/tmp`에 유지한다.
+  - 크기: latest main tracked tree 508,833,978 B; PR tree including checkpoint 507,538,756 B; net -1,295,222 B; 49 HTML 1,036,400 B.
   - 상태: PR #34 OPEN / UNMERGED. Latest-main merge와 전체 local QA를 완료했으며, merge gate는 현재 PR HEAD에서의 Actions SUCCESS와 Notion checkpoint다. GitHub PR 설명은 앞선 API 403으로 갱신하지 않으며 Notion에 stale 상태를 기록한다. 다음 작업은 PR #34 final main review만이며 다른 locale/canary는 시작하지 않는다.
 
 - [x] P0 Support — Keyword Hunter DataLab freshness contract
@@ -59,11 +59,10 @@
   - 범위: `kor/report/parenting/parenting-subsidy-2026.html`의 기존 급여 안내 단락만 갱신했다. 당시 해당 repair는 제목·메타·허브·sitemap·광고/분석 코드를 변경하지 않았다. 신청서 가이드는 별도 P0 #26으로 이후 공개됐다.
   - 완료/배포: 후속 YMYL 검토·전달 완료 후 PR #20 normal merge, merge SHA `8d71c7d2cc1fef374443c26b0108bb2c55a3b59f`. SEO QA `36545079003`, Pages `36545078240`, IndexNow `36545078922` 모두 SUCCESS; 2026-10-01 `https://emfls.github.io/kor/report/parenting/parenting-subsidy-2026.html` HTTP 200. 신청서 가이드는 별도 #26 공개 작업 기록을 참조.
 
-- [ ] P0 Revenue Growth — 세 캠핑 CTR 실험의 비교 불가 수동 종료
+- [x] P0 Revenue Growth — 세 캠핑 CTR 실험의 비교 불가 수동 종료
   - 목적: Nonsan/Cheorwon/Uljin 실험을 없는 matched-period Naver 수치로 판정하지 않고 terminal state로 닫아 실험 slot을 해제한다.
-  - 현재 구현: 최신 main `255e4b543ec9c4d82988a6ad6fa5dc0541ccef4b` 기준 세 레코드를 `INCONCLUSIVE / COMPARABLE_MATCHED_PERIOD_NAVER_DATA_UNAVAILABLE`로 갱신했고, `before` 보존·`after` 미생성을 확인했다. selector active slots 3→0, 가용 slots 0→3; 최신 revenue artifact는 WINNER 1,568 / OPPORTUNITY 35 / EXPERIMENT 0이다.
-  - 범위 보호: 세 대상 HTML, protected pages, sitemap/hub/manifest/IndexNow 변경 없음. 최대 3개 selector 제안을 검토했으며 actionable content edit는 0; Revenue `NO_CONCLUSION`, 추가 public pages 0.
-  - Local gates PASS: focused 67, unittest 742, pytest 1,183, measurement validator 19,027 URLs, launch guard, `git diff --check`. Clean branch commit/push/PR 및 fresh exact-head SEO QA 완료 후에만 이 항목을 `[x]`로 바꾼다.
+  - 최종 전달: PR #35 normal merge, merge SHA `0156625d002654271046b20b7c874ea328d071d2`; post-merge SEO QA `37095932102` SUCCESS. 세 실험은 `INCONCLUSIVE / COMPARABLE_MATCHED_PERIOD_NAVER_DATA_UNAVAILABLE`로 종결했고, active experiments 3→0 및 selector capacity 0→3을 확인했다.
+  - 범위/결과: 실제 콘텐츠 수정 0, 추가 공개 페이지 0. 대상 HTML·protected pages·sitemap/hub/manifest/IndexNow 변경 없음. matched-period Naver 값을 만들지 않았으며 Revenue는 `NO_CONCLUSION`.
 
 ## P1 - High
 
