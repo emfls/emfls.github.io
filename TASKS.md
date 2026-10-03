@@ -4,6 +4,14 @@
 
 ## P0 - Critical
 
+- [ ] P0 Revenue Evidence Upgrade — GSC query-level evidence for current opportunities
+  - 목적: exact-period Search Console query evidence를 현재 `OPPORTUNITY` URL별 sidecar에 수집해 snippet/query mismatch 검토 근거를 만든다. 기존 page-level snapshot은 유지하고 콘텐츠는 수정하지 않는다.
+  - 최신 기준: `origin/main` `ffe6c429a80cabca14ff9231af9cb2c86a1a33a6`; GSC `2026-09-03..2026-09-30`; complete page-performance inventory에서 OPPORTUNITY 34개, revenue summary count와 일치.
+  - 로컬 구현: per-URL exact page filter/query collector, explicit no-query status, API failure 시 last-good artifact 보존, isolated `opportunity-query` workflow mode 및 회귀 테스트. 수정 후 focused 44, unittest 742, pytest 1,193, measurement validator, content launch guard, `git diff --check` PASS.
+  - 실제 수집: GSC Collection run `37112076773` SUCCESS. `data/performance/gsc-opportunity-queries-latest.json`은 34 URL, 12 URL에 query row, 22 `NO_QUERY_ROWS_RETURNED`, 총 110 query rows(393 impressions / 1 click)를 기록한다. Page-level 합계 571 impressions / 7 clicks와 query subtotal 차이는 privacy/top-row filtering으로 가능한 부분 응답이며 불일치 오류나 누락 0으로 해석하지 않는다.
+  - 근거 판정: `YMYL_HOLD` 11, `NO_MISMATCH` 2(URL Encoder·영문 MBTI), `INSUFFICIENT_QUERY_EVIDENCE` 21, `ACTIONABLE_CTR` 0. URL Encoder 실제 query는 encode/decode 의도와 title/meta/H1이 맞고, MBTI query도 현재 16-type quiz 의도와 맞지만 평균 순위 75.18이어서 snippet 원인으로 귀속하지 않았다. 낮은 표본/미반환 query는 수요 0이 아니다. AdSense URL revenue는 계속 `NOT_CONNECTED`; GA4 `totalAdRevenue`를 AdSense 수익으로 사용하지 않았다. 페이지 변경 0, Revenue `NO_CONCLUSION`.
+  - PR/CI: PR #37은 open. 최초 exact-head SEO QA `37112666746`은 마지막 full pytest에서 dry-run 테스트 1건 실패, 나머지 1,192 passed; 원인은 QA가 먼저 revenue artifact를 재생성해 `OPPORTUNITY=0`인 run에서 CLI가 정확히 `plannedUrls=0`을 반환했지만 테스트가 이전 artifact의 고정값 34를 요구한 것. production code는 변경하지 않고 dry-run test를 안정적인 temporary inventory fixture(2 current opportunities)로 분리했다. 수정 후 focused 44, unittest 742, pytest 1,193 PASS. Corrective test commit을 같은 PR branch에 push한 뒤 새 exact-head SEO QA를 확인할 것; PR merge 금지.
+
 - [ ] P0 Arabic Locale Retire — `/ae/`
   - 목적: `/ae/` locale의 현재 사이트 콘텐츠와 파생 인벤토리 의존성을 retire한다. JP First 50 및 다른 locale pruning은 제외한다.
   - 범위: Arabic HTML 63개 삭제, locale 전용 JS 2개 삭제, `ae/sitemap.xml` 삭제. Raw GA4/GSC snapshots와 non-Arabic HTML을 보존하고 compact `data/site-audit.json`을 약 16 MB 수준으로 유지한다.
