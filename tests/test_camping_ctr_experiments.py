@@ -52,14 +52,17 @@ class CampingCtrPageTest(unittest.TestCase):
 
 
 class CampingCtrRegistryTest(unittest.TestCase):
-    def test_registry_contains_exactly_three_independent_observing_experiments(self):
+    def test_registry_contains_exactly_three_terminal_inconclusive_experiments(self):
         registry = json.loads(Path("data/experiments.json").read_text(encoding="utf-8"))
         experiments = registry["experiments"]
         self.assertEqual(len(experiments), 3)
         self.assertEqual({row["url"] for row in experiments}, {row["url"] for row in PAGES.values()})
         for row in experiments:
             expected = next(item for item in PAGES.values() if item["url"] == row["url"])
-            self.assertEqual(row["status"], "OBSERVING")
+            self.assertEqual(row["status"], "INCONCLUSIVE")
+            self.assertEqual(row["result"], "INCONCLUSIVE")
+            self.assertEqual(row["closureReason"], "COMPARABLE_MATCHED_PERIOD_NAVER_DATA_UNAVAILABLE")
+            self.assertNotIn("after", row)
             self.assertEqual(row["started"], "2026-09-01")
             self.assertEqual(row["observe_until"], "2026-09-29")
             self.assertEqual(row["cooldownUntil"], "2026-09-29")
