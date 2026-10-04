@@ -4,6 +4,10 @@ from pathlib import Path
 
 from scripts.generate_recent_rss import collect_entries
 from scripts.sitemap_audit import audit_local_sitemaps, render_root_index
+from scripts.content_launch_guard import (
+    APPROVED_ARABIC_RETIREMENT_URLS,
+    _approved_arabic_retirement_paths,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -41,6 +45,31 @@ def _contains_arabic_path(value):
 
 def test_arabic_public_tree_is_retired():
     assert not (ROOT / "ae").exists()
+
+
+def test_retirement_override_records_only_the_user_approved_arabic_winners():
+    record = json.loads((ROOT / "data/locale-retirement-overrides.json").read_text(encoding="utf-8"))
+
+    assert record["locale"] == "ae"
+    assert record["decision"] == "RETIRED"
+    assert record["status"] == "USER_APPROVED_LOCALE_RETIREMENT_OVERRIDE"
+    assert record["approved"] is True
+    assert record["preserveRawMeasurements"] is True
+    assert set(record["urls"]) == APPROVED_ARABIC_RETIREMENT_URLS
+    assert record["evidence"]["ga4"] == {
+        "period": "2026-09-05..2026-10-02",
+        "views": 13,
+        "users": 12,
+        "engagementSeconds": 256,
+        "totalAdRevenue": 0.015871,
+    }
+    assert record["evidence"]["gsc"]["status"] == "NO_ROW"
+    assert _approved_arabic_retirement_paths(ROOT) == {
+        "ae/util/index.html",
+        "ae/util/dice3d/index.html",
+        "ae/util/text-cleaner/index.html",
+        "ae/util/text-shuffle-sort/index.html",
+    }
 
 
 def test_local_sitemaps_and_rss_contain_no_arabic_urls():
