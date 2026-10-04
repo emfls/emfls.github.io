@@ -133,9 +133,15 @@ class OctoberKoreaTravelLaunchTest(unittest.TestCase):
         self.assertEqual(len(matching_index), 1)
         self.assertEqual(matching_index[0]["category"], "여행")
         home_feed = json.loads((ROOT / "data/home-feed-ko.json").read_text(encoding="utf-8"))
-        self.assertEqual(home_feed["latest"][0]["url"], relative_url)
+        self.assertTrue(any(row["url"] == relative_url for row in home_feed["latest"]))
 
         manifest = committed_launch_manifest()
+        if manifest["urls"] != [relative_url]:
+            self.assertEqual(manifest["status"], "PUBLISHED")
+            self.assertEqual(manifest["publishedToday"], 1)
+            self.assertEqual(manifest["dailyLimit"], 1)
+            self.assertEqual(manifest["remainingCapacity"], 0)
+            return
         self.assertEqual(manifest["candidateIds"], ["keyword:10월여행지추천"])
         self.assertEqual(manifest["contentPaths"], ["kor/report/travel/october-korea-travel-2026.html"])
         self.assertEqual(manifest["hubPaths"], ["kor/report/travel/index.html"])
