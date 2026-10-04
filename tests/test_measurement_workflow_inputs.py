@@ -222,9 +222,13 @@ def test_ga4_jp_travel_coverage_mode_collects_distinct_56d_and_90d_sidecars_only
 def test_gsc_jp_travel_coverage_mode_preserves_existing_modes_and_commits_sidecars_only():
     workflow = _workflow_text()
     coverage_only = "if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'jp-travel-coverage'"
+    validation = _step_block(workflow, "Validate GSC JP Travel coverage sidecars")
 
     assert "options: [page, camping-query, opportunity-query, jp-travel-coverage]" in workflow
     assert "default: page" in workflow
+    assert "from urllib.parse import urlsplit" in validation
+    assert "urlsplit(page[\"url\"]).path.startswith(\"/jp/report/travel/\")" in validation
+    assert "urlsplit(page[\"url\"]).netloc.lower() in {\"\", \"emfls.github.io\"}" in validation
     for days in (56, 90):
         collect = _step_block(workflow, f"Collect GSC JP Travel {days}d coverage")
         assert coverage_only in collect

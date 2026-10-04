@@ -143,6 +143,7 @@ jobs:
           python3 - <<'PY'
           import json
           from pathlib import Path
+          from urllib.parse import urlsplit
           for days in (56, 90):
               path = Path(f"data/performance/jp-travel-gsc-{days}d.json")
               snapshot = json.loads(path.read_text(encoding="utf-8"))
@@ -151,7 +152,11 @@ jobs:
               assert snapshot["scope"]["pathPrefix"] == "/jp/report/travel/"
               assert snapshot["scope"]["property"] == "https://emfls.github.io/"
               assert snapshot["period"]["start"] and snapshot["period"]["end"]
-              assert all(page["url"].startswith("https://emfls.github.io/jp/report/travel/") for page in snapshot["pages"])
+              assert all(
+                  urlsplit(page["url"]).netloc.lower() in {"", "emfls.github.io"}
+                  and urlsplit(page["url"]).path.startswith("/jp/report/travel/")
+                  for page in snapshot["pages"]
+              )
           PY
 
       - name: Commit refreshed GSC measurement artifacts
