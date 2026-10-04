@@ -987,3 +987,12 @@
 - Active experiment slots 3→0; selector capacity reopened 0→3.
 - Manual review produced 0 actionable content edits; additional public pages 0. No camping HTML, public content, sitemap, manifest, or IndexNow changes.
 - Revenue remains `NO_CONCLUSION`; TASKS closure complete.
+
+## 2026-10-04 — P0 JP Travel Batch 02 canary — final PR QA pending
+- Sync recovery used the fetched Git remote as source of truth: `origin/main` `bdf76120dac725fca0ac955929626c5378648055`; branch `codex/p0-pruning-batch-02` starts from that exact SHA. A final pre-delivery fetch found no main movement.
+- Revalidated the canonical 50 only. All 50 existed on base, overlapped none of the protected archive (17), HOLD archive (18), current JP Travel winners (15), or active experiments; all had severe `/jp/` locale/content defects and no inbound HTML link or live content/index/feed/generator dependency. GA4 `2026-09-05..2026-10-02` and verified GSC/query `2026-09-03..2026-09-30` returned `NO_ROW`; missing rows remain unknown, not zero.
+- Removed 50 JP Travel HTML files (674,830 B) and all 50 complete URL blocks from `jp/report/travel/sitemap.xml`. Refreshed compact `data/site-audit.json`, page scores/performance, revenue opportunities, cannibalization and sitemap audit. Raw `data/performance/**` GA4/GSC snapshots are byte-identical to base. No non-candidate HTML changes.
+- A first sitemap edit removed only `<loc>` lines and left 50 empty `<url>` blocks; verification caught this. Removed those entire blocks and re-ran the sitemap audit: 46 leaves / 18,756 URL entries (−50 from base) / 0 duplicates / 0 unknown / 0 invalid XML.
+- Final tracked tree so far: main 508,890,557 B; branch 507,936,737 B (net −953,820 B); `data/site-audit.json` 16,225,108 B. Current protected winner count 1,580 total / 15 JP Travel; candidate overlap 0.
+- Local final QA after sitemap correction: unittest 742; pytest 1,193; SEO QA 0 new criticals / 0 new warnings; sitemap audit PASS; broken internal links 276 unchanged; Launch Guard PASS; `git diff --check` PASS. Keyword Hunter dry-run completed once with 0 API calls / 0 writes before the sitemap-only correction; exact final-head CI is expected to rerun it.
+- State: PR creation and exact-head CI pending; no merge, no production claim, and no Batch 03.

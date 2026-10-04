@@ -4,6 +4,13 @@
 
 ## P0 - Critical
 
+- [ ] P0 JP Travel Batch 02 — 50-page canary PR
+  - 최신 `origin/main`: `bdf76120dac725fca0ac955929626c5378648055`; isolated branch `codex/p0-pruning-batch-02`.
+  - Canonical 50 only: 50 JP Travel HTML files and complete sitemap entries removed on the PR branch; protected/HOLD/active-experiment overlap 0. GA4/GSC `NO_ROW` remains unknown, never zero. Raw GA4/GSC snapshots are unchanged.
+  - Local final QA: unittest 742; pytest 1,193; SEO QA 0 new critical/warnings; sitemap 46 leaves / 18,756 URLs / 0 duplicates / 0 unknown; broken links 276 unchanged; Launch Guard PASS; `git diff --check` PASS. Exact-head Actions and PR remain pending.
+  - State: `EXECUTING — AWAITING_EXACT_HEAD_CI`; do not merge or start Batch 03.
+
+
 - [ ] P0 Revenue Evidence Upgrade — GSC query-level evidence for current opportunities
   - 목적: exact-period Search Console query evidence를 현재 `OPPORTUNITY` URL별 sidecar에 수집해 snippet/query mismatch 검토 근거를 만든다. 기존 page-level snapshot은 유지하고 콘텐츠는 수정하지 않는다.
   - 최신 기준: `origin/main` `ffe6c429a80cabca14ff9231af9cb2c86a1a33a6`; GSC `2026-09-03..2026-09-30`; complete page-performance inventory에서 OPPORTUNITY 34개, revenue summary count와 일치.
