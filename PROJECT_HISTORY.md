@@ -1,5 +1,14 @@
 # PROJECT HISTORY
 
+## 2026-10-04 — P0 JP Travel Batch 02 — latest-main sync and final local QA
+
+- Recovered the GitHub fetch and synchronized the existing branch `codex/p0-pruning-batch-02` with latest `origin/main` `0aac797b1cae66ecbef2fd7286eb223b39e49ca9` using regular merge commit `6ae02e4da18419ff8e41d1487cb3472b2edd08a6`. Thirteen conflict files were resolved without discarding main changes; latest Keyword Hunter/DataLab workflows, scripts, tests, state, and observations remain preserved. Regenerated derived audit/report outputs against the combined tree.
+- Revalidated the exact 50 Batch 02 paths. All 50 remain present on latest main, have no protected-winner or active-experiment overlap, no positive current GA4/GSC page-level row, no inbound link or non-sitemap dependency, and no page-specific generator path. Missing measurement rows remain `NO_ROW / unknown`, not zero. Raw GA4/GSC history under `data/performance/` is unchanged from latest main.
+- Proposed scope remains exactly 50 JP Travel HTML deletions (674,830 B) and 50 JP Travel sitemap entries; protected pages removed: 0; non-target HTML diffs: 0. Current JP travel sitemap changes from 5,337 to 5,287 URLs. No Batch 03 or additional locale pruning was started.
+- Local QA on merge commit `6ae02e4da18419ff8e41d1487cb3472b2edd08a6`: unittest 743 passed; pytest 1,200 passed; SEO QA 0 new criticals / 0 new warnings (767 existing criticals / 420 warnings); sitemap 46 leaf files / 18,707 URLs / 0 duplicates / 0 missing local refs / 0 unknown URLs; broken links 276, unchanged from latest-main baseline; Keyword Hunter dry-run 0 API calls / 0 writes; content launch guard PASS; `git diff --check` PASS.
+- Size at that merge commit: latest main tracked tree 507,654,208 B; branch tree 506,706,034 B; net -948,174 B. The 50 removed HTML files total 674,830 B; compact `data/site-audit.json` is 16,179,318 B and the full scoring audit remains transient at `/tmp/site-audit-full.json`.
+- Status: local validation is complete. The documentation checkpoint is being added before the normal push; PR creation and exact-final-head Actions are pending. Do not merge before exact-head CI success and main review; do not start Batch 03.
+
 ## 2026-10-03 — PR #34 current-main sync and local revalidation (exact-head Actions pending)
 
 - Previous PR #34 branch head `0438379277b2ce69724222c959d9eb6380f0b198`; fetched latest `origin/main` `bdf76120dac725fca0ac955929626c5378648055`. Integrated it by regular merge commit `3d0f1d3a77e5764152beb2b245dccf9dcf180808`. Two documentation conflicts (`PROJECT_HISTORY.md`, `TASKS.md`) were resolved semantically; the five non-conflicting latest-main PR #37 GSC workflow/sidecar/collector/test paths match `origin/main` byte-for-byte.

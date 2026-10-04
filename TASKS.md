@@ -5,10 +5,11 @@
 ## P0 - Critical
 
 - [ ] P0 JP Travel Batch 02 — 50-page canary PR
-  - 최신 `origin/main`: `bdf76120dac725fca0ac955929626c5378648055`; isolated branch `codex/p0-pruning-batch-02`.
-  - Canonical 50 only: 50 JP Travel HTML files and complete sitemap entries removed on the PR branch; protected/HOLD/active-experiment overlap 0. GA4/GSC `NO_ROW` remains unknown, never zero. Raw GA4/GSC snapshots are unchanged.
-  - Local final QA: unittest 742; pytest 1,193; SEO QA 0 new critical/warnings; sitemap 46 leaves / 18,756 URLs / 0 duplicates / 0 unknown; broken links 276 unchanged; Launch Guard PASS; `git diff --check` PASS. Exact-head Actions and PR remain pending.
-  - State: `EXECUTING — AWAITING_EXACT_HEAD_CI`; do not merge or start Batch 03.
+  - Synced the original Batch 02 branch (`0886f7f6fa96c8467ce04b69ce90de4a675d2d7c`) with latest `origin/main` `0aac797b1cae66ecbef2fd7286eb223b39e49ca9` by regular merge commit `6ae02e4da18419ff8e41d1487cb3472b2edd08a6`. Thirteen content/report conflicts were resolved by preserving latest-main Keyword Hunter/DataLab changes and regenerating derived audits.
+  - Canonical 50 only: 50 JP Travel HTML files / 674,830 B and 50 travel-sitemap entries removed. `DELETE_APPROVED=50`; HOLD/PROTECT/MISSING=0 within this reviewed batch. No protected winner, active experiment, positive measured page signal, unresolved dependency, feed/index reference, or generator dependency overlaps the batch. GA4/GSC `NO_ROW` means unknown, never zero. Raw historical snapshots are unchanged.
+  - Local QA: unittest 743; pytest 1,200; SEO QA 0 new criticals / 0 new warnings (767 existing criticals / 420 warnings); sitemap 46 leaves / 18,707 URLs / 0 duplicates / 0 unknown; broken links 276 (latest-main baseline 276); Keyword Hunter dry-run 0 API calls / 0 writes; Launch Guard PASS; `git diff --check` PASS.
+  - Latest-main tracked tree 507,654,208 B; PR tree before this checkpoint edit 506,706,034 B (net -948,174 B); compact `data/site-audit.json` 16,179,318 B. Non-target HTML diff 0; raw GA4/GSC snapshots unchanged.
+  - State: `PR_PENDING_EXACT_HEAD_CI`; do not merge or start Batch 03. Record final pushed HEAD and its own Actions run before marking ready for main review.
 
 
 - [ ] P0 Revenue Evidence Upgrade — GSC query-level evidence for current opportunities
