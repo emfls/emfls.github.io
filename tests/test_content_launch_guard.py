@@ -18,12 +18,46 @@ def setup_data(root):
     write_json(root / "data/revenue-opportunities.json", {"protectedWinners": [
         {"url": "/kor/report/camp/namyangju.html"},
         {"url": "/kor/report/camp/pyeongtaek.html"},
+        {"url": "/jp/report/travel/winner.html"},
+        {"url": "/ae/util/"},
+        {"url": "/ae/util/dice3d/"},
+        {"url": "/ae/util/text-cleaner/"},
+        {"url": "/ae/util/text-shuffle-sort/"},
     ]})
     write_json(root / "data/site-audit.json", {"pages": []})
 
 
 def manifest(urls):
     return {"urls": urls, "contentPaths": [u.lstrip("/") for u in urls], "sitemapPaths": ["kor/report/camp/sitemap.xml"], "hubPaths": ["kor/report/camp/index.html"]}
+
+
+def write_arabic_retirement_override(root):
+    write_json(root / "data/locale-retirement-overrides.json", {
+        "schemaVersion": 1,
+        "locale": "ae",
+        "decision": "RETIRED",
+        "status": "USER_APPROVED_LOCALE_RETIREMENT_OVERRIDE",
+        "approved": True,
+        "approvedAt": "2026-10-04",
+        "reason": "User-approved Arabic locale retirement; historical value is de minimis relative to site-wide simplification.",
+        "preserveRawMeasurements": True,
+        "evidence": {
+            "ga4": {
+                "period": "2026-09-05..2026-10-02",
+                "views": 13,
+                "users": 12,
+                "engagementSeconds": 256,
+                "totalAdRevenue": 0.015871,
+            },
+            "gsc": {"status": "NO_ROW"},
+        },
+        "urls": [
+            "/ae/util/",
+            "/ae/util/dice3d/",
+            "/ae/util/text-cleaner/",
+            "/ae/util/text-shuffle-sort/",
+        ],
+    })
 
 
 def test_guard_allows_more_than_three_pages_but_rejects_deletion(tmp_path):
@@ -36,14 +70,56 @@ def test_guard_allows_more_than_three_pages_but_rejects_deletion(tmp_path):
 
 def test_guard_allows_authorized_arabic_retirement_only(tmp_path):
     setup_data(tmp_path)
-
-    assert validate_launch(tmp_path, manifest([]), [("D", "ae/util/example/index.html")]) == []
-    errors = validate_launch(
+    assert "DELETION_NOT_ALLOWED" in validate_launch(
         tmp_path,
         manifest([]),
-        [("D", "ae/util/example/index.html"), ("D", "kor/report/example.html")],
+        [("D", "ae/util/dice3d/index.html")],
     )
+    write_arabic_retirement_override(tmp_path)
+
+    approved = [
+        ("D", "ae/util/index.html"),
+        ("D", "ae/util/dice3d/index.html"),
+        ("D", "ae/util/text-cleaner/index.html"),
+        ("D", "ae/util/text-shuffle-sort/index.html"),
+    ]
+    assert validate_launch(tmp_path, manifest([]), approved) == []
+    for path in ("ae/util/unapproved/index.html", "jp/report/travel/unapproved.html"):
+        assert "DELETION_NOT_ALLOWED" in validate_launch(tmp_path, manifest([]), [("D", path)])
+
+
+def test_protected_winner_deletion_requires_explicit_arabic_retirement_override(tmp_path):
+    setup_data(tmp_path)
+
+    errors = validate_launch(tmp_path, manifest([]), [("D", "kor/report/camp/namyangju.html")])
+
     assert "DELETION_NOT_ALLOWED" in errors
+    assert "PROTECTED_WINNER_CHANGED" in errors
+
+
+def test_override_cannot_authorize_other_locale_protected_winner(tmp_path):
+    setup_data(tmp_path)
+    write_arabic_retirement_override(tmp_path)
+
+    errors = validate_launch(tmp_path, manifest([]), [("D", "jp/report/travel/winner.html")])
+
+    assert "DELETION_NOT_ALLOWED" in errors
+    assert "PROTECTED_WINNER_CHANGED" in errors
+
+
+def test_raw_ga4_or_gsc_history_deletion_is_always_rejected(tmp_path):
+    setup_data(tmp_path)
+    write_arabic_retirement_override(tmp_path)
+
+    for path in (
+        "data/performance/ga4-latest.json",
+        "data/performance/gsc-latest.json",
+        "data/performance/2026-08-01.json",
+    ):
+        errors = validate_launch(tmp_path, manifest([]), [("D", path)])
+
+        assert "RAW_MEASUREMENT_HISTORY_DELETION_NOT_ALLOWED" in errors
+        assert "DELETION_NOT_ALLOWED" in errors
 
 
 def test_guard_allows_only_exact_jp_travel_canary_deletions(tmp_path):

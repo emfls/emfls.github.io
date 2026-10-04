@@ -115,6 +115,21 @@ APPROVED_JP_TRAVEL_CANARY_DELETIONS = {
     "jp/report/travel/norway-drobak.html",
     "jp/report/travel/poland-poznan.html",
 }
+ARABIC_RETIREMENT_OVERRIDE_PATH = "data/locale-retirement-overrides.json"
+APPROVED_ARABIC_RETIREMENT_URLS = frozenset({
+    "/ae/util/",
+    "/ae/util/dice3d/",
+    "/ae/util/text-cleaner/",
+    "/ae/util/text-shuffle-sort/",
+})
+ARABIC_RETIREMENT_EVIDENCE = {
+    "period": "2026-09-05..2026-10-02",
+    "views": 13,
+    "users": 12,
+    "engagementSeconds": 256,
+    "totalAdRevenue": 0.015871,
+}
+RAW_MEASUREMENT_HISTORY_PREFIX = "data/performance/"
 
 
 def _read(path, default):
@@ -123,6 +138,44 @@ def _read(path, default):
 
 def _url_to_path(url):
     return str(url or "").split("?", 1)[0].lstrip("/")
+
+
+def _url_to_content_path(url):
+    clean = str(url or "").split("?", 1)[0]
+    path = clean.lstrip("/")
+    return f"{path}index.html" if clean.endswith("/") else path
+
+
+def _approved_arabic_retirement_paths(root):
+    record = _read(Path(root) / ARABIC_RETIREMENT_OVERRIDE_PATH, {})
+    if not isinstance(record, dict):
+        return set()
+    urls = record.get("urls")
+    evidence = record.get("evidence")
+    if not isinstance(evidence, dict):
+        return set()
+    ga4 = evidence.get("ga4")
+    gsc = evidence.get("gsc")
+    if not isinstance(ga4, dict) or not isinstance(gsc, dict):
+        return set()
+    if not (
+        record.get("schemaVersion") == 1
+        and record.get("locale") == "ae"
+        and record.get("decision") == "RETIRED"
+        and record.get("status") == "USER_APPROVED_LOCALE_RETIREMENT_OVERRIDE"
+        and record.get("approved") is True
+        and record.get("preserveRawMeasurements") is True
+        and bool(str(record.get("reason") or "").strip())
+        and isinstance(urls, list)
+        and len(urls) == len(APPROVED_ARABIC_RETIREMENT_URLS)
+        and all(isinstance(url, str) for url in urls)
+        and set(urls) == APPROVED_ARABIC_RETIREMENT_URLS
+        and all(url.startswith("/ae/") for url in urls)
+        and ga4 == ARABIC_RETIREMENT_EVIDENCE
+        and gsc == {"status": "NO_ROW"}
+    ):
+        return set()
+    return {_url_to_content_path(url) for url in urls}
 
 
 def _changed_tuple(item):
@@ -140,6 +193,7 @@ def validate_launch(root, manifest, changed_paths):
     changed = [_changed_tuple(row) for row in changed_paths]
     errors = set()
     changed_names = {row[1] for row in changed}
+    approved_arabic_retirement_paths = _approved_arabic_retirement_paths(root)
     added_html = {row[1] for row in changed if row[0] == "A" and row[1].endswith(".html")}
     expected_html = set(manifest.get("contentPaths") or [_url_to_path(url) for url in manifest.get("urls") or []])
     # A manifest can change for launch bookkeeping without adding content.
@@ -148,28 +202,39 @@ def validate_launch(root, manifest, changed_paths):
     launch_changed = bool(added_html)
     if launch_changed and added_html != expected_html:
         errors.add("MANIFEST_DIFF_MISMATCH")
-    # Arabic retirement and this exact JP Travel canary are authorized; keep
-    # all other content deletions and every rename fail-closed.
+    # Only exact, evidenced Arabic retirement exceptions and this exact JP
+    # Travel canary are authorized; keep every other deletion and rename closed.
     unauthorized_deletion = any(
         row[0].startswith(("D", "R"))
         and not (
             row[0] == "D"
-            and (row[1].startswith("ae/") or row[1] in APPROVED_JP_TRAVEL_CANARY_DELETIONS)
+            and (row[1] in approved_arabic_retirement_paths or row[1] in APPROVED_JP_TRAVEL_CANARY_DELETIONS)
         )
         for row in changed
     )
     if manifest.get("deletions") or unauthorized_deletion:
         errors.add("DELETION_NOT_ALLOWED")
+    if any(
+        status.startswith("D") and path.startswith(RAW_MEASUREMENT_HISTORY_PREFIX)
+        for status, path, _, _ in changed
+    ):
+        errors.add("RAW_MEASUREMENT_HISTORY_DELETION_NOT_ALLOWED")
 
     ctr = _read(root / "data/experiments.json", {"experiments": []})
     protected_experiments = {_url_to_path(row.get("url")) for row in ctr.get("experiments") or [] if row.get("status") == "OBSERVING"}
     revenue = _read(root / "data/revenue-opportunities.json", {})
-    protected_winners = {_url_to_path(row.get("url")) for row in revenue.get("protectedWinners") or []}
+    protected_winners = {_url_to_content_path(row.get("url")) for row in revenue.get("protectedWinners") or []}
     if changed_names & protected_experiments:
         errors.add("PROTECTED_EXPERIMENT_CHANGED")
     for path in changed_names & protected_winners:
         path_changes = [row for row in changed if row[1] == path]
         approved = APPROVED_PROTECTED_WINNER_TRANSITIONS.get(path, set())
+        if (
+            len(path_changes) == 1
+            and path_changes[0][0] == "D"
+            and path in approved_arabic_retirement_paths
+        ):
+            continue
         if (
             len(path_changes) != 1
             or path_changes[0][0] != "M"

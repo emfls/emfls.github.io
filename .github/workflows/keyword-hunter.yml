@@ -4,6 +4,17 @@ on:
   schedule:
     - cron: "17 */2 * * *"
   workflow_dispatch:
+    inputs:
+      mode:
+        description: Collection mode
+        type: choice
+        options: [broad, targeted]
+        default: broad
+        required: true
+      keywords:
+        description: 1-5 explicit queries (JSON array or one query per line; targeted mode only)
+        type: string
+        required: false
 
 permissions:
   contents: write
@@ -25,6 +36,7 @@ jobs:
       NAVER_API_HUB_CLIENT_SECRET: ${{ secrets.NAVER_API_HUB_CLIENT_SECRET }}
       NAVER_WEB_SEARCH_API_HUB_CLIENT_ID: ${{ secrets.NAVER_WEB_SEARCH_API_HUB_CLIENT_ID }}
       NAVER_WEB_SEARCH_API_HUB_CLIENT_SECRET: ${{ secrets.NAVER_WEB_SEARCH_API_HUB_CLIENT_SECRET }}
+      KEYWORD_HUNTER_TARGETS_JSON: ${{ inputs.keywords }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -51,15 +63,24 @@ jobs:
         run: python3 -m pip install pytest
 
       - name: Run Keyword Hunter
+        if: github.event_name == 'schedule' || inputs.mode != 'targeted'
         run: python3 scripts/keyword_hunter.py
 
       - name: Verify Keyword Hunter
         run: python3 -m pytest tests/test_keyword_hunter*.py -q
 
+      - name: Run targeted Keyword Hunter measurement
+        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'targeted'
+        env:
+          KEYWORD_HUNTER_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+        run: python3 scripts/keyword_hunter_targeted.py --root .
+
       - name: Prepare supervised review queue
+        if: github.event_name == 'schedule' || inputs.mode != 'targeted'
         run: python3 scripts/prepare_keyword_launch.py --root .
 
       - name: Validate supervised review queue
+        if: github.event_name == 'schedule' || inputs.mode != 'targeted'
         run: |
           python3 - <<'PY'
           import json
@@ -74,13 +95,21 @@ jobs:
           PY
 
       - name: Protect publication state
+        if: always()
         run: |
           for path in data/published_keywords.json data/content-launch-counter.json data/content-launch-manifest.json data/content-launch-decisions.json; do
-            if ! git diff --quiet -- "$path"; then echo "::error::Protected publication state changed: $path"; exit 1; fi
+            if ! git diff HEAD --quiet -- "$path" || [ -n "$(git ls-files --others --exclude-standard -- "$path")" ]; then
+              echo "::error::Protected publication state changed: $path"
+              exit 1
+            fi
           done
-          if git diff --name-only | grep -E '^kor/.*\.html$'; then echo "::error::HTML changed during measurement"; exit 1; fi
+          if git status --porcelain --untracked-files=all | grep -E '^.. kor/.*\.html$'; then
+            echo "::error::HTML changed during measurement"
+            exit 1
+          fi
 
       - name: Persist measured state
+        if: github.event_name == 'schedule' || inputs.mode != 'targeted'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -91,6 +120,27 @@ jobs:
           git diff --cached --quiet || git commit -m "chore: update keyword hunter observations"
           git push
 
+      - name: Persist targeted measurement
+        if: always() && github.event_name == 'workflow_dispatch' && inputs.mode == 'targeted'
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          report="reports/keyword-targeted-validation/${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.json"
+          for path in data/keyword-targeted-validation/latest.json data/api_usage.json "$report"; do
+            if [ -f "$path" ]; then git add -- "$path"; fi
+          done
+          allowed='^(data/keyword-targeted-validation/latest\.json|data/api_usage\.json|reports/keyword-targeted-validation/[0-9]+-[0-9]+\.json)$'
+          while IFS= read -r path; do
+            [ -z "$path" ] && continue
+            if ! printf '%s\n' "$path" | grep -Eq "$allowed"; then
+              echo "::error::Unexpected targeted measurement file staged: $path"
+              exit 1
+            fi
+          done < <(git diff --cached --name-only)
+          git diff --cached --quiet || git commit -m "chore: record targeted keyword measurements"
+          git push
+
       - name: Upload latest reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -98,5 +148,6 @@ jobs:
           name: keyword-hunter-reports
           path: |
             reports/keyword-hunter/
+            reports/keyword-targeted-validation/
             data/existing-page-improvement-candidates.json
           if-no-files-found: warn
