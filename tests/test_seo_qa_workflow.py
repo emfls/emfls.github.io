@@ -56,6 +56,14 @@ class SeoQaWorkflowTests(unittest.TestCase):
         self.assertIn("data/revenue-opportunities.json", source)
         self.assertIn("reports/revenue-growth-report.md", source)
 
+    def test_workflow_revenue_refresh_uses_current_ga4_and_gsc_measurement_artifacts(self):
+        source = WORKFLOW.read_text(encoding="utf-8")
+        start = source.index("python3 scripts/revenue_growth.py")
+        command = source[start : source.index("\n", start)]
+
+        self.assertIn("--performance data/page-performance.json", command)
+        self.assertIn("--gsc-snapshot data/performance/gsc-latest.json", command)
+
     def test_workflow_validates_daily_launch_without_cron_or_write_permission(self):
         source = WORKFLOW.read_text(encoding="utf-8")
         revenue = source.index("scripts/revenue_growth.py")

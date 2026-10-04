@@ -14,6 +14,107 @@ APPROVED_PROTECTED_WINNER_TRANSITIONS = {
         ("4d95593169e466447ee355429d2822764ca7e1a5", "b4fc13119f1e8cd01d78805d06ee981ac6834236"),
     },
 }
+APPROVED_JP_TRAVEL_CANARY_DELETIONS = {
+    "jp/report/travel/bangladesh-lalmonirhat.html",
+    "jp/report/travel/bangladesh-satkhira.html",
+    "jp/report/travel/bangladesh-sirajganj.html",
+    "jp/report/travel/barbados-bathsheba.html",
+    "jp/report/travel/barbados-bridgetown.html",
+    "jp/report/travel/botswana-ramotshwa.html",
+    "jp/report/travel/brazil-curitiba.html",
+    "jp/report/travel/brazil-rio.html",
+    "jp/report/travel/canada-london.html",
+    "jp/report/travel/chile-san-pedro-atacama.html",
+    "jp/report/travel/colombia-santa-marta.html",
+    "jp/report/travel/costa-rica-san-jose.html",
+    "jp/report/travel/croatia-dubrovnik.html",
+    "jp/report/travel/dominican-montecristi.html",
+    "jp/report/travel/dominican-puntacana.html",
+    "jp/report/travel/finland-helsinki.html",
+    "jp/report/travel/greece-astypalaia.html",
+    "jp/report/travel/greece-corfu.html",
+    "jp/report/travel/greece-lefkada.html",
+    "jp/report/travel/greece-mytilene.html",
+    "jp/report/travel/india-ahmedabad.html",
+    "jp/report/travel/india-delhi.html",
+    "jp/report/travel/indonesia-ambon.html",
+    "jp/report/travel/indonesia-medan.html",
+    "jp/report/travel/indonesia-palembang.html",
+    "jp/report/travel/ireland-cork.html",
+    "jp/report/travel/ireland-waterford.html",
+    "jp/report/travel/kenya-nairobi.html",
+    "jp/report/travel/laos-luangprabang.html",
+    "jp/report/travel/laos-pakse.html",
+    "jp/report/travel/malaysia-kota-kinabalu.html",
+    "jp/report/travel/maldives-male.html",
+    "jp/report/travel/panama-city.html",
+    "jp/report/travel/papua-new-guinea-port-moresby.html",
+    "jp/report/travel/philippines-gensan.html",
+    "jp/report/travel/philippines-iloilo.html",
+    "jp/report/travel/portugal-aguassantas.html",
+    "jp/report/travel/somalia-bosaso.html",
+    "jp/report/travel/south-africa-cape-town.html",
+    "jp/report/travel/south-africa-mossel-bay.html",
+    "jp/report/travel/south-africa-paradise.html",
+    "jp/report/travel/taiwan-taipei.html",
+    "jp/report/travel/thailand-phuket.html",
+    "jp/report/travel/thailand-ratchaburi.html",
+    "jp/report/travel/thailand-tak.html",
+    "jp/report/travel/thailand-udonthani.html",
+    "jp/report/travel/uae-dubai.html",
+    "jp/report/travel/uk-edinburgh.html",
+    "jp/report/travel/uk-sheffield.html",
+    "jp/report/travel/belgium-arden.html",
+    "jp/report/travel/belgium-namur.html",
+    "jp/report/travel/belgium-sint-truiden.html",
+    "jp/report/travel/czech-svitavy.html",
+    "jp/report/travel/czech-zlin.html",
+    "jp/report/travel/finland-espoo.html",
+    "jp/report/travel/finland-tampere.html",
+    "jp/report/travel/france-angers.html",
+    "jp/report/travel/france-angouleme.html",
+    "jp/report/travel/france-annecy.html",
+    "jp/report/travel/france-antibes.html",
+    "jp/report/travel/france-argenteuil.html",
+    "jp/report/travel/france-avignon.html",
+    "jp/report/travel/france-bayonne.html",
+    "jp/report/travel/france-bordeaux.html",
+    "jp/report/travel/france-bourges.html",
+    "jp/report/travel/france-brest.html",
+    "jp/report/travel/france-calais.html",
+    "jp/report/travel/france-charleville-mezieres.html",
+    "jp/report/travel/france-clermont-ferrand.html",
+    "jp/report/travel/france-dijon.html",
+    "jp/report/travel/france-evianlesbains.html",
+    "jp/report/travel/france-lehavre.html",
+    "jp/report/travel/france-limoges.html",
+    "jp/report/travel/france-lyon.html",
+    "jp/report/travel/france-marseille.html",
+    "jp/report/travel/france-menton.html",
+    "jp/report/travel/france-mont-saint-michel.html",
+    "jp/report/travel/france-montpellier.html",
+    "jp/report/travel/france-montreuil.html",
+    "jp/report/travel/france-mulhouse.html",
+    "jp/report/travel/france-nantes.html",
+    "jp/report/travel/france-nimes.html",
+    "jp/report/travel/france-niort.html",
+    "jp/report/travel/france-orleans.html",
+    "jp/report/travel/france-paris.html",
+    "jp/report/travel/france-perpignan.html",
+    "jp/report/travel/france-poitiers.html",
+    "jp/report/travel/france-rennes.html",
+    "jp/report/travel/france-rouen.html",
+    "jp/report/travel/france-saint-etienne.html",
+    "jp/report/travel/france-sete.html",
+    "jp/report/travel/france-strasbourg.html",
+    "jp/report/travel/france-toulon.html",
+    "jp/report/travel/france-toulouse.html",
+    "jp/report/travel/france-valenciennes.html",
+    "jp/report/travel/france-versailles.html",
+    "jp/report/travel/italy-perugia.html",
+    "jp/report/travel/norway-drobak.html",
+    "jp/report/travel/poland-poznan.html",
+}
 
 
 def _read(path, default):
@@ -47,11 +148,14 @@ def validate_launch(root, manifest, changed_paths):
     launch_changed = bool(added_html)
     if launch_changed and added_html != expected_html:
         errors.add("MANIFEST_DIFF_MISMATCH")
-    # The Arabic locale retirement is explicitly authorized; keep all other
-    # content deletions and every rename fail-closed.
+    # Arabic retirement and this exact JP Travel canary are authorized; keep
+    # all other content deletions and every rename fail-closed.
     unauthorized_deletion = any(
         row[0].startswith(("D", "R"))
-        and not (row[0] == "D" and row[1].startswith("ae/"))
+        and not (
+            row[0] == "D"
+            and (row[1].startswith("ae/") or row[1] in APPROVED_JP_TRAVEL_CANARY_DELETIONS)
+        )
         for row in changed
     )
     if manifest.get("deletions") or unauthorized_deletion:

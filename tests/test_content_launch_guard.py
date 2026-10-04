@@ -1,7 +1,11 @@
 import json
 from pathlib import Path
 
-from scripts.content_launch_guard import _git_changes, validate_launch
+from scripts.content_launch_guard import (
+    APPROVED_JP_TRAVEL_CANARY_DELETIONS,
+    _git_changes,
+    validate_launch,
+)
 
 
 def write_json(path, payload):
@@ -40,6 +44,86 @@ def test_guard_allows_authorized_arabic_retirement_only(tmp_path):
         [("D", "ae/util/example/index.html"), ("D", "kor/report/example.html")],
     )
     assert "DELETION_NOT_ALLOWED" in errors
+
+
+def test_guard_allows_only_exact_jp_travel_canary_deletions(tmp_path):
+    setup_data(tmp_path)
+    assert len(APPROVED_JP_TRAVEL_CANARY_DELETIONS) == 99
+    assert "jp/report/travel/malaysia-kuala-terengganu.html" not in APPROVED_JP_TRAVEL_CANARY_DELETIONS
+
+    allowed = [("D", path) for path in sorted(APPROVED_JP_TRAVEL_CANARY_DELETIONS)]
+    assert validate_launch(tmp_path, manifest([]), allowed) == []
+
+    for path in (
+        "jp/report/travel/malaysia-kuala-terengganu.html",
+        "jp/report/travel/unreviewed.html",
+        "kor/report/travel/unreviewed.html",
+    ):
+        assert "DELETION_NOT_ALLOWED" in validate_launch(tmp_path, manifest([]), [("D", path)])
+    assert "DELETION_NOT_ALLOWED" in validate_launch(
+        tmp_path,
+        manifest([]),
+        [("R100", "jp/report/travel/bangladesh-satkhira.html")],
+    )
+
+
+def test_guard_allows_the_exact_jp_travel_batch_02_deletions(tmp_path):
+    setup_data(tmp_path)
+    batch_02 = {
+        "jp/report/travel/belgium-arden.html",
+        "jp/report/travel/belgium-namur.html",
+        "jp/report/travel/belgium-sint-truiden.html",
+        "jp/report/travel/czech-svitavy.html",
+        "jp/report/travel/czech-zlin.html",
+        "jp/report/travel/finland-espoo.html",
+        "jp/report/travel/finland-tampere.html",
+        "jp/report/travel/france-angers.html",
+        "jp/report/travel/france-angouleme.html",
+        "jp/report/travel/france-annecy.html",
+        "jp/report/travel/france-antibes.html",
+        "jp/report/travel/france-argenteuil.html",
+        "jp/report/travel/france-avignon.html",
+        "jp/report/travel/france-bayonne.html",
+        "jp/report/travel/france-bordeaux.html",
+        "jp/report/travel/france-bourges.html",
+        "jp/report/travel/france-brest.html",
+        "jp/report/travel/france-calais.html",
+        "jp/report/travel/france-charleville-mezieres.html",
+        "jp/report/travel/france-clermont-ferrand.html",
+        "jp/report/travel/france-dijon.html",
+        "jp/report/travel/france-evianlesbains.html",
+        "jp/report/travel/france-lehavre.html",
+        "jp/report/travel/france-limoges.html",
+        "jp/report/travel/france-lyon.html",
+        "jp/report/travel/france-marseille.html",
+        "jp/report/travel/france-menton.html",
+        "jp/report/travel/france-mont-saint-michel.html",
+        "jp/report/travel/france-montpellier.html",
+        "jp/report/travel/france-montreuil.html",
+        "jp/report/travel/france-mulhouse.html",
+        "jp/report/travel/france-nantes.html",
+        "jp/report/travel/france-nimes.html",
+        "jp/report/travel/france-niort.html",
+        "jp/report/travel/france-orleans.html",
+        "jp/report/travel/france-paris.html",
+        "jp/report/travel/france-perpignan.html",
+        "jp/report/travel/france-poitiers.html",
+        "jp/report/travel/france-rennes.html",
+        "jp/report/travel/france-rouen.html",
+        "jp/report/travel/france-saint-etienne.html",
+        "jp/report/travel/france-sete.html",
+        "jp/report/travel/france-strasbourg.html",
+        "jp/report/travel/france-toulon.html",
+        "jp/report/travel/france-toulouse.html",
+        "jp/report/travel/france-valenciennes.html",
+        "jp/report/travel/france-versailles.html",
+        "jp/report/travel/italy-perugia.html",
+        "jp/report/travel/norway-drobak.html",
+        "jp/report/travel/poland-poznan.html",
+    }
+    assert len(batch_02) == 50
+
+    assert validate_launch(tmp_path, manifest([]), [("D", path) for path in sorted(batch_02)]) == []
 
 
 def test_guard_rejects_protected_pages_and_monetization_code(tmp_path):
