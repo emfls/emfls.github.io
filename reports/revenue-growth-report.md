@@ -17,7 +17,7 @@
 
 ### 1. `/kor/report/camp/gyeongnam-best.html`
 
-- Score: 50.4 / 100
+- Score: 50.36 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -26,9 +26,9 @@
 - Naver: NOT_AVAILABLE
 - Rank: N/A
 
-### 2. `/kor/report/camp/muju.html`
+### 2. `/kor/report/camp/hwasun.html`
 
-- Score: 47.63 / 100
+- Score: 47.64 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -50,7 +50,7 @@
 
 ### 4. `/kor/report/camp/seongnam.html`
 
-- Score: 46.84 / 100
+- Score: 46.69 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -94,7 +94,7 @@
 
 ### 8. `/kor/report/camp/gimhae.html`
 
-- Score: 44.79 / 100
+- Score: 44.67 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -103,9 +103,9 @@
 - Naver: 698 impressions / 48 clicks / 6.9% CTR
 - Rank: N/A
 
-### 9. `/kor/report/camp/naju.html`
+### 9. `/kor/report/camp/muju.html`
 
-- Score: 43.76 / 100
+- Score: 43.35 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
@@ -114,9 +114,9 @@
 - Naver: NOT_AVAILABLE
 - Rank: N/A
 
-### 10. `/kor/report/travel/`
+### 10. `/kor/report/camp/naju.html`
 
-- Score: 42.13 / 100
+- Score: 42.14 / 100
 - Classification: WINNER
 - Why: Verified URL revenue; Verified traffic
 - Next Action: PROTECT
