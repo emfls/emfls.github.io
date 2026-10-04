@@ -11,6 +11,7 @@ ALLOWED_STATUSES = {
     "STALE_DATA",
     "NOT_CONNECTED",
     "INSUFFICIENT_DATA",
+    "UNOBSERVED",
     "NOT_AVAILABLE",
     "ZERO_VERIFIED",
 }
@@ -86,7 +87,11 @@ def _best_search_channel(record):
 
 def score_opportunity(record, cluster_medians):
     channel_name, search = _best_search_channel(record)
-    search_status = "VERIFIED" if channel_name else "NOT_CONNECTED"
+    search_status = "VERIFIED" if channel_name else (
+        "UNOBSERVED"
+        if any((record.get(name) or {}).get("status") == "UNOBSERVED" for name in ("naver", "google"))
+        else "NOT_CONNECTED"
+    )
     impressions = search.get("impressions") if channel_name else None
     clicks = search.get("clicks") if channel_name else None
     ctr = search.get("ctr") if channel_name else None
@@ -114,7 +119,7 @@ def score_opportunity(record, cluster_medians):
     median_impressions = cluster_medians.get(f"{channel_name}_impressions") if channel_name else None
     if ctr is None or median_ctr in (None, 0):
         ctr_score = 0
-        ctr_status = "INSUFFICIENT_DATA" if channel_name else "NOT_CONNECTED"
+        ctr_status = "INSUFFICIENT_DATA" if channel_name else search_status
     elif median_impressions is not None and (impressions or 0) < median_impressions:
         ctr_score = 0
         ctr_status = search_status
@@ -127,7 +132,9 @@ def score_opportunity(record, cluster_medians):
     ga4_revenue = ga4.get("revenue") if _verified_ad_revenue(ga4) else None
     adsense_revenue = adsense.get("revenue") if _verified(adsense) else None
     revenue = adsense_revenue if adsense_revenue is not None else ga4_revenue
-    revenue_status = "VERIFIED" if revenue is not None else "NOT_CONNECTED"
+    revenue_status = "VERIFIED" if revenue is not None else (
+        "UNOBSERVED" if ga4.get("status") == "UNOBSERVED" else "NOT_CONNECTED"
+    )
     revenue_score = 15 * log1p(max(0, revenue or 0)) / log1p(10)
     views = ga4.get("views") if _verified(ga4) else None
     efficiency = revenue * 1000 / views if revenue is not None and views else None
@@ -148,7 +155,7 @@ def score_opportunity(record, cluster_medians):
     critical = [component["status"] for component in components[:6]]
     if "VERIFIED" not in critical:
         status = "INSUFFICIENT_DATA"
-    elif "NOT_CONNECTED" in critical or "INSUFFICIENT_DATA" in critical:
+    elif "NOT_CONNECTED" in critical or "INSUFFICIENT_DATA" in critical or "UNOBSERVED" in critical:
         status = "ESTIMATED"
     else:
         status = "VERIFIED"

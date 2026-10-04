@@ -158,6 +158,26 @@ def _merge_gsc_snapshot(performance, gsc):
     return {**performance, "pages": list(by_url.values())}
 
 
+def _connected_measurement_sources(performance, gsc_snapshot):
+    """Describe connected site-level snapshots for URLs with no returned row."""
+    result = {}
+    ga4 = ((performance.get("site") or {}).get("ga4") or {})
+    if ga4.get("status") == "VERIFIED" and ga4.get("source"):
+        result["ga4"] = {"status": "VERIFIED", "period": ga4.get("period"), "source": ga4["source"]}
+
+    if gsc_snapshot.get("status") == "VERIFIED" and gsc_snapshot.get("source"):
+        periods = gsc_snapshot.get("periods") or {}
+        result["google"] = {
+            "status": "VERIFIED",
+            "period": periods.get("gsc") or {
+                "start": gsc_snapshot.get("periodStart"),
+                "end": gsc_snapshot.get("periodEnd"),
+            },
+            "source": gsc_snapshot["source"],
+        }
+    return result
+
+
 def _cluster_medians(records):
     values = {}
     for channel_name in ("naver", "google"):
@@ -220,6 +240,8 @@ def _data_status(record):
         return "STALE_DATA"
     if record["ga4"].get("status") == "VERIFIED":
         return "INSUFFICIENT_DATA"
+    if "UNOBSERVED" in search_states or record["ga4"].get("status") == "UNOBSERVED":
+        return "UNOBSERVED"
     return "NOT_CONNECTED"
 
 
@@ -328,6 +350,7 @@ def run_revenue_growth(
     audit = _read_json(audit_path, {"pages": []})
     performance = _read_json(performance_path, {"site": {}, "pages": []})
     gsc_snapshot = _read_json(gsc_snapshot_path, {}) if gsc_snapshot_path else {}
+    connected_sources = _connected_measurement_sources(performance, gsc_snapshot)
     performance = _merge_gsc_snapshot(performance, gsc_snapshot)
     experiments = _read_json(experiments_path, {"experiments": []})
     content_experiments = _read_json(content_experiments_path, {"experiments": []})
@@ -370,7 +393,21 @@ def run_revenue_growth(
         for channel_name, fields in CHANNEL_FIELDS.items():
             channel = performance_row.get(channel_name)
             metadata = CHANNEL_METADATA_FIELDS.get(channel_name, ())
-            record[channel_name] = normalize_channel(channel, fields, as_of, metadata) if channel else empty_channel(fields, metadata_fields=metadata)
+            coverage = connected_sources.get(channel_name)
+            if coverage and (
+                channel is None
+                or (
+                    channel.get("status") == "NOT_CONNECTED"
+                    and all(channel.get(field) is None for field in (*fields, *metadata))
+                )
+            ):
+                record[channel_name] = empty_channel(
+                    fields,
+                    status="UNOBSERVED",
+                    metadata_fields=metadata,
+                )
+            else:
+                record[channel_name] = normalize_channel(channel, fields, as_of, metadata) if channel else empty_channel(fields, metadata_fields=metadata)
         if naver_match:
             naver_row = naver_match["matchedByUrl"].get(url)
             if naver_row:
@@ -433,14 +470,15 @@ def run_revenue_growth(
         ):
             classification, action = "EXPERIMENT", "WAIT_FOR_DATA"
             reasons = ["Naver evidence does not satisfy the controlled Opportunity gate"]
+        data_status = _data_status(record)
         record.update(
             {
                 "classification": classification,
                 "revenueOpportunityScore": score["score"],
                 "scoreStatus": score["status"],
                 "scoreComponents": score["components"],
-                "dataStatus": _data_status(record),
-                "candidateDataStatus": "VERIFIED_WITH_LIMITATIONS" if eligible else _data_status(record),
+                "dataStatus": data_status,
+                "candidateDataStatus": "VERIFIED_WITH_LIMITATIONS" if eligible else data_status,
                 "nextAction": action,
                 "reasons": reasons,
             }
@@ -526,6 +564,7 @@ def run_revenue_growth(
         "schemaVersion": 1,
         "asOf": as_of,
         "summary": {"evaluatedIndexablePages": indexed},
+        "measurementSources": connected_sources,
         "pages": records,
     }
     _write_json(page_output, page_payload, compact=True)

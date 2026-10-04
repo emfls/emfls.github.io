@@ -11,6 +11,62 @@ def write_json(path, payload):
 
 
 class RevenueGrowthIntegrationTest(unittest.TestCase):
+    def test_connected_sources_without_page_rows_are_unobserved_not_disconnected_or_zero(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            period = {"start": "2026-09-06", "end": "2026-10-03"}
+            write_json(root / "scores.json", {"pages": [{"url": "/jp/report/travel/unobserved.html", "score": 20, "type": "TRAFFIC"}]})
+            write_json(root / "audit.json", {"pages": [{"url": "/jp/report/travel/unobserved.html", "indexable": True}]})
+            write_json(root / "performance.json", {
+                "site": {"ga4": {"status": "VERIFIED", "source": "GOOGLE_ANALYTICS_DATA_API", "period": period}},
+                "pages": [],
+            })
+            write_json(root / "gsc.json", {
+                "status": "VERIFIED",
+                "source": "GOOGLE_SEARCH_CONSOLE_API",
+                "property": "https://emfls.github.io/",
+                "periods": {"gsc": {"start": "2026-09-04", "end": "2026-10-01"}},
+                "pages": [],
+            })
+            write_json(root / "experiments.json", {"experiments": []})
+            write_json(root / "history.json", {"pages": []})
+
+            pages, _ = run_revenue_growth(
+                page_scores_path=root / "scores.json",
+                audit_path=root / "audit.json",
+                performance_path=root / "performance.json",
+                experiments_path=root / "experiments.json",
+                optimization_history_path=root / "history.json",
+                gsc_snapshot_path=root / "gsc.json",
+                as_of="2026-10-05",
+                page_output=root / "pages.json",
+                opportunity_output=root / "opportunities.json",
+                report_output=root / "report.md",
+            )
+
+            row = pages["pages"][0]
+            self.assertEqual(row["ga4"]["status"], "UNOBSERVED")
+            self.assertEqual(row["google"]["status"], "UNOBSERVED")
+            self.assertEqual(row["dataStatus"], "UNOBSERVED")
+            self.assertEqual(row["candidateDataStatus"], "UNOBSERVED")
+            self.assertEqual(pages["measurementSources"]["ga4"], {
+                "status": "VERIFIED", "period": period, "source": "GOOGLE_ANALYTICS_DATA_API",
+            })
+            self.assertEqual(pages["measurementSources"]["google"], {
+                "status": "VERIFIED",
+                "period": {"start": "2026-09-04", "end": "2026-10-01"},
+                "source": "GOOGLE_SEARCH_CONSOLE_API",
+            })
+            self.assertIsNone(row["ga4"]["period"])
+            self.assertIsNone(row["ga4"]["source"])
+            self.assertIsNone(row["google"]["period"])
+            self.assertIsNone(row["ga4"]["views"])
+            self.assertIsNone(row["ga4"]["revenue"])
+            self.assertIsNone(row["google"]["clicks"])
+            self.assertEqual(row["scoreStatus"], "INSUFFICIENT_DATA")
+            self.assertEqual(row["scoreComponents"][0]["status"], "UNOBSERVED")
+            self.assertEqual(row["scoreComponents"][4]["status"], "UNOBSERVED")
+
     def test_terminal_inconclusive_camping_experiments_release_selector_slots(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

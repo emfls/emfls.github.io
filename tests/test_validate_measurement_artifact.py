@@ -90,6 +90,40 @@ class ValidateMeasurementArtifactTest(unittest.TestCase):
             page_scores = _write_page_scores(Path(directory), ["/example.html"], "2026-09-17")
             self.assertEqual(validate(path, page_scores_path=page_scores), {"pages": 1, "asOf": "2026-09-17"})
 
+    def test_rejects_populated_metrics_for_unobserved_channel(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            artifact, page_scores = _write_coverage_fixtures(
+                root,
+                [{
+                    "url": "/jp/report/travel/unobserved.html",
+                    "ga4": {"status": "UNOBSERVED", "views": 0, "revenue": 0.0},
+                }],
+                ["/jp/report/travel/unobserved.html"],
+            )
+            payload = json.loads(artifact.read_text(encoding="utf-8"))
+            payload["measurementSources"] = {
+                "ga4": {
+                    "status": "VERIFIED",
+                    "source": "GOOGLE_ANALYTICS_DATA_API",
+                    "period": {"start": "2026-09-01", "end": "2026-09-28"},
+                },
+            }
+            artifact.write_text(json.dumps(payload), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "UNOBSERVED ga4 metrics must be null"):
+                validate(artifact, page_scores_path=page_scores)
+
+    def test_rejects_unobserved_channel_without_connected_source_window(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            artifact, page_scores = _write_coverage_fixtures(
+                root,
+                [{"url": "/jp/report/travel/unobserved.html", "google": {"status": "UNOBSERVED"}}],
+                ["/jp/report/travel/unobserved.html"],
+            )
+            with self.assertRaisesRegex(ValueError, "requires a verified source window"):
+                validate(artifact, page_scores_path=page_scores)
+
     def test_rejects_missing_current_indexable_url(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

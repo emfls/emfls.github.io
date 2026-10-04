@@ -84,14 +84,33 @@ def _validate_inventory_coverage(pages, page_scores_path, as_of):
 def _validate_unconnected_channels(page):
     for channel_name, metric_names in UNCONNECTED_CHANNEL_METRICS.items():
         channel = page.get(channel_name)
-        if not isinstance(channel, dict) or channel.get("status") != "NOT_CONNECTED":
+        if not isinstance(channel, dict) or channel.get("status") not in {"NOT_CONNECTED", "UNOBSERVED"}:
             continue
         populated = [name for name in metric_names if channel.get(name) is not None]
         if populated:
             raise ValueError(
-                f"NOT_CONNECTED {channel_name} metrics must be null: "
+                f"{channel['status']} {channel_name} metrics must be null: "
                 + ", ".join(populated)
             )
+
+
+def _validate_unobserved_source_provenance(pages, measurement_sources):
+    for page in pages:
+        for channel_name in ("ga4", "google"):
+            channel = page.get(channel_name) or {}
+            if channel.get("status") != "UNOBSERVED":
+                continue
+            source = (measurement_sources or {}).get(channel_name) or {}
+            period = source.get("period") or {}
+            if (
+                source.get("status") != "VERIFIED"
+                or not source.get("source")
+                or not period.get("start")
+                or not period.get("end")
+            ):
+                raise ValueError(
+                    f"UNOBSERVED {channel_name} requires a verified source window in measurementSources"
+                )
 
 
 def validate(path: Path, *, page_scores_path: Path, minimum_pages: int = 1):
@@ -107,6 +126,7 @@ def validate(path: Path, *, page_scores_path: Path, minimum_pages: int = 1):
     if payload.get("summary", {}).get("evaluatedIndexablePages") != len(pages):
         raise ValueError("summary page count does not match pages")
     _validate_inventory_coverage(pages, page_scores_path, payload["asOf"])
+    _validate_unobserved_source_provenance(pages, payload.get("measurementSources"))
     for page in pages:
         _validate_ga4_freshness(page, payload["asOf"])
         _validate_unconnected_channels(page)

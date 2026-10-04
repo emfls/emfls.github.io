@@ -9,7 +9,7 @@ on:
         description: "Collection scope"
         required: true
         type: choice
-        options: [page, camping-query, opportunity-query]
+        options: [page, camping-query, opportunity-query, jp-travel-coverage]
         default: page
 
 permissions:
@@ -41,6 +41,30 @@ jobs:
       - name: Collect GSC page snapshot
         if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'page'
         run: python3 scripts/collect_gsc_snapshot.py --output data/performance/gsc-latest.json --days 28
+
+      - name: Collect GSC JP Travel 56d coverage
+        if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'jp-travel-coverage'
+        run: python3 scripts/collect_gsc_snapshot.py --output /tmp/gsc-jp-full-56d.json --days 56
+
+      - name: Scope GSC JP Travel 56d coverage
+        if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'jp-travel-coverage'
+        run: >-
+          python3 scripts/scope_jp_travel_measurement_snapshot.py
+          --input /tmp/gsc-jp-full-56d.json
+          --output data/performance/jp-travel-gsc-56d.json
+          --source-type gsc
+
+      - name: Collect GSC JP Travel 90d coverage
+        if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'jp-travel-coverage'
+        run: python3 scripts/collect_gsc_snapshot.py --output /tmp/gsc-jp-full-90d.json --days 90
+
+      - name: Scope GSC JP Travel 90d coverage
+        if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'jp-travel-coverage'
+        run: >-
+          python3 scripts/scope_jp_travel_measurement_snapshot.py
+          --input /tmp/gsc-jp-full-90d.json
+          --output data/performance/jp-travel-gsc-90d.json
+          --source-type gsc
 
       - name: Collect camping query evidence snapshot
         if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'camping-query'
@@ -113,6 +137,23 @@ jobs:
           print(json.dumps(validate_snapshot(snapshot), ensure_ascii=False))
           PY
 
+      - name: Validate GSC JP Travel coverage sidecars
+        if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'jp-travel-coverage'
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          for days in (56, 90):
+              path = Path(f"data/performance/jp-travel-gsc-{days}d.json")
+              snapshot = json.loads(path.read_text(encoding="utf-8"))
+              assert snapshot["status"] == "VERIFIED"
+              assert snapshot["source"] == "GOOGLE_SEARCH_CONSOLE_API"
+              assert snapshot["scope"]["pathPrefix"] == "/jp/report/travel/"
+              assert snapshot["scope"]["property"] == "https://emfls.github.io/"
+              assert snapshot["period"]["start"] and snapshot["period"]["end"]
+              assert all(page["url"].startswith("https://emfls.github.io/jp/report/travel/") for page in snapshot["pages"])
+          PY
+
       - name: Commit refreshed GSC measurement artifacts
         if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'page'
         run: |
@@ -138,4 +179,13 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/performance/gsc-opportunity-queries-latest.json
           git diff --staged --quiet || git commit -m "chore: refresh GSC opportunity query evidence"
+          git push
+
+      - name: Commit GSC JP Travel coverage sidecars
+        if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'jp-travel-coverage'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/performance/jp-travel-gsc-56d.json data/performance/jp-travel-gsc-90d.json
+          git diff --staged --quiet || git commit -m "chore: collect JP Travel GSC coverage windows"
           git push

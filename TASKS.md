@@ -4,13 +4,19 @@
 
 ## P0 - Critical
 
-- [ ] P0 JP Travel Batch 02 — PR #38, 50-page canary
+- [ ] P0 JP Travel Batch 03 — measurement coverage recovery; no deletions
+  - Latest: current branch started from main `fbb4c4413ac97b581716c381001408be835e4205`; PR #38 is merged. JP Travel has 5,287 HTML pages and 5,287 page-performance rows.
+  - Partial result: current GA4 28d has 23 URL rows, current GSC 28d has 1, and a separate historical GA4 28d July window has 19. Missing per-URL rows now label `UNOBSERVED`, with null metrics and verified window/source metadata. Classification: PROTECTED 18; VERIFIED_ACTIVE 25; UNOBSERVED 5,244; VERIFIED_LOW 0; VERIFIED_ZERO 0; HOLD archive entries 18. No candidate or deletion is approved.
+  - Blocker: current 56d/90d URL-level snapshots are unavailable; local service-account JSON is absent and both existing Actions workflows use a fixed 28d period. GSC missing rows cannot prove zero. Next: add a period-specific authenticated collection path, preserving windows separately, then rerun the evidence gate.
+  - QA: unittest 755; pytest 1,218; measurement artifact validator 18,928 pages PASS; raw GA4/GSC snapshots unchanged. State `PARTIAL`; Active Queue remains 0.
+
+- [x] P0 JP Travel Batch 02 — PR #38, 50-page canary
   - 동기화: 요청된 main `6b844cf03138057091bac2cdf1a87db3e98491f2` 이후 main이 `1b15674e09d3dd30fb65620ab2ae8f35f85c2137`로 전진해 두 SHA를 모두 regular merge로 반영했다. `5172e32bcd`에서 derived artifact 충돌 3건을 최신 main 입력 기준으로 해결·재생성했고, `946f3cf027` merge는 충돌이 없었다. rebase/force push 없음.
   - 범위: JP Travel HTML 정확히 50개 / 674,830 B 삭제, 대응 sitemap URL 정확히 50개 제거. 비대상 HTML 변경 0. 보호 승자 1,593개와 후보 overlap 0. 세 실험은 모두 `INCONCLUSIVE`; 후보 revenue/search rows는 `NOT_CONNECTED`/`NO_ROW`로서 unknown이지 0이 아니다. raw GA4/GSC는 latest main과 동일. 최신 targeted validation은 다른 5개 target에서 `VERIFIED`, Batch 02 URL 언급 0.
   - 의존성: 후보로 가는 남은 inbound HTML 링크 0. 삭제 허용목록은 `scripts/content_launch_guard.py`에만 의도적으로 남기며 다른 active manifest/index/feed/generator 경로 참조는 0. broken internal links 276, main 기준과 동일.
   - QA: unittest 752; pytest 1,215; SEO QA new critical/warning 0 (767/420 existing); sitemap 46 leaf / 18,707 URLs / duplicate 0 / missing ref 0 / unknown 0; Naver URL data 30/30 PASS; measurement artifact 18,928 pages PASS; revenue growth selected 3 existing improvements; daily growth 10 researched / 0 selected (`INSUFFICIENT_DATA`); Search Trend Signals `NOT_CONNECTED` (local credentials absent); Keyword Hunter dry-run 0 API / 0 writes; Launch Guard PASS; `git diff --check` PASS.
   - 크기: latest main 507,845,424 B; synchronized branch before this docs checkpoint 506,900,743 B; net -944,681 B; compact `data/site-audit.json` 16,179,318 B. Full scoring audit is transient at `/tmp/site-audit-full.json`.
-  - 상태: `SYNCED_LOCAL_QA_PASS; EXACT_HEAD_CI_PENDING`. Push the current branch normally and require a new Actions SUCCESS on that exact pushed SHA. Do not merge PR #38 before that CI passes; Batch 03 remains unstarted. Record final SHA/run on the existing Notion checkpoint.
+  - 상태: `MERGED / PRODUCTION_VERIFIED`. PR #38 final head `c5ac1d714e049881ba0db296a7a34296cc57adbf`; regular merge commit `b550dc1f228fb8701a4f5e02cc592a53c052fe00`; exact-head Actions `37198989124` SUCCESS. Five removed samples return HTTP 404 and all 50 Batch 02 URLs are absent from the live leaf sitemap/feed. Batch 03 is tracked separately above.
 
 - [ ] P0 Revenue Evidence Upgrade — GSC query-level evidence for current opportunities
   - 목적: exact-period Search Console query evidence를 현재 `OPPORTUNITY` URL별 sidecar에 수집해 snippet/query mismatch 검토 근거를 만든다. 기존 page-level snapshot은 유지하고 콘텐츠는 수정하지 않는다.

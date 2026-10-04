@@ -4,6 +4,13 @@ on:
   schedule:
     - cron: "17 2 * * *" # daily UTC 02:17
   workflow_dispatch:
+    inputs:
+      collection_mode:
+        description: "Collection scope"
+        required: true
+        type: choice
+        options: [refresh, jp-travel-coverage]
+        default: refresh
 
 permissions:
   contents: write
@@ -33,12 +40,39 @@ jobs:
         run: python3 -m pip install google-analytics-data google-auth
 
       - name: Collect GA4 latest snapshot
+        if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'refresh'
         run: python3 scripts/collect_ga4_snapshot.py --output data/performance/ga4-latest.json --days 28
 
+      - name: Collect GA4 JP Travel 56d coverage
+        if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'jp-travel-coverage'
+        run: python3 scripts/collect_ga4_snapshot.py --output /tmp/ga4-jp-full-56d.json --days 56
+
+      - name: Scope GA4 JP Travel 56d coverage
+        if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'jp-travel-coverage'
+        run: >-
+          python3 scripts/scope_jp_travel_measurement_snapshot.py
+          --input /tmp/ga4-jp-full-56d.json
+          --output data/performance/jp-travel-ga4-56d.json
+          --source-type ga4
+
+      - name: Collect GA4 JP Travel 90d coverage
+        if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'jp-travel-coverage'
+        run: python3 scripts/collect_ga4_snapshot.py --output /tmp/ga4-jp-full-90d.json --days 90
+
+      - name: Scope GA4 JP Travel 90d coverage
+        if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'jp-travel-coverage'
+        run: >-
+          python3 scripts/scope_jp_travel_measurement_snapshot.py
+          --input /tmp/ga4-jp-full-90d.json
+          --output data/performance/jp-travel-ga4-90d.json
+          --source-type ga4
+
       - name: Regenerate current site audit for GA4 measurement
+        if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'refresh'
         run: python3 scripts/seo_audit.py . --json /tmp/ga4-site-audit.json --markdown /tmp/ga4-site-audit.md
 
       - name: Regenerate current page scores for GA4 measurement
+        if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'refresh'
         run: |
           python3 scripts/quality_audit.py \
             --audit /tmp/ga4-site-audit.json \
@@ -49,6 +83,7 @@ jobs:
             --dashboard /tmp/ga4-site-dashboard.html
 
       - name: Regenerate measurement artifacts from GA4 snapshot
+        if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'refresh'
         run: |
           python3 scripts/revenue_growth.py \
             --as-of "$(date +%F)" \
@@ -61,6 +96,7 @@ jobs:
             --report reports/revenue-growth-report.md
 
       - name: Validate measurement artifacts
+        if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'refresh'
         run: |
           python3 scripts/validate_measurement_artifact.py data/page-performance.json --page-scores /tmp/ga4-page-scores.json
           python3 - <<'PY'
@@ -75,9 +111,35 @@ jobs:
           PY
 
       - name: Commit refreshed GA4 measurement artifacts
+        if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'refresh'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/performance/ga4-latest.json data/page-performance.json data/revenue-opportunities.json reports/revenue-growth-report.md
           git diff --staged --quiet || git commit -m "chore: refresh GA4 measurement snapshot"
+          git push
+
+      - name: Validate GA4 JP Travel coverage sidecars
+        if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'jp-travel-coverage'
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          for days in (56, 90):
+              path = Path(f"data/performance/jp-travel-ga4-{days}d.json")
+              snapshot = json.loads(path.read_text(encoding="utf-8"))
+              assert snapshot["status"] == "VERIFIED"
+              assert snapshot["source"] == "GOOGLE_ANALYTICS_DATA_API"
+              assert snapshot["scope"]["pathPrefix"] == "/jp/report/travel/"
+              assert snapshot["period"]["start"] and snapshot["period"]["end"]
+              assert all(page["url"].startswith("/jp/report/travel/") for page in snapshot["pages"])
+          PY
+
+      - name: Commit GA4 JP Travel coverage sidecars
+        if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'jp-travel-coverage'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/performance/jp-travel-ga4-56d.json data/performance/jp-travel-ga4-90d.json
+          git diff --staged --quiet || git commit -m "chore: collect JP Travel GA4 coverage windows"
           git push
