@@ -11,6 +11,54 @@ def write_json(path, payload):
 
 
 class RevenueGrowthIntegrationTest(unittest.TestCase):
+    def test_artifact_level_measurement_sources_survive_page_performance_regeneration(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            ga4_period = {"start": "2026-07-07", "end": "2026-10-04"}
+            gsc_period = {"start": "2026-07-05", "end": "2026-10-02"}
+            url = "/jp/report/travel/unobserved.html"
+            write_json(root / "scores.json", {"pages": [{"url": url, "score": 20, "type": "TRAFFIC"}]})
+            write_json(root / "audit.json", {"pages": [{"url": url, "indexable": True}]})
+            write_json(root / "performance.json", {
+                "measurementSources": {
+                    "ga4": {"status": "VERIFIED", "period": ga4_period, "source": "GOOGLE_ANALYTICS_DATA_API"},
+                    "google": {"status": "VERIFIED", "period": gsc_period, "source": "GOOGLE_SEARCH_CONSOLE_API"},
+                },
+                "pages": [{
+                    "url": url,
+                    "ga4": {
+                        "views": None, "users": None, "engagementSeconds": None, "revenue": None,
+                        "revenueMetric": None, "status": "UNOBSERVED", "period": None, "source": None,
+                    },
+                    "google": {
+                        "clicks": None, "impressions": None, "ctr": None, "position": None,
+                        "status": "UNOBSERVED", "period": None, "source": None,
+                    },
+                }],
+            })
+            write_json(root / "experiments.json", {"experiments": []})
+            write_json(root / "history.json", {"pages": []})
+
+            pages, _ = run_revenue_growth(
+                page_scores_path=root / "scores.json",
+                audit_path=root / "audit.json",
+                performance_path=root / "performance.json",
+                experiments_path=root / "experiments.json",
+                optimization_history_path=root / "history.json",
+                as_of="2026-10-05",
+                page_output=root / "pages.json",
+                opportunity_output=root / "opportunities.json",
+                report_output=root / "report.md",
+            )
+
+            row = pages["pages"][0]
+            self.assertEqual(row["ga4"]["status"], "UNOBSERVED")
+            self.assertEqual(row["google"]["status"], "UNOBSERVED")
+            self.assertIsNone(row["ga4"]["views"])
+            self.assertIsNone(row["google"]["clicks"])
+            self.assertEqual(pages["measurementSources"]["ga4"]["period"], ga4_period)
+            self.assertEqual(pages["measurementSources"]["google"]["period"], gsc_period)
+
     def test_connected_sources_without_page_rows_are_unobserved_not_disconnected_or_zero(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

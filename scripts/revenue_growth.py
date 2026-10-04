@@ -161,6 +161,14 @@ def _merge_gsc_snapshot(performance, gsc):
 def _connected_measurement_sources(performance, gsc_snapshot):
     """Describe connected site-level snapshots for URLs with no returned row."""
     result = {}
+    for name, metadata in (performance.get("measurementSources") or {}).items():
+        if isinstance(metadata, dict) and metadata.get("status") == "VERIFIED" and metadata.get("source"):
+            result[name] = {
+                "status": "VERIFIED",
+                "period": metadata.get("period"),
+                "source": metadata["source"],
+            }
+
     ga4 = ((performance.get("site") or {}).get("ga4") or {})
     if ga4.get("status") == "VERIFIED" and ga4.get("source"):
         result["ga4"] = {"status": "VERIFIED", "period": ga4.get("period"), "source": ga4["source"]}

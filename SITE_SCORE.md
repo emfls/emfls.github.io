@@ -3,7 +3,7 @@
 ## 현재 SITE SCORE
 
 - **57 / 100 (F)**
-- 평가 페이지: 18,928
+- 평가 페이지: 18,929
 - 평균 PAGE_SCORE: 75.34
 - 중앙값 PAGE_SCORE: 79.00
 - 80점 이상 비율: 33.1% (목표 80%)
@@ -22,20 +22,20 @@
 
 ## 등급 분포
 
-- S 13, A 6,257, B 7,494, C 4,552, D 610, F 2
+- S 13, A 6,258, B 7,494, C 4,553, D 609, F 2
 
 ## 가장 큰 사이트 문제
 
-1. `about_or_methodology_link` — 18,924페이지
-2. `related_section` — 18,922페이지
-3. `target_query_defined` — 18,833페이지
-4. `missing_sources` — 18,451페이지
-5. `missing_method` — 18,303페이지
+1. `about_or_methodology_link` — 18,925페이지
+2. `related_section` — 18,923페이지
+3. `target_query_defined` — 18,834페이지
+4. `missing_sources` — 18,452페이지
+5. `missing_method` — 18,304페이지
 6. `own_data_or_tool` — 16,582페이지
 7. `missing_freshness` — 13,211페이지
-8. `missing_breadcrumb` — 13,157페이지
-9. `not_orphan` — 10,998페이지
-10. `limitations_explained` — 10,094페이지
+8. `missing_breadcrumb` — 13,158페이지
+9. `not_orphan` — 10,997페이지
+10. `limitations_explained` — 10,095페이지
 
 ## 가장 먼저 개선할 페이지
 

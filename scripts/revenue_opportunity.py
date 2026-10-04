@@ -18,8 +18,12 @@ ALLOWED_STATUSES = {
 
 
 def freshness_status(channel, as_of, max_age_days=7):
-    if not channel or channel.get("status") == "NOT_CONNECTED":
+    if not channel:
         return "NOT_CONNECTED"
+    if channel.get("status") == "NOT_CONNECTED":
+        return "NOT_CONNECTED"
+    if channel.get("status") == "UNOBSERVED":
+        return "UNOBSERVED"
     end = (channel.get("period") or {}).get("end")
     if not end:
         return "INSUFFICIENT_DATA"
