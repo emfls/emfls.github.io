@@ -269,6 +269,17 @@ def test_committed_launch_manifest_is_exactly_the_current_launch_batch():
         assert manifest["dailyLimit"] == 1
         assert manifest["remainingCapacity"] == 0
         return
+    if manifest["urls"] == ["/kor/report/it/keyboard-cleaning-guide.html"]:
+        assert manifest["candidateIds"] == ["keyword:키보드청소방법"]
+        assert manifest["contentPaths"] == ["kor/report/it/keyboard-cleaning-guide.html"]
+        assert manifest["hubPaths"] == ["kor/report/it/index.html"]
+        assert manifest["sitemapPaths"] == ["kor/report/it/sitemap.xml"]
+        assert manifest["runAt"].startswith("2026-10-05T")
+        assert manifest["runId"] == "P0-20261005-KEYBOARD-CLEANING"
+        assert manifest["publishedToday"] == 1
+        assert manifest["dailyLimit"] == 1
+        assert manifest["remainingCapacity"] == 0
+        return
     if manifest["urls"] == ["/kor/report/car/car-full-paint-cost-guide.html"]:
         assert manifest["contentPaths"] == ["kor/report/car/car-full-paint-cost-guide.html"]
         assert manifest["hubPaths"] == ["kor/report/car/index.html"]
