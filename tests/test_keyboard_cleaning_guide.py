@@ -60,6 +60,8 @@ def test_keyboard_cleaning_page_is_indexable_source_backed_and_safe():
     assert "ca-pub-8830524482034754" in html
     assert '"@type":"Article"' in html
     assert "자료 확인일: 2026년 10월 4일" in html
+    assert '"datePublished":"2026-10-05"' in html
+    assert '"dateModified":"2026-10-05"' in html
 
     for source in (
         "https://support.apple.com/ko-kr/102365",
@@ -125,5 +127,5 @@ def test_keyboard_cleaning_manifest_records_only_this_launch_and_one_daily_slot(
     assert manifest["publishedToday"] == 1
     assert manifest["dailyLimit"] == 1
     assert manifest["remainingCapacity"] == 0
-    assert manifest["runAt"].startswith("2026-10-04T")
-    assert manifest["runId"] == "P0-20261004-KEYBOARD-CLEANING"
+    assert manifest["runAt"].startswith("2026-10-05T")
+    assert manifest["runId"] == "P0-20261005-KEYBOARD-CLEANING"
