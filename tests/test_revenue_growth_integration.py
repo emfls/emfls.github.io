@@ -11,6 +11,62 @@ def write_json(path, payload):
 
 
 class RevenueGrowthIntegrationTest(unittest.TestCase):
+    def test_unavailable_page_url_keeps_site_evidence_without_allocating_it_to_pages(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            url = "/known.html"
+            period = {"start": "2026-09-28", "end": "2026-10-04", "days": 7, "inclusive": True}
+            write_json(root / "scores.json", {"pages": [{"url": url, "score": 75, "type": "UTILITY"}]})
+            write_json(root / "audit.json", {"pages": [{"url": url, "indexable": True}]})
+            write_json(root / "performance.json", {"site": {}, "pages": []})
+            write_json(root / "adsense.json", {
+                "source": "DIRECT_ADSENSE_MANAGEMENT_API_V2",
+                "currentPeriod": period,
+                "priorPeriod": {"start": "2026-09-21", "end": "2026-09-27", "days": 7, "inclusive": True},
+                "reportingTimeZone": {"mode": "ACCOUNT_TIME_ZONE", "id": "Asia/Seoul"},
+                "currency": "USD",
+                "site": {
+                    "domain": "emfls.github.io",
+                    "status": "VERIFIED",
+                    "comparisonStatus": "VERIFIED",
+                    "current": {"estimatedEarnings": 18.5},
+                    "prior": {"estimatedEarnings": 10.0},
+                    "absoluteDelta": {"estimatedEarnings": 8.5},
+                    "relativeDelta": {"estimatedEarnings": 0.85},
+                },
+                "pageUrls": {
+                    "source": "DIRECT_ADSENSE_PAGE_URL",
+                    "coverageStatus": "NOT_AVAILABLE",
+                    "rows": [],
+                    "returnedRowCount": 0,
+                    "totalMatchedRows": None,
+                    "truncationStatus": "NOT_AVAILABLE",
+                    "unavailableReason": "PAGE_URL_DIMENSION_COMBINATION_UNAVAILABLE",
+                },
+            })
+            write_json(root / "experiments.json", {"experiments": []})
+            write_json(root / "history.json", {"pages": []})
+
+            pages, summary = run_revenue_growth(
+                page_scores_path=root / "scores.json", audit_path=root / "audit.json",
+                performance_path=root / "performance.json", experiments_path=root / "experiments.json",
+                optimization_history_path=root / "history.json", as_of="2026-10-05",
+                adsense_snapshot_path=root / "adsense.json",
+                page_output=root / "pages.json", opportunity_output=root / "opp.json", report_output=root / "report.md",
+            )
+
+            self.assertEqual(summary["directAdsense"]["status"], "VERIFIED")
+            self.assertEqual(summary["directAdsense"]["comparisonStatus"], "VERIFIED")
+            self.assertEqual(summary["directAdsense"]["site"]["current"]["estimatedEarnings"], 18.5)
+            self.assertEqual(summary["directAdsense"]["pageUrlCoverage"]["status"], "NOT_AVAILABLE")
+            page = next(row for row in pages["pages"] if row["url"] == url)
+            self.assertIsNone(page["adsense"]["revenue"])
+            self.assertEqual(page["adsense"]["status"], "NOT_AVAILABLE")
+            self.assertEqual(page["adsense"]["coverageStatus"], "NOT_AVAILABLE")
+            actual_revenue = next(item for item in page["scoreComponents"] if item["name"] == "actual_revenue")
+            self.assertIsNone(actual_revenue["inputs"]["revenue"])
+            self.assertIsNone(actual_revenue["inputs"]["revenueSource"])
+
     def test_direct_adsense_matched_site_period_is_reported_with_source_labels(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

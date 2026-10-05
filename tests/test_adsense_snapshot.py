@@ -9,6 +9,7 @@ import inspect
 import json
 import os
 import urllib.error
+import tempfile
 from urllib.parse import parse_qs, urlsplit
 from contextlib import redirect_stderr, redirect_stdout
 from datetime import datetime, timezone
@@ -197,6 +198,24 @@ class AdSenseSnapshotContractTest(TestCase):
         self.assertEqual(snapshot["pageUrls"]["rows"][0]["estimatedEarnings"], 0.4)
         self.assertIsNone(snapshot["pageUrls"]["rows"][0]["costPerClick"])
 
+    def test_page_url_rows_are_locally_filtered_to_the_exact_site_hostname(self):
+        current, prior, page = reports(page_rows=[
+            {"PAGE_URL": "https://emfls.github.io/known.html", "ESTIMATED_EARNINGS": "0.4"},
+            {"PAGE_URL": "https://sub.emfls.github.io/other.html", "ESTIMATED_EARNINGS": "9.0"},
+            {"PAGE_URL": "https://unrelated.example/other.html", "ESTIMATED_EARNINGS": "12.0"},
+        ])
+
+        snapshot = self.build(current=current, prior=prior, page=page)
+
+        self.assertEqual(
+            [row["url"] for row in snapshot["pageUrls"]["rows"]],
+            ["https://emfls.github.io/known.html"],
+        )
+        self.assertEqual(snapshot["pageUrls"]["returnedRowCount"], 3)
+        self.assertEqual(snapshot["pageUrls"]["totalMatchedRows"], 3)
+        self.assertIn("Ignored 2 PAGE_URL rows", " ".join(snapshot["collector"]["warnings"]))
+        self.assertNotIn("unrelated.example", json.dumps(snapshot))
+
     def test_missing_url_is_not_returned_as_zero_and_page_coverage_stays_partial(self):
         current, prior, page = reports(page_rows=[], page_total=0)
         snapshot = self.build(current=current, prior=prior, page=page)
@@ -365,6 +384,180 @@ class AdSenseSnapshotContractTest(TestCase):
                 self.assertIn("Invalid report argument", str(captured.exception))
                 output.unlink(missing_ok=True)
 
+    def test_live_page_url_dimension_failure_writes_verified_site_snapshot(self):
+        current, prior, page = reports()
+        responses = [
+            {"access_token": "ACCESS_TOKEN_SENTINEL", "expires_in": 3600},
+            {"name": "accounts/pub-test", "timeZone": {"id": "Asia/Seoul"}},
+            current,
+            prior,
+            page,
+        ]
+        requests = []
+
+        class Response:
+            def __init__(self, payload):
+                self.payload = json.dumps(payload).encode()
+
+            def read(self):
+                return self.payload
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *_args):
+                return False
+
+        def fake_open(request, timeout):
+            requests.append(request)
+            if len(requests) == 5:
+                raise urllib.error.HTTPError(
+                    request.full_url,
+                    400,
+                    "Bad Request",
+                    hdrs=None,
+                    fp=io.BytesIO(json.dumps({"error": {
+                        "code": 400,
+                        "status": "INVALID_ARGUMENT",
+                        "message": "The combination of requested dimensions is unavailable.",
+                    }}).encode()),
+                )
+            return Response(responses[len(requests) - 1])
+
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "adsense-latest.json"
+            try:
+                snapshot = collector.collect_snapshot(
+                    output,
+                    account_name="accounts/pub-test",
+                    client_id="CLIENT_ID_SENTINEL",
+                    client_secret="CLIENT_SECRET_SENTINEL",
+                    refresh_token="REFRESH_TOKEN_SENTINEL",
+                    now=NOW,
+                    open_url=fake_open,
+                )
+            except collector.CollectorError as error:
+                self.fail(f"PAGE_URL unavailability discarded valid site reports: {error}")
+
+            saved = json.loads(output.read_text(encoding="utf-8"))
+            self.assertEqual(snapshot, saved)
+            self.assertTrue(collector.validate_snapshot(saved))
+            self.assertEqual(saved["source"], "DIRECT_ADSENSE_MANAGEMENT_API_V2")
+            self.assertEqual(saved["site"]["status"], "VERIFIED")
+            self.assertEqual(saved["site"]["comparisonStatus"], "VERIFIED")
+            self.assertEqual(saved["site"]["current"]["estimatedEarnings"], 18.5)
+            self.assertEqual(saved["site"]["prior"]["estimatedEarnings"], 10.0)
+            urls = saved["pageUrls"]
+            self.assertEqual(urls["source"], "DIRECT_ADSENSE_PAGE_URL")
+            self.assertEqual(urls["coverageStatus"], "NOT_AVAILABLE")
+            self.assertEqual(urls["rows"], [])
+            self.assertEqual(urls["returnedRowCount"], 0)
+            self.assertIsNone(urls["totalMatchedRows"])
+            self.assertEqual(urls["truncationStatus"], "NOT_AVAILABLE")
+            self.assertEqual(urls["unavailableReason"], "PAGE_URL_DIMENSION_COMBINATION_UNAVAILABLE")
+            page_query = parse_qs(urlsplit(requests[4].full_url).query)
+            self.assertNotIn("filters", page_query)
+            for secret in ("ACCESS_TOKEN_SENTINEL", "CLIENT_ID_SENTINEL", "CLIENT_SECRET_SENTINEL", "REFRESH_TOKEN_SENTINEL"):
+                self.assertNotIn(secret, output.read_text(encoding="utf-8"))
+
+    def test_live_page_url_error_has_safe_structured_classification(self):
+        def failing_open(request, timeout):
+            raise urllib.error.HTTPError(
+                request.full_url,
+                400,
+                "Bad Request",
+                hdrs=None,
+                fp=io.BytesIO(json.dumps({"error": {
+                    "code": 400,
+                    "status": "INVALID_ARGUMENT",
+                    "message": "The combination of requested dimensions is unavailable.",
+                }}).encode()),
+            )
+
+        with self.assertRaises(collector.CollectorError) as captured:
+            collector._api_get(
+                "https://adsense.googleapis.com/v2/accounts/pub-test/reports:generate",
+                "ACCESS_TOKEN_SENTINEL",
+                failing_open,
+                stage="PAGE_URL_REPORT",
+            )
+
+        error = captured.exception
+        self.assertEqual(error.stage, "PAGE_URL_REPORT")
+        self.assertEqual(error.http_status, 400)
+        self.assertEqual(error.google_status, "INVALID_ARGUMENT")
+        self.assertEqual(error.classification, "PAGE_URL_DIMENSION_COMBINATION_UNAVAILABLE")
+        self.assertEqual(error.safe_message, "The combination of requested dimensions is unavailable.")
+        self.assertIsNone(error.__context__)
+        self.assertNotIn("https://", str(error))
+        self.assertNotIn("ACCESS_TOKEN_SENTINEL", str(error))
+
+    def test_only_the_exact_page_url_unavailable_error_is_fail_soft(self):
+        current, prior, page = reports()
+        responses = [
+            {"access_token": "ACCESS_TOKEN_SENTINEL", "expires_in": 3600},
+            {"name": "accounts/pub-test", "timeZone": {"id": "Asia/Seoul"}},
+            current,
+            prior,
+            page,
+        ]
+        cases = (
+            (5, 400, "INVALID_ARGUMENT", "Invalid report argument", "PAGE_URL_REPORT"),
+            (5, 500, "INTERNAL", "Temporary server error", "PAGE_URL_REPORT"),
+            (5, 429, "RESOURCE_EXHAUSTED", "Rate limit exceeded", "PAGE_URL_REPORT"),
+            (1, 400, "INVALID_ARGUMENT", "The combination of requested dimensions is unavailable.", "OAUTH_REFRESH"),
+            (3, 400, "INVALID_ARGUMENT", "The combination of requested dimensions is unavailable.", "SITE_CURRENT_REPORT"),
+            (4, 400, "INVALID_ARGUMENT", "The combination of requested dimensions is unavailable.", "SITE_PRIOR_REPORT"),
+        )
+
+        class Response:
+            def __init__(self, payload):
+                self.payload = json.dumps(payload).encode()
+
+            def read(self):
+                return self.payload
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *_args):
+                return False
+
+        for failing_call, http_status, status, message, stage in cases:
+            with self.subTest(http_status=http_status, stage=stage, message=message):
+                requests = []
+
+                def fake_open(request, timeout):
+                    requests.append(request)
+                    if len(requests) == failing_call:
+                        raise urllib.error.HTTPError(
+                            request.full_url,
+                            http_status,
+                            "Google API failure",
+                            hdrs=None,
+                            fp=io.BytesIO(json.dumps({"error": {
+                                "code": http_status,
+                                "status": status,
+                                "message": message,
+                            }}).encode()),
+                        )
+                    return Response(responses[len(requests) - 1])
+
+                with tempfile.TemporaryDirectory() as temporary:
+                    output = Path(temporary) / "adsense-latest.json"
+                    with self.assertRaises(collector.CollectorError) as captured:
+                        collector.collect_snapshot(
+                            output,
+                            account_name="accounts/pub-test",
+                            client_id="CLIENT_ID_SENTINEL",
+                            client_secret="CLIENT_SECRET_SENTINEL",
+                            refresh_token="REFRESH_TOKEN_SENTINEL",
+                            now=NOW,
+                            open_url=fake_open,
+                        )
+                    self.assertIn(stage, str(captured.exception))
+                    self.assertFalse(output.exists())
+
     def test_http_error_details_are_sanitized_and_never_include_request_urls_or_body(self):
         sentinels = (
             "ACCESS_TOKEN_SENTINEL_12345678901234567890",
@@ -490,6 +683,8 @@ class AdSenseSnapshotContractTest(TestCase):
             self.assertEqual(query_strings[1]["dimensions"], list(SITE_DIMENSIONS))
             self.assertEqual(query_strings[2]["dimensions"], list(PAGE_DIMENSIONS))
             self.assertIn("OWNED_SITE_DOMAIN_NAME==emfls.github.io", query_strings[0]["filters"])
+            self.assertIn("OWNED_SITE_DOMAIN_NAME==emfls.github.io", query_strings[1]["filters"])
+            self.assertNotIn("filters", query_strings[2])
             self.assertNotIn("DATE", query_strings[2]["dimensions"])
             stored = output.read_text(encoding="utf-8")
             self.assertEqual(snapshot["source"], "DIRECT_ADSENSE_MANAGEMENT_API_V2")
@@ -519,6 +714,44 @@ class AdSenseSnapshotContractTest(TestCase):
 
         self.require_function("validate_snapshot")(snapshot)
         self.assertEqual(snapshot["collector"]["scheduleTimeZone"], "UTC")
+
+    def test_snapshot_validator_accepts_page_url_not_available_without_values(self):
+        snapshot = self.build()
+        snapshot["pageUrls"].update({
+            "coverageStatus": "NOT_AVAILABLE",
+            "rows": [],
+            "returnedRowCount": 0,
+            "totalMatchedRows": None,
+            "truncationStatus": "NOT_AVAILABLE",
+            "unavailableReason": "PAGE_URL_DIMENSION_COMBINATION_UNAVAILABLE",
+        })
+
+        self.assertTrue(self.require_function("validate_snapshot")(snapshot))
+        self.assertEqual(snapshot["site"]["status"], "VERIFIED")
+        self.assertEqual(snapshot["site"]["comparisonStatus"], "VERIFIED")
+
+    def test_snapshot_validator_rejects_fabricated_values_for_page_url_not_available(self):
+        snapshot = self.build()
+        snapshot["pageUrls"].update({
+            "coverageStatus": "NOT_AVAILABLE",
+            "rows": [],
+            "returnedRowCount": 0,
+            "totalMatchedRows": None,
+            "truncationStatus": "NOT_AVAILABLE",
+            "unavailableReason": "PAGE_URL_DIMENSION_COMBINATION_UNAVAILABLE",
+        })
+        self.assertTrue(self.require_function("validate_snapshot")(snapshot))
+
+        snapshot["pageUrls"]["rows"] = [{
+            "url": "https://emfls.github.io/unavailable.html",
+            "estimatedEarnings": 0,
+            "impressions": 0,
+            "clicks": 0,
+            "revenueMetric": "ESTIMATED_EARNINGS",
+            "source": "DIRECT_ADSENSE_PAGE_URL",
+        }]
+        with self.assertRaises(collector.CollectorError):
+            self.require_function("validate_snapshot")(snapshot)
 
     def test_validate_only_cli_accepts_saved_normalized_snapshot_without_credentials(self):
         snapshot = self.build()

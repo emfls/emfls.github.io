@@ -11,7 +11,7 @@ from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from urllib.error import HTTPError, URLError
-from urllib.parse import quote, urlencode
+from urllib.parse import quote, urlencode, urlsplit
 from urllib.request import Request, urlopen
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
@@ -43,10 +43,28 @@ METRIC_KEYS = {
 INTEGER_METRICS = {"PAGE_VIEWS", "IMPRESSIONS", "CLICKS"}
 ADDITIVE_METRICS = {"ESTIMATED_EARNINGS", "PAGE_VIEWS", "IMPRESSIONS", "CLICKS"}
 REQUIRED_SITE_METRICS = {"ESTIMATED_EARNINGS", "PAGE_VIEWS", "IMPRESSIONS", "CLICKS"}
+PAGE_URL_UNAVAILABLE_MESSAGE = "The combination of requested dimensions is unavailable."
+PAGE_URL_UNAVAILABLE_CLASSIFICATION = "PAGE_URL_DIMENSION_COMBINATION_UNAVAILABLE"
 
 
 class CollectorError(Exception):
     """A safe-to-log collection or schema error."""
+
+
+class GoogleAPIError(CollectorError):
+    """Safe structured details for one failed Google API request."""
+
+    def __init__(self, *, stage, http_status, google_status=None, safe_message=None, classification=None):
+        self.stage = stage
+        self.http_status = http_status
+        self.google_status = google_status
+        self.safe_message = safe_message
+        self.classification = classification
+        status = f"; {google_status}" if google_status else ""
+        if safe_message:
+            super().__init__(f"Google API request failed at {stage} (HTTP {http_status}{status}): {safe_message}")
+        else:
+            super().__init__(f"Google API request failed at {stage} (HTTP {http_status}{status}).")
 
 
 def build_parser():
@@ -199,9 +217,11 @@ def _page_url_rows(report):
         url = str(row.get("PAGE_URL") or "").strip()
         if not url:
             continue
-        from urllib.parse import urlsplit
-
-        if urlsplit(url).hostname != SITE_DOMAIN:
+        try:
+            hostname = urlsplit(url).hostname
+        except ValueError:
+            hostname = None
+        if hostname != SITE_DOMAIN:
             offsite_rows += 1
             continue
         parsed = {
@@ -241,6 +261,8 @@ def build_snapshot(
     current_report,
     prior_report,
     page_url_report,
+    page_url_unavailable_reason=None,
+    page_url_unavailable_warning=None,
     now=None,
     generated_at=None,
     days=7,
@@ -253,7 +275,14 @@ def build_snapshot(
     current_period, prior_period = build_periods(now or datetime.now(timezone.utc), time_zone, days=days)
     current = _parse_report(current_report, SITE_DIMENSIONS, current_period)
     prior = _parse_report(prior_report, SITE_DIMENSIONS, prior_period)
-    page_urls_report = _parse_report(page_url_report, PAGE_URL_DIMENSIONS, current_period)
+    if page_url_report is None:
+        if page_url_unavailable_reason != PAGE_URL_UNAVAILABLE_CLASSIFICATION:
+            raise CollectorError("Unavailable PAGE_URL evidence requires a recognized Google report classification.")
+        page_urls_report = None
+    else:
+        if page_url_unavailable_reason is not None:
+            raise CollectorError("A PAGE_URL report cannot be both available and unavailable.")
+        page_urls_report = _parse_report(page_url_report, PAGE_URL_DIMENSIONS, current_period)
     if not current["rows"] or not prior["rows"]:
         raise CollectorError("AdSense site report returned no rows; keeping the existing snapshot.")
 
@@ -273,7 +302,11 @@ def build_snapshot(
     prior_contract = {**base_contract, "currency": prior["currency"] if site_matches else "SITE_MISMATCH"}
     contract_status = comparison_status(current_contract, prior_contract) if site_matches else "NOT_AVAILABLE"
 
-    warnings = [*current["warnings"], *prior["warnings"], *page_urls_report["warnings"]]
+    warnings = [*current["warnings"], *prior["warnings"]]
+    if page_urls_report is not None:
+        warnings.extend(page_urls_report["warnings"])
+    elif page_url_unavailable_warning:
+        warnings.append(f"PAGE_URL report unavailable: {page_url_unavailable_warning}")
     if not site_matches:
         warnings.append("The returned site dimension did not match the requested site.")
     if not current["currency"] or not prior["currency"]:
@@ -301,15 +334,19 @@ def build_snapshot(
         relative_delta = {key: None for key in METRIC_KEYS.values()}
     matched_currency = current["currency"] if contract_status == "VERIFIED" else None
 
-    page_rows, offsite_rows = _page_url_rows(page_urls_report)
+    page_rows, offsite_rows = _page_url_rows(page_urls_report) if page_urls_report is not None else ([], 0)
     if offsite_rows:
         warnings.append(f"Ignored {offsite_rows} PAGE_URL rows outside {SITE_DOMAIN}.")
-    page_currency_matches = bool(matched_currency and page_urls_report["currency"] == matched_currency)
+    page_currency_matches = bool(
+        page_urls_report is not None
+        and matched_currency
+        and page_urls_report["currency"] == matched_currency
+    )
     if not page_currency_matches and page_rows:
         warnings.append("PAGE_URL report currency did not match the site-level report; URL rows were omitted.")
         page_rows = []
-    total_matched_rows = page_urls_report["totalMatchedRows"]
-    page_url_status = page_urls_report["truncationStatus"]
+    total_matched_rows = page_urls_report["totalMatchedRows"] if page_urls_report is not None else None
+    page_url_status = page_urls_report["truncationStatus"] if page_urls_report is not None else "NOT_AVAILABLE"
     snapshot_time = _as_utc(now or datetime.now(timezone.utc))
     generated_at = generated_at or snapshot_time.isoformat(timespec="seconds").replace("+00:00", "Z")
 
@@ -343,13 +380,17 @@ def build_snapshot(
         "pageUrls": {
             "period": current_period,
             "source": "DIRECT_ADSENSE_PAGE_URL",
-            "coverageStatus": "PARTIAL",
+            "coverageStatus": "PARTIAL" if page_urls_report is not None else "NOT_AVAILABLE",
             "coverageCaveat": "PAGE_URL includes only eligible pages meeting AdSense impression thresholds; a missing URL is NOT_AVAILABLE, not zero.",
             "rows": page_rows,
-            "returnedRowCount": len(page_urls_report["rows"]),
+            "returnedRowCount": page_urls_report["rowCount"] if page_urls_report is not None else 0,
             "totalMatchedRows": total_matched_rows,
             "truncationStatus": page_url_status,
-            "warnings": page_urls_report["warnings"] + (["Some returned PAGE_URL rows were outside the target site."] if offsite_rows else []),
+            "warnings": (
+                (page_urls_report["warnings"] if page_urls_report is not None else [page_url_unavailable_warning] if page_url_unavailable_warning else [])
+                + (["Some returned PAGE_URL rows were outside the target site."] if offsite_rows else [])
+            ),
+            **({"unavailableReason": page_url_unavailable_reason} if page_urls_report is None else {}),
         },
         "collector": {
             "apiVersion": API_VERSION,
@@ -387,15 +428,37 @@ def validate_snapshot(snapshot):
     if site.get("status") == "VERIFIED" and site.get("comparisonStatus") != "VERIFIED":
         raise CollectorError("A VERIFIED site comparison must pass its report contract.")
     urls = snapshot.get("pageUrls") or {}
-    if urls.get("source") != "DIRECT_ADSENSE_PAGE_URL" or urls.get("coverageStatus") != "PARTIAL":
-        raise CollectorError("PAGE_URL evidence must retain its direct source and partial coverage status.")
+    coverage_status = urls.get("coverageStatus")
+    if urls.get("source") != "DIRECT_ADSENSE_PAGE_URL" or coverage_status not in {"PARTIAL", "NOT_AVAILABLE"}:
+        raise CollectorError("PAGE_URL evidence must retain its direct source and a supported coverage status.")
     if not isinstance(urls.get("rows"), list):
         raise CollectorError("PAGE_URL rows must be a list.")
+    if coverage_status == "NOT_AVAILABLE":
+        if (
+            urls.get("unavailableReason") != PAGE_URL_UNAVAILABLE_CLASSIFICATION
+            or urls["rows"]
+            or urls.get("returnedRowCount") != 0
+            or urls.get("totalMatchedRows") is not None
+            or urls.get("truncationStatus") != "NOT_AVAILABLE"
+        ):
+            raise CollectorError("Unavailable PAGE_URL evidence cannot contain rows or fabricated values.")
+        return True
+    if urls.get("unavailableReason") is not None:
+        raise CollectorError("Available PAGE_URL evidence cannot carry an unavailable reason.")
     for row in urls["rows"]:
-        if row.get("source") != "DIRECT_ADSENSE_PAGE_URL" or row.get("revenueMetric") != "ESTIMATED_EARNINGS":
+        try:
+            hostname = urlsplit(row.get("url") or "").hostname
+        except ValueError:
+            hostname = None
+        if (
+            hostname != SITE_DOMAIN
+            or row.get("source") != "DIRECT_ADSENSE_PAGE_URL"
+            or row.get("revenueMetric") != "ESTIMATED_EARNINGS"
+            or row.get("coverageStatus") != "PARTIAL"
+        ):
             raise CollectorError("PAGE_URL rows must retain their direct AdSense source and metric.")
-        if row.get("estimatedEarnings") is not None and not isinstance(row.get("estimatedEarnings"), (int, float)):
-            raise CollectorError("PAGE_URL estimated earnings must be numeric or null.")
+        if any(value is not None and not isinstance(value, (int, float)) for value in (row.get(key) for key in METRIC_KEYS.values())):
+            raise CollectorError("PAGE_URL metrics must be numeric or null.")
     return True
 
 
@@ -418,37 +481,59 @@ def _sanitize_api_error_message(message, sensitive_values):
     return " ".join(value.split())[:240]
 
 
-def _http_error_message(error, stage, sensitive_values):
-    prefix = f"Google API request failed at {stage} (HTTP {error.code})."
+def _structured_http_error(error, stage, sensitive_values):
+    google_status = None
+    safe_message = None
+    classification = None
     try:
         raw = error.read()
         payload = json.loads(raw.decode("utf-8"))
     except (AttributeError, OSError, UnicodeDecodeError, json.JSONDecodeError):
-        return prefix
-    detail = payload.get("error") if isinstance(payload, dict) else None
-    if not isinstance(detail, dict):
-        return prefix
-    code = detail.get("code")
-    status = detail.get("status")
-    message = detail.get("message")
-    if type(code) is not int or code != error.code or not isinstance(status, str) or not isinstance(message, str):
-        return prefix
-    if not re.fullmatch(r"[A-Z][A-Z0-9_]{0,63}", status):
-        return prefix
-    safe_message = _sanitize_api_error_message(message, sensitive_values)
-    if not safe_message:
-        return prefix
-    return f"Google API request failed at {stage} (HTTP {error.code}; {status}): {safe_message}"
+        pass
+    else:
+        detail = payload.get("error") if isinstance(payload, dict) else None
+        if isinstance(detail, dict):
+            code = detail.get("code")
+            status = detail.get("status")
+            message = detail.get("message")
+            if (
+                type(code) is int
+                and code == error.code
+                and isinstance(status, str)
+                and re.fullmatch(r"[A-Z][A-Z0-9_]{0,63}", status)
+                and isinstance(message, str)
+            ):
+                safe = _sanitize_api_error_message(message, sensitive_values)
+                if safe:
+                    google_status = status
+                    safe_message = safe
+                    if (
+                        stage == "PAGE_URL_REPORT"
+                        and error.code == 400
+                        and status == "INVALID_ARGUMENT"
+                        and message.strip() == PAGE_URL_UNAVAILABLE_MESSAGE
+                    ):
+                        classification = PAGE_URL_UNAVAILABLE_CLASSIFICATION
+    return GoogleAPIError(
+        stage=stage,
+        http_status=error.code,
+        google_status=google_status,
+        safe_message=safe_message,
+        classification=classification,
+    )
 
 
 def _json_request(request, open_url, *, stage, sensitive_values=()):
+    api_error = None
     try:
         with open_url(request, timeout=30) as response:
             raw = response.read()
     except HTTPError as error:
-        raise CollectorError(_http_error_message(error, stage, sensitive_values)) from None
+        api_error = _structured_http_error(error, stage, sensitive_values)
     except (URLError, TimeoutError, OSError):
         raise CollectorError(f"Google API network request failed at {stage}.") from None
+    if api_error is not None:
+        raise api_error
     try:
         value = json.loads(raw.decode("utf-8"))
     except (AttributeError, UnicodeDecodeError, json.JSONDecodeError):
@@ -505,7 +590,7 @@ def _date_query_params(prefix, value):
     ]
 
 
-def _generate_report(account_name, period, dimensions, access_token, open_url, *, stage, sensitive_values=()):
+def _generate_report(account_name, period, dimensions, access_token, open_url, *, stage, filters=(), sensitive_values=()):
     params = [("dimensions", item) for item in dimensions]
     params.extend(("metrics", item) for item in METRICS)
     params.extend(_date_query_params("startDate", period["start"]))
@@ -515,8 +600,8 @@ def _generate_report(account_name, period, dimensions, access_token, open_url, *
         ("reportingTimeZone", "ACCOUNT_TIME_ZONE"),
         ("languageCode", "en"),
         ("limit", str(REPORT_LIMIT)),
-        ("filters", f"OWNED_SITE_DOMAIN_NAME=={SITE_DOMAIN}"),
     ))
+    params.extend(("filters", item) for item in filters)
     account_path = quote(account_name, safe="/")
     url = f"{API_BASE}/{account_path}/reports:generate?{urlencode(params)}"
     return _api_get(url, access_token, open_url, stage=stage, sensitive_values=sensitive_values)
@@ -577,6 +662,7 @@ def collect_snapshot(
         access_token,
         open_url,
         stage="SITE_CURRENT_REPORT",
+        filters=(f"OWNED_SITE_DOMAIN_NAME=={SITE_DOMAIN}",),
         sensitive_values=sensitive_values,
     )
     prior_report = _generate_report(
@@ -586,23 +672,35 @@ def collect_snapshot(
         access_token,
         open_url,
         stage="SITE_PRIOR_REPORT",
+        filters=(f"OWNED_SITE_DOMAIN_NAME=={SITE_DOMAIN}",),
         sensitive_values=sensitive_values,
     )
-    page_url_report = _generate_report(
-        account_name,
-        current_period,
-        PAGE_URL_DIMENSIONS,
-        access_token,
-        open_url,
-        stage="PAGE_URL_REPORT",
-        sensitive_values=sensitive_values,
-    )
+    page_url_unavailable_reason = None
+    page_url_unavailable_warning = None
+    try:
+        page_url_report = _generate_report(
+            account_name,
+            current_period,
+            PAGE_URL_DIMENSIONS,
+            access_token,
+            open_url,
+            stage="PAGE_URL_REPORT",
+            sensitive_values=sensitive_values,
+        )
+    except GoogleAPIError as error:
+        if error.stage != "PAGE_URL_REPORT" or error.classification != PAGE_URL_UNAVAILABLE_CLASSIFICATION:
+            raise
+        page_url_report = None
+        page_url_unavailable_reason = error.classification
+        page_url_unavailable_warning = error.safe_message
     snapshot = build_snapshot(
         account_name=account_name,
         account=account,
         current_report=current_report,
         prior_report=prior_report,
         page_url_report=page_url_report,
+        page_url_unavailable_reason=page_url_unavailable_reason,
+        page_url_unavailable_warning=page_url_unavailable_warning,
         now=now,
         days=days,
     )
