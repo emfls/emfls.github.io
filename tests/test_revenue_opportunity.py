@@ -102,13 +102,18 @@ class RevenueOpportunityBehaviorTest(unittest.TestCase):
         self.assertIn("Verified GA4 totalAdRevenue", reasons)
 
     def test_direct_adsense_page_url_revenue_is_selected_and_labeled_when_both_sources_exist(self):
+        aligned_period = {"start": "2026-09-28", "end": "2026-10-04"}
         record = performance_record(
+            ga4={
+                **performance_record()["ga4"],
+                "period": aligned_period,
+            },
             adsense={
                 "revenue": 0.75,
                 "rpm": 3.6,
                 "revenueMetric": "ESTIMATED_EARNINGS",
                 "status": "VERIFIED",
-                "period": {"start": "2026-09-28", "end": "2026-10-04"},
+                "period": aligned_period,
                 "source": "DIRECT_ADSENSE_PAGE_URL",
                 "coverageStatus": "PARTIAL",
             }
@@ -121,9 +126,124 @@ class RevenueOpportunityBehaviorTest(unittest.TestCase):
         self.assertEqual(actual_revenue["inputs"]["revenue"], 0.75)
         self.assertEqual(actual_revenue["inputs"]["revenueSource"], "DIRECT_ADSENSE_PAGE_URL")
         self.assertEqual(actual_revenue["reason"], "Verified direct AdSense URL revenue.")
+        self.assertEqual(actual_revenue["inputs"]["periodComparison"], "MATCH")
         self.assertEqual(record["ga4"]["revenue"], 0.2)
         self.assertEqual(classification, "WINNER")
         self.assertIn("Verified direct AdSense URL revenue", reasons)
+
+    def test_mismatched_periods_keep_both_sources_but_score_ga4_revenue(self):
+        record = performance_record(
+            ga4={
+                **performance_record()["ga4"],
+                "period": {"start": "2026-09-06", "end": "2026-10-03"},
+            },
+            adsense={
+                "revenue": 0.75,
+                "revenueMetric": "ESTIMATED_EARNINGS",
+                "status": "VERIFIED",
+                "period": {"start": "2026-09-28", "end": "2026-10-04"},
+                "source": "DIRECT_ADSENSE_PAGE_URL",
+                "coverageStatus": "PARTIAL",
+            },
+        )
+
+        actual_revenue = next(
+            item for item in score_opportunity(record, {})["components"] if item["name"] == "actual_revenue"
+        )
+
+        self.assertEqual(actual_revenue["inputs"]["revenue"], 0.2)
+        self.assertEqual(actual_revenue["inputs"]["revenueSource"], "GA4_TOTAL_AD_REVENUE")
+        self.assertEqual(actual_revenue["inputs"]["revenueSources"]["ga4TotalAdRevenue"], 0.2)
+        self.assertEqual(actual_revenue["inputs"]["revenueSources"]["directAdsenseUrlRevenue"], 0.75)
+        self.assertEqual(actual_revenue["inputs"]["periodComparison"], "MISMATCH")
+
+    def test_direct_adsense_without_a_comparability_baseline_is_not_scored_but_can_protect(self):
+        record = performance_record(
+            ga4={
+                "views": 100,
+                "users": 80,
+                "engagementSeconds": 50,
+                "revenue": None,
+                "revenueMetric": None,
+                "status": "VERIFIED",
+            },
+            adsense={
+                "revenue": 0.75,
+                "revenueMetric": "ESTIMATED_EARNINGS",
+                "status": "VERIFIED",
+                "period": {"start": "2026-09-28", "end": "2026-10-04"},
+                "source": "DIRECT_ADSENSE_PAGE_URL",
+                "coverageStatus": "PARTIAL",
+            },
+        )
+
+        score = score_opportunity(record, {})
+        actual_revenue = next(item for item in score["components"] if item["name"] == "actual_revenue")
+        classification, action, reasons = classify_record(record, score)
+
+        self.assertIsNone(actual_revenue["inputs"]["revenue"])
+        self.assertIsNone(actual_revenue["inputs"]["revenueSource"])
+        self.assertEqual(actual_revenue["status"], "INSUFFICIENT_DATA")
+        self.assertEqual(actual_revenue["inputs"]["periodComparison"], "NO_COMPARABILITY_BASELINE")
+        self.assertEqual(actual_revenue["inputs"]["revenueSources"]["directAdsenseUrlRevenue"], 0.75)
+        self.assertEqual((classification, action), ("WINNER", "PROTECT"))
+        self.assertIn("Verified direct AdSense URL earnings (protection evidence)", reasons)
+
+    def test_mismatched_positive_direct_revenue_can_protect_without_overriding_ga4_zero(self):
+        record = performance_record(
+            ga4={
+                **performance_record()["ga4"],
+                "revenue": 0,
+                "period": {"start": "2026-09-06", "end": "2026-10-03"},
+            },
+            adsense={
+                "revenue": 0.75,
+                "revenueMetric": "ESTIMATED_EARNINGS",
+                "status": "VERIFIED",
+                "period": {"start": "2026-09-28", "end": "2026-10-04"},
+                "source": "DIRECT_ADSENSE_PAGE_URL",
+                "coverageStatus": "PARTIAL",
+            },
+        )
+
+        score = score_opportunity(record, {})
+        actual_revenue = next(item for item in score["components"] if item["name"] == "actual_revenue")
+        classification, action, reasons = classify_record(record, score)
+
+        self.assertEqual(actual_revenue["inputs"]["revenue"], 0)
+        self.assertEqual(actual_revenue["inputs"]["revenueSource"], "GA4_TOTAL_AD_REVENUE")
+        self.assertEqual(actual_revenue["inputs"]["revenueSources"]["directAdsenseUrlRevenue"], 0.75)
+        self.assertEqual((classification, action), ("WINNER", "PROTECT"))
+        self.assertIn("Verified direct AdSense URL earnings (protection evidence)", reasons)
+
+    def test_positive_direct_url_earnings_protect_even_when_ga4_has_no_traffic(self):
+        record = performance_record(
+            naver={"impressions": 0, "clicks": 0, "ctr": 0.0, "position": None, "status": "VERIFIED"},
+            ga4={
+                "views": 0,
+                "users": 0,
+                "revenue": 0,
+                "revenueMetric": "totalAdRevenue",
+                "status": "VERIFIED",
+                "period": {"start": "2026-09-06", "end": "2026-10-03"},
+            },
+            adsense={
+                "revenue": 0.75,
+                "revenueMetric": "ESTIMATED_EARNINGS",
+                "status": "VERIFIED",
+                "period": {"start": "2026-09-28", "end": "2026-10-04"},
+                "source": "DIRECT_ADSENSE_PAGE_URL",
+                "coverageStatus": "PARTIAL",
+            },
+            duplicate=True,
+            inboundLinks=0,
+        )
+
+        classification, action, reasons = classify_record(record, score_opportunity(record, {}))
+
+        self.assertEqual((classification, action), ("WINNER", "PROTECT"))
+        self.assertIn("Verified direct AdSense URL earnings (protection evidence)", reasons)
+        self.assertNotIn("Verified traffic", reasons)
 
     def test_verified_legacy_adsense_revenue_without_page_url_source_is_not_used(self):
         record = performance_record(

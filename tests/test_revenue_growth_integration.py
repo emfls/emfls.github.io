@@ -44,7 +44,7 @@ class RevenueGrowthIntegrationTest(unittest.TestCase):
                 "priorPeriod": prior_period,
                 "reportingTimeZone": {"mode": "ACCOUNT_TIME_ZONE", "id": "Asia/Seoul"},
                 "collector": {"scheduleTimeZone": "UTC"},
-                "pageUrls": {"source": "DIRECT_ADSENSE_PAGE_URL", "coverageStatus": "PARTIAL", "rows": [{"url": f"https://emfls.github.io{url}", "estimatedEarnings": 0.4}]},
+                "pageUrls": {"source": "DIRECT_ADSENSE_PAGE_URL", "coverageStatus": "PARTIAL", "returnedRowCount": 10000, "truncationStatus": "TRUNCATED", "rows": [{"url": f"https://emfls.github.io{url}", "estimatedEarnings": 0.4}]},
             }
             write_json(root / "adsense.json", direct_adsense)
             write_json(root / "experiments.json", {"experiments": []})
@@ -70,6 +70,14 @@ class RevenueGrowthIntegrationTest(unittest.TestCase):
             self.assertIsNone(missing_page["adsense"]["revenue"])
             self.assertEqual(missing_page["adsense"]["status"], "NOT_AVAILABLE")
             self.assertEqual(summary["directAdsense"]["pageUrlCoverage"]["status"], "PARTIAL")
+            self.assertEqual(summary["directAdsense"]["pageUrlCoverage"]["truncationStatus"], "TRUNCATED")
+            scored_page = next(row for row in pages["pages"] if row["url"].endswith(url))
+            actual_revenue = next(item for item in scored_page["scoreComponents"] if item["name"] == "actual_revenue")
+            self.assertEqual(actual_revenue["inputs"]["revenue"], 0.7)
+            self.assertEqual(actual_revenue["inputs"]["revenueSource"], "GA4_TOTAL_AD_REVENUE")
+            self.assertEqual(actual_revenue["inputs"]["revenueSources"]["directAdsenseUrlRevenue"], 0.4)
+            self.assertEqual(actual_revenue["inputs"]["periodComparison"], "MISMATCH")
+            self.assertIsNone(missing_page["adsense"]["revenue"])
             report = (root / "report.md").read_text(encoding="utf-8")
             self.assertIn("DIRECT_ADSENSE_SHORT_WINDOW_SIGNAL", report)
             self.assertIn("Estimated earnings are provisional", report)

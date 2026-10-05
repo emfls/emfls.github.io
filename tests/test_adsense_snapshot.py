@@ -95,19 +95,54 @@ class AdSenseCollectorCommandTest(unittest.TestCase):
         workflow = (ROOT / ".github/workflows/adsense-collection.yml").read_text(encoding="utf-8")
         for required in (
             "workflow_dispatch:",
-            'cron: "17 3 * * *"',
+            'cron: "47 1 * * *"',
             "ADSENSE_ACCOUNT_NAME: ${{ vars.ADSENSE_ACCOUNT_NAME }}",
             "ADSENSE_OAUTH_CLIENT_ID: ${{ secrets.ADSENSE_OAUTH_CLIENT_ID }}",
             "ADSENSE_OAUTH_CLIENT_SECRET: ${{ secrets.ADSENSE_OAUTH_CLIENT_SECRET }}",
             "ADSENSE_OAUTH_REFRESH_TOKEN: ${{ secrets.ADSENSE_OAUTH_REFRESH_TOKEN }}",
             "https://www.googleapis.com/auth/adsense.readonly",
             "group: site-measurement-collection",
+            "queue: max",
             "--validate-only data/performance/adsense-latest.json",
         ):
             self.assertIn(required, workflow)
         self.assertNotIn("GOOGLE_APPLICATION_CREDENTIALS", workflow)
-        self.assertIn("group: site-measurement-collection", (ROOT / ".github/workflows/ga4-collection.yml").read_text(encoding="utf-8"))
-        self.assertIn("group: site-measurement-collection", (ROOT / ".github/workflows/gsc-collection.yml").read_text(encoding="utf-8"))
+
+    def test_measurement_workflows_share_the_non_dropping_max_queue(self):
+        for name in ("adsense-collection.yml", "ga4-collection.yml", "gsc-collection.yml"):
+            workflow = (ROOT / ".github/workflows" / name).read_text(encoding="utf-8")
+            self.assertIn(
+                "group: site-measurement-collection\n  cancel-in-progress: false\n  queue: max",
+                workflow,
+                name,
+            )
+
+    def test_adsense_workflow_stages_only_the_compact_latest_snapshot(self):
+        workflow = (ROOT / ".github/workflows/adsense-collection.yml").read_text(encoding="utf-8")
+        staged_line = next(line.strip() for line in workflow.splitlines() if line.strip().startswith("git add "))
+        self.assertEqual(staged_line, "git add data/performance/adsense-latest.json")
+        for derived_artifact in (
+            "data/page-performance.json",
+            "data/revenue-opportunities.json",
+            "reports/revenue-growth-report.md",
+        ):
+            self.assertNotIn(derived_artifact, workflow)
+        for derived_publisher in ("scripts/seo_audit.py", "scripts/quality_audit.py", "scripts/revenue_growth.py"):
+            self.assertNotIn(derived_publisher, workflow)
+
+    def test_adsense_snapshot_runs_before_existing_ga4_gsc_consumers(self):
+        workflow_crons = {}
+        for name in ("adsense-collection.yml", "ga4-collection.yml", "gsc-collection.yml"):
+            workflow = (ROOT / ".github/workflows" / name).read_text(encoding="utf-8")
+            workflow_crons[name] = next(line.split('"')[1] for line in workflow.splitlines() if "cron:" in line)
+
+        self.assertEqual(workflow_crons, {
+            "adsense-collection.yml": "47 1 * * *",
+            "ga4-collection.yml": "17 2 * * *",
+            "gsc-collection.yml": "47 2 * * *",
+        })
+        revenue_growth = (ROOT / "scripts/revenue_growth.py").read_text(encoding="utf-8")
+        self.assertIn('default=Path("data/performance/adsense-latest.json")', revenue_growth)
 
 
 class AdSenseSnapshotContractTest(TestCase):
