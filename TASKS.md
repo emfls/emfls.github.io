@@ -9,12 +9,12 @@
   - 수정 후 검증: focused 187 passed; unittest 752 passed; pytest 1,231 passed; SEO QA 신규 critical/warning 0 (현재 767/420); content launch guard PASS; `git diff --check` PASS.
   - 기준/상태: `origin/main` `a4845bc5a12d5b442279599de4c3abd9313e9fa0` 기반 `codex/c01-daily-publication-cap-3`; PR #42 OPEN / 새 exact-head CI 대기; `READY_FOR_CI`. Control Tower review 전 merge 또는 신규 공개 금지.
 
-- [ ] P0 Direct AdSense matched-period ingestion safety — C06 / PR #46 merged; parser repair pending
-  - 기준: PR #46 merge commit `9a83870428d6cf8b026de728dd9c3aabf3491b1e`의 approved head는 `5eb3f2c828ce6f4979ef8757e266b0fbf68dd1e0`; collector base blob은 `2f4890e73ae705c5347b3755c5fb4ef47ca23e2b`. `DAILY_PUBLICATION_LIMIT = 3` 유지.
+- [ ] P0 Direct AdSense matched-period ingestion safety — C06 / PR #49 approved; latest-main sync
+  - 기준: PR #46 merge commit `9a83870428d6cf8b026de728dd9c3aabf3491b1e`의 approved head는 `5eb3f2c828ce6f4979ef8757e266b0fbf68dd1e0`; `DAILY_PUBLICATION_LIMIT = 3` 유지. PR #49 head `1d4e1cdd956ee6eefe29c15d7f8f18344e61fbb9`는 exact-head SEO QA `37378217157` SUCCESS였다.
   - Live evidence: merge 뒤 AdSense Collection을 한 번만 dispatch했다 (run `37373852773`). 실행은 `Collect direct AdSense latest snapshot` 단계에서 `AdSense report rows are unavailable.`로 실패했다. 안전한 로그에 HTTP/Google status가 없어 실패 endpoint는 미확정이다. 재실행은 금지.
   - Repair: current/prior/PAGE_URL parser 오류에 stage를 명시하고, `rows` 키가 없을 때만 빈 목록으로 정규화한다. 빈 current/prior site report는 fail-closed; 빈/missing PAGE_URL은 `PARTIAL`, matched count와 URL metric은 미확정으로 유지한다. last-good snapshot atomicity와 exact PAGE_URL 400 fail-soft guard는 유지.
-  - 검증: AdSense/launch-guard/revenue source/policy focused 116 passed; unittest 795 passed; pytest 1,279 passed; SEO QA 신규 critical/warning 0 (현재 767/420); launch guard vs latest `origin/main` PASS; workflow YAML 3개 parse PASS; diff check 및 secret-pattern scan PASS. AdSense workflow 변경·live rerun 없음.
-  - 상태: branch `codex/c06-report-parser-stages`, implementation commit `2d3237f3d6f839a7f5605f99c95bc3817269bc3a`; PR #49 OPEN / exact-head CI 대기. Collector blob transition `2f4890e73ae705c5347b3755c5fb4ef47ca23e2b` → `7e462d5e1ccedfba022594d98cabf4aa3697ca01`. PR은 merge하지 않고 Control Tower 검토를 기다린다. C07은 `WAITING`이며 시작하지 않는다.
+  - Sync: latest `origin/main` `97ed941bf1276f5f5d102f25265576227937ccc7`을 regular-merge 중이다. C16 `PROJECT_HISTORY.md`/sitemap/test 기록을 보존하며 C06 문서도 유지한다. Collector content는 기존 approved blob과 동일.
+  - 상태: branch `codex/c06-report-parser-stages`; PR #49은 OPEN, merge 금지. Main sync 뒤 focused/full verification 및 새 exact-head CI가 남아 있다. AdSense live workflow 실행 금지, C07은 `WAITING`.
 
 - [ ] P0 JP Travel Batch 02 — PR #38, 50-page canary
   - 동기화: 요청된 main `6b844cf03138057091bac2cdf1a87db3e98491f2` 이후 main이 `1b15674e09d3dd30fb65620ab2ae8f35f85c2137`로 전진해 두 SHA를 모두 regular merge로 반영했다. `5172e32bcd`에서 derived artifact 충돌 3건을 최신 main 입력 기준으로 해결·재생성했고, `946f3cf027` merge는 충돌이 없었다. rebase/force push 없음.
@@ -92,6 +92,11 @@
   - 범위/결과: 실제 콘텐츠 수정 0, 추가 공개 페이지 0. 대상 HTML·protected pages·sitemap/hub/manifest/IndexNow 변경 없음. matched-period Naver 값을 만들지 않았으며 Revenue는 `NO_CONCLUSION`.
 
 ## P1 - High
+
+- [ ] C16 · Three Utility Sitemap Coverage Repair
+  - Scope: add the three existing, indexable self-canonical utility URLs to `kor/sitemap.xml`; omit unsupported `lastmod`; leave page HTML, root sitemap, content index, measurement data, publication state, and StockWiki untouched.
+  - Verification: regression RED on missing sitemap membership, then GREEN (2); related sitemap/canonical/SEO tests 15 passed; unittest 785 passed; pytest 1,268 passed; sitemap audit found 0 duplicates/invalid XML and one pre-existing unknown inventory URL; SEO QA 0 new critical/warnings; content launch guard PASS; XML parse PASS.
+  - Status: local verification ready for exact-head CI from `origin/main` `93cfd4e48d20a2b012c7b4610929be9f167bcff3` on `codex/c16-three-utility-sitemap-repair`. Keep unmerged pending Control Tower review.
 
 - [x] 12 · Spanish STOPat5 — `/es/game/STOPat5/`
   - 완료: 2026-09-21. 승인 4-commit chain을 최신 main에 non-force 반영하고 Pages run `35589224240` success 및 production served HTML을 확인했다. Timer-specific Spanish identity, fixed 5.000-second `performance.now()` ladder, inclusive tolerance boundary, signed early/late/exact result, local best error/highest reached level, safe storage fallback/reset/restart, replay/share/related navigation, timing trust disclosure, VideoGame-only schema, FAQPage 0, privacy/AdSense state, generated RSS parity, and actual Node behavioral coverage were verified. Focused ES + sixth batch tests 9 passed. Mobile/runtime deep checks remain `MOBILE_390_NOT_VERIFIED` / `RUNTIME_PARTIAL_NOT_VERIFIED`; Google URL Inspection `SEARCH_CONSOLE_NOT_VERIFIED`, no submission; Naver `NAVER_NOT_PRIMARY`. 14/28/56-day measurement and Notion final closure remain follow-up.
