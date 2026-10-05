@@ -22,6 +22,7 @@ APPROVED_MONETIZATION_TRANSITIONS = {
     "scripts/collect_adsense_snapshot.py": {
         ("94f34228ed8b10213085b3de19bbab14e4fee0de", "83595861b3ea484b7fd9ad0c7fb11515f6516692"),
         ("83595861b3ea484b7fd9ad0c7fb11515f6516692", "2f4890e73ae705c5347b3755c5fb4ef47ca23e2b"),
+        ("2f4890e73ae705c5347b3755c5fb4ef47ca23e2b", "7e462d5e1ccedfba022594d98cabf4aa3697ca01"),
     },
 }
 APPROVED_JP_TRAVEL_CANARY_DELETIONS = {

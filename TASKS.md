@@ -9,16 +9,17 @@
   - 수정 후 검증: focused 187 passed; unittest 752 passed; pytest 1,231 passed; SEO QA 신규 critical/warning 0 (현재 767/420); content launch guard PASS; `git diff --check` PASS.
   - 기준/상태: `origin/main` `a4845bc5a12d5b442279599de4c3abd9313e9fa0` 기반 `codex/c01-daily-publication-cap-3`; PR #42 OPEN / 새 exact-head CI 대기; `READY_FOR_CI`. Control Tower review 전 merge 또는 신규 공개 금지.
 
-- [ ] P0 Direct AdSense matched-period ingestion safety — C06 / PR #43 merged; diagnostic follow-up
-  - 범위: PR #43 merge `937e8eb256a5921c6b212dc4ebc0c6ac5afe1b18` 후 latest `origin/main` `cfc4b2119fe9a98c8d7cc40e74dba743b5b4ccd8`에서 별도 hotfix를 진행한다. 실패한 AdSense run `37280801144`의 stage는 아직 확인되지 않았다.
-  - OAuth evidence: 사용자가 동일한 OAuth client/refresh token으로 OAuth Playground의 `adsense.readonly` refresh 성공을 확인했다. 어떤 credential 값도 열람·수정하지 않는다.
-  - 변경: collector 오류에 다섯 요청 stage와 JSON error의 안전한 `status/message`를 추가하고, credential·Bearer·publisher ID·URL/query를 redaction한다. API 요청 의미, workflow, AdSense snapshot, 파생 데이터, 콘텐츠는 바꾸지 않는다.
-  - 검증: 진단 focused 3 passed; collector 22 passed; content launch guard 25 passed; revenue/source 38 passed; unittest 783 passed; pytest 1,266 passed; SEO QA 신규 critical/warning 0; launch guard vs latest `origin/main` PASS; workflow YAML 3개 parse PASS; `git diff --check` PASS; secret-pattern scan PASS.
-  - 상태: diagnostic branch `codex/c06-adsense-stage-diagnostics`, code commit `dccbf21840be4d0f9df042ca4aa9da22d48d9f29`. Hotfix는 unmerged이며 Control Tower review가 다음 승인 gate다. AdSense workflow를 재실행하지 않고 C07은 대기한다.
+- [ ] P0 Direct AdSense matched-period ingestion safety — C06 / PR #49 approved; latest-main sync
+  - 기준: PR #46 merge commit `9a83870428d6cf8b026de728dd9c3aabf3491b1e`의 approved head는 `5eb3f2c828ce6f4979ef8757e266b0fbf68dd1e0`; `DAILY_PUBLICATION_LIMIT = 3` 유지. PR #49 head `1d4e1cdd956ee6eefe29c15d7f8f18344e61fbb9`는 exact-head SEO QA `37378217157` SUCCESS였다.
+  - Live evidence: merge 뒤 AdSense Collection을 한 번만 dispatch했다 (run `37373852773`). 실행은 `Collect direct AdSense latest snapshot` 단계에서 `AdSense report rows are unavailable.`로 실패했다. 안전한 로그에 HTTP/Google status가 없어 실패 endpoint는 미확정이다. 재실행은 금지.
+  - Repair: current/prior/PAGE_URL parser 오류에 stage를 명시하고, `rows` 키가 없을 때만 빈 목록으로 정규화한다. 빈 current/prior site report는 fail-closed; 빈/missing PAGE_URL은 `PARTIAL`, matched count와 URL metric은 미확정으로 유지한다. last-good snapshot atomicity와 exact PAGE_URL 400 fail-soft guard는 유지.
+  - Sync: latest `origin/main` `97ed941bf1276f5f5d102f25265576227937ccc7`을 regular-merge한 merge commit은 `dc9bb64bfe064568b4d321fd1b74dda3869cf92f`이며 latest main은 second parent다. `PROJECT_HISTORY.md` conflict 하나만 해결했고 C16 sitemap/test/history 및 C06 parser/history records 모두 보존했다. Code conflict는 0; collector blob은 그대로다.
+  - 검증: post-sync focused AdSense/guard/revenue/source/policy/C16 tests 118 passed; unittest 797 passed; pytest 1,281 passed; SEO QA 신규 critical/warning 0 (현재 767/420); guard vs latest `origin/main` PASS; workflow YAML 3개 parse PASS; diff check 및 secret-pattern scan PASS. `DAILY_PUBLICATION_LIMIT = 3` 유지.
+  - 상태: branch `codex/c06-report-parser-stages`; PR #49은 OPEN, merge 금지. Merge commit을 포함한 branch를 정상 push한 뒤 새 exact-head CI SUCCESS를 기다린다. AdSense live workflow 실행 금지, C07은 `WAITING`.
 
 - [ ] P0 Site-wide matched-period GSC page×query evidence — C17
   - 범위: 현재 `gsc-latest.json`과 정확히 같은 finalized period/property/web type으로 site-wide `[page, query]` evidence를 수집하는 manual-only, artifact-only 경로. Raw export는 `$RUNNER_TEMP`에만 쓰고 7일 보관 artifact로 업로드한다.
-  - 상태: PR #50 `codex/c17-sitewide-gsc-page-query` OPEN; current base `97ed941bf1276f5f5d102f25265576227937ccc7` was merged normally into the feature branch to resolve the `PROJECT_HISTORY.md` conflict. Local focused suite 90 passed. Exact-head SEO QA run `37387487374` passed on merge head `abe68d27d8d935efa3be11c5b663b046e27a388d` (unittest 793; pytest 1,312 + 518 subtests); this handoff-only update still needs its own exact-head run. Control Tower review follows the latest PR checks; merge and live query dispatch remain prohibited.
+  - 상태: PR #50 `codex/c17-sitewide-gsc-page-query` OPEN; latest base `6d45375651b2cb9e78fbec3b29c6c11281a80faa` was merged normally into the feature branch after PR #49 advanced main; the `PROJECT_HISTORY.md` conflict was resolved with both C06 and C17 records preserved. Local focused suite 90 passed. Exact-head SEO QA run `37387487374` passed on earlier merge head `abe68d27d8d935efa3be11c5b663b046e27a388d` (unittest 793; pytest 1,312 + 518 subtests). Use the latest PR head check for Control Tower review; merge and live query dispatch remain prohibited.
   - 의존성: C07의 겹치는 GSC workflow write 단계는 C17이 merge되거나 abandoned 될 때까지 시작하지 않는다. Live GSC collection은 Control Tower 승인 전 실행하지 않는다.
 
 - [ ] P0 JP Travel Batch 02 — PR #38, 50-page canary
