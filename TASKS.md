@@ -13,8 +13,9 @@
   - 기준: PR #46 merge commit `9a83870428d6cf8b026de728dd9c3aabf3491b1e`의 approved head는 `5eb3f2c828ce6f4979ef8757e266b0fbf68dd1e0`; `DAILY_PUBLICATION_LIMIT = 3` 유지. PR #49 head `1d4e1cdd956ee6eefe29c15d7f8f18344e61fbb9`는 exact-head SEO QA `37378217157` SUCCESS였다.
   - Live evidence: merge 뒤 AdSense Collection을 한 번만 dispatch했다 (run `37373852773`). 실행은 `Collect direct AdSense latest snapshot` 단계에서 `AdSense report rows are unavailable.`로 실패했다. 안전한 로그에 HTTP/Google status가 없어 실패 endpoint는 미확정이다. 재실행은 금지.
   - Repair: current/prior/PAGE_URL parser 오류에 stage를 명시하고, `rows` 키가 없을 때만 빈 목록으로 정규화한다. 빈 current/prior site report는 fail-closed; 빈/missing PAGE_URL은 `PARTIAL`, matched count와 URL metric은 미확정으로 유지한다. last-good snapshot atomicity와 exact PAGE_URL 400 fail-soft guard는 유지.
-  - Sync: latest `origin/main` `97ed941bf1276f5f5d102f25265576227937ccc7`을 regular-merge 중이다. C16 `PROJECT_HISTORY.md`/sitemap/test 기록을 보존하며 C06 문서도 유지한다. Collector content는 기존 approved blob과 동일.
-  - 상태: branch `codex/c06-report-parser-stages`; PR #49은 OPEN, merge 금지. Main sync 뒤 focused/full verification 및 새 exact-head CI가 남아 있다. AdSense live workflow 실행 금지, C07은 `WAITING`.
+  - Sync: latest `origin/main` `97ed941bf1276f5f5d102f25265576227937ccc7`을 regular-merge한 merge commit은 `dc9bb64bfe064568b4d321fd1b74dda3869cf92f`이며 latest main은 second parent다. `PROJECT_HISTORY.md` conflict 하나만 해결했고 C16 sitemap/test/history 및 C06 parser/history records 모두 보존했다. Code conflict는 0; collector blob은 그대로다.
+  - 검증: post-sync focused AdSense/guard/revenue/source/policy/C16 tests 118 passed; unittest 797 passed; pytest 1,281 passed; SEO QA 신규 critical/warning 0 (현재 767/420); guard vs latest `origin/main` PASS; workflow YAML 3개 parse PASS; diff check 및 secret-pattern scan PASS. `DAILY_PUBLICATION_LIMIT = 3` 유지.
+  - 상태: branch `codex/c06-report-parser-stages`; PR #49은 OPEN, merge 금지. Merge commit을 포함한 branch를 정상 push한 뒤 새 exact-head CI SUCCESS를 기다린다. AdSense live workflow 실행 금지, C07은 `WAITING`.
 
 - [ ] P0 JP Travel Batch 02 — PR #38, 50-page canary
   - 동기화: 요청된 main `6b844cf03138057091bac2cdf1a87db3e98491f2` 이후 main이 `1b15674e09d3dd30fb65620ab2ae8f35f85c2137`로 전진해 두 SHA를 모두 regular merge로 반영했다. `5172e32bcd`에서 derived artifact 충돌 3건을 최신 main 입력 기준으로 해결·재생성했고, `946f3cf027` merge는 충돌이 없었다. rebase/force push 없음.
