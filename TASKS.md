@@ -18,7 +18,7 @@
 
 - [ ] P0 Site-wide matched-period GSC page×query evidence — C17
   - 범위: 현재 `gsc-latest.json`과 정확히 같은 finalized period/property/web type으로 site-wide `[page, query]` evidence를 수집하는 manual-only, artifact-only 경로. Raw export는 `$RUNNER_TEMP`에만 쓰고 7일 보관 artifact로 업로드한다.
-  - 상태: sparse branch `codex/c17-sitewide-gsc-page-query` 기반 `9a83870428d6cf8b026de728dd9c3aabf3491b1e`; local focused suite 90 passed, YAML parse와 `git diff --check` 통과. Exact-head CI와 Control Tower review 대기; merge와 live query dispatch 금지.
+  - 상태: PR #50 `codex/c17-sitewide-gsc-page-query` OPEN; current base `97ed941bf1276f5f5d102f25265576227937ccc7` was merged normally into the feature branch to resolve the `PROJECT_HISTORY.md` conflict. Local focused suite 90 passed; initial exact-head CI passed, and updated-base CI is pending. Control Tower review is next; merge and live query dispatch remain prohibited.
   - 의존성: C07의 겹치는 GSC workflow write 단계는 C17이 merge되거나 abandoned 될 때까지 시작하지 않는다. Live GSC collection은 Control Tower 승인 전 실행하지 않는다.
 
 - [ ] P0 JP Travel Batch 02 — PR #38, 50-page canary
@@ -97,6 +97,11 @@
   - 범위/결과: 실제 콘텐츠 수정 0, 추가 공개 페이지 0. 대상 HTML·protected pages·sitemap/hub/manifest/IndexNow 변경 없음. matched-period Naver 값을 만들지 않았으며 Revenue는 `NO_CONCLUSION`.
 
 ## P1 - High
+
+- [ ] C16 · Three Utility Sitemap Coverage Repair
+  - Scope: add the three existing, indexable self-canonical utility URLs to `kor/sitemap.xml`; omit unsupported `lastmod`; leave page HTML, root sitemap, content index, measurement data, publication state, and StockWiki untouched.
+  - Verification: regression RED on missing sitemap membership, then GREEN (2); related sitemap/canonical/SEO tests 15 passed; unittest 785 passed; pytest 1,268 passed; sitemap audit found 0 duplicates/invalid XML and one pre-existing unknown inventory URL; SEO QA 0 new critical/warnings; content launch guard PASS; XML parse PASS.
+  - Status: local verification ready for exact-head CI from `origin/main` `93cfd4e48d20a2b012c7b4610929be9f167bcff3` on `codex/c16-three-utility-sitemap-repair`. Keep unmerged pending Control Tower review.
 
 - [x] 12 · Spanish STOPat5 — `/es/game/STOPat5/`
   - 완료: 2026-09-21. 승인 4-commit chain을 최신 main에 non-force 반영하고 Pages run `35589224240` success 및 production served HTML을 확인했다. Timer-specific Spanish identity, fixed 5.000-second `performance.now()` ladder, inclusive tolerance boundary, signed early/late/exact result, local best error/highest reached level, safe storage fallback/reset/restart, replay/share/related navigation, timing trust disclosure, VideoGame-only schema, FAQPage 0, privacy/AdSense state, generated RSS parity, and actual Node behavioral coverage were verified. Focused ES + sixth batch tests 9 passed. Mobile/runtime deep checks remain `MOBILE_390_NOT_VERIFIED` / `RUNTIME_PARTIAL_NOT_VERIFIED`; Google URL Inspection `SEARCH_CONSOLE_NOT_VERIFIED`, no submission; Naver `NAVER_NOT_PRIMARY`. 14/28/56-day measurement and Notion final closure remain follow-up.
