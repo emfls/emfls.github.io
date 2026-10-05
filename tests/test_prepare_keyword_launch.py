@@ -11,14 +11,64 @@ def test_prepare_queue_records_required_fields_and_preserves_excluded(tmp_path):
     assert item["status"] == "READY_TO_LAUNCH"
     assert item["review_status"] == "PAGE_REVIEW_READY"
 
-def test_kst_midnight_rollover_is_next_publication_day():
-    rows=[{"keyword":"새 도구","status":"NEW","score_valid":"True","opportunity_score":"90","action":"NEW_PAGE","content_types":"calculator/tool","suggested_url":"/kor/util/new/"}]
-    assert prepare_queue(rows,set(),set(),1,"2026-09-14T00:30:00+09:00",1,"2026-09-13")["queue"]
+def test_kst_midnight_rollover_resets_capacity_and_keeps_historical_dedupe():
+    rows = [
+        launch_row("1688구매대행", "/kor/column/1688gumaedaehaeng/", "95"),
+        launch_row("새 도구 하나", "/kor/column/new-one/"),
+        launch_row("새 도구 둘", "/kor/column/new-two/"),
+        launch_row("새 도구 셋", "/kor/column/new-three/"),
+    ]
+    manifest = published_manifest(
+        runAt="2026-09-13T23:00:00+09:00",
+        candidateIds=["keyword:1688구매대행"],
+        urls=["/kor/column/1688gumaedaehaeng/"],
+    )
+    result = prepare_queue(
+        rows,
+        daily_limit=3,
+        selected_at="2026-09-14T00:30:00+09:00",
+        launched_count=3,
+        counter_date="2026-09-13",
+        published_manifest=manifest,
+    )
+    assert result["publishedToday"] == 0
+    assert result["remainingCapacity"] == 3
+    assert len(result["queue"]) == 3
+    assert result["excluded"]["duplicate_keyword"] == 1
 
 def test_prepare_does_not_increment_launch_count():
     rows=[{"keyword":"무료 계산기","status":"NEW","score_valid":"True","opportunity_score":"90","confidence":"HIGH","category":"tools","action":"NEW_PAGE","content_types":"calculator/tool","suggested_url":"/kor/util/free/index.html"}]
     out=prepare_queue(rows,set(),set(),1,"2026-09-12T00:00:00+09:00",0)
     assert out["dailyLimit"] == 1
+
+
+
+def test_default_queue_policy_reports_three_available_slots():
+    rows = [launch_row(f"도구안내{index}", f"/kor/column/tool-{index}/") for index in range(4)]
+    result = prepare_queue(rows, selected_at="2026-09-12T00:00:00+09:00")
+    assert result["dailyLimit"] == 3
+    assert result.get("publishedToday") == 0
+    assert result.get("remainingCapacity") == 3
+    assert len(result["queue"]) == 3
+
+
+def test_remaining_capacity_never_promotes_editorial_hold_or_ymyl_candidates():
+    rows = [
+        launch_row("옷장정리방법", "/kor/column/wardrobe-organization/"),
+        launch_row("안전한정리순서", "/kor/column/safe-organization/"),
+        launch_row("육아휴직급여", "/kor/parenting/leave-pay/"),
+    ]
+    result = prepare_queue(
+        rows,
+        daily_limit=3,
+        selected_at="2026-09-12T00:00:00+09:00",
+        editorial_decisions=[{"keyword": "안전한정리순서", "decision": "HOLD"}],
+        published_manifest={},
+    )
+    assert result.get("remainingCapacity") == 3
+    assert [item["keyword"] for item in result["queue"]] == ["옷장정리방법"]
+    assert result["excluded"]["editorial_hold"] == 1
+    assert result["excluded"]["ymyl"] == 1
 
 def test_counter_applies_only_on_same_local_date():
     rows=[{"keyword":"무료 계산기","status":"NEW","score_valid":"True","opportunity_score":"90","confidence":"HIGH","category":"tools","action":"NEW_PAGE","content_types":"calculator/tool","suggested_url":"/kor/util/free/index.html"}]
@@ -88,9 +138,17 @@ def test_launched_manifest_is_a_final_publication_dedupe_source():
 
 def test_same_day_published_manifest_capacity_overrides_stale_counter():
     manifest=published_manifest(candidateIds=["keyword:기존발행"],urls=["/kor/column/existing/"])
-    result=prepare_queue([launch_row("새 도구","/kor/column/new/")],set(),set(),1,"2026-09-28T12:00:00+09:00",0,"2026-09-13",published_manifest=manifest)
-    assert result["queue"] == []
-    assert result["excluded"]["daily_limit"] == 1
+    rows = [
+        launch_row("새 도구 하나", "/kor/column/new-one/"),
+        launch_row("새 도구 둘", "/kor/column/new-two/"),
+        launch_row("새 도구 셋", "/kor/column/new-three/"),
+    ]
+    result=prepare_queue(rows,set(),set(),3,"2026-09-28T12:00:00+09:00",0,"2026-09-13",published_manifest=manifest)
+    assert result["dailyLimit"] == 3
+    assert result.get("publishedToday") == 1
+    assert result.get("remainingCapacity") == 2
+    assert len(result["queue"]) == 2
+    assert result["excluded"]["daily_limit"] == 0
 
 def test_final_manifest_with_missing_run_at_fails_closed_for_daily_capacity():
     manifest=published_manifest(candidateIds=["keyword:already-published"],urls=["/kor/column/already-published/"])
@@ -149,4 +207,65 @@ def test_main_reads_committed_published_manifest_before_writing_queue(tmp_path, 
     prepare_keyword_launch.main()
     output=json.loads((data/"content-launch-queue.json").read_text(encoding="utf-8"))
     assert output["queue"] == []
-    assert output["excluded"]["daily_limit"] == 1
+    assert output["dailyLimit"] == 3
+    assert output["publishedToday"] == 1
+    assert output["remainingCapacity"] == 2
+    assert output["excluded"]["duplicate_keyword"] == 1
+    assert output["excluded"]["daily_limit"] == 0
+
+
+
+def test_current_keyboard_cleaning_publication_is_preserved_and_leaves_two_slots(tmp_path, monkeypatch):
+    current_manifest = {
+        "candidateIds": ["keyword:키보드청소방법"],
+        "contentPaths": ["kor/report/it/keyboard-cleaning-guide.html"],
+        "dailyLimit": 1,
+        "hubPaths": ["kor/report/it/index.html"],
+        "publishedToday": 1,
+        "remainingCapacity": 0,
+        "runAt": "2026-10-05T06:48:56+09:00",
+        "runId": "P0-20261005-KEYBOARD-CLEANING",
+        "schemaVersion": 1,
+        "sitemapPaths": ["kor/report/it/sitemap.xml"],
+        "status": "PUBLISHED",
+        "urls": ["/kor/report/it/keyboard-cleaning-guide.html"],
+    }
+    before = json.loads(json.dumps(current_manifest))
+
+    data = tmp_path / "data"
+    data.mkdir()
+    fieldnames = [
+        "keyword", "status", "score_valid", "opportunity_score", "confidence",
+        "category", "action", "content_types", "overlap", "suggested_url",
+    ]
+    with (data / "keywords_master.csv").open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows([
+            launch_row("산책길지도", "/kor/column/walking-route/"),
+            launch_row("등산준비목록", "/kor/column/hiking-checklist/"),
+            launch_row("계절별옷정리", "/kor/column/seasonal-clothes/"),
+            launch_row("캠핑준비표", "/kor/column/camping-checklist/"),
+        ])
+    (data / "content-index-ko.json").write_text("[]", encoding="utf-8")
+    (data / "published_keywords.json").write_text("[]", encoding="utf-8")
+    (data / "content-launch-counter.json").write_text(
+        json.dumps({"date": "2026-09-13", "launchedCount": 1, "dailyLimit": 1}),
+        encoding="utf-8",
+    )
+    (data / "content-launch-manifest.json").write_text(
+        json.dumps(current_manifest, ensure_ascii=False), encoding="utf-8"
+    )
+    monkeypatch.setattr(
+        "sys.argv",
+        ["prepare_keyword_launch.py", "--root", str(tmp_path), "--selected-at", "2026-10-05T12:00:00+09:00"],
+    )
+
+    prepare_keyword_launch.main()
+
+    output = json.loads((data / "content-launch-queue.json").read_text(encoding="utf-8"))
+    assert output["dailyLimit"] == 3
+    assert output["publishedToday"] == 1
+    assert output["remainingCapacity"] == 2
+    assert len(output["queue"]) == 2
+    assert json.loads((data / "content-launch-manifest.json").read_text(encoding="utf-8")) == before

@@ -71,6 +71,31 @@ def test_publications_on_the_same_local_day_reduce_capacity(tmp_path):
     assert len(result["selected"]) == 1
 
 
+def test_publications_are_counted_by_kst_day_when_run_time_is_utc(tmp_path):
+    prepare(tmp_path, [raw_candidate(i) for i in range(1, 11)])
+    write_json(
+        tmp_path / "data/content-launch-experiments.json",
+        {"experiments": [
+            {
+                "candidateId": "KST-YESTERDAY",
+                "publishedAt": "2026-09-02T14:30:00+00:00",
+                "publishedOn": "2026-09-02",
+            },
+            {
+                "candidateId": "KST-TODAY",
+                "publishedAt": "2026-09-02T15:00:00+00:00",
+                "publishedOn": "2026-09-03",
+            },
+        ]},
+    )
+
+    result = run_daily_analysis(
+        tmp_path, "2026-09-02T15:30:00+00:00", tmp_path / "research.json"
+    )
+
+    assert len(result["selected"]) == 2
+
+
 def test_fewer_than_ten_researched_candidates_cannot_publish(tmp_path):
     prepare(tmp_path, [raw_candidate(i) for i in range(1, 4)])
     result = run_daily_analysis(tmp_path, "2026-09-01T14:00:00+09:00", tmp_path / "research.json")

@@ -3,6 +3,11 @@
 
 from datetime import date, datetime, timedelta
 
+try:
+    from scripts.content_launch_policy import DAILY_PUBLICATION_LIMIT
+except ModuleNotFoundError:
+    from content_launch_policy import DAILY_PUBLICATION_LIMIT
+
 
 DIRECT_QUERY_SOURCES = {"NAVER_QUERY_EXPORT", "GSC_QUERY_EXPORT", "SEARCH_SERVICE_QUERY_METRIC"}
 OVERLAP_DECISIONS = {
@@ -80,7 +85,7 @@ def score_new_content(candidate):
     return {"score": round(sum(row["score"] for row in components), 2), "components": components}
 
 
-def select_new_pages(candidates, active_launches, published_today, daily_limit=3):
+def select_new_pages(candidates, active_launches, published_today, daily_limit=DAILY_PUBLICATION_LIMIT):
     if active_launches >= 20:
         return []
     eligible = [row for row in candidates if row.get("decision") == "NEW_PAGE" and (row.get("demand") or {}).get("status") == "VERIFIED" and float(row.get("score") or 0) >= 70 and (row.get("overlap") or {}).get("level") in {"NO_OVERLAP", "LOW_OVERLAP"}]
