@@ -4,6 +4,12 @@
 
 ## P0 - Critical
 
+- [ ] P0 StockWiki placeholder-ad source/build regression prevention — C14
+  - 범위: Astro source가 향후 빌드에서 placeholder 광고를 재생성하지 못하도록 한다. 실광고 활성화, StockWiki 금융 콘텐츠/데이터/SEO 의미 변경은 금지한다.
+  - 변경: `AdSlot.astro`와 호출부 및 StockLayout 고정 하단 placeholder를 제거하고, 예약된 StockWiki 빌드 출력에서 광고 마커가 발견되면 복사·커밋 전에 실패하도록 안전 검사를 추가했다. 기존 생성 HTML 정리 스크립트는 유지했다.
+  - 검증: source/served-page 테스트 RED→GREEN; unittest 787 (build 검사 1 skip); pytest 1,269 passed / 1 skipped; SEO QA 신규 critical/warning 0; content launch guard PASS; workflow YAML 및 `git diff --check` PASS. `npm ci`는 package manifest/lock 불일치(`sitemap@9.0.1` 대 `^7.1.2`, npm이 요구한 항목 누락)로 중단됐다. package script가 참조하는 `kor/stockwiki/scripts/gen_sitemap.js`도 latest main에 없다.
+  - 상태: 소스 회귀 방지 변경은 C14 브랜치에 준비했다. Astro build/dist 및 mobile viewport QA는 NOT_RUN; lockfile·sitemap 생성기 수정은 C14 범위 밖이므로 하지 않았다. PR/정확한 head CI와 Control Tower 검토 전 merge 금지.
+
 - [ ] P0 Daily Publication Cap 1→3 — C01
   - 범위: 공통 정책과 keyword/external launch selector의 일일 공개 상한을 3으로 통일하고 KST 당일 사용량을 계산한다. 품질·중복·YMYL/HOLD 게이트는 유지했다. 2026-10-05 Keyboard Cleaning 1건은 기존 PUBLISHED 사실로 반영되어 remaining capacity는 2다. manifest·counter·queue·페이지 데이터 변경 및 신규 공개는 0.
   - 수정 후 검증: focused 187 passed; unittest 752 passed; pytest 1,231 passed; SEO QA 신규 critical/warning 0 (현재 767/420); content launch guard PASS; `git diff --check` PASS.
