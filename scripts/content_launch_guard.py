@@ -9,6 +9,10 @@ from pathlib import Path
 
 
 MEASUREMENT_WORKFLOW_ALLOWLIST = {".github/workflows/ga4-collection.yml"}
+APPROVED_MONETIZATION_ADDITIONS = frozenset({
+    ".github/workflows/adsense-collection.yml",
+    "scripts/collect_adsense_snapshot.py",
+})
 APPROVED_PROTECTED_WINNER_TRANSITIONS = {
     "kor/report/camp/pyeongtaek.html": {
         ("4d95593169e466447ee355429d2822764ca7e1a5", "b4fc13119f1e8cd01d78805d06ee981ac6834236"),
@@ -243,8 +247,12 @@ def validate_launch(root, manifest, changed_paths):
             errors.add("PROTECTED_WINNER_CHANGED")
     if any(
         path not in MEASUREMENT_WORKFLOW_ALLOWLIST
-        and re.search(r"(^|/)(ads?|adsense|ga4|analytics)([._/-]|$)", path, re.I)
-        for path in changed_names
+        and not (status == "A" and path in APPROVED_MONETIZATION_ADDITIONS)
+        and (
+            path in APPROVED_MONETIZATION_ADDITIONS
+            or re.search(r"(^|/)(ads?|adsense|ga4|analytics)([._/-]|$)", path, re.I)
+        )
+        for status, path, _, _ in changed
     ):
         errors.add("MONETIZATION_OR_ANALYTICS_CHANGED")
 

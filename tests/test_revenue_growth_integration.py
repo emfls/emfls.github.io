@@ -11,6 +11,79 @@ def write_json(path, payload):
 
 
 class RevenueGrowthIntegrationTest(unittest.TestCase):
+    def test_direct_adsense_matched_site_period_is_reported_with_source_labels(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            url = "/known.html"
+            period = {"start": "2026-09-28", "end": "2026-10-04", "days": 7, "inclusive": True}
+            prior_period = {"start": "2026-09-21", "end": "2026-09-27", "days": 7, "inclusive": True}
+            missing_url = "/not-returned.html"
+            write_json(root / "scores.json", {"pages": [{"url": url, "score": 75, "type": "UTILITY"}, {"url": missing_url, "score": 70, "type": "UTILITY"}]})
+            write_json(root / "audit.json", {"pages": [{"url": url, "indexable": True}, {"url": missing_url, "indexable": True}]})
+            write_json(root / "performance.json", {
+                "site": {"ga4": {"views": 30, "users": 20, "revenue": 2.4, "revenueMetric": "totalAdRevenue", "source": "GOOGLE_ANALYTICS_DATA_API", "status": "VERIFIED", "period": {"start": "2026-09-06", "end": "2026-10-03"}}},
+                "pages": [{"url": url, "ga4": {"views": 5, "users": 4, "revenue": 0.7, "revenueMetric": "totalAdRevenue", "source": "GOOGLE_ANALYTICS_DATA_API", "status": "VERIFIED", "period": {"start": "2026-09-06", "end": "2026-10-03"}}}],
+            })
+            direct_adsense = {
+                "schemaVersion": 1,
+                "source": "DIRECT_ADSENSE_MANAGEMENT_API_V2",
+                "sourceStatus": "VERIFIED",
+                "currency": "USD",
+                "site": {
+                    "domain": "emfls.github.io",
+                    "status": "VERIFIED",
+                    "comparisonStatus": "VERIFIED",
+                    "dimensions": ["DATE", "OWNED_SITE_DOMAIN_NAME"],
+                    "metrics": ["ESTIMATED_EARNINGS", "PAGE_VIEWS", "PAGE_VIEWS_RPM", "IMPRESSIONS", "CLICKS", "COST_PER_CLICK"],
+                    "current": {"estimatedEarnings": 18.5, "pageViews": 1000, "pageViewsRPM": 18.5, "impressions": 2000, "clicks": 10, "costPerClick": 1.85},
+                    "prior": {"estimatedEarnings": 10.0, "pageViews": 500, "pageViewsRPM": 20.0, "impressions": 1000, "clicks": 5, "costPerClick": 2.0},
+                    "absoluteDelta": {"estimatedEarnings": 8.5},
+                    "relativeDelta": {"estimatedEarnings": 0.85},
+                },
+                "currentPeriod": period,
+                "priorPeriod": prior_period,
+                "reportingTimeZone": {"mode": "ACCOUNT_TIME_ZONE", "id": "Asia/Seoul"},
+                "collector": {"scheduleTimeZone": "UTC"},
+                "pageUrls": {"source": "DIRECT_ADSENSE_PAGE_URL", "coverageStatus": "PARTIAL", "returnedRowCount": 10000, "truncationStatus": "TRUNCATED", "rows": [{"url": f"https://emfls.github.io{url}", "estimatedEarnings": 0.4}]},
+            }
+            write_json(root / "adsense.json", direct_adsense)
+            write_json(root / "experiments.json", {"experiments": []})
+            write_json(root / "history.json", {"pages": []})
+
+            pages, summary = run_revenue_growth(
+                page_scores_path=root / "scores.json", audit_path=root / "audit.json",
+                performance_path=root / "performance.json", experiments_path=root / "experiments.json",
+                optimization_history_path=root / "history.json", as_of="2026-10-05",
+                adsense_snapshot_path=root / "adsense.json",
+                page_output=root / "pages.json", opportunity_output=root / "opp.json", report_output=root / "report.md",
+            )
+
+            self.assertEqual(summary["directAdsense"]["source"], "DIRECT_ADSENSE_MANAGEMENT_API_V2")
+            self.assertEqual(summary["directAdsense"]["site"]["current"]["estimatedEarnings"], 18.5)
+            self.assertEqual(summary["directAdsense"]["site"]["prior"]["estimatedEarnings"], 10.0)
+            direct_page = next(row for row in pages["pages"] if row["url"] == url)
+            missing_page = next(row for row in pages["pages"] if row["url"] == missing_url)
+            self.assertEqual(direct_page["adsense"]["revenue"], 0.4)
+            self.assertEqual(direct_page["adsense"]["revenueMetric"], "ESTIMATED_EARNINGS")
+            self.assertEqual(direct_page["adsense"]["source"], "DIRECT_ADSENSE_PAGE_URL")
+            self.assertEqual(direct_page["adsense"]["coverageStatus"], "PARTIAL")
+            self.assertIsNone(missing_page["adsense"]["revenue"])
+            self.assertEqual(missing_page["adsense"]["status"], "NOT_AVAILABLE")
+            self.assertEqual(summary["directAdsense"]["pageUrlCoverage"]["status"], "PARTIAL")
+            self.assertEqual(summary["directAdsense"]["pageUrlCoverage"]["truncationStatus"], "TRUNCATED")
+            scored_page = next(row for row in pages["pages"] if row["url"].endswith(url))
+            actual_revenue = next(item for item in scored_page["scoreComponents"] if item["name"] == "actual_revenue")
+            self.assertEqual(actual_revenue["inputs"]["revenue"], 0.7)
+            self.assertEqual(actual_revenue["inputs"]["revenueSource"], "GA4_TOTAL_AD_REVENUE")
+            self.assertEqual(actual_revenue["inputs"]["revenueSources"]["directAdsenseUrlRevenue"], 0.4)
+            self.assertEqual(actual_revenue["inputs"]["periodComparison"], "MISMATCH")
+            self.assertIsNone(missing_page["adsense"]["revenue"])
+            report = (root / "report.md").read_text(encoding="utf-8")
+            self.assertIn("DIRECT_ADSENSE_SHORT_WINDOW_SIGNAL", report)
+            self.assertIn("Estimated earnings are provisional", report)
+            self.assertIn("GA4 site revenue (totalAdRevenue)", report)
+            self.assertIn("Not allocated to URLs", report)
+
     def test_terminal_inconclusive_camping_experiments_release_selector_slots(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

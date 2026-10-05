@@ -38,7 +38,10 @@ CHANNEL_FIELDS = {
     "ga4": ("views", "users", "engagementSeconds", "revenue"),
     "adsense": ("revenue", "rpm"),
 }
-CHANNEL_METADATA_FIELDS = {"ga4": ("revenueMetric",)}
+CHANNEL_METADATA_FIELDS = {
+    "ga4": ("revenueMetric",),
+    "adsense": ("revenueMetric", "coverageStatus"),
+}
 
 
 def content_growth_summary(experiments, as_of):
@@ -135,6 +138,56 @@ def period_alignment(left, right):
     return "OVERLAP"
 
 
+def _direct_adsense_summary(snapshot):
+    if not isinstance(snapshot, dict) or snapshot.get("source") != "DIRECT_ADSENSE_MANAGEMENT_API_V2":
+        return {
+            "source": "DIRECT_ADSENSE_MANAGEMENT_API_V2",
+            "sourceLabel": "Direct AdSense Management API v2",
+            "status": "NOT_AVAILABLE",
+            "comparisonStatus": "NOT_AVAILABLE",
+            "currency": None,
+            "reportingTimeZone": None,
+            "currentPeriod": None,
+            "priorPeriod": None,
+            "site": {},
+            "pageUrlCoverage": {"status": "NOT_AVAILABLE", "returnedRowCount": None, "truncationStatus": "NOT_AVAILABLE"},
+        }
+    site = snapshot.get("site") if isinstance(snapshot.get("site"), dict) else {}
+    urls = snapshot.get("pageUrls") if isinstance(snapshot.get("pageUrls"), dict) else {}
+    source_status = site.get("status", "NOT_AVAILABLE")
+    comparison_status = site.get("comparisonStatus", "NOT_AVAILABLE")
+    if site.get("domain") != "emfls.github.io" or source_status not in {"VERIFIED", "PARTIAL", "NOT_AVAILABLE", "ERROR", "STALE_DATA"}:
+        source_status = "NOT_AVAILABLE"
+        comparison_status = "NOT_AVAILABLE"
+    if source_status != "VERIFIED" or comparison_status != "VERIFIED":
+        comparison_status = "NOT_AVAILABLE"
+    return {
+        "source": snapshot["source"],
+        "sourceLabel": "Direct AdSense Management API v2",
+        "status": source_status,
+        "comparisonStatus": comparison_status,
+        "currency": snapshot.get("currency"),
+        "reportingTimeZone": snapshot.get("reportingTimeZone"),
+        "scheduleTimeZone": ((snapshot.get("collector") or {}).get("scheduleTimeZone")),
+        "currentPeriod": snapshot.get("currentPeriod"),
+        "priorPeriod": snapshot.get("priorPeriod"),
+        "site": {
+            "domain": site.get("domain"),
+            "dimensions": site.get("dimensions") or [],
+            "metrics": site.get("metrics") or [],
+            "current": site.get("current") or {},
+            "prior": site.get("prior") or {},
+            "absoluteDelta": site.get("absoluteDelta") or {},
+            "relativeDelta": site.get("relativeDelta") or {},
+        },
+        "pageUrlCoverage": {
+            "status": urls.get("coverageStatus", "NOT_AVAILABLE"),
+            "returnedRowCount": urls.get("returnedRowCount", len(urls.get("rows") or [])),
+            "truncationStatus": urls.get("truncationStatus", "NOT_AVAILABLE"),
+        },
+    }
+
+
 def _period_compatibility(site):
     periods = {
         _period_key(site.get(name))
@@ -155,6 +208,29 @@ def _merge_gsc_snapshot(performance, gsc):
         target = by_url.setdefault(url, {"url": url})
         if row.get("google"):
             target["google"] = row["google"]
+    return {**performance, "pages": list(by_url.values())}
+
+
+def _merge_adsense_snapshot(performance, snapshot):
+    if not isinstance(snapshot, dict) or snapshot.get("source") != "DIRECT_ADSENSE_MANAGEMENT_API_V2":
+        return performance
+    by_url = _performance_by_url(performance.get("pages") or [])
+    period = snapshot.get("currentPeriod")
+    for row in ((snapshot.get("pageUrls") or {}).get("rows") or []):
+        url = normalize_url(row.get("url"))
+        if not url:
+            continue
+        earnings = row.get("estimatedEarnings")
+        target = by_url.setdefault(url, {"url": url})
+        target["adsense"] = {
+            "revenue": earnings,
+            "rpm": row.get("pageViewsRPM"),
+            "revenueMetric": "ESTIMATED_EARNINGS",
+            "coverageStatus": "PARTIAL",
+            "status": "VERIFIED" if isinstance(earnings, (int, float)) else "NOT_AVAILABLE",
+            "period": period,
+            "source": "DIRECT_ADSENSE_PAGE_URL",
+        }
     return {**performance, "pages": list(by_url.values())}
 
 
@@ -246,17 +322,53 @@ def _camping_cluster(records):
 def _render_report(summary):
     kpis = summary["kpis"]
     naver_quality = ((summary.get("dataQuality") or {}).get("naver") or {})
+    direct_adsense = summary.get("directAdsense") or {}
+    direct_site = direct_adsense.get("site") or {}
+    direct_current = direct_site.get("current") or {}
+    direct_prior = direct_site.get("prior") or {}
+    ga4_site = (summary.get("siteSources") or {}).get("ga4") or {}
+    ga4_period = ga4_site.get("period") or {}
+    ga4_range = f"; {ga4_period.get('start')} to {ga4_period.get('end')}" if ga4_period.get("start") and ga4_period.get("end") else ""
+    historical_adsense = (summary.get("siteSources") or {}).get("historicalAdsense") or {}
     lines = [
         "# Revenue Growth Report",
         "",
         "## CURRENT STATUS",
         "",
-        f"- 28d Revenue: ${kpis['revenue28d']['value']:.2f}" if kpis["revenue28d"]["value"] is not None else "- 28d Revenue: N/A",
-        f"- 28d Daily Average: ${kpis['dailyAverage28d']['value']:.2f}" if kpis["dailyAverage28d"]["value"] is not None else "- 28d Daily Average: N/A",
+        f"- Historical AdSense 28d revenue ({historical_adsense.get('source') or 'source unavailable'}): ${kpis['revenue28d']['value']:.2f}" if kpis["revenue28d"]["value"] is not None else "- Historical AdSense 28d revenue: N/A",
+        f"- GA4 site revenue (totalAdRevenue): ${ga4_site['revenue']:.2f}{ga4_range}" if ga4_site.get("revenue") is not None else "- GA4 site revenue (totalAdRevenue): N/A",
+        f"- Historical site daily average (28d): ${kpis['dailyAverage28d']['value']:.2f}" if kpis["dailyAverage28d"]["value"] is not None else "- Historical site daily average (28d): N/A",
         f"- Indexed Pages: {kpis['indexedPages']['value']:,}",
-        f"- Revenue per Indexed Page: ${kpis['revenuePerIndexedPage']['value']:.6f}" if kpis["revenuePerIndexedPage"]["value"] is not None else "- Revenue per Indexed Page: N/A",
+        f"- Historical site revenue divided by indexed page count: ${kpis['revenuePerIndexedPage']['value']:.6f}" if kpis["revenuePerIndexedPage"]["value"] is not None else "- Historical site revenue divided by indexed page count: N/A",
         f"- Views per User: {kpis['viewsPerActiveUser']['value']:.2f}" if kpis["viewsPerActiveUser"]["value"] is not None else "- Views per User: N/A",
     ]
+    lines.extend(("", "## Direct AdSense API site comparison", "", f"- Source: {direct_adsense.get('sourceLabel', 'Direct AdSense Management API v2')}", "- DIRECT_ADSENSE_SHORT_WINDOW_SIGNAL: site-level ESTIMATED_EARNINGS only.", "- Estimated earnings are provisional and may be adjusted; durable revenue wins require longer-period validation.", f"- Status: {direct_adsense.get('status', 'NOT_AVAILABLE')} / comparison {direct_adsense.get('comparisonStatus', 'NOT_AVAILABLE')}"))
+    if direct_adsense.get("comparisonStatus") == "VERIFIED":
+        currency = direct_adsense.get("currency") or "currency unavailable"
+        current_period = direct_adsense.get("currentPeriod") or {}
+        prior_period = direct_adsense.get("priorPeriod") or {}
+        time_zone = direct_adsense.get("reportingTimeZone") or {}
+        schedule_time_zone = direct_adsense.get("scheduleTimeZone") or "N/A"
+        absolute_change = (direct_site.get("absoluteDelta") or {}).get("estimatedEarnings")
+        relative_change = (direct_site.get("relativeDelta") or {}).get("estimatedEarnings")
+        lines.extend((
+            f"- Site: {direct_site.get('domain')}; dimensions: {', '.join(direct_site.get('dimensions') or [])}; metrics: {', '.join(direct_site.get('metrics') or [])}",
+            f"- Reporting timezone: {time_zone.get('id', 'N/A')} ({time_zone.get('mode', 'N/A')}); workflow schedule timezone: {schedule_time_zone}; currency: {currency}; days per period: {current_period.get('days', 'N/A')} inclusive",
+            f"- Current period ({current_period.get('start')} to {current_period.get('end')}): {currency} {direct_current.get('estimatedEarnings')} ESTIMATED_EARNINGS",
+            f"- Prior period ({prior_period.get('start')} to {prior_period.get('end')}): {currency} {direct_prior.get('estimatedEarnings')} ESTIMATED_EARNINGS",
+            f"- Estimated earnings change: {currency} {absolute_change if absolute_change is not None else 'N/A'}; relative change {relative_change:+.1%}" if relative_change is not None else f"- Estimated earnings change: {currency} {absolute_change if absolute_change is not None else 'N/A'}; relative change N/A",
+        ))
+        for key, label in (("pageViews", "Page views"), ("pageViewsRPM", "Page views RPM"), ("impressions", "Impressions"), ("clicks", "Clicks"), ("costPerClick", "Cost per click")):
+            current_value = direct_current.get(key)
+            prior_value = direct_prior.get(key)
+            lines.append(f"- {label}: current {current_value if current_value is not None else 'N/A'}; prior {prior_value if prior_value is not None else 'N/A'}")
+    else:
+        lines.append("- Matched comparison values: N/A")
+    page_coverage = direct_adsense.get("pageUrlCoverage") or {}
+    lines.extend((
+        f"- PAGE_URL evidence: {page_coverage.get('status', 'NOT_AVAILABLE')} ({page_coverage.get('returnedRowCount') if page_coverage.get('returnedRowCount') is not None else 'N/A'} returned; {page_coverage.get('truncationStatus', 'NOT_AVAILABLE')})",
+        "- Not allocated to URLs; PAGE_URL coverage is partial and a missing URL is not zero.",
+    ))
     for name in ("WINNER", "OPPORTUNITY", "EXPERIMENT", "DEAD_CANDIDATE", "INSUFFICIENT_DATA"):
         lines.append(f"- {name}: {summary['classificationCounts'].get(name, 0)}")
     lines.extend(("", "## TOP REVENUE OPPORTUNITIES", ""))
@@ -323,12 +435,15 @@ def run_revenue_growth(
     naver_snapshot_path=None,
     content_experiments_path=None,
     gsc_snapshot_path=None,
+    adsense_snapshot_path=None,
 ):
     page_scores = _read_json(page_scores_path, {"pages": []})
     audit = _read_json(audit_path, {"pages": []})
     performance = _read_json(performance_path, {"site": {}, "pages": []})
     gsc_snapshot = _read_json(gsc_snapshot_path, {}) if gsc_snapshot_path else {}
+    adsense_snapshot = _read_json(adsense_snapshot_path, {}) if adsense_snapshot_path else {}
     performance = _merge_gsc_snapshot(performance, gsc_snapshot)
+    performance = _merge_adsense_snapshot(performance, adsense_snapshot)
     experiments = _read_json(experiments_path, {"experiments": []})
     content_experiments = _read_json(content_experiments_path, {"experiments": []})
     history = _read_json(optimization_history_path, {"pages": []})
@@ -370,7 +485,20 @@ def run_revenue_growth(
         for channel_name, fields in CHANNEL_FIELDS.items():
             channel = performance_row.get(channel_name)
             metadata = CHANNEL_METADATA_FIELDS.get(channel_name, ())
-            record[channel_name] = normalize_channel(channel, fields, as_of, metadata) if channel else empty_channel(fields, metadata_fields=metadata)
+            if channel_name == "adsense" and adsense_snapshot.get("source") == "DIRECT_ADSENSE_MANAGEMENT_API_V2":
+                if channel and channel.get("source") == "DIRECT_ADSENSE_PAGE_URL":
+                    record[channel_name] = normalize_channel(channel, fields, as_of, metadata)
+                else:
+                    unavailable = empty_channel(fields, status="NOT_AVAILABLE", metadata_fields=metadata)
+                    unavailable.update({
+                        "period": adsense_snapshot.get("currentPeriod"),
+                        "source": "DIRECT_ADSENSE_PAGE_URL",
+                        "revenueMetric": "ESTIMATED_EARNINGS",
+                        "coverageStatus": "PARTIAL",
+                    })
+                    record[channel_name] = unavailable
+            else:
+                record[channel_name] = normalize_channel(channel, fields, as_of, metadata) if channel else empty_channel(fields, metadata_fields=metadata)
         if naver_match:
             naver_row = naver_match["matchedByUrl"].get(url)
             if naver_row:
@@ -454,6 +582,7 @@ def run_revenue_growth(
     adsense = site.get("adsense") or {}
     ga4 = site.get("ga4") or {}
     revenue_28d = adsense.get("revenue_28d")
+    direct_adsense = _direct_adsense_summary(adsense_snapshot)
     indexed = len(records)
     period_compatibility = _period_compatibility(site)
     counts = Counter(row.get("classification") for row in records if row.get("classification"))
@@ -483,6 +612,11 @@ def run_revenue_growth(
             "dailyAverage": kpis["dailyAverage28d"]["value"],
             "previous28dChange": adsense.get("previous_28d_change"),
             "status": adsense.get("status", "NOT_CONNECTED"),
+        },
+        "directAdsense": direct_adsense,
+        "siteSources": {
+            "historicalAdsense": {"source": adsense.get("source"), "status": adsense.get("status", "NOT_CONNECTED")},
+            "ga4": {"source": ga4.get("source"), "revenueMetric": ga4.get("revenueMetric"), "revenue": ga4.get("revenue") if ga4.get("revenueMetric") == "totalAdRevenue" else None, "period": ga4.get("period")},
         },
         "traffic": {
             "views": ga4.get("views"),
@@ -546,6 +680,7 @@ def main():
     parser.add_argument("--naver-snapshot", type=Path, default=None)
     parser.add_argument("--content-experiments", type=Path, default=Path("data/content-launch-experiments.json"))
     parser.add_argument("--gsc-snapshot", type=Path)
+    parser.add_argument("--adsense-snapshot", type=Path, default=Path("data/performance/adsense-latest.json"))
     parser.add_argument("--as-of", required=True)
     parser.add_argument("--page-output", type=Path, default=Path("data/page-performance.json"))
     parser.add_argument("--opportunity-output", type=Path, default=Path("data/revenue-opportunities.json"))
@@ -562,6 +697,7 @@ def main():
         naver_snapshot_path=args.naver_snapshot,
         content_experiments_path=args.content_experiments,
         gsc_snapshot_path=args.gsc_snapshot,
+        adsense_snapshot_path=args.adsense_snapshot,
         as_of=args.as_of,
         page_output=args.page_output,
         opportunity_output=args.opportunity_output,

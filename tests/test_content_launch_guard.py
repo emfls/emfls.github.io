@@ -254,6 +254,45 @@ def test_guard_allows_only_ga4_collection_orchestration_workflow(tmp_path):
     )
 
 
+def test_guard_allows_only_control_tower_approved_adsense_initial_additions(tmp_path):
+    setup_data(tmp_path)
+    approved_additions = [
+        ("A", ".github/workflows/adsense-collection.yml"),
+        ("A", "scripts/collect_adsense_snapshot.py"),
+    ]
+
+    assert validate_launch(tmp_path, manifest([]), approved_additions) == []
+
+
+def test_guard_reblocks_future_adsense_modifications_unknown_additions_and_html_ads(tmp_path):
+    setup_data(tmp_path)
+    for path in (
+        ".github/workflows/adsense-collection.yml",
+        "scripts/collect_adsense_snapshot.py",
+    ):
+        assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
+            tmp_path, manifest([]), [("M", path)]
+        )
+
+    for path in (
+        ".github/workflows/adsense-unreviewed.yml",
+        "scripts/adsense_unreviewed_collector.py",
+    ):
+        assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
+            tmp_path, manifest([]), [("A", path)]
+        )
+
+    assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
+        tmp_path, manifest([]), [("M", "assets/js/ad-loader.js")]
+    )
+    assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
+        tmp_path, manifest([]), [("M", "kor/report/ad-placement.html")]
+    )
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+        tmp_path, manifest([]), [("M", "kor/report/camp/namyangju.html")]
+    )
+
+
 def test_guard_continues_blocking_ads_runtime_assets(tmp_path):
     setup_data(tmp_path)
 
