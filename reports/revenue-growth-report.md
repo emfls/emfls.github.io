@@ -19,16 +19,16 @@
 - PAGE_URL evidence: NOT_AVAILABLE (N/A returned; NOT_AVAILABLE)
 - Not allocated to URLs; PAGE_URL coverage is partial and a missing URL is not zero.
 - WINNER: 1611
-- OPPORTUNITY: 34
+- OPPORTUNITY: 35
 - EXPERIMENT: 0
 - DEAD_CANDIDATE: 0
-- INSUFFICIENT_DATA: 17284
+- INSUFFICIENT_DATA: 17283
 
 ## TOP REVENUE OPPORTUNITIES
 
 ### 1. `/kor/report/camp/gyeongnam-best.html`
 
-- Score: 50.28 / 100
+- Score: 50.19 / 100
 - Classification: WINNER
 - Why: Verified GA4 totalAdRevenue; Verified traffic
 - Next Action: PROTECT
@@ -37,9 +37,9 @@
 - Naver: NOT_AVAILABLE
 - Rank: N/A
 
-### 2. `/kor/report/camp/hwasun.html`
+### 2. `/kor/report/camp/seongnam.html`
 
-- Score: 47.59 / 100
+- Score: 46.44 / 100
 - Classification: WINNER
 - Why: Verified GA4 totalAdRevenue; Verified traffic
 - Next Action: PROTECT
@@ -48,29 +48,7 @@
 - Naver: NOT_AVAILABLE
 - Rank: N/A
 
-### 3. `/kor/report/camp/pyeongchang.html`
-
-- Score: 47.53 / 100
-- Classification: WINNER
-- Why: Verified GA4 totalAdRevenue; Verified traffic
-- Next Action: PROTECT
-- Cooldown: NO
-- Data Status: VERIFIED
-- Naver: NOT_AVAILABLE
-- Rank: N/A
-
-### 4. `/kor/report/camp/seongnam.html`
-
-- Score: 46.56 / 100
-- Classification: WINNER
-- Why: Verified GA4 totalAdRevenue; Verified traffic
-- Next Action: PROTECT
-- Cooldown: NO
-- Data Status: VERIFIED
-- Naver: NOT_AVAILABLE
-- Rank: N/A
-
-### 5. `/kor/report/camp/gimje.html`
+### 3. `/kor/report/camp/gimje.html`
 
 - Score: 45.1 / 100
 - Classification: WINNER
@@ -81,9 +59,9 @@
 - Naver: NOT_AVAILABLE
 - Rank: N/A
 
-### 6. `/kor/report/camp/asan.html`
+### 4. `/kor/report/camp/asan.html`
 
-- Score: 45.02 / 100
+- Score: 45.05 / 100
 - Classification: WINNER
 - Why: Verified GA4 totalAdRevenue; Verified traffic
 - Next Action: PROTECT
@@ -92,7 +70,7 @@
 - Naver: NOT_AVAILABLE
 - Rank: N/A
 
-### 7. `/kor/report/camp/andong.html`
+### 5. `/kor/report/camp/andong.html`
 
 - Score: 44.73 / 100
 - Classification: WINNER
@@ -103,9 +81,9 @@
 - Naver: NOT_AVAILABLE
 - Rank: N/A
 
-### 8. `/kor/report/camp/gimhae.html`
+### 6. `/kor/report/camp/gimhae.html`
 
-- Score: 44.52 / 100
+- Score: 44.23 / 100
 - Classification: WINNER
 - Why: Verified GA4 totalAdRevenue; Verified traffic
 - Next Action: PROTECT
@@ -114,9 +92,9 @@
 - Naver: 698 impressions / 48 clicks / 6.9% CTR
 - Rank: N/A
 
-### 9. `/kor/report/camp/muju.html`
+### 7. `/kor/report/camp/incheon.html`
 
-- Score: 43.35 / 100
+- Score: 43.81 / 100
 - Classification: WINNER
 - Why: Verified GA4 totalAdRevenue; Verified traffic
 - Next Action: PROTECT
@@ -125,9 +103,31 @@
 - Naver: NOT_AVAILABLE
 - Rank: N/A
 
-### 10. `/kor/report/camp/naju.html`
+### 8. `/kor/report/camp/hwasun.html`
 
-- Score: 41.43 / 100
+- Score: 43.59 / 100
+- Classification: WINNER
+- Why: Verified GA4 totalAdRevenue; Verified traffic
+- Next Action: PROTECT
+- Cooldown: NO
+- Data Status: VERIFIED
+- Naver: NOT_AVAILABLE
+- Rank: N/A
+
+### 9. `/kor/report/camp/muju.html`
+
+- Score: 43.56 / 100
+- Classification: WINNER
+- Why: Verified GA4 totalAdRevenue; Verified traffic
+- Next Action: PROTECT
+- Cooldown: NO
+- Data Status: VERIFIED
+- Naver: NOT_AVAILABLE
+- Rank: N/A
+
+### 10. `/kor/report/camp/busan.html`
+
+- Score: 40.46 / 100
 - Classification: WINNER
 - Why: Verified GA4 totalAdRevenue; Verified traffic
 - Next Action: PROTECT
