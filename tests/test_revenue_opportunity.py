@@ -89,6 +89,24 @@ class RevenueOpportunityDataTest(unittest.TestCase):
 
 
 class RevenueOpportunityBehaviorTest(unittest.TestCase):
+    def test_unavailable_page_url_revenue_is_not_zero_or_mislabeled_as_direct(self):
+        record = performance_record(adsense={
+            "revenue": None,
+            "rpm": None,
+            "revenueMetric": "ESTIMATED_EARNINGS",
+            "status": "NOT_AVAILABLE",
+            "period": {"start": "2026-09-28", "end": "2026-10-04"},
+            "source": "DIRECT_ADSENSE_PAGE_URL",
+            "coverageStatus": "NOT_AVAILABLE",
+        })
+
+        score = score_opportunity(record, {})
+        actual_revenue = next(item for item in score["components"] if item["name"] == "actual_revenue")
+
+        self.assertEqual(actual_revenue["inputs"]["revenue"], 0.2)
+        self.assertEqual(actual_revenue["inputs"]["revenueSource"], "GA4_TOTAL_AD_REVENUE")
+        self.assertIsNone(actual_revenue["inputs"]["revenueSources"]["directAdsenseUrlRevenue"])
+
     def test_ga4_total_ad_revenue_is_labeled_as_ga4(self):
         record = performance_record()
 

@@ -299,18 +299,13 @@ def test_guard_allows_only_the_exact_adsense_collector_diagnostic_transition(tmp
     setup_data(tmp_path)
     path = "scripts/collect_adsense_snapshot.py"
     approved = APPROVED_MONETIZATION_TRANSITIONS[path]
-    assert len(approved) == 1
-    before_blob, after_blob = next(iter(approved))
-    assert before_blob == "94f34228ed8b10213085b3de19bbab14e4fee0de"
+    diagnostic_transition = (
+        "94f34228ed8b10213085b3de19bbab14e4fee0de",
+        "83595861b3ea484b7fd9ad0c7fb11515f6516692",
+    )
+    assert diagnostic_transition in approved
+    before_blob, after_blob = diagnostic_transition
     assert len(after_blob) == 40
-    actual_blob = subprocess.run(
-        ["git", "hash-object", "scripts/collect_adsense_snapshot.py"],
-        cwd=Path(__file__).resolve().parents[1],
-        text=True,
-        capture_output=True,
-        check=True,
-    ).stdout.strip()
-    assert after_blob == actual_blob
 
     assert validate_launch(tmp_path, manifest([]), [("M", path, before_blob, after_blob)]) == []
     assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
@@ -324,9 +319,39 @@ def test_guard_allows_only_the_exact_adsense_collector_diagnostic_transition(tmp
     )
 
 
+def test_guard_allows_only_the_exact_page_url_fallback_collector_transition(tmp_path):
+    setup_data(tmp_path)
+    path = "scripts/collect_adsense_snapshot.py"
+    current_blob = subprocess.run(
+        ["git", "hash-object", path], cwd=Path(__file__).resolve().parents[1],
+        text=True, capture_output=True, check=True,
+    ).stdout.strip()
+    approved = APPROVED_MONETIZATION_TRANSITIONS[path]
+    transition = ("83595861b3ea484b7fd9ad0c7fb11515f6516692", current_blob)
+
+    assert transition in approved
+    assert len(approved) == 2
+    assert validate_launch(tmp_path, manifest([]), [("M", path, *transition)]) == []
+    assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
+        tmp_path, manifest([]), [("M", path, "0" * 40, current_blob)]
+    )
+    assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
+        tmp_path, manifest([]), [("M", path, transition[0], "f" * 40)]
+    )
+    assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
+        tmp_path, manifest([]), [("M", path, transition[0], "a" * 40)]
+    )
+    assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
+        tmp_path, manifest([]), [("M", ".github/workflows/adsense-collection.yml")]
+    )
+
+
 def test_git_changes_captures_blobs_for_the_approved_adsense_collector_transition(monkeypatch, tmp_path):
     path = "scripts/collect_adsense_snapshot.py"
-    before_blob, after_blob = next(iter(APPROVED_MONETIZATION_TRANSITIONS[path]))
+    before_blob, after_blob = (
+        "94f34228ed8b10213085b3de19bbab14e4fee0de",
+        "83595861b3ea484b7fd9ad0c7fb11515f6516692",
+    )
     calls = []
 
     def fake_run(command, **kwargs):

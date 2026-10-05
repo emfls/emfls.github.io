@@ -453,6 +453,9 @@ def run_revenue_growth(
     experiment_map = _by_url(experiments.get("experiments") or [])
     naver_snapshot = load_naver_snapshot(naver_snapshot_path) if naver_snapshot_path else None
     naver_snapshot_status = snapshot_freshness(naver_snapshot, as_of) if naver_snapshot else "NOT_CONNECTED"
+    page_url_coverage = (adsense_snapshot.get("pageUrls") or {}).get("coverageStatus")
+    if page_url_coverage not in {"PARTIAL", "NOT_AVAILABLE"}:
+        page_url_coverage = "NOT_AVAILABLE"
     canonical_map = {
         normalize_url(row.get("url")): normalize_url(row.get("canonical"))
         for row in audit.get("pages") or []
@@ -494,7 +497,7 @@ def run_revenue_growth(
                         "period": adsense_snapshot.get("currentPeriod"),
                         "source": "DIRECT_ADSENSE_PAGE_URL",
                         "revenueMetric": "ESTIMATED_EARNINGS",
-                        "coverageStatus": "PARTIAL",
+                        "coverageStatus": page_url_coverage,
                     })
                     record[channel_name] = unavailable
             else:
