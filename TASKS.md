@@ -93,6 +93,11 @@
 
 ## P1 - High
 
+- [ ] C16 · Three Utility Sitemap Coverage Repair
+  - Scope: add the three existing, indexable self-canonical utility URLs to `kor/sitemap.xml`; omit unsupported `lastmod`; leave page HTML, root sitemap, content index, measurement data, publication state, and StockWiki untouched.
+  - Verification: regression RED on missing sitemap membership, then GREEN (2); related sitemap/canonical/SEO tests 15 passed; unittest 785 passed; pytest 1,268 passed; sitemap audit found 0 duplicates/invalid XML and one pre-existing unknown inventory URL; SEO QA 0 new critical/warnings; content launch guard PASS; XML parse PASS.
+  - Status: local verification ready for exact-head CI from `origin/main` `93cfd4e48d20a2b012c7b4610929be9f167bcff3` on `codex/c16-three-utility-sitemap-repair`. Keep unmerged pending Control Tower review.
+
 - [x] 12 · Spanish STOPat5 — `/es/game/STOPat5/`
   - 완료: 2026-09-21. 승인 4-commit chain을 최신 main에 non-force 반영하고 Pages run `35589224240` success 및 production served HTML을 확인했다. Timer-specific Spanish identity, fixed 5.000-second `performance.now()` ladder, inclusive tolerance boundary, signed early/late/exact result, local best error/highest reached level, safe storage fallback/reset/restart, replay/share/related navigation, timing trust disclosure, VideoGame-only schema, FAQPage 0, privacy/AdSense state, generated RSS parity, and actual Node behavioral coverage were verified. Focused ES + sixth batch tests 9 passed. Mobile/runtime deep checks remain `MOBILE_390_NOT_VERIFIED` / `RUNTIME_PARTIAL_NOT_VERIFIED`; Google URL Inspection `SEARCH_CONSOLE_NOT_VERIFIED`, no submission; Naver `NAVER_NOT_PRIMARY`. 14/28/56-day measurement and Notion final closure remain follow-up.
 
