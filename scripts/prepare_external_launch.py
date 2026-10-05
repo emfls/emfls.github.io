@@ -39,7 +39,8 @@ def _write(path, payload):
     )
 
 
-def _published_today(experiments, run_at, reset_at=None):
+def _published_today(experiments, run_at):
+    """Count every experiment published on the run's KST day; resets cannot erase history."""
     local_day = publication_day(run_at)
     rows = []
     for row in experiments:
@@ -50,18 +51,7 @@ def _published_today(experiments, run_at, reset_at=None):
             row_day = publication_day(row.get("publishedOn"))
         if row_day == local_day:
             rows.append(row)
-    if not reset_at:
-        return rows
-    reset_time = _seoul_datetime(reset_at)
-    result = []
-    for row in rows:
-        try:
-            published_at = _seoul_datetime(row.get("publishedAt"))
-        except (TypeError, ValueError):
-            continue
-        if published_at > reset_time:
-            result.append(row)
-    return result
+    return rows
 
 
 def _expected_value(candidate):
@@ -92,7 +82,6 @@ def prepare_external_launch(root, run_at, write=True):
     ).get("experiments") or []
     counter_state = _read(root / "data/content-launch-counter.json", {})
     previous_manifest = _read(root / "data/content-launch-manifest.json", {})
-    reset_at = counter_state.get("resetAt")
     published_candidate_ids = {
         row.get("candidateId") for row in experiments if row.get("candidateId")
     }
@@ -111,7 +100,7 @@ def prepare_external_launch(root, run_at, write=True):
         eligible.append({**candidate, "readiness": readiness})
     eligible.sort(key=lambda row: (-_expected_value(row), row.get("candidateId", "")))
     selected_day = publication_day(run_at)
-    published_today = _published_today(experiments, run_at, reset_at)
+    published_today = _published_today(experiments, run_at)
     counter_count = 0
     if publication_day(counter_state.get("date")) == selected_day:
         try:

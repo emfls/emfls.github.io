@@ -178,10 +178,104 @@ def test_daily_counter_reset_preserves_history_and_limits_to_remaining_capacity(
 
     result = prepare_external_launch(tmp_path, "2026-09-02T16:00:00+09:00")
 
-    assert result["publishedToday"] == 1
+    assert result["publishedToday"] == 2
     assert result["dailyLimit"] == 3
-    assert result["remainingCapacity"] == 2
-    assert len(result["candidateIds"]) == 2
+    assert result["remainingCapacity"] == 1
+    assert len(result["candidateIds"]) == 1
+
+
+def test_reset_does_not_restore_capacity_when_three_publications_exist_today(tmp_path):
+    rows = [ready_candidate(str(i), opportunity=95 - i) for i in range(4)]
+    prepare(
+        tmp_path,
+        rows,
+        experiments=[
+            {
+                "candidateId": f"PUB-{i}",
+                "publishedOn": "2026-09-02",
+                "publishedAt": published_at,
+            }
+            for i, published_at in enumerate(
+                (
+                    "2026-09-02T09:00:00+09:00",
+                    "2026-09-02T13:00:00+09:00",
+                    "2026-09-02T14:00:00+09:00",
+                )
+            )
+        ],
+    )
+    write_json(
+        tmp_path / "data/content-launch-counter.json",
+        {"resetAt": "2026-09-02T12:00:00+09:00", "reason": "MANUAL_RESET"},
+    )
+
+    result = prepare_external_launch(tmp_path, "2026-09-02T16:00:00+09:00", write=False)
+
+    assert result["publishedToday"] == 3
+    assert result["dailyLimit"] == 3
+    assert result["remainingCapacity"] == 0
+    assert result["candidateIds"] == []
+
+
+def test_reset_does_not_hide_more_than_three_same_day_publications(tmp_path):
+    rows = [ready_candidate(str(i), opportunity=95 - i) for i in range(4)]
+    prepare(
+        tmp_path,
+        rows,
+        experiments=[
+            {
+                "candidateId": f"PUB-{i}",
+                "publishedOn": "2026-09-02",
+                "publishedAt": published_at,
+            }
+            for i, published_at in enumerate(
+                (
+                    "2026-09-02T09:00:00+09:00",
+                    "2026-09-02T10:00:00+09:00",
+                    "2026-09-02T13:00:00+09:00",
+                    "2026-09-02T14:00:00+09:00",
+                )
+            )
+        ],
+    )
+    write_json(
+        tmp_path / "data/content-launch-counter.json",
+        {"resetAt": "2026-09-02T12:00:00+09:00", "reason": "MANUAL_RESET"},
+    )
+
+    result = prepare_external_launch(tmp_path, "2026-09-02T16:00:00+09:00", write=False)
+
+    assert result["publishedToday"] == 4
+    assert result["dailyLimit"] == 3
+    assert result["remainingCapacity"] == 0
+    assert result["candidateIds"] == []
+
+
+def test_previous_kst_day_publications_do_not_consume_today_after_reset(tmp_path):
+    rows = [ready_candidate(str(i), opportunity=95 - i) for i in range(4)]
+    prepare(
+        tmp_path,
+        rows,
+        experiments=[
+            {
+                "candidateId": f"YESTERDAY-{i}",
+                "publishedOn": "2026-09-02",
+                "publishedAt": f"2026-09-02T0{i + 9}:00:00+09:00",
+            }
+            for i in range(2)
+        ],
+    )
+    write_json(
+        tmp_path / "data/content-launch-counter.json",
+        {"resetAt": "2026-09-03T00:15:00+09:00", "reason": "MANUAL_RESET"},
+    )
+
+    result = prepare_external_launch(tmp_path, "2026-09-03T00:30:00+09:00", write=False)
+
+    assert result["publishedToday"] == 0
+    assert result["dailyLimit"] == 3
+    assert result["remainingCapacity"] == 3
+    assert len(result["candidateIds"]) == 3
 
 
 def test_no_ready_candidate_writes_no_publication_manifest(tmp_path):
@@ -237,18 +331,32 @@ def test_external_publication_day_uses_kst_for_utc_timestamps(tmp_path):
         rows,
         experiments=[
             {
-                "candidateId": "KST-TODAY",
+                "candidateId": "KST-TODAY-BEFORE-RESET",
                 "publishedOn": "2026-09-03",
                 "publishedAt": "2026-09-02T15:00:00+00:00",
-            }
+            },
+            {
+                "candidateId": "KST-TODAY-AFTER-RESET",
+                "publishedOn": "2026-09-03",
+                "publishedAt": "2026-09-02T15:20:00+00:00",
+            },
+            {
+                "candidateId": "PREVIOUS-KST-DAY",
+                "publishedOn": "2026-09-02",
+                "publishedAt": "2026-09-02T14:00:00+00:00",
+            },
         ],
+    )
+    write_json(
+        tmp_path / "data/content-launch-counter.json",
+        {"resetAt": "2026-09-02T15:10:00+00:00", "reason": "MANUAL_RESET"},
     )
 
     result = prepare_external_launch(tmp_path, "2026-09-02T15:30:00+00:00", write=False)
 
-    assert result["publishedToday"] == 1
-    assert result["remainingCapacity"] == 2
-    assert len(result["candidateIds"]) == 2
+    assert result["publishedToday"] == 2
+    assert result["remainingCapacity"] == 1
+    assert len(result["candidateIds"]) == 1
 
 
 

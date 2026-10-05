@@ -1,6 +1,5 @@
 import json
 import csv
-from pathlib import Path
 from scripts import prepare_keyword_launch
 from scripts.prepare_keyword_launch import prepare_queue
 
@@ -217,10 +216,20 @@ def test_main_reads_committed_published_manifest_before_writing_queue(tmp_path, 
 
 
 def test_current_keyboard_cleaning_publication_is_preserved_and_leaves_two_slots(tmp_path, monkeypatch):
-    repo_manifest_path = Path(__file__).resolve().parents[1] / "data/content-launch-manifest.json"
-    current_manifest = json.loads(repo_manifest_path.read_text(encoding="utf-8"))
-    assert current_manifest["runId"] == "P0-20261005-KEYBOARD-CLEANING"
-    assert current_manifest["publishedToday"] == 1
+    current_manifest = {
+        "candidateIds": ["keyword:키보드청소방법"],
+        "contentPaths": ["kor/report/it/keyboard-cleaning-guide.html"],
+        "dailyLimit": 1,
+        "hubPaths": ["kor/report/it/index.html"],
+        "publishedToday": 1,
+        "remainingCapacity": 0,
+        "runAt": "2026-10-05T06:48:56+09:00",
+        "runId": "P0-20261005-KEYBOARD-CLEANING",
+        "schemaVersion": 1,
+        "sitemapPaths": ["kor/report/it/sitemap.xml"],
+        "status": "PUBLISHED",
+        "urls": ["/kor/report/it/keyboard-cleaning-guide.html"],
+    }
     before = json.loads(json.dumps(current_manifest))
 
     data = tmp_path / "data"

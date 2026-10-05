@@ -6,8 +6,8 @@
 
 - [ ] P0 Daily Publication Cap 1→3 — C01
   - 범위: 공통 정책과 keyword/external launch selector의 일일 공개 상한을 3으로 통일하고 KST 당일 사용량을 계산한다. 품질·중복·YMYL/HOLD 게이트는 유지했다. 2026-10-05 Keyboard Cleaning 1건은 기존 PUBLISHED 사실로 반영되어 remaining capacity는 2다. manifest·counter·queue·페이지 데이터 변경 및 신규 공개는 0.
-  - 검증: focused 184 passed; unittest 752 passed; pytest 1,228 passed; SEO QA 신규 critical/warning 0 (현재 767/420); content launch guard PASS; `git diff --check` PASS.
-  - 기준/상태: `origin/main` `a4845bc5a12d5b442279599de4c3abd9313e9fa0` 기반 `codex/c01-daily-publication-cap-3`; PR #42 OPEN / exact-head CI 대기; `READY_FOR_CONTROL_TOWER_REVIEW`. Control Tower review 전 merge 또는 신규 공개 금지.
+  - 수정 후 검증: focused 187 passed; unittest 752 passed; pytest 1,231 passed; SEO QA 신규 critical/warning 0 (현재 767/420); content launch guard PASS; `git diff --check` PASS.
+  - 기준/상태: `origin/main` `a4845bc5a12d5b442279599de4c3abd9313e9fa0` 기반 `codex/c01-daily-publication-cap-3`; PR #42 OPEN / 새 exact-head CI 대기; `READY_FOR_CI`. Control Tower review 전 merge 또는 신규 공개 금지.
 
 - [ ] P0 JP Travel Batch 02 — PR #38, 50-page canary
   - 동기화: 요청된 main `6b844cf03138057091bac2cdf1a87db3e98491f2` 이후 main이 `1b15674e09d3dd30fb65620ab2ae8f35f85c2137`로 전진해 두 SHA를 모두 regular merge로 반영했다. `5172e32bcd`에서 derived artifact 충돌 3건을 최신 main 입력 기준으로 해결·재생성했고, `946f3cf027` merge는 충돌이 없었다. rebase/force push 없음.
