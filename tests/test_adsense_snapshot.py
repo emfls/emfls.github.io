@@ -296,6 +296,153 @@ class AdSenseSnapshotContractTest(TestCase):
         finally:
             output.unlink(missing_ok=True)
 
+    def test_http_400_identifies_the_exact_collection_stage(self):
+        current, prior, page = reports()
+        responses = [
+            {"access_token": "ACCESS_TOKEN_SENTINEL", "expires_in": 3600},
+            {"name": "accounts/pub-test", "timeZone": {"id": "Asia/Seoul"}},
+            current,
+            prior,
+            page,
+        ]
+        stages = (
+            "OAUTH_REFRESH",
+            "ACCOUNT_GET",
+            "SITE_CURRENT_REPORT",
+            "SITE_PRIOR_REPORT",
+            "PAGE_URL_REPORT",
+        )
+
+        class Response:
+            def __init__(self, payload):
+                self.payload = json.dumps(payload).encode()
+
+            def read(self):
+                return self.payload
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *_args):
+                return False
+
+        for failing_call, stage in enumerate(stages, start=1):
+            with self.subTest(stage=stage):
+                call_count = 0
+
+                def fake_open(request, timeout):
+                    nonlocal call_count
+                    call_count += 1
+                    if call_count == failing_call:
+                        raise urllib.error.HTTPError(
+                            request.full_url,
+                            400,
+                            "Bad Request",
+                            hdrs=None,
+                            fp=io.BytesIO(json.dumps({"error": {
+                                "code": 400,
+                                "status": "INVALID_ARGUMENT",
+                                "message": "Invalid report argument",
+                            }}).encode()),
+                        )
+                    return Response(responses[call_count - 1])
+
+                output = ROOT / f"tmp-adsense-{stage.lower()}.json"
+                with self.assertRaises(collector.CollectorError) as captured:
+                    collector.collect_snapshot(
+                        output,
+                        account_name="accounts/pub-test",
+                        client_id="CLIENT_ID_SENTINEL",
+                        client_secret="CLIENT_SECRET_SENTINEL",
+                        refresh_token="REFRESH_TOKEN_SENTINEL",
+                        now=NOW,
+                        open_url=fake_open,
+                    )
+
+                self.assertIn(stage, str(captured.exception))
+                self.assertIn("HTTP 400", str(captured.exception))
+                self.assertIn("INVALID_ARGUMENT", str(captured.exception))
+                self.assertIn("Invalid report argument", str(captured.exception))
+                output.unlink(missing_ok=True)
+
+    def test_http_error_details_are_sanitized_and_never_include_request_urls_or_body(self):
+        sentinels = (
+            "ACCESS_TOKEN_SENTINEL_12345678901234567890",
+            "REFRESH_TOKEN_SENTINEL_12345678901234567890",
+            "CLIENT_SECRET_SENTINEL_12345678901234567890",
+            "CLIENT_ID_SENTINEL_12345678901234567890",
+            "opaque_token_like_value_abcdefghijklmnopqrstuvwxyz123456",
+        )
+        echoed = (
+            "accounts/pub-1234567890123456 Authorization: Bearer header_bearer_secret_1234567890 "
+            "access_token=ACCESS_TOKEN_SENTINEL_12345678901234567890 "
+            "refresh_token=REFRESH_TOKEN_SENTINEL_12345678901234567890 "
+            "client_secret=CLIENT_SECRET_SENTINEL_12345678901234567890 "
+            "client_id=CLIENT_ID_SENTINEL_12345678901234567890 "
+            "opaque_token_like_value_abcdefghijklmnopqrstuvwxyz123456 "
+            "https://adsense.googleapis.com/v2/accounts/pub-1234567890123456/reports:generate?limit=123"
+        )
+
+        def failing_open(request, timeout):
+            raise urllib.error.HTTPError(
+                request.full_url,
+                400,
+                "Bad Request",
+                hdrs=None,
+                fp=io.BytesIO(json.dumps({"error": {
+                    "code": 400,
+                    "status": "INVALID_ARGUMENT",
+                    "message": echoed,
+                }}).encode()),
+            )
+
+        with self.assertRaises(collector.CollectorError) as captured:
+            collector.collect_snapshot(
+                ROOT / "tmp-adsense-never-written.json",
+                account_name="accounts/pub-1234567890123456",
+                client_id=sentinels[3],
+                client_secret=sentinels[2],
+                refresh_token=sentinels[1],
+                now=NOW,
+                open_url=failing_open,
+            )
+
+        message = str(captured.exception)
+        self.assertIn("OAUTH_REFRESH", message)
+        self.assertIn("HTTP 400", message)
+        for secret in (*sentinels, "header_bearer_secret_1234567890", "accounts/pub-1234567890123456"):
+            self.assertNotIn(secret, message)
+        self.assertNotIn("https://", message)
+        self.assertNotIn("?limit=", message)
+
+    def test_non_json_http_error_body_reports_only_stage_and_http_status(self):
+        def failing_open(request, timeout):
+            raise urllib.error.HTTPError(
+                request.full_url,
+                400,
+                "Bad Request",
+                hdrs=None,
+                fp=io.BytesIO(b"<html>private proxy body and https://internal.invalid/?token=secret</html>"),
+            )
+
+        with self.assertRaises(collector.CollectorError) as captured:
+            collector.collect_snapshot(
+                ROOT / "tmp-adsense-non-json-never-written.json",
+                account_name="accounts/pub-test",
+                client_id="CLIENT_ID_SENTINEL",
+                client_secret="CLIENT_SECRET_SENTINEL",
+                refresh_token="REFRESH_TOKEN_SENTINEL",
+                now=NOW,
+                open_url=failing_open,
+            )
+
+        message = str(captured.exception)
+        self.assertIn("OAUTH_REFRESH", message)
+        self.assertIn("HTTP 400", message)
+        self.assertNotIn("private proxy body", message)
+        self.assertNotIn("internal.invalid", message)
+        self.assertNotIn("token=secret", message)
+
     def test_api_queries_keep_site_and_page_url_reports_separate_and_never_store_tokens(self):
         current, prior, page = reports()
         response_bodies = [

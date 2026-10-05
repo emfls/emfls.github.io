@@ -4,6 +4,7 @@
 import argparse
 import json
 import os
+import re
 import sys
 import tempfile
 from datetime import date, datetime, timedelta, timezone
@@ -398,20 +399,62 @@ def validate_snapshot(snapshot):
     return True
 
 
-def _json_request(request, open_url):
+def _sanitize_api_error_message(message, sensitive_values):
+    value = message
+    value = re.sub(r"(?i)https?://[^\s<>()\"']+", "[URL REDACTED]", value)
+    value = re.sub(r"\?[^\s<>()\"']+", "[QUERY REDACTED]", value)
+    value = re.sub(
+        r"(?i)\b(access_token|refresh_token|client_secret|client_id)\b\s*[:=]\s*[^\s,;&]+",
+        lambda match: f"{match.group(1)}=[REDACTED]",
+        value,
+    )
+    value = re.sub(r"(?i)\bAuthorization\s*[:=]\s*(?:Bearer\s+)?[^\s,;]+", "Authorization: [REDACTED]", value)
+    value = re.sub(r"(?i)\bBearer\s+[A-Za-z0-9._~+/-]+=*", "Bearer [REDACTED]", value)
+    value = re.sub(r"\baccounts/pub-\d+\b", "accounts/pub-[REDACTED]", value)
+    for secret in sorted({str(item) for item in sensitive_values if item}, key=len, reverse=True):
+        value = value.replace(secret, "[REDACTED]")
+    value = re.sub(r"(?<![A-Za-z0-9])[A-Za-z0-9][A-Za-z0-9._~+/-]{31,}={0,}(?![A-Za-z0-9])", "[REDACTED]", value)
+    value = re.sub(r"[\x00-\x1f\x7f]+", " ", value)
+    return " ".join(value.split())[:240]
+
+
+def _http_error_message(error, stage, sensitive_values):
+    prefix = f"Google API request failed at {stage} (HTTP {error.code})."
+    try:
+        raw = error.read()
+        payload = json.loads(raw.decode("utf-8"))
+    except (AttributeError, OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return prefix
+    detail = payload.get("error") if isinstance(payload, dict) else None
+    if not isinstance(detail, dict):
+        return prefix
+    code = detail.get("code")
+    status = detail.get("status")
+    message = detail.get("message")
+    if type(code) is not int or code != error.code or not isinstance(status, str) or not isinstance(message, str):
+        return prefix
+    if not re.fullmatch(r"[A-Z][A-Z0-9_]{0,63}", status):
+        return prefix
+    safe_message = _sanitize_api_error_message(message, sensitive_values)
+    if not safe_message:
+        return prefix
+    return f"Google API request failed at {stage} (HTTP {error.code}; {status}): {safe_message}"
+
+
+def _json_request(request, open_url, *, stage, sensitive_values=()):
     try:
         with open_url(request, timeout=30) as response:
             raw = response.read()
     except HTTPError as error:
-        raise CollectorError(f"Google API request failed (HTTP {error.code}).") from None
+        raise CollectorError(_http_error_message(error, stage, sensitive_values)) from None
     except (URLError, TimeoutError, OSError):
-        raise CollectorError("Google API network request failed.") from None
+        raise CollectorError(f"Google API network request failed at {stage}.") from None
     try:
         value = json.loads(raw.decode("utf-8"))
     except (AttributeError, UnicodeDecodeError, json.JSONDecodeError):
-        raise CollectorError("Google API returned invalid JSON.") from None
+        raise CollectorError(f"Google API returned invalid JSON at {stage}.") from None
     if not isinstance(value, dict):
-        raise CollectorError("Google API returned an invalid response.")
+        raise CollectorError(f"Google API returned an invalid response at {stage}.")
     return value
 
 
@@ -428,19 +471,29 @@ def _refresh_access_token(client_id, client_secret, refresh_token, open_url):
         headers={"Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json"},
         method="POST",
     )
-    token_response = _json_request(request, open_url)
+    token_response = _json_request(
+        request,
+        open_url,
+        stage="OAUTH_REFRESH",
+        sensitive_values=(client_id, client_secret, refresh_token),
+    )
     access_token = token_response.get("access_token")
     if not isinstance(access_token, str) or not access_token:
         raise CollectorError("OAuth token response did not include an access token.")
     return access_token
 
 
-def _api_get(url, access_token, open_url):
+def _api_get(url, access_token, open_url, *, stage, sensitive_values=()):
     request = Request(
         url,
         headers={"Authorization": f"Bearer {access_token}", "Accept": "application/json"},
     )
-    return _json_request(request, open_url)
+    return _json_request(
+        request,
+        open_url,
+        stage=stage,
+        sensitive_values=(*sensitive_values, access_token),
+    )
 
 
 def _date_query_params(prefix, value):
@@ -452,7 +505,7 @@ def _date_query_params(prefix, value):
     ]
 
 
-def _generate_report(account_name, period, dimensions, access_token, open_url):
+def _generate_report(account_name, period, dimensions, access_token, open_url, *, stage, sensitive_values=()):
     params = [("dimensions", item) for item in dimensions]
     params.extend(("metrics", item) for item in METRICS)
     params.extend(_date_query_params("startDate", period["start"]))
@@ -466,7 +519,7 @@ def _generate_report(account_name, period, dimensions, access_token, open_url):
     ))
     account_path = quote(account_name, safe="/")
     url = f"{API_BASE}/{account_path}/reports:generate?{urlencode(params)}"
-    return _api_get(url, access_token, open_url)
+    return _api_get(url, access_token, open_url, stage=stage, sensitive_values=sensitive_values)
 
 
 def _write_snapshot(output, snapshot):
@@ -504,15 +557,46 @@ def collect_snapshot(
         raise CollectorError("ADSENSE_ACCOUNT_NAME must use the accounts/pub-... resource format.")
     open_url = open_url or urlopen
     access_token = _refresh_access_token(client_id, client_secret, refresh_token, open_url)
+    sensitive_values = (account_name, client_id, client_secret, refresh_token, access_token)
     account_path = quote(account_name, safe="/")
-    account = _api_get(f"{API_BASE}/{account_path}", access_token, open_url)
+    account = _api_get(
+        f"{API_BASE}/{account_path}",
+        access_token,
+        open_url,
+        stage="ACCOUNT_GET",
+        sensitive_values=sensitive_values,
+    )
     time_zone = ((account.get("timeZone") or {}).get("id"))
     if not time_zone:
         raise CollectorError("The AdSense account timezone is unavailable.")
     current_period, prior_period = build_periods(now or datetime.now(timezone.utc), time_zone, days=days)
-    current_report = _generate_report(account_name, current_period, SITE_DIMENSIONS, access_token, open_url)
-    prior_report = _generate_report(account_name, prior_period, SITE_DIMENSIONS, access_token, open_url)
-    page_url_report = _generate_report(account_name, current_period, PAGE_URL_DIMENSIONS, access_token, open_url)
+    current_report = _generate_report(
+        account_name,
+        current_period,
+        SITE_DIMENSIONS,
+        access_token,
+        open_url,
+        stage="SITE_CURRENT_REPORT",
+        sensitive_values=sensitive_values,
+    )
+    prior_report = _generate_report(
+        account_name,
+        prior_period,
+        SITE_DIMENSIONS,
+        access_token,
+        open_url,
+        stage="SITE_PRIOR_REPORT",
+        sensitive_values=sensitive_values,
+    )
+    page_url_report = _generate_report(
+        account_name,
+        current_period,
+        PAGE_URL_DIMENSIONS,
+        access_token,
+        open_url,
+        stage="PAGE_URL_REPORT",
+        sensitive_values=sensitive_values,
+    )
     snapshot = build_snapshot(
         account_name=account_name,
         account=account,

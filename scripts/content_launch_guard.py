@@ -18,6 +18,11 @@ APPROVED_PROTECTED_WINNER_TRANSITIONS = {
         ("4d95593169e466447ee355429d2822764ca7e1a5", "b4fc13119f1e8cd01d78805d06ee981ac6834236"),
     },
 }
+APPROVED_MONETIZATION_TRANSITIONS = {
+    "scripts/collect_adsense_snapshot.py": {
+        ("94f34228ed8b10213085b3de19bbab14e4fee0de", "83595861b3ea484b7fd9ad0c7fb11515f6516692"),
+    },
+}
 APPROVED_JP_TRAVEL_CANARY_DELETIONS = {
     "jp/report/travel/bangladesh-lalmonirhat.html",
     "jp/report/travel/bangladesh-satkhira.html",
@@ -248,11 +253,16 @@ def validate_launch(root, manifest, changed_paths):
     if any(
         path not in MEASUREMENT_WORKFLOW_ALLOWLIST
         and not (status == "A" and path in APPROVED_MONETIZATION_ADDITIONS)
+        and not (
+            status == "M"
+            and path in APPROVED_MONETIZATION_TRANSITIONS
+            and (before_blob, after_blob) in APPROVED_MONETIZATION_TRANSITIONS[path]
+        )
         and (
             path in APPROVED_MONETIZATION_ADDITIONS
             or re.search(r"(^|/)(ads?|adsense|ga4|analytics)([._/-]|$)", path, re.I)
         )
-        for status, path, _, _ in changed
+        for status, path, before_blob, after_blob in changed
     ):
         errors.add("MONETIZATION_OR_ANALYTICS_CHANGED")
 
@@ -309,7 +319,10 @@ def _git_changes(root, base_ref):
         parts = line.split("\t")
         if len(parts) >= 2:
             status, path = parts[0], parts[-1]
-            if status == "M" and path in APPROVED_PROTECTED_WINNER_TRANSITIONS:
+            if status == "M" and (
+                path in APPROVED_PROTECTED_WINNER_TRANSITIONS
+                or path in APPROVED_MONETIZATION_TRANSITIONS
+            ):
                 before = subprocess.run(
                     ["git", "rev-parse", f"{base_ref}:{path}"],
                     cwd=str(root), text=True, capture_output=True, check=True,

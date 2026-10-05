@@ -1,8 +1,10 @@
 import json
+import subprocess
 from pathlib import Path
 
 from scripts.content_launch_guard import (
     APPROVED_JP_TRAVEL_CANARY_DELETIONS,
+    APPROVED_MONETIZATION_TRANSITIONS,
     _git_changes,
     validate_launch,
 )
@@ -291,6 +293,56 @@ def test_guard_reblocks_future_adsense_modifications_unknown_additions_and_html_
     assert "PROTECTED_WINNER_CHANGED" in validate_launch(
         tmp_path, manifest([]), [("M", "kor/report/camp/namyangju.html")]
     )
+
+
+def test_guard_allows_only_the_exact_adsense_collector_diagnostic_transition(tmp_path):
+    setup_data(tmp_path)
+    path = "scripts/collect_adsense_snapshot.py"
+    approved = APPROVED_MONETIZATION_TRANSITIONS[path]
+    assert len(approved) == 1
+    before_blob, after_blob = next(iter(approved))
+    assert before_blob == "94f34228ed8b10213085b3de19bbab14e4fee0de"
+    assert len(after_blob) == 40
+    actual_blob = subprocess.run(
+        ["git", "hash-object", "scripts/collect_adsense_snapshot.py"],
+        cwd=Path(__file__).resolve().parents[1],
+        text=True,
+        capture_output=True,
+        check=True,
+    ).stdout.strip()
+    assert after_blob == actual_blob
+
+    assert validate_launch(tmp_path, manifest([]), [("M", path, before_blob, after_blob)]) == []
+    assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
+        tmp_path, manifest([]), [("M", path, "0" * 40, after_blob)]
+    )
+    assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
+        tmp_path, manifest([]), [("M", path, before_blob, "f" * 40)]
+    )
+    assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
+        tmp_path, manifest([]), [("M", path)]
+    )
+
+
+def test_git_changes_captures_blobs_for_the_approved_adsense_collector_transition(monkeypatch, tmp_path):
+    path = "scripts/collect_adsense_snapshot.py"
+    before_blob, after_blob = next(iter(APPROVED_MONETIZATION_TRANSITIONS[path]))
+    calls = []
+
+    def fake_run(command, **kwargs):
+        calls.append(command)
+        if command[:3] == ["git", "diff", "--name-status"]:
+            return type("Result", (), {"stdout": f"M\t{path}\n"})()
+        if command == ["git", "rev-parse", f"base-sha:{path}"]:
+            return type("Result", (), {"stdout": before_blob + "\n"})()
+        if command == ["git", "rev-parse", f"HEAD:{path}"]:
+            return type("Result", (), {"stdout": after_blob + "\n"})()
+        raise AssertionError(f"unexpected git invocation: {command}")
+
+    monkeypatch.setattr("scripts.content_launch_guard.subprocess.run", fake_run)
+
+    assert _git_changes(tmp_path, "base-sha") == [("M", path, before_blob, after_blob)]
+    assert len(calls) == 3
 
 
 def test_guard_continues_blocking_ads_runtime_assets(tmp_path):
