@@ -97,7 +97,7 @@
 - [ ] C20 · StockWiki Build Integrity and Active CI
   - Scope: make `emfls.github.io` the canonical host, add route-derived StockWiki canonicals, remove the dead sitemap generator call and unused direct `sitemap` dependency, correct the public robots sitemap URL, and add read-only path-scoped build QA. The tracked 11-URL sitemap remains separately owned.
   - Local verification: TDD RED/GREEN; `npm ci` and `npm run build` PASS; 11 production routes have exact self-canonicals; focused StockWiki tests 12 passed; canonical inventory 2 passed; unittest 807 passed (1 build-output test skipped after cleanup); pytest 1,290 passed (1 skipped); SEO QA 0 new critical/warnings (767/420 existing); launch guard, YAML, and diff checks PASS.
-  - Status: exact-head StockWiki Build QA and SEO QA plus Control Tower review remain pending. Fresh build confirmed the separate malformed base-path asset URLs; kept that repair out of C20 scope.
+  - Status: latest `origin/main` `6d45375651b2cb9e78fbec3b29c6c11281a80faa` is included and the content-launch guard passes against it. Exact-head StockWiki Build QA, SEO QA, and Control Tower review remain pending. Fresh build confirmed the separate malformed base-path asset URLs; kept that repair out of C20 scope.
 
 - [ ] C16 · Three Utility Sitemap Coverage Repair
   - Scope: add the three existing, indexable self-canonical utility URLs to `kor/sitemap.xml`; omit unsupported `lastmod`; leave page HTML, root sitemap, content index, measurement data, publication state, and StockWiki untouched.
