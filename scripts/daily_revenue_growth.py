@@ -12,6 +12,12 @@ except ModuleNotFoundError:
     from new_content_opportunity import classify_overlap, evaluate_launch_cohort, score_new_content, select_new_pages, validate_demand_evidence
 
 
+try:
+    from scripts.content_launch_policy import publication_day
+except ModuleNotFoundError:
+    from content_launch_policy import publication_day
+
+
 def read_json(path, default):
     path = Path(path)
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else default
@@ -37,17 +43,13 @@ def _evaluate(raw, as_of):
 
 
 def _launches_on_local_day(experiments, run_at):
-    current = datetime.fromisoformat(run_at)
+    current_day = publication_day(run_at)
     rows = []
     for row in experiments:
-        if row.get("publishedOn") == current.date().isoformat():
-            rows.append(row)
-            continue
-        try:
-            published = datetime.fromisoformat(row.get("publishedAt", ""))
-        except ValueError:
-            continue
-        if published.astimezone(current.tzinfo).date() == current.date():
+        published_day = publication_day(row.get("publishedAt"))
+        if published_day is None:
+            published_day = publication_day(row.get("publishedOn"))
+        if published_day == current_day:
             rows.append(row)
     return rows
 
@@ -86,17 +88,18 @@ def run_daily_analysis(root, run_at, research_path, write=True):
     root = Path(root)
     research = read_json(research_path, {"candidates": []})
     raw = research.get("candidates") or []
-    candidates = sorted((_evaluate(row, run_at) for row in raw), key=lambda row: (-float(row.get("score") or 0), row.get("url", "")))
+    current_day = publication_day(run_at)
+    candidates = sorted((_evaluate(row, current_day.isoformat()) for row in raw), key=lambda row: (-float(row.get("score") or 0), row.get("url", "")))
     launches = read_json(root / "data/content-launch-experiments.json", {"experiments": []}).get("experiments") or []
     active = sum(row.get("status") == "OBSERVING" for row in launches)
     complete_research = 10 <= len(raw) <= 20
     selected = select_new_pages(candidates, active, _launches_on_local_day(launches, run_at)) if complete_research else []
-    cohort = evaluate_launch_cohort(launches, run_at[:10])
+    cohort = evaluate_launch_cohort(launches, current_day.isoformat())
     status = "VERIFIED" if complete_research and any((row.get("demand") or {}).get("status") == "VERIFIED" for row in candidates) else "INSUFFICIENT_DATA"
     payload = {
         "schemaVersion": 1, "runAt": run_at, "dataStatus": status,
         "candidates": candidates, "selected": selected,
-        "kpis": {"activeContentExperiments": active, "newPagesLast28d": sum(row.get("publishedOn", "") >= (datetime.fromisoformat(run_at).date() - timedelta(days=28)).isoformat() for row in launches), "matureCohort": cohort["mature"], "newPageWinRate": cohort["winRate"]},
+        "kpis": {"activeContentExperiments": active, "newPagesLast28d": sum(row.get("publishedOn", "") >= (current_day - timedelta(days=28)).isoformat() for row in launches), "matureCohort": cohort["mature"], "newPageWinRate": cohort["winRate"]},
     }
     manifest = {
         "schemaVersion": 1, "runId": "RUN-" + datetime.fromisoformat(run_at).strftime("%Y%m%d-%H%M"), "runAt": run_at,

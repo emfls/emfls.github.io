@@ -5,12 +5,25 @@ import argparse
 import json
 from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 try:
     from scripts.external_content_opportunity import launch_readiness
 except ModuleNotFoundError:
     from external_content_opportunity import launch_readiness
 
+try:
+    from scripts.content_launch_policy import DAILY_PUBLICATION_LIMIT, publication_day, publication_manifest_count
+except ModuleNotFoundError:
+    from content_launch_policy import DAILY_PUBLICATION_LIMIT, publication_day, publication_manifest_count
+
+
+SEOUL = ZoneInfo("Asia/Seoul")
+
+
+def _seoul_datetime(value):
+    parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    return parsed.astimezone(SEOUL) if parsed.tzinfo is not None else parsed.replace(tzinfo=SEOUL)
 
 def _read(path, default):
     path = Path(path)
@@ -27,17 +40,28 @@ def _write(path, payload):
 
 
 def _published_today(experiments, run_at, reset_at=None):
-    local_day = datetime.fromisoformat(run_at).date().isoformat()
-    rows = [row for row in experiments if row.get("publishedOn") == local_day]
+    local_day = publication_day(run_at)
+    rows = []
+    for row in experiments:
+        published_at = row.get("publishedAt")
+        try:
+            row_day = _seoul_datetime(published_at).date() if published_at else publication_day(row.get("publishedOn"))
+        except (TypeError, ValueError):
+            row_day = publication_day(row.get("publishedOn"))
+        if row_day == local_day:
+            rows.append(row)
     if not reset_at:
         return rows
-    reset_time = datetime.fromisoformat(reset_at)
-    return [
-        row
-        for row in rows
-        if row.get("publishedAt")
-        and datetime.fromisoformat(row["publishedAt"]) > reset_time
-    ]
+    reset_time = _seoul_datetime(reset_at)
+    result = []
+    for row in rows:
+        try:
+            published_at = _seoul_datetime(row.get("publishedAt"))
+        except (TypeError, ValueError):
+            continue
+        if published_at > reset_time:
+            result.append(row)
+    return result
 
 
 def _expected_value(candidate):
@@ -67,6 +91,7 @@ def prepare_external_launch(root, run_at, write=True):
         root / "data/content-launch-experiments.json", {"experiments": []}
     ).get("experiments") or []
     counter_state = _read(root / "data/content-launch-counter.json", {})
+    previous_manifest = _read(root / "data/content-launch-manifest.json", {})
     reset_at = counter_state.get("resetAt")
     published_candidate_ids = {
         row.get("candidateId") for row in experiments if row.get("candidateId")
@@ -85,10 +110,21 @@ def prepare_external_launch(root, run_at, write=True):
             continue
         eligible.append({**candidate, "readiness": readiness})
     eligible.sort(key=lambda row: (-_expected_value(row), row.get("candidateId", "")))
+    selected_day = publication_day(run_at)
     published_today = _published_today(experiments, run_at, reset_at)
-    # Publication volume is governed by readiness and quality, not a daily cap.
-    # Keep today's count for reporting, but never truncate the READY queue.
-    selected = eligible
+    counter_count = 0
+    if publication_day(counter_state.get("date")) == selected_day:
+        try:
+            counter_count = max(0, int(counter_state.get("launchedCount", 0)))
+        except (TypeError, ValueError):
+            counter_count = DAILY_PUBLICATION_LIMIT
+    manifest_count = publication_manifest_count(
+        previous_manifest, selected_day, DAILY_PUBLICATION_LIMIT
+    )
+    # These are parallel views of today's total; max avoids counting the same launch twice.
+    published_today_count = max(counter_count, manifest_count, len(published_today))
+    remaining_capacity = max(0, DAILY_PUBLICATION_LIMIT - published_today_count)
+    selected = eligible[:remaining_capacity]
     manifest = {
         "schemaVersion": 1,
         "runId": "EXT-RUN-" + datetime.fromisoformat(run_at).strftime("%Y%m%d-%H%M"),
@@ -99,9 +135,10 @@ def prepare_external_launch(root, run_at, write=True):
         "contentPaths": [row["contentPath"] for row in selected],
         "sitemapPaths": sorted({row["sitemapPath"] for row in selected}),
         "hubPaths": sorted({row["hubPath"] for row in selected}),
-        "dailyLimit": None,
-        "publishedToday": len(published_today),
-        "remainingCapacity": None,
+        "dailyLimit": DAILY_PUBLICATION_LIMIT,
+        "publishedToday": published_today_count,
+        "remainingCapacity": remaining_capacity,
+        "publicationAccountingDate": selected_day.isoformat(),
     }
     index_candidates = {
         "schemaVersion": 1,

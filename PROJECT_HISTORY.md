@@ -1045,3 +1045,10 @@
 
 ## 2026-10-05 04:41 Keyword Hunter
 - Seeds: 40; New: 80; Rejected: 69; DB: 4532; Errors: 0; Top: 정수기구매. Report: reports/keyword-hunter/2026-10-05-0441.md
+
+## 2026-10-05 P0 Daily Publication Cap 1→3 — C01
+- **Base/scope:** isolated branch `codex/c01-daily-publication-cap-3` from fetched `origin/main` `a4845bc5a12d5b442279599de4c3abd9313e9fa0`. Centralized the cap at 3 for keyword and external launch planning, aligned protocol defaults and KST-day reporting, and retained max-of-current-day accounting across valid counter/manifest/experiment evidence. Quality, duplicate, YMYL/HOLD, and launch-guard rules are unchanged.
+- **Root cause:** keyword planning inherited a stale `dailyLimit: 1` from the persisted counter; external READY planning had no daily cap; protocol defaults also retained 1. Revenue reporting grouped some publication timestamps by UTC date rather than KST.
+- **Current-day evidence:** KST 2026-10-05 manifest records Keyboard Cleaning as already `PUBLISHED` once. Policy preview reports `dailyLimit=3`, `publishedToday=1`, `remainingCapacity=2`. Historical manifest fields remain untouched; counter, queue, experiment registry, page content, and actual publications were not changed (new publications: 0).
+- **Verification:** focused launch/policy/protocol/manifest/queue/guard and related suites 184 passed; unittest 752 passed; full pytest 1,228 passed; launch guard PASS; SEO QA reports 0 new critical and 0 new warnings (767/420 current); `git diff --check` PASS. Production browser verification was unavailable under the browser's enforced policy; no live-page or deployment claim is made.
+- **Delivery/status:** `READY_FOR_CONTROL_TOWER_REVIEW`; PR and exact-head CI result to be added after branch delivery. Do not merge or publish additional content before Control Tower review.
