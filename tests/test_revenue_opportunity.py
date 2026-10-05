@@ -89,6 +89,62 @@ class RevenueOpportunityDataTest(unittest.TestCase):
 
 
 class RevenueOpportunityBehaviorTest(unittest.TestCase):
+    def test_ga4_total_ad_revenue_is_labeled_as_ga4(self):
+        record = performance_record()
+
+        score = score_opportunity(record, {})
+        actual_revenue = next(item for item in score["components"] if item["name"] == "actual_revenue")
+        classification, _, reasons = classify_record(record, score)
+
+        self.assertEqual(actual_revenue["inputs"]["revenueSource"], "GA4_TOTAL_AD_REVENUE")
+        self.assertEqual(actual_revenue["reason"], "Verified GA4 totalAdRevenue.")
+        self.assertEqual(classification, "WINNER")
+        self.assertIn("Verified GA4 totalAdRevenue", reasons)
+
+    def test_direct_adsense_page_url_revenue_is_selected_and_labeled_when_both_sources_exist(self):
+        record = performance_record(
+            adsense={
+                "revenue": 0.75,
+                "rpm": 3.6,
+                "revenueMetric": "ESTIMATED_EARNINGS",
+                "status": "VERIFIED",
+                "period": {"start": "2026-09-28", "end": "2026-10-04"},
+                "source": "DIRECT_ADSENSE_PAGE_URL",
+                "coverageStatus": "PARTIAL",
+            }
+        )
+
+        score = score_opportunity(record, {})
+        actual_revenue = next(item for item in score["components"] if item["name"] == "actual_revenue")
+        classification, _, reasons = classify_record(record, score)
+
+        self.assertEqual(actual_revenue["inputs"]["revenue"], 0.75)
+        self.assertEqual(actual_revenue["inputs"]["revenueSource"], "DIRECT_ADSENSE_PAGE_URL")
+        self.assertEqual(actual_revenue["reason"], "Verified direct AdSense URL revenue.")
+        self.assertEqual(record["ga4"]["revenue"], 0.2)
+        self.assertEqual(classification, "WINNER")
+        self.assertIn("Verified direct AdSense URL revenue", reasons)
+
+    def test_verified_legacy_adsense_revenue_without_page_url_source_is_not_used(self):
+        record = performance_record(
+            ga4={"views": 100, "revenue": None, "revenueMetric": None, "status": "NOT_CONNECTED"},
+            adsense={
+                "revenue": 0.75,
+                "rpm": 3.6,
+                "status": "VERIFIED",
+                "period": {"start": "2026-09-28", "end": "2026-10-04"},
+                "source": "USER_VERIFIED_MANUAL_SNAPSHOT",
+            },
+        )
+
+        score = score_opportunity(record, {})
+        actual_revenue = next(item for item in score["components"] if item["name"] == "actual_revenue")
+        classification, _, _ = classify_record(record, score)
+
+        self.assertIsNone(actual_revenue["inputs"]["revenue"])
+        self.assertIsNone(actual_revenue["inputs"]["revenueSource"])
+        self.assertNotEqual(classification, "WINNER")
+
     def test_high_impressions_low_ctr_scores_above_low_demand_page(self):
         high = score_opportunity(performance_record(), {"naver_ctr": 0.024})
         low = score_opportunity(
@@ -283,7 +339,14 @@ class RevenueOpportunityBehaviorTest(unittest.TestCase):
                 "users": 0,
                 "engagementSeconds": 0,
                 "revenue": 0,
+                "revenueMetric": "totalAdRevenue",
                 "status": "VERIFIED",
+            },
+            adsense={
+                "revenue": 0,
+                "revenueMetric": "ESTIMATED_EARNINGS",
+                "status": "VERIFIED",
+                "source": "DIRECT_ADSENSE_PAGE_URL",
             },
             duplicate=True,
             inboundLinks=0,
@@ -297,6 +360,20 @@ class RevenueOpportunityBehaviorTest(unittest.TestCase):
             (classification, action),
             ("DEAD_CANDIDATE", "DEAD_CANDIDATE_REVIEW"),
         )
+
+    def test_zero_ga4_revenue_without_direct_url_row_is_not_dead_candidate(self):
+        record = performance_record(
+            naver={"impressions": 0, "clicks": 0, "ctr": 0.0, "position": None, "status": "VERIFIED"},
+            ga4={"views": 0, "users": 0, "revenue": 0, "revenueMetric": "totalAdRevenue", "status": "VERIFIED"},
+            adsense={"revenue": None, "revenueMetric": "ESTIMATED_EARNINGS", "status": "NOT_AVAILABLE", "source": "DIRECT_ADSENSE_PAGE_URL"},
+            duplicate=True,
+            inboundLinks=0,
+        )
+
+        classification, action, _ = classify_record(record, score_opportunity(record, {}))
+
+        self.assertNotEqual(classification, "DEAD_CANDIDATE")
+        self.assertEqual(action, "WAIT_FOR_DATA")
         self.assertNotIn(action, {"DELETE", "NOINDEX", "CHANGE_CANONICAL"})
 
 

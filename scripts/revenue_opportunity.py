@@ -62,6 +62,27 @@ def _verified_ad_revenue(channel):
     return _verified(channel) and channel.get("revenueMetric") == "totalAdRevenue"
 
 
+def _verified_direct_adsense_revenue(channel):
+    return (
+        _verified(channel)
+        and channel.get("source") == "DIRECT_ADSENSE_PAGE_URL"
+        and channel.get("revenueMetric") == "ESTIMATED_EARNINGS"
+    )
+
+
+def _revenue_evidence(record):
+    """Select one explicit URL revenue source while preserving each source channel."""
+    ga4 = record.get("ga4") or {}
+    adsense = record.get("adsense") or {}
+    ga4_revenue = ga4.get("revenue") if _verified_ad_revenue(ga4) else None
+    direct_revenue = adsense.get("revenue") if _verified_direct_adsense_revenue(adsense) else None
+    if direct_revenue is not None:
+        return direct_revenue, "DIRECT_ADSENSE_PAGE_URL", "Verified direct AdSense URL revenue"
+    if ga4_revenue is not None:
+        return ga4_revenue, "GA4_TOTAL_AD_REVENUE", "Verified GA4 totalAdRevenue"
+    return None, None, None
+
+
 def _component(name, score, maximum, status, reason, inputs):
     return {
         "name": name,
@@ -124,13 +145,12 @@ def score_opportunity(record, cluster_medians):
 
     ga4 = record.get("ga4") or {}
     adsense = record.get("adsense") or {}
+    revenue, revenue_source, revenue_label = _revenue_evidence(record)
     ga4_revenue = ga4.get("revenue") if _verified_ad_revenue(ga4) else None
-    adsense_revenue = adsense.get("revenue") if _verified(adsense) else None
-    revenue = adsense_revenue if adsense_revenue is not None else ga4_revenue
     revenue_status = "VERIFIED" if revenue is not None else "NOT_CONNECTED"
     revenue_score = 15 * log1p(max(0, revenue or 0)) / log1p(10)
     views = ga4.get("views") if _verified(ga4) else None
-    efficiency = revenue * 1000 / views if revenue is not None and views else None
+    efficiency = ga4_revenue * 1000 / views if ga4_revenue is not None and views else None
     efficiency_score = min(10, efficiency) if efficiency is not None else 0
     expansion_score = 10 if record.get("cluster") == "camping" and (impressions or 0) > 0 else 3
     ease_score = 5 if (impressions or 0) > 0 and ctr is not None else 2
@@ -140,7 +160,21 @@ def score_opportunity(record, cluster_medians):
         _component("search_clicks", click_score, 15, search_status, "Verified search clicks using cluster percentile and log normalization." if channel_name else "No URL-level search data.", {"channel": channel_name, "clicks": clicks, "clusterPercentile": click_percentile if channel_name else None, "logNormalized": click_log if channel_name else None}),
         _component("ranking_upside", position_score, 10, "NOT_AVAILABLE" if channel_name and position is None else search_status, "Average rank is unavailable; no ranking points are inferred." if channel_name and position is None else "Positions 10-30 receive the highest improvement weight.", {"channel": channel_name, "position": position}),
         _component("search_ctr_gap", ctr_score, 15, ctr_status, "CTR gap versus the same-channel cluster median.", {"channel": channel_name, "ctr": ctr, "clusterMedianCtr": median_ctr}),
-        _component("actual_revenue", revenue_score, 15, revenue_status, "Verified URL revenue only.", {"revenue": revenue}),
+        _component(
+            "actual_revenue",
+            revenue_score,
+            15,
+            revenue_status,
+            f"{revenue_label}." if revenue_label else "No verified GA4 totalAdRevenue or direct AdSense URL revenue.",
+            {
+                "revenue": revenue,
+                "revenueSource": revenue_source,
+                "revenueSources": {
+                    "ga4TotalAdRevenue": ga4_revenue,
+                    "directAdsenseUrlRevenue": adsense.get("revenue") if _verified_direct_adsense_revenue(adsense) else None,
+                },
+            },
+        ),
         _component("page_efficiency", efficiency_score, 10, revenue_status if efficiency is not None else "INSUFFICIENT_DATA", "GA4 page revenue per 1,000 views; not AdSense RPM.", {"revenuePer1000Views": efficiency}),
         _component("intent_expandability", expansion_score, 10, "ESTIMATED", "Verified camping demand supports adjacent-intent analysis." if expansion_score == 10 else "No verified winner-cluster expansion signal.", {"cluster": record.get("cluster")}),
         _component("benefit_vs_cost", ease_score, 5, "ESTIMATED", "A focused search-snippet change is low cost." if ease_score == 5 else "Improvement scope needs manual review.", {"focusedChangePossible": ease_score == 5}),
@@ -180,11 +214,11 @@ def classify_record(record, score):
     search_name, search = _best_search_channel(record)
     has_verified_visits = _verified(ga4) and (ga4.get("views") or 0) > 0
     has_verified_search = bool(search_name and ((search.get("impressions") or 0) > 0 or (search.get("clicks") or 0) > 0))
-    has_verified_revenue = _verified_ad_revenue(ga4) and (ga4.get("revenue") or 0) > 0
+    revenue, _, revenue_label = _revenue_evidence(record)
+    has_verified_revenue = revenue is not None and revenue > 0
     adsense = record.get("adsense") or {}
-    has_verified_revenue = has_verified_revenue or (_verified(adsense) and (adsense.get("revenue") or 0) > 0)
     if has_verified_revenue and (has_verified_visits or has_verified_search):
-        return "WINNER", "PROTECT", ["Verified URL revenue", "Verified traffic"]
+        return "WINNER", "PROTECT", [revenue_label, "Verified traffic"]
 
     all_zero = (
         search_name
@@ -192,7 +226,10 @@ def classify_record(record, score):
         and (search.get("impressions") == 0)
         and (search.get("clicks") == 0)
         and (ga4.get("views") == 0)
+        and _verified_ad_revenue(ga4)
         and (ga4.get("revenue") == 0)
+        and _verified_direct_adsense_revenue(adsense)
+        and (adsense.get("revenue") == 0)
     )
     if all_zero and record.get("duplicate") and record.get("inboundLinks") == 0:
         return "DEAD_CANDIDATE", "DEAD_CANDIDATE_REVIEW", ["Verified zero demand and revenue", "Duplicate with no inbound links"]

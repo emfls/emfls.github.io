@@ -1,0 +1,90 @@
+name: AdSense Collection
+
+on:
+  schedule:
+    - cron: "17 3 * * *" # daily UTC 03:17, after GA4 and GSC collection
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: site-measurement-collection
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TZ: Asia/Seoul
+      ADSENSE_ACCOUNT_NAME: ${{ vars.ADSENSE_ACCOUNT_NAME }}
+      ADSENSE_OAUTH_CLIENT_ID: ${{ secrets.ADSENSE_OAUTH_CLIENT_ID }}
+      ADSENSE_OAUTH_CLIENT_SECRET: ${{ secrets.ADSENSE_OAUTH_CLIENT_SECRET }}
+      ADSENSE_OAUTH_REFRESH_TOKEN: ${{ secrets.ADSENSE_OAUTH_REFRESH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # The refresh token must be issued for https://www.googleapis.com/auth/adsense.readonly.
+      - name: Collect direct AdSense latest snapshot
+        run: python3 scripts/collect_adsense_snapshot.py --output data/performance/adsense-latest.json --days 7
+
+      - name: Regenerate current site audit for measurement
+        run: python3 scripts/seo_audit.py . --json /tmp/adsense-site-audit.json --markdown /tmp/adsense-site-audit.md
+
+      - name: Regenerate current page scores for measurement
+        run: |
+          python3 scripts/quality_audit.py \
+            --audit /tmp/adsense-site-audit.json \
+            --as-of "$(date +%F)" \
+            --page-output /tmp/adsense-page-scores.json \
+            --site-output /tmp/adsense-site-score.json \
+            --report /tmp/adsense-site-score.md \
+            --dashboard /tmp/adsense-site-dashboard.html
+
+      - name: Regenerate measurement artifacts with source-labeled revenue
+        run: |
+          python3 scripts/revenue_growth.py \
+            --as-of "$(date +%F)" \
+            --performance data/performance/ga4-latest.json \
+            --audit /tmp/adsense-site-audit.json \
+            --page-scores /tmp/adsense-page-scores.json \
+            --gsc-snapshot data/performance/gsc-latest.json \
+            --adsense-snapshot data/performance/adsense-latest.json \
+            --page-output data/page-performance.json \
+            --opportunity-output data/revenue-opportunities.json \
+            --report reports/revenue-growth-report.md
+
+      - name: Validate direct AdSense and measurement artifacts
+        run: |
+          python3 scripts/collect_adsense_snapshot.py --validate-only data/performance/adsense-latest.json
+          python3 scripts/validate_measurement_artifact.py data/page-performance.json --page-scores /tmp/adsense-page-scores.json
+          python3 -m unittest tests.test_adsense_snapshot tests.test_revenue_opportunity tests.test_revenue_growth_integration
+          python3 - <<'PY'
+          import json
+          p = json.load(open('data/performance/adsense-latest.json'))
+          assert p['source'] == 'DIRECT_ADSENSE_MANAGEMENT_API_V2'
+          assert p['currentPeriod']['days'] == p['priorPeriod']['days'] == 7
+          assert p['currentPeriod']['inclusive'] is p['priorPeriod']['inclusive'] is True
+          assert p['reportingTimeZone']['mode'] == 'ACCOUNT_TIME_ZONE'
+          assert p['pageUrls']['coverageStatus'] == 'PARTIAL'
+          if p['site']['status'] == 'VERIFIED':
+              assert p['site']['comparisonStatus'] == 'VERIFIED'
+          PY
+
+      - name: Commit refreshed AdSense measurement artifacts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --check
+          git add data/performance/adsense-latest.json data/page-performance.json data/revenue-opportunities.json reports/revenue-growth-report.md
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: refresh direct AdSense measurement snapshot"
+            git push
+          fi
