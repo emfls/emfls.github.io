@@ -16,6 +16,11 @@
   - 검증: 진단 focused 3 passed; collector 22 passed; content launch guard 25 passed; revenue/source 38 passed; unittest 783 passed; pytest 1,266 passed; SEO QA 신규 critical/warning 0; launch guard vs latest `origin/main` PASS; workflow YAML 3개 parse PASS; `git diff --check` PASS; secret-pattern scan PASS.
   - 상태: diagnostic branch `codex/c06-adsense-stage-diagnostics`, code commit `dccbf21840be4d0f9df042ca4aa9da22d48d9f29`. Hotfix는 unmerged이며 Control Tower review가 다음 승인 gate다. AdSense workflow를 재실행하지 않고 C07은 대기한다.
 
+- [ ] P0 Site-wide matched-period GSC page×query evidence — C17
+  - 범위: 현재 `gsc-latest.json`과 정확히 같은 finalized period/property/web type으로 site-wide `[page, query]` evidence를 수집하는 manual-only, artifact-only 경로. Raw export는 `$RUNNER_TEMP`에만 쓰고 7일 보관 artifact로 업로드한다.
+  - 상태: sparse branch `codex/c17-sitewide-gsc-page-query` 기반 `9a83870428d6cf8b026de728dd9c3aabf3491b1e`; local focused suite 90 passed, YAML parse와 `git diff --check` 통과. Exact-head CI와 Control Tower review 대기; merge와 live query dispatch 금지.
+  - 의존성: C07의 겹치는 GSC workflow write 단계는 C17이 merge되거나 abandoned 될 때까지 시작하지 않는다. Live GSC collection은 Control Tower 승인 전 실행하지 않는다.
+
 - [ ] P0 JP Travel Batch 02 — PR #38, 50-page canary
   - 동기화: 요청된 main `6b844cf03138057091bac2cdf1a87db3e98491f2` 이후 main이 `1b15674e09d3dd30fb65620ab2ae8f35f85c2137`로 전진해 두 SHA를 모두 regular merge로 반영했다. `5172e32bcd`에서 derived artifact 충돌 3건을 최신 main 입력 기준으로 해결·재생성했고, `946f3cf027` merge는 충돌이 없었다. rebase/force push 없음.
   - 범위: JP Travel HTML 정확히 50개 / 674,830 B 삭제, 대응 sitemap URL 정확히 50개 제거. 비대상 HTML 변경 0. 보호 승자 1,593개와 후보 overlap 0. 세 실험은 모두 `INCONCLUSIVE`; 후보 revenue/search rows는 `NOT_CONNECTED`/`NO_ROW`로서 unknown이지 0이 아니다. raw GA4/GSC는 latest main과 동일. 최신 targeted validation은 다른 5개 target에서 `VERIFIED`, Batch 02 URL 언급 0.

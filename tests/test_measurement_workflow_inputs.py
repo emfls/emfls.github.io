@@ -95,7 +95,7 @@ def test_gsc_workflow_defaults_to_page_mode_for_schedule_and_manual_runs():
 
     assert "collection_mode:" in workflow
     assert "default: page" in workflow
-    assert "options: [page, camping-query, opportunity-query]" in workflow
+    assert "options: [page, camping-query, opportunity-query, sitewide-query]" in workflow
     assert "schedule:" in workflow
     assert "workflow_dispatch:" in workflow
 
@@ -180,3 +180,62 @@ def test_opportunity_query_mode_isolated_and_commits_only_sidecar_artifact():
     page_only = "if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'page'"
     assert page_only in _step_block(workflow, "Collect GSC page snapshot")
     assert "opportunity-query" in workflow
+
+
+def test_sitewide_query_mode_is_manual_only_and_skips_page_refresh():
+    workflow = _workflow_text()
+    scheduled = workflow.split("  workflow_dispatch:", 1)[0]
+    collect = _step_block(workflow, "Collect site-wide page-query evidence snapshot")
+    page_only = "if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'page'"
+
+    assert "sitewide-query" not in scheduled
+    assert "if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'sitewide-query'" in collect
+    assert "scripts/collect_gsc_sitewide_query_snapshot.py" in collect
+    assert "$RUNNER_TEMP/gsc-sitewide-query.json" in collect
+    assert page_only in _step_block(workflow, "Collect GSC page snapshot")
+    assert page_only in _step_block(workflow, "Regenerate measurement artifacts from GA4 and GSC snapshots")
+
+
+def test_sitewide_query_mode_validates_and_uploads_bounded_artifact():
+    workflow = _workflow_text()
+    manual_only = "if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'sitewide-query'"
+    validation = _step_block(workflow, "Validate site-wide page-query evidence snapshot")
+    upload = _step_block(workflow, "Upload site-wide page-query evidence artifact")
+
+    assert manual_only in validation
+    assert "validate_snapshot" in validation
+    assert "$RUNNER_TEMP/gsc-sitewide-query.json" in validation
+    assert manual_only in upload
+    assert "actions/upload-artifact@v4" in upload
+    assert "${{ runner.temp }}/gsc-sitewide-query.json" in upload
+    assert "retention-days: 7" in upload
+    assert "if-no-files-found: error" in upload
+
+
+def test_sitewide_raw_artifact_is_never_added_or_committed():
+    workflow = _workflow_text()
+    collect = _step_block(workflow, "Collect site-wide page-query evidence snapshot")
+    validate = _step_block(workflow, "Validate site-wide page-query evidence snapshot")
+    upload = _step_block(workflow, "Upload site-wide page-query evidence artifact")
+
+    assert "git add" not in collect + validate + upload
+    assert "git commit" not in collect + validate + upload
+    assert "Commit site-wide page-query" not in workflow
+    assert "git add data/performance/gsc-sitewide-query" not in workflow
+    assert "git commit -m" not in upload
+
+
+def test_existing_query_modes_keep_their_scoped_conditions_and_outputs():
+    workflow = _workflow_text()
+    assert "if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'camping-query'" in _step_block(
+        workflow, "Collect camping query evidence snapshot"
+    )
+    assert "if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'opportunity-query'" in _step_block(
+        workflow, "Collect current revenue opportunity query evidence"
+    )
+    assert "git add data/performance/gsc-camp-query-latest.json" in _step_block(
+        workflow, "Commit camping query evidence snapshot"
+    )
+    assert "git add data/performance/gsc-opportunity-queries-latest.json" in _step_block(
+        workflow, "Commit revenue opportunity query evidence snapshot"
+    )
