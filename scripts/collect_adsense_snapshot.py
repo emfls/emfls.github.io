@@ -134,10 +134,12 @@ def _number(value, metric):
     return float(number)
 
 
-def _parse_cells(row, headers):
+def _parse_cells(row, headers, *, stage):
     cells = row.get("cells") if isinstance(row, dict) else None
     if not isinstance(cells, list) or len(cells) != len(headers):
-        raise CollectorError("AdSense returned a report row with an unexpected shape.")
+        raise CollectorError(f"{stage}: AdSense returned a report row with an unexpected shape.")
+    if any(cell is not None and not isinstance(cell, dict) for cell in cells):
+        raise CollectorError(f"{stage}: AdSense returned a report row with an unexpected shape.")
     return {header["name"]: (cell or {}).get("value") for header, cell in zip(headers, cells)}
 
 
@@ -152,30 +154,39 @@ def _currency(headers):
     return next(iter(values)) if len(values) == 1 else None
 
 
-def _parse_report(report, dimensions, expected_period):
+def _parse_report(report, dimensions, expected_period, *, stage):
     if not isinstance(report, dict):
-        raise CollectorError("AdSense returned an invalid report response.")
+        raise CollectorError(f"{stage}: AdSense returned an invalid report response.")
     headers = report.get("headers")
     expected_headers = [*dimensions, *METRICS]
-    if not isinstance(headers, list) or [item.get("name") for item in headers] != expected_headers:
-        raise CollectorError("AdSense report headers do not match the requested dimensions and metrics.")
-    start = _date_from_api(report.get("startDate"))
-    end = _date_from_api(report.get("endDate"))
+    if (
+        not isinstance(headers, list)
+        or any(not isinstance(item, dict) for item in headers)
+        or [item.get("name") for item in headers] != expected_headers
+    ):
+        raise CollectorError(f"{stage}: AdSense report headers do not match the requested dimensions and metrics.")
+    try:
+        start = _date_from_api(report.get("startDate"))
+        end = _date_from_api(report.get("endDate"))
+    except CollectorError as error:
+        raise CollectorError(f"{stage}: {error}") from None
     if start != expected_period["start"] or end != expected_period["end"]:
-        raise CollectorError("AdSense report dates do not match the requested inclusive period.")
-    rows = report.get("rows")
+        raise CollectorError(f"{stage}: AdSense report dates do not match the requested inclusive period.")
+    rows = report["rows"] if "rows" in report else []
     if not isinstance(rows, list):
-        raise CollectorError("AdSense report rows are unavailable.")
+        raise CollectorError(f"{stage}: AdSense report rows must be a list when present.")
     total_raw = report.get("totalMatchedRows")
     try:
+        if total_raw is not None and (isinstance(total_raw, bool) or not isinstance(total_raw, (int, str))):
+            raise ValueError
         total_matched = int(total_raw) if total_raw is not None else None
     except (TypeError, ValueError):
-        total_matched = None
+        raise CollectorError(f"{stage}: AdSense report totalMatchedRows is invalid.") from None
     if total_matched is not None and total_matched < len(rows):
-        raise CollectorError("AdSense report row count is inconsistent.")
-    parsed_rows = [_parse_cells(row, headers) for row in rows]
+        raise CollectorError(f"{stage}: AdSense report row count is inconsistent.")
+    parsed_rows = [_parse_cells(row, headers, stage=stage) for row in rows]
     totals_row = report.get("totals")
-    totals = _parse_cells(totals_row, headers) if totals_row else {}
+    totals = _parse_cells(totals_row, headers, stage=stage) if totals_row else {}
     warnings = report.get("warnings") or []
     if not isinstance(warnings, list):
         warnings = ["AdSense returned report warnings in an unknown format."]
@@ -273,8 +284,22 @@ def build_snapshot(
     if not time_zone:
         raise CollectorError("The AdSense account timezone is unavailable.")
     current_period, prior_period = build_periods(now or datetime.now(timezone.utc), time_zone, days=days)
-    current = _parse_report(current_report, SITE_DIMENSIONS, current_period)
-    prior = _parse_report(prior_report, SITE_DIMENSIONS, prior_period)
+    current = _parse_report(
+        current_report,
+        SITE_DIMENSIONS,
+        current_period,
+        stage="SITE_CURRENT_REPORT_PARSE",
+    )
+    if not current["rows"]:
+        raise CollectorError("SITE_CURRENT_REPORT_EMPTY: AdSense returned no site report rows; keeping the existing snapshot.")
+    prior = _parse_report(
+        prior_report,
+        SITE_DIMENSIONS,
+        prior_period,
+        stage="SITE_PRIOR_REPORT_PARSE",
+    )
+    if not prior["rows"]:
+        raise CollectorError("SITE_PRIOR_REPORT_EMPTY: AdSense returned no site report rows; keeping the existing snapshot.")
     if page_url_report is None:
         if page_url_unavailable_reason != PAGE_URL_UNAVAILABLE_CLASSIFICATION:
             raise CollectorError("Unavailable PAGE_URL evidence requires a recognized Google report classification.")
@@ -282,9 +307,12 @@ def build_snapshot(
     else:
         if page_url_unavailable_reason is not None:
             raise CollectorError("A PAGE_URL report cannot be both available and unavailable.")
-        page_urls_report = _parse_report(page_url_report, PAGE_URL_DIMENSIONS, current_period)
-    if not current["rows"] or not prior["rows"]:
-        raise CollectorError("AdSense site report returned no rows; keeping the existing snapshot.")
+        page_urls_report = _parse_report(
+            page_url_report,
+            PAGE_URL_DIMENSIONS,
+            current_period,
+            stage="PAGE_URL_REPORT_PARSE",
+        )
 
     current_sites = {row.get("OWNED_SITE_DOMAIN_NAME") for row in current["rows"]}
     prior_sites = {row.get("OWNED_SITE_DOMAIN_NAME") for row in prior["rows"]}
