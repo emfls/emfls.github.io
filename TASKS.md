@@ -18,7 +18,7 @@
 
 - [ ] P0 Site-wide matched-period GSC page×query evidence — C17
   - 범위: 현재 `gsc-latest.json`과 정확히 같은 finalized period/property/web type으로 site-wide `[page, query]` evidence를 수집하는 manual-only, artifact-only 경로. Raw export는 `$RUNNER_TEMP`에만 쓰고 7일 보관 artifact로 업로드한다.
-  - 상태: PR #50 `codex/c17-sitewide-gsc-page-query` OPEN; current base `97ed941bf1276f5f5d102f25265576227937ccc7` was merged normally into the feature branch to resolve the `PROJECT_HISTORY.md` conflict. Local focused suite 90 passed; initial exact-head CI passed, and updated-base CI is pending. Control Tower review is next; merge and live query dispatch remain prohibited.
+  - 상태: PR #50 `codex/c17-sitewide-gsc-page-query` OPEN; current base `97ed941bf1276f5f5d102f25265576227937ccc7` was merged normally into the feature branch to resolve the `PROJECT_HISTORY.md` conflict. Local focused suite 90 passed. Exact-head SEO QA run `37387487374` passed on merge head `abe68d27d8d935efa3be11c5b663b046e27a388d` (unittest 793; pytest 1,312 + 518 subtests); this handoff-only update still needs its own exact-head run. Control Tower review follows the latest PR checks; merge and live query dispatch remain prohibited.
   - 의존성: C07의 겹치는 GSC workflow write 단계는 C17이 merge되거나 abandoned 될 때까지 시작하지 않는다. Live GSC collection은 Control Tower 승인 전 실행하지 않는다.
 
 - [ ] P0 JP Travel Batch 02 — PR #38, 50-page canary
