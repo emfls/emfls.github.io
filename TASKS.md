@@ -14,7 +14,7 @@
   - Live evidence: merge 뒤 AdSense Collection을 한 번만 dispatch했다 (run `37373852773`). 실행은 `Collect direct AdSense latest snapshot` 단계에서 `AdSense report rows are unavailable.`로 실패했다. 안전한 로그에 HTTP/Google status가 없어 실패 endpoint는 미확정이다. 재실행은 금지.
   - Repair: current/prior/PAGE_URL parser 오류에 stage를 명시하고, `rows` 키가 없을 때만 빈 목록으로 정규화한다. 빈 current/prior site report는 fail-closed; 빈/missing PAGE_URL은 `PARTIAL`, matched count와 URL metric은 미확정으로 유지한다. last-good snapshot atomicity와 exact PAGE_URL 400 fail-soft guard는 유지.
   - 검증: AdSense/launch-guard/revenue source/policy focused 116 passed; unittest 795 passed; pytest 1,279 passed; SEO QA 신규 critical/warning 0 (현재 767/420); launch guard vs latest `origin/main` PASS; workflow YAML 3개 parse PASS; diff check 및 secret-pattern scan PASS. AdSense workflow 변경·live rerun 없음.
-  - 상태: branch `codex/c06-report-parser-stages`; collector blob transition `2f4890e73ae705c5347b3755c5fb4ef47ca23e2b` → `7e462d5e1ccedfba022594d98cabf4aa3697ca01`. 새 repair PR 및 exact-head CI를 Control Tower 검토용으로 준비한다. C07은 `WAITING`이며 시작하지 않는다.
+  - 상태: branch `codex/c06-report-parser-stages`, implementation commit `2d3237f3d6f839a7f5605f99c95bc3817269bc3a`; PR #49 OPEN / exact-head CI 대기. Collector blob transition `2f4890e73ae705c5347b3755c5fb4ef47ca23e2b` → `7e462d5e1ccedfba022594d98cabf4aa3697ca01`. PR은 merge하지 않고 Control Tower 검토를 기다린다. C07은 `WAITING`이며 시작하지 않는다.
 
 - [ ] P0 JP Travel Batch 02 — PR #38, 50-page canary
   - 동기화: 요청된 main `6b844cf03138057091bac2cdf1a87db3e98491f2` 이후 main이 `1b15674e09d3dd30fb65620ab2ae8f35f85c2137`로 전진해 두 SHA를 모두 regular merge로 반영했다. `5172e32bcd`에서 derived artifact 충돌 3건을 최신 main 입력 기준으로 해결·재생성했고, `946f3cf027` merge는 충돌이 없었다. rebase/force push 없음.
