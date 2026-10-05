@@ -1,10 +1,13 @@
-"""Fail-closed, deterministic policy for selecting one launch-ready keyword."""
-from datetime import datetime, timezone
+"""Fail-closed, deterministic policy for selecting launch-ready keywords."""
+from datetime import date, datetime, timezone
+from zoneinfo import ZoneInfo
 from difflib import SequenceMatcher
 import re
 from urllib.parse import urlsplit
 
 SITE_HOST = "emfls.github.io"
+SEOUL = ZoneInfo("Asia/Seoul")
+DAILY_PUBLICATION_LIMIT = 3
 FINAL_PUBLICATION_STATUSES = {"PUBLISHED", "LAUNCHED"}
 
 # Query/content-type evidence is evaluated independently from the broad
@@ -117,6 +120,68 @@ def published_manifest_dedupe_keys(manifest):
     }
     return urls, keywords
 
+def publication_day(value):
+    # Normalize publication timestamps to the site's KST calendar day.
+    if not value:
+        return None
+    if isinstance(value, datetime):
+        parsed = value
+    else:
+        text = str(value).strip()
+        try:
+            parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
+        except ValueError:
+            try:
+                return date.fromisoformat(text)
+            except ValueError:
+                return None
+    if parsed.tzinfo is not None:
+        parsed = parsed.astimezone(SEOUL)
+    return parsed.date()
+
+
+def publication_manifest_count(manifest, selected_day, daily_limit=DAILY_PUBLICATION_LIMIT):
+    # Count final publications, or published counts carried by a tagged launch plan.
+    if not isinstance(manifest, dict):
+        return 0
+    selected_day = publication_day(selected_day)
+    if selected_day is None:
+        return 0
+    try:
+        fail_closed_count = max(0, int(daily_limit))
+    except (TypeError, ValueError):
+        fail_closed_count = DAILY_PUBLICATION_LIMIT
+
+    status = str(manifest.get("status") or "").upper()
+    if status in FINAL_PUBLICATION_STATUSES:
+        publication_date = publication_day(manifest.get("runAt"))
+        if publication_date is None:
+            return fail_closed_count
+        if publication_date != selected_day:
+            return 0
+        count_values = True
+    elif (
+        status in {"READY", "NO_PUBLICATION"}
+        and publication_day(manifest.get("publicationAccountingDate")) == selected_day
+    ):
+        count_values = False
+    else:
+        return 0
+
+    counts = []
+    published_today = manifest.get("publishedToday")
+    if isinstance(published_today, int) and not isinstance(published_today, bool) and published_today >= 0:
+        counts.append(published_today)
+    elif isinstance(published_today, str) and published_today.strip().isdigit():
+        counts.append(int(published_today.strip()))
+    if count_values:
+        for key in ("urls", "candidateIds", "contentPaths"):
+            values = manifest.get(key)
+            if isinstance(values, (list, tuple)):
+                counts.append(sum(1 for value in values if isinstance(value, str) and value.strip()))
+    return max(counts, default=0)
+
+
 def _truthy(value): return str(value).casefold() in {"true", "1", "yes"}
 def _tool(row):
     text = f"{row.get('category','')}|{row.get('content_types','')}|{row.get('intent','')}".casefold()
@@ -140,7 +205,7 @@ def _ymyl(row):
         or _has_ymyl_text_signal(category_evidence)
     )
 
-def select_launch_candidate(rows, existing_urls=None, published_keywords=None, daily_limit=1, selected_at=None, max_age_days=30, launched_count=0):
+def select_launch_candidate(rows, existing_urls=None, published_keywords=None, daily_limit=DAILY_PUBLICATION_LIMIT, selected_at=None, max_age_days=30, launched_count=0):
     existing_urls={identity for x in (existing_urls or set()) if (identity := normalize_url_identity(x)) is not None}; published={normalize_keyword(x) for x in (published_keywords or set())}
     daily_limit=max(0,int(daily_limit)); launched_count=max(0,int(launched_count)); remaining_capacity=max(0,daily_limit-launched_count)
     now=datetime.fromisoformat(selected_at) if selected_at else datetime.now(timezone.utc)
@@ -148,7 +213,7 @@ def select_launch_candidate(rows, existing_urls=None, published_keywords=None, d
     excluded={"duplicate_url":0,"missing_url":0,"duplicate_keyword":0,"similar_intent":0,"invalid_score":0,"stale_winner":0,"ymyl":0,"ineligible":0,"daily_limit":0,"overlap":0}
     if remaining_capacity == 0:
         excluded["daily_limit"] = 1
-        return {"queue": [], "excluded": excluded, "dailyLimit": daily_limit}
+        return {"queue": [], "excluded": excluded, "dailyLimit": daily_limit, "remainingCapacity": remaining_capacity}
     published_norm=list(published)
     def rank(r): return (-(1 if r.get("status")=="WINNER" else 0), -(1 if r.get("status")=="CANDIDATE" else 0), -(1 if _tool(r) else 0), -float(r.get("opportunity_score") or 0), normalize_keyword(r.get("keyword")))
     eligible=[]; seen=[]
@@ -172,4 +237,4 @@ def select_launch_candidate(rows, existing_urls=None, published_keywords=None, d
     queue=[]
     for row in eligible[:remaining_capacity]:
         queue.append({"keyword":row["keyword"],"source":row.get("source") or "KEYWORD_HUNTER","status":"READY_TO_LAUNCH","review_status":"PAGE_REVIEW_READY","opportunity_score":float(row["opportunity_score"]),"confidence":row.get("confidence"),"category":row.get("category"),"intended_page_type":"free_tool" if _tool(row) else "article","suggested_url":row.get("suggested_url"),"duplicate_check":"passed","reason":"winner/tool priority with verified score and no overlap","selected_at":selected_at})
-    return {"queue":queue,"excluded":excluded,"dailyLimit":daily_limit}
+    return {"queue":queue,"excluded":excluded,"dailyLimit":daily_limit,"remainingCapacity":remaining_capacity}

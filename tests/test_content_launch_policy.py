@@ -47,6 +47,30 @@ def test_queue_size_is_bounded_by_remaining_daily_capacity():
     result=select_launch_candidate(rows,daily_limit=2,launched_count=1)
     assert len(result["queue"]) == 1
 
+
+def test_default_launch_policy_uses_three_daily_publication_slots():
+    rows = [
+        row(keyword=f"안전한도구{index}", suggested_url=f"/kor/column/safe-{index}/")
+        for index in range(4)
+    ]
+    result = select_launch_candidate(rows)
+    assert result["dailyLimit"] == 3
+    assert result.get("remainingCapacity") == 3
+    assert len(result["queue"]) == 3
+
+
+def test_launch_policy_reports_remaining_capacity_and_blocks_at_three():
+    rows = [
+        row(keyword=f"도구안내{index}", suggested_url=f"/kor/column/tool-{index}/")
+        for index in range(4)
+    ]
+    for published, expected in ((0, 3), (1, 2), (2, 1), (3, 0), (4, 0)):
+        result = select_launch_candidate(rows, daily_limit=3, launched_count=published)
+        assert result.get("remainingCapacity") == expected
+        assert len(result["queue"]) == expected
+        if published >= 3:
+            assert result["excluded"]["daily_limit"] == 1
+
 def test_ymyl_calculators_block_but_unit_calculator_allowed():
     blocked=["원천징수계산기","3.3%계산기","퇴직금세금계산기","부가세계산기","급여일할계산기","연장수당계산기","휴일수당계산기"]
     for keyword in blocked:

@@ -1,12 +1,25 @@
 """Convert Keyword Hunter rows into a bounded launch queue; never publishes HTML."""
 import argparse, csv, json
 from pathlib import Path
-from datetime import date, datetime
-from zoneinfo import ZoneInfo
+from datetime import datetime
 try:
-    from scripts.content_launch_policy import FINAL_PUBLICATION_STATUSES, published_manifest_dedupe_keys, select_launch_candidate
+    from scripts.content_launch_policy import (
+        DAILY_PUBLICATION_LIMIT,
+        SEOUL,
+        publication_day,
+        publication_manifest_count,
+        published_manifest_dedupe_keys,
+        select_launch_candidate,
+    )
 except ModuleNotFoundError:
-    from content_launch_policy import FINAL_PUBLICATION_STATUSES, published_manifest_dedupe_keys, select_launch_candidate
+    from content_launch_policy import (
+        DAILY_PUBLICATION_LIMIT,
+        SEOUL,
+        publication_day,
+        publication_manifest_count,
+        published_manifest_dedupe_keys,
+        select_launch_candidate,
+    )
 try:
     from scripts.content_url_planner import plan_url
 except ModuleNotFoundError:
@@ -16,55 +29,15 @@ try:
 except ModuleNotFoundError:
     from content_launch_decisions import load_decisions
 
-SEOUL = ZoneInfo("Asia/Seoul")
-
-def _publication_day(value):
-    if not value:
-        return None
-    if isinstance(value, datetime):
-        parsed = value
-    else:
-        text = str(value).strip()
-        try:
-            parsed = datetime.fromisoformat(text.replace("Z", "+00:00"))
-        except ValueError:
-            try:
-                return date.fromisoformat(text)
-            except ValueError:
-                return None
-    if parsed.tzinfo is not None:
-        parsed = parsed.astimezone(SEOUL)
-    return parsed.date()
-
-def _manifest_publication_count(manifest, selected_day, daily_limit):
-    if not isinstance(manifest, dict) or str(manifest.get("status") or "").upper() not in FINAL_PUBLICATION_STATUSES:
-        return 0
-    publication_day = _publication_day(manifest.get("runAt"))
-    if publication_day is None:
-        return max(0, daily_limit)
-    if publication_day != selected_day:
-        return 0
-    counts = []
-    published_today = manifest.get("publishedToday")
-    if isinstance(published_today, int) and not isinstance(published_today, bool) and published_today >= 0:
-        counts.append(published_today)
-    elif isinstance(published_today, str) and published_today.strip().isdigit():
-        counts.append(int(published_today.strip()))
-    for key in ("urls", "candidateIds", "contentPaths"):
-        values = manifest.get(key)
-        if isinstance(values, (list, tuple)):
-            counts.append(sum(1 for value in values if isinstance(value, str) and value.strip()))
-    return max(counts, default=0)
-
-def prepare_queue(rows, existing_urls=None, published_keywords=None, daily_limit=1, selected_at=None, launched_count=0, counter_date=None, editorial_decisions=None, published_manifest=None):
-    selected_day = _publication_day(selected_at) if selected_at else datetime.now(SEOUL).date()
+def prepare_queue(rows, existing_urls=None, published_keywords=None, daily_limit=DAILY_PUBLICATION_LIMIT, selected_at=None, launched_count=0, counter_date=None, editorial_decisions=None, published_manifest=None):
+    selected_day = publication_day(selected_at) if selected_at else datetime.now(SEOUL).date()
     counter_count = 0
-    if _publication_day(counter_date) == selected_day:
+    if publication_day(counter_date) == selected_day:
         try:
             counter_count = max(0, int(launched_count))
         except (TypeError, ValueError):
             counter_count = 0
-    manifest_count = _manifest_publication_count(published_manifest, selected_day, daily_limit)
+    manifest_count = publication_manifest_count(published_manifest, selected_day, daily_limit)
     effective_count = max(counter_count, manifest_count)
     manifest_urls, manifest_keywords = published_manifest_dedupe_keys(published_manifest)
     existing_urls = set(existing_urls or set()) | manifest_urls
@@ -82,17 +55,19 @@ def prepare_queue(rows, existing_urls=None, published_keywords=None, daily_limit
         derived.append(item)
     result=select_launch_candidate(derived, existing_urls, published_keywords, daily_limit, selected_at, launched_count=effective_count)
     result['excluded']['editorial_hold']=held
+    result['publishedToday']=effective_count
+    result['remainingCapacity']=max(0, int(daily_limit)-effective_count)
     return result
 
 def main():
-    p=argparse.ArgumentParser(); p.add_argument('--root',type=Path,default=Path('.')); p.add_argument('--selected-at',default=datetime.now(ZoneInfo('Asia/Seoul')).isoformat()); args=p.parse_args()
+    p=argparse.ArgumentParser(); p.add_argument('--root',type=Path,default=Path('.')); p.add_argument('--selected-at',default=datetime.now(SEOUL).isoformat()); args=p.parse_args()
     with (args.root/'data/keywords_master.csv').open(encoding='utf-8',newline='') as f: rows=list(csv.DictReader(f))
     index=json.loads((args.root/'data/content-index-ko.json').read_text(encoding='utf-8')) if (args.root/'data/content-index-ko.json').exists() else []
     published=json.loads((args.root/'data/published_keywords.json').read_text(encoding='utf-8')) if (args.root/'data/published_keywords.json').exists() else []
     decisions=load_decisions(args.root/'data/content-launch-decisions.json')
     counter=json.loads((args.root/'data/content-launch-counter.json').read_text(encoding='utf-8')) if (args.root/'data/content-launch-counter.json').exists() else {}
     manifest=json.loads((args.root/'data/content-launch-manifest.json').read_text(encoding='utf-8')) if (args.root/'data/content-launch-manifest.json').exists() else {}
-    result=prepare_queue(rows,{r.get('url') for r in index},{r.get('keyword') for r in published},int(counter.get('dailyLimit',1)),args.selected_at,int(counter.get('launchedCount',0)),counter.get('date'),decisions,manifest)
+    result=prepare_queue(rows,{r.get('url') for r in index},{r.get('keyword') for r in published},DAILY_PUBLICATION_LIMIT,args.selected_at,int(counter.get('launchedCount',0)),counter.get('date'),decisions,manifest)
     out=args.root/'data/content-launch-queue.json'
     payload={'schemaVersion':1,'selectedAt':args.selected_at,**result}
     if out.exists():
