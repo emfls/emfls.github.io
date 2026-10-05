@@ -9,11 +9,12 @@
   - 수정 후 검증: focused 187 passed; unittest 752 passed; pytest 1,231 passed; SEO QA 신규 critical/warning 0 (현재 767/420); content launch guard PASS; `git diff --check` PASS.
   - 기준/상태: `origin/main` `a4845bc5a12d5b442279599de4c3abd9313e9fa0` 기반 `codex/c01-daily-publication-cap-3`; PR #42 OPEN / 새 exact-head CI 대기; `READY_FOR_CI`. Control Tower review 전 merge 또는 신규 공개 금지.
 
-- [ ] P0 Direct AdSense matched-period ingestion safety — C06 / PR #43
-  - 범위: 기존 read-only AdSense collector를 보존하고, Control Tower 검토 후 guard·workflow queue/storage/schedule·period-aware revenue scoring blocker만 수정한다. C01 publication cap 3과 content launch policy/data는 보존한다.
-  - 로컬 검증: focused 78 passed; unittest 780 passed; pytest 1,261 passed; fresh SEO QA `failed=false` with 0 new critical/warnings; content launch guard vs `origin/main` PASS; 3 workflow YAML parse PASS; `git diff --check` PASS.
-  - Exact-head: code SHA `9aed5a2620652fffbbd89437f334107b8d00c9ea`; SEO QA run `37263916073` SUCCESS.
-  - 상태: `READY_FOR_CONTROL_TOWER_REVIEW`; same branch의 PR #43은 OPEN/UNMERGED다. AdSense live run은 credential 부재로 수행하지 않는다. C07은 시작하지 않았다.
+- [ ] P0 Direct AdSense matched-period ingestion safety — C06 / PR #43 merged; diagnostic follow-up
+  - 범위: PR #43 merge `937e8eb256a5921c6b212dc4ebc0c6ac5afe1b18` 후 latest `origin/main` `cfc4b2119fe9a98c8d7cc40e74dba743b5b4ccd8`에서 별도 hotfix를 진행한다. 실패한 AdSense run `37280801144`의 stage는 아직 확인되지 않았다.
+  - OAuth evidence: 사용자가 동일한 OAuth client/refresh token으로 OAuth Playground의 `adsense.readonly` refresh 성공을 확인했다. 어떤 credential 값도 열람·수정하지 않는다.
+  - 변경: collector 오류에 다섯 요청 stage와 JSON error의 안전한 `status/message`를 추가하고, credential·Bearer·publisher ID·URL/query를 redaction한다. API 요청 의미, workflow, AdSense snapshot, 파생 데이터, 콘텐츠는 바꾸지 않는다.
+  - 검증: 진단 focused 3 passed; collector 22 passed; content launch guard 25 passed; revenue/source 38 passed; unittest 783 passed; pytest 1,266 passed; SEO QA 신규 critical/warning 0; launch guard vs latest `origin/main` PASS; workflow YAML 3개 parse PASS; `git diff --check` PASS; secret-pattern scan PASS.
+  - 상태: diagnostic branch `codex/c06-adsense-stage-diagnostics`, code commit `dccbf21840be4d0f9df042ca4aa9da22d48d9f29`. Hotfix는 unmerged이며 Control Tower review가 다음 승인 gate다. AdSense workflow를 재실행하지 않고 C07은 대기한다.
 
 - [ ] P0 JP Travel Batch 02 — PR #38, 50-page canary
   - 동기화: 요청된 main `6b844cf03138057091bac2cdf1a87db3e98491f2` 이후 main이 `1b15674e09d3dd30fb65620ab2ae8f35f85c2137`로 전진해 두 SHA를 모두 regular merge로 반영했다. `5172e32bcd`에서 derived artifact 충돌 3건을 최신 main 입력 기준으로 해결·재생성했고, `946f3cf027` merge는 충돌이 없었다. rebase/force push 없음.
