@@ -3,6 +3,7 @@
 
 import argparse
 import json
+import math
 import os
 import re
 import sys
@@ -75,6 +76,10 @@ BREAKDOWN_DIMENSION_KEYS = {
 BREAKDOWN_REPORT_STATUSES = {"COMPLETE", "PARTIAL", "NOT_AVAILABLE", "UNSUPPORTED_COMBINATION"}
 BREAKDOWN_ROW_LIMIT = 4000
 BREAKDOWN_MAX_PERIOD_DAYS = 7
+DIAGNOSTICS_DAILY_ROW_LIMIT = 14
+DIAGNOSTICS_CATEGORY_LIMIT = 32
+DIAGNOSTICS_COUNTRY_TOP_N = 20
+MAX_DIAGNOSTICS_BYTES = 256 * 1024
 PAGE_URL_UNAVAILABLE_MESSAGE = "The combination of requested dimensions is unavailable."
 PAGE_URL_UNAVAILABLE_CLASSIFICATION = "PAGE_URL_DIMENSION_COMBINATION_UNAVAILABLE"
 
@@ -106,6 +111,9 @@ def build_parser():
     parser.add_argument("--validate-only", type=Path)
     parser.add_argument("--breakdown-output", type=Path)
     parser.add_argument("--validate-breakdown-only", type=Path)
+    parser.add_argument("--build-diagnostics-from", type=Path)
+    parser.add_argument("--diagnostics-output", type=Path)
+    parser.add_argument("--validate-diagnostics-only", type=Path)
     return parser
 
 
@@ -937,6 +945,474 @@ def validate_breakdown_snapshot(snapshot):
     return True
 
 
+def _sum_known_metric(rows, key):
+    values = [row.get(key) for row in rows]
+    if not values or any(value is None for value in values):
+        return None
+    return sum(values)
+
+
+def _ratio(numerator, denominator, *, scale=1):
+    if numerator is None or denominator is None or denominator <= 0:
+        return None
+    return numerator / denominator * scale
+
+
+def _summary_metrics(rows):
+    result = {
+        BREAKDOWN_METRIC_KEYS[metric]: _sum_known_metric(rows, BREAKDOWN_METRIC_KEYS[metric])
+        for metric in BREAKDOWN_ADDITIVE_METRICS
+    }
+    earnings = result["estimatedEarnings"]
+    page_views = result["pageViews"]
+    clicks = result["clicks"]
+    ad_requests = result["adRequests"]
+    matched_requests = result["matchedAdRequests"]
+    result["pageViewsRPM"] = _ratio(earnings, page_views, scale=1000)
+    result["costPerClick"] = _ratio(earnings, clicks)
+    result["adRequestsCoverage"] = _ratio(matched_requests, ad_requests)
+    # The source does not include a compatible additive denominator for Active View.
+    result["activeViewViewability"] = None
+    return {key: result.get(key) for key in BREAKDOWN_METRIC_KEYS.values()}
+
+
+def _period_dates(period):
+    start = date.fromisoformat(period["start"])
+    return {
+        (start + timedelta(days=offset)).isoformat()
+        for offset in range(period["days"])
+    }
+
+
+def _period_dimension_summary(report, dimension_key, period, *, limit, country=False):
+    source_status = report["status"]
+    period_dates = _period_dates(period)
+    if source_status in {"NOT_AVAILABLE", "UNSUPPORTED_COMBINATION"}:
+        return {
+            "status": source_status,
+            "observedRowCount": 0,
+            "observedCategoryCount": 0,
+            "retainedRowCount": 0,
+            "unassignedDimensionRowCount": 0,
+            "omittedReturnedCountryCount" if country else "omittedReturnedCategoryCount": 0,
+            "rankingMetric": None,
+            "rankingRule": None,
+            "rows": [],
+        }
+
+    grouped = {}
+    unassigned_rows = 0
+    observed_count = 0
+    for row in report["rows"]:
+        if row.get("date") not in period_dates:
+            continue
+        observed_count += 1
+        label = row.get(dimension_key)
+        if not isinstance(label, str) or not label:
+            unassigned_rows += 1
+            continue
+        grouped.setdefault(label, []).append(row)
+
+    summaries = [
+        {dimension_key: label, "metrics": _summary_metrics(rows)}
+        for label, rows in grouped.items()
+    ]
+    if summaries and all(row["metrics"]["estimatedEarnings"] is not None for row in summaries):
+        ranking_metric = "estimatedEarnings"
+        ranking_rule = "estimatedEarnings DESC, pageViews DESC, dimension ASC"
+        summaries.sort(key=lambda row: (
+            -row["metrics"]["estimatedEarnings"],
+            -(row["metrics"]["pageViews"] if row["metrics"]["pageViews"] is not None else -1),
+            row[dimension_key].casefold(),
+            row[dimension_key],
+        ))
+    elif summaries and all(row["metrics"]["pageViews"] is not None for row in summaries):
+        ranking_metric = "pageViews"
+        ranking_rule = "pageViews DESC, dimension ASC; earnings unavailable"
+        summaries.sort(key=lambda row: (
+            -row["metrics"]["pageViews"], row[dimension_key].casefold(), row[dimension_key]
+        ))
+    else:
+        ranking_metric = None
+        ranking_rule = "dimension ASC; earnings and page views are not fully available"
+        summaries.sort(key=lambda row: (row[dimension_key].casefold(), row[dimension_key]))
+
+    omitted = max(0, len(summaries) - limit)
+    retained = summaries[:limit]
+    status = "NOT_AVAILABLE" if source_status == "COMPLETE" and observed_count == 0 else source_status
+    if status == "COMPLETE" and (omitted or unassigned_rows):
+        status = "PARTIAL"
+    result = {
+        "status": status,
+        "observedRowCount": observed_count,
+        "observedCategoryCount": len(grouped),
+        "unassignedDimensionRowCount": unassigned_rows,
+        "retainedRowCount": len(retained),
+        "omittedReturnedCountryCount" if country else "omittedReturnedCategoryCount": omitted,
+        "rankingMetric": ranking_metric,
+        "rankingRule": ranking_rule,
+        "rows": retained,
+    }
+    if country:
+        result.update({
+            "topN": limit,
+            "omittedMeans": "NOT_ZERO",
+            "coverageCaveat": (
+                "Only the top 20 countries among returned rows for this period are retained. "
+                "Omitted countries are unknown, are not aggregated into other, and must not be read as zero."
+            ),
+        })
+    return result
+
+
+def build_diagnostics_snapshot(raw_snapshot):
+    """Build a bounded, tracked summary without retaining raw dimensional rows."""
+    validate_breakdown_snapshot(raw_snapshot)
+    if raw_snapshot["range"].get("days") != DIAGNOSTICS_DAILY_ROW_LIMIT:
+        raise CollectorError("Tracked AdSense diagnostics require exactly 14 complete reporting dates.")
+
+    daily_source = raw_snapshot["daily"]
+    daily_rows = sorted(daily_source["rows"], key=lambda row: row["date"])
+    daily = {
+        "status": daily_source["status"],
+        "expectedRowCount": DIAGNOSTICS_DAILY_ROW_LIMIT,
+        "rowCount": daily_source["rowCount"],
+        "totalMatchedRows": daily_source["totalMatchedRows"],
+        "truncationStatus": daily_source["truncationStatus"],
+        "missingDates": list(daily_source.get("missingDates", [])),
+        "warnings": list(daily_source["warnings"]),
+        "rows": daily_rows,
+    }
+
+    breakdowns = {}
+    for name, dimensions in BREAKDOWN_DIMENSIONS.items():
+        source_report = raw_snapshot["breakdowns"][name]
+        dimension_key = BREAKDOWN_DIMENSION_KEYS[dimensions[1]]
+        country = name == "country"
+        limit = DIAGNOSTICS_COUNTRY_TOP_N if country else DIAGNOSTICS_CATEGORY_LIMIT
+        periods = {
+            label: _period_dimension_summary(
+                source_report,
+                dimension_key,
+                raw_snapshot[f"{label}Period"],
+                limit=limit,
+                country=country,
+            )
+            for label in ("prior", "current")
+        }
+        breakdowns[name] = {
+            "dimension": dimension_key,
+            "dimensions": list(source_report["dimensions"]),
+            "sourceStatus": source_report["status"],
+            "rowCount": source_report["rowCount"],
+            "totalMatchedRows": source_report["totalMatchedRows"],
+            "truncationStatus": source_report["truncationStatus"],
+            "warnings": list(source_report["warnings"]),
+            "periods": periods,
+        }
+
+    triple_report = raw_snapshot["breakdowns"]["platformTypeAdFormat"]
+    breakdowns["platformTypeAdFormat"] = {
+        "dimensions": list(triple_report["dimensions"]),
+        "sourceStatus": triple_report["status"],
+        "availabilityReason": triple_report.get("availabilityReason"),
+        "rowCount": triple_report["rowCount"],
+        "totalMatchedRows": triple_report["totalMatchedRows"],
+        "truncationStatus": triple_report["truncationStatus"],
+        "warnings": list(triple_report["warnings"]),
+        "rows": [],
+    }
+
+    caveats = [
+        "Active View viewability is NOT_AVAILABLE for period summaries because the source does not provide a compatible additive denominator.",
+        "An absent dimension-period summary is NOT_AVAILABLE, not zero. Country/category omissions are not an other bucket and are not zero.",
+    ]
+    return {
+        "schemaVersion": 1,
+        "source": raw_snapshot["source"],
+        "generatedAt": raw_snapshot["generatedAt"],
+        "account": dict(raw_snapshot["account"]),
+        "site": raw_snapshot["site"],
+        "currency": raw_snapshot["currency"],
+        "currencyStatus": raw_snapshot["currencyStatus"],
+        "reportingTimeZone": dict(raw_snapshot["reportingTimeZone"]),
+        "currentPeriod": dict(raw_snapshot["currentPeriod"]),
+        "priorPeriod": dict(raw_snapshot["priorPeriod"]),
+        "range": dict(raw_snapshot["range"]),
+        "metrics": list(BREAKDOWN_METRICS),
+        "completeness": {
+            "daily": daily["status"],
+            "breakdowns": {name: report["sourceStatus"] for name, report in breakdowns.items()},
+        },
+        "daily": daily,
+        "breakdowns": breakdowns,
+        "aggregationMethods": {
+            "additiveMetrics": [BREAKDOWN_METRIC_KEYS[metric] for metric in sorted(BREAKDOWN_ADDITIVE_METRICS)],
+            "pageViewsRPM": "estimatedEarnings / pageViews * 1000",
+            "costPerClick": "estimatedEarnings / clicks",
+            "adRequestsCoverage": "matchedAdRequests / adRequests",
+            "activeViewViewability": "NOT_AGGREGATED_NON_ADDITIVE",
+        },
+        "rowCounts": dict(raw_snapshot["rowCounts"]),
+        "warnings": list(raw_snapshot["warnings"]),
+        "caveats": caveats,
+        "storage": {
+            "trackedPath": "data/performance/adsense-diagnostics-latest.json",
+            "maxTrackedBytes": MAX_DIAGNOSTICS_BYTES,
+            "rawBreakdown": {
+                "location": "GITHUB_ACTIONS_ARTIFACT_ONLY",
+                "retentionDays": 7,
+                "trackedInGit": False,
+                "includedInPagesPayload": False,
+            },
+        },
+    }
+
+
+def _validate_diagnostics_number(value):
+    if value is not None and (isinstance(value, bool) or not isinstance(value, (int, float))):
+        raise CollectorError("AdSense diagnostics metrics must be numeric or null.")
+    if isinstance(value, float) and not math.isfinite(value):
+        raise CollectorError("AdSense diagnostics metrics must be finite.")
+
+
+def validate_diagnostics_snapshot(snapshot, *, serialized_size=None):
+    if not isinstance(snapshot, dict) or snapshot.get("schemaVersion") != 1:
+        raise CollectorError("AdSense diagnostics schemaVersion must be 1.")
+    if snapshot.get("source") != "DIRECT_ADSENSE_MANAGEMENT_API_V2":
+        raise CollectorError("AdSense diagnostics source is invalid.")
+    if not isinstance(snapshot.get("generatedAt"), str) or not snapshot["generatedAt"]:
+        raise CollectorError("AdSense diagnostics generatedAt is required.")
+    if not str((snapshot.get("account") or {}).get("name") or "").startswith("accounts/pub-"):
+        raise CollectorError("AdSense diagnostics account resource name is invalid.")
+    if snapshot.get("site") != SITE_DOMAIN:
+        raise CollectorError("AdSense diagnostics site is invalid.")
+    timezone_info = snapshot.get("reportingTimeZone") or {}
+    if timezone_info.get("mode") != "ACCOUNT_TIME_ZONE" or not timezone_info.get("id"):
+        raise CollectorError("AdSense diagnostics reporting timezone is invalid.")
+    try:
+        ZoneInfo(timezone_info["id"])
+    except (ZoneInfoNotFoundError, TypeError, ValueError):
+        raise CollectorError("AdSense diagnostics reporting timezone is invalid.") from None
+    if snapshot.get("currency") is not None and not isinstance(snapshot["currency"], str):
+        raise CollectorError("AdSense diagnostics currency must be a code or null.")
+    if snapshot.get("currencyStatus") not in {"VERIFIED", "PARTIAL", "NOT_AVAILABLE"}:
+        raise CollectorError("AdSense diagnostics currency status is invalid.")
+    if snapshot["currencyStatus"] == "VERIFIED" and not snapshot.get("currency"):
+        raise CollectorError("Verified AdSense diagnostics currency is required.")
+    if snapshot["currencyStatus"] == "NOT_AVAILABLE" and snapshot.get("currency") is not None:
+        raise CollectorError("Unavailable AdSense diagnostics currency cannot contain a value.")
+    if snapshot.get("metrics") != list(BREAKDOWN_METRICS):
+        raise CollectorError("AdSense diagnostics metric metadata is invalid.")
+
+    periods = {name: snapshot.get(f"{name}Period") or {} for name in ("current", "prior")}
+    for period in periods.values():
+        try:
+            start = date.fromisoformat(period["start"])
+            end = date.fromisoformat(period["end"])
+            days = int(period["days"])
+        except (KeyError, TypeError, ValueError):
+            raise CollectorError("AdSense diagnostics period metadata is invalid.") from None
+        if period.get("inclusive") is not True or end < start or (end - start).days + 1 != days or days != 7:
+            raise CollectorError("AdSense diagnostics must contain two inclusive seven-day periods.")
+    if date.fromisoformat(periods["prior"]["end"]) + timedelta(days=1) != date.fromisoformat(periods["current"]["start"]):
+        raise CollectorError("AdSense diagnostics periods must be adjacent.")
+    expected_range = {
+        "start": periods["prior"]["start"],
+        "end": periods["current"]["end"],
+        "days": DIAGNOSTICS_DAILY_ROW_LIMIT,
+        "inclusive": True,
+    }
+    if snapshot.get("range") != expected_range:
+        raise CollectorError("AdSense diagnostics date range is invalid.")
+
+    daily = snapshot.get("daily")
+    if not isinstance(daily, dict) or daily.get("expectedRowCount") != DIAGNOSTICS_DAILY_ROW_LIMIT:
+        raise CollectorError("AdSense diagnostics must expect exactly 14 daily rows.")
+    rows = daily.get("rows")
+    if not isinstance(rows, list) or len(rows) > DIAGNOSTICS_DAILY_ROW_LIMIT or daily.get("rowCount") != len(rows):
+        raise CollectorError("AdSense diagnostics daily row count is invalid or exceeds 14.")
+    if daily.get("status") not in BREAKDOWN_REPORT_STATUSES:
+        raise CollectorError("AdSense diagnostics daily completeness status is invalid.")
+    expected_dates = _period_dates(expected_range)
+    seen_dates = set()
+    for row in rows:
+        if not isinstance(row, dict) or set(BREAKDOWN_METRIC_KEYS.values()) - set(row):
+            raise CollectorError("AdSense diagnostics daily row is missing required metrics.")
+        try:
+            row_date = date.fromisoformat(row.get("date"))
+        except (TypeError, ValueError):
+            raise CollectorError("AdSense diagnostics daily date is invalid.") from None
+        if row_date.isoformat() not in expected_dates or row_date.isoformat() in seen_dates:
+            raise CollectorError("AdSense diagnostics daily dates are outside range or duplicated.")
+        seen_dates.add(row_date.isoformat())
+        for key in BREAKDOWN_METRIC_KEYS.values():
+            _validate_diagnostics_number(row[key])
+    if rows and [row["date"] for row in rows] != sorted(row["date"] for row in rows):
+        raise CollectorError("AdSense diagnostics daily rows must be date-ordered.")
+    missing_dates = sorted(expected_dates - seen_dates)
+    if daily.get("missingDates") != missing_dates:
+        raise CollectorError("AdSense diagnostics missing dates are invalid.")
+    if daily.get("status") == "COMPLETE" and missing_dates:
+        raise CollectorError("Complete AdSense diagnostics cannot contain missing daily dates.")
+    if not isinstance(daily.get("warnings"), list) or any(not isinstance(item, str) for item in daily["warnings"]):
+        raise CollectorError("AdSense diagnostics daily warnings are invalid.")
+    if daily.get("truncationStatus") not in {"NOT_TRUNCATED", "TRUNCATED", "NOT_AVAILABLE"}:
+        raise CollectorError("AdSense diagnostics daily truncation status is invalid.")
+    matched_daily_rows = daily.get("totalMatchedRows")
+    if matched_daily_rows is not None and (type(matched_daily_rows) is not int or matched_daily_rows < len(rows)):
+        raise CollectorError("AdSense diagnostics daily matched row count is invalid.")
+    if daily.get("status") == "COMPLETE" and (
+        missing_dates
+        or daily["warnings"]
+        or daily["truncationStatus"] != "NOT_TRUNCATED"
+        or matched_daily_rows != len(rows)
+        or any(row[key] is None for row in rows for key in BREAKDOWN_METRIC_KEYS.values())
+    ):
+        raise CollectorError("Complete AdSense diagnostics cannot contain missing metrics or incomplete rows.")
+
+    breakdowns = snapshot.get("breakdowns")
+    expected_names = {*BREAKDOWN_DIMENSIONS, "platformTypeAdFormat"}
+    if not isinstance(breakdowns, dict) or set(breakdowns) != expected_names:
+        raise CollectorError("AdSense diagnostics breakdown set is invalid.")
+    for name, dimensions in BREAKDOWN_DIMENSIONS.items():
+        report = breakdowns[name]
+        dimension_key = BREAKDOWN_DIMENSION_KEYS[dimensions[1]]
+        country = name == "country"
+        row_limit = DIAGNOSTICS_COUNTRY_TOP_N if country else DIAGNOSTICS_CATEGORY_LIMIT
+        if not isinstance(report, dict) or report.get("dimension") != dimension_key or report.get("dimensions") != list(dimensions):
+            raise CollectorError("AdSense diagnostics breakdown dimension metadata is invalid.")
+        if report.get("sourceStatus") not in BREAKDOWN_REPORT_STATUSES:
+            raise CollectorError("AdSense diagnostics breakdown status is invalid.")
+        if type(report.get("rowCount")) is not int or report["rowCount"] < 0 or report["rowCount"] > BREAKDOWN_ROW_LIMIT:
+            raise CollectorError("AdSense diagnostics raw row count is invalid.")
+        matched_rows = report.get("totalMatchedRows")
+        if matched_rows is not None and (type(matched_rows) is not int or matched_rows < report["rowCount"]):
+            raise CollectorError("AdSense diagnostics matched row count is invalid.")
+        if report.get("truncationStatus") not in {"NOT_TRUNCATED", "TRUNCATED", "NOT_AVAILABLE"}:
+            raise CollectorError("AdSense diagnostics truncation status is invalid.")
+        if not isinstance(report.get("warnings"), list) or any(not isinstance(item, str) for item in report["warnings"]):
+            raise CollectorError("AdSense diagnostics breakdown warnings are invalid.")
+        if report["sourceStatus"] == "COMPLETE" and (
+            report["rowCount"] == 0
+            or matched_rows != report["rowCount"]
+            or report["truncationStatus"] != "NOT_TRUNCATED"
+            or report["warnings"]
+        ):
+            raise CollectorError("Complete AdSense diagnostics breakdown metadata is inconsistent.")
+        period_summaries = report.get("periods")
+        if not isinstance(period_summaries, dict) or set(period_summaries) != {"current", "prior"}:
+            raise CollectorError("AdSense diagnostics breakdown periods are invalid.")
+        for period_name, summary in period_summaries.items():
+            if not isinstance(summary, dict) or summary.get("status") not in BREAKDOWN_REPORT_STATUSES:
+                raise CollectorError("AdSense diagnostics period completeness is invalid.")
+            summary_rows = summary.get("rows")
+            if not isinstance(summary_rows, list) or len(summary_rows) > row_limit:
+                raise CollectorError("AdSense diagnostics summary exceeds its bounded row limit.")
+            expected_top_n = DIAGNOSTICS_COUNTRY_TOP_N if country else None
+            if country and (summary.get("topN") != expected_top_n or summary.get("omittedMeans") != "NOT_ZERO"):
+                raise CollectorError("AdSense country top-N omission semantics are invalid.")
+            observed_categories = summary.get("observedCategoryCount")
+            retained_count = summary.get("retainedRowCount")
+            omitted_key = "omittedReturnedCountryCount" if country else "omittedReturnedCategoryCount"
+            omitted_count = summary.get(omitted_key)
+            unassigned_count = summary.get("unassignedDimensionRowCount")
+            if any(type(value) is not int or value < 0 for value in (observed_categories, retained_count, omitted_count, unassigned_count)):
+                raise CollectorError("AdSense diagnostics summary row counts are invalid.")
+            if retained_count != len(summary_rows) or observed_categories != retained_count + omitted_count:
+                raise CollectorError("AdSense diagnostics summary counts do not match retained and omitted categories.")
+            if summary.get("observedRowCount") is None or type(summary["observedRowCount"]) is not int or summary["observedRowCount"] < unassigned_count:
+                raise CollectorError("AdSense diagnostics observed row count is invalid.")
+            if summary.get("rankingMetric") not in {None, "estimatedEarnings", "pageViews"}:
+                raise CollectorError("AdSense diagnostics ranking metric is invalid.")
+            if summary.get("rankingRule") is not None and not isinstance(summary["rankingRule"], str):
+                raise CollectorError("AdSense diagnostics ranking rule is invalid.")
+            if summary.get("status") == "COMPLETE" and (
+                summary.get("observedRowCount") == 0
+                or omitted_count != 0
+                or unassigned_count != 0
+            ):
+                raise CollectorError("Complete AdSense dimension summaries cannot omit or lack source rows.")
+            if report["sourceStatus"] == "COMPLETE" and summary.get("observedRowCount") == 0 and summary.get("status") != "NOT_AVAILABLE":
+                raise CollectorError("An absent complete-source dimension period must be NOT_AVAILABLE.")
+            if report["sourceStatus"] in {"NOT_AVAILABLE", "UNSUPPORTED_COMBINATION"} and (
+                summary.get("status") != report["sourceStatus"] or summary_rows
+            ):
+                raise CollectorError("Unavailable AdSense dimension periods cannot contain fabricated rows.")
+            seen_labels = set()
+            for row in summary_rows:
+                if not isinstance(row, dict) or not isinstance(row.get(dimension_key), str) or not row[dimension_key]:
+                    raise CollectorError("AdSense diagnostics summary dimension value is invalid.")
+                if row[dimension_key] in seen_labels:
+                    raise CollectorError("AdSense diagnostics summary has duplicate dimension values.")
+                seen_labels.add(row[dimension_key])
+                metrics = row.get("metrics")
+                if not isinstance(metrics, dict) or set(BREAKDOWN_METRIC_KEYS.values()) - set(metrics):
+                    raise CollectorError("AdSense diagnostics summary metrics are incomplete.")
+                for key in BREAKDOWN_METRIC_KEYS.values():
+                    _validate_diagnostics_number(metrics[key])
+
+    triple = breakdowns["platformTypeAdFormat"]
+    if (
+        not isinstance(triple, dict)
+        or triple.get("dimensions") != ["DATE", "PLATFORM_TYPE_NAME", "AD_FORMAT_NAME"]
+        or triple.get("sourceStatus") not in BREAKDOWN_REPORT_STATUSES
+        or not isinstance(triple.get("rows"), list)
+        or triple["rows"]
+    ):
+        raise CollectorError("AdSense three-way breakdown availability metadata is invalid.")
+    if not isinstance(snapshot.get("warnings"), list) or any(not isinstance(item, str) for item in snapshot["warnings"]):
+        raise CollectorError("AdSense diagnostics warnings are invalid.")
+    if not isinstance(snapshot.get("caveats"), list) or any(not isinstance(item, str) for item in snapshot["caveats"]):
+        raise CollectorError("AdSense diagnostics caveats are invalid.")
+    if not isinstance(snapshot.get("rowCounts"), dict):
+        raise CollectorError("AdSense diagnostics row counts are invalid.")
+    expected_row_counts = {
+        "daily": daily["rowCount"],
+        **{name: breakdowns[name]["rowCount"] for name in BREAKDOWN_DIMENSIONS},
+        "platformTypeAdFormat": triple["rowCount"],
+    }
+    if snapshot["rowCounts"] != expected_row_counts:
+        raise CollectorError("AdSense diagnostics row counts do not match its report metadata.")
+    if snapshot.get("completeness") != {
+        "daily": daily["status"],
+        "breakdowns": {name: breakdowns[name]["sourceStatus"] for name in expected_names},
+    }:
+        raise CollectorError("AdSense diagnostics completeness metadata is inconsistent.")
+    storage = snapshot.get("storage") or {}
+    if storage.get("trackedPath") != "data/performance/adsense-diagnostics-latest.json" or storage.get("maxTrackedBytes") != MAX_DIAGNOSTICS_BYTES:
+        raise CollectorError("AdSense diagnostics tracked storage contract is invalid.")
+    raw_storage = storage.get("rawBreakdown") or {}
+    if raw_storage != {
+        "location": "GITHUB_ACTIONS_ARTIFACT_ONLY",
+        "retentionDays": 7,
+        "trackedInGit": False,
+        "includedInPagesPayload": False,
+    }:
+        raise CollectorError("AdSense raw breakdown storage contract is invalid.")
+    if serialized_size is not None and serialized_size > MAX_DIAGNOSTICS_BYTES:
+        raise CollectorError("AdSense diagnostics exceed the 256 KiB tracked size limit.")
+    return True
+
+
+def write_diagnostics_snapshot(output, snapshot):
+    validate_diagnostics_snapshot(snapshot)
+    try:
+        serialized = json.dumps(
+            snapshot,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        ).encode("utf-8") + b"\n"
+    except (TypeError, ValueError):
+        raise CollectorError("AdSense diagnostics contain values that cannot be represented as valid JSON.") from None
+    if len(serialized) > MAX_DIAGNOSTICS_BYTES:
+        raise CollectorError("AdSense diagnostics exceed the 256 KiB tracked size limit.")
+    _write_snapshot(output, snapshot)
+    return len(serialized)
+
+
 def validate_snapshot(snapshot):
     if not isinstance(snapshot, dict) or snapshot.get("schemaVersion") != 1:
         raise CollectorError("Snapshot schemaVersion must be 1.")
@@ -1344,7 +1820,8 @@ def _read_snapshot(path):
 def main(argv=None):
     args = build_parser().parse_args(argv)
     try:
-        if args.validate_only and args.validate_breakdown_only:
+        validation_modes = [args.validate_only, args.validate_breakdown_only, args.validate_diagnostics_only]
+        if sum(value is not None for value in validation_modes) > 1:
             raise CollectorError("Choose only one AdSense artifact validation mode.")
         if args.validate_only:
             validate_snapshot(_read_snapshot(args.validate_only))
@@ -1354,6 +1831,31 @@ def main(argv=None):
             validate_breakdown_snapshot(_read_snapshot(args.validate_breakdown_only))
             print("AdSense breakdown schema: PASS")
             return 0
+        if args.validate_diagnostics_only:
+            try:
+                serialized = args.validate_diagnostics_only.read_bytes()
+                diagnostics = json.loads(serialized.decode("utf-8"))
+            except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+                raise CollectorError("Could not read a valid AdSense diagnostics snapshot for validation.") from None
+            validate_diagnostics_snapshot(diagnostics, serialized_size=len(serialized))
+            print(f"AdSense diagnostics schema: PASS ({len(serialized)} bytes)")
+            return 0
+        if args.build_diagnostics_from:
+            if args.diagnostics_output is None:
+                raise CollectorError("--build-diagnostics-from requires --diagnostics-output.")
+            targets = {
+                args.build_diagnostics_from.resolve(),
+                args.diagnostics_output.resolve(),
+                args.output.resolve(),
+            }
+            if len(targets) != 3:
+                raise CollectorError("AdSense raw, diagnostics, and base snapshot paths must be different.")
+            diagnostics = build_diagnostics_snapshot(_read_snapshot(args.build_diagnostics_from))
+            size = write_diagnostics_snapshot(args.diagnostics_output, diagnostics)
+            print(f"AdSense diagnostics written: {size} bytes (limit {MAX_DIAGNOSTICS_BYTES})")
+            return 0
+        if args.diagnostics_output is not None:
+            raise CollectorError("--diagnostics-output requires --build-diagnostics-from.")
         if args.breakdown_output and args.breakdown_output.resolve() == args.output.resolve():
             raise CollectorError("The AdSense snapshot and breakdown outputs must be different files.")
         missing = [

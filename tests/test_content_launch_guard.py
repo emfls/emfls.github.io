@@ -369,8 +369,12 @@ def test_guard_allows_only_the_exact_stage_aware_empty_rows_collector_transition
         ("83595861b3ea484b7fd9ad0c7fb11515f6516692", "2f4890e73ae705c5347b3755c5fb4ef47ca23e2b"),
         ("2f4890e73ae705c5347b3755c5fb4ef47ca23e2b", "7e462d5e1ccedfba022594d98cabf4aa3697ca01"),
         historical_transition,
+        ("085f253a3ba6c98b3318a99d7a03b63c1398f761", "114d91de1a6e22103f7c697c7df229fa2ac1a0ad"),
+        ("7e462d5e1ccedfba022594d98cabf4aa3697ca01", "114d91de1a6e22103f7c697c7df229fa2ac1a0ad"),
         transition,
         base_to_final_transition,
+        ("114d91de1a6e22103f7c697c7df229fa2ac1a0ad", current_blob),
+        ("7e462d5e1ccedfba022594d98cabf4aa3697ca01", current_blob),
     }
     assert validate_launch(tmp_path, manifest([]), [("M", path, *historical_transition)]) == []
     assert validate_launch(tmp_path, manifest([]), [("M", path, *transition)]) == []
@@ -398,7 +402,8 @@ def test_guard_allows_only_the_exact_adsense_workflow_breakdown_transition(tmp_p
     ).stdout.strip()
     transition = ("90f64a3d00d901f9052fc1fe20fc86372c90e014", current_blob)
 
-    assert APPROVED_MONETIZATION_TRANSITIONS[path] == {transition}
+    historical_transition = ("90f64a3d00d901f9052fc1fe20fc86372c90e014", "893889ceac2620250a6752d93aeb66c2a131b136")
+    assert APPROVED_MONETIZATION_TRANSITIONS[path] == {historical_transition, transition}
     assert validate_launch(tmp_path, manifest([]), [("M", path, *transition)]) == []
     assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
         tmp_path, manifest([]), [("M", path, transition[0], "f" * 40)]

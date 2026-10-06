@@ -30,9 +30,13 @@ APPROVED_MONETIZATION_TRANSITIONS = {
         ("7e462d5e1ccedfba022594d98cabf4aa3697ca01", "085f253a3ba6c98b3318a99d7a03b63c1398f761"),
         ("085f253a3ba6c98b3318a99d7a03b63c1398f761", "114d91de1a6e22103f7c697c7df229fa2ac1a0ad"),
         ("7e462d5e1ccedfba022594d98cabf4aa3697ca01", "114d91de1a6e22103f7c697c7df229fa2ac1a0ad"),
+        ("085f253a3ba6c98b3318a99d7a03b63c1398f761", "d387a34a2fd020b3f64e3ee6fe9e90c744d1fb3f"),
+        ("114d91de1a6e22103f7c697c7df229fa2ac1a0ad", "d387a34a2fd020b3f64e3ee6fe9e90c744d1fb3f"),
+        ("7e462d5e1ccedfba022594d98cabf4aa3697ca01", "d387a34a2fd020b3f64e3ee6fe9e90c744d1fb3f"),
     },
     ".github/workflows/adsense-collection.yml": {
         ("90f64a3d00d901f9052fc1fe20fc86372c90e014", "893889ceac2620250a6752d93aeb66c2a131b136"),
+        ("90f64a3d00d901f9052fc1fe20fc86372c90e014", "791cae6496af09dd8ad32e4893e25736e5e02157"),
     },
 }
 APPROVED_JP_TRAVEL_CANARY_DELETIONS = {

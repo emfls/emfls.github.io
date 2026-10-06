@@ -34,20 +34,36 @@ jobs:
 
       # The refresh token must be issued for https://www.googleapis.com/auth/adsense.readonly.
       - name: Collect direct AdSense latest snapshot
-        run: python3 scripts/collect_adsense_snapshot.py --output data/performance/adsense-latest.json --breakdown-output data/performance/adsense-breakdown-latest.json --days 7
+        run: python3 scripts/collect_adsense_snapshot.py --output data/performance/adsense-latest.json --breakdown-output "$RUNNER_TEMP/adsense-breakdown-latest.json" --days 7
 
       - name: Validate direct AdSense snapshot
         run: python3 scripts/collect_adsense_snapshot.py --validate-only data/performance/adsense-latest.json
 
       - name: Validate direct AdSense breakdown snapshot
-        run: python3 scripts/collect_adsense_snapshot.py --validate-breakdown-only data/performance/adsense-breakdown-latest.json
+        run: python3 scripts/collect_adsense_snapshot.py --validate-breakdown-only "$RUNNER_TEMP/adsense-breakdown-latest.json"
+
+      - name: Build compact AdSense diagnostics
+        run: python3 scripts/collect_adsense_snapshot.py --build-diagnostics-from "$RUNNER_TEMP/adsense-breakdown-latest.json" --diagnostics-output data/performance/adsense-diagnostics-latest.json
+
+      - name: Validate compact AdSense diagnostics
+        run: python3 scripts/collect_adsense_snapshot.py --validate-diagnostics-only data/performance/adsense-diagnostics-latest.json
+
+      # Preserve the full raw rows for diagnosis even if compact validation or the tracked size guard fails.
+      - name: Upload raw AdSense breakdown
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: adsense-breakdown-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/adsense-breakdown-latest.json
+          if-no-files-found: warn
+          retention-days: 7
 
       - name: Commit refreshed AdSense snapshot
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git diff --check
-          git add data/performance/adsense-latest.json data/performance/adsense-breakdown-latest.json
+          git add data/performance/adsense-latest.json data/performance/adsense-diagnostics-latest.json
+          git diff --cached --check
           if ! git diff --staged --quiet; then
             git commit -m "chore: refresh direct AdSense latest snapshot"
             git push

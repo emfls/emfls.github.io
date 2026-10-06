@@ -1,3 +1,5 @@
+import re
+import shlex
 import subprocess
 import sys
 import unittest
@@ -200,10 +202,27 @@ class AdSenseCollectorCommandTest(unittest.TestCase):
             "group: site-measurement-collection",
             "queue: max",
             "--validate-only data/performance/adsense-latest.json",
-            "--breakdown-output data/performance/adsense-breakdown-latest.json",
-            "--validate-breakdown-only data/performance/adsense-breakdown-latest.json",
+            '--breakdown-output "$RUNNER_TEMP/adsense-breakdown-latest.json"',
+            '--validate-breakdown-only "$RUNNER_TEMP/adsense-breakdown-latest.json"',
+            '--build-diagnostics-from "$RUNNER_TEMP/adsense-breakdown-latest.json"',
+            "--diagnostics-output data/performance/adsense-diagnostics-latest.json",
+            "--validate-diagnostics-only data/performance/adsense-diagnostics-latest.json",
+            "actions/upload-artifact@v4",
+            "retention-days: 7",
         ):
             self.assertIn(required, workflow)
+        ordered_steps = (
+            "- name: Collect direct AdSense latest snapshot",
+            "- name: Validate direct AdSense snapshot",
+            "- name: Validate direct AdSense breakdown snapshot",
+            "- name: Build compact AdSense diagnostics",
+            "- name: Validate compact AdSense diagnostics",
+            "- name: Upload raw AdSense breakdown",
+            "- name: Commit refreshed AdSense snapshot",
+        )
+        positions = [workflow.index(step) for step in ordered_steps]
+        self.assertEqual(positions, sorted(positions))
+        self.assertIn("${{ github.run_id }}-${{ github.run_attempt }}", workflow)
         self.assertNotIn("GOOGLE_APPLICATION_CREDENTIALS", workflow)
 
     def test_measurement_workflows_share_the_non_dropping_max_queue(self):
@@ -220,8 +239,9 @@ class AdSenseCollectorCommandTest(unittest.TestCase):
         staged_line = next(line.strip() for line in workflow.splitlines() if line.strip().startswith("git add "))
         self.assertEqual(
             staged_line,
-            "git add data/performance/adsense-latest.json data/performance/adsense-breakdown-latest.json",
+            "git add data/performance/adsense-latest.json data/performance/adsense-diagnostics-latest.json",
         )
+        self.assertNotIn("data/performance/adsense-breakdown-latest.json", workflow)
         for derived_artifact in (
             "data/page-performance.json",
             "data/revenue-opportunities.json",
@@ -1349,3 +1369,315 @@ class AdSenseBreakdownSnapshotTest(TestCase):
         ]
         self.assertTrue(all(query["metrics"] == list(BREAKDOWN_METRICS_FIXTURE) for query in breakdown_queries))
         self.assertTrue(all(query["limit"] == ["4000"] for query in breakdown_queries))
+
+
+class AdSenseDiagnosticsSnapshotTest(TestCase):
+    def build_raw(self):
+        return AdSenseBreakdownSnapshotTest().build()
+
+    def test_diagnostics_keep_daily_rows_and_source_metadata_with_a_fourteen_day_bound(self):
+        raw = self.build_raw()
+
+        diagnostics = collector.build_diagnostics_snapshot(raw)
+
+        self.assertEqual(diagnostics["schemaVersion"], 1)
+        self.assertEqual(diagnostics["source"], raw["source"])
+        self.assertEqual(diagnostics["generatedAt"], raw["generatedAt"])
+        self.assertEqual(diagnostics["reportingTimeZone"], {"mode": "ACCOUNT_TIME_ZONE", "id": "Asia/Seoul"})
+        self.assertEqual(diagnostics["currency"], "USD")
+        self.assertEqual(diagnostics["currentPeriod"], raw["currentPeriod"])
+        self.assertEqual(diagnostics["priorPeriod"], raw["priorPeriod"])
+        self.assertEqual(diagnostics["daily"]["expectedRowCount"], 14)
+        self.assertEqual(len(diagnostics["daily"]["rows"]), 14)
+        self.assertEqual(diagnostics["daily"]["rows"][-1]["date"], "2026-10-04")
+        self.assertEqual(diagnostics["daily"]["rows"][-1]["estimatedEarnings"], 18.5)
+        self.assertEqual(diagnostics["daily"]["rows"][-1]["activeViewViewability"], 0.62)
+        self.assertTrue(collector.validate_diagnostics_snapshot(diagnostics))
+
+    def test_dimension_summaries_sum_additive_metrics_and_recompute_ratios(self):
+        diagnostics = collector.build_diagnostics_snapshot(self.build_raw())
+        current = diagnostics["breakdowns"]["platformType"]["periods"]["current"]["rows"][0]
+
+        self.assertEqual(current["platformType"], "Desktop")
+        self.assertEqual(current["metrics"]["estimatedEarnings"], 18.5)
+        self.assertEqual(current["metrics"]["pageViews"], 1000)
+        self.assertEqual(current["metrics"]["impressions"], 2000)
+        self.assertEqual(current["metrics"]["clicks"], 10)
+        self.assertEqual(current["metrics"]["adRequests"], 2500)
+        self.assertEqual(current["metrics"]["matchedAdRequests"], 2200)
+        self.assertEqual(current["metrics"]["pageViewsRPM"], 18.5)
+        self.assertEqual(current["metrics"]["costPerClick"], 1.85)
+        self.assertEqual(current["metrics"]["adRequestsCoverage"], 0.88)
+        self.assertIsNone(current["metrics"]["activeViewViewability"])
+
+    def test_missing_metrics_stay_null_and_explicit_zero_stays_zero_in_diagnostics(self):
+        raw = self.build_raw()
+        daily = raw["daily"]
+        daily["rows"][0]["estimatedEarnings"] = None
+        daily["rows"][1]["estimatedEarnings"] = 0
+        daily["status"] = "PARTIAL"
+        daily["warnings"] = ["one daily earnings value unavailable"]
+        raw["coverageStatus"] = "PARTIAL"
+        raw["warnings"].append("one daily earnings value unavailable")
+
+        diagnostics = collector.build_diagnostics_snapshot(raw)
+
+        self.assertIsNone(diagnostics["daily"]["rows"][0]["estimatedEarnings"])
+        self.assertEqual(diagnostics["daily"]["rows"][1]["estimatedEarnings"], 0)
+        self.assertEqual(diagnostics["daily"]["status"], "PARTIAL")
+        self.assertIn("one daily earnings value unavailable", diagnostics["daily"]["warnings"])
+
+    def test_diagnostics_validator_rejects_missing_metrics_claimed_as_complete(self):
+        diagnostics = collector.build_diagnostics_snapshot(self.build_raw())
+        diagnostics["daily"]["rows"][0]["estimatedEarnings"] = None
+
+        with self.assertRaisesRegex(collector.CollectorError, "Complete AdSense diagnostics.*missing metrics"):
+            collector.validate_diagnostics_snapshot(diagnostics)
+
+    def test_missing_day_stays_absent_and_partial_in_compact_diagnostics(self):
+        raw = self.build_raw()
+        daily = raw["daily"]
+        missing_date = daily["rows"].pop()["date"]
+        daily["rowCount"] -= 1
+        daily["totalMatchedRows"] -= 1
+        daily["missingDates"] = [missing_date]
+        daily["status"] = "PARTIAL"
+        raw["rowCounts"]["daily"] -= 1
+        raw["coverageStatus"] = "PARTIAL"
+
+        diagnostics = collector.build_diagnostics_snapshot(raw)
+
+        self.assertEqual(diagnostics["daily"]["expectedRowCount"], 14)
+        self.assertEqual(diagnostics["daily"]["rowCount"], 13)
+        self.assertEqual(diagnostics["daily"]["missingDates"], [missing_date])
+        self.assertNotIn(missing_date, [row["date"] for row in diagnostics["daily"]["rows"]])
+        self.assertEqual(diagnostics["daily"]["status"], "PARTIAL")
+
+    def test_partial_breakdown_warnings_and_truncation_survive_compaction(self):
+        raw = self.build_raw()
+        country = raw["breakdowns"]["country"]
+        country["status"] = "PARTIAL"
+        country["totalMatchedRows"] = country["rowCount"] + 5
+        country["truncationStatus"] = "TRUNCATED"
+        country["warnings"] = ["country rows truncated"]
+        raw["warnings"].append("country rows truncated")
+
+        diagnostics = collector.build_diagnostics_snapshot(raw)
+        country_summary = diagnostics["breakdowns"]["country"]
+
+        self.assertEqual(country_summary["sourceStatus"], "PARTIAL")
+        self.assertEqual(country_summary["totalMatchedRows"], country["totalMatchedRows"])
+        self.assertEqual(country_summary["truncationStatus"], "TRUNCATED")
+        self.assertEqual(country_summary["warnings"], ["country rows truncated"])
+        self.assertEqual(country_summary["periods"]["current"]["status"], "PARTIAL")
+
+    def test_unverified_three_way_combination_remains_unavailable_not_empty_complete(self):
+        diagnostics = collector.build_diagnostics_snapshot(self.build_raw())
+
+        triple = diagnostics["breakdowns"]["platformTypeAdFormat"]
+        self.assertEqual(triple["sourceStatus"], "NOT_AVAILABLE")
+        self.assertEqual(triple["availabilityReason"], "NOT_PROBED_ACTUAL_API_COMPATIBILITY")
+        self.assertEqual(triple["rows"], [])
+
+    def _country_report_with_rows(self, raw, rows, *, status="COMPLETE", warnings=None):
+        report = raw["breakdowns"]["country"]
+        report["rows"] = rows
+        report["rowCount"] = len(rows)
+        report["totalMatchedRows"] = len(rows)
+        report["truncationStatus"] = "NOT_TRUNCATED"
+        report["status"] = status
+        report["warnings"] = list(warnings or [])
+        raw["rowCounts"]["country"] = len(rows)
+
+    def test_country_top_twenty_uses_deterministic_earnings_ties_and_marks_omissions_unknown(self):
+        raw = self.build_raw()
+        daily_rows = raw["daily"]["rows"]
+        rows = []
+        for index in range(1, 22):
+            country = f"Country {index:02d}"
+            for daily in daily_rows:
+                row = {"date": daily["date"], "country": country}
+                row.update({key: 0 for key in collector.BREAKDOWN_METRIC_KEYS.values()})
+                if daily["date"] in {"2026-09-27", "2026-10-04"}:
+                    earnings = 2 if index == 21 else 1
+                    views = 1 if index == 21 else 11 if index == 1 else 10
+                    row.update({
+                        "estimatedEarnings": earnings,
+                        "pageViews": views,
+                        "pageViewsRPM": earnings / views * 1000,
+                        "impressions": 20,
+                        "clicks": 1,
+                        "costPerClick": earnings,
+                        "adRequests": 20,
+                        "matchedAdRequests": 10,
+                        "adRequestsCoverage": 0.5,
+                        "activeViewViewability": 0.5,
+                    })
+                rows.append(row)
+        self._country_report_with_rows(raw, rows)
+
+        diagnostics = collector.build_diagnostics_snapshot(raw)
+        current = diagnostics["breakdowns"]["country"]["periods"]["current"]
+
+        self.assertEqual(current["topN"], 20)
+        self.assertEqual(current["rankingMetric"], "estimatedEarnings")
+        self.assertEqual([row["country"] for row in current["rows"]], [
+            "Country 21", "Country 01", *[f"Country {index:02d}" for index in range(2, 20)],
+        ])
+        self.assertEqual(current["omittedReturnedCountryCount"], 1)
+        self.assertEqual(current["omittedMeans"], "NOT_ZERO")
+        self.assertEqual(current["observedCategoryCount"], 21)
+        self.assertEqual(current["rankingRule"], "estimatedEarnings DESC, pageViews DESC, dimension ASC")
+        self.assertNotIn("other", [row["country"] for row in current["rows"]])
+
+    def test_country_ranking_falls_back_to_page_views_if_earnings_are_unavailable(self):
+        raw = self.build_raw()
+        daily_rows = raw["daily"]["rows"]
+        rows = []
+        for country, earnings, views in (("A", None, 50), ("B", None, 100), ("C", None, 100)):
+            for daily in daily_rows:
+                row = {"date": daily["date"], "country": country}
+                row.update({key: 0 for key in collector.BREAKDOWN_METRIC_KEYS.values()})
+                row["estimatedEarnings"] = earnings
+                if daily["date"] == "2026-10-04":
+                    row["pageViews"] = views
+                rows.append(row)
+        self._country_report_with_rows(raw, rows, status="PARTIAL", warnings=["earnings unavailable"])
+
+        diagnostics = collector.build_diagnostics_snapshot(raw)
+        current = diagnostics["breakdowns"]["country"]["periods"]["current"]
+
+        self.assertEqual(current["rankingMetric"], "pageViews")
+        self.assertEqual([row["country"] for row in current["rows"]], ["B", "C", "A"])
+
+    def test_absent_period_dimension_is_not_filled_with_zero(self):
+        raw = self.build_raw()
+        platform = raw["breakdowns"]["platformType"]
+        platform["rows"] = [row for row in platform["rows"] if row["date"] >= "2026-09-28"]
+        platform["rowCount"] = len(platform["rows"])
+        platform["totalMatchedRows"] = platform["rowCount"]
+        raw["rowCounts"]["platformType"] = platform["rowCount"]
+
+        diagnostics = collector.build_diagnostics_snapshot(raw)
+
+        prior = diagnostics["breakdowns"]["platformType"]["periods"]["prior"]
+        self.assertEqual(prior["status"], "NOT_AVAILABLE")
+        self.assertEqual(prior["rows"], [])
+
+    def test_diagnostics_writer_rejects_output_over_the_hard_tracked_size_limit(self):
+        diagnostics = collector.build_diagnostics_snapshot(self.build_raw())
+        diagnostics["caveats"].append("x" * (256 * 1024))
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "diagnostics.json"
+
+            with self.assertRaisesRegex(collector.CollectorError, "256 KiB"):
+                collector.write_diagnostics_snapshot(output, diagnostics)
+
+            self.assertFalse(output.exists())
+
+    def test_worst_cap_raw_fixture_is_uploaded_from_runner_temp_and_not_staged(self):
+        workflow = (ROOT / ".github/workflows/adsense-collection.yml").read_text(encoding="utf-8")
+        stage_match = re.search(r"^\s*git add (.+)$", workflow, re.MULTILINE)
+        self.assertIsNotNone(stage_match, "workflow must stage an explicit allowlist")
+        stage_paths = shlex.split(stage_match.group(1))
+        self.assertEqual(stage_paths, [
+            "data/performance/adsense-latest.json",
+            "data/performance/adsense-diagnostics-latest.json",
+        ])
+        self.assertIn('--breakdown-output "$RUNNER_TEMP/adsense-breakdown-latest.json"', workflow)
+        self.assertIn("${{ runner.temp }}/adsense-breakdown-latest.json", workflow)
+        self.assertIn("retention-days: 7", workflow)
+        self.assertIn("if: always()", workflow)
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            repository = root / "repo"
+            runner_temp = root / "runner-temp"
+            repository.mkdir()
+            runner_temp.mkdir()
+            raw_path = runner_temp / "adsense-breakdown-latest.json"
+            raw = self.build_raw()
+            period_start = raw["range"]["start"]
+            dates = [
+                (datetime.fromisoformat(period_start) + timedelta(days=offset)).date().isoformat()
+                for offset in range(14)
+            ]
+            for name, report in raw["breakdowns"].items():
+                if name == "platformTypeAdFormat":
+                    continue
+                dimension_key = collector.BREAKDOWN_DIMENSION_KEYS[report["dimensions"][1]]
+                report["rows"] = []
+                for index in range(4000):
+                    label = f"{name}-{index:04d}"
+                    row = {"date": dates[index % len(dates)], dimension_key: label}
+                    row.update({
+                        "estimatedEarnings": 1.25,
+                        "pageViews": 10,
+                        "pageViewsRPM": 125,
+                        "impressions": 20,
+                        "clicks": 1,
+                        "costPerClick": 1.25,
+                        "adRequests": 24,
+                        "matchedAdRequests": 21,
+                        "adRequestsCoverage": 0.875,
+                        "activeViewViewability": 0.6,
+                    })
+                    report["rows"].append(row)
+                report["rowCount"] = len(report["rows"])
+                report["totalMatchedRows"] = len(report["rows"]) + 1
+                report["truncationStatus"] = "TRUNCATED"
+                report["status"] = "PARTIAL"
+                report["warnings"] = ["synthetic upper-bound report truncated"]
+                raw["warnings"].append(f"{name}: synthetic upper-bound report truncated")
+                raw["rowCounts"][name] = len(report["rows"])
+            self.assertTrue(collector.validate_breakdown_snapshot(raw))
+            raw_path.write_text(
+                json.dumps(raw, ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n",
+                encoding="utf-8",
+            )
+            self.assertGreater(raw_path.stat().st_size, 256 * 1024)
+            for path in stage_paths:
+                target = repository / path
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text("{}\n", encoding="utf-8")
+            subprocess.run(["git", "init", "-q", str(repository)], check=True)
+            subprocess.run(["git", "-C", str(repository), "add", *stage_paths], check=True)
+            staged = subprocess.run(
+                ["git", "-C", str(repository), "diff", "--cached", "--name-only"],
+                check=True, capture_output=True, text=True,
+            ).stdout.splitlines()
+
+            self.assertEqual(staged, sorted(stage_paths))
+            self.assertNotIn(str(raw_path), [str(repository / path) for path in staged])
+
+    def test_no_timestamped_tracked_diagnostic_and_base_snapshot_contract_remains_valid(self):
+        tracked_snapshot = ROOT / "data/performance/adsense-latest.json"
+        snapshot = json.loads(tracked_snapshot.read_text(encoding="utf-8"))
+        self.assertTrue(collector.validate_snapshot(snapshot))
+        self.assertEqual(snapshot["source"], "DIRECT_ADSENSE_MANAGEMENT_API_V2")
+        self.assertIn("reportingTimeZone", snapshot)
+
+        workflow = (ROOT / ".github/workflows/adsense-collection.yml").read_text(encoding="utf-8")
+        stage_line = next(line.strip() for line in workflow.splitlines() if line.strip().startswith("git add "))
+        self.assertIn("adsense-diagnostics-latest.json", stage_line)
+        self.assertNotIn("adsense-breakdown-latest.json", stage_line)
+        self.assertNotRegex(stage_line, r"20\d\d[-/]\d\d")
+
+    def test_cli_builds_and_validates_compact_diagnostics_without_credentials(self):
+        raw = self.build_raw()
+        with tempfile.TemporaryDirectory() as directory:
+            raw_path = Path(directory) / "raw.json"
+            diagnostics_path = Path(directory) / "diagnostics.json"
+            raw_path.write_text(json.dumps(raw), encoding="utf-8")
+            build = subprocess.run(
+                [sys.executable, str(COLLECTOR), "--build-diagnostics-from", str(raw_path), "--diagnostics-output", str(diagnostics_path)],
+                cwd=ROOT, capture_output=True, text=True, check=False,
+            )
+            self.assertEqual(build.returncode, 0, build.stderr)
+            self.assertTrue(diagnostics_path.exists())
+            validate = subprocess.run(
+                [sys.executable, str(COLLECTOR), "--validate-diagnostics-only", str(diagnostics_path)],
+                cwd=ROOT, capture_output=True, text=True, check=False,
+            )
+            self.assertEqual(validate.returncode, 0, validate.stderr)
+            self.assertIn("AdSense diagnostics schema: PASS", validate.stdout)
