@@ -110,6 +110,11 @@
   - 최종 전달: PR #35 normal merge, merge SHA `0156625d002654271046b20b7c874ea328d071d2`; post-merge SEO QA `37095932102` SUCCESS. 세 실험은 `INCONCLUSIVE / COMPARABLE_MATCHED_PERIOD_NAVER_DATA_UNAVAILABLE`로 종결했고, active experiments 3→0 및 selector capacity 0→3을 확인했다.
   - 범위/결과: 실제 콘텐츠 수정 0, 추가 공개 페이지 0. 대상 HTML·protected pages·sitemap/hub/manifest/IndexNow 변경 없음. matched-period Naver 값을 만들지 않았으며 Revenue는 `NO_CONCLUSION`.
 
+- [ ] P0 C26 · Keyword Hunter 3/day queue validator repair
+  - 범위: `.github/workflows/keyword-hunter.yml`의 낡은 1-item 검증을 중앙 `DAILY_PUBLICATION_LIMIT` 기준으로 교정하고, queue/status/review/URL 및 publication-state/HTML 보호를 유지한다. 검색 후보 품질, YMYL, 중복, editorial HOLD, 발행 정책은 변경하지 않는다.
+  - 검증: TDD RED/GREEN; 관련 Keyword Hunter/launch suite 224 passed; 전체 unittest 819 passed (3 skipped); 전체 pytest 1,345 passed (3 skipped); workflow YAML parse, content launch guard, `git diff --check` PASS.
+  - 상태: 최신 main `02afeeb8e58fdbf0c6a3aae418ed41664b3e2b05`에서 분리한 `codex/c26-kh-queue-limit-20261006`; PR #54 is open. Use its Checks tab for current exact-head CI; 신규 공개·live Keyword Hunter dispatch·merge 없음.
+
 ## P1 - High
 
 - [ ] C24 · StockWiki base-path asset repair
