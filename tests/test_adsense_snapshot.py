@@ -1055,6 +1055,37 @@ class AdSenseBreakdownSnapshotTest(TestCase):
         self.assertEqual(artifact["aggregateReconciliation"]["current"]["estimatedEarnings"]["status"], "MATCH")
         self.assertEqual(artifact["aggregateReconciliation"]["prior"]["pageViews"]["status"], "MATCH")
 
+    def test_partial_site_aggregate_is_not_used_for_verified_reconciliation(self):
+        site_current, site_prior, page = reports()
+        site_current["warnings"] = ["site report warning"]
+        base = collector.build_snapshot(
+            account_name="accounts/pub-test",
+            account={"name": "accounts/pub-test", "timeZone": {"id": "Asia/Seoul"}},
+            current_report=site_current,
+            prior_report=site_prior,
+            page_url_report=page,
+            now=NOW,
+            generated_at="2026-10-05T06:00:00Z",
+            days=7,
+        )
+        self.assertEqual(base["site"]["status"], "PARTIAL")
+        self.assertEqual(base["site"]["comparisonStatus"], "VERIFIED")
+        daily, breakdowns = breakdown_fixtures(base)
+
+        artifact = collector.build_breakdown_snapshot(
+            account_name="accounts/pub-test",
+            account={"name": "accounts/pub-test", "timeZone": {"id": "Asia/Seoul"}},
+            snapshot=base,
+            daily_report=daily,
+            breakdown_reports=breakdowns,
+            generated_at="2026-10-05T06:00:00Z",
+            days=7,
+        )
+
+        self.assertEqual(artifact["aggregateReconciliation"]["current"]["estimatedEarnings"]["status"], "NOT_AVAILABLE")
+        self.assertEqual(artifact["aggregateReconciliation"]["prior"]["pageViews"]["status"], "NOT_AVAILABLE")
+        self.assertEqual(artifact["aggregateReconciliation"]["status"], "NOT_AVAILABLE")
+
     def test_partial_missing_date_is_not_filled_with_zero_and_explicit_zero_is_preserved(self):
         artifact = self.build(missing_date="2026-10-02")
 
@@ -1096,6 +1127,35 @@ class AdSenseBreakdownSnapshotTest(TestCase):
         self.assertEqual(artifact["daily"]["status"], "PARTIAL")
         self.assertIn("fixture report warning", artifact["daily"]["warnings"])
         self.assertIn("fixture report warning", artifact["warnings"])
+
+    def test_malformed_falsey_warning_payload_is_preserved_as_partial(self):
+        site_current, site_prior, page = reports()
+        base = collector.build_snapshot(
+            account_name="accounts/pub-test",
+            account={"name": "accounts/pub-test", "timeZone": {"id": "Asia/Seoul"}},
+            current_report=site_current,
+            prior_report=site_prior,
+            page_url_report=page,
+            now=NOW,
+            generated_at="2026-10-05T06:00:00Z",
+            days=7,
+        )
+        daily, breakdowns = breakdown_fixtures(base)
+        daily["warnings"] = 0
+
+        artifact = collector.build_breakdown_snapshot(
+            account_name="accounts/pub-test",
+            account={"name": "accounts/pub-test", "timeZone": {"id": "Asia/Seoul"}},
+            snapshot=base,
+            daily_report=daily,
+            breakdown_reports=breakdowns,
+            generated_at="2026-10-05T06:00:00Z",
+            days=7,
+        )
+
+        self.assertEqual(artifact["daily"]["status"], "PARTIAL")
+        self.assertEqual(artifact["daily"]["warnings"], ["AdSense returned report warnings in an unknown format."])
+        self.assertIn("AdSense returned report warnings in an unknown format.", artifact["warnings"])
 
     def test_additive_total_mismatch_is_partial_and_not_silently_accepted(self):
         artifact = self.build(aggregate_mismatch=True)

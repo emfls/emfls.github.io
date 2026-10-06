@@ -221,7 +221,7 @@ def _parse_report(report, dimensions, expected_period, *, stage, metrics=METRICS
     parsed_rows = [_parse_cells(row, headers, stage=stage) for row in rows]
     totals_row = report.get("totals")
     totals = _parse_cells(totals_row, headers, stage=stage) if totals_row else {}
-    warnings = report.get("warnings") or []
+    warnings = report.get("warnings", [])
     if not isinstance(warnings, list):
         warnings = ["AdSense returned report warnings in an unknown format."]
     return {
@@ -627,6 +627,7 @@ def _aggregate_reconciliation(daily, snapshot, current_period, prior_period):
         daily.get("totalMatchedRows") != daily.get("rowCount")
         or daily.get("truncationStatus") != "NOT_TRUNCATED"
         or daily.get("warnings")
+        or snapshot.get("site", {}).get("status") != "VERIFIED"
         or snapshot.get("site", {}).get("comparisonStatus") != "VERIFIED"
         or not snapshot.get("currency")
         or daily.get("currency") != snapshot.get("currency")

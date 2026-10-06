@@ -28,6 +28,7 @@ APPROVED_MONETIZATION_TRANSITIONS = {
         ("83595861b3ea484b7fd9ad0c7fb11515f6516692", "2f4890e73ae705c5347b3755c5fb4ef47ca23e2b"),
         ("2f4890e73ae705c5347b3755c5fb4ef47ca23e2b", "7e462d5e1ccedfba022594d98cabf4aa3697ca01"),
         ("7e462d5e1ccedfba022594d98cabf4aa3697ca01", "085f253a3ba6c98b3318a99d7a03b63c1398f761"),
+        ("085f253a3ba6c98b3318a99d7a03b63c1398f761", "114d91de1a6e22103f7c697c7df229fa2ac1a0ad"),
     },
     ".github/workflows/adsense-collection.yml": {
         ("90f64a3d00d901f9052fc1fe20fc86372c90e014", "893889ceac2620250a6752d93aeb66c2a131b136"),
