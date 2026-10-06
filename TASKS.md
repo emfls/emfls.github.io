@@ -21,12 +21,19 @@
   - Repair: current/prior/PAGE_URL parser 오류에 stage를 명시하고, `rows` 키가 없을 때만 빈 목록으로 정규화한다. 빈 current/prior site report는 fail-closed; 빈/missing PAGE_URL은 `PARTIAL`, matched count와 URL metric은 미확정으로 유지한다. last-good snapshot atomicity와 exact PAGE_URL 400 fail-soft guard는 유지.
   - Sync: latest `origin/main` `97ed941bf1276f5f5d102f25265576227937ccc7`을 regular-merge한 merge commit은 `dc9bb64bfe064568b4d321fd1b74dda3869cf92f`이며 latest main은 second parent다. `PROJECT_HISTORY.md` conflict 하나만 해결했고 C16 sitemap/test/history 및 C06 parser/history records 모두 보존했다. Code conflict는 0; collector blob은 그대로다.
   - 검증: post-sync focused AdSense/guard/revenue/source/policy/C16 tests 118 passed; unittest 797 passed; pytest 1,281 passed; SEO QA 신규 critical/warning 0 (현재 767/420); guard vs latest `origin/main` PASS; workflow YAML 3개 parse PASS; diff check 및 secret-pattern scan PASS. `DAILY_PUBLICATION_LIMIT = 3` 유지.
-  - 상태: branch `codex/c06-report-parser-stages`; PR #49은 OPEN, merge 금지. Merge commit을 포함한 branch를 정상 push한 뒤 새 exact-head CI SUCCESS를 기다린다. AdSense live workflow 실행 금지, C07은 `WAITING`.
+  - 상태: PR #49은 `03f49d071e4657e4b6a3ae6b1127449ab5bf0faf`로 정상 merge됨. 승인된 live AdSense 실행은 `37373852773`에서 parser failure로 종료됐고 재실행하지 않았다. 현재 tracked snapshot은 `site.status=PARTIAL`, `comparisonStatus=VERIFIED`; C07의 parser/write 충돌 의존성은 해소됐다.
 
-- [ ] P0 Site-wide matched-period GSC page×query evidence — C17
+- [x] P0 Site-wide matched-period GSC page×query evidence — C17
   - 범위: 현재 `gsc-latest.json`과 정확히 같은 finalized period/property/web type으로 site-wide `[page, query]` evidence를 수집하는 manual-only, artifact-only 경로. Raw export는 `$RUNNER_TEMP`에만 쓰고 7일 보관 artifact로 업로드한다.
-  - 상태: PR #50 `codex/c17-sitewide-gsc-page-query` OPEN; latest base `a7ea9bfc14ba6a52b4bdd021aa9232bbb76d0443` was merged normally after PR #48 advanced main; C13 files and C17 records are preserved, while the PR comparison remains C17-only. Local focused suite 90 passed. Exact-head SEO QA run `37390044458` passed on earlier head `0c9715d389c7b8eed7816780582190b21fdc3d64` (unittest 797; pytest 1,316 + 528 subtests). Use the latest PR head check for Control Tower review; merge and live query dispatch remain prohibited.
-  - 의존성: C07의 겹치는 GSC workflow write 단계는 C17이 merge되거나 abandoned 될 때까지 시작하지 않는다. Live GSC collection은 Control Tower 승인 전 실행하지 않는다.
+  - 완료: PR #50 regular merge `489df99ea81f51833d36d27ee09c8190c8443236`; live run `37404548746` SUCCESS with artifact `gsc-sitewide-query-37404548746` (223 rows, `PARTIAL_TOP_ROWS`, completeness not guaranteed). Raw export remains a seven-day artifact; no tracked commit or C07 integration.
+  - 의존성 해소: C17 is `TASK_COMPLETE`; C07 may publish page-derived artifacts independently of the ephemeral sitewide artifact.
+
+- [ ] P0 Derived Measurement Publisher Consolidation — C07
+  - 범위: GA4/GSC/AdSense collectors publish source snapshots only; one serialized daily publisher validates tracked source snapshots, regenerates temporary audit/page scores, and publishes only the three shared derived outputs. Preserve C17 sidecar behavior, source schemas, URL alias semantics, and direct AdSense PARTIAL/VERIFIED distinctions.
+  - 저장소 판정: `IMMEDIATE_REPO_SIZE_SAVINGS = NONE`; `GIT_HISTORY_REWRITE = NONE`; `FUTURE_DERIVED_ARTIFACT_CHURN_REDUCTION = YES`.
+  - 검증: measurement/workflow/GSC C17/GA4/AdSense focused suites 143 passed; unittest 819 passed (3 skipped); pytest 1,338 passed (3 skipped); fresh generated artifact validation 18,929 pages; SEO QA 0 new critical/warnings (767/420 existing); YAML, Python syntax, and diff checks PASS.
+  - 현재 입력 상태: tracked GSC period ends `2026-10-02`, while the 2026-10-06 collector window expects `2026-10-03`; publisher gate fails closed and leaves all last-good derived files unchanged until source refresh.
+  - 상태: C06 PR #49 and C17 PR #50 are merged. C07 starts from latest main `70f0374380a85d214e91b3292871eeee19c946f6` on `codex/c07-derived-measurement-publisher`; normal merge included. PR creation and exact-head CI are pending; do not merge.
 
 - [ ] P0 JP Travel Batch 02 — PR #38, 50-page canary
   - 동기화: 요청된 main `6b844cf03138057091bac2cdf1a87db3e98491f2` 이후 main이 `1b15674e09d3dd30fb65620ab2ae8f35f85c2137`로 전진해 두 SHA를 모두 regular merge로 반영했다. `5172e32bcd`에서 derived artifact 충돌 3건을 최신 main 입력 기준으로 해결·재생성했고, `946f3cf027` merge는 충돌이 없었다. rebase/force push 없음.

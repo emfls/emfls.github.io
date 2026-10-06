@@ -1,0 +1,79 @@
+name: Publish derived measurement artifacts
+
+on:
+  schedule:
+    - cron: "17 3 * * *" # daily UTC 03:17, after AdSense, GA4, and GSC collectors
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: site-measurement-collection
+  cancel-in-progress: false
+  queue: max
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      TZ: Asia/Seoul
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate source snapshots
+        run: python3 scripts/validate_measurement_sources.py --as-of "$(date +%F)"
+
+      - name: Regenerate current site audit
+        run: python3 scripts/seo_audit.py . --json "$RUNNER_TEMP/site-audit.json" --markdown "$RUNNER_TEMP/site-audit.md"
+
+      - name: Regenerate current page scores
+        run: |
+          python3 scripts/quality_audit.py \
+            --audit "$RUNNER_TEMP/site-audit.json" \
+            --as-of "$(date +%F)" \
+            --page-output "$RUNNER_TEMP/page-scores.json" \
+            --site-output "$RUNNER_TEMP/site-score.json" \
+            --report "$RUNNER_TEMP/site-score.md" \
+            --dashboard "$RUNNER_TEMP/site-dashboard.html"
+
+      - name: Generate derived artifacts
+        run: |
+          python3 scripts/revenue_growth.py \
+            --as-of "$(date +%F)" \
+            --performance data/performance/ga4-latest.json \
+            --audit "$RUNNER_TEMP/site-audit.json" \
+            --page-scores "$RUNNER_TEMP/page-scores.json" \
+            --gsc-snapshot data/performance/gsc-latest.json \
+            --adsense-snapshot data/performance/adsense-latest.json \
+            --page-output "$RUNNER_TEMP/page-performance.json" \
+            --opportunity-output "$RUNNER_TEMP/revenue-opportunities.json" \
+            --report "$RUNNER_TEMP/revenue-growth-report.md"
+
+      - name: Validate generated artifacts
+        run: python3 scripts/validate_measurement_artifact.py "$RUNNER_TEMP/page-performance.json" --page-scores "$RUNNER_TEMP/page-scores.json"
+
+      - name: Promote derived artifacts
+        run: |
+          python3 scripts/promote_measurement_artifacts.py \
+            --page-source "$RUNNER_TEMP/page-performance.json" \
+            --opportunity-source "$RUNNER_TEMP/revenue-opportunities.json" \
+            --report-source "$RUNNER_TEMP/revenue-growth-report.md"
+
+      - name: Commit derived measurement artifacts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git diff --check
+          git add data/page-performance.json data/revenue-opportunities.json reports/revenue-growth-report.md
+          if ! git diff --staged --quiet; then
+            git commit -m "chore: publish derived measurement artifacts"
+            git push
+          fi

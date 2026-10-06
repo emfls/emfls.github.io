@@ -36,40 +36,17 @@ jobs:
       - name: Collect GA4 latest snapshot
         run: python3 scripts/collect_ga4_snapshot.py --output data/performance/ga4-latest.json --days 28
 
-      - name: Regenerate current site audit for GA4 measurement
-        run: python3 scripts/seo_audit.py . --json /tmp/ga4-site-audit.json --markdown /tmp/ga4-site-audit.md
-
-      - name: Regenerate current page scores for GA4 measurement
+      - name: Validate GA4 source snapshot
         run: |
-          python3 scripts/quality_audit.py \
-            --audit /tmp/ga4-site-audit.json \
-            --as-of "$(date +%F)" \
-            --page-output /tmp/ga4-page-scores.json \
-            --site-output /tmp/ga4-site-score.json \
-            --report /tmp/ga4-site-score.md \
-            --dashboard /tmp/ga4-site-dashboard.html
-
-      - name: Regenerate measurement artifacts from GA4 snapshot
-        run: |
-          python3 scripts/revenue_growth.py \
-            --as-of "$(date +%F)" \
-            --performance data/performance/ga4-latest.json \
-            --audit /tmp/ga4-site-audit.json \
-            --page-scores /tmp/ga4-page-scores.json \
-            --gsc-snapshot data/performance/gsc-latest.json \
-            --page-output data/page-performance.json \
-            --opportunity-output data/revenue-opportunities.json \
-            --report reports/revenue-growth-report.md
-
-      - name: Validate measurement artifacts
-        run: |
-          python3 scripts/validate_measurement_artifact.py data/page-performance.json --page-scores /tmp/ga4-page-scores.json
           python3 - <<'PY'
           import json
           from datetime import date
           p = json.load(open('data/performance/ga4-latest.json'))
           assert p['site']['ga4']['status'] == 'VERIFIED'
           assert p['site']['ga4']['source'] == 'GOOGLE_ANALYTICS_DATA_API'
+          assert p['collection']['source'] == 'GOOGLE_ANALYTICS_DATA_API'
+          assert p['pages']
+          assert p['site']['ga4']['period'] == p['periods']['ga4']
           end = date.fromisoformat(p['periods']['ga4']['end'])
           as_of = date.fromisoformat(p['as_of'])
           assert (as_of - end).days <= 7
@@ -79,6 +56,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/performance/ga4-latest.json data/page-performance.json data/revenue-opportunities.json reports/revenue-growth-report.md
-          git diff --staged --quiet || git commit -m "chore: refresh GA4 measurement snapshot"
+          git add data/performance/ga4-latest.json
+          git diff --staged --quiet || git commit -m "chore: refresh GA4 source snapshot"
           git push
