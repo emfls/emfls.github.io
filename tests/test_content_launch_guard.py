@@ -9,6 +9,10 @@ from scripts.content_launch_guard import (
     validate_launch,
 )
 
+C33_MAPLE_PATH = "kor/column/maple-planet-no-capital-rice-farming-2026.html"
+C33_MAPLE_BASE_BLOB = "fd73fdd0be12fab17f9ab78473c0182956d34098"
+C33_MAPLE_REPAIRED_BLOB = "873ab21ba21523a22e83cffaf61e1dab3e4ec5d3"
+
 
 def write_json(path, payload):
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -216,6 +220,32 @@ def test_guard_allows_only_approved_pyeongtaek_blob_transition(tmp_path):
     changed = [("M", "kor/report/camp/pyeongtaek.html", "4d95593169e466447ee355429d2822764ca7e1a5", "b4fc13119f1e8cd01d78805d06ee981ac6834236")]
 
     assert validate_launch(tmp_path, manifest([]), changed) == []
+
+
+def test_guard_allows_only_exact_c33_maple_integrity_transition(tmp_path):
+    setup_data(tmp_path)
+    revenue_path = tmp_path / "data/revenue-opportunities.json"
+    revenue = json.loads(revenue_path.read_text(encoding="utf-8"))
+    revenue["protectedWinners"].append({"url": f"/{C33_MAPLE_PATH}"})
+    write_json(revenue_path, revenue)
+
+    exact_transition = [("M", C33_MAPLE_PATH, C33_MAPLE_BASE_BLOB, C33_MAPLE_REPAIRED_BLOB)]
+    assert validate_launch(tmp_path, manifest([]), exact_transition) == []
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+        tmp_path,
+        manifest([]),
+        [("M", C33_MAPLE_PATH, C33_MAPLE_BASE_BLOB, "a" * 40)],
+    )
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+        tmp_path,
+        manifest([]),
+        [("M", C33_MAPLE_PATH, "b" * 40, C33_MAPLE_REPAIRED_BLOB)],
+    )
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+        tmp_path,
+        manifest([]),
+        [("M", "kor/report/camp/namyangju.html", C33_MAPLE_BASE_BLOB, C33_MAPLE_REPAIRED_BLOB)],
+    )
 
 
 def test_guard_rejects_pyeongtaek_with_different_result_blob(tmp_path):

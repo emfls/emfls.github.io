@@ -6,7 +6,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 PAGES = {
     "kor/column/maple-planet-bishop-4th-skill-quest-guide-2026.html": ("Article", "패치", "관련"),
-    "kor/column/maple-planet-no-capital-rice-farming-2026.html": ("Article", "보장", "관련"),
+    "kor/column/maple-planet-no-capital-rice-farming-2026.html": ("Article", "확정 수치", "관련"),
     "kor/column/maple-planet-suncall-blizzard-hp-zero-setup-2026.html": ("Article", "실측", "관련"),
     "kor/column/minecraft-262-geyser-multiplayer-update-2026.html": ("Article", "공식", "관련"),
     "kor/column/maple-planet-lv80-black-centaurus-leveling-2026.html": ("Article", "실측", "관련"),
@@ -17,19 +17,20 @@ PAGES = {
     "jp/game/ConnectFour/index.html": ("VideoGame", "引き分け", "関連"),
 }
 
+REVIEW_DATES = {
+    "kor/column/maple-planet-bishop-4th-skill-quest-guide-2026.html": "2026-08-24",
+    "kor/column/maple-planet-no-capital-rice-farming-2026.html": "2026-10-06",
+    "kor/column/maple-planet-suncall-blizzard-hp-zero-setup-2026.html": "2026-08-24",
+    "kor/column/maple-planet-lv80-black-centaurus-leveling-2026.html": "2026-08-24",
+}
+
 
 class SeventhGa4PriorityBatchTest(unittest.TestCase):
     def test_pages_have_review_contract(self):
         for relative, (schema_type, limitation, related_label) in PAGES.items():
             with self.subTest(relative=relative):
                 html = (ROOT / relative).read_text(encoding="utf-8")
-                expected_date = "2026-08-24" if relative.endswith(
-                    (
-                        "maple-planet-bishop-4th-skill-quest-guide-2026.html",
-                        "maple-planet-suncall-blizzard-hp-zero-setup-2026.html",
-                        "maple-planet-lv80-black-centaurus-leveling-2026.html",
-                    )
-                ) else "2026-08-09"
+                expected_date = REVIEW_DATES.get(relative, "2026-08-09")
                 self.assertIn(expected_date, html)
                 self.assertIn(f'"@type":"{schema_type}"', html.replace(" ", ""))
                 self.assertIn(limitation.lower(), html.lower())

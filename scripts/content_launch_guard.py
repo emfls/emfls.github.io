@@ -17,6 +17,10 @@ APPROVED_PROTECTED_WINNER_TRANSITIONS = {
     "kor/report/camp/pyeongtaek.html": {
         ("4d95593169e466447ee355429d2822764ca7e1a5", "b4fc13119f1e8cd01d78805d06ee981ac6834236"),
     },
+    # C33's user-approved factual and policy-integrity repair; the exact blob pair keeps all other edits protected.
+    "kor/column/maple-planet-no-capital-rice-farming-2026.html": {
+        ("fd73fdd0be12fab17f9ab78473c0182956d34098", "873ab21ba21523a22e83cffaf61e1dab3e4ec5d3"),
+    },
 }
 APPROVED_MONETIZATION_TRANSITIONS = {
     "scripts/collect_adsense_snapshot.py": {
