@@ -692,7 +692,7 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
                 if row['parent_keyword']: cluster_map[row['cluster']]['edges'].append([row['parent_keyword'],row['keyword']])
             for s in next_selected: pool.setdefault(normalize(s['keyword']),s)
             # Preserve manually registered blocked terms even when absent from master.
-            summary='\n## {} Keyword Hunter\n- Seeds: {}; New: {}; Rejected: {}; DB: {}; Errors: {}; Top: {}. Report: {}\n'.format(now.strftime('%Y-%m-%d %H:%M'),len(selected),len(fresh),result['rejected'],len(active),len(client.errors),result['top5'][0]['keyword'] if result['top5'] else 'none',report_path)
+            summary='\n## {} Keyword Hunter\n- Seeds: {}; New: {}; Rejected: {}; DB: {}; Errors: {}; Top: {}. Artifact report: {}\n'.format(now.strftime('%Y-%m-%d %H:%M'),len(selected),len(fresh),result['rejected'],len(active),len(client.errors),result['top5'][0]['keyword'] if result['top5'] else 'none',report_path)
             files={'data/keywords_master.csv':csv_text(active),'data/keyword_seeds.json':json_text({'seeds':list(pool.values())}),
                    'data/keyword_clusters.json':json_text(cluster_map),'data/rejected_keywords.json':json_text(update_registry(rejected,active,'REJECTED',status_change,now)),
                    'data/published_keywords.json':json_text(update_registry(published,active,'PUBLISHED',status_change,now)),report_path:existing+output,
