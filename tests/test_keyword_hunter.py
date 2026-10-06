@@ -92,7 +92,11 @@ class HunterTests(unittest.TestCase):
         self.assertEqual(len(rows),1)
         self.assertEqual(rows[0]['parent_keyword'],'텐트')
         self.assertIn('TOP 5',(self.root/'reports/keyword-hunter/2026-09-09-1800.md').read_text())
-        self.assertIn('Prior history',(self.root/'PROJECT_HISTORY.md').read_text())
+        self.assertEqual(first['report_path'],'reports/keyword-hunter/2026-09-09-1800.md')
+        self.assertTrue((self.root/first['report_path']).is_file())
+        history=(self.root/'PROJECT_HISTORY.md').read_text()
+        self.assertIn('Prior history',history)
+        self.assertIn('Artifact report: reports/keyword-hunter/2026-09-09-1800.md',history)
         for name in ['keyword_seeds','keyword_clusters','rejected_keywords','published_keywords']:
             self.assertTrue((self.root/('data/'+name+'.json')).exists())
     def test_site_duplicate_not_top(self):
