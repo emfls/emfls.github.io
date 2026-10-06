@@ -41,6 +41,7 @@ def test_keyword_hunter_workflow_keeps_publication_state_and_content_protected()
     assert "git add data/content-launch-manifest.json" not in text
     assert "git add data/content-launch-counter.json" not in text
 
+
 def _review_queue_item(**overrides):
     item = {
         "status": "READY_TO_LAUNCH",
