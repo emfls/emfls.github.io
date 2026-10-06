@@ -9,7 +9,7 @@ on:
         description: "Collection scope"
         required: true
         type: choice
-        options: [page, camping-query, opportunity-query]
+        options: [page, camping-query, opportunity-query, sitewide-query]
         default: page
 
 permissions:
@@ -50,6 +50,13 @@ jobs:
       - name: Collect current revenue opportunity query evidence
         if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'opportunity-query'
         run: python3 scripts/collect_gsc_opportunity_query_snapshot.py --output data/performance/gsc-opportunity-queries-latest.json
+
+      - name: Collect site-wide page-query evidence snapshot
+        if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'sitewide-query'
+        run: |
+          python3 scripts/collect_gsc_sitewide_query_snapshot.py \
+            --gsc-snapshot data/performance/gsc-latest.json \
+            --output "$RUNNER_TEMP/gsc-sitewide-query.json"
 
       - name: Regenerate current site audit for GSC measurement
         if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'page'
@@ -113,6 +120,27 @@ jobs:
               snapshot = json.load(handle)
           print(json.dumps(validate_snapshot(snapshot), ensure_ascii=False))
           PY
+
+      - name: Validate site-wide page-query evidence snapshot
+        if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'sitewide-query'
+        run: |
+          python3 - "$RUNNER_TEMP/gsc-sitewide-query.json" <<'PY'
+          import json
+          import sys
+          from scripts.collect_gsc_sitewide_query_snapshot import validate_snapshot
+          with open(sys.argv[1], encoding='utf-8') as handle:
+              snapshot = json.load(handle)
+          print(json.dumps(validate_snapshot(snapshot), ensure_ascii=False))
+          PY
+
+      - name: Upload site-wide page-query evidence artifact
+        if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'sitewide-query'
+        uses: actions/upload-artifact@v4
+        with:
+          name: gsc-sitewide-query-${{ github.run_id }}
+          path: ${{ runner.temp }}/gsc-sitewide-query.json
+          if-no-files-found: error
+          retention-days: 7
 
       - name: Commit refreshed GSC measurement artifacts
         if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'page'
