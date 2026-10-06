@@ -4,12 +4,6 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def _measurement_command(workflow):
-    text = (ROOT / ".github" / "workflows" / workflow).read_text(encoding="utf-8")
-    start = text.index("python3 scripts/revenue_growth.py")
-    return text[start : text.index("\n", text.index("--report", start))]
-
-
 def _workflow_text():
     return (ROOT / ".github" / "workflows" / "gsc-collection.yml").read_text(encoding="utf-8")
 
@@ -21,32 +15,22 @@ def _step_block(workflow, name):
     return workflow[start : next_step if next_step >= 0 else len(workflow)]
 
 
-def test_ga4_refresh_regenerates_measurements_with_latest_gsc_snapshot():
-    command = _measurement_command("ga4-collection.yml")
-
-    assert "--performance data/performance/ga4-latest.json" in command
-    assert "--gsc-snapshot data/performance/gsc-latest.json" in command
-    assert "--page-output data/page-performance.json" in command
-
-
-def test_ga4_refresh_scores_current_html_inventory_before_joining_snapshot_rows():
-    workflow = (ROOT / ".github" / "workflows" / "ga4-collection.yml").read_text(encoding="utf-8")
-    audit_step = _step_block(workflow, "Regenerate current site audit for GA4 measurement")
-    scores_step = _step_block(workflow, "Regenerate current page scores for GA4 measurement")
-    revenue_step = _step_block(workflow, "Regenerate measurement artifacts from GA4 snapshot")
-    commit_step = _step_block(workflow, "Commit refreshed GA4 measurement artifacts")
-
-    assert "scripts/seo_audit.py . --json /tmp/ga4-site-audit.json" in audit_step
-    assert "scripts/quality_audit.py" in scores_step
-    assert "--audit /tmp/ga4-site-audit.json" in scores_step
-    assert "--page-output /tmp/ga4-page-scores.json" in scores_step
-    assert "--audit /tmp/ga4-site-audit.json" in revenue_step
-    assert "--page-scores /tmp/ga4-page-scores.json" in revenue_step
-    assert "ga4-site-audit.json" not in commit_step
-    assert "ga4-page-scores.json" not in commit_step
-    assert workflow.index("Regenerate current site audit for GA4 measurement") < workflow.index(
-        "Regenerate current page scores for GA4 measurement"
-    ) < workflow.index("Regenerate measurement artifacts from GA4 snapshot")
+def test_source_collection_workflows_commit_only_their_source_snapshots():
+    expected = {
+        "ga4-collection.yml": "git add data/performance/ga4-latest.json",
+        "gsc-collection.yml": "git add data/performance/gsc-latest.json",
+    }
+    derived = (
+        "data/page-performance.json",
+        "data/revenue-opportunities.json",
+        "reports/revenue-growth-report.md",
+        "scripts/revenue_growth.py",
+    )
+    for name, staged_line in expected.items():
+        workflow = (ROOT / ".github" / "workflows" / name).read_text(encoding="utf-8")
+        assert staged_line in workflow
+        for item in derived:
+            assert item not in workflow
 
 
 def test_seo_qa_measurement_validator_uses_fresh_page_scores():
@@ -55,42 +39,39 @@ def test_seo_qa_measurement_validator_uses_fresh_page_scores():
     assert "python3 scripts/validate_measurement_artifact.py data/page-performance.json --page-scores data/page-scores.json" in workflow
 
 
-def test_ga4_measurement_validator_uses_the_fresh_temporary_page_scores():
-    workflow = (ROOT / ".github" / "workflows" / "ga4-collection.yml").read_text(encoding="utf-8")
-    validation = _step_block(workflow, "Validate measurement artifacts")
-
-    assert "data/page-performance.json --page-scores /tmp/ga4-page-scores.json" in validation
-
-
-def test_gsc_refresh_keeps_using_gsc_snapshot_for_measurement_regeneration():
-    command = _measurement_command("gsc-collection.yml")
-
-    assert "--gsc-snapshot data/performance/gsc-latest.json" in command
-
-
-def test_gsc_page_refresh_generates_and_uses_a_fresh_indexable_inventory():
-    workflow = _workflow_text()
-    audit_step = _step_block(workflow, "Regenerate current site audit for GSC measurement")
-    scores_step = _step_block(workflow, "Regenerate current page scores for GSC measurement")
-    revenue_step = _step_block(workflow, "Regenerate measurement artifacts from GA4 and GSC snapshots")
-    validation_step = _step_block(workflow, "Validate GSC and measurement artifacts")
-    page_only = "if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'page'"
-
-    assert page_only in audit_step
-    assert page_only in scores_step
-    assert "scripts/seo_audit.py . --json /tmp/gsc-site-audit.json" in audit_step
-    assert "scripts/quality_audit.py" in scores_step
-    assert "--audit /tmp/gsc-site-audit.json" in scores_step
-    assert "--page-output /tmp/gsc-page-scores.json" in scores_step
-    assert "--audit /tmp/gsc-site-audit.json" in revenue_step
-    assert "--page-scores /tmp/gsc-page-scores.json" in revenue_step
-    assert "data/page-performance.json --page-scores /tmp/gsc-page-scores.json" in validation_step
-    assert workflow.index("Regenerate current site audit for GSC measurement") < workflow.index(
-        "Regenerate current page scores for GSC measurement"
-    ) < workflow.index("Regenerate measurement artifacts from GA4 and GSC snapshots")
+def test_derived_publisher_runs_after_daily_collectors_and_stages_only_derived_outputs():
+    workflow = (ROOT / ".github" / "workflows" / "derived-measurement-publisher.yml").read_text(encoding="utf-8")
+    assert 'cron: "17 3 * * *"' in workflow
+    assert "workflow_dispatch:" in workflow
+    assert "group: site-measurement-collection\n  cancel-in-progress: false\n  queue: max" in workflow
+    assert "scripts/validate_measurement_sources.py" in workflow
+    assert workflow.index("Validate source snapshots") < workflow.index("Regenerate current site audit")
+    assert workflow.index("Regenerate current page scores") < workflow.index("Generate derived artifacts")
+    assert workflow.index("Generate derived artifacts") < workflow.index("Promote derived artifacts")
+    assert workflow.index("Promote derived artifacts") < workflow.index("Commit derived measurement artifacts")
+    commit = _step_block(workflow, "Commit derived measurement artifacts")
+    assert "git add data/page-performance.json data/revenue-opportunities.json reports/revenue-growth-report.md" in commit
+    for source_snapshot in (
+        "data/performance/ga4-latest.json",
+        "data/performance/gsc-latest.json",
+        "data/performance/adsense-latest.json",
+    ):
+        assert source_snapshot not in commit
+    for collector in ("collect_ga4_snapshot.py", "collect_gsc_snapshot.py", "collect_adsense_snapshot.py"):
+        assert collector not in workflow
+    assert "google-analytics-data" not in workflow
+    assert "google-api-python-client" not in workflow
 
 
-def test_gsc_workflow_defaults_to_page_mode_for_schedule_and_manual_runs():
+def test_source_collection_schedules_precede_derived_publisher():
+    publisher = (ROOT / ".github" / "workflows" / "derived-measurement-publisher.yml").read_text(encoding="utf-8")
+    assert 'cron: "47 1 * * *"' in (ROOT / ".github/workflows/adsense-collection.yml").read_text(encoding="utf-8")
+    assert 'cron: "17 2 * * *"' in (ROOT / ".github/workflows/ga4-collection.yml").read_text(encoding="utf-8")
+    assert 'cron: "47 2 * * *"' in _workflow_text()
+    assert 'cron: "17 3 * * *"' in publisher
+
+
+def test_gsc_workflow_keeps_page_and_sidecar_collection_without_derived_publication():
     workflow = _workflow_text()
 
     assert "collection_mode:" in workflow
@@ -101,21 +82,18 @@ def test_gsc_workflow_defaults_to_page_mode_for_schedule_and_manual_runs():
 
     page_only = "if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'page'"
     assert page_only in _step_block(workflow, "Collect GSC page snapshot")
-    assert page_only in _step_block(workflow, "Regenerate measurement artifacts from GA4 and GSC snapshots")
-    assert page_only in _step_block(workflow, "Validate GSC and measurement artifacts")
-    assert page_only in _step_block(workflow, "Commit refreshed GSC measurement artifacts")
+    source_commit = _step_block(workflow, "Commit refreshed GSC measurement artifacts")
+    assert "git add data/performance/gsc-latest.json" in source_commit
+    assert "scripts/revenue_growth.py" not in workflow
+    for derived_artifact in ("data/page-performance.json", "data/revenue-opportunities.json", "reports/revenue-growth-report.md"):
+        assert derived_artifact not in workflow
 
 
 def test_page_mode_preserves_old_outputs_without_collecting_or_committing_query_artifact():
     workflow = _workflow_text()
-    command = _measurement_command("gsc-collection.yml")
-
-    assert "--gsc-snapshot data/performance/gsc-latest.json" in command
-    assert "--page-output data/page-performance.json" in command
-    assert "gsc-camp-query-latest.json" not in command
-    assert "data/performance/gsc-camp-query-latest.json" not in _step_block(
-        workflow, "Commit refreshed GSC measurement artifacts"
-    )
+    assert "data/performance/gsc-latest.json" in _step_block(workflow, "Collect GSC page snapshot")
+    source_commit = _step_block(workflow, "Commit refreshed GSC measurement artifacts")
+    assert "data/performance/gsc-camp-query-latest.json" not in source_commit
 
 
 def test_camping_query_mode_isolated_from_page_and_revenue_outputs():
@@ -148,8 +126,6 @@ def test_camping_query_mode_skips_all_page_mode_collection_steps():
 
     for name in (
         "Collect GSC page snapshot",
-        "Regenerate measurement artifacts from GA4 and GSC snapshots",
-        "Validate GSC and measurement artifacts",
         "Commit refreshed GSC measurement artifacts",
     ):
         assert page_only in _step_block(workflow, name)
@@ -193,7 +169,7 @@ def test_sitewide_query_mode_is_manual_only_and_skips_page_refresh():
     assert "scripts/collect_gsc_sitewide_query_snapshot.py" in collect
     assert "$RUNNER_TEMP/gsc-sitewide-query.json" in collect
     assert page_only in _step_block(workflow, "Collect GSC page snapshot")
-    assert page_only in _step_block(workflow, "Regenerate measurement artifacts from GA4 and GSC snapshots")
+    assert "scripts/revenue_growth.py" not in workflow
 
 
 def test_sitewide_query_mode_validates_and_uploads_bounded_artifact():

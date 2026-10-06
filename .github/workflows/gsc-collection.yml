@@ -58,35 +58,7 @@ jobs:
             --gsc-snapshot data/performance/gsc-latest.json \
             --output "$RUNNER_TEMP/gsc-sitewide-query.json"
 
-      - name: Regenerate current site audit for GSC measurement
-        if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'page'
-        run: python3 scripts/seo_audit.py . --json /tmp/gsc-site-audit.json --markdown /tmp/gsc-site-audit.md
-
-      - name: Regenerate current page scores for GSC measurement
-        if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'page'
-        run: |
-          python3 scripts/quality_audit.py \
-            --audit /tmp/gsc-site-audit.json \
-            --as-of "$(date +%F)" \
-            --page-output /tmp/gsc-page-scores.json \
-            --site-output /tmp/gsc-site-score.json \
-            --report /tmp/gsc-site-score.md \
-            --dashboard /tmp/gsc-site-dashboard.html
-
-      - name: Regenerate measurement artifacts from GA4 and GSC snapshots
-        if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'page'
-        run: |
-          python3 scripts/revenue_growth.py \
-            --as-of "$(date +%F)" \
-            --performance data/performance/ga4-latest.json \
-            --audit /tmp/gsc-site-audit.json \
-            --page-scores /tmp/gsc-page-scores.json \
-            --gsc-snapshot data/performance/gsc-latest.json \
-            --page-output data/page-performance.json \
-            --opportunity-output data/revenue-opportunities.json \
-            --report reports/revenue-growth-report.md
-
-      - name: Validate GSC and measurement artifacts
+      - name: Validate GSC source snapshot
         if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'page'
         run: |
           python3 - <<'PY'
@@ -97,7 +69,6 @@ jobs:
           assert p['property'] == 'https://emfls.github.io/'
           assert p['pages']
           PY
-          python3 scripts/validate_measurement_artifact.py data/page-performance.json --page-scores /tmp/gsc-page-scores.json
 
       - name: Validate camping query evidence snapshot
         if: github.event_name == 'workflow_dispatch' && inputs.collection_mode == 'camping-query'
@@ -147,8 +118,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/performance/gsc-latest.json data/page-performance.json data/revenue-opportunities.json reports/revenue-growth-report.md
-          git diff --staged --quiet || git commit -m "chore: refresh GSC measurement snapshot"
+          git add data/performance/gsc-latest.json
+          git diff --staged --quiet || git commit -m "chore: refresh GSC source snapshot"
           git push
 
       - name: Commit camping query evidence snapshot

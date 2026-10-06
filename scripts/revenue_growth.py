@@ -48,7 +48,7 @@ def content_growth_summary(experiments, as_of):
     current = date.fromisoformat(as_of)
     launches = [row for row in experiments if row.get("type") == "CONTENT_LAUNCH_EXPERIMENT"]
     mature = [row for row in launches if row.get("publishedOn") and (current - date.fromisoformat(row["publishedOn"])).days >= 28]
-    winners = sum(row.get("result") == "WINNER" for row in mature)
+    winners = sum(row.get("result") == "SUCCESS" for row in mature)
     recent = [row for row in launches if row.get("publishedOn") and date.fromisoformat(row["publishedOn"]) >= current - timedelta(days=27)]
     revenues = [row.get("revenue") for row in recent]
     revenue_ready = bool(recent) and all(value is not None for value in revenues)
@@ -159,7 +159,7 @@ def _direct_adsense_summary(snapshot):
     if site.get("domain") != "emfls.github.io" or source_status not in {"VERIFIED", "PARTIAL", "NOT_AVAILABLE", "ERROR", "STALE_DATA"}:
         source_status = "NOT_AVAILABLE"
         comparison_status = "NOT_AVAILABLE"
-    if source_status != "VERIFIED" or comparison_status != "VERIFIED":
+    if comparison_status != "VERIFIED":
         comparison_status = "NOT_AVAILABLE"
     return {
         "source": snapshot["source"],

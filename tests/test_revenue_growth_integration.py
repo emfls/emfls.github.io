@@ -27,7 +27,7 @@ class RevenueGrowthIntegrationTest(unittest.TestCase):
                 "currency": "USD",
                 "site": {
                     "domain": "emfls.github.io",
-                    "status": "VERIFIED",
+                    "status": "PARTIAL",
                     "comparisonStatus": "VERIFIED",
                     "current": {"estimatedEarnings": 18.5},
                     "prior": {"estimatedEarnings": 10.0},
@@ -55,7 +55,7 @@ class RevenueGrowthIntegrationTest(unittest.TestCase):
                 page_output=root / "pages.json", opportunity_output=root / "opp.json", report_output=root / "report.md",
             )
 
-            self.assertEqual(summary["directAdsense"]["status"], "VERIFIED")
+            self.assertEqual(summary["directAdsense"]["status"], "PARTIAL")
             self.assertEqual(summary["directAdsense"]["comparisonStatus"], "VERIFIED")
             self.assertEqual(summary["directAdsense"]["site"]["current"]["estimatedEarnings"], 18.5)
             self.assertEqual(summary["directAdsense"]["pageUrlCoverage"]["status"], "NOT_AVAILABLE")
@@ -300,14 +300,15 @@ class RevenueGrowthIntegrationTest(unittest.TestCase):
 
     def test_content_growth_uses_only_mature_launches_for_win_rate(self):
         rows = [
-            {"type": "CONTENT_LAUNCH_EXPERIMENT", "publishedOn": "2026-07-01", "status": "COMPLETE", "result": "WINNER", "revenue": None},
+            {"type": "CONTENT_LAUNCH_EXPERIMENT", "publishedOn": "2026-07-01", "status": "COMPLETE", "result": "SUCCESS", "revenue": None},
             {"type": "CONTENT_LAUNCH_EXPERIMENT", "publishedOn": "2026-07-02", "status": "COMPLETE", "result": "FAILED", "revenue": None},
+            {"type": "CONTENT_LAUNCH_EXPERIMENT", "publishedOn": "2026-07-03", "status": "COMPLETE", "result": "INCONCLUSIVE", "revenue": None},
             {"type": "CONTENT_LAUNCH_EXPERIMENT", "publishedOn": "2026-08-25", "status": "OBSERVING", "result": None, "revenue": None},
         ]
         result = content_growth_summary(rows, "2026-09-01")
         self.assertEqual(result["activeExperiments"], 1)
-        self.assertEqual(result["matureCohort"], 2)
-        self.assertEqual(result["newPageWinRate"], 0.5)
+        self.assertEqual(result["matureCohort"], 3)
+        self.assertEqual(result["newPageWinRate"], 0.3333)
         self.assertIsNone(result["revenuePerNewPage"])
         self.assertEqual(result["revenuePerNewPageStatus"], "INSUFFICIENT_DATA")
     def test_verified_naver_snapshot_drives_only_eligible_camping_candidates(self):
