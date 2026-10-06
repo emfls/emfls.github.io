@@ -117,6 +117,11 @@
   - 보호 winner gate: PR #55 첫 exact-head run `37422867065`는 launch guard에서 `PROTECTED_WINNER_CHANGED`로 실패했다. 지정된 C33 본문 수정만 통과하도록 exact base/result blob pair를 allowlist에 추가하고 variant/다른 winner 거부 회귀를 추가했다. Full local revalidation은 통과; 수정 commit push 후 새 exact-head Actions 대기 중.
   - 상태: `origin/main` `02afeeb8e58fdbf0c6a3aae418ed41664b3e2b05`에서 분리한 `codex/c33-maple-planet-content-integrity-20261006`; PR #55 OPEN, merge 금지.
 
+- [ ] P0 C26 · Keyword Hunter 3/day queue validator repair
+  - 범위: `.github/workflows/keyword-hunter.yml`의 낡은 1-item 검증을 중앙 `DAILY_PUBLICATION_LIMIT` 기준으로 교정하고, queue/status/review/URL 및 publication-state/HTML 보호를 유지한다. 검색 후보 품질, YMYL, 중복, editorial HOLD, 발행 정책은 변경하지 않는다.
+  - 검증: TDD RED/GREEN; 관련 Keyword Hunter/launch suite 224 passed; 전체 unittest 819 passed (3 skipped); 전체 pytest 1,345 passed (3 skipped); workflow YAML parse, content launch guard, `git diff --check` PASS.
+  - 상태: 최신 main `02afeeb8e58fdbf0c6a3aae418ed41664b3e2b05`에서 분리한 `codex/c26-kh-queue-limit-20261006`; PR #54 is open. Use its Checks tab for current exact-head CI; 신규 공개·live Keyword Hunter dispatch·merge 없음.
+
 ## P1 - High
 
 - [ ] C24 · StockWiki base-path asset repair

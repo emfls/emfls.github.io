@@ -84,9 +84,13 @@ jobs:
         run: |
           python3 - <<'PY'
           import json
+          from scripts.content_launch_policy import DAILY_PUBLICATION_LIMIT
+
           q=json.load(open('data/content-launch-queue.json', encoding='utf-8'))
+          daily_limit=q.get('dailyLimit')
+          assert type(daily_limit) is int and 0 <= daily_limit <= DAILY_PUBLICATION_LIMIT
           items=q.get('queue', [])
-          assert len(items) <= 1 and len(items) <= int(q.get('dailyLimit', 1))
+          assert isinstance(items, list) and len(items) <= daily_limit
           for item in items:
               assert item.get('status') == 'READY_TO_LAUNCH'
               assert item.get('review_status') == 'PAGE_REVIEW_READY'
