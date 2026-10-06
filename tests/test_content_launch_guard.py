@@ -357,12 +357,13 @@ def test_guard_allows_only_the_exact_stage_aware_empty_rows_collector_transition
         text=True, capture_output=True, check=True,
     ).stdout.strip()
     approved = APPROVED_MONETIZATION_TRANSITIONS[path]
-    transition = ("2f4890e73ae705c5347b3755c5fb4ef47ca23e2b", current_blob)
+    transition = ("7e462d5e1ccedfba022594d98cabf4aa3697ca01", current_blob)
 
     assert transition in approved
     assert approved == {
         ("94f34228ed8b10213085b3de19bbab14e4fee0de", "83595861b3ea484b7fd9ad0c7fb11515f6516692"),
         ("83595861b3ea484b7fd9ad0c7fb11515f6516692", "2f4890e73ae705c5347b3755c5fb4ef47ca23e2b"),
+        ("2f4890e73ae705c5347b3755c5fb4ef47ca23e2b", "7e462d5e1ccedfba022594d98cabf4aa3697ca01"),
         transition,
     }
     assert validate_launch(tmp_path, manifest([]), [("M", path, *transition)]) == []
@@ -377,6 +378,22 @@ def test_guard_allows_only_the_exact_stage_aware_empty_rows_collector_transition
     )
     assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
         tmp_path, manifest([]), [("M", ".github/workflows/adsense-collection.yml")]
+    )
+
+
+def test_guard_allows_only_the_exact_adsense_workflow_breakdown_transition(tmp_path):
+    setup_data(tmp_path)
+    path = ".github/workflows/adsense-collection.yml"
+    current_blob = subprocess.run(
+        ["git", "hash-object", path], cwd=Path(__file__).resolve().parents[1],
+        text=True, capture_output=True, check=True,
+    ).stdout.strip()
+    transition = ("90f64a3d00d901f9052fc1fe20fc86372c90e014", current_blob)
+
+    assert APPROVED_MONETIZATION_TRANSITIONS[path] == {transition}
+    assert validate_launch(tmp_path, manifest([]), [("M", path, *transition)]) == []
+    assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
+        tmp_path, manifest([]), [("M", path, transition[0], "f" * 40)]
     )
 
 

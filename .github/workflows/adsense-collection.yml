@@ -34,17 +34,20 @@ jobs:
 
       # The refresh token must be issued for https://www.googleapis.com/auth/adsense.readonly.
       - name: Collect direct AdSense latest snapshot
-        run: python3 scripts/collect_adsense_snapshot.py --output data/performance/adsense-latest.json --days 7
+        run: python3 scripts/collect_adsense_snapshot.py --output data/performance/adsense-latest.json --breakdown-output data/performance/adsense-breakdown-latest.json --days 7
 
       - name: Validate direct AdSense snapshot
         run: python3 scripts/collect_adsense_snapshot.py --validate-only data/performance/adsense-latest.json
+
+      - name: Validate direct AdSense breakdown snapshot
+        run: python3 scripts/collect_adsense_snapshot.py --validate-breakdown-only data/performance/adsense-breakdown-latest.json
 
       - name: Commit refreshed AdSense snapshot
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git diff --check
-          git add data/performance/adsense-latest.json
+          git add data/performance/adsense-latest.json data/performance/adsense-breakdown-latest.json
           if ! git diff --staged --quiet; then
             git commit -m "chore: refresh direct AdSense latest snapshot"
             git push

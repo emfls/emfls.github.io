@@ -12,7 +12,7 @@ import urllib.error
 import tempfile
 from urllib.parse import parse_qs, urlsplit
 from contextlib import redirect_stderr, redirect_stdout
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from unittest import TestCase
 from unittest.mock import patch
 
@@ -71,6 +71,93 @@ def make_missing_rows_report(dimensions, start, end, totals, *, currency="USD"):
     return report
 
 
+BREAKDOWN_METRICS_FIXTURE = (
+    "ESTIMATED_EARNINGS", "PAGE_VIEWS", "PAGE_VIEWS_RPM", "IMPRESSIONS", "CLICKS",
+    "COST_PER_CLICK", "AD_REQUESTS", "MATCHED_AD_REQUESTS", "AD_REQUESTS_COVERAGE",
+    "ACTIVE_VIEW_VIEWABILITY",
+)
+
+
+def make_breakdown_report(dimensions, start, end, rows, totals, *, currency="USD", total_matched_rows=None, warnings=None):
+    headers = [{"name": name, "type": "DIMENSION"} for name in dimensions]
+    for name in BREAKDOWN_METRICS_FIXTURE:
+        metric_type = (
+            "METRIC_CURRENCY" if name in {"ESTIMATED_EARNINGS", "COST_PER_CLICK"}
+            else "METRIC_RATIO" if name in {"PAGE_VIEWS_RPM", "AD_REQUESTS_COVERAGE", "ACTIVE_VIEW_VIEWABILITY"}
+            else "METRIC_TALLY"
+        )
+        header = {"name": name, "type": metric_type}
+        if metric_type == "METRIC_CURRENCY":
+            header["currencyCode"] = currency
+        headers.append(header)
+
+    def encode(row):
+        values = [row.get(name, "") for name in dimensions]
+        values.extend(row.get(name, "") for name in BREAKDOWN_METRICS_FIXTURE)
+        return {"cells": [{"value": str(value)} for value in values]}
+
+    total_values = [""] * len(dimensions) + [str(totals.get(name, "")) for name in BREAKDOWN_METRICS_FIXTURE]
+    return {
+        "headers": headers,
+        "rows": [encode(row) for row in rows],
+        "totals": {"cells": [{"value": value} for value in total_values]},
+        "totalMatchedRows": str(len(rows) if total_matched_rows is None else total_matched_rows),
+        "startDate": _date_parts(start),
+        "endDate": _date_parts(end),
+        "warnings": warnings or [],
+    }
+
+
+def breakdown_fixtures(snapshot, *, missing_date=None, warnings=None, total_matched_rows=None, missing_metric=False, aggregate_mismatch=False):
+    first = datetime.fromisoformat(snapshot["priorPeriod"]["start"])
+    last = datetime.fromisoformat(snapshot["currentPeriod"]["end"])
+    dates = [(first + timedelta(days=offset)).date().isoformat() for offset in range((last - first).days + 1)]
+    current_values = {
+        "ESTIMATED_EARNINGS": "18.50", "PAGE_VIEWS": "1000", "PAGE_VIEWS_RPM": "18.50",
+        "IMPRESSIONS": "2000", "CLICKS": "10", "COST_PER_CLICK": "1.85",
+        "AD_REQUESTS": "2500", "MATCHED_AD_REQUESTS": "2200", "AD_REQUESTS_COVERAGE": "0.88",
+        "ACTIVE_VIEW_VIEWABILITY": "0.62",
+    }
+    prior_values = {
+        "ESTIMATED_EARNINGS": "10.00", "PAGE_VIEWS": "500", "PAGE_VIEWS_RPM": "20.00",
+        "IMPRESSIONS": "1000", "CLICKS": "5", "COST_PER_CLICK": "2.00",
+        "AD_REQUESTS": "1200", "MATCHED_AD_REQUESTS": "900", "AD_REQUESTS_COVERAGE": "0.75",
+        "ACTIVE_VIEW_VIEWABILITY": "0.68",
+    }
+    rows = []
+    for day in dates:
+        values = current_values if day == snapshot["currentPeriod"]["end"] else prior_values if day == snapshot["priorPeriod"]["end"] else {
+            metric: "0" for metric in BREAKDOWN_METRICS_FIXTURE
+        }
+        row = {"DATE": day, **values}
+        if missing_metric and day == dates[0]:
+            row["ACTIVE_VIEW_VIEWABILITY"] = ""
+        if day != missing_date:
+            rows.append(row)
+    totals = {
+        "ESTIMATED_EARNINGS": "28.50", "PAGE_VIEWS": "1500", "PAGE_VIEWS_RPM": "19.00",
+        "IMPRESSIONS": "3000", "CLICKS": "15", "COST_PER_CLICK": "1.90",
+        "AD_REQUESTS": "3700", "MATCHED_AD_REQUESTS": "3100", "AD_REQUESTS_COVERAGE": "0.83",
+        "ACTIVE_VIEW_VIEWABILITY": "0.65",
+    }
+    if aggregate_mismatch:
+        totals["ESTIMATED_EARNINGS"] = "30.00"
+    daily = make_breakdown_report(
+        ("DATE",), dates[0], dates[-1], rows, totals,
+        warnings=warnings, total_matched_rows=total_matched_rows,
+    )
+    dimension_reports = {}
+    for key, dimension in (("country", "COUNTRY_NAME"), ("platformType", "PLATFORM_TYPE_NAME"), ("adFormat", "AD_FORMAT_NAME")):
+        label = {"country": "South Korea", "platformType": "Desktop", "adFormat": "In-page"}[key]
+        dimensional_rows = [{**row, dimension: label} for row in rows]
+        dimension_reports[key] = make_breakdown_report(
+            ("DATE", dimension), dates[0], dates[-1], dimensional_rows, totals,
+            warnings=warnings,
+            total_matched_rows=total_matched_rows if total_matched_rows is not None else len(dimensional_rows),
+        )
+    return daily, dimension_reports
+
+
 def reports(*, current_rows=None, prior_rows=None, page_rows=None, current_totals=None, prior_totals=None, current_currency="USD", prior_currency="USD", page_total=None, current_site="emfls.github.io"):
     current_rows = current_rows if current_rows is not None else [{"DATE": "2026-10-04", "OWNED_SITE_DOMAIN_NAME": current_site, **(current_totals or {})}]
     prior_rows = prior_rows if prior_rows is not None else [{"DATE": "2026-09-27", "OWNED_SITE_DOMAIN_NAME": "emfls.github.io", **(prior_totals or {})}]
@@ -113,6 +200,8 @@ class AdSenseCollectorCommandTest(unittest.TestCase):
             "group: site-measurement-collection",
             "queue: max",
             "--validate-only data/performance/adsense-latest.json",
+            "--breakdown-output data/performance/adsense-breakdown-latest.json",
+            "--validate-breakdown-only data/performance/adsense-breakdown-latest.json",
         ):
             self.assertIn(required, workflow)
         self.assertNotIn("GOOGLE_APPLICATION_CREDENTIALS", workflow)
@@ -129,7 +218,10 @@ class AdSenseCollectorCommandTest(unittest.TestCase):
     def test_adsense_workflow_stages_only_the_compact_latest_snapshot(self):
         workflow = (ROOT / ".github/workflows/adsense-collection.yml").read_text(encoding="utf-8")
         staged_line = next(line.strip() for line in workflow.splitlines() if line.strip().startswith("git add "))
-        self.assertEqual(staged_line, "git add data/performance/adsense-latest.json")
+        self.assertEqual(
+            staged_line,
+            "git add data/performance/adsense-latest.json data/performance/adsense-breakdown-latest.json",
+        )
         for derived_artifact in (
             "data/page-performance.json",
             "data/revenue-opportunities.json",
@@ -906,3 +998,294 @@ class AdSenseSnapshotContractTest(TestCase):
             self.assertIn("AdSense snapshot schema: PASS", result.stdout)
         finally:
             path.unlink(missing_ok=True)
+
+
+class AdSenseBreakdownSnapshotTest(TestCase):
+    def build(self, **fixture_options):
+        site_current, site_prior, page = reports()
+        base = collector.build_snapshot(
+            account_name="accounts/pub-test",
+            account={"name": "accounts/pub-test", "timeZone": {"id": "Asia/Seoul"}},
+            current_report=site_current,
+            prior_report=site_prior,
+            page_url_report=page,
+            now=NOW,
+            generated_at="2026-10-05T06:00:00+00:00",
+            days=7,
+        )
+        daily, breakdowns = breakdown_fixtures(base, **fixture_options)
+        return collector.build_breakdown_snapshot(
+            account_name="accounts/pub-test",
+            account={"name": "accounts/pub-test", "timeZone": {"id": "Asia/Seoul"}},
+            snapshot=base,
+            daily_report=daily,
+            breakdown_reports=breakdowns,
+            generated_at="2026-10-05T06:00:00Z",
+            days=7,
+        )
+
+    def test_daily_rows_keep_two_complete_windows_metrics_timezone_currency_and_periods(self):
+        artifact = self.build()
+
+        self.assertEqual(artifact["source"], "DIRECT_ADSENSE_MANAGEMENT_API_V2")
+        self.assertEqual(artifact["reportingTimeZone"], {"mode": "ACCOUNT_TIME_ZONE", "id": "Asia/Seoul"})
+        self.assertEqual(artifact["currency"], "USD")
+        self.assertEqual(artifact["priorPeriod"], {"start": "2026-09-21", "end": "2026-09-27", "days": 7, "inclusive": True})
+        self.assertEqual(artifact["currentPeriod"], {"start": "2026-09-28", "end": "2026-10-04", "days": 7, "inclusive": True})
+        self.assertEqual(artifact["daily"]["rowCount"], 14)
+        self.assertEqual(artifact["daily"]["rows"][-1]["date"], "2026-10-04")
+        self.assertEqual(artifact["daily"]["rows"][-1]["estimatedEarnings"], 18.5)
+        self.assertEqual(artifact["daily"]["rows"][-1]["pageViews"], 1000)
+        self.assertEqual(artifact["daily"]["rows"][-1]["pageViewsRPM"], 18.5)
+        self.assertEqual(artifact["daily"]["rows"][-1]["impressions"], 2000)
+        self.assertEqual(artifact["daily"]["rows"][-1]["clicks"], 10)
+        self.assertEqual(artifact["daily"]["rows"][-1]["costPerClick"], 1.85)
+        self.assertEqual(artifact["daily"]["rows"][-1]["adRequests"], 2500)
+        self.assertEqual(artifact["daily"]["rows"][-1]["matchedAdRequests"], 2200)
+        self.assertEqual(artifact["daily"]["rows"][-1]["adRequestsCoverage"], 0.88)
+        self.assertEqual(artifact["daily"]["rows"][-1]["activeViewViewability"], 0.62)
+
+    def test_daily_sum_matches_site_aggregate_only_for_additive_metrics(self):
+        artifact = self.build()
+
+        self.assertEqual(artifact["daily"]["rowAggregateCheck"]["estimatedEarnings"], {"status": "MATCH", "dailyTotal": 28.5, "reportedTotal": 28.5})
+        self.assertEqual(artifact["daily"]["rowAggregateCheck"]["pageViews"], {"status": "MATCH", "dailyTotal": 1500, "reportedTotal": 1500})
+        self.assertEqual(artifact["daily"]["rowAggregateCheck"]["pageViewsRPM"]["status"], "NON_ADDITIVE")
+        self.assertEqual(artifact["daily"]["rowAggregateCheck"]["costPerClick"]["status"], "NON_ADDITIVE")
+        self.assertEqual(artifact["aggregateReconciliation"]["current"]["estimatedEarnings"]["status"], "MATCH")
+        self.assertEqual(artifact["aggregateReconciliation"]["prior"]["pageViews"]["status"], "MATCH")
+
+    def test_partial_missing_date_is_not_filled_with_zero_and_explicit_zero_is_preserved(self):
+        artifact = self.build(missing_date="2026-10-02")
+
+        daily = artifact["daily"]
+        self.assertEqual(daily["status"], "PARTIAL")
+        self.assertEqual(daily["missingDates"], ["2026-10-02"])
+        self.assertNotIn("2026-10-02", {row["date"] for row in daily["rows"]})
+        self.assertEqual(daily["rows"][0]["estimatedEarnings"], 0)
+        self.assertEqual(daily["rowAggregateCheck"]["estimatedEarnings"]["status"], "NOT_AVAILABLE")
+
+    def test_missing_metric_stays_null_and_partial_day_is_excluded(self):
+        artifact = self.build(missing_metric=True)
+
+        self.assertIsNone(artifact["daily"]["rows"][0]["activeViewViewability"])
+        self.assertEqual(artifact["daily"]["status"], "PARTIAL")
+        self.assertEqual(artifact["daily"]["rowAggregateCheck"]["estimatedEarnings"]["status"], "MATCH")
+        self.assertEqual(artifact["aggregateReconciliation"]["current"]["estimatedEarnings"]["status"], "MATCH")
+        self.assertEqual(artifact["range"]["end"], "2026-10-04")
+        self.assertNotIn("2026-10-05", [row["date"] for row in artifact["daily"]["rows"]])
+
+    def test_pair_breakdowns_are_retained_and_unverified_three_way_pair_is_not_fabricated(self):
+        artifact = self.build()
+
+        self.assertEqual(artifact["breakdowns"]["country"]["dimensions"], ["DATE", "COUNTRY_NAME"])
+        self.assertEqual(artifact["breakdowns"]["country"]["rows"][0]["country"], "South Korea")
+        self.assertEqual(artifact["breakdowns"]["platformType"]["rows"][0]["platformType"], "Desktop")
+        self.assertEqual(artifact["breakdowns"]["adFormat"]["rows"][0]["adFormat"], "In-page")
+        three_way = artifact["breakdowns"]["platformTypeAdFormat"]
+        self.assertEqual(three_way["status"], "NOT_AVAILABLE")
+        self.assertEqual(three_way["availabilityReason"], "NOT_PROBED_ACTUAL_API_COMPATIBILITY")
+        self.assertEqual(three_way["rows"], [])
+
+    def test_warnings_and_row_truncation_are_preserved_as_partial(self):
+        artifact = self.build(warnings=["fixture report warning"], total_matched_rows=15)
+
+        self.assertEqual(artifact["daily"]["rowCount"], 14)
+        self.assertEqual(artifact["daily"]["totalMatchedRows"], 15)
+        self.assertEqual(artifact["daily"]["truncationStatus"], "TRUNCATED")
+        self.assertEqual(artifact["daily"]["status"], "PARTIAL")
+        self.assertIn("fixture report warning", artifact["daily"]["warnings"])
+        self.assertIn("fixture report warning", artifact["warnings"])
+
+    def test_additive_total_mismatch_is_partial_and_not_silently_accepted(self):
+        artifact = self.build(aggregate_mismatch=True)
+
+        self.assertEqual(artifact["daily"]["status"], "PARTIAL")
+        self.assertEqual(artifact["daily"]["rowAggregateCheck"]["estimatedEarnings"]["status"], "MISMATCH")
+        self.assertTrue(any("row sums did not match" in warning for warning in artifact["warnings"]))
+
+    def test_unavailable_breakdown_is_unknown_not_zero(self):
+        artifact = self.build()
+        artifact["breakdowns"]["country"] = collector.unavailable_breakdown_report(
+            ["DATE", "COUNTRY_NAME"], "NOT_AVAILABLE", "API_ERROR", ["safe API error"]
+        )
+        artifact["rowCounts"]["country"] = 0
+
+        self.assertEqual(artifact["breakdowns"]["country"]["rows"], [])
+        self.assertIsNone(artifact["breakdowns"]["country"]["totalMatchedRows"])
+        self.assertEqual(artifact["breakdowns"]["country"]["status"], "NOT_AVAILABLE")
+        self.assertNotIn("estimatedEarnings", artifact["breakdowns"]["country"])
+        self.assertTrue(collector.validate_breakdown_snapshot(artifact))
+
+    def test_breakdown_validator_rejects_rows_missing_a_metric_field(self):
+        artifact = self.build()
+        artifact["daily"]["rows"][0].pop("estimatedEarnings")
+
+        with self.assertRaises(collector.CollectorError):
+            collector.validate_breakdown_snapshot(artifact)
+
+    def test_breakdown_validator_accepts_explicit_zero_and_null_values(self):
+        artifact = self.build(missing_metric=True)
+
+        self.assertTrue(collector.validate_breakdown_snapshot(artifact))
+        self.assertEqual(artifact["daily"]["rows"][1]["estimatedEarnings"], 0)
+        self.assertIsNone(artifact["daily"]["rows"][0]["activeViewViewability"])
+
+    def test_validate_breakdown_only_cli_validates_saved_sidecar_without_credentials(self):
+        artifact = self.build()
+        path = ROOT / "tmp-adsense-breakdown-schema-validation.json"
+        path.write_text(json.dumps(artifact), encoding="utf-8")
+        try:
+            result = subprocess.run(
+                [sys.executable, str(COLLECTOR), "--validate-breakdown-only", str(path)],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+                env={"PATH": os.environ.get("PATH", "")},
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn("AdSense breakdown schema: PASS", result.stdout)
+        finally:
+            path.unlink(missing_ok=True)
+
+    def test_breakdown_storage_window_cannot_expand_beyond_two_seven_day_periods(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            with self.assertRaises(collector.CollectorError) as captured:
+                collector.collect_snapshot(
+                    Path(temporary) / "adsense-latest.json",
+                    account_name="accounts/pub-test",
+                    client_id="client",
+                    client_secret="secret",
+                    refresh_token="refresh",
+                    days=8,
+                    breakdown_output=Path(temporary) / "adsense-breakdown-latest.json",
+                    open_url=lambda *_args, **_kwargs: self.fail("bounded-window rejection must not call the API"),
+                )
+        self.assertIn("bounded to two seven-day periods", str(captured.exception))
+
+    def test_breakdown_cannot_replace_the_existing_snapshot_path(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "adsense-latest.json"
+            output.write_text('{"marker":"last-good"}\n', encoding="utf-8")
+            with self.assertRaises(collector.CollectorError) as captured:
+                collector.collect_snapshot(
+                    output,
+                    account_name="accounts/pub-test",
+                    client_id="client",
+                    client_secret="secret",
+                    refresh_token="refresh",
+                    breakdown_output=output,
+                    open_url=lambda *_args, **_kwargs: self.fail("output collision must be rejected before API access"),
+                )
+            self.assertIn("different files", str(captured.exception))
+            self.assertEqual(output.read_text(encoding="utf-8"), '{"marker":"last-good"}\n')
+
+    def test_collection_keeps_existing_snapshot_contract_and_fails_soft_per_report(self):
+        site_current, site_prior, _page = reports()
+        base = collector.build_snapshot(
+            account_name="accounts/pub-test",
+            account={"name": "accounts/pub-test", "timeZone": {"id": "Asia/Seoul"}},
+            current_report=site_current,
+            prior_report=site_prior,
+            page_url_report=None,
+            page_url_unavailable_reason=collector.PAGE_URL_UNAVAILABLE_CLASSIFICATION,
+            page_url_unavailable_warning="The combination of requested dimensions is unavailable.",
+            now=NOW,
+            generated_at="2026-10-05T06:00:00Z",
+            days=7,
+        )
+        daily_report, dimension_reports = breakdown_fixtures(base)
+        requests = []
+
+        class Response:
+            def __init__(self, payload):
+                self.payload = json.dumps(payload).encode()
+
+            def read(self):
+                return self.payload
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *_args):
+                return False
+
+        def fake_open(request, timeout):
+            requests.append(request)
+            if request.full_url.startswith(collector.OAUTH_TOKEN_URL):
+                return Response({"access_token": "ACCESS_TOKEN_SENTINEL", "expires_in": 3600, "token_type": "Bearer"})
+            query = parse_qs(urlsplit(request.full_url).query)
+            if "/reports:generate" not in request.full_url:
+                return Response({"name": "accounts/pub-test", "timeZone": {"id": "Asia/Seoul"}})
+            dimensions = tuple(query.get("dimensions", []))
+            if dimensions == PAGE_DIMENSIONS:
+                raise urllib.error.HTTPError(
+                    request.full_url,
+                    400,
+                    "Bad Request",
+                    hdrs=None,
+                    fp=io.BytesIO(json.dumps({"error": {
+                        "code": 400,
+                        "status": "INVALID_ARGUMENT",
+                        "message": collector.PAGE_URL_UNAVAILABLE_MESSAGE,
+                    }}).encode()),
+                )
+            if dimensions == SITE_DIMENSIONS:
+                return Response(site_current if query["startDate.year"] == ["2026"] and query["startDate.month"] == ["9"] and query["startDate.day"] == ["28"] else site_prior)
+            if dimensions == ("DATE",):
+                return Response(daily_report)
+            if dimensions == ("DATE", "COUNTRY_NAME"):
+                raise urllib.error.HTTPError(
+                    request.full_url,
+                    400,
+                    "Bad Request",
+                    hdrs=None,
+                    fp=io.BytesIO(json.dumps({"error": {
+                        "code": 400,
+                        "status": "INVALID_ARGUMENT",
+                        "message": "Unsupported combination of dimensions and metrics.",
+                    }}).encode()),
+                )
+            if dimensions == ("DATE", "PLATFORM_TYPE_NAME"):
+                return Response(dimension_reports["platformType"])
+            if dimensions == ("DATE", "AD_FORMAT_NAME"):
+                return Response(dimension_reports["adFormat"])
+            self.fail(f"Unexpected AdSense report dimensions: {dimensions}")
+
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "adsense-latest.json"
+            breakdown_output = Path(temporary) / "adsense-breakdown-latest.json"
+            snapshot = collector.collect_snapshot(
+                output,
+                account_name="accounts/pub-test",
+                client_id="CLIENT_ID_SENTINEL",
+                client_secret="CLIENT_SECRET_SENTINEL",
+                refresh_token="REFRESH_TOKEN_SENTINEL",
+                now=NOW,
+                open_url=fake_open,
+                breakdown_output=breakdown_output,
+            )
+            stored_snapshot = json.loads(output.read_text(encoding="utf-8"))
+            stored_breakdown = json.loads(breakdown_output.read_text(encoding="utf-8"))
+
+        self.assertEqual(len(requests), 9)
+        self.assertEqual(stored_snapshot["source"], "DIRECT_ADSENSE_MANAGEMENT_API_V2")
+        self.assertEqual(snapshot["pageUrls"]["coverageStatus"], "NOT_AVAILABLE")
+        self.assertEqual(snapshot["site"], stored_snapshot["site"])
+        self.assertEqual(stored_breakdown["breakdowns"]["country"]["status"], "UNSUPPORTED_COMBINATION")
+        self.assertEqual(stored_breakdown["breakdowns"]["country"]["rows"], [])
+        self.assertEqual(stored_breakdown["daily"]["status"], "COMPLETE")
+        requested_dimensions = [
+            tuple(parse_qs(urlsplit(request.full_url).query).get("dimensions", []))
+            for request in requests if "/reports:generate" in request.full_url
+        ]
+        self.assertNotIn(("DATE", "PLATFORM_TYPE_NAME", "AD_FORMAT_NAME"), requested_dimensions)
+        breakdown_queries = [
+            parse_qs(urlsplit(request.full_url).query)
+            for request in requests
+            if "/reports:generate" in request.full_url
+            and tuple(parse_qs(urlsplit(request.full_url).query).get("dimensions", [])) not in {SITE_DIMENSIONS, PAGE_DIMENSIONS}
+        ]
+        self.assertTrue(all(query["metrics"] == list(BREAKDOWN_METRICS_FIXTURE) for query in breakdown_queries))
+        self.assertTrue(all(query["limit"] == ["4000"] for query in breakdown_queries))

@@ -40,9 +40,41 @@ METRIC_KEYS = {
     "CLICKS": "clicks",
     "COST_PER_CLICK": "costPerClick",
 }
-INTEGER_METRICS = {"PAGE_VIEWS", "IMPRESSIONS", "CLICKS"}
+INTEGER_METRICS = {"PAGE_VIEWS", "IMPRESSIONS", "CLICKS", "AD_REQUESTS", "MATCHED_AD_REQUESTS"}
 ADDITIVE_METRICS = {"ESTIMATED_EARNINGS", "PAGE_VIEWS", "IMPRESSIONS", "CLICKS"}
 REQUIRED_SITE_METRICS = {"ESTIMATED_EARNINGS", "PAGE_VIEWS", "IMPRESSIONS", "CLICKS"}
+BREAKDOWN_METRICS = (
+    *METRICS,
+    "AD_REQUESTS",
+    "MATCHED_AD_REQUESTS",
+    "AD_REQUESTS_COVERAGE",
+    "ACTIVE_VIEW_VIEWABILITY",
+)
+BREAKDOWN_METRIC_KEYS = {
+    **METRIC_KEYS,
+    "AD_REQUESTS": "adRequests",
+    "MATCHED_AD_REQUESTS": "matchedAdRequests",
+    "AD_REQUESTS_COVERAGE": "adRequestsCoverage",
+    "ACTIVE_VIEW_VIEWABILITY": "activeViewViewability",
+}
+BREAKDOWN_ADDITIVE_METRICS = {
+    "ESTIMATED_EARNINGS", "PAGE_VIEWS", "IMPRESSIONS", "CLICKS",
+    "AD_REQUESTS", "MATCHED_AD_REQUESTS",
+}
+BREAKDOWN_DIMENSIONS = {
+    "country": ("DATE", "COUNTRY_NAME"),
+    "platformType": ("DATE", "PLATFORM_TYPE_NAME"),
+    "adFormat": ("DATE", "AD_FORMAT_NAME"),
+}
+BREAKDOWN_DIMENSION_KEYS = {
+    "DATE": "date",
+    "COUNTRY_NAME": "country",
+    "PLATFORM_TYPE_NAME": "platformType",
+    "AD_FORMAT_NAME": "adFormat",
+}
+BREAKDOWN_REPORT_STATUSES = {"COMPLETE", "PARTIAL", "NOT_AVAILABLE", "UNSUPPORTED_COMBINATION"}
+BREAKDOWN_ROW_LIMIT = 4000
+BREAKDOWN_MAX_PERIOD_DAYS = 7
 PAGE_URL_UNAVAILABLE_MESSAGE = "The combination of requested dimensions is unavailable."
 PAGE_URL_UNAVAILABLE_CLASSIFICATION = "PAGE_URL_DIMENSION_COMBINATION_UNAVAILABLE"
 
@@ -72,6 +104,8 @@ def build_parser():
     parser.add_argument("--output", type=Path, default=Path("data/performance/adsense-latest.json"))
     parser.add_argument("--days", type=int, default=7)
     parser.add_argument("--validate-only", type=Path)
+    parser.add_argument("--breakdown-output", type=Path)
+    parser.add_argument("--validate-breakdown-only", type=Path)
     return parser
 
 
@@ -154,11 +188,11 @@ def _currency(headers):
     return next(iter(values)) if len(values) == 1 else None
 
 
-def _parse_report(report, dimensions, expected_period, *, stage):
+def _parse_report(report, dimensions, expected_period, *, stage, metrics=METRICS):
     if not isinstance(report, dict):
         raise CollectorError(f"{stage}: AdSense returned an invalid report response.")
     headers = report.get("headers")
-    expected_headers = [*dimensions, *METRICS]
+    expected_headers = [*dimensions, *metrics]
     if (
         not isinstance(headers, list)
         or any(not isinstance(item, dict) for item in headers)
@@ -192,7 +226,7 @@ def _parse_report(report, dimensions, expected_period, *, stage):
         warnings = ["AdSense returned report warnings in an unknown format."]
     return {
         "dimensions": list(dimensions),
-        "metrics": list(METRICS),
+        "metrics": list(metrics),
         "period": {"start": start, "end": end},
         "currency": _currency(headers),
         "rows": parsed_rows,
@@ -431,6 +465,477 @@ def build_snapshot(
     return snapshot
 
 
+def unavailable_breakdown_report(dimensions, status="NOT_AVAILABLE", reason="NOT_AVAILABLE", warnings=()):
+    if status not in {"NOT_AVAILABLE", "UNSUPPORTED_COMBINATION"}:
+        raise CollectorError("Unavailable breakdown status is invalid.")
+    return {
+        "dimensions": list(dimensions),
+        "metrics": list(BREAKDOWN_METRICS),
+        "status": status,
+        "availabilityReason": reason,
+        "currency": None,
+        "rows": [],
+        "rowCount": 0,
+        "totalMatchedRows": None,
+        "truncationStatus": "NOT_AVAILABLE",
+        "totals": {},
+        "warnings": [str(item) for item in warnings],
+    }
+
+
+def _breakdown_report(report, dimensions, expected_period, *, stage, daily=False, failure=None):
+    if failure:
+        result = unavailable_breakdown_report(
+            dimensions,
+            failure.get("status", "NOT_AVAILABLE"),
+            failure.get("reason", "API_ERROR"),
+            failure.get("warnings", ()),
+        )
+        if daily:
+            lower, upper = date.fromisoformat(expected_period["start"]), date.fromisoformat(expected_period["end"])
+            result["missingDates"] = [
+                (lower + timedelta(days=offset)).isoformat()
+                for offset in range((upper - lower).days + 1)
+            ]
+        return result
+    if report is None:
+        return _breakdown_report(
+            None,
+            dimensions,
+            expected_period,
+            stage=stage,
+            daily=daily,
+            failure={"reason": "NOT_AVAILABLE"},
+        ) if daily else unavailable_breakdown_report(dimensions)
+    parsed = _parse_report(
+        report,
+        dimensions,
+        expected_period,
+        stage=stage,
+        metrics=BREAKDOWN_METRICS,
+    )
+    lower, upper = date.fromisoformat(expected_period["start"]), date.fromisoformat(expected_period["end"])
+    rows = []
+    keys = set()
+    seen_dates = set()
+    for source_row in parsed["rows"]:
+        row = {}
+        for dimension in dimensions:
+            field = BREAKDOWN_DIMENSION_KEYS[dimension]
+            value = source_row.get(dimension)
+            if dimension == "DATE":
+                try:
+                    row_date = date.fromisoformat(value)
+                except (TypeError, ValueError):
+                    raise CollectorError(f"{stage}: AdSense returned an invalid DATE dimension.") from None
+                if row_date < lower or row_date > upper:
+                    raise CollectorError(f"{stage}: AdSense returned a DATE outside the requested period.")
+                value = row_date.isoformat()
+                if daily and value in seen_dates:
+                    raise CollectorError(f"{stage}: AdSense returned duplicate daily dates.")
+                if daily:
+                    seen_dates.add(value)
+            elif value == "":
+                value = None
+            row[field] = value
+        for metric in BREAKDOWN_METRICS:
+            row[BREAKDOWN_METRIC_KEYS[metric]] = _number(source_row.get(metric), metric)
+        key = tuple(row.get(BREAKDOWN_DIMENSION_KEYS[item]) for item in dimensions)
+        if key in keys:
+            raise CollectorError(f"{stage}: AdSense returned duplicate breakdown rows.")
+        keys.add(key)
+        rows.append(row)
+
+    totals = {
+        BREAKDOWN_METRIC_KEYS[metric]: _number(parsed["totals"].get(metric), metric)
+        for metric in BREAKDOWN_METRICS
+    }
+    missing_dates = []
+    if daily:
+        expected_dates = {
+            (lower + timedelta(days=offset)).isoformat()
+            for offset in range((upper - lower).days + 1)
+        }
+        missing_dates = sorted(expected_dates - seen_dates)
+    warnings = list(parsed["warnings"])
+    status = "COMPLETE"
+    if (
+        parsed["totalMatchedRows"] is None
+        or parsed["totalMatchedRows"] != parsed["rowCount"]
+        or parsed["currency"] is None
+        or not rows
+        or warnings
+        or missing_dates
+        or any(value is None for row in rows for value in (row.get(BREAKDOWN_METRIC_KEYS[metric]) for metric in BREAKDOWN_METRICS))
+        or any(value is None for row in rows for value in (row.get(BREAKDOWN_DIMENSION_KEYS[item]) for item in dimensions if item != "DATE"))
+    ):
+        status = "PARTIAL"
+    result = {
+        "dimensions": list(dimensions),
+        "metrics": list(BREAKDOWN_METRICS),
+        "status": status,
+        "currency": parsed["currency"],
+        "rows": rows,
+        "rowCount": parsed["rowCount"],
+        "totalMatchedRows": parsed["totalMatchedRows"],
+        "truncationStatus": parsed["truncationStatus"],
+        "totals": totals,
+        "warnings": warnings,
+    }
+    if daily:
+        result["missingDates"] = missing_dates
+    return result
+
+
+def _metric_totals_match(actual, expected, metric):
+    if actual is None or expected is None:
+        return False
+    tolerance = Decimal("0.01") if metric == "ESTIMATED_EARNINGS" else Decimal("0")
+    return abs(Decimal(str(actual)) - Decimal(str(expected))) <= tolerance
+
+
+def _daily_row_aggregate_check(daily):
+    checks = {}
+    rows_complete = (
+        daily.get("totalMatchedRows") == daily.get("rowCount")
+        and daily.get("truncationStatus") == "NOT_TRUNCATED"
+        and not daily.get("missingDates")
+        and not daily.get("warnings")
+    )
+    for metric in BREAKDOWN_METRICS:
+        key = BREAKDOWN_METRIC_KEYS[metric]
+        if metric not in BREAKDOWN_ADDITIVE_METRICS:
+            checks[key] = {"status": "NON_ADDITIVE"}
+            continue
+        values = [row.get(key) for row in daily["rows"]]
+        reported = daily["totals"].get(key)
+        if not rows_complete or not values or any(value is None for value in values) or reported is None:
+            checks[key] = {"status": "NOT_AVAILABLE"}
+            continue
+        total = sum(values)
+        checks[key] = {
+            "status": "MATCH" if _metric_totals_match(total, reported, metric) else "MISMATCH",
+            "dailyTotal": total,
+            "reportedTotal": reported,
+        }
+    return checks
+
+
+def _aggregate_reconciliation(daily, snapshot, current_period, prior_period):
+    result = {"status": "NOT_AVAILABLE", "current": {}, "prior": {}}
+    eligible = not (
+        daily.get("totalMatchedRows") != daily.get("rowCount")
+        or daily.get("truncationStatus") != "NOT_TRUNCATED"
+        or daily.get("warnings")
+        or snapshot.get("site", {}).get("comparisonStatus") != "VERIFIED"
+        or not snapshot.get("currency")
+        or daily.get("currency") != snapshot.get("currency")
+    )
+    for label, period, snapshot_key in (
+        ("prior", prior_period, "prior"),
+        ("current", current_period, "current"),
+    ):
+        dates = {
+            (date.fromisoformat(period["start"]) + timedelta(days=offset)).isoformat()
+            for offset in range(period["days"])
+        }
+        rows = [row for row in daily["rows"] if row["date"] in dates]
+        complete_dates = {row["date"] for row in rows} == dates and len(rows) == len(dates)
+        for metric in sorted(BREAKDOWN_ADDITIVE_METRICS):
+            key = BREAKDOWN_METRIC_KEYS[metric]
+            daily_values = [row.get(key) for row in rows]
+            source_value = (snapshot.get("site", {}).get(snapshot_key) or {}).get(key)
+            if (
+                not eligible
+                or not complete_dates
+                or any(value is None for value in daily_values)
+                or source_value is None
+            ):
+                check = {"status": "NOT_AVAILABLE"}
+            else:
+                total = sum(daily_values)
+                check = {
+                    "status": "MATCH" if _metric_totals_match(total, source_value, metric) else "MISMATCH",
+                    "dailyTotal": total,
+                    "siteAggregate": source_value,
+                }
+            result[label][key] = check
+    statuses = [
+        check["status"]
+        for period_name in ("current", "prior")
+        for check in result[period_name].values()
+    ]
+    if any(status == "MISMATCH" for status in statuses):
+        result["status"] = "PARTIAL"
+    elif statuses and all(status == "MATCH" for status in statuses):
+        result["status"] = "VERIFIED"
+    return result
+
+
+def build_breakdown_snapshot(
+    *,
+    account_name,
+    account,
+    snapshot,
+    daily_report,
+    breakdown_reports,
+    generated_at=None,
+    days=7,
+    failures=None,
+):
+    if account_name != (account or {}).get("name") or account_name != (snapshot.get("account") or {}).get("name"):
+        raise CollectorError("The AdSense account response does not match the breakdown snapshot account.")
+    time_zone = ((account or {}).get("timeZone") or {}).get("id")
+    if not time_zone or time_zone != (snapshot.get("reportingTimeZone") or {}).get("id"):
+        raise CollectorError("The AdSense account timezone does not match the breakdown snapshot.")
+    current_period = snapshot["currentPeriod"]
+    prior_period = snapshot["priorPeriod"]
+    if current_period.get("days") != days or prior_period.get("days") != days:
+        raise CollectorError("Breakdown snapshot periods do not match the requested comparison window.")
+    if days > BREAKDOWN_MAX_PERIOD_DAYS:
+        raise CollectorError("Breakdown snapshot exceeds its bounded comparison window.")
+    report_period = {
+        "start": prior_period["start"],
+        "end": current_period["end"],
+        "days": prior_period["days"] + current_period["days"],
+        "inclusive": True,
+    }
+    failures = failures or {}
+    daily = _breakdown_report(
+        daily_report,
+        ("DATE",),
+        report_period,
+        stage="DAILY_REPORT_PARSE",
+        daily=True,
+        failure=failures.get("daily"),
+    )
+    breakdowns = {}
+    for name, dimensions in BREAKDOWN_DIMENSIONS.items():
+        breakdowns[name] = _breakdown_report(
+            (breakdown_reports or {}).get(name),
+            dimensions,
+            report_period,
+            stage=f"{name.upper()}_REPORT_PARSE",
+            failure=failures.get(name),
+        )
+    breakdowns["platformTypeAdFormat"] = unavailable_breakdown_report(
+        ("DATE", "PLATFORM_TYPE_NAME", "AD_FORMAT_NAME"),
+        "NOT_AVAILABLE",
+        "NOT_PROBED_ACTUAL_API_COMPATIBILITY",
+    )
+
+    currencies = {
+        report["currency"]
+        for report in (daily, *breakdowns.values())
+        if report.get("currency")
+    }
+    warnings = []
+    for report in (daily, *breakdowns.values()):
+        for warning in report.get("warnings", []):
+            if warning not in warnings:
+                warnings.append(warning)
+    if len(currencies) > 1:
+        warnings.append("Breakdown reports returned different currencies; cross-report comparisons are unavailable.")
+        for report in (daily, *breakdowns.values()):
+            if report.get("currency") and report["currency"] != daily.get("currency") and report["status"] == "COMPLETE":
+                report["status"] = "PARTIAL"
+                report["warnings"].append("Report currency differs from the daily report currency.")
+
+    daily["rowAggregateCheck"] = _daily_row_aggregate_check(daily)
+    if any(check["status"] == "MISMATCH" for check in daily["rowAggregateCheck"].values()):
+        daily["status"] = "PARTIAL"
+        warning = "Daily additive row sums did not match the report totals."
+        daily["warnings"].append(warning)
+        warnings.append(warning)
+    aggregate_reconciliation = _aggregate_reconciliation(daily, snapshot, current_period, prior_period)
+    if aggregate_reconciliation["status"] == "PARTIAL":
+        warnings.append("Daily rows did not reconcile to the existing site aggregate for every additive metric.")
+
+    artifact = {
+        "schemaVersion": 1,
+        "source": "DIRECT_ADSENSE_MANAGEMENT_API_V2",
+        "generatedAt": generated_at or snapshot["generatedAt"],
+        "account": {"name": account_name},
+        "site": SITE_DOMAIN,
+        "currency": daily.get("currency"),
+        "currencyStatus": "NOT_AVAILABLE" if not daily.get("currency") else "VERIFIED" if len(currencies) <= 1 else "PARTIAL",
+        "reportingTimeZone": {"mode": "ACCOUNT_TIME_ZONE", "id": time_zone},
+        "currentPeriod": current_period,
+        "priorPeriod": prior_period,
+        "range": {"start": prior_period["start"], "end": current_period["end"], "days": report_period["days"], "inclusive": True},
+        "metrics": list(BREAKDOWN_METRICS),
+        "coverageStatus": daily["status"],
+        "daily": daily,
+        "breakdowns": breakdowns,
+        "aggregateReconciliation": aggregate_reconciliation,
+        "rowCounts": {"daily": daily["rowCount"], **{name: row["rowCount"] for name, row in breakdowns.items()}},
+        "warnings": warnings,
+        "collector": {"apiVersion": API_VERSION, "reportRowLimit": BREAKDOWN_ROW_LIMIT},
+    }
+    validate_breakdown_snapshot(artifact)
+    return artifact
+
+
+def validate_breakdown_snapshot(snapshot):
+    if not isinstance(snapshot, dict) or snapshot.get("schemaVersion") != 1:
+        raise CollectorError("Breakdown snapshot schemaVersion must be 1.")
+    if snapshot.get("source") != "DIRECT_ADSENSE_MANAGEMENT_API_V2":
+        raise CollectorError("Breakdown snapshot source is invalid.")
+    if not isinstance(snapshot.get("generatedAt"), str) or not snapshot["generatedAt"]:
+        raise CollectorError("Breakdown snapshot generatedAt is required.")
+    if not str((snapshot.get("account") or {}).get("name") or "").startswith("accounts/pub-"):
+        raise CollectorError("Breakdown snapshot account resource name is invalid.")
+    if snapshot.get("site") != SITE_DOMAIN or snapshot.get("metrics") != list(BREAKDOWN_METRICS):
+        raise CollectorError("Breakdown snapshot site or metric metadata is invalid.")
+    timezone_id = (snapshot.get("reportingTimeZone") or {}).get("id")
+    if not timezone_id or (snapshot.get("reportingTimeZone") or {}).get("mode") != "ACCOUNT_TIME_ZONE":
+        raise CollectorError("Breakdown snapshot reporting timezone is invalid.")
+    try:
+        ZoneInfo(timezone_id)
+    except (ZoneInfoNotFoundError, TypeError, ValueError):
+        raise CollectorError("Breakdown snapshot reporting timezone is invalid.") from None
+    current_period, prior_period = snapshot.get("currentPeriod") or {}, snapshot.get("priorPeriod") or {}
+    for period in (current_period, prior_period):
+        try:
+            start, end, day_count = date.fromisoformat(period["start"]), date.fromisoformat(period["end"]), int(period["days"])
+        except (KeyError, TypeError, ValueError):
+            raise CollectorError("Breakdown snapshot period metadata is invalid.") from None
+        if period.get("inclusive") is not True or end < start or (end - start).days + 1 != day_count or day_count > BREAKDOWN_MAX_PERIOD_DAYS:
+            raise CollectorError("Breakdown snapshot periods must be inclusive and match their day counts.")
+    if date.fromisoformat(prior_period["end"]) + timedelta(days=1) != date.fromisoformat(current_period["start"]):
+        raise CollectorError("Breakdown snapshot comparison periods must be adjacent.")
+    expected_range = {
+        "start": prior_period["start"], "end": current_period["end"],
+        "days": prior_period["days"] + current_period["days"], "inclusive": True,
+    }
+    if snapshot.get("range") != expected_range:
+        raise CollectorError("Breakdown snapshot range does not match its periods.")
+    if snapshot.get("currency") is not None and not isinstance(snapshot["currency"], str):
+        raise CollectorError("Breakdown snapshot currency must be a code or null.")
+    if snapshot.get("currencyStatus") not in {"VERIFIED", "PARTIAL", "NOT_AVAILABLE"}:
+        raise CollectorError("Breakdown snapshot currency status is invalid.")
+    if not isinstance(snapshot.get("warnings"), list) or any(not isinstance(item, str) for item in snapshot["warnings"]):
+        raise CollectorError("Breakdown snapshot warnings must be strings.")
+
+    reports = {"daily": snapshot.get("daily")}
+    reports.update(snapshot.get("breakdowns") or {})
+    expected_dimensions = {
+        "daily": ("DATE",),
+        **BREAKDOWN_DIMENSIONS,
+        "platformTypeAdFormat": ("DATE", "PLATFORM_TYPE_NAME", "AD_FORMAT_NAME"),
+    }
+    if set(reports) != set(expected_dimensions):
+        raise CollectorError("Breakdown snapshot report set is invalid.")
+    expected_dates = {
+        (date.fromisoformat(expected_range["start"]) + timedelta(days=offset)).isoformat()
+        for offset in range(expected_range["days"])
+    }
+    for name, expected_dims in expected_dimensions.items():
+        report = reports[name]
+        if not isinstance(report, dict) or report.get("dimensions") != list(expected_dims) or report.get("metrics") != list(BREAKDOWN_METRICS):
+            raise CollectorError("Breakdown report dimensions or metrics are invalid.")
+        if report.get("status") not in BREAKDOWN_REPORT_STATUSES:
+            raise CollectorError("Breakdown report status is invalid.")
+        if not isinstance(report.get("rows"), list) or type(report.get("rowCount")) is not int or report["rowCount"] != len(report["rows"]):
+            raise CollectorError("Breakdown report row count is invalid.")
+        if report["rowCount"] > BREAKDOWN_ROW_LIMIT:
+            raise CollectorError("Breakdown report exceeds its bounded row limit.")
+        if not isinstance(report.get("warnings"), list) or any(not isinstance(item, str) for item in report["warnings"]):
+            raise CollectorError("Breakdown report warnings are invalid.")
+        if name == "daily" and snapshot.get("coverageStatus") != report.get("status"):
+            raise CollectorError("Breakdown snapshot coverage status does not match the daily report.")
+        if report.get("status") in {"NOT_AVAILABLE", "UNSUPPORTED_COMBINATION"}:
+            if report["rows"] or report.get("rowCount") != 0 or report.get("totalMatchedRows") is not None or report.get("truncationStatus") != "NOT_AVAILABLE":
+                raise CollectorError("Unavailable breakdown reports cannot contain fabricated rows or counts.")
+            continue
+        total_matched = report.get("totalMatchedRows")
+        if total_matched is not None and (type(total_matched) is not int or total_matched < report["rowCount"]):
+            raise CollectorError("Breakdown report matched row count is invalid.")
+        expected_truncation = "NOT_AVAILABLE" if total_matched is None else "TRUNCATED" if total_matched > report["rowCount"] else "NOT_TRUNCATED"
+        if report.get("truncationStatus") != expected_truncation:
+            raise CollectorError("Breakdown report truncation status is inconsistent.")
+        if report.get("currency") is not None and not isinstance(report["currency"], str):
+            raise CollectorError("Breakdown report currency must be a code or null.")
+        if not isinstance(report.get("totals"), dict):
+            raise CollectorError("Breakdown report totals must be an object.")
+        for metric in BREAKDOWN_METRICS:
+            field = BREAKDOWN_METRIC_KEYS[metric]
+            if field not in report["totals"]:
+                raise CollectorError("Breakdown report totals must preserve every metric field.")
+            value = report["totals"][field]
+            if value is not None and (isinstance(value, bool) or not isinstance(value, (int, float))):
+                raise CollectorError("Breakdown report totals must be numeric or null.")
+        seen = set()
+        seen_dates = set()
+        for row in report["rows"]:
+            if not isinstance(row, dict):
+                raise CollectorError("Breakdown report rows must be objects.")
+            values = []
+            for dimension in expected_dims:
+                field = BREAKDOWN_DIMENSION_KEYS[dimension]
+                value = row.get(field)
+                if dimension == "DATE":
+                    try:
+                        parsed_date = date.fromisoformat(value)
+                    except (TypeError, ValueError):
+                        raise CollectorError("Breakdown report row date is invalid.") from None
+                    if value not in expected_dates:
+                        raise CollectorError("Breakdown report row date is outside its saved range.")
+                    if name == "daily":
+                        seen_dates.add(value)
+                elif value is not None and not isinstance(value, str):
+                    raise CollectorError("Breakdown report dimension values must be strings or null.")
+                values.append(value)
+            key = tuple(values)
+            if key in seen:
+                raise CollectorError("Breakdown report contains duplicate dimension rows.")
+            seen.add(key)
+            for metric in BREAKDOWN_METRICS:
+                field = BREAKDOWN_METRIC_KEYS[metric]
+                if field not in row:
+                    raise CollectorError("Breakdown report rows must preserve every metric field.")
+                value = row.get(field)
+                if value is not None and (isinstance(value, bool) or not isinstance(value, (int, float))):
+                    raise CollectorError("Breakdown report metrics must be numeric or null.")
+            if report.get("status") == "COMPLETE":
+                if any(row.get(BREAKDOWN_METRIC_KEYS[metric]) is None for metric in BREAKDOWN_METRICS):
+                    raise CollectorError("A complete breakdown report cannot contain missing metrics.")
+                if any(row.get(BREAKDOWN_DIMENSION_KEYS[item]) is None for item in expected_dims if item != "DATE"):
+                    raise CollectorError("A complete breakdown report cannot contain missing dimension values.")
+        if name == "daily":
+            missing_dates = sorted(expected_dates - seen_dates)
+            if report.get("missingDates") != missing_dates:
+                raise CollectorError("Daily missing-date metadata does not match its rows.")
+            if report.get("status") == "COMPLETE" and missing_dates:
+                raise CollectorError("A daily report with missing dates cannot be complete.")
+            if not isinstance(report.get("rowAggregateCheck"), dict):
+                raise CollectorError("Daily aggregate checks are required.")
+        if report.get("status") == "COMPLETE" and (
+            not report["rows"]
+            or report.get("currency") is None
+            or report.get("totalMatchedRows") != report["rowCount"]
+            or report.get("truncationStatus") != "NOT_TRUNCATED"
+            or report.get("warnings")
+        ):
+            raise CollectorError("A complete breakdown report must have full rows, currency, and no warnings.")
+    row_counts = snapshot.get("rowCounts")
+    if not isinstance(row_counts, dict) or row_counts != {name: report["rowCount"] for name, report in reports.items()}:
+        raise CollectorError("Breakdown snapshot row counts do not match report contents.")
+    available_currencies = {report.get("currency") for report in reports.values() if report.get("currency")}
+    if snapshot.get("currencyStatus") == "VERIFIED" and (
+        snapshot.get("currency") is None
+        or available_currencies != {snapshot.get("currency")}
+    ):
+        raise CollectorError("Verified breakdown currency must agree across all available reports.")
+    if snapshot.get("currencyStatus") == "NOT_AVAILABLE" and snapshot.get("currency") is not None:
+        raise CollectorError("Unavailable breakdown currency cannot contain a value.")
+    if not isinstance(snapshot.get("aggregateReconciliation"), dict) or snapshot["aggregateReconciliation"].get("status") not in {"VERIFIED", "PARTIAL", "NOT_AVAILABLE"}:
+        raise CollectorError("Breakdown aggregate reconciliation metadata is invalid.")
+    if not isinstance(snapshot.get("collector"), dict) or snapshot["collector"].get("apiVersion") != API_VERSION:
+        raise CollectorError("Breakdown collector metadata is invalid.")
+    return True
+
+
 def validate_snapshot(snapshot):
     if not isinstance(snapshot, dict) or snapshot.get("schemaVersion") != 1:
         raise CollectorError("Snapshot schemaVersion must be 1.")
@@ -618,16 +1123,16 @@ def _date_query_params(prefix, value):
     ]
 
 
-def _generate_report(account_name, period, dimensions, access_token, open_url, *, stage, filters=(), sensitive_values=()):
+def _generate_report(account_name, period, dimensions, access_token, open_url, *, stage, filters=(), sensitive_values=(), metrics=METRICS, limit=REPORT_LIMIT):
     params = [("dimensions", item) for item in dimensions]
-    params.extend(("metrics", item) for item in METRICS)
+    params.extend(("metrics", item) for item in metrics)
     params.extend(_date_query_params("startDate", period["start"]))
     params.extend(_date_query_params("endDate", period["end"]))
     params.extend((
         ("dateRange", "CUSTOM"),
         ("reportingTimeZone", "ACCOUNT_TIME_ZONE"),
         ("languageCode", "en"),
-        ("limit", str(REPORT_LIMIT)),
+        ("limit", str(limit)),
     ))
     params.extend(("filters", item) for item in filters)
     account_path = quote(account_name, safe="/")
@@ -663,7 +1168,12 @@ def collect_snapshot(
     now=None,
     days=7,
     open_url=None,
+    breakdown_output=None,
 ):
+    if breakdown_output is not None and Path(output).resolve() == Path(breakdown_output).resolve():
+        raise CollectorError("The AdSense snapshot and breakdown outputs must be different files.")
+    if breakdown_output is not None and days > BREAKDOWN_MAX_PERIOD_DAYS:
+        raise CollectorError("Daily breakdown output is bounded to two seven-day periods.")
     if not all((account_name, client_id, client_secret, refresh_token)):
         raise CollectorError("ADSENSE_ACCOUNT_NAME and all three AdSense OAuth credentials are required.")
     if not str(account_name).startswith("accounts/pub-"):
@@ -734,7 +1244,92 @@ def collect_snapshot(
     )
     validate_snapshot(snapshot)
     _write_snapshot(output, snapshot)
+    if breakdown_output is not None:
+        _collect_breakdown_snapshot(
+            breakdown_output,
+            account_name=account_name,
+            account=account,
+            access_token=access_token,
+            sensitive_values=sensitive_values,
+            snapshot=snapshot,
+            now=now,
+            days=days,
+            open_url=open_url,
+        )
     return snapshot
+
+
+def _collect_breakdown_snapshot(
+    output,
+    *,
+    account_name,
+    account,
+    access_token,
+    sensitive_values,
+    snapshot,
+    now,
+    days,
+    open_url,
+):
+    current_period, prior_period = build_periods(now or datetime.now(timezone.utc), snapshot["reportingTimeZone"]["id"], days=days)
+    report_period = {
+        "start": prior_period["start"],
+        "end": current_period["end"],
+        "days": prior_period["days"] + current_period["days"],
+        "inclusive": True,
+    }
+    reports_by_name = {}
+    failures = {}
+    specs = {"daily": ("DATE",), **BREAKDOWN_DIMENSIONS}
+    for name, dimensions in specs.items():
+        stage = f"{name.upper()}_BREAKDOWN_REPORT"
+        try:
+            report = _generate_report(
+                account_name,
+                report_period,
+                dimensions,
+                access_token,
+                open_url,
+                stage=stage,
+                filters=(f"OWNED_SITE_DOMAIN_NAME=={SITE_DOMAIN}",),
+                sensitive_values=sensitive_values,
+                metrics=BREAKDOWN_METRICS,
+                limit=BREAKDOWN_ROW_LIMIT,
+            )
+            _breakdown_report(
+                report,
+                dimensions,
+                report_period,
+                stage=f"{name.upper()}_BREAKDOWN_REPORT_PARSE",
+                daily=name == "daily",
+            )
+            reports_by_name[name] = report
+        except GoogleAPIError as error:
+            message = error.safe_message or str(error)
+            unsupported = (
+                error.http_status == 400
+                and error.google_status == "INVALID_ARGUMENT"
+                and "combination" in message.lower()
+            )
+            failures[name] = {
+                "status": "UNSUPPORTED_COMBINATION" if unsupported else "NOT_AVAILABLE",
+                "reason": "UNSUPPORTED_COMBINATION" if unsupported else "API_ERROR",
+                "warnings": [message],
+            }
+        except CollectorError as error:
+            failures[name] = {"status": "NOT_AVAILABLE", "reason": "REPORT_PARSE_ERROR", "warnings": [str(error)]}
+    artifact = build_breakdown_snapshot(
+        account_name=account_name,
+        account=account,
+        snapshot=snapshot,
+        daily_report=reports_by_name.get("daily"),
+        breakdown_reports={name: reports_by_name.get(name) for name in BREAKDOWN_DIMENSIONS},
+        generated_at=snapshot["generatedAt"],
+        days=days,
+        failures=failures,
+    )
+    _write_snapshot(output, artifact)
+    return artifact
 
 
 def _read_snapshot(path):
@@ -748,10 +1343,18 @@ def _read_snapshot(path):
 def main(argv=None):
     args = build_parser().parse_args(argv)
     try:
+        if args.validate_only and args.validate_breakdown_only:
+            raise CollectorError("Choose only one AdSense artifact validation mode.")
         if args.validate_only:
             validate_snapshot(_read_snapshot(args.validate_only))
             print("AdSense snapshot schema: PASS")
             return 0
+        if args.validate_breakdown_only:
+            validate_breakdown_snapshot(_read_snapshot(args.validate_breakdown_only))
+            print("AdSense breakdown schema: PASS")
+            return 0
+        if args.breakdown_output and args.breakdown_output.resolve() == args.output.resolve():
+            raise CollectorError("The AdSense snapshot and breakdown outputs must be different files.")
         missing = [
             name for name in (
                 "ADSENSE_ACCOUNT_NAME",
@@ -769,6 +1372,7 @@ def main(argv=None):
             client_secret=os.environ["ADSENSE_OAUTH_CLIENT_SECRET"],
             refresh_token=os.environ["ADSENSE_OAUTH_REFRESH_TOKEN"],
             days=args.days,
+            breakdown_output=args.breakdown_output,
         )
         print(
             f"AdSense snapshot written: site={snapshot['site']['status']}; "

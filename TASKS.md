@@ -15,13 +15,20 @@
   - 수정 후 검증: focused 187 passed; unittest 752 passed; pytest 1,231 passed; SEO QA 신규 critical/warning 0 (현재 767/420); content launch guard PASS; `git diff --check` PASS.
   - 기준/상태: `origin/main` `a4845bc5a12d5b442279599de4c3abd9313e9fa0` 기반 `codex/c01-daily-publication-cap-3`; PR #42 OPEN / 새 exact-head CI 대기; `READY_FOR_CI`. Control Tower review 전 merge 또는 신규 공개 금지.
 
-- [ ] P0 Direct AdSense matched-period ingestion safety — C06 / PR #49 approved; latest-main sync
+- [x] P0 Direct AdSense matched-period ingestion safety — C06 / PR #49 approved; latest-main sync
   - 기준: PR #46 merge commit `9a83870428d6cf8b026de728dd9c3aabf3491b1e`의 approved head는 `5eb3f2c828ce6f4979ef8757e266b0fbf68dd1e0`; `DAILY_PUBLICATION_LIMIT = 3` 유지. PR #49 head `1d4e1cdd956ee6eefe29c15d7f8f18344e61fbb9`는 exact-head SEO QA `37378217157` SUCCESS였다.
   - Live evidence: merge 뒤 AdSense Collection을 한 번만 dispatch했다 (run `37373852773`). 실행은 `Collect direct AdSense latest snapshot` 단계에서 `AdSense report rows are unavailable.`로 실패했다. 안전한 로그에 HTTP/Google status가 없어 실패 endpoint는 미확정이다. 재실행은 금지.
   - Repair: current/prior/PAGE_URL parser 오류에 stage를 명시하고, `rows` 키가 없을 때만 빈 목록으로 정규화한다. 빈 current/prior site report는 fail-closed; 빈/missing PAGE_URL은 `PARTIAL`, matched count와 URL metric은 미확정으로 유지한다. last-good snapshot atomicity와 exact PAGE_URL 400 fail-soft guard는 유지.
   - Sync: latest `origin/main` `97ed941bf1276f5f5d102f25265576227937ccc7`을 regular-merge한 merge commit은 `dc9bb64bfe064568b4d321fd1b74dda3869cf92f`이며 latest main은 second parent다. `PROJECT_HISTORY.md` conflict 하나만 해결했고 C16 sitemap/test/history 및 C06 parser/history records 모두 보존했다. Code conflict는 0; collector blob은 그대로다.
   - 검증: post-sync focused AdSense/guard/revenue/source/policy/C16 tests 118 passed; unittest 797 passed; pytest 1,281 passed; SEO QA 신규 critical/warning 0 (현재 767/420); guard vs latest `origin/main` PASS; workflow YAML 3개 parse PASS; diff check 및 secret-pattern scan PASS. `DAILY_PUBLICATION_LIMIT = 3` 유지.
   - 상태: PR #49은 `03f49d071e4657e4b6a3ae6b1127449ab5bf0faf`로 정상 merge됨. 승인된 live AdSense 실행은 `37373852773`에서 parser failure로 종료됐고 재실행하지 않았다. 현재 tracked snapshot은 `site.status=PARTIAL`, `comparisonStatus=VERIFIED`; C07의 parser/write 충돌 의존성은 해소됐다.
+
+- [ ] P0 AdSense Daily Revenue Observability — C27
+  - 기준: latest verified GitHub `main` and local `origin/main` are `b79487f74fdb8aee5098b689dcd6596b2c9de698`. Isolated branch: `codex/adsense-daily-observability`.
+  - 변경: existing `adsense-latest.json` contract retained; added bounded `adsense-breakdown-latest.json` with 14 complete Asia/Seoul dates, minimum delivery/yield metrics, per-report currency/coverage/warnings/counts, additive reconciliation, and independent DATE×COUNTRY / DATE×PLATFORM_TYPE / DATE×AD_FORMAT states. Three-way platform×format remains `NOT_AVAILABLE` / `NOT_PROBED_ACTUAL_API_COMPATIBILITY` until actual API compatibility is confirmed.
+  - 보호/저장: latest-only replacement, 4,000-row cap per report, 7 days per comparison window. No content/ad-placement edits, timestamped Git history, live API call, or workflow dispatch. API outcomes remain unverified until a scheduled collection supplies them.
+  - 검증: Final AdSense/source/revenue/workflow focused pytest 104 passed; unittest 833 passed (3 skipped); full pytest 1,363 passed (3 skipped); `content_launch_guard` PASS vs latest main; AdSense workflow YAML, Python syntax, and `git diff --check` PASS. Fixture sidecar: 18,358 bytes for 14 sample rows per report; production size is bounded by the row limit.
+  - 상태: implementation locally verified; commit/push/PR and exact-head CI are pending. Do not merge before Control Tower review.
 
 - [x] P0 Site-wide matched-period GSC page×query evidence — C17
   - 범위: 현재 `gsc-latest.json`과 정확히 같은 finalized period/property/web type으로 site-wide `[page, query]` evidence를 수집하는 manual-only, artifact-only 경로. Raw export는 `$RUNNER_TEMP`에만 쓰고 7일 보관 artifact로 업로드한다.
