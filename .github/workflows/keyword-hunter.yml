@@ -1,5 +1,6 @@
 name: Keyword Hunter
 
+
 on:
   schedule:
     - cron: "17 */2 * * *"
@@ -16,12 +17,15 @@ on:
         type: string
         required: false
 
+
 permissions:
   contents: write
+
 
 concurrency:
   group: keyword-hunter-production
   cancel-in-progress: false
+
 
 jobs:
   discover:
@@ -43,10 +47,12 @@ jobs:
         with:
           fetch-depth: 1
 
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+
 
       - name: Validate required credentials
         run: |
@@ -62,12 +68,15 @@ jobs:
       - name: Install test runner
         run: python3 -m pip install pytest
 
+
       - name: Run Keyword Hunter
         if: github.event_name == 'schedule' || inputs.mode != 'targeted'
         run: python3 scripts/keyword_hunter.py
 
+
       - name: Verify Keyword Hunter
         run: python3 -m pytest tests/test_keyword_hunter*.py -q
+
 
       - name: Run targeted Keyword Hunter measurement
         if: github.event_name == 'workflow_dispatch' && inputs.mode == 'targeted'
@@ -75,18 +84,24 @@ jobs:
           KEYWORD_HUNTER_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
         run: python3 scripts/keyword_hunter_targeted.py --root .
 
+
       - name: Prepare supervised review queue
         if: github.event_name == 'schedule' || inputs.mode != 'targeted'
         run: python3 scripts/prepare_keyword_launch.py --root .
+
 
       - name: Validate supervised review queue
         if: github.event_name == 'schedule' || inputs.mode != 'targeted'
         run: |
           python3 - <<'PY'
           import json
+          from scripts.content_launch_policy import DAILY_PUBLICATION_LIMIT
+
           q=json.load(open('data/content-launch-queue.json', encoding='utf-8'))
+          daily_limit=q.get('dailyLimit')
+          assert type(daily_limit) is int and 0 <= daily_limit <= DAILY_PUBLICATION_LIMIT
           items=q.get('queue', [])
-          assert len(items) <= 1 and len(items) <= int(q.get('dailyLimit', 1))
+          assert isinstance(items, list) and len(items) <= daily_limit
           for item in items:
               assert item.get('status') == 'READY_TO_LAUNCH'
               assert item.get('review_status') == 'PAGE_REVIEW_READY'
