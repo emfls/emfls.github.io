@@ -4,6 +4,12 @@
 
 ## P0 - Critical
 
+- [ ] P0 StockWiki placeholder-ad source/build regression prevention — C14
+  - 범위: Astro source가 향후 빌드에서 placeholder 광고를 재생성하지 못하도록 한다. 실광고 활성화, StockWiki 금융 콘텐츠/데이터/SEO 의미 변경은 금지한다.
+  - 변경: `AdSlot.astro`와 호출부 및 StockLayout 고정 하단 placeholder를 제거하고, 예약된 StockWiki 빌드 출력에서 광고 마커가 발견되면 복사·커밋 전에 실패하도록 안전 검사를 추가했다. 기존 생성 HTML 정리 스크립트는 유지했다.
+  - 재개 검증: C20 병합 후 `origin/main` `489df99ea81f51833d36d27ee09c8190c8443236`을 merge commit `2f6106ac3a`로 일반 병합했다. `npm ci`와 `npm run build` PASS; C14 ad safety 6, C20 integrity 10, canonical inventory 2 테스트 PASS. 전체 unittest 811개, 전체 pytest 1,333개 PASS (각 2개 skip). 새 dist의 광고 마커 없음; SEO QA 신규 critical/warning 0 (767/420 기존); content launch guard, YAML parse, `git diff --check` PASS.
+  - 상태: C20 루트 `.github/workflows/stockwiki-build-qa.yml`를 사용하며 비활성 nested workflow는 최신 main과 동일하게 복원했다. 알려진 `/kor/stockwikifavicon.ico` 및 `/kor/stockwikipagefind/` 경로 결함은 재현되어 C14에서 변경하지 않았다. 기존 PR #47의 최종 head에서 StockWiki Build QA와 SEO QA 성공 및 Control Tower 검토를 기다린다. Merge 금지.
+
 - [ ] P0 Daily Publication Cap 1→3 — C01
   - 범위: 공통 정책과 keyword/external launch selector의 일일 공개 상한을 3으로 통일하고 KST 당일 사용량을 계산한다. 품질·중복·YMYL/HOLD 게이트는 유지했다. 2026-10-05 Keyboard Cleaning 1건은 기존 PUBLISHED 사실로 반영되어 remaining capacity는 2다. manifest·counter·queue·페이지 데이터 변경 및 신규 공개는 0.
   - 수정 후 검증: focused 187 passed; unittest 752 passed; pytest 1,231 passed; SEO QA 신규 critical/warning 0 (현재 767/420); content launch guard PASS; `git diff --check` PASS.
@@ -99,10 +105,16 @@
 
 ## P1 - High
 
-- [ ] C20 · StockWiki Build Integrity and Active CI
+- [ ] C24 · StockWiki base-path asset repair
+  - Scope: normalize Astro's base path for the StockWiki favicon and Pagefind stylesheet only; preserve C20 canonicals, sitemap, 11 production routes, ad markup, and deployment state.
+  - Baseline: C20 PR #51 merged as `3214c1a3cc388534d9f322c978bb31387cdf9ffd`. Fresh build reproduced `/kor/stockwikifavicon.ico` and `/kor/stockwikipagefind/pagefind-ui.css` on all 12 built HTML pages.
+  - Verification: regression RED on the post-C20 build, then GREEN; `npm ci` / `npm run build` PASS; 12 generated HTML pages, 11 indexed Pagefind pages; canonical inventory 2 passed; post-build StockWiki Build QA tests 13 passed; unittest 808 tests (2 skipped); pytest 1,330 passed (2 skipped); SEO QA no new criticals/warnings (767/420 current); launch guard, YAML parse, and `git diff --check` PASS.
+  - Status: branch `codex/c24-stockwiki-base-path-repair`, synced to `origin/main` `489df99ea81f51833d36d27ee09c8190c8443236`; exact-head CI pending. Keep unmerged; no deployment.
+
+- [x] C20 · StockWiki Build Integrity and Active CI
   - Scope: make `emfls.github.io` the canonical host, add route-derived StockWiki canonicals, remove the dead sitemap generator call and unused direct `sitemap` dependency, correct the public robots sitemap URL, and add read-only path-scoped build QA. The tracked 11-URL sitemap remains separately owned.
   - Local verification: TDD RED/GREEN; `npm ci` and `npm run build` PASS; 11 production routes have exact self-canonicals; focused StockWiki tests 12 passed; canonical inventory 2 passed; unittest 807 passed (1 build-output test skipped after cleanup); pytest 1,290 passed (1 skipped); SEO QA 0 new critical/warnings (767/420 existing); launch guard, YAML, and diff checks PASS.
-  - Status: latest `origin/main` `a7ea9bfc14ba6a52b4bdd021aa9232bbb76d0443` is included; PR #48's Keyword Hunter persistence changes do not modify StockWiki source. PR #51 is OPEN / unmerged. Prior head `a7a262e198ff740b5563a23d9df6896508e1054c` passed exact-head StockWiki Build QA `37392597208` and SEO QA `37392597350`; this latest-main sync moves the PR head, so confirm both checks on the resulting head before Control Tower review. Fresh build confirmed the separate malformed base-path asset URLs; kept that repair out of C20 scope.
+  - Status: PR #51 merged as `3214c1a3cc388534d9f322c978bb31387cdf9ffd`. Its separately observed base-path asset defect is tracked in C24.
 
 - [ ] C16 · Three Utility Sitemap Coverage Repair
   - Scope: add the three existing, indexable self-canonical utility URLs to `kor/sitemap.xml`; omit unsupported `lastmod`; leave page HTML, root sitemap, content index, measurement data, publication state, and StockWiki untouched.
