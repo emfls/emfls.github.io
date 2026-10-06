@@ -15,12 +15,18 @@
   - 수정 후 검증: focused 187 passed; unittest 752 passed; pytest 1,231 passed; SEO QA 신규 critical/warning 0 (현재 767/420); content launch guard PASS; `git diff --check` PASS.
   - 기준/상태: `origin/main` `a4845bc5a12d5b442279599de4c3abd9313e9fa0` 기반 `codex/c01-daily-publication-cap-3`; PR #42 OPEN / 새 exact-head CI 대기; `READY_FOR_CI`. Control Tower review 전 merge 또는 신규 공개 금지.
 
-- [ ] P0 Direct AdSense matched-period ingestion safety — C06 / PR #43 merged; diagnostic follow-up
-  - 범위: PR #43 merge `937e8eb256a5921c6b212dc4ebc0c6ac5afe1b18` 후 latest `origin/main` `cfc4b2119fe9a98c8d7cc40e74dba743b5b4ccd8`에서 별도 hotfix를 진행한다. 실패한 AdSense run `37280801144`의 stage는 아직 확인되지 않았다.
-  - OAuth evidence: 사용자가 동일한 OAuth client/refresh token으로 OAuth Playground의 `adsense.readonly` refresh 성공을 확인했다. 어떤 credential 값도 열람·수정하지 않는다.
-  - 변경: collector 오류에 다섯 요청 stage와 JSON error의 안전한 `status/message`를 추가하고, credential·Bearer·publisher ID·URL/query를 redaction한다. API 요청 의미, workflow, AdSense snapshot, 파생 데이터, 콘텐츠는 바꾸지 않는다.
-  - 검증: 진단 focused 3 passed; collector 22 passed; content launch guard 25 passed; revenue/source 38 passed; unittest 783 passed; pytest 1,266 passed; SEO QA 신규 critical/warning 0; launch guard vs latest `origin/main` PASS; workflow YAML 3개 parse PASS; `git diff --check` PASS; secret-pattern scan PASS.
-  - 상태: diagnostic branch `codex/c06-adsense-stage-diagnostics`, code commit `dccbf21840be4d0f9df042ca4aa9da22d48d9f29`. Hotfix는 unmerged이며 Control Tower review가 다음 승인 gate다. AdSense workflow를 재실행하지 않고 C07은 대기한다.
+- [ ] P0 Direct AdSense matched-period ingestion safety — C06 / PR #49 approved; latest-main sync
+  - 기준: PR #46 merge commit `9a83870428d6cf8b026de728dd9c3aabf3491b1e`의 approved head는 `5eb3f2c828ce6f4979ef8757e266b0fbf68dd1e0`; `DAILY_PUBLICATION_LIMIT = 3` 유지. PR #49 head `1d4e1cdd956ee6eefe29c15d7f8f18344e61fbb9`는 exact-head SEO QA `37378217157` SUCCESS였다.
+  - Live evidence: merge 뒤 AdSense Collection을 한 번만 dispatch했다 (run `37373852773`). 실행은 `Collect direct AdSense latest snapshot` 단계에서 `AdSense report rows are unavailable.`로 실패했다. 안전한 로그에 HTTP/Google status가 없어 실패 endpoint는 미확정이다. 재실행은 금지.
+  - Repair: current/prior/PAGE_URL parser 오류에 stage를 명시하고, `rows` 키가 없을 때만 빈 목록으로 정규화한다. 빈 current/prior site report는 fail-closed; 빈/missing PAGE_URL은 `PARTIAL`, matched count와 URL metric은 미확정으로 유지한다. last-good snapshot atomicity와 exact PAGE_URL 400 fail-soft guard는 유지.
+  - Sync: latest `origin/main` `97ed941bf1276f5f5d102f25265576227937ccc7`을 regular-merge한 merge commit은 `dc9bb64bfe064568b4d321fd1b74dda3869cf92f`이며 latest main은 second parent다. `PROJECT_HISTORY.md` conflict 하나만 해결했고 C16 sitemap/test/history 및 C06 parser/history records 모두 보존했다. Code conflict는 0; collector blob은 그대로다.
+  - 검증: post-sync focused AdSense/guard/revenue/source/policy/C16 tests 118 passed; unittest 797 passed; pytest 1,281 passed; SEO QA 신규 critical/warning 0 (현재 767/420); guard vs latest `origin/main` PASS; workflow YAML 3개 parse PASS; diff check 및 secret-pattern scan PASS. `DAILY_PUBLICATION_LIMIT = 3` 유지.
+  - 상태: branch `codex/c06-report-parser-stages`; PR #49은 OPEN, merge 금지. Merge commit을 포함한 branch를 정상 push한 뒤 새 exact-head CI SUCCESS를 기다린다. AdSense live workflow 실행 금지, C07은 `WAITING`.
+
+- [ ] P0 Site-wide matched-period GSC page×query evidence — C17
+  - 범위: 현재 `gsc-latest.json`과 정확히 같은 finalized period/property/web type으로 site-wide `[page, query]` evidence를 수집하는 manual-only, artifact-only 경로. Raw export는 `$RUNNER_TEMP`에만 쓰고 7일 보관 artifact로 업로드한다.
+  - 상태: PR #50 `codex/c17-sitewide-gsc-page-query` OPEN; latest base `a7ea9bfc14ba6a52b4bdd021aa9232bbb76d0443` was merged normally after PR #48 advanced main; C13 files and C17 records are preserved, while the PR comparison remains C17-only. Local focused suite 90 passed. Exact-head SEO QA run `37390044458` passed on earlier head `0c9715d389c7b8eed7816780582190b21fdc3d64` (unittest 797; pytest 1,316 + 528 subtests). Use the latest PR head check for Control Tower review; merge and live query dispatch remain prohibited.
+  - 의존성: C07의 겹치는 GSC workflow write 단계는 C17이 merge되거나 abandoned 될 때까지 시작하지 않는다. Live GSC collection은 Control Tower 승인 전 실행하지 않는다.
 
 - [ ] P0 JP Travel Batch 02 — PR #38, 50-page canary
   - 동기화: 요청된 main `6b844cf03138057091bac2cdf1a87db3e98491f2` 이후 main이 `1b15674e09d3dd30fb65620ab2ae8f35f85c2137`로 전진해 두 SHA를 모두 regular merge로 반영했다. `5172e32bcd`에서 derived artifact 충돌 3건을 최신 main 입력 기준으로 해결·재생성했고, `946f3cf027` merge는 충돌이 없었다. rebase/force push 없음.
@@ -98,6 +104,16 @@
   - 범위/결과: 실제 콘텐츠 수정 0, 추가 공개 페이지 0. 대상 HTML·protected pages·sitemap/hub/manifest/IndexNow 변경 없음. matched-period Naver 값을 만들지 않았으며 Revenue는 `NO_CONCLUSION`.
 
 ## P1 - High
+
+- [ ] C20 · StockWiki Build Integrity and Active CI
+  - Scope: make `emfls.github.io` the canonical host, add route-derived StockWiki canonicals, remove the dead sitemap generator call and unused direct `sitemap` dependency, correct the public robots sitemap URL, and add read-only path-scoped build QA. The tracked 11-URL sitemap remains separately owned.
+  - Local verification: TDD RED/GREEN; `npm ci` and `npm run build` PASS; 11 production routes have exact self-canonicals; focused StockWiki tests 12 passed; canonical inventory 2 passed; unittest 807 passed (1 build-output test skipped after cleanup); pytest 1,290 passed (1 skipped); SEO QA 0 new critical/warnings (767/420 existing); launch guard, YAML, and diff checks PASS.
+  - Status: latest `origin/main` `a7ea9bfc14ba6a52b4bdd021aa9232bbb76d0443` is included; PR #48's Keyword Hunter persistence changes do not modify StockWiki source. PR #51 is OPEN / unmerged. Prior head `a7a262e198ff740b5563a23d9df6896508e1054c` passed exact-head StockWiki Build QA `37392597208` and SEO QA `37392597350`; this latest-main sync moves the PR head, so confirm both checks on the resulting head before Control Tower review. Fresh build confirmed the separate malformed base-path asset URLs; kept that repair out of C20 scope.
+
+- [ ] C16 · Three Utility Sitemap Coverage Repair
+  - Scope: add the three existing, indexable self-canonical utility URLs to `kor/sitemap.xml`; omit unsupported `lastmod`; leave page HTML, root sitemap, content index, measurement data, publication state, and StockWiki untouched.
+  - Verification: regression RED on missing sitemap membership, then GREEN (2); related sitemap/canonical/SEO tests 15 passed; unittest 785 passed; pytest 1,268 passed; sitemap audit found 0 duplicates/invalid XML and one pre-existing unknown inventory URL; SEO QA 0 new critical/warnings; content launch guard PASS; XML parse PASS.
+  - Status: local verification ready for exact-head CI from `origin/main` `93cfd4e48d20a2b012c7b4610929be9f167bcff3` on `codex/c16-three-utility-sitemap-repair`. Keep unmerged pending Control Tower review.
 
 - [x] 12 · Spanish STOPat5 — `/es/game/STOPat5/`
   - 완료: 2026-09-21. 승인 4-commit chain을 최신 main에 non-force 반영하고 Pages run `35589224240` success 및 production served HTML을 확인했다. Timer-specific Spanish identity, fixed 5.000-second `performance.now()` ladder, inclusive tolerance boundary, signed early/late/exact result, local best error/highest reached level, safe storage fallback/reset/restart, replay/share/related navigation, timing trust disclosure, VideoGame-only schema, FAQPage 0, privacy/AdSense state, generated RSS parity, and actual Node behavioral coverage were verified. Focused ES + sixth batch tests 9 passed. Mobile/runtime deep checks remain `MOBILE_390_NOT_VERIFIED` / `RUNTIME_PARTIAL_NOT_VERIFIED`; Google URL Inspection `SEARCH_CONSOLE_NOT_VERIFIED`, no submission; Naver `NAVER_NOT_PRIMARY`. 14/28/56-day measurement and Notion final closure remain follow-up.

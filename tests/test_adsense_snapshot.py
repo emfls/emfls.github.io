@@ -63,6 +63,14 @@ def make_report(dimensions, start, end, rows, totals, *, currency="USD", total_m
     }
 
 
+def make_missing_rows_report(dimensions, start, end, totals, *, currency="USD"):
+    """Fixture for a valid Google report response that omits optional rows."""
+    report = make_report(dimensions, start, end, [], totals, currency=currency)
+    report.pop("rows")
+    report.pop("totalMatchedRows")
+    return report
+
+
 def reports(*, current_rows=None, prior_rows=None, page_rows=None, current_totals=None, prior_totals=None, current_currency="USD", prior_currency="USD", page_total=None, current_site="emfls.github.io"):
     current_rows = current_rows if current_rows is not None else [{"DATE": "2026-10-04", "OWNED_SITE_DOMAIN_NAME": current_site, **(current_totals or {})}]
     prior_rows = prior_rows if prior_rows is not None else [{"DATE": "2026-09-27", "OWNED_SITE_DOMAIN_NAME": "emfls.github.io", **(prior_totals or {})}]
@@ -253,12 +261,140 @@ class AdSenseSnapshotContractTest(TestCase):
         self.assertNotEqual(snapshot["site"]["comparisonStatus"], "VERIFIED")
 
     def test_empty_site_api_response_does_not_create_verified_zero_snapshot(self):
-        current, prior, page = reports(current_rows=[], current_totals={metric: "0" for metric in METRICS})
+        zero_totals = {metric: "0" for metric in METRICS}
+        current, prior, page = reports()
 
-        error_type = getattr(collector, "CollectorError", Exception)
-        with self.assertRaises(error_type) as captured:
-            self.build(current=current, prior=prior, page=page)
-        self.assertRegex(str(captured.exception), "empty|no rows|unavailable")
+        for stage, report_name in (("SITE_CURRENT_REPORT_EMPTY", "current"), ("SITE_PRIOR_REPORT_EMPTY", "prior")):
+            with self.subTest(stage=stage):
+                payloads = {"current": current, "prior": prior, "page": page}
+                payloads[report_name] = make_missing_rows_report(
+                    SITE_DIMENSIONS,
+                    "2026-09-28" if report_name == "current" else "2026-09-21",
+                    "2026-10-04" if report_name == "current" else "2026-09-27",
+                    zero_totals,
+                )
+                with self.assertRaises(collector.CollectorError) as captured:
+                    self.build(**payloads)
+                self.assertIn(stage, str(captured.exception))
+
+    def test_live_missing_rows_contract_fixture_is_attributed_without_guessing_endpoint(self):
+        zero_totals = {metric: "0" for metric in METRICS}
+        current, prior, page = reports()
+        missing_current = make_missing_rows_report(SITE_DIMENSIONS, "2026-09-28", "2026-10-04", zero_totals)
+        missing_prior = make_missing_rows_report(SITE_DIMENSIONS, "2026-09-21", "2026-09-27", zero_totals)
+        missing_page = make_missing_rows_report(PAGE_DIMENSIONS, "2026-09-28", "2026-10-04", {})
+
+        for stage, reports_to_build in (
+            ("SITE_CURRENT_REPORT_EMPTY", (missing_current, prior, page)),
+            ("SITE_PRIOR_REPORT_EMPTY", (current, missing_prior, page)),
+        ):
+            with self.subTest(stage=stage):
+                with self.assertRaises(collector.CollectorError) as captured:
+                    self.build(current=reports_to_build[0], prior=reports_to_build[1], page=reports_to_build[2])
+                self.assertIn(stage, str(captured.exception))
+
+        snapshot = self.build(current=current, prior=prior, page=missing_page)
+        self.assertTrue(collector.validate_snapshot(snapshot))
+        self.assertEqual(snapshot["source"], "DIRECT_ADSENSE_MANAGEMENT_API_V2")
+        self.assertEqual(snapshot["site"]["status"], "VERIFIED")
+        self.assertEqual(snapshot["site"]["comparisonStatus"], "VERIFIED")
+        self.assertEqual(snapshot["pageUrls"]["coverageStatus"], "PARTIAL")
+        self.assertEqual(snapshot["pageUrls"]["rows"], [])
+        self.assertEqual(snapshot["pageUrls"]["returnedRowCount"], 0)
+        self.assertIsNone(snapshot["pageUrls"]["totalMatchedRows"])
+        self.assertEqual(snapshot["pageUrls"]["truncationStatus"], "NOT_AVAILABLE")
+        self.assertIn("missing URL is NOT_AVAILABLE, not zero", snapshot["pageUrls"]["coverageCaveat"])
+
+    def test_non_list_rows_and_invalid_matched_count_include_parse_stage(self):
+        current, prior, page = reports()
+        cases = (
+            ("SITE_CURRENT_REPORT_PARSE", "current", None),
+            ("SITE_PRIOR_REPORT_PARSE", "prior", {}),
+            ("PAGE_URL_REPORT_PARSE", "page", "not-a-list"),
+        )
+        for stage, report_name, rows in cases:
+            with self.subTest(stage=stage):
+                payloads = {"current": current, "prior": prior, "page": page}
+                payloads[report_name] = dict(payloads[report_name])
+                payloads[report_name]["rows"] = rows
+                with self.assertRaises(collector.CollectorError) as captured:
+                    self.build(**payloads)
+                self.assertIn(stage, str(captured.exception))
+
+        invalid_count = dict(page)
+        invalid_count["totalMatchedRows"] = "not-a-number"
+        with self.assertRaises(collector.CollectorError) as captured:
+            self.build(current=current, prior=prior, page=invalid_count)
+        self.assertIn("PAGE_URL_REPORT_PARSE", str(captured.exception))
+
+    def test_structural_report_errors_include_the_exact_parse_stage(self):
+        current, prior, page = reports()
+        malformed = (
+            ("SITE_CURRENT_REPORT_PARSE", "current", "headers", [None]),
+            ("SITE_PRIOR_REPORT_PARSE", "prior", "startDate", {"year": "bad", "month": 9, "day": 21}),
+            ("PAGE_URL_REPORT_PARSE", "page", "rows", [{"cells": []}]),
+        )
+        for stage, report_name, field, value in malformed:
+            with self.subTest(stage=stage, field=field):
+                payloads = {"current": current, "prior": prior, "page": page}
+                payloads[report_name] = dict(payloads[report_name])
+                payloads[report_name][field] = value
+                with self.assertRaises(collector.CollectorError) as captured:
+                    self.build(**payloads)
+                self.assertIn(stage, str(captured.exception))
+
+    def test_empty_site_report_parse_preserves_the_last_good_snapshot(self):
+        current, prior, page = reports()
+        current = make_missing_rows_report(
+            SITE_DIMENSIONS,
+            "2026-09-28",
+            "2026-10-04",
+            {metric: "0" for metric in METRICS},
+        )
+        responses = [
+            {"access_token": "ACCESS_TOKEN_SENTINEL", "expires_in": 3600},
+            {"name": "accounts/pub-test", "timeZone": {"id": "Asia/Seoul"}},
+            current,
+            prior,
+            page,
+        ]
+
+        class Response:
+            def __init__(self, payload):
+                self.payload = json.dumps(payload).encode()
+
+            def read(self):
+                return self.payload
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *_args):
+                return False
+
+        with tempfile.TemporaryDirectory() as temporary:
+            output = Path(temporary) / "adsense-latest.json"
+            output.write_text('{"marker":"last-good"}\n', encoding="utf-8")
+            call_count = 0
+
+            def fake_open(_request, timeout):
+                nonlocal call_count
+                response = Response(responses[call_count])
+                call_count += 1
+                return response
+
+            with self.assertRaises(collector.CollectorError) as captured:
+                collector.collect_snapshot(
+                    output,
+                    account_name="accounts/pub-test",
+                    client_id="CLIENT_ID_SENTINEL",
+                    client_secret="CLIENT_SECRET_SENTINEL",
+                    refresh_token="REFRESH_TOKEN_SENTINEL",
+                    now=NOW,
+                    open_url=fake_open,
+                )
+            self.assertIn("SITE_CURRENT_REPORT_EMPTY", str(captured.exception))
+            self.assertEqual(output.read_text(encoding="utf-8"), '{"marker":"last-good"}\n')
 
     def test_api_auth_failure_preserves_last_good_snapshot_and_redacts_response_body(self):
         output = ROOT / "tmp-adsense-last-good.json"
