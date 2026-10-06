@@ -1165,3 +1165,6 @@
 - **Current delivery state:** the previously failed PR creation attempt is not repeated; status remains `PR_BLOCKED_BY_INTEGRATION_PERMISSION`, with exact-head CI `NOT_AVAILABLE_NO_PR`. No merge to `main`, credential workaround, workflow dispatch, content/HTML edit, ad-placement edit, or timestamped artifact was performed.
 ## 2026-10-07 00:15 Keyword Hunter
 - Seeds: 40; New: 0; Rejected: 0; DB: 4532; Errors: 0; Top: none. Artifact report: reports/keyword-hunter/2026-10-07-0015.md
+
+## 2026-10-07 06:01 Keyword Hunter
+- Seeds: 40; New: 100; Rejected: 88; DB: 4632; Errors: 0; Top: 10월신혼여행지추천. Artifact report: reports/keyword-hunter/2026-10-07-0601.md
