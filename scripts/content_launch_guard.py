@@ -12,6 +12,9 @@ MEASUREMENT_WORKFLOW_ALLOWLIST = {".github/workflows/ga4-collection.yml"}
 APPROVED_MONETIZATION_ADDITIONS = frozenset({
     ".github/workflows/adsense-collection.yml",
     "scripts/collect_adsense_snapshot.py",
+    "docs/analytics/adsense-storage-retention.md",
+    "docs/superpowers/plans/2026-10-06-adsense-daily-observability.md",
+    "docs/superpowers/plans/2026-10-07-adsense-storage-safe-finalization.md",
 })
 APPROVED_PROTECTED_WINNER_TRANSITIONS = {
     "kor/report/camp/pyeongtaek.html": {

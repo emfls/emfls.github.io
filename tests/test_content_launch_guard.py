@@ -296,6 +296,20 @@ def test_guard_allows_only_control_tower_approved_adsense_initial_additions(tmp_
     assert validate_launch(tmp_path, manifest([]), approved_additions) == []
 
 
+def test_guard_allows_only_exact_adsense_documentation_additions(tmp_path):
+    setup_data(tmp_path)
+    approved_docs = [
+        ("A", "docs/analytics/adsense-storage-retention.md"),
+        ("A", "docs/superpowers/plans/2026-10-06-adsense-daily-observability.md"),
+        ("A", "docs/superpowers/plans/2026-10-07-adsense-storage-safe-finalization.md"),
+    ]
+
+    assert validate_launch(tmp_path, manifest([]), approved_docs) == []
+    assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
+        tmp_path, manifest([]), [(*approved_docs[0][:1], "docs/analytics/adsense-unreviewed.md")]
+    )
+
+
 def test_guard_reblocks_future_adsense_modifications_unknown_additions_and_html_ads(tmp_path):
     setup_data(tmp_path)
     for path in (

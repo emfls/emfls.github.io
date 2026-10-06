@@ -87,7 +87,7 @@
 **Files:**
 - Modify: `PROJECT_HISTORY.md`, `TASKS.md`
 
-- [ ] **Step 1: Record** the storage redesign, verified latest main, artifact location/retention, size evidence, tests, API compatibility limitation, and PR/CI state.
+- [x] **Step 1: Record** the storage redesign, verified latest main, artifact location/retention, size evidence, tests, API compatibility limitation, and PR/CI state.
 - [x] **Step 2: Run** focused AdSense tests, full unittest, full pytest, SEO QA, content launch guard, workflow YAML parse, Python syntax, and `git diff --check` on the final tree.
-- [ ] **Step 3: Review** staged paths and diff; run the content launch guard against freshly fetched latest main; commit and push normally; verify remote head.
-- [ ] **Step 4: Make one GitHub PR creation attempt** and inspect exact-head CI if a PR is created. Never merge.
+- [x] **Step 3: Review** staged paths and diff; run the content launch guard against freshly fetched latest main; commit and push normally; verify remote head.
+- [x] **Step 4: Make one GitHub PR creation attempt** and inspect exact-head CI if a PR is created. Never merge. The single attempt returned 403, so exact-head PR CI is unavailable.
