@@ -38,6 +38,21 @@ class CanonicalParser(HTMLParser):
             self.canonicals.append(values.get("href"))
 
 
+class AssetParser(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.asset_urls = []
+
+    def handle_starttag(self, tag, attrs):
+        values = dict(attrs)
+        if tag.lower() == "link":
+            rel = set((values.get("rel") or "").lower().split())
+            if rel.intersection({"icon", "stylesheet"}) and values.get("href"):
+                self.asset_urls.append(values["href"])
+        elif tag.lower() in {"img", "script", "source"} and values.get("src"):
+            self.asset_urls.append(values["src"])
+
+
 class StockWikiBuildIntegrityTest(unittest.TestCase):
     def test_astro_site_uses_canonical_github_pages_host(self):
         config = (STOCKWIKI / "astro.config.mjs").read_text(encoding="utf-8")
@@ -87,6 +102,48 @@ class StockWikiBuildIntegrityTest(unittest.TestCase):
         self.assertEqual([], failures)
         self.assertEqual(set(EXPECTED_DIST_PAGES) | set(AUXILIARY_BUILD_PAGES), actual)
         self.assertEqual(11, len(EXPECTED_DIST_PAGES))
+
+    @unittest.skipUnless(DIST.exists(), "run npm run build before checking generated StockWiki output")
+    def test_fresh_dist_assets_use_the_stockwiki_base_path(self):
+        favicon_url = "/kor/stockwiki/favicon.ico"
+        pagefind_prefix = "/kor/stockwiki/pagefind/"
+        failures = []
+        pages = {**EXPECTED_DIST_PAGES, **AUXILIARY_BUILD_PAGES}
+
+        for output_path in pages:
+            page = DIST / output_path
+            if not page.is_file():
+                failures.append(f"missing {output_path}")
+                continue
+
+            parser = AssetParser()
+            parser.feed(page.read_text(encoding="utf-8"))
+            assets = parser.asset_urls
+
+            if assets.count(favicon_url) != 1:
+                failures.append(f"{output_path}: expected one favicon at {favicon_url}, got {assets!r}")
+            if "/kor/stockwikifavicon.ico" in assets:
+                failures.append(f"{output_path}: malformed favicon path /kor/stockwikifavicon.ico")
+            if "/kor/stockwikipagefind/pagefind-ui.css" in assets:
+                failures.append(f"{output_path}: malformed Pagefind path /kor/stockwikipagefind/pagefind-ui.css")
+            if "/kor/stockwikifpagefind/pagefind-ui.css" in assets:
+                failures.append(f"{output_path}: malformed Pagefind path /kor/stockwikifpagefind/pagefind-ui.css")
+            pagefind_assets = [url for url in assets if "pagefind" in url.lower()]
+            if not pagefind_assets or any(not url.startswith(pagefind_prefix) for url in pagefind_assets):
+                failures.append(f"{output_path}: Pagefind assets are not rooted under {pagefind_prefix}: {pagefind_assets!r}")
+            if any(url.startswith("/") and not url.startswith("/kor/stockwiki/") for url in assets):
+                failures.append(f"{output_path}: unexpected root-relative asset outside /kor/stockwiki/: {assets!r}")
+            if any(
+                not (
+                    url == favicon_url
+                    or url.startswith(pagefind_prefix)
+                    or url.startswith("/kor/stockwiki/_assets/")
+                )
+                for url in assets
+            ):
+                failures.append(f"{output_path}: unexpected root-relative StockWiki asset: {assets!r}")
+
+        self.assertEqual([], failures)
 
     def test_separately_tracked_sitemap_keeps_eleven_github_io_routes(self):
         sitemap_path = STOCKWIKI / "sitemap.xml"

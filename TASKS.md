@@ -94,10 +94,16 @@
 
 ## P1 - High
 
-- [ ] C20 · StockWiki Build Integrity and Active CI
+- [ ] C24 · StockWiki base-path asset repair
+  - Scope: normalize Astro's base path for the StockWiki favicon and Pagefind stylesheet only; preserve C20 canonicals, sitemap, 11 production routes, ad markup, and deployment state.
+  - Baseline: C20 PR #51 merged as `3214c1a3cc388534d9f322c978bb31387cdf9ffd`. Fresh build reproduced `/kor/stockwikifavicon.ico` and `/kor/stockwikipagefind/pagefind-ui.css` on all 12 built HTML pages.
+  - Verification: regression RED on the post-C20 build, then GREEN; `npm ci` / `npm run build` PASS; 12 generated HTML pages, 11 indexed Pagefind pages; canonical inventory 2 passed; post-build StockWiki Build QA tests 13 passed; unittest 808 tests (2 skipped); pytest 1,295 passed (2 skipped); SEO QA no new criticals/warnings (767/420 current); launch guard, YAML parse, and `git diff --check` PASS.
+  - Status: branch `codex/c24-stockwiki-base-path-repair`; exact-head CI pending. Keep unmerged; no deployment.
+
+- [x] C20 · StockWiki Build Integrity and Active CI
   - Scope: make `emfls.github.io` the canonical host, add route-derived StockWiki canonicals, remove the dead sitemap generator call and unused direct `sitemap` dependency, correct the public robots sitemap URL, and add read-only path-scoped build QA. The tracked 11-URL sitemap remains separately owned.
   - Local verification: TDD RED/GREEN; `npm ci` and `npm run build` PASS; 11 production routes have exact self-canonicals; focused StockWiki tests 12 passed; canonical inventory 2 passed; unittest 807 passed (1 build-output test skipped after cleanup); pytest 1,290 passed (1 skipped); SEO QA 0 new critical/warnings (767/420 existing); launch guard, YAML, and diff checks PASS.
-  - Status: latest `origin/main` `a7ea9bfc14ba6a52b4bdd021aa9232bbb76d0443` is included; PR #48's Keyword Hunter persistence changes do not modify StockWiki source. PR #51 is OPEN / unmerged. Prior head `a7a262e198ff740b5563a23d9df6896508e1054c` passed exact-head StockWiki Build QA `37392597208` and SEO QA `37392597350`; this latest-main sync moves the PR head, so confirm both checks on the resulting head before Control Tower review. Fresh build confirmed the separate malformed base-path asset URLs; kept that repair out of C20 scope.
+  - Status: PR #51 merged as `3214c1a3cc388534d9f322c978bb31387cdf9ffd`. Its separately observed base-path asset defect is tracked in C24.
 
 - [ ] C16 · Three Utility Sitemap Coverage Repair
   - Scope: add the three existing, indexable self-canonical utility URLs to `kor/sitemap.xml`; omit unsupported `lastmod`; leave page HTML, root sitemap, content index, measurement data, publication state, and StockWiki untouched.
