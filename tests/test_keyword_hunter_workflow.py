@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 import os
 import re
@@ -39,6 +40,89 @@ def test_keyword_hunter_workflow_keeps_publication_state_and_content_protected()
     assert "^.. kor/.*\\.html$" in guard
     assert "git add data/content-launch-manifest.json" not in text
     assert "git add data/content-launch-counter.json" not in text
+
+def _review_queue_item(**overrides):
+    item = {
+        "status": "READY_TO_LAUNCH",
+        "review_status": "PAGE_REVIEW_READY",
+        "suggested_url": "/kor/guide/example.html",
+    }
+    item.update(overrides)
+    return item
+
+
+def _run_review_queue_validator(queue, root):
+    queue_path = root / "data" / "content-launch-queue.json"
+    queue_path.parent.mkdir(parents=True, exist_ok=True)
+    queue_path.write_text(json.dumps(queue), encoding="utf-8")
+
+    workflow = (ROOT / ".github/workflows/keyword-hunter.yml").read_text(encoding="utf-8")
+    script = _step_script(_workflow_step(workflow, "Validate supervised review queue"))
+    return subprocess.run(
+        ["bash", "-e", "-o", "pipefail", "-c", script],
+        cwd=root,
+        env={**os.environ, "PYTHONPATH": str(ROOT)},
+        text=True,
+        capture_output=True,
+    )
+
+
+def test_supervised_queue_validator_accepts_one_two_and_three_items_at_daily_limit_three(tmp_path):
+    for count in (1, 2, 3):
+        result = _run_review_queue_validator(
+            {"dailyLimit": 3, "queue": [_review_queue_item() for _ in range(count)]},
+            tmp_path,
+        )
+        assert result.returncode == 0, result.stderr + result.stdout
+
+
+def test_supervised_queue_validator_rejects_four_items_at_daily_limit_three(tmp_path):
+    result = _run_review_queue_validator(
+        {"dailyLimit": 3, "queue": [_review_queue_item() for _ in range(4)]},
+        tmp_path,
+    )
+    assert result.returncode != 0
+
+
+def test_supervised_queue_validator_rejects_daily_limit_above_canonical_policy(tmp_path):
+    result = _run_review_queue_validator(
+        {"dailyLimit": 4, "queue": [_review_queue_item()]},
+        tmp_path,
+    )
+    assert result.returncode != 0
+
+
+def test_supervised_queue_validator_rejects_non_integer_daily_limit(tmp_path):
+    result = _run_review_queue_validator(
+        {"dailyLimit": "999", "queue": [_review_queue_item()]},
+        tmp_path,
+    )
+    assert result.returncode != 0
+
+
+def test_supervised_queue_validator_keeps_ready_to_launch_guard(tmp_path):
+    result = _run_review_queue_validator(
+        {"dailyLimit": 3, "queue": [_review_queue_item(status="CANDIDATE")]},
+        tmp_path,
+    )
+    assert result.returncode != 0
+
+
+def test_supervised_queue_validator_keeps_page_review_ready_guard(tmp_path):
+    result = _run_review_queue_validator(
+        {"dailyLimit": 3, "queue": [_review_queue_item(review_status="HOLD")]},
+        tmp_path,
+    )
+    assert result.returncode != 0
+
+
+def test_supervised_queue_validator_keeps_korean_url_guard(tmp_path):
+    result = _run_review_queue_validator(
+        {"dailyLimit": 3, "queue": [_review_queue_item(suggested_url="/eng/guide/example.html")]},
+        tmp_path,
+    )
+    assert result.returncode != 0
+
 
 def test_targeted_dispatch_is_explicit_and_does_not_change_scheduled_or_default_broad_run():
     text = (ROOT / ".github/workflows/keyword-hunter.yml").read_text(encoding="utf-8")
