@@ -5,7 +5,6 @@ import PriceChart from '../../components/PriceChart.astro';
 import FinancialChart from '../../components/FinancialChart.astro';
 import FinancialTable from '../../components/FinancialTable.astro';
 import HistoricalValuationChart from '../../components/HistoricalValuationChart.astro';
-import AdSlot from '../../components/AdSlot.astro';
 import { readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 
@@ -246,17 +245,11 @@ const latestNetMargin = latestFin?.net_margin ?? null;
         <!-- 7. 역사적 PER/PBR 차트 (실제 계산값) -->
         <HistoricalValuationChart historicalValuation={stock.historical_valuation ?? null} />
 
-        <!-- 광고 (재무제표 하단) -->
-        <AdSlot type="adsense" />
-
         <!-- 8. 사업 개요 -->
         <div class="description-card">
           <div class="section-title">사업 개요</div>
           <p class="description-text">{stock.description}</p>
         </div>
-
-        <!-- 9. 광고 슬롯 (쿠팡) -->
-        <AdSlot type="coupang" />
 
         <!-- 10. 관련 종목 -->
         {related.length > 0 && (
@@ -281,12 +274,6 @@ const latestNetMargin = latestFin?.net_margin ?? null;
         )}
       </div>
 
-      <!-- 사이드바 광고 (PC only) -->
-      <aside class="sidebar">
-        <div class="sidebar-sticky">
-          <AdSlot type="adsense" style="display:block;width:300px;height:600px" />
-        </div>
-      </aside>
     </div>
   </StockLayout>
 )}
@@ -344,9 +331,6 @@ const latestNetMargin = latestFin?.net_margin ?? null;
   /* 레이아웃 */
   .content-grid { display: flex; gap: 24px; align-items: flex-start; }
   .main-col { flex: 1; min-width: 0; }
-  .sidebar { width: 320px; flex-shrink: 0; }
-  .sidebar-sticky { position: sticky; top: 72px; }
-  @media (max-width: 1024px) { .sidebar { display: none; } }
 
   /* 핵심 지표 */
   .metrics-card {
