@@ -102,8 +102,8 @@
 - [ ] C24 · StockWiki base-path asset repair
   - Scope: normalize Astro's base path for the StockWiki favicon and Pagefind stylesheet only; preserve C20 canonicals, sitemap, 11 production routes, ad markup, and deployment state.
   - Baseline: C20 PR #51 merged as `3214c1a3cc388534d9f322c978bb31387cdf9ffd`. Fresh build reproduced `/kor/stockwikifavicon.ico` and `/kor/stockwikipagefind/pagefind-ui.css` on all 12 built HTML pages.
-  - Verification: regression RED on the post-C20 build, then GREEN; `npm ci` / `npm run build` PASS; 12 generated HTML pages, 11 indexed Pagefind pages; canonical inventory 2 passed; post-build StockWiki Build QA tests 13 passed; unittest 808 tests (2 skipped); pytest 1,295 passed (2 skipped); SEO QA no new criticals/warnings (767/420 current); launch guard, YAML parse, and `git diff --check` PASS.
-  - Status: branch `codex/c24-stockwiki-base-path-repair`; exact-head CI pending. Keep unmerged; no deployment.
+  - Verification: regression RED on the post-C20 build, then GREEN; `npm ci` / `npm run build` PASS; 12 generated HTML pages, 11 indexed Pagefind pages; canonical inventory 2 passed; post-build StockWiki Build QA tests 13 passed; unittest 808 tests (2 skipped); pytest 1,330 passed (2 skipped); SEO QA no new criticals/warnings (767/420 current); launch guard, YAML parse, and `git diff --check` PASS.
+  - Status: branch `codex/c24-stockwiki-base-path-repair`, synced to `origin/main` `489df99ea81f51833d36d27ee09c8190c8443236`; exact-head CI pending. Keep unmerged; no deployment.
 
 - [x] C20 · StockWiki Build Integrity and Active CI
   - Scope: make `emfls.github.io` the canonical host, add route-derived StockWiki canonicals, remove the dead sitemap generator call and unused direct `sitemap` dependency, correct the public robots sitemap URL, and add read-only path-scoped build QA. The tracked 11-URL sitemap remains separately owned.
