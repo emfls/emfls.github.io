@@ -114,7 +114,7 @@
   - 범위: 기존 `kor/column/maple-planet-no-capital-rice-farming-2026.html` 한 페이지만 수정한다. URL, canonical, sitemap 등록, 무자본 게임 내 메소 수급 의도와 유효한 관련 링크를 보존하며 새 Maple 페이지를 만들지 않는다.
   - 변경: 서드파티 복각 서버 오인, RMT 정상화, 환전 안내, 시간당 원화/메소 수익 및 90% 직업 통계를 제거했다. Maple Planet 운영정책·MapleStory Worlds 공식 월드 목록·공식 플레이 가이드·2026-10-03 패치노트를 연결하고, 쌀먹 검색어를 정책 맥락에서만 설명했다. 최근 검토와 Article `dateModified`는 2026-10-06이다.
   - 검증: page-specific 및 관련 형제 회귀 3 passed; unittest 819 passed / 3 skipped; pytest 1,340 passed / 3 skipped; SEO audit 18,932 pages / 0 parser errors; SEO QA 신규 critical 0 / warning 0 (기존 767 / 420); launch guard 및 `git diff --check` PASS. SEO 및 quality 출력은 `/tmp`에서 확인했으며 추적 성과 산출물 변경은 없다.
-  - 상태: `origin/main` `02afeeb8e58fdbf0c6a3aae418ed41664b3e2b05`에서 분리한 `codex/c33-maple-planet-content-integrity-20261006`; push/PR 및 exact-head CI 기록 대기. Merge 금지.
+  - 상태: `origin/main` `02afeeb8e58fdbf0c6a3aae418ed41664b3e2b05`에서 분리한 `codex/c33-maple-planet-content-integrity-20261006`; PR #55 OPEN, exact-head CI 대기. Merge 금지.
 
 ## P1 - High
 
