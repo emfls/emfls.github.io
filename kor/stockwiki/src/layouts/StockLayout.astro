@@ -6,6 +6,7 @@ export interface Props {
 }
 const { title = 'StockWiki', description = '한국/미국 주식 종합 정보 사이트', ogImage } = Astro.props;
 const base = import.meta.env.BASE_URL;
+const assetBase = base.endsWith('/') ? base : `${base}/`;
 const basePath = base.replace(/\/+$/, '');
 const routePath = Astro.url.pathname.replace(/index\.html$/, '').replace(/\/?$/, '/');
 const canonicalPath = routePath === basePath || routePath.startsWith(`${basePath}/`)
@@ -25,10 +26,10 @@ const canonicalUrl = new URL(canonicalPath || `${basePath}/`, Astro.site).href;
   {ogImage && <meta property="og:image" content={ogImage} />}
   <link rel="canonical" href={canonicalUrl} />
   <meta name="theme-color" content="#0d1117" />
-  <link rel="icon" type="image/x-icon" href={`${base}favicon.ico`} />
+  <link rel="icon" type="image/x-icon" href={`${assetBase}favicon.ico`} />
 
   <!-- Pagefind UI CSS (loaded after build) -->
-  <link rel="stylesheet" href={`${base}pagefind/pagefind-ui.css`} />
+  <link rel="stylesheet" href={`${assetBase}pagefind/pagefind-ui.css`} />
 
   <style>
     :root {
