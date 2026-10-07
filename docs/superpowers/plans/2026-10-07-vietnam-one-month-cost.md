@@ -4,7 +4,7 @@
 
 **Goal:** Add a source-backed Korean guide that calculates a transparent 30-day one-person monthly-rent baseline for Hanoi, Da Nang, and Ho Chi Minh City while keeping short-stay booking, visa, insurance, and direct AdSense facts separate.
 
-**Architecture:** Add one static responsive Article page following the existing standalone travel-page pattern, with no calculator JavaScript and no ad changes. Add focused regression coverage, register the canonical route in the travel sitemap and generated Korean content index/home feed, then record the PR-ready state in project history/tasks.
+**Architecture:** Add one static responsive Article page following the existing standalone travel-page pattern, with no calculator JavaScript and no ad changes. Add focused regression coverage, register the canonical route in the travel sitemap and generated Korean content index/home feed, keep the verified protected travel hub unchanged, and record the PR-ready state in project history/tasks.
 
 **Tech Stack:** Static HTML, JSON-LD Article, Python unittest/pytest, repository SEO and launch-guard scripts.
 
@@ -37,12 +37,12 @@
 **Files:**
 - Create: `tests/test_vietnam_one_month_cost.py`
 - Create: `kor/report/travel/vietnam-one-month-cost.html`
-- Modify: `kor/report/travel/index.html`
-- Modify: `tests/test_travel_revenue_hub.py`
+- Do not modify: `kor/report/travel/index.html` (verified protected WINNER)
 - Modify: `tests/test_keyboard_cleaning_guide.py` (keep the existing launch discoverable after the new dated page enters the latest feed)
 - Modify: `kor/report/travel/sitemap.xml`
 - Modify: `data/content-index-ko.json`
 - Modify: `data/home-feed-ko.json`
+- Modify: `data/content-metadata.json` (query intent and source provenance)
 - Modify: `PROJECT_HISTORY.md`
 - Modify: `TASKS.md`
 
@@ -55,7 +55,7 @@
 - [x] **Step 1: Write the failing test** for indexability/schema, exact source/date/assumption facts, three-city table and subtotal math, visa and accommodation distinction, safe internal links, sitemap/index/feed membership, and preserved GA4/AdSense loaders.
 - [x] **Step 2: Run `pytest tests/test_vietnam_one_month_cost.py -q`** and confirm it fails because the page/wiring do not exist.
 - [x] **Step 3: Implement the single HTML article** using observed Oct 5–6 city-price snapshots and the Sep 25 furnished-rent cross-check; add three contextual city-guide links and official visa sources. Keep existing pages/ads untouched.
-- [x] **Step 4: Register discovery** exactly once in the travel sitemap and regenerate the deterministic content index/home feed; the only changes are the new page, modified travel hub date, and corresponding latest-feed ordering.
+- [x] **Step 4: Register discovery and metadata** exactly once in the travel sitemap, content index/home feed, and curated page metadata; preserve the verified protected WINNER travel hub unchanged.
 - [ ] **Step 5: Run the focused test**, inspect displayed arithmetic independently, then run page, sitemap, broken-link, launch-guard, SEO QA, unittest, pytest, and `git diff --check` checks.
 - [ ] **Step 6: Update `PROJECT_HISTORY.md` and `TASKS.md`** with source SHA, exact branch/head, tests, cap state, and no-merge Control Tower status.
 - [ ] **Step 7: Commit, push, make one PR creation attempt, and verify exact-head CI**; do not merge.

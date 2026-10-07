@@ -170,17 +170,6 @@ def test_all_internal_links_and_fresh_city_price_sources_are_registered():
 
 def test_publication_discovery_registers_page_once_without_publishing_it():
     _, page = parsed_page()
-    hub = (ROOT / "kor/report/travel/index.html").read_text(encoding="utf-8")
-    assert hub.count(f'href="{RELATIVE_URL}"') == 1
-    hub_schema = re.search(r'<script type="application/ld\+json">\s*(\{.*?\})\s*</script>', hub, re.S)
-    assert hub_schema
-    item_list = json.loads(hub_schema.group(1))
-    assert item_list["@type"] == "CollectionPage"
-    list_schema = re.search(r'<script type="application/ld\+json">\s*(\{.*?\})\s*</script>', hub[hub_schema.end():], re.S)
-    assert list_schema
-    items = json.loads(list_schema.group(1))["itemListElement"]
-    assert any(item["url"] == CANONICAL for item in items)
-
     travel_sitemap = (ROOT / "kor/report/travel/sitemap.xml").read_text(encoding="utf-8")
     assert travel_sitemap.count(CANONICAL) == 1
     assert (ROOT / "kor/sitemap.xml").read_text(encoding="utf-8").count(CANONICAL) == 0
@@ -188,6 +177,14 @@ def test_publication_discovery_registers_page_once_without_publishing_it():
     matching = [row for row in index if row["url"] == RELATIVE_URL]
     assert len(matching) == 1
     assert matching[0]["category"] == "여행"
+    metadata = json.loads((ROOT / "data/content-metadata.json").read_text(encoding="utf-8"))
+    target_metadata = [row for row in metadata if row["url"] == RELATIVE_URL]
+    assert len(target_metadata) == 1
+    assert target_metadata[0]["target_query"] == "베트남한달살기비용"
+    source_urls = {source["url"] for source in target_metadata[0]["sources"]}
+    assert "https://www.numbeo.com/cost-of-living/in/Hanoi" in source_urls
+    assert "https://vnembassy-seoul.mofa.gov.vn/vi/web/guest/tin-chi-tiet/chi-tiet/danh-muc-mien-thi-thuc-cua-viet-nam-voi-cac-nuoc-57162-596.html" in source_urls
+    assert "https://evisa.gov.vn/" in source_urls
     feed = json.loads((ROOT / "data/home-feed-ko.json").read_text(encoding="utf-8"))
     assert feed["latest"][0]["url"] == RELATIVE_URL
 
