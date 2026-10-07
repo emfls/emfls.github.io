@@ -2,6 +2,7 @@
 """Fail-closed validation for automated content launch diffs."""
 
 import argparse
+import hashlib
 import json
 import re
 import subprocess
@@ -131,6 +132,9 @@ APPROVED_JP_TRAVEL_CANARY_DELETIONS = {
     "jp/report/travel/poland-poznan.html",
 }
 ARABIC_RETIREMENT_OVERRIDE_PATH = "data/locale-retirement-overrides.json"
+BATCH_A_DELETION_AUTH_PATH = "data/locale-prune-canary-a-20261007.json"
+BATCH_A_SOURCE_MANIFEST_SHA256 = "2b8126abc0d1ffd02384e32cdcd113b6b2f9cbd6b7606840a25489c50112d7d1"
+BATCH_A_CANONICAL_PATHS_SHA256 = "afc77999191ede1768353550c05ec600df784d244a6c49aec57e4ed7bf850724"
 APPROVED_ARABIC_RETIREMENT_URLS = frozenset({
     "/ae/util/",
     "/ae/util/dice3d/",
@@ -193,6 +197,51 @@ def _approved_arabic_retirement_paths(root):
     return {_url_to_content_path(url) for url in urls}
 
 
+def _approved_batch_a_deletion_paths(root):
+    """Return Batch A paths only when its fixed approval contract is intact."""
+    try:
+        record = _read(Path(root) / BATCH_A_DELETION_AUTH_PATH, {})
+    except (OSError, UnicodeError, json.JSONDecodeError):
+        return set()
+    expected = {
+        "schemaVersion": 1,
+        "decision": "DELETE_EXACT_APPROVED_BATCH_A",
+        "status": "CONTROL_TOWER_APPROVED_CANARY_DELETION",
+        "approved": True,
+        "approvedAt": "2026-10-07",
+        "sourceAuditRun": "37580037353",
+        "sourceAuditHead": "adea8a4ea14eff225ec845c50c92acc675be7ee3",
+        "sourceArtifactId": 11464271890,
+        "sourceArtifactDigest": "sha256:e8e150ea2541fa2d9e7bcd84feafc75ec79b4622b9aa512f63540b6d4a481199",
+        "manifestSha256": BATCH_A_SOURCE_MANIFEST_SHA256,
+        "preserveRawMeasurements": True,
+    }
+    if not isinstance(record, dict) or set(record) != set(expected) | {"paths"}:
+        return set()
+    if any(type(record.get(key)) is not type(value) or record.get(key) != value for key, value in expected.items()):
+        return set()
+    paths = record.get("paths")
+    if not isinstance(paths, list) or len(paths) != 50 or any(not isinstance(path, str) for path in paths):
+        return set()
+    if len(set(paths)) != 50:
+        return set()
+    if any(
+        path != path.strip()
+        or "\\" in path
+        or path.startswith("/")
+        or any(part in ("", ".", "..") for part in path.split("/"))
+        or not path.endswith(".html")
+        or not path.startswith(("id/", "in/"))
+        for path in paths
+    ):
+        return set()
+    ordered_digest = hashlib.sha256(("\n".join(paths) + "\n").encode("utf-8")).hexdigest()
+    canonical_digest = hashlib.sha256(("\n".join(sorted(paths)) + "\n").encode("utf-8")).hexdigest()
+    if ordered_digest != BATCH_A_SOURCE_MANIFEST_SHA256 or canonical_digest != BATCH_A_CANONICAL_PATHS_SHA256:
+        return set()
+    return set(paths)
+
+
 def _changed_tuple(item):
     if not isinstance(item, tuple):
         return "M", item, None, None
@@ -209,6 +258,7 @@ def validate_launch(root, manifest, changed_paths):
     errors = set()
     changed_names = {row[1] for row in changed}
     approved_arabic_retirement_paths = _approved_arabic_retirement_paths(root)
+    approved_batch_a_paths = _approved_batch_a_deletion_paths(root)
     added_html = {row[1] for row in changed if row[0] == "A" and row[1].endswith(".html")}
     expected_html = set(manifest.get("contentPaths") or [_url_to_path(url) for url in manifest.get("urls") or []])
     # A manifest can change for launch bookkeeping without adding content.
@@ -217,13 +267,17 @@ def validate_launch(root, manifest, changed_paths):
     launch_changed = bool(added_html)
     if launch_changed and added_html != expected_html:
         errors.add("MANIFEST_DIFF_MISMATCH")
-    # Only exact, evidenced Arabic retirement exceptions and this exact JP
-    # Travel canary are authorized; keep every other deletion and rename closed.
+    # Only exact, evidenced retirement/canary exceptions are authorized; keep
+    # every other deletion and rename closed.
     unauthorized_deletion = any(
         row[0].startswith(("D", "R"))
         and not (
             row[0] == "D"
-            and (row[1] in approved_arabic_retirement_paths or row[1] in APPROVED_JP_TRAVEL_CANARY_DELETIONS)
+            and (
+                row[1] in approved_arabic_retirement_paths
+                or row[1] in APPROVED_JP_TRAVEL_CANARY_DELETIONS
+                or row[1] in approved_batch_a_paths
+            )
         )
         for row in changed
     )

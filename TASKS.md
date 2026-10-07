@@ -4,6 +4,11 @@
 
 ## P0 - Critical
 
+- [x] P0 Batch A exact deletion authorization repair + JP Batch B nested safety model
+  - Batch A: same branch `codex/locale-prune-canary-a-20261007`; the guard now requires the exact Control Tower metadata and both the approved ordered-manifest SHA-256 and normalized sorted-path SHA-256. Exactly 50 ID/IN paths pass; additions, renames, raw measurement deletion, and protected winner/experiment changes remain blocked.
+  - Verification: exact merge-base guard PASS; focused guard/Arabic retirement 39 passed; unittest 819 passed (3 skipped); pytest 1,355 passed (3 skipped); SEO QA 0 new criticals/warnings; sitemap 46 leaf / 18,661 URLs / no invalid XML or duplicate URLs; 275 broken-link findings with 0 references to the 50 deleted targets; canonical inventory 2 passed.
+  - JP Batch B: read-only nested B25/B50/B100 model only. Two Hangul-dominant pages were excluded after text inspection; the retained 100 show Japanese kana presence, but GSC/GA4 missing rows and mixed/awkward copy keep every JP batch on HOLD. No JP pages were deleted. Batch A repair was pushed on the same branch; PR creation was not retried by instruction. Next: Control Tower review of the pushed head.
+
 - [ ] P0 StockWiki placeholder-ad source/build regression prevention — C14
   - 범위: Astro source가 향후 빌드에서 placeholder 광고를 재생성하지 못하도록 한다. 실광고 활성화, StockWiki 금융 콘텐츠/데이터/SEO 의미 변경은 금지한다.
   - 변경: `AdSlot.astro`와 호출부 및 StockLayout 고정 하단 placeholder를 제거하고, 예약된 StockWiki 빌드 출력에서 광고 마커가 발견되면 복사·커밋 전에 실패하도록 안전 검사를 추가했다. 기존 생성 HTML 정리 스크립트는 유지했다.

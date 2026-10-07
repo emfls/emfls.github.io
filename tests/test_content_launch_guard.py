@@ -12,6 +12,7 @@ from scripts.content_launch_guard import (
 C33_MAPLE_PATH = "kor/column/maple-planet-no-capital-rice-farming-2026.html"
 C33_MAPLE_BASE_BLOB = "fd73fdd0be12fab17f9ab78473c0182956d34098"
 C33_MAPLE_REPAIRED_BLOB = "873ab21ba21523a22e83cffaf61e1dab3e4ec5d3"
+BATCH_A_AUTH_SOURCE = Path(__file__).resolve().parents[1] / "data/locale-prune-canary-a-20261007.json"
 
 
 def write_json(path, payload):
@@ -64,6 +65,14 @@ def write_arabic_retirement_override(root):
             "/ae/util/text-shuffle-sort/",
         ],
     })
+
+
+def write_batch_a_authorization(root, mutate=None):
+    record = json.loads(BATCH_A_AUTH_SOURCE.read_text(encoding="utf-8"))
+    if mutate:
+        mutate(record)
+    write_json(root / "data/locale-prune-canary-a-20261007.json", record)
+    return record
 
 
 def test_guard_allows_more_than_three_pages_but_rejects_deletion(tmp_path):
@@ -503,3 +512,92 @@ def test_git_changes_ignore_ci_generated_worktree_files(monkeypatch, tmp_path):
     monkeypatch.setattr("scripts.content_launch_guard.subprocess.run", fake_run)
     assert _git_changes(tmp_path, "base-sha") == [("A", "kor/report/camp/new.html")]
     assert captured["command"] == ["git", "diff", "--name-status", "base-sha", "HEAD"]
+
+
+def test_guard_allows_exact_batch_a_paths_and_subsets_only(tmp_path):
+    setup_data(tmp_path)
+    record = write_batch_a_authorization(tmp_path)
+    assert len(record["paths"]) == 50
+    assert validate_launch(tmp_path, manifest([]), [("D", path) for path in record["paths"]]) == []
+    assert validate_launch(tmp_path, manifest([]), [("D", path) for path in record["paths"][:49]]) == []
+
+
+def test_batch_a_authorization_rejects_extra_id_in_and_unrelated_locale_paths(tmp_path):
+    setup_data(tmp_path)
+    record = write_batch_a_authorization(tmp_path)
+    approved = [("D", path) for path in record["paths"]]
+    for path in (
+        "id/util/not-approved/index.html",
+        "in/util/not-approved/index.html",
+        "jp/report/travel/not-approved.html",
+    ):
+        assert "DELETION_NOT_ALLOWED" in validate_launch(
+            tmp_path, manifest([]), approved + [("D", path)]
+        )
+
+
+def test_batch_a_authorization_never_allows_renames_or_measurement_deletion(tmp_path):
+    setup_data(tmp_path)
+    write_batch_a_authorization(tmp_path)
+    assert "DELETION_NOT_ALLOWED" in validate_launch(
+        tmp_path, manifest([]), [("R100", "id/game/LadderGame/index.html")]
+    )
+    record = json.loads((tmp_path / "data/locale-prune-canary-a-20261007.json").read_text(encoding="utf-8"))
+    measurement_errors = validate_launch(
+        tmp_path,
+        manifest([]),
+        [("D", path) for path in record["paths"]] + [("D", "data/performance/ga4-latest.json")],
+    )
+    assert {"DELETION_NOT_ALLOWED", "RAW_MEASUREMENT_HISTORY_DELETION_NOT_ALLOWED"} <= set(measurement_errors)
+
+
+def test_batch_a_authorization_fails_closed_for_malformed_or_wrong_metadata(tmp_path):
+    setup_data(tmp_path)
+    auth_path = tmp_path / "data/locale-prune-canary-a-20261007.json"
+    auth_path.parent.mkdir(parents=True, exist_ok=True)
+    auth_path.write_text("{", encoding="utf-8")
+    assert "DELETION_NOT_ALLOWED" in validate_launch(tmp_path, manifest([]), [("D", "id/game/LadderGame/index.html")])
+    auth_path.write_bytes(b"\xff")
+    assert "DELETION_NOT_ALLOWED" in validate_launch(tmp_path, manifest([]), [("D", "id/game/LadderGame/index.html")])
+
+    for field, value in (
+        ("sourceArtifactDigest", "sha256:" + "0" * 64),
+        ("manifestSha256", "0" * 64),
+    ):
+        write_batch_a_authorization(tmp_path, lambda record, f=field, v=value: record.__setitem__(f, v))
+        assert "DELETION_NOT_ALLOWED" in validate_launch(
+            tmp_path, manifest([]), [("D", "id/game/LadderGame/index.html")]
+        )
+
+
+def test_editing_batch_a_json_paths_alone_cannot_widen_approved_set(tmp_path):
+    setup_data(tmp_path)
+
+    def replace_one_approved_path(record):
+        record["paths"][-1] = "in/util/not-approved/index.html"
+
+    record = write_batch_a_authorization(tmp_path, replace_one_approved_path)
+    errors = validate_launch(tmp_path, manifest([]), [("D", path) for path in record["paths"]])
+
+    assert "DELETION_NOT_ALLOWED" in errors
+
+
+def test_batch_a_authorization_does_not_override_protected_winners_or_experiments(tmp_path):
+    setup_data(tmp_path)
+    write_batch_a_authorization(tmp_path)
+
+    revenue_path = tmp_path / "data/revenue-opportunities.json"
+    revenue = json.loads(revenue_path.read_text(encoding="utf-8"))
+    revenue["protectedWinners"].append({"url": "/id/util/fortune/"})
+    write_json(revenue_path, revenue)
+    winner_errors = validate_launch(tmp_path, manifest([]), [("D", "id/util/fortune/index.html")])
+    assert "DELETION_NOT_ALLOWED" not in winner_errors
+    assert "PROTECTED_WINNER_CHANGED" in winner_errors
+
+    experiments_path = tmp_path / "data/experiments.json"
+    experiments = json.loads(experiments_path.read_text(encoding="utf-8"))
+    experiments["experiments"].append({"url": "/id/game/LadderGame/index.html", "status": "OBSERVING"})
+    write_json(experiments_path, experiments)
+    experiment_errors = validate_launch(tmp_path, manifest([]), [("D", "id/game/LadderGame/index.html")])
+    assert "DELETION_NOT_ALLOWED" not in experiment_errors
+    assert "PROTECTED_EXPERIMENT_CHANGED" in experiment_errors
