@@ -421,7 +421,8 @@ def test_guard_allows_only_the_exact_adsense_workflow_breakdown_transition(tmp_p
     transition = ("90f64a3d00d901f9052fc1fe20fc86372c90e014", current_blob)
 
     historical_transition = ("90f64a3d00d901f9052fc1fe20fc86372c90e014", "893889ceac2620250a6752d93aeb66c2a131b136")
-    assert APPROVED_MONETIZATION_TRANSITIONS[path] == {historical_transition, transition}
+    prior_transition = ("90f64a3d00d901f9052fc1fe20fc86372c90e014", "791cae6496af09dd8ad32e4893e25736e5e02157")
+    assert APPROVED_MONETIZATION_TRANSITIONS[path] == {historical_transition, prior_transition, transition}
     assert validate_launch(tmp_path, manifest([]), [("M", path, *transition)]) == []
     assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
         tmp_path, manifest([]), [("M", path, transition[0], "f" * 40)]

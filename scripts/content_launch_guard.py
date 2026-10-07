@@ -11,7 +11,6 @@ from pathlib import Path
 MEASUREMENT_WORKFLOW_ALLOWLIST = {".github/workflows/ga4-collection.yml"}
 APPROVED_MONETIZATION_ADDITIONS = frozenset({
     ".github/workflows/adsense-collection.yml",
-    ".github/workflows/adsense-page-url-probe.yml",
     "scripts/collect_adsense_snapshot.py",
     "docs/analytics/adsense-storage-retention.md",
     "docs/superpowers/plans/2026-10-07-adsense-page-url-probe.md",
@@ -48,6 +47,7 @@ APPROVED_MONETIZATION_TRANSITIONS = {
     ".github/workflows/adsense-collection.yml": {
         ("90f64a3d00d901f9052fc1fe20fc86372c90e014", "893889ceac2620250a6752d93aeb66c2a131b136"),
         ("90f64a3d00d901f9052fc1fe20fc86372c90e014", "791cae6496af09dd8ad32e4893e25736e5e02157"),
+        ("90f64a3d00d901f9052fc1fe20fc86372c90e014", "1308f1f5dcec0b55abeea71c918d063739e50866"),
     },
 }
 APPROVED_JP_TRAVEL_CANARY_DELETIONS = {

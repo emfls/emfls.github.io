@@ -6,6 +6,8 @@ from pathlib import Path
 from unittest.mock import patch
 from urllib.request import Request
 
+import yaml
+
 from scripts import collect_adsense_snapshot as collector
 from scripts.content_launch_guard import validate_launch
 
@@ -295,23 +297,41 @@ class PageUrlProbeSpecTests(unittest.TestCase):
             probe.assert_called_once()
             regular_collection.assert_not_called()
 
-    def test_probe_workflow_is_manual_temp_only_and_uploads_one_seven_day_artifact(self):
-        workflow_path = Path(__file__).resolve().parents[1] / ".github/workflows/adsense-page-url-probe.yml"
-        workflow = workflow_path.read_text(encoding="utf-8")
+    def test_probe_uses_existing_dispatchable_workflow_and_preserves_collection_job(self):
+        workflow_path = Path(__file__).resolve().parents[1] / ".github/workflows/adsense-collection.yml"
+        workflow = yaml.load(workflow_path.read_text(encoding="utf-8"), Loader=yaml.BaseLoader)
+        jobs = workflow["jobs"]
+        dispatch = workflow["on"]["workflow_dispatch"]
 
-        self.assertIn("workflow_dispatch:", workflow)
-        self.assertIn("contents: read", workflow)
+        self.assertEqual(dispatch["inputs"]["operation"]["default"], "collect")
+        self.assertEqual(dispatch["inputs"]["operation"]["options"], ["collect", "page_url_probe"])
+        self.assertEqual(jobs["collect"]["permissions"], {"contents": "write"})
+        self.assertIn("Collect direct AdSense latest snapshot", [step.get("name") for step in jobs["collect"]["steps"]])
+        self.assertIn("Commit refreshed AdSense snapshot", [step.get("name") for step in jobs["collect"]["steps"]])
+        self.assertIn("schedule", jobs["collect"]["if"])
+
+        probe = jobs["probe"]
+        self.assertEqual(probe["permissions"], {"contents": "read"})
+        self.assertIn("workflow_dispatch", probe["if"])
+        self.assertIn("page_url_probe", probe["if"])
+        self.assertEqual(len([
+            step for step in probe["steps"]
+            if step.get("uses") == "actions/upload-artifact@v4"
+        ]), 1)
+        probe_steps = "\n".join(str(step) for step in probe["steps"])
+        self.assertNotIn("git add", probe_steps)
+        self.assertNotIn("git commit", probe_steps)
+        self.assertNotIn("git push", probe_steps)
+        self.assertNotIn("adsense-latest.json", probe_steps)
+
+        workflow_text = workflow_path.read_text(encoding="utf-8")
         self.assertIn(
             '--page-url-probe-output "$RUNNER_TEMP/adsense-page-url-probe/probe-summary.json"',
-            " ".join(workflow.split()),
+            " ".join(workflow_text.split()),
         )
-        self.assertIn("adsense-page-url-probe-${{ github.run_id }}", workflow)
-        self.assertIn("retention-days: 7", workflow)
-        self.assertIn("if: always()", workflow)
-        self.assertNotIn("git add", workflow)
-        self.assertNotIn("git commit", workflow)
-        self.assertNotIn("git push", workflow)
-        self.assertNotIn("adsense-latest.json", workflow)
+        self.assertIn("adsense-page-url-probe-${{ github.run_id }}", workflow_text)
+        self.assertIn("retention-days: 7", workflow_text)
+        self.assertIn("if: always()", workflow_text)
 
 
 def test_guard_allows_only_the_exact_initial_diagnostics_snapshot_blob():

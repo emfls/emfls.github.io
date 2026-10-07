@@ -4,7 +4,7 @@
 
 **Goal:** Add an audit-only, five-case PAGE_URL API probe that records enough evidence to distinguish window, metric, and AdSense for Content applicability without changing regular collection first.
 
-**Architecture:** Add an explicit probe CLI mode to the existing collector, reuse its OAuth and report request helpers, and write a summary plus raw per-probe responses under the supplied temp directory. A manual read-only Actions workflow uploads the files once for seven days. The launch guard permits only the exact initial diagnostics blob and exact collector transition.
+**Architecture:** Add an explicit probe CLI mode to the existing collector, reuse its OAuth and report request helpers, and write a summary plus raw per-probe responses under the supplied temp directory. A manual-only, read-only probe job in the existing AdSense collection workflow uploads the files once for seven days, so the workflow can be dispatched while testing the feature branch without merging it. The existing scheduled collection job keeps its write permission and snapshot commit step. The launch guard permits only the exact initial diagnostics blob and exact source/workflow transitions.
 
 **Tech Stack:** Python 3, `urllib`, GitHub Actions, pytest/unittest.
 
@@ -31,11 +31,11 @@
 
 ### Task 1: Probe matrix, artifact workflow, and fail-closed guard
 
-**Files:** `scripts/collect_adsense_snapshot.py`, `.github/workflows/adsense-page-url-probe.yml`, `scripts/content_launch_guard.py`, `tests/test_adsense_page_url_probe.py`, `tests/test_content_launch_guard.py`.
+**Files:** `scripts/collect_adsense_snapshot.py`, `.github/workflows/adsense-collection.yml`, `scripts/content_launch_guard.py`, `tests/test_adsense_page_url_probe.py`, `tests/test_content_launch_guard.py`.
 
 - [x] Write failing tests for exact query windows, metrics and filters, result metadata, partial/missing rows, API errors, classification, temp-only output, and the exact initial diagnostics addition.
 - [x] Run the new tests and confirm they fail before implementation.
-- [x] Add the audit-only CLI mode and manual artifact-only workflow without changing the default collection path.
+- [x] Add the audit-only CLI mode and manual read-only probe job in the existing workflow without changing the scheduled collection path.
 - [x] Add exact blob checks for initial diagnostics and the approved collector transition.
 - [ ] Run focused and full validation, run the launch guard against the latest main, then push the same branch.
 - [ ] Dispatch the real probe matrix, inspect its single seven-day artifact, and change production PAGE_URL observation only if returned rows support it.
