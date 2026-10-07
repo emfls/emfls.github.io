@@ -82,6 +82,13 @@ DIAGNOSTICS_COUNTRY_TOP_N = 20
 MAX_DIAGNOSTICS_BYTES = 256 * 1024
 PAGE_URL_UNAVAILABLE_MESSAGE = "The combination of requested dimensions is unavailable."
 PAGE_URL_UNAVAILABLE_CLASSIFICATION = "PAGE_URL_DIMENSION_COMBINATION_UNAVAILABLE"
+PAGE_URL_PROBE_METRICS = {
+    "probe-a-30d-standard": ("ESTIMATED_EARNINGS", "PAGE_VIEWS", "IMPRESSIONS", "CLICKS"),
+    "probe-b-30d-impressions": ("IMPRESSIONS",),
+    "probe-c-7d-impressions": ("IMPRESSIONS",),
+    "probe-d-30d-earnings": ("ESTIMATED_EARNINGS",),
+    "probe-e-afc": ("IMPRESSIONS",),
+}
 
 
 class CollectorError(Exception):
@@ -114,6 +121,7 @@ def build_parser():
     parser.add_argument("--build-diagnostics-from", type=Path)
     parser.add_argument("--diagnostics-output", type=Path)
     parser.add_argument("--validate-diagnostics-only", type=Path)
+    parser.add_argument("--page-url-probe-output", type=Path)
     return parser
 
 
@@ -1533,12 +1541,44 @@ def _structured_http_error(error, stage, sensitive_values):
     )
 
 
-def _json_request(request, open_url, *, stage, sensitive_values=()):
+def _http_response_metadata(response, sensitive_values):
+    status = getattr(response, "status", None)
+    if status is None:
+        status = getattr(response, "code", None)
+    if status is None:
+        try:
+            status = response.getcode()
+        except (AttributeError, OSError):
+            status = None
+    raw_headers = getattr(response, "headers", None)
+    if raw_headers is None:
+        raw_headers = getattr(response, "info", lambda: {})()
+    allowed_headers = {
+        "cache-control", "content-type", "date", "server",
+        "x-goog-request-id", "x-request-id", "x-guploader-uploadid",
+    }
+    safe_headers = {}
+    try:
+        entries = raw_headers.items()
+    except AttributeError:
+        entries = ()
+    for name, value in entries:
+        normalized_name = str(name).lower()
+        if normalized_name in allowed_headers:
+            safe_headers[normalized_name] = _sanitize_api_error_message(str(value), sensitive_values)
+    return {"httpStatus": status, "httpHeaders": safe_headers}
+
+
+def _json_request(request, open_url, *, stage, sensitive_values=(), response_metadata=None):
     api_error = None
     try:
         with open_url(request, timeout=30) as response:
+            if response_metadata is not None:
+                response_metadata.update(_http_response_metadata(response, sensitive_values))
             raw = response.read()
     except HTTPError as error:
+        if response_metadata is not None:
+            response_metadata.update(_http_response_metadata(error, sensitive_values))
         api_error = _structured_http_error(error, stage, sensitive_values)
     except (URLError, TimeoutError, OSError):
         raise CollectorError(f"Google API network request failed at {stage}.") from None
@@ -1578,7 +1618,7 @@ def _refresh_access_token(client_id, client_secret, refresh_token, open_url):
     return access_token
 
 
-def _api_get(url, access_token, open_url, *, stage, sensitive_values=()):
+def _api_get(url, access_token, open_url, *, stage, sensitive_values=(), response_metadata=None):
     request = Request(
         url,
         headers={"Authorization": f"Bearer {access_token}", "Accept": "application/json"},
@@ -1588,6 +1628,7 @@ def _api_get(url, access_token, open_url, *, stage, sensitive_values=()):
         open_url,
         stage=stage,
         sensitive_values=(*sensitive_values, access_token),
+        response_metadata=response_metadata,
     )
 
 
@@ -1600,7 +1641,7 @@ def _date_query_params(prefix, value):
     ]
 
 
-def _generate_report(account_name, period, dimensions, access_token, open_url, *, stage, filters=(), sensitive_values=(), metrics=METRICS, limit=REPORT_LIMIT):
+def _generate_report(account_name, period, dimensions, access_token, open_url, *, stage, filters=(), sensitive_values=(), metrics=METRICS, limit=REPORT_LIMIT, response_metadata=None):
     params = [("dimensions", item) for item in dimensions]
     params.extend(("metrics", item) for item in metrics)
     params.extend(_date_query_params("startDate", period["start"]))
@@ -1614,7 +1655,414 @@ def _generate_report(account_name, period, dimensions, access_token, open_url, *
     params.extend(("filters", item) for item in filters)
     account_path = quote(account_name, safe="/")
     url = f"{API_BASE}/{account_path}/reports:generate?{urlencode(params)}"
-    return _api_get(url, access_token, open_url, stage=stage, sensitive_values=sensitive_values)
+    return _api_get(
+        url, access_token, open_url,
+        stage=stage,
+        sensitive_values=sensitive_values,
+        response_metadata=response_metadata,
+    )
+
+
+def build_page_url_probe_specs(now, reporting_time_zone):
+    """Build the fixed PAGE_URL audit matrix using complete account-local days."""
+    thirty_day_period = build_periods(now, reporting_time_zone, days=30)[0]
+    seven_day_period = build_periods(now, reporting_time_zone, days=7)[0]
+    common = {"dimensions": PAGE_URL_DIMENSIONS, "limit": REPORT_LIMIT}
+    return [
+        {"id": "probe-a-30d-standard", **common, "metrics": PAGE_URL_PROBE_METRICS["probe-a-30d-standard"], "filters": (), "period": thirty_day_period},
+        {"id": "probe-b-30d-impressions", **common, "metrics": PAGE_URL_PROBE_METRICS["probe-b-30d-impressions"], "filters": (), "period": thirty_day_period},
+        {"id": "probe-c-7d-impressions", **common, "metrics": PAGE_URL_PROBE_METRICS["probe-c-7d-impressions"], "filters": (), "period": seven_day_period},
+        {"id": "probe-d-30d-earnings", **common, "metrics": PAGE_URL_PROBE_METRICS["probe-d-30d-earnings"], "filters": (), "period": thirty_day_period},
+        {"id": "probe-e-afc", **common, "metrics": PAGE_URL_PROBE_METRICS["probe-e-afc"], "filters": ("PRODUCT_CODE==AFC",), "period": thirty_day_period},
+    ]
+
+
+def _probe_report_rows(report, sensitive_values):
+    headers = report.get("headers")
+    rows = report.get("rows")
+    if not isinstance(headers, list) or not isinstance(rows, list):
+        return None, [], ["The API response omitted a valid headers or rows list."]
+    names = [header.get("name") if isinstance(header, dict) else None for header in headers]
+    if "PAGE_URL" not in names:
+        return len(rows), [], ["The API response omitted the requested PAGE_URL dimension."]
+    parsed = []
+    warnings = []
+    for row in rows:
+        cells = row.get("cells") if isinstance(row, dict) else None
+        if not isinstance(cells, list):
+            warnings.append("A returned report row did not contain a cells list.")
+            continue
+        values = {}
+        for index, cell in enumerate(cells):
+            if index >= len(names) or not names[index] or not isinstance(cell, dict):
+                continue
+            values[names[index]] = cell.get("value")
+        page_url = values.get("PAGE_URL")
+        if not isinstance(page_url, str) or not page_url.strip():
+            warnings.append("A returned PAGE_URL row did not contain a page URL.")
+        clean = {"pageUrl": values.get("PAGE_URL")}
+        for metric in PAGE_URL_PROBE_METRICS["probe-a-30d-standard"]:
+            if metric in values:
+                try:
+                    clean[METRIC_KEYS.get(metric, metric)] = _number(values[metric], metric)
+                except CollectorError:
+                    clean[METRIC_KEYS.get(metric, metric)] = None
+                    warnings.append("A returned metric value was not numeric.")
+            else:
+                clean[METRIC_KEYS.get(metric, metric)] = None
+        parsed.append(clean)
+    return len(rows), parsed, list(dict.fromkeys(
+        _sanitize_api_error_message(item, sensitive_values)
+        for item in warnings
+    ))
+
+
+def _probe_currency(report):
+    headers = report.get("headers")
+    if not isinstance(headers, list):
+        return None
+    for header in headers:
+        if isinstance(header, dict) and header.get("name") == "ESTIMATED_EARNINGS":
+            currency = header.get("currencyCode")
+            return currency if isinstance(currency, str) and currency else None
+    return None
+
+
+def _probe_warning_list(report, sensitive_values):
+    warnings = report.get("warnings")
+    if not isinstance(warnings, list):
+        return []
+    return list(dict.fromkeys(
+        _sanitize_api_error_message(str(warning), sensitive_values)
+        for warning in warnings
+        if warning is not None
+    ))
+
+
+def _probe_total_matched_rows(report):
+    value = report.get("totalMatchedRows")
+    if isinstance(value, int) and not isinstance(value, bool) and value >= 0:
+        return value
+    if isinstance(value, str) and value.isdigit():
+        return int(value)
+    return None
+
+
+def classify_page_url_probe_results(results):
+    """Classify only directly observed rows; unknown/missing counts stay unknown."""
+    def usable(probe_id):
+        result = results.get(probe_id) or {}
+        page_rows = result.get("usablePageUrlRowCount", result.get("returnedRowCount"))
+        return result.get("status") in {"SUCCESS", "PARTIAL"} and isinstance(page_rows, int) and page_rows > 0
+
+    def explicit_empty(probe_id):
+        result = results.get(probe_id) or {}
+        return (
+            result.get("status") == "SUCCESS"
+            and not result.get("warnings")
+            and result.get("rowsPresent") is True
+            and result.get("returnedRowCount") == 0
+            and result.get("totalMatchedRows") == 0
+        )
+
+    unrestricted = (
+        "probe-a-30d-standard", "probe-b-30d-impressions",
+        "probe-c-7d-impressions", "probe-d-30d-earnings",
+    )
+    any_unrestricted_rows = any(usable(probe_id) for probe_id in unrestricted)
+    unrestricted_30d = (
+        "probe-a-30d-standard", "probe-b-30d-impressions", "probe-d-30d-earnings",
+    )
+    if usable("probe-e-afc") and all(explicit_empty(probe_id) for probe_id in unrestricted_30d):
+        return "CONTENT_PRODUCT_APPLICABILITY"
+    if usable("probe-b-30d-impressions") and explicit_empty("probe-c-7d-impressions"):
+        return "WINDOW_THRESHOLD_CONFIRMED"
+    standard_metrics_unusable = explicit_empty("probe-a-30d-standard") or (
+        (results.get("probe-a-30d-standard") or {}).get("status") == "API_ERROR"
+        and (results.get("probe-a-30d-standard") or {}).get("googleStatus") == "INVALID_ARGUMENT"
+    )
+    if standard_metrics_unusable and (
+        usable("probe-b-30d-impressions") or usable("probe-d-30d-earnings")
+    ):
+        return "METRIC_COMPATIBILITY_CONFIRMED"
+    if any_unrestricted_rows:
+        return "PAGE_URL_AVAILABLE"
+    if usable("probe-e-afc"):
+        return "PAGE_URL_AVAILABLE"
+    if all(explicit_empty(probe_id) for probe_id in unrestricted):
+        return "PAGE_URL_ACCOUNT_LIMITATION"
+    return "UNKNOWN"
+
+
+def _probe_page_rows(report, currency, sensitive_values):
+    _, parsed, _ = _probe_report_rows(report, sensitive_values)
+    if parsed is None:
+        return []
+    result = []
+    for row in parsed:
+        page_url = row.get("pageUrl")
+        if not isinstance(page_url, str) or not page_url.strip():
+            continue
+        try:
+            if urlsplit(page_url).hostname != SITE_DOMAIN:
+                continue
+        except ValueError:
+            continue
+        earnings = row.get("estimatedEarnings")
+        page_views = row.get("pageViews")
+        page_views_rpm = (earnings / page_views * 1000) if earnings is not None and page_views else None
+        result.append({
+            "pageUrl": page_url,
+            "estimatedEarnings": earnings,
+            "pageViews": page_views,
+            "pageViewsRPM": page_views_rpm,
+            "pageViewsRPMSource": "DERIVED_FROM_DIRECT_ADSENSE_EARNINGS_AND_PAGE_VIEWS" if page_views_rpm is not None else None,
+            "impressions": row.get("impressions"),
+            "clicks": row.get("clicks"),
+            "currency": currency,
+            "eligibilityCaveat": "Only returned PAGE_URL rows are eligible; unreturned pages are NOT_AVAILABLE, not zero.",
+        })
+    result.sort(key=lambda row: (
+        row["estimatedEarnings"] is None,
+        -(row["estimatedEarnings"] or 0),
+        row["pageViews"] is None,
+        -(row["pageViews"] or 0),
+        row["pageViewsRPM"] is None,
+        -(row["pageViewsRPM"] or 0),
+        row["impressions"] is None,
+        -(row["impressions"] or 0),
+        row["pageUrl"],
+    ))
+    return result[:5]
+
+
+def _not_run_probe_result(probe_id, warning):
+    metrics = PAGE_URL_PROBE_METRICS[probe_id]
+    filters = ("PRODUCT_CODE==AFC",) if probe_id == "probe-e-afc" else ()
+    return {
+        "id": probe_id,
+        "status": "NOT_RUN",
+        "request": {
+            "dimensions": list(PAGE_URL_DIMENSIONS),
+            "metrics": list(metrics),
+            "filters": list(filters),
+            "startDate": None,
+            "endDate": None,
+            "reportingTimeZone": "ACCOUNT_TIME_ZONE",
+        },
+        "httpStatus": None,
+        "httpHeaders": {},
+        "reportHeaders": None,
+        "warnings": [warning],
+        "rowsPresent": False,
+        "returnedRowCount": None,
+        "usablePageUrlRowCount": None,
+        "totalMatchedRows": None,
+        "truncationStatus": "NOT_AVAILABLE",
+        "currency": None,
+        "currencyStatus": "NOT_AVAILABLE",
+        "samplePageUrls": [],
+    }
+
+
+def run_page_url_probe_matrix(
+    output,
+    *,
+    account_name,
+    client_id,
+    client_secret,
+    refresh_token,
+    now=None,
+    open_url=None,
+):
+    """Run independent PAGE_URL API probes and write bounded-lifetime raw evidence."""
+    output = Path(output)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    runtime_now = _as_utc(now or datetime.now(timezone.utc))
+    summary = {
+        "schemaVersion": 1,
+        "source": "DIRECT_ADSENSE_MANAGEMENT_API_V2",
+        "generatedAt": runtime_now.isoformat().replace("+00:00", "Z"),
+        "reportingTimeZone": None,
+        "periods": None,
+        "currency": None,
+        "runStatus": "FAILED",
+        "classification": "UNKNOWN",
+        "probeCount": len(PAGE_URL_PROBE_METRICS),
+        "rowCounts": {},
+        "matchedRowCounts": {},
+        "probes": [],
+        "topPageRevenueRows": [],
+        "warnings": [],
+    }
+    probe_files = {}
+    base_open_url = open_url or urlopen
+    sensitive_values = tuple(value for value in (account_name, client_id, client_secret, refresh_token) if value)
+
+    def save_probe_file(probe_id, result, api_response=None):
+        probe_payload = {"schemaVersion": 1, "probe": result, "apiResponse": api_response}
+        probe_path = output.parent / f"{probe_id}.json"
+        _write_snapshot(probe_path, probe_payload)
+        probe_files[probe_id] = probe_path
+
+    try:
+        if not all((account_name, client_id, client_secret, refresh_token)):
+            raise CollectorError("AdSense account name and OAuth credentials are required for PAGE_URL probes.")
+        if not str(account_name).startswith("accounts/pub-"):
+            raise CollectorError("ADSENSE_ACCOUNT_NAME must use the accounts/pub-... resource format.")
+        access_token = _refresh_access_token(client_id, client_secret, refresh_token, base_open_url)
+        sensitive_values = (*sensitive_values, access_token)
+        account_path = quote(account_name, safe="/")
+        account = _api_get(
+            f"{API_BASE}/{account_path}", access_token, base_open_url,
+            stage="PAGE_URL_PROBE_ACCOUNT_GET", sensitive_values=sensitive_values,
+        )
+        time_zone = ((account.get("timeZone") or {}).get("id"))
+        if not time_zone:
+            raise CollectorError("The AdSense account timezone is unavailable for PAGE_URL probes.")
+        specs = build_page_url_probe_specs(runtime_now, time_zone)
+        summary["reportingTimeZone"] = time_zone
+        summary["periods"] = {
+            "30d": specs[0]["period"],
+            "7d": specs[2]["period"],
+        }
+        reports = {}
+        for spec in specs:
+            metadata = {}
+            request_record = {
+                "dimensions": list(spec["dimensions"]),
+                "metrics": list(spec["metrics"]),
+                "filters": list(spec["filters"]),
+                "startDate": spec["period"]["start"],
+                "endDate": spec["period"]["end"],
+                "reportingTimeZone": "ACCOUNT_TIME_ZONE",
+                "accountReportingTimeZone": time_zone,
+                "limit": spec["limit"],
+            }
+            report = None
+            result = {
+                "id": spec["id"],
+                "status": "API_ERROR",
+                "request": request_record,
+                "httpStatus": None,
+                "httpHeaders": {},
+                "reportHeaders": None,
+                "warnings": [],
+                "rowsPresent": False,
+                "returnedRowCount": None,
+                "usablePageUrlRowCount": None,
+                "totalMatchedRows": None,
+                "truncationStatus": "NOT_AVAILABLE",
+                "currency": None,
+                "currencyStatus": "NOT_AVAILABLE",
+                "samplePageUrls": [],
+            }
+            try:
+                report = _generate_report(
+                    account_name,
+                    spec["period"],
+                    spec["dimensions"],
+                    access_token,
+                    base_open_url,
+                    stage=f"PAGE_URL_PROBE_{spec['id'].upper().replace('-', '_')}",
+                    filters=spec["filters"],
+                    sensitive_values=sensitive_values,
+                    metrics=spec["metrics"],
+                    limit=spec["limit"],
+                    response_metadata=metadata,
+                )
+                if not isinstance(report, dict):
+                    raise CollectorError("AdSense returned an invalid PAGE_URL probe response.")
+                rows_present = isinstance(report.get("rows"), list)
+                returned_count, parsed_rows, parse_warnings = _probe_report_rows(report, sensitive_values)
+                usable_page_count = sum(
+                    1 for row in parsed_rows
+                    if isinstance(row.get("pageUrl"), str) and row["pageUrl"].strip()
+                )
+                total_matched = _probe_total_matched_rows(report)
+                result.update({
+                    "status": (
+                        "INVALID_RESPONSE" if returned_count is None
+                        else "PARTIAL" if _probe_warning_list(report, sensitive_values) or parse_warnings or usable_page_count < returned_count
+                        else "SUCCESS"
+                    ),
+                    "httpStatus": metadata.get("httpStatus"),
+                    "httpHeaders": metadata.get("httpHeaders", {}),
+                    "reportHeaders": report.get("headers") if isinstance(report.get("headers"), list) else None,
+                    "warnings": _probe_warning_list(report, sensitive_values) + parse_warnings,
+                    "rowsPresent": rows_present,
+                    "returnedRowCount": returned_count,
+                    "usablePageUrlRowCount": usable_page_count,
+                    "totalMatchedRows": total_matched,
+                    "truncationStatus": (
+                        "NOT_AVAILABLE" if returned_count is None or total_matched is None
+                        else "TRUNCATED" if total_matched > returned_count
+                        else "NOT_TRUNCATED"
+                    ),
+                    "currency": _probe_currency(report),
+                    "currencyStatus": "AVAILABLE" if _probe_currency(report) else "NOT_IN_REPORT",
+                    "samplePageUrls": [
+                        row.get("pageUrl") for row in parsed_rows
+                        if isinstance(row.get("pageUrl"), str) and row["pageUrl"]
+                    ][:5],
+                })
+                reports[spec["id"]] = report
+            except GoogleAPIError as error:
+                result.update({
+                    "status": "API_ERROR",
+                    "httpStatus": metadata.get("httpStatus", error.http_status),
+                    "httpHeaders": metadata.get("httpHeaders", {}),
+                    "googleStatus": error.google_status,
+                    "warnings": [error.safe_message or f"Google API request failed with HTTP {error.http_status}."],
+                })
+            except CollectorError as error:
+                result.update({
+                    "status": "INVALID_RESPONSE",
+                    "httpStatus": metadata.get("httpStatus"),
+                    "httpHeaders": metadata.get("httpHeaders", {}),
+                    "warnings": [_sanitize_api_error_message(str(error), sensitive_values)],
+                })
+            except Exception:
+                result.update({
+                    "status": "INVALID_RESPONSE",
+                    "httpStatus": metadata.get("httpStatus"),
+                    "httpHeaders": metadata.get("httpHeaders", {}),
+                    "warnings": ["PAGE_URL probe response could not be processed."],
+                })
+            result["warnings"] = list(dict.fromkeys(result["warnings"]))
+            summary["probes"].append(result)
+            summary["rowCounts"][spec["id"]] = result["returnedRowCount"]
+            summary["matchedRowCounts"][spec["id"]] = result["totalMatchedRows"]
+            save_probe_file(spec["id"], result, report)
+
+        by_id = {result["id"]: result for result in summary["probes"]}
+        summary["classification"] = classify_page_url_probe_results(by_id)
+        summary["runStatus"] = "COMPLETE" if all(result["status"] == "SUCCESS" for result in summary["probes"]) else "PARTIAL"
+        currencies = {result["currency"] for result in summary["probes"] if result["currency"]}
+        summary["currency"] = next(iter(currencies)) if len(currencies) == 1 else None
+        if "probe-a-30d-standard" in reports:
+            summary["topPageRevenueRows"] = _probe_page_rows(
+                reports["probe-a-30d-standard"],
+                by_id["probe-a-30d-standard"]["currency"],
+                sensitive_values,
+            )
+        summary["warnings"] = list(dict.fromkeys(
+            warning
+            for result in summary["probes"]
+            for warning in result["warnings"]
+        ))
+    except (CollectorError, GoogleAPIError) as error:
+        safe_warning = _sanitize_api_error_message(str(error), sensitive_values)
+        summary["warnings"] = [safe_warning]
+        for probe_id in PAGE_URL_PROBE_METRICS:
+            result = _not_run_probe_result(probe_id, safe_warning)
+            summary["probes"].append(result)
+            summary["rowCounts"][probe_id] = None
+            summary["matchedRowCounts"][probe_id] = None
+            save_probe_file(probe_id, result)
+
+    _write_snapshot(output, summary)
+    return summary
 
 
 def _write_snapshot(output, snapshot):
@@ -1820,6 +2268,28 @@ def _read_snapshot(path):
 def main(argv=None):
     args = build_parser().parse_args(argv)
     try:
+        if args.page_url_probe_output is not None:
+            if any((
+                args.validate_only,
+                args.validate_breakdown_only,
+                args.validate_diagnostics_only,
+                args.build_diagnostics_from,
+                args.diagnostics_output,
+                args.breakdown_output,
+            )):
+                raise CollectorError("PAGE_URL probe mode cannot be combined with another AdSense mode.")
+            summary = run_page_url_probe_matrix(
+                args.page_url_probe_output,
+                account_name=os.environ.get("ADSENSE_ACCOUNT_NAME"),
+                client_id=os.environ.get("ADSENSE_OAUTH_CLIENT_ID"),
+                client_secret=os.environ.get("ADSENSE_OAUTH_CLIENT_SECRET"),
+                refresh_token=os.environ.get("ADSENSE_OAUTH_REFRESH_TOKEN"),
+            )
+            print(
+                f"AdSense PAGE_URL probe matrix written: status={summary['runStatus']}; "
+                f"classification={summary['classification']}; probes={len(summary['probes'])}"
+            )
+            return 1 if summary["runStatus"] == "FAILED" else 0
         validation_modes = [args.validate_only, args.validate_breakdown_only, args.validate_diagnostics_only]
         if sum(value is not None for value in validation_modes) > 1:
             raise CollectorError("Choose only one AdSense artifact validation mode.")

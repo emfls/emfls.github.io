@@ -302,6 +302,7 @@ def test_guard_allows_only_exact_adsense_documentation_additions(tmp_path):
         ("A", "docs/analytics/adsense-storage-retention.md"),
         ("A", "docs/superpowers/plans/2026-10-06-adsense-daily-observability.md"),
         ("A", "docs/superpowers/plans/2026-10-07-adsense-storage-safe-finalization.md"),
+        ("A", "docs/superpowers/plans/2026-10-07-adsense-page-url-probe.md"),
     ]
 
     assert validate_launch(tmp_path, manifest([]), approved_docs) == []
@@ -385,6 +386,9 @@ def test_guard_allows_only_the_exact_stage_aware_empty_rows_collector_transition
         historical_transition,
         ("085f253a3ba6c98b3318a99d7a03b63c1398f761", "114d91de1a6e22103f7c697c7df229fa2ac1a0ad"),
         ("7e462d5e1ccedfba022594d98cabf4aa3697ca01", "114d91de1a6e22103f7c697c7df229fa2ac1a0ad"),
+        ("085f253a3ba6c98b3318a99d7a03b63c1398f761", "d387a34a2fd020b3f64e3ee6fe9e90c744d1fb3f"),
+        ("114d91de1a6e22103f7c697c7df229fa2ac1a0ad", "d387a34a2fd020b3f64e3ee6fe9e90c744d1fb3f"),
+        ("7e462d5e1ccedfba022594d98cabf4aa3697ca01", "d387a34a2fd020b3f64e3ee6fe9e90c744d1fb3f"),
         transition,
         base_to_final_transition,
         ("114d91de1a6e22103f7c697c7df229fa2ac1a0ad", current_blob),
@@ -446,6 +450,25 @@ def test_git_changes_captures_blobs_for_the_approved_adsense_collector_transitio
 
     assert _git_changes(tmp_path, "base-sha") == [("M", path, before_blob, after_blob)]
     assert len(calls) == 3
+
+
+def test_git_changes_captures_the_blob_for_the_exact_initial_diagnostics_addition(monkeypatch, tmp_path):
+    path = "data/performance/adsense-diagnostics-latest.json"
+    expected_blob = "6649da69660e608f2b47a48cc46b72e8023ba2af"
+    calls = []
+
+    def fake_run(command, **kwargs):
+        calls.append(command)
+        if command[:3] == ["git", "diff", "--name-status"]:
+            return type("Result", (), {"stdout": f"A\t{path}\n"})()
+        if command == ["git", "rev-parse", f"HEAD:{path}"]:
+            return type("Result", (), {"stdout": expected_blob + "\n"})()
+        raise AssertionError(f"unexpected git invocation: {command}")
+
+    monkeypatch.setattr("scripts.content_launch_guard.subprocess.run", fake_run)
+
+    assert _git_changes(tmp_path, "base-sha") == [("A", path, None, expected_blob)]
+    assert len(calls) == 2
 
 
 def test_guard_continues_blocking_ads_runtime_assets(tmp_path):

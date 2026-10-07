@@ -11,11 +11,16 @@ from pathlib import Path
 MEASUREMENT_WORKFLOW_ALLOWLIST = {".github/workflows/ga4-collection.yml"}
 APPROVED_MONETIZATION_ADDITIONS = frozenset({
     ".github/workflows/adsense-collection.yml",
+    ".github/workflows/adsense-page-url-probe.yml",
     "scripts/collect_adsense_snapshot.py",
     "docs/analytics/adsense-storage-retention.md",
+    "docs/superpowers/plans/2026-10-07-adsense-page-url-probe.md",
     "docs/superpowers/plans/2026-10-06-adsense-daily-observability.md",
     "docs/superpowers/plans/2026-10-07-adsense-storage-safe-finalization.md",
 })
+APPROVED_MONETIZATION_INITIAL_ADDITIONS = {
+    "data/performance/adsense-diagnostics-latest.json": "6649da69660e608f2b47a48cc46b72e8023ba2af",
+}
 APPROVED_PROTECTED_WINNER_TRANSITIONS = {
     "kor/report/camp/pyeongtaek.html": {
         ("4d95593169e466447ee355429d2822764ca7e1a5", "b4fc13119f1e8cd01d78805d06ee981ac6834236"),
@@ -36,6 +41,9 @@ APPROVED_MONETIZATION_TRANSITIONS = {
         ("085f253a3ba6c98b3318a99d7a03b63c1398f761", "d387a34a2fd020b3f64e3ee6fe9e90c744d1fb3f"),
         ("114d91de1a6e22103f7c697c7df229fa2ac1a0ad", "d387a34a2fd020b3f64e3ee6fe9e90c744d1fb3f"),
         ("7e462d5e1ccedfba022594d98cabf4aa3697ca01", "d387a34a2fd020b3f64e3ee6fe9e90c744d1fb3f"),
+        ("085f253a3ba6c98b3318a99d7a03b63c1398f761", "957645a50ddf075849701f6a5681f09847814b45"),
+        ("114d91de1a6e22103f7c697c7df229fa2ac1a0ad", "957645a50ddf075849701f6a5681f09847814b45"),
+        ("7e462d5e1ccedfba022594d98cabf4aa3697ca01", "957645a50ddf075849701f6a5681f09847814b45"),
     },
     ".github/workflows/adsense-collection.yml": {
         ("90f64a3d00d901f9052fc1fe20fc86372c90e014", "893889ceac2620250a6752d93aeb66c2a131b136"),
@@ -271,7 +279,17 @@ def validate_launch(root, manifest, changed_paths):
             errors.add("PROTECTED_WINNER_CHANGED")
     if any(
         path not in MEASUREMENT_WORKFLOW_ALLOWLIST
-        and not (status == "A" and path in APPROVED_MONETIZATION_ADDITIONS)
+        and not (
+            status == "A"
+            and (
+                path in APPROVED_MONETIZATION_ADDITIONS
+                or (
+                    path in APPROVED_MONETIZATION_INITIAL_ADDITIONS
+                    and before_blob is None
+                    and after_blob == APPROVED_MONETIZATION_INITIAL_ADDITIONS[path]
+                )
+            )
+        )
         and not (
             status == "M"
             and path in APPROVED_MONETIZATION_TRANSITIONS
@@ -338,7 +356,13 @@ def _git_changes(root, base_ref):
         parts = line.split("\t")
         if len(parts) >= 2:
             status, path = parts[0], parts[-1]
-            if status == "M" and (
+            if status == "A" and path in APPROVED_MONETIZATION_INITIAL_ADDITIONS:
+                after = subprocess.run(
+                    ["git", "rev-parse", f"HEAD:{path}"],
+                    cwd=str(root), text=True, capture_output=True, check=True,
+                ).stdout.strip()
+                rows.append((status, path, None, after))
+            elif status == "M" and (
                 path in APPROVED_PROTECTED_WINNER_TRANSITIONS
                 or path in APPROVED_MONETIZATION_TRANSITIONS
             ):
