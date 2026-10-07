@@ -11,12 +11,25 @@ try:
 except ModuleNotFoundError:
     from quality_site import normalize_url
 
+try:
+    from scripts.revenue_opportunity import ALLOWED_STATUSES
+except ModuleNotFoundError:
+    from revenue_opportunity import ALLOWED_STATUSES
+
 
 REQUIRED_KEYS = {"schemaVersion", "asOf", "summary", "pages"}
 GA4_MAX_AGE_DAYS = 7
+ALLOWED_CLASSIFICATIONS = {"WINNER", "OPPORTUNITY", "EXPERIMENT", "DEAD_CANDIDATE"}
+REQUIRED_CHANNEL_FIELDS = {
+    "ga4": {"status", "period", "source", "views", "users", "engagementSeconds", "revenue", "revenueMetric"},
+    "google": {"status", "period", "source", "clicks", "impressions", "ctr", "position"},
+    "naver": {"status", "period", "source", "clicks", "impressions", "ctr", "position"},
+    "adsense": {"status", "period", "source", "revenue", "rpm", "revenueMetric", "coverageStatus"},
+}
 UNCONNECTED_CHANNEL_METRICS = {
     "ga4": ("views", "users", "engagementSeconds", "revenue"),
     "google": ("clicks", "impressions", "ctr", "position"),
+    "naver": ("clicks", "impressions", "ctr", "position"),
     "adsense": ("revenue", "rpm"),
 }
 
@@ -84,7 +97,7 @@ def _validate_inventory_coverage(pages, page_scores_path, as_of):
 def _validate_unconnected_channels(page):
     for channel_name, metric_names in UNCONNECTED_CHANNEL_METRICS.items():
         channel = page.get(channel_name)
-        if not isinstance(channel, dict) or channel.get("status") != "NOT_CONNECTED":
+        if channel["status"] != "NOT_CONNECTED":
             continue
         populated = [name for name in metric_names if channel.get(name) is not None]
         if populated:
@@ -92,6 +105,41 @@ def _validate_unconnected_channels(page):
                 f"NOT_CONNECTED {channel_name} metrics must be null: "
                 + ", ".join(populated)
             )
+
+
+def _validate_page_shape(page):
+    if not isinstance(page, dict):
+        raise ValueError("page-performance page rows must be objects")
+    if not isinstance(page.get("url"), str) or not page["url"].strip():
+        raise ValueError("page-performance contains a page without a URL")
+    if "classification" not in page:
+        raise ValueError(f"page-performance page is missing classification: {page['url']}")
+    classification = page["classification"]
+    if classification is not None and (
+        not isinstance(classification, str) or classification not in ALLOWED_CLASSIFICATIONS
+    ):
+        raise ValueError(
+            f"page-performance has an unsupported classification for {page['url']}: {classification!r}"
+        )
+
+    for channel_name, required_fields in REQUIRED_CHANNEL_FIELDS.items():
+        channel = page.get(channel_name)
+        if not isinstance(channel, dict):
+            raise ValueError(f"page-performance {channel_name} channel must be an object for {page['url']}")
+        missing = required_fields - set(channel)
+        if missing:
+            raise ValueError(
+                f"page-performance {channel_name} channel is missing required field(s) for {page['url']}: "
+                + ", ".join(sorted(missing))
+            )
+        status = channel["status"]
+        if not isinstance(status, str) or status not in ALLOWED_STATUSES:
+            raise ValueError(
+                f"page-performance {channel_name} channel has unsupported status for {page['url']}: {status!r}"
+            )
+        period = channel["period"]
+        if period is not None and not isinstance(period, dict):
+            raise ValueError(f"page-performance {channel_name} period must be null or an object for {page['url']}")
 
 
 def validate(path: Path, *, page_scores_path: Path, minimum_pages: int = 1):
@@ -106,6 +154,8 @@ def validate(path: Path, *, page_scores_path: Path, minimum_pages: int = 1):
         raise ValueError("asOf is empty")
     if payload.get("summary", {}).get("evaluatedIndexablePages") != len(pages):
         raise ValueError("summary page count does not match pages")
+    for page in pages:
+        _validate_page_shape(page)
     _validate_inventory_coverage(pages, page_scores_path, payload["asOf"])
     for page in pages:
         _validate_ga4_freshness(page, payload["asOf"])
