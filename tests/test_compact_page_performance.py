@@ -1,5 +1,8 @@
 import hashlib
 import json
+import subprocess
+import sys
+from pathlib import Path
 
 import pytest
 
@@ -122,3 +125,26 @@ def test_project_file_validates_full_input_before_replacing_output(tmp_path):
         project_file(full, page_scores, output)
 
     assert output.read_bytes() == b"last-good\n"
+
+
+def test_projector_cli_runs_as_workflow_invoked_script(tmp_path):
+    full, page_scores = _write_full_inputs(tmp_path, _payload([_page("/only/")]))
+    output = tmp_path / "compact.json"
+    root = Path(__file__).resolve().parents[1]
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(root / "scripts" / "compact_page_performance.py"),
+            str(full),
+            "--page-scores",
+            str(page_scores),
+            "--output",
+            str(output),
+        ],
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert completed.returncode == 0, completed.stderr
+    assert json.loads(output.read_text(encoding="utf-8")) == project(_payload([_page("/only/")]))

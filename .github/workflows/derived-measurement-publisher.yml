@@ -44,7 +44,7 @@ jobs:
             --report "$RUNNER_TEMP/site-score.md" \
             --dashboard "$RUNNER_TEMP/site-dashboard.html"
 
-      - name: Generate derived artifacts
+      - name: Generate full derived artifacts
         run: |
           python3 scripts/revenue_growth.py \
             --as-of "$(date +%F)" \
@@ -53,19 +53,70 @@ jobs:
             --page-scores "$RUNNER_TEMP/page-scores.json" \
             --gsc-snapshot data/performance/gsc-latest.json \
             --adsense-snapshot data/performance/adsense-latest.json \
-            --page-output "$RUNNER_TEMP/page-performance.json" \
-            --opportunity-output "$RUNNER_TEMP/revenue-opportunities.json" \
-            --report "$RUNNER_TEMP/revenue-growth-report.md"
+            --page-output "$RUNNER_TEMP/page-performance-full.json" \
+            --opportunity-output "$RUNNER_TEMP/revenue-opportunities-full.json" \
+            --report "$RUNNER_TEMP/revenue-growth-report-full.md"
 
-      - name: Validate generated artifacts
-        run: python3 scripts/validate_measurement_artifact.py "$RUNNER_TEMP/page-performance.json" --page-scores "$RUNNER_TEMP/page-scores.json"
+      - name: Validate full page-performance artifact
+        run: python3 scripts/validate_measurement_artifact.py "$RUNNER_TEMP/page-performance-full.json" --page-scores "$RUNNER_TEMP/page-scores.json"
+
+      - name: Build full artifact manifest
+        run: |
+          python3 scripts/build_page_performance_manifest.py \
+            --full "$RUNNER_TEMP/page-performance-full.json" \
+            --ga4 data/performance/ga4-latest.json \
+            --gsc data/performance/gsc-latest.json \
+            --adsense data/performance/adsense-latest.json \
+            --analysis-commit "${{ github.sha }}" \
+            --workflow-run-id "${{ github.run_id }}" \
+            --workflow-run-attempt "${{ github.run_attempt }}" \
+            --output "$RUNNER_TEMP/page-performance-manifest.json"
+
+      - name: Upload full page-performance artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: page-performance-full-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/page-performance-full.json
+            ${{ runner.temp }}/page-performance-manifest.json
+          retention-days: 7
+          if-no-files-found: error
+
+      - name: Project compact page-performance
+        run: |
+          python3 scripts/compact_page_performance.py \
+            "$RUNNER_TEMP/page-performance-full.json" \
+            --page-scores "$RUNNER_TEMP/page-scores.json" \
+            --output "$RUNNER_TEMP/page-performance-compact.json"
+
+      - name: Validate compact page-performance artifact
+        run: python3 scripts/validate_measurement_artifact.py "$RUNNER_TEMP/page-performance-compact.json" --page-scores "$RUNNER_TEMP/page-scores.json"
+
+      - name: Validate full and compact consumer parity
+        run: |
+          python3 scripts/validate_page_performance_compact_parity.py \
+            --full "$RUNNER_TEMP/page-performance-full.json" \
+            --compact "$RUNNER_TEMP/page-performance-compact.json" \
+            --manifest "$RUNNER_TEMP/page-performance-manifest.json" \
+            --page-scores "$RUNNER_TEMP/page-scores.json" \
+            --revenue-opportunities "$RUNNER_TEMP/revenue-opportunities-full.json" \
+            --audit "$RUNNER_TEMP/site-audit.json" \
+            --experiments data/experiments.json \
+            --optimization-history data/optimization-history.json \
+            --content-experiments data/content-launch-experiments.json \
+            --ga4-snapshot data/performance/ga4-latest.json \
+            --gsc-snapshot data/performance/gsc-latest.json \
+            --adsense-snapshot data/performance/adsense-latest.json \
+            --analysis-commit "${{ github.sha }}" \
+            --workflow-run-id "${{ github.run_id }}" \
+            --workflow-run-attempt "${{ github.run_attempt }}"
 
       - name: Promote derived artifacts
         run: |
           python3 scripts/promote_measurement_artifacts.py \
-            --page-source "$RUNNER_TEMP/page-performance.json" \
-            --opportunity-source "$RUNNER_TEMP/revenue-opportunities.json" \
-            --report-source "$RUNNER_TEMP/revenue-growth-report.md"
+            --page-source "$RUNNER_TEMP/page-performance-compact.json" \
+            --opportunity-source "$RUNNER_TEMP/revenue-opportunities-full.json" \
+            --report-source "$RUNNER_TEMP/revenue-growth-report-full.md"
 
       - name: Commit derived measurement artifacts
         run: |
