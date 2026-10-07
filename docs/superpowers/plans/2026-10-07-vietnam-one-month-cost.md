@@ -18,9 +18,10 @@
 - Show monthly apartment rent and 30-night accommodation quotes as separate products.
 - State the one-person assumptions and itemized monthly subtotal arithmetic; exclude airfare, unquoted utilities, travel insurance, and non-specified leisure from the subtotal.
 - Visa statements must link to Vietnamese government sources and remain passport-specific.
-- Do not edit existing city guides, protected winners, publication queue/manifest, AdSense placement, or tracking loaders.
-- No page publish, main merge, or queue/cap override; stop at one open PR for Control Tower review.
-- Part B opportunity scan is read-only and happens after branch implementation.
+- The original article implementation left all city guides and the launch manifest untouched. The authorized continuation permits one visible contextual link in a freshly verified unprotected city guide and requires an accurate post-launch manifest.
+- Preserve protected winners, AdSense placement, and tracking loaders. Do not alter publication counter/experiment/index files unless same-commit launch conventions prove they are required.
+- No main merge or queue/cap override. Push the existing branch; do not retry PR creation because Control Tower will create/review it.
+- The follow-up revenue task is a read-only exact-page URL Encoder GSC and live SERP audit; no URL Encoder repository edits without a specific evidence-backed write gate.
 
 ## Review Focus
 
@@ -56,14 +57,34 @@
 - [x] **Step 2: Run `pytest tests/test_vietnam_one_month_cost.py -q`** and confirm it fails because the page/wiring do not exist.
 - [x] **Step 3: Implement the single HTML article** using observed Oct 5–6 city-price snapshots and the Sep 25 furnished-rent cross-check; add three contextual city-guide links and official visa sources. Keep existing pages/ads untouched.
 - [x] **Step 4: Register discovery and metadata** exactly once in the travel sitemap, content index/home feed, and curated page metadata; preserve the verified protected WINNER travel hub unchanged.
-- [ ] **Step 5: Run the focused test**, inspect displayed arithmetic independently, then run page, sitemap, broken-link, launch-guard, SEO QA, unittest, pytest, and `git diff --check` checks.
-- [ ] **Step 6: Update `PROJECT_HISTORY.md` and `TASKS.md`** with source SHA, exact branch/head, tests, cap state, and no-merge Control Tower status.
-- [ ] **Step 7: Commit, push, make one PR creation attempt, and verify exact-head CI**; do not merge.
+- [x] **Step 5: Run the focused test**, inspect displayed arithmetic independently, then run page, sitemap, broken-link, launch-guard, SEO QA, unittest, pytest, and `git diff --check` checks.
+- [x] **Step 6: Update `PROJECT_HISTORY.md` and `TASKS.md`** with source SHA, exact branch/head, tests, cap state, and no-merge Control Tower status.
+- [ ] **Step 7: Commit and push the existing branch**; do not create a PR or merge.
 
-### Task 2: Read-only next opportunity scan
+### Task 2: Repair the approved launch protocol and source link
+
+**Files:**
+- Modify: `tests/test_vietnam_one_month_cost.py`
+- Modify: `data/content-launch-manifest.json`
+- Modify: `kor/report/travel/vietnam-danang.html` (only if current protection checks remain clear)
+- Modify: `PROJECT_HISTORY.md`, `TASKS.md`
+
+**Interfaces:**
+- Candidate ID: `keyword:베트남한달살기비용`.
+- Published path: `/kor/report/travel/vietnam-one-month-cost.html`.
+- Accounting date: `2026-10-07` in `Asia/Seoul`; one publication out of a limit of three.
+- Hub link source: `kor/report/travel/vietnam-danang.html` only if it remains unprotected.
+
+- [x] **Step 1: Add failing tests** for the exact PUBLISHED manifest/accounting and one visible contextual Da Nang-to-guide link, including `hubPaths`.
+- [x] **Step 2: Run the new tests and observe expected failures** against the old Keyboard Cleaning manifest and missing inbound link.
+- [x] **Step 3: Apply the minimal manifest and one-link changes**; preserve other publication ledgers unless repository convention requires them.
+- [x] **Step 4: Run content launch guard first** against the latest `origin/main` SHA, then the focused suite and repository QA.
+- [ ] **Step 5: Update project records, commit and push the same branch**; do not retry PR creation.
+
+### Task 3: Read-only URL Encoder evidence refresh
 
 **Files:**
 - No repository changes.
 
-- [ ] After Task 1 branch implementation is complete, scan current `origin/main` evidence for up to three non-camping, non-Vietnam candidates.
-- [ ] Use source-specific freshness/completeness labels; protect winners; report `NEXT_READY_FOR_WRITE` only for one evidence-backed distinct intent.
+- [ ] After the Vietnam branch is pushed, collect the freshest exact-page GSC query rows for `/util/url-encoder/` and inspect current SERPs for encoder/decoder/percent-encoding intents.
+- [ ] Label query coverage limitations; decide `TITLE_INTENT_MISMATCH`, `CONTENT_GAP`, `SNIPPET_GAP`, or `NO_ACTION`; make no repository changes without a specific evidence-backed write gate.

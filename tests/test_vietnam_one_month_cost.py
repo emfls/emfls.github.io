@@ -3,6 +3,9 @@ import re
 from html.parser import HTMLParser
 from pathlib import Path
 
+from scripts.content_launch_policy import publication_manifest_count, published_manifest_dedupe_keys
+from scripts.prepare_keyword_launch import prepare_queue
+
 ROOT = Path(__file__).resolve().parents[1]
 RELATIVE_URL = "/kor/report/travel/vietnam-one-month-cost.html"
 CANONICAL = "https://emfls.github.io" + RELATIVE_URL
@@ -168,7 +171,7 @@ def test_all_internal_links_and_fresh_city_price_sources_are_registered():
             assert target.is_file(), f"broken internal link: {href}"
 
 
-def test_publication_discovery_registers_page_once_without_publishing_it():
+def test_publication_discovery_registers_page_once_with_launch_manifest():
     _, page = parsed_page()
     travel_sitemap = (ROOT / "kor/report/travel/sitemap.xml").read_text(encoding="utf-8")
     assert travel_sitemap.count(CANONICAL) == 1
@@ -189,4 +192,64 @@ def test_publication_discovery_registers_page_once_without_publishing_it():
     assert feed["latest"][0]["url"] == RELATIVE_URL
 
     manifest = json.loads((ROOT / "data/content-launch-manifest.json").read_text(encoding="utf-8"))
-    assert RELATIVE_URL not in manifest.get("urls", [])
+    assert manifest["urls"] == [RELATIVE_URL]
+
+
+def test_vietnam_manifest_accounts_for_one_published_kst_slot():
+    manifest = json.loads((ROOT / "data/content-launch-manifest.json").read_text(encoding="utf-8"))
+    assert manifest["schemaVersion"] == 1
+    assert manifest["status"] == "PUBLISHED"
+    assert manifest["candidateIds"] == ["keyword:베트남한달살기비용"]
+    assert manifest["urls"] == [RELATIVE_URL]
+    assert manifest["contentPaths"] == ["kor/report/travel/vietnam-one-month-cost.html"]
+    assert manifest["sitemapPaths"] == ["kor/report/travel/sitemap.xml"]
+    assert manifest["hubPaths"] == ["kor/report/travel/vietnam-danang.html"]
+    assert manifest["dailyLimit"] == 3
+    assert manifest["publishedToday"] == 1
+    assert manifest["remainingCapacity"] == 2
+    assert manifest["publicationAccountingDate"] == "2026-10-07"
+    assert manifest["runAt"].startswith("2026-10-07T")
+    assert manifest["runAt"].endswith("+09:00")
+    assert publication_manifest_count(manifest, "2026-10-07", 3) == 1
+    assert published_manifest_dedupe_keys(manifest) == (
+        {"/kor/report/travel/vietnam-one-month-cost.html"},
+        {"베트남한달살기비용"},
+    )
+    queued = prepare_queue(
+        [
+            {
+                "keyword": "베트남한달살기비용",
+                "score_valid": True,
+                "opportunity_score": 10,
+                "action": "NEW_PAGE",
+                "suggested_url": RELATIVE_URL,
+            },
+            {
+                "keyword": "다낭여행경비계산",
+                "score_valid": True,
+                "opportunity_score": 5,
+                "action": "NEW_PAGE",
+                "suggested_url": "/kor/report/travel/danang-trip-budget.html",
+            },
+        ],
+        daily_limit=3,
+        selected_at="2026-10-07T16:05:54+09:00",
+        launched_count=0,
+        counter_date="2026-10-07",
+        published_manifest=manifest,
+    )
+    assert queued["publishedToday"] == 1
+    assert queued["remainingCapacity"] == 2
+    assert [row["keyword"] for row in queued["queue"]] == ["다낭여행경비계산"]
+    assert queued["excluded"]["duplicate_keyword"] == 1
+
+
+def test_danang_guide_has_one_visible_contextual_vietnam_cost_link():
+    source = ROOT / "kor/report/travel/vietnam-danang.html"
+    html = source.read_text(encoding="utf-8")
+    target = 'href="/kor/report/travel/vietnam-one-month-cost.html"'
+    assert html.count(target) == 1
+    assert "도시별 한 달 체류 예산을 비교하려면" in html
+    assert '<a href="/kor/report/travel/vietnam-one-month-cost.html">베트남 한 달 살기 비용 가이드</a>' in html
+    budget_section = html.split('<h2>💰 다낭 여행 예상 경비</h2>', 1)[1].split("</section>", 1)[0]
+    assert target in budget_section
