@@ -1175,3 +1175,6 @@
 
 ## 2026-10-07 10:36 Keyword Hunter
 - Seeds: 40; New: 80; Rejected: 67; DB: 4712; Errors: 0; Top: 베트남한달살기비용. Artifact report: reports/keyword-hunter/2026-10-07-1036.md
+
+## 2026-10-07 17:45 Keyword Hunter
+- Seeds: 40; New: 20; Rejected: 10; DB: 4732; Errors: 0; Top: 회계연도연차계산기. Artifact report: reports/keyword-hunter/2026-10-07-1745.md
