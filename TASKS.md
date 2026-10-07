@@ -31,9 +31,10 @@
 - [ ] P0 Derived Measurement Publisher Consolidation — C07
   - 범위: GA4/GSC/AdSense collectors publish source snapshots only; one serialized daily publisher validates tracked source snapshots, regenerates temporary audit/page scores, and publishes only the three shared derived outputs. Preserve C17 sidecar behavior, source schemas, URL alias semantics, and direct AdSense PARTIAL/VERIFIED distinctions.
   - 저장소 판정: `IMMEDIATE_REPO_SIZE_SAVINGS = NONE`; `GIT_HISTORY_REWRITE = NONE`; `FUTURE_DERIVED_ARTIFACT_CHURN_REDUCTION = YES`.
-  - 검증: measurement/workflow/GSC C17/GA4/AdSense focused suites 143 passed; unittest 819 passed (3 skipped); pytest 1,338 passed (3 skipped); fresh generated artifact validation 18,929 pages; SEO QA 0 new critical/warnings (767/420 existing); YAML, Python syntax, and diff checks PASS.
-  - 현재 입력 상태: tracked GSC period ends `2026-10-02`, while the 2026-10-06 collector window expects `2026-10-03`; publisher gate fails closed and leaves all last-good derived files unchanged until source refresh.
-  - 상태: C06 PR #49 and C17 PR #50 are merged. C07 starts from latest main `70f0374380a85d214e91b3292871eeee19c946f6` on `codex/c07-derived-measurement-publisher`; normal merge included. PR creation and exact-head CI are pending; do not merge.
+  - 라이브 이식: fresh `origin/main` `b9f67ceb4615183f399f4dca14069a8e4ded1182`에서 `codex/page-performance-compact-publisher-live-20261007`를 만들고 승인된 fail-closed patch와 실제 compact implementation 4개를 순서대로 이식했다. 오프라인 범위의 나머지 3개는 문서 전용 commit이라 제외하고 이 상태 기록 하나로 압축한다.
+  - 입력 검증: GA4 `VERIFIED` `2026-09-09..2026-10-06`; GSC `VERIFIED` `2026-09-07..2026-10-04`; AdSense `PARTIAL`, current `2026-09-30..2026-10-06`, prior `2026-09-23..2026-09-29`. Full/compact artifact validation 각각 18,929 URLs, consumer parity PASS (Keyword Hunter 34 candidates, GSC opportunities 36, protected winners 1,632). Full 55,289,121 B → compact 14,426,745 B (40,862,376 B / 73.907% 감소).
+  - 검증: focused 89 passed; `pytest` 1,383 passed (3 skipped); unittest 837 run (3 skipped); source validation 및 `git diff --check` PASS. 전체 광고 workflow는 dispatch하지 않았고 tracked derived outputs를 바꾸지 않았다.
+  - 상태: local transplant 검증 완료. 정상 push, PR 생성, 최종 remote HEAD의 exact-head CI 대기; merge 금지. Git history rewrite는 `DEFERRED`.
 
 - [ ] P0 JP Travel Batch 02 — PR #38, 50-page canary
   - 동기화: 요청된 main `6b844cf03138057091bac2cdf1a87db3e98491f2` 이후 main이 `1b15674e09d3dd30fb65620ab2ae8f35f85c2137`로 전진해 두 SHA를 모두 regular merge로 반영했다. `5172e32bcd`에서 derived artifact 충돌 3건을 최신 main 입력 기준으로 해결·재생성했고, `946f3cf027` merge는 충돌이 없었다. rebase/force push 없음.
