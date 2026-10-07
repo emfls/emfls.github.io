@@ -11,6 +11,11 @@ on:
         type: choice
         options: [page, camping-query, opportunity-query, sitewide-query]
         default: page
+      jp_url_inspection_audit:
+        description: "Run the fixed JP B25 URL Inspection audit on its dedicated branch"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -22,6 +27,7 @@ concurrency:
 
 jobs:
   collect:
+    if: github.event_name != 'workflow_dispatch' || inputs.jp_url_inspection_audit != true
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
@@ -139,3 +145,64 @@ jobs:
           git add data/performance/gsc-opportunity-queries-latest.json
           git diff --staged --quiet || git commit -m "chore: refresh GSC opportunity query evidence"
           git push
+
+
+  inspect_jp_b25:
+    if: github.event_name == 'workflow_dispatch' && inputs.jp_url_inspection_audit == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Require the fixed JP audit branch
+        shell: bash
+        run: |
+          test "$GITHUB_REF" = "refs/heads/codex/jp-b25-url-inspection-audit-20261007" || {
+            echo "JP B25 URL Inspection mode is restricted to its audit branch." >&2
+            exit 1
+          }
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Search Console API client
+        run: python3 -m pip install google-api-python-client google-auth
+
+      - name: Inspect the frozen B25 URL set
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON_B64: ${{ secrets.GA4_SERVICE_ACCOUNT_JSON_B64 }}
+        run: >-
+          python3 scripts/inspect_gsc_urls.py
+          --manifest data/jp-b25-url-inspection-input-20261007.csv
+          --output-dir "$RUNNER_TEMP/jp-b25-url-inspection-${GITHUB_RUN_ID}"
+
+      - name: Validate artifact-only output set
+        run: |
+          python3 - "$RUNNER_TEMP/jp-b25-url-inspection-${GITHUB_RUN_ID}" <<'PY'
+          import pathlib
+          import sys
+          root = pathlib.Path(sys.argv[1])
+          expected = {
+              "b25-input-manifest.csv",
+              "b25-url-inspection.json",
+              "b25-decision.csv",
+              "b25-summary.json",
+          }
+          actual = {path.name for path in root.iterdir() if path.is_file()}
+          assert actual == expected, (actual, expected)
+          assert all((root / name).stat().st_size > 0 for name in expected)
+          PY
+
+      - name: Upload seven-day URL Inspection artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: jp-b25-url-inspection-${{ github.run_id }}
+          path: ${{ runner.temp }}/jp-b25-url-inspection-${{ github.run_id }}
+          if-no-files-found: error
+          retention-days: 7
