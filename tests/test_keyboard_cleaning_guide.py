@@ -111,7 +111,7 @@ def test_keyboard_cleaning_page_has_publication_discovery_and_registry_wiring():
     content_index = json.loads((ROOT / "data/content-index-ko.json").read_text(encoding="utf-8"))
     assert sum(row["url"] == RELATIVE_URL for row in content_index) == 1
     feed = json.loads((ROOT / "data/home-feed-ko.json").read_text(encoding="utf-8"))
-    assert feed["latest"][0]["url"] == RELATIVE_URL
+    assert any(row["url"] == RELATIVE_URL for row in feed["latest"])
 
 
 def test_keyboard_cleaning_manifest_records_only_this_launch_and_one_daily_slot():

@@ -128,7 +128,7 @@ def test_travel_inventory_remains_discoverable_without_rendering_every_link_in_h
     assert len(sitemap_urls) >= 5_000
     assert len(indexed_travel_urls) >= 5_000
     assert hub_row["title"] == "한국어 여행 정보 허브 | 여행 준비·국가별 가이드"
-    assert hub_row["updated_at"] == "2026-09-13"
+    assert hub_row["updated_at"] == "2026-10-07"
     for path in (
         "/kor/report/travel/japan-tokyo.html",
         "/kor/report/travel/thailand-bangkok.html",

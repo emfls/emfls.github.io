@@ -124,6 +124,11 @@
 
 ## P1 - High
 
+- [ ] Revenue Growth · Vietnam one-month cost guide — `/kor/report/travel/vietnam-one-month-cost.html`
+  - Scope: source-backed 1-person/30-day VND budget comparison for Hanoi, Da Nang, and Ho Chi Minh City; distinguish monthly rent from 30-night bookings and passport-specific stay rules. Add only the travel-hub card, travel sitemap entry, generated discovery indexes, and focused regression coverage. Do not change city guides, ads, queue, publication manifest, or production state.
+  - Verification: focused page/hub tests 9 passed; unittest 819 passed (3 skipped); full pytest 1,353 passed (3 skipped); fresh SEO audit includes the page with one H1, breadcrumb, responsive table, source/method/limitation signals; SEO QA 0 new criticals/warnings (767/420 baseline); 46 leaf sitemaps / 18,712 URLs / 0 duplicates / 0 invalid XML / 0 missing local references; broken links 276 existing, with no new page or travel-hub failures; `git diff --check` PASS.
+  - State: isolated branch `codex/revenue-vietnam-one-month-cost-20261007`, based on latest `origin/main` `284a350a573b5a0ea837a4bb8a8f53dc943a74a7`. Current queue reports 0/3 publications today and 3 ready candidates; this unmerged PR does not consume a publication slot. The tracked PUBLISHED manifest is intentionally unchanged, so its content-launch guard rejects the added HTML with `MANIFEST_DIFF_MISMATCH`; an isolated review manifest validates the page wiring. Push/PR and exact-head CI remain pending. Do not merge.
+
 - [ ] C24 · StockWiki base-path asset repair
   - Scope: normalize Astro's base path for the StockWiki favicon and Pagefind stylesheet only; preserve C20 canonicals, sitemap, 11 production routes, ad markup, and deployment state.
   - Baseline: C20 PR #51 merged as `3214c1a3cc388534d9f322c978bb31387cdf9ffd`. Fresh build reproduced `/kor/stockwikifavicon.ico` and `/kor/stockwikipagefind/pagefind-ui.css` on all 12 built HTML pages.
