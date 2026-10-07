@@ -1172,3 +1172,6 @@
 
 ## 2026-10-07 06:01 Keyword Hunter
 - Seeds: 40; New: 100; Rejected: 88; DB: 4632; Errors: 0; Top: 10월신혼여행지추천. Artifact report: reports/keyword-hunter/2026-10-07-0601.md
+
+## 2026-10-07 10:36 Keyword Hunter
+- Seeds: 40; New: 80; Rejected: 67; DB: 4712; Errors: 0; Top: 베트남한달살기비용. Artifact report: reports/keyword-hunter/2026-10-07-1036.md
