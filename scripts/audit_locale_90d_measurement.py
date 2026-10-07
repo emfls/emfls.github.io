@@ -34,6 +34,11 @@ GA4_REQUEST_LIMIT = 100_000
 GSC_ROW_LIMIT = 25_000
 PROPERTY_URL = "https://emfls.github.io/"
 SITE_HOST = "emfls.github.io"
+JP_REVIEW_ROUTES = {
+    "/jp/report/travel/uk-miltonkeynes.html",
+    "/jp/report/travel/bangladesh-joypurhat.html",
+    "/jp/report/travel/khagrachari.html",
+}
 
 
 def _get(value, snake_name, camel_name=None, default=None):
@@ -59,6 +64,48 @@ def _get(value, snake_name, camel_name=None, default=None):
     if camel_name and hasattr(value, camel_name):
         return getattr(value, camel_name)
     return default
+
+
+def _has_field(value, snake_name, camel_name=None):
+    if isinstance(value, dict):
+        return snake_name in value or bool(camel_name and camel_name in value)
+    for message in (value, getattr(value, "_pb", None)):
+        has_field = getattr(message, "HasField", None) if message is not None else None
+        if callable(has_field):
+            try:
+                return bool(has_field(snake_name))
+            except (TypeError, ValueError):
+                continue
+    return bool(value is not None and (hasattr(value, snake_name) or (camel_name and hasattr(value, camel_name))))
+
+
+def _plain_metadata_value(value):
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, dict):
+        return {str(key): _plain_metadata_value(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_plain_metadata_value(item) for item in value]
+    proto_value = getattr(value, "_pb", value)
+    try:
+        from google.protobuf.json_format import MessageToDict
+        from google.protobuf.message import Message
+        if isinstance(proto_value, Message):
+            return MessageToDict(proto_value, preserving_proto_field_name=False)
+    except ImportError:
+        pass
+    to_dict = getattr(type(value), "to_dict", None)
+    if callable(to_dict):
+        try:
+            return _plain_metadata_value(to_dict(value))
+        except (TypeError, ValueError):
+            pass
+    fields = getattr(value, "__dict__", None)
+    if isinstance(fields, dict):
+        public = {key: item for key, item in fields.items() if not key.startswith("_")}
+        if public:
+            return _plain_metadata_value(public)
+    return str(value)
 
 
 def _number(value):
@@ -97,24 +144,38 @@ def _metadata_dict(metadata):
             "currencyCode": None,
             "timeZone": None,
             "subjectToThresholding": None,
+            "subjectToThresholdingValue": None,
+            "subjectToThresholdingPresent": False,
             "dataLossFromOtherRow": None,
             "samplingMetadatas": None,
+            "dataTruncationReasons": None,
+            "schemaRestrictionResponse": None,
             "emptyReason": None,
         }
     samples = _get(metadata, "sampling_metadatas", "samplingMetadatas", None)
     if samples is not None:
-        samples = [str(item) for item in samples]
+        samples = [_plain_metadata_value(item) for item in samples]
+    subject_value = _get(metadata, "subject_to_thresholding", "subjectToThresholding", None)
+    truncation_reasons = _get(metadata, "data_truncation_reasons", "dataTruncationReasons", None)
+    if truncation_reasons is not None:
+        truncation_reasons = [_plain_metadata_value(item) for item in truncation_reasons]
     return {
         "currencyCode": _get(metadata, "currency_code", "currencyCode", None),
         "timeZone": _get(metadata, "time_zone", "timeZone", None),
-        "subjectToThresholding": _get(metadata, "subject_to_thresholding", "subjectToThresholding", None),
+        "subjectToThresholding": subject_value,
+        "subjectToThresholdingValue": subject_value,
+        "subjectToThresholdingPresent": _has_field(metadata, "subject_to_thresholding", "subjectToThresholding"),
         "dataLossFromOtherRow": _get(metadata, "data_loss_from_other_row", "dataLossFromOtherRow", None),
         "samplingMetadatas": samples,
+        "dataTruncationReasons": truncation_reasons,
+        "schemaRestrictionResponse": _plain_metadata_value(
+            _get(metadata, "schema_restriction_response", "schemaRestrictionResponse", None)
+        ),
         "emptyReason": _get(metadata, "empty_reason", "emptyReason", None),
     }
 
 
-def collect_ga4_report(fetch_page, *, requested_rows=GA4_REQUEST_LIMIT, expected_timezone="Asia/Seoul", max_pages=10_000):
+def collect_ga4_report(fetch_page, *, requested_rows=GA4_REQUEST_LIMIT, expected_timezone="Asia/Seoul", max_pages=10_000, keep_empty_rows=False):
     """Fetch all GA4 report rows using rowCount/offset and retain completeness evidence."""
     offset = 0
     rows = []
@@ -176,12 +237,15 @@ def collect_ga4_report(fetch_page, *, requested_rows=GA4_REQUEST_LIMIT, expected
     sampling = metadata.get("samplingMetadatas")
     zero_eligible = bool(
         complete
-        and metadata.get("subjectToThresholding") is False
+        and keep_empty_rows is False
+        and metadata.get("subjectToThresholdingValue") is not True
         and metadata.get("dataLossFromOtherRow") is False
         and metadata.get("timeZone") == expected_timezone
         and sampling == []
+        and not metadata.get("dataTruncationReasons")
     )
     return {
+        "keepEmptyRows": keep_empty_rows,
         "requestedRows": requested_rows,
         "requestedRowsTotal": pages_fetched * requested_rows,
         "rowCount": row_count,
@@ -194,6 +258,15 @@ def collect_ga4_report(fetch_page, *, requested_rows=GA4_REQUEST_LIMIT, expected
         "complete": complete,
         "zeroEligible": zero_eligible,
         "metadata": metadata,
+        "currencyCode": metadata.get("currencyCode"),
+        "timeZone": metadata.get("timeZone"),
+        "subjectToThresholdingValue": metadata.get("subjectToThresholdingValue"),
+        "subjectToThresholdingPresent": metadata.get("subjectToThresholdingPresent"),
+        "dataLossFromOtherRow": metadata.get("dataLossFromOtherRow"),
+        "samplingMetadatas": metadata.get("samplingMetadatas"),
+        "dataTruncationReasons": metadata.get("dataTruncationReasons"),
+        "schemaRestrictionResponse": metadata.get("schemaRestrictionResponse"),
+        "emptyReason": metadata.get("emptyReason"),
         "pageMetadata": page_metadata,
         "rows": rows,
     }
@@ -489,7 +562,7 @@ def classify_manifest_routes(
     dependencies,
     gsc_success_locales=None,
 ):
-    """Assign one conservative state to every manifest item; no missing row becomes zero."""
+    """Assign one measured state to every manifest item without equating no-row to revenue zero."""
     index = build_manifest_index(manifest_routes)
     raw_ga4 = ga4_report.get("rows", [])
     ga4_groups = aggregate_ga4_rows(raw_ga4, index)["routes"]
@@ -505,7 +578,7 @@ def classify_manifest_routes(
         gsc = gsc_groups.get(route)
         dep = dependencies.get(route, {})
         ga4_activity = _is_activity(ga4["metrics"]) if ga4 else None
-        ga4_zero_verified = bool(ga4_report.get("zeroEligible")) and (ga4 is None or ga4_activity is False)
+        ga4_no_activity_row_eligible = bool(ga4_report.get("zeroEligible")) and ga4 is None
         gsc_available = locale in gsc_success_locales
         gsc_status = "GSC_QUERY_UNAVAILABLE" if not gsc_available else "NO_GSC_ROW"
         gsc_signal = None
@@ -529,7 +602,7 @@ def classify_manifest_routes(
         protected = route in protected_routes
         opportunity = route in opportunity_routes
         experiment = route in experiment_routes
-        status = "UNKNOWN"
+        status = "OTHER_UNKNOWN"
         hold_reason = None
         if protected:
             status = "PROTECTED"
@@ -539,28 +612,18 @@ def classify_manifest_routes(
         elif normalization_collision:
             status = "NORMALIZATION_COLLISION"
             hold_reason = "MULTIPLE_SOURCE_OR_MANIFEST_PATHS_MAP_TO_ROUTE"
-        elif ga4_activity is True:
+        elif ga4_activity is True or gsc_signal is True:
             status = "MEASURED_POSITIVE"
-        elif gsc_signal is True:
-            status = "GA4_90D_ZERO_GSC_SIGNAL" if ga4_zero_verified else "MEASURED_POSITIVE"
-        elif ga4_zero_verified and not gsc_available:
-            status = "UNKNOWN"
-            hold_reason = "GSC_LOCALE_QUERY_UNAVAILABLE"
-        elif ga4_zero_verified and gsc_status == "GSC_ROW_METRICS_UNKNOWN":
-            status = "UNKNOWN"
-            hold_reason = "GSC_METRICS_UNKNOWN"
-        elif ga4_zero_verified and gsc_status == "GSC_SIGNAL":
-            status = "GA4_90D_ZERO_GSC_SIGNAL"
-        elif ga4_zero_verified and gsc_status == "NO_GSC_ROW":
-            status = "GA4_90D_ZERO_NO_GSC_ROW"
-        elif ga4_zero_verified and gsc_status == "GSC_ROW_NO_SIGNAL":
-            status = "UNKNOWN"
-            hold_reason = "GSC_ROW_PRESENT_BUT_NO_MEANINGFUL_SIGNAL"
-        elif not ga4_report.get("zeroEligible") and ga4_activity is False:
-            status = "UNKNOWN"
+        elif ga4_no_activity_row_eligible:
+            status = "GA4_90D_NO_ACTIVITY_ROW"
+        elif ga4_activity is False:
+            status = "OTHER_UNKNOWN"
+            hold_reason = "GA4_ROW_PRESENT_WITH_ZERO_METRICS_UNEXPECTED_WHEN_KEEP_EMPTY_ROWS_FALSE"
+        elif not ga4_report.get("zeroEligible") and ga4 is None:
+            status = "OTHER_UNKNOWN"
             hold_reason = "GA4_ZERO_GATE_NOT_VERIFIED"
 
-        if status in {"GA4_90D_ZERO_GSC_SIGNAL", "GA4_90D_ZERO_NO_GSC_ROW"} and dep:
+        if status == "GA4_90D_NO_ACTIVITY_ROW" and dep:
             if dep.get("unique_value_hold"):
                 status = "HOLD_DEPENDENCY"
                 hold_reason = "STRONG_UNIQUE_VALUE_REQUIRES_HOLD"
@@ -570,14 +633,19 @@ def classify_manifest_routes(
             elif dep.get("code_references"):
                 status = "HOLD_DEPENDENCY"
                 hold_reason = "HARDCODED_RUNTIME_ROUTE_REFERENCE"
+            elif dep.get("test_references"):
+                status = "HOLD_DEPENDENCY"
+                hold_reason = "TEST_ROUTE_REFERENCE"
             elif not dep.get("cleanup_straightforward", False):
                 status = "HOLD_DEPENDENCY"
                 hold_reason = "SITEMAP_OR_FEED_CLEANUP_NOT_STRAIGHTFORWARD"
 
-        candidate_gate_passed = bool(
-            status == "GA4_90D_ZERO_NO_GSC_ROW"
-            and ga4_zero_verified
+        pre_age_candidate_gate_passed = bool(
+            status == "GA4_90D_NO_ACTIVITY_ROW"
+            and ga4_no_activity_row_eligible
             and gsc_available
+            and gsc_signal is not True
+            and gsc_status != "GSC_ROW_METRICS_UNKNOWN"
             and not protected
             and not opportunity
             and not experiment
@@ -585,6 +653,7 @@ def classify_manifest_routes(
             and not dep.get("unique_value_hold")
             and int(dep.get("cross_locale_inbound_html", 0)) == 0
             and not dep.get("code_references")
+            and not dep.get("test_references")
             and dep.get("cleanup_straightforward", False)
         )
         content_signals = dep.get("content_signals", {})
@@ -600,9 +669,9 @@ def classify_manifest_routes(
             "bytes": manifest_item.get("bytes"),
             "status": status,
             "holdReason": hold_reason,
-            "ga4ZeroVerified": ga4_zero_verified,
-            "ga4Status": "GA4_90D_ZERO" if ga4_zero_verified else ("MEASURED" if ga4_activity is True else "UNKNOWN"),
-            "ga4Metrics": ga4["metrics"] if ga4 else ({key: 0 for _, key in GA4_METRICS} if ga4_zero_verified else None),
+            "ga4NoActivityRowEligible": ga4_no_activity_row_eligible,
+            "ga4Status": "NO_ACTIVITY_ROW_ELIGIBLE" if ga4_no_activity_row_eligible else ("MEASURED" if ga4_activity is True else "GA4_ROW_ZERO_METRICS" if ga4_activity is False else "UNKNOWN"),
+            "ga4Metrics": ga4["metrics"] if ga4 else None,
             "ga4RawPaths": ga4["rawPaths"] if ga4 else [],
             "ga4UnknownMetrics": ga4["unknownMetrics"] if ga4 else [],
             "gscStatus": gsc_status,
@@ -614,35 +683,69 @@ def classify_manifest_routes(
             "codeReferences": dep.get("code_references", []),
             "testReferences": dep.get("test_references", []),
             "sitemapFiles": dep.get("sitemap_files", []),
-        "feedFiles": dep.get("feed_files", []),
-        "indexFiles": dep.get("index_files", []),
+            "feedFiles": dep.get("feed_files", []),
+            "indexFiles": dep.get("index_files", []),
             "cleanupStraightforward": bool(dep.get("cleanup_straightforward", False)),
-        "contentSignals": content_signals,
-        "candidateGatePassed": candidate_gate_passed,
-        "contentReviewPassed": review["passed"],
-        "contentReviewReasons": review["reasons"],
+            "contentSignals": content_signals,
+            "preAgeCandidateGatePassed": pre_age_candidate_gate_passed,
+            "candidateGatePassed": False,
+            "firstSeenCommit": None,
+            "firstSeenDate": None,
+            "candidateAgeHoldReason": None,
+            "contentReviewPassed": review["passed"],
+            "contentReviewReasons": review["reasons"],
         })
     if len(output) != len(index["items"]):
         raise RuntimeError("manifest conservation failed: some HTML paths were not classified")
     return output
 
 
-def select_batch_a(classifications, limit=50):
+def select_batch_a(classifications, limit=50, *, period_start="2026-07-09", first_seen_lookup=None):
     eligible = [
         item for item in classifications
-        if item.get("candidateGatePassed") and item.get("contentReviewPassed")
+        if item.get("preAgeCandidateGatePassed") and item.get("contentReviewPassed")
     ]
     def priority(item):
         signals = item.get("contentSignals", {})
+        locale_rank = {"id": 0, "in": 1, "jp": 2}.get(item.get("locale"), 3)
+        route = item.get("route", "")
         return (
-            0 if item.get("locale") == "jp" else 1 if item.get("locale") in {"id", "in"} else 2,
+            locale_rank,
+            0 if item.get("locale") == "jp" and route in JP_REVIEW_ROUTES else 1,
             0 if signals.get("exactDuplicateOf") else 1,
             0 if signals.get("wrongLanguage") else 1,
             0 if signals.get("templateHeavy") else 1,
+            0 if not item.get("feedFiles") else 1,
             0 if item.get("crossLocaleInboundHtml", 0) + item.get("sameLocaleInboundHtml", 0) == 0 else 1,
+            item.get("firstSeenDate") or "9999-99-99",
             item.get("route", ""),
         )
-    return sorted(eligible, key=priority)[:max(0, min(int(limit), 50))]
+    for item in eligible:
+        first_seen = None
+        if first_seen_lookup:
+            first_seen = first_seen_lookup(item.get("repoPath") or item.get("route"))
+        elif item.get("firstSeenCommit") and item.get("firstSeenDate"):
+            first_seen = {"firstSeenCommit": item["firstSeenCommit"], "firstSeenDate": item["firstSeenDate"]}
+        if first_seen:
+            item["firstSeenCommit"] = first_seen["firstSeenCommit"]
+            item["firstSeenDate"] = first_seen["firstSeenDate"]
+        else:
+            item["firstSeenCommit"] = None
+            item["firstSeenDate"] = None
+            item["candidateAgeHoldReason"] = "FIRST_SEEN_GIT_HISTORY_UNAVAILABLE"
+    for item in eligible:
+        if not item.get("firstSeenCommit") or not item.get("firstSeenDate"):
+            item["candidateAgeHoldReason"] = "FIRST_SEEN_GIT_HISTORY_UNAVAILABLE"
+            item["candidateGatePassed"] = False
+            continue
+        if str(item["firstSeenDate"]) >= period_start:
+            item["candidateAgeHoldReason"] = "PAGE_FIRST_SEEN_ON_OR_AFTER_GA4_PERIOD_START"
+            item["candidateGatePassed"] = False
+            continue
+        item["candidateAgeHoldReason"] = None
+        item["candidateGatePassed"] = True
+    age_eligible = [item for item in eligible if item.get("candidateGatePassed")]
+    return sorted(age_eligible, key=priority)[:max(0, min(int(limit), 50))]
 
 
 def _content_review(signals, same_locale_inbound, cross_locale_inbound):
@@ -900,8 +1003,62 @@ def git_list_paths(repo_root, ref):
     return [line for line in output.splitlines() if line]
 
 
+def git_blob_size(repo_root, ref, repo_path):
+    output = subprocess.check_output(
+        ["git", "-C", str(repo_root), "ls-tree", "-r", "-l", ref, "--", repo_path], text=True
+    )
+    for line in output.splitlines():
+        meta, path = line.split("\t", 1)
+        if path == repo_path:
+            return int(meta.split()[3])
+    return None
+
+
+def summarize_candidate_references(repo_root, base_sha, candidates):
+    groups = {"sitemap": defaultdict(set), "feed": defaultdict(set)}
+    for item in candidates:
+        for kind, field in (("sitemap", "sitemapFiles"), ("feed", "feedFiles")):
+            for path in item.get(field, []):
+                groups[kind][path].add(item["route"])
+    summaries = {}
+    for kind, files in groups.items():
+        summaries[kind] = [{
+            "path": path,
+            "trackedBytes": git_blob_size(repo_root, base_sha, path),
+            "candidateRoutes": sorted(routes),
+            "candidateEntryReferences": len(routes),
+        } for path, routes in sorted(files.items())]
+    unique_files = {item["path"]: item["trackedBytes"] for items in summaries.values() for item in items}
+    summaries["associatedTrackedBytesAffected"] = sum(size or 0 for size in unique_files.values())
+    return summaries
+
+
 def git_show_text(repo_root, ref, path):
     return subprocess.check_output(["git", "-C", str(repo_root), "show", f"{ref}:{path}"], text=True, encoding="utf-8", errors="replace")
+
+
+def git_first_seen(repo_root, ref, repo_path):
+    """Return the first add event on a route's rename-following history, or None."""
+    try:
+        output = subprocess.check_output([
+            "git", "-C", str(repo_root), "log", "--follow", "--diff-filter=A", "--reverse",
+            "--format=%H%x09%cI", ref, "--", repo_path,
+        ], text=True)
+    except subprocess.CalledProcessError:
+        return None
+    for line in output.splitlines():
+        fields = line.split("\t", 1)
+        if len(fields) != 2:
+            continue
+        commit, committed_at = fields
+        try:
+            local_date = datetime.fromisoformat(committed_at.replace("Z", "+00:00")).astimezone(
+                ZoneInfo("Asia/Seoul")
+            ).date().isoformat()
+        except ValueError:
+            continue
+        return {"firstSeenCommit": commit, "firstSeenDate": local_date}
+    return None
 
 
 def git_manifest(repo_root, base_sha):
@@ -1063,7 +1220,7 @@ def _locale_counts(classifications):
         result[locale] = {
             "manifestPages": len(rows),
             "statuses": _counts(rows),
-            "batchACandidates": sum(bool(item.get("candidateGatePassed") and item.get("contentReviewPassed")) for item in rows),
+            "deleteCanaryGatePassed": sum(bool(item.get("candidateGatePassed") and item.get("contentReviewPassed")) for item in rows),
         }
     return result
 
@@ -1101,9 +1258,15 @@ def _collect_ga4_period(client, property_id, period, *, expected_timezone):
             date_ranges=[DateRange(start_date=period["start"], end_date=period["end"])],
             limit=limit,
             offset=str(offset),
+            keep_empty_rows=False,
         )
         return client.run_report(request)
-    return collect_ga4_report(fetch, requested_rows=GA4_REQUEST_LIMIT, expected_timezone=expected_timezone)
+    return collect_ga4_report(
+        fetch,
+        requested_rows=GA4_REQUEST_LIMIT,
+        expected_timezone=expected_timezone,
+        keep_empty_rows=False,
+    )
 
 
 def _gsc_service_from_env(encoded):
@@ -1151,10 +1314,11 @@ def write_artifacts(output_dir, summary, page_rows, ga4_raw, gsc_raw):
     _atomic_json(output_dir / "locale-90d-ga4-raw.json", ga4_raw)
     _atomic_json(output_dir / "locale-90d-gsc-raw.json", gsc_raw)
     fields = [
-        "repoPath", "locale", "route", "bytes", "status", "holdReason", "ga4ZeroVerified", "ga4Status",
+        "repoPath", "locale", "route", "bytes", "status", "holdReason", "ga4NoActivityRowEligible", "ga4Status",
         "ga4Metrics", "ga4RawPaths", "gscStatus", "gscMetrics", "gscRawUrls", "normalizationCollision",
         "crossLocaleInboundHtml", "sameLocaleInboundHtml", "codeReferences", "testReferences", "sitemapFiles",
-        "feedFiles", "indexFiles", "cleanupStraightforward", "contentSignals", "candidateGatePassed",
+        "feedFiles", "indexFiles", "cleanupStraightforward", "contentSignals", "preAgeCandidateGatePassed",
+        "candidateGatePassed", "firstSeenCommit", "firstSeenDate", "candidateAgeHoldReason",
         "contentReviewPassed", "contentReviewReasons",
     ]
     with tempfile.NamedTemporaryFile("w", encoding="utf-8", newline="", dir=output_dir, delete=False) as handle:
@@ -1246,12 +1410,13 @@ def run_audit(repo_root, base_sha, output_dir, *, now=None):
     )
     dependency_routes = {
         item["route"] for item in initial
-        if item["status"] in {"GA4_90D_ZERO_GSC_SIGNAL", "GA4_90D_ZERO_NO_GSC_ROW", "UNKNOWN"}
-        and item["ga4ZeroVerified"]
+        if item["status"] == "GA4_90D_NO_ACTIVITY_ROW"
+        and item["ga4NoActivityRowEligible"]
         and item["route"] not in protected
         and item["route"] not in opportunities
         and item["route"] not in experiments
     }
+    dependency_routes.update(route for route in JP_REVIEW_ROUTES if route in manifest_index["by_route"])
     dependency_map = build_dependency_map(repo_root, base_sha, manifest_index, dependency_routes, output_dir)
     page_rows = classify_manifest_routes(
         manifest_index["items"], ga4_90,
@@ -1265,14 +1430,21 @@ def run_audit(repo_root, base_sha, output_dir, *, now=None):
     counts = _counts(page_rows)
     if sum(counts.values()) != manifest_stats["count"]:
         raise RuntimeError("status counts do not conserve latest-main manifest total")
-    zero_count = sum(bool(item["ga4ZeroVerified"]) for item in page_rows)
-    candidate_pool = select_batch_a(page_rows, limit=50)
+    no_activity_row_count = sum(bool(item["ga4NoActivityRowEligible"]) for item in page_rows)
+    period_start = periods["ga4"]["90d"]["start"]
+    candidate_pool = select_batch_a(
+        page_rows,
+        limit=50,
+        period_start=period_start,
+        first_seen_lookup=lambda path: git_first_seen(repo_root, base_sha, path),
+    )
+    candidate_references = summarize_candidate_references(repo_root, base_sha, candidate_pool)
     gsc_locale_summary = {
         locale: {key: value for key, value in gsc_raw["locales"][locale].items() if key != "rows"}
         for locale in LOCALES
     }
     summary = {
-        "result": "LOCALE_90D_AUDIT_COMPLETE",
+        "result": "LOCALE_CANARY_READY" if candidate_pool else "NO_SAFE_CANARY",
         "baseMainSha": base_sha,
         "auditHeadSha": subprocess.check_output(["git", "-C", str(repo_root), "rev-parse", "HEAD"], text=True).strip(),
         "periods": periods,
@@ -1284,10 +1456,14 @@ def run_audit(repo_root, base_sha, output_dir, *, now=None):
             "dimension": "pagePathPlusQueryString",
             "metrics": [name for name, _ in GA4_METRICS],
             "limit": GA4_REQUEST_LIMIT,
+            "keepEmptyRows": False,
             "reports": {
                 key: {field: report.get(field) for field in (
                     "requestedRows", "requestedRowsTotal", "rowCount", "retrievedRows", "pagesFetched",
-                    "stoppedBecause", "rowCountConsistent", "metadataConsistent", "complete", "zeroEligible", "metadata",
+                    "stoppedBecause", "rowCountConsistent", "metadataConsistent", "complete", "zeroEligible",
+                    "keepEmptyRows", "currencyCode", "timeZone", "subjectToThresholdingValue",
+                    "subjectToThresholdingPresent", "dataLossFromOtherRow", "samplingMetadatas",
+                    "dataTruncationReasons", "schemaRestrictionResponse", "emptyReason", "metadata",
                 )} for key, report in ga4_raw["reports"].items()
             },
             "unmatchedTargetRows": len(ga4_join["unmatchedRows"]),
@@ -1304,13 +1480,29 @@ def run_audit(repo_root, base_sha, output_dir, *, now=None):
         },
         "classificationCounts": counts,
         "localeClassifications": _locale_counts(page_rows),
-        "ga4VerifiedZero": zero_count,
-        "unknown": counts.get("UNKNOWN", 0),
+        "ga4NoActivityRowEligiblePages": no_activity_row_count,
+        "jpReviewRoutes": [{
+            "route": item["route"],
+            "status": item["status"],
+            "ga4Status": item["ga4Status"],
+            "ga4Metrics": item["ga4Metrics"],
+            "gscStatus": item["gscStatus"],
+            "gscMetrics": item["gscMetrics"],
+            "crossLocaleInboundHtml": item["crossLocaleInboundHtml"],
+            "sameLocaleInboundHtml": item["sameLocaleInboundHtml"],
+            "sitemapFiles": item["sitemapFiles"],
+            "feedFiles": item["feedFiles"],
+            "codeReferences": item["codeReferences"],
+            "testReferences": item["testReferences"],
+            "contentSignals": item["contentSignals"],
+        } for item in page_rows if item["route"] in JP_REVIEW_ROUTES],
         "batchAReviewPool": [{
             "locale": item["locale"],
             "repoPath": item["repoPath"],
             "route": item["route"],
             "bytes": item["bytes"],
+            "firstSeenCommit": item["firstSeenCommit"],
+            "firstSeenDate": item["firstSeenDate"],
             "gscStatus": item["gscStatus"],
             "ga4Metrics": item["ga4Metrics"],
             "crossLocaleInboundHtml": item["crossLocaleInboundHtml"],
@@ -1328,6 +1520,8 @@ def run_audit(repo_root, base_sha, output_dir, *, now=None):
             "repoPath": item["repoPath"],
             "route": item["route"],
             "bytes": item["bytes"],
+            "firstSeenCommit": item["firstSeenCommit"],
+            "firstSeenDate": item["firstSeenDate"],
             "ga4Metrics": item["ga4Metrics"],
             "gscStatus": item["gscStatus"],
             "gscMetrics": item["gscMetrics"],
@@ -1341,7 +1535,17 @@ def run_audit(repo_root, base_sha, output_dir, *, now=None):
             "contentSignals": item["contentSignals"],
         } for item in candidate_pool],
         "batchACandidatesStatus": "CANDIDATES_READY_FOR_CONTROL_TOWER_REVIEW" if candidate_pool else "NO_HIGH_CONFIDENCE_CANDIDATES",
+        "batchAFileCount": len(candidate_pool),
         "currentTreeSavingsBytes": sum(item["bytes"] or 0 for item in candidate_pool),
+        "currentTreeSavingsEstimate": {
+            "htmlBytes": sum(item["bytes"] or 0 for item in candidate_pool),
+            "associatedSitemapFeedTrackedBytesAffected": candidate_references["associatedTrackedBytesAffected"],
+            "associatedSitemapFiles": candidate_references["sitemap"],
+            "associatedFeedFiles": candidate_references["feed"],
+            "note": "HTML removal bytes are exact; sitemap/feed trackedBytesAffected identifies files requiring deterministic entry cleanup and is not added as full-file savings.",
+        },
+        "sitemapChangesRequired": candidate_references["sitemap"],
+        "feedChangesRequired": candidate_references["feed"],
         "batchACandidatePages": len(candidate_pool),
         "rawGitTracked": 0,
     }

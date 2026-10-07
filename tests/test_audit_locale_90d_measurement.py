@@ -1,9 +1,14 @@
 import importlib.util
 import json
+import sys
+import os
+import subprocess
 import tempfile
+import types
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
+from unittest import mock
 
 import yaml
 
@@ -40,7 +45,7 @@ def ga4_metadata(**overrides):
 
 
 def ga4_response(row_count, rows, metadata=None):
-    return SimpleNamespace(row_count=row_count, rows=rows, metadata=metadata or ga4_metadata())
+    return SimpleNamespace(row_count=row_count, rows=rows, metadata=ga4_metadata() if metadata is None else metadata)
 
 
 def gsc_row(url, clicks=0, impressions=0, position=0.0):
@@ -85,6 +90,10 @@ class LocaleAuditPipelineTest(unittest.TestCase):
         self.assertEqual(len(rows), 5_916)
         self.assertEqual(sum(audit._counts(rows).values()), 5_916)
         self.assertEqual(len({item["repoPath"] for item in rows}), 5_916)
+        self.assertTrue(set(audit._counts(rows)).issubset({
+            "PROTECTED", "MEASURED_POSITIVE", "GA4_90D_NO_ACTIVITY_ROW",
+            "NORMALIZATION_COLLISION", "HOLD_DEPENDENCY", "OTHER_UNKNOWN",
+        }))
 
     def test_ga4_paginates_until_row_count_and_captures_zero_gate_metadata(self):
         audit = load_audit(self)
@@ -187,6 +196,69 @@ class LocaleAuditPipelineTest(unittest.TestCase):
             self.assertTrue(result["complete"])
             self.assertFalse(result["zeroEligible"])
 
+    def test_ga4_zero_gate_absent_subject_flag_and_truncation_contract(self):
+        audit = load_audit(self)
+
+        def report(metadata):
+            return audit.collect_ga4_report(
+                lambda offset, limit: ga4_response(0, [], metadata),
+                requested_rows=100000,
+                keep_empty_rows=False,
+            )
+
+        explicit_false = report(ga4_metadata(subjectToThresholding=False))
+        self.assertTrue(explicit_false["zeroEligible"])
+        self.assertEqual(explicit_false["metadata"]["subjectToThresholdingValue"], False)
+        self.assertTrue(explicit_false["metadata"]["subjectToThresholdingPresent"])
+
+        absent_metadata = ga4_metadata()
+        del absent_metadata["subjectToThresholding"]
+        absent = report(absent_metadata)
+        self.assertTrue(absent["zeroEligible"])
+        self.assertIsNone(absent["metadata"]["subjectToThresholdingValue"])
+        self.assertFalse(absent["metadata"]["subjectToThresholdingPresent"])
+
+        self.assertFalse(report(ga4_metadata(subjectToThresholding=True))["zeroEligible"])
+        self.assertFalse(report(ga4_metadata(dataLossFromOtherRow=True))["zeroEligible"])
+        self.assertFalse(report(ga4_metadata(samplingMetadatas=[{"samplesReadCount": 5}]))["zeroEligible"])
+        truncated = report(ga4_metadata(dataTruncationReasons=[{"type": "ROW_LIMIT"}]))
+        self.assertFalse(truncated["zeroEligible"])
+        self.assertEqual(truncated["metadata"]["dataTruncationReasons"], [{"type": "ROW_LIMIT"}])
+
+        restricted = report(ga4_metadata(schemaRestrictionResponse={
+            "activeMetricRestrictions": [{"metricName": "totalAdRevenue"}],
+        }))
+        self.assertTrue(restricted["zeroEligible"])
+        self.assertEqual(restricted["metadata"]["schemaRestrictionResponse"]["activeMetricRestrictions"][0]["metricName"], "totalAdRevenue")
+
+    def test_ga4_request_explicitly_sets_keep_empty_rows_false(self):
+        audit = load_audit(self)
+        captured = {}
+
+        class FakeRequest:
+            def __init__(self, **kwargs):
+                captured.update(kwargs)
+
+        fake_types = types.ModuleType("google.analytics.data_v1beta.types")
+        fake_types.DateRange = lambda **kwargs: kwargs
+        fake_types.Dimension = lambda **kwargs: kwargs
+        fake_types.Metric = lambda **kwargs: kwargs
+        fake_types.RunReportRequest = FakeRequest
+        module_names = (
+            "google", "google.analytics", "google.analytics.data_v1beta",
+            "google.analytics.data_v1beta.types",
+        )
+        fake_modules = {name: types.ModuleType(name) for name in module_names}
+        fake_modules["google.analytics.data_v1beta.types"] = fake_types
+        with mock.patch.dict(sys.modules, fake_modules):
+            result = audit._collect_ga4_period(
+                SimpleNamespace(run_report=lambda request: ga4_response(0, [])),
+                "123", {"start": "2026-07-09", "end": "2026-10-06"},
+                expected_timezone="Asia/Seoul",
+            )
+        self.assertIs(captured["keep_empty_rows"], False)
+        self.assertIs(result["keepEmptyRows"], False)
+
     def test_gsc_filters_each_locale_to_finalized_pages_and_paginates(self):
         audit = load_audit(self)
         requests = []
@@ -247,16 +319,19 @@ class LocaleAuditPipelineTest(unittest.TestCase):
         )
         states = {row["route"]: row["status"] for row in result}
         rows_by_route = {row["route"]: row for row in result}
-        self.assertEqual(states["/id/no-row.html"], "GA4_90D_ZERO_NO_GSC_ROW")
-        self.assertTrue(rows_by_route["/id/no-row.html"]["candidateGatePassed"])
+        self.assertEqual(states["/id/no-row.html"], "GA4_90D_NO_ACTIVITY_ROW")
+        self.assertTrue(rows_by_route["/id/no-row.html"]["preAgeCandidateGatePassed"])
+        self.assertFalse(rows_by_route["/id/no-row.html"]["candidateGatePassed"])
         self.assertEqual(states["/id/positive.html"], "MEASURED_POSITIVE")
-        self.assertEqual(states["/id/gsc.html"], "GA4_90D_ZERO_GSC_SIGNAL")
+        self.assertEqual(states["/id/gsc.html"], "MEASURED_POSITIVE")
+        self.assertEqual(rows_by_route["/id/gsc.html"]["ga4Status"], "NO_ACTIVITY_ROW_ELIGIBLE")
+        self.assertFalse(rows_by_route["/id/gsc.html"]["preAgeCandidateGatePassed"])
         self.assertEqual(states["/id/protected.html"], "PROTECTED")
         self.assertEqual(states["/id/experiment.html"], "HOLD_DEPENDENCY")
         self.assertEqual(states["/id/dependency.html"], "HOLD_DEPENDENCY")
         self.assertEqual(len(result), len(routes))
         self.assertEqual(set(states.values()), {
-            "GA4_90D_ZERO_NO_GSC_ROW", "MEASURED_POSITIVE", "GA4_90D_ZERO_GSC_SIGNAL",
+            "GA4_90D_NO_ACTIVITY_ROW", "MEASURED_POSITIVE",
             "PROTECTED", "HOLD_DEPENDENCY",
         })
 
@@ -267,8 +342,8 @@ class LocaleAuditPipelineTest(unittest.TestCase):
             protected_routes=set(), opportunity_routes=set(), experiment_routes=set(),
             dependencies={"/in/no-row.html": clean_dependencies()},
         )
-        self.assertEqual(result[0]["status"], "UNKNOWN")
-        self.assertFalse(result[0]["ga4ZeroVerified"])
+        self.assertEqual(result[0]["status"], "OTHER_UNKNOWN")
+        self.assertFalse(result[0]["ga4NoActivityRowEligible"])
         self.assertEqual(result[0]["gscStatus"], "NO_GSC_ROW")
 
     def test_gsc_zero_metric_row_is_unknown_and_alias_collision_is_held(self):
@@ -292,7 +367,8 @@ class LocaleAuditPipelineTest(unittest.TestCase):
             gsc_success_locales={"id"},
         )
         states = {row["route"]: row for row in result}
-        self.assertEqual(states["/id/zero-row.html"]["status"], "UNKNOWN")
+        self.assertEqual(states["/id/zero-row.html"]["status"], "GA4_90D_NO_ACTIVITY_ROW")
+        self.assertEqual(states["/id/zero-row.html"]["gscStatus"], "GSC_ROW_NO_SIGNAL")
         self.assertEqual(states["/id/family/"]["status"], "NORMALIZATION_COLLISION")
         self.assertTrue(states["/id/family/"]["normalizationCollision"])
         self.assertEqual(len(result), len(routes))
@@ -300,12 +376,14 @@ class LocaleAuditPipelineTest(unittest.TestCase):
     def test_candidate_set_excludes_holds_and_never_exceeds_fifty(self):
         audit = load_audit(self)
         routes = [
-            {"route": f"/id/{i:02}.html", "status": "GA4_90D_ZERO_NO_GSC_ROW", "candidateGatePassed": True, "contentReviewPassed": True}
+            {"route": f"/id/{i:02}.html", "locale": "id", "status": "GA4_90D_NO_ACTIVITY_ROW",
+             "preAgeCandidateGatePassed": True, "candidateGatePassed": False, "contentReviewPassed": True,
+             "firstSeenCommit": "a" * 40, "firstSeenDate": "2026-06-01"}
             for i in range(55)
         ]
         routes.extend([
-            {"route": "/id/protected.html", "status": "PROTECTED", "candidateGatePassed": False, "contentReviewPassed": True},
-            {"route": "/id/hold.html", "status": "HOLD_DEPENDENCY", "candidateGatePassed": False, "contentReviewPassed": True},
+            {"route": "/id/protected.html", "status": "PROTECTED", "preAgeCandidateGatePassed": False, "candidateGatePassed": False, "contentReviewPassed": True},
+            {"route": "/id/hold.html", "status": "HOLD_DEPENDENCY", "preAgeCandidateGatePassed": False, "candidateGatePassed": False, "contentReviewPassed": True},
         ])
         candidates = audit.select_batch_a(routes, limit=50)
         self.assertEqual(len(candidates), 50)
@@ -313,6 +391,52 @@ class LocaleAuditPipelineTest(unittest.TestCase):
         self.assertTrue(all(item["candidateGatePassed"] for item in candidates))
         self.assertNotIn("/id/protected.html", {item["route"] for item in candidates})
         self.assertNotIn("/id/hold.html", {item["route"] for item in candidates})
+
+    def test_batch_a_requires_pre_period_age_and_prioritizes_id_then_in(self):
+        audit = load_audit(self)
+        rows = [
+            {"route": "/jp/report/travel/khagrachari.html", "locale": "jp", "status": "GA4_90D_NO_ACTIVITY_ROW", "preAgeCandidateGatePassed": True, "candidateGatePassed": False, "contentReviewPassed": True,
+             "firstSeenCommit": "a" * 40, "firstSeenDate": "2026-06-01"},
+            {"route": "/in/a.html", "locale": "in", "status": "GA4_90D_NO_ACTIVITY_ROW", "preAgeCandidateGatePassed": True, "candidateGatePassed": False, "contentReviewPassed": True,
+             "firstSeenCommit": "b" * 40, "firstSeenDate": "2026-06-01"},
+            {"route": "/id/new.html", "locale": "id", "status": "GA4_90D_NO_ACTIVITY_ROW", "preAgeCandidateGatePassed": True, "candidateGatePassed": False, "contentReviewPassed": True,
+             "firstSeenCommit": "c" * 40, "firstSeenDate": "2026-07-09"},
+            {"route": "/id/old.html", "locale": "id", "status": "GA4_90D_NO_ACTIVITY_ROW", "preAgeCandidateGatePassed": True, "candidateGatePassed": False, "contentReviewPassed": True,
+             "firstSeenCommit": "d" * 40, "firstSeenDate": "2026-06-01"},
+            {"route": "/jp/report/travel/ordinary.html", "locale": "jp", "status": "GA4_90D_NO_ACTIVITY_ROW", "preAgeCandidateGatePassed": True, "candidateGatePassed": False, "contentReviewPassed": True,
+             "firstSeenCommit": "e" * 40, "firstSeenDate": "2020-01-01"},
+        ]
+        candidates = audit.select_batch_a(rows, limit=50, period_start="2026-07-09")
+        self.assertEqual([item["route"] for item in candidates], [
+            "/id/old.html", "/in/a.html", "/jp/report/travel/khagrachari.html", "/jp/report/travel/ordinary.html",
+        ])
+        self.assertNotIn("/id/new.html", {item["route"] for item in candidates})
+        self.assertTrue(all(item["candidateGatePassed"] for item in candidates))
+        self.assertEqual(audit.JP_REVIEW_ROUTES, {
+            "/jp/report/travel/uk-miltonkeynes.html",
+            "/jp/report/travel/bangladesh-joypurhat.html",
+            "/jp/report/travel/khagrachari.html",
+        })
+
+    def test_git_first_seen_uses_add_commit_not_last_touch(self):
+        audit = load_audit(self)
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory)
+            subprocess.run(["git", "init", "-q", str(repo)], check=True)
+            page = repo / "id" / "old.html"
+            page.parent.mkdir()
+            page.write_text("first", encoding="utf-8")
+            subprocess.run(["git", "-C", str(repo), "add", "id/old.html"], check=True)
+            env = dict(os.environ, GIT_AUTHOR_DATE="2026-06-01T12:00:00+00:00", GIT_COMMITTER_DATE="2026-06-01T12:00:00+00:00")
+            subprocess.run(["git", "-C", str(repo), "-c", "user.name=Test", "-c", "user.email=test@example.com", "commit", "-qm", "add page"], env=env, check=True)
+            first_commit = subprocess.check_output(["git", "-C", str(repo), "rev-parse", "HEAD"], text=True).strip()
+            page.write_text("updated", encoding="utf-8")
+            subprocess.run(["git", "-C", str(repo), "add", "id/old.html"], check=True)
+            env = dict(os.environ, GIT_AUTHOR_DATE="2026-10-01T12:00:00+00:00", GIT_COMMITTER_DATE="2026-10-01T12:00:00+00:00")
+            subprocess.run(["git", "-C", str(repo), "-c", "user.name=Test", "-c", "user.email=test@example.com", "commit", "-qm", "update page"], env=env, check=True)
+            first_seen = audit.git_first_seen(repo, "HEAD", "id/old.html")
+        self.assertEqual(first_seen["firstSeenCommit"], first_commit)
+        self.assertEqual(first_seen["firstSeenDate"], "2026-06-01")
 
     def test_candidate_content_review_requires_clear_low_value_evidence(self):
         audit = load_audit(self)
@@ -367,6 +491,11 @@ class LocaleAuditPipelineTest(unittest.TestCase):
         self.assertIn("runner.temp", upload["with"]["path"])
         run_scripts = "\n".join(step.get("run", "") for step in steps)
         self.assertIn("audit_locale_90d_measurement.py", run_scripts)
+        self.assertIn('--base-sha "$BASE_MAIN_SHA"', run_scripts)
+        self.assertIn("BASE_MAIN_SHA=", run_scripts)
+        self.assertNotIn("EXPECTED_MAIN_SHA", run_scripts)
+        self.assertIn("git fetch --no-tags origin main", run_scripts)
+        self.assertNotIn("origin main --depth=1", run_scripts)
         self.assertNotRegex(run_scripts, r"git\s+(?:add|commit|push)")
         self.assertIn("git status --porcelain", run_scripts)
         self.assertIn("locale-90d-ga4-raw.json", run_scripts)

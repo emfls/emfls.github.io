@@ -84,23 +84,24 @@ jobs:
       - name: Install GA4 and Search Console read-only clients
         run: python3 -m pip install google-analytics-data google-api-python-client google-auth
 
-      - name: Verify exact main baseline and prepare artifact directory
-        env:
-          EXPECTED_MAIN_SHA: d87451872ecffe95d0b0e1da8d4a698a76f52e6c
+      - name: Pin latest main baseline and prepare artifact directory
         run: |
           set -euo pipefail
-          git fetch --no-tags origin main --depth=1
-          test "$(git rev-parse origin/main)" = "$EXPECTED_MAIN_SHA"
-          git merge-base --is-ancestor "$EXPECTED_MAIN_SHA" HEAD
+          git fetch --no-tags origin main
+          BASE_MAIN_SHA="$(git rev-parse origin/main)"
+          AUDIT_COMMON_BASE_SHA=d87451872ecffe95d0b0e1da8d4a698a76f52e6c
+          git merge-base --is-ancestor "$AUDIT_COMMON_BASE_SHA" origin/main
+          git merge-base --is-ancestor "$AUDIT_COMMON_BASE_SHA" HEAD
           test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          echo "BASE_MAIN_SHA=$BASE_MAIN_SHA" >> "$GITHUB_ENV"
+          echo "Audit head: $GITHUB_SHA"
+          echo "Latest main baseline: $BASE_MAIN_SHA"
           mkdir -p "$RUNNER_TEMP/locale-90d"
 
       - name: Collect and classify all locale pages
-        env:
-          EXPECTED_MAIN_SHA: d87451872ecffe95d0b0e1da8d4a698a76f52e6c
         run: >-
           python3 scripts/audit_locale_90d_measurement.py
-          --base-sha "$EXPECTED_MAIN_SHA"
+          --base-sha "$BASE_MAIN_SHA"
           --repo-root "$GITHUB_WORKSPACE"
           --output-dir "$RUNNER_TEMP/locale-90d"
 
