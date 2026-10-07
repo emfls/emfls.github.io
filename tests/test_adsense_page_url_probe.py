@@ -126,13 +126,15 @@ class PageUrlProbeSpecTests(unittest.TestCase):
             self.assertNotIn("secret-client-secret", serialized)
             self.assertNotIn("secret-refresh-token", serialized)
 
-    def test_missing_rows_or_matched_count_remain_unknown_instead_of_zero_revenue(self):
+    def test_omitted_rows_field_with_valid_headers_is_partial_and_never_zero(self):
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "probe-summary.json"
 
             def generate_report(account_name, period, dimensions, access_token, open_url, **kwargs):
                 kwargs["response_metadata"].update({"httpStatus": 200, "httpHeaders": {}})
-                return {"headers": [], "warnings": []}
+                report = report_for(kwargs["metrics"])
+                report.pop("rows")
+                return report
 
             with patch.object(collector, "_refresh_access_token", return_value="token"), \
                  patch.object(collector, "_api_get", return_value={"timeZone": {"id": "Asia/Seoul"}}), \
@@ -145,8 +147,32 @@ class PageUrlProbeSpecTests(unittest.TestCase):
             self.assertIsNone(summary["probes"][0]["returnedRowCount"])
             self.assertIsNone(summary["probes"][0]["totalMatchedRows"])
             self.assertEqual(summary["probes"][0]["truncationStatus"], "NOT_AVAILABLE")
+            self.assertEqual(summary["probes"][0]["status"], "PARTIAL")
+            self.assertFalse(summary["probes"][0]["rowsPresent"])
+            self.assertTrue(any("row counts are NOT_AVAILABLE" in warning for warning in summary["probes"][0]["warnings"]))
             self.assertEqual(summary["probes"][0]["samplePageUrls"], [])
             self.assertEqual(summary["topPageRevenueRows"], [])
+            self.assertEqual(summary["classification"], "UNKNOWN")
+
+    def test_malformed_headers_or_rows_remain_invalid_responses(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory) / "probe-summary.json"
+
+            def generate_report(account_name, period, dimensions, access_token, open_url, **kwargs):
+                kwargs["response_metadata"].update({"httpStatus": 200, "httpHeaders": {}})
+                return {"headers": [{"name": "OTHER", "type": "DIMENSION"}]}
+
+            with patch.object(collector, "_refresh_access_token", return_value="token"), \
+                 patch.object(collector, "_api_get", return_value={"timeZone": {"id": "Asia/Seoul"}}), \
+                 patch.object(collector, "_generate_report", side_effect=generate_report):
+                summary = collector.run_page_url_probe_matrix(
+                    output, account_name=ACCOUNT, client_id="id", client_secret="secret",
+                    refresh_token="refresh", now=NOW,
+                )
+
+            self.assertEqual(summary["probes"][0]["status"], "INVALID_RESPONSE")
+            self.assertIsNone(summary["probes"][0]["returnedRowCount"])
+            self.assertTrue(any("omitted the requested PAGE_URL dimension" in warning for warning in summary["probes"][0]["warnings"]))
             self.assertEqual(summary["classification"], "UNKNOWN")
 
     def test_explicit_zero_rows_do_not_create_zero_revenue_and_can_classify_account_limitation(self):

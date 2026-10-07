@@ -389,10 +389,19 @@ def test_guard_allows_only_the_exact_stage_aware_empty_rows_collector_transition
         ("085f253a3ba6c98b3318a99d7a03b63c1398f761", "d387a34a2fd020b3f64e3ee6fe9e90c744d1fb3f"),
         ("114d91de1a6e22103f7c697c7df229fa2ac1a0ad", "d387a34a2fd020b3f64e3ee6fe9e90c744d1fb3f"),
         ("7e462d5e1ccedfba022594d98cabf4aa3697ca01", "d387a34a2fd020b3f64e3ee6fe9e90c744d1fb3f"),
+        ("085f253a3ba6c98b3318a99d7a03b63c1398f761", "957645a50ddf075849701f6a5681f09847814b45"),
+        ("114d91de1a6e22103f7c697c7df229fa2ac1a0ad", "957645a50ddf075849701f6a5681f09847814b45"),
+        ("7e462d5e1ccedfba022594d98cabf4aa3697ca01", "957645a50ddf075849701f6a5681f09847814b45"),
+        ("957645a50ddf075849701f6a5681f09847814b45", "974c78b42a7a3b4baf3c3549b93413ca1c279108"),
+        ("085f253a3ba6c98b3318a99d7a03b63c1398f761", "974c78b42a7a3b4baf3c3549b93413ca1c279108"),
+        ("114d91de1a6e22103f7c697c7df229fa2ac1a0ad", "974c78b42a7a3b4baf3c3549b93413ca1c279108"),
+        ("7e462d5e1ccedfba022594d98cabf4aa3697ca01", "974c78b42a7a3b4baf3c3549b93413ca1c279108"),
+        ("974c78b42a7a3b4baf3c3549b93413ca1c279108", current_blob),
         transition,
         base_to_final_transition,
         ("114d91de1a6e22103f7c697c7df229fa2ac1a0ad", current_blob),
         ("7e462d5e1ccedfba022594d98cabf4aa3697ca01", current_blob),
+        ("957645a50ddf075849701f6a5681f09847814b45", current_blob),
     }
     assert validate_launch(tmp_path, manifest([]), [("M", path, *historical_transition)]) == []
     assert validate_launch(tmp_path, manifest([]), [("M", path, *transition)]) == []

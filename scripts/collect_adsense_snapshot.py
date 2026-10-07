@@ -1680,11 +1680,19 @@ def build_page_url_probe_specs(now, reporting_time_zone):
 def _probe_report_rows(report, sensitive_values):
     headers = report.get("headers")
     rows = report.get("rows")
-    if not isinstance(headers, list) or not isinstance(rows, list):
-        return None, [], ["The API response omitted a valid headers or rows list."]
+    if not isinstance(headers, list):
+        return None, [], ["The API response omitted a valid headers list."]
     names = [header.get("name") if isinstance(header, dict) else None for header in headers]
     if "PAGE_URL" not in names:
-        return len(rows), [], ["The API response omitted the requested PAGE_URL dimension."]
+        return (
+            len(rows) if isinstance(rows, list) else None,
+            [],
+            ["The API response omitted the requested PAGE_URL dimension."],
+        )
+    if "rows" not in report:
+        return None, [], ["The API response omitted rows; row counts are NOT_AVAILABLE."]
+    if not isinstance(rows, list):
+        return None, [], ["The API response rows field was not a list."]
     parsed = []
     warnings = []
     for row in rows:
@@ -1982,7 +1990,16 @@ def run_page_url_probe_matrix(
                 total_matched = _probe_total_matched_rows(report)
                 result.update({
                     "status": (
-                        "INVALID_RESPONSE" if returned_count is None
+                        "PARTIAL" if (
+                            returned_count is None
+                            and "rows" not in report
+                            and isinstance(report.get("headers"), list)
+                            and any(
+                                isinstance(header, dict) and header.get("name") == "PAGE_URL"
+                                for header in report["headers"]
+                            )
+                        )
+                        else "INVALID_RESPONSE" if returned_count is None
                         else "PARTIAL" if _probe_warning_list(report, sensitive_values) or parse_warnings or usable_page_count < returned_count
                         else "SUCCESS"
                     ),
