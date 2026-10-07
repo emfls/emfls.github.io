@@ -37,6 +37,6 @@
 - [x] Run the new tests and confirm they fail before implementation.
 - [x] Add the audit-only CLI mode and manual read-only probe job in the existing workflow without changing the scheduled collection path.
 - [x] Add exact blob checks for initial diagnostics and the approved collector transition.
-- [ ] Run focused and full validation, run the launch guard against the latest main, then push the same branch.
-- [ ] Dispatch the real probe matrix, inspect its single seven-day artifact, and change production PAGE_URL observation only if returned rows support it.
-- [ ] Revalidate final diff, preserve latest-main `adsense-latest.json`, and stop before PR or main merge.
+- [x] Run focused and full validation, run the launch guard against the latest main, then push the same branch.
+- [x] Dispatch the real probe matrix and inspect its single seven-day artifact; no returned rows support a production PAGE_URL observation change.
+- [x] Revalidate final diff, preserve latest-main `adsense-latest.json`, and stop before PR or main merge.
