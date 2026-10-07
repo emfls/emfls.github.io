@@ -4,9 +4,15 @@ on:
   schedule:
     - cron: "17 2 * * *" # daily UTC 02:17
   workflow_dispatch:
+    inputs:
+      matched_traffic_growth_audit:
+        description: "Run the bounded matched-period traffic audit without writing repository data"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: site-measurement-collection
@@ -15,6 +21,9 @@ concurrency:
 
 jobs:
   collect:
+    if: github.event_name != 'workflow_dispatch' || inputs.matched_traffic_growth_audit != true
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
@@ -59,3 +68,40 @@ jobs:
           git add data/performance/ga4-latest.json
           git diff --staged --quiet || git commit -m "chore: refresh GA4 source snapshot"
           git push
+
+  matched-traffic-growth-audit:
+    if: github.event_name == 'workflow_dispatch' && inputs.matched_traffic_growth_audit == true
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      TZ: Asia/Seoul
+      GA4_PROPERTY_ID: ${{ vars.GA4_PROPERTY_ID }}
+      GA4_SERVICE_ACCOUNT_JSON_B64: ${{ secrets.GA4_SERVICE_ACCOUNT_JSON_B64 }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install read-only GA4 and Search Console clients
+        run: python3 -m pip install google-analytics-data google-api-python-client google-auth
+
+      - name: Collect matched-period traffic audit
+        run: >-
+          python3 scripts/collect_matched_traffic_growth_audit.py
+          --repository-root .
+          --output-dir "$RUNNER_TEMP/matched-traffic-growth"
+
+      - name: Upload seven-day matched-traffic audit artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: matched-traffic-growth-${{ github.run_id }}
+          path: ${{ runner.temp }}/matched-traffic-growth/*
+          if-no-files-found: error
+          retention-days: 7
