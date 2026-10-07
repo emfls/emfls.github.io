@@ -438,6 +438,44 @@ class LocaleAuditPipelineTest(unittest.TestCase):
         self.assertEqual(first_seen["firstSeenCommit"], first_commit)
         self.assertEqual(first_seen["firstSeenDate"], "2026-06-01")
 
+    def test_git_first_seen_many_batches_exact_path_additions(self):
+        audit = load_audit(self)
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory)
+            subprocess.run(["git", "init", "-q", str(repo)], check=True)
+
+            def commit(path, content, date, message):
+                target = repo / path
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text(content, encoding="utf-8")
+                subprocess.run(["git", "-C", str(repo), "add", path], check=True)
+                env = dict(os.environ, GIT_AUTHOR_DATE=date, GIT_COMMITTER_DATE=date)
+                subprocess.run([
+                    "git", "-C", str(repo), "-c", "user.name=Test", "-c",
+                    "user.email=test@example.com", "commit", "-qm", message,
+                ], env=env, check=True)
+                return subprocess.check_output(["git", "-C", str(repo), "rev-parse", "HEAD"], text=True).strip()
+
+            first_commit = commit("id/old.html", "first", "2026-06-01T12:00:00+00:00", "add old page")
+            second_commit = commit("in/another.html", "second", "2026-06-05T12:00:00+00:00", "add another page")
+            commit("id/old.html", "updated", "2026-06-10T12:00:00+00:00", "update old page")
+            renamed_commit = commit("id/renamed.html", "updated", "2026-06-15T12:00:00+00:00", "add renamed route")
+
+            first_seen = audit.git_first_seen_many(
+                repo, "HEAD", ["id/old.html", "in/another.html", "id/renamed.html", "id/missing.html"]
+            )
+
+        self.assertEqual(first_seen["id/old.html"], {
+            "firstSeenCommit": first_commit, "firstSeenDate": "2026-06-01",
+        })
+        self.assertEqual(first_seen["in/another.html"], {
+            "firstSeenCommit": second_commit, "firstSeenDate": "2026-06-05",
+        })
+        self.assertEqual(first_seen["id/renamed.html"], {
+            "firstSeenCommit": renamed_commit, "firstSeenDate": "2026-06-15",
+        })
+        self.assertNotIn("id/missing.html", first_seen)
+
     def test_candidate_content_review_requires_clear_low_value_evidence(self):
         audit = load_audit(self)
         thin = audit._content_review({"textTokenCount": 32, "templateHeavy": True}, 0, 0)

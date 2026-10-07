@@ -1037,28 +1037,44 @@ def git_show_text(repo_root, ref, path):
     return subprocess.check_output(["git", "-C", str(repo_root), "show", f"{ref}:{path}"], text=True, encoding="utf-8", errors="replace")
 
 
-def git_first_seen(repo_root, ref, repo_path):
-    """Return the first add event on a route's rename-following history, or None."""
-    try:
-        output = subprocess.check_output([
-            "git", "-C", str(repo_root), "log", "--follow", "--diff-filter=A", "--reverse",
-            "--format=%H%x09%cI", ref, "--", repo_path,
-        ], text=True)
-    except subprocess.CalledProcessError:
-        return None
+def git_first_seen_many(repo_root, ref, repo_paths):
+    """Find each route path's first Git add in one history walk.
+
+    Rename detection is disabled deliberately: a renamed source path represents a
+    new static route path, and treating it as a new add is the conservative age
+    boundary for a deletion canary.
+    """
+    requested = sorted(set(str(path) for path in repo_paths if path))
+    if not requested:
+        return {}
+    requested_set = set(requested)
+    output = subprocess.check_output([
+        "git", "-C", str(repo_root), "log", "--reverse", "--diff-filter=A", "--no-renames",
+        "--format=COMMIT:%H%x09%cI", "--name-only", ref, "--", *requested,
+    ], text=True, errors="replace")
+    result = {}
+    current_commit = None
+    current_date = None
     for line in output.splitlines():
-        fields = line.split("\t", 1)
-        if len(fields) != 2:
-            continue
-        commit, committed_at = fields
-        try:
-            local_date = datetime.fromisoformat(committed_at.replace("Z", "+00:00")).astimezone(
-                ZoneInfo("Asia/Seoul")
-            ).date().isoformat()
-        except ValueError:
-            continue
-        return {"firstSeenCommit": commit, "firstSeenDate": local_date}
-    return None
+        if line.startswith("COMMIT:"):
+            fields = line.removeprefix("COMMIT:").split("\t", 1)
+            current_commit = fields[0] if len(fields) == 2 else None
+            current_date = None
+            if len(fields) == 2:
+                try:
+                    current_date = datetime.fromisoformat(fields[1].replace("Z", "+00:00")).astimezone(
+                        ZoneInfo("Asia/Seoul")
+                    ).date().isoformat()
+                except ValueError:
+                    current_commit = None
+        elif line in requested_set and line not in result and current_commit and current_date:
+            result[line] = {"firstSeenCommit": current_commit, "firstSeenDate": current_date}
+    return result
+
+
+def git_first_seen(repo_root, ref, repo_path):
+    """Return one route path's first Git add, using the batched implementation."""
+    return git_first_seen_many(repo_root, ref, [repo_path]).get(repo_path)
 
 
 def git_manifest(repo_root, base_sha):
@@ -1432,11 +1448,16 @@ def run_audit(repo_root, base_sha, output_dir, *, now=None):
         raise RuntimeError("status counts do not conserve latest-main manifest total")
     no_activity_row_count = sum(bool(item["ga4NoActivityRowEligible"]) for item in page_rows)
     period_start = periods["ga4"]["90d"]["start"]
+    candidate_age_paths = [
+        item.get("repoPath") or item.get("route") for item in page_rows
+        if item.get("preAgeCandidateGatePassed") and item.get("contentReviewPassed")
+    ]
+    first_seen_by_path = git_first_seen_many(repo_root, base_sha, candidate_age_paths)
     candidate_pool = select_batch_a(
         page_rows,
         limit=50,
         period_start=period_start,
-        first_seen_lookup=lambda path: git_first_seen(repo_root, base_sha, path),
+        first_seen_lookup=first_seen_by_path.get,
     )
     candidate_references = summarize_candidate_references(repo_root, base_sha, candidate_pool)
     gsc_locale_summary = {
