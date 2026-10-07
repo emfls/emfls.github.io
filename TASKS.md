@@ -4,6 +4,11 @@
 
 ## P0 - Critical
 
+- [ ] P0 90-Day Locale Measurement Audit Pipeline — `codex/locale-measurement-audit-90d`
+  - 범위: exact-main 기반의 branch-only GA4/GSC measurement recovery, 전체 locale URL 보전 분류, 삭제 후보 최대 50 검토. Production HTML/sitemap 삭제, history rewrite, PR, main merge는 금지한다.
+  - 구현/QA: current main `d87451872ecffe95d0b0e1da8d4a698a76f52e6c`; manifest 5,916 / 99,296,655 B; protected winners 64. 신규 collector/workflow와 regression coverage 완료. Related tests 45 PASS; unittest 836 PASS (3 skipped); pytest 1,365 PASS (3 skipped); YAML/syntax/diff/manifest checks PASS.
+  - 상태: isolated local branch 준비됨; remote push 및 workflow_dispatch 대기. Artifact 전에는 activity/zero/candidate/reduction claims 없음.
+
 - [ ] P0 StockWiki placeholder-ad source/build regression prevention — C14
   - 범위: Astro source가 향후 빌드에서 placeholder 광고를 재생성하지 못하도록 한다. 실광고 활성화, StockWiki 금융 콘텐츠/데이터/SEO 의미 변경은 금지한다.
   - 변경: `AdSlot.astro`와 호출부 및 StockLayout 고정 하단 placeholder를 제거하고, 예약된 StockWiki 빌드 출력에서 광고 마커가 발견되면 복사·커밋 전에 실패하도록 안전 검사를 추가했다. 기존 생성 HTML 정리 스크립트는 유지했다.

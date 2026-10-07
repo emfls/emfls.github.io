@@ -1,5 +1,12 @@
 # PROJECT HISTORY
 
+## 2026-10-07 — 90-Day Locale Measurement Audit Pipeline — live collection pending
+
+- **Base/scope:** Reverified repository `emfls/emfls.github.io` main at `d87451872ecffe95d0b0e1da8d4a698a76f52e6c`; created isolated branch `codex/locale-measurement-audit-90d` from that exact base in a temporary clone. The latest-main locale manifest is 5,916 HTML files / 99,296,655 B (JP 5,349, ID 63, IN 63; 64 current protected winners).
+- **Implementation:** Added a separate GA4/GSC 90-day collector with rowCount pagination, strict zero eligibility, normalized-alias collision holds, finalized GSC locale-prefix pagination, route-conserving classification, runtime/link/index dependency scans, a thin-content/duplicate review gate, and four artifact outputs under `$RUNNER_TEMP`. The existing GA4 collector job is skipped only on this audit branch; the audit job is manual-only, `contents: read`, has no persisted checkout credential, and verifies the exact main SHA and clean Git tree. No production HTML, sitemap, tracked measurement snapshot, or direct AdSense values were changed.
+- **Verification:** Audit plus related GA4/GSC/workflow/measurement tests: 45 passed. Full unittest: 836 passed, 3 skipped. Full pytest: 1,365 passed, 3 skipped. Workflow YAML, Python syntax, `git diff --check`, 5,916-route manifest conservation, and a JP/ID/IN HTML dependency-scan smoke check passed.
+- **Status:** Local implementation and QA are complete. Remote branch push and the manual Actions run are still pending. No live GA4/GSC collection, deletion candidate, tree/history savings, or pruning action is claimed until the uploaded artifact is independently checked. No PR or main merge is planned.
+
 ## 2026-10-06 — C33 Maple Planet top-winner content integrity repair
 
 - Started from latest `origin/main` `02afeeb8e58fdbf0c6a3aae418ed41664b3e2b05` in isolated branch `codex/c33-maple-planet-content-integrity-20261006`. Scope is only the existing URL `kor/column/maple-planet-no-capital-rice-farming-2026.html`; no new Maple page or URL, sitemap, analytics, or ad changes.

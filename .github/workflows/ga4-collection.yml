@@ -15,6 +15,7 @@ concurrency:
 
 jobs:
   collect:
+    if: github.ref_name != 'codex/locale-measurement-audit-90d'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
@@ -59,3 +60,71 @@ jobs:
           git add data/performance/ga4-latest.json
           git diff --staged --quiet || git commit -m "chore: refresh GA4 source snapshot"
           git push
+
+  audit_locale_measurement:
+    if: github.event_name == 'workflow_dispatch' && github.ref_name == 'codex/locale-measurement-audit-90d'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+    env:
+      GA4_PROPERTY_ID: ${{ vars.GA4_PROPERTY_ID }}
+      GA4_SERVICE_ACCOUNT_JSON_B64: ${{ secrets.GA4_SERVICE_ACCOUNT_JSON_B64 }}
+      GOOGLE_SERVICE_ACCOUNT_JSON_B64: ${{ secrets.GA4_SERVICE_ACCOUNT_JSON_B64 }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install GA4 and Search Console read-only clients
+        run: python3 -m pip install google-analytics-data google-api-python-client google-auth
+
+      - name: Verify exact main baseline and prepare artifact directory
+        env:
+          EXPECTED_MAIN_SHA: d87451872ecffe95d0b0e1da8d4a698a76f52e6c
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main --depth=1
+          test "$(git rev-parse origin/main)" = "$EXPECTED_MAIN_SHA"
+          git merge-base --is-ancestor "$EXPECTED_MAIN_SHA" HEAD
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          mkdir -p "$RUNNER_TEMP/locale-90d"
+
+      - name: Collect and classify all locale pages
+        env:
+          EXPECTED_MAIN_SHA: d87451872ecffe95d0b0e1da8d4a698a76f52e6c
+        run: >-
+          python3 scripts/audit_locale_90d_measurement.py
+          --base-sha "$EXPECTED_MAIN_SHA"
+          --repo-root "$GITHUB_WORKSPACE"
+          --output-dir "$RUNNER_TEMP/locale-90d"
+
+      - name: Verify artifact-only output and unchanged checkout
+        run: |
+          python3 - "$RUNNER_TEMP/locale-90d" <<'PY'
+          import sys
+          from pathlib import Path
+          expected = {
+              "locale-90d-summary.json",
+              "locale-90d-pages.csv",
+              "locale-90d-ga4-raw.json",
+              "locale-90d-gsc-raw.json",
+          }
+          actual = {path.name for path in Path(sys.argv[1]).iterdir() if path.is_file()}
+          assert actual == expected, (actual, expected)
+          PY
+          git diff --exit-code
+          test -z "$(git status --porcelain --untracked-files=all)"
+
+      - name: Upload locale measurement artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: locale-90d-measurement-${{ github.run_id }}
+          path: ${{ runner.temp }}/locale-90d/
+          if-no-files-found: error
+          retention-days: 7

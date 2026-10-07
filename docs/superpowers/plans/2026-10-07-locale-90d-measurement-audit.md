@@ -38,8 +38,8 @@
 
 **Interfaces:** tests define expectations for GA4 pagination/metadata, GSC locale filters/startRow pagination, normalized-route collision preservation, status conservation, missing-vs-zero, protected/dependency exclusions, candidate cap, and audit-only workflow safeguards.
 
-- [ ] Write minimal tests for all listed contracts, using fake API responses only at external client boundaries.
-- [ ] Run the focused test file and confirm failures arise from the absent audit module/behavior.
+- [x] Write minimal tests for all listed contracts, using fake API responses only at external client boundaries.
+- [x] Run the focused test file red on the absent audit module/workflow, then green after implementation.
 
 ### Task 2: Implement audit collector and classification
 
@@ -49,10 +49,10 @@
 
 **Interfaces:** expose pure date/URL normalization, GA4 pagination, GSC locale pagination, exact tree manifest, dependency scan, classification, candidate selection, and atomic artifact writing helpers.
 
-- [ ] Implement minimal functions to satisfy the failing tests.
-- [ ] Store row counts, fetched pages, stop reasons, API metadata, per-locale pagination, normalized aliases, and source-specific periods.
-- [ ] Build summary JSON, complete route CSV, and raw GA4/GSC JSON only in the requested output directory.
-- [ ] Run focused tests until green; inspect the full candidate gate and route-conservation totals.
+- [x] Implement minimal functions to satisfy the failing tests.
+- [x] Store row counts, fetched pages, stop reasons, API metadata, per-locale pagination, normalized aliases, and source-specific periods.
+- [x] Build summary JSON, complete route CSV, and raw GA4/GSC JSON only in the requested output directory.
+- [x] Run focused tests until green; inspect the full candidate gate and route-conservation totals.
 
 ### Task 3: Add branch-only artifact workflow route
 
@@ -60,17 +60,17 @@
 - Modify: `.github/workflows/ga4-collection.yml`
 - Test: `tests/test_audit_locale_90d_measurement.py`
 
-- [ ] Add a manual exact-branch job with read-only repository permission, installed GA4/GSC clients, base-SHA freshness check, and `$RUNNER_TEMP` output.
-- [ ] Keep the existing main collector job behavior unchanged.
-- [ ] Upload the four named artifacts with seven-day retention; do not add Git staging/commit/push commands.
-- [ ] Run workflow contract and YAML tests.
+- [x] Add a manual exact-branch job with read-only repository permission, installed GA4/GSC clients, base-SHA freshness check, and `$RUNNER_TEMP` output.
+- [x] Keep the existing main collector job behavior unchanged.
+- [x] Upload the four named artifacts with seven-day retention; do not add Git staging/commit/push commands.
+- [x] Run workflow contract and YAML tests.
 
 ### Task 4: Verify, run, and review Batch A
 
 **Files:**
 - Modify: `PROJECT_HISTORY.md`, `TASKS.md`
 
-- [ ] Run focused audit tests, relevant existing GA4/GSC/workflow tests, and the repository test suites.
+- [x] Run focused audit/GA4/GSC tests (45 passed), full unittest (836 passed, 3 skipped), and full pytest (1,365 passed, 3 skipped).
 - [ ] Push only the audit branch and dispatch the existing GA4 workflow on that branch.
 - [ ] Download and validate the artifact; independently reconcile all 5,916 manifest routes and class sums.
 - [ ] Review technical dependencies and content uniqueness for any passing zero-signal pages; produce at most 50 exact candidates.
