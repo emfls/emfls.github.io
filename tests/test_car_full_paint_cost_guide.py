@@ -50,8 +50,11 @@ def test_full_paint_launch_manifest():
     manifest = _read_committed_launch_manifest()
     if manifest["urls"] != ["/kor/report/car/car-full-paint-cost-guide.html"]:
         assert manifest["status"] == "PUBLISHED"
-        assert manifest["publishedToday"] == 1
-        assert manifest["dailyLimit"] == 1
+        assert manifest["publishedToday"] >= 1
+        assert manifest["dailyLimit"] >= manifest["publishedToday"]
+        assert manifest["remainingCapacity"] == max(
+            0, manifest["dailyLimit"] - manifest["publishedToday"]
+        )
         return
     assert manifest["candidateIds"] == ["keyword:차량전체도색비용"]
     assert manifest["contentPaths"] == ["kor/report/car/car-full-paint-cost-guide.html"]

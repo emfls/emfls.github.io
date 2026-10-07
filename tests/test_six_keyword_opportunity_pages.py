@@ -343,6 +343,19 @@ def test_committed_launch_manifest_is_exactly_the_current_launch_batch():
         assert manifest["dailyLimit"] == 1
         assert manifest["remainingCapacity"] == 0
         return
+    if manifest["urls"] == ["/kor/report/travel/vietnam-one-month-cost.html"]:
+        assert manifest["candidateIds"] == ["keyword:베트남한달살기비용"]
+        assert manifest["contentPaths"] == [
+            "kor/report/travel/vietnam-one-month-cost.html"
+        ]
+        assert manifest["hubPaths"] == ["kor/report/travel/vietnam-danang.html"]
+        assert manifest["sitemapPaths"] == ["kor/report/travel/sitemap.xml"]
+        assert manifest["runAt"].startswith("2026-10-07T")
+        assert manifest["runId"] == "P0-20261007-VIETNAM-ONE-MONTH-COST"
+        assert manifest["publishedToday"] == 1
+        assert manifest["dailyLimit"] == 3
+        assert manifest["remainingCapacity"] == 2
+        return
     assert manifest["urls"] == ["/kor/util/water-purifier-rental-price-comparison/"]
     assert manifest["contentPaths"] == ["kor/util/water-purifier-rental-price-comparison/index.html"]
     assert manifest["hubPaths"] == ["kor/util/index.html"]

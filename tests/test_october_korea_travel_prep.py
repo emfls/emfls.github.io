@@ -138,9 +138,12 @@ class OctoberKoreaTravelLaunchTest(unittest.TestCase):
         manifest = committed_launch_manifest()
         if manifest["urls"] != [relative_url]:
             self.assertEqual(manifest["status"], "PUBLISHED")
-            self.assertEqual(manifest["publishedToday"], 1)
-            self.assertEqual(manifest["dailyLimit"], 1)
-            self.assertEqual(manifest["remainingCapacity"], 0)
+            self.assertGreaterEqual(manifest["publishedToday"], 1)
+            self.assertGreaterEqual(manifest["dailyLimit"], manifest["publishedToday"])
+            self.assertEqual(
+                manifest["remainingCapacity"],
+                max(0, manifest["dailyLimit"] - manifest["publishedToday"]),
+            )
             return
         self.assertEqual(manifest["candidateIds"], ["keyword:10월여행지추천"])
         self.assertEqual(manifest["contentPaths"], ["kor/report/travel/october-korea-travel-2026.html"])
