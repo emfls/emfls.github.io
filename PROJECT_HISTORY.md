@@ -1163,3 +1163,6 @@
 
 ## 2026-10-07 17:45 Keyword Hunter
 - Seeds: 40; New: 20; Rejected: 10; DB: 4732; Errors: 0; Top: 회계연도연차계산기. Artifact report: reports/keyword-hunter/2026-10-07-1745.md
+
+## 2026-10-08 02:27 Keyword Hunter
+- Seeds: 40; New: 20; Rejected: 18; DB: 4752; Errors: 0; Top: 사업소득세계산기. Artifact report: reports/keyword-hunter/2026-10-08-0227.md
