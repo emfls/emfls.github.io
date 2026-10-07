@@ -3,13 +3,21 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 LANGS = ("", "cn", "de", "es", "fr", "id", "in", "jp", "kor", "pt", "ru", "vn")
+RETIRED_INTERACTIVE_PAGES = {("id", "fortune")}
 
 
 def interactive_pages():
     for lang in LANGS:
         prefix = ROOT / lang if lang else ROOT
-        yield prefix / "util/dice3d/index.html"
-        yield prefix / "util/fortune/index.html"
+        for page_name in ("dice3d", "fortune"):
+            if (lang, page_name) in RETIRED_INTERACTIVE_PAGES:
+                continue
+            yield prefix / f"util/{page_name}/index.html"
+
+
+def test_retired_interactive_page_is_not_in_the_inventory():
+    retired_page = ROOT / "id/util/fortune/index.html"
+    assert retired_page not in set(interactive_pages())
 
 
 def test_interactive_ads_have_clear_label_and_safe_spacing():
