@@ -1,5 +1,14 @@
 # PROJECT HISTORY
 
+## 2026-10-08 C02 — PR #56 final integration after PR #60
+
+- Confirmed PR #60 merged as `7d8ab3f6df7e60c32d4f5e1e289c16d8060e6411`; latest main `7da1e484fd4a622efd90c88de05361cb34297fa3` descends from that merge. Normally merged latest main into PR #56 at `8b7bf79f21180fceb62de2aaaeec23c02f28f2d5`; PR #60's seven link fixes and regression test match main exactly. PR #56 remains OPEN / MERGEABLE.
+- Latest main publisher run `37765173248` completed successfully and produced tracked full `data/page-performance.json` at 55,293,326 B, SHA256 `37edb01a3d29badaddbc9c6280ef9fce538ad52603a690a71c8ac88b6638d64b`. This full artifact is unchanged in the PR branch; no publisher dispatch, promote, main write, or direct merge occurred.
+- Exact integration-head run `37770487612` attempt 1 passed both `validate` and `measurement-parity`. PR head `8b7bf79f21180fceb62de2aaaeec23c02f28f2d5`; Actions execution SHA `180a01a1aeac578930ad033f6f7a11fceaef5801`. Unittest 855 passed / 3 skipped; pytest 1,459 passed / 3 skipped / 556 subtests; SEO QA 0 new criticals and warnings; content launch guard PASS.
+- Exact parity: 18,929 URLs; GA4/GSC `VERIFIED`, AdSense `PARTIAL`; Naver source `data/naver/search-advisor-2026-09-17.json` stays stale/period-mismatched with ranking unavailable. GA4 revision/SHA `1ee052939b4ac5b60ae69b9536cef3292d0018b7` / `83f84496516d975e66285c80cea54ef72953387253180ac8ed035e914b9d14c7`; GSC `0e8b6e8487eb14b549dcee242e60aa683bbb7949` / `e56f9a7854f4e3a12c0e7d41b3d34dd6d53aea46879e8e2cf6f5f93a5d8a5ab6`; AdSense `a2d1e131ae1840acd1cb43b3bf6fee8d2be98892` / `92717c0599bb15ba9f6b0d230038498ee7617730c9c2d7dff92d72fb911c622b`; Naver SHA `65692c13e65e807d476858e0c7979fd70aa51dd14e017edb6c7c7b1f044e8479`.
+- Manifest SHA256 `328da95e6b3ae5a6b5017c36f4b3d71332380257a429856f5b25eb36f423b209`; full artifact 57,674,600 B / SHA256 `2319a556df9bc284732ab8cc2b1a93253ecdb2e9893cb9ae441a2a31df78b835`; compact 18,157,051 B / SHA256 `63e2ba5812929c0d6d1971cfa8965cc7585f6339ed6f4e3b52efdbeeeb1dd6d7`; projected reduction 39,517,549 B / 68.52%. Keyword Hunter 32, GSC opportunities 34, revenue parity PASS, protected winners 1,642. Actual main tracked savings remain 0 B until promotion.
+- No final PR merge. Control Tower approval remains required. The documentation-only follow-up has a separate exact-head CI gate; check the latest PR head before readiness is relayed.
+
 ## 2026-10-08 C02 — PR #56 Naver parity and exact-head CI hardening
 
 - Synced the existing PR branch to latest `origin/main` `a2d1e131ae1840acd1cb43b3bf6fee8d2be98892` with normal merge commits; no rebase or force-push. PR #56's prior head was `dcb0807a9949749d2c877e97435af7692ff8fdde`.
