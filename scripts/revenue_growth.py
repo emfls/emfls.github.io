@@ -39,9 +39,31 @@ CHANNEL_FIELDS = {
     "adsense": ("revenue", "rpm"),
 }
 CHANNEL_METADATA_FIELDS = {
+    "naver": ("periodPreset", "dataUpdatedAt", "positionStatus", "crossSourceStatus"),
     "ga4": ("revenueMetric",),
     "adsense": ("revenueMetric", "coverageStatus"),
 }
+
+
+def _empty_naver_channel(status="NOT_CONNECTED", snapshot=None):
+    """Keep Naver provenance and unavailable states explicit on every URL row."""
+    channel = empty_channel(
+        CHANNEL_FIELDS["naver"],
+        status=status,
+        metadata_fields=CHANNEL_METADATA_FIELDS["naver"],
+    )
+    if snapshot:
+        channel.update({
+            "period": snapshot.get("period"),
+            "periodPreset": snapshot.get("periodPreset"),
+            "source": snapshot.get("source"),
+            "dataUpdatedAt": snapshot.get("dataUpdatedAt"),
+            "crossSourceStatus": "PERIOD_MISMATCH",
+        })
+    else:
+        channel["crossSourceStatus"] = "NOT_CONNECTED"
+    channel["positionStatus"] = "NOT_AVAILABLE"
+    return channel
 
 
 def content_growth_summary(experiments, as_of):
@@ -500,6 +522,11 @@ def run_revenue_growth(
                         "coverageStatus": page_url_coverage,
                     })
                     record[channel_name] = unavailable
+            elif channel_name == "naver":
+                normalized = normalize_channel(channel, fields, as_of, metadata) if channel else _empty_naver_channel()
+                normalized["positionStatus"] = normalized.get("positionStatus") or "NOT_AVAILABLE"
+                normalized["crossSourceStatus"] = normalized.get("crossSourceStatus") or "NOT_CONNECTED"
+                record[channel_name] = normalized
             else:
                 record[channel_name] = normalize_channel(channel, fields, as_of, metadata) if channel else empty_channel(fields, metadata_fields=metadata)
         if naver_match:
@@ -519,11 +546,7 @@ def run_revenue_growth(
                     "crossSourceStatus": "PERIOD_MISMATCH",
                 }
             else:
-                record["naver"] = {
-                    **empty_channel(CHANNEL_FIELDS["naver"], status="NOT_AVAILABLE"),
-                    "positionStatus": "NOT_AVAILABLE",
-                    "crossSourceStatus": "PERIOD_MISMATCH",
-                }
+                record["naver"] = _empty_naver_channel(status="NOT_AVAILABLE", snapshot=naver_snapshot)
         record.update(cooldown_state(record["lastOptimizationDate"], as_of, experiment.get("observe_until")))
         records.append(record)
 

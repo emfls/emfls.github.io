@@ -39,10 +39,14 @@ def validate_manifest_for_parity(
     ga4_snapshot_path,
     gsc_snapshot_path,
     adsense_snapshot_path,
+    naver_snapshot_path,
     *,
     analysis_commit,
     workflow_run_id,
     workflow_run_attempt,
+    repository_root=None,
+    pull_request_head_sha=None,
+    adsense_source_revision=None,
 ):
     """Verify provenance against the exact current full artifact and snapshots."""
     manifest = _read_json(manifest_path, "page-performance manifest")
@@ -52,9 +56,13 @@ def validate_manifest_for_parity(
         ga4_snapshot_path,
         gsc_snapshot_path,
         adsense_snapshot_path,
+        naver_snapshot_path,
         analysis_commit,
         workflow_run_id,
         workflow_run_attempt,
+        repository_root=repository_root,
+        pull_request_head_sha=pull_request_head_sha,
+        adsense_source_revision=adsense_source_revision,
     )
 
 
@@ -132,10 +140,12 @@ def validate_parity(
     ga4_snapshot_path,
     gsc_snapshot_path,
     adsense_snapshot_path,
+    naver_snapshot_path,
     analysis_commit,
     workflow_run_id,
     workflow_run_attempt,
-    naver_snapshot_path=None,
+    pull_request_head_sha=None,
+    adsense_source_revision=None,
 ):
     manifest_status = validate_manifest_for_parity(
         manifest_path,
@@ -143,9 +153,12 @@ def validate_parity(
         ga4_snapshot_path=ga4_snapshot_path,
         gsc_snapshot_path=gsc_snapshot_path,
         adsense_snapshot_path=adsense_snapshot_path,
+        naver_snapshot_path=naver_snapshot_path,
         analysis_commit=analysis_commit,
         workflow_run_id=workflow_run_id,
         workflow_run_attempt=workflow_run_attempt,
+        pull_request_head_sha=pull_request_head_sha,
+        adsense_source_revision=adsense_source_revision,
     )
 
     full_payload = _read_json(full_path, "full page-performance artifact")
@@ -168,8 +181,7 @@ def validate_parity(
         "adsense_snapshot_path": Path(adsense_snapshot_path),
         "as_of": full_payload["asOf"],
     }
-    if naver_snapshot_path:
-        common["naver_snapshot_path"] = Path(naver_snapshot_path)
+    common["naver_snapshot_path"] = Path(naver_snapshot_path)
     with tempfile.TemporaryDirectory(prefix="page-performance-parity-") as temporary:
         output_root = Path(temporary)
         full_result = _run_revenue(Path(full_path), common, output_root / "full")
@@ -192,7 +204,9 @@ def main():
     parser.add_argument("--analysis-commit", required=True)
     parser.add_argument("--workflow-run-id", required=True)
     parser.add_argument("--workflow-run-attempt", required=True)
-    parser.add_argument("--naver-snapshot", type=Path)
+    parser.add_argument("--naver-snapshot", type=Path, required=True)
+    parser.add_argument("--pull-request-head-sha")
+    parser.add_argument("--adsense-source-revision")
     args = parser.parse_args()
     result = validate_parity(
         full_path=args.full,
@@ -207,10 +221,12 @@ def main():
         ga4_snapshot_path=args.ga4_snapshot,
         gsc_snapshot_path=args.gsc_snapshot,
         adsense_snapshot_path=args.adsense_snapshot,
+        naver_snapshot_path=args.naver_snapshot,
         analysis_commit=args.analysis_commit,
         workflow_run_id=args.workflow_run_id,
         workflow_run_attempt=args.workflow_run_attempt,
-        naver_snapshot_path=args.naver_snapshot,
+        pull_request_head_sha=args.pull_request_head_sha,
+        adsense_source_revision=args.adsense_source_revision,
     )
     print(json.dumps(result, ensure_ascii=False, sort_keys=True))
 

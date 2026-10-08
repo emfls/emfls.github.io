@@ -27,7 +27,19 @@ def full_fixture():
         "pageScore": 70,
         "ga4": channel("VERIFIED", {"start": "2026-09-08", "end": "2026-10-05"}, "GA4", views=500, users=300, engagementSeconds=8000, revenue=2.5, revenueMetric="totalAdRevenue"),
         "google": channel("VERIFIED", {"start": "2026-09-06", "end": "2026-10-03"}, "GSC", clicks=10, impressions=1000, ctr=0.01, position=8.2),
-        "naver": channel("NOT_CONNECTED", None, None, clicks=None, impressions=None, ctr=None, position=None),
+        "naver": channel(
+            "STALE_DATA",
+            {"start": "2026-08-19", "end": "2026-09-17"},
+            "NAVER_SEARCH_ADVISOR_UI_TOP_30",
+            clicks=2,
+            impressions=31,
+            ctr=0.0645,
+            position=None,
+            positionStatus="NOT_AVAILABLE",
+            crossSourceStatus="PERIOD_MISMATCH",
+            dataUpdatedAt="2026-09-17",
+            periodPreset="RECENT_30_DAYS",
+        ),
         "adsense": channel("NOT_AVAILABLE", None, "DIRECT_ADSENSE_PAGE_URL", revenue=None, rpm=None, revenueMetric="ESTIMATED_EARNINGS", coverageStatus="NOT_AVAILABLE"),
     }
     return {
@@ -56,6 +68,18 @@ class PagePerformanceCompactParityTests(unittest.TestCase):
         cases.append(mutation)
         mutation = copy.deepcopy(self.compact)
         mutation["pages"][0]["ga4"].pop("revenue")
+        cases.append(mutation)
+        mutation = copy.deepcopy(self.compact)
+        mutation["pages"][0]["naver"].pop("positionStatus")
+        cases.append(mutation)
+        mutation = copy.deepcopy(self.compact)
+        mutation["pages"][0]["naver"]["crossSourceStatus"] = "VERIFIED"
+        cases.append(mutation)
+        mutation = copy.deepcopy(self.compact)
+        mutation["pages"][0]["naver"]["positionStatus"] = None
+        cases.append(mutation)
+        mutation = copy.deepcopy(self.compact)
+        mutation["pages"][0]["naver"].pop("crossSourceStatus")
         cases.append(mutation)
         for candidate in cases:
             with self.subTest(candidate=candidate):
@@ -94,12 +118,14 @@ class PagePerformanceCompactParityTests(unittest.TestCase):
             ga4_path = root / "ga4.json"
             gsc_path = root / "gsc.json"
             adsense_path = root / "adsense.json"
+            naver_path = root / "naver.json"
             manifest_path = root / "manifest.json"
             full_path.write_text(json.dumps(self.full), encoding="utf-8")
             ga4_path.write_text(json.dumps({"periods": {"ga4": {"start": "2026-09-08", "end": "2026-10-05"}}}), encoding="utf-8")
             gsc_path.write_text(json.dumps({"periodStart": "2026-09-06", "periodEnd": "2026-10-03"}), encoding="utf-8")
             adsense_path.write_text(json.dumps({"currentPeriod": {"start": "2026-09-29", "end": "2026-10-05"}}), encoding="utf-8")
-            manifest = build_manifest(full_path, ga4_path, gsc_path, adsense_path, "b" * 40, "44", "1")
+            naver_path.write_text(json.dumps({"period": {"start": "2026-08-19", "end": "2026-09-17"}, "periodPreset": "RECENT_30_DAYS", "dataUpdatedAt": "2026-09-17"}), encoding="utf-8")
+            manifest = build_manifest(full_path, ga4_path, gsc_path, adsense_path, naver_path, "b" * 40, "44", "1", repository_root=root)
             manifest["fullArtifact"]["sha256"] = "0" * 64
             manifest_path.write_bytes(serialize_manifest(manifest))
             with self.assertRaisesRegex(ValueError, "manifest does not match current inputs"):
@@ -109,9 +135,11 @@ class PagePerformanceCompactParityTests(unittest.TestCase):
                     ga4_path,
                     gsc_path,
                     adsense_path,
+                    naver_path,
                     analysis_commit="b" * 40,
                     workflow_run_id="44",
                     workflow_run_attempt="1",
+                    repository_root=root,
                 )
 
 

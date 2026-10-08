@@ -23,7 +23,10 @@ ALLOWED_CLASSIFICATIONS = {"WINNER", "OPPORTUNITY", "EXPERIMENT", "DEAD_CANDIDAT
 REQUIRED_CHANNEL_FIELDS = {
     "ga4": {"status", "period", "source", "views", "users", "engagementSeconds", "revenue", "revenueMetric"},
     "google": {"status", "period", "source", "clicks", "impressions", "ctr", "position"},
-    "naver": {"status", "period", "source", "clicks", "impressions", "ctr", "position"},
+    "naver": {
+        "status", "period", "periodPreset", "source", "dataUpdatedAt",
+        "clicks", "impressions", "ctr", "position", "positionStatus", "crossSourceStatus",
+    },
     "adsense": {"status", "period", "source", "revenue", "rpm", "revenueMetric", "coverageStatus"},
 }
 UNCONNECTED_CHANNEL_METRICS = {
@@ -140,6 +143,11 @@ def _validate_page_shape(page):
         period = channel["period"]
         if period is not None and not isinstance(period, dict):
             raise ValueError(f"page-performance {channel_name} period must be null or an object for {page['url']}")
+        if channel_name == "naver":
+            if channel["positionStatus"] != "NOT_AVAILABLE":
+                raise ValueError(f"page-performance Naver positionStatus must remain NOT_AVAILABLE for {page['url']}")
+            if channel["crossSourceStatus"] not in {"PERIOD_MISMATCH", "NOT_CONNECTED"}:
+                raise ValueError(f"page-performance Naver crossSourceStatus is unsupported for {page['url']}")
 
 
 def validate(path: Path, *, page_scores_path: Path, minimum_pages: int = 1):

@@ -13,7 +13,10 @@ PAGE_FIELDS = {"url", "classification", "cooldown", "cluster", "pageScore"}
 CHANNEL_FIELDS = {
     "ga4": {"status", "period", "source", "views", "users", "engagementSeconds", "revenue", "revenueMetric"},
     "google": {"status", "period", "source", "clicks", "impressions", "ctr", "position"},
-    "naver": {"status", "period", "source", "clicks", "impressions", "ctr", "position"},
+    "naver": {
+        "status", "period", "periodPreset", "source", "dataUpdatedAt",
+        "clicks", "impressions", "ctr", "position", "positionStatus", "crossSourceStatus",
+    },
     "adsense": {"status", "period", "source", "revenue", "rpm", "revenueMetric", "coverageStatus"},
 }
 
@@ -35,7 +38,8 @@ def _page(url, classification=None):
         },
         "naver": {
             "status": "NOT_CONNECTED", "period": None, "source": None, "clicks": None,
-            "impressions": None, "ctr": None, "position": None,
+            "impressions": None, "ctr": None, "position": None, "periodPreset": None,
+            "dataUpdatedAt": None, "positionStatus": "NOT_AVAILABLE", "crossSourceStatus": "NOT_CONNECTED",
         },
         "adsense": {
             "status": "NOT_CONNECTED", "period": None, "source": None, "revenue": None,
@@ -96,6 +100,29 @@ def test_identical_input_has_stable_compact_utf8_bytes_and_trailing_newline():
     assert first.count(b"\n") == 1
     assert "테스트".encode("utf-8") in first
     assert json.loads(first) == project(payload)
+
+
+def test_naver_status_source_and_freshness_metadata_are_preserved_exactly():
+    page = _page("/kor/report/camp/ansan.html")
+    page["naver"].update({
+        "status": "STALE_DATA",
+        "period": {"start": "2026-08-19", "end": "2026-09-17"},
+        "periodPreset": "LAST_30_DAYS",
+        "source": "NAVER_SEARCH_ADVISOR_MANUAL",
+        "dataUpdatedAt": "2026-09-17",
+        "position": None,
+        "positionStatus": "NOT_AVAILABLE",
+        "crossSourceStatus": "PERIOD_MISMATCH",
+        "clicks": 3,
+        "impressions": 42,
+        "ctr": 0.0714,
+    })
+
+    compact = project(_payload([page]))
+
+    assert compact["pages"][0]["naver"] == page["naver"]
+    assert compact["pages"][0]["naver"]["positionStatus"] == "NOT_AVAILABLE"
+    assert compact["pages"][0]["naver"]["crossSourceStatus"] == "PERIOD_MISMATCH"
 
 
 @pytest.mark.parametrize("mutation", ["row", "classification", "channel", "metric"])

@@ -31,6 +31,20 @@ jobs:
       - name: Validate source snapshots
         run: python3 scripts/validate_measurement_sources.py --as-of "$(date +%F)"
 
+      - name: Resolve the exact Naver snapshot path once
+        run: |
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          from scripts.naver_performance import latest_naver_snapshot_path
+
+          path = latest_naver_snapshot_path(Path("data/naver"))
+          if path is None or not path.is_file():
+              raise SystemExit("No eligible Naver snapshot path is available")
+          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as env:
+              env.write(f"NAVER_SNAPSHOT={path.as_posix()}\n")
+          PY
+
       - name: Regenerate current site audit
         run: python3 scripts/seo_audit.py . --json "$RUNNER_TEMP/site-audit.json" --markdown "$RUNNER_TEMP/site-audit.md"
 
@@ -53,6 +67,7 @@ jobs:
             --page-scores "$RUNNER_TEMP/page-scores.json" \
             --gsc-snapshot data/performance/gsc-latest.json \
             --adsense-snapshot data/performance/adsense-latest.json \
+            --naver-snapshot "$NAVER_SNAPSHOT" \
             --page-output "$RUNNER_TEMP/page-performance-full.json" \
             --opportunity-output "$RUNNER_TEMP/revenue-opportunities-full.json" \
             --report "$RUNNER_TEMP/revenue-growth-report-full.md"
@@ -67,6 +82,7 @@ jobs:
             --ga4 data/performance/ga4-latest.json \
             --gsc data/performance/gsc-latest.json \
             --adsense data/performance/adsense-latest.json \
+            --naver "$NAVER_SNAPSHOT" \
             --analysis-commit "${{ github.sha }}" \
             --workflow-run-id "${{ github.run_id }}" \
             --workflow-run-attempt "${{ github.run_attempt }}" \
@@ -107,6 +123,7 @@ jobs:
             --ga4-snapshot data/performance/ga4-latest.json \
             --gsc-snapshot data/performance/gsc-latest.json \
             --adsense-snapshot data/performance/adsense-latest.json \
+            --naver-snapshot "$NAVER_SNAPSHOT" \
             --analysis-commit "${{ github.sha }}" \
             --workflow-run-id "${{ github.run_id }}" \
             --workflow-run-attempt "${{ github.run_attempt }}"

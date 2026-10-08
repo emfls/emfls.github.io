@@ -9,7 +9,10 @@ from scripts.validate_measurement_artifact import validate
 CHANNEL_METRICS = {
     "ga4": ("views", "users", "engagementSeconds", "revenue", "revenueMetric"),
     "google": ("clicks", "impressions", "ctr", "position"),
-    "naver": ("clicks", "impressions", "ctr", "position"),
+    "naver": (
+        "clicks", "impressions", "ctr", "position", "periodPreset", "dataUpdatedAt",
+        "positionStatus", "crossSourceStatus",
+    ),
     "adsense": ("revenue", "rpm", "revenueMetric", "coverageStatus"),
 }
 
@@ -23,6 +26,8 @@ def _default_channels():
             "source": None,
             **{metric: None for metric in metrics},
         }
+    channels["naver"]["positionStatus"] = "NOT_AVAILABLE"
+    channels["naver"]["crossSourceStatus"] = "NOT_CONNECTED"
     return channels
 
 
@@ -302,6 +307,17 @@ class ValidateMeasurementArtifactTest(unittest.TestCase):
                 payload["pages"][0]["ga4"].pop(field)
                 _write_json(artifact, payload)
                 with self.assertRaisesRegex(ValueError, f"ga4.*{field}"):
+                    validate(artifact, page_scores_path=page_scores)
+
+    def test_rejects_missing_or_null_naver_measurement_status(self):
+        for field, value in (("positionStatus", None), ("crossSourceStatus", None)):
+            with self.subTest(field=field, value=value), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                artifact, page_scores = _write_coverage_fixtures(root, [_valid_page("/")], ["/"])
+                payload = json.loads(artifact.read_text(encoding="utf-8"))
+                payload["pages"][0]["naver"][field] = value
+                _write_json(artifact, payload)
+                with self.assertRaisesRegex(ValueError, "Naver"):
                     validate(artifact, page_scores_path=page_scores)
 
     def test_rejects_non_object_channel_period(self):

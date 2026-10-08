@@ -112,3 +112,209 @@ jobs:
             reports/site-quality-dashboard.html
             reports/search-trend-signals.md
           if-no-files-found: warn
+
+  measurement-parity:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    permissions:
+      contents: read
+    env:
+      TZ: Asia/Seoul
+      PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - name: Check out exact PR verification revision
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify checkout matches the Actions execution SHA
+        run: |
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          printf 'execution_sha=%s\npr_head_sha=%s\n' "$GITHUB_SHA" "$PR_HEAD_SHA"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install local validation dependencies
+        run: python3 -m pip install requests PyYAML
+
+      - name: Resolve aligned source date and exact Naver snapshot once
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from scripts.naver_performance import latest_naver_snapshot_path
+
+          ga4 = json.loads(Path("data/performance/ga4-latest.json").read_text(encoding="utf-8"))
+          as_of = ga4.get("as_of")
+          naver = latest_naver_snapshot_path(Path("data/naver"))
+          if not isinstance(as_of, str) or not as_of:
+              raise SystemExit("GA4 source snapshot has no as_of date")
+          if naver is None or not naver.is_file():
+              raise SystemExit("No eligible Naver snapshot path is available")
+          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as env:
+              env.write(f"MEASUREMENT_AS_OF={as_of}\n")
+              env.write(f"NAVER_SNAPSHOT={naver.as_posix()}\n")
+          print(json.dumps({"asOf": as_of, "naverSnapshot": naver.as_posix()}, sort_keys=True))
+          PY
+
+      - name: Resolve newest eligible AdSense source blob for the aligned date
+        run: |
+          python3 scripts/resolve_eligible_adsense_snapshot.py \
+            --ga4 data/performance/ga4-latest.json \
+            --gsc data/performance/gsc-latest.json \
+            --as-of "$MEASUREMENT_AS_OF" \
+            --revision "$GITHUB_SHA" \
+            --output "$RUNNER_TEMP/adsense-eligible.json" \
+            --github-env "$GITHUB_ENV"
+
+      - name: Validate latest eligible aligned source snapshots
+        run: |
+          python3 scripts/validate_measurement_sources.py \
+            --ga4 data/performance/ga4-latest.json \
+            --gsc data/performance/gsc-latest.json \
+            --adsense "$ADSENSE_SNAPSHOT" \
+            --as-of "$MEASUREMENT_AS_OF"
+
+      - name: Generate isolated site audit and page scores
+        run: |
+          python3 scripts/seo_audit.py . \
+            --json "$RUNNER_TEMP/site-audit-full.json" \
+            --markdown "$RUNNER_TEMP/site-audit.md"
+          python3 scripts/quality_audit.py \
+            --audit "$RUNNER_TEMP/site-audit-full.json" \
+            --as-of "$MEASUREMENT_AS_OF" \
+            --page-output "$RUNNER_TEMP/page-scores.json" \
+            --site-output "$RUNNER_TEMP/site-score.json" \
+            --report "$RUNNER_TEMP/site-score.md" \
+            --dashboard "$RUNNER_TEMP/site-quality-dashboard.html"
+
+      - name: Validate the pinned Naver source without changing its freshness state
+        run: |
+          python3 scripts/naver_performance.py \
+            --snapshot "$NAVER_SNAPSHOT" \
+            --page-scores "$RUNNER_TEMP/page-scores.json" \
+            --report "$RUNNER_TEMP/naver-data-quality.md"
+
+      - name: Generate full performance and revenue outputs with pinned inputs
+        run: |
+          python3 scripts/revenue_growth.py \
+            --as-of "$MEASUREMENT_AS_OF" \
+            --performance data/performance/ga4-latest.json \
+            --audit "$RUNNER_TEMP/site-audit-full.json" \
+            --page-scores "$RUNNER_TEMP/page-scores.json" \
+            --gsc-snapshot data/performance/gsc-latest.json \
+            --adsense-snapshot "$ADSENSE_SNAPSHOT" \
+            --naver-snapshot "$NAVER_SNAPSHOT" \
+            --experiments data/experiments.json \
+            --optimization-history data/optimization-history.json \
+            --content-experiments data/content-launch-experiments.json \
+            --page-output "$RUNNER_TEMP/page-performance-full.json" \
+            --opportunity-output "$RUNNER_TEMP/revenue-opportunities-full.json" \
+            --report "$RUNNER_TEMP/revenue-growth-report-full.md"
+
+      - name: Validate full measurement artifact
+        run: |
+          python3 scripts/validate_measurement_artifact.py \
+            "$RUNNER_TEMP/page-performance-full.json" \
+            --page-scores "$RUNNER_TEMP/page-scores.json"
+
+      - name: Build provenance manifest from exact source paths and Actions run
+        run: |
+          python3 scripts/build_page_performance_manifest.py \
+            --full "$RUNNER_TEMP/page-performance-full.json" \
+            --ga4 data/performance/ga4-latest.json \
+            --gsc data/performance/gsc-latest.json \
+            --adsense "$ADSENSE_SNAPSHOT" \
+            --adsense-source-revision "$ADSENSE_SOURCE_REVISION" \
+            --naver "$NAVER_SNAPSHOT" \
+            --analysis-commit "$GITHUB_SHA" \
+            --pull-request-head-sha "$PR_HEAD_SHA" \
+            --workflow-run-id "$GITHUB_RUN_ID" \
+            --workflow-run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --output "$RUNNER_TEMP/page-performance-manifest.json"
+          sha256sum "$RUNNER_TEMP/page-performance-manifest.json" > "$RUNNER_TEMP/page-performance-manifest.sha256"
+          sha256sum --check "$RUNNER_TEMP/page-performance-manifest.sha256"
+
+      - name: Project compact measurement artifact
+        run: |
+          python3 scripts/compact_page_performance.py \
+            "$RUNNER_TEMP/page-performance-full.json" \
+            --page-scores "$RUNNER_TEMP/page-scores.json" \
+            --output "$RUNNER_TEMP/page-performance-compact.json"
+
+      - name: Verify measurement, consumer, revenue, and source provenance parity
+        run: |
+          python3 scripts/validate_page_performance_compact_parity.py \
+            --full "$RUNNER_TEMP/page-performance-full.json" \
+            --compact "$RUNNER_TEMP/page-performance-compact.json" \
+            --manifest "$RUNNER_TEMP/page-performance-manifest.json" \
+            --page-scores "$RUNNER_TEMP/page-scores.json" \
+            --revenue-opportunities "$RUNNER_TEMP/revenue-opportunities-full.json" \
+            --audit "$RUNNER_TEMP/site-audit-full.json" \
+            --experiments data/experiments.json \
+            --optimization-history data/optimization-history.json \
+            --content-experiments data/content-launch-experiments.json \
+            --ga4-snapshot data/performance/ga4-latest.json \
+            --gsc-snapshot data/performance/gsc-latest.json \
+            --adsense-snapshot "$ADSENSE_SNAPSHOT" \
+            --naver-snapshot "$NAVER_SNAPSHOT" \
+            --adsense-source-revision "$ADSENSE_SOURCE_REVISION" \
+            --analysis-commit "$GITHUB_SHA" \
+            --pull-request-head-sha "$PR_HEAD_SHA" \
+            --workflow-run-id "$GITHUB_RUN_ID" \
+            --workflow-run-attempt "$GITHUB_RUN_ATTEMPT" \
+            > "$RUNNER_TEMP/measurement-parity-result.json"
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          temp = Path(os.environ["RUNNER_TEMP"])
+          result = json.loads((temp / "measurement-parity-result.json").read_text(encoding="utf-8"))
+          manifest = json.loads((temp / "page-performance-manifest.json").read_text(encoding="utf-8"))
+          full = temp / "page-performance-full.json"
+          compact = temp / "page-performance-compact.json"
+          full_bytes, compact_bytes = full.stat().st_size, compact.stat().st_size
+          report = {
+              "status": result["status"],
+              "executionCommit": os.environ["GITHUB_SHA"],
+              "pullRequestHeadSha": os.environ["PR_HEAD_SHA"],
+              "workflowRunId": os.environ["GITHUB_RUN_ID"],
+              "workflowRunAttempt": os.environ["GITHUB_RUN_ATTEMPT"],
+              "asOf": manifest["asOf"],
+              "pageCount": manifest["pageCount"],
+              "naverSnapshot": manifest["sourceSnapshots"]["naver"],
+              "adsenseSnapshot": manifest["sourceSnapshots"]["adsense"],
+              "fullArtifactSha256": manifest["fullArtifact"]["sha256"],
+              "compactArtifactSha256": hashlib.sha256(compact.read_bytes()).hexdigest(),
+              "manifestSha256": hashlib.sha256((temp / "page-performance-manifest.json").read_bytes()).hexdigest(),
+              "fullBytes": full_bytes,
+              "compactBytes": compact_bytes,
+              "storageSavingsBytes": full_bytes - compact_bytes,
+              "storageSavingsPercent": round((full_bytes - compact_bytes) / full_bytes * 100, 2),
+              "parity": result,
+          }
+          (temp / "measurement-parity-report.json").write_text(
+              json.dumps(report, ensure_ascii=False, sort_keys=True, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+          PY
+
+      - name: Upload isolated measurement parity evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: measurement-parity-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/measurement-parity-report.json
+            ${{ runner.temp }}/page-performance-manifest.json
+            ${{ runner.temp }}/page-performance-manifest.sha256
+          retention-days: 7
+          if-no-files-found: warn

@@ -24,7 +24,10 @@ PAGE_FIELDS = ("url", "classification", "cooldown", "cluster", "pageScore")
 CHANNEL_FIELDS = {
     "ga4": ("status", "period", "source", "views", "users", "engagementSeconds", "revenue", "revenueMetric"),
     "google": ("status", "period", "source", "clicks", "impressions", "ctr", "position"),
-    "naver": ("status", "period", "source", "clicks", "impressions", "ctr", "position"),
+    "naver": (
+        "status", "period", "periodPreset", "source", "dataUpdatedAt",
+        "clicks", "impressions", "ctr", "position", "positionStatus", "crossSourceStatus",
+    ),
     "adsense": ("status", "period", "source", "revenue", "rpm", "revenueMetric", "coverageStatus"),
 }
 
