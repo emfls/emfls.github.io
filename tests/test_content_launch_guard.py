@@ -31,10 +31,18 @@ def setup_data(root):
         {"url": "/ae/util/text-shuffle-sort/"},
     ]})
     write_json(root / "data/site-audit.json", {"pages": []})
+    write_json(root / "data/content-launch-decisions.json", {"schemaVersion": 1, "decisions": [
+        {"keyword": "인건비계산기", "decision": "HOLD", "reason": "Control Tower HOLD"},
+        {"keyword": "엔카중고차구매", "decision": "NO_NEW_PAGE", "reason": "Control Tower NO_NEW_PAGE"},
+    ]})
 
 
 def manifest(urls):
-    return {"urls": urls, "contentPaths": [u.lstrip("/") for u in urls], "sitemapPaths": ["kor/report/camp/sitemap.xml"], "hubPaths": ["kor/report/camp/index.html"]}
+    return {"urls": urls, "contentPaths": [u.lstrip("/") for u in urls], "candidateIds": [f"keyword:guard-fixture-{i}" for i, _ in enumerate(urls)], "sitemapPaths": ["kor/report/camp/sitemap.xml"], "hubPaths": ["kor/report/camp/index.html"]}
+
+
+def launch_manifest(url, relative, candidate_ids=None):
+    return {"urls": [url], "contentPaths": [relative], "candidateIds": candidate_ids or [], "sitemapPaths": [], "hubPaths": []}
 
 
 def write_arabic_retirement_override(root):
@@ -490,7 +498,10 @@ def test_regenerated_audit_does_not_treat_manifest_page_as_existing_duplicate(tm
         {"pages": [{"path": relative, "url": url, "title": "새 독립 제목", "h1": "새 독립 제목"}]},
     )
 
-    assert validate_launch(tmp_path, manifest([url]), [("A", relative)]) == []
+    safe_manifest = launch_manifest(url, relative, ["keyword:글자수계산기"])
+    safe_manifest["sitemapPaths"] = ["kor/report/camp/sitemap.xml"]
+    safe_manifest["hubPaths"] = ["kor/report/camp/index.html"]
+    assert validate_launch(tmp_path, safe_manifest, [("A", relative)]) == []
 
 
 def test_git_changes_ignore_ci_generated_worktree_files(monkeypatch, tmp_path):
@@ -503,3 +514,101 @@ def test_git_changes_ignore_ci_generated_worktree_files(monkeypatch, tmp_path):
     monkeypatch.setattr("scripts.content_launch_guard.subprocess.run", fake_run)
     assert _git_changes(tmp_path, "base-sha") == [("A", "kor/report/camp/new.html")]
     assert captured["command"] == ["git", "diff", "--name-status", "base-sha", "HEAD"]
+
+
+def test_final_guard_blocks_hold_and_no_new_page_candidates(tmp_path):
+    setup_data(tmp_path)
+    candidates = (
+        ("인건비계산기", "/kor/util/ingeonbigyesangi/", "kor/util/ingeonbigyesangi/index.html"),
+        ("엔카중고차구매", "/kor/column/enkajunggocagumae/", "kor/column/enkajunggocagumae/index.html"),
+    )
+    for keyword, url, relative in candidates:
+        errors = validate_launch(
+            tmp_path,
+            launch_manifest(url, relative, [f"keyword:{keyword}"]),
+            [("A", relative)],
+        )
+        assert "EDITORIAL_DECISION_BLOCKED" in errors, keyword
+
+
+def test_final_guard_blocks_known_target_route_when_candidate_id_is_missing(tmp_path):
+    setup_data(tmp_path)
+    url = "/kor/column/enkajunggocagumae/"
+    relative = "kor/column/enkajunggocagumae/index.html"
+    errors = validate_launch(tmp_path, launch_manifest(url, relative), [("A", relative)])
+    assert "EDITORIAL_DECISION_BLOCKED" in errors
+
+
+def test_final_guard_requires_ymyl_review_but_keeps_safe_candidate_open(tmp_path):
+    setup_data(tmp_path)
+    url = "/kor/util/yeoncagaesugyesangi/"
+    relative = "kor/util/yeoncagaesugyesangi/index.html"
+    unreviewed_errors = validate_launch(
+        tmp_path,
+        launch_manifest(url, relative, ["keyword:연차개수계산기"]),
+        [("A", relative)],
+    )
+    assert "YMYL_REVIEW_REQUIRED" in unreviewed_errors
+
+    write_json(tmp_path / "data/content-launch-decisions.json", {"schemaVersion": 1, "decisions": [
+        {"keyword": "연차개수계산기", "decision": "APPROVE", "reason": "explicit YMYL review completed"},
+    ]})
+    approved_errors = validate_launch(
+        tmp_path,
+        launch_manifest(url, relative, ["keyword:연차개수계산기"]),
+        [("A", relative)],
+    )
+    assert "YMYL_REVIEW_REQUIRED" not in approved_errors
+
+    safe_errors = validate_launch(
+        tmp_path,
+        launch_manifest("/kor/util/character-count/", "kor/util/character-count/index.html", ["keyword:글자수계산기"]),
+        [("A", "kor/util/character-count/index.html")],
+    )
+    assert "EDITORIAL_DECISION_BLOCKED" not in safe_errors
+    assert "YMYL_REVIEW_REQUIRED" not in safe_errors
+
+
+def test_final_guard_requires_candidate_id_for_each_added_page(tmp_path):
+    setup_data(tmp_path)
+    url = "/kor/report/camp/untracked-candidate.html"
+    relative = "kor/report/camp/untracked-candidate.html"
+    errors = validate_launch(tmp_path, launch_manifest(url, relative), [("A", relative)])
+    assert "LAUNCH_CANDIDATE_IDS_REQUIRED" in errors
+
+
+def test_final_guard_rejects_unresolvable_candidate_ids(tmp_path):
+    setup_data(tmp_path)
+    url = "/kor/report/camp/untracked-candidate.html"
+    relative = "kor/report/camp/untracked-candidate.html"
+    content = tmp_path / relative
+    content.parent.mkdir(parents=True, exist_ok=True)
+    content.write_text(
+        f'<html><head><title>New page</title><link rel="canonical" href="https://emfls.github.io{url}"></head><body><h1>New page</h1></body></html>',
+        encoding="utf-8",
+    )
+    errors = validate_launch(
+        tmp_path,
+        launch_manifest(url, relative, ["opaque-id"]),
+        [("A", relative)],
+    )
+    assert "LAUNCH_KEYWORD_ID_REQUIRED" in errors
+
+
+def test_final_guard_fails_closed_when_editorial_decisions_are_unavailable(tmp_path):
+    setup_data(tmp_path)
+    (tmp_path / "data/content-launch-decisions.json").unlink()
+    url = "/kor/report/camp/untracked-candidate.html"
+    relative = "kor/report/camp/untracked-candidate.html"
+    content = tmp_path / relative
+    content.parent.mkdir(parents=True, exist_ok=True)
+    content.write_text(
+        f'<html><head><title>New page</title><link rel="canonical" href="https://emfls.github.io{url}"></head><body><h1>New page</h1></body></html>',
+        encoding="utf-8",
+    )
+    errors = validate_launch(
+        tmp_path,
+        launch_manifest(url, relative, ["keyword:새후보"]),
+        [("A", relative)],
+    )
+    assert "EDITORIAL_DECISIONS_UNAVAILABLE" in errors

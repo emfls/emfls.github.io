@@ -7,6 +7,13 @@ import re
 import subprocess
 from pathlib import Path
 
+try:
+    from scripts.content_launch_decisions import load_decisions
+    from scripts.content_launch_policy import keyword_from_candidate_id, requires_ymyl_review
+except ModuleNotFoundError:
+    from content_launch_decisions import load_decisions
+    from content_launch_policy import keyword_from_candidate_id, requires_ymyl_review
+
 
 MEASUREMENT_WORKFLOW_ALLOWLIST = {".github/workflows/ga4-collection.yml"}
 APPROVED_MONETIZATION_ADDITIONS = frozenset({
@@ -145,6 +152,11 @@ ARABIC_RETIREMENT_EVIDENCE = {
     "totalAdRevenue": 0.015871,
 }
 RAW_MEASUREMENT_HISTORY_PREFIX = "data/performance/"
+KEYWORD_CANDIDATE_PATHS = {
+    "kor/util/yeoncagaesugyesangi/index.html": "연차개수계산기",
+    "kor/util/ingeonbigyesangi/index.html": "인건비계산기",
+    "kor/column/enkajunggocagumae/index.html": "엔카중고차구매",
+}
 
 
 def _read(path, default):
@@ -217,6 +229,39 @@ def validate_launch(root, manifest, changed_paths):
     launch_changed = bool(added_html)
     if launch_changed and added_html != expected_html:
         errors.add("MANIFEST_DIFF_MISMATCH")
+    if launch_changed:
+        candidate_ids = manifest.get("candidateIds")
+        if (
+            not isinstance(candidate_ids, list)
+            or len(candidate_ids) != len(added_html)
+            or any(not isinstance(value, str) or not value.strip() for value in candidate_ids)
+            or len(set(candidate_ids)) != len(candidate_ids)
+        ):
+            errors.add("LAUNCH_CANDIDATE_IDS_REQUIRED")
+        candidate_keywords = set()
+        if isinstance(candidate_ids, list):
+            for value in candidate_ids:
+                keyword = keyword_from_candidate_id(value)
+                if keyword:
+                    candidate_keywords.add(keyword)
+                else:
+                    errors.add("LAUNCH_KEYWORD_ID_REQUIRED")
+        candidate_keywords.update(
+            KEYWORD_CANDIDATE_PATHS[path]
+            for path in added_html
+            if path in KEYWORD_CANDIDATE_PATHS
+        )
+        try:
+            editorial_decisions = load_decisions(root / "data/content-launch-decisions.json")
+        except (OSError, TypeError, ValueError):
+            editorial_decisions = {}
+            errors.add("EDITORIAL_DECISIONS_UNAVAILABLE")
+        for keyword in candidate_keywords:
+            decision = editorial_decisions.get(keyword)
+            if decision in {"HOLD", "NO_NEW_PAGE", "UPDATE_EXISTING"}:
+                errors.add("EDITORIAL_DECISION_BLOCKED")
+            if requires_ymyl_review({"keyword": keyword}) and decision != "APPROVE":
+                errors.add("YMYL_REVIEW_REQUIRED")
     # Only exact, evidenced Arabic retirement exceptions and this exact JP
     # Travel canary are authorized; keep every other deletion and rename closed.
     unauthorized_deletion = any(

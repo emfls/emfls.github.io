@@ -203,6 +203,7 @@ def test_main_reads_committed_published_manifest_before_writing_queue(tmp_path, 
     (data/"published_keywords.json").write_text("[]",encoding="utf-8")
     (data/"content-launch-counter.json").write_text(json.dumps({"date":"2026-09-13","launchedCount":1,"dailyLimit":1}),encoding="utf-8")
     (data/"content-launch-manifest.json").write_text(json.dumps(published_manifest()),encoding="utf-8")
+    (data/"content-launch-decisions.json").write_text(json.dumps({"schemaVersion": 1, "decisions": []}),encoding="utf-8")
     monkeypatch.setattr("sys.argv",["prepare_keyword_launch.py","--root",str(tmp_path),"--selected-at","2026-09-28T12:00:00+09:00"])
     prepare_keyword_launch.main()
     output=json.loads((data/"content-launch-queue.json").read_text(encoding="utf-8"))
@@ -256,6 +257,9 @@ def test_current_keyboard_cleaning_publication_is_preserved_and_leaves_two_slots
     (data / "content-launch-manifest.json").write_text(
         json.dumps(current_manifest, ensure_ascii=False), encoding="utf-8"
     )
+    (data / "content-launch-decisions.json").write_text(
+        json.dumps({"schemaVersion": 1, "decisions": []}), encoding="utf-8"
+    )
     monkeypatch.setattr(
         "sys.argv",
         ["prepare_keyword_launch.py", "--root", str(tmp_path), "--selected-at", "2026-10-05T12:00:00+09:00"],
@@ -269,3 +273,122 @@ def test_current_keyboard_cleaning_publication_is_preserved_and_leaves_two_slots
     assert output["remainingCapacity"] == 2
     assert len(output["queue"]) == 2
     assert json.loads((data / "content-launch-manifest.json").read_text(encoding="utf-8")) == before
+
+def test_current_hold_and_no_new_page_verdicts_are_persisted_and_excluded():
+    from pathlib import Path
+
+    decisions_path = Path(__file__).resolve().parents[1] / "data" / "content-launch-decisions.json"
+    decisions = prepare_keyword_launch.load_decisions(decisions_path)
+    assert decisions.get("인건비계산기") == "HOLD"
+    assert decisions.get("엔카중고차구매") == "NO_NEW_PAGE"
+
+    result = prepare_queue(
+        [
+            launch_row("인건비계산기", "/kor/util/ingeonbigyesangi/"),
+            launch_row("엔카중고차구매", "/kor/column/enkajunggocagumae/"),
+        ],
+        daily_limit=3,
+        selected_at="2026-10-08T08:22:46+09:00",
+        editorial_decisions=decisions,
+        published_manifest={},
+    )
+    assert result["queue"] == []
+    assert result["excluded"]["editorial_hold"] == 1
+    assert result["excluded"]["no_new_page"] == 1
+
+
+def test_no_new_page_decision_is_loaded_and_blocks_exact_candidate(tmp_path):
+    path = tmp_path / "content-launch-decisions.json"
+    path.write_text(json.dumps({"schemaVersion": 1, "decisions": [
+        {"keyword": "엔카중고차구매", "decision": "NO_NEW_PAGE", "reason": "prior editorial decision"}
+    ]}), encoding="utf-8")
+
+    decisions = prepare_keyword_launch.load_decisions(path)
+    assert decisions.get("엔카중고차구매") == "NO_NEW_PAGE"
+    result = prepare_queue(
+        [launch_row("엔카중고차구매", "/kor/column/enkajunggocagumae/")],
+        daily_limit=1,
+        selected_at="2026-10-08T08:22:46+09:00",
+        editorial_decisions=decisions,
+        published_manifest={},
+    )
+    assert result["queue"] == []
+    assert result["excluded"]["no_new_page"] == 1
+
+
+def test_airport_priority_exit_is_safe_from_ymyl_but_held_for_no_serp_gap():
+    from pathlib import Path
+
+    decisions_path = Path(__file__).resolve().parents[1] / "data" / "content-launch-decisions.json"
+    decisions = prepare_keyword_launch.load_decisions(decisions_path)
+    assert decisions.get("인천공항교통약자우대출구") == "HOLD"
+
+    result = prepare_queue(
+        [launch_row("인천공항교통약자우대출구", "/kor/column/incheon-airport-priority-exit/")],
+        daily_limit=1,
+        selected_at="2026-10-08T09:36:43+09:00",
+        editorial_decisions=decisions,
+        published_manifest={},
+    )
+    assert result["queue"] == []
+    assert result["excluded"]["editorial_hold"] == 1
+    assert result["excluded"]["ymyl"] == 0
+
+
+def test_airport_priority_exit_is_safe_from_ymyl_but_held_for_no_serp_gap():
+    from pathlib import Path
+
+    decisions_path = Path(__file__).resolve().parents[1] / "data" / "content-launch-decisions.json"
+    decisions = prepare_keyword_launch.load_decisions(decisions_path)
+    assert decisions.get("인천공항교통약자우대출구") == "HOLD"
+
+    result = prepare_queue(
+        [launch_row("인천공항교통약자우대출구", "/kor/column/incheon-airport-priority-exit/")],
+        daily_limit=1,
+        selected_at="2026-10-08T09:36:43+09:00",
+        editorial_decisions=decisions,
+        published_manifest={},
+    )
+    assert result["queue"] == []
+    assert result["excluded"]["editorial_hold"] == 1
+    assert result["excluded"]["ymyl"] == 0
+
+
+def test_invalid_decision_store_fails_closed(tmp_path):
+    import pytest
+
+    path = tmp_path / "content-launch-decisions.json"
+    with pytest.raises(ValueError):
+        prepare_keyword_launch.load_decisions(path)
+
+    path.write_text("{broken", encoding="utf-8")
+    with pytest.raises(ValueError):
+        prepare_keyword_launch.load_decisions(path)
+
+    path.write_text(json.dumps({"schemaVersion": 1, "decisions": "not-a-list"}), encoding="utf-8")
+    with pytest.raises(ValueError):
+        prepare_keyword_launch.load_decisions(path)
+
+
+def test_ymyl_candidate_needs_explicit_approval_and_safe_candidate_stays_eligible():
+    candidate = launch_row("연차개수계산기", "/kor/util/yeoncagaesugyesangi/")
+    unreviewed = prepare_queue(
+        [candidate], daily_limit=1, selected_at="2026-10-08T08:22:46+09:00",
+        editorial_decisions=[], published_manifest={},
+    )
+    assert unreviewed["queue"] == []
+    assert unreviewed["excluded"]["ymyl"] == 1
+
+    approved = prepare_queue(
+        [candidate], daily_limit=1, selected_at="2026-10-08T08:22:46+09:00",
+        editorial_decisions=[{"keyword": "연차개수계산기", "decision": "APPROVE"}], published_manifest={},
+    )
+    assert [item["keyword"] for item in approved["queue"]] == ["연차개수계산기"]
+    assert approved["excluded"]["ymyl"] == 0
+
+    safe = prepare_queue(
+        [launch_row("글자수계산기", "/kor/util/character-count/")],
+        daily_limit=1, selected_at="2026-10-08T08:22:46+09:00",
+        editorial_decisions=[], published_manifest={},
+    )
+    assert [item["keyword"] for item in safe["queue"]] == ["글자수계산기"]

@@ -8,6 +8,7 @@ try:
         SEOUL,
         publication_day,
         publication_manifest_count,
+        normalize_keyword,
         published_manifest_dedupe_keys,
         select_launch_candidate,
     )
@@ -17,6 +18,7 @@ except ModuleNotFoundError:
         SEOUL,
         publication_day,
         publication_manifest_count,
+        normalize_keyword,
         published_manifest_dedupe_keys,
         select_launch_candidate,
     )
@@ -42,19 +44,28 @@ def prepare_queue(rows, existing_urls=None, published_keywords=None, daily_limit
     manifest_urls, manifest_keywords = published_manifest_dedupe_keys(published_manifest)
     existing_urls = set(existing_urls or set()) | manifest_urls
     published_keywords = set(published_keywords or set()) | manifest_keywords
-    derived=[]; held=0
+    derived=[]; held=0; no_new_page=0; update_existing=0
     if isinstance(editorial_decisions,list):
-        decisions={''.join(ch for ch in str(x.get('keyword','')).casefold() if ch.isalnum()):x.get('decision') for x in editorial_decisions if isinstance(x,dict)}
-    else: decisions=editorial_decisions or {}
+        decisions={normalize_keyword(x.get('keyword')):x.get('decision') for x in editorial_decisions if isinstance(x,dict)}
+    else:
+        decisions={normalize_keyword(k):v for k,v in (editorial_decisions or {}).items()}
     for row in rows:
         item=dict(row)
-        if decisions.get(''.join(ch for ch in str(item.get('keyword','')).casefold() if ch.isalnum())) == 'HOLD':
+        decision=decisions.get(normalize_keyword(item.get('keyword')))
+        if decision == 'HOLD':
             held += 1; continue
+        if decision == 'NO_NEW_PAGE':
+            no_new_page += 1; continue
+        if decision == 'UPDATE_EXISTING':
+            update_existing += 1; continue
         if item.get('action','NEW_PAGE') == 'NEW_PAGE' and not item.get('suggested_url'):
             item['suggested_url']=plan_url(item.get('keyword'),item.get('category'),item.get('content_types'),item.get('intent'))
         derived.append(item)
-    result=select_launch_candidate(derived, existing_urls, published_keywords, daily_limit, selected_at, launched_count=effective_count)
+    reviewed_ymyl_keywords={keyword for keyword, decision in decisions.items() if decision == 'APPROVE'}
+    result=select_launch_candidate(derived, existing_urls, published_keywords, daily_limit, selected_at, launched_count=effective_count, reviewed_ymyl_keywords=reviewed_ymyl_keywords)
     result['excluded']['editorial_hold']=held
+    result['excluded']['no_new_page']=no_new_page
+    result['excluded']['update_existing']=update_existing
     result['publishedToday']=effective_count
     result['remainingCapacity']=max(0, int(daily_limit)-effective_count)
     return result

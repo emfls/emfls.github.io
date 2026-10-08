@@ -453,6 +453,10 @@ def test_explicit_ymyl_category_and_safe_controls_keep_expected_eligibility():
         assert result["excluded"]["ymyl"] == 0
 
 def test_ymyl_queue_block_does_not_disable_separately_approved_manual_launch(tmp_path):
+    (tmp_path / "data").mkdir(parents=True, exist_ok=True)
+    (tmp_path / "data/content-launch-decisions.json").write_text(
+        '{"schemaVersion": 1, "decisions": []}', encoding="utf-8"
+    )
     url = "/kor/report/parenting/manual.html"
     relative_path = "kor/report/parenting/manual.html"
     html_path = tmp_path / relative_path
@@ -476,10 +480,18 @@ def test_ymyl_queue_block_does_not_disable_separately_approved_manual_launch(tmp
     manifest = {
         "urls": [url],
         "contentPaths": [relative_path],
+        "candidateIds": ["keyword:수동승인가이드"],
         "sitemapPaths": [sitemap_path],
         "hubPaths": [hub_path],
     }
     assert validate_launch(tmp_path, manifest, [("A", relative_path)]) == []
+
+
+def test_loan_signal_inside_airport_priority_exit_does_not_mark_travel_query_ymyl():
+    from scripts.content_launch_policy import requires_ymyl_review
+
+    assert requires_ymyl_review({"keyword": "인천공항교통약자우대출구"}) is False
+    assert requires_ymyl_review({"keyword": "신용대출금리비교"}) is True
 
 def test_non_ymyl_candidate_remains_eligible_after_parental_leave_block():
     result = select_launch_candidate(
@@ -630,3 +642,15 @@ def test_master_safe_controls_remain_queue_eligible():
         )
         assert [item["keyword"] for item in result["queue"]] == [keyword]
         assert result["excluded"]["ymyl"] == 0
+
+def test_current_leave_and_labor_calculators_require_explicit_ymyl_review():
+    for keyword, url in (
+        ("연차개수계산기", "/kor/util/yeoncagaesugyesangi/"),
+        ("인건비계산기", "/kor/util/ingeonbigyesangi/"),
+    ):
+        result = select_launch_candidate(
+            [row(keyword=keyword, category="recovery:세금", content_types="calculator/tool|evergreen|informational", suggested_url=url)],
+            daily_limit=1,
+        )
+        assert result["queue"] == [], keyword
+        assert result["excluded"]["ymyl"] == 1, keyword
