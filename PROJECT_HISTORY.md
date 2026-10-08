@@ -1169,3 +1169,8 @@
 - Source gate passed: GA4 `VERIFIED` `2026-09-09..2026-10-06`; GSC `VERIFIED` `2026-09-07..2026-10-04`; AdSense `PARTIAL` current `2026-09-30..2026-10-06` / prior `2026-09-23..2026-09-29`. Full and compact validation each cover 18,929 URLs; Keyword Hunter (34 candidates), GSC opportunities (36 URLs), protected winners (1,632), and revenue/SEO consumer parity match exactly.
 - Live-base generated output: full 55,289,121 B (`623c10edd64ca0d77fe97b252063ab2157d92d65684c72f1ca9250b826b2b69f`); compact 14,426,745 B (`395b7978268f04109d3f796fd6575682eed8eecfd8c7fb37f5e2009ece964ebc`); reduction 40,862,376 B / 73.907%. Focused tests 89 passed; pytest 1,383 passed / 3 skipped; unittest 837 run / 3 skipped; source validation and diff check passed.
 - Delivery checkpoint: normal review-branch push and PR/exact-head CI remain pending. Publisher workflow was not dispatched. No history rewrite; status `DEFERRED`. No merge authorized.
+## 2026-10-08 02:27 Keyword Hunter
+- Seeds: 40; New: 20; Rejected: 18; DB: 4752; Errors: 0; Top: 사업소득세계산기. Artifact report: reports/keyword-hunter/2026-10-08-0227.md
+
+## 2026-10-08 08:09 Keyword Hunter
+- Seeds: 40; New: 0; Rejected: 0; DB: 4752; Errors: 1; Top: none. Artifact report: reports/keyword-hunter/2026-10-08-0809.md
