@@ -403,3 +403,64 @@ def test_ymyl_candidate_needs_explicit_approval_and_safe_candidate_stays_eligibl
         editorial_decisions=[], published_manifest={},
     )
     assert [item["keyword"] for item in safe["queue"]] == ["글자수계산기"]
+
+
+def test_only_explicit_hold_aliases_block_queue_and_regeneration_is_deterministic(tmp_path):
+    decisions_path = tmp_path / "content-launch-decisions.json"
+    decisions_path.write_text(json.dumps({"schemaVersion": 1, "decisions": [
+        {
+            "keyword": "가을여행추천",
+            "decision": "HOLD",
+            "holdAliases": ["국내가을여행지추천"],
+            "reason": "same broad autumn destination-selection intent",
+        }
+    ]}, ensure_ascii=False), encoding="utf-8")
+
+    decisions = prepare_keyword_launch.load_decisions(decisions_path)
+    assert decisions.get("가을여행추천") == "HOLD"
+    assert decisions.get("국내가을여행지추천") == "HOLD"
+    assert decisions.get("9월국내여행지추천") is None
+
+    rows = [
+        launch_row("가을여행추천", "/kor/column/gaeulyeohaengcuceon/", "95"),
+        launch_row("국내가을여행지추천", "/kor/column/gugnaegaeulyeohaengjicuceon/", "90"),
+        {
+            **launch_row("9월국내여행지추천", "/kor/column/9weolgugnaeyeohaengjicuceon/", "85"),
+            "parent_keyword": "가을여행지추천",
+        },
+        launch_row("안전한독립후보", "/kor/column/safe-independent-candidate/", "80"),
+    ]
+    first = prepare_queue(
+        rows, daily_limit=3, selected_at="2026-10-09T12:00:00+09:00",
+        editorial_decisions=decisions, published_manifest={},
+    )
+    second = prepare_queue(
+        rows, daily_limit=3, selected_at="2026-10-09T12:00:00+09:00",
+        editorial_decisions=decisions, published_manifest={},
+    )
+
+    queued = {item["keyword"] for item in first["queue"]}
+    assert first == second
+    assert first["excluded"]["editorial_hold"] == 2
+    assert not queued.intersection({"가을여행추천", "국내가을여행지추천"})
+    assert queued == {"9월국내여행지추천", "안전한독립후보"}
+    assert first["dailyLimit"] == 3
+
+
+def test_hold_aliases_are_rejected_for_approval_or_conflicting_decisions(tmp_path):
+    import pytest
+
+    path = tmp_path / "content-launch-decisions.json"
+    invalid_stores = [
+        {"schemaVersion": 1, "decisions": [
+            {"keyword": "안전한후보", "decision": "APPROVE", "holdAliases": ["별칭"]}
+        ]},
+        {"schemaVersion": 1, "decisions": [
+            {"keyword": "가을여행추천", "decision": "HOLD", "holdAliases": ["별칭"]},
+            {"keyword": "별칭", "decision": "APPROVE"},
+        ]},
+    ]
+    for store in invalid_stores:
+        path.write_text(json.dumps(store, ensure_ascii=False), encoding="utf-8")
+        with pytest.raises(ValueError):
+            prepare_keyword_launch.load_decisions(path)
