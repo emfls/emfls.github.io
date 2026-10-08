@@ -335,25 +335,6 @@ def test_airport_priority_exit_is_safe_from_ymyl_but_held_for_no_serp_gap():
     assert result["excluded"]["ymyl"] == 0
 
 
-def test_airport_priority_exit_is_safe_from_ymyl_but_held_for_no_serp_gap():
-    from pathlib import Path
-
-    decisions_path = Path(__file__).resolve().parents[1] / "data" / "content-launch-decisions.json"
-    decisions = prepare_keyword_launch.load_decisions(decisions_path)
-    assert decisions.get("인천공항교통약자우대출구") == "HOLD"
-
-    result = prepare_queue(
-        [launch_row("인천공항교통약자우대출구", "/kor/column/incheon-airport-priority-exit/")],
-        daily_limit=1,
-        selected_at="2026-10-08T09:36:43+09:00",
-        editorial_decisions=decisions,
-        published_manifest={},
-    )
-    assert result["queue"] == []
-    assert result["excluded"]["editorial_hold"] == 1
-    assert result["excluded"]["ymyl"] == 0
-
-
 def test_invalid_decision_store_fails_closed(tmp_path):
     import pytest
 
