@@ -16,8 +16,7 @@ try:
     from scripts.quality_site import (
         calculate_revenue_goal,
         calculate_site_score,
-        latest_performance_file,
-        load_performance,
+        load_quality_performance,
         normalize_url,
         performance_by_url,
         rank_priority,
@@ -29,8 +28,7 @@ except ModuleNotFoundError:
     from quality_site import (
         calculate_revenue_goal,
         calculate_site_score,
-        latest_performance_file,
-        load_performance,
+        load_quality_performance,
         normalize_url,
         performance_by_url,
         rank_priority,
@@ -176,8 +174,7 @@ def run_quality_audit(
     pages = sorted((page for page in audit.get("pages", []) if page.get("indexable", True)), key=lambda row: row["url"])
     metadata_rows = _read_json(metadata_path, [])
     metadata = {normalize_url(row["url"]): row for row in metadata_rows if row.get("url")}
-    performance_path = latest_performance_file(performance_dir)
-    performance = load_performance(performance_path) if performance_path else {"pages": [], "adsense": None, "periods": {}}
+    performance = load_quality_performance(performance_dir, as_of)
     metrics = performance_by_url(performance)
     sitemap_urls = _sitemap_urls(root)
     inbound = _inbound_counts(pages)
@@ -209,6 +206,7 @@ def run_quality_audit(
         "rules_version": RULES_VERSION,
         "as_of": as_of,
         "summary": {"evaluated_indexable_pages": len(results)},
+        "measurement_sources": performance.get("source_selection", {}),
         "pages": results,
     }
     system_context = _system_context(pages, performance, sitemap_urls, inbound, root, as_of)
@@ -217,6 +215,7 @@ def run_quality_audit(
         "schema_version": SCHEMA_VERSION,
         "rules_version": RULES_VERSION,
         "as_of": as_of,
+        "measurement_sources": performance.get("source_selection", {}),
         **site,
         "revenue_goal": calculate_revenue_goal(performance.get("adsense")),
     }

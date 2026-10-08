@@ -142,6 +142,12 @@
 
 ## P1 - High
 
+- [ ] C02 · Quality audit performance source selection repair
+  - Scope: select only validated canonical GA4/GSC page snapshots for quality scoring; preserve each channel's source, schema, period, freshness, and missingness. Do not derive URL revenue/RPM from site-level AdSense or relabel GA4 views as sessions.
+  - Evidence: the prior lexical selector chose `gsc-opportunity-queries-latest.json` (34 query rows, no page-level GA4/GSC channels). Same-input recomputation over 18,928 indexable pages changed coverage from 0 measured / 18,928 estimated to 3,012 measured / 15,916 estimated; Revenue Growth output and all 1,642 protected winners stayed identical. Site connection score changed 53/F→68/C; per-page grade distribution did not change.
+  - Verification: source-selection/quality/workflow focused suite 31 passed; unittest 861 passed (3 skipped); pytest 1,466 passed (3 skipped); SEO QA 0 new Critical/Warning; source validator, launch guard, workflow YAML, and diff check PASS. Exact-head CI pending.
+  - Status: repair is isolated from C01 launch/HOLD files; keep PR open for Control Tower review. Do not run Publisher or merge.
+
 - [ ] C01 · Autumn travel HOLD and overseas purchase-agency review
   - Scope: persist the autumn travel HOLD; research the next overseas purchase-agency keyword and prevent a broad, overlapping or high-maintenance page from being treated as launch-ready. No HTML, ad, measurement, PR #56, or protected WINNER edits.
   - Evidence: autumn intent overlaps the existing October and day/overnight travel pages; its queue-promoted near-synonym was also held. Overseas Search Ads: 280/month (PC 70, mobile 210), HIGH, checked 2026-10-08; live Google/Naver SERPs mix buyer service discovery with seller workflow. Existing 1688 guide and volatile provider terms leave no proven independent low-maintenance task.
