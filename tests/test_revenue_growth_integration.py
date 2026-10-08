@@ -11,6 +11,67 @@ def write_json(path, payload):
 
 
 class RevenueGrowthIntegrationTest(unittest.TestCase):
+    def test_naver_snapshot_metadata_is_retained_on_matched_and_unmatched_pages(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            matched_url = "/kor/report/camp/matched.html"
+            unmatched_url = "/kor/report/camp/not-in-top-30.html"
+            write_json(root / "scores.json", {
+                "pages": [
+                    {"url": matched_url, "score": 70, "type": "TRAFFIC"},
+                    {"url": unmatched_url, "score": 65, "type": "TRAFFIC"},
+                ]
+            })
+            write_json(root / "audit.json", {
+                "pages": [
+                    {"url": matched_url, "indexable": True, "canonical": f"https://emfls.github.io{matched_url}"},
+                    {"url": unmatched_url, "indexable": True, "canonical": f"https://emfls.github.io{unmatched_url}"},
+                ]
+            })
+            write_json(root / "performance.json", {"site": {}, "pages": []})
+            write_json(root / "experiments.json", {"experiments": []})
+            write_json(root / "history.json", {"pages": []})
+            write_json(root / "naver.json", {
+                "source": "NAVER_SEARCH_ADVISOR_UI_TOP_30",
+                "periodPreset": "RECENT_30_DAYS",
+                "period": {"start": "2026-08-19", "end": "2026-09-17"},
+                "dataUpdatedAt": "2026-09-17",
+                "rows": [{
+                    "sourceUrl": f"https://emfls.github.io{matched_url}",
+                    "clicks": 3,
+                    "impressions": 42,
+                    "ctr": 0.0714,
+                    "averageRank": None,
+                    "rankStatus": "NOT_AVAILABLE",
+                    "status": "VERIFIED",
+                }],
+            })
+
+            result, _ = run_revenue_growth(
+                page_scores_path=root / "scores.json",
+                audit_path=root / "audit.json",
+                performance_path=root / "performance.json",
+                experiments_path=root / "experiments.json",
+                optimization_history_path=root / "history.json",
+                naver_snapshot_path=root / "naver.json",
+                as_of="2026-10-07",
+                page_output=root / "pages.json",
+                opportunity_output=root / "opportunities.json",
+                report_output=root / "report.md",
+            )
+
+            records = {row["url"]: row["naver"] for row in result["pages"]}
+            for naver in records.values():
+                self.assertEqual(naver["period"], {"start": "2026-08-19", "end": "2026-09-17"})
+                self.assertEqual(naver["periodPreset"], "RECENT_30_DAYS")
+                self.assertEqual(naver["dataUpdatedAt"], "2026-09-17")
+                self.assertEqual(naver["positionStatus"], "NOT_AVAILABLE")
+                self.assertEqual(naver["crossSourceStatus"], "PERIOD_MISMATCH")
+            self.assertEqual(records[matched_url]["status"], "STALE_DATA")
+            self.assertEqual(records[matched_url]["impressions"], 42)
+            self.assertEqual(records[unmatched_url]["status"], "NOT_AVAILABLE")
+            self.assertIsNone(records[unmatched_url]["impressions"])
+
     def test_unavailable_page_url_keeps_site_evidence_without_allocating_it_to_pages(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

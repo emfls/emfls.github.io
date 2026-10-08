@@ -42,7 +42,7 @@ class SeoQaWorkflowTests(unittest.TestCase):
         self.assertIn('parser.add_argument("--audit", type=Path, help=', quality)
 
     def test_workflow_generates_revenue_opportunities_before_final_dashboard_and_tests(self):
-        source = WORKFLOW.read_text(encoding="utf-8")
+        source = WORKFLOW.read_text(encoding="utf-8").split("  measurement-parity:", 1)[0]
         audit = source.index("scripts/seo_audit.py")
         quality = source.index("scripts/quality_audit.py")
         revenue = source.index("scripts/revenue_growth.py")
@@ -65,7 +65,7 @@ class SeoQaWorkflowTests(unittest.TestCase):
         self.assertIn("--gsc-snapshot data/performance/gsc-latest.json", command)
 
     def test_workflow_validates_daily_launch_without_cron_or_write_permission(self):
-        source = WORKFLOW.read_text(encoding="utf-8")
+        source = WORKFLOW.read_text(encoding="utf-8").split("  measurement-parity:", 1)[0]
         revenue = source.index("scripts/revenue_growth.py")
         daily = source.index("scripts/daily_revenue_growth.py")
         guard = source.index("scripts/content_launch_guard.py")
@@ -94,6 +94,75 @@ class SeoQaWorkflowTests(unittest.TestCase):
         guard = source.index("scripts/content_launch_guard.py")
         self.assertLess(snapshot, guard)
         self.assertIn("--manifest /tmp/content-launch-manifest.json", source)
+
+    def test_pr_has_independent_nonpublishing_measurement_parity_job(self):
+        source = WORKFLOW.read_text(encoding="utf-8")
+        self.assertIn("  measurement-parity:", source)
+        job = source.split("  measurement-parity:", 1)[1]
+        self.assertIn("if: github.event_name == 'pull_request'", job)
+        self.assertIn("permissions:\n      contents: read", job)
+        self.assertIn("fetch-depth: 0", job)
+        for required in (
+            "scripts/resolve_eligible_ga4_snapshot.py",
+            "scripts/validate_measurement_sources.py",
+            "scripts/resolve_eligible_adsense_snapshot.py",
+            "--gsc data/performance/gsc-latest.json",
+            '--revision "$GITHUB_SHA"',
+            '--ga4 "$GA4_SNAPSHOT"',
+            '--ga4-source-revision "$GA4_SOURCE_REVISION"',
+            '--performance-dir "$RUNNER_TEMP/aligned-performance"',
+            "scripts/seo_audit.py",
+            "scripts/quality_audit.py",
+            "scripts/revenue_growth.py",
+            "scripts/compact_page_performance.py",
+            "scripts/build_page_performance_manifest.py",
+            "scripts/validate_page_performance_compact_parity.py",
+            "--naver-snapshot",
+            "--naver \"$NAVER_SNAPSHOT\"",
+            "--adsense-source-revision \"$ADSENSE_SOURCE_REVISION\"",
+            '"$GITHUB_SHA"',
+            '"$GITHUB_RUN_ID"',
+            '"$GITHUB_RUN_ATTEMPT"',
+            "PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}",
+            '--pull-request-head-sha "$PR_HEAD_SHA"',
+            "actions/upload-artifact@v4",
+            "measurement-parity-report.json",
+            "${{ runner.temp }}/measurement-parity-report.json",
+        ):
+            self.assertIn(required, job)
+        for forbidden in (
+            "git push",
+            "git commit",
+            "promote_measurement_artifacts.py",
+            "workflow_dispatch",
+            "vercel deploy",
+        ):
+            self.assertNotIn(forbidden, job.lower())
+        self.assertNotIn("data/page-performance.json", job)
+        self.assertNotIn("data/revenue-opportunities.json", job)
+        self.assertEqual(job.count('--adsense-snapshot "$ADSENSE_SNAPSHOT"'), 2)
+        self.assertIn('--adsense "$ADSENSE_SNAPSHOT"', job)
+        resolver = job.index("scripts/resolve_eligible_adsense_snapshot.py")
+        ga4_resolver = job.index("scripts/resolve_eligible_ga4_snapshot.py")
+        source_validation = job.index("scripts/validate_measurement_sources.py")
+        revenue_generation = job.index("scripts/revenue_growth.py")
+        manifest_generation = job.index("scripts/build_page_performance_manifest.py")
+        parity_validation = job.index("scripts/validate_page_performance_compact_parity.py")
+        self.assertLess(ga4_resolver, resolver)
+        self.assertLess(resolver, source_validation)
+        self.assertLess(source_validation, revenue_generation)
+        self.assertLess(revenue_generation, manifest_generation)
+        self.assertLess(manifest_generation, parity_validation)
+        self.assertEqual(job.count('--adsense "$ADSENSE_SNAPSHOT"'), 2)
+        self.assertIn('"ga4Snapshot": manifest["sourceSnapshots"]["ga4"]', job)
+        self.assertIn('from scripts.revenue_growth import _merge_adsense_snapshot, _merge_gsc_snapshot', job)
+
+    def test_derived_publisher_pins_one_naver_snapshot_for_revenue_and_manifest(self):
+        publisher = (ROOT / ".github/workflows/derived-measurement-publisher.yml").read_text(encoding="utf-8")
+        self.assertIn("Resolve the exact Naver snapshot path once", publisher)
+        self.assertIn('env.write(f"NAVER_SNAPSHOT={path.as_posix()}\\n")', publisher)
+        self.assertEqual(publisher.count('--naver-snapshot "$NAVER_SNAPSHOT"'), 2)
+        self.assertEqual(publisher.count('--naver "$NAVER_SNAPSHOT"'), 1)
 
 
 if __name__ == "__main__":

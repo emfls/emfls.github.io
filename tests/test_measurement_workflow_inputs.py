@@ -46,8 +46,8 @@ def test_derived_publisher_runs_after_daily_collectors_and_stages_only_derived_o
     assert "group: site-measurement-collection\n  cancel-in-progress: false\n  queue: max" in workflow
     assert "scripts/validate_measurement_sources.py" in workflow
     assert workflow.index("Validate source snapshots") < workflow.index("Regenerate current site audit")
-    assert workflow.index("Regenerate current page scores") < workflow.index("Generate derived artifacts")
-    assert workflow.index("Generate derived artifacts") < workflow.index("Promote derived artifacts")
+    assert workflow.index("Regenerate current page scores") < workflow.index("Generate full derived artifacts")
+    assert workflow.index("Generate full derived artifacts") < workflow.index("Promote derived artifacts")
     assert workflow.index("Promote derived artifacts") < workflow.index("Commit derived measurement artifacts")
     commit = _step_block(workflow, "Commit derived measurement artifacts")
     assert "git add data/page-performance.json data/revenue-opportunities.json reports/revenue-growth-report.md" in commit
@@ -61,6 +61,83 @@ def test_derived_publisher_runs_after_daily_collectors_and_stages_only_derived_o
         assert collector not in workflow
     assert "google-analytics-data" not in workflow
     assert "google-api-python-client" not in workflow
+
+
+def test_compact_publisher_orders_all_fail_closed_gates_before_promotion():
+    workflow = (ROOT / ".github" / "workflows" / "derived-measurement-publisher.yml").read_text(encoding="utf-8")
+    names = [
+        "Validate source snapshots",
+        "Regenerate current site audit",
+        "Regenerate current page scores",
+        "Generate full derived artifacts",
+        "Validate full page-performance artifact",
+        "Build full artifact manifest",
+        "Upload full page-performance artifact",
+        "Project compact page-performance",
+        "Validate compact page-performance artifact",
+        "Validate full and compact consumer parity",
+        "Promote derived artifacts",
+        "Commit derived measurement artifacts",
+    ]
+    positions = [workflow.index(f"- name: {name}") for name in names]
+    assert positions == sorted(positions)
+
+    for name in names[4:-1]:
+        block = _step_block(workflow, name)
+        assert "continue-on-error:" not in block
+        assert "\n        if:" not in block
+
+    commit = _step_block(workflow, "Commit derived measurement artifacts")
+    assert "git diff --check" in commit
+    assert "git add data/page-performance.json data/revenue-opportunities.json reports/revenue-growth-report.md" in commit
+
+
+def test_full_artifact_upload_is_bounded_and_promotion_uses_compact_plus_full_derived_revenue():
+    workflow = (ROOT / ".github" / "workflows" / "derived-measurement-publisher.yml").read_text(encoding="utf-8")
+    generation = _step_block(workflow, "Generate full derived artifacts")
+    full_validation = _step_block(workflow, "Validate full page-performance artifact")
+    manifest = _step_block(workflow, "Build full artifact manifest")
+    upload = _step_block(workflow, "Upload full page-performance artifact")
+    compact = _step_block(workflow, "Project compact page-performance")
+    promotion = _step_block(workflow, "Promote derived artifacts")
+
+    assert "$RUNNER_TEMP/page-performance-full.json" in generation
+    assert "$RUNNER_TEMP/revenue-opportunities-full.json" in generation
+    assert "$RUNNER_TEMP/revenue-growth-report-full.md" in generation
+    assert "$RUNNER_TEMP/page-performance-full.json" in full_validation
+    assert "$RUNNER_TEMP/page-performance-manifest.json" in manifest
+    assert "${{ github.sha }}" in manifest
+    assert "${{ github.run_id }}" in manifest
+    assert "${{ github.run_attempt }}" in manifest
+    assert "actions/upload-artifact@v4" in upload
+    assert "page-performance-full-${{ github.run_id }}" in upload
+    assert "${{ runner.temp }}/page-performance-full.json" in upload
+    assert "${{ runner.temp }}/page-performance-manifest.json" in upload
+    assert "retention-days: 7" in upload
+    assert "if-no-files-found: error" in upload
+    assert "page-scores.json" not in upload
+    assert "revenue-opportunities" not in upload
+    assert "revenue-growth-report" not in upload
+    assert "--output \"$RUNNER_TEMP/page-performance-compact.json\"" in compact
+    assert "--page-source \"$RUNNER_TEMP/page-performance-compact.json\"" in promotion
+    assert "--opportunity-source \"$RUNNER_TEMP/revenue-opportunities-full.json\"" in promotion
+    assert "--report-source \"$RUNNER_TEMP/revenue-growth-report-full.md\"" in promotion
+    assert "page-performance-full.json" not in _step_block(workflow, "Commit derived measurement artifacts")
+
+
+def test_seo_qa_consumes_the_tracked_compact_page_performance_artifact():
+    workflow = (ROOT / ".github" / "workflows" / "seo-qa.yml").read_text(encoding="utf-8")
+    assert "--performance data/page-performance.json" in workflow
+    assert "data/page-performance-full.json" not in workflow
+
+
+def test_derived_publisher_workflow_parses_as_yaml():
+    import yaml
+
+    path = ROOT / ".github" / "workflows" / "derived-measurement-publisher.yml"
+    workflow = yaml.safe_load(path.read_text(encoding="utf-8"))
+    assert isinstance(workflow, dict)
+    assert "jobs" in workflow and "publish" in workflow["jobs"]
 
 
 def test_source_collection_schedules_precede_derived_publisher():

@@ -96,6 +96,39 @@ def test_current_opportunities_are_exhaustive_and_cross_checked_against_summary(
         current_opportunity_urls(page_performance, _summary(1))
 
 
+def test_gsc_selector_rejects_non_object_page_rows():
+    with pytest.raises(ValueError, match="page row"):
+        current_opportunity_urls({"pages": ["not-a-page"]}, _summary(0))
+
+
+def test_gsc_selector_rejects_page_rows_missing_url_or_classification():
+    with pytest.raises(ValueError, match="URL"):
+        current_opportunity_urls({"pages": [{"classification": "WINNER"}]}, _summary(0))
+    with pytest.raises(ValueError, match="classification"):
+        current_opportunity_urls({"pages": [{"url": "/winner/"}]}, _summary(0))
+
+
+def test_null_and_non_opportunity_classifications_are_valid_but_not_selected():
+    pages = [
+        {"url": "/unknown-data/", "classification": None},
+        _opportunity("/winner/", "WINNER"),
+        _opportunity("/experiment/", "EXPERIMENT"),
+        _opportunity("/dead-candidate/", "DEAD_CANDIDATE"),
+    ]
+    assert current_opportunity_urls({"pages": pages}, _summary(0)) == []
+
+
+def test_gsc_selector_rejects_unknown_classification():
+    with pytest.raises(ValueError, match="classification"):
+        current_opportunity_urls({"pages": [_opportunity("/bad/", "SURPRISE")]}, _summary(0))
+
+
+def test_gsc_selector_still_rejects_duplicate_opportunity_urls():
+    pages = [_opportunity("/duplicate/"), _opportunity("/duplicate/")]
+    with pytest.raises(ValueError, match="duplicate normalized opportunity URL"):
+        current_opportunity_urls({"pages": pages}, _summary(2))
+
+
 def test_only_current_opportunity_urls_are_queried_and_not_ymyl_labeled():
     pages = [_opportunity("/a/"), _opportunity("/b/"), _opportunity("/winner/", "WINNER")]
     urls = current_opportunity_urls({"pages": pages}, _summary(2))
