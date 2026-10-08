@@ -10,6 +10,8 @@ ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_ORIGIN = "https://emfls.github.io"
 BROKEN_TARGET = "/kor/report/stock/2025/hyundaienc-000720.html"
 EXPECTED_TARGET = "/kor/report/stock/hyundaienc-000720.html"
+AMOREPACIFIC_BROKEN_TARGET = "/kor/report/stock/2025/amorepacific-090430.html"
+AMOREPACIFIC_EXPECTED_TARGET = "/kor/report/stock/amorepacific-090430.html"
 SOURCE_PAGES = (
     "/kor/report/stock/2025/ecoprobm-247540.html",
     "/kor/report/stock/2025/hana-086790.html",
@@ -19,6 +21,15 @@ SOURCE_PAGES = (
     "/kor/report/stock/2025/shinhan-055550.html",
     "/kor/report/stock/2025/skhynix-000660.html",
     "/kor/report/stock/2025/skt-017670.html",
+)
+AMOREPACIFIC_SOURCE_PAGES = (
+    "/kor/report/stock/2025/celltrion-068270.html",
+    "/kor/report/stock/2025/doosan-034020.html",
+    "/kor/report/stock/2025/hyundai-005380.html",
+    "/kor/report/stock/2025/hyundaimobis-012330.html",
+    "/kor/report/stock/2025/lgup-032640.html",
+    "/kor/report/stock/2025/posco-005490.html",
+    "/kor/report/stock/2025/samsung-005930.html",
 )
 
 
@@ -61,6 +72,27 @@ class InternalLinkRecoveryTests(unittest.TestCase):
             self.assertEqual(1, len(matching), source)
             resolved_path = urlparse(urljoin(PUBLIC_ORIGIN + source, matching[0])).path
             self.assertEqual(EXPECTED_TARGET, resolved_path, source)
+
+    def test_amorepacific_stock_links_resolve_to_existing_canonical_route(self):
+        broken = find_broken_internal_links(ROOT)
+        stale_links = [
+            item for item in broken
+            if item["source"] in AMOREPACIFIC_SOURCE_PAGES
+            and item["target"] == AMOREPACIFIC_BROKEN_TARGET
+        ]
+        self.assertEqual([], stale_links, f"stale Amorepacific links: {stale_links}")
+        self.assertTrue((ROOT / AMOREPACIFIC_EXPECTED_TARGET.lstrip("/")).is_file())
+
+        for source in AMOREPACIFIC_SOURCE_PAGES:
+            parser = AnchorParser()
+            parser.feed((ROOT / source.lstrip("/")).read_text(encoding="utf-8"))
+            matching = [
+                href for href, text in parser.anchors
+                if "아모레퍼시픽(090430)" in " ".join(text.split())
+            ]
+            self.assertEqual(1, len(matching), source)
+            resolved_path = urlparse(urljoin(PUBLIC_ORIGIN + source, matching[0])).path
+            self.assertEqual(AMOREPACIFIC_EXPECTED_TARGET, resolved_path, source)
 
 
 if __name__ == "__main__":
