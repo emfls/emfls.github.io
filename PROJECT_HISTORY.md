@@ -1181,3 +1181,9 @@
 
 ## 2026-10-08 15:12 Keyword Hunter
 - Seeds: 40; New: 40; Rejected: 27; DB: 4792; Errors: 0; Top: 급여소득세계산기. Artifact report: reports/keyword-hunter/2026-10-08-1512.md
+
+## 2026-10-08 C01 — Amorepacific internal-link recovery
+- **Base/safety:** rechecked `origin/main` at `a2d1e131ae1840acd1cb43b3bf6fee8d2be98892`; PR #56 remains OPEN and untouched. All seven requested source pages exist and were screened: none is a protected WINNER, OBSERVING, in cooldown, or on HOLD. The wrong `/2025/amorepacific-090430.html` target is HTTP 404; the existing `/kor/report/stock/amorepacific-090430.html` target is HTTP 200 without redirect, identifies code 090430, and has the exact self-canonical.
+- **Repair/test:** the seven source pages are nested under `/kor/report/stock/2025/`, so their bare filename links resolved to the missing `/2025/` route. Changed only those seven hrefs to `../amorepacific-090430.html`; added a regression that checks all seven route resolutions and rejects the stale destination. No page copy, title, ads, measurement, or canonical changed.
+- **Verification:** fresh broken-link scan fell from 268 to 261; no remaining Amorepacific errors from these sources. SEO audit parsed 18,932 pages with zero parser errors; SEO QA reported zero new Critical and zero new Warning findings. Launch guard and `git diff --check` PASS. Full unittest: 821 passed, 3 skipped; full pytest: 1,407 passed, 3 skipped.
+- **Delivery:** commit `fdf1e136051b3155790940cdfc4175e3a60407b7` on `codex/amorepacific-internal-link-recovery-20261008`; PR #60 OPEN and unmerged. GitHub connector PR creation returned 403, so the authorized PR was created through the authenticated GitHub UI. Exact-head SEO QA is pending; leave merge to Control Tower.
