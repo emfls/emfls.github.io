@@ -183,23 +183,26 @@ jobs:
             --adsense "$ADSENSE_SNAPSHOT" \
             --as-of "$MEASUREMENT_AS_OF"
 
-      - name: Build the aligned performance view for page scoring
+      - name: Stage validated page sources for quality scoring
         run: |
           mkdir -p "$RUNNER_TEMP/aligned-performance"
+          cp "$GA4_SNAPSHOT" "$RUNNER_TEMP/aligned-performance/ga4-latest.json"
+          cp data/performance/gsc-latest.json "$RUNNER_TEMP/aligned-performance/gsc-latest.json"
           python3 - <<'PY'
           import json
           import os
           from pathlib import Path
-          from scripts.revenue_growth import _merge_adsense_snapshot, _merge_gsc_snapshot
 
-          performance = json.loads(Path(os.environ["GA4_SNAPSHOT"]).read_text(encoding="utf-8"))
-          gsc = json.loads(Path("data/performance/gsc-latest.json").read_text(encoding="utf-8"))
-          adsense = json.loads(Path(os.environ["ADSENSE_SNAPSHOT"]).read_text(encoding="utf-8"))
-          performance = _merge_gsc_snapshot(performance, gsc)
-          performance = _merge_adsense_snapshot(performance, adsense)
-          output = Path(os.environ["RUNNER_TEMP"]) / "aligned-performance" / "selected.json"
-          output.write_text(json.dumps(performance, ensure_ascii=False, sort_keys=True) + "\n", encoding="utf-8")
-          print(json.dumps({"path": str(output), "asOf": os.environ["MEASUREMENT_AS_OF"], "pages": len(performance.get("pages") or [])}, sort_keys=True))
+          root = Path(os.environ["RUNNER_TEMP"]) / "aligned-performance"
+          summary = {}
+          for channel, filename in (("ga4", "ga4-latest.json"), ("gsc", "gsc-latest.json")):
+              snapshot = json.loads((root / filename).read_text(encoding="utf-8"))
+              summary[channel] = {
+                  "file": filename,
+                  "period": (snapshot.get("periods") or {}).get(channel)
+                      or {"start": snapshot.get("periodStart"), "end": snapshot.get("periodEnd")},
+              }
+          print(json.dumps({"asOf": os.environ["MEASUREMENT_AS_OF"], "sources": summary}, sort_keys=True))
           PY
 
       - name: Generate isolated site audit and page scores

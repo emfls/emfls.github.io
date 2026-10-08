@@ -31,7 +31,8 @@ class QualityPriorityTest(unittest.TestCase):
 
         self.assertEqual(rows["/camp/example.html"]["impressions"], 100)
         self.assertEqual(rows["/camp/example.html"]["organic_clicks"], 4)
-        self.assertEqual(rows["/camp/example.html"]["sessions"], 80)
+        self.assertEqual(rows["/camp/example.html"]["views"], 80)
+        self.assertNotIn("sessions", rows["/camp/example.html"])
     def test_measured_page_outranks_zero_data_page_when_opportunity_is_large(self):
         measured = rank_priority(
             {"score": 72, "type": "TRAFFIC", "issues": ["missing_sources"]},

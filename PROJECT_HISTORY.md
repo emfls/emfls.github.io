@@ -1,5 +1,11 @@
 # PROJECT HISTORY
 
+## 2026-10-09 C02 — Quality audit performance-source selection repair
+
+- Reproduced `latest_performance_file()` choosing the lexically last query sidecar instead of page-level GA4/GSC inputs. Replaced filename-order selection with canonical-source, source/schema, required-metric, and per-channel freshness validation; preserved independent GA4/GSC periods, missingness, URL revenue/RPM as `NOT_CONNECTED`, and kept GA4 views distinct from sessions.
+- Same tracked audit input (18,928 indexable pages; `as_of=2026-10-08`): old selection produced 0 `MEASURED` / 18,928 `ESTIMATED`, site score 53/F; validated GA4/GSC produced 3,012 `MEASURED` / 15,916 `ESTIMATED`, site score 68/C. Page grade distribution and downstream Revenue Growth output stayed unchanged; protected WINNER set remained 1,642. Direct AdSense page revenue was not inferred.
+- Focused source-selection, quality-site, integration, and SEO workflow tests passed (31 total); full unittest 861 passed / 3 skipped; full pytest 1,466 passed / 3 skipped. SEO QA added 0 Critical / 0 Warning; launch guard, source validation, workflow YAML parse, and `git diff --check` passed. PR #63 initial head `7d7b4d1de92f44affd8524641747018b60e0cf59` passed exact-head Actions run `37849905132` (`validate` and `measurement-parity` SUCCESS). Main subsequently advanced to `e8cb8c174c1ba6b8f5304628e3a9b7a825127f09` through the C01 merge; the C02 branch is being normally synchronized and needs new exact-head CI. No Publisher dispatch, data artifact change, page-score compaction, or merge.
+
 ## 2026-10-08 C02 — PR #56 final integration after PR #60
 
 - Confirmed PR #60 merged as `7d8ab3f6df7e60c32d4f5e1e289c16d8060e6411`; latest main `7da1e484fd4a622efd90c88de05361cb34297fa3` descends from that merge. Normally merged latest main into PR #56 at `8b7bf79f21180fceb62de2aaaeec23c02f28f2d5`; PR #60's seven link fixes and regression test match main exactly. PR #56 remains OPEN / MERGEABLE.

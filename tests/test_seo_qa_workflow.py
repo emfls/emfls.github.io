@@ -155,7 +155,10 @@ class SeoQaWorkflowTests(unittest.TestCase):
         self.assertLess(manifest_generation, parity_validation)
         self.assertEqual(job.count('--adsense "$ADSENSE_SNAPSHOT"'), 2)
         self.assertIn('"ga4Snapshot": manifest["sourceSnapshots"]["ga4"]', job)
-        self.assertIn('from scripts.revenue_growth import _merge_adsense_snapshot, _merge_gsc_snapshot', job)
+        self.assertIn("Stage validated page sources for quality scoring", job)
+        self.assertIn('cp "$GA4_SNAPSHOT" "$RUNNER_TEMP/aligned-performance/ga4-latest.json"', job)
+        self.assertIn('cp data/performance/gsc-latest.json "$RUNNER_TEMP/aligned-performance/gsc-latest.json"', job)
+        self.assertNotIn('_merge_adsense_snapshot, _merge_gsc_snapshot', job)
 
     def test_derived_publisher_pins_one_naver_snapshot_for_revenue_and_manifest(self):
         publisher = (ROOT / ".github/workflows/derived-measurement-publisher.yml").read_text(encoding="utf-8")

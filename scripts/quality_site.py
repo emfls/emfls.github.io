@@ -2,11 +2,18 @@
 """Join performance signals, rank improvements, and aggregate site quality."""
 
 import json
+import math
 from collections import Counter
-from datetime import datetime
+from datetime import date, datetime
+from numbers import Real
 from pathlib import Path
 from statistics import mean, median
 from urllib.parse import unquote, urlsplit
+
+try:
+    from scripts.validate_measurement_sources import _validate_ga4, _validate_gsc
+except ModuleNotFoundError:
+    from validate_measurement_sources import _validate_ga4, _validate_gsc
 
 
 def normalize_url(url):
@@ -18,9 +25,154 @@ def normalize_url(url):
     return path[: -len("index.html")] if path.endswith("/index.html") else path
 
 
-def latest_performance_file(directory):
-    candidates = sorted(Path(directory).glob("*.json"))
-    return candidates[-1] if candidates else None
+def _is_finite_number(value):
+    return isinstance(value, Real) and not isinstance(value, bool) and math.isfinite(float(value))
+
+
+def _validate_quality_metrics(snapshot, channel):
+    if channel == "ga4":
+        required = ("views", "users", "engagementSeconds", "revenue", "revenueMetric")
+    else:
+        required = ("clicks", "impressions", "ctr", "position")
+
+    for row in snapshot.get("pages") or []:
+        evidence = row[channel if channel == "ga4" else "google"]
+        for field in required:
+            if field not in evidence:
+                raise ValueError(f"{channel.upper()} page row is missing required metric {field}")
+            value = evidence[field]
+            if field == "revenueMetric":
+                if value != "totalAdRevenue":
+                    raise ValueError("GA4 page row revenueMetric must be totalAdRevenue")
+                continue
+            if value is None:
+                continue
+            if not _is_finite_number(value):
+                raise ValueError(f"{channel.upper()} page row metric {field} must be a finite number or null")
+            if field != "revenue" and value < 0:
+                raise ValueError(f"{channel.upper()} page row metric {field} must be non-negative")
+            if channel == "gsc" and field == "ctr" and value > 1:
+                raise ValueError("GSC page row ctr must be between 0 and 1")
+
+
+def _period_from(snapshot, channel):
+    if channel == "ga4":
+        return dict((snapshot.get("periods") or {}).get("ga4") or {})
+    return dict((snapshot.get("periods") or {}).get("gsc") or {})
+
+
+def _source_details(snapshot, channel, *, status, filename, period=None):
+    result = {
+        "status": status,
+        "file": filename,
+        "period": dict(period or _period_from(snapshot, channel)),
+        "page_rows": len(snapshot.get("pages") or []),
+    }
+    if channel == "ga4":
+        result.update({"source": ((snapshot.get("collection") or {}).get("source")), "schema_version": snapshot.get("schema_version")})
+    else:
+        result.update({"source": snapshot.get("source"), "property": snapshot.get("property")})
+    if status == "STALE_DATA":
+        result["reason"] = "SOURCE_PERIOD_OUTSIDE_FRESHNESS_CONTRACT"
+    return result
+
+
+def _load_channel_snapshot(directory, channel, as_of):
+    filename = "ga4-latest.json" if channel == "ga4" else "gsc-latest.json"
+    path = Path(directory) / filename
+    if not path.is_file():
+        return None, {"status": "NOT_CONNECTED", "file": filename, "period": {}, "page_rows": 0}
+
+    try:
+        snapshot = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError(f"could not read {channel.upper()} quality source {filename}: {error}") from error
+
+    if channel == "ga4" and (not isinstance(snapshot, dict) or snapshot.get("schema_version") != 2):
+        raise ValueError("GA4 schema_version must be 2")
+    if not isinstance(snapshot, dict):
+        raise ValueError(f"{channel.upper()} quality source must be an object")
+
+    try:
+        period = _validate_ga4(snapshot, as_of) if channel == "ga4" else _validate_gsc(snapshot, as_of)
+    except ValueError as error:
+        if "stale under" in str(error) and "period" in str(error):
+            return None, _source_details(snapshot, channel, status="STALE_DATA", filename=filename)
+        raise ValueError(f"invalid {channel.upper()} quality source {filename}: {error}") from error
+
+    _validate_quality_metrics(snapshot, channel)
+    return snapshot, _source_details(snapshot, channel, status="VERIFIED", filename=filename, period=period)
+
+
+def _merge_ga4_row(target, incoming, url):
+    current = target["ga4"]
+    for field in ("period", "source", "revenueMetric", "status"):
+        if current.get(field) != incoming.get(field):
+            raise ValueError(f"Conflicting GA4 metadata for normalized URL {url}")
+    for field in ("views", "engagementSeconds", "revenue"):
+        left, right = current.get(field), incoming.get(field)
+        current[field] = left + right if _is_finite_number(left) and _is_finite_number(right) else None
+    # Users cannot be added across URL aliases because the source does not provide a deduplicated union.
+    current["users"] = None
+
+
+def _quality_source_url(value, channel):
+    if not isinstance(value, str) or not value.strip() or value.strip().startswith("//"):
+        raise ValueError(f"{channel.upper()} quality source contains an invalid URL")
+    parsed = urlsplit(value.strip() if "://" in value else f"https://emfls.github.io/{value.strip().lstrip('/')}")
+    if parsed.netloc and parsed.netloc.lower() not in {"emfls.github.io", "www.emfls.github.io"}:
+        raise ValueError(f"{channel.upper()} quality source contains a URL outside emfls.github.io")
+    return normalize_url(value)
+
+
+def load_quality_performance(directory, as_of):
+    """Build the quality-audit view from validated, channel-specific snapshots only."""
+    try:
+        as_of_date = date.fromisoformat(as_of)
+    except (TypeError, ValueError):
+        raise ValueError("as_of must be an ISO date") from None
+
+    ga4, ga4_status = _load_channel_snapshot(directory, "ga4", as_of_date)
+    gsc, gsc_status = _load_channel_snapshot(directory, "gsc", as_of_date)
+    by_url = {}
+    periods = {}
+
+    if ga4 is not None:
+        periods["ga4"] = dict(ga4_status["period"])
+        ga4_urls = set()
+        ga4_collisions = 0
+        for row in ga4.get("pages") or []:
+            url = _quality_source_url(row.get("url"), "ga4")
+            target = by_url.setdefault(url, {"url": url})
+            evidence = row["ga4"]
+            if url in ga4_urls:
+                ga4_collisions += 1
+                _merge_ga4_row(target, evidence, url)
+            else:
+                target["ga4"] = dict(evidence)
+                ga4_urls.add(url)
+        ga4_status["normalized_url_count"] = len(ga4_urls)
+        ga4_status["normalized_url_collisions"] = ga4_collisions
+
+    if gsc is not None:
+        periods["gsc"] = dict(gsc_status["period"])
+        gsc_urls = set()
+        for row in gsc.get("pages") or []:
+            url = _quality_source_url(row.get("url"), "gsc")
+            target = by_url.setdefault(url, {"url": url})
+            if url in gsc_urls:
+                raise ValueError(f"GSC quality source has duplicate normalized URL {url}")
+            gsc_urls.add(url)
+            target["google"] = dict(row["google"])
+        gsc_status["normalized_url_count"] = len(gsc_urls)
+        gsc_status["normalized_url_collisions"] = 0
+
+    return {
+        "pages": [by_url[url] for url in sorted(by_url)],
+        "periods": periods,
+        "adsense": None,
+        "source_selection": {"ga4": ga4_status, "gsc": gsc_status},
+    }
 
 
 def performance_by_url(data):
@@ -32,8 +184,8 @@ def performance_by_url(data):
         ga4 = row.get("ga4") or {}
         google = row.get("google") or {}
         if ga4:
-            values.setdefault("sessions", ga4.get("views"))
-            values.setdefault("active_users", ga4.get("users"))
+            values.setdefault("views", ga4.get("views"))
+            values.setdefault("users", ga4.get("users"))
             values.setdefault("engagement_seconds", ga4.get("engagementSeconds"))
         if google:
             values.setdefault("organic_clicks", google.get("clicks"))
@@ -44,20 +196,28 @@ def performance_by_url(data):
     return normalized
 
 
-def _metric(value, status):
-    return {"value": value, "status": status}
+def _metric(value, provenance=None, unavailable_status="NOT_CONNECTED"):
+    status = "VERIFIED" if value is not None else ("NOT_AVAILABLE" if provenance else unavailable_status)
+    result = {"value": value, "status": status}
+    if provenance:
+        if provenance.get("source"):
+            result["source"] = provenance["source"]
+        if provenance.get("period"):
+            result["period"] = dict(provenance["period"])
+    return result
 
 
 def rank_priority(page_result, metrics):
     measured = bool(metrics and any(metrics.get(key) is not None for key in (
-        "impressions", "organic_clicks", "average_position", "sessions", "opportunity_score"
+        "impressions", "organic_clicks", "average_position", "sessions", "views", "opportunity_score"
     )))
     values = metrics or {}
     quality_gap = max(0.0, min(100.0, 100.0 - float(page_result.get("score", 0))))
     search_opportunity = min(100.0, max(0.0, float(values.get("opportunity_score") or 0) / 5 * 100))
     impressions = max(0.0, float(values.get("impressions") or 0))
-    sessions = max(0.0, float(values.get("sessions") or 0))
-    traffic_signal = min(100.0, impressions / 200 + sessions / 20)
+    activity = values.get("sessions") if values.get("sessions") is not None else values.get("views")
+    activity = max(0.0, float(activity or 0))
+    traffic_signal = min(100.0, impressions / 200 + activity / 20)
     type_value = {"MONEY": 100.0, "TOOL": 85.0, "TRAFFIC": 60.0, "HUB": 55.0, "TRUST": 30.0, "UTILITY": 25.0}.get(
         page_result.get("type"), 40.0
     )
@@ -72,7 +232,9 @@ def rank_priority(page_result, metrics):
     )
     if not measured:
         priority *= 0.60
-    metric_status = "VERIFIED" if measured else "NOT_CONNECTED"
+    ga4 = values.get("ga4") if isinstance(values.get("ga4"), dict) else None
+    google = values.get("google") if isinstance(values.get("google"), dict) else None
+    session_missing_status = "NOT_AVAILABLE" if ga4 else "NOT_CONNECTED"
     return {
         "score": round(priority, 2),
         "level": "HIGH" if priority >= 65 else "MEDIUM" if priority >= 40 else "LOW",
@@ -85,13 +247,14 @@ def rank_priority(page_result, metrics):
             "ease_of_fix": round(ease_of_fix, 2),
         },
         "metrics": {
-            "impressions": _metric(values.get("impressions"), metric_status),
-            "clicks": _metric(values.get("organic_clicks"), metric_status),
-            "search_ctr": _metric(values.get("search_ctr"), metric_status),
-            "average_position": _metric(values.get("average_position"), metric_status),
-            "sessions": _metric(values.get("sessions"), metric_status),
-            "revenue": _metric(None, "NOT_CONNECTED"),
-            "rpm": _metric(None, "NOT_CONNECTED"),
+            "impressions": _metric(values.get("impressions"), google),
+            "clicks": _metric(values.get("organic_clicks"), google),
+            "search_ctr": _metric(values.get("search_ctr"), google),
+            "average_position": _metric(values.get("average_position"), google),
+            "views": _metric(values.get("views"), ga4),
+            "sessions": _metric(values.get("sessions"), None, session_missing_status),
+            "revenue": _metric(None),
+            "rpm": _metric(None),
         },
     }
 
