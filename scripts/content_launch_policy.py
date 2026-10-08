@@ -40,9 +40,9 @@ _YMYL_TEXT_SIGNAL_GROUPS = (
         "health, labor, and family leave",
         (
             "의료", "health", "medical", "육아휴직", "출산휴가", "배우자출산", "난임치료휴가",
-            "가족돌봄휴가", "휴가신청서", "노무사상담", "노무사비용", "실업급여", "퇴직금", "퇴직소득", "급여", "임금", "주휴수당",
+            "가족돌봄휴가", "휴가신청서", "인건비", "노무사상담", "노무사비용", "실업급여", "퇴직금", "퇴직소득", "급여", "임금", "주휴수당",
             "연장수당", "휴일수당", "법정수당", "근로계약", "근로기준", "산재",
-            "연차계산", "연차수당", "연차휴가", "연차일수", "회계년도연차", "시급계산", "실수령액",
+            "연차계산", "연차개수", "연차수당", "연차휴가", "연차일수", "회계년도연차", "시급계산", "실수령액",
             "시간외수당", "월급", "연봉", "연장근로수당", "조기재취업수당", "수급자격신청",
             "알바비", "세후", "야간근로수당", "야간수당", "휴일근무수당", "노동청신고",
         ),
@@ -188,7 +188,10 @@ def _tool(row):
     return any(x in text for x in ("tool", "calculator", "계산기", "무료 도구"))
 
 def _has_ymyl_text_signal(text):
-    raw_text = str(text or "").casefold()
+    # In the fixed phrase "우대출구" the substring "대출" means an
+    # airport priority exit, not a loan. Keep the loan signal for every
+    # remaining occurrence in the query.
+    raw_text = str(text or "").casefold().replace("우대출구", "")
     if any(signal in raw_text for _, signals in _YMYL_TEXT_SIGNAL_GROUPS for signal in signals):
         return True
     normalized_text = normalize_keyword(raw_text)
@@ -205,8 +208,13 @@ def _ymyl(row):
         or _has_ymyl_text_signal(category_evidence)
     )
 
-def select_launch_candidate(rows, existing_urls=None, published_keywords=None, daily_limit=DAILY_PUBLICATION_LIMIT, selected_at=None, max_age_days=30, launched_count=0):
-    existing_urls={identity for x in (existing_urls or set()) if (identity := normalize_url_identity(x)) is not None}; published={normalize_keyword(x) for x in (published_keywords or set())}
+def requires_ymyl_review(row):
+    """Return whether candidate text needs explicit YMYL approval before launch."""
+    return _ymyl(row)
+
+
+def select_launch_candidate(rows, existing_urls=None, published_keywords=None, daily_limit=DAILY_PUBLICATION_LIMIT, selected_at=None, max_age_days=30, launched_count=0, reviewed_ymyl_keywords=None):
+    existing_urls={identity for x in (existing_urls or set()) if (identity := normalize_url_identity(x)) is not None}; published={normalize_keyword(x) for x in (published_keywords or set())}; reviewed_ymyl={normalize_keyword(x) for x in (reviewed_ymyl_keywords or set())}
     daily_limit=max(0,int(daily_limit)); launched_count=max(0,int(launched_count)); remaining_capacity=max(0,daily_limit-launched_count)
     now=datetime.fromisoformat(selected_at) if selected_at else datetime.now(timezone.utc)
     if now.tzinfo is None: now=now.replace(tzinfo=timezone.utc)
@@ -226,7 +234,7 @@ def select_launch_candidate(rows, existing_urls=None, published_keywords=None, d
                 checked=datetime.fromisoformat(str(row["last_checked"]).replace("Z","+00:00")); checked=checked if checked.tzinfo else checked.replace(tzinfo=timezone.utc)
                 if (now-checked).days > max_age_days: excluded["stale_winner"]+=1; continue
             except ValueError: excluded["stale_winner"]+=1; continue
-        if _ymyl(row): excluded["ymyl"]+=1; continue
+        if _ymyl(row) and norm not in reviewed_ymyl: excluded["ymyl"]+=1; continue
         if norm in published or any(norm == n for _,n in seen): excluded["duplicate_keyword"]+=1; continue
         if any(SequenceMatcher(None,norm,n).ratio() >= .86 for n in published_norm) or any(SequenceMatcher(None,norm,n).ratio() >= .86 for _,n in seen): excluded["similar_intent"]+=1; continue
         if str(row.get("overlap") or "NO_OVERLAP") != "NO_OVERLAP": excluded["overlap"]+=1; continue

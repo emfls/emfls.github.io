@@ -15,6 +15,12 @@
   - 수정 후 검증: focused 187 passed; unittest 752 passed; pytest 1,231 passed; SEO QA 신규 critical/warning 0 (현재 767/420); content launch guard PASS; `git diff --check` PASS.
   - 기준/상태: `origin/main` `a4845bc5a12d5b442279599de4c3abd9313e9fa0` 기반 `codex/c01-daily-publication-cap-3`; PR #42 OPEN / 새 exact-head CI 대기; `READY_FOR_CI`. Control Tower review 전 merge 또는 신규 공개 금지.
 
+- [ ] P0 Launch Queue Integrity + Fresh Demand Screen — C01
+  - 범위: current editorial HOLD/NO_NEW_PAGE와 YMYL 판정을 queue 및 최종 HTML launch guard까지 연결하고, 새로운 비YMYL 과업 30개를 demand-first로 선별한다. 신규 콘텐츠 발행과 merge는 금지.
+  - 수정/검증: HOLD·NO_NEW_PAGE·UPDATE_EXISTING loader 및 queue block, 누락/손상 decision store fail-closed, final guard candidate keyword IDs/editorial/YMYL checks, `연차개수`·`인건비` YMYL signal 보강, `우대출구`/`대출` substring false-positive 제거. 회귀 RED→GREEN. Unittest 819 passed (3 skipped); pytest 1,361 passed (3 skipped); SEO QA 신규 critical/warning 0 (767/420 기존); final content launch guard PASS; diff check PASS.
+  - Phase B: 30개 과업 screen, exact valid HIGH Naver Search Ads 4건, launch-ready safe/distinct TOP 1 없음; 세부 근거 `docs/growth/2026-10-08-c01-launch-queue-integrity-and-demand-screen.md`.
+  - 상태: `codex/launch-queue-integrity-20261008`를 push했다. GitHub integration의 PR 생성은 403으로 거부되어 수동 PR 생성 링크를 제공한다. PR이 없어 exact-head CI는 아직 없음. Control Tower review 전 merge 및 신규 발행 금지.
+
 - [ ] P0 Direct AdSense matched-period ingestion safety — C06 / PR #49 approved; latest-main sync
   - 기준: PR #46 merge commit `9a83870428d6cf8b026de728dd9c3aabf3491b1e`의 approved head는 `5eb3f2c828ce6f4979ef8757e266b0fbf68dd1e0`; `DAILY_PUBLICATION_LIMIT = 3` 유지. PR #49 head `1d4e1cdd956ee6eefe29c15d7f8f18344e61fbb9`는 exact-head SEO QA `37378217157` SUCCESS였다.
   - Live evidence: merge 뒤 AdSense Collection을 한 번만 dispatch했다 (run `37373852773`). 실행은 `Collect direct AdSense latest snapshot` 단계에서 `AdSense report rows are unavailable.`로 실패했다. 안전한 로그에 HTTP/Google status가 없어 실패 endpoint는 미확정이다. 재실행은 금지.
