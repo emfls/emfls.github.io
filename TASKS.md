@@ -4,6 +4,13 @@
 
 ## P0 - Critical
 
+- [x] P0 PR #56 — Naver parity and exact-head CI hardening — C02
+  - 변경: full/compact Naver 상태·출처·freshness 메타데이터를 보존하고 null/누락/변경 시 fail-closed 검증을 추가했다. Manifest가 실제 Naver 경로·SHA와 실행에 사용한 AdSense source revision·SHA를 검증하며 synthetic execution SHA와 PR head를 분리한다. PR-only `contents: read` nonpublishing parity job은 임시 runner 경로에서만 생성·검증하고 7일 artifact를 업로드한다.
+  - 데이터: `asOf=2026-10-07`, 18,929 URL. Local full/compact와 revenue parity PASS; Keyword Hunter 34, GSC opportunity 36, protected winner 1,632. Naver metadata missing 0; source `2026-08-19..2026-09-17`, `STALE_DATA` 30 / `NOT_AVAILABLE` 18,899, rank `NOT_AVAILABLE` 유지. GA4/GSC `VERIFIED`, AdSense `PARTIAL` snapshot commit `a5c78eecbff48de70cc900c228b052f907f14d03`.
+  - 검증: unittest 849 passed (3 skipped), pytest 1,453 passed (3 skipped); SEO QA 신규 critical/warning 0 (759/420 current); launch guard, YAML parse, diff check PASS. Exact-head Actions run `37749583350` attempt 1 SUCCESS: PR head `ad01c2965e3816a84e6ae4a8efb346f84f0b4c7c`, execution merge SHA `53017c2b8c7d113e4450b57cd96981391e608327`, `validate` + `measurement-parity` 모두 PASS.
+  - 저장공간: full 57,670,395 B, compact 18,153,808 B, same-run reduction 39,516,587 B / 68.52%. Main tracked `data/page-performance.json`는 55,289,121 B로 아직 변경되지 않아 actual main savings 0 B; 예상 compact replacement 절감 37,135,313 B. Publisher/promote는 실행하지 않았다.
+  - 상태: latest main `a2d1e131ae1840acd1cb43b3bf6fee8d2be98892`과 정상 동기화. PR #56 OPEN / NOT MERGED / MERGEABLE; Control Tower merge review 대기. 문서 checkpoint commit은 별도 exact-head CI를 확인한다.
+
 - [ ] P0 StockWiki placeholder-ad source/build regression prevention — C14
   - 범위: Astro source가 향후 빌드에서 placeholder 광고를 재생성하지 못하도록 한다. 실광고 활성화, StockWiki 금융 콘텐츠/데이터/SEO 의미 변경은 금지한다.
   - 변경: `AdSlot.astro`와 호출부 및 StockLayout 고정 하단 placeholder를 제거하고, 예약된 StockWiki 빌드 출력에서 광고 마커가 발견되면 복사·커밋 전에 실패하도록 안전 검사를 추가했다. 기존 생성 HTML 정리 스크립트는 유지했다.
