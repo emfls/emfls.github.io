@@ -1230,3 +1230,9 @@
 
 ## 2026-10-09 04:59 Keyword Hunter
 - Seeds: 40; New: 40; Rejected: 29; DB: 4832; Errors: 0; Top: 국내가을여행지추천. Artifact report: reports/keyword-hunter/2026-10-09-0459.md
+
+## 2026-10-09 C01 — Safe autumn intent-family HOLD guard
+- **Base/research:** verified current main `889a9bf9f68793aa3a4fa2d9a4a7734a1597e565`. The exact `국내가을여행지추천` Naver Search Ads row is 3,880/month (PC 660, mobile 3,220), HIGH, checked 2026-10-09 04:59 KST. Google/Naver results are broad autumn destination lists, matching the existing October and day/overnight selection coverage. `9월국내여행지추천` results emphasize September-specific event, flowering, and timing choices; it remains distinct and is not aliased to HOLD. Existing broad domestic-travel WINNER remains untouched.
+- **Change:** added one explicit `holdAliases` entry from `가을여행추천` to `국내가을여행지추천`; no substring or parent-keyword inference. Queue regenerated through `prepare_keyword_launch.py`: the alias is excluded; the September candidate remains; 3 items at the daily maximum of 3. Shared normalized decision loading now makes new-HTML launch guard comparisons include aliases, blocking an added or removed alias alongside safe new HTML while leaving editorial-only decision PRs reviewable.
+- **Regression/verification:** queue and guard tests reproduced RED before implementation, then GREEN. Focused launch suites: 114 passed. Full unittest: 855 passed, 3 skipped. Full pytest: 1,465 passed, 3 skipped. SEO QA: 0 new Critical, 0 new Warning (752 existing Critical, 420 existing Warning). `git diff --check` PASS. No HTML, publication, measurement, advertising, or protected-WINNER change.
+- **Delivery checkpoint:** branch `codex/c01-autumn-intent-family-hold-guard-20261009` is based on current main. Local launch-guard CLI, PR creation, and exact-head `validate` plus `measurement-parity` remain pending; do not merge. Leave the PR open for Control Tower review after exact-head CI succeeds.
