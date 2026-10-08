@@ -15,7 +15,7 @@ from urllib.parse import unquote, urlsplit
 from zoneinfo import ZoneInfo
 
 try:
-    from scripts.content_launch_decisions import load_decisions
+    from scripts.content_launch_decisions import decisions_from_document, load_decisions
     from scripts.content_launch_policy import (
         DAILY_PUBLICATION_LIMIT,
         SITE_HOST,
@@ -28,7 +28,7 @@ try:
     from scripts.content_url_planner import plan_url
     from scripts.external_content_opportunity import launch_readiness
 except ModuleNotFoundError:
-    from content_launch_decisions import load_decisions
+    from content_launch_decisions import decisions_from_document, load_decisions
     from content_launch_policy import (
         DAILY_PUBLICATION_LIMIT,
         SITE_HOST,
@@ -251,21 +251,7 @@ def _trusted_base_snapshot(root, base_ref):
 
 
 def _decision_map(document):
-    if not isinstance(document, dict) or document.get("schemaVersion") != 1 or not isinstance(document.get("decisions"), list):
-        raise ValueError("invalid content-launch decision store")
-    decisions = {}
-    allowed = {"HOLD", "NO_NEW_PAGE", "UPDATE_EXISTING", "APPROVE"}
-    for row in document["decisions"]:
-        if not isinstance(row, dict):
-            raise ValueError("invalid content-launch decision row")
-        keyword = normalize_keyword(row.get("keyword"))
-        decision = row.get("decision")
-        if not keyword or decision not in allowed:
-            raise ValueError("invalid content-launch decision")
-        if keyword in decisions and decisions[keyword] != decision:
-            raise ValueError("conflicting content-launch decisions")
-        decisions[keyword] = decision
-    return decisions
+    return decisions_from_document(document)
 
 
 def _normalized_launch_url(value, *, require_absolute=False):

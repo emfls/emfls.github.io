@@ -107,7 +107,7 @@ def external_source(candidate_id="EXT-SAFE-01"):
 
 def create_base_repo(tmp_path, keywords=(), external=(), decisions=None, counter=None,
                      protected_experiments=(), protected_winners=(), duplicate_queue=(),
-                     base_manifest=None):
+                     base_manifest=None, decision_rows=None):
     root = tmp_path / "repo"
     root.mkdir(parents=True)
     (root / ".gitignore").write_text(".DS_Store\n", encoding="utf-8")
@@ -118,7 +118,7 @@ def create_base_repo(tmp_path, keywords=(), external=(), decisions=None, counter
     write_json(root, "data/content-launch-queue.json", {"dailyLimit": 3, "queue": queue})
     write_json(root, "data/content-launch-decisions.json", {
         "schemaVersion": 1,
-        "decisions": [
+        "decisions": decision_rows if decision_rows is not None else [
             {"keyword": keyword, "decision": decision, "reason": "Control Tower decision"}
             for keyword, decision in (decisions or {}).items()
         ],
@@ -166,10 +166,11 @@ def create_base_repo(tmp_path, keywords=(), external=(), decisions=None, counter
 def run_launch(tmp_path, *, sources=(), external=(), decisions=None, proposals=(),
                manifest_override=None, head_changes=None, counter=None,
                protected_experiments=(), protected_winners=(), duplicate_queue=(),
-               changed_existing=(), base_manifest=None):
+               changed_existing=(), base_manifest=None, decision_rows=None):
     root, base_sha = create_base_repo(
         tmp_path, sources, external, decisions, counter,
         protected_experiments, protected_winners, duplicate_queue, base_manifest,
+        decision_rows=decision_rows,
     )
     if head_changes:
         for relative, value in head_changes.items():
@@ -672,3 +673,55 @@ def test_content_path_must_be_the_path_encoded_by_the_trusted_candidate_url(tmp_
     )])
     assert result["status"] == "FAIL"
     assert "CANDIDATE_IDENTITY_MISMATCH" in result["errors"]
+
+
+@pytest.mark.parametrize(("base_aliases", "head_aliases"), [
+    ([], ["별칭후보"]),
+    (["별칭후보"], []),
+])
+def test_new_html_blocks_unrelated_hold_alias_changes(tmp_path, base_aliases, head_aliases):
+    safe = keyword_source("안전검색어")
+    base_decisions = [{
+        "keyword": "기존보호키워드",
+        "decision": "HOLD",
+        "reason": "Control Tower decision",
+    }]
+    if base_aliases:
+        base_decisions[0]["holdAliases"] = base_aliases
+    head_decisions = [{
+        "keyword": "기존보호키워드",
+        "decision": "HOLD",
+        "reason": "Control Tower decision",
+    }]
+    if head_aliases:
+        head_decisions[0]["holdAliases"] = head_aliases
+
+    result = run_launch(
+        tmp_path,
+        sources=[safe],
+        proposals=[proposal(safe)],
+        decision_rows=base_decisions,
+        head_changes={"data/content-launch-decisions.json": {
+            "schemaVersion": 1,
+            "decisions": head_decisions,
+        }},
+    )
+
+    assert result["status"] == "FAIL"
+    assert "EDITORIAL_DECISION_TAMPERING" in result["errors"]
+
+
+def test_editorial_only_hold_alias_change_remains_reviewable_without_new_html(tmp_path):
+    result = run_launch(
+        tmp_path,
+        decisions={"기존보호키워드": "HOLD"},
+        head_changes={"data/content-launch-decisions.json": {
+            "schemaVersion": 1,
+            "decisions": [{
+                "keyword": "기존보호키워드",
+                "decision": "HOLD",
+                "holdAliases": ["별칭후보"],
+            }],
+        }},
+    )
+    assert result == {"status": "PASS", "errors": []}

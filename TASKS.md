@@ -145,14 +145,19 @@
 - [ ] C02 · Quality audit performance source selection repair
   - Scope: select only validated canonical GA4/GSC page snapshots for quality scoring; preserve each channel's source, schema, period, freshness, and missingness. Do not derive URL revenue/RPM from site-level AdSense or relabel GA4 views as sessions.
   - Evidence: the prior lexical selector chose `gsc-opportunity-queries-latest.json` (34 query rows, no page-level GA4/GSC channels). Same-input recomputation over 18,928 indexable pages changed coverage from 0 measured / 18,928 estimated to 3,012 measured / 15,916 estimated; Revenue Growth output and all 1,642 protected winners stayed identical. Site connection score changed 53/F→68/C; per-page grade distribution did not change.
-  - Verification: source-selection/quality/workflow focused suite 31 passed; unittest 861 passed (3 skipped); pytest 1,466 passed (3 skipped); SEO QA 0 new Critical/Warning; source validator, launch guard, workflow YAML, and diff check PASS. Exact-head CI pending.
-  - Status: repair is isolated from C01 launch/HOLD files; keep PR open for Control Tower review. Do not run Publisher or merge.
+  - Verification: source-selection/quality/workflow focused suite 31 passed; unittest 861 passed (3 skipped); pytest 1,466 passed (3 skipped); SEO QA 0 new Critical/Warning; source validator, launch guard, workflow YAML, and diff check PASS. Initial exact-head run 37849905132 passed both validate and measurement-parity.
+  - Status: main advanced through C01 merge to e8cb8c174c1ba6b8f5304628e3a9b7a825127f09; C02 branch sync requires a fresh exact-head CI. Keep PR open for Control Tower review. Do not run Publisher or merge.
 
-- [ ] C01 · Autumn travel HOLD and overseas purchase-agency review
+- [x] C01 · Autumn travel HOLD and overseas purchase-agency review
   - Scope: persist the autumn travel HOLD; research the next overseas purchase-agency keyword and prevent a broad, overlapping or high-maintenance page from being treated as launch-ready. No HTML, ad, measurement, PR #56, or protected WINNER edits.
   - Evidence: autumn intent overlaps the existing October and day/overnight travel pages; its queue-promoted near-synonym was also held. Overseas Search Ads: 280/month (PC 70, mobile 210), HIGH, checked 2026-10-08; live Google/Naver SERPs mix buyer service discovery with seller workflow. Existing 1688 guide and volatile provider terms leave no proven independent low-maintenance task.
   - Verification: TDD RED/GREEN; focused launch/guard suite 171 passed; unittest 821 passed (3 skipped); pytest 1,408 passed (3 skipped); SEO QA 0 new Critical/Warning; launch guard PASS; diff check PASS.
-  - Status: branch `codex/autumn-hold-next-keyword-20261008`, based on `7da1e484fd4a622efd90c88de05361cb34297fa3`; create one PR, keep it open for Control Tower review, and do not merge.
+  - Status: its three HOLD decisions are present in current main `889a9bf9f68793aa3a4fa2d9a4a7734a1597e565`; the queue-generation follow-up is tracked below.
+
+- [ ] C01 · Safe autumn intent-family HOLD guard
+  - Scope: explicitly map only `국내가을여행지추천` to the existing `가을여행추천` HOLD; retain the distinct September candidate; detect effective HOLD alias additions/removals in any PR that adds HTML. No HTML publication.
+  - Evidence and tests: exact Naver Search Ads row is 3,880/month (PC 660, mobile 3,220), HIGH, checked 2026-10-09 04:59 KST. Google/Naver SERPs show broad autumn-destination list intent for the alias and September-specific event/date planning for `9월국내여행지추천`. Focused suite 114 passed; unittest 855 passed (3 skipped); pytest 1,465 passed (3 skipped); SEO QA 0 new Critical/Warning; queue remains at maximum 3.
+  - Status: implementation is on `codex/c01-autumn-intent-family-hold-guard-20261009`, based on current main `889a9bf9f68793aa3a4fa2d9a4a7734a1597e565`. Finish launch-guard CLI and exact-head `validate` + `measurement-parity`; keep its PR open for Control Tower review.
 
 - [ ] C01 · Amorepacific internal-link recovery
   - Scope: correct the seven reviewed `/kor/report/stock/2025/` related-stock links to the existing self-canonical Amorepacific (090430) report; add a route regression test. No content, canonical, ads, or measurement edits.
