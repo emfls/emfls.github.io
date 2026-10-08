@@ -18,6 +18,7 @@ except ImportError:
 
 
 ROW_LIMIT = 25_000
+ALLOWED_CLASSIFICATIONS = {"WINNER", "OPPORTUNITY", "EXPERIMENT", "DEAD_CANDIDATE"}
 LIMITATIONS = [
     "SEARCH_CONSOLE_TOP_ROWS_ONLY",
     "QUERY_PRIVACY_FILTERING_POSSIBLE",
@@ -55,9 +56,22 @@ def current_opportunity_urls(page_performance, revenue_opportunities):
     urls = []
     seen = set()
     for row in rows:
-        if not isinstance(row, dict) or row.get("classification") != "OPPORTUNITY":
+        if not isinstance(row, dict):
+            raise ValueError("page-performance page rows must be objects")
+        if not isinstance(row.get("url"), str) or not row["url"].strip():
+            raise ValueError("page-performance page row is missing a URL")
+        if "classification" not in row:
+            raise ValueError(f"page-performance page row is missing classification: {row['url']}")
+        classification = row["classification"]
+        if classification is not None and (
+            not isinstance(classification, str) or classification not in ALLOWED_CLASSIFICATIONS
+        ):
+            raise ValueError(
+                f"page-performance page row has unsupported classification: {classification!r}"
+            )
+        if classification != "OPPORTUNITY":
             continue
-        url = _normalize_candidate_path(row.get("url"))
+        url = _normalize_candidate_path(row["url"])
         if url in seen:
             raise ValueError(f"duplicate normalized opportunity URL: {url}")
         seen.add(url)
