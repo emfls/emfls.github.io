@@ -96,3 +96,9 @@ Demand labels: `H:n/mo` means a score-valid `HIGH` exact-keyword Naver Search Ad
 - [Glamping beginner guide and booking checklist](https://travelkoreatoday.co.kr/glamping-beginner-guide-vs-camping/)
 - [Steam Support — Steam Cloud](https://help.steampowered.com/en/faqs/view/68D2-35AB-09A9-7678)
 - [Samsung Support — Galaxy folder not visible on PC](https://www.samsungsvc.co.kr/solution/40312)
+
+## Delivery status
+
+- Implementation commit `c8a08632ee` is pushed to `codex/launch-queue-integrity-20261008`.
+- GitHub integration denied PR creation with HTTP 403 `Resource not accessible by integration`. No PR-triggered workflow run or commit status exists for that head, so exact-head CI is pending.
+- [Create the PR for this branch](https://github.com/emfls/emfls.github.io/pull/new/codex/launch-queue-integrity-20261008). Do not merge before Control Tower review.
