@@ -130,6 +130,12 @@
 
 ## P1 - High
 
+- [ ] C01 · Autumn travel HOLD and overseas purchase-agency review
+  - Scope: persist the autumn travel HOLD; research the next overseas purchase-agency keyword and prevent a broad, overlapping or high-maintenance page from being treated as launch-ready. No HTML, ad, measurement, PR #56, or protected WINNER edits.
+  - Evidence: autumn intent overlaps the existing October and day/overnight travel pages; its queue-promoted near-synonym was also held. Overseas Search Ads: 280/month (PC 70, mobile 210), HIGH, checked 2026-10-08; live Google/Naver SERPs mix buyer service discovery with seller workflow. Existing 1688 guide and volatile provider terms leave no proven independent low-maintenance task.
+  - Verification: TDD RED/GREEN; focused launch/guard suite 171 passed; unittest 821 passed (3 skipped); pytest 1,408 passed (3 skipped); SEO QA 0 new Critical/Warning; launch guard PASS; diff check PASS.
+  - Status: branch `codex/autumn-hold-next-keyword-20261008`, based on `7da1e484fd4a622efd90c88de05361cb34297fa3`; create one PR, keep it open for Control Tower review, and do not merge.
+
 - [ ] C01 · Amorepacific internal-link recovery
   - Scope: correct the seven reviewed `/kor/report/stock/2025/` related-stock links to the existing self-canonical Amorepacific (090430) report; add a route regression test. No content, canonical, ads, or measurement edits.
   - Verification: live target HTTP 200, exact stock code and self-canonical; broken internal links 268→261; launch guard PASS; SEO QA no new Critical/Warning; unittest 821 passed (3 skipped); pytest 1,407 passed (3 skipped); `git diff --check` PASS.

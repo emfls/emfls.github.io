@@ -335,6 +335,36 @@ def test_airport_priority_exit_is_safe_from_ymyl_but_held_for_no_serp_gap():
     assert result["excluded"]["ymyl"] == 0
 
 
+def test_reviewed_travel_and_overseas_candidates_stay_out_of_launch_queue():
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    decisions = prepare_keyword_launch.load_decisions(root / "data" / "content-launch-decisions.json")
+    held = ["가을여행추천", "가을여행지추천", "해외구매대행쇼핑몰"]
+
+    assert all(decisions.get(keyword) == "HOLD" for keyword in held)
+
+    result = prepare_queue(
+        [
+            launch_row("가을여행추천", "/kor/column/gaeulyeohaengcuceon/"),
+            launch_row("가을여행지추천", "/kor/column/gaeulyeohaengjicuceon/"),
+            launch_row("해외구매대행쇼핑몰", "/kor/column/haeoegumaedaehaengsyopingmol/"),
+        ],
+        daily_limit=3,
+        selected_at="2026-10-08T20:00:00+09:00",
+        editorial_decisions=decisions,
+        published_manifest={},
+    )
+    assert result["queue"] == []
+    assert result["excluded"]["editorial_hold"] == 3
+
+    persisted_queue = json.loads((root / "data" / "content-launch-queue.json").read_text(encoding="utf-8"))
+    queued_keywords = {item["keyword"] for item in persisted_queue["queue"]}
+    assert not queued_keywords.intersection(held)
+    assert persisted_queue["dailyLimit"] == 3
+    assert len(persisted_queue["queue"]) <= 3
+
+
 def test_invalid_decision_store_fails_closed(tmp_path):
     import pytest
 
