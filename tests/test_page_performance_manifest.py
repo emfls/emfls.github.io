@@ -60,7 +60,7 @@ class PagePerformanceManifestTests(unittest.TestCase):
     def _write(path, payload):
         path.write_text(json.dumps(payload, sort_keys=True), encoding="utf-8")
 
-    def _build(self, *, adsense_source_revision=None):
+    def _build(self, *, ga4_source_revision=None, adsense_source_revision=None):
         return build_manifest(
             self.full_path,
             self.ga4_path,
@@ -71,6 +71,7 @@ class PagePerformanceManifestTests(unittest.TestCase):
             workflow_run_id="12345",
             workflow_run_attempt="2",
             repository_root=self.root,
+            ga4_source_revision=ga4_source_revision,
             adsense_source_revision=adsense_source_revision,
         )
 
@@ -90,6 +91,7 @@ class PagePerformanceManifestTests(unittest.TestCase):
         self.assertEqual(manifest["gscPeriod"], {"start": "2026-09-06", "end": "2026-10-03"})
         self.assertEqual(manifest["adsenseCurrentPeriod"], self.adsense["currentPeriod"])
         self.assertIsNone(manifest["pullRequestHeadSha"])
+        self.assertIsNone(manifest["sourceSnapshots"]["ga4"]["revision"])
         self.assertIsNone(manifest["sourceSnapshots"]["adsense"]["revision"])
 
     def test_full_output_hash_size_and_source_hashes_are_recorded(self):
@@ -190,6 +192,41 @@ class PagePerformanceManifestTests(unittest.TestCase):
 
         with self.assertRaisesRegex(ValueError, "do not match recorded AdSense revision"):
             self._build(adsense_source_revision=revision)
+
+    def test_ga4_source_revision_is_bound_to_exact_repository_blob(self):
+        source = self.root / "data" / "performance" / "ga4-latest.json"
+        source.parent.mkdir(parents=True, exist_ok=True)
+        source.write_bytes(self.ga4_path.read_bytes())
+        subprocess.run(["git", "init", "-q", str(self.root)], check=True)
+        subprocess.run(["git", "-C", str(self.root), "add", "data/performance/ga4-latest.json"], check=True)
+        subprocess.run(["git", "-C", str(self.root), "-c", "user.name=Test", "-c", "user.email=test@example.invalid", "commit", "-qm", "pin GA4 source"], check=True)
+        revision = subprocess.run(
+            ["git", "-C", str(self.root), "rev-parse", "HEAD"],
+            text=True, capture_output=True, check=True,
+        ).stdout.strip()
+
+        manifest = self._build(ga4_source_revision=revision)
+        self.assertEqual(manifest["sourceSnapshots"]["ga4"]["revision"], revision)
+        self.assertEqual(
+            manifest["sourceSnapshots"]["ga4"]["sha256"],
+            hashlib.sha256(source.read_bytes()).hexdigest(),
+        )
+
+    def test_manifest_rejects_ga4_bytes_that_do_not_match_recorded_revision(self):
+        source = self.root / "data" / "performance" / "ga4-latest.json"
+        source.parent.mkdir(parents=True, exist_ok=True)
+        source.write_bytes(self.ga4_path.read_bytes())
+        subprocess.run(["git", "init", "-q", str(self.root)], check=True)
+        subprocess.run(["git", "-C", str(self.root), "add", "data/performance/ga4-latest.json"], check=True)
+        subprocess.run(["git", "-C", str(self.root), "-c", "user.name=Test", "-c", "user.email=test@example.invalid", "commit", "-qm", "pin GA4 source"], check=True)
+        revision = subprocess.run(
+            ["git", "-C", str(self.root), "rev-parse", "HEAD"],
+            text=True, capture_output=True, check=True,
+        ).stdout.strip()
+        self._write(self.ga4_path, {**self.ga4, "as_of": "different bytes"})
+
+        with self.assertRaisesRegex(ValueError, "do not match recorded GA4 revision"):
+            self._build(ga4_source_revision=revision)
 
     def test_verifier_rejects_replaced_naver_source_file(self):
         manifest = self._build()

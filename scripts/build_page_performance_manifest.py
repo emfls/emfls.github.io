@@ -79,21 +79,23 @@ def _repository_relative_path(path, repository_root):
         raise ValueError("Naver snapshot must resolve inside the repository root") from None
 
 
-def _verify_adsense_revision_blob(repository_root, revision, expected_sha256):
+def _verify_source_revision_blob(repository_root, revision, expected_sha256, source_key):
     """Require a claimed historical source revision to contain the exact input bytes."""
-    revision = _required_git_sha(revision, "AdSense source revision")
+    label = {"ga4": "GA4", "adsense": "AdSense"}[source_key]
+    revision = _required_git_sha(revision, f"{label} source revision")
+    logical_path = SOURCE_LOGICAL_PATHS[source_key]
     try:
         source_bytes = subprocess.run(
-            ["git", "show", f"{revision}:{SOURCE_LOGICAL_PATHS['adsense']}"],
+            ["git", "show", f"{revision}:{logical_path}"],
             cwd=repository_root,
             capture_output=True,
             check=True,
         ).stdout
     except (OSError, subprocess.CalledProcessError) as exc:
-        raise ValueError(f"could not read AdSense source revision blob: {exc}") from exc
+        raise ValueError(f"could not read {label} source revision blob: {exc}") from exc
     actual_sha256 = hashlib.sha256(source_bytes).hexdigest()
     if actual_sha256 != expected_sha256:
-        raise ValueError("AdSense snapshot bytes do not match recorded AdSense revision")
+        raise ValueError(f"{label} snapshot bytes do not match recorded {label} revision")
     return revision
 
 
@@ -109,6 +111,7 @@ def build_manifest(
     *,
     repository_root=None,
     pull_request_head_sha=None,
+    ga4_source_revision=None,
     adsense_source_revision=None,
 ):
     """Return deterministic manifest metadata without exposing runner paths."""
@@ -121,11 +124,12 @@ def build_manifest(
         else None
     )
     repository_root = Path(repository_root or Path.cwd())
-    adsense_source_revision = (
-        _verify_adsense_revision_blob(repository_root, adsense_source_revision, _sha256(adsense_snapshot_path)[0])
-        if adsense_source_revision
-        else None
-    )
+    ga4_source_revision = _verify_source_revision_blob(
+        repository_root, ga4_source_revision, _sha256(ga4_snapshot_path)[0], "ga4"
+    ) if ga4_source_revision else None
+    adsense_source_revision = _verify_source_revision_blob(
+        repository_root, adsense_source_revision, _sha256(adsense_snapshot_path)[0], "adsense"
+    ) if adsense_source_revision else None
 
     full = _read_json(full_path, "full page-performance artifact")
     if not isinstance(full, dict) or not isinstance(full.get("asOf"), str) or not full["asOf"].strip():
@@ -166,7 +170,9 @@ def build_manifest(
     ):
         source_hash, _ = _sha256(path)
         snapshot = {"path": SOURCE_LOGICAL_PATHS[key], "sha256": source_hash}
-        if key == "adsense":
+        if key == "ga4":
+            snapshot["revision"] = ga4_source_revision
+        elif key == "adsense":
             snapshot["revision"] = adsense_source_revision
         source_snapshots[key] = snapshot
 
@@ -215,6 +221,7 @@ def verify_manifest(
     *,
     repository_root=None,
     pull_request_head_sha=None,
+    ga4_source_revision=None,
     adsense_source_revision=None,
 ):
     """Fail closed unless the supplied manifest exactly matches current inputs."""
@@ -229,6 +236,7 @@ def verify_manifest(
         workflow_run_attempt,
         repository_root=repository_root,
         pull_request_head_sha=pull_request_head_sha,
+        ga4_source_revision=ga4_source_revision,
         adsense_source_revision=adsense_source_revision,
     )
     if manifest != expected:
@@ -264,6 +272,7 @@ def _add_inputs(parser):
     parser.add_argument("--naver", type=Path, required=True)
     parser.add_argument("--analysis-commit", required=True)
     parser.add_argument("--pull-request-head-sha")
+    parser.add_argument("--ga4-source-revision")
     parser.add_argument("--adsense-source-revision")
     parser.add_argument("--workflow-run-id", required=True)
     parser.add_argument("--workflow-run-attempt", required=True)
@@ -291,12 +300,14 @@ def main():
             _read_json(args.verify, "manifest"),
             *inputs,
             pull_request_head_sha=args.pull_request_head_sha,
+            ga4_source_revision=args.ga4_source_revision,
             adsense_source_revision=args.adsense_source_revision,
         )
     else:
         manifest = build_manifest(
             *inputs,
             pull_request_head_sha=args.pull_request_head_sha,
+            ga4_source_revision=args.ga4_source_revision,
             adsense_source_revision=args.adsense_source_revision,
         )
         _write_atomic(args.output, serialize_manifest(manifest))

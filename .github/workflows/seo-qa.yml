@@ -141,7 +141,7 @@ jobs:
       - name: Install local validation dependencies
         run: python3 -m pip install requests PyYAML
 
-      - name: Resolve aligned source date and exact Naver snapshot once
+      - name: Resolve the exact Naver snapshot path once
         run: |
           python3 - <<'PY'
           import json
@@ -149,23 +149,26 @@ jobs:
           from pathlib import Path
           from scripts.naver_performance import latest_naver_snapshot_path
 
-          ga4 = json.loads(Path("data/performance/ga4-latest.json").read_text(encoding="utf-8"))
-          as_of = ga4.get("as_of")
           naver = latest_naver_snapshot_path(Path("data/naver"))
-          if not isinstance(as_of, str) or not as_of:
-              raise SystemExit("GA4 source snapshot has no as_of date")
           if naver is None or not naver.is_file():
               raise SystemExit("No eligible Naver snapshot path is available")
           with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as env:
-              env.write(f"MEASUREMENT_AS_OF={as_of}\n")
               env.write(f"NAVER_SNAPSHOT={naver.as_posix()}\n")
-          print(json.dumps({"asOf": as_of, "naverSnapshot": naver.as_posix()}, sort_keys=True))
+          print(json.dumps({"naverSnapshot": naver.as_posix()}, sort_keys=True))
           PY
+
+      - name: Resolve newest eligible GA4 snapshot for the verified GSC period
+        run: |
+          python3 scripts/resolve_eligible_ga4_snapshot.py \
+            --gsc data/performance/gsc-latest.json \
+            --revision "$GITHUB_SHA" \
+            --output "$RUNNER_TEMP/ga4-eligible.json" \
+            --github-env "$GITHUB_ENV"
 
       - name: Resolve newest eligible AdSense source blob for the aligned date
         run: |
           python3 scripts/resolve_eligible_adsense_snapshot.py \
-            --ga4 data/performance/ga4-latest.json \
+            --ga4 "$GA4_SNAPSHOT" \
             --gsc data/performance/gsc-latest.json \
             --as-of "$MEASUREMENT_AS_OF" \
             --revision "$GITHUB_SHA" \
@@ -175,10 +178,29 @@ jobs:
       - name: Validate latest eligible aligned source snapshots
         run: |
           python3 scripts/validate_measurement_sources.py \
-            --ga4 data/performance/ga4-latest.json \
+            --ga4 "$GA4_SNAPSHOT" \
             --gsc data/performance/gsc-latest.json \
             --adsense "$ADSENSE_SNAPSHOT" \
             --as-of "$MEASUREMENT_AS_OF"
+
+      - name: Build the aligned performance view for page scoring
+        run: |
+          mkdir -p "$RUNNER_TEMP/aligned-performance"
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from scripts.revenue_growth import _merge_adsense_snapshot, _merge_gsc_snapshot
+
+          performance = json.loads(Path(os.environ["GA4_SNAPSHOT"]).read_text(encoding="utf-8"))
+          gsc = json.loads(Path("data/performance/gsc-latest.json").read_text(encoding="utf-8"))
+          adsense = json.loads(Path(os.environ["ADSENSE_SNAPSHOT"]).read_text(encoding="utf-8"))
+          performance = _merge_gsc_snapshot(performance, gsc)
+          performance = _merge_adsense_snapshot(performance, adsense)
+          output = Path(os.environ["RUNNER_TEMP"]) / "aligned-performance" / "selected.json"
+          output.write_text(json.dumps(performance, ensure_ascii=False, sort_keys=True) + "\n", encoding="utf-8")
+          print(json.dumps({"path": str(output), "asOf": os.environ["MEASUREMENT_AS_OF"], "pages": len(performance.get("pages") or [])}, sort_keys=True))
+          PY
 
       - name: Generate isolated site audit and page scores
         run: |
@@ -188,6 +210,7 @@ jobs:
           python3 scripts/quality_audit.py \
             --audit "$RUNNER_TEMP/site-audit-full.json" \
             --as-of "$MEASUREMENT_AS_OF" \
+            --performance-dir "$RUNNER_TEMP/aligned-performance" \
             --page-output "$RUNNER_TEMP/page-scores.json" \
             --site-output "$RUNNER_TEMP/site-score.json" \
             --report "$RUNNER_TEMP/site-score.md" \
@@ -204,7 +227,7 @@ jobs:
         run: |
           python3 scripts/revenue_growth.py \
             --as-of "$MEASUREMENT_AS_OF" \
-            --performance data/performance/ga4-latest.json \
+            --performance "$GA4_SNAPSHOT" \
             --audit "$RUNNER_TEMP/site-audit-full.json" \
             --page-scores "$RUNNER_TEMP/page-scores.json" \
             --gsc-snapshot data/performance/gsc-latest.json \
@@ -227,9 +250,10 @@ jobs:
         run: |
           python3 scripts/build_page_performance_manifest.py \
             --full "$RUNNER_TEMP/page-performance-full.json" \
-            --ga4 data/performance/ga4-latest.json \
+            --ga4 "$GA4_SNAPSHOT" \
             --gsc data/performance/gsc-latest.json \
             --adsense "$ADSENSE_SNAPSHOT" \
+            --ga4-source-revision "$GA4_SOURCE_REVISION" \
             --adsense-source-revision "$ADSENSE_SOURCE_REVISION" \
             --naver "$NAVER_SNAPSHOT" \
             --analysis-commit "$GITHUB_SHA" \
@@ -259,10 +283,11 @@ jobs:
             --experiments data/experiments.json \
             --optimization-history data/optimization-history.json \
             --content-experiments data/content-launch-experiments.json \
-            --ga4-snapshot data/performance/ga4-latest.json \
+            --ga4-snapshot "$GA4_SNAPSHOT" \
             --gsc-snapshot data/performance/gsc-latest.json \
             --adsense-snapshot "$ADSENSE_SNAPSHOT" \
             --naver-snapshot "$NAVER_SNAPSHOT" \
+            --ga4-source-revision "$GA4_SOURCE_REVISION" \
             --adsense-source-revision "$ADSENSE_SOURCE_REVISION" \
             --analysis-commit "$GITHUB_SHA" \
             --pull-request-head-sha "$PR_HEAD_SHA" \
@@ -289,6 +314,7 @@ jobs:
               "workflowRunAttempt": os.environ["GITHUB_RUN_ATTEMPT"],
               "asOf": manifest["asOf"],
               "pageCount": manifest["pageCount"],
+              "ga4Snapshot": manifest["sourceSnapshots"]["ga4"],
               "naverSnapshot": manifest["sourceSnapshots"]["naver"],
               "adsenseSnapshot": manifest["sourceSnapshots"]["adsense"],
               "fullArtifactSha256": manifest["fullArtifact"]["sha256"],

@@ -103,8 +103,14 @@ class SeoQaWorkflowTests(unittest.TestCase):
         self.assertIn("permissions:\n      contents: read", job)
         self.assertIn("fetch-depth: 0", job)
         for required in (
+            "scripts/resolve_eligible_ga4_snapshot.py",
             "scripts/validate_measurement_sources.py",
             "scripts/resolve_eligible_adsense_snapshot.py",
+            "--gsc data/performance/gsc-latest.json",
+            '--revision "$GITHUB_SHA"',
+            '--ga4 "$GA4_SNAPSHOT"',
+            '--ga4-source-revision "$GA4_SOURCE_REVISION"',
+            '--performance-dir "$RUNNER_TEMP/aligned-performance"',
             "scripts/seo_audit.py",
             "scripts/quality_audit.py",
             "scripts/revenue_growth.py",
@@ -137,15 +143,19 @@ class SeoQaWorkflowTests(unittest.TestCase):
         self.assertEqual(job.count('--adsense-snapshot "$ADSENSE_SNAPSHOT"'), 2)
         self.assertIn('--adsense "$ADSENSE_SNAPSHOT"', job)
         resolver = job.index("scripts/resolve_eligible_adsense_snapshot.py")
+        ga4_resolver = job.index("scripts/resolve_eligible_ga4_snapshot.py")
         source_validation = job.index("scripts/validate_measurement_sources.py")
         revenue_generation = job.index("scripts/revenue_growth.py")
         manifest_generation = job.index("scripts/build_page_performance_manifest.py")
         parity_validation = job.index("scripts/validate_page_performance_compact_parity.py")
+        self.assertLess(ga4_resolver, resolver)
         self.assertLess(resolver, source_validation)
         self.assertLess(source_validation, revenue_generation)
         self.assertLess(revenue_generation, manifest_generation)
         self.assertLess(manifest_generation, parity_validation)
         self.assertEqual(job.count('--adsense "$ADSENSE_SNAPSHOT"'), 2)
+        self.assertIn('"ga4Snapshot": manifest["sourceSnapshots"]["ga4"]', job)
+        self.assertIn('from scripts.revenue_growth import _merge_adsense_snapshot, _merge_gsc_snapshot', job)
 
     def test_derived_publisher_pins_one_naver_snapshot_for_revenue_and_manifest(self):
         publisher = (ROOT / ".github/workflows/derived-measurement-publisher.yml").read_text(encoding="utf-8")
