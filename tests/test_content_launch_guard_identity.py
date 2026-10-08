@@ -395,6 +395,82 @@ def test_pr_inserted_ymyl_approval_is_not_authoritative(tmp_path):
     assert "YMYL_REVIEW_REQUIRED" in result["errors"]
 
 
+def test_new_html_blocks_removal_of_unrelated_hold(tmp_path):
+    safe = keyword_source("안전검색어")
+    result = run_launch(
+        tmp_path, sources=[safe], decisions={"기존보호키워드": "HOLD"},
+        proposals=[proposal(safe)],
+        head_changes={"data/content-launch-decisions.json": {
+            "schemaVersion": 1, "decisions": [],
+        }},
+    )
+    assert result["status"] == "FAIL"
+    assert "EDITORIAL_DECISION_TAMPERING" in result["errors"]
+
+
+def test_new_html_blocks_insertion_of_unrelated_ymyl_approval(tmp_path):
+    safe = keyword_source("안전검색어")
+    result = run_launch(
+        tmp_path, sources=[safe], decisions={"기존보호키워드": "HOLD"},
+        proposals=[proposal(safe)],
+        head_changes={"data/content-launch-decisions.json": {
+            "schemaVersion": 1,
+            "decisions": [
+                {"keyword": "기존보호키워드", "decision": "HOLD"},
+                {"keyword": "급여세금계산기", "decision": "APPROVE"},
+            ],
+        }},
+    )
+    assert result["status"] == "FAIL"
+    assert "EDITORIAL_DECISION_TAMPERING" in result["errors"]
+
+
+@pytest.mark.parametrize(("old_decision", "new_decision"), [
+    ("NO_NEW_PAGE", "UPDATE_EXISTING"),
+    ("NO_NEW_PAGE", None),
+    ("UPDATE_EXISTING", None),
+])
+def test_new_html_blocks_unrelated_no_new_page_and_update_existing_changes(
+    tmp_path, old_decision, new_decision,
+):
+    safe = keyword_source("안전검색어")
+    decisions = {"기존보호키워드": old_decision}
+    head_decisions = [] if new_decision is None else [
+        {"keyword": "기존보호키워드", "decision": new_decision},
+    ]
+    result = run_launch(
+        tmp_path, sources=[safe], decisions=decisions, proposals=[proposal(safe)],
+        head_changes={"data/content-launch-decisions.json": {
+            "schemaVersion": 1, "decisions": head_decisions,
+        }},
+    )
+    assert result["status"] == "FAIL"
+    assert "EDITORIAL_DECISION_TAMPERING" in result["errors"]
+
+
+def test_new_html_allows_semantically_identical_editorial_decisions(tmp_path):
+    safe = keyword_source("안전검색어")
+    result = run_launch(
+        tmp_path, sources=[safe], decisions={"기존보호키워드": "HOLD"},
+        proposals=[proposal(safe)],
+        head_changes={"data/content-launch-decisions.json":
+            '{ "decisions" : [ { "reason": "reformatted", "decision": "HOLD", '
+            '"keyword": "기존보호키워드" } ], "schemaVersion" : 1 }\n'},
+    )
+    assert result == {"status": "PASS", "errors": []}
+
+
+def test_editorial_only_review_change_without_new_html_remains_passable(tmp_path):
+    result = run_launch(
+        tmp_path, decisions={"검토대상키워드": "HOLD"},
+        head_changes={"data/content-launch-decisions.json": {
+            "schemaVersion": 1,
+            "decisions": [{"keyword": "검토대상키워드", "decision": "APPROVE"}],
+        }},
+    )
+    assert result == {"status": "PASS", "errors": []}
+
+
 def test_pr_cannot_change_launch_authority_code_and_add_html_in_the_same_head(tmp_path):
     safe = keyword_source("안전검색어")
     result = run_launch(

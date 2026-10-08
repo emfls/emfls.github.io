@@ -623,7 +623,8 @@ def _validate_candidate_bindings(root, manifest, added_html, snapshot, errors):
     except (KeyError, TypeError, ValueError, OSError, csv.Error):
         errors.add("TRUSTED_BASE_REVISION_UNAVAILABLE")
         return
-
+    if base_decisions != head_decisions:
+        errors.add("EDITORIAL_DECISION_TAMPERING")
     urls = manifest.get("urls")
     paths = manifest.get("contentPaths")
     candidate_ids = manifest.get("candidateIds")
@@ -699,8 +700,6 @@ def _validate_candidate_bindings(root, manifest, added_html, snapshot, errors):
         editorial_keys = source["editorialKeys"]
         for identity in editorial_keys:
             base_decision = base_decisions.get(identity)
-            if head_decisions.get(identity) != base_decision:
-                errors.add("EDITORIAL_DECISION_TAMPERING")
             if base_decision in {"HOLD", "NO_NEW_PAGE", "UPDATE_EXISTING"}:
                 errors.add("EDITORIAL_DECISION_BLOCKED")
             if source["ymyl"] and identity == source.get("approvalKey", identity) and base_decision != "APPROVE":
