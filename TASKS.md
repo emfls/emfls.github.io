@@ -164,6 +164,11 @@
   - Verification: live target HTTP 200, exact stock code and self-canonical; broken internal links 268→261; launch guard PASS; SEO QA no new Critical/Warning; unittest 821 passed (3 skipped); pytest 1,407 passed (3 skipped); `git diff --check` PASS.
   - Status: PR #60 is OPEN and unmerged on `codex/amorepacific-internal-link-recovery-20261008`; exact-head SEO QA pending. Await Control Tower review.
 
+- [x] C01 · Celltrion to SM related-stock link repair
+  - Scope: change only the SM link in `kor/report/stock/2025/celltrion-068270.html` to the existing canonical report; add a route and canonical regression test.
+  - Verification: TDD RED/GREEN; focused link tests 3 passed; unittest 862 passed (3 skipped); pytest 1,472 passed (3 skipped); fresh SEO audit parsed 18,932 pages with 0 parser errors; SEO QA added 0 Critical and 0 Warning findings. Live HTTP status codes were not available from the web reader.
+  - Status: branch `codex/celltrion-smsoft-link-20261009` is based on `47a717b82a3672289c35e261e4db18cac8ab90e3`. Run launch guard after commit, then create an OPEN PR and verify exact-head CI. Do not merge before Control Tower approval.
+
 - [ ] C24 · StockWiki base-path asset repair
   - Scope: normalize Astro's base path for the StockWiki favicon and Pagefind stylesheet only; preserve C20 canonicals, sitemap, 11 production routes, ad markup, and deployment state.
   - Baseline: C20 PR #51 merged as `3214c1a3cc388534d9f322c978bb31387cdf9ffd`. Fresh build reproduced `/kor/stockwikifavicon.ico` and `/kor/stockwikipagefind/pagefind-ui.css` on all 12 built HTML pages.
