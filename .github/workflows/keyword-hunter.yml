@@ -114,40 +114,11 @@ jobs:
 
       - name: Persist measured state
         if: github.event_name == 'schedule' || inputs.mode != 'targeted'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/keywords_master.csv data/keyword_seeds.json data/keyword_clusters.json
-          git add data/rejected_keywords.json data/recent_exploration_history.json
-          git add data/api_usage.json data/existing-page-improvement-candidates.json PROJECT_HISTORY.md
-          git add data/content-launch-queue.json
-          if git diff --cached --name-only | grep -Eq '^reports/keyword-hunter/'; then
-            echo "::error::Broad Keyword Hunter reports must remain Actions artifacts, not Git commits"
-            exit 1
-          fi
-          git diff --cached --quiet || git commit -m "chore: update keyword hunter observations"
-          git push
+        run: python3 scripts/keyword_hunter_persist.py --mode broad --base-sha "$GITHUB_SHA" --diagnostics-dir "$RUNNER_TEMP/keyword-hunter-persistence"
 
       - name: Persist targeted measurement
         if: always() && github.event_name == 'workflow_dispatch' && inputs.mode == 'targeted'
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          report="reports/keyword-targeted-validation/${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.json"
-          for path in data/keyword-targeted-validation/latest.json data/api_usage.json "$report"; do
-            if [ -f "$path" ]; then git add -- "$path"; fi
-          done
-          allowed='^(data/keyword-targeted-validation/latest\.json|data/api_usage\.json|reports/keyword-targeted-validation/[0-9]+-[0-9]+\.json)$'
-          while IFS= read -r path; do
-            [ -z "$path" ] && continue
-            if ! printf '%s\n' "$path" | grep -Eq "$allowed"; then
-              echo "::error::Unexpected targeted measurement file staged: $path"
-              exit 1
-            fi
-          done < <(git diff --cached --name-only)
-          git diff --cached --quiet || git commit -m "chore: record targeted keyword measurements"
-          git push
+        run: python3 scripts/keyword_hunter_persist.py --mode targeted --base-sha "$GITHUB_SHA" --diagnostics-dir "$RUNNER_TEMP/keyword-hunter-persistence"
 
       - name: Upload latest reports
         if: always()
@@ -158,5 +129,6 @@ jobs:
             reports/keyword-hunter/
             reports/keyword-targeted-validation/
             data/existing-page-improvement-candidates.json
+            ${{ runner.temp }}/keyword-hunter-persistence/
           retention-days: 30
           if-no-files-found: warn
