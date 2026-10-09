@@ -3,6 +3,7 @@
 
 import argparse
 import json
+import os
 from collections import Counter
 from datetime import date, timedelta
 from pathlib import Path
@@ -30,6 +31,9 @@ except ModuleNotFoundError:
         score_opportunity,
         select_improvements,
     )
+
+
+GSC_PROPERTY = "https://emfls.github.io/"
 
 
 CHANNEL_FIELDS = {
@@ -210,6 +214,74 @@ def _direct_adsense_summary(snapshot):
     }
 
 
+def _gsc_reported_page_rows(snapshot):
+    """Count only page rows verified against the canonical GSC property and period."""
+    limitations = [
+        "SEARCH_ANALYTICS_ROWS_ARE_NOT_GOOGLE_INDEX_COVERAGE",
+        "LOW_VOLUME_OR_ANONYMIZED_DATA_MAY_BE_OMITTED",
+    ]
+    result = {
+        "value": None,
+        "status": "NOT_AVAILABLE",
+        "source": "GOOGLE_SEARCH_CONSOLE_API",
+        "property": None,
+        "period": None,
+        "limitations": limitations,
+    }
+    if not isinstance(snapshot, dict):
+        return result
+
+    result["property"] = snapshot.get("property")
+    period = {"start": snapshot.get("periodStart"), "end": snapshot.get("periodEnd")}
+    if period["start"] and period["end"]:
+        result["period"] = period
+    periods = snapshot.get("periods")
+    declared_period = periods.get("gsc") if isinstance(periods, dict) else None
+    if (
+        snapshot.get("source") != "GOOGLE_SEARCH_CONSOLE_API"
+        or snapshot.get("property") != GSC_PROPERTY
+        or snapshot.get("status") != "VERIFIED"
+        or not period["start"]
+        or not period["end"]
+        or declared_period != period
+    ):
+        return result
+    try:
+        date.fromisoformat(period["start"])
+        date.fromisoformat(period["end"])
+    except (TypeError, ValueError):
+        return result
+
+    rows = snapshot.get("pages")
+    if not isinstance(rows, list):
+        return result
+    valid_rows = 0
+    invalid_rows = 0
+    for row in rows:
+        google = row.get("google") if isinstance(row, dict) else None
+        if (
+            isinstance(row, dict)
+            and isinstance(row.get("url"), str)
+            and bool(row["url"].strip())
+            and isinstance(google, dict)
+            and google.get("source") == "GOOGLE_SEARCH_CONSOLE_API"
+            and google.get("property") == GSC_PROPERTY
+            and google.get("status") == "VERIFIED"
+            and google.get("period") == period
+        ):
+            valid_rows += 1
+        else:
+            invalid_rows += 1
+    result.update({
+        "value": valid_rows if valid_rows or not rows else None,
+        "status": "VERIFIED" if invalid_rows == 0 else "PARTIAL",
+        "property": GSC_PROPERTY,
+        "period": period,
+        "displayDetail": f"{period['start']} to {period['end']} · rows only",
+    })
+    return result
+
+
 def _period_compatibility(site):
     periods = {
         _period_key(site.get(name))
@@ -352,6 +424,15 @@ def _render_report(summary):
     ga4_period = ga4_site.get("period") or {}
     ga4_range = f"; {ga4_period.get('start')} to {ga4_period.get('end')}" if ga4_period.get("start") and ga4_period.get("end") else ""
     historical_adsense = (summary.get("siteSources") or {}).get("historicalAdsense") or {}
+    inventory_kpi = kpis["evaluatedIndexablePages"]
+    gsc_rows_kpi = kpis["gscReportedPageRows"]
+    revenue_per_evaluated = kpis["revenuePerEvaluatedPage"]
+    gsc_period = gsc_rows_kpi.get("period") or {}
+    gsc_period_label = (
+        f"{gsc_period.get('start')} to {gsc_period.get('end')}"
+        if gsc_period.get("start") and gsc_period.get("end")
+        else "period unavailable"
+    )
     lines = [
         "# Revenue Growth Report",
         "",
@@ -360,8 +441,11 @@ def _render_report(summary):
         f"- Historical AdSense 28d revenue ({historical_adsense.get('source') or 'source unavailable'}): ${kpis['revenue28d']['value']:.2f}" if kpis["revenue28d"]["value"] is not None else "- Historical AdSense 28d revenue: N/A",
         f"- GA4 site revenue (totalAdRevenue): ${ga4_site['revenue']:.2f}{ga4_range}" if ga4_site.get("revenue") is not None else "- GA4 site revenue (totalAdRevenue): N/A",
         f"- Historical site daily average (28d): ${kpis['dailyAverage28d']['value']:.2f}" if kpis["dailyAverage28d"]["value"] is not None else "- Historical site daily average (28d): N/A",
-        f"- Indexed Pages: {kpis['indexedPages']['value']:,}",
-        f"- Historical site revenue divided by indexed page count: ${kpis['revenuePerIndexedPage']['value']:.6f}" if kpis["revenuePerIndexedPage"]["value"] is not None else "- Historical site revenue divided by indexed page count: N/A",
+        f"- Evaluated indexable pages: {inventory_kpi['value']:,} (VERIFIED; snapshot {inventory_kpi.get('asOf')}; revision {inventory_kpi.get('revision') or 'NOT_AVAILABLE'})" if inventory_kpi["value"] is not None else "- Evaluated indexable pages: N/A",
+        "- Google indexed pages: N/A (NOT_AVAILABLE)",
+        f"- GSC Search Analytics page rows: {gsc_rows_kpi['value']:,} ({gsc_rows_kpi['status']}; property {gsc_rows_kpi.get('property')}; {gsc_period_label}; not total Google index coverage)" if gsc_rows_kpi["value"] is not None else f"- GSC Search Analytics page rows: N/A ({gsc_rows_kpi['status']})",
+        "- Published pages: N/A (INSUFFICIENT_DATA; authoritative published-page inventory unavailable)",
+        f"- Revenue per evaluated indexable page: ${revenue_per_evaluated['value']:.6f} ({revenue_per_evaluated['status']}; denominator {revenue_per_evaluated.get('denominator')})" if revenue_per_evaluated["value"] is not None else f"- Revenue per evaluated indexable page: N/A ({revenue_per_evaluated['status']})",
         f"- Views per User: {kpis['viewsPerActiveUser']['value']:.2f}" if kpis["viewsPerActiveUser"]["value"] is not None else "- Views per User: N/A",
     ]
     lines.extend(("", "## Direct AdSense API site comparison", "", f"- Source: {direct_adsense.get('sourceLabel', 'Direct AdSense Management API v2')}", "- DIRECT_ADSENSE_SHORT_WINDOW_SIGNAL: site-level ESTIMATED_EARNINGS only.", "- Estimated earnings are provisional and may be adjusted; durable revenue wins require longer-period validation.", f"- Status: {direct_adsense.get('status', 'NOT_AVAILABLE')} / comparison {direct_adsense.get('comparisonStatus', 'NOT_AVAILABLE')}"))
@@ -458,6 +542,7 @@ def run_revenue_growth(
     content_experiments_path=None,
     gsc_snapshot_path=None,
     adsense_snapshot_path=None,
+    analysis_revision=None,
 ):
     page_scores = _read_json(page_scores_path, {"pages": []})
     audit = _read_json(audit_path, {"pages": []})
@@ -610,13 +695,66 @@ def run_revenue_growth(
     revenue_28d = adsense.get("revenue_28d")
     direct_adsense = _direct_adsense_summary(adsense_snapshot)
     indexed = len(records)
+    inventory_revision = analysis_revision or os.environ.get("GITHUB_SHA")
+    gsc_reported_rows = _gsc_reported_page_rows(gsc_snapshot)
+    revenue_per_evaluated_value = (
+        round(revenue_28d / indexed, 8)
+        if revenue_28d is not None and indexed
+        else None
+    )
+    adsense_status = adsense.get("status", "NOT_CONNECTED")
+    revenue_per_evaluated_status = (
+        adsense_status
+        if revenue_per_evaluated_value is not None
+        else "INSUFFICIENT_DATA" if revenue_28d is not None and indexed == 0 else adsense_status
+    )
     period_compatibility = _period_compatibility(site)
     counts = Counter(row.get("classification") for row in records if row.get("classification"))
     kpis = {
         "revenue28d": {"value": revenue_28d, "status": adsense.get("status", "NOT_CONNECTED")},
         "dailyAverage28d": {"value": round(revenue_28d / 28, 2) if revenue_28d is not None else None, "status": adsense.get("status", "NOT_CONNECTED")},
-        "indexedPages": {"value": indexed, "status": "VERIFIED"},
-        "revenuePerIndexedPage": {"value": round(revenue_28d / indexed, 8) if revenue_28d is not None and indexed else None, "status": adsense.get("status", "NOT_CONNECTED")},
+        "evaluatedIndexablePages": {
+            "value": indexed,
+            "status": "VERIFIED",
+            "source": "page-scores.json and indexable site-audit entries",
+            "asOf": as_of,
+            "period": {"kind": "INVENTORY_SNAPSHOT", "asOf": as_of},
+            "revision": inventory_revision,
+            "revisionStatus": "VERIFIED" if inventory_revision else "NOT_AVAILABLE",
+            "displayDetail": f"snapshot {as_of}; revision {inventory_revision or 'NOT_AVAILABLE'}",
+        },
+        "googleIndexedPages": {
+            "value": None,
+            "status": "NOT_AVAILABLE",
+            "source": "GOOGLE_INDEX_COVERAGE_REPORT",
+            "reason": "No verified Google indexing coverage report is supplied to this pipeline.",
+            "displayDetail": "verified Index Coverage report not supplied",
+        },
+        "gscReportedPageRows": gsc_reported_rows,
+        "publishedPages": {
+            "value": None,
+            "status": "INSUFFICIENT_DATA",
+            "reason": "No authoritative published-page inventory is supplied to this pipeline.",
+        },
+        "revenuePerEvaluatedPage": {
+            "value": revenue_per_evaluated_value,
+            "status": revenue_per_evaluated_status,
+            "numeratorSource": adsense.get("source"),
+            "numeratorMetric": "revenue_28d",
+            "denominatorMetric": "evaluatedIndexablePages",
+            "denominator": indexed,
+            "displayDetail": "28-day historical AdSense / evaluated indexable page inventory",
+        },
+        "indexedPages": {
+            "value": None,
+            "status": "DEPRECATED",
+            "replacement": "evaluatedIndexablePages",
+        },
+        "revenuePerIndexedPage": {
+            "value": None,
+            "status": "DEPRECATED",
+            "replacement": "revenuePerEvaluatedPage",
+        },
         "viewsPerActiveUser": {"value": round(ga4.get("views") / ga4.get("users"), 2) if ga4.get("views") is not None and ga4.get("users") else None, "status": ga4.get("status", "NOT_CONNECTED")},
         "revenueProducingPageRatio": {"value": None, "status": "INSUFFICIENT_DATA"},
         "searchActivePageRatio": {"value": None, "status": "INSUFFICIENT_DATA"},

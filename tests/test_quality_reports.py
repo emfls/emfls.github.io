@@ -73,8 +73,12 @@ def revenue_fixture():
         "kpis": {
             "revenue28d": {"value": 13.88, "status": "VERIFIED"},
             "dailyAverage28d": {"value": 0.5, "status": "VERIFIED"},
-            "indexedPages": {"value": 19063, "status": "VERIFIED"},
-            "revenuePerIndexedPage": {"value": 0.00072811, "status": "VERIFIED"},
+            "evaluatedIndexablePages": {"value": 19063, "status": "VERIFIED", "displayDetail": "snapshot 2026-09-09 · revision fixture"},
+            "googleIndexedPages": {"value": None, "status": "NOT_AVAILABLE", "displayDetail": "no verified coverage report"},
+            "gscReportedPageRows": {"value": 108, "status": "VERIFIED", "displayDetail": "2026-09-08 to 2026-10-05 · rows only"},
+            "revenuePerEvaluatedPage": {"value": 0.00072811, "status": "VERIFIED", "displayDetail": "28-day revenue / evaluated inventory"},
+            "indexedPages": {"value": 99999, "status": "VERIFIED"},
+            "revenuePerIndexedPage": {"value": 0.25, "status": "VERIFIED"},
             "viewsPerActiveUser": {"value": 1.34, "status": "VERIFIED"},
             "winnerRevenueConcentration": {"value": None, "status": "INSUFFICIENT_DATA"},
         },
@@ -141,6 +145,13 @@ class QualityReportTest(unittest.TestCase):
         self.assertIn("Secondary cluster", rendered)
         self.assertIn("Naver clicks", rendered)
         self.assertIn("Google clicks", rendered)
+        self.assertIn("Evaluated indexable pages", rendered)
+        self.assertIn("Google indexed pages", rendered)
+        self.assertIn("NOT_AVAILABLE", rendered)
+        self.assertIn("GSC Search Analytics page rows", rendered)
+        self.assertIn("Revenue per evaluated indexable page", rendered)
+        self.assertNotIn("revenuePerIndexedPage", rendered)
+        self.assertNotIn("99,999", rendered)
         self.assertIn("$1/day", rendered)
         self.assertIn("$100/day", rendered)
         self.assertIn("PAGE SCORE", rendered)

@@ -547,5 +547,129 @@ class RevenueGrowthIntegrationTest(unittest.TestCase):
             self.assertIsNone(summary["kpis"]["combinedSearchRevenue"]["value"])
 
 
+    def test_indexable_inventory_is_not_reported_as_google_index_coverage(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            period = {"start": "2026-09-09", "end": "2026-10-06"}
+            write_json(root / "scores.json", {
+                "pages": [
+                    {"url": "/a.html", "score": 70, "type": "TRAFFIC"},
+                    {"url": "/b.html", "score": 60, "type": "TRAFFIC"},
+                ]
+            })
+            write_json(root / "audit.json", {
+                "pages": [
+                    {"url": "/a.html", "indexable": True},
+                    {"url": "/b.html", "indexable": True},
+                ]
+            })
+            write_json(root / "performance.json", {
+                "site": {
+                    "adsense": {"revenue_28d": 10.0, "status": "PARTIAL", "source": "HISTORICAL_ADSENSE"},
+                    "ga4": {},
+                },
+                "pages": [],
+            })
+            write_json(root / "experiments.json", {"experiments": []})
+            write_json(root / "history.json", {"pages": []})
+            write_json(root / "gsc.json", {
+                "status": "VERIFIED",
+                "source": "GOOGLE_SEARCH_CONSOLE_API",
+                "property": "https://emfls.github.io/",
+                "periodStart": period["start"],
+                "periodEnd": period["end"],
+                "periods": {"gsc": period},
+                "pages": [{
+                    "url": "/a.html",
+                    "google": {
+                        "clicks": 1,
+                        "impressions": 7,
+                        "ctr": 1 / 7,
+                        "position": 4,
+                        "period": period,
+                        "source": "GOOGLE_SEARCH_CONSOLE_API",
+                        "property": "https://emfls.github.io/",
+                        "status": "VERIFIED",
+                    },
+                }],
+            })
+
+            _, summary = run_revenue_growth(
+                page_scores_path=root / "scores.json",
+                audit_path=root / "audit.json",
+                performance_path=root / "performance.json",
+                experiments_path=root / "experiments.json",
+                optimization_history_path=root / "history.json",
+                gsc_snapshot_path=root / "gsc.json",
+                as_of="2026-10-09",
+                analysis_revision="fixture-source-sha",
+                page_output=root / "pages.json",
+                opportunity_output=root / "opportunities.json",
+                report_output=root / "report.md",
+            )
+
+            kpis = summary["kpis"]
+            self.assertEqual(kpis["evaluatedIndexablePages"]["value"], 2)
+            self.assertEqual(kpis["evaluatedIndexablePages"]["status"], "VERIFIED")
+            self.assertEqual(kpis["evaluatedIndexablePages"]["asOf"], "2026-10-09")
+            self.assertEqual(kpis["evaluatedIndexablePages"]["revision"], "fixture-source-sha")
+            self.assertIsNone(kpis["googleIndexedPages"]["value"])
+            self.assertEqual(kpis["googleIndexedPages"]["status"], "NOT_AVAILABLE")
+            self.assertEqual(kpis["gscReportedPageRows"]["value"], 1)
+            self.assertEqual(kpis["gscReportedPageRows"]["status"], "VERIFIED")
+            self.assertEqual(kpis["gscReportedPageRows"]["property"], "https://emfls.github.io/")
+            self.assertEqual(kpis["gscReportedPageRows"]["period"], period)
+            self.assertEqual(kpis["revenuePerEvaluatedPage"]["value"], 5.0)
+            self.assertEqual(kpis["revenuePerEvaluatedPage"]["status"], "PARTIAL")
+            self.assertEqual(kpis["revenuePerEvaluatedPage"]["denominator"], 2)
+            self.assertIsNone(kpis["indexedPages"]["value"])
+            self.assertEqual(kpis["indexedPages"]["status"], "DEPRECATED")
+            self.assertIsNone(kpis["revenuePerIndexedPage"]["value"])
+            self.assertEqual(kpis["revenuePerIndexedPage"]["status"], "DEPRECATED")
+            self.assertIsNone(kpis["publishedPages"]["value"])
+            self.assertEqual(kpis["publishedPages"]["status"], "INSUFFICIENT_DATA")
+            self.assertIsNone(kpis["searchActivePageRatio"]["value"])
+
+            report = (root / "report.md").read_text(encoding="utf-8")
+            self.assertIn("Evaluated indexable pages: 2", report)
+            self.assertIn("Google indexed pages: N/A (NOT_AVAILABLE)", report)
+            self.assertIn("GSC Search Analytics page rows: 1", report)
+            self.assertIn("not total Google index coverage", report)
+            self.assertIn("Revenue per evaluated indexable page: $5.000000", report)
+            self.assertNotIn("- Indexed Pages: 2", report)
+
+    def test_gsc_reported_page_rows_require_matching_verified_property_and_period(self):
+        from scripts.revenue_growth import _gsc_reported_page_rows
+
+        period = {"start": "2026-09-09", "end": "2026-10-06"}
+        row = {
+            "url": "/a.html",
+            "google": {
+                "period": period,
+                "source": "GOOGLE_SEARCH_CONSOLE_API",
+                "property": "https://emfls.github.io/",
+                "status": "VERIFIED",
+            },
+        }
+        snapshot = {
+            "status": "VERIFIED",
+            "source": "GOOGLE_SEARCH_CONSOLE_API",
+            "property": "https://emfls.github.io/",
+            "periodStart": period["start"],
+            "periodEnd": period["end"],
+            "periods": {"gsc": period},
+            "pages": [row],
+        }
+
+        self.assertEqual(_gsc_reported_page_rows(snapshot)["value"], 1)
+        wrong_property = {**snapshot, "property": "https://www.emfls.github.io/"}
+        self.assertIsNone(_gsc_reported_page_rows(wrong_property)["value"])
+        wrong_period = {**snapshot, "periodEnd": "2026-10-07"}
+        self.assertIsNone(_gsc_reported_page_rows(wrong_period)["value"])
+        wrong_row = {**snapshot, "pages": [{**row, "google": {**row["google"], "status": "PARTIAL"}}]}
+        self.assertEqual(_gsc_reported_page_rows(wrong_row)["status"], "PARTIAL")
+        self.assertIsNone(_gsc_reported_page_rows(wrong_row)["value"])
+
+
 if __name__ == "__main__":
     unittest.main()

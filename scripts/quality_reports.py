@@ -79,12 +79,15 @@ def render_site_markdown(site, pages, previous=None):
     return "\n".join(lines).rstrip() + "\n"
 
 
-def _revenue_metric(revenue, name, prefix="", decimals=2):
+def _revenue_metric(revenue, name, prefix="", decimals=2, label=None):
     metric = (revenue.get("kpis") or {}).get(name) or {}
     value = metric.get("value")
     status = metric.get("status", "NOT_CONNECTED")
     shown = "N/A" if value is None else f"{prefix}{value:,.{decimals}f}"
-    return f'<div class="card"><div>{html.escape(name)}</div><div class="score">{shown}</div><small>{html.escape(status)}</small></div>'
+    title = html.escape(label or name)
+    detail = metric.get("displayDetail")
+    detail_html = f" · {html.escape(str(detail))}" if detail else ""
+    return f'<div class="card"><div>{title}</div><div class="score">{shown}</div><small>{html.escape(status)}{detail_html}</small></div>'
 
 
 def _render_revenue_control_center(revenue):
@@ -174,7 +177,8 @@ def _render_revenue_control_center(revenue):
 <p>현재 단계: <strong>{html.escape(str(revenue.get('phase', 'DATA NOT AVAILABLE')))}</strong></p>
 <p>Revenue goals: {goals}</p><h2>Revenue</h2><div class="cards">{revenue_cards}</div>
 <h2>Traffic</h2><div class="cards">{traffic_cards}</div>
-<h2>Efficiency</h2><div class="cards">{_revenue_metric(revenue, 'revenuePerIndexedPage', '$', 6)}{_revenue_metric(revenue, 'viewsPerActiveUser')}{_revenue_metric(revenue, 'winnerRevenueConcentration')}</div>
+<h2>Search coverage &amp; page inventory</h2><div class="cards">{_revenue_metric(revenue, 'evaluatedIndexablePages', decimals=0, label='Evaluated indexable pages')}{_revenue_metric(revenue, 'googleIndexedPages', decimals=0, label='Google indexed pages')}{_revenue_metric(revenue, 'gscReportedPageRows', decimals=0, label='GSC Search Analytics page rows')}</div>
+<h2>Efficiency</h2><div class="cards">{_revenue_metric(revenue, 'revenuePerEvaluatedPage', '$', 6, label='Revenue per evaluated indexable page')}{_revenue_metric(revenue, 'viewsPerActiveUser')}{_revenue_metric(revenue, 'winnerRevenueConcentration')}</div>
 <h2>Opportunity</h2><div class="cards">{count_cards}</div>
 <h2>TODAY'S TOP OPPORTUNITIES</h2><div class="wrap"><table><thead><tr><th>#</th><th>URL</th><th>Score</th><th>Classification</th><th>Next action</th><th>Cooldown</th><th>Data</th><th>Naver</th></tr></thead><tbody>{''.join(top_rows)}</tbody></table></div>
 <div class="cards"><div class="card"><h2>WINNERS - DO NOT REWRITE</h2><ul>{winner_rows}</ul></div><div class="card"><h2>ACTIVE EXPERIMENTS</h2><ul>{experiment_rows}</ul></div></div>
