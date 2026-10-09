@@ -12,6 +12,9 @@ BROKEN_TARGET = "/kor/report/stock/2025/hyundaienc-000720.html"
 EXPECTED_TARGET = "/kor/report/stock/hyundaienc-000720.html"
 AMOREPACIFIC_BROKEN_TARGET = "/kor/report/stock/2025/amorepacific-090430.html"
 AMOREPACIFIC_EXPECTED_TARGET = "/kor/report/stock/amorepacific-090430.html"
+CELLTRION_SOURCE = "/kor/report/stock/2025/celltrion-068270.html"
+SM_BROKEN_TARGET = "/kor/report/stock/2025/smsoft-041510.html"
+SM_EXPECTED_TARGET = "/kor/report/stock/smsoft-041510.html"
 SOURCE_PAGES = (
     "/kor/report/stock/2025/ecoprobm-247540.html",
     "/kor/report/stock/2025/hana-086790.html",
@@ -53,7 +56,58 @@ class AnchorParser(HTMLParser):
             self.current[1].append(data)
 
 
+class CanonicalParser(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.canonicals = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag.lower() != "link":
+            return
+        attributes = dict(attrs)
+        if attributes.get("rel", "").lower() == "canonical":
+            self.canonicals.append(attributes.get("href", ""))
+
+
 class InternalLinkRecoveryTests(unittest.TestCase):
+    def test_celltrion_sm_related_stock_link_uses_existing_canonical_route(self):
+        source_html = (ROOT / CELLTRION_SOURCE.lstrip("/")).read_text(encoding="utf-8")
+        target_path = ROOT / SM_EXPECTED_TARGET.lstrip("/")
+        self.assertTrue(target_path.is_file())
+        self.assertFalse((ROOT / SM_BROKEN_TARGET.lstrip("/")).exists())
+
+        source_canonical = CanonicalParser()
+        source_canonical.feed(source_html)
+        self.assertEqual(
+            [PUBLIC_ORIGIN + CELLTRION_SOURCE],
+            source_canonical.canonicals,
+        )
+
+        target_canonical = CanonicalParser()
+        target_canonical.feed(target_path.read_text(encoding="utf-8"))
+        self.assertEqual(
+            [PUBLIC_ORIGIN + SM_EXPECTED_TARGET],
+            target_canonical.canonicals,
+        )
+
+        anchors = AnchorParser()
+        anchors.feed(source_html)
+        matching = [
+            href for href, text in anchors.anchors
+            if "에스엠(041510)" in " ".join(text.split())
+        ]
+        self.assertEqual(1, len(matching))
+        self.assertEqual("../smsoft-041510.html", matching[0])
+        resolved_path = urlparse(urljoin(PUBLIC_ORIGIN + CELLTRION_SOURCE, matching[0])).path
+        self.assertEqual(SM_EXPECTED_TARGET, resolved_path)
+
+        broken = find_broken_internal_links(ROOT)
+        stale_links = [
+            item for item in broken
+            if item["source"] == CELLTRION_SOURCE and item["target"] == SM_BROKEN_TARGET
+        ]
+        self.assertEqual([], stale_links, f"stale Celltrion to SM links: {stale_links}")
+
     def test_hyundai_e_and_c_related_stock_links_use_existing_canonical_route(self):
         broken = find_broken_internal_links(ROOT)
         stale_links = [
