@@ -91,7 +91,7 @@ def _run_persist(runner, base_sha, tmp_path, mode="broad", env=None):
     diag = tmp_path / "keyword-hunter-persistence"
     run_env = {
         **os.environ,
-        "PYTHONPATH": str(ROOT),
+        
         "RUNNER_TEMP": str(tmp_path),
         "GITHUB_SHA": base_sha,
         "GITHUB_RUN_ID": "321",
