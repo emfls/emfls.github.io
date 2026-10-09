@@ -98,6 +98,7 @@ def _run_persist(runner, base_sha, tmp_path, mode="broad", env=None):
         "GITHUB_RUN_ATTEMPT": "2",
     }
     run_env.update(env or {})
+    run_env.pop("PYTHONPATH", None)
     return subprocess.run(
         ["python3", str(PERSIST), "--mode", mode, "--base-sha", base_sha,
          "--root", str(runner), "--diagnostics-dir", str(diag)],
@@ -278,3 +279,48 @@ def test_broad_reports_stay_out_of_git_and_diagnostics_are_uploaded_by_workflow(
     upload = workflow.split("- name: Upload latest reports", 1)[1]
     assert "$" + "{{ runner.temp }}/keyword-hunter-persistence/" in upload
     assert "retention-days: 30" in upload
+
+
+def test_broad_direct_entrypoint_runs_without_pythonpath(tmp_path):
+    origin, base_sha, runner, _ = _fixture(tmp_path)
+    _measurement_outputs(runner)
+
+    result = _run_persist(runner, base_sha, tmp_path)
+
+    assert result.returncode == 0, result.stderr + result.stdout
+    final_sha = _remote_sha(origin)
+    assert "measured,NEW" in _show(runner, final_sha, "data/keywords_master.csv")
+
+
+def test_targeted_direct_entrypoint_runs_without_pythonpath(tmp_path):
+    origin, base_sha, runner, _ = _fixture(tmp_path)
+    _write(runner, "data/keyword-targeted-validation/latest.json", '{"status": "validated"}\n')
+    _write(runner, "data/api_usage.json", '{"targeted": true}\n')
+    _write(runner, "reports/keyword-targeted-validation/321-2.json", '{"target": "example"}\n')
+
+    result = _run_persist(runner, base_sha, tmp_path, mode="targeted")
+
+    assert result.returncode == 0, result.stderr + result.stdout
+    final_sha = _remote_sha(origin)
+    assert _show(runner, final_sha, "reports/keyword-targeted-validation/321-2.json") == '{"target": "example"}\n'
+
+
+def test_targeted_direct_entrypoint_recovers_safe_concurrent_main_update_without_pythonpath(tmp_path):
+    origin, base_sha, runner, competitor = _fixture(tmp_path)
+    _write(runner, "data/keyword-targeted-validation/latest.json", '{"status": "validated"}\n')
+    _write(runner, "data/api_usage.json", '{"targeted": true}\n')
+    _write(runner, "reports/keyword-targeted-validation/321-2.json", '{"target": "example"}\n')
+    _write(competitor, "TASKS.md", "# Tasks\nUnrelated concurrent update\n")
+    competitor_sha = _remote_commit(competitor)
+
+    result = _run_persist(runner, base_sha, tmp_path, mode="targeted")
+
+    assert result.returncode == 0, result.stderr + result.stdout
+    final_sha = _remote_sha(origin)
+    assert _show(runner, final_sha, "TASKS.md") == "# Tasks\nUnrelated concurrent update\n"
+    assert _show(runner, final_sha, "reports/keyword-targeted-validation/321-2.json") == '{"target": "example"}\n'
+    assert _git(runner, "merge-base", "--is-ancestor", competitor_sha, final_sha, check=False).returncode == 0
+    provenance = json.loads((tmp_path / "keyword-hunter-persistence/persistence-provenance.json").read_text())
+    assert provenance["pushAttempts"] == 2
+    assert provenance["result"] == "recovered_and_pushed"
+
