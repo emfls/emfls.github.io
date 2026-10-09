@@ -464,3 +464,76 @@ def test_hold_aliases_are_rejected_for_approval_or_conflicting_decisions(tmp_pat
         path.write_text(json.dumps(store, ensure_ascii=False), encoding="utf-8")
         with pytest.raises(ValueError):
             prepare_keyword_launch.load_decisions(path)
+
+
+def test_exact_september_travel_hold_preserves_other_month_candidates():
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    decision_path = root / "data" / "content-launch-decisions.json"
+    decision_document = json.loads(decision_path.read_text(encoding="utf-8"))
+    target_rows = [
+        row for row in decision_document["decisions"]
+        if row.get("keyword") == "9월국내여행지추천"
+    ]
+    assert len(target_rows) == 1
+    assert target_rows[0]["decision"] == "HOLD"
+    assert "holdAliases" not in target_rows[0]
+
+    decisions = prepare_keyword_launch.load_decisions(decision_path)
+    assert decisions.get("가을여행추천") == "HOLD"
+    assert decisions.get("가을여행지추천") == "HOLD"
+    assert decisions.get("국내가을여행지추천") == "HOLD"
+    assert decisions.get("3월여행지추천") is None
+    assert decisions.get("9월여행지추천") is None
+
+    result = prepare_queue(
+        [
+            launch_row("9월국내여행지추천", "/kor/column/september-domestic-travel/", "100"),
+            launch_row("3월여행지추천", "/kor/column/march-travel/", "90"),
+            launch_row("9월여행지추천", "/kor/column/september-travel/", "80"),
+            launch_row("월별국내여행가이드", "/kor/column/monthly-travel-guide/", "70"),
+            launch_row("안전한도구", "/kor/column/safe-tool/", "60"),
+            launch_row("가을여행추천", "/kor/column/autumn-travel/", "50"),
+            launch_row("가을여행지추천", "/kor/column/autumn-destinations/", "40"),
+        ],
+        daily_limit=3,
+        selected_at="2026-10-09T15:22:00+09:00",
+        editorial_decisions=decisions,
+        published_manifest={},
+    )
+
+    assert [item["keyword"] for item in result["queue"]] == [
+        "3월여행지추천",
+        "9월여행지추천",
+        "월별국내여행가이드",
+    ]
+    assert result["excluded"]["editorial_hold"] == 3
+    assert result["dailyLimit"] == 3
+
+
+def test_exact_september_hold_does_not_expire_at_year_rollover():
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    decisions = prepare_keyword_launch.load_decisions(
+        root / "data" / "content-launch-decisions.json"
+    )
+    rows = [
+        launch_row("9월국내여행지추천", "/kor/column/september-domestic-travel/", "90"),
+        launch_row("3월여행지추천", "/kor/column/march-travel/", "80"),
+    ]
+
+    for selected_at in (
+        "2026-10-09T15:22:00+09:00",
+        "2027-01-01T00:00:00+09:00",
+    ):
+        result = prepare_queue(
+            rows,
+            daily_limit=3,
+            selected_at=selected_at,
+            editorial_decisions=decisions,
+            published_manifest={},
+        )
+        assert [item["keyword"] for item in result["queue"]] == ["3월여행지추천"]
+        assert result["excluded"]["editorial_hold"] == 1
