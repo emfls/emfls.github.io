@@ -34,6 +34,14 @@ AMOREPACIFIC_SOURCE_PAGES = (
     "/kor/report/stock/2025/posco-005490.html",
     "/kor/report/stock/2025/samsung-005930.html",
 )
+SM_REMAINING_ELIGIBLE_SOURCE_PAGES = (
+    "/kor/report/stock/2025/doosan-034020.html",
+    "/kor/report/stock/2025/ecoprobm-247540.html",
+    "/kor/report/stock/2025/kt-030200.html",
+    "/kor/report/stock/2025/samsungbio-207940.html",
+    "/kor/report/stock/2025/samsungelec-009150.html",
+    "/kor/report/stock/2025/samsungsdi-006400.html",
+)
 
 
 class AnchorParser(HTMLParser):
@@ -70,6 +78,37 @@ class CanonicalParser(HTMLParser):
 
 
 class InternalLinkRecoveryTests(unittest.TestCase):
+    def test_eligible_remaining_sm_related_stock_links_use_existing_canonical_route(self):
+        broken = find_broken_internal_links(ROOT)
+        stale_links = [
+            item for item in broken
+            if item["source"] in SM_REMAINING_ELIGIBLE_SOURCE_PAGES
+            and item["target"] == SM_BROKEN_TARGET
+        ]
+        self.assertEqual([], stale_links, f"stale remaining SM links: {stale_links}")
+
+        target_path = ROOT / SM_EXPECTED_TARGET.lstrip("/")
+        self.assertTrue(target_path.is_file())
+        target_canonical = CanonicalParser()
+        target_canonical.feed(target_path.read_text(encoding="utf-8"))
+        self.assertEqual([PUBLIC_ORIGIN + SM_EXPECTED_TARGET], target_canonical.canonicals)
+
+        for source in SM_REMAINING_ELIGIBLE_SOURCE_PAGES:
+            source_html = (ROOT / source.lstrip("/")).read_text(encoding="utf-8")
+            source_canonical = CanonicalParser()
+            source_canonical.feed(source_html)
+            self.assertEqual([PUBLIC_ORIGIN + source], source_canonical.canonicals, source)
+
+            anchors = AnchorParser()
+            anchors.feed(source_html)
+            matching = [
+                href for href, text in anchors.anchors
+                if "에스엠(041510)" in " ".join(text.split())
+            ]
+            self.assertEqual(1, len(matching), source)
+            resolved_path = urlparse(urljoin(PUBLIC_ORIGIN + source, matching[0])).path
+            self.assertEqual(SM_EXPECTED_TARGET, resolved_path, source)
+
     def test_celltrion_sm_related_stock_link_uses_existing_canonical_route(self):
         source_html = (ROOT / CELLTRION_SOURCE.lstrip("/")).read_text(encoding="utf-8")
         target_path = ROOT / SM_EXPECTED_TARGET.lstrip("/")
