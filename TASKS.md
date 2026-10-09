@@ -142,6 +142,12 @@
 
 ## P1 - High
 
+- [x] C02 · Keyword Hunter safe persistence race recovery
+  - Root cause: scheduled run `37864726975` passed collection, tests, queue validation, and publication-state checks, then its push was rejected with `fetch first` after PR #64 advanced main. The confirmed overlapping path was `PROJECT_HISTORY.md`; no Git content conflict occurred.
+  - Change: route broad and targeted persistence through a helper with exact path allowlists, JSON/CSV/queue validation, one explicit non-fast-forward recovery, base ancestry and remote-path checks, append-only history preservation, one retry maximum, and retained diagnostics. Any overlapping data, publication-state, script, or workflow update fails closed. Collection is not repeated; broad reports stay out of Git.
+  - Verification: local bare-Git regression reproduced RED before the fix; A–J recovery tests are GREEN. Focused Keyword Hunter tests 95 passed; unittest 862 passed (3 skipped); pytest 1,481 passed (3 skipped); workflow YAML and `git diff --check` PASS. Tests made no Naver API calls.
+  - Status: branch `codex/keyword-hunter-persist-race-20261009` on main `9fee9e13036a240217f0683edab43be8671d5523`. Content Launch Guard PASS and SEO QA reported 0 new Critical/Warning; PR creation and exact-head CI are pending. Keep one PR OPEN for Control Tower review; do not merge.
+
 - [ ] C02 · Quality audit performance source selection repair
   - Scope: select only validated canonical GA4/GSC page snapshots for quality scoring; preserve each channel's source, schema, period, freshness, and missingness. Do not derive URL revenue/RPM from site-level AdSense or relabel GA4 views as sessions.
   - Evidence: the prior lexical selector chose `gsc-opportunity-queries-latest.json` (34 query rows, no page-level GA4/GSC channels). Same-input recomputation over 18,928 indexable pages changed coverage from 0 measured / 18,928 estimated to 3,012 measured / 15,916 estimated; Revenue Growth output and all 1,642 protected winners stayed identical. Site connection score changed 53/F→68/C; per-page grade distribution did not change.
