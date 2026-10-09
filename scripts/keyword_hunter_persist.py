@@ -14,6 +14,10 @@ import sys
 import tempfile
 from pathlib import Path
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+
 
 BROAD_PATHS = (
     "data/keywords_master.csv",
