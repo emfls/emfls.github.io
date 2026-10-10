@@ -1265,3 +1265,6 @@
 
 ## 2026-10-10 07:42 Keyword Hunter
 - Seeds: 40; New: 0; Rejected: 0; DB: 4872; Errors: 0; Top: none. Artifact report: reports/keyword-hunter/2026-10-10-0742.md
+
+## 2026-10-10 14:59 Keyword Hunter
+- Seeds: 40; New: 100; Rejected: 81; DB: 4972; Errors: 0; Top: 전라도여행지추천. Artifact report: reports/keyword-hunter/2026-10-10-1459.md
