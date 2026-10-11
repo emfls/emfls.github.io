@@ -2,6 +2,13 @@
 
 작업 완료 후 항목을 삭제하지 말고 `[x]`로 변경한다. 같은 우선순위에서는 위 항목부터 수행한다.
 
+- [x] Existing C01-20261011-026 — protected content and fixed 50-page dependency audit (Cloud reconstruction)
+  - Source: GitHub main 409b9b759893c66b1e6957bdcf40cd7b594bfae4. Mac local SHA 7d13ffcd and its patch were not transferred; this is an independent implementation. Review-only branch/PR and exact-head CI are the next gates.
+  - Change: added a read-only fail-closed validator, fixed-cohort fixture, and regression tests. No content, sitemap, advertising, or launch queue state was changed.
+  - Protection: 1,642 WINNER routes, 0 normalized duplicates; 19 OBSERVING, 3 INCONCLUSIVE URL experiments; 13 blocked editorial decisions (11 without targetUrl); 12 YMYL=true entries; four exact Arabic exceptions. Target overlap is 0, but route mapping is partial where decision URLs are absent.
+  - Dependency scan: 50/50 historical blobs and sitemap entries; 0 inbound/outbound internal HTML links, one self-canonical per page, no hreflang. Overall coverage PARTIAL (43 binary Pagefind files and other unsupported inputs); dynamic-reference status UNKNOWN; no deletion authorization.
+  - Local verification: focused tests 6/6, SEO QA PASS (0 new critical/warnings), Launch Guard PASS, diff check PASS. Full unittest (884 collected) and pytest could not complete because this executor lacks pytest/requests; exact-head Actions is required.
+
 ## P0 - Critical
 
 - [x] P0 PR #56 — Naver parity and exact-head CI hardening — C02
