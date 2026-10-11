@@ -1,5 +1,11 @@
 # PROJECT HISTORY
 
+## 2026-10-11 C02-034 — One-candidate VOLUME_UNKNOWN review gate
+
+- Based on remote main `aaf87558b0cf9cfb15808f3eb1bfa59784f0c3ca`. Added an ancestor-trusted, versioned approval record and a fail-closed Guard path for only C01-032 candidate `C01-20261011-032-IPHONEDATE` at `/kor/report/window/iphone-photos-date-taken.html`. Approval is classified as CT-scoped review under the standing authorization, not per-article `USER_APPROVED`; demand remains `VOLUME_UNKNOWN`.
+- The normal `INSUFFICIENT_DATA` rule and `LAUNCH_GUARD_CHANGED_WITH_CONTENT` remain active. No HTML, hub, sitemap, published status, collector, workflow, ad, or measurement code changed. The existing mixed C01 PR #74 remains untouched.
+- RED reproduced `TRUSTED_CANDIDATE_NOT_FOUND`; 24 focused new tests pass locally. Broader QA, remote PR, and exact-head CI remain pending; no publication or merge.
+
 ## 2026-10-11 C01-026 — Protected content and route dependency audit (Cloud)
 
 - Rebuilt independently from GitHub rather than claiming recovery of Mac commit 7d13ffcd; its patch and checksums were unavailable in this Cloud session. Record: ORIGINAL_LOCAL_SHA_NOT_TRANSFERRED. Latest main is 409b9b759893c66b1e6957bdcf40cd7b594bfae4. The local scan checkout was parent de693eaa0a9adb3a1bb88dc9396667195e181b15 because the shell proxy refused access; all 50 target page/sitemap blobs and protection inputs were verified unchanged against 409, and the five other changed main blobs were separately inspected for target-route references.
