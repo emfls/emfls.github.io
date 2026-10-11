@@ -1,5 +1,12 @@
 # PROJECT HISTORY
 
+## 2026-10-11 C01-032 — iPhone photo capture-date guide (VOLUME_UNKNOWN)
+
+- Implementing the user-approved one-page experiment at `/kor/report/window/iphone-photos-date-taken.html`. Search volume remains UNKNOWN; no traffic, revenue, or demand claim is made. The page distinguishes Windows Date taken from file created/modified dates and gives cautious USB, iCloud, and HEIC checks using Apple, Microsoft, and CIPA sources.
+- Protection check: the exact route is absent from the current 128-entry Windows sitemap and GitHub code search. Existing content/URL experiment and WINNER datasets are not changed. The large external-opportunity source was not returned by the connector, so that dataset-wide overlap result remains UNKNOWN; the Launch Guard will validate the exact route against the trusted main snapshot in CI.
+- Launch gate: a task-bound candidate ID/URL/path allows only this one VOLUME_UNKNOWN experiment, reports no opportunity score, and keeps ordinary unknown-volume candidates blocked. Regression suite reproduced RED on main, then passed GREEN after the scoped implementation. No deletion, ad change, deployment, or merge.
+- Source: latest main `aaf87558b0cf9cfb15808f3eb1bfa59784f0c3ca`; dedicated branch `codex/c01-20261011-032-one-original-useful-guide`. Branch review and exact-head Actions remain pending.
+
 ## 2026-10-11 C01-026 — Protected content and route dependency audit (Cloud)
 
 - Rebuilt independently from GitHub rather than claiming recovery of Mac commit 7d13ffcd; its patch and checksums were unavailable in this Cloud session. Record: ORIGINAL_LOCAL_SHA_NOT_TRANSFERRED. Latest main is 409b9b759893c66b1e6957bdcf40cd7b594bfae4. The local scan checkout was parent de693eaa0a9adb3a1bb88dc9396667195e181b15 because the shell proxy refused access; all 50 target page/sitemap blobs and protection inputs were verified unchanged against 409, and the five other changed main blobs were separately inspected for target-route references.

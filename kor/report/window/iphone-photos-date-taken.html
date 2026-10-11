@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>아이폰 사진 촬영일, 윈도우에서 확인하는 방법</title>
+<meta name="description" content="아이폰 사진을 Windows로 옮긴 뒤 촬영일과 파일 생성일이 다를 때 확인할 순서입니다. 원본을 지우기 전 작은 표본으로 Date taken, USB 가져오기, iCloud 원본, HEIC 호환성을 점검하세요.">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="아이폰 사진 촬영일, 윈도우에서 확인하는 방법">
+<meta property="og:description" content="Date taken과 파일 생성일을 구분하고, 원본을 보존하며 USB·iCloud 전송을 점검합니다.">
+<meta property="og:url" content="https://emfls.github.io/kor/report/window/iphone-photos-date-taken.html">
+<link rel="canonical" href="https://emfls.github.io/kor/report/window/iphone-photos-date-taken.html">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "아이폰 사진 촬영일, 윈도우에서 확인하는 방법",
+  "description": "아이폰 사진의 촬영일과 Windows 파일 날짜가 다를 때 원본을 보존하며 진단하는 순서.",
+  "dateModified": "2026-10-11",
+  "author": {"@type": "Organization", "name": "emfls.github.io"},
+  "inLanguage": "ko-KR"
+}
+</script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f4f6fb;color:#202534;font-family:system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.75}
+main{max-width:860px;margin:0 auto;padding:20px 18px 56px}
+.breadcrumb{font-size:.9rem;color:#5e6779;margin:4px 0 18px}
+a{color:#1459b8}
+.hero,.section{background:#fff;border-radius:14px;padding:24px;margin:0 0 16px;box-shadow:0 2px 10px #1828480c}
+.hero{background:linear-gradient(135deg,#172b55,#225ca5);color:#fff;padding:34px 28px}
+.hero h1{font-size:clamp(1.55rem,4vw,2.1rem);line-height:1.35;margin:0 0 12px}
+.hero p{margin:0;color:#e8efff}
+.notice{border-left:4px solid #e49a17;background:#fff7e5;padding:14px 16px;border-radius:6px;margin-top:18px;color:#4d3c18}
+h2{font-size:1.25rem;line-height:1.45;margin:0 0 12px;color:#173d78}
+h3{font-size:1.05rem;margin:20px 0 8px}
+p{margin:9px 0}
+ol,ul{padding-left:1.35rem}
+li{margin:6px 0}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.94rem}
+th,td{border:1px solid #d8deea;padding:10px;text-align:left;vertical-align:top}
+th{background:#edf2fb}
+.tag{display:inline-block;background:#edf3ff;border-radius:20px;padding:3px 10px;font-size:.82rem;margin:2px 4px 2px 0}
+.sources li{overflow-wrap:anywhere}
+.small{font-size:.9rem;color:#586173}
+.back{display:inline-block;margin-top:8px;font-weight:650}
+@media(max-width:600px){main{padding:12px 12px 36px}.hero,.section{padding:19px}.hero{padding:25px 19px}table{font-size:.86rem}th,td{padding:7px}}
+</style>
+</head>
+<body>
+<main>
+  <nav class="breadcrumb" aria-label="현재 위치">
+    <a href="https://emfls.github.io">홈</a> ›
+    <a href="https://emfls.github.io/kor/report/window/index.html">윈도우 가이드</a> ›
+    아이폰 사진 촬영일
+  </nav>
+
+  <header class="hero">
+    <h1>아이폰 사진 촬영일, 윈도우에서 확인하는 방법</h1>
+    <p>사진을 옮긴 날짜와 실제 촬영한 날짜는 다를 수 있습니다. 원본을 지우거나 날짜를 일괄 수정하기 전에 작은 표본으로 먼저 확인하세요.</p>
+    <div class="notice"><strong>먼저 할 일:</strong> 사진 3장 정도를 복사해 확인하고, 아이폰과 백업의 원본은 그대로 보관합니다. 탐색기의 <em>만든 날짜</em>만 보고 촬영일이라고 판단하지 마세요.</div>
+  </header>
+
+  <section class="section">
+    <h2>촬영일과 파일 날짜는 서로 다른 값입니다</h2>
+    <p>Windows의 <strong>Date taken(촬영한 날짜)</strong>은 사진 안에 기록된 촬영 시각 정보를 읽어 보여줍니다. Microsoft가 정의한 <code>System.Photo.DateTaken</code>도 사진의 촬영 날짜 속성입니다. 반면 <strong>Date created(만든 날짜)</strong>와 <strong>Date modified(수정한 날짜)</strong>는 현재 파일이 만들어지거나 바뀐 시각입니다. 복사·다운로드·압축 해제 과정에서 파일 날짜가 달라져도 사진의 촬영 정보가 그대로일 수 있습니다.</p>
+    <table>
+      <thead><tr><th>Windows에서 보이는 항목</th><th>무엇을 뜻하나</th><th>확인할 때</th></tr></thead>
+      <tbody>
+        <tr><td>Date taken / 촬영한 날짜</td><td>사진 메타데이터에서 읽은 촬영 시각</td><td>실제 촬영일을 확인할 때 우선 살펴봅니다.</td></tr>
+        <tr><td>Date created / 만든 날짜</td><td>이 위치에 파일이 만들어진 시각</td><td>복사·다운로드한 날과 비슷해도 촬영일이라고 단정하지 않습니다.</td></tr>
+        <tr><td>Date modified / 수정한 날짜</td><td>파일 내용이나 파일이 마지막으로 바뀐 시각</td><td>편집·변환 뒤 달라질 수 있으므로 촬영일 확인에 대신 쓰지 않습니다.</td></tr>
+      </tbody>
+    </table>
+    <ol>
+      <li>파일 탐색기에서 사진 한 장을 우클릭하고 <strong>속성 → 자세히</strong>를 엽니다.</li>
+      <li><strong>촬영한 날짜</strong> 항목을 아이폰 사진 앱의 정보 화면에 보이는 시각과 비교합니다.</li>
+      <li>같은 사진에서 <strong>만든 날짜</strong>와 <strong>수정한 날짜</strong>도 따로 확인합니다.</li>
+      <li>표본 세 장에서 결과가 일관될 때만 나머지 사진을 옮기고, 확인 전에는 아이폰의 원본을 삭제하지 않습니다.</li>
+    </ol>
+  </section>
+
+  <section class="section">
+    <h2>USB 케이블로 가져올 때</h2>
+    <ol>
+      <li>아이폰 잠금을 풀고 케이블을 연결합니다. 기기에 신뢰 확인이 표시되면 본인이 연결한 PC인지 확인한 뒤 허용합니다.</li>
+      <li>Windows 사진 앱에서 <strong>가져오기 → 연결된 장치</strong>를 선택하고 사진 몇 장만 먼저 가져옵니다. 앱의 메뉴 이름은 Windows 버전에 따라 다를 수 있습니다.</li>
+      <li>가져온 파일의 <strong>속성 → 자세히 → 촬영한 날짜</strong>를 확인합니다. 파일 탐색기에서 만든 날짜가 오늘로 표시되는 것만으로 촬영 정보가 사라졌다고 볼 수는 없습니다.</li>
+    </ol>
+    <p>iCloud 사진에서 저장 공간 최적화를 사용 중이라면 원본이 아이폰에 내려받아져 있지 않을 수 있습니다. 이 경우 케이블 전송을 반복하기보다 iCloud for Windows에서 원본을 내려받거나, 아이폰에 원본을 다운로드한 뒤 표본 파일로 다시 확인하세요. 원본 크기의 파일을 받았는지도 확인합니다.</p>
+  </section>
+
+  <section class="section">
+    <h2>사진이 HEIC라면 날짜보다 먼저 열기 호환성을 확인하세요</h2>
+    <p>HEIC 사진이 Windows에서 열리지 않는 문제와 촬영일 메타데이터가 비어 있는 문제는 같은 원인이라고 단정할 수 없습니다. 사진을 볼 수 없어도 파일 속성의 자세히 탭에서 촬영일이 보일 수 있습니다. 반대로 변환 앱이 사진을 열어도 메타데이터를 모두 보존한다고 보장할 수는 없습니다.</p>
+    <p>아이폰의 <strong>설정 → 카메라 → 포맷</strong>에서 ‘높은 호환성’을 선택하면 앞으로 촬영할 사진이 JPEG 형식으로 저장됩니다. 이 설정은 과거 사진을 복구하거나 이미 옮긴 사진의 날짜를 고치는 기능이 아닙니다. HEIC 변환이 필요하면 원본은 남기고 복사본 한 장으로 먼저 시험하세요.</p>
+    <div><span class="tag">원본 유지</span><span class="tag">표본 3장 확인</span><span class="tag">일괄 날짜 수정 금지</span></div>
+  </section>
+
+  <section class="section">
+    <h2>촬영일이 비어 있거나 예상과 다를 때</h2>
+    <ul>
+      <li><strong>아이폰에서도 날짜가 보이지 않는 경우:</strong> 해당 사진의 정보 화면을 다시 확인하고, 편집·메신저 저장본이 아닌 원본 파일과 비교합니다.</li>
+      <li><strong>아이폰에는 보이지만 Windows에는 없는 경우:</strong> 다른 원본 한 장을 USB와 iCloud 중 한 경로로 다시 받아 확인합니다. 표시 앱이 바뀌면 결과도 달라질 수 있습니다.</li>
+      <li><strong>만든 날짜만 가져온 날로 보이는 경우:</strong> 그 값은 전송 시각일 수 있습니다. 촬영일 확인을 위해 만든 날짜를 덮어쓰지 마세요.</li>
+      <li><strong>시간이 몇 시간 차이 나는 경우:</strong> 파일의 날짜를 임의로 바꾸지 말고 아이폰의 날짜·시간 설정과 원본 사진 정보를 먼저 비교합니다.</li>
+    </ul>
+    <p>날짜가 비어 있다고 해서 언제나 전송 실패인 것은 아닙니다. 원본에 메타데이터가 없거나, 편집·내보내기 과정에서 제거됐거나, Windows 앱이 읽지 못했을 수 있습니다. 원인을 모를 때는 아이폰 원본과 백업을 보존하고 한 파일씩 확인하세요.</p>
+  </section>
+
+  <section class="section">
+    <h2>자주 묻는 질문</h2>
+    <h3>복사한 날짜를 촬영일로 바꿔도 되나요?</h3>
+    <p>권하지 않습니다. 만든 날짜를 바꾸면 촬영 정보가 복구되는 것이 아니며, 파일 정렬과 백업 기록을 혼동하게 할 수 있습니다. 촬영 시각은 원본의 사진 메타데이터와 비교하세요.</p>
+    <h3>HEIC를 JPEG로 바꾸면 촬영일이 고쳐지나요?</h3>
+    <p>형식 변환은 날짜 복구 방법이 아닙니다. 변환 도구마다 메타데이터 처리 방식이 다를 수 있으므로 복사본 하나로 결과를 확인하고 원본을 보관하세요.</p>
+    <h3>아이클라우드에서 받은 파일도 만든 날짜가 바뀔 수 있나요?</h3>
+    <p>다운로드 위치와 앱에 따라 파일 시스템 날짜는 달라질 수 있습니다. 파일의 만든 날짜와 사진 속 촬영 날짜를 각각 확인하세요.</p>
+  </section>
+
+  <section class="section">
+    <h2>공식 자료</h2>
+    <ul class="sources">
+      <li><a href="https://support.apple.com/ko-kr/120267">Apple: iPhone 또는 iPad에서 Windows PC로 사진 및 동영상 전송</a> — USB 전송과 iCloud 사진 사용 시 원본을 확인하는 절차. (2026-09-22 갱신)</li>
+      <li><a href="https://support.apple.com/ko-kr/116944">Apple: HEIF 또는 HEVC 미디어 사용</a> — 높은 효율성과 호환 형식 설정 안내.</li>
+      <li><a href="https://support.microsoft.com/en-us/windows/apps/photos/import-photos-and-videos-from-phone-to-pc">Microsoft: 휴대폰에서 PC로 사진 및 동영상 가져오기</a> — 기기 잠금 해제와 사진 앱 가져오기 절차.</li>
+      <li><a href="https://learn.microsoft.com/en-us/windows/win32/properties/props-system-photo-datetaken">Microsoft Learn: System.Photo.DateTaken</a> — Windows 사진 촬영일 속성 정의.</li>
+      <li><a href="https://cipa.jp/std/documents/e/DC-X010-2017.pdf">CIPA: Exif 2.31 표준</a> — 원본 촬영 시각을 기록하는 Exif 태그 정의.</li>
+    </ul>
+    <p class="small">공식 자료를 2026-10-11에 확인했습니다. 기기·Windows 버전·사진 앱에 따라 메뉴와 표시 결과가 다를 수 있습니다.</p>
+    <a class="back" href="https://emfls.github.io/kor/report/window/index.html">윈도우 가이드 전체 목록 보기</a>
+  </section>
+</main>
+</body>
+</html>

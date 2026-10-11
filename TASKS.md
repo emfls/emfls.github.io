@@ -2,6 +2,11 @@
 
 작업 완료 후 항목을 삭제하지 말고 `[x]`로 변경한다. 같은 우선순위에서는 위 항목부터 수행한다.
 
+- [ ] Existing C01-20261011-032 — one Korean iPhone photo capture-date guide (`VOLUME_UNKNOWN`)
+  - Approved design: one page at `/kor/report/window/iphone-photos-date-taken.html`, one hub card, section sitemap, and an exact task-bound experiment gate. Search volume stays UNKNOWN; no advertising or live deployment changes.
+  - Protection: no exact route in the current Windows sitemap or repository code search; no protected WINNER, experiment, editorial decision, or queue data changed; only the task-scoped launch-review manifest was updated. The large external-opportunity file was unavailable from the connector, so full-corpus overlap remains UNKNOWN pending exact-head CI.
+  - Verification to date: focused tests RED on main, then 6/6 unittest GREEN after implementation. Review branch `codex/c01-20261011-032-one-original-useful-guide` from main `aaf87558b0cf9cfb15808f3eb1bfa59784f0c3ca`; PR and exact-head Actions pending.
+
 - [x] Existing C01-20261011-026 — protected content and fixed 50-page dependency audit (Cloud reconstruction)
   - Source: GitHub main 409b9b759893c66b1e6957bdcf40cd7b594bfae4. Mac local SHA 7d13ffcd and its patch were not transferred; this is an independent implementation. Review-only branch/PR and exact-head CI are the next gates.
   - Change: added a read-only fail-closed validator, fixed-cohort fixture, and regression tests. No content, sitemap, advertising, or launch queue state was changed.

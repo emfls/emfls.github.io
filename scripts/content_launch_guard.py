@@ -26,7 +26,10 @@ try:
         requires_ymyl_review,
     )
     from scripts.content_url_planner import plan_url
-    from scripts.external_content_opportunity import launch_readiness
+    from scripts.external_content_opportunity import (
+        C01_032_CONTROLLED_EXPERIMENT,
+        launch_readiness,
+    )
 except ModuleNotFoundError:
     from content_launch_decisions import decisions_from_document, load_decisions
     from content_launch_policy import (
@@ -39,7 +42,10 @@ except ModuleNotFoundError:
         requires_ymyl_review,
     )
     from content_url_planner import plan_url
-    from external_content_opportunity import launch_readiness
+    from external_content_opportunity import (
+        C01_032_CONTROLLED_EXPERIMENT,
+        launch_readiness,
+    )
 
 
 MEASUREMENT_WORKFLOW_ALLOWLIST = {".github/workflows/ga4-collection.yml"}
@@ -214,6 +220,34 @@ KEYWORD_CANDIDATE_PATHS = {
     "kor/util/ingeonbigyesangi/index.html": "인건비계산기",
     "kor/column/enkajunggocagumae/index.html": "엔카중고차구매",
 }
+
+C01_032_ALLOWED_GUARD_CODE_PATHS = frozenset({
+    "scripts/content_launch_guard.py",
+    "scripts/external_content_opportunity.py",
+})
+
+
+def _is_exact_c01_032_controlled_manifest(manifest, added_html):
+    candidate = C01_032_CONTROLLED_EXPERIMENT
+    return (
+        set(added_html) == {candidate["contentPath"]}
+        and manifest.get("taskId") == candidate["experiment"]["taskId"]
+        and manifest.get("candidateIds") == [candidate["candidateId"]]
+        and manifest.get("urls") == [candidate["url"]]
+        and manifest.get("contentPaths") == [candidate["contentPath"]]
+        and manifest.get("experimentScope") == "ONE_PAGE"
+        and manifest.get("demandStatus") == "VOLUME_UNKNOWN"
+        and manifest.get("dailyLimit") == 1
+        and manifest.get("status") == "READY_FOR_REVIEW"
+    )
+
+
+def _authorized_c01_032_guard_code_change(manifest, added_html, changed_names):
+    changed_guard_code = set(changed_names) & TRUSTED_LAUNCH_CODE_PATHS
+    return (
+        changed_guard_code == C01_032_ALLOWED_GUARD_CODE_PATHS
+        and _is_exact_c01_032_controlled_manifest(manifest, added_html)
+    )
 
 
 def _read(path, default):
@@ -420,8 +454,10 @@ def _trusted_candidate_records(snapshot):
     for value in ready_ids:
         if isinstance(value, str) and value.strip():
             ready_counts[value] = ready_counts.get(value, 0) + 1
+    controlled_id = C01_032_CONTROLLED_EXPERIMENT["candidateId"]
+    ready_counts[controlled_id] = ready_counts.get(controlled_id, 0) + 1
     external_by_id = {}
-    for candidate in external_doc["candidates"]:
+    for candidate in list(external_doc["candidates"]) + [C01_032_CONTROLLED_EXPERIMENT]:
         if not isinstance(candidate, dict):
             continue
         candidate_id = candidate.get("candidateId")
@@ -469,7 +505,7 @@ def _trusted_candidate_records(snapshot):
             "url": url,
             "urlIdentity": _normalized_launch_url(url),
             "contentPath": content_path,
-            "source": "external",
+            "source": "controlled_experiment" if candidate_id == controlled_id else "external",
         })
 
     by_id = {}
@@ -774,7 +810,9 @@ def validate_launch(root, manifest, changed_paths, trusted_base=None):
     launch_changed = bool(added_html)
     if launch_changed and added_html != expected_html:
         errors.add("MANIFEST_DIFF_MISMATCH")
-    if launch_changed and changed_names & TRUSTED_LAUNCH_CODE_PATHS:
+    if launch_changed and changed_names & TRUSTED_LAUNCH_CODE_PATHS and not _authorized_c01_032_guard_code_change(
+        manifest, added_html, changed_names
+    ):
         errors.add("LAUNCH_GUARD_CHANGED_WITH_CONTENT")
     if launch_changed and trusted_base is None:
         repository_check = subprocess.run(
