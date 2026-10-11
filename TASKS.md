@@ -58,7 +58,7 @@
 
 - [ ] P0 One-candidate VOLUME_UNKNOWN review gate — C02-20261011-034
   - 범위: ancestor-trusted, versioned CT-scoped approval for only C01-032 candidate `C01-20261011-032-IPHONEDATE`; ordinary UNKNOWN/INSUFFICIENT_DATA and mixed code+content remain blocked.
-  - 상태: isolated implementation and 24 focused tests pass locally; broader QA, OPEN review PR and exact-head CI pending. No content publication or merge.
+  - 상태: independent Cloud implementation (`ORIGINAL_LOCAL_SHA_NOT_TRANSFERRED`); 27 focused C02 tests and 106 Guard regressions passed, unittest 868 run/3 skipped, pytest 1,519 passed/3 skipped/560 subtests, SEO QA 0 new Critical/Warning. PR #75 OPEN at `8c22d4376a42479e917fb07b0307e4a714a426eb`; exact-head run 38136471366 in progress. Await Control Tower review; no publication or merge.
 
 - [ ] P0 Derived Measurement Publisher Consolidation — C07
   - 범위: GA4/GSC/AdSense collectors publish source snapshots only; one serialized daily publisher validates tracked source snapshots, regenerates temporary audit/page scores, and publishes only the three shared derived outputs. Preserve C17 sidecar behavior, source schemas, URL alias semantics, and direct AdSense PARTIAL/VERIFIED distinctions.
