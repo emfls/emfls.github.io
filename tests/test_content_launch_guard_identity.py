@@ -21,6 +21,7 @@ C02_CANDIDATE_URL = "/kor/report/window/iphone-photos-date-taken.html"
 C02_CANDIDATE_PATH = "kor/report/window/iphone-photos-date-taken.html"
 C02_CANDIDATE_TITLE = "아이폰 사진 촬영일, 윈도우에서 확인하는 방법"
 C02_CANDIDATE_INTENT = "윈도우에서 아이폰 사진의 촬영일을 확인하고 전송 문제를 진단"
+C02_034_PRE_PHASE_A_GUARD_BLOB_SHA = "ff29edfa2256f716699a6360414c37be5f25877d"
 
 
 def write_json(root, relative, value):
@@ -385,7 +386,7 @@ def test_c02_034_exact_approved_unknown_experiment_is_bound_to_trusted_base(tmp_
 def test_c02_034_pre_phase_a_base_guard_still_rejects_the_same_synthetic_page(tmp_path):
     baseline_guard = tmp_path / "baseline-content-launch-guard.py"
     baseline_source = subprocess.run(
-        ["git", "show", "HEAD:scripts/content_launch_guard.py"],
+        ["git", "show", C02_034_PRE_PHASE_A_GUARD_BLOB_SHA],
         cwd=REPO, text=True, capture_output=True, check=True,
     ).stdout
     baseline_guard.write_text(baseline_source, encoding="utf-8")
