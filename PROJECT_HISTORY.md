@@ -1291,3 +1291,6 @@
 ## 2026-10-11 C02 — GSC query evidence provenance validator
 - C02-20261011-028 restored the validator and tests from SHA-verified Notion source artifacts; the Mac commit object 239fd563234dbf71f512752a04aeb9fca33fe416 was not transferred or recreated. Period alignment and query coverage remain separate; missing query rows are UNKNOWN_NOT_ZERO, and different native periods return WINDOW_MISMATCH_HOLD without metric joins.
 - Current page-only and query snapshots have different native windows. Cloud contract tests pass 17/17; GSC regression tests pass 48/48 and SEO QA reports zero new Critical/Warning findings. The local full suite could not load because this executor lacks pytest/requests; detailed exact-head CI evidence is recorded in the C02 OUTBOX. Review-only delivery; await Control Tower review and do not merge.
+
+## 2026-10-11 21:58 Keyword Hunter
+- Seeds: 40; New: 0; Rejected: 0; DB: 5052; Errors: 1; Top: none. Artifact report: reports/keyword-hunter/2026-10-11-2158.md
