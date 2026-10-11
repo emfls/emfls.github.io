@@ -1,5 +1,12 @@
 # PROJECT HISTORY
 
+## 2026-10-11 C01-026 — Protected content and route dependency audit (Cloud)
+
+- Rebuilt independently from GitHub rather than claiming recovery of Mac commit 7d13ffcd; its patch and checksums were unavailable in this Cloud session. Record: ORIGINAL_LOCAL_SHA_NOT_TRANSFERRED. Latest main is 409b9b759893c66b1e6957bdcf40cd7b594bfae4. The local scan checkout was parent de693eaa0a9adb3a1bb88dc9396667195e181b15 because the shell proxy refused access; all 50 target page/sitemap blobs and protection inputs were verified unchanged against 409, and the five other changed main blobs were separately inspected for target-route references.
+- Added a read-only, fail-closed protection/dependency auditor, fixed 50-route provenance fixture, and regression tests. Current WINNER count is 1,642 with 0 normalized duplicate URLs; 19 content experiments are OBSERVING and 3 URL experiments are INCONCLUSIVE. Editorial decisions are 10 HOLD, 2 UPDATE_EXISTING and 1 NO_NEW_PAGE; 11 blocked decisions lack targetUrl, so route mapping remains PARTIAL. YMYL flags are present for 67 entries (12 true). Four exact /ae/ exceptions match the existing guard. No route is approved for deletion.
+- The 50 fixed JP-locale pages match historical Git blobs 50/50 and remain in the locale sitemap. Each has a self-canonical and sitemap entry; no hreflang tags or internal HTML links were found among/inbound to the cohort. No route, sitemap, public content, ads, or protected data was modified. Pagefind coverage is incomplete (43 of 53 tracked Pagefind files are binary/unreadable) and dynamic-reference status stays UNKNOWN.
+- Focused regression tests passed (6). Local full unittest discovery ran 884 tests but was blocked by missing pytest and requests packages (11 import errors plus one dependent failure); pytest was unavailable. SEO QA reported 0 new criticals/warnings, content launch guard passed, and git diff checks passed. Full repository CI is required on the dedicated review branch.
+
 ## 2026-10-09 C02 — Quality audit performance-source selection repair
 
 - Reproduced `latest_performance_file()` choosing the lexically last query sidecar instead of page-level GA4/GSC inputs. Replaced filename-order selection with canonical-source, source/schema, required-metric, and per-channel freshness validation; preserved independent GA4/GSC periods, missingness, URL revenue/RPM as `NOT_CONNECTED`, and kept GA4 views distinct from sessions.
