@@ -1,5 +1,6 @@
 import json
 import re
+import subprocess
 import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -28,14 +29,21 @@ PREVIOUS_PUBLISHED_MANIFEST = {
 }
 
 
-def read_json(relative_path):
-    return json.loads((ROOT / relative_path).read_text(encoding="utf-8"))
+def read_committed_json(relative_path):
+    result = subprocess.run(
+        ["git", "show", f"HEAD:{relative_path}"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return json.loads(result.stdout)
 
 
 class C01032ContentReleaseTests(unittest.TestCase):
     def test_manifest_binds_one_exact_review_only_approval(self):
-        manifest = read_json("data/content-launch-manifest.json")
-        approval = read_json("data/content-launch-experiment-approvals.json")["approvals"][0]
+        manifest = read_committed_json("data/content-launch-manifest.json")
+        approval = read_committed_json("data/content-launch-experiment-approvals.json")["approvals"][0]
         self.assertEqual(approval["candidateId"], CANDIDATE_ID)
         self.assertEqual(approval["title"], TITLE)
         self.assertEqual(approval["primaryIntent"], INTENT)
@@ -59,7 +67,7 @@ class C01032ContentReleaseTests(unittest.TestCase):
         self.assertRegex(policy, r"(?m)^DAILY_PUBLICATION_LIMIT\s*=\s*3\s*$")
 
     def test_prior_published_manifest_is_preserved_as_the_exact_object(self):
-        manifest = read_json("data/content-launch-manifest.json")
+        manifest = read_committed_json("data/content-launch-manifest.json")
         self.assertEqual(manifest["preservedManifestRecords"], [PREVIOUS_PUBLISHED_MANIFEST])
         self.assertEqual(PREVIOUS_PUBLISHED_MANIFEST["status"], "PUBLISHED")
         self.assertNotIn(PREVIOUS_PUBLISHED_MANIFEST["urls"][0], manifest["urls"])

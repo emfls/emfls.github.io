@@ -5,7 +5,8 @@
 - Based on the post-Phase-A main `61a203487f0c8094b19f19562492b90461620b6f` and its task-scoped approval for `C01-20261011-032-IPHONEDATE`; demand remains `VOLUME_UNKNOWN` and status remains `READY_FOR_REVIEW`.
 - Reused the checksum-verified Notion draft (`9d1e86a4ae57cb72b5a1b550aa7bfdd9b6b148346b23075a9298c704f900197f`). Added its Windows hub card (127 to 128 cards), one leaf sitemap URL, and a four-test content/manifest integration regression. The existing root sitemap index already includes the leaf sitemap.
 - The new manifest preserves the complete previous keyboard-cleaning `PUBLISHED` manifest object under `preservedManifestRecords`; the experiment cap is 1 and the global KST cap remains 3. No launch Guard, approval, protected source, workflow, or ad policy files are changed.
-- Focused integration tests showed expected RED on the current main baseline and GREEN after the content/manifest/hub/sitemap candidate was assembled. Full exact-head SEO/Launch Guard/unittest/pytest CI is pending review PR. No merge, article publication, indexation, or revenue result is claimed.
+- Focused integration tests showed expected RED on the current main baseline and GREEN after the content/manifest/hub/sitemap candidate was assembled; local compile and staged diff checks passed. PR #76 is OPEN for Control Tower review. No merge, article publication, indexation, or revenue result is claimed.
+- Exact-head PR #76 run #435 / `38144790042` passed Launch Guard, SEO regressions, and measurement parity, but unittest failed because deterministic QA rewrote the worktree manifest before two tests read it, while the prior October test still expected a top-level `PUBLISHED` record. Pytest was skipped. Tests now read the committed manifest and recognize its preserved keyboard-cleaning publication history; no content, policy, or Guard source changes were needed. New exact-head CI is pending.
 
 ## 2026-10-11 C02-034 — One-candidate VOLUME_UNKNOWN review gate
 
