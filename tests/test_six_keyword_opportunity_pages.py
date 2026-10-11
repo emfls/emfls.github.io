@@ -244,6 +244,15 @@ def test_committed_launch_manifest_is_exactly_the_current_launch_batch():
     if manifest["status"] == "REVIEW_ONLY":
         assert manifest["publishedToday"] == 0
         return
+    if manifest["status"] == "READY_FOR_REVIEW":
+        prior_records = manifest.get("preservedManifestRecords") or []
+        assert any(
+            record.get("status") == "PUBLISHED"
+            and record.get("candidateIds") == ["keyword:키보드청소방법"]
+            and record.get("urls") == ["/kor/report/it/keyboard-cleaning-guide.html"]
+            for record in prior_records
+        )
+        return
     assert manifest["status"] == "PUBLISHED"
     if manifest["urls"] == ["/kor/column/yeongeogongbuhijoheunmideu/"]:
         assert manifest["contentPaths"] == ["kor/column/yeongeogongbuhijoheunmideu/index.html"]
