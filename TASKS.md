@@ -45,6 +45,10 @@
   - 완료: PR #50 regular merge `489df99ea81f51833d36d27ee09c8190c8443236`; live run `37404548746` SUCCESS with artifact `gsc-sitewide-query-37404548746` (223 rows, `PARTIAL_TOP_ROWS`, completeness not guaranteed). Raw export remains a seven-day artifact; no tracked commit or C07 integration.
   - 의존성 해소: C17 is `TASK_COMPLETE`; C07 may publish page-derived artifacts independently of the ephemeral sitewide artifact.
 
+- [ ] P0 GSC query evidence provenance validator — C02-20261011-028
+  - 범위: page-only/query snapshot provenance; native period alignment is separate from query coverage, missing rows stay UNKNOWN_NOT_ZERO, period mismatch is WINDOW_MISMATCH_HOLD, and no metrics are joined.
+  - 상태: Cloud implementation and local GSC/SEO checks complete; keep review-only and await Control Tower review. Do not merge; no collector, workflow, schedule, API request, or AdSense/GA4 change.
+
 - [ ] P0 Derived Measurement Publisher Consolidation — C07
   - 범위: GA4/GSC/AdSense collectors publish source snapshots only; one serialized daily publisher validates tracked source snapshots, regenerates temporary audit/page scores, and publishes only the three shared derived outputs. Preserve C17 sidecar behavior, source schemas, URL alias semantics, and direct AdSense PARTIAL/VERIFIED distinctions.
   - 저장소 판정: `IMMEDIATE_REPO_SIZE_SAVINGS = NONE`; `GIT_HISTORY_REWRITE = NONE`; `FUTURE_DERIVED_ARTIFACT_CHURN_REDUCTION = YES`.
