@@ -7,6 +7,7 @@
 - The new manifest preserves the complete previous keyboard-cleaning `PUBLISHED` manifest object under `preservedManifestRecords`; the experiment cap is 1 and the global KST cap remains 3. No launch Guard, approval, protected source, workflow, or ad policy files are changed.
 - Focused integration tests showed expected RED on the current main baseline and GREEN after the content/manifest/hub/sitemap candidate was assembled; local compile and staged diff checks passed. PR #76 is OPEN for Control Tower review. No merge, article publication, indexation, or revenue result is claimed.
 - Exact-head PR #76 run #435 / `38144790042` passed Launch Guard, SEO regressions, and measurement parity, but unittest failed because deterministic QA rewrote the worktree manifest before two tests read it, while the prior October test still expected a top-level `PUBLISHED` record. Pytest was skipped. Tests now read the committed manifest and recognize its preserved keyboard-cleaning publication history; no content, policy, or Guard source changes were needed. New exact-head CI is pending.
+- The next exact-head run #436 / `38146532063` passed all 895 unittest tests (3 skipped); pytest reported 1,544 passed, 3 skipped and 560 subtests, with two legacy assertions still requiring top-level `PUBLISHED`. Both now verify the same exact keyboard-cleaning PUBLISHED record in `preservedManifestRecords`. The only changed sources remain tests and task records; run #437 must confirm the full suite.
 
 ## 2026-10-11 C02-034 — One-candidate VOLUME_UNKNOWN review gate
 

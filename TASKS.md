@@ -13,7 +13,7 @@
 
 - [ ] P0 One-page iPhone photo capture-date guide — C01-20261011-032
   - 범위: approved `C01-20261011-032-IPHONEDATE` 단일 후보만 review; `VOLUME_UNKNOWN`, 실험 상한 1, 기존 PUBLISHED manifest 전체 보존.
-  - 상태: 첫 exact-head run `38144790042`에서 Launch Guard/SEO/measurement는 통과했으나 unittest의 manifest fixture 기대가 깨져 pytest가 skipped됨. CI worktree가 임시 manifest를 생성하는 동작에 맞춰 커밋 원본을 검증하고 기존 PUBLISHED 이력 배열을 확인하도록 테스트만 보완; 새 exact-head CI 및 관제탑 검수 대기. 전역 KST cap 3 및 Launch Guard/승인/보호 데이터는 변경하지 않음. 미병합·미발행.
+  - 상태: run `38144790042`의 fixture 실패 수정 후 run `38146532063`에서 895 unittest PASS/3 skipped, pytest 1,544 PASS/3 skipped/560 subtests였으나 기존 full-paint 및 six-keyword manifest 테스트 2개가 top-level PUBLISHED만 기대해 FAIL. 두 테스트를 `preservedManifestRecords`의 동일한 이전 keyboard-cleaning PUBLISHED 이력도 인식하도록 좁게 보정; 새 exact-head CI 및 관제탑 검수 대기. 전역 KST cap 3 및 Launch Guard/승인/보호 데이터는 변경하지 않음. 미병합·미발행.
 
 - [x] P0 PR #56 — Naver parity and exact-head CI hardening — C02
   - 변경: full/compact Naver 상태·출처·freshness 메타데이터를 보존하고 null/누락/변경 시 fail-closed 검증을 추가했다. Manifest가 실제 Naver 경로·SHA와 실행에 사용한 AdSense source revision·SHA를 검증하며 synthetic execution SHA와 PR head를 분리한다. PR-only `contents: read` nonpublishing parity job은 임시 runner 경로에서만 생성·검증하고 7일 artifact를 업로드한다.

@@ -49,9 +49,15 @@ def test_full_paint_discovery_and_sitemaps():
 def test_full_paint_launch_manifest():
     manifest = _read_committed_launch_manifest()
     if manifest["urls"] != ["/kor/report/car/car-full-paint-cost-guide.html"]:
-        assert manifest["status"] == "PUBLISHED"
-        assert manifest["publishedToday"] == 1
-        assert manifest["dailyLimit"] == 1
+        prior_records = [manifest, *(manifest.get("preservedManifestRecords") or [])]
+        assert any(
+            record.get("status") == "PUBLISHED"
+            and record.get("candidateIds") == ["keyword:키보드청소방법"]
+            and record.get("urls") == ["/kor/report/it/keyboard-cleaning-guide.html"]
+            and record.get("publishedToday") == 1
+            and record.get("dailyLimit") == 1
+            for record in prior_records
+        )
         return
     assert manifest["candidateIds"] == ["keyword:차량전체도색비용"]
     assert manifest["contentPaths"] == ["kor/report/car/car-full-paint-cost-guide.html"]
