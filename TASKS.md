@@ -11,6 +11,10 @@
 
 ## P0 - Critical
 
+- [ ] P0 One-page iPhone photo capture-date guide — C01-20261011-032
+  - 범위: approved `C01-20261011-032-IPHONEDATE` 단일 후보만 review; `VOLUME_UNKNOWN`, 실험 상한 1, 기존 PUBLISHED manifest 전체 보존.
+  - 상태: content-only 검수 브랜치 준비; exact-head CI 및 관제탑 검수 대기. 전역 KST cap 3 및 Launch Guard/승인/보호 데이터는 변경하지 않음. 미병합·미발행.
+
 - [x] P0 PR #56 — Naver parity and exact-head CI hardening — C02
   - 변경: full/compact Naver 상태·출처·freshness 메타데이터를 보존하고 null/누락/변경 시 fail-closed 검증을 추가했다. Manifest가 실제 Naver 경로·SHA와 실행에 사용한 AdSense source revision·SHA를 검증하며 synthetic execution SHA와 PR head를 분리한다. PR-only `contents: read` nonpublishing parity job은 임시 runner 경로에서만 생성·검증하고 7일 artifact를 업로드한다.
   - 데이터: `asOf=2026-10-07`, 18,929 URL. Local full/compact와 revenue parity PASS; Keyword Hunter 34, GSC opportunity 36, protected winner 1,632. Naver metadata missing 0; source `2026-08-19..2026-09-17`, `STALE_DATA` 30 / `NOT_AVAILABLE` 18,899, rank `NOT_AVAILABLE` 유지. GA4/GSC `VERIFIED`, AdSense `PARTIAL` snapshot commit `a5c78eecbff48de70cc900c228b052f907f14d03`.

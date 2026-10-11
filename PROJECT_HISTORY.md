@@ -1,5 +1,12 @@
 # PROJECT HISTORY
 
+## 2026-10-11 C01-032 — iPhone photo capture-date guide content-only candidate
+
+- Based on the post-Phase-A main `61a203487f0c8094b19f19562492b90461620b6f` and its task-scoped approval for `C01-20261011-032-IPHONEDATE`; demand remains `VOLUME_UNKNOWN` and status remains `READY_FOR_REVIEW`.
+- Reused the checksum-verified Notion draft (`9d1e86a4ae57cb72b5a1b550aa7bfdd9b6b148346b23075a9298c704f900197f`). Added its Windows hub card (127 to 128 cards), one leaf sitemap URL, and a four-test content/manifest integration regression. The existing root sitemap index already includes the leaf sitemap.
+- The new manifest preserves the complete previous keyboard-cleaning `PUBLISHED` manifest object under `preservedManifestRecords`; the experiment cap is 1 and the global KST cap remains 3. No launch Guard, approval, protected source, workflow, or ad policy files are changed.
+- Focused integration tests showed expected RED on the current main baseline and GREEN after the content/manifest/hub/sitemap candidate was assembled. Full exact-head SEO/Launch Guard/unittest/pytest CI is pending review PR. No merge, article publication, indexation, or revenue result is claimed.
+
 ## 2026-10-11 C02-034 — One-candidate VOLUME_UNKNOWN review gate
 
 - Based on remote main `aaf87558b0cf9cfb15808f3eb1bfa59784f0c3ca`. Added an ancestor-trusted, versioned approval record and a fail-closed Guard path for only C01-032 candidate `C01-20261011-032-IPHONEDATE` at `/kor/report/window/iphone-photos-date-taken.html`. Approval is classified as CT-scoped review under the standing authorization, not per-article `USER_APPROVED`; demand remains `VOLUME_UNKNOWN`.
