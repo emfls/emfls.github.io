@@ -2,7 +2,7 @@ import csv
 import json
 import os
 import subprocess
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -10,17 +10,68 @@ import pytest
 
 from scripts.content_url_planner import plan_url
 from scripts.external_content_opportunity import launch_readiness
+from scripts.content_launch_guard import _validated_c02_034_approval
 
 
 REPO = Path(__file__).resolve().parents[1]
 GUARD = REPO / "scripts/content_launch_guard.py"
 SEOUL = ZoneInfo("Asia/Seoul")
+C02_CANDIDATE_ID = "C01-20261011-032-IPHONEDATE"
+C02_CANDIDATE_URL = "/kor/report/window/iphone-photos-date-taken.html"
+C02_CANDIDATE_PATH = "kor/report/window/iphone-photos-date-taken.html"
+C02_CANDIDATE_TITLE = "아이폰 사진 촬영일, 윈도우에서 확인하는 방법"
+C02_CANDIDATE_INTENT = "윈도우에서 아이폰 사진의 촬영일을 확인하고 전송 문제를 진단"
+C02_034_PRE_PHASE_A_GUARD_BLOB_SHA = "ff29edfa2256f716699a6360414c37be5f25877d"
 
 
 def write_json(root, relative, value):
     path = root / relative
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def controlled_experiment_approval(**overrides):
+    today = datetime.now(SEOUL).date()
+    record = {
+        "approvalId": "C02-20261011-034-IPHONE-001",
+        "approvalVersion": 1,
+        "taskId": "C01-20261011-032",
+        "candidateId": C02_CANDIDATE_ID,
+        "url": C02_CANDIDATE_URL,
+        "canonicalUrl": f"https://emfls.github.io{C02_CANDIDATE_URL}",
+        "contentPath": C02_CANDIDATE_PATH,
+        "hubPath": "kor/report/window/index.html",
+        "sitemapPath": "kor/report/window/sitemap.xml",
+        "title": C02_CANDIDATE_TITLE,
+        "primaryIntent": C02_CANDIDATE_INTENT,
+        "experimentScope": "ONE_PAGE",
+        "demandStatus": "VOLUME_UNKNOWN",
+        "approvalStatus": "CT_SCOPED_EXPERIMENT_REVIEW_ONLY",
+        "approvalBasis": "STANDING_AUTHORIZATION_NARROWED_TO_THIS_TASK",
+        "ymyl": False,
+        "approvalRefs": [
+            "https://app.notion.com/p/3f6db4c0a9918175b79bcbe85fabfbdd",
+            "https://app.notion.com/p/3f6db4c0a99181dc8227d7fde28b740a",
+        ],
+        "validFrom": today.isoformat(),
+        "validThrough": (today + timedelta(days=7)).isoformat(),
+        "revoked": False,
+        "sourceReview": {
+            "status": "REPORTED_REVIEWED_BY_C01",
+            "reviewedByTask": "C01-20261011-032",
+            "reviewedAt": today.isoformat(),
+            "recordRef": "https://app.notion.com/p/3f6db4c0a991818ebc3cccfddb68a3c7",
+            "sources": [
+                {"url": "https://support.apple.com/ko-kr/120267", "supports": "USB and iCloud transfer steps"},
+                {"url": "https://support.apple.com/ko-kr/116944", "supports": "HEIF and High Compatibility format facts"},
+                {"url": "https://support.microsoft.com/en-us/windows/apps/photos/import-photos-and-videos-from-phone-to-pc", "supports": "Windows Photos import steps"},
+                {"url": "https://learn.microsoft.com/en-us/windows/win32/properties/props-system-photo-datetaken", "supports": "System.Photo.DateTaken property meaning"},
+                {"url": "https://cipa.jp/std/documents/e/DC-X010-2017.pdf", "supports": "Exif DateTimeOriginal tag semantics"},
+            ],
+        },
+    }
+    record.update(overrides)
+    return {"schemaVersion": 1, "approvals": [record]}
 
 
 def keyword_source(keyword, *, category="article", content_types="informational", intent="informational"):
@@ -107,7 +158,7 @@ def external_source(candidate_id="EXT-SAFE-01"):
 
 def create_base_repo(tmp_path, keywords=(), external=(), decisions=None, counter=None,
                      protected_experiments=(), protected_winners=(), duplicate_queue=(),
-                     base_manifest=None, decision_rows=None):
+                     base_manifest=None, decision_rows=None, experiment_approvals=None):
     root = tmp_path / "repo"
     root.mkdir(parents=True)
     (root / ".gitignore").write_text(".DS_Store\n", encoding="utf-8")
@@ -130,6 +181,8 @@ def create_base_repo(tmp_path, keywords=(), external=(), decisions=None, counter
     })
     write_json(root, "data/published_keywords.json", [])
     write_json(root, "data/content-launch-experiments.json", {"experiments": []})
+    if experiment_approvals is not None:
+        write_json(root, "data/content-launch-experiment-approvals.json", experiment_approvals)
     trusted_manifest = {
         "schemaVersion": 1, "status": "NO_PUBLICATION", "runAt": "2026-01-01T00:00:00+09:00",
         "candidateIds": [], "urls": [], "contentPaths": [], "dailyLimit": 3,
@@ -145,6 +198,10 @@ def create_base_repo(tmp_path, keywords=(), external=(), decisions=None, counter
     hub = root / "kor/launch-hub.html"
     hub.parent.mkdir(parents=True, exist_ok=True)
     hub.write_text("<!-- existing launch hub -->", encoding="utf-8")
+    window_hub = root / "kor/report/window/index.html"
+    window_hub.parent.mkdir(parents=True, exist_ok=True)
+    window_hub.write_text("<!-- existing Windows guide hub -->", encoding="utf-8")
+    (window_hub.parent / "sitemap.xml").write_text("<urlset></urlset>\n", encoding="utf-8")
     master_path = data / "keywords_master.csv"
     master_path.parent.mkdir(parents=True, exist_ok=True)
     fields = ["keyword", "category", "content_types", "intent", "action", "score_valid", "status"]
@@ -166,11 +223,13 @@ def create_base_repo(tmp_path, keywords=(), external=(), decisions=None, counter
 def run_launch(tmp_path, *, sources=(), external=(), decisions=None, proposals=(),
                manifest_override=None, head_changes=None, counter=None,
                protected_experiments=(), protected_winners=(), duplicate_queue=(),
-               changed_existing=(), base_manifest=None, decision_rows=None):
+               changed_existing=(), base_manifest=None, decision_rows=None,
+               experiment_approvals=None, guard=GUARD):
     root, base_sha = create_base_repo(
         tmp_path, sources, external, decisions, counter,
         protected_experiments, protected_winners, duplicate_queue, base_manifest,
         decision_rows=decision_rows,
+        experiment_approvals=experiment_approvals,
     )
     if head_changes:
         for relative, value in head_changes.items():
@@ -199,14 +258,19 @@ def run_launch(tmp_path, *, sources=(), external=(), decisions=None, proposals=(
     manifest.update(manifest_override or {})
     write_json(root, "data/content-launch-manifest.json", manifest)
     canonical_urls = manifest.get("urls") or []
-    sitemap = root / "kor/launch-sitemap.xml"
-    sitemap.parent.mkdir(parents=True, exist_ok=True)
-    sitemap.write_text("\n".join(
+    sitemap_text = "\n".join(
         value if str(value).startswith("https://") else f"https://emfls.github.io{value}"
         for value in canonical_urls if value
-    ), encoding="utf-8")
-    hub = root / "kor/launch-hub.html"
-    hub.write_text("\n".join(f'<a href="{value}">Launch</a>' for value in canonical_urls if value), encoding="utf-8")
+    )
+    for relative in manifest.get("sitemapPaths") or []:
+        sitemap = root / relative
+        sitemap.parent.mkdir(parents=True, exist_ok=True)
+        sitemap.write_text(sitemap_text, encoding="utf-8")
+    hub_text = "\n".join(f'<a href="{value}">Launch</a>' for value in canonical_urls if value)
+    for relative in manifest.get("hubPaths") or []:
+        hub = root / relative
+        hub.parent.mkdir(parents=True, exist_ok=True)
+        hub.write_text(hub_text, encoding="utf-8")
 
     for index, proposal in enumerate(proposals):
         relative = proposal.get("filePath") or proposal.get("contentPath")
@@ -214,7 +278,7 @@ def run_launch(tmp_path, *, sources=(), external=(), decisions=None, proposals=(
             continue
         path = root / relative
         path.parent.mkdir(parents=True, exist_ok=True)
-        title = f"Launch candidate {index}"
+        title = proposal.get("title") or f"Launch candidate {index}"
         canonical = proposal.get("canonical")
         if canonical is None:
             url = proposal.get("url") or ""
@@ -234,7 +298,7 @@ def run_launch(tmp_path, *, sources=(), external=(), decisions=None, proposals=(
     subprocess.run(["git", "add", "-A"], cwd=root, check=True)
     subprocess.run(["git", "commit", "-qm", "proposed launch"], cwd=root, check=True)
     result = subprocess.run(
-        ["python3", str(GUARD), "--root", str(root), "--manifest",
+        ["python3", str(guard), "--root", str(root), "--manifest",
          "data/content-launch-manifest.json", "--base-ref", base_sha],
         cwd=REPO, text=True, capture_output=True, check=False,
         env={**os.environ, "PYTHONPATH": str(REPO)},
@@ -250,6 +314,284 @@ def proposal(candidate, **overrides):
     value = {key: candidate[key] for key in ("candidateId", "url", "contentPath")}
     value.update(overrides)
     return value
+
+
+def controlled_proposal(**overrides):
+    candidate = {
+        "candidateId": C02_CANDIDATE_ID,
+        "url": C02_CANDIDATE_URL,
+        "contentPath": C02_CANDIDATE_PATH,
+    }
+    candidate.update(overrides)
+    return {**candidate, "title": candidate.pop("title", C02_CANDIDATE_TITLE)}
+
+
+def controlled_manifest(**overrides):
+    return {
+        "taskId": "C01-20261011-032",
+        "experimentScope": "ONE_PAGE",
+        "demandStatus": "VOLUME_UNKNOWN",
+        "dailyLimit": 1,
+        "candidateIntents": [C02_CANDIDATE_INTENT],
+        "candidateTitles": [C02_CANDIDATE_TITLE],
+        "hubPaths": ["kor/report/window/index.html"],
+        "sitemapPaths": ["kor/report/window/sitemap.xml"],
+        "status": "READY_FOR_REVIEW",
+        **overrides,
+    }
+
+
+def published_manifest_record(*, candidate_id="keyword:키보드청소방법", url="/kor/report/it/keyboard-cleaning-guide.html",
+                              run_at="2026-10-05T06:48:56+09:00", published_today=1):
+    return {
+        "schemaVersion": 1,
+        "status": "PUBLISHED",
+        "runId": "P0-20261005-KEYBOARD-CLEANING",
+        "runAt": run_at,
+        "dailyLimit": 1,
+        "publishedToday": published_today,
+        "candidateIds": [candidate_id],
+        "urls": [url],
+        "contentPaths": [f"{url.lstrip('/')}"],
+        "hubPaths": ["kor/report/it/index.html"],
+        "sitemapPaths": ["kor/report/it/sitemap.xml"],
+    }
+
+
+def run_controlled_experiment(tmp_path, *, approvals="valid", proposal_overrides=None,
+                              manifest_overrides=None, decisions=None,
+                              protected_experiments=(), protected_winners=(), head_changes=None,
+                              base_manifest=None, guard=GUARD):
+    if approvals == "valid":
+        approvals = controlled_experiment_approval()
+    return run_launch(
+        tmp_path,
+        proposals=[controlled_proposal(**(proposal_overrides or {}))],
+        experiment_approvals=approvals,
+        manifest_override=controlled_manifest(**(manifest_overrides or {})),
+        decisions=decisions,
+        protected_experiments=protected_experiments,
+        protected_winners=protected_winners,
+        head_changes=head_changes,
+        base_manifest=base_manifest,
+        guard=guard,
+    )
+
+
+def test_c02_034_exact_approved_unknown_experiment_is_bound_to_trusted_base(tmp_path):
+    result = run_controlled_experiment(tmp_path)
+    assert result == {"status": "PASS", "errors": []}
+
+
+def test_c02_034_pre_phase_a_base_guard_still_rejects_the_same_synthetic_page(tmp_path):
+    baseline_guard = tmp_path / "baseline-content-launch-guard.py"
+    baseline_source = subprocess.run(
+        ["git", "show", C02_034_PRE_PHASE_A_GUARD_BLOB_SHA],
+        cwd=REPO, text=True, capture_output=True, check=True,
+    ).stdout
+    baseline_guard.write_text(baseline_source, encoding="utf-8")
+    result = run_controlled_experiment(tmp_path / "phase-b", guard=baseline_guard)
+    assert result["status"] == "FAIL"
+    assert "TRUSTED_CANDIDATE_NOT_FOUND" in result["errors"]
+
+
+def test_c02_034_checked_in_approval_is_ct_scoped_and_source_backed(monkeypatch):
+    class FrozenDateTime(datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return cls(2026, 10, 11, tzinfo=tz)
+
+    monkeypatch.setattr("scripts.content_launch_guard.datetime", FrozenDateTime)
+    approvals = json.loads((REPO / "data/content-launch-experiment-approvals.json").read_text(encoding="utf-8"))
+    record, issue = _validated_c02_034_approval({"json": {
+        "data/content-launch-experiment-approvals.json": approvals,
+    }})
+    assert issue is None
+    assert record["approvalStatus"] == "CT_SCOPED_EXPERIMENT_REVIEW_ONLY"
+    assert record["approvalBasis"] == "STANDING_AUTHORIZATION_NARROWED_TO_THIS_TASK"
+    assert record["demandStatus"] == "VOLUME_UNKNOWN"
+    assert "monthlySearchVolume" not in record
+
+
+def test_c02_034_does_not_authorize_another_unknown_candidate(tmp_path):
+    result = run_controlled_experiment(
+        tmp_path,
+        proposal_overrides={
+            "candidateId": "EXT-OTHER-UNKNOWN",
+            "url": "/kor/report/window/another-unknown.html",
+            "contentPath": "kor/report/window/another-unknown.html",
+        },
+    )
+    assert result["status"] == "FAIL"
+    assert "TRUSTED_CANDIDATE_NOT_FOUND" in result["errors"]
+
+
+@pytest.mark.parametrize(("proposal_overrides", "manifest_overrides", "error"), [
+    ({"url": "/kor/report/window/changed.html", "contentPath": "kor/report/window/changed.html"}, {}, "CANDIDATE_IDENTITY_MISMATCH"),
+    ({"canonical": "https://emfls.github.io/kor/report/window/changed.html"}, {}, "CANONICAL_MISMATCH"),
+    ({"title": "다른 주제"}, {}, "CANDIDATE_IDENTITY_MISMATCH"),
+    ({}, {"candidateIntents": ["다른 사용자 의도"]}, "CANDIDATE_IDENTITY_MISMATCH"),
+    ({}, {"candidateTitles": ["다른 제목"]}, "CANDIDATE_IDENTITY_MISMATCH"),
+])
+def test_c02_034_identity_intent_title_and_canonical_mismatches_are_blocked(
+    tmp_path, proposal_overrides, manifest_overrides, error,
+):
+    result = run_controlled_experiment(
+        tmp_path, proposal_overrides=proposal_overrides, manifest_overrides=manifest_overrides,
+    )
+    assert result["status"] == "FAIL"
+    assert error in result["errors"]
+
+
+@pytest.mark.parametrize("invalidity", [
+    "expired", "revoked", "unreviewed", "missing_source", "altered_source",
+    "wrong_candidate", "long_lived",
+])
+def test_c02_034_stale_revoked_or_unsubstantiated_approval_fails_closed(tmp_path, invalidity):
+    approval = controlled_experiment_approval()
+    record = approval["approvals"][0]
+    if invalidity == "expired":
+        record["validThrough"] = (datetime.now(SEOUL).date() - timedelta(days=1)).isoformat()
+    elif invalidity == "revoked":
+        record["revoked"] = True
+    elif invalidity == "unreviewed":
+        record["sourceReview"]["status"] = "UNKNOWN"
+    elif invalidity == "missing_source":
+        record["sourceReview"]["sources"] = []
+    elif invalidity == "altered_source":
+        record["sourceReview"]["sources"][0]["url"] = "https://example.invalid/fake"
+    elif invalidity == "wrong_candidate":
+        record["candidateId"] = "EXT-OTHER-UNKNOWN"
+    else:
+        record["validThrough"] = (datetime.now(SEOUL).date() + timedelta(days=8)).isoformat()
+    result = run_controlled_experiment(tmp_path, approvals=approval)
+    assert result["status"] == "FAIL"
+    assert "APPROVAL_EVIDENCE_UNAVAILABLE" in result["errors"]
+
+
+def test_c02_034_duplicate_approval_records_are_ambiguous_and_blocked(tmp_path):
+    approval = controlled_experiment_approval()
+    approval["approvals"].append(dict(approval["approvals"][0]))
+    result = run_controlled_experiment(tmp_path, approvals=approval)
+    assert result["status"] == "FAIL"
+    assert "APPROVAL_EVIDENCE_UNAVAILABLE" in result["errors"]
+    assert "AMBIGUOUS_TRUSTED_CANDIDATE" in result["errors"]
+
+
+def test_c02_034_head_only_approval_cannot_authorize_candidate(tmp_path):
+    result = run_controlled_experiment(
+        tmp_path, approvals=None,
+        head_changes={"data/content-launch-experiment-approvals.json": controlled_experiment_approval()},
+    )
+    assert result["status"] == "FAIL"
+    assert "TRUSTED_CANDIDATE_NOT_FOUND" in result["errors"]
+    assert "APPROVAL_EVIDENCE_CHANGED_WITH_CONTENT" in result["errors"]
+
+
+def test_c02_034_hold_decision_and_protected_candidate_remain_blocked(tmp_path):
+    held = run_controlled_experiment(tmp_path / "held", decisions={C02_CANDIDATE_ID: "HOLD"})
+    protected = run_controlled_experiment(
+        tmp_path / "protected",
+        protected_experiments=[{
+            "candidateId": C02_CANDIDATE_ID, "url": C02_CANDIDATE_URL, "status": "OBSERVING",
+        }],
+    )
+    assert held["status"] == "FAIL"
+    assert "EDITORIAL_DECISION_BLOCKED" in held["errors"]
+    assert protected["status"] == "FAIL"
+    assert "PROTECTED_EXPERIMENT_CHANGED" in protected["errors"]
+
+
+@pytest.mark.parametrize("decision", ["HOLD", "NO_NEW_PAGE", "UPDATE_EXISTING"])
+def test_c02_034_all_editorial_stop_decisions_remain_blocked(tmp_path, decision):
+    result = run_controlled_experiment(tmp_path, decisions={C02_CANDIDATE_ID: decision})
+    assert result["status"] == "FAIL"
+    assert "EDITORIAL_DECISION_BLOCKED" in result["errors"]
+
+
+def test_c02_034_ymyl_and_protected_winner_remain_blocked(tmp_path):
+    approval = controlled_experiment_approval()
+    approval["approvals"][0]["ymyl"] = True
+    ymyl = run_controlled_experiment(tmp_path / "ymyl", approvals=approval)
+    winner = run_controlled_experiment(
+        tmp_path / "winner",
+        protected_winners=[{"url": C02_CANDIDATE_URL}],
+    )
+    assert ymyl["status"] == "FAIL"
+    assert "YMYL_REVIEW_REQUIRED" in ymyl["errors"]
+    assert winner["status"] == "FAIL"
+    assert "PROTECTED_WINNER_CHANGED" in winner["errors"]
+
+
+def test_c02_034_already_published_candidate_or_url_is_blocked(tmp_path):
+    result = run_controlled_experiment(
+        tmp_path,
+        base_manifest={
+            "status": "PUBLISHED",
+            "runAt": "2026-10-01T09:00:00+09:00",
+            "candidateIds": [C02_CANDIDATE_ID],
+            "urls": [C02_CANDIDATE_URL],
+            "contentPaths": [C02_CANDIDATE_PATH],
+        },
+    )
+    assert result["status"] == "FAIL"
+    assert "CANDIDATE_ALREADY_PUBLISHED" in result["errors"]
+
+
+def test_c02_034_phase_b_must_preserve_the_prior_published_manifest_record(tmp_path):
+    previous = published_manifest_record()
+    retained = run_controlled_experiment(
+        tmp_path / "retained",
+        base_manifest=previous,
+        manifest_overrides={"preservedManifestRecords": [previous]},
+    )
+    dropped = run_controlled_experiment(
+        tmp_path / "dropped",
+        base_manifest=previous,
+    )
+    assert retained == {"status": "PASS", "errors": []}
+    assert dropped["status"] == "FAIL"
+    assert "PUBLISHED_MANIFEST_HISTORY_DROPPED" in dropped["errors"]
+
+
+def test_c02_034_preserved_manifest_history_still_blocks_republication_and_daily_overflow(tmp_path):
+    already_published = published_manifest_record(
+        candidate_id=C02_CANDIDATE_ID, url=C02_CANDIDATE_URL,
+    )
+    duplicate = run_controlled_experiment(
+        tmp_path / "duplicate",
+        base_manifest={"preservedManifestRecords": [already_published]},
+        manifest_overrides={"preservedManifestRecords": [already_published]},
+    )
+    today = datetime.now(SEOUL).date().isoformat()
+    prior_today = published_manifest_record(
+        candidate_id="keyword:prior1", url="/kor/report/prior1.html",
+        run_at=f"{today}T09:00:00+09:00", published_today=3,
+    )
+    prior_today["candidateIds"] = ["keyword:prior1", "keyword:prior2", "keyword:prior3"]
+    prior_today["urls"] = ["/kor/report/prior1.html", "/kor/report/prior2.html", "/kor/report/prior3.html"]
+    prior_today["contentPaths"] = ["kor/report/prior1.html", "kor/report/prior2.html", "kor/report/prior3.html"]
+    overflow = run_controlled_experiment(
+        tmp_path / "overflow",
+        base_manifest={"preservedManifestRecords": [prior_today]},
+        manifest_overrides={"preservedManifestRecords": [prior_today]},
+    )
+    assert duplicate["status"] == "FAIL"
+    assert "CANDIDATE_ALREADY_PUBLISHED" in duplicate["errors"]
+    assert overflow["status"] == "FAIL"
+    assert "PUBLICATION_LIMIT_EXCEEDED" in overflow["errors"]
+
+
+def test_c02_034_experiment_limit_and_guard_content_separation_remain_enforced(tmp_path):
+    excessive = run_controlled_experiment(tmp_path / "limit", manifest_overrides={"dailyLimit": 2})
+    mixed = run_controlled_experiment(
+        tmp_path / "mixed",
+        head_changes={"scripts/content_launch_guard.py": "# changed guard"},
+    )
+    assert excessive["status"] == "FAIL"
+    assert "PUBLICATION_LIMIT_EXCEEDED" in excessive["errors"]
+    assert mixed["status"] == "FAIL"
+    assert "LAUNCH_GUARD_CHANGED_WITH_CONTENT" in mixed["errors"]
 
 
 def test_unapproved_hold_route_cannot_borrow_an_unrelated_safe_keyword_id(tmp_path):

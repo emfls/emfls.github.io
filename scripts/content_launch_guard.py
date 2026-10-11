@@ -8,7 +8,7 @@ import json
 import re
 import subprocess
 import unicodedata
-from datetime import datetime
+from datetime import date, datetime
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
@@ -191,7 +191,37 @@ TRUSTED_BASE_JSON_PATHS = (
     "data/experiments.json",
     "data/revenue-opportunities.json",
     "data/site-audit.json",
+    "data/content-launch-experiment-approvals.json",
 )
+EXPERIMENT_APPROVAL_JSON_PATH = "data/content-launch-experiment-approvals.json"
+C02_034_EXPERIMENT = {
+    "taskId": "C01-20261011-032",
+    "candidateId": "C01-20261011-032-IPHONEDATE",
+    "url": "/kor/report/window/iphone-photos-date-taken.html",
+    "canonicalUrl": "https://emfls.github.io/kor/report/window/iphone-photos-date-taken.html",
+    "contentPath": "kor/report/window/iphone-photos-date-taken.html",
+    "hubPath": "kor/report/window/index.html",
+    "sitemapPath": "kor/report/window/sitemap.xml",
+    "title": "아이폰 사진 촬영일, 윈도우에서 확인하는 방법",
+    "primaryIntent": "윈도우에서 아이폰 사진의 촬영일을 확인하고 전송 문제를 진단",
+    "experimentScope": "ONE_PAGE",
+    "demandStatus": "VOLUME_UNKNOWN",
+    "approvalId": "C02-20261011-034-IPHONE-001",
+    "approvalStatus": "CT_SCOPED_EXPERIMENT_REVIEW_ONLY",
+    "approvalBasis": "STANDING_AUTHORIZATION_NARROWED_TO_THIS_TASK",
+    "approvalRefs": (
+        "https://app.notion.com/p/3f6db4c0a9918175b79bcbe85fabfbdd",
+        "https://app.notion.com/p/3f6db4c0a99181dc8227d7fde28b740a",
+    ),
+    "sourceReviewRef": "https://app.notion.com/p/3f6db4c0a991818ebc3cccfddb68a3c7",
+    "officialSourceUrls": frozenset({
+        "https://support.apple.com/ko-kr/120267",
+        "https://support.apple.com/ko-kr/116944",
+        "https://support.microsoft.com/en-us/windows/apps/photos/import-photos-and-videos-from-phone-to-pc",
+        "https://learn.microsoft.com/en-us/windows/win32/properties/props-system-photo-datetaken",
+        "https://cipa.jp/std/documents/e/DC-X010-2017.pdf",
+    }),
+}
 TRUSTED_BASE_CSV_PATHS = ("data/keywords_master.csv",)
 TRUSTED_LAUNCH_CODE_PATHS = {
     ".github/workflows/content-index-refresh.yml",
@@ -236,11 +266,16 @@ def _trusted_base_snapshot(root, base_ref):
 
     snapshot = {"revision": resolved, "json": {}, "csv": {}}
     for relative in TRUSTED_BASE_JSON_PATHS:
-        raw = subprocess.run(
+        result = subprocess.run(
             ["git", "show", f"{resolved}:{relative}"],
-            cwd=str(root), text=True, capture_output=True, check=True,
-        ).stdout
-        snapshot["json"][relative] = json.loads(raw)
+            cwd=str(root), text=True, capture_output=True, check=False,
+        )
+        if result.returncode != 0:
+            if relative == EXPERIMENT_APPROVAL_JSON_PATH:
+                snapshot["json"][relative] = None
+                continue
+            raise subprocess.CalledProcessError(result.returncode, result.args, result.stdout, result.stderr)
+        snapshot["json"][relative] = json.loads(result.stdout)
     for relative in TRUSTED_BASE_CSV_PATHS:
         raw = subprocess.run(
             ["git", "show", f"{resolved}:{relative}"],
@@ -341,6 +376,109 @@ class _AnchorParser(HTMLParser):
             attrs = {str(key).casefold(): value for key, value in attrs}
             if attrs.get("href"):
                 self.hrefs.append(attrs["href"])
+
+
+class _PageTitleParser(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.in_title = False
+        self.in_h1 = False
+        self.title_parts = []
+        self.h1_parts = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag.casefold() == "title":
+            self.in_title = True
+        elif tag.casefold() == "h1":
+            self.in_h1 = True
+
+    def handle_endtag(self, tag):
+        if tag.casefold() == "title":
+            self.in_title = False
+        elif tag.casefold() == "h1":
+            self.in_h1 = False
+
+    def handle_data(self, data):
+        if self.in_title:
+            self.title_parts.append(data)
+        if self.in_h1:
+            self.h1_parts.append(data)
+
+    @property
+    def title(self):
+        return " ".join("".join(self.title_parts).split())
+
+    @property
+    def h1(self):
+        return " ".join("".join(self.h1_parts).split())
+
+
+def _validated_c02_034_approval(snapshot):
+    document = snapshot.get("json", {}).get(EXPERIMENT_APPROVAL_JSON_PATH)
+    if not isinstance(document, dict) or document.get("schemaVersion") != 1:
+        return None, "missing_or_invalid"
+    rows = document.get("approvals")
+    if not isinstance(rows, list) or len(rows) != 1 or not isinstance(rows[0], dict):
+        return None, "ambiguous_or_invalid"
+    record = rows[0]
+    expected = C02_034_EXPERIMENT
+    for key in (
+        "approvalId", "taskId", "candidateId", "url", "canonicalUrl", "contentPath",
+        "hubPath", "sitemapPath", "title", "primaryIntent", "experimentScope",
+        "demandStatus", "approvalStatus",
+        "approvalBasis",
+    ):
+        if record.get(key) != expected[key]:
+            return None, "identity_or_scope_mismatch"
+    if record.get("approvalVersion") != 1 or record.get("revoked") is not False:
+        return None, "version_or_revocation_invalid"
+    if record.get("ymyl") not in (False, True) or type(record.get("ymyl")) is not bool:
+        return None, "ymyl_flag_invalid"
+    refs = record.get("approvalRefs")
+    if (
+        not isinstance(refs, list)
+        or len(refs) != len(expected["approvalRefs"])
+        or any(not isinstance(value, str) for value in refs)
+    ):
+        return None, "approval_refs_invalid"
+    if set(refs) != set(expected["approvalRefs"]):
+        return None, "approval_refs_invalid"
+    try:
+        valid_from = date.fromisoformat(record.get("validFrom"))
+        valid_through = date.fromisoformat(record.get("validThrough"))
+        today = datetime.now(SEOUL).date()
+    except (TypeError, ValueError):
+        return None, "approval_dates_invalid"
+    if not (valid_from <= today <= valid_through) or (valid_through - valid_from).days > 7:
+        return None, "approval_expired_or_stale"
+
+    review = record.get("sourceReview")
+    if not isinstance(review, dict) or not (
+        review.get("status") == "REPORTED_REVIEWED_BY_C01"
+        and review.get("reviewedByTask") == expected["taskId"]
+        and review.get("recordRef") == expected["sourceReviewRef"]
+    ):
+        return None, "source_review_unavailable"
+    try:
+        reviewed_at = date.fromisoformat(review.get("reviewedAt"))
+    except (TypeError, ValueError):
+        return None, "source_review_date_invalid"
+    if not (valid_from <= reviewed_at <= today):
+        return None, "source_review_date_invalid"
+    source_rows = review.get("sources")
+    if not isinstance(source_rows, list) or len(source_rows) != len(expected["officialSourceUrls"]):
+        return None, "official_sources_unavailable"
+    if any(
+        not isinstance(source, dict) or not isinstance(source.get("supports"), str)
+        or not source["supports"].strip() or not isinstance(source.get("url"), str)
+        for source in source_rows
+    ) or {source.get("url") for source in source_rows} != set(expected["officialSourceUrls"]):
+        return None, "official_sources_unavailable"
+    if any(key in record for key in (
+        "monthlySearchVolume", "estimatedMonthlyVolume", "demandConfidence", "opportunityScore",
+    )):
+        return None, "unsupported_demand_claim"
+    return record, None
 
 
 def _trusted_candidate_records(snapshot):
@@ -472,6 +610,27 @@ def _trusted_candidate_records(snapshot):
             "source": "external",
         })
 
+    expected = C02_034_EXPERIMENT
+    experiment_approval, experiment_approval_issue = _validated_c02_034_approval(snapshot)
+    if experiment_approval is not None:
+        candidate_id = expected["candidateId"]
+        intent_key = normalize_keyword(expected["primaryIntent"])
+        candidate_key = normalize_keyword(candidate_id)
+        records.append({
+            "candidateId": candidate_id,
+            "keyword": expected["primaryIntent"],
+            "editorialKeys": list(dict.fromkeys(key for key in (intent_key, candidate_key) if key)),
+            "approvalKey": None,
+            "ymyl": experiment_approval["ymyl"] or requires_ymyl_review({"keyword": expected["primaryIntent"]}),
+            "url": expected["url"],
+            "urlIdentity": _normalized_launch_url(expected["url"]),
+            "contentPath": expected["contentPath"],
+            "title": expected["title"],
+            "primaryIntent": expected["primaryIntent"],
+            "approval": experiment_approval,
+            "source": "controlled_experiment",
+        })
+
     by_id = {}
     by_url = {}
     by_path = {}
@@ -493,6 +652,7 @@ def _trusted_candidate_records(snapshot):
         "ambiguousIds": ambiguous_ids,
         "ambiguousUrls": ambiguous_urls,
         "ambiguousPaths": ambiguous_paths,
+        "experimentApprovalIssue": experiment_approval_issue,
     }
 
 
@@ -515,6 +675,10 @@ def _base_published_identities(snapshot):
     manifest = documents["data/content-launch-manifest.json"]
     if not isinstance(manifest, dict):
         raise ValueError("invalid published content launch manifest")
+    published_external_ids = set()
+    preserved_manifests = manifest.get("preservedManifestRecords", [])
+    if not isinstance(preserved_manifests, list) or any(not isinstance(row, dict) for row in preserved_manifests):
+        raise ValueError("invalid preserved publication manifest records")
     _, manifest_keywords = published_manifest_dedupe_keys(manifest)
     is_final_manifest = str(manifest.get("status") or "").upper() in {"PUBLISHED", "LAUNCHED"}
     manifest_url_values = manifest.get("urls") or []
@@ -528,13 +692,32 @@ def _base_published_identities(snapshot):
                 raise ValueError("invalid published manifest URL")
             continue
         manifest_urls.add(url_identity)
+    for previous in preserved_manifests:
+        previous_urls = previous.get("urls") or []
+        previous_ids = previous.get("candidateIds") or []
+        previous_paths = previous.get("contentPaths") or []
+        if not all(isinstance(values, list) for values in (previous_urls, previous_ids, previous_paths)):
+            raise ValueError("invalid preserved publication manifest identities")
+        for value in previous_urls:
+            identity = _normalized_launch_url(value)
+            if identity is None:
+                raise ValueError("invalid preserved publication manifest URL")
+            manifest_urls.add(identity)
+        for value in previous_ids:
+            if not isinstance(value, str) or not value.strip():
+                raise ValueError("invalid preserved publication candidate ID")
+            keyword = keyword_from_candidate_id(value)
+            if keyword:
+                published_keywords_set.add(keyword)
+            else:
+                published_external_ids.add(value)
     published_urls.update(manifest_urls)
     published_keywords_set.update(manifest_keywords)
-    published_external_ids = {
+    published_external_ids.update({
         str(value) for value in (manifest.get("candidateIds") or [])
         if str(manifest.get("status") or "").upper() in {"PUBLISHED", "LAUNCHED"}
         and isinstance(value, str) and value.strip() and not keyword_from_candidate_id(value)
-    } if isinstance(manifest, dict) else set()
+    })
     experiment_doc = documents["data/content-launch-experiments.json"]
     if not isinstance(experiment_doc, dict):
         raise ValueError("invalid content launch experiments")
@@ -577,6 +760,22 @@ def _published_count_for_day(snapshot, day):
                 len(manifest.get("contentPaths") or []),
                 int(manifest.get("publishedToday") or 0),
             ))
+    if not isinstance(manifest, dict):
+        raise ValueError("invalid published content launch manifest")
+    history = manifest.get("preservedManifestRecords", [])
+    if not isinstance(history, list) or any(not isinstance(row, dict) for row in history):
+        raise ValueError("invalid preserved publication manifest records")
+    historical_counts = []
+    for row in history:
+        if publication_day(row.get("runAt") or row.get("publicationAccountingDate")) == day:
+            historical_counts.append(max(
+                len(row.get("candidateIds") or []),
+                len(row.get("urls") or []),
+                len(row.get("contentPaths") or []),
+                int(row.get("publishedToday") or 0),
+            ))
+    if historical_counts:
+        counts.append(sum(historical_counts))
     experiment_doc = documents["data/content-launch-experiments.json"]
     if not isinstance(experiment_doc, dict) or not isinstance(experiment_doc.get("experiments", []), list):
         raise ValueError("invalid content launch experiments")
@@ -647,12 +846,53 @@ def _validate_candidate_bindings(root, manifest, added_html, snapshot, errors):
     if len(added_html) + _published_count_for_day(snapshot, today) > daily_limit:
         errors.add("PUBLICATION_LIMIT_EXCEEDED")
 
+    experiment = C02_034_EXPERIMENT
+    if experiment["candidateId"] in candidate_ids:
+        if not (
+            candidate_ids == [experiment["candidateId"]]
+            and urls == [experiment["url"]]
+            and paths == [experiment["contentPath"]]
+            and added_html == {experiment["contentPath"]}
+            and manifest.get("taskId") == experiment["taskId"]
+            and manifest.get("experimentScope") == experiment["experimentScope"]
+            and manifest.get("demandStatus") == experiment["demandStatus"]
+            and manifest.get("status") == "READY_FOR_REVIEW"
+            and manifest.get("candidateIntents") == [experiment["primaryIntent"]]
+            and manifest.get("candidateTitles") == [experiment["title"]]
+            and manifest.get("hubPaths") == [experiment["hubPath"]]
+            and manifest.get("sitemapPaths") == [experiment["sitemapPath"]]
+        ):
+            errors.add("CANDIDATE_IDENTITY_MISMATCH")
+        if daily_limit != 1:
+            errors.add("PUBLICATION_LIMIT_EXCEEDED")
+        base_manifest = snapshot["json"].get("data/content-launch-manifest.json") or {}
+        if not isinstance(base_manifest, dict):
+            errors.add("PUBLISHED_MANIFEST_HISTORY_DROPPED")
+        else:
+            base_history = base_manifest.get("preservedManifestRecords", [])
+            if not isinstance(base_history, list):
+                errors.add("PUBLISHED_MANIFEST_HISTORY_DROPPED")
+            else:
+                required_history = list(base_history)
+                if any(base_manifest.get(key) for key in ("candidateIds", "urls", "contentPaths")):
+                    required_history.append(base_manifest)
+                head_history = manifest.get("preservedManifestRecords", [])
+                if head_history != required_history:
+                    errors.add("PUBLISHED_MANIFEST_HISTORY_DROPPED")
+
     for candidate_id, url, content_path in zip(candidate_ids, urls, paths):
         if not isinstance(candidate_id, str) or not candidate_id.strip():
             errors.add("LAUNCH_CANDIDATE_IDS_REQUIRED")
             errors.add("CANDIDATE_IDENTITY_MISMATCH")
             continue
         matches = sources["byId"].get(candidate_id, [])
+        if (
+            candidate_id == experiment["candidateId"]
+            and sources.get("experimentApprovalIssue") is not None
+        ):
+            errors.add("APPROVAL_EVIDENCE_UNAVAILABLE")
+            if sources["experimentApprovalIssue"] == "ambiguous_or_invalid":
+                errors.add("AMBIGUOUS_TRUSTED_CANDIDATE")
         if candidate_id in sources["ambiguousIds"] or len(matches) > 1:
             errors.add("AMBIGUOUS_TRUSTED_CANDIDATE")
             continue
@@ -684,6 +924,8 @@ def _validate_candidate_bindings(root, manifest, added_html, snapshot, errors):
             errors.add("CANDIDATE_ALREADY_PUBLISHED")
 
         editorial_keys = source["editorialKeys"]
+        if source["source"] == "controlled_experiment" and source["ymyl"]:
+            errors.add("YMYL_REVIEW_REQUIRED")
         for identity in editorial_keys:
             base_decision = base_decisions.get(identity)
             if base_decision in {"HOLD", "NO_NEW_PAGE", "UPDATE_EXISTING"}:
@@ -696,8 +938,11 @@ def _validate_candidate_bindings(root, manifest, added_html, snapshot, errors):
             page_path.resolve().relative_to(root.resolve())
             if page_path.is_symlink():
                 raise ValueError("content path must not be a symlink")
+            html = page_path.read_text(encoding="utf-8")
             parser = _CanonicalLinkParser()
-            parser.feed(page_path.read_text(encoding="utf-8"))
+            parser.feed(html)
+            title_parser = _PageTitleParser()
+            title_parser.feed(html)
         except (OSError, ValueError):
             errors.add("CANDIDATE_IDENTITY_MISMATCH")
             continue
@@ -706,6 +951,10 @@ def _validate_candidate_bindings(root, manifest, added_html, snapshot, errors):
             or _normalized_launch_url(parser.hrefs[0], require_absolute=True) != url_identity
         ):
             errors.add("CANONICAL_MISMATCH")
+        if source["source"] == "controlled_experiment" and (
+            title_parser.title != source["title"] or title_parser.h1 != source["title"]
+        ):
+            errors.add("CANDIDATE_IDENTITY_MISMATCH")
 
 
 def _url_to_path(url):
@@ -772,6 +1021,8 @@ def validate_launch(root, manifest, changed_paths, trusted_base=None):
     # Only a newly added HTML file starts content-launch validation; when HTML
     # is added, it must still match the manifest exactly.
     launch_changed = bool(added_html)
+    if launch_changed and EXPERIMENT_APPROVAL_JSON_PATH in changed_names:
+        errors.add("APPROVAL_EVIDENCE_CHANGED_WITH_CONTENT")
     if launch_changed and added_html != expected_html:
         errors.add("MANIFEST_DIFF_MISMATCH")
     if launch_changed and changed_names & TRUSTED_LAUNCH_CODE_PATHS:

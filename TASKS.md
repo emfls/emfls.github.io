@@ -56,6 +56,10 @@
   - 범위: page-only/query snapshot provenance; native period alignment is separate from query coverage, missing rows stay UNKNOWN_NOT_ZERO, period mismatch is WINDOW_MISMATCH_HOLD, and no metrics are joined.
   - 상태: Cloud implementation and local GSC/SEO checks complete; keep review-only and await Control Tower review. Do not merge; no collector, workflow, schedule, API request, or AdSense/GA4 change.
 
+- [ ] P0 One-candidate VOLUME_UNKNOWN review gate — C02-20261011-034
+  - 범위: ancestor-trusted, versioned CT-scoped approval for only C01-032 candidate `C01-20261011-032-IPHONEDATE`; ordinary UNKNOWN/INSUFFICIENT_DATA and mixed code+content remain blocked.
+  - 상태: independent Cloud implementation (`ORIGINAL_LOCAL_SHA_NOT_TRANSFERRED`); 27 focused C02 tests and 106 Guard regressions passed, unittest 868 run/3 skipped, pytest 1,519 passed/3 skipped/560 subtests, SEO QA 0 new Critical/Warning. PR #75 OPEN; exact HEAD and run status are tracked in the C02-034 OUTBOX. Await Control Tower review; no publication or merge.
+
 - [ ] P0 Derived Measurement Publisher Consolidation — C07
   - 범위: GA4/GSC/AdSense collectors publish source snapshots only; one serialized daily publisher validates tracked source snapshots, regenerates temporary audit/page scores, and publishes only the three shared derived outputs. Preserve C17 sidecar behavior, source schemas, URL alias semantics, and direct AdSense PARTIAL/VERIFIED distinctions.
   - 저장소 판정: `IMMEDIATE_REPO_SIZE_SAVINGS = NONE`; `GIT_HISTORY_REWRITE = NONE`; `FUTURE_DERIVED_ARTIFACT_CHURN_REDUCTION = YES`.

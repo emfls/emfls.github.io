@@ -1,5 +1,11 @@
 # PROJECT HISTORY
 
+## 2026-10-11 C02-034 — One-candidate VOLUME_UNKNOWN review gate
+
+- Based on remote main `aaf87558b0cf9cfb15808f3eb1bfa59784f0c3ca`. Added an ancestor-trusted, versioned approval record and a fail-closed Guard path for only C01-032 candidate `C01-20261011-032-IPHONEDATE` at `/kor/report/window/iphone-photos-date-taken.html`. Approval is classified as CT-scoped review under the standing authorization, not per-article `USER_APPROVED`; demand remains `VOLUME_UNKNOWN`.
+- The normal `INSUFFICIENT_DATA` rule and `LAUNCH_GUARD_CHANGED_WITH_CONTENT` remain active. No HTML, hub, sitemap, published status, collector, workflow, ad, or measurement code changed. The existing mixed C01 PR #74 remains untouched.
+- Independent Cloud implementation; `ORIGINAL_LOCAL_SHA_NOT_TRANSFERRED` (no C02-034 Mac commit or patch was available or transferred). RED reproduced `TRUSTED_CANDIDATE_NOT_FOUND`; local checks: 27 focused C02 tests and 106 Guard regressions passed, unittest 868 tests run/3 skipped, pytest 1,519 passed/3 skipped/560 subtests, SEO QA 0 new Critical/Warning. PR #75 is OPEN; exact HEAD and run status are tracked in the C02-034 OUTBOX. No publication or merge.
+
 ## 2026-10-11 C01-026 — Protected content and route dependency audit (Cloud)
 
 - Rebuilt independently from GitHub rather than claiming recovery of Mac commit 7d13ffcd; its patch and checksums were unavailable in this Cloud session. Record: ORIGINAL_LOCAL_SHA_NOT_TRANSFERRED. Latest main is 409b9b759893c66b1e6957bdcf40cd7b594bfae4. The local scan checkout was parent de693eaa0a9adb3a1bb88dc9396667195e181b15 because the shell proxy refused access; all 50 target page/sitemap blobs and protection inputs were verified unchanged against 409, and the five other changed main blobs were separately inspected for target-route references.
