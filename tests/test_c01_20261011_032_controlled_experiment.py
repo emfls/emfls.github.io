@@ -167,7 +167,7 @@ class ControlledExperimentTests(unittest.TestCase):
             ),
             1,
         )
-        self.assertEqual(hub.count('href="iphone-photos-date-taken.html"'), 1)
+        self.assertEqual(hub.count('href="/kor/report/window/iphone-photos-date-taken.html"'), 1)
         self.assertEqual(
             sitemap.count(
                 "<loc>https://emfls.github.io"
