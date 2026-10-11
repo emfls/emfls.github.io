@@ -4,6 +4,11 @@
 
 ## P0 - Critical
 
+- [ ] P0 C01-20261010-015 — fail-closed research-only Keyword Hunter provenance lane
+  - 구현: production selector 밖의 fixture-only 입력·capture 모듈과 bounded `latest.json` sidecar를 추가했다. scheduled workflow, Search Ads 요청, production seed/master/scoring/queue/editorial/manifest는 연결하거나 변경하지 않았다.
+  - 검증: latest main `70047d82aff8f39c698691f5b2ae9c1c832b7f80`; 집중 211 passed, unittest 887 passed / 3 skipped, pytest 1,511 passed / 3 skipped, SEO QA 신규 Critical 0 / Warning 0, base 및 HEAD Launch Guard PASS, diff check PASS. exact-head CI 및 Control Tower 검수 대기.
+  - 후속: OPEN PR 및 exact-head CI 증거를 확인한 뒤 Control Tower에 제출한다. 병합·라이브 API 실행 금지.
+
 - [x] P0 PR #56 — Naver parity and exact-head CI hardening — C02
   - 변경: full/compact Naver 상태·출처·freshness 메타데이터를 보존하고 null/누락/변경 시 fail-closed 검증을 추가했다. Manifest가 실제 Naver 경로·SHA와 실행에 사용한 AdSense source revision·SHA를 검증하며 synthetic execution SHA와 PR head를 분리한다. PR-only `contents: read` nonpublishing parity job은 임시 runner 경로에서만 생성·검증하고 7일 artifact를 업로드한다.
   - 데이터: `asOf=2026-10-07`, 18,929 URL. Local full/compact와 revenue parity PASS; Keyword Hunter 34, GSC opportunity 36, protected winner 1,632. Naver metadata missing 0; source `2026-08-19..2026-09-17`, `STALE_DATA` 30 / `NOT_AVAILABLE` 18,899, rank `NOT_AVAILABLE` 유지. GA4/GSC `VERIFIED`, AdSense `PARTIAL` snapshot commit `a5c78eecbff48de70cc900c228b052f907f14d03`.

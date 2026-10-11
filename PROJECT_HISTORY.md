@@ -1,5 +1,12 @@
 # PROJECT HISTORY
 
+## 2026-10-10 C01-20261010-015 — fail-closed research-only Keyword Hunter provenance
+
+- Started from main `3bd622381ccaeed6e7fb644bce38a521500ea0b6`. While full verification ran, main advanced through PR #69 to `70047d82aff8f39c698691f5b2ae9c1c832b7f80`; the isolated branch was fast-forwarded to that exact main before final tests. Only the research-only module, its tests, and its bounded operator gate document were added; no hypothesis input or candidate phrase was created.
+- Added a strict, offline `RESEARCH_ONLY` lane: maximum six reviewed exact Korean B1/A3 hypotheses, input capped at 32 KB, duplicate JSON keys rejected, exact phrase/request hint/provider term retained, raw PC/mobile counts classified as `EXACT` / `CENSORED` / `MISSING` / `INVALID`, KST/provider provenance preserved, and an explicit `NOT_AVAILABLE` monthly reporting period. Capture rows are capped at 1,000 per hypothesis and the compact bundle at 2 MB. A single `latest.json` is atomically replaced; malformed or unexpected prior files fail closed. SHA-256 only detects changes and is not an authenticity signature.
+- No safe natural-schedule integration exists in the current broad production workflow: it shares production collection, quota/credentials, scoring, launch-queue and write/push steps. Therefore this lane remains OFF and fixture-only. Provider requests = 0; no workflow, secrets, seed/master/scoring, queue, editorial decision, manifest, protected page, or publication files changed. Tests use synthetic fixture phrases only.
+- Verification on latest main: focused Keyword Hunter/launch + research-lane tests 211 passed; unittest 887 passed / 3 skipped; pytest 1,511 passed / 3 skipped; SEO QA 0 new Critical / 0 new Warning (745 / 420 current); trusted-base and HEAD Launch Guard PASS. The existing `keyword_hunter.py --dry-run` was started in offline/no-write mode but manually stopped after about seven minutes in the existing site-similarity matching loop; it is NOT reported as passed. OPEN PR and exact-head CI remain pending; no merge or manual dispatch.
+
 ## 2026-10-09 C02 — Quality audit performance-source selection repair
 
 - Reproduced `latest_performance_file()` choosing the lexically last query sidecar instead of page-level GA4/GSC inputs. Replaced filename-order selection with canonical-source, source/schema, required-metric, and per-channel freshness validation; preserved independent GA4/GSC periods, missingness, URL revenue/RPM as `NOT_CONNECTED`, and kept GA4 views distinct from sessions.
