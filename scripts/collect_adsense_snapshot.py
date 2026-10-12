@@ -52,6 +52,8 @@ OAUTH_TOKEN_ERROR_CODES = {
     "unauthorized_client",
     "unsupported_grant_type",
     "invalid_scope",
+    "deleted_client",
+    "org_internal",
 }
 
 
