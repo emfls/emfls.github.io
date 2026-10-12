@@ -773,37 +773,39 @@ class AdSenseSnapshotContractTest(TestCase):
         self.assertNotIn("token=secret", message)
 
     def test_oauth_refresh_http_error_logs_only_allowlisted_oauth_error_code(self):
-        body = {
-            "error": "invalid_grant",
-            "error_description": "private account detail REFRESH_TOKEN_SENTINEL",
-        }
+        for oauth_code in ("invalid_grant", "invalid_client", "deleted_client", "org_internal"):
+            with self.subTest(oauth_code=oauth_code):
+                body = {
+                    "error": oauth_code,
+                    "error_description": "private account detail REFRESH_TOKEN_SENTINEL",
+                }
 
-        def failing_open(request, timeout):
-            raise urllib.error.HTTPError(
-                request.full_url,
-                400,
-                "Bad Request",
-                hdrs=None,
-                fp=io.BytesIO(json.dumps(body).encode()),
-            )
+                def failing_open(request, timeout):
+                    raise urllib.error.HTTPError(
+                        request.full_url,
+                        400,
+                        "Bad Request",
+                        hdrs=None,
+                        fp=io.BytesIO(json.dumps(body).encode()),
+                    )
 
-        with self.assertRaises(collector.GoogleAPIError) as captured:
-            collector.collect_snapshot(
-                ROOT / "tmp-adsense-oauth-error-never-written.json",
-                account_name="accounts/pub-test",
-                client_id="CLIENT_ID_SENTINEL",
-                client_secret="CLIENT_SECRET_SENTINEL",
-                refresh_token="REFRESH_TOKEN_SENTINEL",
-                now=NOW,
-                open_url=failing_open,
-            )
+                with self.assertRaises(collector.GoogleAPIError) as captured:
+                    collector.collect_snapshot(
+                        ROOT / "tmp-adsense-oauth-error-never-written.json",
+                        account_name="accounts/pub-test",
+                        client_id="CLIENT_ID_SENTINEL",
+                        client_secret="CLIENT_SECRET_SENTINEL",
+                        refresh_token="REFRESH_TOKEN_SENTINEL",
+                        now=NOW,
+                        open_url=failing_open,
+                    )
 
-        message = str(captured.exception)
-        self.assertIn("OAUTH_INVALID_GRANT", message)
-        self.assertNotIn("error_description", message)
-        self.assertNotIn("private account detail", message)
-        for secret in ("CLIENT_ID_SENTINEL", "CLIENT_SECRET_SENTINEL", "REFRESH_TOKEN_SENTINEL"):
-            self.assertNotIn(secret, message)
+                message = str(captured.exception)
+                self.assertIn(f"OAUTH_{oauth_code.upper()}", message)
+                self.assertNotIn("error_description", message)
+                self.assertNotIn("private account detail", message)
+                for secret in ("CLIENT_ID_SENTINEL", "CLIENT_SECRET_SENTINEL", "REFRESH_TOKEN_SENTINEL"):
+                    self.assertNotIn(secret, message)
 
     def test_api_queries_keep_site_and_page_url_reports_separate_and_never_store_tokens(self):
         current, prior, page = reports()
