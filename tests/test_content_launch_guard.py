@@ -365,13 +365,12 @@ def test_guard_allows_only_the_exact_stage_aware_empty_rows_collector_transition
         text=True, capture_output=True, check=True,
     ).stdout.strip()
     approved = APPROVED_MONETIZATION_TRANSITIONS[path]
-    transition = ("7e462d5e1ccedfba022594d98cabf4aa3697ca01", current_blob)
+    transition = ("2f4890e73ae705c5347b3755c5fb4ef47ca23e2b", current_blob)
 
     assert transition in approved
     assert approved == {
         ("94f34228ed8b10213085b3de19bbab14e4fee0de", "83595861b3ea484b7fd9ad0c7fb11515f6516692"),
         ("83595861b3ea484b7fd9ad0c7fb11515f6516692", "2f4890e73ae705c5347b3755c5fb4ef47ca23e2b"),
-        ("2f4890e73ae705c5347b3755c5fb4ef47ca23e2b", "7e462d5e1ccedfba022594d98cabf4aa3697ca01"),
         transition,
     }
     assert validate_launch(tmp_path, manifest([]), [("M", path, *transition)]) == []
@@ -387,8 +386,6 @@ def test_guard_allows_only_the_exact_stage_aware_empty_rows_collector_transition
     assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
         tmp_path, manifest([]), [("M", ".github/workflows/adsense-collection.yml")]
     )
-
-
 
 
 def test_git_changes_captures_blobs_for_the_approved_adsense_collector_transition(monkeypatch, tmp_path):
