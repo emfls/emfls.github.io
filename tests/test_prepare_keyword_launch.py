@@ -1,7 +1,54 @@
 import json
 import csv
+import shutil
+from pathlib import Path
 from scripts import prepare_keyword_launch
-from scripts.prepare_keyword_launch import prepare_queue
+from scripts.content_launch_policy import normalize_keyword
+from scripts.prepare_keyword_launch import prepare_queue as _prepare_queue
+
+def source_backed_approval(keyword, **extra):
+    return {
+        "keyword": keyword,
+        "decision": "APPROVE",
+        "reason": "The fixture records a distinct, source-reviewed page intent.",
+        "sourceRefs": ["https://sources.example.test/editorial/" + keyword],
+        **extra,
+    }
+
+def prepare_queue(rows, *args, **kwargs):
+    """Existing policy tests use explicit fixture clearances for unblocked rows."""
+    rows = list(rows)
+    positional = list(args)
+    if len(positional) >= 7:
+        supplied = positional[6]
+    else:
+        supplied = kwargs.get("editorial_decisions")
+    if isinstance(supplied, dict):
+        decisions = [{"keyword": keyword, "decision": decision} for keyword, decision in supplied.items()]
+    elif isinstance(supplied, list):
+        decisions = list(supplied)
+    else:
+        decisions = []
+    decided = set()
+    for row in decisions:
+        if not isinstance(row, dict):
+            continue
+        keyword = normalize_keyword(row.get("keyword"))
+        if keyword:
+            decided.add(keyword)
+        if row.get("decision") == "HOLD":
+            decided.update(normalize_keyword(alias) for alias in row.get("holdAliases", []) if normalize_keyword(alias))
+    for candidate in rows:
+        keyword = normalize_keyword(candidate.get("keyword"))
+        if keyword and keyword not in decided:
+            decisions.append(source_backed_approval(candidate.get("keyword")))
+            decided.add(keyword)
+    if len(positional) >= 7:
+        positional[6] = decisions
+        args = tuple(positional)
+    else:
+        kwargs["editorial_decisions"] = decisions
+    return _prepare_queue(rows, *args, **kwargs)
 
 def test_prepare_queue_records_required_fields_and_preserves_excluded(tmp_path):
     rows=[{"keyword":"무료 계산기","status":"NEW","score_valid":"True","opportunity_score":"90","confidence":"HIGH","category":"tools","action":"NEW_PAGE","content_types":"calculator/tool|evergreen","suggested_url":"/kor/util/free/index.html","closest_url":"","overlap":"NO_OVERLAP"}]
@@ -93,8 +140,8 @@ def test_editorial_hold_does_not_mutate_rows():
 
 def test_unknown_editorial_decision_is_ignored_safely():
     row={"keyword":"안전한도구","status":"NEW","score_valid":"True","opportunity_score":"80","action":"NEW_PAGE","content_types":"calculator/tool"}
-    out=prepare_queue([row],set(),set(),1,"2026-09-13T00:00:00+00:00",0,None,[{"keyword":"안전한도구","decision":"UNKNOWN"}])
-    assert out["queue"] and out["excluded"]["editorial_hold"] == 0
+    out=_prepare_queue([row],set(),set(),1,"2026-09-13T00:00:00+00:00",0,None,[{"keyword":"안전한도구","decision":"UNKNOWN"}])
+    assert out["queue"] == [] and out["excluded"]["editorial_not_approved"] == 1
 
 def test_car_check_cost_hold_does_not_block_distinct_inspection_keyword():
     rows=[{"keyword":"자동차점검비용","status":"NEW","score_valid":"True","opportunity_score":"90","action":"NEW_PAGE","content_types":"informational"}, {"keyword":"자동차검사비용","status":"NEW","score_valid":"True","opportunity_score":"80","action":"NEW_PAGE","content_types":"informational"}]
@@ -258,7 +305,12 @@ def test_current_keyboard_cleaning_publication_is_preserved_and_leaves_two_slots
         json.dumps(current_manifest, ensure_ascii=False), encoding="utf-8"
     )
     (data / "content-launch-decisions.json").write_text(
-        json.dumps({"schemaVersion": 1, "decisions": []}), encoding="utf-8"
+        json.dumps({"schemaVersion": 1, "decisions": [
+            source_backed_approval("산책길지도"),
+            source_backed_approval("등산준비목록"),
+            source_backed_approval("계절별옷정리"),
+            source_backed_approval("캠핑준비표"),
+        ]}), encoding="utf-8"
     )
     monkeypatch.setattr(
         "sys.argv",
@@ -383,24 +435,28 @@ def test_invalid_decision_store_fails_closed(tmp_path):
 
 def test_ymyl_candidate_needs_explicit_approval_and_safe_candidate_stays_eligible():
     candidate = launch_row("연차개수계산기", "/kor/util/yeoncagaesugyesangi/")
-    unreviewed = prepare_queue(
+    unreviewed = _prepare_queue(
         [candidate], daily_limit=1, selected_at="2026-10-08T08:22:46+09:00",
         editorial_decisions=[], published_manifest={},
     )
     assert unreviewed["queue"] == []
     assert unreviewed["excluded"]["ymyl"] == 1
 
-    approved = prepare_queue(
+    approved = _prepare_queue(
         [candidate], daily_limit=1, selected_at="2026-10-08T08:22:46+09:00",
-        editorial_decisions=[{"keyword": "연차개수계산기", "decision": "APPROVE"}], published_manifest={},
+        editorial_decisions=[source_backed_approval("연차개수계산기", ymylReview={
+            "status": "APPROVED",
+            "reason": "The fixture includes a separate, source-backed YMYL review.",
+            "sourceRefs": ["https://sources.example.test/ymyl/leave-pay"],
+        })], published_manifest={},
     )
     assert [item["keyword"] for item in approved["queue"]] == ["연차개수계산기"]
     assert approved["excluded"]["ymyl"] == 0
 
-    safe = prepare_queue(
+    safe = _prepare_queue(
         [launch_row("글자수계산기", "/kor/util/character-count/")],
         daily_limit=1, selected_at="2026-10-08T08:22:46+09:00",
-        editorial_decisions=[], published_manifest={},
+        editorial_decisions=[source_backed_approval("글자수계산기")], published_manifest={},
     )
     assert [item["keyword"] for item in safe["queue"]] == ["글자수계산기"]
 
@@ -418,6 +474,7 @@ def test_only_explicit_hold_aliases_block_queue_and_regeneration_is_deterministi
 
     decisions = prepare_keyword_launch.load_decisions(decisions_path)
     assert decisions.get("가을여행추천") == "HOLD"
+
     assert decisions.get("국내가을여행지추천") == "HOLD"
     assert decisions.get("9월국내여행지추천") is None
 
@@ -445,6 +502,165 @@ def test_only_explicit_hold_aliases_block_queue_and_regeneration_is_deterministi
     assert not queued.intersection({"가을여행추천", "국내가을여행지추천"})
     assert queued == {"9월국내여행지추천", "안전한독립후보"}
     assert first["dailyLimit"] == 3
+
+def test_only_source_backed_editorial_approval_can_fill_ready_queue():
+    rows = [
+        launch_row("미검토우선후보", "/kor/column/unreviewed/", "99"),
+        launch_row("독립도구후보", "/kor/column/distinct-tool/", "80"),
+    ]
+
+    result = _prepare_queue(
+        rows,
+        daily_limit=1,
+        selected_at="2026-10-12T12:00:00+09:00",
+        editorial_decisions=[source_backed_approval("독립도구후보")],
+        published_manifest={},
+    )
+
+    assert [item["keyword"] for item in result["queue"]] == ["독립도구후보"]
+    assert result["excluded"]["editorial_not_approved"] == 1
+
+
+def test_approval_without_evidence_refs_fails_closed():
+    result = _prepare_queue(
+        [launch_row("근거없는승인", "/kor/column/no-evidence/")],
+        daily_limit=1,
+        selected_at="2026-10-12T12:00:00+09:00",
+        editorial_decisions=[{
+            "keyword": "근거없는승인",
+            "decision": "APPROVE",
+            "reason": "A reason without source references.",
+        }],
+        published_manifest={},
+    )
+
+    assert result["queue"] == []
+    assert result["excluded"]["editorial_not_approved"] == 1
+
+
+def test_editorial_clearance_does_not_clear_ymyl_without_separate_review():
+    result = _prepare_queue(
+        [launch_row("육아휴직급여", "/kor/report/parenting/leave-pay/")],
+        daily_limit=1,
+        selected_at="2026-10-12T12:00:00+09:00",
+        editorial_decisions=[source_backed_approval("육아휴직급여")],
+        published_manifest={},
+    )
+
+    assert result["queue"] == []
+    assert result["excluded"]["ymyl"] == 1
+
+
+def test_exact_false_ready_keywords_have_source_backed_negative_decisions():
+    registry = json.loads(
+        (Path(__file__).resolve().parents[1] / "data" / "content-launch-decisions.json").read_text(encoding="utf-8")
+    )
+    expected = {
+        "1월국내여행지추천": "HOLD",
+        "3월여행지추천": "HOLD",
+        "차량폐차가격": "NO_NEW_PAGE",
+    }
+    decisions = {row.get("keyword"): row for row in registry["decisions"]}
+    for keyword, disposition in expected.items():
+        row = decisions[keyword]
+        assert row["decision"] == disposition
+        assert row["reason"].strip()
+        assert row["sourceRefs"]
+    assert "https://app.notion.com/p/3f6db4c0a99181b8b9b9ec2f9dc2ee7e" in decisions["1월국내여행지추천"]["sourceRefs"]
+    assert "https://app.notion.com/p/3f6db4c0a99181b8b9b9ec2f9dc2ee7e" in decisions["3월여행지추천"]["sourceRefs"]
+    assert decisions["차량폐차가격"]["targetUrl"] == "/kor/report/car/car-scrap-cost-guide.html"
+    assert "https://app.notion.com/p/3f6db4c0a9918133a635ee5bd30120a7" in decisions["차량폐차가격"]["sourceRefs"]
+
+    result = _prepare_queue(
+        [launch_row(keyword, f"/kor/column/{index}/") for index, keyword in enumerate(expected)],
+        daily_limit=3,
+        selected_at="2026-10-12T12:00:00+09:00",
+        editorial_decisions=registry["decisions"],
+        published_manifest={},
+    )
+    assert result["queue"] == []
+    assert result["excluded"]["editorial_hold"] == 2
+    assert result["excluded"]["no_new_page"] == 1
+
+
+def test_latest_main_keyword_snapshot_replays_without_false_ready_rows(tmp_path, monkeypatch):
+    source_root = Path(__file__).resolve().parents[1]
+    source_data = source_root / "data"
+    data = tmp_path / "data"
+    data.mkdir()
+    names = (
+        "keywords_master.csv",
+        "content-index-ko.json",
+        "published_keywords.json",
+        "content-launch-counter.json",
+        "content-launch-manifest.json",
+        "content-launch-decisions.json",
+        "content-launch-queue.json",
+    )
+    for name in names:
+        shutil.copy2(source_data / name, data / name)
+
+    keywords = {row["keyword"]: row for row in csv.DictReader((data / "keywords_master.csv").open(encoding="utf-8", newline=""))}
+    false_ready = {"1월국내여행지추천", "3월여행지추천", "차량폐차가격"}
+    assert false_ready <= set(keywords)
+    assert all(keywords[keyword]["score_valid"].strip().casefold() == "true" for keyword in false_ready)
+    selected_at = json.loads((data / "content-launch-queue.json").read_text(encoding="utf-8"))["selectedAt"]
+    manifest_before = json.loads((data / "content-launch-manifest.json").read_text(encoding="utf-8"))
+    monkeypatch.setattr(
+        "sys.argv",
+        ["prepare_keyword_launch.py", "--root", str(tmp_path), "--selected-at", selected_at],
+    )
+
+    prepare_keyword_launch.main()
+
+    output = json.loads((data / "content-launch-queue.json").read_text(encoding="utf-8"))
+    assert output["queue"] == []
+    assert output["dailyLimit"] == 3
+    assert output["publishedToday"] == 0
+    assert output["remainingCapacity"] == 3
+    assert output["excluded"]["editorial_hold"] >= 2
+    assert output["excluded"]["no_new_page"] >= 1
+    assert output["excluded"]["editorial_not_approved"] >= 1
+    assert json.loads((data / "content-launch-manifest.json").read_text(encoding="utf-8")) == manifest_before
+
+
+def test_single_page_experiment_approval_does_not_authorize_keyword_queue(tmp_path, monkeypatch):
+    data = tmp_path / "data"
+    data.mkdir()
+    with (data / "keywords_master.csv").open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=[
+            "keyword", "status", "score_valid", "opportunity_score", "confidence",
+            "category", "action", "content_types", "overlap", "suggested_url",
+        ])
+        writer.writeheader()
+        writer.writerow(launch_row("아이폰 사진 촬영일 확인", "/kor/report/window/iphone-photos-date-taken.html"))
+    (data / "content-index-ko.json").write_text("[]", encoding="utf-8")
+    (data / "published_keywords.json").write_text("[]", encoding="utf-8")
+    (data / "content-launch-counter.json").write_text("{}", encoding="utf-8")
+    (data / "content-launch-manifest.json").write_text(json.dumps({"status": "READY_FOR_REVIEW", "dailyLimit": 1}), encoding="utf-8")
+    (data / "content-launch-decisions.json").write_text(json.dumps({"schemaVersion": 1, "decisions": []}), encoding="utf-8")
+    (data / "content-launch-experiment-approvals.json").write_text(json.dumps({
+        "schemaVersion": 1,
+        "approvals": [{
+            "approvalId": "C02-20261011-034-IPHONE-001",
+            "taskId": "C01-20261011-032",
+            "candidateId": "C01-20261011-032-IPHONEDATE",
+            "approvalStatus": "CT_SCOPED_EXPERIMENT_REVIEW_ONLY",
+            "experimentScope": "ONE_PAGE",
+            "ymyl": False,
+            "approvalRefs": ["https://app.notion.com/p/3f6db4c0a9918175b79bcbe85fabfbdd"],
+        }],
+    }), encoding="utf-8")
+    monkeypatch.setattr(
+        "sys.argv",
+        ["prepare_keyword_launch.py", "--root", str(tmp_path), "--selected-at", "2026-10-12T12:00:00+09:00"],
+    )
+
+    prepare_keyword_launch.main()
+
+    output = json.loads((data / "content-launch-queue.json").read_text(encoding="utf-8"))
+    assert output["queue"] == []
+    assert output["excluded"]["editorial_not_approved"] == 1
 
 
 def test_hold_aliases_are_rejected_for_approval_or_conflicting_decisions(tmp_path):
@@ -484,7 +700,7 @@ def test_exact_september_travel_hold_preserves_other_month_candidates():
     assert decisions.get("가을여행추천") == "HOLD"
     assert decisions.get("가을여행지추천") == "HOLD"
     assert decisions.get("국내가을여행지추천") == "HOLD"
-    assert decisions.get("3월여행지추천") is None
+    assert decisions.get("3월여행지추천") == "HOLD"
     assert decisions.get("9월여행지추천") is None
 
     result = prepare_queue(
@@ -504,15 +720,15 @@ def test_exact_september_travel_hold_preserves_other_month_candidates():
     )
 
     assert [item["keyword"] for item in result["queue"]] == [
-        "3월여행지추천",
         "9월여행지추천",
         "월별국내여행가이드",
+        "안전한도구",
     ]
-    assert result["excluded"]["editorial_hold"] == 3
+    assert result["excluded"]["editorial_hold"] == 4
     assert result["dailyLimit"] == 3
 
 
-def test_exact_september_hold_does_not_expire_at_year_rollover():
+def test_exact_september_and_march_holds_do_not_expire_at_year_rollover():
     from pathlib import Path
 
     root = Path(__file__).resolve().parents[1]
@@ -535,5 +751,5 @@ def test_exact_september_hold_does_not_expire_at_year_rollover():
             editorial_decisions=decisions,
             published_manifest={},
         )
-        assert [item["keyword"] for item in result["queue"]] == ["3월여행지추천"]
-        assert result["excluded"]["editorial_hold"] == 1
+        assert result["queue"] == []
+        assert result["excluded"]["editorial_hold"] == 2

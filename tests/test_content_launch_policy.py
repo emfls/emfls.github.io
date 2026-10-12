@@ -10,6 +10,14 @@ def row(**kw):
     base = {"keyword":"계산기", "status":"NEW", "score_valid":"True", "opportunity_score":"80", "confidence":"HIGH", "category":"tools", "action":"NEW_PAGE", "content_types":"calculator/tool|evergreen", "closest_url":"", "overlap":"NO_OVERLAP"}
     base.update(kw); return base
 
+def editorial_clearance(keyword):
+    return {
+        "keyword": keyword,
+        "decision": "APPROVE",
+        "reason": "Source-backed distinct-intent fixture for queue eligibility tests.",
+        "sourceRefs": ["https://sources.example.test/queue-policy/" + keyword],
+    }
+
 def current_master_rows():
     master_path = Path(__file__).resolve().parents[1] / "data" / "keywords_master.csv"
     with master_path.open(encoding="utf-8-sig", newline="") as source:
@@ -235,7 +243,7 @@ def test_high_risk_candidate_fixtures_fail_closed_before_queue_selection():
             published_keywords=set(),
             daily_limit=1,
             selected_at="2026-10-03T12:00:00+09:00",
-            editorial_decisions=[],
+            editorial_decisions=[editorial_clearance(keyword)],
             published_manifest={},
         )
         assert result["queue"] == [], keyword
@@ -278,7 +286,7 @@ def test_consumer_and_vehicle_procedure_fixtures_are_blocked_as_legal_ymyl():
             published_keywords=set(),
             daily_limit=1,
             selected_at="2026-10-03T12:00:00+09:00",
-            editorial_decisions=[],
+            editorial_decisions=[editorial_clearance(keyword)],
             published_manifest={},
         )
         assert result["queue"] == [], keyword
@@ -320,7 +328,7 @@ def test_safe_control_fixtures_remain_eligible_with_noisy_recovery_category():
             published_keywords=set(),
             daily_limit=1,
             selected_at="2026-10-03T12:00:00+09:00",
-            editorial_decisions=[],
+            editorial_decisions=[editorial_clearance(keyword)],
             published_manifest={},
         )
         assert [item["keyword"] for item in result["queue"]] == [keyword]
@@ -637,7 +645,7 @@ def test_master_safe_controls_remain_queue_eligible():
             published_keywords=set(),
             daily_limit=1,
             selected_at="2026-09-30T15:50:00+09:00",
-            editorial_decisions=[],
+            editorial_decisions=[editorial_clearance(keyword)],
             published_manifest={},
         )
         assert [item["keyword"] for item in result["queue"]] == [keyword]

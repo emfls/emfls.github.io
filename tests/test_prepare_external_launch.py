@@ -76,6 +76,15 @@ def ready_candidate(candidate_id, opportunity=90, quality=90):
     }
 
 
+def editorial_approval(keyword):
+    return {
+        "keyword": keyword,
+        "decision": "APPROVE",
+        "reason": "The fixture has a distinct, reviewed safe-tool intent.",
+        "sourceRefs": [f"https://sources.example.test/editorial/{keyword}"],
+    }
+
+
 def prepare(root, candidates, experiments=None):
     write_json(
         root / "data/external-content-opportunities.json",
@@ -414,6 +423,7 @@ def test_external_ready_manifest_carries_same_day_publication_count(tmp_path):
         ],
         daily_limit=3,
         selected_at="2026-09-02T15:00:00+09:00",
+        editorial_decisions=[editorial_approval(f"안전한도구{index}") for index in range(4)],
         published_manifest=prepared_manifest,
     )
 
