@@ -63,9 +63,6 @@ APPROVED_MONETIZATION_TRANSITIONS = {
         ("2f4890e73ae705c5347b3755c5fb4ef47ca23e2b", "7e462d5e1ccedfba022594d98cabf4aa3697ca01"),
         ("7e462d5e1ccedfba022594d98cabf4aa3697ca01", "3d9928a86b2792ba337bde8a566a48f0d908594a"),
     },
-    "tests/test_adsense_snapshot.py": {
-        ("544b739523d4944d07e03442e8bd0989051e5f83", "a76c04781d8a136c64b03b9d5d1ec263edba3545"),
-    },
 }
 APPROVED_JP_TRAVEL_CANARY_DELETIONS = {
     "jp/report/travel/bangladesh-lalmonirhat.html",
