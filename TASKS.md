@@ -11,6 +11,9 @@
 
 ## P0 - Critical
 
+- [ ] C02-20261012-037 — False READY_TO_LAUNCH queue blocker
+  - 상태: exact three source-backed HOLD/NO_NEW_PAGE decisions and fail-closed editorial clearance are implemented; current queue is empty while its daily capacity remains 3. Focused generator tests pass. Task remains open for independent PR and Control Tower review; no merge or publication is authorized here.
+
 - [ ] P0 One-page iPhone photo capture-date guide — C01-20261011-032
   - 범위: approved `C01-20261011-032-IPHONEDATE` 단일 후보만 review; `VOLUME_UNKNOWN`, 실험 상한 1, 기존 PUBLISHED manifest 전체 보존.
   - 상태: run `38144790042`의 fixture 실패 수정 후 run `38146532063`에서 895 unittest PASS/3 skipped, pytest 1,544 PASS/3 skipped/560 subtests였으나 기존 full-paint 및 six-keyword manifest 테스트 2개가 top-level PUBLISHED만 기대해 FAIL. 두 테스트를 `preservedManifestRecords`의 동일한 이전 keyboard-cleaning PUBLISHED 이력도 인식하도록 좁게 보정; 새 exact-head CI 및 관제탑 검수 대기. 전역 KST cap 3 및 Launch Guard/승인/보호 데이터는 변경하지 않음. 미병합·미발행.

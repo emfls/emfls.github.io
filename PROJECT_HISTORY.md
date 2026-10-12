@@ -1,5 +1,13 @@
 # PROJECT HISTORY
 
+## 2026-10-12 C02-20261012-037 — false READY_TO_LAUNCH queue prevention
+
+- Based on latest main `6652778e8dcde8827526d8224ec39395c8e8fc39`, the checked queue still listed `1월국내여행지추천`, `3월여행지추천`, and `차량폐차가격` as READY_TO_LAUNCH. Reused existing C01-027/C01-030 decisions and verified current pages; no new keyword-master or SERP research was run.
+- `prepare_keyword_launch.py` now requires an exact editorial `APPROVE` with a non-empty reason and HTTPS `sourceRefs` before READY selection; unreviewed rows cannot backfill READY slots. YMYL clearance is separately source-backed under `ymylReview`. The existing one-page C01-032 experiment approval remains a different gate.
+- Added exact `HOLD` records for the January and March general travel intents and `NO_NEW_PAGE` for `차량폐차가격`, with target `/kor/report/car/car-scrap-cost-guide.html`. No broad aliases were added. Regenerated current main's queue snapshot at its original selection time: queue 0, daily limit 3, remaining capacity 3; excluded counts include HOLD 13, NO_NEW_PAGE 2, unapproved-ready candidates 3, YMYL 4. The existing publication manifest was preserved.
+- Verification: four new RED regressions failed before the implementation; focused generator suite now passes 42/42, including a replay of the current main keyword snapshot and an experiment-approval separation check. Exact-head SEO QA, Launch Guard, unittest, pytest, PR HEAD, and run details are tracked in the existing C02-037 OUTBOX. No publication, GSC/GA4/AdSense change, or revenue claim.
+- Scope is limited to the launch decision registry, queue builder, its tests, regenerated queue, and this task/status documentation. Keep task open pending independent review; do not merge automatically.
+
 ## 2026-10-11 C01-032 — iPhone photo capture-date guide content-only candidate
 
 - Based on the post-Phase-A main `61a203487f0c8094b19f19562492b90461620b6f` and its task-scoped approval for `C01-20261011-032-IPHONEDATE`; demand remains `VOLUME_UNKNOWN` and status remains `READY_FOR_REVIEW`.
