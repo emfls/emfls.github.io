@@ -1,32 +1,32 @@
-name: Keyword Hunter
+name: Keyword Hunter targeted no-deploy canary
 
 on:
-  schedule:
-    - cron: "17 */2 * * *"
   workflow_dispatch:
     inputs:
       mode:
-        description: Collection mode
+        description: Run the fixed one-query targeted measurement
         type: choice
-        options: [broad, targeted]
-        default: broad
+        options: [targeted]
+        default: targeted
         required: true
       keywords:
-        description: 1-5 explicit queries (JSON array or one query per line; targeted mode only)
+        description: Exact query; must match the authorized SC050 query
         type: string
-        required: false
+        default: '윈도우 11 검색 창 새 UI 안 보임'
+        required: true
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: keyword-hunter-production
   cancel-in-progress: false
 
 jobs:
-  discover:
+  targeted-canary:
+    if: inputs.mode == 'targeted' && inputs.keywords == '윈도우 11 검색 창 새 UI 안 보임'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
     env:
       TZ: Asia/Seoul
       NAVER_SEARCHAD_API_KEY: ${{ secrets.NAVER_SEARCHAD_API_KEY }}
@@ -36,99 +36,45 @@ jobs:
       NAVER_API_HUB_CLIENT_SECRET: ${{ secrets.NAVER_API_HUB_CLIENT_SECRET }}
       NAVER_WEB_SEARCH_API_HUB_CLIENT_ID: ${{ secrets.NAVER_WEB_SEARCH_API_HUB_CLIENT_ID }}
       NAVER_WEB_SEARCH_API_HUB_CLIENT_SECRET: ${{ secrets.NAVER_WEB_SEARCH_API_HUB_CLIENT_SECRET }}
-      KEYWORD_HUNTER_TARGETS_JSON: ${{ inputs.keywords }}
+      KEYWORD_HUNTER_TARGETS_JSON: '["윈도우 11 검색 창 새 UI 안 보임"]'
+      KEYWORD_HUNTER_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
     steps:
-      - name: Check out repository
+      - name: Check out selected branch without persisted credentials
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Validate required credentials
-        run: |
-          if [ -z "$NAVER_SEARCHAD_API_KEY" ] || [ -z "$NAVER_SEARCHAD_SECRET_KEY" ] || [ -z "$NAVER_SEARCHAD_CUSTOMER_ID" ]; then
-            echo "::error::Add the three NAVER_SEARCHAD repository secrets."
-            exit 1
-          fi
-          if [ -z "$NAVER_API_HUB_CLIENT_ID" ] || [ -z "$NAVER_API_HUB_CLIENT_SECRET" ]; then
-            echo "::error::Add the two NAVER_API_HUB repository secrets."
-            exit 1
-          fi
-
       - name: Install test runner
         run: python3 -m pip install pytest
 
-      - name: Run Keyword Hunter
-        if: github.event_name == 'schedule' || inputs.mode != 'targeted'
-        run: python3 scripts/keyword_hunter.py
+      - name: Verify no-deploy canary contract and targeted collector
+        run: python3 -m pytest tests/test_keyword_hunter_canary_workflow.py tests/test_keyword_hunter_targeted.py -q
 
-      - name: Verify Keyword Hunter
-        run: python3 -m pytest tests/test_keyword_hunter*.py -q
-
-      - name: Run targeted Keyword Hunter measurement
-        if: github.event_name == 'workflow_dispatch' && inputs.mode == 'targeted'
-        env:
-          KEYWORD_HUNTER_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
-        run: python3 scripts/keyword_hunter_targeted.py --root .
-
-      - name: Prepare supervised review queue
-        if: github.event_name == 'schedule' || inputs.mode != 'targeted'
-        run: python3 scripts/prepare_keyword_launch.py --root .
-
-      - name: Validate supervised review queue
-        if: github.event_name == 'schedule' || inputs.mode != 'targeted'
+      - name: Validate required credentials without printing values
         run: |
-          python3 - <<'PY'
-          import json
-          from scripts.content_launch_policy import DAILY_PUBLICATION_LIMIT
-
-          q=json.load(open('data/content-launch-queue.json', encoding='utf-8'))
-          daily_limit=q.get('dailyLimit')
-          assert type(daily_limit) is int and 0 <= daily_limit <= DAILY_PUBLICATION_LIMIT
-          items=q.get('queue', [])
-          assert isinstance(items, list) and len(items) <= daily_limit
-          for item in items:
-              assert item.get('status') == 'READY_TO_LAUNCH'
-              assert item.get('review_status') == 'PAGE_REVIEW_READY'
-              assert item.get('suggested_url','').startswith('/kor/')
-          assert not any(k in q.get('excluded', {}) for k in [])
-          PY
-
-      - name: Protect publication state
-        if: always()
-        run: |
-          for path in data/published_keywords.json data/content-launch-counter.json data/content-launch-manifest.json data/content-launch-decisions.json; do
-            if ! git diff HEAD --quiet -- "$path" || [ -n "$(git ls-files --others --exclude-standard -- "$path")" ]; then
-              echo "::error::Protected publication state changed: $path"
-              exit 1
-            fi
-          done
-          if git status --porcelain --untracked-files=all | grep -E '^.. kor/.*\.html$'; then
-            echo "::error::HTML changed during measurement"
+          if [ -z "$NAVER_SEARCHAD_API_KEY" ] || [ -z "$NAVER_SEARCHAD_SECRET_KEY" ] || [ -z "$NAVER_SEARCHAD_CUSTOMER_ID" ]; then
+            echo "::error::Required Search Ads credentials are unavailable."
+            exit 1
+          fi
+          if [ -z "$NAVER_API_HUB_CLIENT_ID" ] || [ -z "$NAVER_API_HUB_CLIENT_SECRET" ]; then
+            echo "::error::Required Naver API Hub credentials are unavailable."
             exit 1
           fi
 
-      - name: Persist measured state
-        if: github.event_name == 'schedule' || inputs.mode != 'targeted'
-        run: python3 scripts/keyword_hunter_persist.py --mode broad --base-sha "$GITHUB_SHA" --diagnostics-dir "$RUNNER_TEMP/keyword-hunter-persistence"
+      - name: Run the single authorized targeted measurement
+        run: python3 scripts/keyword_hunter_targeted.py --root .
 
-      - name: Persist targeted measurement
-        if: always() && github.event_name == 'workflow_dispatch' && inputs.mode == 'targeted'
-        run: python3 scripts/keyword_hunter_persist.py --mode targeted --base-sha "$GITHUB_SHA" --diagnostics-dir "$RUNNER_TEMP/keyword-hunter-persistence"
-
-      - name: Upload latest reports
+      - name: Upload the run-specific filtered measurement only
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: keyword-hunter-reports
-          path: |
-            reports/keyword-hunter/
-            reports/keyword-targeted-validation/
-            data/existing-page-improvement-candidates.json
-            ${{ runner.temp }}/keyword-hunter-persistence/
-          retention-days: 30
-          if-no-files-found: warn
+          name: sc050-keyword-targeted-${{ github.run_id }}-${{ github.run_attempt }}
+          path: reports/keyword-targeted-validation/${{ github.run_id }}-${{ github.run_attempt }}.json
+          retention-days: 7
+          if-no-files-found: error
