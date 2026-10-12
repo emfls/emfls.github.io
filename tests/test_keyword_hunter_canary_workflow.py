@@ -15,6 +15,9 @@ def test_targeted_canary_is_read_only_and_artifact_only():
     assert "retention-days: 7" in workflow
     assert "if-no-files-found: error" in workflow
     assert "reports/keyword-targeted-validation/${{ github.run_id }}-${{ github.run_attempt }}.json" in workflow
+    assert "  validate-canary:" in workflow
+    validation_job = workflow.split("  validate-canary:", 1)[1].split("  targeted-canary:", 1)[0]
+    assert "secrets." not in validation_job
 
     for forbidden in (
         "keyword_hunter_persist.py",
