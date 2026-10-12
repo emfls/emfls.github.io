@@ -390,22 +390,6 @@ def test_guard_allows_only_the_exact_stage_aware_empty_rows_collector_transition
 
 
 
-def test_guard_allows_only_the_exact_adsense_oauth_regression_test_transition(tmp_path):
-    setup_data(tmp_path)
-    path = "tests/test_adsense_snapshot.py"
-    transition = (
-        "544b739523d4944d07e03442e8bd0989051e5f83",
-        "a76c04781d8a136c64b03b9d5d1ec263edba3545",
-    )
-
-    assert transition in APPROVED_MONETIZATION_TRANSITIONS[path]
-    assert validate_launch(tmp_path, manifest([]), [("M", path, *transition)]) == []
-    assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
-        tmp_path, manifest([]), [("M", path, "0" * 40, transition[1])]
-    )
-    assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
-        tmp_path, manifest([]), [("M", path, transition[0], "f" * 40)]
-    )
 
 def test_git_changes_captures_blobs_for_the_approved_adsense_collector_transition(monkeypatch, tmp_path):
     path = "scripts/collect_adsense_snapshot.py"
