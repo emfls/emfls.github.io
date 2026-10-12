@@ -45,6 +45,14 @@ ADDITIVE_METRICS = {"ESTIMATED_EARNINGS", "PAGE_VIEWS", "IMPRESSIONS", "CLICKS"}
 REQUIRED_SITE_METRICS = {"ESTIMATED_EARNINGS", "PAGE_VIEWS", "IMPRESSIONS", "CLICKS"}
 PAGE_URL_UNAVAILABLE_MESSAGE = "The combination of requested dimensions is unavailable."
 PAGE_URL_UNAVAILABLE_CLASSIFICATION = "PAGE_URL_DIMENSION_COMBINATION_UNAVAILABLE"
+OAUTH_TOKEN_ERROR_CODES = {
+    "invalid_request",
+    "invalid_client",
+    "invalid_grant",
+    "unauthorized_client",
+    "unsupported_grant_type",
+    "invalid_scope",
+}
 
 
 class CollectorError(Exception):
@@ -520,7 +528,10 @@ def _structured_http_error(error, stage, sensitive_values):
         pass
     else:
         detail = payload.get("error") if isinstance(payload, dict) else None
-        if isinstance(detail, dict):
+        if stage == "OAUTH_REFRESH" and isinstance(detail, str) and detail in OAUTH_TOKEN_ERROR_CODES:
+            classification = f"OAUTH_{detail.upper()}"
+            google_status = classification
+        elif isinstance(detail, dict):
             code = detail.get("code")
             status = detail.get("status")
             message = detail.get("message")
