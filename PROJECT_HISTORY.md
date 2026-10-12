@@ -1,5 +1,13 @@
 # PROJECT HISTORY
 
+## 2026-10-12 SC-20261012-040 — measurement provenance in heuristic inventory
+
+- Based on latest main `d0e209b86d750a3da1aa497dd146a1120960b258`, reproduced that the candidate builder retained numeric values but dropped each verified channel's source, status, and measurement period. `TRAFFIC_WITH_STRUCTURE_GAP` remains a threshold heuristic and is not evidence of a reproduced usability defect.
+- The candidate output now preserves per-channel source/status/period, marks missing or invalid dates UNKNOWN, keeps GA4's `revenueMetric`, and explicitly reports period alignment. Every candidate is labeled `HEURISTIC_REVIEW_ONLY` and requires a reproducible issue before action. Candidate thresholds, ordering, advertising, publication, launch, and protected-content rules are unchanged.
+- Regression tests failed before the implementation and pass after it (3 new unittest cases); the two existing pytest-style checks and Python compilation also pass. Exact-PR-head SEO QA, Launch Guard, full unittest, and pytest results are recorded in the SC-040 OUTBOX.
+- The generated candidate JSON was not rewritten: the matching latest-main page-performance input is an 18 MB Git blob that the approved connector did not return, and the available local checkout contains a different snapshot. No stale snapshot was used.
+- Scope: the candidate builder, its regression tests, and this task/status documentation. Keep the task open for exact-head CI and Control Tower review; no automatic merge.
+
 ## 2026-10-12 C02-20261012-037 — false READY_TO_LAUNCH queue prevention
 
 - Based on latest main `6652778e8dcde8827526d8224ec39395c8e8fc39`, the checked queue still listed `1월국내여행지추천`, `3월여행지추천`, and `차량폐차가격` as READY_TO_LAUNCH. Reused existing C01-027/C01-030 decisions and verified current pages; no new keyword-master or SERP research was run.
