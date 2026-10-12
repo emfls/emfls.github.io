@@ -23,7 +23,29 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  validate-canary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out selected branch without persisted credentials
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install test runner without repository secrets
+        run: python3 -m pip install pytest
+
+      - name: Verify no-deploy canary contract and targeted collector
+        run: python3 -m pytest tests/test_keyword_hunter_canary_workflow.py tests/test_keyword_hunter_targeted.py -q
+
   targeted-canary:
+    needs: validate-canary
     if: inputs.mode == 'targeted' && inputs.keywords == '윈도우 11 검색 창 새 UI 안 보임'
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -49,12 +71,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-
-      - name: Install test runner
-        run: python3 -m pip install pytest
-
-      - name: Verify no-deploy canary contract and targeted collector
-        run: python3 -m pytest tests/test_keyword_hunter_canary_workflow.py tests/test_keyword_hunter_targeted.py -q
 
       - name: Validate required credentials without printing values
         run: |
