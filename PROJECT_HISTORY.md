@@ -1323,3 +1323,6 @@
 
 ## 2026-10-12 08:43 Keyword Hunter
 - Seeds: 40; New: 0; Rejected: 0; DB: 5072; Errors: 1; Top: none. Artifact report: reports/keyword-hunter/2026-10-12-0843.md
+
+## 2026-10-12 15:05 Keyword Hunter
+- Seeds: 40; New: 20; Rejected: 14; DB: 5092; Errors: 0; Top: 레인지로버인증중고차. Artifact report: reports/keyword-hunter/2026-10-12-1505.md
