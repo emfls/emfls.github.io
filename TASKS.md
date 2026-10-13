@@ -321,3 +321,9 @@
   - 목적: 실제 검색·수익 데이터가 확보되면 무료 도구/계산기 노출을 캠핑·게임보다 앞세울지 판단한다.
   - 완료 조건: 동일 28일 기간의 채널별 클릭·PV·수익을 비교하고 근거가 있을 때만 홈 순서를 변경.
   - 관련 영역: `data/page-performance.json`, `data/revenue-opportunities.json`, `index.html`.
+
+
+## Owner-approved weekly USD35 sprint · 2026-10-13
+- [x] Diagnose the matched recent/prior week with a bounded read-only GA4 query; keep raw reports private.
+- [x] Implement and regression-check one non-WINNER camping reader-path repair.
+- [ ] Review the repair PR and exact-head CI before any merge/deployment; measure post-release traffic and actual AdSense revenue separately.

@@ -1343,3 +1343,9 @@
 
 ## 2026-10-13 15:51 Keyword Hunter
 - Seeds: 40; New: 101; Rejected: 77; DB: 5193; Errors: 0; Top: 서울찜질방추천. Artifact report: reports/keyword-hunter/2026-10-13-1551.md
+
+
+## 2026-10-13 — Owner-approved weekly USD35 sprint: first repair
+- Read-only GA4 comparison isolated a mobile Naver/camping traffic decline; raw analytics remain private outside the repository.
+- Corrected one non-WINNER auto-camping guide’s Open Graph URL (reproduced HTTP404), removed unsupported generic power-bank EV-charging advice using a manufacturer reference, and added three relevant existing regional guide links. No protected destination was edited.
+- Regression RED→GREEN: 2 tests. Launch Guard and scoped static SEO pass. Full pytest 1556 passed/3 skipped/1 historical Git-blob DNS failure; exact failed case passed after fetching the missing blob. PR/current-head CI review pending; no merge/deployment or measured revenue lift.
