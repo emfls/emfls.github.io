@@ -1349,3 +1349,5 @@
 - Read-only GA4 comparison isolated a mobile Naver/camping traffic decline; raw analytics remain private outside the repository.
 - Corrected one non-WINNER auto-camping guide’s Open Graph URL (reproduced HTTP404), removed unsupported generic power-bank EV-charging advice using a manufacturer reference, and added three relevant existing regional guide links. No protected destination was edited.
 - Regression RED→GREEN: 2 tests. Launch Guard and scoped static SEO pass. Full pytest 1556 passed/3 skipped/1 historical Git-blob DNS failure; exact failed case passed after fetching the missing blob. PR/current-head CI review pending; no merge/deployment or measured revenue lift.
+## 2026-10-14 01:04 Keyword Hunter
+- Seeds: 40; New: 80; Rejected: 74; DB: 5273; Errors: 0; Top: 경기도찜질방추천. Artifact report: reports/keyword-hunter/2026-10-14-0104.md
