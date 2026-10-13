@@ -1,16 +1,16 @@
 # EXTERNAL DISCOVERY PIPELINE
 
-- Run: 2026-09-08T11:30:00+09:00
-- Data status: INSUFFICIENT_DATA
-- External ideas discovered: 0
+- Run: 2026-10-14T08:36:08+09:00
+- Data status: ESTIMATED
+- External ideas discovered: 1
 - Google: 0
 - Naver: 0
-- Other websites: 0
+- Other websites: 1
 - Rejected as existing intent: 2
 - Researching: 155
 - Brief ready: 21
-- Ready to launch: 0
-- Pages launched today: 1 / 3
+- Ready to launch: 1
+- Pages launched today: 0 / 3
 
 ## TOP 10 EXTERNAL OPPORTUNITIES
 
@@ -74,7 +74,19 @@
 - Content gap: 단일 금액 안내보다 구매처·선물·재반입 여부를 포함한 신고 판단 흐름이 필요하다.
 - Status: RESEARCHING
 
-### 6. 면세 액체 봉인봉투 환승 체크리스트
+### 6. 팰월드 1.0 모드 충돌·실행 오류 안전 해결
+
+- Candidate: EXT-20260908-184
+- Discovery: GOOGLE_NAVER_COMMUNITY / SEARCH_RESULTS_REPEATED_PROBLEM
+- Demand status: OBSERVED_SEARCH_SIGNAL
+- Opportunity: 84.2
+- Quality: 89.0
+- Closest existing page: None
+- Overlap: NO_OVERLAP
+- Content gap: 검색 결과는 특정 모드 삭제 경험담이 많아 세이브를 보호하면서 공식 순서대로 원인을 분리하는 한국어 체크리스트가 부족하다.
+- Status: PUBLISHED
+
+### 7. 면세 액체 봉인봉투 환승 체크리스트
 
 - Candidate: EXT-20260908-173
 - Discovery: GOOGLE / OFFICIAL_FAQ
@@ -86,7 +98,7 @@
 - Content gap: 구매 직후부터 최종 목적지까지 단계별 보관 행동을 설명해야 한다.
 - Status: RESEARCHING
 
-### 7. 자동차 여행 연료비·통행료 분담 계산기
+### 8. 자동차 여행 연료비·통행료 분담 계산기
 
 - Candidate: EXT-20260902-014
 - Discovery: GOOGLE / COMPETITOR_TOOL
@@ -98,7 +110,7 @@
 - Content gap: 연료비 계산에 통행료·왕복·인원 분담을 결합하고 입력 가정을 명확히 보여주면 한국 자동차 여행에 실용적이다.
 - Status: LAUNCHED
 
-### 8. 인천공항 수유실·유아휴게실 위치 찾기
+### 9. 인천공항 수유실·유아휴게실 위치 찾기
 
 - Candidate: EXT-20260908-177
 - Discovery: OTHER_WEBSITE / OFFICIAL_FACILITY_LIST
@@ -110,7 +122,7 @@
 - Content gap: 긴 시설 목록을 현재 터미널과 보안구역 여부로 필터링할 수 있다.
 - Status: RESEARCHING
 
-### 9. 국립공원 야영장 차량·전기 추가요금 계산기
+### 10. 국립공원 야영장 차량·전기 추가요금 계산기
 
 - Candidate: EXT-20260907-146
 - Discovery: OTHER_WEBSITE / OFFICIAL_PDF
@@ -121,18 +133,6 @@
 - Overlap: NO_OVERLAP
 - Content gap: 기본요금과 별도 전기·초과차량 조건을 합산해 여행 예산을 계산하는 도구가 부족하다.
 - Status: BRIEF_READY
-
-### 10. 입국 시 외화 신고 필요 여부 체크리스트
-
-- Candidate: EXT-20260908-166
-- Discovery: GOOGLE / OFFICIAL_GUIDE
-- Demand status: OBSERVED_SEARCH_SIGNAL
-- Opportunity: 83.0
-- Quality: 75.0
-- Closest existing page: None
-- Overlap: NO_OVERLAP
-- Content gap: 금액만 제시하지 않고 입국 신고서 작성과 신고필증 수령까지 연결해야 한다.
-- Status: RESEARCHING
 
 ## DUPLICATE REMOVAL RESULTS
 

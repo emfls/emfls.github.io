@@ -164,3 +164,75 @@ def test_same_input_and_run_time_are_byte_deterministic(tmp_path):
         tmp_path, "2026-09-02T12:00:00+09:00", tmp_path / "input.json"
     )
     assert first == (tmp_path / "data/external-content-opportunities.json").read_bytes()
+
+
+def single_review(root, row, *, decision="APPROVE", source_refs=None, target=None):
+    row.update(keyword="새 서비스 이용 안내", url="/kor/report/it/new-service.html", ymyl=False)
+    prepare(root, incoming=[row], existing=[candidate("UNREVIEWED-OLD")])
+    write_json(root / "input.json", {"reviewMode": "SINGLE_EDITORIAL_REVIEW", "candidates": [row]})
+    write_json(root / "data/content-launch-decisions.json", {
+        "schemaVersion": 1, "decisions": [{
+            "keyword": row["keyword"], "decision": decision,
+            "candidateId": row["candidateId"], "targetUrl": target or row["url"],
+            "reason": "Official source and distinct reader task reviewed.",
+            "sourceRefs": ["https://official.example/notice"] if source_refs is None else source_refs,
+            "approvalBasis": "OWNER_DELEGATED_PUBLICATION",
+            "approvalRefs": ["https://example.com/owner-authorization"],
+        }],
+    })
+
+
+def test_single_editorial_review_requires_exact_source_backed_approval(tmp_path):
+    row = candidate("ONE-REVIEWED")
+    row["discovery"]["demandStatus"] = "ESTIMATED"
+    single_review(tmp_path, row)
+    result = run_external_pipeline(tmp_path, "2026-10-14T10:00:00+09:00", tmp_path / "input.json")
+    assert result["readyToLaunch"] == ["ONE-REVIEWED"]
+    assert result["dataStatus"] == "ESTIMATED"
+    assert len(result["candidates"]) == 2
+
+
+def test_single_review_cannot_promote_hold_missing_sources_or_another_target(tmp_path):
+    for changes in ({"decision": "HOLD"}, {"source_refs": []}, {"target": "/different.html"}):
+        single_review(tmp_path, candidate("ONE-REVIEWED"), **changes)
+        result = run_external_pipeline(tmp_path, "2026-10-14T10:00:00+09:00", tmp_path / "input.json")
+        assert result["readyToLaunch"] == []
+        assert result["dataStatus"] == "INSUFFICIENT_DATA"
+
+
+def test_single_review_keeps_quality_and_demand_gates(tmp_path):
+    for row in (candidate("ONE-REVIEWED", quality=30), candidate("ONE-REVIEWED")):
+        if row["qualityInputs"]["accuracy"] != .3:
+            row["discovery"]["demandStatus"] = "INSUFFICIENT_DATA"
+        single_review(tmp_path, row)
+        result = run_external_pipeline(tmp_path, "2026-10-14T10:00:00+09:00", tmp_path / "input.json")
+        assert result["readyToLaunch"] == []
+
+
+def test_single_review_rejects_ymyl_even_if_declared_false(tmp_path):
+    single_review(tmp_path, candidate("ONE-REVIEWED", primary="대출 신청 조건"))
+    result = run_external_pipeline(tmp_path, "2026-10-14T10:00:00+09:00", tmp_path / "input.json")
+    assert result["readyToLaunch"] == []
+
+
+def test_single_review_does_not_accept_two_candidates_or_missing_authority(tmp_path):
+    single_review(tmp_path, candidate("ONE-REVIEWED"))
+    payload = json.loads((tmp_path / "input.json").read_text())
+    payload["candidates"].append(candidate("SECOND"))
+    write_json(tmp_path / "input.json", payload)
+    assert run_external_pipeline(tmp_path, "2026-10-14T10:00:00+09:00", tmp_path / "input.json")["readyToLaunch"] == []
+    for field, value in (("approvalRefs", []), ("approvalBasis", "UNVERIFIED"), ("sourceRefs", ["http://official.example/notice"])):
+        single_review(tmp_path, candidate("ONE-REVIEWED"))
+        document = json.loads((tmp_path / "data/content-launch-decisions.json").read_text())
+        document["decisions"][0][field] = value
+        write_json(tmp_path / "data/content-launch-decisions.json", document)
+        assert run_external_pipeline(tmp_path, "2026-10-14T10:00:00+09:00", tmp_path / "input.json")["readyToLaunch"] == []
+
+
+def test_single_review_preserves_unrelated_existing_duplicate_intents(tmp_path):
+    single_review(tmp_path, candidate("ONE-REVIEWED"))
+    existing = [candidate("OLD-A", primary="과거 동일한 과업"), candidate("OLD-B", primary="과거 동일한 과업")]
+    write_json(tmp_path / "data/external-content-opportunities.json", {"schemaVersion": 1, "candidates": existing})
+    result = run_external_pipeline(tmp_path, "2026-10-14T10:00:00+09:00", tmp_path / "input.json")
+    assert [row for row in result["candidates"] if row["candidateId"].startswith("OLD-")] == existing
+    assert result["readyToLaunch"] == ["ONE-REVIEWED"]

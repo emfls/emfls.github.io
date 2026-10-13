@@ -1349,3 +1349,8 @@
 
 ## 2026-10-14 06:19 Keyword Hunter
 - Seeds: 40; New: 0; Rejected: 0; DB: 5273; Errors: 0; Top: none. Artifact report: reports/keyword-hunter/2026-10-14-0619.md
+
+## 2026-10-14 — Owner-delegated reviewed single news intake
+- Added an explicit one-candidate editorial intake alongside the unchanged10–30 broad discovery batch. Exact source-backed delegated APPROVE, low-risk identity, existing readiness thresholds, and unrelated-history preservation are required; only the reviewed ID may enter the ready list.
+- Registered source-reviewed Kanana Space registration/access article as ESTIMATED demand, without keyword-volume or revenue claims. Candidate rubric74.5/feasibility93.25 are editorial inputs; BLOG89 is separate. No article HTML, measurement snapshots, protected pages, counters, or manifest changed in this upstream PR.
+- Positive regression RED→GREEN; focused30 PASS, Launch Guard/diff checks PASS. Full/exact-head CI and downstream content release pending.

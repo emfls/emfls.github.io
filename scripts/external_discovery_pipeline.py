@@ -5,6 +5,7 @@ import argparse
 import json
 from copy import deepcopy
 from pathlib import Path
+from urllib.parse import urlsplit
 
 try:
     from scripts.external_content_opportunity import (
@@ -20,6 +21,13 @@ except ModuleNotFoundError:
         score_external_opportunity,
         score_quality_feasibility,
     )
+
+try:
+    from scripts.content_launch_decisions import decisions_from_document
+    from scripts.content_launch_policy import normalize_keyword, normalize_url_identity, requires_ymyl_review
+except ModuleNotFoundError:
+    from content_launch_decisions import decisions_from_document
+    from content_launch_policy import normalize_keyword, normalize_url_identity, requires_ymyl_review
 
 
 TERMINAL_STATUSES = {"REJECTED", "SAME_INTENT", "FAILED_PATTERN"}
@@ -50,6 +58,66 @@ def _key(candidate):
 
 def _refs(candidate):
     return list((candidate.get("discovery") or {}).get("evidenceRefs") or [])
+
+
+def _https_refs(values):
+    if not isinstance(values, list) or not values:
+        return False
+    for value in values:
+        if not isinstance(value, str):
+            return False
+        try:
+            parsed = urlsplit(value)
+            if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password:
+                return False
+        except ValueError:
+            return False
+    return True
+
+
+def _single_review_approved(root, incoming):
+    """A reviewed low-risk incremental intake is distinct from broad discovery."""
+    if len(incoming) != 1:
+        return False
+    candidate = incoming[0]
+    if not isinstance(candidate, dict) or candidate.get("ymyl") is not False:
+        return False
+    if any(requires_ymyl_review({"keyword": value}) for value in (
+        candidate.get("keyword"), candidate.get("idea"),
+        (candidate.get("discovery") or {}).get("observedTopic"),
+        (candidate.get("intent") or {}).get("primary"),
+        (candidate.get("brief") or {}).get("primaryIntent"),
+    ) if value):
+        return False
+    if launch_readiness(candidate).get("status") != "READY_TO_LAUNCH":
+        return False
+    if not _https_refs(_refs(candidate)) or not _https_refs([
+        row.get("url") for row in candidate.get("officialSources", [])
+        if isinstance(row, dict)
+    ]):
+        return False
+    document = _read(root / "data/content-launch-decisions.json", {})
+    try:
+        decisions = decisions_from_document(document)
+    except (ValueError, TypeError):
+        return False
+    key = normalize_keyword(candidate.get("keyword"))
+    if not key or decisions.get(key) != "APPROVE":
+        return False
+    matches = [row for row in document["decisions"] if normalize_keyword(row.get("keyword")) == key]
+    if len(matches) != 1:
+        return False
+    record = matches[0]
+    identity = normalize_url_identity(candidate.get("url"))
+    return bool(
+        identity
+        and normalize_url_identity(record.get("targetUrl")) == identity
+        and record.get("candidateId") == candidate.get("candidateId")
+        and str(record.get("reason") or "").strip()
+        and record.get("approvalBasis") == "OWNER_DELEGATED_PUBLICATION"
+        and _https_refs(record.get("sourceRefs"))
+        and _https_refs(record.get("approvalRefs"))
+    )
 
 
 def _evaluate(candidate, run_at):
@@ -148,7 +216,9 @@ def run_external_pipeline(root, run_at, input_path, write=True):
         root / "data/external-content-opportunities.json",
         {"schemaVersion": 1, "candidates": []},
     )
-    by_key = {_key(row): deepcopy(row) for row in existing_payload.get("candidates") or []}
+    existing_rows = existing_payload.get("candidates") or []
+    single_mode = incoming_payload.get("reviewMode") == "SINGLE_EDITORIAL_REVIEW"
+    by_key = {_key(row): deepcopy(row) for row in existing_rows}
     reused = 0
 
     for raw in incoming:
@@ -163,10 +233,33 @@ def run_external_pipeline(root, run_at, input_path, write=True):
             by_key[key] = evaluated
 
     candidates = sorted(by_key.values(), key=lambda row: row.get("candidateId", ""))
-    enough_research = 10 <= len(incoming) <= 30 and all(
+    single_collision = False
+    if single_mode:
+        # A one-candidate review must not deduplicate or refresh unrelated history.
+        candidates = deepcopy(existing_rows)
+        reused = 0
+        if len(incoming) == 1:
+            raw = incoming[0]
+            matches = [i for i, row in enumerate(candidates) if _key(row) == _key(raw) or row.get("candidateId") == raw.get("candidateId")]
+            single_collision = len(matches) > 1 or any(_key(candidates[i]) != _key(raw) for i in matches)
+            if not single_collision:
+                if matches:
+                    candidates[matches[0]], was_reused = _merge(candidates[matches[0]], raw, run_at)
+                    reused = int(was_reused)
+                else:
+                    evaluated = _evaluate(raw, run_at)
+                    evaluated["firstDiscoveredAt"] = run_at
+                    evaluated["lastDiscoveredAt"] = run_at
+                    candidates.append(evaluated)
+        candidates.sort(key=lambda row: row.get("candidateId", ""))
+    single_approved = single_mode and not single_collision and _single_review_approved(root, incoming)
+    enough_research = not single_mode and 10 <= len(incoming) <= 30 and all(
         (row.get("discovery") or {}).get("origin") == "EXTERNAL_WEB" for row in incoming
     )
     ready = [row for row in candidates if row.get("status") == "READY_TO_LAUNCH"]
+    if single_mode:
+        approved_ids = {row["candidateId"] for row in incoming} if single_approved else set()
+        ready = [row for row in ready if row.get("candidateId") in approved_ids]
     ready.sort(
         key=lambda row: (
             -float(row.get("opportunityScore") or 0),
@@ -174,7 +267,7 @@ def run_external_pipeline(root, run_at, input_path, write=True):
             row.get("candidateId", ""),
         )
     )
-    if not enough_research:
+    if not enough_research and not single_approved:
         ready = []
     top10 = sorted(
         candidates,
@@ -203,7 +296,10 @@ def run_external_pipeline(root, run_at, input_path, write=True):
     payload = {
         "schemaVersion": 1,
         "runAt": run_at,
-        "dataStatus": "OBSERVED_SEARCH_SIGNAL" if enough_research else "INSUFFICIENT_DATA",
+        "dataStatus": (
+            incoming[0]["discovery"]["demandStatus"] if single_approved
+            else "OBSERVED_SEARCH_SIGNAL" if enough_research else "INSUFFICIENT_DATA"
+        ),
         "summary": summary,
         "candidates": candidates,
         "readyToLaunch": [row["candidateId"] for row in ready],
