@@ -1340,3 +1340,6 @@
 
 ## 2026-10-13 08:02 Keyword Hunter
 - Seeds: 40; New: 0; Rejected: 0; DB: 5092; Errors: 0; Top: none. Artifact report: reports/keyword-hunter/2026-10-13-0802.md
+
+## 2026-10-13 15:51 Keyword Hunter
+- Seeds: 40; New: 101; Rejected: 77; DB: 5193; Errors: 0; Top: 서울찜질방추천. Artifact report: reports/keyword-hunter/2026-10-13-1551.md
