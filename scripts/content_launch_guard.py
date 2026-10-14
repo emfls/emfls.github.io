@@ -145,6 +145,44 @@ APPROVED_PROTECTED_WINNER_TRANSITIONS = {
         ("fd73fdd0be12fab17f9ab78473c0182956d34098", "873ab21ba21523a22e83cffaf61e1dab3e4ec5d3"),
     },
 }
+
+# User-approved AdSense placement on the 29-day top-30 camping pages, 2026-10-14.
+# Evidence: reports/camp-cluster-inventory-2026-10-14.csv; exact blob pairs only.
+APPROVED_AD_PLACEMENT_TRANSITIONS = {
+    'kor/report/camp/gyeonggi-best.html': {('218dd0469056c432b1dcfccbab54d4dbf38c1769', 'ac9c428f4f76555644ffa41c7a710d7448fbff73')},
+    'kor/report/camp/pyeongtaek.html': {('0fd88c06441a246aa87ddeb72ba29a5f5fb4d5c1', 'c2fb69df21a9c41340e74e87c2daca409fa54e7b')},
+    'kor/report/camp/suwon.html': {('c965b510a9044b50ffaf5b3a9d3a2267157a30e6', '3471e4138ddb05a4f7c18380a4e2b251d9dcc586')},
+    'kor/report/camp/siheung.html': {('356dc2a0c9925a5d98b491764f82af181e12a607', 'ea621df5aeef350912cfdbb3a1eea619928afeb2')},
+    'kor/report/camp/ansan.html': {('ed7356cd82ca5a73e54be996ee6e64428da531aa', '6c5eaf5b69d6a045ba3985b580eafdf56d296c17')},
+    'kor/report/camp/cheorwon.html': {('7c85a60c9ea3cd772cec71e0628371f3c036ddca', '9c4619bc59e69d0bf5fbaa35891f230a03fad117')},
+    'kor/report/camp/free-camping-top20.html': {('9e43505ea55269bd15b40203ac8d87ba2182168c', 'd3a9915ffc63af8100ed5e7145dc467509224c2e')},
+    'kor/report/camp/goyang.html': {('9825bef7a105c317d2e8ef6864d09f39cb98effa', '2bb3c477d8552d193a8afc6ffcc304bcb84c1567')},
+    'kor/report/camp/jinju.html': {('bc2da49e0032ec84f458b6fa01ecc51f8bacac9d', '5c823348f2ef2f4557330c53e54f167685d63bf5')},
+    'kor/report/camp/nonsan.html': {('a4a84d3175068107255d0661f1a6fc5edefce8bd', 'dc0bf2e94bec31008ff56cc6a415c89669bd1595')},
+    'kor/report/camp/paju.html': {('6d1f2a222f150c88a00b3ad3bafc1213761a8fe6', '470d5b87afa8a7fb1f97006f683c596c0affba7e')},
+    'kor/report/camp/boryeong.html': {('8049f09e81190d4cb87d086a80dccb6bb664b938', 'aed9f125db1bf01030e1d67f70a6d9872555dc55')},
+    'kor/report/camp/iksan.html': {('46bc4a8bb456cf19d6fdf8a13ec04ce6cf84bdbc', 'd99e879e2995031023cc38f5e4a8af7eca295010')},
+    'kor/report/camp/sejong.html': {('88683b5569912dd2a7cb07c1002dcec1da05c838', 'a572cef85b094d06318bf4fb4e914b73a6cf60eb')},
+    'kor/report/camp/sokcho.html': {('7f0dfdf4614388f9d0452fa650135982ef558827', '131f6c7a76fb346a5040550c8a4a1515da635897')},
+    'kor/report/camp/gumi.html': {('8247845770a55743e7c3fa6b923a6d921d2962fa', 'ac2d288245094d8fb884f91f3eac1d1c87b6874a')},
+    'kor/report/camp/daebudo-camping.html': {('8cc86c6618ace2f3f5381a68d28632e4dfc2cd09', 'e889bc4380855684650b311ef1583eafaeea6cc9')},
+    'kor/report/camp/buyeo.html': {('18bb30fb239d18f251653f47c5a6acc6696b557b', 'a56f0955dddecf0f3ded1daf92f3e0d37340fbd8')},
+    'kor/report/camp/hadong.html': {('8052b7f3fa4ac3f6d3eaa7b441aac9595d91e3d9', 'bb4bcdcf3b36d5e5b438e7e6037b67755fc8936a')},
+    'kor/report/camp/seocheon.html': {('742c8944bed3c136d1e10a7b46f2d833d067fc68', '55b8b998d824a47c52ac2b4282591ffb35e436ce')},
+    'kor/report/camp/jangseong.html': {('ddc0536200386f0cfbffb72e3cec499e7cc04e3f', 'a88adaf07ccd6df2817e8e2766d67f1ab9203edb')},
+    'kor/report/camp/gunpo.html': {('66ebaeb7592dd0158fc7a1039ed9d5cbd88e1f2a', '10f32db492341b9f45cdbd77ea0a9b670dec4095')},
+    'kor/report/camp/jeongseon.html': {('9debf037ce21be8f5b58bf45e2efd78c049e7151', '123b15dd9f20251dd39963980521901140f06c5b')},
+    'kor/report/camp/chungcheong-camping-best.html': {('0d72e2d183f1322985e72830949eb551a6572fe3', '8221a02264b4f5c83971b79bba68de096f49bc0e')},
+    'kor/report/camp/jeongeup.html': {('b074c08ddd543bf86c6cbc94cc9b7fdd3543cfe1', 'ab1e3262356aed3a0bbaa1261b8ac4ce236bfbbb')},
+    'kor/report/camp/gimhae.html': {('a67b4c1ecfa99c0a0b7b17979b3b336d8576997e', '05cd885ece332aeda44d7e62315c74f2b3c140b3')},
+    'kor/report/camp/okcheon.html': {('43d0b034d21dde3630a12721d5fc782cc34e95cb', '4033840ca91635899ff111630d1a2e1ca0a29385')},
+    'kor/report/camp/chilgok.html': {('6e42d405ae217e2606132c8d585cf70c1e1b77d5', 'ae6804356d90cb05659a0d0bb33a879de421843f')},
+    'kor/report/camp/namyangju.html': {('a3b767ef1d7604a096514c6ec36ea6adf66fe4dd', 'd13b0802c28b8ef2ae58fde3e73f1440936ea695')},
+    'kor/report/camp/naju.html': {('e0e8d669d228fb410291e2a16dc59a8217cd3ee4', '5d0bbd9034e8ec5e23a23f4bcded152e206e75af')},
+}
+for _path, _blob_pairs in APPROVED_AD_PLACEMENT_TRANSITIONS.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).update(_blob_pairs)
+
 APPROVED_MONETIZATION_TRANSITIONS = {
     "scripts/collect_adsense_snapshot.py": {
         ("94f34228ed8b10213085b3de19bbab14e4fee0de", "83595861b3ea484b7fd9ad0c7fb11515f6516692"),
