@@ -139,11 +139,45 @@ APPROVED_PROTECTED_WINNER_TRANSITIONS = {
     # Evidence: reports/camp-factcheck-v6-sokcho-gumi-daebudo-buyeo-2026-10-14.md
     "kor/report/camp/gumi.html": {
         ("42694573cb32ba5faa28c8fb65adba8632f74d3d", "8247845770a55743e7c3fa6b923a6d921d2962fa"),
+        # 7차 nationwide winter hub reciprocal link; the exact page diff changed no factual claims.
+        # Evidence: https://emfls.github.io/kor/report/camp/winter-public-campsites-2026.html
+        ("ac2d288245094d8fb884f91f3eac1d1c87b6874a", "3230bfbc1366512bf868eddb3b9809d6afdf00bf"),
     },
     # C33's user-approved factual and policy-integrity repair; the exact blob pair keeps all other edits protected.
     "kor/column/maple-planet-no-capital-rice-farming-2026.html": {
         ("fd73fdd0be12fab17f9ab78473c0182956d34098", "873ab21ba21523a22e83cffaf61e1dab3e4ec5d3"),
     },
+    # User-approved rank-23~72 revenue top-ten claim-safety transition, 2026-10-15.
+    # Reason: blanket price, permission, popularity, and facility-operation claims lacked page-specific current proof; softened to candidates/checks.
+    # Evidence for place-category restrictions: official Nature Parks Act, Article 27.
+    "kor/report/camp/jeongeup.html": {("ab1e3262356aed3a0bbaa1261b8ac4ce236bfbbb", "2aa21bb5fe2df98522db391b1ef3b80e77acf7b9")},
+    # Reason: no official source confirmed permission for the riverside day-use claims; softened and cooking permission must be checked.
+    # Official registered-campsite directory: https://www.gocamping.or.kr/
+    "kor/report/camp/naju.html": {("5d0bbd9034e8ec5e23a23f4bcded152e206e75af", "dd487c6c8ef607705d201fa2310c0f5c1febc657")},
+    # Reason: public parking use is not camping permission; exact conditional caveat cites Parking Act Article 6-3.
+    # Evidence: https://www.law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1030692303
+    "kor/report/camp/jeongseon.html": {("123b15dd9f20251dd39963980521901140f06c5b", "45ce7fd27c043ce0633e0444d77b752cabbe3782")},
+    # Reason: unsupported free-use and facility-operation guarantees were recast as candidates/checks.
+    # Official registered-campsite directory: https://www.gocamping.or.kr/
+    "kor/report/camp/gimhae.html": {("05cd885ece332aeda44d7e62315c74f2b3c140b3", "bb9c8901f0c0157a362db5f7ad46bd477e809308")},
+    # Reason: unsupported riverside and facility guarantees were softened; registered facilities remain identifiable.
+    # Official registered-campsite directory: https://www.gocamping.or.kr/
+    "kor/report/camp/imsil.html": {("6170c38cbf7172e5ae49eebdcca2a7b8e5df5818", "ea707753aa03c0ab375483657b9b445a7b1f59be")},
+    # Reason: public-park parking and camping are distinct; unsupported access claims were softened.
+    # Evidence: https://www.law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1030692303
+    "kor/report/camp/hanam.html": {("29e134192f8374b4717762fd1af649f9db693c91", "be7b1f40498e32b3cce1d3f8aa280608aaae53ab")},
+    # Reason: public parking and unregistered riverside camping claims were reframed as candidates/checks.
+    # Evidence: https://www.law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1030692303
+    "kor/report/camp/mungyeong.html": {("acd2dba287f933dd9d9f205842343f33495fa346", "23711e091b048deac5f4a0ae13b06b47be3fb01a")},
+    # Reason: Sobaeksan national park camping is limited to designated locations; operation statements now require official confirmation.
+    # Evidence: https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1016596485
+    "kor/report/camp/yeongju.html": {("c685ec7abe886b21b8c8bedf1732dfda9f3a7c45", "3f99ce18ef9375d1af3f82eb8d6ed4c26f3d1599")},
+    # Reason: park/parking and facility claims were softened; national park and public parking restrictions are linked.
+    # Evidence: https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1016596485 ; https://www.law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1030692303
+    "kor/report/camp/danyang.html": {("dce1faa5116434176c59b691527c60703ea26439", "c4c707b5930eff43cf2a6d3a54a310106f8bbd17")},
+    # Reason: remove unsupported beach/shore popularity, free-use, and permission claims; retain conditional designated-place notices.
+    # Evidence: Beach Act Article 22 https://www.law.go.kr/LSW/lsLinkCommonInfo.do?chrClsCd=010202&lsJoLnkSeq=1033791203 ; Parking Act Article 6-3 https://www.law.go.kr/법령/주차장법/제6조의3
+    "kor/report/camp/gunsan.html": {("c4b8dacf33b1bd6d9142f2c0428784b814c065af", "064e5328caa5e3ff6b0e319574c71d4b798f5099")},
 }
 
 # User-approved AdSense placement on the 29-day top-30 camping pages, 2026-10-14.

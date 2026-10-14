@@ -299,6 +299,58 @@ def test_official_camp_fact_corrections_allow_only_exact_documented_blob_pairs(t
         )
 
 
+
+def test_guard_allows_only_user_approved_gumi_hub_reciprocal_link(tmp_path):
+    setup_data(tmp_path)
+    revenue_path = tmp_path / "data/revenue-opportunities.json"
+    revenue = json.loads(revenue_path.read_text(encoding="utf-8"))
+    revenue["protectedWinners"].append({"url": "/kor/report/camp/gumi.html"})
+    write_json(revenue_path, revenue)
+
+    before = "ac2d288245094d8fb884f91f3eac1d1c87b6874a"
+    after = "3230bfbc1366512bf868eddb3b9809d6afdf00bf"
+    path = "kor/report/camp/gumi.html"
+    assert (before, after) in APPROVED_PROTECTED_WINNER_TRANSITIONS[path]
+    assert validate_launch(tmp_path, manifest([]), [("M", path, before, after)]) == []
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+        tmp_path, manifest([]), [("M", path, before, "f" * 40)]
+    )
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+        tmp_path, manifest([]), [("M", path, "b" * 40, after)]
+    )
+
+
+def test_guard_allows_only_user_approved_top10_claim_transitions(tmp_path):
+    setup_data(tmp_path)
+    revenue_path = tmp_path / "data/revenue-opportunities.json"
+    revenue = json.loads(revenue_path.read_text(encoding="utf-8"))
+    paths = [
+        "kor/report/camp/jeongeup.html",
+        "kor/report/camp/naju.html",
+        "kor/report/camp/jeongseon.html",
+        "kor/report/camp/gimhae.html",
+        "kor/report/camp/imsil.html",
+        "kor/report/camp/hanam.html",
+        "kor/report/camp/mungyeong.html",
+        "kor/report/camp/yeongju.html",
+        "kor/report/camp/danyang.html",
+        "kor/report/camp/gunsan.html",
+    ]
+    revenue["protectedWinners"].extend({"url": f"/{path}"} for path in paths)
+    write_json(revenue_path, revenue)
+
+    for path in paths:
+        before, after = next(iter(APPROVED_PROTECTED_WINNER_TRANSITIONS[path]))
+        assert validate_launch(tmp_path, manifest([]), [("M", path, before, after)]) == []
+        assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+            tmp_path, manifest([]), [("M", path, before, "f" * 40)]
+        )
+        assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+            tmp_path, manifest([]), [("M", path, "b" * 40, after)]
+        )
+
+
+
 def test_guard_rejects_pyeongtaek_with_different_result_blob(tmp_path):
     setup_data(tmp_path)
     changed = [("M", "kor/report/camp/pyeongtaek.html", "4d95593169e466447ee355429d2822764ca7e1a5", "a" * 40)]
