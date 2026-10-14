@@ -1,7 +1,7 @@
 # emfls.github.io 캠핑 콘텐츠 사실검증 보고서 v3
 
-**검증 기준일:** 2026년 10월 14일  
-**대상:** `suwon.html`, `siheung.html`, `ansan.html`, `cheorwon.html`  
+**검증 기준일:** 2026년 10월 14일<br>
+**대상:** `suwon.html`, `siheung.html`, `ansan.html`, `cheorwon.html`<br>
 **검증 대상:** 무료 차박·야영·취사 허용, 시설·이용료, 소재지, 운영기관, 전화번호, 금지구역 및 출입통제
 
 네 페이지의 공개 본문을 직접 확인했습니다. 이번에는 특히 중요한 사실이 발견됐습니다.
@@ -75,7 +75,7 @@
 
 ## 3. suwon.html 사실검증
 
-**원문:** [수원시 노지 캠핑장 가이드](https://emfls.github.io/kor/report/camp/suwon.html)  
+**원문:** [수원시 노지 캠핑장 가이드](https://emfls.github.io/kor/report/camp/suwon.html)<br>
 **사용자 제공 최근 28일 조회수:** 240회
 
 ### 3-1. 공식 자료에서 확인된 주요 정보
@@ -142,7 +142,7 @@
 
 ## 4. siheung.html 사실검증
 
-**원문:** [시흥 노지 캠핑장 가이드](https://emfls.github.io/kor/report/camp/siheung.html)  
+**원문:** [시흥 노지 캠핑장 가이드](https://emfls.github.io/kor/report/camp/siheung.html)<br>
 **사용자 제공 최근 28일 조회수:** 205회
 
 ### 4-1. 갯골캠핑장 공식 정보

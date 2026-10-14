@@ -1,6 +1,6 @@
 # emfls.github.io 캠핑 콘텐츠 사실검증 보고서
 
-**검증일:** 2026년 10월 14일  
+**검증일:** 2026년 10월 14일<br>
 **대상 페이지:**
 - [평택 노지캠핑 가이드](https://emfls.github.io/kor/report/camp/pyeongtaek.html)
 - [경기도 노지캠핑 BEST 10](https://emfls.github.io/kor/report/camp/gyeonggi-best.html)
