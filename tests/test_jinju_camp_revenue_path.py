@@ -12,7 +12,7 @@ HUB = ROOT / "kor/report/camp/index.html"
 class JinjuCampRevenuePathTest(unittest.TestCase):
     def test_page_has_consistent_permission_first_content(self):
         html = PAGE.read_text(encoding="utf-8")
-        self.assertIn("진주 캠핑·차박 가이드 2026", html)
+        self.assertIn("진주에서 야영 가능한 곳은? 와룡지구 제한·등록 캠핑장 확인 2026", html)
         for text in ("야영·차박 허용 여부", "등록 캠핑장", "출발 당일"):
             self.assertIn(text, html)
         for official in ("gocamping.or.kr", "jinju.go.kr"):
@@ -24,7 +24,7 @@ class JinjuCampRevenuePathTest(unittest.TestCase):
 
         schemas = re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)
         parsed = [json.loads(item) for item in schemas]
-        self.assertTrue(any(item.get("dateModified") == "2026-08-26" for item in parsed))
+        self.assertTrue(any(item.get("dateModified") == "2026-10-14" for item in parsed))
         self.assertIn("G-QP5Q67GE5B", html)
         self.assertIn("ca-pub-8830524482034754", html)
 
