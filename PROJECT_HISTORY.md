@@ -1367,3 +1367,6 @@
 
 ## 2026-10-14 10:16 Keyword Hunter
 - Seeds: 40; New: 101; Rejected: 87; DB: 5374; Errors: 0; Top: 냉온정수기구매. Artifact report: reports/keyword-hunter/2026-10-14-1016.md
+
+## 2026-10-14 22:47 Keyword Hunter
+- Seeds: 40; New: 102; Rejected: 71; DB: 5476; Errors: 0; Top: 중고차팔때서류. Artifact report: reports/keyword-hunter/2026-10-14-2247.md
