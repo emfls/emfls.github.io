@@ -44,7 +44,13 @@ def _contains_arabic_path(value):
 
 
 def test_arabic_public_tree_is_retired():
-    assert not (ROOT / "ae").exists()
+    # Finder may leave an ignored .DS_Store after public locale files are removed.
+    public_files = [
+        path
+        for path in (ROOT / "ae").rglob("*")
+        if path.is_file() and path.name != ".DS_Store"
+    ]
+    assert not public_files
 
 
 def test_retirement_override_records_only_the_user_approved_arabic_winners():

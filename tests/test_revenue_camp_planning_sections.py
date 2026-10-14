@@ -7,7 +7,8 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 PAGES = {
     "namyangju.html": ({"gyeonggi-best.html", "uijeongbu.html", "goyang.html"}, "2026-08-21"),
-    "jeongseon.html": ({"gangwon-best.html", "taebaek.html", "pyeongchang.html"}, "2026-08-21"),
+    # c3fa79b82a5925473d997a5a646566e42b9c3f71 refreshed these pages on 2026-10-15.
+    "jeongseon.html": ({"gangwon-best.html", "taebaek.html", "pyeongchang.html"}, "2026-10-15"),
     "hadong.html": ({"gyeongnam-best.html", "jinju.html", "gimhae.html"}, "2026-10-14"),
     "gwangyang.html": ({"jeonnam-best.html", "suncheon.html", "yeosu.html"}, "2026-08-21"),
     "yangyang.html": ({"gangwon-best.html", "sokcho.html", "gangneung.html"}, "2026-08-21"),
@@ -23,10 +24,13 @@ PAGES = {
     "jangseong.html": ({"jeonnam-best.html", "hwasun.html", "damyang.html"}, "2026-10-14"),
     "hwasun.html": ({"jeonnam-best.html", "jangseong.html", "damyang.html"}, "2026-08-26"),
     "goyang.html": ({"gyeonggi-best.html", "namyangju.html", "uijeongbu.html"}, "2026-10-14"),
-    "gimhae.html": ({"gyeongnam-best.html", "hadong.html", "jinju.html"}, "2026-08-22"),
+    "gimhae.html": ({"gyeongnam-best.html", "hadong.html", "jinju.html"}, "2026-10-15"),
     "yeongyang.html": ({"uljin.html", "andong.html", "pohang.html"}, "2026-08-23"),
     "uljin.html": ({"yeongyang.html", "andong.html", "pohang.html"}, "2026-08-23"),
-    "gunsan.html": ({"iksan.html", "buan.html", "gimje.html"}, "2026-08-23"),
+    "gunsan.html": (
+        {"iksan.html", "buan.html", "gimje.html", "winter-public-campsites-2026.html"},
+        "2026-10-15",
+    ),
     "gangwon-best.html": ({"jeongseon.html", "taebaek.html", "pyeongchang.html"}, "2026-08-23"),
     "uijeongbu.html": ({"gyeonggi-best.html", "namyangju.html", "goyang.html"}, "2026-08-24"),
     "yeongdong.html": ({"chungcheong-camping-best.html", "geumsan.html", "okcheon.html"}, "2026-08-24"),
@@ -46,6 +50,14 @@ PAGES = {
     "cheongju.html": ({"chungcheong-camping-best.html", "yeongdong.html", "nonsan.html"}, "2026-08-24"),
 }
 REQUIRED_LABELS = {"대표 장소", "주차", "화장실", "취사", "요금·허용 여부", "최종 재검토"}
+PAGE_LABELS = {
+    "jeongseon.html": {
+        "대표 장소", "주차", "화장실", "취사", "요금·허용 여부", "시설별 운영 정보 확인 기준"
+    },
+    "gunsan.html": {
+        "대표 장소", "주차", "공공 주차장", "화장실", "취사·야영", "요금·허용 여부", "최종 재검토"
+    },
+}
 
 
 class PlanningSectionParser(HTMLParser):
@@ -124,10 +136,11 @@ class RevenueCampPlanningSectionsTest(unittest.TestCase):
             with self.subTest(page=page):
                 parser = PlanningSectionParser()
                 parser.feed((ROOT / "kor/report/camp" / page).read_text(encoding="utf-8"))
-                self.assertEqual(REQUIRED_LABELS, set(parser.terms))
+                self.assertEqual(PAGE_LABELS.get(page, REQUIRED_LABELS), set(parser.terms))
+                camp_links = {href for href in parser.links if href.startswith("/kor/report/camp/")}
                 self.assertEqual(
                     {f"/kor/report/camp/{name}" for name in related_files},
-                    set(parser.links),
+                    camp_links,
                 )
                 self.assertTrue(
                     any(
@@ -136,6 +149,11 @@ class RevenueCampPlanningSectionsTest(unittest.TestCase):
                         for item in parser.json_ld
                     )
                 )
+
+    def test_gunsan_cites_the_public_parking_rule(self):
+        parser = PlanningSectionParser()
+        parser.feed((ROOT / "kor/report/camp/gunsan.html").read_text(encoding="utf-8"))
+        self.assertIn("https://www.law.go.kr/법령/주차장법/제6조의3", parser.links)
 
     def test_jeonnam_hub_links_to_the_gwangyang_revenue_page(self):
         parser = LinkParser()
