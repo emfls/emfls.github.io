@@ -135,6 +135,11 @@ APPROVED_PROTECTED_WINNER_TRANSITIONS = {
     "kor/report/camp/buyeo.html": {
         ("7fc58974db6d37078e48715c7dfb9633bffd60e6", "18bb30fb239d18f251653f47c5a6acc6696b557b"),
     },
+    # Official-source fact correction, 2026-10-14; exact blob pair only.
+    # Evidence: reports/camp-factcheck-v6-sokcho-gumi-daebudo-buyeo-2026-10-14.md
+    "kor/report/camp/gumi.html": {
+        ("42694573cb32ba5faa28c8fb65adba8632f74d3d", "8247845770a55743e7c3fa6b923a6d921d2962fa"),
+    },
     # C33's user-approved factual and policy-integrity repair; the exact blob pair keeps all other edits protected.
     "kor/column/maple-planet-no-capital-rice-farming-2026.html": {
         ("fd73fdd0be12fab17f9ab78473c0182956d34098", "873ab21ba21523a22e83cffaf61e1dab3e4ec5d3"),
