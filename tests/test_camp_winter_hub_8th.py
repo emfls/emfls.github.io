@@ -73,7 +73,7 @@ class WinterHubEighthTaskTest(unittest.TestCase):
         cls.page.feed(cls.html)
 
     def test_question_title_and_reviewed_meta_description(self):
-        self.assertEqual("".join(self.page.title), "2026 겨울 저렴한 캠핑장, 어디가 열까?")
+        self.assertEqual("".join(self.page.title), "2026 겨울 캠핑장 추천, 문 여는 공공 야영장은?")
         description = next(
             item["content"] for item in self.page.metas
             if item.get("name") == "description"
@@ -85,8 +85,10 @@ class WinterHubEighthTaskTest(unittest.TestCase):
         )
         self.assertEqual(
             "".join(self.page.h1),
-            "2026~2027 겨울 공공 저가 캠핑장: 무료부터 3만원 이하까지",
+            "2026 겨울 캠핑장 추천, 문 여는 공공 야영장은?",
         )
+        self.assertIn("<h2>겨울 차박 대신 이용할 수 있는 지정 야영장 요금은?</h2>", self.html)
+        self.assertIn("<h2>무료 주차와 무료 야영, 겨울 차박지는 어떻게 다를까?</h2>", self.html)
 
     def test_national_park_notice_is_split_into_the_three_official_groups(self):
         self.assertEqual(len(_table_rows(self.html, "national-park-year-round")), 15)
