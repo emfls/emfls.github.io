@@ -1,5 +1,13 @@
 # PROJECT HISTORY
 
+## 2026-10-15 — [8차] 겨울 공공 야영장 허브 마감
+
+- 관제탑의 재개 결정에 따라 기존 작업을 이어갔다. 기준선 테스트 복구 PR #90은 `2e8231ad8b1a5db7e7d986dd870c9b79d0d1eeda`, 보호 기준선 PR #89는 `2f52e4b19a77b36b9cfa679856426144e33bc1ce`로 main에 병합했다. 보호 검사나 워크플로는 비활성화하지 않았다.
+- PR #88은 최신 main `2f52e4b19a77b36b9cfa679856426144e33bc1ce` 위에서 제목/H1 `2026 겨울 캠핑장 추천, 문 여는 공공 야영장은?`, H2 `겨울 차박 대신 이용할 수 있는 지정 야영장 요금은?` 및 `무료 주차와 무료 야영, 겨울 차박지는 어떻게 다를까?`를 반영했다. 별도 제목 커밋 `eb9b60dd0eae7fddc7f7c06f98aca4e8e076f10a`; PR merge `e3d51acd28111200cf2f31d46dd292148502e314`.
+- 정확한 PR head SEO QA run `38652859172`에서 `validate` 16m05s와 `measurement-parity` 2m12s가 모두 통과했다. 신규 SEO Critical/Warning 0, unittest 911개 통과, pytest 1,578 passed / 3 skipped / 573 subtests passed. 로컬 허브 테스트 6개, Content Launch Guard 및 `git diff --check`도 통과했다.
+- main의 콘텐츠 인덱스 갱신 커밋 `8852c4c265cc32c2aace35df2b0867ab9685b4a7` 반영 뒤 Pages deploy run `38654730876`이 성공했다. 공개 허브·안산·철원·논산 페이지 모두 HTTP 200; 허브의 title/H1, canonical 및 요금/무료주차 H2 두 문구, 안산·철원의 정정 문구를 확인했다. 논산·철원은 광고 로더 1개, in-article 슬롯 `3423411629` 1개, multiplex 슬롯 `5833952548` 1개를 확인했다. 허브는 기존 마크업 기준 로더 1개, in-article 2개, multiplex 1개다.
+- 승인된 1회 키워드 측정 run `38639925458` 이후 키워드 수집을 다시 실행하지 않았다. 키워드 워크플로, AdSense/GA4 코드, URL/canonical, 검색 QA 게이트는 수정하지 않았다.
+
 ## 2026-10-14 — GA4 유입원 및 캠핑 클러스터 기준선
 
 - `data/performance/ga4-source-latest.json`에 GA4 유입원×랜딩페이지 원자료와 요약을 저장했다. 캠핑 prefix에는 660개 source/medium/page 조합, 170개 랜딩 페이지, 14,974개 세션 기준 조회, GA4 `totalAdRevenue` $43.534155가 포함된다. 이 수익은 AdSense URL별 직접 수익이 아니며, 조회는 해당 랜딩 URL의 총 페이지뷰와 동일하지 않다.
