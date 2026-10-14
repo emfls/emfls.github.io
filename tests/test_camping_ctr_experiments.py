@@ -12,6 +12,7 @@ PAGES = {
         "h1": "논산에서 야영할 수 있는 곳은? 금강변 미확인·등록 캠핑장 안내 2026",
         "answer": "논산의 관광지와 캠핑시설을 구분해 소개합니다. 금강변·공원 주변의 무료 야영·취사 여부는 확인되지 않았으며, 공식 등록이 확인된 수락캠핑장도 예약 전 최신 운영조건을 확인해야 합니다.",
         "baseline": (560, 21, 0.038),
+        "ad_slots": ("3423411629", "5833952548"),
     },
     "cheorwon": {
         "url": "/kor/report/camp/cheorwon.html",
@@ -20,6 +21,7 @@ PAGES = {
         "h1": "철원 무료 차박 가능한 곳은? 금지 구역·등록 캠핑장 확인 2026",
         "answer": "철원에서 캠핑·차박 장소를 찾는다면 승일교·한탄강 주변 관광지와 등록 캠핑장의 이용 조건을 먼저 구분해야 합니다. 이 페이지에서는 장소별 주차·화장실 정보와 야간 숙박·취사 제한을 비교하고, 현장 공지를 확인할 항목을 정리합니다.",
         "baseline": (529, 27, 0.051),
+        "ad_slots": ("3423411629", "5833952548"),
     },
     "uljin": {
         "url": "/kor/report/camp/uljin.html",
@@ -28,6 +30,7 @@ PAGES = {
         "h1": "🌊 울진군 노지 캠핑장 완전 가이드",
         "answer": "울진에서 캠핑·차박 장소를 찾는다면 구산·봉평 해변, 불영계곡 주변과 등록 캠핑장의 이용 조건을 비교하세요. 이 페이지에서는 6곳의 주차·화장실·취사 정보를 살펴보고, 해변·계곡의 야영 허용 여부를 출발 전에 확인할 수 있도록 정리합니다.",
         "baseline": (704, 40, 0.057),
+        "ad_slots": (),
     },
 }
 
@@ -45,7 +48,25 @@ class CampingCtrPageTest(unittest.TestCase):
                 self.assertEqual(source.count('meta name="description"'), 1)
                 self.assertEqual(source.count("<h1>"), 1)
                 self.assertIn(f'<link rel="canonical" href="https://emfls.github.io{expected["url"]}">', source)
-                self.assertEqual(source.count("adsbygoogle"), 2)
+                # c9a52e2d1ea238f6441bbfe8dd2ffe0cb59fd068 added two manual units to
+                # the top-30 pages; loader and unit markup are separate contracts.
+                loaders = re.findall(
+                    r'<script\b[^>]*src=["\'][^"\']*pagead/js/adsbygoogle\.js\?client=',
+                    source,
+                    re.I,
+                )
+                self.assertEqual(len(loaders), 1)
+                ad_units = re.findall(
+                    r'<ins\b(?=[^>]*class=["\'][^"\']*\badsbygoogle\b[^"\']*["\'])([^>]*)>',
+                    source,
+                    re.I,
+                )
+                slots = [
+                    match.group(1)
+                    for unit in ad_units
+                    if (match := re.search(r'data-ad-slot=["\']([^"\']+)["\']', unit, re.I))
+                ]
+                self.assertEqual(slots, list(expected["ad_slots"]))
                 self.assertEqual(source.count("gtag("), 3)
                 for payload in re.findall(r'<script type="application/ld\+json">(.*?)</script>', source, re.S):
                     json.loads(payload)
