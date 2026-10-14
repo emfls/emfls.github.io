@@ -325,3 +325,5 @@
 - [ ] Owner-delegated 2026-10-14 Kanana Space release
   - Reviewed single intake implemented; exact APPROVE, low-risk/source/quality/demand checks and default discovery rule preserved. Upstream PR first, exact-head CI and normal merge; content-only PR after trusted base.
   - Draft/FAQ source comparison and local four-viewport preview complete. Search volume/performance/crawler evidence remain unmeasured. No protected page modifications.
+
+- [ ] Kanana Space content release: content-only PR based on reviewed intake; exact-head SEO QA/Launch Guard, normal merge, Pages deployment and HTTP/canonical/body verification pending.

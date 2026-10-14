@@ -40,9 +40,19 @@ def read_committed_json(relative_path):
     return json.loads(result.stdout)
 
 
+def c01_032_manifest():
+    """Validate this immutable release record even after a newer launch."""
+    current = read_committed_json("data/content-launch-manifest.json")
+    records = [current, *current.get("preservedManifestRecords", [])]
+    matches = [r for r in records if r.get("candidateIds") == [CANDIDATE_ID]]
+    if len(matches) != 1:
+        raise AssertionError("exactly one preserved C01-032 release record is required")
+    return matches[0]
+
+
 class C01032ContentReleaseTests(unittest.TestCase):
     def test_manifest_binds_one_exact_review_only_approval(self):
-        manifest = read_committed_json("data/content-launch-manifest.json")
+        manifest = c01_032_manifest()
         approval = read_committed_json("data/content-launch-experiment-approvals.json")["approvals"][0]
         self.assertEqual(approval["candidateId"], CANDIDATE_ID)
         self.assertEqual(approval["title"], TITLE)
@@ -67,7 +77,7 @@ class C01032ContentReleaseTests(unittest.TestCase):
         self.assertRegex(policy, r"(?m)^DAILY_PUBLICATION_LIMIT\s*=\s*3\s*$")
 
     def test_prior_published_manifest_is_preserved_as_the_exact_object(self):
-        manifest = read_committed_json("data/content-launch-manifest.json")
+        manifest = c01_032_manifest()
         self.assertEqual(manifest["preservedManifestRecords"], [PREVIOUS_PUBLISHED_MANIFEST])
         self.assertEqual(PREVIOUS_PUBLISHED_MANIFEST["status"], "PUBLISHED")
         self.assertNotIn(PREVIOUS_PUBLISHED_MANIFEST["urls"][0], manifest["urls"])

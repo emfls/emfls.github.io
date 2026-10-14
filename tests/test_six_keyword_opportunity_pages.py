@@ -254,6 +254,17 @@ def test_committed_launch_manifest_is_exactly_the_current_launch_batch():
         )
         return
     assert manifest["status"] == "PUBLISHED"
+    if manifest["urls"] == ["/kor/report/it/kanana-space-pre-registration-guide.html"]:
+        assert manifest["candidateIds"] == ["EXT-20261014-KANANA-SPACE"]
+        assert manifest["contentPaths"] == ["kor/report/it/kanana-space-pre-registration-guide.html"]
+        assert manifest["hubPaths"] == ["kor/report/it/index.html"]
+        assert manifest["sitemapPaths"] == ["kor/report/it/sitemap.xml"]
+        assert manifest["demandStatus"] == "ESTIMATED"
+        assert manifest["publicationEvidenceStatus"] == "SOURCE_RELEASE_ON_MERGE_HTTP_PENDING"
+        assert manifest["publishedToday"] == 1
+        assert manifest["dailyLimit"] == 3
+        assert manifest["remainingCapacity"] == 2
+        return
     if manifest["urls"] == ["/kor/column/yeongeogongbuhijoheunmideu/"]:
         assert manifest["contentPaths"] == ["kor/column/yeongeogongbuhijoheunmideu/index.html"]
         assert manifest["hubPaths"] == ["kor/column/index.html"]
@@ -380,7 +391,10 @@ def test_1688_launch_discovery_contract():
     home_latest = json.loads(
         (ROOT / "data/home-feed-ko.json").read_text(encoding="utf-8")
     )["latest"]
-    assert any(item["url"] == index_url for item in home_latest)
+    # The latest list has six slots; older content must remain indexed and
+    # appears here only while it is actually among the six newest records.
+    newest = sorted(search_index, key=lambda row: (row["updated_at"] is not None, row["updated_at"] or "", row["url"]), reverse=True)[:6]
+    assert [item["url"] for item in home_latest] == [item["url"] for item in newest]
 
 
 def test_car_tool_has_bounded_fee_lookup_and_official_handoff():

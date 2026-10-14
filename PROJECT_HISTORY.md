@@ -1354,3 +1354,7 @@
 - Added an explicit one-candidate editorial intake alongside the unchanged10–30 broad discovery batch. Exact source-backed delegated APPROVE, low-risk identity, existing readiness thresholds, and unrelated-history preservation are required; only the reviewed ID may enter the ready list.
 - Registered source-reviewed Kanana Space registration/access article as ESTIMATED demand, without keyword-volume or revenue claims. Candidate rubric74.5/feasibility93.25 are editorial inputs; BLOG89 is separate. No article HTML, measurement snapshots, protected pages, counters, or manifest changed in this upstream PR.
 - Positive regression RED→GREEN; focused30 PASS, Launch Guard/diff checks PASS. Full/exact-head CI and downstream content release pending.
+
+## 2026-10-14 — Kanana Space source-release proposal
+- Based on the merged reviewed single intake, added one original official-source registration/access article, original diagram, IT hub card and leaf sitemap entry. Existing GA4/AdSense declarations reused; no new ad slots.
+- Used prepare_external_launch selection; preserved the full previous manifest and all publication history. Source-release declaration reserves one KST-day slot, while HTTP LIVE evidence remains pending deployment. No keyword measurements or protected WINNER file changes.

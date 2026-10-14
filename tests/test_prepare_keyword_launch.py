@@ -616,8 +616,17 @@ def test_latest_main_keyword_snapshot_replays_without_false_ready_rows(tmp_path,
     output = json.loads((data / "content-launch-queue.json").read_text(encoding="utf-8"))
     assert output["queue"] == []
     assert output["dailyLimit"] == 3
-    assert output["publishedToday"] == 0
-    assert output["remainingCapacity"] == 3
+    # A later same-day source release consumes a slot even when the keyword
+    # queue remains empty. Do not assume the repository has never published.
+    selected_day = selected_at[:10]
+    expected_published = 0
+    if manifest_before.get("status") in {"PUBLISHED", "LAUNCHED"} and str(manifest_before.get("runAt", ""))[:10] == selected_day:
+        expected_published = max(manifest_before["publishedToday"], len(manifest_before["urls"]))
+    counter = json.loads((data / "content-launch-counter.json").read_text(encoding="utf-8"))
+    if counter.get("date") == selected_day:
+        expected_published = max(expected_published, counter["launchedCount"])
+    assert output["publishedToday"] == expected_published
+    assert output["remainingCapacity"] == max(0, 3 - expected_published)
     assert output["excluded"]["editorial_hold"] >= 2
     assert output["excluded"]["no_new_page"] >= 1
     assert output["excluded"]["editorial_not_approved"] >= 1
