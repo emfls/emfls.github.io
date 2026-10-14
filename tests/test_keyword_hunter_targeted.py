@@ -53,16 +53,21 @@ def _client(root, transport):
 
 
 class TargetInputTests(unittest.TestCase):
-    def test_accepts_one_to_five_json_or_newline_targets_without_rewriting_them(self):
+    def test_accepts_one_to_fifteen_json_or_newline_targets_without_rewriting_them(self):
         self.assertEqual(parse_targets('["JSON 구조 비교"]'), ["JSON 구조 비교"])
         self.assertEqual(parse_targets("CSV 인코딩 변환\nSHA-256 파일 체크섬"), [
             "CSV 인코딩 변환", "SHA-256 파일 체크섬"
         ])
         self.assertEqual(parse_targets(json.dumps(TARGETS, ensure_ascii=False)), TARGETS)
 
-    def test_rejects_more_than_five_targets(self):
-        with self.assertRaisesRegex(ValueError, "1..5"):
-            parse_targets(json.dumps(TARGETS + ["여섯 번째"]))
+    def test_accepts_exactly_fifteen_explicit_targets(self):
+        fifteen = TARGETS + [f"확장 키워드 {index}" for index in range(10)]
+        self.assertEqual(parse_targets(json.dumps(fifteen, ensure_ascii=False)), fifteen)
+
+    def test_rejects_more_than_fifteen_targets(self):
+        sixteen = TARGETS + [f"확장 키워드 {index}" for index in range(11)]
+        with self.assertRaisesRegex(ValueError, "1..15"):
+            parse_targets(json.dumps(sixteen, ensure_ascii=False))
 
     def test_rejects_empty_or_non_string_targets(self):
         for raw in ("", "[]", '[""]', '["   "]', '["ok", null]'):
