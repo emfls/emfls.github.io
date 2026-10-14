@@ -604,7 +604,8 @@ def test_latest_main_keyword_snapshot_replays_only_explicitly_approved_rows(tmp_
     false_ready = {"1월국내여행지추천", "3월여행지추천", "차량폐차가격"}
     assert false_ready <= set(keywords)
     assert all(keywords[keyword]["score_valid"].strip().casefold() == "true" for keyword in false_ready)
-    selected_at = json.loads((data / "content-launch-queue.json").read_text(encoding="utf-8"))["selectedAt"]
+    queue_snapshot = json.loads((data / "content-launch-queue.json").read_text(encoding="utf-8"))
+    selected_at = queue_snapshot["selectedAt"]
     manifest_before = json.loads((data / "content-launch-manifest.json").read_text(encoding="utf-8"))
     monkeypatch.setattr(
         "sys.argv",
@@ -614,19 +615,18 @@ def test_latest_main_keyword_snapshot_replays_only_explicitly_approved_rows(tmp_
     prepare_keyword_launch.main()
 
     output = json.loads((data / "content-launch-queue.json").read_text(encoding="utf-8"))
-    source_release_already_recorded = (
-        manifest_before.get("status") in {"PUBLISHED", "LAUNCHED"}
-        and str(manifest_before.get("runAt", ""))[:10] == selected_at[:10]
-        and {"keyword:서울찜질방추천", "keyword:서울아이와가볼만한곳"}
-        <= set(manifest_before.get("candidateIds") or [])
-    )
-    expected_queue = [] if source_release_already_recorded else [
-        "서울찜질방추천",
-        "서울아이와가볼만한곳",
-    ]
+    # f633aaf9ddd29ae1be0aabece354694a807bf854 refreshed the current
+    # observations and marked both previously approved candidates trend_stale;
+    # the current committed queue correctly excludes them until revalidated.
+    expected_queue = queue_snapshot["queue"]
     assert [item["keyword"] for item in output["queue"]] == expected_queue
+    assert output == queue_snapshot
     assert all(item["status"] == "READY_TO_LAUNCH" for item in output["queue"])
     assert not (false_ready & {item["keyword"] for item in output["queue"]})
+    assert all(
+        keywords[item["keyword"]]["score_valid"].strip().casefold() == "true"
+        for item in output["queue"]
+    )
     assert output["dailyLimit"] == 3
     # A same-day source release consumes a slot independently of the keyword
     # queue. Do not assume the repository has never published.
@@ -644,7 +644,7 @@ def test_latest_main_keyword_snapshot_replays_only_explicitly_approved_rows(tmp_
     if expected_queue:
         assert output["excluded"]["editorial_not_approved"] >= 1
     else:
-        assert output["excluded"]["daily_limit"] >= 1
+        assert output["excluded"]["invalid_score"] >= 1
     assert json.loads((data / "content-launch-manifest.json").read_text(encoding="utf-8")) == manifest_before
 
 
