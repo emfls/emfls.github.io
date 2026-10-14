@@ -321,3 +321,7 @@
   - 목적: 실제 검색·수익 데이터가 확보되면 무료 도구/계산기 노출을 캠핑·게임보다 앞세울지 판단한다.
   - 완료 조건: 동일 28일 기간의 채널별 클릭·PV·수익을 비교하고 근거가 있을 때만 홈 순서를 변경.
   - 관련 영역: `data/page-performance.json`, `data/revenue-opportunities.json`, `index.html`.
+
+- [ ] Owner-delegated 2026-10-14 Kanana Space release
+  - Reviewed single intake implemented; exact APPROVE, low-risk/source/quality/demand checks and default discovery rule preserved. Upstream PR first, exact-head CI and normal merge; content-only PR after trusted base.
+  - Draft/FAQ source comparison and local four-viewport preview complete. Search volume/performance/crawler evidence remain unmeasured. No protected page modifications.
