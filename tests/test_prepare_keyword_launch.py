@@ -583,7 +583,7 @@ def test_exact_false_ready_keywords_have_source_backed_negative_decisions():
     assert result["excluded"]["no_new_page"] == 1
 
 
-def test_latest_main_keyword_snapshot_replays_without_false_ready_rows(tmp_path, monkeypatch):
+def test_latest_main_keyword_snapshot_replays_only_explicitly_approved_rows(tmp_path, monkeypatch):
     source_root = Path(__file__).resolve().parents[1]
     source_data = source_root / "data"
     data = tmp_path / "data"
@@ -614,10 +614,15 @@ def test_latest_main_keyword_snapshot_replays_without_false_ready_rows(tmp_path,
     prepare_keyword_launch.main()
 
     output = json.loads((data / "content-launch-queue.json").read_text(encoding="utf-8"))
-    assert output["queue"] == []
+    assert [item["keyword"] for item in output["queue"]] == [
+        "서울찜질방추천",
+        "서울아이와가볼만한곳",
+    ]
+    assert all(item["status"] == "READY_TO_LAUNCH" for item in output["queue"])
+    assert not (false_ready & {item["keyword"] for item in output["queue"]})
     assert output["dailyLimit"] == 3
-    # A later same-day source release consumes a slot even when the keyword
-    # queue remains empty. Do not assume the repository has never published.
+    # A same-day source release consumes a slot independently of the keyword
+    # queue. Do not assume the repository has never published.
     selected_day = selected_at[:10]
     expected_published = 0
     if manifest_before.get("status") in {"PUBLISHED", "LAUNCHED"} and str(manifest_before.get("runAt", ""))[:10] == selected_day:
