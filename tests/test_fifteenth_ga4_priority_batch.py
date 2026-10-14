@@ -15,6 +15,10 @@ PAGES = {
     "kor/report/travel/estonia-tallinn.html": ("WebPage", "입국", "관련"),
 }
 
+# c3fa79b82a5925473d997a5a646566e42b9c3f71 refreshed this page after the
+# original batch date; the other pages retain their 2026-08-10 review marker.
+REVIEW_DATE_OVERRIDES = {"kor/report/camp/gunsan.html": "2026-10-15"}
+
 
 class FifteenthGa4PriorityBatchTest(unittest.TestCase):
     def test_contract(self):
@@ -22,7 +26,7 @@ class FifteenthGa4PriorityBatchTest(unittest.TestCase):
             with self.subTest(relative=relative):
                 html = (ROOT / relative).read_text(encoding="utf-8")
                 compact = "".join(html.split())
-                self.assertIn("2026-08-10", html)
+                self.assertIn(REVIEW_DATE_OVERRIDES.get(relative, "2026-08-10"), html)
                 self.assertIn(f'"@type":"{schema}"', compact)
                 self.assertIn(limitation.lower(), html.lower())
                 self.assertIn(related, html)

@@ -3,6 +3,8 @@ import re
 from html.parser import HTMLParser
 from pathlib import Path
 
+from scripts.build_content_index import build_home_feed
+
 
 ROOT = Path(__file__).resolve().parents[1]
 RELATIVE_URL = "/kor/report/it/keyboard-cleaning-guide.html"
@@ -111,7 +113,9 @@ def test_keyboard_cleaning_page_has_publication_discovery_and_registry_wiring():
     content_index = json.loads((ROOT / "data/content-index-ko.json").read_text(encoding="utf-8"))
     assert sum(row["url"] == RELATIVE_URL for row in content_index) == 1
     feed = json.loads((ROOT / "data/home-feed-ko.json").read_text(encoding="utf-8"))
-    assert any(item["url"] == RELATIVE_URL for item in feed["latest"])
+    # 099b0162afebb5e565716805131c86e17a247b73 keeps only the six latest cards;
+    # this older article remains in the complete searchable index.
+    assert feed["latest"] == build_home_feed(content_index)["latest"]
 
 
 def test_keyboard_cleaning_manifest_records_only_this_launch_and_one_daily_slot():

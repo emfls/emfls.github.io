@@ -4,6 +4,8 @@ import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
 from pathlib import Path
 
+from scripts.build_content_index import build_home_feed
+
 
 ROOT = Path(__file__).resolve().parents[1]
 ROUTE = "kor/report/parenting/parental-leave-application-form-2026.html"
@@ -239,5 +241,6 @@ def test_published_page_hub_and_sitemaps_register_the_page_once():
     content_index = json.loads((ROOT / "data/content-index-ko.json").read_text(encoding="utf-8"))
     row = next(item for item in content_index if item["url"] == f"/{ROUTE}")
     assert row["title"] == "육아휴직 신청서 작성 가이드 2026 | 사업주 신청·급여 신청 구분"
-    home_latest = json.loads((ROOT / "data/home-feed-ko.json").read_text(encoding="utf-8"))["latest"]
-    assert any(item["url"] == f"/{ROUTE}" for item in home_latest)
+    home_feed = json.loads((ROOT / "data/home-feed-ko.json").read_text(encoding="utf-8"))
+    # 099b0162afebb5e565716805131c86e17a247b73 uses a rolling six-card feed.
+    assert home_feed["latest"] == build_home_feed(content_index)["latest"]
