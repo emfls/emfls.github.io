@@ -1,3 +1,4 @@
+import ast
 import json
 import subprocess
 from pathlib import Path
@@ -279,6 +280,7 @@ def test_official_camp_fact_corrections_allow_only_exact_documented_blob_pairs(t
         "kor/report/camp/goyang.html",
         "kor/report/camp/free-camping-top20.html",
         "kor/report/camp/sejong.html",
+        "kor/report/camp/paju.html",
     )
     revenue["protectedWinners"].extend({"url": f"/{path}"} for path in paths)
     write_json(revenue_path, revenue)
@@ -647,3 +649,15 @@ def test_final_guard_fails_closed_when_editorial_decisions_are_unavailable(tmp_p
         [("A", relative)],
     )
     assert "EDITORIAL_DECISIONS_UNAVAILABLE" in errors
+
+
+def test_protected_winner_transition_source_has_unique_page_keys():
+    source = Path("scripts/content_launch_guard.py").read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    assignment = next(
+        node for node in tree.body
+        if isinstance(node, ast.Assign)
+        and any(isinstance(target, ast.Name) and target.id == "APPROVED_PROTECTED_WINNER_TRANSITIONS" for target in node.targets)
+    )
+    keys = [ast.literal_eval(key) for key in assignment.value.keys if key is not None]
+    assert len(keys) == len(set(keys)), "protected winner page keys must be unique in source"
