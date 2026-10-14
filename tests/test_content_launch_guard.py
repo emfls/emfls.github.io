@@ -277,6 +277,7 @@ def test_official_camp_fact_corrections_allow_only_exact_documented_blob_pairs(t
         "kor/report/camp/jinju.html",
         "kor/report/camp/nonsan.html",
         "kor/report/camp/goyang.html",
+        "kor/report/camp/free-camping-top20.html",
     )
     revenue["protectedWinners"].extend({"url": f"/{path}"} for path in paths)
     write_json(revenue_path, revenue)
