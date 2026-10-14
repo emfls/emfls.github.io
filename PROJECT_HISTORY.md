@@ -1,5 +1,11 @@
 # PROJECT HISTORY
 
+## 2026-10-14 — GA4 유입원 및 캠핑 클러스터 기준선
+
+- `data/performance/ga4-source-latest.json`에 GA4 유입원×랜딩페이지 원자료와 요약을 저장했다. 캠핑 prefix에는 660개 source/medium/page 조합, 170개 랜딩 페이지, 14,974개 세션 기준 조회, GA4 `totalAdRevenue` $43.534155가 포함된다. 이 수익은 AdSense URL별 직접 수익이 아니며, 조회는 해당 랜딩 URL의 총 페이지뷰와 동일하지 않다.
+- `kor/report/camp/` 정적 172페이지의 제목, 본문 단어 수, 내부 링크, 광고 슬롯 위치, 분류, 조회·점수 자료 및 시군구 커버리지를 CSV/JSON/노트북으로 저장했다. 사이트 HTML과 noindex/삭제/리다이렉트 상태는 바꾸지 않았다.
+- 원본 commit `2990643eeb`는 Marble Flick 문서 커밋을 부모로 하므로 해당 커밋의 파일 변경만 `origin/main` 위에 새 commit으로 이식했다. Marble Flick 이력은 새 브랜치의 추가 커밋에 포함하지 않는다.
+
 ## 2026-10-12 SC-20261012-040 — measurement provenance in heuristic inventory
 
 - Based on latest main `d0e209b86d750a3da1aa497dd146a1120960b258`, reproduced that the candidate builder retained numeric values but dropped each verified channel's source, status, and measurement period. `TRAFFIC_WITH_STRUCTURE_GAP` remains a threshold heuristic and is not evidence of a reproduced usability defect.

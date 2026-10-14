@@ -291,6 +291,15 @@
 
 ## P2 - Medium
 
+- [x] GA4 source report and camping-cluster inventory snapshot
+  - 완료: 2026-10-14. GA4 acquisition/source rows, camp landing-page rollups, template/coverage inventory and existing PAGE_SCORE/category fields saved under `data/performance/` and `reports/`.
+  - Website content and noindex/delete/redirect state were unchanged. GA4 totalAdRevenue is not direct AdSense page revenue; landing-page views are session report totals, not lifetime page views.
+
+
+- [x] GA4 source report and camping-cluster inventory snapshot
+  - 완료: 2026-10-14. GA4 acquisition rows, camp per-URL landing-session rollups, low-view cluster ratios/template similarity, 2026 municipal coverage, and existing dated PAGE_SCORE/category fields were saved under `data/performance/` and `reports/`.
+  - Website HTML and all noindex/delete/redirect state remained untouched. Direct AdSense URL revenue and lifetime page views were not available from the queried data.
+
 - [x] 14 · Marble Flick — /game/MarbleFlick/
   - Closed on main after the approved four-commit chain: title-frozen English canary with generation-guarded AI callbacks, stale-collision isolation, chained-motion settlement barrier, live-count winner matrix, delayed turn handoff, AI-only local replay stats, DOM-safe initialization, H1/breadcrumb semantics, accessibility, VideoGame/BreadcrumbList schema, and RSS parity.
   - Pages run `35596795290` succeeded for product SHA `7dcfc1fd65`; production served the final title, one H1, Games breadcrumb, board, mode controls, instructions, local stats, and crawlable `/game/` navigation. Runtime/mobile and Search Console evidence are recorded as partial or unavailable where applicable; 15 and coordinated locale rollout remain out of scope.
