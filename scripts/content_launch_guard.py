@@ -115,6 +115,11 @@ APPROVED_PROTECTED_WINNER_TRANSITIONS = {
     "kor/report/camp/boryeong.html": {
         ("bfbe722f3545e3f3d1aebe35cc1cfd5c9a807b68", "8049f09e81190d4cb87d086a80dccb6bb664b938"),
     },
+    # Official-source fact correction, 2026-10-14; exact blob pair only.
+    # Evidence: reports/camp-factcheck-v5-paju-boryeong-iksan-sejong-2026-10-14.md
+    "kor/report/camp/iksan.html": {
+        ("e145697177cdc049889db9dfdb356cad63a358fc", "46bc4a8bb456cf19d6fdf8a13ec04ce6cf84bdbc"),
+    },
     # C33's user-approved factual and policy-integrity repair; the exact blob pair keeps all other edits protected.
     "kor/column/maple-planet-no-capital-rice-farming-2026.html": {
         ("fd73fdd0be12fab17f9ab78473c0182956d34098", "873ab21ba21523a22e83cffaf61e1dab3e4ec5d3"),
