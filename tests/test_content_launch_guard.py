@@ -4,6 +4,7 @@ from pathlib import Path
 
 from scripts.content_launch_guard import (
     APPROVED_JP_TRAVEL_CANARY_DELETIONS,
+    APPROVED_PROTECTED_WINNER_TRANSITIONS,
     APPROVED_MONETIZATION_TRANSITIONS,
     _git_changes,
     validate_launch,
@@ -254,6 +255,29 @@ def test_guard_allows_only_exact_c33_maple_integrity_transition(tmp_path):
         manifest([]),
         [("M", "kor/report/camp/namyangju.html", C33_MAPLE_BASE_BLOB, C33_MAPLE_REPAIRED_BLOB)],
     )
+
+
+def test_official_camp_fact_corrections_allow_only_exact_documented_blob_pairs(tmp_path):
+    setup_data(tmp_path)
+    revenue_path = tmp_path / "data/revenue-opportunities.json"
+    revenue = json.loads(revenue_path.read_text(encoding="utf-8"))
+    paths = (
+        "kor/report/camp/ansan.html",
+        "kor/report/camp/cheorwon.html",
+        "kor/report/camp/pyeongtaek.html",
+        "kor/report/camp/gyeonggi-best.html",
+        "kor/report/camp/siheung.html",
+        "kor/report/camp/suwon.html",
+    )
+    revenue["protectedWinners"].extend({"url": f"/{path}"} for path in paths)
+    write_json(revenue_path, revenue)
+
+    for path in paths:
+        transition = next(iter(APPROVED_PROTECTED_WINNER_TRANSITIONS[path]))
+        assert validate_launch(tmp_path, manifest([]), [("M", path, *transition)]) == []
+        assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+            tmp_path, manifest([]), [("M", path, transition[0], "f" * 40)]
+        )
 
 
 def test_guard_rejects_pyeongtaek_with_different_result_blob(tmp_path):

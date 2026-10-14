@@ -48,8 +48,37 @@ APPROVED_MONETIZATION_ADDITIONS = frozenset({
     "scripts/collect_adsense_snapshot.py",
 })
 APPROVED_PROTECTED_WINNER_TRANSITIONS = {
+    # Official-source fact correction, 2026-10-14; exact blob pair only.
+    # Evidence: reports/camp-factcheck-v3-suwon-siheung-ansan-cheorwon-2026-10-14.md
+    "kor/report/camp/ansan.html": {
+        ("0d33716b6dd3e8f9c2f8036f437fb79a13d6eacf", "ed7356cd82ca5a73e54be996ee6e64428da531aa"),
+    },
+    # Official-source fact correction, 2026-10-14; exact blob pair only.
+    # Evidence: reports/camp-factcheck-v3-suwon-siheung-ansan-cheorwon-2026-10-14.md
+    "kor/report/camp/cheorwon.html": {
+        ("d12c71cd0cdf1fe69cd290697ac92d3fb88e3b57", "7c85a60c9ea3cd772cec71e0628371f3c036ddca"),
+    },
+    # Preserve the earlier exact internal-link transition and record the separate fact correction.
+    # Official-source fact correction, 2026-10-14; exact blob pair only.
+    # Evidence: reports/camp-factcheck-v2-pyeongtaek-gyeonggi-2026-10-14.md
     "kor/report/camp/pyeongtaek.html": {
         ("4d95593169e466447ee355429d2822764ca7e1a5", "b4fc13119f1e8cd01d78805d06ee981ac6834236"),
+        ("3fd0e1959b4302b3209d4efc37b872c97aded91e", "0fd88c06441a246aa87ddeb72ba29a5f5fb4d5c1"),
+    },
+    # Official-source fact correction, 2026-10-14; exact blob pair only.
+    # Evidence: reports/camp-factcheck-v2-pyeongtaek-gyeonggi-2026-10-14.md
+    "kor/report/camp/gyeonggi-best.html": {
+        ("1166dbea157c13f7664c12055d9b5aabb65edb27", "218dd0469056c432b1dcfccbab54d4dbf38c1769"),
+    },
+    # Official-source fact correction, 2026-10-14; exact blob pair only.
+    # Evidence: reports/camp-factcheck-v3-suwon-siheung-ansan-cheorwon-2026-10-14.md
+    "kor/report/camp/siheung.html": {
+        ("0560afa99bee22a561ba52fe156ef68a1e34ffe9", "356dc2a0c9925a5d98b491764f82af181e12a607"),
+    },
+    # Official-source fact correction, 2026-10-14; exact blob pair only.
+    # Evidence: reports/camp-factcheck-v3-suwon-siheung-ansan-cheorwon-2026-10-14.md
+    "kor/report/camp/suwon.html": {
+        ("ede5c9273cdacf710908bdc0252e6e99ea404389", "c965b510a9044b50ffaf5b3a9d3a2267157a30e6"),
     },
     # C33's user-approved factual and policy-integrity repair; the exact blob pair keeps all other edits protected.
     "kor/column/maple-planet-no-capital-rice-farming-2026.html": {
