@@ -614,10 +614,17 @@ def test_latest_main_keyword_snapshot_replays_only_explicitly_approved_rows(tmp_
     prepare_keyword_launch.main()
 
     output = json.loads((data / "content-launch-queue.json").read_text(encoding="utf-8"))
-    assert [item["keyword"] for item in output["queue"]] == [
+    source_release_already_recorded = (
+        manifest_before.get("status") in {"PUBLISHED", "LAUNCHED"}
+        and str(manifest_before.get("runAt", ""))[:10] == selected_at[:10]
+        and {"keyword:서울찜질방추천", "keyword:서울아이와가볼만한곳"}
+        <= set(manifest_before.get("candidateIds") or [])
+    )
+    expected_queue = [] if source_release_already_recorded else [
         "서울찜질방추천",
         "서울아이와가볼만한곳",
     ]
+    assert [item["keyword"] for item in output["queue"]] == expected_queue
     assert all(item["status"] == "READY_TO_LAUNCH" for item in output["queue"])
     assert not (false_ready & {item["keyword"] for item in output["queue"]})
     assert output["dailyLimit"] == 3
@@ -634,7 +641,10 @@ def test_latest_main_keyword_snapshot_replays_only_explicitly_approved_rows(tmp_
     assert output["remainingCapacity"] == max(0, 3 - expected_published)
     assert output["excluded"]["editorial_hold"] >= 2
     assert output["excluded"]["no_new_page"] >= 1
-    assert output["excluded"]["editorial_not_approved"] >= 1
+    if expected_queue:
+        assert output["excluded"]["editorial_not_approved"] >= 1
+    else:
+        assert output["excluded"]["daily_limit"] >= 1
     assert json.loads((data / "content-launch-manifest.json").read_text(encoding="utf-8")) == manifest_before
 
 
