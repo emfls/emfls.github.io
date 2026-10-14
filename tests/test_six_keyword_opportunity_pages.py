@@ -363,6 +363,25 @@ def test_committed_launch_manifest_is_exactly_the_current_launch_batch():
         assert manifest["dailyLimit"] == 1
         assert manifest["remainingCapacity"] == 0
         return
+    if manifest["urls"] == [
+        "/kor/column/seouljjimjilbangcuceon/",
+        "/kor/column/seoulaiwagabolmanhangos/",
+    ]:
+        assert manifest["candidateIds"] == [
+            "keyword:서울찜질방추천",
+            "keyword:서울아이와가볼만한곳",
+        ]
+        assert manifest["contentPaths"] == [
+            "kor/column/seouljjimjilbangcuceon/index.html",
+            "kor/column/seoulaiwagabolmanhangos/index.html",
+        ]
+        assert manifest["hubPaths"] == ["kor/column/index.html"]
+        assert manifest["sitemapPaths"] == ["kor/column/sitemap.xml"]
+        assert manifest["publicationEvidenceStatus"] == "SOURCE_RELEASE_ON_MERGE_HTTP_PENDING"
+        assert manifest["publishedToday"] == 3
+        assert manifest["dailyLimit"] == 3
+        assert manifest["remainingCapacity"] == 0
+        return
     assert manifest["urls"] == ["/kor/util/water-purifier-rental-price-comparison/"]
     assert manifest["contentPaths"] == ["kor/util/water-purifier-rental-price-comparison/index.html"]
     assert manifest["hubPaths"] == ["kor/util/index.html"]
