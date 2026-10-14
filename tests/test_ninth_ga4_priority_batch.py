@@ -24,7 +24,12 @@ class NinthGa4PriorityBatchTest(unittest.TestCase):
             with self.subTest(relative=relative):
                 html = (ROOT / relative).read_text(encoding="utf-8")
                 compact = "".join(html.split())
-                self.assertIn("2026-08-10", html)
+                expected_review_date = (
+                    "2026-10-14"
+                    if relative == "kor/report/camp/cheorwon.html"
+                    else "2026-08-10"
+                )
+                self.assertIn(expected_review_date, html)
                 self.assertIn(f'"@type":"{schema_type}"', compact)
                 self.assertIn(limitation.lower(), html.lower())
                 self.assertIn(related_label, html)
