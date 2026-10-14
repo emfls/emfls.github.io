@@ -85,6 +85,11 @@ APPROVED_PROTECTED_WINNER_TRANSITIONS = {
     "kor/report/camp/jinju.html": {
         ("6cf50dd713dda4d144d1749fa748b9726f7b5427", "bc2da49e0032ec84f458b6fa01ecc51f8bacac9d"),
     },
+    # Official-source fact correction, 2026-10-14; exact blob pair only.
+    # Evidence: reports/camp-factcheck-v4-top20-goyang-jinju-nonsan-2026-10-14.md
+    "kor/report/camp/nonsan.html": {
+        ("2f93f3c4abdf9b77d93d70424d805693481189b9", "a4a84d3175068107255d0661f1a6fc5edefce8bd"),
+    },
     # C33's user-approved factual and policy-integrity repair; the exact blob pair keeps all other edits protected.
     "kor/column/maple-planet-no-capital-rice-farming-2026.html": {
         ("fd73fdd0be12fab17f9ab78473c0182956d34098", "873ab21ba21523a22e83cffaf61e1dab3e4ec5d3"),

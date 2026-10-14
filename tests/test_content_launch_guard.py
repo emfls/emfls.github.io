@@ -259,6 +259,12 @@ def test_guard_allows_only_exact_c33_maple_integrity_transition(tmp_path):
 
 def test_official_camp_fact_corrections_allow_only_exact_documented_blob_pairs(tmp_path):
     setup_data(tmp_path)
+    experiments_path = tmp_path / "data/experiments.json"
+    experiments = json.loads(experiments_path.read_text(encoding="utf-8"))
+    # The real nonsan experiment is INCONCLUSIVE; keep the synthetic OBSERVING fixture
+    # intact in the separate test that verifies active experiments remain protected.
+    experiments["experiments"][0]["status"] = "INCONCLUSIVE"
+    write_json(experiments_path, experiments)
     revenue_path = tmp_path / "data/revenue-opportunities.json"
     revenue = json.loads(revenue_path.read_text(encoding="utf-8"))
     paths = (
@@ -269,6 +275,7 @@ def test_official_camp_fact_corrections_allow_only_exact_documented_blob_pairs(t
         "kor/report/camp/siheung.html",
         "kor/report/camp/suwon.html",
         "kor/report/camp/jinju.html",
+        "kor/report/camp/nonsan.html",
     )
     revenue["protectedWinners"].extend({"url": f"/{path}"} for path in paths)
     write_json(revenue_path, revenue)
