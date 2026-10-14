@@ -1358,3 +1358,6 @@
 ## 2026-10-14 — Kanana Space source-release proposal
 - Based on the merged reviewed single intake, added one original official-source registration/access article, original diagram, IT hub card and leaf sitemap entry. Existing GA4/AdSense declarations reused; no new ad slots.
 - Used prepare_external_launch selection; preserved the full previous manifest and all publication history. Source-release declaration reserves one KST-day slot, while HTTP LIVE evidence remains pending deployment. No keyword measurements or protected WINNER file changes.
+
+## 2026-10-14 10:16 Keyword Hunter
+- Seeds: 40; New: 101; Rejected: 87; DB: 5374; Errors: 0; Top: 냉온정수기구매. Artifact report: reports/keyword-hunter/2026-10-14-1016.md
