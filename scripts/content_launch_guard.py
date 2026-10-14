@@ -125,6 +125,11 @@ APPROVED_PROTECTED_WINNER_TRANSITIONS = {
     "kor/report/camp/daebudo-camping.html": {
         ("a1b43ea83b8bf37071c97498c8250762cab155ec", "8cc86c6618ace2f3f5381a68d28632e4dfc2cd09"),
     },
+    # Official-source fact correction, 2026-10-14; exact blob pair only.
+    # Evidence: reports/camp-factcheck-v6-sokcho-gumi-daebudo-buyeo-2026-10-14.md
+    "kor/report/camp/sokcho.html": {
+        ("20cff46f028466b9ca7ea2f0169ea9a24335d0bd", "7f0dfdf4614388f9d0452fa650135982ef558827"),
+    },
     # C33's user-approved factual and policy-integrity repair; the exact blob pair keeps all other edits protected.
     "kor/column/maple-planet-no-capital-rice-farming-2026.html": {
         ("fd73fdd0be12fab17f9ab78473c0182956d34098", "873ab21ba21523a22e83cffaf61e1dab3e4ec5d3"),
