@@ -180,6 +180,26 @@ APPROVED_PROTECTED_WINNER_TRANSITIONS = {
     "kor/report/camp/gunsan.html": {("c4b8dacf33b1bd6d9142f2c0428784b814c065af", "064e5328caa5e3ff6b0e319574c71d4b798f5099")},
 }
 
+# [8차] Exact protected-WINNER transitions for reviewed claim softening and winter facts, 2026-10-15.
+# Reason: only these explicitly reviewed pages changed. Unsafe camping/facility guarantees were qualified;
+# local pages now match the 2026-09-29 KNPS winter operation notice or the linked Foresttrip notice.
+# Evidence: Notion instruction [8차] (3f9db4c0a991818294e9f6f2339d0a80), approved draft 16차,
+# KNPS notice seq=29193, and Foresttrip Gari-san official page. Exact blob pairs only; QA remains enabled.
+APPROVED_TASK8_PROTECTED_TRANSITIONS = {
+    "kor/report/camp/jeongeup.html": ("2aa21bb5fe2df98522db391b1ef3b80e77acf7b9", "22e1bb559dbc1b22916e4c0aaa7cc6b5077cfc06"),
+    "kor/report/camp/chilgok.html": ("ae6804356d90cb05659a0d0bb33a879de421843f", "d556f15ca025ec8f27d72403cd11c55fa821b88c"),
+    "kor/report/camp/mungyeong.html": ("23711e091b048deac5f4a0ae13b06b47be3fb01a", "13fe81db50b57f1a569b852649d7b0521cc857e7"),
+    "kor/report/camp/tongyeong.html": ("f40f8e7b1f59e7a99df1d6aec282ccdd4edb9c2e", "5ef906eef4c4cecd6d33548d1fdb0d956f4b0292"),
+    "kor/report/camp/miryang.html": ("d9931bcb76f5a2ad14d50f4ffe34bebb6c7f95a7", "cd5eb8e946c3dda2fe6352b93fdf5b351861077f"),
+    "kor/report/camp/gyeryong.html": ("3c799ed6a98f9250d322f6e13076ca09e2da9558", "12bb2658bf403251027828854d26d9cddd5cc61f"),
+    "kor/report/camp/suncheon.html": ("03febec926594a6570b6b8c0397ada640fee7b95", "2d5f4b37405f4c824f3513a99a9d208a6905158b"),
+    "kor/report/camp/hongcheon.html": ("174f2cd7b24db6e2aba624021a31ca8e4c36352a", "b29334ecff8e07e730c984f7c376600629c35562"),
+    "kor/report/camp/yeongju.html": ("3f99ce18ef9375d1af3f82eb8d6ed4c26f3d1599", "cb19f4f199a7bd0fd23992f678133d1020b2e6cb"),
+    "kor/report/camp/seongju.html": ("4bb4f72be5883e43f432d542e0b4df9621812f08", "e55c11cb4c3ecf88f32f6587072e46700c46693a"),
+}
+for _path, _pair in APPROVED_TASK8_PROTECTED_TRANSITIONS.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_pair)
+
 # User-approved AdSense placement on the 29-day top-30 camping pages, 2026-10-14.
 # Evidence: reports/camp-cluster-inventory-2026-10-14.csv; exact blob pairs only.
 APPROVED_AD_PLACEMENT_TRANSITIONS = {
