@@ -133,7 +133,22 @@ class OctoberKoreaTravelLaunchTest(unittest.TestCase):
         self.assertEqual(len(matching_index), 1)
         self.assertEqual(matching_index[0]["category"], "여행")
         home_feed = json.loads((ROOT / "data/home-feed-ko.json").read_text(encoding="utf-8"))
-        self.assertTrue(any(row["url"] == relative_url for row in home_feed["latest"]))
+        # 099b0162afebb5e565716805131c86e17a247b73 refreshed the rolling
+        # six-item feed; older published pages remain searchable in the full index.
+        dated = sorted(
+            search_index,
+            key=lambda row: (
+                row["updated_at"] is not None,
+                row["updated_at"] or "",
+                row["url"],
+            ),
+            reverse=True,
+        )
+        expected_latest = [
+            {key: row[key] for key in ("title", "url", "description", "category", "tags")}
+            for row in dated[:6]
+        ]
+        self.assertEqual(home_feed["latest"], expected_latest)
 
         manifest = committed_launch_manifest()
         if manifest["urls"] != [relative_url]:
