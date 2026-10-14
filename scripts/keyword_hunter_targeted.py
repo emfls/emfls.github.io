@@ -24,16 +24,16 @@ SAFE_CODE = re.compile(r"[^A-Z0-9_.-]+")
 
 
 def parse_targets(raw):
-    """Accept a JSON string array or newline list of 1-5 explicit queries."""
+    """Accept a JSON string array or newline list of 1-15 explicit queries."""
     if not isinstance(raw, str) or not raw.strip():
-        raise ValueError("Provide 1..5 explicit keywords")
+        raise ValueError("Provide 1..15 explicit keywords")
     text = raw.strip()
     try:
         decoded = json.loads(text)
     except json.JSONDecodeError:
         decoded = [line.strip() for line in text.splitlines() if line.strip()]
-    if not isinstance(decoded, list) or not 1 <= len(decoded) <= 5:
-        raise ValueError("Provide 1..5 explicit keywords")
+    if not isinstance(decoded, list) or not 1 <= len(decoded) <= 15:
+        raise ValueError("Provide 1..15 explicit keywords")
 
     targets = []
     keys = set()
