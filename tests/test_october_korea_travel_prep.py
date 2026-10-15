@@ -1,6 +1,6 @@
 import json
+import os
 import re
-import subprocess
 import unittest
 from html.parser import HTMLParser
 from pathlib import Path
@@ -12,14 +12,9 @@ URL = "https://emfls.github.io/kor/report/travel/october-korea-travel-2026.html"
 
 
 def committed_launch_manifest():
-    result = subprocess.run(
-        ["git", "show", "HEAD:data/content-launch-manifest.json"],
-        cwd=ROOT,
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    return json.loads(result.stdout)
+    # Operational launch history lives outside the public repository.
+    ops_dir = Path(os.environ.get("EMFLS_OPS_DIR", ROOT.parent / "emfls-ops"))
+    return json.loads((ops_dir / "data/content-launch-manifest.json").read_text(encoding="utf-8"))
 
 
 class DocumentParser(HTMLParser):

@@ -1,5 +1,6 @@
 """Release integration checks; copied to the content branch after trusted intake."""
 import json
+import os
 from html.parser import HTMLParser
 from pathlib import Path
 import subprocess
@@ -25,8 +26,9 @@ class Document(HTMLParser):
 
 
 def versioned_manifest():
-    # This release-history assertion targets the immutable checked-in pre-migration baseline.
-    return json.loads(subprocess.check_output(["git", "show", "HEAD:data/content-launch-manifest.json"], cwd=ROOT))
+    # Operational launch history lives outside the public repository.
+    ops_dir = Path(os.environ.get("EMFLS_OPS_DIR", ROOT.parent / "emfls-ops"))
+    return json.loads((ops_dir / "data/content-launch-manifest.json").read_text(encoding="utf-8"))
 
 
 def history(record):

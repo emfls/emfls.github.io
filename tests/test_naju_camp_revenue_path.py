@@ -26,7 +26,7 @@ class NajuCampRevenuePathTest(unittest.TestCase):
 
         schemas = re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)
         parsed = [json.loads(item) for item in schemas]
-        self.assertTrue(any(item.get("dateModified") == "2026-08-25" for item in parsed))
+        self.assertTrue(any(item.get("@type") == "TravelGuide" and item.get("dateModified") == "2026-10-15" for item in parsed))
         self.assertTrue(
             any(
                 item.get("@type") == "WebPage" and item.get("dateModified") == "2026-10-15"
