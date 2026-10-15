@@ -1391,3 +1391,11 @@
 - `ab366e82771737c3f9ca1e039ac5fda0d27424eb`를 2026-10-15 14:10:41 KST에 main으로 정상 fast-forward push했다. Pages deployment run `38685375355`는 success로 완료됐다. 완료 뒤 캐시 우회 HTTP로 공개 10 URL을 확인해 전부 200, 최신 title 일치 10/10(칠곡·통영·밀양·계룡·순천·정읍·나주·정선·김해·임실)을 확인했다.
 - 결과 이력 문서 커밋 `24a2abe518870717327abaccbf1577f10cf926c4`도 main에 push했다. 이 문서 push의 Pages run `38685649766`은 조회 시 `in_progress`; 앞선 콘텐츠 배포 성공과 라이브 페이지는 이미 확인했고 추가 CI 대기는 하지 않았다.
 - `data/home-feed-ko.json`의 단일 토큰 순서 변동은 local QA 생성 부수효과로 확인해 되돌렸으며 커밋하지 않았다.
+
+## 2026-10-15 — 10차 캠핑 사실정정 5페이지 및 main 푸시
+- 19차 공식자료 검증(Claude 90점, 전체 채택)을 근거로 하남·문경·영주·단양·군산을 수정하고 페이지별 커밋으로 분리했다. 금지·제한, 등록 야영장, 허용 미확인 방문 후보를 구분하고 각 장소 출처·확인일을 추가했다. 오시아노(해남)의 영주 페이지 항목·메타·구조화데이터 참조를 삭제하고, 예천 관광지와 단양 겨울 휴장 시설을 올바르게 분리했다.
+- 보호된 페이지의 정확한 `origin/main`→최종 blob 쌍 5개를 Launch Guard 승인 목록에 추가했으며 검사 로직은 유지했다. 검색 인덱스도 5페이지의 새 제목·설명에 맞춰 갱신했다. 고유 변경 파일 7개.
+- `local_qa.sh` run `20261015T144411+0900` PASS: GA4/GSC VERIFIED, AdSense PARTIAL; 보호·측정 parity 8,915 URLs PASS, WINNER 1,670 유지, SEO 신규 critical/warning 0 (기존 745/420), unittest 914, pytest 1,588, 집중 회귀 19, StockWiki 12페이지 빌드 및 Pagefind 11페이지 인덱스 PASS. 페이지 제목·H1·메타·JSON-LD·출처 확인일·겨울 허브 링크와 canonical/GA4/AdSense 불변성은 5/5 확인했다.
+- 페이지 커밋 `1cb8abe73b`, `8b6f0dff30`, `93227474dc`, `a7fcd11a14`, `875e8c54a1`; Guard `beb3712d81`; 검색 인덱스 `45c7433867`. main은 `fb520d77a9`에서 `45c7433867`로 fast-forward push했다. Pages run `38690149398`은 확인 시 `in_progress`; 지시에 따라 기다리지 않았다. 캐시 우회 HTTP는 5/5 모두 200이었지만 이전 HTML이 반환되어 라이브 반영은 확인되지 않았다.
+- 다음 ChatGPT 검증용으로 GA4 최근 28일(v2~v7·17~19차 제외) 미검증 캠핑 페이지 totalAdRevenue 상위 15개를 산출해 결과 페이지에 기록했다. 값은 GA4 `totalAdRevenue`이며 AdSense 직접 PAGE_URL 수익이 아니다.
+- 전체 결과와 페이지별 대조표: [Notion 10차 결과](https://app.notion.com/p/3fadb4c0a99181a1be59f398ab4a4dcc). 지시 상태 완료.

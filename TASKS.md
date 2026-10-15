@@ -308,6 +308,10 @@
   - 8-2차 운영 데이터 이전 후속: 보호 증거 기준은 emfls-ops 설정이 가리키는 9a5ef58 스냅샷에 고정하고 현재 변경 파일 비교를 `origin/main`→`HEAD`로 분리했다. 보호·삭제·수익화 검사는 유지하며 미승인 보호 변경 음성 테스트를 추가했다. 기준선 커밋 `ab366e8277`; `local_qa.sh` run `20261015T135145+0900` 전체 PASS (unittest 914, pytest 1,588, 추가 무결성 19, Launch Guard, SEO QA, measurement parity, StockWiki build).
   - 17차·18차 근거로 칠곡·통영·밀양·계룡·순천·정읍·나주·정선·김해·임실 페이지를 페이지별 커밋으로 반영했다. 콘텐츠 SHA `ab366e82771737c3f9ca1e039ac5fda0d27424eb` push 후 Pages run `38685375355` success. 캐시 우회 live 확인: HTTP 200 및 최신 title 10/10. 결과 문서 SHA `24a2abe518870717327abaccbf1577f10cf926c4`도 main에 push했고 이 문서 배포 실행 `38685649766`은 확인 당시 진행 중(대기하지 않음). Notion `[9차]` 결과 페이지에 상세 기록.
 
+- [x] 10차 · 캠핑 사실정정 5페이지 + GA4 다음 검증 후보 15개
+  - 19차 근거로 하남·문경·영주·단양·군산을 페이지별 커밋으로 수정하고 Launch Guard exact transition 5건 및 검색 인덱스를 갱신했다. `local_qa.sh` run `20261015T144411+0900` PASS: unittest 914, pytest 1,588, 집중 회귀 19, 측정 parity·SEO·StockWiki build PASS.
+  - main SHA `45c743386744fc0a089a67c2f67b752c3cdebe2b`를 2026-10-15 약 15:03 KST에 fast-forward push했다. Pages run `38690149398`은 조회 시 진행 중이어서 CI를 기다리지 않았다. 캐시 우회 HTTP는 5/5 200이나 이전 HTML을 반환해 라이브 반영은 미확인. GA4 2026-09-17~2026-10-14의 미검증 캠핑 페이지 수익 상위 15개는 결과 페이지에 기록했다. [Notion 10차 결과](https://app.notion.com/p/3fadb4c0a99181a1be59f398ab4a4dcc).
+
 
 - [x] 14 · Marble Flick — /game/MarbleFlick/
   - Closed on main after the approved four-commit chain: title-frozen English canary with generation-guarded AI callbacks, stale-collision isolation, chained-motion settlement barrier, live-count winner matrix, delayed turn handoff, AI-only local replay stats, DOM-safe initialization, H1/breadcrumb semantics, accessibility, VideoGame/BreadcrumbList schema, and RSS parity.
