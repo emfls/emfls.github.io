@@ -1382,7 +1382,11 @@
 ## 2026-10-15 03:40 Keyword Hunter
 - Seeds: 40; New: 0; Rejected: 0; DB: 5476; Errors: 0; Top: none. Artifact report: reports/keyword-hunter/2026-10-15-0340.md
 
-## 2026-10-15 — 9차 local QA 기준선 분리 (8-2차 운영 데이터 이전 후속)
+## 2026-10-15 — 9차 캠핑 사실정정 10페이지 및 main 반영
 - Launch Guard는 보호 증거를 `emfls-ops/state/content-launch-guard-base-ref.txt`의 설정값에서 읽고, 변경 파일은 `origin/main`→`HEAD`로만 계산한다. 8-2차 운영 데이터 이전으로 운영 입력이 저장소 밖으로 이동한 사유를 코드 주석에 기록했다.
 - 기존 보호 WINNER·삭제·수익화 검사 본체는 변경하지 않았다. 승인 기록에 없는 보호 WINNER 변경이 `PROTECTED_WINNER_CHANGED`로 실패하는 회귀 테스트와 설정 경로 검사를 추가했다.
-- focused tests 2 passed, shell syntax 및 `git diff --check` PASS. 전체 `local_qa.sh` 실행 및 배포는 이 기록 시점에서 대기.
+- `local_qa.sh` run `20261015T135145+0900` PASS: GA4/GSC `VERIFIED`, AdSense `PARTIAL`; Launch Guard PASS; 8,915 measurement URLs parity PASS, protected winners 1,670 유지; SEO QA 신규 critical/warning 0 (기존 745/420). Unittest 914 PASS, pytest 1,588 PASS, 추가 canonical/ad/build 무결성 19 PASS, StockWiki build 12 pages PASS. Focused 기준선 회귀 2 PASS, shell syntax·diff check PASS.
+- `keyword_hunter --dry-run`은 API 호출 없이 완료. `npm ci`는 의존성 취약점 19건(Moderate 4/High 14/Critical 1)을 보고했으며 이 범위에서 패키지를 갱신하지 않았다. 측정 QA의 한계대로 AdSense는 `PARTIAL` 상태를 유지했다.
+- 칠곡·통영·밀양·계룡·순천·정읍·나주·정선·김해·임실 사실정정은 각 페이지별 커밋으로 분리했다. 로컬 렌더 확인 10/10; canonical·AdSense·GA4 서명은 기존 main과 모두 동일했다.
+- `ab366e82771737c3f9ca1e039ac5fda0d27424eb`를 2026-10-15 14:10:41 KST에 main으로 정상 fast-forward push했다. Pages deployment run `38685375355`는 조회 시점 `in_progress`; CI를 기다리지 않았다. 실제 공개 HTTP 점검은 10/10 URL이 200이었으나 title 최신본 일치는 1/10(Naju), 나머지 9개는 이전 응답이어서 배포 반영은 미확인으로 남겼다.
+- `data/home-feed-ko.json`의 단일 토큰 순서 변동은 local QA 생성 부수효과로 확인해 되돌렸으며 커밋하지 않았다.

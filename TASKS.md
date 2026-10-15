@@ -304,9 +304,9 @@
   - 완료: 2026-10-15. 기준선 테스트 PR #90, protected-WINNER exact transitions PR #89, 겨울 허브 PR #88을 green CI 후 main에 병합했다. 정확한 CI run `38652859172`: unittest 911 통과, pytest 1,578 passed / 3 skipped / 573 subtests, measurement parity 및 SEO 회귀 검사 통과(신규 Critical/Warning 0).
   - Pages run `38654730876` 성공. 허브·안산·철원·논산 운영 URL HTTP 200 및 승인 제목/정정 문구/광고 슬롯을 확인했다. 세부 사항은 `PROJECT_HISTORY.md`의 2026-10-15 기록과 Notion `[8차]` 결과 페이지에 남겼다. 키워드 workflow는 재실행하지 않았고 보호 QA를 유지했다.
 
-- [ ] 9차 · 캠핑 사실정정 10페이지 + Launch Guard 기준선 분리
-  - 콘텐츠 페이지별 커밋 10개 및 검색/스키마 보정은 로컬 브랜치에 준비됐다. 8-2차 운영 데이터 이전 후속으로 보호 증거 기준은 emfls-ops 설정이 가리키는 9a5ef58 스냅샷에 고정하고, 현재 변경 파일 비교를 `origin/main`→`HEAD`로 분리했다. 보호·삭제·수익화 검사는 유지하며 미승인 보호 변경 음성 테스트를 추가했다.
-  - focused tests와 shell syntax 및 diff check 통과. 전체 local QA·main 푸시·운영 사이트 확인 및 Notion 결과 등록 대기.
+- [x] 9차 · 캠핑 사실정정 10페이지 + Launch Guard 기준선 분리
+  - 8-2차 운영 데이터 이전 후속: 보호 증거 기준은 emfls-ops 설정이 가리키는 9a5ef58 스냅샷에 고정하고 현재 변경 파일 비교를 `origin/main`→`HEAD`로 분리했다. 보호·삭제·수익화 검사는 유지하며 미승인 보호 변경 음성 테스트를 추가했다. 기준선 커밋 `ab366e8277`; `local_qa.sh` run `20261015T135145+0900` 전체 PASS (unittest 914, pytest 1,588, 추가 무결성 19, Launch Guard, SEO QA, measurement parity, StockWiki build).
+  - 17차·18차 근거로 칠곡·통영·밀양·계룡·순천·정읍·나주·정선·김해·임실 페이지를 페이지별 커밋으로 반영했다. main SHA `ab366e82771737c3f9ca1e039ac5fda0d27424eb` push 완료. 공개 URL은 HTTP 200 10/10; 실제 최신 title 일치는 1/10이며 Pages run `38685375355` 진행 중이라 배포 반영은 미확인(지시에 따라 CI 대기 없음). 결과와 제한은 Notion `[9차]` 결과 페이지에 기록.
 
 
 - [x] 14 · Marble Flick — /game/MarbleFlick/
