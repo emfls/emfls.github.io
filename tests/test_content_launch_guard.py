@@ -425,6 +425,32 @@ def test_guard_allows_only_exact_13th_camp_fact_transitions(tmp_path):
         )
 
 
+def test_guard_allows_only_exact_14th_camp_fact_transitions(tmp_path):
+    from scripts.content_launch_guard import APPROVED_TASK14_PROTECTED_TRANSITIONS
+
+    setup_data(tmp_path)
+    revenue_path = tmp_path / "data/revenue-opportunities.json"
+    revenue = json.loads(revenue_path.read_text(encoding="utf-8"))
+    paths = list(APPROVED_TASK14_PROTECTED_TRANSITIONS)
+    revenue["protectedWinners"].extend({"url": f"/{path}"} for path in paths)
+    write_json(revenue_path, revenue)
+
+    assert paths == [
+        "kor/report/camp/hadong.html",
+        "kor/report/camp/sejong.html",
+        "kor/report/camp/buyeo.html",
+        "kor/report/camp/boryeong.html",
+        "kor/report/camp/seocheon.html",
+    ]
+    for path in paths:
+        before, after = APPROVED_TASK14_PROTECTED_TRANSITIONS[path]
+        assert (before, after) in APPROVED_PROTECTED_WINNER_TRANSITIONS[path]
+        assert validate_launch(tmp_path, manifest([]), [("M", path, before, after)]) == []
+        assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+            tmp_path, manifest([]), [("M", path, before, "f" * 40)]
+        )
+
+
 def test_guard_allows_only_exact_11th_jindo_winter_followup(tmp_path):
     setup_data(tmp_path)
     revenue_path = tmp_path / "data/revenue-opportunities.json"
