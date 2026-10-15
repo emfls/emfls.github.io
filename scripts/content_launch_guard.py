@@ -206,43 +206,43 @@ for _path, _pair in APPROVED_TASK8_PROTECTED_TRANSITIONS.items():
 APPROVED_TASK9_PROTECTED_TRANSITIONS = {
     # chilgok: user-directed official fact correction; no ads, GA4, canonical URL, or route changes.
     # Evidence: https://app.notion.com/p/3f9db4c0a99181358dacf91b7ae41eb5
-    "kor/report/camp/chilgok.html": ("d556f15ca025ec8f27d72403cd11c55fa821b88c", "46b761ef3cf7a8ab690c78d32945a085839e2bfc"),
+    "kor/report/camp/chilgok.html": ("d556f15ca025ec8f27d72403cd11c55fa821b88c", "6873a0b9eed042519d6d53e1e02599fff75f778e"),
 
     # tongyeong: user-directed official fact correction; no ads, GA4, canonical URL, or route changes.
     # Evidence: https://app.notion.com/p/3f9db4c0a99181358dacf91b7ae41eb5
-    "kor/report/camp/tongyeong.html": ("5ef906eef4c4cecd6d33548d1fdb0d956f4b0292", "583a18f35d7e5cbd5bfed24d9e459566b0c2e935"),
+    "kor/report/camp/tongyeong.html": ("5ef906eef4c4cecd6d33548d1fdb0d956f4b0292", "236df7181ddba7a8b514509dac4ebb374a01e6f9"),
 
     # miryang: user-directed official fact correction; no ads, GA4, canonical URL, or route changes.
     # Evidence: https://app.notion.com/p/3f9db4c0a99181358dacf91b7ae41eb5
-    "kor/report/camp/miryang.html": ("cd5eb8e946c3dda2fe6352b93fdf5b351861077f", "f6e6dc0b698c8fb7e1f6420cb163b77aa3f687ee"),
+    "kor/report/camp/miryang.html": ("cd5eb8e946c3dda2fe6352b93fdf5b351861077f", "f6d26d823f02495af4060b6f06b3aef5b154fd0e"),
 
     # gyeryong: user-directed official fact correction; no ads, GA4, canonical URL, or route changes.
     # Evidence: https://app.notion.com/p/3f9db4c0a99181358dacf91b7ae41eb5
-    "kor/report/camp/gyeryong.html": ("12bb2658bf403251027828854d26d9cddd5cc61f", "daf1855d1e9a520b181e747a77e8fe34bfd4c48d"),
+    "kor/report/camp/gyeryong.html": ("12bb2658bf403251027828854d26d9cddd5cc61f", "cbd239aeca7ed4fccd17eda904d71bfa35ab5352"),
 
     # suncheon: user-directed official fact correction; no ads, GA4, canonical URL, or route changes.
     # Evidence: https://app.notion.com/p/3f9db4c0a99181358dacf91b7ae41eb5
-    "kor/report/camp/suncheon.html": ("2d5f4b37405f4c824f3513a99a9d208a6905158b", "161e190f8ef7cab22639991f7e126817bd3c7185"),
+    "kor/report/camp/suncheon.html": ("2d5f4b37405f4c824f3513a99a9d208a6905158b", "750183eb0ddfa1efe6282c01ab494a52152a1532"),
 
     # jeongeup: user-directed official fact correction; no ads, GA4, canonical URL, or route changes.
     # Evidence: https://app.notion.com/p/3f9db4c0a99181eb8153ecaa339536fe
-    "kor/report/camp/jeongeup.html": ("22e1bb559dbc1b22916e4c0aaa7cc6b5077cfc06", "72b10eecf4138aef989f548514dba7ca9d792375"),
+    "kor/report/camp/jeongeup.html": ("22e1bb559dbc1b22916e4c0aaa7cc6b5077cfc06", "b84fe432e8b1e0d5181fb24b1ba8947093c4a7f3"),
 
     # naju: user-directed official fact correction; no ads, GA4, canonical URL, or route changes.
     # Evidence: https://app.notion.com/p/3f9db4c0a99181eb8153ecaa339536fe
-    "kor/report/camp/naju.html": ("dd487c6c8ef607705d201fa2310c0f5c1febc657", "6d446ceeebc77c47484c7ac57638766d3c446a5c"),
+    "kor/report/camp/naju.html": ("dd487c6c8ef607705d201fa2310c0f5c1febc657", "d81177785d617cb18796162b290e13035bd53e2f"),
 
     # jeongseon: user-directed official fact correction; no ads, GA4, canonical URL, or route changes.
     # Evidence: https://app.notion.com/p/3f9db4c0a99181eb8153ecaa339536fe
-    "kor/report/camp/jeongseon.html": ("45ce7fd27c043ce0633e0444d77b752cabbe3782", "c0dd43f2785f7fda1209668113b95fced18e9726"),
+    "kor/report/camp/jeongseon.html": ("45ce7fd27c043ce0633e0444d77b752cabbe3782", "fc00ce907b0150a640c40e3a1d40427a015cdd1b"),
 
     # gimhae: user-directed official fact correction; no ads, GA4, canonical URL, or route changes.
     # Evidence: https://app.notion.com/p/3f9db4c0a99181eb8153ecaa339536fe
-    "kor/report/camp/gimhae.html": ("bb9c8901f0c0157a362db5f7ad46bd477e809308", "145143a9cf20d9a2b5d64a367d5c50c818da2429"),
+    "kor/report/camp/gimhae.html": ("bb9c8901f0c0157a362db5f7ad46bd477e809308", "13c933afd940088bd17ac78280401249200fb4fe"),
 
     # imsil: user-directed official fact correction; no ads, GA4, canonical URL, or route changes.
     # Evidence: https://app.notion.com/p/3f9db4c0a99181eb8153ecaa339536fe
-    "kor/report/camp/imsil.html": ("ea707753aa03c0ab375483657b9b445a7b1f59be", "5c16e7e2df39ee94a764fb237b237b971aed84f5"),
+    "kor/report/camp/imsil.html": ("ea707753aa03c0ab375483657b9b445a7b1f59be", "338c7f333ead58ec6df42dad01097bac8cee5db6"),
 
 }
 for _path, _blob_pair in APPROVED_TASK9_PROTECTED_TRANSITIONS.items():
