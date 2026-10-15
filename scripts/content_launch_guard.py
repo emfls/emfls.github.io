@@ -208,6 +208,10 @@ APPROVED_TASK9_PROTECTED_TRANSITIONS = {
     # Evidence: https://app.notion.com/p/3f9db4c0a99181358dacf91b7ae41eb5
     "kor/report/camp/chilgok.html": ("d556f15ca025ec8f27d72403cd11c55fa821b88c", "46b761ef3cf7a8ab690c78d32945a085839e2bfc"),
 
+    # tongyeong: user-directed official fact correction; no ads, GA4, canonical URL, or route changes.
+    # Evidence: https://app.notion.com/p/3f9db4c0a99181358dacf91b7ae41eb5
+    "kor/report/camp/tongyeong.html": ("5ef906eef4c4cecd6d33548d1fdb0d956f4b0292", "583a18f35d7e5cbd5bfed24d9e459566b0c2e935"),
+
 }
 for _path, _blob_pair in APPROVED_TASK9_PROTECTED_TRANSITIONS.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
