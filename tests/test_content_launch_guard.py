@@ -557,14 +557,27 @@ def test_guard_allows_only_the_exact_stage_aware_empty_rows_collector_transition
     ).stdout.strip()
     approved = APPROVED_MONETIZATION_TRANSITIONS[path]
     transition = ("2f4890e73ae705c5347b3755c5fb4ef47ca23e2b", current_blob)
+    diagnostic_transition = (
+        "7e462d5e1ccedfba022594d98cabf4aa3697ca01",
+        "3d9928a86b2792ba337bde8a566a48f0d908594a",
+    )
 
     assert transition in approved
+    assert diagnostic_transition in approved
     assert approved == {
         ("94f34228ed8b10213085b3de19bbab14e4fee0de", "83595861b3ea484b7fd9ad0c7fb11515f6516692"),
         ("83595861b3ea484b7fd9ad0c7fb11515f6516692", "2f4890e73ae705c5347b3755c5fb4ef47ca23e2b"),
         transition,
+        diagnostic_transition,
     }
     assert validate_launch(tmp_path, manifest([]), [("M", path, *transition)]) == []
+    assert validate_launch(tmp_path, manifest([]), [("M", path, *diagnostic_transition)]) == []
+    assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
+        tmp_path, manifest([]), [("M", path, diagnostic_transition[0], "f" * 40)]
+    )
+    assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
+        tmp_path, manifest([]), [("M", path, "0" * 40, diagnostic_transition[1])]
+    )
     assert "MONETIZATION_OR_ANALYTICS_CHANGED" in validate_launch(
         tmp_path, manifest([]), [("M", path, "0" * 40, current_blob)]
     )
