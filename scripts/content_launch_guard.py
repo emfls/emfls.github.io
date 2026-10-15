@@ -188,7 +188,7 @@ APPROVED_PROTECTED_WINNER_TRANSITIONS = {
 # KNPS notice seq=29193, and Foresttrip Gari-san official page. Exact blob pairs only; QA remains enabled.
 APPROVED_TASK8_PROTECTED_TRANSITIONS = {
     "kor/report/camp/jeongeup.html": ("2aa21bb5fe2df98522db391b1ef3b80e77acf7b9", "22e1bb559dbc1b22916e4c0aaa7cc6b5077cfc06"),
-    "kor/report/camp/chilgok.html": ("ae6804356d90cb05659a0d0bb33a879de421843f", "d556f15ca025ec8f27d72403cd11c55fa821b88c"),
+    "kor/report/camp/chilgok.html": ("d556f15ca025ec8f27d72403cd11c55fa821b88c", "dd3f8a561ff549fce007514e1908b58af351e7fb"),
     "kor/report/camp/mungyeong.html": ("23711e091b048deac5f4a0ae13b06b47be3fb01a", "13fe81db50b57f1a569b852649d7b0521cc857e7"),
     "kor/report/camp/tongyeong.html": ("f40f8e7b1f59e7a99df1d6aec282ccdd4edb9c2e", "5ef906eef4c4cecd6d33548d1fdb0d956f4b0292"),
     "kor/report/camp/miryang.html": ("d9931bcb76f5a2ad14d50f4ffe34bebb6c7f95a7", "cd5eb8e946c3dda2fe6352b93fdf5b351861077f"),
@@ -200,6 +200,17 @@ APPROVED_TASK8_PROTECTED_TRANSITIONS = {
 }
 for _path, _pair in APPROVED_TASK8_PROTECTED_TRANSITIONS.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_pair)
+
+# [9차] Official-source fact corrections, 2026-10-15; exact blob pairs only.
+# Evidence: Notion 17차/18차 accepted official-source fact-check results; page-specific transition reason recorded below.
+APPROVED_TASK9_PROTECTED_TRANSITIONS = {
+    # chilgok: user-directed official fact correction; no ads, GA4, canonical URL, or route changes.
+    # Evidence: https://app.notion.com/p/3f9db4c0a99181358dacf91b7ae41eb5
+    "kor/report/camp/chilgok.html": ("d556f15ca025ec8f27d72403cd11c55fa821b88c", "46b761ef3cf7a8ab690c78d32945a085839e2bfc"),
+
+}
+for _path, _blob_pair in APPROVED_TASK9_PROTECTED_TRANSITIONS.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
 # User-approved AdSense placement on the 29-day top-30 camping pages, 2026-10-14.
 # Evidence: reports/camp-cluster-inventory-2026-10-14.csv; exact blob pairs only.
