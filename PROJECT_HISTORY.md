@@ -1388,5 +1388,6 @@
 - `local_qa.sh` run `20261015T135145+0900` PASS: GA4/GSC `VERIFIED`, AdSense `PARTIAL`; Launch Guard PASS; 8,915 measurement URLs parity PASS, protected winners 1,670 유지; SEO QA 신규 critical/warning 0 (기존 745/420). Unittest 914 PASS, pytest 1,588 PASS, 추가 canonical/ad/build 무결성 19 PASS, StockWiki build 12 pages PASS. Focused 기준선 회귀 2 PASS, shell syntax·diff check PASS.
 - `keyword_hunter --dry-run`은 API 호출 없이 완료. `npm ci`는 의존성 취약점 19건(Moderate 4/High 14/Critical 1)을 보고했으며 이 범위에서 패키지를 갱신하지 않았다. 측정 QA의 한계대로 AdSense는 `PARTIAL` 상태를 유지했다.
 - 칠곡·통영·밀양·계룡·순천·정읍·나주·정선·김해·임실 사실정정은 각 페이지별 커밋으로 분리했다. 로컬 렌더 확인 10/10; canonical·AdSense·GA4 서명은 기존 main과 모두 동일했다.
-- `ab366e82771737c3f9ca1e039ac5fda0d27424eb`를 2026-10-15 14:10:41 KST에 main으로 정상 fast-forward push했다. Pages deployment run `38685375355`는 조회 시점 `in_progress`; CI를 기다리지 않았다. 실제 공개 HTTP 점검은 10/10 URL이 200이었으나 title 최신본 일치는 1/10(Naju), 나머지 9개는 이전 응답이어서 배포 반영은 미확인으로 남겼다.
+- `ab366e82771737c3f9ca1e039ac5fda0d27424eb`를 2026-10-15 14:10:41 KST에 main으로 정상 fast-forward push했다. Pages deployment run `38685375355`는 success로 완료됐다. 완료 뒤 캐시 우회 HTTP로 공개 10 URL을 확인해 전부 200, 최신 title 일치 10/10(칠곡·통영·밀양·계룡·순천·정읍·나주·정선·김해·임실)을 확인했다.
+- 결과 이력 문서 커밋 `24a2abe518870717327abaccbf1577f10cf926c4`도 main에 push했다. 이 문서 push의 Pages run `38685649766`은 조회 시 `in_progress`; 앞선 콘텐츠 배포 성공과 라이브 페이지는 이미 확인했고 추가 CI 대기는 하지 않았다.
 - `data/home-feed-ko.json`의 단일 토큰 순서 변동은 local QA 생성 부수효과로 확인해 되돌렸으며 커밋하지 않았다.
