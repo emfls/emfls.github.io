@@ -1,7 +1,7 @@
 import json
 import re
-import subprocess
 from pathlib import Path
+from scripts.ops_paths import ops_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -10,14 +10,7 @@ URL = "https://emfls.github.io/kor/report/car/car-full-paint-cost-guide.html"
 
 
 def _read_committed_launch_manifest():
-    result = subprocess.run(
-        ["git", "show", "HEAD:data/content-launch-manifest.json"],
-        cwd=ROOT,
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    return json.loads(result.stdout)
+    return json.loads(ops_path("data/content-launch-manifest.json").read_text(encoding="utf-8"))
 
 
 def test_full_paint_guide_contract():

@@ -14,14 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def _committed_launch_manifest():
-    result = subprocess.run(
-        ["git", "show", "HEAD:data/content-launch-manifest.json"],
-        cwd=ROOT,
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    return json.loads(result.stdout)
+    return json.loads(ops_path("data/content-launch-manifest.json").read_text(encoding="utf-8"))
 
 
 PAGES = {

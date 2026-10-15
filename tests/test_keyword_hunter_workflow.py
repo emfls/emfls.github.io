@@ -216,13 +216,19 @@ def test_report_artifact_upload_is_bounded_and_keeps_targeted_directory():
 
 
 def test_historical_broad_reports_are_preserved_in_ops_and_match_git_history():
+    # Compare the private ops copy with the last public-repository snapshot
+    # immediately before the approved 8-2 operational-data migration.
+    migration_commit = "4175d309cb9f4b08b97ec5464ebfbccea35fce6f"
+    history_base = subprocess.check_output(
+        ["git", "rev-parse", f"{migration_commit}^"], cwd=ROOT, text=True
+    ).strip()
     tracked = subprocess.check_output(
-        ["git", "ls-tree", "-r", "--name-only", "HEAD", "reports/keyword-hunter"],
+        ["git", "ls-tree", "-r", "--name-only", history_base, "reports/keyword-hunter"],
         cwd=ROOT, text=True,
     ).splitlines()
     assert len(tracked) >= 131
     for relative in tracked:
         working_copy = ops_path(relative)
-        historical = subprocess.check_output(["git", "show", f"HEAD:{relative}"], cwd=ROOT)
+        historical = subprocess.check_output(["git", "show", f"{history_base}:{relative}"], cwd=ROOT)
         assert working_copy.is_file()
         assert working_copy.read_bytes() == historical
