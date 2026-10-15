@@ -9,7 +9,7 @@ PAGES = {
     "namyangju.html": ({"gyeonggi-best.html", "hanam.html"}, "2026-10-15"),
     # c3fa79b82a5925473d997a5a646566e42b9c3f71 refreshed these pages on 2026-10-15.
     "jeongseon.html": ({"gangwon-best.html", "taebaek.html", "pyeongchang.html"}, "2026-10-15"),
-    "hadong.html": ({"gyeongnam-best.html", "jinju.html", "gimhae.html"}, "2026-10-14"),
+    "hadong.html": ({"gyeongnam-best.html", "jinju.html", "gimhae.html"}, "2026-10-15"),
     "gwangyang.html": ({"jeonnam-best.html", "suncheon.html", "yeosu.html"}, "2026-08-21"),
     "yangyang.html": ({"gangwon-best.html", "sokcho.html", "gangneung.html"}, "2026-08-21"),
     "gyeonggi-best.html": ({"namyangju.html", "goyang.html", "uijeongbu.html"}, "2026-10-14"),
