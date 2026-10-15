@@ -4,6 +4,7 @@ import subprocess
 from pathlib import Path
 
 from scripts.content_launch_guard import (
+    APPROVED_TASK11_FOLLOWUP_PROTECTED_TRANSITIONS,
     APPROVED_TASK11_PROTECTED_TRANSITIONS,
     APPROVED_JP_TRAVEL_CANARY_DELETIONS,
     APPROVED_PROTECTED_WINNER_TRANSITIONS,
@@ -370,6 +371,25 @@ def test_guard_allows_only_exact_11th_camp_fact_transitions(tmp_path):
         assert "PROTECTED_WINNER_CHANGED" in validate_launch(
             tmp_path, manifest([]), [("M", path, "b" * 40, after)]
         )
+
+
+def test_guard_allows_only_exact_11th_jindo_winter_followup(tmp_path):
+    setup_data(tmp_path)
+    revenue_path = tmp_path / "data/revenue-opportunities.json"
+    revenue = json.loads(revenue_path.read_text(encoding="utf-8"))
+    path = "kor/report/camp/jindo.html"
+    revenue["protectedWinners"].append({"url": f"/{path}"})
+    write_json(revenue_path, revenue)
+
+    before, after = APPROVED_TASK11_FOLLOWUP_PROTECTED_TRANSITIONS[path]
+    assert (before, after) in APPROVED_PROTECTED_WINNER_TRANSITIONS[path]
+    assert validate_launch(tmp_path, manifest([]), [("M", path, before, after)]) == []
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+        tmp_path, manifest([]), [("M", path, before, "f" * 40)]
+    )
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+        tmp_path, manifest([]), [("M", path, "b" * 40, after)]
+    )
 
 
 

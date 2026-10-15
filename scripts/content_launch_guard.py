@@ -276,6 +276,15 @@ APPROVED_TASK11_PROTECTED_TRANSITIONS = {
 for _path, _blob_pair in APPROVED_TASK11_PROTECTED_TRANSITIONS.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
+# [11차 보완] Exact Jindo follow-up for the accepted 2026-09-29 KNPS winter notice.
+# Reason: the adopted P1 requires separating park-wide campsite season labels from Gwanmaedo's unverified local permission.
+# Evidence: Notion [20차] and [12-보완]; no URL, ads, GA4, or other page is approved by this transition.
+APPROVED_TASK11_FOLLOWUP_PROTECTED_TRANSITIONS = {
+    "kor/report/camp/jindo.html": ("104ee22b5ced0c27d6027be9519560ab481fe23c", "f1dffcdda87e644d9de17b902170e99cdd1be2b3"),
+}
+for _path, _blob_pair in APPROVED_TASK11_FOLLOWUP_PROTECTED_TRANSITIONS.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
+
 # User-approved AdSense placement on the 29-day top-30 camping pages, 2026-10-14.
 # Evidence: reports/camp-cluster-inventory-2026-10-14.csv; exact blob pairs only.
 APPROVED_AD_PLACEMENT_TRANSITIONS = {
