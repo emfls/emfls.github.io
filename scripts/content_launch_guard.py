@@ -248,6 +248,20 @@ APPROVED_TASK9_PROTECTED_TRANSITIONS = {
 for _path, _blob_pair in APPROVED_TASK9_PROTECTED_TRANSITIONS.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
+# [10차] Official-source fact corrections, 2026-10-15; exact origin/main→HEAD blob pairs only.
+# Reason: user-directed P0/P1 corrections accepted from Notion 19차; only those five protected
+# pages are approved. Ads, GA4, canonical URLs, and routes remain unchanged; all guard checks stay enabled.
+# Evidence: https://app.notion.com/p/3f9db4c0a99181fbb340dea80a3e158e
+APPROVED_TASK10_PROTECTED_TRANSITIONS = {
+    "kor/report/camp/hanam.html": ("be7b1f40498e32b3cce1d3f8aa280608aaae53ab", "cf48be7802004da8d63aa878ca4b661a1247fc73"),
+    "kor/report/camp/mungyeong.html": ("13fe81db50b57f1a569b852649d7b0521cc857e7", "8b3eb7082cd0259f1892592778ccf45ed194a081"),
+    "kor/report/camp/yeongju.html": ("cb19f4f199a7bd0fd23992f678133d1020b2e6cb", "b11ec5bf666e5cea6719cd5d5138fb396e24f5e8"),
+    "kor/report/camp/danyang.html": ("c4c707b5930eff43cf2a6d3a54a310106f8bbd17", "c7d3b26a0ece8ded640c046ba251137f5300bf79"),
+    "kor/report/camp/gunsan.html": ("064e5328caa5e3ff6b0e319574c71d4b798f5099", "e53cff80bd837caafea6d5b5e6429960a135364a"),
+}
+for _path, _blob_pair in APPROVED_TASK10_PROTECTED_TRANSITIONS.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
+
 # User-approved AdSense placement on the 29-day top-30 camping pages, 2026-10-14.
 # Evidence: reports/camp-cluster-inventory-2026-10-14.csv; exact blob pairs only.
 APPROVED_AD_PLACEMENT_TRANSITIONS = {
