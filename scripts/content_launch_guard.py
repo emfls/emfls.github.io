@@ -285,6 +285,22 @@ APPROVED_TASK11_FOLLOWUP_PROTECTED_TRANSITIONS = {
 for _path, _blob_pair in APPROVED_TASK11_FOLLOWUP_PROTECTED_TRANSITIONS.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
+# [12차] Official-source fact corrections for five protected camp pages, 2026-10-15.
+# Reason: user-directed P0 and accepted P1 corrections from Notion [12차] and the adopted [21차] review;
+# winter facility details follow the official [12-보완] evidence. Exact origin/main→page blob pairs only.
+# No canonical URL, route, AdSense, or GA4 changes are included; every Launch Guard check remains active.
+# Evidence: https://app.notion.com/p/3fadb4c0a99181e8a564d8f44c77f10b ;
+# https://app.notion.com/p/3fadb4c0a9918115abb1cb1651ca97ea ; https://app.notion.com/p/3f9db4c0a991818db751eac34edf82ae
+APPROVED_TASK12_PROTECTED_TRANSITIONS = {
+    "kor/report/camp/okcheon.html": ("4033840ca91635899ff111630d1a2e1ca0a29385", "8391f02f02022845e87ce6dc93aa0fbf73104fb5"),
+    "kor/report/camp/uiryeong.html": ("aedec20d8aa96bc06a48dfc65883320506711b4f", "421e8087b966d8e626fed120ecfbb5fdf8180942"),
+    "kor/report/camp/bonghwa.html": ("76b7b5cafe1a3844e159abda0065ffdc5ff616be", "2a8f3bf9217f8d48e854eeed8f39dccd595460a3"),
+    "kor/report/camp/yeongyang.html": ("82d2b9975e02b1930519d39bab0c9ba75febcee7", "67f67d3b49e7495015a188ed1f054dd5417cf3e5"),
+    "kor/report/camp/chungcheong-camping-best.html": ("8221a02264b4f5c83971b79bba68de096f49bc0e", "ec9a98783358a0006f2e4492d340200c5f431554"),
+}
+for _path, _blob_pair in APPROVED_TASK12_PROTECTED_TRANSITIONS.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
+
 # User-approved AdSense placement on the 29-day top-30 camping pages, 2026-10-14.
 # Evidence: reports/camp-cluster-inventory-2026-10-14.csv; exact blob pairs only.
 APPROVED_AD_PLACEMENT_TRANSITIONS = {
