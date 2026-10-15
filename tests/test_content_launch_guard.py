@@ -4,6 +4,7 @@ import subprocess
 from pathlib import Path
 
 from scripts.content_launch_guard import (
+    APPROVED_TASK11_PROTECTED_TRANSITIONS,
     APPROVED_JP_TRAVEL_CANARY_DELETIONS,
     APPROVED_PROTECTED_WINNER_TRANSITIONS,
     APPROVED_MONETIZATION_TRANSITIONS,
@@ -341,6 +342,27 @@ def test_guard_allows_only_user_approved_top10_claim_transitions(tmp_path):
 
     for path in paths:
         before, after = next(iter(APPROVED_PROTECTED_WINNER_TRANSITIONS[path]))
+        assert validate_launch(tmp_path, manifest([]), [("M", path, before, after)]) == []
+        assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+            tmp_path, manifest([]), [("M", path, before, "f" * 40)]
+        )
+        assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+            tmp_path, manifest([]), [("M", path, "b" * 40, after)]
+        )
+
+
+def test_guard_allows_only_exact_11th_camp_fact_transitions(tmp_path):
+    setup_data(tmp_path)
+    revenue_path = tmp_path / "data/revenue-opportunities.json"
+    revenue = json.loads(revenue_path.read_text(encoding="utf-8"))
+    paths = list(APPROVED_TASK11_PROTECTED_TRANSITIONS)
+    revenue["protectedWinners"].extend({"url": f"/{path}"} for path in paths)
+    write_json(revenue_path, revenue)
+
+    assert len(paths) == 5
+    for path in paths:
+        before, after = APPROVED_TASK11_PROTECTED_TRANSITIONS[path]
+        assert (before, after) in APPROVED_PROTECTED_WINNER_TRANSITIONS[path]
         assert validate_launch(tmp_path, manifest([]), [("M", path, before, after)]) == []
         assert "PROTECTED_WINNER_CHANGED" in validate_launch(
             tmp_path, manifest([]), [("M", path, before, "f" * 40)]
