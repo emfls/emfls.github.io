@@ -1,5 +1,13 @@
 # PROJECT HISTORY
 
+## 2026-10-15 — [12차] 캠핑 사실정정 5페이지
+
+- [21차] 공식자료 검수와 [12-보완] 동절기 근거를 반영해 옥천·의령·봉화·영양·충청 BEST를 수정했다. 각 장소를 등록 야영장, 금지·제한 구역, 허용 미확인 후보로 분류하고 출처·확인일 2026-10-15, 질문형 제목/H1/meta description, 겨울 공공 야영장 허브 링크를 적용했다. 광고·GA4·URL/canonical은 보존했다.
+- 페이지별 커밋: `16528a1b7a` 옥천, `3adf9ce35c` 의령, `89862b2a50` 봉화, `3f12beda82` 영양, `782108c118` 충청 BEST. compact WebPage JSON-LD 기존 QA 표식을 유지한 보정 `dda666d334`; 검색 인덱스 보정 `c76576bf56`; 승인된 보호 blob 전이와 음성/양성 회귀 검증 `d48d433100`.
+- `local_qa.sh` run `20261015T182737+0900` PASS. 측정 parity 8,915 URL, GA4/GSC VERIFIED, AdSense PARTIAL; 전체 SEO 스캔 18,938 HTML / 8,915 indexable, parser error 0; SEO 신규 Critical/Warning 0 (기존 745/420); WINNER 1,670 유지. unittest 914, pytest 1,591, 마지막 집중 회귀 19 PASS. StockWiki 12페이지 빌드와 Pagefind 11페이지 인덱싱 PASS. 집중 캠핑/Guard 회귀 113 PASS. `npm ci`는 취약점 19건(중간 4/높음 14/심각 1)을 알렸으며 의존성은 바꾸지 않았다. QA 생성 부수효과인 홈 피드·비대상 검색 인덱스 변경은 복원했다.
+- 5개 페이지의 로컬 렌더·제목/출처·광고·GA4/canonical 불변성 확인 완료. 이 기록을 작성한 시점에는 main push 및 공개 페이지 확인이 남아 있다.
+- 근거: [21차 검수](https://app.notion.com/p/3fadb4c0a9918115abb1cb1651ca97ea), [12-보완 동절기 근거](https://app.notion.com/p/3f9db4c0a991818db751eac34edf82ae).
+
 ## 2026-10-15 — [11차] 캠핑 사실정정 5페이지
 
 - [20차] 검수(76점, 전체 채택)와 [12-보완] 국립공원공단 동절기 공지를 반영했다. 장흥·장수·함안·진도·창원 5개 페이지를 각각 별도 커밋(`fc8ac913eb`, `557b0d6f65`, `808cf8f6af`, `0bcfcb9f03`, `a60dc6b9f5`)으로 수정했다. 등록 야영장·제한 구역·허용 미확인 후보를 구분하고, 장소별 출처·확인일, 질문형 제목/H1/meta, 겨울 허브 링크를 반영했다. canonical/URL·GA4·AdSense는 보존했다.
