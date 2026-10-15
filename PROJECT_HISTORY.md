@@ -1,5 +1,14 @@
 # PROJECT HISTORY
 
+## 2026-10-15 — [11차] 캠핑 사실정정 5페이지
+
+- [20차] 검수(76점, 전체 채택)와 [12-보완] 국립공원공단 동절기 공지를 반영했다. 장흥·장수·함안·진도·창원 5개 페이지를 각각 별도 커밋(`fc8ac913eb`, `557b0d6f65`, `808cf8f6af`, `0bcfcb9f03`, `a60dc6b9f5`)으로 수정했다. 등록 야영장·제한 구역·허용 미확인 후보를 구분하고, 장소별 출처·확인일, 질문형 제목/H1/meta, 겨울 허브 링크를 반영했다. canonical/URL·GA4·AdSense는 보존했다.
+- JSON-LD/기존 테스트 계약 보완은 `418f758f49`, `ad62b1ff17`, `628ca30d01`; Launch Guard exact transition과 회귀 검증은 `bc2502e6d8`, `7f39ea1e35`에 기록했다. 검색 인덱스 포함 첫 배포 SHA `02a35ab2276b80aea717c309c694569562703e36`를 15:53 KST경 푸시했다.
+- 원문 지시의 겨울 운영 P1을 재대조해 진도에 별도 겨울 상태 표를 추가했다. 해당 페이지 커밋 `8e7f28a421`와 미승인 보호 전이를 막는 exact-pair 승인·회귀 테스트 `bbca3ff68c`를 16:16 KST에 완료하고, `local_qa.sh` run `20261015T161603+0900` PASS 후 main SHA `bbca3ff68cd113044ba423eda5002c8081200347`를 16:36 KST에 fast-forward push했다. 보호 검사를 비활성화하거나 우회하지 않았다.
+- 최종 QA: unittest 914, pytest 1,590, focused StockWiki 검증 19 PASS; Content Launch Guard와 measurement parity(8,915 URL) PASS; SEO QA 신규 Critical/Warning 0. 측정 원본은 GA4/GSC VERIFIED, AdSense PARTIAL. npm audit의 기존 취약점 19건(중간 4, 높음 14, 심각 1)은 이번 범위에서 수정하지 않았다.
+- 배포 확인(2026-10-15 16:34 KST경): 다섯 공개 페이지 모두 HTTP 200이며 제목·확인일이 보였다. 장수의 휴업 표현과 함안의 허용 미확인 표현도 확인했다. 단, 진도 공개 페이지에는 방금 푸시한 동절기 운영표가 아직 보이지 않았고 main/raw 소스에는 존재한다. 사용자 지시에 따라 CI를 기다리지 않았으므로 이 후속 표의 Pages 반영은 확인되지 않은 상태로 남긴다.
+- 근거: [20차 검수](https://app.notion.com/p/3fadb4c0a991811c8a51d01bb5d607f9), [12-보완 동절기 공지 전사](https://app.notion.com/p/3f9db4c0a991818db751eac34edf82ae), [국립공원공단 2026 동절기 미운영 안내](https://reservation.knps.or.kr/community/board/notice/boardDetail.do?seq=29193).
+
 ## 2026-10-15 — [8차] 겨울 공공 야영장 허브 마감
 
 - 관제탑의 재개 결정에 따라 기존 작업을 이어갔다. 기준선 테스트 복구 PR #90은 `2e8231ad8b1a5db7e7d986dd870c9b79d0d1eeda`, 보호 기준선 PR #89는 `2f52e4b19a77b36b9cfa679856426144e33bc1ce`로 main에 병합했다. 보호 검사나 워크플로는 비활성화하지 않았다.

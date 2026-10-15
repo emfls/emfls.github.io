@@ -312,6 +312,9 @@
   - 19차 근거로 하남·문경·영주·단양·군산을 페이지별 커밋으로 수정하고 Launch Guard exact transition 5건 및 검색 인덱스를 갱신했다. `local_qa.sh` run `20261015T144411+0900` PASS: unittest 914, pytest 1,588, 집중 회귀 19, 측정 parity·SEO·StockWiki build PASS.
   - main SHA `45c743386744fc0a089a67c2f67b752c3cdebe2b`를 2026-10-15 약 15:03 KST에 fast-forward push했다. Pages run `38690149398`은 최초 확인 시 진행 중이어서 기다리지 않았고, 후속 단일 조회에서 success를 확인했다. 15:06 KST 캐시 회피 HTTP는 정정된 제목·확인일과 HTTP 200을 5/5에서 제공했다. GA4 2026-09-17~2026-10-14의 미검증 캠핑 페이지 수익 상위 15개는 결과 페이지에 기록했다. [Notion 10차 결과](https://app.notion.com/p/3fadb4c0a99181a1be59f398ab4a4dcc).
 
+- [x] 11차 · 캠핑 사실정정 5페이지 (20차 근거)
+  - 장흥·장수·함안·진도·창원을 페이지별 커밋으로 정정했다. 재대조 후 진도 동절기 운영표와 protected exact transition도 추가했다. `local_qa.sh` run `20261015T161603+0900` PASS (unittest 914, pytest 1,590, focused 19, Guard/parity/SEO PASS); main `bbca3ff68cd113044ba423eda5002c8081200347`를 16:36 KST에 푸시했다. 공개 URL 5/5는 HTTP 200과 정정 제목·확인일을 제공했으나, 마지막 진도 동절기 표는 공개 페이지에 아직 나타나지 않아 반영 미확인이다. CI는 요청대로 기다리지 않았다. 세부는 `PROJECT_HISTORY.md` 및 [Notion 11차 결과](https://app.notion.com/p/3fadb4c0a99181fbad56ca5ffdaf3719) 참조.
+
 
 - [x] 14 · Marble Flick — /game/MarbleFlick/
   - Closed on main after the approved four-commit chain: title-frozen English canary with generation-guarded AI callbacks, stale-collision isolation, chained-motion settlement barrier, live-count winner matrix, delayed turn handoff, AI-only local replay stats, DOM-safe initialization, H1/breadcrumb semantics, accessibility, VideoGame/BreadcrumbList schema, and RSS parity.
