@@ -315,8 +315,8 @@
 - [x] 11차 · 캠핑 사실정정 5페이지 (20차 근거)
   - 장흥·장수·함안·진도·창원을 페이지별 커밋으로 정정했다. 재대조 후 진도 동절기 운영표와 protected exact transition도 추가했다. `local_qa.sh` run `20261015T161603+0900` PASS (unittest 914, pytest 1,590, focused 19, Guard/parity/SEO PASS); main `bbca3ff68cd113044ba423eda5002c8081200347`를 16:36 KST에 푸시했다. 공개 URL 5/5 HTTP 200; 16:38 KST 재조회에서 진도 동절기 표 제목·다도해해상 연중 운영 목록까지 확인했다. CI 완료를 기다리지 않았다. 세부는 `PROJECT_HISTORY.md` 및 [Notion 11차 결과](https://app.notion.com/p/3fadb4c0a99181fbad56ca5ffdaf3719) 참조.
 
-- [ ] 12차 · 캠핑 사실정정 5페이지 (21차 근거)
-  - 옥천·의령·봉화·영양·충청 BEST를 각각 페이지 커밋으로 수정했다. exact protected transition 및 검색 인덱스를 갱신했다. `local_qa.sh` run `20261015T182737+0900` PASS: unittest 914, pytest 1,591, 집중 회귀 19, Guard·측정 parity·SEO·StockWiki PASS. main push와 공개 확인 대기. 상세는 `PROJECT_HISTORY.md` 및 [12차 근거](https://app.notion.com/p/3fadb4c0a9918115abb1cb1651ca97ea) 참조.
+- [x] 12차 · 캠핑 사실정정 5페이지 (21차 근거)
+  - 옥천·의령·봉화·영양·충청 BEST를 각각 페이지 커밋으로 수정하고 exact protected transition 및 검색 인덱스를 갱신했다. `local_qa.sh` run `20261015T182737+0900` PASS: unittest 914, pytest 1,591, 집중 회귀 19, Guard·측정 parity·SEO·StockWiki PASS. main `61c4675de7af3722c51c39023cb6a59364e706fc` fast-forward push 후 공개 URL 5/5 HTTP 200 및 새 제목/정정 문구 확인. 세부는 [Notion 12차 결과](https://app.notion.com/p/3fadb4c0a99181e6a5b6c69caac575b4) 참조.
 
 
 - [x] 14 · Marble Flick — /game/MarbleFlick/
