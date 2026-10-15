@@ -240,6 +240,10 @@ APPROVED_TASK9_PROTECTED_TRANSITIONS = {
     # Evidence: https://app.notion.com/p/3f9db4c0a99181eb8153ecaa339536fe
     "kor/report/camp/gimhae.html": ("bb9c8901f0c0157a362db5f7ad46bd477e809308", "145143a9cf20d9a2b5d64a367d5c50c818da2429"),
 
+    # imsil: user-directed official fact correction; no ads, GA4, canonical URL, or route changes.
+    # Evidence: https://app.notion.com/p/3f9db4c0a99181eb8153ecaa339536fe
+    "kor/report/camp/imsil.html": ("ea707753aa03c0ab375483657b9b445a7b1f59be", "5c16e7e2df39ee94a764fb237b237b971aed84f5"),
+
 }
 for _path, _blob_pair in APPROVED_TASK9_PROTECTED_TRANSITIONS.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
