@@ -14,7 +14,7 @@ PAGES = {
     "kor/report/travel/albania-durres.html": ("WebPage", "입국", "관련"),
     "kor/report/travel/china-shenyang.html": ("WebPage", "입국", "관련"),
 }
-REVIEW_DATES = {"kor/report/camp/mokpo.html": "2026-08-26"}
+REVIEW_DATES = {"kor/report/camp/mokpo.html": "2026-10-15"}
 
 class TwelfthGa4PriorityBatchTest(unittest.TestCase):
     def test_pages_have_quality_contract(self):

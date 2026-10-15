@@ -6,7 +6,7 @@ import unittest
 
 ROOT = Path(__file__).resolve().parents[1]
 PAGES = {
-    "namyangju.html": ({"gyeonggi-best.html", "uijeongbu.html", "goyang.html"}, "2026-08-21"),
+    "namyangju.html": ({"gyeonggi-best.html", "hanam.html"}, "2026-10-15"),
     # c3fa79b82a5925473d997a5a646566e42b9c3f71 refreshed these pages on 2026-10-15.
     "jeongseon.html": ({"gangwon-best.html", "taebaek.html", "pyeongchang.html"}, "2026-10-15"),
     "hadong.html": ({"gyeongnam-best.html", "jinju.html", "gimhae.html"}, "2026-10-14"),
