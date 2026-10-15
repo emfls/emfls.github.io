@@ -1397,5 +1397,6 @@
 - 보호된 페이지의 정확한 `origin/main`→최종 blob 쌍 5개를 Launch Guard 승인 목록에 추가했으며 검사 로직은 유지했다. 검색 인덱스도 5페이지의 새 제목·설명에 맞춰 갱신했다. 고유 변경 파일 7개.
 - `local_qa.sh` run `20261015T144411+0900` PASS: GA4/GSC VERIFIED, AdSense PARTIAL; 보호·측정 parity 8,915 URLs PASS, WINNER 1,670 유지, SEO 신규 critical/warning 0 (기존 745/420), unittest 914, pytest 1,588, 집중 회귀 19, StockWiki 12페이지 빌드 및 Pagefind 11페이지 인덱스 PASS. 페이지 제목·H1·메타·JSON-LD·출처 확인일·겨울 허브 링크와 canonical/GA4/AdSense 불변성은 5/5 확인했다.
 - 페이지 커밋 `1cb8abe73b`, `8b6f0dff30`, `93227474dc`, `a7fcd11a14`, `875e8c54a1`; Guard `beb3712d81`; 검색 인덱스 `45c7433867`. main은 `fb520d77a9`에서 `45c7433867`로 fast-forward push했다. Pages run `38690149398`은 확인 시 `in_progress`; 지시에 따라 기다리지 않았다. 캐시 우회 HTTP는 5/5 모두 200이었지만 이전 HTML이 반환되어 라이브 반영은 확인되지 않았다.
+- 후속 단일 상태 조회에서 Pages run `38690149398`은 `success`로 종료된 것을 확인했다. 2026-10-15 15:06 KST 캐시 회피 HTTP 재확인 결과 5개 모두 HTTP 200, 정정된 2026 제목과 확인일을 제공했다(5/5). 운영 기록 커밋 `5d051cda45`의 Pages run `38690400132`는 당시 진행 중이었고 기다리지 않았다.
 - 다음 ChatGPT 검증용으로 GA4 최근 28일(v2~v7·17~19차 제외) 미검증 캠핑 페이지 totalAdRevenue 상위 15개를 산출해 결과 페이지에 기록했다. 값은 GA4 `totalAdRevenue`이며 AdSense 직접 PAGE_URL 수익이 아니다.
 - 전체 결과와 페이지별 대조표: [Notion 10차 결과](https://app.notion.com/p/3fadb4c0a99181a1be59f398ab4a4dcc). 지시 상태 완료.

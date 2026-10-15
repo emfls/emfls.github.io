@@ -310,7 +310,7 @@
 
 - [x] 10차 · 캠핑 사실정정 5페이지 + GA4 다음 검증 후보 15개
   - 19차 근거로 하남·문경·영주·단양·군산을 페이지별 커밋으로 수정하고 Launch Guard exact transition 5건 및 검색 인덱스를 갱신했다. `local_qa.sh` run `20261015T144411+0900` PASS: unittest 914, pytest 1,588, 집중 회귀 19, 측정 parity·SEO·StockWiki build PASS.
-  - main SHA `45c743386744fc0a089a67c2f67b752c3cdebe2b`를 2026-10-15 약 15:03 KST에 fast-forward push했다. Pages run `38690149398`은 조회 시 진행 중이어서 CI를 기다리지 않았다. 캐시 우회 HTTP는 5/5 200이나 이전 HTML을 반환해 라이브 반영은 미확인. GA4 2026-09-17~2026-10-14의 미검증 캠핑 페이지 수익 상위 15개는 결과 페이지에 기록했다. [Notion 10차 결과](https://app.notion.com/p/3fadb4c0a99181a1be59f398ab4a4dcc).
+  - main SHA `45c743386744fc0a089a67c2f67b752c3cdebe2b`를 2026-10-15 약 15:03 KST에 fast-forward push했다. Pages run `38690149398`은 최초 확인 시 진행 중이어서 기다리지 않았고, 후속 단일 조회에서 success를 확인했다. 15:06 KST 캐시 회피 HTTP는 정정된 제목·확인일과 HTTP 200을 5/5에서 제공했다. GA4 2026-09-17~2026-10-14의 미검증 캠핑 페이지 수익 상위 15개는 결과 페이지에 기록했다. [Notion 10차 결과](https://app.notion.com/p/3fadb4c0a99181a1be59f398ab4a4dcc).
 
 
 - [x] 14 · Marble Flick — /game/MarbleFlick/
