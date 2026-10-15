@@ -20,5 +20,8 @@ def test_location_cards_require_current_fee_and_permission_checks():
 
     for claim in ("완전무료", "취사가능", "완전 무료 + 취사 가능", "한강변 무료 캠핑"):
         assert claim not in html
-    assert html.count("요금확인") >= 5
-    assert html.count("허용확인") >= 3
+    assert html.count('class="camping-card"') == 15
+    assert html.count("③ 야영 허용 미확인") >= 8
+    assert html.count("허가") >= 5
+    assert "매년 11월 1일부터 이듬해 3월 31일까지 전면 폐쇄" in html
+    assert "비룡로 1516-17" in html
