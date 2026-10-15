@@ -228,6 +228,10 @@ APPROVED_TASK9_PROTECTED_TRANSITIONS = {
     # Evidence: https://app.notion.com/p/3f9db4c0a99181eb8153ecaa339536fe
     "kor/report/camp/jeongeup.html": ("22e1bb559dbc1b22916e4c0aaa7cc6b5077cfc06", "72b10eecf4138aef989f548514dba7ca9d792375"),
 
+    # naju: user-directed official fact correction; no ads, GA4, canonical URL, or route changes.
+    # Evidence: https://app.notion.com/p/3f9db4c0a99181eb8153ecaa339536fe
+    "kor/report/camp/naju.html": ("dd487c6c8ef607705d201fa2310c0f5c1febc657", "6d446ceeebc77c47484c7ac57638766d3c446a5c"),
+
 }
 for _path, _blob_pair in APPROVED_TASK9_PROTECTED_TRANSITIONS.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
