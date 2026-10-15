@@ -304,6 +304,10 @@
   - 완료: 2026-10-15. 기준선 테스트 PR #90, protected-WINNER exact transitions PR #89, 겨울 허브 PR #88을 green CI 후 main에 병합했다. 정확한 CI run `38652859172`: unittest 911 통과, pytest 1,578 passed / 3 skipped / 573 subtests, measurement parity 및 SEO 회귀 검사 통과(신규 Critical/Warning 0).
   - Pages run `38654730876` 성공. 허브·안산·철원·논산 운영 URL HTTP 200 및 승인 제목/정정 문구/광고 슬롯을 확인했다. 세부 사항은 `PROJECT_HISTORY.md`의 2026-10-15 기록과 Notion `[8차]` 결과 페이지에 남겼다. 키워드 workflow는 재실행하지 않았고 보호 QA를 유지했다.
 
+- [ ] 9차 · 캠핑 사실정정 10페이지 + Launch Guard 기준선 분리
+  - 콘텐츠 페이지별 커밋 10개 및 검색/스키마 보정은 로컬 브랜치에 준비됐다. 8-2차 운영 데이터 이전 후속으로 보호 증거 기준은 emfls-ops 설정이 가리키는 9a5ef58 스냅샷에 고정하고, 현재 변경 파일 비교를 `origin/main`→`HEAD`로 분리했다. 보호·삭제·수익화 검사는 유지하며 미승인 보호 변경 음성 테스트를 추가했다.
+  - focused tests와 shell syntax 및 diff check 통과. 전체 local QA·main 푸시·운영 사이트 확인 및 Notion 결과 등록 대기.
+
 
 - [x] 14 · Marble Flick — /game/MarbleFlick/
   - Closed on main after the approved four-commit chain: title-frozen English canary with generation-guarded AI callbacks, stale-collision isolation, chained-motion settlement barrier, live-count winner matrix, delayed turn handoff, AI-only local replay stats, DOM-safe initialization, H1/breadcrumb semantics, accessibility, VideoGame/BreadcrumbList schema, and RSS parity.

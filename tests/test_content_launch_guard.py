@@ -374,6 +374,60 @@ def test_guard_rejects_other_protected_winner_and_missing_blob_proof(tmp_path):
     assert "PROTECTED_WINNER_CHANGED" in validate_launch(tmp_path, manifest([]), unproven_pyeongtaek)
 
 
+def test_split_guard_bases_reject_unapproved_protected_winner_change(monkeypatch, tmp_path, capsys):
+    import sys
+
+    import pytest
+    from scripts import content_launch_guard as guard
+
+    setup_data(tmp_path)
+    write_json(tmp_path / "data/content-launch-manifest.json", manifest([]))
+    trusted_ref = "9a5ef58d459697642f36d2f494be6c48387ac9b3"
+    protected_path = "kor/report/camp/namyangju.html"
+    trusted_snapshot = {
+        "revision": trusted_ref,
+        "json": {
+            "data/experiments.json": json.loads((tmp_path / "data/experiments.json").read_text()),
+            "data/revenue-opportunities.json": json.loads((tmp_path / "data/revenue-opportunities.json").read_text()),
+            "data/site-audit.json": json.loads((tmp_path / "data/site-audit.json").read_text()),
+        },
+        "csv": {},
+    }
+    trusted_refs, requested_change_refs, diff_refs = [], [], []
+
+    def load_snapshot(root, revision):
+        trusted_refs.append(revision)
+        return trusted_snapshot
+
+    def resolve_change_base(root, revision):
+        requested_change_refs.append(revision)
+        return "resolved-origin-main-commit"
+
+    def diff_from(root, revision):
+        diff_refs.append(revision)
+        return [("M", protected_path, "0" * 40, "1" * 40)]
+
+    monkeypatch.setattr(guard, "_trusted_base_snapshot", load_snapshot)
+    monkeypatch.setattr(guard, "_validated_change_base", resolve_change_base)
+    monkeypatch.setattr(guard, "_git_changes", diff_from)
+    monkeypatch.setattr(sys, "argv", [
+        "content_launch_guard.py", "--root", str(tmp_path),
+        "--ops-dir", str(tmp_path), "--manifest", "data/content-launch-manifest.json",
+        "--base-ref", trusted_ref, "--change-base-ref", "origin/main",
+    ])
+
+    with pytest.raises(SystemExit) as exit_info:
+        guard.main()
+
+    assert exit_info.value.code == 1
+    assert trusted_refs == [trusted_ref]
+    assert requested_change_refs == ["origin/main"]
+    assert diff_refs == ["resolved-origin-main-commit"]
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["status"] == "FAIL"
+    assert "PROTECTED_WINNER_CHANGED" in payload["errors"]
+
+
 def test_guard_allows_only_ga4_collection_orchestration_workflow(tmp_path):
     setup_data(tmp_path)
 

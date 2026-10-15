@@ -1381,3 +1381,8 @@
 
 ## 2026-10-15 03:40 Keyword Hunter
 - Seeds: 40; New: 0; Rejected: 0; DB: 5476; Errors: 0; Top: none. Artifact report: reports/keyword-hunter/2026-10-15-0340.md
+
+## 2026-10-15 — 9차 local QA 기준선 분리 (8-2차 운영 데이터 이전 후속)
+- Launch Guard는 보호 증거를 `emfls-ops/state/content-launch-guard-base-ref.txt`의 설정값에서 읽고, 변경 파일은 `origin/main`→`HEAD`로만 계산한다. 8-2차 운영 데이터 이전으로 운영 입력이 저장소 밖으로 이동한 사유를 코드 주석에 기록했다.
+- 기존 보호 WINNER·삭제·수익화 검사 본체는 변경하지 않았다. 승인 기록에 없는 보호 WINNER 변경이 `PROTECTED_WINNER_CHANGED`로 실패하는 회귀 테스트와 설정 경로 검사를 추가했다.
+- focused tests 2 passed, shell syntax 및 `git diff --check` PASS. 전체 `local_qa.sh` 실행 및 배포는 이 기록 시점에서 대기.

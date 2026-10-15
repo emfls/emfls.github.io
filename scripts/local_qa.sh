@@ -4,17 +4,18 @@ umask 077
 
 REPO_DIR="${EMFLS_REPO_DIR:-$(cd "$(dirname "$0")/.." && pwd)}"
 SOURCE_OPS_DIR="${EMFLS_OPS_DIR:-$HOME/Documents/emfls-ops}"
+TRUSTED_BASE_REF_FILE="$SOURCE_OPS_DIR/state/content-launch-guard-base-ref.txt"
 QA_RUN_ID="${EMFLS_QA_RUN_ID:-$(TZ=Asia/Seoul date +%Y%m%dT%H%M%S%z)}"
 QA_DIR="${EMFLS_QA_ARTIFACTS_DIR:-$SOURCE_OPS_DIR/qa-artifacts/$QA_RUN_ID}"
 PYTHON="${EMFLS_PYTHON:-$SOURCE_OPS_DIR/.venv/bin/python}"
-BASE_REF="${EMFLS_QA_BASE_REF:-$(git -C "$REPO_DIR" rev-parse origin/main)}"
+CHANGE_BASE_REF="origin/main"
 export EMFLS_REPO_DIR="$REPO_DIR"
 export EMFLS_SOURCE_OPS_DIR="$SOURCE_OPS_DIR"
 export EMFLS_OPS_DIR="$QA_DIR"
 export TZ="Asia/Seoul"
 export PYTHONPATH="$REPO_DIR${PYTHONPATH:+:$PYTHONPATH}"
 
-if [[ ! -f "$SOURCE_OPS_DIR/.env" || ! -x "$PYTHON" ]]; then
+if [[ ! -f "$SOURCE_OPS_DIR/.env" || ! -x "$PYTHON" || ! -f "$TRUSTED_BASE_REF_FILE" ]]; then
   print -u2 "Run setup in EMFLS_OPS_DIR first; this script never creates or prints API keys."
   exit 78
 fi
@@ -36,6 +37,11 @@ ln -s "$SOURCE_OPS_DIR/.env" "$QA_DIR/.env"
 set -a
 source "$SOURCE_OPS_DIR/.env"
 set +a
+TRUSTED_BASE_REF="$(tr -d '[:space:]' < "$TRUSTED_BASE_REF_FILE")"
+if [[ ${#TRUSTED_BASE_REF} -ne 40 || "$TRUSTED_BASE_REF" == *[^0-9a-f]* ]]; then
+  print -u2 "Invalid trusted launch-evidence snapshot ref in EMFLS_OPS_DIR/state."
+  exit 78
+fi
 cd "$REPO_DIR"
 
 TODAY="$(TZ=Asia/Seoul date +%F)"
@@ -54,13 +60,12 @@ RUN_AT="$("$PYTHON" -c 'from datetime import datetime; from zoneinfo import Zone
   --root "$QA_DIR" --config "$QA_DIR/data/search-trend-keywords.json" \
   --run-at "$RUN_AT"
 
-GUARD_BASE="$BASE_REF"
-if [[ -f "$QA_DIR/state/content-launch-guard-base-ref.txt" ]]; then
-  GUARD_BASE="$(cat "$QA_DIR/state/content-launch-guard-base-ref.txt")"
-fi
+# 8-2 moved operational launch evidence out of Git; read its pinned snapshot
+# ref from emfls-ops, while checking only this task's origin/main..HEAD diff.
 "$PYTHON" scripts/content_launch_guard.py \
   --root "$REPO_DIR" --ops-dir "$QA_DIR" \
-  --manifest "$QA_DIR/data/content-launch-manifest.json" --base-ref "$GUARD_BASE"
+  --manifest "$QA_DIR/data/content-launch-manifest.json" \
+  --base-ref "$TRUSTED_BASE_REF" --change-base-ref "$CHANGE_BASE_REF"
 "$PYTHON" scripts/seo_qa.py "$REPO_DIR" \
   --audit "$QA_DIR/data/site-audit.json" \
   --baseline "$QA_DIR/data/seo-qa-baseline.json" \

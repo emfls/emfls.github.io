@@ -1437,20 +1437,41 @@ def _git_changes(root, base_ref):
     return rows
 
 
+def _validated_change_base(root, base_ref):
+    """Resolve the change-set base and require it to be an ancestor of HEAD."""
+    resolved = subprocess.run(
+        ["git", "rev-parse", "--verify", f"{base_ref}^{{commit}}"],
+        cwd=str(root), text=True, capture_output=True, check=True,
+    ).stdout.strip()
+    ancestor = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", resolved, "HEAD"],
+        cwd=str(root), text=True, capture_output=True, check=False,
+    )
+    if ancestor.returncode != 0:
+        raise ValueError("change base revision is not an ancestor of the checked head")
+    return resolved
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, default=Path("."))
     parser.add_argument("--ops-dir", type=Path, default=Path(os.environ["EMFLS_OPS_DIR"]) if os.environ.get("EMFLS_OPS_DIR") else None)
     parser.add_argument("--manifest", type=Path, default=Path(os.environ["EMFLS_OPS_DIR"]) / "data/content-launch-manifest.json" if os.environ.get("EMFLS_OPS_DIR") else Path("data/content-launch-manifest.json"))
     parser.add_argument("--base-ref", default="HEAD")
+    parser.add_argument("--change-base-ref", help="Commit used to calculate changed paths; defaults to --base-ref.")
     args = parser.parse_args()
     manifest = _read(args.root / args.manifest, {})
     try:
         trusted_base = _trusted_base_snapshot(args.root, args.base_ref)
-        changed_paths = _git_changes(args.root, trusted_base["revision"])
-        errors = validate_launch(args.root, manifest, changed_paths, trusted_base=trusted_base, ops_dir=args.ops_dir)
     except (OSError, TypeError, ValueError, KeyError, subprocess.CalledProcessError, csv.Error):
         errors = ["TRUSTED_BASE_REVISION_UNAVAILABLE"]
+    else:
+        try:
+            change_ref = _validated_change_base(args.root, args.change_base_ref or args.base_ref)
+            changed_paths = _git_changes(args.root, change_ref)
+            errors = validate_launch(args.root, manifest, changed_paths, trusted_base=trusted_base, ops_dir=args.ops_dir)
+        except (OSError, TypeError, ValueError, KeyError, subprocess.CalledProcessError, csv.Error):
+            errors = ["CHANGE_BASE_REVISION_UNAVAILABLE"]
     print(json.dumps({"status": "FAIL" if errors else "PASS", "errors": errors}))
     raise SystemExit(1 if errors else 0)
 

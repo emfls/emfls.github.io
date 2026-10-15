@@ -103,6 +103,19 @@ class SeoQaWorkflowTests(unittest.TestCase):
         self.assertLess(snapshot, guard)
         self.assertIn("--manifest /tmp/content-launch-manifest.json", source)
 
+    def test_local_qa_separates_ops_trust_snapshot_from_origin_main_change_set(self):
+        local_qa = (ROOT / "scripts/local_qa.sh").read_text(encoding="utf-8")
+        self.assertIn(
+            'TRUSTED_BASE_REF_FILE="$SOURCE_OPS_DIR/state/content-launch-guard-base-ref.txt"',
+            local_qa,
+        )
+        self.assertIn('CHANGE_BASE_REF="origin/main"', local_qa)
+        self.assertIn(
+            '--base-ref "$TRUSTED_BASE_REF" --change-base-ref "$CHANGE_BASE_REF"',
+            local_qa,
+        )
+        self.assertIn("8-2", local_qa)
+
     def test_pr_has_independent_nonpublishing_measurement_parity_job(self):
         source = WORKFLOW.read_text(encoding="utf-8")
         self.assertIn("  measurement-parity:", source)
