@@ -1,6 +1,6 @@
 import json
+import os
 import re
-import subprocess
 import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -29,20 +29,15 @@ PREVIOUS_PUBLISHED_MANIFEST = {
 }
 
 
-def read_committed_json(relative_path):
-    result = subprocess.run(
-        ["git", "show", f"HEAD:{relative_path}"],
-        cwd=ROOT,
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    return json.loads(result.stdout)
+def read_operational_json(relative_path):
+    """Read launch evidence from its local ops directory, not the public repo."""
+    ops_dir = Path(os.environ.get("EMFLS_OPS_DIR", ROOT.parent / "emfls-ops"))
+    return json.loads((ops_dir / relative_path).read_text(encoding="utf-8"))
 
 
 def c01_032_manifest():
     """Validate this immutable release record even after a newer launch."""
-    current = read_committed_json("data/content-launch-manifest.json")
+    current = read_operational_json("data/content-launch-manifest.json")
     records = [current, *current.get("preservedManifestRecords", [])]
     matches = [r for r in records if r.get("candidateIds") == [CANDIDATE_ID]]
     if len(matches) != 1:
@@ -53,7 +48,7 @@ def c01_032_manifest():
 class C01032ContentReleaseTests(unittest.TestCase):
     def test_manifest_binds_one_exact_review_only_approval(self):
         manifest = c01_032_manifest()
-        approval = read_committed_json("data/content-launch-experiment-approvals.json")["approvals"][0]
+        approval = read_operational_json("data/content-launch-experiment-approvals.json")["approvals"][0]
         self.assertEqual(approval["candidateId"], CANDIDATE_ID)
         self.assertEqual(approval["title"], TITLE)
         self.assertEqual(approval["primaryIntent"], INTENT)
