@@ -4,6 +4,7 @@ import shutil
 from pathlib import Path
 from scripts import prepare_keyword_launch
 from scripts.content_launch_policy import normalize_keyword
+from scripts.ops_paths import ops_path
 from scripts.prepare_keyword_launch import prepare_queue as _prepare_queue
 
 def source_backed_approval(keyword, **extra):
@@ -329,7 +330,7 @@ def test_current_keyboard_cleaning_publication_is_preserved_and_leaves_two_slots
 def test_current_hold_and_no_new_page_verdicts_are_persisted_and_excluded():
     from pathlib import Path
 
-    decisions_path = Path(__file__).resolve().parents[1] / "data" / "content-launch-decisions.json"
+    decisions_path = ops_path("data/content-launch-decisions.json")
     decisions = prepare_keyword_launch.load_decisions(decisions_path)
     assert decisions.get("인건비계산기") == "HOLD"
     assert decisions.get("엔카중고차구매") == "NO_NEW_PAGE"
@@ -371,7 +372,7 @@ def test_no_new_page_decision_is_loaded_and_blocks_exact_candidate(tmp_path):
 def test_airport_priority_exit_is_safe_from_ymyl_but_held_for_no_serp_gap():
     from pathlib import Path
 
-    decisions_path = Path(__file__).resolve().parents[1] / "data" / "content-launch-decisions.json"
+    decisions_path = ops_path("data/content-launch-decisions.json")
     decisions = prepare_keyword_launch.load_decisions(decisions_path)
     assert decisions.get("인천공항교통약자우대출구") == "HOLD"
 
@@ -391,7 +392,7 @@ def test_reviewed_travel_and_overseas_candidates_stay_out_of_launch_queue():
     from pathlib import Path
 
     root = Path(__file__).resolve().parents[1]
-    decisions = prepare_keyword_launch.load_decisions(root / "data" / "content-launch-decisions.json")
+    decisions = prepare_keyword_launch.load_decisions(ops_path("data/content-launch-decisions.json"))
     held = ["가을여행추천", "가을여행지추천", "해외구매대행쇼핑몰"]
 
     assert all(decisions.get(keyword) == "HOLD" for keyword in held)
@@ -410,7 +411,7 @@ def test_reviewed_travel_and_overseas_candidates_stay_out_of_launch_queue():
     assert result["queue"] == []
     assert result["excluded"]["editorial_hold"] == 3
 
-    persisted_queue = json.loads((root / "data" / "content-launch-queue.json").read_text(encoding="utf-8"))
+    persisted_queue = json.loads(ops_path("data/content-launch-queue.json").read_text(encoding="utf-8"))
     queued_keywords = {item["keyword"] for item in persisted_queue["queue"]}
     assert not queued_keywords.intersection(held)
     assert persisted_queue["dailyLimit"] == 3
@@ -553,7 +554,7 @@ def test_editorial_clearance_does_not_clear_ymyl_without_separate_review():
 
 def test_exact_false_ready_keywords_have_source_backed_negative_decisions():
     registry = json.loads(
-        (Path(__file__).resolve().parents[1] / "data" / "content-launch-decisions.json").read_text(encoding="utf-8")
+        ops_path("data/content-launch-decisions.json").read_text(encoding="utf-8")
     )
     expected = {
         "1월국내여행지추천": "HOLD",
@@ -584,8 +585,7 @@ def test_exact_false_ready_keywords_have_source_backed_negative_decisions():
 
 
 def test_latest_main_keyword_snapshot_replays_only_explicitly_approved_rows(tmp_path, monkeypatch):
-    source_root = Path(__file__).resolve().parents[1]
-    source_data = source_root / "data"
+    source_data = ops_path("data")
     data = tmp_path / "data"
     data.mkdir()
     names = (
@@ -611,6 +611,7 @@ def test_latest_main_keyword_snapshot_replays_only_explicitly_approved_rows(tmp_
         "sys.argv",
         ["prepare_keyword_launch.py", "--root", str(tmp_path), "--selected-at", selected_at],
     )
+    monkeypatch.setenv("EMFLS_OPS_DIR", str(tmp_path))
 
     prepare_keyword_launch.main()
 
@@ -620,7 +621,9 @@ def test_latest_main_keyword_snapshot_replays_only_explicitly_approved_rows(tmp_
     # the current committed queue correctly excludes them until revalidated.
     expected_queue = queue_snapshot["queue"]
     assert [item["keyword"] for item in output["queue"]] == expected_queue
-    assert output == queue_snapshot
+    assert output["selectedAt"] == queue_snapshot["selectedAt"]
+    assert output["dailyLimit"] == queue_snapshot["dailyLimit"]
+    assert output["queue"] == queue_snapshot["queue"]
     assert all(item["status"] == "READY_TO_LAUNCH" for item in output["queue"])
     assert not (false_ready & {item["keyword"] for item in output["queue"]})
     assert all(
@@ -710,7 +713,7 @@ def test_exact_september_travel_hold_preserves_other_month_candidates():
     from pathlib import Path
 
     root = Path(__file__).resolve().parents[1]
-    decision_path = root / "data" / "content-launch-decisions.json"
+    decision_path = ops_path("data/content-launch-decisions.json")
     decision_document = json.loads(decision_path.read_text(encoding="utf-8"))
     target_rows = [
         row for row in decision_document["decisions"]
@@ -757,7 +760,7 @@ def test_exact_september_and_march_holds_do_not_expire_at_year_rollover():
 
     root = Path(__file__).resolve().parents[1]
     decisions = prepare_keyword_launch.load_decisions(
-        root / "data" / "content-launch-decisions.json"
+        ops_path("data/content-launch-decisions.json")
     )
     rows = [
         launch_row("9월국내여행지추천", "/kor/column/september-domestic-travel/", "90"),

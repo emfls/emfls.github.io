@@ -65,6 +65,29 @@ def candidate_urls(manifest, changed_paths):
     return candidates
 
 
+def changed_indexable_page_urls(root, changed_paths):
+    """Resolve changed, locally indexable HTML pages when the private launch manifest is absent."""
+    root = Path(root).resolve()
+    candidates = []
+    for raw_path in sorted({str(path).lstrip("/") for path in changed_paths}):
+        relative = Path(raw_path)
+        if relative.is_absolute() or ".." in relative.parts or relative.suffix.lower() != ".html":
+            continue
+        page = root / relative
+        if not page.is_file():
+            continue
+        html = page.read_text(encoding="utf-8", errors="replace")
+        if _has_noindex(html, {}):
+            continue
+        canonical = _canonical(html)
+        if not canonical:
+            continue
+        url = ensure_same_host_https(canonical)
+        if url not in candidates:
+            candidates.append(url)
+    return candidates
+
+
 def _status(response):
     return int(getattr(response, "status", response.getcode() if hasattr(response, "getcode") else 0))
 
@@ -296,10 +319,15 @@ def main(argv=None):
         print("SKIP_BOT_COMMIT")
         return 0
 
-    manifest_path = args.manifest if args.manifest.is_absolute() else root / args.manifest
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     changed = _changed_paths(root, args.before, args.sha)
-    candidates = candidate_urls(manifest, changed)
+    manifest_path = args.manifest if args.manifest.is_absolute() else root / args.manifest
+    if manifest_path.is_file():
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        candidates = candidate_urls(manifest, changed)
+    else:
+        # Operational launch manifests now live in EMFLS_OPS_DIR and are not in Git.
+        # Changed HTML still has to be indexable locally and pass the production canonical/noindex gate.
+        candidates = changed_indexable_page_urls(root, changed)
     for url in _backfill_urls(args.backfill_urls):
         ensure_same_host_https(url)
         if url not in candidates:

@@ -7,6 +7,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import pytest
+from scripts.ops_paths import ops_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -134,24 +135,24 @@ def relevant_sitemap_text(key):
 
 
 def metadata_entry(url):
-    metadata = json.loads((ROOT / "data/content-metadata.json").read_text(encoding="utf-8"))
+    metadata = json.loads(ops_path("data/content-metadata.json").read_text(encoding="utf-8"))
     return next(entry for entry in metadata if entry["url"] == url)
 
 
 def experiment_entry(url):
     experiments = json.loads(
-        (ROOT / "data/content-launch-experiments.json").read_text(encoding="utf-8")
+        ops_path("data/content-launch-experiments.json").read_text(encoding="utf-8")
     )["experiments"]
     return next(entry for entry in experiments if entry["url"] == url)
 
 
 def keyword_rows_for_url(url):
-    with (ROOT / "data/keywords_master.csv").open(encoding="utf-8", newline="") as handle:
+    with ops_path("data/keywords_master.csv").open(encoding="utf-8", newline="") as handle:
         return [row for row in csv.DictReader(handle) if row["closest_url"] == url]
 
 
 def keyword_rows():
-    with (ROOT / "data/keywords_master.csv").open(encoding="utf-8", newline="") as handle:
+    with ops_path("data/keywords_master.csv").open(encoding="utf-8", newline="") as handle:
         return list(csv.DictReader(handle))
 
 

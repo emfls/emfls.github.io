@@ -14,6 +14,7 @@ from scripts.collect_gsc_opportunity_query_snapshot import (
     run_collection,
     validate_snapshot,
 )
+from scripts.ops_paths import ops_path
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -80,7 +81,7 @@ def _summary(count):
 
 
 def test_existing_page_snapshot_schema_remains_page_level_only():
-    with (ROOT / "data/performance/gsc-latest.json").open(encoding="utf-8") as handle:
+    with ops_path("data/performance/gsc-latest.json").open(encoding="utf-8") as handle:
         snapshot = json.load(handle)
     assert set(snapshot) == {
         "status", "source", "property", "periodStart", "periodEnd", "generatedAt", "periods", "pages"

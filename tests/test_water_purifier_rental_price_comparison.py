@@ -4,6 +4,7 @@ import re
 import subprocess
 import xml.etree.ElementTree as ET
 from pathlib import Path
+from scripts.ops_paths import ops_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -51,14 +52,14 @@ def test_publication_is_registered_without_secondary_doorways():
     locations = {node.text for node in sitemap.iter() if node.tag.endswith("loc")}
     assert "https://emfls.github.io" + URL in locations
     assert URL in (ROOT / "kor/util/index.html").read_text(encoding="utf-8")
-    metadata = json.loads((ROOT / "data/content-metadata.json").read_text(encoding="utf-8"))
+    metadata = json.loads(ops_path("data/content-metadata.json").read_text(encoding="utf-8"))
     entry = next(row for row in metadata if row["url"] == URL)
     assert entry["target_query"] == "정수기렌탈가격비교"
-    experiments = json.loads((ROOT / "data/content-launch-experiments.json").read_text(encoding="utf-8"))["experiments"]
+    experiments = json.loads(ops_path("data/content-launch-experiments.json").read_text(encoding="utf-8"))["experiments"]
     experiment = next(row for row in experiments if row["url"] == URL)
     assert experiment["status"] == "OBSERVING"
     assert experiment["observeUntil"] == "2026-10-10"
-    with (ROOT / "data/keywords_master.csv").open(encoding="utf-8", newline="") as handle:
+    with ops_path("data/keywords_master.csv").open(encoding="utf-8", newline="") as handle:
         rows = list(csv.DictReader(handle))
     primary = next(row for row in rows if row["keyword"] == "정수기렌탈가격비교")
     assert primary["status"] == "PUBLISHED"

@@ -314,15 +314,16 @@ def report(result,now):
     if not result['errors']: lines.append('- 없음')
     return '\n'.join(lines)+'\n'
 
-def health_check(root,client=None):
-    root=Path(root).resolve()
+def health_check(root,client=None,ops_dir=None):
+    root=Path(root).resolve(); state_root=Path(ops_dir or root).resolve()
     config=deepcopy(DEFAULT_CONFIG)
-    overrides=read_json(root/'data/keyword_hunter_config.json',{})
+    overrides=read_json(state_root/'data/keyword_hunter_config.json',{})
     for key,value in overrides.items():
         if isinstance(config.get(key),dict): config[key].update(value)
         else: config[key]=value
-    client=client or Client(config,usage_tracker=datalab_usage(root,config))
-    pages=inventory(root)
+    client=client or Client(config,usage_tracker=datalab_usage(state_root,config))
+    metadata_path=state_root/'data/content-metadata.json'
+    pages=inventory(root,metadata_path=metadata_path if metadata_path.exists() else None)
     current=client.health()
     if current.get('NAVER_SEARCH_ADS')!='NOT_CONFIGURED': client.related('육아휴직')
     if current.get('NAVER_DATALAB')!='NOT_CONFIGURED': client.trends(['육아휴직'],datetime.now(KST).date())
@@ -330,21 +331,21 @@ def health_check(root,client=None):
     if config.get('rss_feeds'): client.feed(config['rss_feeds'][0])
     return {**client.health(),'SITE_INDEX':'OK' if pages else 'API_ERROR'}
 
-def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,status_change=None,data_quality_only=False):
-    root=Path(root).resolve();now=datetime.fromisoformat(run_at) if run_at else datetime.now(KST)
+def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,status_change=None,data_quality_only=False,ops_dir=None):
+    root=Path(root).resolve(); state_root=Path(ops_dir or root).resolve(); now=datetime.fromisoformat(run_at) if run_at else datetime.now(KST)
     if now.tzinfo is None: now=now.replace(tzinfo=KST)
-    with (nullcontext() if dry_run else locked(root)):
+    with (nullcontext() if dry_run else locked(state_root)):
         # History and persistent databases are read before discovery or API activity.
-        history=(root/'PROJECT_HISTORY.md').read_text(encoding='utf-8') if (root/'PROJECT_HISTORY.md').exists() else '# PROJECT HISTORY\n'
-        master=read_master(root); baseline_master={normalize(r['keyword']):dict(r) for r in master}; seed_data=read_json(root/'data/keyword_seeds.json',{'seeds':[]})
-        exploration_history=read_json(root/'data/recent_exploration_history.json',{'runs':[]}).get('runs',[])[-10:]
+        history=(state_root/'PROJECT_HISTORY.md').read_text(encoding='utf-8') if (state_root/'PROJECT_HISTORY.md').exists() else '# PROJECT HISTORY\n'
+        master=read_master(state_root); baseline_master={normalize(r['keyword']):dict(r) for r in master}; seed_data=read_json(state_root/'data/keyword_seeds.json',{'seeds':[]})
+        exploration_history=read_json(state_root/'data/recent_exploration_history.json',{'runs':[]}).get('runs',[])[-10:]
         recovery=recovery_active(exploration_history)
-        excluded_roots={normalize(x) for x in read_json(root/'data/seed_exclusions.json',{'roots':[]}).get('roots',[])}
+        excluded_roots={normalize(x) for x in read_json(state_root/'data/seed_exclusions.json',{'roots':[]}).get('roots',[])}
         excluded_keywords=excluded_lineage_keys(master,excluded_roots)
-        clusters=read_json(root/'data/keyword_clusters.json',{})
-        rejected=read_json(root/'data/rejected_keywords.json',[])
-        published=read_json(root/'data/published_keywords.json',[])
-        config=deepcopy(DEFAULT_CONFIG); overrides=read_json(root/'data/keyword_hunter_config.json',{})
+        clusters=read_json(state_root/'data/keyword_clusters.json',{})
+        rejected=read_json(state_root/'data/rejected_keywords.json',[])
+        published=read_json(state_root/'data/published_keywords.json',[])
+        config=deepcopy(DEFAULT_CONFIG); overrides=read_json(state_root/'data/keyword_hunter_config.json',{})
         for k,v in overrides.items():
             if isinstance(config.get(k),dict): config[k].update(v)
             else: config[k]=v
@@ -354,10 +355,11 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
         if config['max_depth']<1 or config['max_seeds']<1: raise ValueError('Invalid depth/seed budget')
         allocate(config['target'],config['exploration'])
         score({'keyword':'검증'},config,now=now)
-        usage=datalab_usage(root,config,now)
+        usage=datalab_usage(state_root,config,now)
         client=Client(config,offline=dry_run or offline,usage_tracker=usage) if dry_run or client is None else client
         api_health=client.health() if hasattr(client,'health') and isinstance(client.health(),dict) else {}
-        pages=inventory(root); site=SiteIndex(pages)
+        metadata_path=state_root/'data/content-metadata.json'
+        pages=inventory(root,metadata_path=metadata_path if metadata_path.exists() else None); site=SiteIndex(pages)
         if status_change:
             keyword,status,url=status_change
             row=next((r for r in master if normalize(r['keyword'])==normalize(keyword)),None)
@@ -386,7 +388,7 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
             lineage={normalize(seed.get(k) or '') for k in ('keyword','parent_keyword','cluster')}
             if seed.get('source') in ANCHORED_SOURCES or lineage & anchored_clusters or normalize(seed['keyword']) in excluded_keywords: continue
             pool[normalize(seed['keyword'])]=seed
-        external=[] if status_change or data_quality_only else external_seeds(root,client,config,now)
+        external=[] if status_change or data_quality_only else external_seeds(state_root,client,config,now)
         expanded_external=recovery_seed_fragments(external)+external if recovery['active'] else external
         for s in expanded_external:
             key=normalize(s['keyword'])
@@ -630,7 +632,7 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
         invalid_counts=Counter(reason for row in invalid_details for reason in row['missing'].split('|') if reason)
         invalid_counts={key:invalid_counts.get(key,0) for key in
                         ('monthly_volume_missing','competition_missing','trend_missing','web_result_missing')}
-        improvement_data=select_improvement_candidates(read_json(root/'data'/'page-performance.json',{}))
+        improvement_data=select_improvement_candidates(read_json(state_root/'data'/'page-performance.json',{}))
         cohort_after={normalize(r['keyword']):r for r in active if normalize(r['keyword']) in baseline_master}
         result={'target':config['target'],'seeds_checked':len(selected),'new_keywords':len(fresh),'duplicates':duplicates,
                 'rejected':sum(r['status']=='REJECTED' for r in fresh),'db_total':len(active),'api_calls':client.calls,
@@ -684,7 +686,7 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
         if not dry_run:
             report_path='reports/keyword-hunter/'+now.strftime('%Y-%m-%d-%H%M')+'.md'
             # Same-minute invocations append sections to retain every run in the required pathname.
-            existing=(root/report_path).read_text() if (root/report_path).exists() else ''
+            existing=(state_root/report_path).read_text() if (state_root/report_path).exists() else ''
             cluster_map={}
             for row in active:
                 cluster_map.setdefault(row['cluster'],{'category':row['category'],'keywords':[],'edges':[]})
@@ -699,12 +701,13 @@ def run(root,dry_run=False,offline=False,run_at=None,client=None,target=None,sta
                    'data/recent_exploration_history.json':json_text({'runs':history_after}),
                    'data/existing-page-improvement-candidates.json':json_text(improvement_data),
                    'PROJECT_HISTORY.md':history+summary}
-            commit(root,files);result['report_path']=report_path
+            commit(state_root,files);result['report_path']=report_path
         return result
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root',type=Path,default=Path(__file__).resolve().parents[1])
+    parser.add_argument('--ops-dir',type=Path,default=Path(os.environ.get('EMFLS_OPS_DIR',Path(__file__).resolve().parents[1])))
     parser.add_argument('--dry-run',action='store_true',help='No writes or API calls')
     parser.add_argument('--offline',action='store_true',help='Use local sources; persist results')
     parser.add_argument('--target',type=int)
@@ -714,12 +717,12 @@ def main():
     parser.add_argument('--keyword');parser.add_argument('--url')
     args=parser.parse_args()
     try:
-        load_env_file(args.root)
+        load_env_file(args.ops_dir)
         if args.health_check:
-            for name,status in health_check(args.root).items(): print('{}: {}'.format(name,status))
+            for name,status in health_check(args.root,ops_dir=args.ops_dir).items(): print('{}: {}'.format(name,status))
             return 0
         if args.set_status and not args.keyword: raise ValueError('--keyword required')
-        result=run(args.root,dry_run=args.dry_run,offline=args.offline,target=args.target,
+        result=run(args.root,dry_run=args.dry_run,offline=args.offline,target=args.target,ops_dir=args.ops_dir,
                    status_change=(args.keyword,args.set_status,args.url) if args.set_status else None,
                    data_quality_only=args.data_quality_only)
         print(result['report_text'] if args.dry_run else json.dumps({k:result[k] for k in ['new_keywords','db_total','api_calls','shortfall','existing_page_improvement_candidates','report_path']},ensure_ascii=False))

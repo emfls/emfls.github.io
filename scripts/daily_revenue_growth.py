@@ -3,6 +3,7 @@
 
 import argparse
 import json
+import os
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -84,13 +85,14 @@ def _report(payload):
     return "\n".join(lines).rstrip() + "\n"
 
 
-def run_daily_analysis(root, run_at, research_path, write=True):
+def run_daily_analysis(root, run_at, research_path, write=True, ops_dir=None, preserve_launch_manifest=False):
     root = Path(root)
+    state_root = Path(ops_dir or root)
     research = read_json(research_path, {"candidates": []})
     raw = research.get("candidates") or []
     current_day = publication_day(run_at)
     candidates = sorted((_evaluate(row, current_day.isoformat()) for row in raw), key=lambda row: (-float(row.get("score") or 0), row.get("url", "")))
-    launches = read_json(root / "data/content-launch-experiments.json", {"experiments": []}).get("experiments") or []
+    launches = read_json(state_root / "data/content-launch-experiments.json", {"experiments": []}).get("experiments") or []
     active = sum(row.get("status") == "OBSERVING" for row in launches)
     complete_research = 10 <= len(raw) <= 20
     selected = select_new_pages(candidates, active, _launches_on_local_day(launches, run_at)) if complete_research else []
@@ -109,11 +111,11 @@ def run_daily_analysis(root, run_at, research_path, write=True):
     }
     index_candidates = {"schemaVersion": 1, "runAt": run_at, "status": "REVIEW_ONLY", "candidates": [{"url": row["url"], "status": "PENDING_CONTENT_LAUNCH"} for row in selected]}
     if write:
-        write_json(root / "data/new-content-opportunities.json", payload)
-        if not _preserve_same_day_launch(root, launches, run_at):
-            write_json(root / "data/content-launch-manifest.json", manifest)
-            write_json(root / "data/google-index-candidates.json", index_candidates)
-        report = root / "reports/daily-revenue-growth.md"
+        write_json(state_root / "data/new-content-opportunities.json", payload)
+        if not preserve_launch_manifest and not _preserve_same_day_launch(state_root, launches, run_at):
+            write_json(state_root / "data/content-launch-manifest.json", manifest)
+            write_json(state_root / "data/google-index-candidates.json", index_candidates)
+        report = state_root / "reports/daily-revenue-growth.md"
         report.parent.mkdir(parents=True, exist_ok=True)
         report.write_text(_report(payload), encoding="utf-8")
     return payload
@@ -122,10 +124,15 @@ def run_daily_analysis(root, run_at, research_path, write=True):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, default=Path("."))
+    parser.add_argument("--ops-dir", type=Path, default=Path(os.environ["EMFLS_OPS_DIR"]) if os.environ.get("EMFLS_OPS_DIR") else None)
     parser.add_argument("--run-at", required=True)
-    parser.add_argument("--research", type=Path, default=Path("data/new-content-research.json"))
+    parser.add_argument("--preserve-launch-manifest", action="store_true", help="write analysis outputs without replacing the operational launch manifest")
+    parser.add_argument("--research", type=Path, default=Path(os.environ["EMFLS_OPS_DIR"]) / "data/new-content-research.json" if os.environ.get("EMFLS_OPS_DIR") else Path("data/new-content-research.json"))
     args = parser.parse_args()
-    result = run_daily_analysis(args.root, args.run_at, args.research)
+    result = run_daily_analysis(
+        args.root, args.run_at, args.research, ops_dir=args.ops_dir,
+        preserve_launch_manifest=args.preserve_launch_manifest,
+    )
     print(json.dumps({"researched": len(result["candidates"]), "selected": len(result["selected"]), "status": result["dataStatus"]}))
 
 

@@ -4,6 +4,7 @@ from pathlib import Path
 
 from scripts.content_launch_policy import select_launch_candidate, normalize_keyword
 from scripts.content_launch_guard import validate_launch
+from scripts.ops_paths import ops_path
 from scripts.prepare_keyword_launch import prepare_queue
 
 def row(**kw):
@@ -19,7 +20,7 @@ def editorial_clearance(keyword):
     }
 
 def current_master_rows():
-    master_path = Path(__file__).resolve().parents[1] / "data" / "keywords_master.csv"
+    master_path = ops_path("data/keywords_master.csv")
     with master_path.open(encoding="utf-8-sig", newline="") as source:
         return {item["keyword"]: item for item in csv.DictReader(source)}
 
@@ -557,7 +558,7 @@ def launchable_master_row(candidate, suggested_url):
     }
 
 def test_master_high_risk_keywords_fail_closed_before_queue_selection():
-    master_path = Path(__file__).resolve().parents[1] / "data" / "keywords_master.csv"
+    master_path = ops_path("data/keywords_master.csv")
     with master_path.open(encoding="utf-8-sig", newline="") as source:
         rows = {item["keyword"]: item for item in csv.DictReader(source)}
 
@@ -576,7 +577,7 @@ def test_master_high_risk_keywords_fail_closed_before_queue_selection():
         assert result["excluded"]["ymyl"] == 1, keyword
 
 def test_master_vehicle_transfer_registration_application_is_blocked_as_legal_ymyl():
-    master_path = Path(__file__).resolve().parents[1] / "data" / "keywords_master.csv"
+    master_path = ops_path("data/keywords_master.csv")
     with master_path.open(encoding="utf-8-sig", newline="") as source:
         candidate = next(item for item in csv.DictReader(source) if item["keyword"] == "이전등록신청서")
 
@@ -609,7 +610,7 @@ def test_master_consumer_and_vehicle_procedure_keywords_are_blocked_as_legal_ymy
         "폐차하는법",
         "자동차매도서류",
     )
-    master_path = Path(__file__).resolve().parents[1] / "data" / "keywords_master.csv"
+    master_path = ops_path("data/keywords_master.csv")
     with master_path.open(encoding="utf-8-sig", newline="") as source:
         rows = {item["keyword"]: item for item in csv.DictReader(source)}
 
@@ -633,7 +634,7 @@ def test_master_consumer_and_vehicle_procedure_keywords_are_blocked_as_legal_ymy
     assert failures == []
 
 def test_master_safe_controls_remain_queue_eligible():
-    master_path = Path(__file__).resolve().parents[1] / "data" / "keywords_master.csv"
+    master_path = ops_path("data/keywords_master.csv")
     with master_path.open(encoding="utf-8-sig", newline="") as source:
         rows = {item["keyword"]: item for item in csv.DictReader(source)}
 

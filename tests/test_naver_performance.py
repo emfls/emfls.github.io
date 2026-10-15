@@ -3,6 +3,7 @@ import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from scripts.ops_paths import ops_path
 
 from scripts.naver_performance import (
     build_naver_quality_report,
@@ -130,7 +131,7 @@ class NaverMatchingQualityTest(unittest.TestCase):
 class CheckedInNaverSnapshotTest(unittest.TestCase):
     def test_contains_exactly_30_verified_ui_rows(self):
         snapshot = load_naver_snapshot(
-            Path("data/naver/search-advisor-2026-08-30.json")
+            ops_path("data/naver/search-advisor-2026-08-30.json")
         )
         self.assertEqual(len(snapshot["rows"]), 30)
         self.assertEqual(snapshot["source"], "NAVER_SEARCH_ADVISOR_UI_TOP_30")
@@ -146,10 +147,10 @@ class CheckedInNaverSnapshotTest(unittest.TestCase):
     def test_real_snapshot_matches_site_inventory_and_reports_limits(self):
         site_urls = [
             row["url"]
-            for row in json.loads(Path("data/page-scores.json").read_text())["pages"]
+            for row in json.loads(ops_path("data/page-scores.json").read_text())["pages"]
         ]
         result, markdown = build_naver_quality_report(
-            Path("data/naver/search-advisor-2026-08-30.json"), site_urls
+            ops_path("data/naver/search-advisor-2026-08-30.json"), site_urls
         )
         self.assertGreaterEqual(result["quality"]["matchRate"], 0.95)
         self.assertTrue(result["quality"]["gatePassed"])

@@ -2,6 +2,7 @@ import json
 import re
 import unittest
 from pathlib import Path
+from scripts.ops_paths import ops_path
 
 
 PAGES = {
@@ -74,7 +75,7 @@ class CampingCtrPageTest(unittest.TestCase):
 
 class CampingCtrRegistryTest(unittest.TestCase):
     def test_registry_contains_exactly_three_terminal_inconclusive_experiments(self):
-        registry = json.loads(Path("data/experiments.json").read_text(encoding="utf-8"))
+        registry = json.loads(ops_path("data/experiments.json").read_text(encoding="utf-8"))
         experiments = registry["experiments"]
         self.assertEqual(len(experiments), 3)
         self.assertEqual({row["url"] for row in experiments}, {row["url"] for row in PAGES.values()})

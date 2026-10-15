@@ -4,6 +4,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 from scripts.build_content_index import build_home_feed
+from scripts.ops_paths import ops_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -45,7 +46,7 @@ class PageParser(HTMLParser):
 
 
 def _current_manifest():
-    return json.loads((ROOT / "data/content-launch-manifest.json").read_text(encoding="utf-8"))
+    return json.loads(ops_path("data/content-launch-manifest.json").read_text(encoding="utf-8"))
 
 
 def test_keyboard_cleaning_page_is_indexable_source_backed_and_safe():

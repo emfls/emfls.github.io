@@ -3,6 +3,7 @@ import re
 import subprocess
 import unittest
 from pathlib import Path
+from scripts.ops_paths import ops_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -72,7 +73,7 @@ class OverseasStockTaxClusterTests(unittest.TestCase):
     def test_cluster_metadata_has_current_verification_and_sources(self):
         entries = {
             item["url"]: item
-            for item in json.loads((ROOT / "data/content-metadata.json").read_text(encoding="utf-8"))
+            for item in json.loads(ops_path("data/content-metadata.json").read_text(encoding="utf-8"))
         }
         urls = (
             "/kor/column/overseas-stock-tax-2026.html",

@@ -9,6 +9,7 @@ from scripts.indexnow_submit import (
     GateError,
     build_report,
     candidate_urls,
+    changed_indexable_page_urls,
     ensure_same_host_https,
     should_skip_actor,
     submit_urls,
@@ -61,6 +62,23 @@ def test_non_published_manifest_has_no_automatic_candidates():
     }
 
     assert candidate_urls(manifest, {"kor/new/index.html"}) == []
+
+
+def test_changed_html_fallback_skips_noindex_missing_canonical_and_non_html(tmp_path):
+    (tmp_path / "kor").mkdir()
+    (tmp_path / "kor/ready.html").write_text(
+        '<link rel="canonical" href="https://emfls.github.io/kor/ready.html">', encoding="utf-8"
+    )
+    (tmp_path / "kor/private.html").write_text(
+        '<meta name="robots" content="noindex,follow"><link rel="canonical" href="https://emfls.github.io/kor/private.html">',
+        encoding="utf-8",
+    )
+    (tmp_path / "kor/no-canonical.html").write_text("<title>missing canonical</title>", encoding="utf-8")
+
+    assert changed_indexable_page_urls(
+        tmp_path,
+        {"kor/ready.html", "kor/private.html", "kor/no-canonical.html", "data/private.json", "missing.html"},
+    ) == ["https://emfls.github.io/kor/ready.html"]
 
 
 @pytest.mark.parametrize(

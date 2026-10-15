@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 from scripts.generate_recent_rss import collect_entries
+from scripts.ops_paths import ops_path
 from scripts.sitemap_audit import audit_local_sitemaps, render_root_index
 from scripts.content_launch_guard import (
     APPROVED_ARABIC_RETIREMENT_URLS,
@@ -54,7 +55,7 @@ def test_arabic_public_tree_is_retired():
 
 
 def test_retirement_override_records_only_the_user_approved_arabic_winners():
-    record = json.loads((ROOT / "data/locale-retirement-overrides.json").read_text(encoding="utf-8"))
+    record = json.loads(ops_path("data/locale-retirement-overrides.json").read_text(encoding="utf-8"))
 
     assert record["locale"] == "ae"
     assert record["decision"] == "RETIRED"
@@ -70,7 +71,7 @@ def test_retirement_override_records_only_the_user_approved_arabic_winners():
         "totalAdRevenue": 0.015871,
     }
     assert record["evidence"]["gsc"]["status"] == "NO_ROW"
-    assert _approved_arabic_retirement_paths(ROOT) == {
+    assert _approved_arabic_retirement_paths(ops_path("")) == {
         "ae/util/index.html",
         "ae/util/dice3d/index.html",
         "ae/util/text-cleaner/index.html",
@@ -99,7 +100,7 @@ def test_local_sitemaps_and_rss_contain_no_arabic_urls():
 
 def test_current_derived_inventories_contain_no_arabic_urls():
     for relative in CURRENT_DATA_FILES:
-        data = json.loads((ROOT / relative).read_text(encoding="utf-8"))
+        data = json.loads(ops_path(relative).read_text(encoding="utf-8"))
         assert not any(_contains_arabic_path(value) for value in _strings(data)), relative
 
 
@@ -124,7 +125,7 @@ def test_active_ga4_manifests_and_generators_have_no_arabic_locale():
 
     breadcrumb_generator = (ROOT / "scripts/apply_breadcrumb_metadata.py").read_text(encoding="utf-8")
     assert "العربية" not in breadcrumb_generator
-    assert "/ae/" not in (ROOT / "reports/related-links-pilot.md").read_text(encoding="utf-8")
+    assert "/ae/" not in ops_path("reports/related-links-pilot.md").read_text(encoding="utf-8")
 
 
 def test_raw_measurement_history_is_preserved():
@@ -133,4 +134,4 @@ def test_raw_measurement_history_is_preserved():
         "data/performance/gsc-latest.json",
         "data/performance/2026-08-01.json",
     ):
-        assert (ROOT / relative).is_file()
+        assert ops_path(relative).is_file()

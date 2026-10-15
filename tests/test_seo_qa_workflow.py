@@ -7,6 +7,14 @@ WORKFLOW = ROOT / ".github/workflows/seo-qa.yml"
 
 
 class SeoQaWorkflowTests(unittest.TestCase):
+    def test_github_seo_qa_is_manual_only(self):
+        source = WORKFLOW.read_text(encoding="utf-8")
+        trigger_block = source.split("permissions:", 1)[0]
+        self.assertIn("workflow_dispatch:", trigger_block)
+        self.assertNotIn("pull_request:", trigger_block)
+        self.assertNotIn("push:", trigger_block)
+        self.assertNotIn("schedule:", trigger_block)
+
     def test_workflow_runs_audit_gate_and_full_tests_without_rewriting_baseline(self):
         source = WORKFLOW.read_text(encoding="utf-8")
         self.assertIn("scripts/seo_audit.py", source)

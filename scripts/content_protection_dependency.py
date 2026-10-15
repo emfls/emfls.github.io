@@ -20,12 +20,14 @@ if __package__ in {None, ""}:
         _approved_arabic_retirement_paths,
     )
     from content_launch_policy import normalize_url_identity
+    from ops_paths import ops_root
 else:
     from scripts.content_launch_guard import (
         APPROVED_ARABIC_RETIREMENT_URLS,
         _approved_arabic_retirement_paths,
     )
     from scripts.content_launch_policy import normalize_url_identity
+    from scripts.ops_paths import ops_root
 
 
 PROTECTION_JSON = (
@@ -168,19 +170,20 @@ def _normalized_routes(rows: list[dict[str, Any]], errors: list[str], label: str
     return routes, invalid
 
 
-def build_protection_report(root: str | Path) -> dict[str, Any]:
+def build_protection_report(root: str | Path, ops_dir: str | Path | None = None) -> dict[str, Any]:
     """Validate real policy inputs; any missing or inconsistent source remains UNKNOWN."""
     root = Path(root).resolve()
+    state_root = Path(ops_dir).resolve() if ops_dir else (
+        root if (root / PROTECTION_JSON[0]).is_file() else ops_root(default=root)
+    )
     errors: list[str] = []
-    sources = {
-        path: _source_fingerprint(root, path)
-        for path in (*PROTECTION_JSON, *POLICY_FILES)
-    }
+    sources = {path: _source_fingerprint(state_root, path) for path in PROTECTION_JSON}
+    sources.update({path: _source_fingerprint(root, path) for path in POLICY_FILES})
     for path, fingerprint in sources.items():
         if fingerprint["status"] != "READ":
             errors.append(f"SOURCE_UNAVAILABLE:{path}")
 
-    documents = {path: _read_json(root, path, errors) for path in PROTECTION_JSON}
+    documents = {path: _read_json(state_root, path, errors) for path in PROTECTION_JSON}
     revenue = documents["data/revenue-opportunities.json"]
     winners = _valid_rows(revenue, "protectedWinners", "data/revenue-opportunities.json", errors)
     if not winners:
@@ -239,7 +242,7 @@ def build_protection_report(root: str | Path) -> dict[str, Any]:
     else:
         decision_routes, invalid_decision_urls = [], 0
 
-    queue = _read_json(root, "data/content-launch-queue.json", errors)
+    queue = _read_json(state_root, "data/content-launch-queue.json", errors)
     queue_rows = _valid_rows(queue, "queue", "data/content-launch-queue.json", errors)
     queue_statuses = Counter(str(row.get("status") or "UNKNOWN") for row in queue_rows)
     queue_routes, invalid_queue_urls = _normalized_routes(
@@ -270,7 +273,7 @@ def build_protection_report(root: str | Path) -> dict[str, Any]:
             else:
                 ymyl_routes.append(route)
 
-    approved_arabic_paths = _approved_arabic_retirement_paths(root)
+    approved_arabic_paths = _approved_arabic_retirement_paths(state_root)
     if len(approved_arabic_paths) != len(APPROVED_ARABIC_RETIREMENT_URLS):
         errors.append("ARABIC_EXCEPTION_CONTRACT_UNKNOWN")
     protected_routes = set(winner_routes)
@@ -768,9 +771,9 @@ def scan_dependencies(root: str | Path, targets: list[dict[str, Any]]) -> dict[s
     }
 
 
-def build_report(root: str | Path, target_set_path: str | Path) -> dict[str, Any]:
+def build_report(root: str | Path, target_set_path: str | Path, ops_dir: str | Path | None = None) -> dict[str, Any]:
     targets = load_target_set(target_set_path)
-    protection = build_protection_report(root)
+    protection = build_protection_report(root, ops_dir=ops_dir)
     target_paths = {"/" + str(target["path"]).lstrip("/") for target in targets}
     route_protection = {
         label: sorted(target_paths & {"/" + str(route).lstrip("/") for route in routes})
@@ -792,6 +795,7 @@ def build_report(root: str | Path, target_set_path: str | Path) -> dict[str, Any
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=".", help="repository working tree")
+    parser.add_argument("--ops-dir", type=Path, help="external EMFLS operations directory")
     parser.add_argument(
         "--targets",
         default="tests/fixtures/c01-review-set-50.json",
@@ -799,7 +803,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--output", help="optional JSON output path")
     args = parser.parse_args(argv)
-    report = build_report(args.root, args.targets)
+    report = build_report(args.root, args.targets, ops_dir=args.ops_dir)
     rendered = json.dumps(report, ensure_ascii=False, indent=2) + "\n"
     if args.output:
         Path(args.output).write_text(rendered, encoding="utf-8")

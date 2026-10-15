@@ -15,6 +15,7 @@ from scripts.seo_audit import (
     serialize_audit,
     serialize_compact_audit,
 )
+from scripts.ops_paths import ops_path
 
 
 BASE_COMMITTED_PAGE_FIELDS = (
@@ -27,16 +28,31 @@ BASE_COMMITTED_PAGE_FIELDS = (
 
 class SeoAuditParserTests(unittest.TestCase):
     def test_site_audit_artifact_stays_below_git_host_blob_limit(self):
-        path = Path(__file__).resolve().parents[1] / "data/site-audit.json"
+        path = ops_path("data/site-audit.json")
         self.assertLess(path.stat().st_size, MAX_AUDIT_FILE_BYTES)
 
     def test_committed_site_audit_stays_below_25_mb_target(self):
-        path = Path(__file__).resolve().parents[1] / "data/site-audit.json"
+        path = ops_path("data/site-audit.json")
         self.assertLess(path.stat().st_size, 25 * 1024 * 1024)
 
     def test_site_audit_serializer_rejects_oversized_output(self):
         with self.assertRaisesRegex(ValueError, "site audit is"):
             serialize_audit({"payload": "x" * 20}, max_bytes=10)
+
+    def test_site_audit_excludes_stockwiki_build_output_and_keeps_source_pages(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = root / "kor/stockwiki/index.html"
+            generated = root / "kor/stockwiki/dist/index.html"
+            unrelated = root / "kor/report/dist/example.html"
+            for path in (source, generated, unrelated):
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("<html><head><title>Page</title></head><body>Public page</body></html>", encoding="utf-8")
+
+            report = audit_site(root)
+
+        paths = {page["path"] for page in report["pages"]}
+        self.assertEqual(paths, {"kor/stockwiki/index.html", "kor/report/dist/example.html"})
 
     def test_compact_audit_keeps_the_legacy_contract_and_drops_scoring_payloads(self):
         legacy_page = {field: f"legacy-{field}" for field in BASE_COMMITTED_PAGE_FIELDS}

@@ -39,10 +39,10 @@ def test_seo_qa_measurement_validator_uses_fresh_page_scores():
     assert "python3 scripts/validate_measurement_artifact.py data/page-performance.json --page-scores data/page-scores.json" in workflow
 
 
-def test_derived_publisher_runs_after_daily_collectors_and_stages_only_derived_outputs():
+def test_derived_publisher_is_manual_only_and_stages_only_derived_outputs():
     workflow = (ROOT / ".github" / "workflows" / "derived-measurement-publisher.yml").read_text(encoding="utf-8")
-    assert 'cron: "17 3 * * *"' in workflow
     assert "workflow_dispatch:" in workflow
+    assert "schedule:" not in workflow.split("permissions:", 1)[0]
     assert "group: site-measurement-collection\n  cancel-in-progress: false\n  queue: max" in workflow
     assert "scripts/validate_measurement_sources.py" in workflow
     assert workflow.index("Validate source snapshots") < workflow.index("Regenerate current site audit")
@@ -140,12 +140,18 @@ def test_derived_publisher_workflow_parses_as_yaml():
     assert "jobs" in workflow and "publish" in workflow["jobs"]
 
 
-def test_source_collection_schedules_precede_derived_publisher():
+def test_local_collections_are_manual_only_and_partial_adsense_stays_scheduled():
     publisher = (ROOT / ".github" / "workflows" / "derived-measurement-publisher.yml").read_text(encoding="utf-8")
-    assert 'cron: "47 1 * * *"' in (ROOT / ".github/workflows/adsense-collection.yml").read_text(encoding="utf-8")
-    assert 'cron: "17 2 * * *"' in (ROOT / ".github/workflows/ga4-collection.yml").read_text(encoding="utf-8")
-    assert 'cron: "47 2 * * *"' in _workflow_text()
-    assert 'cron: "17 3 * * *"' in publisher
+    adsense = (ROOT / ".github/workflows/adsense-collection.yml").read_text(encoding="utf-8")
+    assert 'cron: "47 1 * * *"' in adsense
+    for workflow in (
+        (ROOT / ".github/workflows/ga4-collection.yml").read_text(encoding="utf-8"),
+        _workflow_text(),
+        publisher,
+    ):
+        trigger_block = workflow.split("permissions:", 1)[0]
+        assert "workflow_dispatch:" in trigger_block
+        assert "schedule:" not in trigger_block
 
 
 def test_gsc_workflow_keeps_page_and_sidecar_collection_without_derived_publication():
@@ -154,7 +160,7 @@ def test_gsc_workflow_keeps_page_and_sidecar_collection_without_derived_publicat
     assert "collection_mode:" in workflow
     assert "default: page" in workflow
     assert "options: [page, camping-query, opportunity-query, sitewide-query]" in workflow
-    assert "schedule:" in workflow
+    assert "schedule:" not in workflow.split("permissions:", 1)[0]
     assert "workflow_dispatch:" in workflow
 
     page_only = "if: github.event_name != 'workflow_dispatch' || inputs.collection_mode == 'page'"

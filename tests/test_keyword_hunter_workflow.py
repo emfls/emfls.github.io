@@ -5,15 +5,19 @@ import re
 import subprocess
 
 from scripts.keyword_hunter_persist import BROAD_PATHS, TARGETED_FIXED_PATHS
+from scripts.ops_paths import ops_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_keyword_hunter_has_bounded_scheduled_workflow():
+def test_keyword_hunter_has_bounded_manual_workflow():
     text = (ROOT / ".github/workflows/keyword-hunter.yml").read_text(encoding="utf-8")
-    assert 'cron: "17 */2 * * *"' in text
-    assert "workflow_dispatch:" in text
+    trigger_block = text.split("permissions:", 1)[0]
+    assert "workflow_dispatch:" in trigger_block
+    assert "schedule:" not in trigger_block
+    assert "push:" not in trigger_block
+    assert "pull_request:" not in trigger_block
     assert "contents: write" in text
     assert "python3 scripts/keyword_hunter.py" in text
     assert "NAVER_SEARCHAD_API_KEY: ${{ secrets.NAVER_SEARCHAD_API_KEY }}" in text
@@ -126,10 +130,10 @@ def test_supervised_queue_validator_keeps_korean_url_guard(tmp_path):
     assert result.returncode != 0
 
 
-def test_targeted_dispatch_is_explicit_and_does_not_change_scheduled_or_default_broad_run():
+def test_targeted_dispatch_is_explicit_and_keeps_the_default_broad_run():
     text = (ROOT / ".github/workflows/keyword-hunter.yml").read_text(encoding="utf-8")
 
-    assert 'cron: "17 */2 * * *"' in text
+    assert "schedule:" not in text.split("permissions:", 1)[0]
     assert "mode:" in text
     assert "default: broad" in text
     assert "options: [broad, targeted]" in text
@@ -211,19 +215,14 @@ def test_report_artifact_upload_is_bounded_and_keeps_targeted_directory():
     assert re.search(r"(?m)^\s*retention-days:\s*30\s*$", upload)
 
 
-def test_historical_broad_reports_remain_tracked_and_unmodified():
+def test_historical_broad_reports_are_preserved_in_ops_and_match_git_history():
     tracked = subprocess.check_output(
         ["git", "ls-tree", "-r", "--name-only", "HEAD", "reports/keyword-hunter"],
         cwd=ROOT, text=True,
     ).splitlines()
     assert len(tracked) >= 131
-    assert all((ROOT / relative).is_file() for relative in tracked)
-    for args in (
-        ["diff", "--name-status", "HEAD"],
-        ["diff", "--cached", "--name-status", "HEAD"],
-    ):
-        changes = subprocess.check_output(["git", *args], cwd=ROOT, text=True).splitlines()
-        assert not any(
-            line.startswith("D\t") and line.split("\t", 1)[1].startswith("reports/keyword-hunter/")
-            for line in changes
-        )
+    for relative in tracked:
+        working_copy = ops_path(relative)
+        historical = subprocess.check_output(["git", "show", f"HEAD:{relative}"], cwd=ROOT)
+        assert working_copy.is_file()
+        assert working_copy.read_bytes() == historical

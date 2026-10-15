@@ -26,9 +26,9 @@ class HeadingParser(PageParser):
         if tag in {'h1','h2','h3','h4','h5','h6'} and self.heading is not None:
             self.headings.append(' '.join(''.join(self.heading).split()));self.heading=None
 
-def inventory(root):
+def inventory(root, metadata_path=None):
     root=Path(root); pages=[]
-    metadata_path=root/'data/content-metadata.json'
+    metadata_path=Path(metadata_path) if metadata_path else root/'data/content-metadata.json'
     metadata=json.loads(metadata_path.read_text()) if metadata_path.exists() else []
     by_path={urlparse(r.get('url','')).path:r for r in metadata}
     for path in sorted(root.rglob('*.html')):

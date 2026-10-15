@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import html as html_lib
 import json
+import os
 import re
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -116,9 +117,11 @@ def build_home_feed(rows: list[dict]) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument("--ops-dir", type=Path, default=Path(os.environ["EMFLS_OPS_DIR"]) if os.environ.get("EMFLS_OPS_DIR") else None)
     args = parser.parse_args()
     root = args.root.resolve()
-    override_path = root / "data/content-overrides-ko.json"
+    ops_dir = (args.ops_dir or root).resolve()
+    override_path = ops_dir / "data/content-overrides-ko.json"
     overrides = json.loads(override_path.read_text(encoding="utf-8")) if override_path.exists() else {}
     rows = build_index(root, overrides)
     feed = build_home_feed(rows)

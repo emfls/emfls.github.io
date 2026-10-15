@@ -146,6 +146,7 @@ def validate_parity(
     analysis_commit,
     workflow_run_id,
     workflow_run_attempt,
+    repository_root=None,
     pull_request_head_sha=None,
     ga4_source_revision=None,
     adsense_source_revision=None,
@@ -160,6 +161,7 @@ def validate_parity(
         analysis_commit=analysis_commit,
         workflow_run_id=workflow_run_id,
         workflow_run_attempt=workflow_run_attempt,
+        repository_root=repository_root,
         pull_request_head_sha=pull_request_head_sha,
         ga4_source_revision=ga4_source_revision,
         adsense_source_revision=adsense_source_revision,
@@ -206,6 +208,7 @@ def main():
     for name in ("full", "compact", "manifest", "page-scores", "revenue-opportunities", "audit", "experiments", "optimization-history", "content-experiments", "ga4-snapshot", "gsc-snapshot", "adsense-snapshot"):
         parser.add_argument("--" + name, type=Path, required=True)
     parser.add_argument("--analysis-commit", required=True)
+    parser.add_argument("--repository-root", type=Path, default=Path.cwd())
     parser.add_argument("--workflow-run-id", required=True)
     parser.add_argument("--workflow-run-attempt", required=True)
     parser.add_argument("--naver-snapshot", type=Path, required=True)
@@ -230,6 +233,7 @@ def main():
         analysis_commit=args.analysis_commit,
         workflow_run_id=args.workflow_run_id,
         workflow_run_attempt=args.workflow_run_attempt,
+        repository_root=args.repository_root,
         pull_request_head_sha=args.pull_request_head_sha,
         ga4_source_revision=args.ga4_source_revision,
         adsense_source_revision=args.adsense_source_revision,

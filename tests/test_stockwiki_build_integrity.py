@@ -161,13 +161,13 @@ class StockWikiBuildIntegrityTest(unittest.TestCase):
         self.assertNotIn("sitemap-index.xml", robots)
         self.assertTrue((STOCKWIKI / "sitemap.xml").is_file())
 
-    def test_root_build_workflow_is_read_only_and_path_scoped(self):
+    def test_root_build_workflow_is_read_only_and_manual_only(self):
         workflow_path = ROOT / ".github/workflows/stockwiki-build-qa.yml"
         self.assertTrue(workflow_path.is_file())
         workflow = workflow_path.read_text(encoding="utf-8")
-        self.assertRegex(workflow, r"(?m)^  pull_request:\n    paths:")
+        trigger_block = workflow.split("permissions:", 1)[0]
         self.assertRegex(workflow, r"(?m)^  workflow_dispatch:")
-        self.assertNotRegex(workflow, r"(?m)^\s+schedule:")
+        self.assertNotRegex(trigger_block, r"(?m)^\s+(?:pull_request|push|schedule):")
         self.assertRegex(workflow, r"(?m)^permissions:\n  contents: read$")
         self.assertRegex(workflow, r"(?m)^\s+node-version:\s*['\"]?20")
         for required in ("npm ci", "npm run build", "test_canonical_inventory.py", "test_stockwiki_build_integrity.py", "test_stockwiki_ad_safety.py"):

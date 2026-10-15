@@ -271,6 +271,7 @@ def _add_inputs(parser):
     parser.add_argument("--adsense", type=Path, required=True)
     parser.add_argument("--naver", type=Path, required=True)
     parser.add_argument("--analysis-commit", required=True)
+    parser.add_argument("--repository-root", type=Path, default=Path.cwd())
     parser.add_argument("--pull-request-head-sha")
     parser.add_argument("--ga4-source-revision")
     parser.add_argument("--adsense-source-revision")
@@ -299,6 +300,7 @@ def main():
         result = verify_manifest(
             _read_json(args.verify, "manifest"),
             *inputs,
+            repository_root=args.repository_root,
             pull_request_head_sha=args.pull_request_head_sha,
             ga4_source_revision=args.ga4_source_revision,
             adsense_source_revision=args.adsense_source_revision,
@@ -306,6 +308,7 @@ def main():
     else:
         manifest = build_manifest(
             *inputs,
+            repository_root=args.repository_root,
             pull_request_head_sha=args.pull_request_head_sha,
             ga4_source_revision=args.ga4_source_revision,
             adsense_source_revision=args.adsense_source_revision,

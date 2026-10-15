@@ -139,17 +139,14 @@ class AdSenseCollectorCommandTest(unittest.TestCase):
         for derived_publisher in ("scripts/seo_audit.py", "scripts/quality_audit.py", "scripts/revenue_growth.py"):
             self.assertNotIn(derived_publisher, workflow)
 
-    def test_adsense_snapshot_runs_before_existing_ga4_gsc_consumers(self):
-        workflow_crons = {}
-        for name in ("adsense-collection.yml", "ga4-collection.yml", "gsc-collection.yml"):
+    def test_adsense_stays_scheduled_while_localized_sources_are_manual_only(self):
+        adsense = (ROOT / ".github/workflows/adsense-collection.yml").read_text(encoding="utf-8")
+        self.assertIn('cron: "47 1 * * *"', adsense)
+        for name in ("ga4-collection.yml", "gsc-collection.yml"):
             workflow = (ROOT / ".github/workflows" / name).read_text(encoding="utf-8")
-            workflow_crons[name] = next(line.split('"')[1] for line in workflow.splitlines() if "cron:" in line)
-
-        self.assertEqual(workflow_crons, {
-            "adsense-collection.yml": "47 1 * * *",
-            "ga4-collection.yml": "17 2 * * *",
-            "gsc-collection.yml": "47 2 * * *",
-        })
+            trigger_block = workflow.split("permissions:", 1)[0]
+            self.assertIn("workflow_dispatch:", trigger_block)
+            self.assertNotIn("schedule:", trigger_block)
         revenue_growth = (ROOT / "scripts/revenue_growth.py").read_text(encoding="utf-8")
         self.assertIn('default=Path("data/performance/adsense-latest.json")', revenue_growth)
 

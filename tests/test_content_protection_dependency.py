@@ -11,6 +11,7 @@ from scripts.content_protection_dependency import (
     load_target_set,
     scan_dependencies,
 )
+from scripts.ops_paths import ops_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -54,7 +55,7 @@ def write_minimal_protection_sources(root, winner_urls):
     })
     (root / "data").mkdir(parents=True, exist_ok=True)
     (root / "data/locale-retirement-overrides.json").write_bytes(
-        (ROOT / "data/locale-retirement-overrides.json").read_bytes()
+        ops_path("data/locale-retirement-overrides.json").read_bytes()
     )
     (root / "scripts").mkdir(parents=True, exist_ok=True)
     for name in ("content_launch_guard.py", "content_launch_policy.py"):
@@ -97,7 +98,7 @@ class ContentProtectionDependencyTest(unittest.TestCase):
         self.assertEqual(report["exceptions"]["approvedArabicCount"], 4)
         self.assertFalse(report["deletionAuthorized"])
         revenue_source = report["sources"]["data/revenue-opportunities.json"]
-        source_bytes = (ROOT / "data/revenue-opportunities.json").read_bytes()
+        source_bytes = ops_path("data/revenue-opportunities.json").read_bytes()
         self.assertEqual(revenue_source["sha256"], hashlib.sha256(source_bytes).hexdigest())
         self.assertEqual(revenue_source["bytes"], len(source_bytes))
 

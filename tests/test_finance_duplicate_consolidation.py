@@ -2,6 +2,7 @@ import json
 import unittest
 from html.parser import HTMLParser
 from pathlib import Path
+from scripts.ops_paths import ops_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -44,7 +45,7 @@ class FinanceDuplicateConsolidationTests(unittest.TestCase):
     def test_representatives_use_current_review_date_and_official_sources(self):
         metadata = {
             item["url"]: item
-            for item in json.loads((ROOT / "data/content-metadata.json").read_text(encoding="utf-8"))
+            for item in json.loads(ops_path("data/content-metadata.json").read_text(encoding="utf-8"))
         }
         for _, representative in self.PAIRS:
             with self.subTest(representative=representative):

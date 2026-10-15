@@ -12,6 +12,11 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 try:
+    from .ops_paths import ops_path
+except ImportError:
+    from ops_paths import ops_path
+
+try:
     from .collect_gsc_snapshot import PROPERTY_URL, SOURCE, normalize_url
 except ImportError:
     from collect_gsc_snapshot import PROPERTY_URL, SOURCE, normalize_url
@@ -299,10 +304,10 @@ def _create_service(service_account_info):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--page-performance", type=Path, default=Path("data/page-performance.json"))
-    parser.add_argument("--revenue-opportunities", type=Path, default=Path("data/revenue-opportunities.json"))
-    parser.add_argument("--gsc-snapshot", type=Path, default=Path("data/performance/gsc-latest.json"))
-    parser.add_argument("--output", type=Path, default=Path("data/performance/gsc-opportunity-queries-latest.json"))
+    parser.add_argument("--page-performance", type=Path, default=ops_path("data/page-performance.json"))
+    parser.add_argument("--revenue-opportunities", type=Path, default=ops_path("data/revenue-opportunities.json"))
+    parser.add_argument("--gsc-snapshot", type=Path, default=ops_path("data/performance/gsc-latest.json"))
+    parser.add_argument("--output", type=Path, default=ops_path("data/performance/gsc-opportunity-queries-latest.json"))
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 

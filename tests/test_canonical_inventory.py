@@ -43,7 +43,7 @@ def public_url(relative_path: str) -> str:
 def public_html_pages():
     return (
         page for page in sorted(ROOT.rglob("*.html"))
-        if ".worktrees" not in page.relative_to(ROOT).parts
+        if not ({".worktrees", "node_modules", "dist"} & set(page.relative_to(ROOT).parts))
     )
 
 

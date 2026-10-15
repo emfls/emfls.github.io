@@ -11,6 +11,7 @@ import pytest
 from scripts.content_url_planner import plan_url
 from scripts.external_content_opportunity import launch_readiness
 from scripts.content_launch_guard import _validated_c02_034_approval
+from scripts.ops_paths import ops_path
 
 
 REPO = Path(__file__).resolve().parents[1]
@@ -301,7 +302,7 @@ def run_launch(tmp_path, *, sources=(), external=(), decisions=None, proposals=(
         ["python3", str(guard), "--root", str(root), "--manifest",
          "data/content-launch-manifest.json", "--base-ref", base_sha],
         cwd=REPO, text=True, capture_output=True, check=False,
-        env={**os.environ, "PYTHONPATH": str(REPO)},
+        env={**os.environ, "PYTHONPATH": str(REPO), "EMFLS_OPS_DIR": str(root)},
     )
     try:
         payload = json.loads(result.stdout)
@@ -402,7 +403,7 @@ def test_c02_034_checked_in_approval_is_ct_scoped_and_source_backed(monkeypatch)
             return cls(2026, 10, 11, tzinfo=tz)
 
     monkeypatch.setattr("scripts.content_launch_guard.datetime", FrozenDateTime)
-    approvals = json.loads((REPO / "data/content-launch-experiment-approvals.json").read_text(encoding="utf-8"))
+    approvals = json.loads(ops_path("data/content-launch-experiment-approvals.json").read_text(encoding="utf-8"))
     record, issue = _validated_c02_034_approval({"json": {
         "data/content-launch-experiment-approvals.json": approvals,
     }})

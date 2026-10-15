@@ -1,6 +1,7 @@
 import json
 import unittest
 from pathlib import Path
+from scripts.ops_paths import ops_path
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -43,7 +44,7 @@ class FinanceTaxSourceAuditTests(unittest.TestCase):
     def test_metadata_marks_only_audited_pages_as_verified(self):
         entries = {
             item["url"]: item
-            for item in json.loads((ROOT / "data/content-metadata.json").read_text(encoding="utf-8"))
+            for item in json.loads(ops_path("data/content-metadata.json").read_text(encoding="utf-8"))
         }
         for url in PAGES:
             with self.subTest(url=url):

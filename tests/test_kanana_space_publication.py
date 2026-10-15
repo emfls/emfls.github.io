@@ -7,6 +7,7 @@ import unittest
 from urllib.parse import urljoin
 from xml.etree import ElementTree
 
+
 ROOT = Path(__file__).resolve().parents[1]
 PATH = 'kor/report/it/kanana-space-pre-registration-guide.html'
 URL = 'https://emfls.github.io/' + PATH
@@ -24,8 +25,8 @@ class Document(HTMLParser):
 
 
 def versioned_manifest():
-    # CI regenerates the working copy; the Git index retains the proposed source.
-    return json.loads(subprocess.check_output(['git', 'show', ':data/content-launch-manifest.json'], cwd=ROOT))
+    # This release-history assertion targets the immutable checked-in pre-migration baseline.
+    return json.loads(subprocess.check_output(["git", "show", "HEAD:data/content-launch-manifest.json"], cwd=ROOT))
 
 
 def history(record):

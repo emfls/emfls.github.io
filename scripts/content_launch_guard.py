@@ -5,6 +5,7 @@ import argparse
 import csv
 import io
 import json
+import os
 import re
 import subprocess
 import unicodedata
@@ -976,15 +977,16 @@ def _published_count_for_day(snapshot, day):
     return max(counts, default=0)
 
 
-def _validate_candidate_bindings(root, manifest, added_html, snapshot, errors):
+def _validate_candidate_bindings(root, manifest, added_html, snapshot, errors, ops_dir=None):
     root = Path(root)
+    state_root = Path(ops_dir or root)
     if not isinstance(snapshot, dict):
         errors.add("TRUSTED_BASE_REVISION_UNAVAILABLE")
         return
     try:
         sources = _trusted_candidate_records(snapshot)
         base_decisions = _decision_map(snapshot["json"]["data/content-launch-decisions.json"])
-        head_decisions = _decision_map(_read(root / "data/content-launch-decisions.json", {}))
+        head_decisions = _decision_map(_read(state_root / "data/content-launch-decisions.json", {}))
         published_keywords, published_urls, published_external_ids = _base_published_identities(snapshot)
     except (KeyError, TypeError, ValueError, OSError, csv.Error):
         errors.add("TRUSTED_BASE_REVISION_UNAVAILABLE")
@@ -1190,12 +1192,13 @@ def _changed_tuple(item):
     raise ValueError("changed path entries must contain status/path or status/path/blob transition")
 
 
-def validate_launch(root, manifest, changed_paths, trusted_base=None):
+def validate_launch(root, manifest, changed_paths, trusted_base=None, ops_dir=None):
     root = Path(root)
+    state_root = Path(ops_dir or root)
     changed = [_changed_tuple(row) for row in changed_paths]
     errors = set()
     changed_names = {row[1] for row in changed}
-    approved_arabic_retirement_paths = _approved_arabic_retirement_paths(root)
+    approved_arabic_retirement_paths = _approved_arabic_retirement_paths(state_root)
     added_html = {row[1] for row in changed if row[0] == "A" and row[1].endswith(".html")}
     expected_html = set(manifest.get("contentPaths") or [_url_to_path(url) for url in manifest.get("urls") or []])
     # A manifest can change for launch bookkeeping without adding content.
@@ -1217,7 +1220,7 @@ def validate_launch(root, manifest, changed_paths, trusted_base=None):
             errors.add("TRUSTED_BASE_REVISION_REQUIRED")
     if launch_changed:
         if trusted_base is not None:
-            _validate_candidate_bindings(root, manifest, added_html, trusted_base, errors)
+            _validate_candidate_bindings(root, manifest, added_html, trusted_base, errors, ops_dir=state_root)
         else:
             candidate_ids = manifest.get("candidateIds")
             if (
@@ -1241,7 +1244,7 @@ def validate_launch(root, manifest, changed_paths, trusted_base=None):
                 if path in KEYWORD_CANDIDATE_PATHS
             )
             try:
-                editorial_decisions = load_decisions(root / "data/content-launch-decisions.json")
+                editorial_decisions = load_decisions(state_root / "data/content-launch-decisions.json")
             except (OSError, TypeError, ValueError):
                 editorial_decisions = {}
                 errors.add("EDITORIAL_DECISIONS_UNAVAILABLE")
@@ -1270,9 +1273,9 @@ def validate_launch(root, manifest, changed_paths, trusted_base=None):
         errors.add("RAW_MEASUREMENT_HISTORY_DELETION_NOT_ALLOWED")
 
     base_documents = trusted_base.get("json", {}) if trusted_base else {}
-    ctr = base_documents.get("data/experiments.json") or _read(root / "data/experiments.json", {"experiments": []})
+    ctr = base_documents.get("data/experiments.json") or _read(state_root / "data/experiments.json", {"experiments": []})
     protected_experiments = {_url_to_path(row.get("url")) for row in ctr.get("experiments") or [] if row.get("status") == "OBSERVING"}
-    revenue = base_documents.get("data/revenue-opportunities.json") or _read(root / "data/revenue-opportunities.json", {})
+    revenue = base_documents.get("data/revenue-opportunities.json") or _read(state_root / "data/revenue-opportunities.json", {})
     protected_winners = {_url_to_content_path(row.get("url")) for row in revenue.get("protectedWinners") or []}
     if changed_names & protected_experiments:
         errors.add("PROTECTED_EXPERIMENT_CHANGED")
@@ -1310,7 +1313,7 @@ def validate_launch(root, manifest, changed_paths, trusted_base=None):
     if not launch_changed:
         return sorted(errors)
 
-    audit = base_documents.get("data/site-audit.json") or _read(root / "data/site-audit.json", {"pages": []})
+    audit = base_documents.get("data/site-audit.json") or _read(state_root / "data/site-audit.json", {"pages": []})
     manifest_urls = set(manifest.get("urls") or [])
     existing_rows = [
         row
@@ -1390,14 +1393,15 @@ def _git_changes(root, base_ref):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, default=Path("."))
-    parser.add_argument("--manifest", type=Path, default=Path("data/content-launch-manifest.json"))
+    parser.add_argument("--ops-dir", type=Path, default=Path(os.environ["EMFLS_OPS_DIR"]) if os.environ.get("EMFLS_OPS_DIR") else None)
+    parser.add_argument("--manifest", type=Path, default=Path(os.environ["EMFLS_OPS_DIR"]) / "data/content-launch-manifest.json" if os.environ.get("EMFLS_OPS_DIR") else Path("data/content-launch-manifest.json"))
     parser.add_argument("--base-ref", default="HEAD")
     args = parser.parse_args()
     manifest = _read(args.root / args.manifest, {})
     try:
         trusted_base = _trusted_base_snapshot(args.root, args.base_ref)
         changed_paths = _git_changes(args.root, trusted_base["revision"])
-        errors = validate_launch(args.root, manifest, changed_paths, trusted_base=trusted_base)
+        errors = validate_launch(args.root, manifest, changed_paths, trusted_base=trusted_base, ops_dir=args.ops_dir)
     except (OSError, TypeError, ValueError, KeyError, subprocess.CalledProcessError, csv.Error):
         errors = ["TRUSTED_BASE_REVISION_UNAVAILABLE"]
     print(json.dumps({"status": "FAIL" if errors else "PASS", "errors": errors}))

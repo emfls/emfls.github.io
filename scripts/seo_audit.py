@@ -335,6 +335,8 @@ def audit_site(root):
         if any(part in {".git", ".venv", "node_modules"} for part in path.parts):
             continue
         relative = path.relative_to(root)
+        if relative.parts[:3] == ("kor", "stockwiki", "dist"):
+            continue
         if relative.as_posix() == "reports/site-quality-dashboard.html":
             continue
         try:
