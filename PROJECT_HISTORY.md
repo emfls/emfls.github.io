@@ -1,5 +1,15 @@
 # PROJECT HISTORY
 
+## 2026-10-15 — [13차] 캠핑 사실정정 5페이지
+
+- [22차] 사실검증(Claude 85점, 검수 완료)과 [12-보완] 동절기 근거로 부안·목포·당진·증평·남양주를 페이지별 커밋으로 수정했다. 등록·금지/제한·허용 미확인 3단계 분류, 장소별 출처/확인일 2026-10-15, 질문형 2026 제목/H1/meta description, 겨울 공공 캠핑 허브 링크 1개를 반영했다. 광고·GA4·URL/canonical은 보존했다.
+- 페이지 커밋: 부안 `3379f8e7e6`, 목포 `1f3dfe4b0f`, 당진 `5216aee594`, 증평 `336985b6a0`, 남양주 `14971ee05b`. 보호 페이지 exact 전이와 미승인 전이 음성 테스트 `00d76009f3`; 검색 인덱스 `a265b9cbbf`; 회귀 기대값 수정 `28d92de1fb`, `7072150331`.
+- 기준 `cecb20d263` 대비 12개 파일(+584/-1,698줄). 로컬 렌더·내부 링크·JSON-LD·광고/GA4/canonical 불변성 5/5, Launch Guard 42 passed, `git diff --check` PASS.
+- `local_qa.sh` run `20261015T194008+0900` 전체 PASS: unittest 914, pytest 1,592, 추가 무결성 19; 측정 parity 8,915 URL, GA4/GSC VERIFIED, AdSense PARTIAL; SEO 18,938 HTML/8,915 indexable/parser error 0, 신규 Critical/Warning 0, 보호 WINNER 1,670 유지; StockWiki/Pagefind PASS. QA로 재생성된 홈 피드와 공개 검색 인덱스는 복원했다.
+- main SHA `7072150331dfe90949468b3598b054d10ddf8f34`를 2026-10-15 19:58 KST경 fast-forward push했다(CI 대기 없음). 최초 응답은 이전 캐시였으나 20:00:04~05 KST 캐시 회피 재조회에서 5개 URL 모두 HTTP 200, 새 질문형 제목과 확인일 문구, CDN MISS를 확인했다.
+- 결과: [Notion 13차 완료 보고](https://app.notion.com/p/3fadb4c0a99181f6bcbdcd29ba45c1f4). 지시 상태 완료.
+- 근거: [22차 사실검증](https://app.notion.com/p/3fadb4c0a9918112a461fc2172a1e5ab), [12-보완 동절기 근거](https://app.notion.com/p/3f9db4c0a991818db751eac34edf82ae).
+
 ## 2026-10-15 — [12차] 캠핑 사실정정 5페이지
 
 - [21차] 공식자료 검수와 [12-보완] 동절기 근거를 반영해 옥천·의령·봉화·영양·충청 BEST를 수정했다. 각 장소를 등록 야영장, 금지·제한 구역, 허용 미확인 후보로 분류하고 출처·확인일 2026-10-15, 질문형 제목/H1/meta description, 겨울 공공 야영장 허브 링크를 적용했다. 광고·GA4·URL/canonical은 보존했다.

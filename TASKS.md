@@ -318,6 +318,9 @@
 - [x] 12차 · 캠핑 사실정정 5페이지 (21차 근거)
   - 옥천·의령·봉화·영양·충청 BEST를 각각 페이지 커밋으로 수정하고 exact protected transition 및 검색 인덱스를 갱신했다. `local_qa.sh` run `20261015T182737+0900` PASS: unittest 914, pytest 1,591, 집중 회귀 19, Guard·측정 parity·SEO·StockWiki PASS. main `61c4675de7af3722c51c39023cb6a59364e706fc` fast-forward push 후 공개 URL 5/5 HTTP 200 및 새 제목/정정 문구 확인. 세부는 [Notion 12차 결과](https://app.notion.com/p/3fadb4c0a99181e6a5b6c69caac575b4) 참조.
 
+- [x] 13차 · 캠핑 사실정정 5페이지 (22차 근거)
+  - 부안·목포·당진·증평·남양주를 각각 페이지 커밋으로 정정했다. protected exact 전이의 양성/음성 회귀, 검색 인덱스 동기화, 테스트 기대값 갱신을 포함한 9개 커밋·12개 파일이다. `local_qa.sh` run `20261015T194008+0900` PASS: unittest 914, pytest 1,592, 추가 무결성 19, Launch Guard·측정 parity·SEO·StockWiki/Pagefind PASS. main `7072150331dfe90949468b3598b054d10ddf8f34`를 19:58 KST경 fast-forward push했고, 20:00 KST 재조회에서 공개 URL 5/5가 HTTP 200 및 새 제목/정정일을 제공했다. 세부 전후표는 [Notion 13차 결과](https://app.notion.com/p/3fadb4c0a99181f6bcbdcd29ba45c1f4) 참조.
+
 
 - [x] 14 · Marble Flick — /game/MarbleFlick/
   - Closed on main after the approved four-commit chain: title-frozen English canary with generation-guarded AI callbacks, stale-collision isolation, chained-motion settlement barrier, live-count winner matrix, delayed turn handoff, AI-only local replay stats, DOM-safe initialization, H1/breadcrumb semantics, accessibility, VideoGame/BreadcrumbList schema, and RSS parity.
