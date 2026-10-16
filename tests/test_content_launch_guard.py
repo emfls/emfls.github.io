@@ -451,6 +451,48 @@ def test_guard_allows_only_exact_14th_camp_fact_transitions(tmp_path):
         )
 
 
+def test_guard_allows_only_exact_15th_camp_fact_transitions(tmp_path):
+    from scripts.content_launch_guard import APPROVED_TASK15_PROTECTED_TRANSITIONS
+
+    setup_data(tmp_path)
+    revenue_path = tmp_path / "data/revenue-opportunities.json"
+    revenue = json.loads(revenue_path.read_text(encoding="utf-8"))
+    paths = list(APPROVED_TASK15_PROTECTED_TRANSITIONS)
+    blocked_16th_paths = [
+        "kor/report/camp/uijeongbu.html",
+        "kor/report/camp/seosan.html",
+        "kor/report/camp/gochang.html",
+        "kor/report/camp/chuncheon.html",
+    ]
+    revenue["protectedWinners"].extend({"url": f"/{path}"} for path in paths + blocked_16th_paths)
+    write_json(revenue_path, revenue)
+
+    assert paths == [
+        "kor/report/camp/gumi.html",
+        "kor/report/camp/jangseong.html",
+        "kor/report/camp/gunpo.html",
+        "kor/report/camp/daebudo-camping.html",
+        "kor/report/camp/gimpo.html",
+        "kor/report/camp/dangjin.html",
+    ]
+    for path in paths:
+        before, after = APPROVED_TASK15_PROTECTED_TRANSITIONS[path]
+        assert (before, after) in APPROVED_PROTECTED_WINNER_TRANSITIONS[path]
+        assert validate_launch(tmp_path, manifest([]), [("M", path, before, after)]) == []
+        assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+            tmp_path, manifest([]), [("M", path, before, "f" * 40)]
+        )
+        assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+            tmp_path, manifest([]), [("M", path, "b" * 40, after)]
+        )
+
+    for path in blocked_16th_paths:
+        assert not APPROVED_PROTECTED_WINNER_TRANSITIONS.get(path)
+        assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+            tmp_path, manifest([]), [("M", path, "b" * 40, "f" * 40)]
+        )
+
+
 def test_guard_allows_only_exact_11th_jindo_winter_followup(tmp_path):
     setup_data(tmp_path)
     revenue_path = tmp_path / "data/revenue-opportunities.json"

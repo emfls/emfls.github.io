@@ -22,7 +22,10 @@ class FourteenthGa4PriorityBatchTest(unittest.TestCase):
             with self.subTest(relative=relative):
                 html = (ROOT / relative).read_text(encoding="utf-8")
                 compact = "".join(html.split())
-                self.assertRegex(html, r"2026-08-(?:10|12|13|26)")
+                if relative == "kor/report/camp/gimpo.html":
+                    self.assertIn("2026-10-15", html)
+                else:
+                    self.assertRegex(html, r"2026-08-(?:10|12|13|26)")
                 self.assertIn(f'"@type":"{schema}"', compact)
                 self.assertIn(limitation.lower(), html.lower())
                 self.assertIn(related, html)

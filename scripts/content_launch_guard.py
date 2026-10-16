@@ -329,6 +329,22 @@ APPROVED_TASK14_PROTECTED_TRANSITIONS = {
 for _path, _blob_pair in APPROVED_TASK14_PROTECTED_TRANSITIONS.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
+# [15차] User-directed official-source corrections for five camp pages plus the Dangjin winter-notice follow-up, 2026-10-16.
+# Reason: apply accepted P0/P1 findings from Notion [15차]/[24차] and verify the [13차] winter supplement.
+# Approve only these exact origin/main→page blob pairs; canonical URLs, AdSense, GA4, and all guard checks remain unchanged.
+# Evidence: https://app.notion.com/p/3fadb4c0a99181e7b595edf4daa31788 ;
+# https://app.notion.com/p/3fadb4c0a9918180ac93c7b6e4143df6 ; https://reservation.knps.or.kr/community/board/notice/boardDetail.do?seq=29193
+APPROVED_TASK15_PROTECTED_TRANSITIONS = {
+    "kor/report/camp/gumi.html": ("3230bfbc1366512bf868eddb3b9809d6afdf00bf", "72540c782ce2719d926c75003b97f58f849a55ce"),
+    "kor/report/camp/jangseong.html": ("a88adaf07ccd6df2817e8e2766d67f1ab9203edb", "b92bf0ada715e80756dc9ebcf30458ca6246c1a0"),
+    "kor/report/camp/gunpo.html": ("52171867915d2b3f8d1bd7820cc95e607f1b7416", "cf3aa68c1015a2bb72c9a89cc0811cd35c3273f4"),
+    "kor/report/camp/daebudo-camping.html": ("e889bc4380855684650b311ef1583eafaeea6cc9", "dc0694d3fe28c3c1da7a2fbb66851c20a6ef9325"),
+    "kor/report/camp/gimpo.html": ("3f4bb92dadada5563d2bff0338b8ba56d98e8ddf", "48d621257ed6866f6535f1c95dbe127c32d864df"),
+    "kor/report/camp/dangjin.html": ("4c7976b4f7a006c43fc15839f60c5f8e2414953b", "25fb6fe9af78732c25f1c2dc10d0a15c887c6b72"),
+}
+for _path, _blob_pair in APPROVED_TASK15_PROTECTED_TRANSITIONS.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
+
 # User-approved AdSense placement on the 29-day top-30 camping pages, 2026-10-14.
 # Evidence: reports/camp-cluster-inventory-2026-10-14.csv; exact blob pairs only.
 APPROVED_AD_PLACEMENT_TRANSITIONS = {

@@ -23,7 +23,7 @@ class JangseongCampRevenuePathTest(unittest.TestCase):
             self.assertNotIn(stale, html)
         schemas = re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)
         parsed = [json.loads(item) for item in schemas]
-        self.assertTrue(any(item.get("dateModified") == "2026-10-14" for item in parsed))
+        self.assertTrue(any(item.get("dateModified") == "2026-10-16" for item in parsed))
         self.assertIn("G-QP5Q67GE5B", html)
         self.assertIn("ca-pub-8830524482034754", html)
 

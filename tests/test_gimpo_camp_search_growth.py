@@ -13,7 +13,7 @@ class GimpoCampSearchGrowthTest(unittest.TestCase):
     def test_page_has_local_planning_path(self):
         html = PAGE.read_text(encoding="utf-8")
         for text in (
-            "김포 캠핑·차박 가이드 2026",
+            "김포에서 캠핑할 수 있는 곳은? 등록 야영장과 허용 미확인 장소 2026",
             "대표 장소", "주차", "화장실", "취사", "요금·허용 여부", "최종 재검토",
             "/kor/report/camp/gyeonggi-best.html",
             "/kor/report/camp/goyang.html",
@@ -25,7 +25,7 @@ class GimpoCampSearchGrowthTest(unittest.TestCase):
         for stale in ("김포 무료 캠핑", "김포 차박지", "김포 차크닉 명소"):
             self.assertNotIn(stale, html)
         blocks = re.findall(r'<script type="application/ld\+json">\s*(.*?)\s*</script>', html, re.S)
-        self.assertTrue(any(json.loads(block).get("dateModified") == "2026-08-26" for block in blocks))
+        self.assertTrue(any(json.loads(block).get("dateModified") == "2026-10-16" for block in blocks))
 
     def test_index_uses_current_snippet(self):
         html = INDEX.read_text(encoding="utf-8")
