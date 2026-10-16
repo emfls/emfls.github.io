@@ -291,6 +291,9 @@
 
 ## P2 - Medium
 
+- [x] JP Travel sitemap noindex URL cleanup
+  - 완료: 2026-10-16. `jp/report/travel/index.html`의 `noindex,follow`에 해당하는 sitemap URL 한 항목만 제거했다. URL 78 → 77. 나머지 sitemap URL·형식은 유지했으며 canonical 불일치 및 테스트 페이지 후보는 수정하지 않았다. 자세한 근거와 검증은 `PROJECT_HISTORY.md` 참조.
+
 - [x] GA4 source report and camping-cluster inventory snapshot
   - 완료: 2026-10-14. GA4 acquisition/source rows, camp landing-page rollups, template/coverage inventory and existing PAGE_SCORE/category fields saved under `data/performance/` and `reports/`.
   - Website content and noindex/delete/redirect state were unchanged. GA4 totalAdRevenue is not direct AdSense page revenue; landing-page views are session report totals, not lifetime page views.

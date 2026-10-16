@@ -1,3 +1,9 @@
+## 2026-10-16 — JP Travel sitemap noindex entry cleanup
+
+- `jp/report/travel/index.html` declares `noindex,follow`; removed only its `/jp/report/travel/` URL entry from `jp/report/travel/sitemap.xml`. URL count 78 → 77; remaining 77 URLs and XML structure preserved.
+- Sitemap audit found no canonical mismatches or filename-based test-page candidates among the listed routes. No canonical, test, or HTML page was changed.
+- XML parse, remaining-URL parity, noindex membership, and `git diff --check` passed.
+
 # PROJECT HISTORY
 
 ## 2026-10-15 — [13차] 캠핑 사실정정 5페이지
