@@ -1434,3 +1434,11 @@
 - 후속 단일 상태 조회에서 Pages run `38690149398`은 `success`로 종료된 것을 확인했다. 2026-10-15 15:06 KST 캐시 회피 HTTP 재확인 결과 5개 모두 HTTP 200, 정정된 2026 제목과 확인일을 제공했다(5/5). 운영 기록 커밋 `5d051cda45`의 Pages run `38690400132`는 당시 진행 중이었고 기다리지 않았다.
 - 다음 ChatGPT 검증용으로 GA4 최근 28일(v2~v7·17~19차 제외) 미검증 캠핑 페이지 totalAdRevenue 상위 15개를 산출해 결과 페이지에 기록했다. 값은 GA4 `totalAdRevenue`이며 AdSense 직접 PAGE_URL 수익이 아니다.
 - 전체 결과와 페이지별 대조표: [Notion 10차 결과](https://app.notion.com/p/3fadb4c0a99181a1be59f398ab4a4dcc). 지시 상태 완료.
+
+## 2026-10-19 — C01 28차 11월 캠핑 할인 가이드
+- 최신 C02 AdSense site snapshot 재사용: 10/12–18 USD 11.30 / 4,069 PV / page RPM 2.78 / 12,161 impressions, 이전 10/05–11 USD 17.99 / 5,973 PV / RPM 3.01 / 14,732 impressions. Revenue -37.2%, PV -31.9%, RPM -7.6%, impressions/PV +21.2%; comparison VERIFIED, URL-level data PARTIAL. No revenue lift claimed.
+- 기존 검수된 26차 Naver landing context는 캠핑 페이지 집중(Pyeongtaek, Gyeonggi, Suwon, Siheung 등)만 참고했다. 최신 7일 source/landing/device API 한 번은 Google Analytics DNS 오류로 실패; DataLab/Search Advisor 401은 C02 영역 상태로 보존했다. 최신 7일 URL 손실 순위는 만들지 않았다.
+- 후보 중 2026–27 겨울 공공야영장 intent는 기존 글과 중복, 넓은 가을여행 intent는 기존 HOLD, 11월 캠핑 할인은 기존 동일 의도 페이지와 충돌 없음 및 현행 한국관광공사 프로모션 근거로 선택. `/kor/report/camp/index.html`은 protected WINNER라 그대로 유지하고 캠핑 sitemap에만 신규 URL을 추가했다.
+- 신규 글은 2026-10-19 공식 프로모션/고캠핑 시설정보 기준 4개 혜택의 기간·조건·예약 경로와 주소·운영·기본요금을 구분한다. 할인 예산·예약 가능·최종 결제액을 보장하지 않는다. 기존 2 AdSense 슬롯 템플릿 사용.
+- Verification: sitemap audit (47 files, 46 leaf sitemaps, 8,890 URLs, duplicates 0, invalid XML 0); sitemap tests 5 PASS; full SEO audit 18,953 pages, parser errors 0; 신규 페이지 indexable, canonical/viewport/breadcrumb/responsive table/Article JSON-LD/GA4/AdSense PASS; `git diff --check` PASS.
+- Launch Guard cannot be completed: this latest-main checkout does not track the trusted launch manifest/candidate source files required by the guard. The protected camp hub was not edited, no C02 ops files or guard rules changed. [PR #107](https://github.com/emfls/emfls.github.io/pull/107) is DRAFT/OPEN for Control Tower review; no merge, publication, or deploy.
