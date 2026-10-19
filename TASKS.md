@@ -168,6 +168,12 @@
 
 ## P1 - High
 
+- [ ] C01/28 — 2026년 11월 캠핑 할인 안내 1건
+  - 신규 글 `kor/report/camp/camping-discounts-november-2026.html` 및 camp sitemap URL 1건. 캠핑 허브 `/kor/report/camp/`는 보호 WINNER라 수정하지 않음.
+  - 한국관광공사 캠페인·고캠핑 시설정보로 혜택 기간/조건, 주소·운영·요금·예약 정보를 교차 확인. 최신 7일 Naver landing/device 비교는 GA4 API DNS 오류로 BLOCKED; Naver API 401은 C02 측 제한을 따름.
+  - sitemap 회귀 5건, HTML/canonical/Article JSON-LD/mobile/ad-slot 자체점검 PASS; 전체 SEO audit 18,953페이지 스캔 및 신규 페이지 항목 PASS. tracked checkout에 trusted launch manifest/candidate record가 없어 Launch Guard는 BLOCKED; 우회·ops manifest 수정 없음.
+  - 10/19 AdSense site-level 최신 비교: $11.30 vs $17.99 (-37.2%), PV -31.9%, page RPM -7.6%, impressions/PV +21.2%; comparison VERIFIED, PAGE_URL 자료 부재로 overall PARTIAL. PR OPEN/draft, merge/deploy 금지.
+
 - [x] C02 · Keyword Hunter safe persistence race recovery
   - Root cause: scheduled run `37864726975` passed collection, tests, queue validation, and publication-state checks, then its push was rejected with `fetch first` after PR #64 advanced main. The confirmed overlapping path was `PROJECT_HISTORY.md`; no Git content conflict occurred.
   - Change: route broad and targeted persistence through a helper with exact path allowlists, JSON/CSV/queue validation, one explicit non-fast-forward recovery, base ancestry and remote-path checks, append-only history preservation, one retry maximum, and retained diagnostics. Any overlapping data, publication-state, script, or workflow update fails closed. Collection is not repeated; broad reports stay out of Git.
