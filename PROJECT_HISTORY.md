@@ -1,5 +1,11 @@
 # PROJECT HISTORY
 
+## 2026-10-19 — C02 29차 AdSense 스냅샷 및 Mac 경로 회귀 방지
+
+- 최신 AdSense 스냅샷(2026-10-12..18): 사이트 합계 수익 $11.30, 직전 7일 $17.99(-37.2%). 직접 PAGE_URL은 0행 반환으로 `PARTIAL`; 페이지 수익 0으로 해석하지 않았다. 기존 스냅샷에는 날짜별 원행이 없어 일자표를 만들지 않았다.
+- `run_local_ops.sh`의 Documents 기본 경로 fallback을 제거하고 `EMFLS_OPS_DIR` 절대경로를 필수화했다. 현재 `~/Developer` 경로를 가리키는 정적 launchd 템플릿 5개를 저장소에 추가했다. 실제 LaunchAgents, 실행 중 job, 시간표, 보안·절전·키 설정은 변경하지 않았다.
+- focused path/workflow tests 4 passed; zsh syntax, 5개 plist lint, `git diff --check` 통과. Naver DataLab/Web Search는 HTTP 401; 63 API calls 로그에 retry 횟수는 없어 재시도 여부 미확정. PR review/merge 대기.
+
 ## 2026-10-15 — [13차] 캠핑 사실정정 5페이지
 
 - [22차] 사실검증(Claude 85점, 검수 완료)과 [12-보완] 동절기 근거로 부안·목포·당진·증평·남양주를 페이지별 커밋으로 수정했다. 등록·금지/제한·허용 미확인 3단계 분류, 장소별 출처/확인일 2026-10-15, 질문형 2026 제목/H1/meta description, 겨울 공공 캠핑 허브 링크 1개를 반영했다. 광고·GA4·URL/canonical은 보존했다.

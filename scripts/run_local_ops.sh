@@ -3,7 +3,11 @@ set -euo pipefail
 umask 077
 
 REPO_DIR="${EMFLS_REPO_DIR:-$(cd "$(dirname "$0")/.." && pwd)}"
-OPS_DIR="${EMFLS_OPS_DIR:-$HOME/Documents/emfls-ops}"
+OPS_DIR="${EMFLS_OPS_DIR:-}"
+if [[ -z "$OPS_DIR" || "$OPS_DIR" != /* ]]; then
+  print -u2 "Set EMFLS_OPS_DIR to the absolute path of the local operations folder."
+  exit 78
+fi
 PYTHON="${EMFLS_PYTHON:-$OPS_DIR/.venv/bin/python}"
 export EMFLS_REPO_DIR="$REPO_DIR"
 export EMFLS_OPS_DIR="$OPS_DIR"
