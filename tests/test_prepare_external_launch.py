@@ -487,7 +487,7 @@ def test_all_stale_publication_ledgers_hold_instead_of_granting_three_slots(tmp_
     assert result["candidateIds"] == []
 
 
-def test_current_counter_proves_zero_and_stale_ledgers_do_not_block_capacity(tmp_path):
+def test_current_counter_alone_does_not_prove_zero_when_other_ledgers_are_stale(tmp_path):
     prepare(
         tmp_path,
         [ready_candidate("A")],
@@ -507,12 +507,51 @@ def test_current_counter_proves_zero_and_stale_ledgers_do_not_block_capacity(tmp
         tmp_path, "2026-10-20T14:00:00+09:00", write=False
     )
 
-    assert result["status"] == "READY"
-    assert result["publicationAccountingStatus"] == "VERIFIED"
-    assert result["publishedToday"] == 0
+    assert result["status"] == "HOLD"
+    assert result["publicationAccountingStatus"] == "UNKNOWN"
+    assert result["publishedToday"] is None
     assert result["dailyLimit"] == 3
-    assert result["remainingCapacity"] == 3
-    assert result["candidateIds"] == ["A"]
+    assert result["remainingCapacity"] == 0
+    assert result["candidateIds"] == []
+
+
+def test_same_kst_day_preserved_publication_conflicts_with_zero_sources(tmp_path):
+    prepare(tmp_path, [ready_candidate("PRIOR-KST")], experiments=[], as_of="2026-10-20")
+    write_json(
+        tmp_path / "data/content-launch-counter.json",
+        {"date": "2026-10-20", "launchedCount": 0, "dailyLimit": 3},
+    )
+    prior = {
+        "status": "PUBLISHED",
+        "runId": "PRIOR-KST-RUN",
+        "runAt": "2026-10-19T15:30:00+00:00",
+        "candidateIds": ["PRIOR-KST"],
+        "urls": ["/kor/report/prior-kst.html"],
+        "contentPaths": ["kor/report/prior-kst.html"],
+        "publishedToday": 1,
+    }
+    ready_manifest = {
+        "status": "READY",
+        "runAt": "2026-10-20T00:30:00+09:00",
+        "publicationAccountingDate": "2026-10-20",
+        "publishedToday": 0,
+        "candidateIds": [],
+        "urls": [],
+        "contentPaths": [],
+        "preservedManifestRecords": [prior],
+    }
+    manifest_path = tmp_path / "data/content-launch-manifest.json"
+    write_json(manifest_path, ready_manifest)
+    before = manifest_path.read_bytes()
+
+    result = prepare_external_launch(tmp_path, "2026-10-20T00:30:00+09:00")
+
+    assert result["status"] == "HOLD"
+    assert result["publicationAccountingStatus"] == "CONFLICT"
+    assert result["publishedToday"] is None
+    assert result["remainingCapacity"] == 0
+    assert result["candidateIds"] == []
+    assert manifest_path.read_bytes() == before
 
 
 def test_current_ledgers_with_three_publications_leave_no_capacity(tmp_path):

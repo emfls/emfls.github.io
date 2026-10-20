@@ -119,13 +119,14 @@ def _publication_accounting(
         return "INVALID", None, []
 
     counts = {}
+    counter_count = None
     if counter_present:
         counter_day = publication_day(counter.get("date"))
         if counter_day == selected_day:
             count = counter.get("launchedCount")
             if type(count) is not int or count < 0:
                 return "INVALID", None, []
-            counts["counter"] = count
+            counter_count = count
 
     if experiment_present:
         rows = experiment_doc.get("experiments")
@@ -138,10 +139,24 @@ def _publication_accounting(
             return "INVALID", None, []
 
     derived_count = None
+    preserved_count = 0
     if manifest_present:
         history = manifest.get("preservedManifestRecords", [])
         if not isinstance(history, list) or any(not isinstance(row, dict) for row in history):
             return "INVALID", None, []
+        history_counts = []
+        for row in history:
+            if str(row.get("status") or "").upper() not in FINAL_PUBLICATION_STATUSES:
+                continue
+            history_day = publication_day(row.get("runAt") or row.get("publicationAccountingDate"))
+            if history_day is None:
+                return "INVALID", None, []
+            if history_day == selected_day:
+                try:
+                    history_counts.append(_manifest_count(row, True, selected_day))
+                except ValueError:
+                    return "INVALID", None, []
+        preserved_count = sum(history_counts)
         status = str(manifest.get("status") or "").upper()
         is_final = status in FINAL_PUBLICATION_STATUSES
         manifest_day = publication_day(
@@ -163,14 +178,25 @@ def _publication_accounting(
             except ValueError:
                 return "INVALID", None, []
 
+    observed_sources = set()
+    if counter_count is not None:
+        observed_sources.add("counter")
+    if preserved_count:
+        observed_sources.add("preservedManifestRecords")
     if not counts:
-        return "UNKNOWN", None, []
-    if len(set(counts.values())) != 1:
-        return "CONFLICT", None, sorted(counts)
+        return "UNKNOWN", None, sorted(observed_sources)
+    if len(set(counts.values())) != 1 or (
+        counter_count is not None and any(count != counter_count for count in counts.values())
+    ):
+        return "CONFLICT", None, sorted(set(counts) | observed_sources)
     verified_count = next(iter(counts.values()))
+    if preserved_count > verified_count or (
+        counter_count is not None and preserved_count > counter_count
+    ):
+        return "CONFLICT", None, sorted(set(counts) | observed_sources)
     if derived_count is not None and derived_count > verified_count:
-        return "CONFLICT", None, sorted(counts)
-    return "VERIFIED", max(verified_count, derived_count or 0), sorted(counts)
+        return "CONFLICT", None, sorted(set(counts) | observed_sources)
+    return "VERIFIED", max(verified_count, derived_count or 0), sorted(set(counts) | observed_sources)
 
 
 def _preserved_manifest_records(manifest):
