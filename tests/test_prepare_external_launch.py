@@ -85,7 +85,7 @@ def editorial_approval(keyword):
     }
 
 
-def prepare(root, candidates, experiments=None):
+def prepare(root, candidates, experiments=None, as_of="2026-09-02"):
     write_json(
         root / "data/external-content-opportunities.json",
         {
@@ -96,7 +96,7 @@ def prepare(root, candidates, experiments=None):
     )
     write_json(
         root / "data/content-launch-experiments.json",
-        {"experiments": experiments or []},
+        {"asOf": as_of, "experiments": experiments or []},
     )
 
 
@@ -137,7 +137,7 @@ def test_external_ready_queue_is_limited_to_remaining_three_per_day(tmp_path):
 
 def test_external_queue_counts_same_day_manifest_over_stale_counter(tmp_path):
     rows = [ready_candidate(str(i), opportunity=95 - i) for i in range(5)]
-    prepare(tmp_path, rows)
+    prepare(tmp_path, rows, as_of="2026-09-01")
     write_json(
         tmp_path / "data/content-launch-counter.json",
         {"date": "2026-09-01", "launchedCount": 1, "dailyLimit": 1},
@@ -273,6 +273,7 @@ def test_previous_kst_day_publications_do_not_consume_today_after_reset(tmp_path
             }
             for i in range(2)
         ],
+        as_of="2026-09-03",
     )
     write_json(
         tmp_path / "data/content-launch-counter.json",
@@ -325,6 +326,7 @@ def test_candidate_already_registered_as_published_is_not_selected_again(tmp_pat
                 "status": "OBSERVING",
             }
         ],
+        as_of="2026-09-06",
     )
 
     result = prepare_external_launch(tmp_path, "2026-09-06T21:00:00+09:00")
@@ -355,6 +357,7 @@ def test_external_publication_day_uses_kst_for_utc_timestamps(tmp_path):
                 "publishedAt": "2026-09-02T14:00:00+00:00",
             },
         ],
+        as_of="2026-09-03",
     )
     write_json(
         tmp_path / "data/content-launch-counter.json",
@@ -390,7 +393,7 @@ def test_external_queue_blocks_when_three_publications_are_already_counted(tmp_p
 
 def test_external_ready_manifest_carries_same_day_publication_count(tmp_path):
     candidates = [ready_candidate(str(i), opportunity=95 - i) for i in range(4)]
-    prepare(tmp_path, candidates)
+    prepare(tmp_path, candidates, as_of="2026-09-01")
     write_json(
         tmp_path / "data/content-launch-manifest.json",
         {
@@ -433,3 +436,235 @@ def test_external_ready_manifest_carries_same_day_publication_count(tmp_path):
     assert later_queue["publishedToday"] == 1
     assert later_queue["remainingCapacity"] == 2
     assert len(later_queue["queue"]) == 2
+
+
+def test_missing_publication_ledgers_hold_instead_of_granting_three_slots(tmp_path):
+    prepare(tmp_path, [ready_candidate("A")])
+    (tmp_path / "data/content-launch-experiments.json").unlink()
+
+    result = prepare_external_launch(
+        tmp_path, "2026-10-20T14:00:00+09:00", write=False
+    )
+
+    assert result["status"] == "HOLD"
+    assert result["publicationAccountingStatus"] == "UNKNOWN"
+    assert result["publishedToday"] is None
+    assert result["remainingCapacity"] == 0
+    assert result["candidateIds"] == []
+    assert not (tmp_path / "data/content-launch-manifest.json").exists()
+
+
+def test_all_stale_publication_ledgers_hold_instead_of_granting_three_slots(tmp_path):
+    prepare(
+        tmp_path,
+        [ready_candidate("A")],
+        experiments=[{"candidateId": "OLD", "publishedOn": "2026-10-14"}],
+        as_of="2026-10-14",
+    )
+    write_json(
+        tmp_path / "data/content-launch-counter.json",
+        {"date": "2026-09-13", "launchedCount": 1, "dailyLimit": 1},
+    )
+    write_json(
+        tmp_path / "data/content-launch-manifest.json",
+        {
+            "status": "PUBLISHED",
+            "runAt": "2026-10-14T13:37:44+09:00",
+            "candidateIds": ["OLD"],
+            "urls": ["/kor/report/old.html"],
+            "publishedToday": 3,
+        },
+    )
+
+    result = prepare_external_launch(
+        tmp_path, "2026-10-20T14:00:00+09:00", write=False
+    )
+
+    assert result["status"] == "HOLD"
+    assert result["publicationAccountingStatus"] == "UNKNOWN"
+    assert result["publishedToday"] is None
+    assert result["remainingCapacity"] == 0
+    assert result["candidateIds"] == []
+
+
+def test_current_counter_alone_does_not_prove_zero_when_other_ledgers_are_stale(tmp_path):
+    prepare(
+        tmp_path,
+        [ready_candidate("A")],
+        experiments=[],
+        as_of="2026-10-14",
+    )
+    write_json(
+        tmp_path / "data/content-launch-counter.json",
+        {"date": "2026-10-20", "launchedCount": 0, "dailyLimit": 3},
+    )
+    write_json(
+        tmp_path / "data/content-launch-manifest.json",
+        {"status": "PUBLISHED", "runAt": "2026-10-14T13:37:44+09:00", "publishedToday": 3},
+    )
+
+    result = prepare_external_launch(
+        tmp_path, "2026-10-20T14:00:00+09:00", write=False
+    )
+
+    assert result["status"] == "HOLD"
+    assert result["publicationAccountingStatus"] == "UNKNOWN"
+    assert result["publishedToday"] is None
+    assert result["dailyLimit"] == 3
+    assert result["remainingCapacity"] == 0
+    assert result["candidateIds"] == []
+
+
+def test_same_kst_day_preserved_publication_conflicts_with_zero_sources(tmp_path):
+    prepare(tmp_path, [ready_candidate("PRIOR-KST")], experiments=[], as_of="2026-10-20")
+    write_json(
+        tmp_path / "data/content-launch-counter.json",
+        {"date": "2026-10-20", "launchedCount": 0, "dailyLimit": 3},
+    )
+    prior = {
+        "status": "PUBLISHED",
+        "runId": "PRIOR-KST-RUN",
+        "runAt": "2026-10-19T15:30:00+00:00",
+        "candidateIds": ["PRIOR-KST"],
+        "urls": ["/kor/report/prior-kst.html"],
+        "contentPaths": ["kor/report/prior-kst.html"],
+        "publishedToday": 1,
+    }
+    ready_manifest = {
+        "status": "READY",
+        "runAt": "2026-10-20T00:30:00+09:00",
+        "publicationAccountingDate": "2026-10-20",
+        "publishedToday": 0,
+        "candidateIds": [],
+        "urls": [],
+        "contentPaths": [],
+        "preservedManifestRecords": [prior],
+    }
+    manifest_path = tmp_path / "data/content-launch-manifest.json"
+    write_json(manifest_path, ready_manifest)
+    before = manifest_path.read_bytes()
+
+    result = prepare_external_launch(tmp_path, "2026-10-20T00:30:00+09:00")
+
+    assert result["status"] == "HOLD"
+    assert result["publicationAccountingStatus"] == "CONFLICT"
+    assert result["publishedToday"] is None
+    assert result["remainingCapacity"] == 0
+    assert result["candidateIds"] == []
+    assert manifest_path.read_bytes() == before
+
+
+def test_current_ledgers_with_three_publications_leave_no_capacity(tmp_path):
+    rows = [ready_candidate(str(index)) for index in range(4)]
+    experiments = [
+        {"candidateId": f"PUB-{index}", "publishedOn": "2026-10-20"}
+        for index in range(3)
+    ]
+    prepare(tmp_path, rows, experiments=experiments, as_of="2026-10-20")
+    write_json(
+        tmp_path / "data/content-launch-counter.json",
+        {"date": "2026-10-20", "launchedCount": 3, "dailyLimit": 3},
+    )
+    write_json(
+        tmp_path / "data/content-launch-manifest.json",
+        {
+            "status": "PUBLISHED",
+            "runAt": "2026-10-20T12:00:00+09:00",
+            "candidateIds": ["PUB-0", "PUB-1", "PUB-2"],
+            "urls": ["/kor/report/pub-0.html", "/kor/report/pub-1.html", "/kor/report/pub-2.html"],
+            "publishedToday": 3,
+        },
+    )
+
+    result = prepare_external_launch(
+        tmp_path, "2026-10-20T14:00:00+09:00", write=False
+    )
+
+    assert result["status"] == "NO_PUBLICATION"
+    assert result["publicationAccountingStatus"] == "VERIFIED"
+    assert result["publishedToday"] == 3
+    assert result["remainingCapacity"] == 0
+    assert result["candidateIds"] == []
+
+
+def test_corrupt_or_conflicting_ledgers_hold_without_overwriting_source_data(tmp_path):
+    prepare(tmp_path, [ready_candidate("A")], experiments=[], as_of="2026-10-20")
+    manifest_path = tmp_path / "data/content-launch-manifest.json"
+    manifest_path.write_text("{bad json\n", encoding="utf-8")
+    write_json(
+        tmp_path / "data/content-launch-counter.json",
+        {"date": "2026-10-20", "launchedCount": 0, "dailyLimit": 3},
+    )
+    corrupted_manifest = manifest_path.read_bytes()
+
+    result = prepare_external_launch(
+        tmp_path, "2026-10-20T14:00:00+09:00", write=False
+    )
+
+    assert result["status"] == "HOLD"
+    assert result["publicationAccountingStatus"] == "INVALID"
+    assert result["publishedToday"] is None
+    assert result["candidateIds"] == []
+    assert manifest_path.read_bytes() == corrupted_manifest
+
+    conflict_root = tmp_path / "conflict"
+    prepare(
+        conflict_root,
+        [ready_candidate("B")],
+        experiments=[{"candidateId": "PUB", "publishedOn": "2026-10-20"}],
+        as_of="2026-10-20",
+    )
+    counter_path = conflict_root / "data/content-launch-counter.json"
+    write_json(
+        counter_path,
+        {"date": "2026-10-20", "launchedCount": 0, "dailyLimit": 3},
+    )
+    write_json(
+        conflict_root / "data/content-launch-manifest.json",
+        {
+            "status": "PUBLISHED",
+            "runAt": "2026-10-20T12:00:00+09:00",
+            "candidateIds": ["PUB-0", "PUB-1"],
+            "urls": ["/kor/report/pub-0.html", "/kor/report/pub-1.html"],
+            "publishedToday": 2,
+        },
+    )
+    counter_before = counter_path.read_bytes()
+
+    conflict = prepare_external_launch(
+        conflict_root, "2026-10-20T14:00:00+09:00", write=False
+    )
+
+    assert conflict["status"] == "HOLD"
+    assert conflict["publicationAccountingStatus"] == "CONFLICT"
+    assert conflict["publishedToday"] is None
+    assert conflict["candidateIds"] == []
+    assert counter_path.read_bytes() == counter_before
+
+
+def test_ready_manifest_preserves_prior_published_manifest_history(tmp_path):
+    prepare(tmp_path, [ready_candidate("NEW")], experiments=[], as_of="2026-10-20")
+    write_json(
+        tmp_path / "data/content-launch-counter.json",
+        {"date": "2026-10-20", "launchedCount": 0, "dailyLimit": 3},
+    )
+    prior = {
+        "status": "PUBLISHED",
+        "runId": "OLD-RUN",
+        "runAt": "2026-10-19T12:00:00+09:00",
+        "candidateIds": ["OLD"],
+        "urls": ["/kor/report/old.html"],
+        "contentPaths": ["kor/report/old.html"],
+        "publishedToday": 1,
+    }
+    write_json(tmp_path / "data/content-launch-manifest.json", prior)
+
+    result = prepare_external_launch(
+        tmp_path, "2026-10-20T14:00:00+09:00"
+    )
+    saved = json.loads(
+        (tmp_path / "data/content-launch-manifest.json").read_text(encoding="utf-8")
+    )
+
+    assert result["status"] == "READY"
+    assert saved["preservedManifestRecords"] == [prior]

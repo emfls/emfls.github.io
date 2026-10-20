@@ -13,9 +13,19 @@ except ModuleNotFoundError:
     from external_content_opportunity import launch_readiness
 
 try:
-    from scripts.content_launch_policy import DAILY_PUBLICATION_LIMIT, publication_day, publication_manifest_count
+    from scripts.content_launch_policy import (
+        DAILY_PUBLICATION_LIMIT,
+        FINAL_PUBLICATION_STATUSES,
+        publication_day,
+        publication_manifest_count,
+    )
 except ModuleNotFoundError:
-    from content_launch_policy import DAILY_PUBLICATION_LIMIT, publication_day, publication_manifest_count
+    from content_launch_policy import (
+        DAILY_PUBLICATION_LIMIT,
+        FINAL_PUBLICATION_STATUSES,
+        publication_day,
+        publication_manifest_count,
+    )
 
 
 SEOUL = ZoneInfo("Asia/Seoul")
@@ -54,6 +64,157 @@ def _published_today(experiments, run_at):
     return rows
 
 
+def _read_ledger(path, default):
+    try:
+        return json.loads(Path(path).read_text(encoding="utf-8")), True, False
+    except FileNotFoundError:
+        return default, False, False
+    except (OSError, UnicodeError, ValueError):
+        return default, True, True
+
+
+def _manifest_count(manifest, is_final, selected_day):
+    published_today = manifest.get("publishedToday")
+    if published_today is not None:
+        if not (
+            type(published_today) is int and published_today >= 0
+            or isinstance(published_today, str) and published_today.strip().isdigit()
+        ):
+            raise ValueError("invalid manifest publication count")
+    elif not is_final:
+        raise ValueError("accounting manifest has no publication count")
+    if is_final:
+        for key in ("urls", "candidateIds", "contentPaths"):
+            values = manifest.get(key)
+            if values is None:
+                continue
+            if not isinstance(values, (list, tuple)) or any(
+                not isinstance(value, str) or not value.strip() for value in values
+            ):
+                raise ValueError("invalid manifest publication identities")
+    count = publication_manifest_count(manifest, selected_day, DAILY_PUBLICATION_LIMIT)
+    if is_final and count == 0:
+        raise ValueError("published manifest has no publication count")
+    return count
+
+
+def _publication_accounting(
+    counter,
+    counter_present,
+    manifest,
+    manifest_present,
+    experiment_doc,
+    experiment_present,
+    run_at,
+    selected_day,
+    read_error=False,
+):
+    if selected_day is None:
+        return "INVALID", None, []
+    if read_error or (counter_present and not isinstance(counter, dict)):
+        return "INVALID", None, []
+    if manifest_present and not isinstance(manifest, dict):
+        return "INVALID", None, []
+    if experiment_present and not isinstance(experiment_doc, dict):
+        return "INVALID", None, []
+
+    counts = {}
+    counter_count = None
+    if counter_present:
+        counter_day = publication_day(counter.get("date"))
+        if counter_day == selected_day:
+            count = counter.get("launchedCount")
+            if type(count) is not int or count < 0:
+                return "INVALID", None, []
+            counter_count = count
+
+    if experiment_present:
+        rows = experiment_doc.get("experiments")
+        if not isinstance(rows, list) or any(not isinstance(row, dict) for row in rows):
+            return "INVALID", None, []
+        rows_today = _published_today(rows, run_at)
+        if publication_day(experiment_doc.get("asOf")) == selected_day:
+            counts["experiments"] = len(rows_today)
+        elif rows_today:
+            return "INVALID", None, []
+
+    derived_count = None
+    preserved_count = 0
+    if manifest_present:
+        history = manifest.get("preservedManifestRecords", [])
+        if not isinstance(history, list) or any(not isinstance(row, dict) for row in history):
+            return "INVALID", None, []
+        history_counts = []
+        for row in history:
+            if str(row.get("status") or "").upper() not in FINAL_PUBLICATION_STATUSES:
+                continue
+            history_day = publication_day(row.get("runAt") or row.get("publicationAccountingDate"))
+            if history_day is None:
+                return "INVALID", None, []
+            if history_day == selected_day:
+                try:
+                    history_counts.append(_manifest_count(row, True, selected_day))
+                except ValueError:
+                    return "INVALID", None, []
+        preserved_count = sum(history_counts)
+        status = str(manifest.get("status") or "").upper()
+        is_final = status in FINAL_PUBLICATION_STATUSES
+        manifest_day = publication_day(
+            manifest.get("runAt") if is_final else manifest.get("publicationAccountingDate")
+        )
+        if is_final and manifest_day is None:
+            return "INVALID", None, []
+        if is_final and manifest_day == selected_day:
+            try:
+                counts["manifest"] = _manifest_count(manifest, True, selected_day)
+            except ValueError:
+                return "INVALID", None, []
+        elif (
+            status in {"READY", "NO_PUBLICATION"}
+            and publication_day(manifest.get("publicationAccountingDate")) == selected_day
+        ):
+            try:
+                derived_count = _manifest_count(manifest, False, selected_day)
+            except ValueError:
+                return "INVALID", None, []
+
+    observed_sources = set()
+    if counter_count is not None:
+        observed_sources.add("counter")
+    if preserved_count:
+        observed_sources.add("preservedManifestRecords")
+    if not counts:
+        return "UNKNOWN", None, sorted(observed_sources)
+    if len(set(counts.values())) != 1 or (
+        counter_count is not None and any(count != counter_count for count in counts.values())
+    ):
+        return "CONFLICT", None, sorted(set(counts) | observed_sources)
+    verified_count = next(iter(counts.values()))
+    if preserved_count > verified_count or (
+        counter_count is not None and preserved_count > counter_count
+    ):
+        return "CONFLICT", None, sorted(set(counts) | observed_sources)
+    if derived_count is not None and derived_count > verified_count:
+        return "CONFLICT", None, sorted(set(counts) | observed_sources)
+    return "VERIFIED", max(verified_count, derived_count or 0), sorted(set(counts) | observed_sources)
+
+
+def _preserved_manifest_records(manifest):
+    history = [dict(row) for row in manifest.get("preservedManifestRecords", [])]
+    if str(manifest.get("status") or "").upper() in FINAL_PUBLICATION_STATUSES:
+        previous = {
+            key: value for key, value in manifest.items()
+            if key != "preservedManifestRecords"
+        }
+        run_id = previous.get("runId")
+        if not any(
+            row.get("runId") == run_id if run_id else row == previous
+            for row in history
+        ):
+            history.append(previous)
+    return history
+
+
 def _expected_value(candidate):
     inputs = candidate.get("selectionInputs") or {}
     revenue = float(inputs.get("expectedRevenueImpact") or 0)
@@ -77,11 +238,46 @@ def prepare_external_launch(root, run_at, write=True):
         root / "data/external-content-opportunities.json",
         {"candidates": [], "readyToLaunch": []},
     )
-    experiments = _read(
-        root / "data/content-launch-experiments.json", {"experiments": []}
-    ).get("experiments") or []
-    counter_state = _read(root / "data/content-launch-counter.json", {})
-    previous_manifest = _read(root / "data/content-launch-manifest.json", {})
+    experiment_doc, experiment_present, experiment_error = _read_ledger(
+        root / "data/content-launch-experiments.json", {}
+    )
+    counter_state, counter_present, counter_error = _read_ledger(
+        root / "data/content-launch-counter.json", {}
+    )
+    previous_manifest, manifest_present, manifest_error = _read_ledger(
+        root / "data/content-launch-manifest.json", {}
+    )
+    selected_day = publication_day(run_at)
+    accounting_status, published_today_count, accounting_sources = _publication_accounting(
+        counter_state,
+        counter_present,
+        previous_manifest,
+        manifest_present,
+        experiment_doc,
+        experiment_present,
+        run_at,
+        selected_day,
+        counter_error or manifest_error or experiment_error,
+    )
+    if accounting_status != "VERIFIED":
+        return {
+            "schemaVersion": 1,
+            "runId": "EXT-RUN-" + datetime.fromisoformat(run_at).strftime("%Y%m%d-%H%M"),
+            "runAt": run_at,
+            "status": "HOLD",
+            "urls": [],
+            "candidateIds": [],
+            "contentPaths": [],
+            "sitemapPaths": [],
+            "hubPaths": [],
+            "dailyLimit": DAILY_PUBLICATION_LIMIT,
+            "publishedToday": None,
+            "remainingCapacity": 0,
+            "publicationAccountingDate": selected_day.isoformat() if selected_day else None,
+            "publicationAccountingStatus": accounting_status,
+            "publicationAccountingSources": accounting_sources,
+        }
+    experiments = experiment_doc.get("experiments", [])
     published_candidate_ids = {
         row.get("candidateId") for row in experiments if row.get("candidateId")
     }
@@ -99,19 +295,6 @@ def prepare_external_launch(root, run_at, write=True):
             continue
         eligible.append({**candidate, "readiness": readiness})
     eligible.sort(key=lambda row: (-_expected_value(row), row.get("candidateId", "")))
-    selected_day = publication_day(run_at)
-    published_today = _published_today(experiments, run_at)
-    counter_count = 0
-    if publication_day(counter_state.get("date")) == selected_day:
-        try:
-            counter_count = max(0, int(counter_state.get("launchedCount", 0)))
-        except (TypeError, ValueError):
-            counter_count = DAILY_PUBLICATION_LIMIT
-    manifest_count = publication_manifest_count(
-        previous_manifest, selected_day, DAILY_PUBLICATION_LIMIT
-    )
-    # These are parallel views of today's total; max avoids counting the same launch twice.
-    published_today_count = max(counter_count, manifest_count, len(published_today))
     remaining_capacity = max(0, DAILY_PUBLICATION_LIMIT - published_today_count)
     selected = eligible[:remaining_capacity]
     manifest = {
@@ -128,7 +311,12 @@ def prepare_external_launch(root, run_at, write=True):
         "publishedToday": published_today_count,
         "remainingCapacity": remaining_capacity,
         "publicationAccountingDate": selected_day.isoformat(),
+        "publicationAccountingStatus": accounting_status,
+        "publicationAccountingSources": accounting_sources,
     }
+    preserved_records = _preserved_manifest_records(previous_manifest)
+    if preserved_records:
+        manifest["preservedManifestRecords"] = preserved_records
     index_candidates = {
         "schemaVersion": 1,
         "runAt": run_at,
