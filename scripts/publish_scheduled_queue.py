@@ -10,6 +10,8 @@ from pathlib import Path
 import re
 import subprocess
 from urllib.parse import urlsplit
+from urllib.request import Request, urlopen
+from urllib.error import HTTPError, URLError
 from zoneinfo import ZoneInfo
 
 KST = ZoneInfo("Asia/Seoul")
@@ -65,9 +67,29 @@ def validate_article(candidate: dict, root: Path):
     if "<html" not in html.lower() or "</html>" not in html.lower(): raise ValueError("Incomplete HTML document")
     return route, url, html
 
+def previous_release_is_live(root: Path) -> bool:
+    ledger = root / "data/scheduled-publication-ledger.jsonl"
+    if not ledger.is_file(): return True
+    rows = [x for x in ledger.read_text(encoding="utf-8").splitlines() if x.strip()]
+    if not rows: return True
+    last = json.loads(rows[-1])
+    url = last.get("url","")
+    expected = last.get("title","")
+    if not url.startswith(SITE + "/kor/") or not expected:
+        raise RuntimeError("Previous publication ledger entry is invalid")
+    try:
+        req = Request(url + "?scheduled-live-check=1", headers={"Cache-Control":"no-cache"})
+        with urlopen(req, timeout=15) as response:
+            html = response.read().decode("utf-8", errors="replace")
+            return response.status == 200 and expected in html
+    except (HTTPError, URLError, TimeoutError):
+        return False
+
 def plan(root: Path, now: datetime):
     now = now.astimezone(KST)
     if now.date().isoformat() < "2026-10-23": return {"status":"NOT_STARTED","kst":now.isoformat()}
+    if not previous_release_is_live(root):
+        raise RuntimeError("PREVIOUS_RELEASE_NOT_LIVE: repair official Pages build before publishing another page")
     existing = added_pages_today(root,now)
     if len(existing) >= DAILY_LIMIT: return {"status":"DAILY_LIMIT_REACHED","today":len(existing)}
     queue = root / "data/scheduled-publication-queue"
