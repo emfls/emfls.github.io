@@ -73,18 +73,18 @@ def _run_review_queue_validator(queue, root):
     )
 
 
-def test_supervised_queue_validator_accepts_one_two_and_three_items_at_daily_limit_three(tmp_path):
-    for count in (1, 2, 3):
+def test_supervised_queue_validator_accepts_up_to_ten_items_at_daily_limit_ten(tmp_path):
+    for count in (1, 2, 3, 10):
         result = _run_review_queue_validator(
-            {"dailyLimit": 3, "queue": [_review_queue_item() for _ in range(count)]},
+            {"dailyLimit": 10, "queue": [_review_queue_item() for _ in range(count)]},
             tmp_path,
         )
         assert result.returncode == 0, result.stderr + result.stdout
 
 
-def test_supervised_queue_validator_rejects_four_items_at_daily_limit_three(tmp_path):
+def test_supervised_queue_validator_rejects_eleven_items_at_daily_limit_ten(tmp_path):
     result = _run_review_queue_validator(
-        {"dailyLimit": 3, "queue": [_review_queue_item() for _ in range(4)]},
+        {"dailyLimit": 10, "queue": [_review_queue_item() for _ in range(11)]},
         tmp_path,
     )
     assert result.returncode != 0
@@ -92,7 +92,7 @@ def test_supervised_queue_validator_rejects_four_items_at_daily_limit_three(tmp_
 
 def test_supervised_queue_validator_rejects_daily_limit_above_canonical_policy(tmp_path):
     result = _run_review_queue_validator(
-        {"dailyLimit": 4, "queue": [_review_queue_item()]},
+        {"dailyLimit": 11, "queue": [_review_queue_item()]},
         tmp_path,
     )
     assert result.returncode != 0

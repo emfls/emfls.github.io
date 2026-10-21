@@ -51,7 +51,7 @@ def test_valid_candidates_are_deterministic_and_ctr_experiments_do_not_consume_c
     second = run_daily_analysis(tmp_path, "2026-09-01T14:00:00+09:00", tmp_path / "research.json")
     assert first == second
     assert first_bytes == (tmp_path / "data/new-content-opportunities.json").read_bytes()
-    assert len(first["selected"]) == 3
+    assert len(first["selected"]) == 10
     assert first["kpis"]["activeContentExperiments"] == 0
 
 
@@ -68,7 +68,7 @@ def test_publications_on_the_same_local_day_reduce_capacity(tmp_path):
     result = run_daily_analysis(
         tmp_path, "2026-09-01T14:00:00+09:00", tmp_path / "research.json"
     )
-    assert len(result["selected"]) == 1
+    assert len(result["selected"]) == 8
 
 
 def test_publications_are_counted_by_kst_day_when_run_time_is_utc(tmp_path):
@@ -93,7 +93,7 @@ def test_publications_are_counted_by_kst_day_when_run_time_is_utc(tmp_path):
         tmp_path, "2026-09-02T15:30:00+00:00", tmp_path / "research.json"
     )
 
-    assert len(result["selected"]) == 2
+    assert len(result["selected"]) == 9
 
 
 def test_fewer_than_ten_researched_candidates_cannot_publish(tmp_path):

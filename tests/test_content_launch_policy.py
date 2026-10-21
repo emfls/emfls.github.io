@@ -57,15 +57,15 @@ def test_queue_size_is_bounded_by_remaining_daily_capacity():
     assert len(result["queue"]) == 1
 
 
-def test_default_launch_policy_uses_three_daily_publication_slots():
+def test_default_launch_policy_uses_ten_daily_publication_slots():
     rows = [
         row(keyword=f"안전한도구{index}", suggested_url=f"/kor/column/safe-{index}/")
-        for index in range(4)
+        for index in range(11)
     ]
     result = select_launch_candidate(rows)
-    assert result["dailyLimit"] == 3
-    assert result.get("remainingCapacity") == 3
-    assert len(result["queue"]) == 3
+    assert result["dailyLimit"] == 10
+    assert result.get("remainingCapacity") == 10
+    assert len(result["queue"]) == 10
 
 
 def test_launch_policy_reports_remaining_capacity_and_blocks_at_three():

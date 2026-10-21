@@ -114,8 +114,8 @@ def test_same_intent_and_incomplete_brief_never_enter_manifest(tmp_path):
     assert result["urls"] == [valid["url"]]
 
 
-def test_external_ready_queue_is_limited_to_remaining_three_per_day(tmp_path):
-    rows = [ready_candidate(str(i), opportunity=95 - i) for i in range(5)]
+def test_external_ready_queue_is_limited_to_remaining_ten_per_day(tmp_path):
+    rows = [ready_candidate(str(i), opportunity=95 - i) for i in range(12)]
     prepare(
         tmp_path,
         rows,
@@ -128,11 +128,11 @@ def test_external_ready_queue_is_limited_to_remaining_three_per_day(tmp_path):
 
     result = prepare_external_launch(tmp_path, "2026-09-02T14:00:00+09:00", write=False)
 
-    assert len(result["candidateIds"]) == 1
-    assert result["candidateIds"] == ["0"]
-    assert result["dailyLimit"] == 3
+    assert len(result["candidateIds"]) == 10 - 2
+    assert result["candidateIds"][0] == "0"
+    assert result["dailyLimit"] == 10
     assert result["publishedToday"] == 2
-    assert result["remainingCapacity"] == 1
+    assert result["remainingCapacity"] == 8
 
 
 def test_external_queue_counts_same_day_manifest_over_stale_counter(tmp_path):
@@ -156,10 +156,10 @@ def test_external_queue_counts_same_day_manifest_over_stale_counter(tmp_path):
 
     result = prepare_external_launch(tmp_path, "2026-09-02T12:00:00+09:00", write=False)
 
-    assert result["dailyLimit"] == 3
+    assert result["dailyLimit"] == 10
     assert result["publishedToday"] == 1
-    assert result["remainingCapacity"] == 2
-    assert len(result["candidateIds"]) == 2
+    assert result["remainingCapacity"] == 9
+    assert len(result["candidateIds"]) == 5
 
 
 def test_daily_counter_reset_preserves_history_and_limits_to_remaining_capacity(tmp_path):
@@ -188,12 +188,12 @@ def test_daily_counter_reset_preserves_history_and_limits_to_remaining_capacity(
     result = prepare_external_launch(tmp_path, "2026-09-02T16:00:00+09:00")
 
     assert result["publishedToday"] == 2
-    assert result["dailyLimit"] == 3
-    assert result["remainingCapacity"] == 1
-    assert len(result["candidateIds"]) == 1
+    assert result["dailyLimit"] == 10
+    assert result["remainingCapacity"] == 8
+    assert len(result["candidateIds"]) == 4
 
 
-def test_reset_does_not_restore_capacity_when_three_publications_exist_today(tmp_path):
+def test_reset_does_not_restore_capacity_when_ten_publications_exist_today(tmp_path):
     rows = [ready_candidate(str(i), opportunity=95 - i) for i in range(4)]
     prepare(
         tmp_path,
@@ -204,13 +204,8 @@ def test_reset_does_not_restore_capacity_when_three_publications_exist_today(tmp
                 "publishedOn": "2026-09-02",
                 "publishedAt": published_at,
             }
-            for i, published_at in enumerate(
-                (
-                    "2026-09-02T09:00:00+09:00",
-                    "2026-09-02T13:00:00+09:00",
-                    "2026-09-02T14:00:00+09:00",
-                )
-            )
+            for i in range(10)
+            for published_at in (f"2026-09-02T{9 + i:02}:00:00+09:00",)
         ],
     )
     write_json(
@@ -220,13 +215,13 @@ def test_reset_does_not_restore_capacity_when_three_publications_exist_today(tmp
 
     result = prepare_external_launch(tmp_path, "2026-09-02T16:00:00+09:00", write=False)
 
-    assert result["publishedToday"] == 3
-    assert result["dailyLimit"] == 3
+    assert result["publishedToday"] == 10
+    assert result["dailyLimit"] == 10
     assert result["remainingCapacity"] == 0
     assert result["candidateIds"] == []
 
 
-def test_reset_does_not_hide_more_than_three_same_day_publications(tmp_path):
+def test_reset_does_not_hide_more_than_ten_same_day_publications(tmp_path):
     rows = [ready_candidate(str(i), opportunity=95 - i) for i in range(4)]
     prepare(
         tmp_path,
@@ -237,14 +232,8 @@ def test_reset_does_not_hide_more_than_three_same_day_publications(tmp_path):
                 "publishedOn": "2026-09-02",
                 "publishedAt": published_at,
             }
-            for i, published_at in enumerate(
-                (
-                    "2026-09-02T09:00:00+09:00",
-                    "2026-09-02T10:00:00+09:00",
-                    "2026-09-02T13:00:00+09:00",
-                    "2026-09-02T14:00:00+09:00",
-                )
-            )
+            for i in range(11)
+            for published_at in (f"2026-09-02T{9 + i:02}:00:00+09:00",)
         ],
     )
     write_json(
@@ -254,8 +243,8 @@ def test_reset_does_not_hide_more_than_three_same_day_publications(tmp_path):
 
     result = prepare_external_launch(tmp_path, "2026-09-02T16:00:00+09:00", write=False)
 
-    assert result["publishedToday"] == 4
-    assert result["dailyLimit"] == 3
+    assert result["publishedToday"] == 11
+    assert result["dailyLimit"] == 10
     assert result["remainingCapacity"] == 0
     assert result["candidateIds"] == []
 
@@ -282,9 +271,9 @@ def test_previous_kst_day_publications_do_not_consume_today_after_reset(tmp_path
     result = prepare_external_launch(tmp_path, "2026-09-03T00:30:00+09:00", write=False)
 
     assert result["publishedToday"] == 0
-    assert result["dailyLimit"] == 3
-    assert result["remainingCapacity"] == 3
-    assert len(result["candidateIds"]) == 3
+    assert result["dailyLimit"] == 10
+    assert result["remainingCapacity"] == 10
+    assert len(result["candidateIds"]) == 4
 
 
 def test_no_ready_candidate_writes_no_publication_manifest(tmp_path):
@@ -364,27 +353,28 @@ def test_external_publication_day_uses_kst_for_utc_timestamps(tmp_path):
     result = prepare_external_launch(tmp_path, "2026-09-02T15:30:00+00:00", write=False)
 
     assert result["publishedToday"] == 2
-    assert result["remainingCapacity"] == 1
-    assert len(result["candidateIds"]) == 1
+    assert result["dailyLimit"] == 10
+    assert result["remainingCapacity"] == 8
+    assert len(result["candidateIds"]) == 5
 
 
 
-def test_external_queue_blocks_when_three_publications_are_already_counted(tmp_path):
+def test_external_queue_blocks_when_ten_publications_are_already_counted(tmp_path):
     rows = [ready_candidate(str(i), opportunity=95 - i) for i in range(4)]
     prepare(
         tmp_path,
         rows,
         experiments=[
-            {"candidateId": f"PUB-{i}", "publishedOn": "2026-09-02", "publishedAt": f"2026-09-02T0{i + 1}:00:00+09:00"}
-            for i in range(3)
+            {"candidateId": f"PUB-{i}", "publishedOn": "2026-09-02", "publishedAt": f"2026-09-02T{i + 1:02}:00:00+09:00"}
+            for i in range(10)
         ],
     )
 
     result = prepare_external_launch(tmp_path, "2026-09-02T14:00:00+09:00", write=False)
 
     assert result["candidateIds"] == []
-    assert result["dailyLimit"] == 3
-    assert result["publishedToday"] == 3
+    assert result["dailyLimit"] == 10
+    assert result["publishedToday"] == 10
     assert result["remainingCapacity"] == 0
 
 
@@ -421,15 +411,14 @@ def test_external_ready_manifest_carries_same_day_publication_count(tmp_path):
             }
             for index in range(4)
         ],
-        daily_limit=3,
         selected_at="2026-09-02T15:00:00+09:00",
         editorial_decisions=[editorial_approval(f"안전한도구{index}") for index in range(4)],
         published_manifest=prepared_manifest,
     )
 
     assert result["publishedToday"] == 1
-    assert result["remainingCapacity"] == 2
+    assert result["remainingCapacity"] == 9
     assert prepared_manifest["publicationAccountingDate"] == "2026-09-02"
     assert later_queue["publishedToday"] == 1
-    assert later_queue["remainingCapacity"] == 2
-    assert len(later_queue["queue"]) == 2
+    assert later_queue["remainingCapacity"] == 9
+    assert len(later_queue["queue"]) == 4
