@@ -69,7 +69,7 @@ jobs:
           # Main has PR-only branch protection. Never push directly to main.
           branch="notion/auto-publish-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           git push origin "HEAD:refs/heads/$branch"
-          export GH_TOKEN="$GITHUB_TOKEN"
+          export GH_TOKEN="${PAGES_DEPLOY_TOKEN:-$GITHUB_TOKEN}"
           gh pr create --head "$branch" --base main \
             --title "content: publish one Notion guide" \
             --body "Automated publication of one validated Notion draft. Includes its category sitemap and deduplication ledger."
