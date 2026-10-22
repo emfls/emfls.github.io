@@ -1,0 +1,56 @@
+name: Notion Connection Smoke Check
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/notion-connection-smoke.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      NOTION_API_TOKEN: ${{ secrets.NOTION_API_TOKEN }}
+    steps:
+      - name: Check Notion token and ready queue read access
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os
+          from urllib.request import Request, urlopen
+          from urllib.error import HTTPError
+
+          base = 'https://api.notion.com/v1'
+          token = os.getenv('NOTION_API_TOKEN', '')
+          if not token:
+              raise SystemExit('FAIL: GitHub secret NOTION_API_TOKEN not available')
+          headers = {'Authorization':'Bearer '+token, 'Notion-Version':'2025-09-03', 'Content-Type':'application/json'}
+
+          def req(method, path, payload=None):
+              data = None if payload is None else json.dumps(payload).encode()
+              try:
+                  with urlopen(Request(base + path, data=data, method=method, headers=headers), timeout=20) as response:
+                      return json.loads(response.read())
+              except HTTPError as ex:
+                  print('Notion API HTTP', ex.code, 'for', path)
+                  raise
+
+          req('GET', '/users/me')
+          print('PASS: API token authenticates')
+          req('GET', '/data_sources/bf74df89-89b9-4fa7-b89f-1dfe513162e9')
+          print('PASS: Notion database data source readable')
+          result = req('POST', '/data_sources/bf74df89-89b9-4fa7-b89f-1dfe513162e9/query', {
+              'filter': {'property':'상태', 'select':{'equals':'발행대기'}},
+              'page_size': 10,
+          })
+          print('PASS: Ready queue query works; ready articles:', len(result.get('results', [])))
+          blocks = req('GET', '/blocks/401db4c0-a991-81aa-9790-cec419c1cb0a/children?page_size=5')
+          print('PASS: Draft content blocks readable:', len(blocks.get('results', [])))
+          print('NOTION_CONNECTION_SMOKE_PASS')
+          PY
