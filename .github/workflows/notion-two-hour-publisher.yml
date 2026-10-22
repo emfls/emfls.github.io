@@ -76,14 +76,11 @@ jobs:
             --body "Automated publication of one validated Notion draft. Includes its category sitemap and deduplication ledger."
           gh pr merge "$branch" --squash --delete-branch
 
-      - name: Request GitHub Pages build
+      - name: Rely on automatic Pages deployment after protected-main PR merge
         if: steps.stage.outputs.status == 'SOURCE_STAGED'
         shell: bash
         run: |
-          set -euo pipefail
-          export GH_TOKEN="$PAGES_DEPLOY_TOKEN"
-          if [ -z "$GH_TOKEN" ]; then export GH_TOKEN="$GITHUB_TOKEN"; fi
-          gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds" -H 'Accept: application/vnd.github+json'
+          echo "PR merged to main. GitHub Pages deploys automatically; verifying live page in the next step."
 
       - name: Verify published page content
         if: steps.stage.outputs.status == 'SOURCE_STAGED'
