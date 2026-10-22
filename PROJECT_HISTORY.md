@@ -1434,3 +1434,10 @@
 - 후속 단일 상태 조회에서 Pages run `38690149398`은 `success`로 종료된 것을 확인했다. 2026-10-15 15:06 KST 캐시 회피 HTTP 재확인 결과 5개 모두 HTTP 200, 정정된 2026 제목과 확인일을 제공했다(5/5). 운영 기록 커밋 `5d051cda45`의 Pages run `38690400132`는 당시 진행 중이었고 기다리지 않았다.
 - 다음 ChatGPT 검증용으로 GA4 최근 28일(v2~v7·17~19차 제외) 미검증 캠핑 페이지 totalAdRevenue 상위 15개를 산출해 결과 페이지에 기록했다. 값은 GA4 `totalAdRevenue`이며 AdSense 직접 PAGE_URL 수익이 아니다.
 - 전체 결과와 페이지별 대조표: [Notion 10차 결과](https://app.notion.com/p/3fadb4c0a99181a1be59f398ab4a4dcc). 지시 상태 완료.
+
+## 2026-10-22 — Task 53 · 12편/일 예약 발행 준비
+- 중앙 `DAILY_PUBLICATION_LIMIT`을 10에서 12로 변경하고 Keyword, External, Guard, publication protocol 테스트 및 활성 External runbook을 정합화했다. 과거 발행 10·11건 기록은 보존했다. Guard 테스트 파일의 최신 main 복사본에 있던 출력 truncation으로 인한 문법 오류도 직전 정상 파일로 복구했다.
+- TDD 경계 확인: 기존 10개 상한으로 12개 허용 테스트 6건이 실패한 뒤 정책 변경 후 통과했다. 서로 숫자만 다른 테스트 후보는 유사 의도 중복 필터가 제거하므로 12개의 서로 다른 intent fixture로 교체했다. 직접 관련 모듈 묶음은 운영 데이터 경로를 지정해 194 passed; 2건은 현재 운영 snapshot의 점수 기대 불일치와 shallow clone에 없는 과거 Git blob으로 실패했고, shallow history 의존 테스트 1건은 제외했다. 독립 cap 경계 테스트 7/7 통과.
+- GitHub 읽기 전용 UI: 예약 workflow 활성화/수동 실행 UI 표시, 현재 run 0개; Actions 설정은 allow-all 및 `GITHUB_TOKEN` 기본 write, workflow는 `contents:write`/`pages:write`; Pages는 `main` 루트에서 서비스 중. `PAGES_DEPLOY_TOKEN`, `INDEXNOW_KEY` 이름은 존재하지만 값은 열지 않았고 실제 token 동작은 run 전이라 검증되지 않았다.
+- 첫 큐 원고는 교육부·서울시교육청 일정과 일치한다. 현재일 dry-run은 `NOT_STARTED`; 2026-10-23 00:17 KST 격리 dry-run은 정확한 첫 큐 파일과 URL을 `READY`로 반환했다. 큐 SHA-256은 전후 `80d6d7569d2150a5426b24c2576fe081e0bd74c15326a74965680cbd4d8dc3cd`로 같고 대상 live URL은 예약 전 HTTP 화면에서 404. 발행·IndexNow 제출은 수행하지 않았다.
+- 남은 검증: 첫 예약 Actions 실행, Pages 공개 본문/URL/SHA, IndexNow 단일 URL의 실제 200/202 결과. 그 전까지 첫 원고 상태는 READY이며 Task 53은 수행 중이다.

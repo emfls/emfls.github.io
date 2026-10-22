@@ -69,7 +69,7 @@ class C01032ContentReleaseTests(unittest.TestCase):
         self.assertEqual(manifest["status"], "READY_FOR_REVIEW")
         self.assertEqual(manifest["dailyLimit"], 1)
         policy = (ROOT / "scripts/content_launch_policy.py").read_text(encoding="utf-8")
-        self.assertRegex(policy, r"(?m)^DAILY_PUBLICATION_LIMIT\s*=\s*10\s*$")
+        self.assertRegex(policy, r"(?m)^DAILY_PUBLICATION_LIMIT\s*=\s*12\s*$")
 
     def test_prior_published_manifest_is_preserved_as_the_exact_object(self):
         manifest = c01_032_manifest()

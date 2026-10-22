@@ -91,13 +91,20 @@ def test_prepare_does_not_increment_launch_count():
 
 
 
-def test_default_queue_policy_reports_ten_available_slots():
-    rows = [launch_row(f"도구안내{index}", f"/kor/column/tool-{index}/") for index in range(12)]
+def test_default_queue_policy_reports_twelve_available_slots():
+    keywords = (
+        "수능성적발표일", "아이폰아이클라우드사진백업", "윈도우스크린샷저장위치",
+        "고속도로미납통행료조회", "엑셀중복행삭제방법", "중고차사고이력조회",
+        "세탁기통세척코스", "기내보조배터리용량규정", "윈도우저장소센스정리",
+        "갤럭시버즈한쪽노이즈캔슬링", "PDF파일압축하는법", "아이폰기기간임시백업",
+        "초등학교입학준비물확인", "김치냉장고성에제거방법",
+    )
+    rows = [launch_row(keyword, f"/kor/column/tool-{index}/") for index, keyword in enumerate(keywords)]
     result = prepare_queue(rows, selected_at="2026-09-12T00:00:00+09:00")
-    assert result["dailyLimit"] == 10
+    assert result["dailyLimit"] == 12
     assert result.get("publishedToday") == 0
-    assert result.get("remainingCapacity") == 10
-    assert len(result["queue"]) == 10
+    assert result.get("remainingCapacity") == 12
+    assert len(result["queue"]) == 12
 
 
 def test_remaining_capacity_never_promotes_editorial_hold_or_ymyl_candidates():
@@ -256,9 +263,9 @@ def test_main_reads_committed_published_manifest_before_writing_queue(tmp_path, 
     prepare_keyword_launch.main()
     output=json.loads((data/"content-launch-queue.json").read_text(encoding="utf-8"))
     assert output["queue"] == []
-    assert output["dailyLimit"] == 10
+    assert output["dailyLimit"] == 12
     assert output["publishedToday"] == 1
-    assert output["remainingCapacity"] == 9
+    assert output["remainingCapacity"] == 11
     assert output["excluded"]["duplicate_keyword"] == 1
     assert output["excluded"]["daily_limit"] == 0
 
@@ -321,9 +328,9 @@ def test_current_keyboard_cleaning_publication_is_preserved_and_leaves_nine_slot
     prepare_keyword_launch.main()
 
     output = json.loads((data / "content-launch-queue.json").read_text(encoding="utf-8"))
-    assert output["dailyLimit"] == 10
+    assert output["dailyLimit"] == 12
     assert output["publishedToday"] == 1
-    assert output["remainingCapacity"] == 9
+    assert output["remainingCapacity"] == 11
     assert len(output["queue"]) == 4
     assert json.loads((data / "content-launch-manifest.json").read_text(encoding="utf-8")) == before
 
@@ -622,7 +629,7 @@ def test_latest_main_keyword_snapshot_replays_only_explicitly_approved_rows(tmp_
     expected_queue = queue_snapshot["queue"]
     assert [item["keyword"] for item in output["queue"]] == expected_queue
     assert output["selectedAt"] == queue_snapshot["selectedAt"]
-    assert output["dailyLimit"] == 10
+    assert output["dailyLimit"] == 12
     assert output["queue"] == queue_snapshot["queue"]
     assert all(item["status"] == "READY_TO_LAUNCH" for item in output["queue"])
     assert not (false_ready & {item["keyword"] for item in output["queue"]})
@@ -630,7 +637,7 @@ def test_latest_main_keyword_snapshot_replays_only_explicitly_approved_rows(tmp_
         keywords[item["keyword"]]["score_valid"].strip().casefold() == "true"
         for item in output["queue"]
     )
-    assert output["dailyLimit"] == 10
+    assert output["dailyLimit"] == 12
     # A same-day source release consumes a slot independently of the keyword
     # queue. Do not assume the repository has never published.
     selected_day = selected_at[:10]
@@ -641,7 +648,7 @@ def test_latest_main_keyword_snapshot_replays_only_explicitly_approved_rows(tmp_
     if counter.get("date") == selected_day:
         expected_published = max(expected_published, counter["launchedCount"])
     assert output["publishedToday"] == expected_published
-    assert output["remainingCapacity"] == max(0, 10 - expected_published)
+    assert output["remainingCapacity"] == max(0, 12 - expected_published)
     assert output["excluded"]["editorial_hold"] >= 2
     assert output["excluded"]["no_new_page"] >= 1
     if expected_queue:

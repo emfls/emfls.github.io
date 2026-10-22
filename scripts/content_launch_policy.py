@@ -7,7 +7,7 @@ from urllib.parse import urlsplit
 
 SITE_HOST = "emfls.github.io"
 SEOUL = ZoneInfo("Asia/Seoul")
-DAILY_PUBLICATION_LIMIT = 10
+DAILY_PUBLICATION_LIMIT = 12
 FINAL_PUBLICATION_STATUSES = {"PUBLISHED", "LAUNCHED"}
 
 # Query/content-type evidence is evaluated independently from the broad

@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 11928)
-Total output lines: 1070
-
 import csv
 import json
 import os
@@ -251,7 +248,7 @@ def run_launch(tmp_path, *, sources=(), external=(), decisions=None, proposals=(
         "schemaVersion": 1,
         "status": "READY",
         "runAt": datetime.now(SEOUL).isoformat(),
-        "dailyLimit": 10,
+        "dailyLimit": 12,
         "publishedToday": (counter or {}).get("launchedCount", 0),
         "urls": urls,
         "contentPaths": content_paths,
@@ -437,7 +434,180 @@ def test_c02_034_does_not_authorize_another_unknown_candidate(tmp_path):
     ({}, {"candidateIntents": ["다른 사용자 의도"]}, "CANDIDATE_IDENTITY_MISMATCH"),
     ({}, {"candidateTitles": ["다른 제목"]}, "CANDIDATE_IDENTITY_MISMATCH"),
 ])
-def test_c02_034_identity_intent_title_and_canonical_mismatches_are_block…1928 tokens truncated…
+def test_c02_034_identity_intent_title_and_canonical_mismatches_are_blocked(
+    tmp_path, proposal_overrides, manifest_overrides, error,
+):
+    result = run_controlled_experiment(
+        tmp_path, proposal_overrides=proposal_overrides, manifest_overrides=manifest_overrides,
+    )
+    assert result["status"] == "FAIL"
+    assert error in result["errors"]
+
+
+@pytest.mark.parametrize("invalidity", [
+    "expired", "revoked", "unreviewed", "missing_source", "altered_source",
+    "wrong_candidate", "long_lived",
+])
+def test_c02_034_stale_revoked_or_unsubstantiated_approval_fails_closed(tmp_path, invalidity):
+    approval = controlled_experiment_approval()
+    record = approval["approvals"][0]
+    if invalidity == "expired":
+        record["validThrough"] = (datetime.now(SEOUL).date() - timedelta(days=1)).isoformat()
+    elif invalidity == "revoked":
+        record["revoked"] = True
+    elif invalidity == "unreviewed":
+        record["sourceReview"]["status"] = "UNKNOWN"
+    elif invalidity == "missing_source":
+        record["sourceReview"]["sources"] = []
+    elif invalidity == "altered_source":
+        record["sourceReview"]["sources"][0]["url"] = "https://example.invalid/fake"
+    elif invalidity == "wrong_candidate":
+        record["candidateId"] = "EXT-OTHER-UNKNOWN"
+    else:
+        record["validThrough"] = (datetime.now(SEOUL).date() + timedelta(days=8)).isoformat()
+    result = run_controlled_experiment(tmp_path, approvals=approval)
+    assert result["status"] == "FAIL"
+    assert "APPROVAL_EVIDENCE_UNAVAILABLE" in result["errors"]
+
+
+def test_c02_034_duplicate_approval_records_are_ambiguous_and_blocked(tmp_path):
+    approval = controlled_experiment_approval()
+    approval["approvals"].append(dict(approval["approvals"][0]))
+    result = run_controlled_experiment(tmp_path, approvals=approval)
+    assert result["status"] == "FAIL"
+    assert "APPROVAL_EVIDENCE_UNAVAILABLE" in result["errors"]
+    assert "AMBIGUOUS_TRUSTED_CANDIDATE" in result["errors"]
+
+
+def test_c02_034_head_only_approval_cannot_authorize_candidate(tmp_path):
+    result = run_controlled_experiment(
+        tmp_path, approvals=None,
+        head_changes={"data/content-launch-experiment-approvals.json": controlled_experiment_approval()},
+    )
+    assert result["status"] == "FAIL"
+    assert "TRUSTED_CANDIDATE_NOT_FOUND" in result["errors"]
+    assert "APPROVAL_EVIDENCE_CHANGED_WITH_CONTENT" in result["errors"]
+
+
+def test_c02_034_hold_decision_and_protected_candidate_remain_blocked(tmp_path):
+    held = run_controlled_experiment(tmp_path / "held", decisions={C02_CANDIDATE_ID: "HOLD"})
+    protected = run_controlled_experiment(
+        tmp_path / "protected",
+        protected_experiments=[{
+            "candidateId": C02_CANDIDATE_ID, "url": C02_CANDIDATE_URL, "status": "OBSERVING",
+        }],
+    )
+    assert held["status"] == "FAIL"
+    assert "EDITORIAL_DECISION_BLOCKED" in held["errors"]
+    assert protected["status"] == "FAIL"
+    assert "PROTECTED_EXPERIMENT_CHANGED" in protected["errors"]
+
+
+@pytest.mark.parametrize("decision", ["HOLD", "NO_NEW_PAGE", "UPDATE_EXISTING"])
+def test_c02_034_all_editorial_stop_decisions_remain_blocked(tmp_path, decision):
+    result = run_controlled_experiment(tmp_path, decisions={C02_CANDIDATE_ID: decision})
+    assert result["status"] == "FAIL"
+    assert "EDITORIAL_DECISION_BLOCKED" in result["errors"]
+
+
+def test_c02_034_ymyl_and_protected_winner_remain_blocked(tmp_path):
+    approval = controlled_experiment_approval()
+    approval["approvals"][0]["ymyl"] = True
+    ymyl = run_controlled_experiment(tmp_path / "ymyl", approvals=approval)
+    winner = run_controlled_experiment(
+        tmp_path / "winner",
+        protected_winners=[{"url": C02_CANDIDATE_URL}],
+    )
+    assert ymyl["status"] == "FAIL"
+    assert "YMYL_REVIEW_REQUIRED" in ymyl["errors"]
+    assert winner["status"] == "FAIL"
+    assert "PROTECTED_WINNER_CHANGED" in winner["errors"]
+
+
+def test_c02_034_already_published_candidate_or_url_is_blocked(tmp_path):
+    result = run_controlled_experiment(
+        tmp_path,
+        base_manifest={
+            "status": "PUBLISHED",
+            "runAt": "2026-10-01T09:00:00+09:00",
+            "candidateIds": [C02_CANDIDATE_ID],
+            "urls": [C02_CANDIDATE_URL],
+            "contentPaths": [C02_CANDIDATE_PATH],
+        },
+    )
+    assert result["status"] == "FAIL"
+    assert "CANDIDATE_ALREADY_PUBLISHED" in result["errors"]
+
+
+def test_c02_034_phase_b_must_preserve_the_prior_published_manifest_record(tmp_path):
+    previous = published_manifest_record()
+    retained = run_controlled_experiment(
+        tmp_path / "retained",
+        base_manifest=previous,
+        manifest_overrides={"preservedManifestRecords": [previous]},
+    )
+    dropped = run_controlled_experiment(
+        tmp_path / "dropped",
+        base_manifest=previous,
+    )
+    assert retained == {"status": "PASS", "errors": []}
+    assert dropped["status"] == "FAIL"
+    assert "PUBLISHED_MANIFEST_HISTORY_DROPPED" in dropped["errors"]
+
+
+def test_c02_034_preserved_manifest_history_still_blocks_republication_and_daily_overflow(tmp_path):
+    already_published = published_manifest_record(
+        candidate_id=C02_CANDIDATE_ID, url=C02_CANDIDATE_URL,
+    )
+    duplicate = run_controlled_experiment(
+        tmp_path / "duplicate",
+        base_manifest={"preservedManifestRecords": [already_published]},
+        manifest_overrides={"preservedManifestRecords": [already_published]},
+    )
+    today = datetime.now(SEOUL).date().isoformat()
+    prior_today = published_manifest_record(
+        candidate_id="keyword:prior1", url="/kor/report/prior1.html",
+        run_at=f"{today}T09:00:00+09:00", published_today=3,
+    )
+    prior_today["candidateIds"] = ["keyword:prior1", "keyword:prior2", "keyword:prior3"]
+    prior_today["urls"] = ["/kor/report/prior1.html", "/kor/report/prior2.html", "/kor/report/prior3.html"]
+    prior_today["contentPaths"] = ["kor/report/prior1.html", "kor/report/prior2.html", "kor/report/prior3.html"]
+    overflow = run_controlled_experiment(
+        tmp_path / "overflow",
+        base_manifest={"preservedManifestRecords": [prior_today]},
+        manifest_overrides={"preservedManifestRecords": [prior_today]},
+    )
+    assert duplicate["status"] == "FAIL"
+    assert "CANDIDATE_ALREADY_PUBLISHED" in duplicate["errors"]
+    assert overflow["status"] == "FAIL"
+    assert "PUBLICATION_LIMIT_EXCEEDED" in overflow["errors"]
+
+
+def test_c02_034_experiment_limit_and_guard_content_separation_remain_enforced(tmp_path):
+    excessive = run_controlled_experiment(tmp_path / "limit", manifest_overrides={"dailyLimit": 2})
+    mixed = run_controlled_experiment(
+        tmp_path / "mixed",
+        head_changes={"scripts/content_launch_guard.py": "# changed guard"},
+    )
+    assert excessive["status"] == "FAIL"
+    assert "PUBLICATION_LIMIT_EXCEEDED" in excessive["errors"]
+    assert mixed["status"] == "FAIL"
+    assert "LAUNCH_GUARD_CHANGED_WITH_CONTENT" in mixed["errors"]
+
+
+def test_unapproved_hold_route_cannot_borrow_an_unrelated_safe_keyword_id(tmp_path):
+    safe = keyword_source("글자수계산기", category="tool", content_types="calculator/tool", intent="calculator/tool")
+    hold = keyword_source("인천공항교통약자우대출구")
+    result = run_launch(
+        tmp_path, sources=[safe, hold], decisions={"인천공항교통약자우대출구": "HOLD"},
+        proposals=[proposal(safe, url=hold["url"], contentPath=hold["contentPath"])],
+    )
+    assert result["status"] == "FAIL"
+    assert "CANDIDATE_IDENTITY_MISMATCH" in result["errors"]
+
+
+def test_unapproved_ymyl_route_cannot_borrow_an_unrelated_safe_keyword_id(tmp_path):
+    safe = keyword_source("글자수계산기", category="tool", content_types="calculator/tool", intent="calculator/tool")
     ymyl = keyword_source("급여세금계산기", category="tool", content_types="calculator/tool", intent="calculator/tool")
     result = run_launch(tmp_path, sources=[safe, ymyl], proposals=[
         proposal(safe, url=ymyl["url"], contentPath=ymyl["contentPath"]),
@@ -760,15 +930,15 @@ def test_existing_published_manifest_without_new_html_changes_passes(tmp_path):
     assert json.loads(result.stdout) == {"status": "PASS", "errors": []}
 
 
-def test_daily_publication_limit_allows_ten_but_rejects_eleven(tmp_path):
-    candidates = [keyword_source(f"안전후보{i}") for i in range(11)]
-    ten = run_launch(tmp_path / "ten", sources=candidates[:10],
-                     proposals=[proposal(row) for row in candidates[:10]])
-    eleven = run_launch(tmp_path / "eleven", sources=candidates,
-                        proposals=[proposal(row) for row in candidates])
-    assert ten == {"status": "PASS", "errors": []}
-    assert eleven["status"] == "FAIL"
-    assert "PUBLICATION_LIMIT_EXCEEDED" in eleven["errors"]
+def test_daily_publication_limit_allows_twelve_but_rejects_thirteen(tmp_path):
+    candidates = [keyword_source(f"안전후보{i}") for i in range(13)]
+    twelve = run_launch(tmp_path / "twelve", sources=candidates[:12],
+                        proposals=[proposal(row) for row in candidates[:12]])
+    thirteen = run_launch(tmp_path / "thirteen", sources=candidates,
+                          proposals=[proposal(row) for row in candidates])
+    assert twelve == {"status": "PASS", "errors": []}
+    assert thirteen["status"] == "FAIL"
+    assert "PUBLICATION_LIMIT_EXCEEDED" in thirteen["errors"]
 
 
 def test_unparseable_base_publication_counter_fails_closed(tmp_path):

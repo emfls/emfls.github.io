@@ -2,7 +2,7 @@
 
 ## 목적
 
-2시간마다 외부 검색 환경에서 새로운 사용자 수요를 탐색하고, 기존 emfls 약 19,000페이지와 겹치지 않으며 고품질 제작이 가능한 후보를 `READY_TO_LAUNCH`까지 준비한다. 실제 신규 발행은 한국시간 기준 하루 최대 3페이지이며, 좋은 후보가 없으면 0페이지가 정상이다.
+2시간마다 외부 검색 환경에서 새로운 사용자 수요를 탐색하고, 기존 emfls 약 19,000페이지와 겹치지 않으며 고품질 제작이 가능한 후보를 `READY_TO_LAUNCH`까지 준비한다. 실제 신규 발행은 한국시간 기준 하루 최대 12페이지이며, 좋은 후보가 없으면 0페이지가 정상이다.
 
 ## 실행 순서
 
@@ -17,7 +17,7 @@
 9. `EXTERNAL_CONTENT_OPPORTUNITY_SCORE`와 `QUALITY_FEASIBILITY_SCORE`를 계산한다.
 10. 두 임계값과 overlap, 출처, Brief 조건을 모두 통과한 후보만 READY 큐에 적재한다.
 11. 당일 남은 발행 슬롯과 기존 실험을 확인한다.
-12. 모든 launch gate를 통과한 최상위 후보만 0~3페이지 발행한다.
+12. 모든 launch gate를 통과한 최상위 후보만 0~12페이지 발행한다.
 13. sitemap, hub 내부링크와 index readiness를 갱신한다.
 14. launch guard와 관련 테스트 및 전체 pytest를 실행한다.
 15. 보고서와 성장 기록을 갱신하고 안전한 변경만 커밋·push한다.
@@ -34,7 +34,7 @@ emfls 저장 프로젝트에서 External Web Opportunity 운영을 수행한다.
 
 통과 후보는 경쟁 콘텐츠의 공통 답변과 부족한 점을 분석하고, 명확한 CONTENT_GAP과 독립적인 추가 가치를 정의한다. 커뮤니티는 질문 발견에만 사용하고 최종 사실은 공식·신뢰 출처로 검증한다. 공식 sources, supporting sources, key facts, potential table, potential tool, FAQ, closest emfls page, why separate page 및 internal link plan을 포함한 Content Brief를 작성한다. YMYL은 공식 출처, reviewed date, limitations와 disclaimer가 없으면 발행하지 않는다. 확인 불가능한 사실은 NOT_VERIFIED로 남긴다.
 
-scripts/external_discovery_pipeline.py와 scripts/prepare_external_launch.py의 결정적 규칙을 사용한다. External Opportunity Score 70 이상, Quality Feasibility Score 75 이상, overlap LOW 이하 및 모든 근거·Brief 조건을 통과한 후보만 READY_TO_LAUNCH로 둔다. 한국시간 당일 발행량이 3개 미만일 때 가장 높은 기대값의 후보만 발행하며 3개를 억지로 채우지 않는다. 데이터나 출처가 부족하면 0페이지 발행하고 INSUFFICIENT_DATA, NOT_CONNECTED, STALE_DATA 또는 NOT_VERIFIED를 기록한다.
+scripts/external_discovery_pipeline.py와 scripts/prepare_external_launch.py의 결정적 규칙을 사용한다. External Opportunity Score 70 이상, Quality Feasibility Score 75 이상, overlap LOW 이하 및 모든 근거·Brief 조건을 통과한 후보만 READY_TO_LAUNCH로 둔다. 한국시간 당일 발행량이 12개 미만일 때 가장 높은 기대값의 후보만 발행하며 12개를 억지로 채우지 않는다. 데이터나 출처가 부족하면 0페이지 발행하고 INSUFFICIENT_DATA, NOT_CONNECTED, STALE_DATA 또는 NOT_VERIFIED를 기록한다.
 
 WINNER와 활성 COOLDOWN, 특히 논산·철원·울진 CTR 실험을 수정하지 않는다. URL, canonical, 광고, analytics, AdSense CTR, 대량 rewrite, 삭제, doorway 및 지역명 치환을 하지 않는다. 신규 페이지는 검색자의 첫 화면에서 핵심 답을 제공하고 intent에 맞는 비교·계산·가이드·체크리스트·도구 구조를 사용한다.
 
@@ -48,7 +48,7 @@ WINNER와 활성 COOLDOWN, 특히 논산·철원·울진 CTR 실험을 수정하
 - 주기: 2시간
 - 알림: 실패한 실행만
 - 자동 발행 권한: 사용자가 2026-09-08에 명시적으로 사전 승인함. 모든 launch gate를 통과한 `READY_TO_LAUNCH` 후보는 페이지별 추가 승인 없이 구현·QA·발행한다.
-- 승인 재요청 금지: 기존 승인 범위 안의 신규 페이지 발행은 별도 설계 승인 때문에 중단하지 않는다. 단, 하루 3개 제한과 품질·중복·출처·YMYL·WINNER·COOLDOWN 보호 기준은 그대로 적용한다.
+- 승인 재요청 금지: 기존 승인 범위 안의 신규 페이지 발행은 별도 설계 승인 때문에 중단하지 않는다. 단, 하루 12개 제한과 품질·중복·출처·YMYL·WINNER·COOLDOWN 보호 기준은 그대로 적용한다.
 - 프로젝트 ID: 자동화 생성 시 `list_projects`로 검증한 실제 ID 사용
 - 외부 후보 DB: `data/external-content-opportunities.json`
 - 실행 보고서: `reports/external-discovery-pipeline.md`

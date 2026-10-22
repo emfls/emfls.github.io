@@ -15,6 +15,11 @@
 
 ## P0 - Critical
 
+- [ ] Task 53 C01 — 2시간 간격 예약 발행·일일 한도 12편 정합성
+  - 상태: 중앙 정책·Keyword/External/Guard 경계 테스트와 활성 runbook을 12로 맞춘 작업본 준비. Actions 활성화, `main` Pages 설정, Pages/IndexNow secret 이름 존재를 읽기 전용 화면에서 확인했으며 실제 workflow 실행은 아직 없음.
+  - 첫 원고: `2027-csat-2026-test-date-score-release.html`; 2026-10-23 00:17 KST dry-run `READY`, 현재일 dry-run `NOT_STARTED`, 큐 SHA 불변, 공개 URL은 예약 전에 404. 첫 실제 공개·Pages·IndexNow HTTP 응답을 확인할 때까지 `PUBLISHED`로 처리하지 않는다.
+  - 후속: 변경을 main에 반영할 수 있는지 확인하고, 첫 예약 실행 후 live 제목·URL·Pages SHA·IndexNow 200/202 보고서를 확인한다. 상세 상태는 Task 53 Notion SOP에 기록.
+
 - [ ] C02-20261012-037 — False READY_TO_LAUNCH queue blocker
   - 상태: exact three source-backed HOLD/NO_NEW_PAGE decisions and fail-closed editorial clearance are implemented; current queue is empty while its daily capacity remains 3. Focused generator tests pass. Task remains open for independent PR and Control Tower review; no merge or publication is authorized here.
 
