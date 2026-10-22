@@ -1,4 +1,4 @@
-name: Notion / Automatic Two-Hour Publishing
+name: Notion / Automatic Hourly Publishing
 
 on:
   # The external HTTP scheduler uses GitHub's authenticated workflow_dispatch API.
@@ -34,7 +34,7 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Honor strict two-hour publication spacing across scheduler jitter
+      - name: Honor strict one-hour publication spacing across scheduler jitter
         shell: bash
         run: |
           set -euo pipefail
@@ -52,10 +52,10 @@ jobs:
               last_time = datetime.fromisoformat(previous["slotKst"])
               if last_time.tzinfo is None:
                   raise SystemExit("Last publication timestamp has no timezone: cannot safely enforce cooldown")
-              remaining = (last_time.astimezone(timezone.utc) + timedelta(hours=2) - datetime.now(timezone.utc)).total_seconds()
+              remaining = (last_time.astimezone(timezone.utc) + timedelta(hours=1) - datetime.now(timezone.utc)).total_seconds()
               if 0 < remaining <= 600:
                   seconds = remaining + 3
-                  print(f"Waiting {seconds:.0f} seconds for two-hour publication cooldown", flush=True)
+                  print(f"Waiting {seconds:.0f} seconds for one-hour publication cooldown", flush=True)
                   time.sleep(seconds)
               elif remaining > 600:
                   print(f"Cooldown has {remaining:.0f} seconds left; publisher will return COOLDOWN without publishing")
