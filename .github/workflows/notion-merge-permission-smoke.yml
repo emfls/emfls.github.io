@@ -34,7 +34,7 @@ jobs:
           first="notion/approval-probe-${GITHUB_RUN_ID}"
           git switch -c "$first"
           echo "Test GitHub Actions bot PR merge ability. One-time marker." > data/.notion-approval-merge-probe.txt
-          git add data/.notion-approval-merge-probe.txt
+          git add -f data/.notion-approval-merge-probe.txt
           git commit -m "test: check Notion publisher bot merge permission"
           git push origin "HEAD:refs/heads/$first"
           gh pr create --head "$first" --base main --title "test: publisher auto-merge permission" --body "One-time permission smoke test after changing main branch approval policy. Contains only a disposable marker."
