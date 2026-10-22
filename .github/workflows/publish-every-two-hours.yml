@@ -1,137 +1,15 @@
-name: ChatGPT Stack / Codex-1 Two-Hour Publisher
+name: Legacy GitHub draft queue publisher (manual recovery only)
 
+# Replaced by notion-two-hour-publisher.yml.
+# Preserve existing articles and drafts, but do not auto-release the old queue.
 on:
-  schedule:
-    # ChatGPT-written draft stack, Codex/Python release only.
-    # Anchor 13:47 KST Oct 22; next windows 15:47, 17:47, 19:47...
-    # UTC even hours = odd hours in KST (KST is UTC+9).
-    - cron: '47 0-22/2 * * *'
   workflow_dispatch:
 
 permissions:
-  contents: write
-  pages: write
-
-concurrency:
-  group: scheduled-korean-article-publication
-  cancel-in-progress: false
+  contents: read
 
 jobs:
-  publish_one:
-    if: github.repository == 'emfls/emfls.github.io'
+  info:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
-    env:
-      TZ: Asia/Seoul
-      PAGES_DEPLOY_TOKEN: ${{ secrets.PAGES_DEPLOY_TOKEN }}
-      INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
-      GITHUB_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          persist-credentials: true
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Stage one vetted original Korean article
-        id: stage
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 scripts/publish_scheduled_queue.py --root . > scheduled-publication-result.json
-          cat scheduled-publication-result.json
-          python3 - <<'PY'
-          import json, os
-          result = json.load(open('scheduled-publication-result.json', encoding='utf-8'))
-          with open(os.environ['GITHUB_OUTPUT'], 'a') as out:
-              out.write('status=' + result['status'] + '\n')
-              if result['status'] == 'SOURCE_STAGED':
-                  out.write('url=' + result['url'] + '\n')
-                  out.write('destination=' + result['destination'] + '\n')
-                  out.write('queue_file=' + result['queueFile'] + '\n')
-          PY
-
-      - name: Commit one page and update its category sitemap
-        if: steps.stage.outputs.status == 'SOURCE_STAGED'
-        shell: bash
-        run: |
-          set -euo pipefail
-          dest='${{ steps.stage.outputs.destination }}'
-          queue='${{ steps.stage.outputs.queue_file }}'
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add "$dest" "$(dirname "$dest")/sitemap.xml"
-          git add -f data/scheduled-publication-ledger.jsonl
-          git add -u -- "$queue"
-          git diff --cached --check
-          git commit -m 'content: publish one scheduled Korean guide'
-          git push origin HEAD:main
-
-      - name: Request official Pages build
-        if: steps.stage.outputs.status == 'SOURCE_STAGED'
-        shell: bash
-        run: |
-          set -euo pipefail
-          export GH_TOKEN="${PAGES_DEPLOY_TOKEN:-$GITHUB_TOKEN}"
-          gh api --method POST "repos/${GITHUB_REPOSITORY}/pages/builds" -H 'Accept: application/vnd.github+json'
-
-      - name: Verify live content instead of assuming commit means publication
-        if: steps.stage.outputs.status == 'SOURCE_STAGED'
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 - '${{ steps.stage.outputs.url }}' '${{ steps.stage.outputs.destination }}' <<'PY'
-          import sys, time
-          from urllib.request import Request, urlopen
-          from urllib.error import HTTPError, URLError
-          url, path = sys.argv[1:]
-          expected_title = open(path, encoding='utf-8').read().split('<title>',1)[1].split('</title>',1)[0].strip()
-          for attempt in range(24):
-              try:
-                  req = Request(url + '?scheduled-verify=' + str(int(time.time())), headers={'Cache-Control':'no-cache'})
-                  with urlopen(req, timeout=15) as response:
-                      content = response.read().decode('utf-8', errors='replace')
-                      if response.status == 200 and expected_title in content:
-                          print('LIVE VERIFIED:', url)
-                          sys.exit(0)
-              except (HTTPError, URLError, TimeoutError) as error:
-                  print('Page not yet live:', str(error)[:180])
-              time.sleep(15)
-          raise SystemExit('DEPLOY_NOT_YET_LIVE: public page/title did not verify')
-          PY
-
-      - name: Submit verified URL to IndexNow
-        if: steps.stage.outputs.status == 'SOURCE_STAGED'
-        shell: bash
-        run: |
-          set -euo pipefail
-          if [ -z "$INDEXNOW_KEY" ]; then
-            echo '::error::INDEXNOW_KEY unavailable: IndexNow submission cannot be verified.'
-            exit 1
-          fi
-          mkdir -p artifacts
-          python3 scripts/indexnow_submit.py --root . --before HEAD^ --sha HEAD \
-            --backfill-urls '${{ steps.stage.outputs.url }}' \
-            --report artifacts/scheduled-indexnow.json
-          cat artifacts/scheduled-indexnow.json
-          python3 - '${{ steps.stage.outputs.url }}' <<'PY'
-          import json, sys
-          expected = sys.argv[1]
-          r = json.load(open('artifacts/scheduled-indexnow.json', encoding='utf-8'))
-          assert r.get('status') == 'SUBMITTED', 'IndexNow not SUBMITTED'
-          assert r.get('indexnowStatus') in (200, 202), 'IndexNow HTTP not 200/202'
-          assert expected in r.get('submitted', []), 'Published URL missing in IndexNow report'
-          assert len(r.get('submitted', [])) == 1, 'Unexpected submission count'
-          print('INDEXNOW VERIFIED: one URL, HTTP', r['indexnowStatus'], expected)
-          PY
-
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: scheduled-publication-${{ github.run_id }}
-          path: |
-            scheduled-publication-result.json
-            artifacts/scheduled-indexnow.json
-          if-no-files-found: warn
+      - run: echo 'Automatic releases now read the new Notion draft database. Legacy drafts are preserved without scheduling.'
