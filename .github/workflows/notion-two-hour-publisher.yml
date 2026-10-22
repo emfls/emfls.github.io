@@ -1,0 +1,131 @@
+name: Notion / Automatic Two-Hour Publishing
+
+on:
+  schedule:
+    # 01:47, 03:47, ... 23:47 Korea time.
+    - cron: '47 0-22/2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: scheduled-korean-article-publication
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.repository == 'emfls/emfls.github.io'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      TZ: Asia/Seoul
+      NOTION_API_TOKEN: ${{ secrets.NOTION_API_TOKEN }}
+      PAGES_DEPLOY_TOKEN: ${{ secrets.PAGES_DEPLOY_TOKEN }}
+      INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Load next ready Notion article and stage one page
+        id: stage
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/notion_autopublish.py stage > notion-publish-result.json
+          cat notion-publish-result.json
+          python3 - <<'PY'
+          import json,os
+          row=json.load(open("notion-publish-result.json",encoding="utf-8"))
+          with open(os.environ["GITHUB_OUTPUT"],"a") as out:
+              for field in ("status","destination","url","page_id"):
+                  if field in row:
+                      out.write(field+"="+row[field]+"\n")
+          PY
+
+      - name: Commit page, category sitemap and publication ledger
+        if: steps.stage.outputs.status == 'SOURCE_STAGED'
+        env:
+          DESTINATION: ${{ steps.stage.outputs.destination }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- "$DESTINATION" "$(dirname "$DESTINATION")/sitemap.xml"
+          git add -f data/scheduled-publication-ledger.jsonl
+          git diff --cached --check
+          git commit -m "content: publish one original Notion guide"
+          git push origin HEAD:main
+
+      - name: Request GitHub Pages build
+        if: steps.stage.outputs.status == 'SOURCE_STAGED'
+        shell: bash
+        run: |
+          set -euo pipefail
+          export GH_TOKEN="$PAGES_DEPLOY_TOKEN"
+          if [ -z "$GH_TOKEN" ]; then export GH_TOKEN="$GITHUB_TOKEN"; fi
+          gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds" -H 'Accept: application/vnd.github+json'
+
+      - name: Verify published page content
+        if: steps.stage.outputs.status == 'SOURCE_STAGED'
+        env:
+          DESTINATION: ${{ steps.stage.outputs.destination }}
+          PUBLIC_URL: ${{ steps.stage.outputs.url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os,time
+          from urllib.request import Request,urlopen
+          from urllib.error import HTTPError,URLError
+          url=os.environ["PUBLIC_URL"]
+          path=os.environ["DESTINATION"]
+          title=open(path,encoding="utf-8").read().split("<title>",1)[1].split("</title>",1)[0]
+          for retry in range(24):
+              try:
+                  request=Request(url+"?notion-verify="+str(retry),headers={"Cache-Control":"no-cache"})
+                  with urlopen(request,timeout=15) as response:
+                      if response.status==200 and title in response.read().decode("utf-8",errors="replace"):
+                          print("LIVE VERIFIED:",url)
+                          raise SystemExit(0)
+              except (HTTPError,URLError,TimeoutError):
+                  pass
+              time.sleep(15)
+          raise SystemExit("NOT_LIVE: public page could not be verified")
+          PY
+
+      - name: Mark Notion item published after live verification
+        if: steps.stage.outputs.status == 'SOURCE_STAGED'
+        env:
+          NOTION_PAGE_ID: ${{ steps.stage.outputs.page_id }}
+          PUBLIC_URL: ${{ steps.stage.outputs.url }}
+        run: |
+          python3 scripts/notion_autopublish.py finalize --page-id "$NOTION_PAGE_ID" --url "$PUBLIC_URL"
+
+      - name: Optional IndexNow submission
+        if: steps.stage.outputs.status == 'SOURCE_STAGED'
+        env:
+          PUBLIC_URL: ${{ steps.stage.outputs.url }}
+        shell: bash
+        run: |
+          if [ -n "$INDEXNOW_KEY" ]; then
+            mkdir -p artifacts
+            python3 scripts/indexnow_submit.py --root . --before HEAD^ --sha HEAD --backfill-urls "$PUBLIC_URL" --report artifacts/notion-indexnow.json
+          fi
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: notion-publication-${{ github.run_id }}
+          path: |
+            notion-publish-result.json
+            artifacts/notion-indexnow.json
+          if-no-files-found: warn
