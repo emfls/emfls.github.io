@@ -2,10 +2,12 @@ name: Notion / Automatic Two-Hour Publishing
 
 on:
   schedule:
-    # Two-hourly slots at 22:37, 00:37, 02:37, ... KST, away from
-    # crowded UTC :00/:30 boundaries where GitHub may drop schedule jobs.
-    # KST = UTC+9. GitHub schedule events execute on the default branch.
-    - cron: '37 1-23/2 * * *'
+    # Primary two-hour schedule at 22:57, 00:57, 02:57, ... KST.
+    # Offset from GitHub's busy :00/:30 dispatch times.
+    # First run after the 2026-10-23 00:52 publication is 02:57 KST;
+    # this respects the mandatory two-hour publisher cooldown.
+    # KST = UTC+9. GitHub schedule runs on the default branch.
+    - cron: '57 1-23/2 * * *'
   workflow_dispatch:
 
 permissions:
