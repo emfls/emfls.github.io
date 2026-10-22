@@ -51,8 +51,12 @@ jobs:
               'page_size': 10,
           })
           print('PASS: Ready queue query works; ready articles:', len(result.get('results', [])))
-          blocks = req('GET', '/blocks/401db4c0-a991-81aa-9790-cec419c1cb0a/children?page_size=5')
-          print('PASS: Draft content blocks readable:', len(blocks.get('results', [])))
+          ready = result.get('results', [])
+          if ready:
+              blocks = req('GET', '/blocks/' + ready[0]['id'] + '/children?page_size=5')
+              print('PASS: Next ready draft content blocks readable:', len(blocks.get('results', [])))
+          else:
+              print('PASS: Queue is empty; no content to read')
           print('NOTION_CONNECTION_SMOKE_PASS')
           PY
 
