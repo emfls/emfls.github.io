@@ -1,0 +1,69 @@
+name: Notion Article Layout QA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/notion-article-layout-qa.yml
+      - scripts/templates/notion_article.html
+      - scripts/notion_article_template.py
+      - scripts/notion_autopublish.py
+      - kor/report/gov/flu-shot-free-2026-2027-children-pregnant-seniors.html
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check render syntax and published flu page metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile scripts/notion_article_template.py scripts/notion_autopublish.py
+          python - <<'PY'
+          import json, re, sys
+          from pathlib import Path
+          from html.parser import HTMLParser
+          sys.path.insert(0, str(Path('scripts').resolve()))
+          from notion_article_template import render_article
+          from publish_scheduled_queue import validate_article, MarkupCheck
+          original_path=Path('kor/report/gov/flu-shot-free-2026-2027-children-pregnant-seniors.html')
+          html=original_path.read_text(encoding='utf-8')
+          expected='https://emfls.github.io/'+str(original_path)
+          assert html.count('G-QP5Q67GE5B') == 2
+          assert html.count('ca-pub-8830524482034754') == 1
+          assert html.count('<h1>') == 1
+          assert html.count('class="section"') >= 6
+          assert 'aria-label="글 목차"' in html
+          assert '<html lang="ko">' in html
+          assert '<link rel="canonical" href="'+expected+'">' in html
+          assert '<script type="application/ld+json">' in html
+          assert '{{' not in html
+          p=MarkupCheck()
+          p.feed(html)
+          assert p.canonical==expected
+          ld=json.loads(re.search(r'<script type="application/ld\+json">(.+?)</script>',html,re.S).group(1))
+          assert ld['url']==expected and ld['datePublished']=='2026-10-22'
+          print('EXISTING_FLU_ARTICLE_PASS')
+          synthetic_body='<p>테스트 원고입니다. 필요한 정보를 확인하세요.</p><h2>일정</h2><p>'+('검증하는 내용을 반복합니다. '*50)+'</p><ul><li>준비물</li><li>공식 출처 확인</li></ul>'
+          url='https://emfls.github.io/kor/report/seasonal/long-form-layout-check-2026.html'
+          out=render_article(title='2026년 원고 레이아웃 테스트 안내서',description='자세한 정보를 확인하는 테스트 가이드',url=url,category='seasonal',body=synthetic_body,published_date='2026-10-22')
+          assert out.count('G-QP5Q67GE5B')==2
+          assert out.count('ca-pub-8830524482034754')==1
+          assert '<h2 id="section-01">' in out
+          assert 'href="#section-01"' in out
+          assert '{{' not in out
+          assert '<meta name="viewport"' in out
+          assert '<html lang="ko">' in out
+          test_draft={'title':'2026년 원고 레이아웃 테스트 안내서','destination':'kor/report/seasonal/long-form-layout-check-2026.html','html':out,'sources':['https://cert.kdca.go.kr/']}
+          validate_article(test_draft,Path('.'))
+          print('FUTURE_NOTION_ARTICLE_RENDER_PASS')
+          PY
