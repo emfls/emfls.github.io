@@ -72,11 +72,15 @@ def get_blocks(page_id):
 
 def to_html(page_id):
     rendered, sources, summary = [], [], ""
+    active_list = None
     for block in get_blocks(page_id):
         kind = block["type"]
         if block.get("has_children"):
             raise ValueError("Nested blocks are not supported: " + kind)
         if kind == "divider":
+            if active_list:
+                rendered.append("</" + active_list + ">")
+                active_list = None
             rendered.append("<hr>")
             continue
         if kind not in ("paragraph", "heading_1", "heading_2", "heading_3",
@@ -105,12 +109,17 @@ def to_html(page_id):
             "heading_3": "h3", "quote": "blockquote",
             "bulleted_list_item": "li", "numbered_list_item": "li",
         }[kind]
-        part = "<" + tag + ">" + val + "</" + tag + ">"
-        if kind == "bulleted_list_item":
-            part = "<ul>" + part + "</ul>"
-        if kind == "numbered_list_item":
-            part = "<ol>" + part + "</ol>"
-        rendered.append(part)
+        desired_list = ("ul" if kind == "bulleted_list_item" else
+                        "ol" if kind == "numbered_list_item" else None)
+        if active_list != desired_list:
+            if active_list:
+                rendered.append("</" + active_list + ">")
+            if desired_list:
+                rendered.append("<" + desired_list + ">")
+            active_list = desired_list
+        rendered.append("<" + tag + ">" + val + "</" + tag + ">")
+    if active_list:
+        rendered.append("</" + active_list + ">")
     return "\n".join(rendered), list(dict.fromkeys(sources)), summary
 
 
