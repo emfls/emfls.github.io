@@ -31,6 +31,7 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: true
+          token: ${{ secrets.PAGES_DEPLOY_TOKEN }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -62,7 +63,8 @@ jobs:
           queue='${{ steps.stage.outputs.queue_file }}'
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add "$dest" "$(dirname "$dest")/sitemap.xml" data/scheduled-publication-ledger.jsonl
+          git add "$dest" "$(dirname "$dest")/sitemap.xml"
+          git add -f data/scheduled-publication-ledger.jsonl
           git add -u -- "$queue"
           git diff --cached --check
           git commit -m 'content: publish one scheduled Korean guide'
