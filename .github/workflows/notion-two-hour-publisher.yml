@@ -1,13 +1,14 @@
 name: Notion / Automatic Two-Hour Publishing
 
 on:
-  schedule:
-    # Primary two-hour schedule at 22:57, 00:57, 02:57, ... KST.
-    # Offset from GitHub's busy :00/:30 dispatch times.
-    # First run after the 2026-10-23 00:52 publication is 02:57 KST;
-    # this respects the mandatory two-hour publisher cooldown.
-    # KST = UTC+9. GitHub schedule runs on the default branch.
-    - cron: '57 1-23/2 * * *'
+  # ChatGPT scheduled task commits this single non-content trigger file on main.
+  # That explicit push starts the existing validated Notion -> HTML -> PR
+  # -> Pages verification -> Notion completion publisher pipeline.
+  # GitHub cron is deliberately disabled to avoid duplicate and skipped slots.
+  push:
+    branches: [main]
+    paths:
+      - 'data/notion-publish-trigger.json'
   workflow_dispatch:
 
 permissions:
