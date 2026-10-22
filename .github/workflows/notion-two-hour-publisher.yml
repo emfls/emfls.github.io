@@ -2,10 +2,11 @@ name: Notion / Automatic Two-Hour Publishing
 
 on:
   schedule:
-    # Anchored to first public release at 19:39 KST on 2026-10-22.
-    # 01:40, 03:40, ... 23:40 KST (rounded after initial 19:39:35 release).
-    # Scheduler starts slightly after the two-hour cooldown; GitHub may delay runs.
-    - cron: '40 0-22/2 * * *'
+    # New first publication: 2026-10-22 ~20:28 KST (Notion source staged 20:27:31).
+    # Two-hourly slots: 22:30, 00:30, 02:30, ... KST.
+    # KST = UTC+9: UTC odd hours 01:30, 03:30, ..., 23:30.
+    # Rounded forward so the two-hour cooldown is fully elapsed.
+    - cron: '30 1-23/2 * * *'
   workflow_dispatch:
 
 permissions:
@@ -69,7 +70,7 @@ jobs:
           # Main has PR-only branch protection. Never push directly to main.
           branch="notion/auto-publish-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           git push origin "HEAD:refs/heads/$branch"
-          export GH_TOKEN="${PAGES_DEPLOY_TOKEN:-$GITHUB_TOKEN}"
+          export GH_TOKEN="$GITHUB_TOKEN"
           gh pr create --head "$branch" --base main \
             --title "content: publish one Notion guide" \
             --body "Automated publication of one validated Notion draft. Includes its category sitemap and deduplication ledger."
