@@ -2,7 +2,7 @@
 """Publish one Notion database draft into this static GitHub Pages repository."""
 import argparse
 from datetime import datetime, timedelta, timezone
-from html import escape
+from html import escape, unescape
 import json
 import os
 from pathlib import Path
@@ -12,6 +12,7 @@ from urllib.parse import quote, urlparse
 from urllib.request import Request, urlopen
 
 from publish_scheduled_queue import KST, SITE, validate_article, previous_release_is_live
+from notion_article_template import render_article
 
 ROOT = Path(__file__).resolve().parent.parent
 LEDGER = ROOT / "data/scheduled-publication-ledger.jsonl"
@@ -131,20 +132,10 @@ def article(page):
     destination = "kor/report/" + category + "/" + slug + ".html"
     url = SITE + "/" + destination
     body, sources, summary = to_html(page["id"])
-    doc = ('<!doctype html><html lang="ko"><head><meta charset="utf-8">'
-           '<meta name="viewport" content="width=device-width, initial-scale=1">'
-           '<title>' + escape(title) + '</title>'
-           '<meta name="description" content="' + escape(summary, quote=True) + '">'
-           '<link rel="canonical" href="' + escape(url, quote=True) + '">'
-           '<style>body{font-family:system-ui,"Noto Sans KR",sans-serif;line-height:1.8;color:#222;margin:0}'
-           'main{max-width:780px;margin:auto;padding:30px 18px 80px}'
-           'h1{line-height:1.4}h2{margin-top:2.3rem}h3{margin-top:1.7rem}'
-           'a{color:#185b91;overflow-wrap:anywhere}li{margin:.35rem 0}'
-           'blockquote{border-left:4px solid #ccd;padding-left:15px}</style>'
-           '</head><body><main><nav><a href="/">EMFLS</a></nav><article>'
-           '<h1>' + escape(title) + '</h1>' + body +
-           '</article><footer>자료 확인일: ' + datetime.now(KST).strftime("%Y-%m-%d") +
-           '</footer></main></body></html>')
+    doc = render_article(
+        title=title, description=unescape(summary) or title, url=url,
+        category=category, body=body, published_date=datetime.now(KST).date().isoformat(),
+    )
     draft = {"title": title, "destination": destination, "html": doc, "sources": sources}
     validate_article(draft, ROOT)
     return draft, url
