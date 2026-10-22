@@ -6,13 +6,6 @@ on:
     # crowded UTC :00/:30 boundaries where GitHub may drop schedule jobs.
     # KST = UTC+9. GitHub schedule events execute on the default branch.
     - cron: '37 1-23/2 * * *'
-  # One-time bootstrap: the workflow-file change below triggers a real
-  # full production run without bypassing the two-hour cooldown.
-  # Remove this push-only trigger after the first run has been inspected.
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/notion-two-hour-publisher.yml'
   workflow_dispatch:
 
 permissions:
@@ -80,7 +73,10 @@ jobs:
           gh pr create --head "$branch" --base main \
             --title "content: publish one Notion guide" \
             --body "Automated publication of one validated Notion draft. Includes its category sitemap and deduplication ledger."
-          gh pr merge "$branch" --squash --delete-branch
+          if ! gh pr merge "$branch" --squash --delete-branch; then
+            echo "::error::GitHub main branch requires at least one approving review by a user with write access. PR is created, but unattended merge is blocked. Configure an approved automation bypass/reviewer before relying on fully automatic publishing."
+            exit 1
+          fi
 
       - name: Rely on automatic Pages deployment after protected-main PR merge
         if: steps.stage.outputs.status == 'SOURCE_STAGED'
