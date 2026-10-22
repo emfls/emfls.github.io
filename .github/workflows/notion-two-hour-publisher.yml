@@ -2,11 +2,17 @@ name: Notion / Automatic Two-Hour Publishing
 
 on:
   schedule:
-    # New first publication: 2026-10-22 ~20:28 KST (Notion source staged 20:27:31).
-    # Two-hourly slots: 22:30, 00:30, 02:30, ... KST.
-    # KST = UTC+9: UTC odd hours 01:30, 03:30, ..., 23:30.
-    # Rounded forward so the two-hour cooldown is fully elapsed.
-    - cron: '30 1-23/2 * * *'
+    # Two-hourly slots at 22:37, 00:37, 02:37, ... KST, away from
+    # crowded UTC :00/:30 boundaries where GitHub may drop schedule jobs.
+    # KST = UTC+9. GitHub schedule events execute on the default branch.
+    - cron: '37 1-23/2 * * *'
+  # One-time bootstrap: the workflow-file change below triggers a real
+  # full production run without bypassing the two-hour cooldown.
+  # Remove this push-only trigger after the first run has been inspected.
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/notion-two-hour-publisher.yml'
   workflow_dispatch:
 
 permissions:
