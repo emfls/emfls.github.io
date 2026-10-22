@@ -191,7 +191,12 @@ def stage():
             return {"status": "RECONCILED", "url": entry["url"]}
     last = next((r for r in reversed(history) if r.get("notionPageId")), None)
     now = datetime.now(KST)
-    if last and now - datetime.fromisoformat(last["slotKst"]).astimezone(KST) < timedelta(hours=2):
+    # One-time operator-requested new publishing anchor, strictly limited to the
+    # known first queued page. Normal scheduled and manual runs never bypass cooldown.
+    initial_page = os.environ.get("NOTION_INITIAL_PAGE_ID", "").strip()
+    if initial_page and (not ready or ready[0]["id"] != initial_page):
+        return {"status": "INITIAL_PAGE_ALREADY_CONSUMED"}
+    if not initial_page and last and now - datetime.fromisoformat(last["slotKst"]).astimezone(KST) < timedelta(hours=2):
         return {"status": "COOLDOWN"}
     if not ready:
         return {"status": "QUEUE_EMPTY"}
