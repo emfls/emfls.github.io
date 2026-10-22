@@ -107,14 +107,24 @@ jobs:
         run: |
           set -euo pipefail
           if [ -z "$INDEXNOW_KEY" ]; then
-            echo 'IndexNow key unavailable; this step did not submit an URL.'
-            exit 0
+            echo '::error::INDEXNOW_KEY unavailable: IndexNow submission cannot be verified.'
+            exit 1
           fi
           mkdir -p artifacts
           python3 scripts/indexnow_submit.py --root . --before HEAD^ --sha HEAD \
             --backfill-urls '${{ steps.stage.outputs.url }}' \
             --report artifacts/scheduled-indexnow.json
           cat artifacts/scheduled-indexnow.json
+          python3 - '${{ steps.stage.outputs.url }}' <<'PY'
+          import json, sys
+          expected = sys.argv[1]
+          r = json.load(open('artifacts/scheduled-indexnow.json', encoding='utf-8'))
+          assert r.get('status') == 'SUBMITTED', 'IndexNow not SUBMITTED'
+          assert r.get('indexnowStatus') in (200, 202), 'IndexNow HTTP not 200/202'
+          assert expected in r.get('submitted', []), 'Published URL missing in IndexNow report'
+          assert len(r.get('submitted', [])) == 1, 'Unexpected submission count'
+          print('INDEXNOW VERIFIED: one URL, HTTP', r['indexnowStatus'], expected)
+          PY
 
       - uses: actions/upload-artifact@v4
         if: always()
