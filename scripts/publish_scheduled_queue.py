@@ -2,7 +2,7 @@
 """Release at most one vetted Korean article from a dated GitHub queue per run."""
 from __future__ import annotations
 import argparse
-from datetime import datetime, time
+from datetime import datetime, timedelta, time
 from html import escape
 from html.parser import HTMLParser
 import json
@@ -16,7 +16,6 @@ from zoneinfo import ZoneInfo
 
 KST = ZoneInfo("Asia/Seoul")
 SITE = "https://emfls.github.io"
-DAILY_LIMIT = 12
 CATEGORIES = {"ai","car","compare","daiso","gov","it","parenting","seasonal","travel","costco","gift","fashion","camp","fitness","animal"}
 ROUTE = re.compile(r"kor/report/([a-z0-9-]+)/([a-z0-9-]+)\.html\Z")
 SLUG = re.compile(r"[a-z0-9][a-z0-9-]{4,80}\Z")
@@ -90,25 +89,24 @@ def plan(root: Path, now: datetime):
     if now.date().isoformat() < "2026-10-22": return {"status":"NOT_STARTED","kst":now.isoformat()}
     if not previous_release_is_live(root):
         raise RuntimeError("PREVIOUS_RELEASE_NOT_LIVE: repair official Pages build before publishing another page")
-    existing = added_pages_today(root,now)
-    # Task 52: ten verified pages went live on Oct 22 even though their
-    # source commits were created on Oct 21. Count by LIVE KST date,
-    # not Git commit date. Distinct paths avoid double counting.
-    if now.date().isoformat() == "2026-10-22":
-        existing.update({
-            "kor/report/travel/2026-korea-grand-festival-discounts.html",
-            "kor/report/travel/2026-gyeongbokgung-free-admission-autumn.html",
-            "kor/report/travel/2026-autumn-foliage-peak-korea.html",
-            "kor/report/travel/2026-naejangsan-foliage-seoraebong-reservation.html",
-            "kor/report/travel/2026-hampyeong-chrysanthemum-festival-tickets.html",
-            "kor/report/travel/2026-busan-fireworks-festival-seats-booking.html",
-            "kor/report/travel/2026-hansik-day-museum-food-festival.html",
-            "kor/report/travel/2026-gangjin-reed-festival-free-entry.html",
-            "kor/report/travel/2026-mungyeong-apple-festival-saijae.html",
-            "kor/report/travel/2026-seogwipo-chilsimni-festival-drone-show.html",
-        })
-    if len(existing) >= DAILY_LIMIT: return {"status":"DAILY_LIMIT_REACHED","today":len(existing)}
-    queue = root / "data/scheduled-publication-queue"
+    # 2026-10-22 OWNER RESET: ChatGPT article stack is the sole source.
+    # The legacy 12-article queue and its daily publication cap are NOT used.
+    # Preserve at-most-one release per two-hour window without any daily quota.
+    existing = set()
+    ledger = root / "data/scheduled-publication-ledger.jsonl"
+    if ledger.is_file():
+        rows = [line for line in ledger.read_text(encoding="utf-8").splitlines() if line.strip()]
+        if rows:
+            last = json.loads(rows[-1])
+            last_slot = last.get("slotKst")
+            if last_slot:
+                last_time = datetime.fromisoformat(last_slot)
+                if last_time.tzinfo is None:
+                    raise RuntimeError("Invalid timezone in last publication slot")
+                elapsed = now - last_time.astimezone(KST)
+                if elapsed < timedelta(hours=2):
+                    return {"status": "COOLDOWN", "lastSlot": last_slot, "kst": now.isoformat()}
+    queue = root / "data/chatgpt-draft-stack"
     for q in sorted(queue.glob("*.json")) if queue.is_dir() else []:
         candidate = json.loads(q.read_text(encoding="utf-8"))
         due = candidate.get("available_from_kst")
