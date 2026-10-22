@@ -1,3 +1,9 @@
+## 2026-10-20 — TASK 46 C01 · 캠핑 수익 허브 내부 링크
+
+- Naver 유입 GA4 스냅샷에서 평택 페이지는 2026-09-15~10-13 `m.search.naver.com/referral` 424 screenPageViews와 `naver/organic` 57을 기록했다. 별도 GA4 스냅샷(2026-09-22~10-19)은 449 views, 353 users, `totalAdRevenue` $1.46063이다. 이는 AdSense URL별 수익이 아니다.
+- 보호되지 않은 캠핑 허브 `/kor/report/camp/index.html`의 상단 추천 영역에 기존 평택 페이지로 가는 카드 1개를 추가했다. 제목·메타·URL·광고·GA4 코드는 바꾸지 않았고, 평택 보호 페이지는 수정하지 않았다.
+- 직접 AdSense URL 데이터는 0행 / PARTIAL이므로 URL별 AdSense 수익은 미확인. 사이트 전체 7일 수익은 10/13~19 $10.48, 직전 7일은 $17.92. 집중 guard 테스트 44개 통과. Guard CLI는 필수 신뢰 스냅샷이 Git 기준 커밋에 없어 `TRUSTED_BASE_REVISION_UNAVAILABLE`로 fail-closed; 우회하지 않고 Draft PR에서 검수를 요청한다.
+
 ## 2026-10-16 — JP Travel sitemap noindex entry cleanup
 
 - `jp/report/travel/index.html` declares `noindex,follow`; removed only its `/jp/report/travel/` URL entry from `jp/report/travel/sitemap.xml`. URL count 78 → 77; remaining 77 URLs and XML structure preserved.
