@@ -173,6 +173,9 @@
 
 ## P1 - High
 
+- [ ] C02 · AdSense snapshot and Mac operations path hardening (29차)
+  - 상태: 2026-10-19 최신 사이트 합계 정리, PAGE_URL `PARTIAL` 판정, 정적 launchd 템플릿 5개와 실행기 경로 fallback 수정 완료. PR 검토 대기; 자동 병합 금지.
+
 - [x] C02 · Keyword Hunter safe persistence race recovery
   - Root cause: scheduled run `37864726975` passed collection, tests, queue validation, and publication-state checks, then its push was rejected with `fetch first` after PR #64 advanced main. The confirmed overlapping path was `PROJECT_HISTORY.md`; no Git content conflict occurred.
   - Change: route broad and targeted persistence through a helper with exact path allowlists, JSON/CSV/queue validation, one explicit non-fast-forward recovery, base ancestry and remote-path checks, append-only history preservation, one retry maximum, and retained diagnostics. Any overlapping data, publication-state, script, or workflow update fails closed. Collection is not repeated; broad reports stay out of Git.
