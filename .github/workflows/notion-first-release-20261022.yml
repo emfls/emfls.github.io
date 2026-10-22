@@ -10,6 +10,7 @@ on:
 permissions:
   contents: write
   pages: write
+  pull-requests: write
 
 concurrency:
   group: scheduled-korean-article-publication
@@ -65,7 +66,14 @@ jobs:
           git add -f data/scheduled-publication-ledger.jsonl
           git diff --cached --check
           git commit -m "content: publish one original Notion guide"
-          git push origin HEAD:main
+          # Main has PR-only branch protection. Never push directly to main.
+          branch="notion/auto-publish-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          git push origin "HEAD:refs/heads/$branch"
+          export GH_TOKEN="$GITHUB_TOKEN"
+          gh pr create --head "$branch" --base main \
+            --title "content: publish one Notion guide" \
+            --body "Automated publication of one validated Notion draft. Includes its category sitemap and deduplication ledger."
+          gh pr merge "$branch" --squash --delete-branch
 
       - name: Request GitHub Pages build
         if: steps.stage.outputs.status == 'SOURCE_STAGED'
