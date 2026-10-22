@@ -9,6 +9,7 @@ on:
       - scripts/notion_article_template.py
       - scripts/notion_autopublish.py
       - kor/report/gov/flu-shot-free-2026-2027-children-pregnant-seniors.html
+      - kor/report/seasonal/k-sale-festa-2026-oct29-nov15-shopping-guide.html
   workflow_dispatch:
 
 permissions:
@@ -53,6 +54,25 @@ jobs:
           ld=json.loads(re.search(r'<script type="application/ld\+json">(.+?)</script>',html,re.S).group(1))
           assert ld['url']==expected and ld['datePublished']=='2026-10-22'
           print('EXISTING_FLU_ARTICLE_PASS')
+          sale_path=Path('kor/report/seasonal/k-sale-festa-2026-oct29-nov15-shopping-guide.html')
+          sale=sale_path.read_text(encoding='utf-8')
+          sale_url='https://emfls.github.io/'+str(sale_path)
+          assert sale.count('G-QP5Q67GE5B') == 2, 'Missing/duplicate GA4 on sale guide'
+          assert sale.count('ca-pub-8830524482034754') == 1, 'Missing/duplicate AdSense on sale guide'
+          assert sale.count('<h1>') == 1, 'Missing/duplicate H1 on sale guide'
+          assert sale.count('class="section"') >= 6
+          assert 'aria-label="글 목차"' in sale
+          assert '접종 및 건강 관련 판단' not in sale
+          assert '<link rel="canonical" href="'+sale_url+'">' in sale
+          assert '<meta property="og:title"' in sale
+          assert '2026 K-세일페스타' in sale
+          assert '{{' not in sale
+          sale_markup=MarkupCheck()
+          sale_markup.feed(sale)
+          assert sale_markup.canonical == sale_url
+          sale_ld=json.loads(re.search(r'<script type="application/ld\\+json">(.+?)</script>',sale,re.S).group(1))
+          assert sale_ld['url']==sale_url and sale_ld['datePublished']=='2026-10-22'
+          print('EXISTING_KSALE_ARTICLE_PASS')
           synthetic_body='<p>테스트 원고입니다. 필요한 정보를 확인하세요.</p><h2>일정</h2><p>'+('검증하는 내용을 반복합니다. '*50)+'</p><ul><li>준비물</li><li>공식 출처 확인</li></ul>'
           url='https://emfls.github.io/kor/report/seasonal/long-form-layout-check-2026.html'
           out=render_article(title='2026년 원고 레이아웃 테스트 안내서',description='자세한 정보를 확인하는 테스트 가이드',url=url,category='seasonal',body=synthetic_body,published_date='2026-10-22')
