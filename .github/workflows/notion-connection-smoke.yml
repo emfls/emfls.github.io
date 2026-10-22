@@ -17,6 +17,7 @@ jobs:
     env:
       NOTION_API_TOKEN: ${{ secrets.NOTION_API_TOKEN }}
     steps:
+      - uses: actions/checkout@v4
       - name: Check Notion token and ready queue read access
         shell: bash
         run: |
@@ -53,4 +54,25 @@ jobs:
           blocks = req('GET', '/blocks/401db4c0-a991-81aa-9790-cec419c1cb0a/children?page_size=5')
           print('PASS: Draft content blocks readable:', len(blocks.get('results', [])))
           print('NOTION_CONNECTION_SMOKE_PASS')
+          PY
+
+      - name: Validate next draft HTML without publishing
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('scripts').resolve()))
+          from notion_autopublish import ready_rows, article
+          ready = ready_rows()
+          if not ready:
+              print('QUEUE_EMPTY: no content to validate')
+              raise SystemExit(0)
+          candidate, url = article(ready[0])
+          assert Path(candidate['destination']).parent.joinpath('sitemap.xml').is_file()
+          assert len(candidate['html']) > 2400
+          assert candidate['sources']
+          print('PREFLIGHT_PASS:', candidate['destination'])
+          print('PREFLIGHT_SOURCES:', len(candidate['sources']))
           PY
