@@ -1,6 +1,6 @@
 # EMFLS Notion article publishing: external scheduler
 
-Status: **PENDING USER AUTHENTICATION** (external cron job has not been created).
+Status: **ACTIVE / VERIFIED ON 2026-10-23 KST**. External scheduler is configured; a workflow_dispatch end-to-end publication of article #5 was verified. Token rotation and subsequent requests require ongoing monitoring.
 Updated: 2026-10-23 KST.
 
 ## Architecture
@@ -15,8 +15,8 @@ GitHub `schedule:` is deliberately disabled because scheduled runs were skipped.
 
 - Name: `EMFLS Notion 2h publishing`
 - Time zone: `Asia/Seoul`
-- Frequency: every two hours at `:30` (00:30, 02:30, 04:30, 06:30, 08:30, 10:30, 12:30, 14:30, 16:30, 18:30, 20:30, 22:30 KST).
-- If the service offers a five-field cron syntax with the time zone configured: `30 */2 * * *`.
+- Frequency: **every hour at `:30`** (00:30, 01:30, ... 23:30 KST). Update the cron-job.org job schedule manually from two-hour to hourly; repository code already enforces the one-hour cooldown.
+- If the service offers a five-field cron syntax with the time zone configured: `30 * * * *`.
 - URL: `https://api.github.com/repos/emfls/emfls.github.io/actions/workflows/notion-two-hour-publisher.yml/dispatches`
 - HTTP method: `POST`
 - Request body type: `application/json`
@@ -33,7 +33,7 @@ cron-job.org documentation: https://cron-job.org/en/faq/
 
 ### End-to-end smoke test after configuring the scheduler
 
-1. Confirm the latest successfully published Notion page is publicly reachable, and its publication slot was at least two hours ago. This publisher enforces a strict two-hour gap and can wait up to ten minutes for small scheduler drift.
+1. Confirm the latest successfully published Notion page is publicly reachable, and its publication slot was at least one hour ago. This publisher enforces a strict one-hour gap and can wait up to ten minutes for small scheduler drift.
 2. Use the scheduler's **Execute now / Test run** feature once.
 3. Verify that GitHub Actions launched a new **workflow_dispatch** run: https://github.com/emfls/emfls.github.io/actions/workflows/notion-two-hour-publisher.yml
 4. Verify run steps: stage one page -> commit and auto-merge PR -> GitHub Pages live verified -> Notion `발행완료`.
@@ -48,11 +48,11 @@ The third-party scheduler stores the GitHub token; use a single-repository fine-
 
 Use the separate read-only ChatGPT monitoring task for run-state and missing-publication alerts. Monitoring must never modify GitHub files or Notion rows, dispatch workflows, or pretend an HTTP success from GitHub is a published article.
 
-### Remaining one-time user action
+### One-time action for switching to hourly publishing
 
-1. Create/sign into cron-job.org.
-2. Create the restricted GitHub token privately.
-3. Save the external cron job with the settings above.
-4. Test once, then verify actual live publication.
+1. Open the already configured cron-job.org job and change its Custom schedule from every two hours at :30 to every hour at :30.
+2. Save and confirm Next executions are hourly.
+3. The endpoint, token, POST method, request headers, and JSON body stay unchanged.
+4. Confirm a subsequent workflow_dispatch run publishes no more than one article, with the one-hour cooldown respected.
 
-The external scheduler cannot be considered **ACTIVE** until its own job exists, authentication succeeds and the first end-to-end publication run is verified.
+The external scheduler was tested with an HTTP 204 request, and article #5 successfully published in an end-to-end run on 2026-10-23. The **hourly recurrence remains pending** until the cron-job.org schedule is manually updated and subsequently verified.
