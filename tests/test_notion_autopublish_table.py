@@ -3,7 +3,7 @@ from unittest.mock import patch
 from pathlib import Path
 import sys
 
-import pytest
+import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import notion_autopublish as publisher
@@ -71,7 +71,7 @@ def test_unexpected_nested_block_still_fails_without_content_loss():
     with patch.object(publisher, "get_blocks", return_value=[
         {"type": "toggle", "has_children": True},
     ]):
-        with pytest.raises(ValueError, match="Unsupported nested Notion block"):
+        with unittest.TestCase().assertRaisesRegex(ValueError, "Unsupported nested Notion block"):
             publisher.to_html("page-2")
 
 
@@ -83,5 +83,16 @@ def test_malformed_table_row_is_rejected_instead_of_truncated():
         return [bad] if block_id == "tbl-1" else [table_fixture()]
 
     with patch.object(publisher, "get_blocks", side_effect=get_blocks):
-        with pytest.raises(ValueError, match="mismatched cells"):
+        with unittest.TestCase().assertRaisesRegex(ValueError, "mismatched cells"):
             publisher.to_html("page-3")
+
+
+class NativeTablePublisherTests(unittest.TestCase):
+    def test_table_and_checkboxes(self):
+        test_native_table_renders_headers_rows_links_and_checkboxes()
+
+    def test_nested_block_rejected(self):
+        test_unexpected_nested_block_still_fails_without_content_loss()
+
+    def test_malformed_table_rejected(self):
+        test_malformed_table_row_is_rejected_instead_of_truncated()
