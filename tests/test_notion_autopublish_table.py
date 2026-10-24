@@ -1,9 +1,12 @@
 """Regression coverage for Notion native tables and checklist publication."""
 from unittest.mock import patch
+from pathlib import Path
+import sys
 
 import pytest
 
-from scripts import notion_autopublish as publisher
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+import notion_autopublish as publisher
 
 
 def rich(text, href=None, bold=False):
