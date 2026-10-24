@@ -71,13 +71,71 @@ def get_blocks(page_id):
         cursor = response["next_cursor"]
 
 
+def rich_text_to_html(items, sources):
+    """Render text and links in either ordinary blocks or native table cells."""
+    chunks = []
+    for item in items:
+        value = escape(item.get("plain_text", ""))
+        annotations = item.get("annotations") or {}
+        if annotations.get("bold"):
+            value = "<strong>" + value + "</strong>"
+        if annotations.get("italic"):
+            value = "<em>" + value + "</em>"
+        if annotations.get("strikethrough"):
+            value = "<del>" + value + "</del>"
+        href = item.get("href")
+        if href and urlparse(href).scheme == "https":
+            sources.append(href)
+            value = '<a href="' + escape(href, quote=True) + '" rel="noopener noreferrer">' + value + "</a>"
+        chunks.append(value)
+    return "".join(chunks)
+
+
+def render_table(block, sources):
+    """Fetch table_row children and keep every Notion table cell in the output."""
+    details = block.get("table") or {}
+    width = details.get("table_width")
+    rows = get_blocks(block["id"])
+    if not rows:
+        raise ValueError("Notion table has no rows: " + block["id"])
+    rendered = ['<div class="details-table"><table>']
+    has_header = bool(details.get("has_column_header"))
+    row_headers = bool(details.get("has_row_header"))
+    for index, row in enumerate(rows):
+        if row.get("type") != "table_row" or row.get("has_children"):
+            raise ValueError("Invalid nested Notion table row: " + str(row.get("type")))
+        cells = (row.get("table_row") or {}).get("cells") or []
+        if not cells or (width is not None and len(cells) != width):
+            raise ValueError("Notion table row has missing or mismatched cells: " + block["id"])
+        if index == 0:
+            rendered.append("<thead>" if has_header else "<tbody>")
+        if index == 1 and has_header:
+            rendered.append("</thead><tbody>")
+        rendered.append("<tr>")
+        for cell_index, cell in enumerate(cells):
+            is_col_header = has_header and index == 0
+            is_row_header = row_headers and cell_index == 0 and not is_col_header
+            tag = "th" if is_col_header or is_row_header else "td"
+            scope = ' scope="col"' if is_col_header else (' scope="row"' if is_row_header else "")
+            rendered.append("<" + tag + scope + ">" + rich_text_to_html(cell, sources) + "</" + tag + ">")
+        rendered.append("</tr>")
+    rendered.append("</tbody></table></div>")
+    return "".join(rendered)
+
+
 def to_html(page_id):
     rendered, sources, summary = [], [], ""
     active_list = None
     for block in get_blocks(page_id):
         kind = block["type"]
+        if kind == "table":
+            if active_list:
+                rendered.append("</" + active_list + ">")
+                active_list = None
+            rendered.append(render_table(block, sources))
+            continue
         if block.get("has_children"):
-            raise ValueError("Nested blocks are not supported: " + kind)
+            raise ValueError("Unsupported nested Notion block (no content loss): " + kind)
         if kind == "divider":
             if active_list:
                 rendered.append("</" + active_list + ">")
@@ -85,22 +143,11 @@ def to_html(page_id):
             rendered.append("<hr>")
             continue
         if kind not in ("paragraph", "heading_1", "heading_2", "heading_3",
-                        "bulleted_list_item", "numbered_list_item", "quote"):
+                        "bulleted_list_item", "numbered_list_item", "quote", "to_do"):
             raise ValueError("Unsupported block (no silent content loss): " + kind)
-        chunks = []
-        for item in block[kind].get("rich_text", []):
-            v = escape(item.get("plain_text", ""))
-            annotations = item.get("annotations") or {}
-            if annotations.get("bold"):
-                v = "<strong>" + v + "</strong>"
-            if annotations.get("italic"):
-                v = "<em>" + v + "</em>"
-            url = item.get("href")
-            if url and urlparse(url).scheme == "https":
-                sources.append(url)
-                v = '<a href="' + escape(url, quote=True) + '" rel="noopener noreferrer">' + v + "</a>"
-            chunks.append(v)
-        val = "".join(chunks)
+        val = rich_text_to_html((block.get(kind) or {}).get("rich_text", []), sources)
+        if kind == "to_do":
+            val = ("☑ " if (block.get("to_do") or {}).get("checked") else "☐ ") + val
         if not val:
             continue
         if kind == "paragraph" and not summary:
@@ -109,8 +156,9 @@ def to_html(page_id):
             "paragraph": "p", "heading_1": "h2", "heading_2": "h2",
             "heading_3": "h3", "quote": "blockquote",
             "bulleted_list_item": "li", "numbered_list_item": "li",
+            "to_do": "li",
         }[kind]
-        desired_list = ("ul" if kind == "bulleted_list_item" else
+        desired_list = ("ul" if kind in ("bulleted_list_item", "to_do") else
                         "ol" if kind == "numbered_list_item" else None)
         if active_list != desired_list:
             if active_list:
@@ -192,7 +240,10 @@ def stage():
     if not ready:
         return {"status": "QUEUE_EMPTY"}
     page = ready[0]
-    draft, url = article(page)
+    try:
+        draft, url = article(page)
+    except (ValueError, RuntimeError) as exc:
+        raise ValueError("Cannot publish Notion page " + page["id"] + ": " + str(exc)) from exc
     dest = ROOT / draft["destination"]
     sitemap = dest.parent / "sitemap.xml"
     if not sitemap.is_file():
