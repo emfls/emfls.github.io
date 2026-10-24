@@ -8,8 +8,14 @@ on:
       - scripts/templates/notion_article.html
       - scripts/notion_article_template.py
       - scripts/notion_autopublish.py
+      - tests/test_notion_autopublish_table.py
       - kor/report/gov/flu-shot-free-2026-2027-children-pregnant-seniors.html
       - kor/report/seasonal/k-sale-festa-2026-oct29-nov15-shopping-guide.html
+  pull_request:
+    branches: [main]
+    paths:
+      - scripts/notion_autopublish.py
+      - tests/test_notion_autopublish_table.py
   workflow_dispatch:
 
 permissions:
@@ -24,6 +30,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Verify native Notion table and checklist regression cases
+        run: |
+          python -m py_compile scripts/notion_autopublish.py
+          python -m unittest discover -s tests -p 'test_notion_autopublish_table.py' -v
       - name: Check render syntax and published flu page metadata
         shell: bash
         run: |
