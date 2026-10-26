@@ -142,6 +142,20 @@ def to_html(page_id):
                 active_list = None
             rendered.append("<hr>")
             continue
+        if kind == "code":
+            # Code blocks must preserve literal text and newlines (including <,
+            # >, and &), without interpreting rich-text markup as HTML.
+            if active_list:
+                rendered.append("</" + active_list + ">")
+                active_list = None
+            details = block.get("code") or {}
+            code_text = "".join(item.get("plain_text", "") for item in details.get("rich_text", []))
+            rendered.append('<pre class="notion-code"><code>' + escape(code_text) + "</code></pre>")
+            caption = details.get("caption") or []
+            if caption:
+                rendered.append('<p class="notion-code-caption">' +
+                                rich_text_to_html(caption, sources) + "</p>")
+            continue
         if kind not in ("paragraph", "heading_1", "heading_2", "heading_3",
                         "bulleted_list_item", "numbered_list_item", "quote", "to_do"):
             raise ValueError("Unsupported block (no silent content loss): " + kind)
