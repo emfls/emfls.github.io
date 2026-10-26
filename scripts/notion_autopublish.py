@@ -228,6 +228,32 @@ def finalize(page_id, url):
     return {"status": "NOTION_COMPLETED", "url": url}
 
 
+def mark_failed(page_id, error):
+    """Quarantine a content-invalid draft without touching the publishing ledger."""
+    reason = (type(error).__name__ + ": " + str(error)).strip()[:1800]
+    # The state and reason are written in one Notion PATCH. If the PATCH fails,
+    # abort the entire run rather than repeatedly attempting the same draft.
+    api("PATCH", "/pages/" + page_id, {"properties": {
+        "상태": {"select": {"name": "발행실패"}},
+        "오류": {"rich_text": [{"type": "text", "text": {"content": reason}}]},
+    }})
+    print("NOTION_DRAFT_FAILED: " + page_id + ": " + reason, file=sys.stderr)
+
+
+def candidate_sitemap(draft, url):
+    """Check draft-specific publishability before any repository writes."""
+    dest = ROOT / draft["destination"]
+    sitemap = dest.parent / "sitemap.xml"
+    if not sitemap.is_file():
+        raise ValueError("Category sitemap not found: " + str(sitemap.relative_to(ROOT)))
+    old = sitemap.read_text(encoding="utf-8")
+    if "</urlset>" not in old:
+        raise ValueError("Category sitemap missing closing urlset: " + str(sitemap.relative_to(ROOT)))
+    if url in old:
+        raise ValueError("Category sitemap already contains draft URL: " + url)
+    return dest, sitemap, old
+
+
 def stage():
     if not os.environ.get("NOTION_API_TOKEN"):
         return {"status": "NEEDS_NOTION_API_TOKEN"}
@@ -253,28 +279,34 @@ def stage():
         return {"status": "COOLDOWN"}
     if not ready:
         return {"status": "QUEUE_EMPTY"}
-    page = ready[0]
-    try:
-        draft, url = article(page)
-    except (ValueError, RuntimeError) as exc:
-        raise ValueError("Cannot publish Notion page " + page["id"] + ": " + str(exc)) from exc
-    dest = ROOT / draft["destination"]
-    sitemap = dest.parent / "sitemap.xml"
-    if not sitemap.is_file():
-        raise RuntimeError("Category sitemap not found")
-    old = sitemap.read_text(encoding="utf-8")
-    if "</urlset>" not in old or url in old:
-        raise RuntimeError("Category sitemap missing terminator or URL is duplicated")
-    element = ("  <url>\n    <loc>" + escape(url) + "</loc>\n"
-               "    <lastmod>" + now.strftime("%Y-%m-%d") + "</lastmod>\n  </url>\n")
-    dest.write_text(draft["html"], encoding="utf-8")
-    sitemap.write_text(old.replace("</urlset>", element + "</urlset>"), encoding="utf-8")
-    with LEDGER.open("a", encoding="utf-8") as f:
-        f.write(json.dumps({"notionPageId": page["id"], "url": url,
-                            "title": draft["title"], "slotKst": now.isoformat(),
-                            "phase": "SOURCE_STAGED_NOT_YET_LIVE"}, ensure_ascii=False) + "\n")
-    return {"status": "SOURCE_STAGED", "destination": draft["destination"],
-            "url": url, "page_id": page["id"]}
+    failed_count = 0
+    # On scheduled runs, try the next ready draft immediately if content is
+    # invalid. The one-time initial-page override must not publish a different
+    # page in the same special run.
+    candidates = ready[:1] if initial_page else ready
+    for page in candidates:
+        try:
+            draft, url = article(page)
+            dest, sitemap, old = candidate_sitemap(draft, url)
+        except (ValueError, RuntimeError) as exc:
+            # Only deterministic draft validation/rendering errors are
+            # quarantined. Notion HTTP/network failures, GitHub push/merge
+            # failures, local I/O failures, and live-verification failures
+            # still abort the run for safe retry, without mislabeling content.
+            mark_failed(page["id"], exc)
+            failed_count += 1
+            continue
+        element = ("  <url>\n    <loc>" + escape(url) + "</loc>\n"
+                   "    <lastmod>" + now.strftime("%Y-%m-%d") + "</lastmod>\n  </url>\n")
+        dest.write_text(draft["html"], encoding="utf-8")
+        sitemap.write_text(old.replace("</urlset>", element + "</urlset>"), encoding="utf-8")
+        with LEDGER.open("a", encoding="utf-8") as f:
+            f.write(json.dumps({"notionPageId": page["id"], "url": url,
+                                "title": draft["title"], "slotKst": now.isoformat(),
+                                "phase": "SOURCE_STAGED_NOT_YET_LIVE"}, ensure_ascii=False) + "\n")
+        return {"status": "SOURCE_STAGED", "destination": draft["destination"],
+                "url": url, "page_id": page["id"], "failed_count": failed_count}
+    return {"status": "QUEUE_ALL_FAILED", "failed_count": failed_count}
 
 
 if __name__ == "__main__":
