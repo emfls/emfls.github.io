@@ -224,6 +224,7 @@ def finalize(page_id, url):
         "상태": {"select": {"name": "발행완료"}},
         "게시 URL": {"url": url},
         "발행일시": {"date": {"start": datetime.now(timezone.utc).isoformat(timespec="seconds")}},
+        "오류": {"rich_text": []},
     }})
     return {"status": "NOTION_COMPLETED", "url": url}
 
