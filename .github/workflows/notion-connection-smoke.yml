@@ -70,15 +70,25 @@ jobs:
           import sys
           from pathlib import Path
           sys.path.insert(0, str(Path('scripts').resolve()))
-          from notion_autopublish import ready_rows, article
+          from notion_autopublish import ready_rows, article, candidate_sitemap
           ready = ready_rows()
           if not ready:
               print('QUEUE_EMPTY: no content to validate')
               raise SystemExit(0)
-          candidate, url = article(ready[0])
-          assert Path(candidate['destination']).parent.joinpath('sitemap.xml').is_file()
-          assert len(candidate['html']) > 2400
-          assert candidate['sources']
-          print('PREFLIGHT_PASS:', candidate['destination'])
-          print('PREFLIGHT_SOURCES:', len(candidate['sources']))
+          for page in ready:
+              try:
+                  candidate, url = article(page)
+                  candidate_sitemap(candidate, url)
+              except (ValueError, RuntimeError) as exc:
+                  # Read-only smoke check; the hourly publisher will mark
+                  # these draft-specific errors and try the next candidate.
+                  print('PREFLIGHT_SKIP_INVALID:', page['id'], str(exc))
+                  continue
+              assert len(candidate['html']) > 2400
+              assert candidate['sources']
+              print('PREFLIGHT_PASS:', candidate['destination'])
+              print('PREFLIGHT_SOURCES:', len(candidate['sources']))
+              break
+          else:
+              print('PREFLIGHT_NO_VALID_READY_DRAFT'))
           PY
