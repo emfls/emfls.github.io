@@ -72,9 +72,12 @@ jobs:
           import json,os
           row=json.load(open("notion-publish-result.json",encoding="utf-8"))
           with open(os.environ["GITHUB_OUTPUT"],"a") as out:
-              for field in ("status","destination","url","page_id"):
+              for field in ("status","destination","url","page_id","failed_count"):
                   if field in row:
-                      out.write(field+"="+row[field]+"\n")
+                      out.write(field+"="+str(row[field])+"\n")
+          if row.get("failed_count", 0):
+              print("::warning::Marked " + str(row["failed_count"]) +
+                    " invalid Notion drafts 발행실패; attempted the next ready draft.")
           PY
 
       - name: Commit page, category sitemap and publication ledger
