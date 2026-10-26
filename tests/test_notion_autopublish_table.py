@@ -67,6 +67,31 @@ def test_native_table_renders_headers_rows_links_and_checkboxes():
     assert summary == "Useful introduction."
 
 
+def test_notion_code_blocks_preserve_search_syntax_and_escape_html():
+    page = [
+        {"type": "paragraph", "has_children": False,
+         "paragraph": {"rich_text": [rich("Search Gmail safely.")]}},
+        {"type": "bulleted_list_item", "has_children": False,
+         "bulleted_list_item": {"rich_text": [rich("First select candidates")]}},
+        {"type": "code", "has_children": False,
+         "code": {"language": "javascript",
+                  "rich_text": [rich("has:attachment larger:10M\n"),
+                                rich("filename:.pdf larger:5M <script>&")],
+                  "caption": [rich("Gmail search examples")]}},
+        {"type": "paragraph", "has_children": False,
+         "paragraph": {"rich_text": [rich("Review before deletion.")]}},
+    ]
+    with patch.object(publisher, "get_blocks", return_value=page):
+        html, sources, summary = publisher.to_html("gmail-63")
+    assert "</ul>\n<pre class=\"notion-code\">" in html
+    assert "has:attachment larger:10M\nfilename:.pdf larger:5M &lt;script&gt;&amp;" in html
+    assert "<script>" not in html
+    assert '<p class="notion-code-caption">Gmail search examples</p>' in html
+    assert html.index("</pre>") < html.index("Review before deletion.")
+    assert sources == []
+    assert summary == "Search Gmail safely."
+
+
 def test_unexpected_nested_block_still_fails_without_content_loss():
     with patch.object(publisher, "get_blocks", return_value=[
         {"type": "toggle", "has_children": True},
@@ -90,6 +115,9 @@ def test_malformed_table_row_is_rejected_instead_of_truncated():
 class NativeTablePublisherTests(unittest.TestCase):
     def test_table_and_checkboxes(self):
         test_native_table_renders_headers_rows_links_and_checkboxes()
+
+    def test_code_block_renders_safely(self):
+        test_notion_code_blocks_preserve_search_syntax_and_escape_html()
 
     def test_nested_block_rejected(self):
         test_unexpected_nested_block_still_fails_without_content_loss()
