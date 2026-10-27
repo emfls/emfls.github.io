@@ -4,6 +4,7 @@ import argparse
 from datetime import datetime, timedelta, timezone
 from html import escape, unescape
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -53,8 +54,23 @@ def ready_rows():
         response = api("POST", "/data_sources/" + SOURCE_ID + "/query", body)
         rows += response["results"]
         if not response.get("has_more"):
-            return rows
+            break
         cursor = response["next_cursor"]
+    # Enforce ordering across all pagination pages even if API pages arrive
+    # with inconsistent sort order; never silently place missing-order first.
+    def order_key(page):
+        prop = (page.get("properties") or {}).get("발행순서") or {}
+        value = prop.get("number")
+        valid = (type(value) in (int, float) and
+                 math.isfinite(value) and value > 0)
+        return (0 if valid else 1, value if valid else 0, page["id"])
+    rows.sort(key=order_key)
+    if rows:
+        first = rows[0]
+        print("NOTION_QUEUE_FIRST: order=" +
+              str(((first.get("properties") or {}).get("발행순서") or {}).get("number")) +
+              " page=" + first["id"] + " pending=" + str(len(rows)), file=sys.stderr)
+    return rows
 
 
 def get_blocks(page_id):
@@ -226,7 +242,23 @@ def finalize(page_id, url):
         "발행일시": {"date": {"start": datetime.now(timezone.utc).isoformat(timespec="seconds")}},
         "오류": {"rich_text": []},
     }})
-    return {"status": "NOTION_COMPLETED", "url": url}
+    # A successful PATCH is not sufficient evidence that the Notion fields
+    # read back correctly. Keep the run failed if server-side state disagrees.
+    published = api("GET", "/pages/" + page_id)
+    props = published["properties"]
+    saved_status = (props["상태"].get("select") or {}).get("name")
+    saved_url = (props["게시 URL"].get("url") or "")
+    published_at = (props["발행일시"].get("date") or {}).get("start")
+    if saved_status != "발행완료" or saved_url != url or not published_at:
+        raise RuntimeError("NOTION_STATUS_READBACK_MISMATCH: page=" + page_id +
+                           " status=" + str(saved_status) +
+                           " url_matches=" + str(saved_url == url) +
+                           " timestamp_present=" + str(bool(published_at)))
+    order = (props.get("발행순서") or {}).get("number")
+    print("NOTION_STATUS_READBACK_PASS: order=" + str(order) +
+          " page=" + page_id + " status=" + saved_status +
+          " url=" + saved_url, file=sys.stderr)
+    return {"status": "NOTION_COMPLETED", "url": url, "order": order}
 
 
 def mark_failed(page_id, error):
@@ -286,7 +318,13 @@ def stage():
     # page in the same special run.
     candidates = ready[:1] if initial_page else ready
     for page in candidates:
+        queue_order = ((page.get("properties") or {}).get("발행순서") or {}).get("number")
+        print("NOTION_QUEUE_ATTEMPT: order=" + str(queue_order) +
+              " page=" + page["id"], file=sys.stderr)
         try:
+            if (type(queue_order) not in (int, float) or
+                    not math.isfinite(queue_order) or queue_order <= 0):
+                raise ValueError("Invalid or missing 발행순서")
             draft, url = article(page)
             dest, sitemap, old = candidate_sitemap(draft, url)
         except (ValueError, RuntimeError) as exc:
@@ -306,7 +344,8 @@ def stage():
                                 "title": draft["title"], "slotKst": now.isoformat(),
                                 "phase": "SOURCE_STAGED_NOT_YET_LIVE"}, ensure_ascii=False) + "\n")
         return {"status": "SOURCE_STAGED", "destination": draft["destination"],
-                "url": url, "page_id": page["id"], "failed_count": failed_count}
+                "url": url, "page_id": page["id"], "order": queue_order,
+                "failed_count": failed_count}
     return {"status": "QUEUE_ALL_FAILED", "failed_count": failed_count}
 
 
