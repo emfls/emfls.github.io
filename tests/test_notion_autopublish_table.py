@@ -92,6 +92,28 @@ def test_notion_code_blocks_preserve_search_syntax_and_escape_html():
     assert summary == "Search Gmail safely."
 
 
+
+def test_nested_numbered_list_retains_child_text_and_links():
+    page = [
+        {"id": "p-1", "type": "numbered_list_item", "has_children": True,
+         "numbered_list_item": {"rich_text": [rich("Open settings")]}},
+        {"id": "p-2", "type": "numbered_list_item", "has_children": False,
+         "numbered_list_item": {"rich_text": [rich("Save changes")]}},
+    ]
+    nested = [
+        {"id": "n-1", "type": "numbered_list_item", "has_children": False,
+         "numbered_list_item": {"rich_text": [rich("Find spam options", href="https://www.samsungsvc.co.kr/")]}},
+        {"id": "n-2", "type": "bulleted_list_item", "has_children": False,
+         "bulleted_list_item": {"rich_text": [rich("Check blocked messages")]}},
+    ]
+    with patch.object(publisher, "get_blocks", side_effect=lambda ident: nested if ident == "p-1" else page):
+        html, sources, _ = publisher.to_html("page-nested")
+    assert "<ol><li>Open settings<ol><li>" in html
+    assert "Find spam options" in html
+    assert "</ol><ul><li>Check blocked messages</li></ul></li><li>Save changes" in html
+    assert sources == ["https://www.samsungsvc.co.kr/"]
+
+
 def test_unexpected_nested_block_still_fails_without_content_loss():
     with patch.object(publisher, "get_blocks", return_value=[
         {"type": "toggle", "has_children": True},
@@ -118,6 +140,9 @@ class NativeTablePublisherTests(unittest.TestCase):
 
     def test_code_block_renders_safely(self):
         test_notion_code_blocks_preserve_search_syntax_and_escape_html()
+
+    def test_nested_numbered_list(self):
+        test_nested_numbered_list_retains_child_text_and_links()
 
     def test_nested_block_rejected(self):
         test_unexpected_nested_block_still_fails_without_content_loss()

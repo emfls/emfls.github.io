@@ -139,6 +139,43 @@ def render_table(block, sources):
     return "".join(rendered)
 
 
+def render_nested_children(block_id, sources, depth=0):
+    """Preserve indented Notion list blocks instead of dropping child text."""
+    if depth >= 12:
+        raise ValueError("Notion list nesting exceeds supported depth")
+    children = get_blocks(block_id)
+    if not children:
+        raise ValueError("Notion nested block has no children: " + block_id)
+    rendered, active_list = [], None
+    for block in children:
+        kind = block["type"]
+        desired = ("ol" if kind == "numbered_list_item" else
+                   "ul" if kind in ("bulleted_list_item", "to_do") else None)
+        if active_list != desired:
+            if active_list:
+                rendered.append("</" + active_list + ">")
+            if desired:
+                rendered.append("<" + desired + ">")
+            active_list = desired
+        if kind in ("numbered_list_item", "bulleted_list_item", "to_do"):
+            value = rich_text_to_html((block.get(kind) or {}).get("rich_text", []), sources)
+            if kind == "to_do":
+                value = ("☑ " if (block.get(kind) or {}).get("checked") else "☐ ") + value
+            nested = (render_nested_children(block["id"], sources, depth + 1)
+                      if block.get("has_children") else "")
+            if not value and not nested:
+                raise ValueError("Empty nested Notion list item")
+            rendered.append("<li>" + value + nested + "</li>")
+        elif kind == "paragraph" and not block.get("has_children"):
+            value = rich_text_to_html((block.get(kind) or {}).get("rich_text", []), sources)
+            rendered.append("<p>" + value + "</p>")
+        else:
+            raise ValueError("Unsupported nested Notion block (no content loss): " + kind)
+    if active_list:
+        rendered.append("</" + active_list + ">")
+    return "".join(rendered)
+
+
 def to_html(page_id):
     rendered, sources, summary = [], [], ""
     active_list = None
@@ -150,8 +187,11 @@ def to_html(page_id):
                 active_list = None
             rendered.append(render_table(block, sources))
             continue
+        nested = ""
         if block.get("has_children"):
-            raise ValueError("Unsupported nested Notion block (no content loss): " + kind)
+            if kind not in ("numbered_list_item", "bulleted_list_item", "to_do"):
+                raise ValueError("Unsupported nested Notion block (no content loss): " + kind)
+            nested = render_nested_children(block["id"], sources)
         if kind == "divider":
             if active_list:
                 rendered.append("</" + active_list + ">")
@@ -178,7 +218,7 @@ def to_html(page_id):
         val = rich_text_to_html((block.get(kind) or {}).get("rich_text", []), sources)
         if kind == "to_do":
             val = ("☑ " if (block.get("to_do") or {}).get("checked") else "☐ ") + val
-        if not val:
+        if not val and not nested:
             continue
         if kind == "paragraph" and not summary:
             summary = re.sub(r"<[^>]+>", "", val)[:150]
@@ -196,7 +236,7 @@ def to_html(page_id):
             if desired_list:
                 rendered.append("<" + desired_list + ">")
             active_list = desired_list
-        rendered.append("<" + tag + ">" + val + "</" + tag + ">")
+        rendered.append("<" + tag + ">" + val + nested + "</" + tag + ">")
     if active_list:
         rendered.append("</" + active_list + ">")
     return "\n".join(rendered), list(dict.fromkeys(sources)), summary
