@@ -108,7 +108,7 @@ def test_nested_numbered_list_retains_child_text_and_links():
     ]
     with patch.object(publisher, "get_blocks", side_effect=lambda ident: nested if ident == "p-1" else page):
         html, sources, _ = publisher.to_html("page-nested")
-    compact = html.replace("\\n", "")
+    compact = html.replace(chr(10), "")
     assert "<ol><li>Open settings<ol><li>" in compact
     assert "Find spam options" in compact
     assert "</ol><ul><li>Check blocked messages</li></ul></li><li>Save changes" in compact
