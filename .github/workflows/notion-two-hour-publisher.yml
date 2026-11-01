@@ -34,6 +34,17 @@ jobs:
         with:
           python-version: '3.11'
 
+      # workflow_dispatch may be queued while another writer commits a new
+      # article. Fetch latest main after the concurrency lock is acquired so
+      # cooldown and duplicate detection use the up-to-date ledger.
+      - name: Refresh current main before choosing a Notion draft
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main
+          git reset --hard origin/main
+          echo "Publication starting at main $(git rev-parse --short HEAD)"
+
       - name: Honor strict 30-minute publication spacing across scheduler jitter
         shell: bash
         run: |
@@ -126,7 +137,7 @@ jobs:
           url=os.environ["PUBLIC_URL"]
           path=os.environ["DESTINATION"]
           title=open(path,encoding="utf-8").read().split("<title>",1)[1].split("</title>",1)[0]
-          for retry in range(24):
+          for retry in range(40):
               try:
                   request=Request(url+"?notion-verify="+str(retry),headers={"Cache-Control":"no-cache"})
                   with urlopen(request,timeout=15) as response:
