@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 import re
 import sys
+import time
 from urllib.parse import quote, urlparse
 from urllib.request import Request, urlopen
 
@@ -330,17 +331,32 @@ def candidate_sitemap(draft, url):
 def stage():
     if not os.environ.get("NOTION_API_TOKEN"):
         return {"status": "NEEDS_NOTION_API_TOKEN"}
-    if not previous_release_is_live(ROOT):
-        raise RuntimeError("Previous publication has not been confirmed live")
+    # Pages deployments can become readable shortly after the workflow starts.
+    # Retry this guard without ever bypassing it: a missing previous page still
+    # prevents all new publication after the bounded retry window.
+    for attempt in range(9):
+        if previous_release_is_live(ROOT):
+            break
+        if attempt == 8:
+            raise RuntimeError("Previous publication has not been confirmed live after 120s")
+        print("PAGES_PREVIOUS_NOT_LIVE: retrying in 15s (" +
+              str(attempt + 1) + "/8)", file=sys.stderr)
+        time.sleep(15)
     history = ledger_rows()
     ready = ready_rows()
+    reconciled_ids = set()
     for row in ready:
         entry = next((r for r in reversed(history) if r.get("notionPageId") == row["id"]), None)
         if entry:
             if not live(entry["url"], entry["title"]):
                 raise RuntimeError("A previously staged Notion article is still not live")
             finalize(row["id"], entry["url"])
-            return {"status": "RECONCILED", "url": entry["url"]}
+            reconciled_ids.add(row["id"])
+            print("NOTION_RECONCILED_ALREADY_LIVE: " + row["id"], file=sys.stderr)
+    # Finalization of an already-live page must not waste the next available
+    # 30-minute publication slot. Only still-pending rows can be staged.
+    if reconciled_ids:
+        ready = [row for row in ready if row["id"] not in reconciled_ids]
     last = next((r for r in reversed(history) if r.get("notionPageId")), None)
     now = datetime.now(KST)
     # One-time operator-requested new publishing anchor, strictly limited to the
