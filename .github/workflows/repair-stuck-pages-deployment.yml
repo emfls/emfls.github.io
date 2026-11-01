@@ -1,0 +1,43 @@
+name: One-time recovery of blocked GitHub Pages deployment
+# Operational repair only: never publish or change any article/Notion row.
+# Deleting this workflow after recovery prevents future invocation.
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/repair-stuck-pages-deployment.yml
+
+permissions:
+  contents: read
+  pages: write
+
+concurrency:
+  group: github-pages-stuck-deployment-recovery
+  cancel-in-progress: false
+
+jobs:
+  cancel-stuck-deployment:
+    if: github.repository == 'emfls/emfls.github.io'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Cancel only the known stuck Pages deployment (Nov 1)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          DEPLOYMENT_ID="96940542908e1ce93d113b6ae6ee210702cb000a"
+          URL="https://api.github.com/repos/emfls/emfls.github.io/pages/deployments/${DEPLOYMENT_ID}/cancel"
+          status=$(curl --silent --show-error --location --output response.txt --write-out '%{http_code}' --request POST \
+            --header "Authorization: Bearer ${GH_TOKEN}" \
+            --header "Accept: application/vnd.github+json" \
+            --header "X-GitHub-Api-Version: 2026-03-10" \
+            "${URL}")
+          echo "Pages cancel endpoint HTTP status: ${status}"
+          if [ "${status}" != "204" ]; then
+            cat response.txt
+            echo "::error::The stuck Pages deployment could not be canceled. Do not claim the site is recovered."
+            exit 1
+          fi
+          echo "Canceled the identified blocked Pages deployment."
