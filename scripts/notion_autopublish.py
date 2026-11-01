@@ -348,7 +348,7 @@ def stage():
     initial_page = os.environ.get("NOTION_INITIAL_PAGE_ID", "").strip()
     if initial_page and (not ready or ready[0]["id"] != initial_page):
         return {"status": "INITIAL_PAGE_ALREADY_CONSUMED"}
-    if not initial_page and last and now - datetime.fromisoformat(last["slotKst"]).astimezone(KST) < timedelta(hours=1):
+    if not initial_page and last and now - datetime.fromisoformat(last["slotKst"]).astimezone(KST) < timedelta(minutes=30):
         return {"status": "COOLDOWN"}
     if not ready:
         return {"status": "QUEUE_EMPTY"}
