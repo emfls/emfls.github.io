@@ -1,7 +1,7 @@
 # EMFLS Notion article publishing: external scheduler
 
-Status: **ACTIVE / VERIFIED ON 2026-10-23 KST**. External scheduler is configured; a workflow_dispatch end-to-end publication of article #5 was verified. Token rotation and subsequent requests require ongoing monitoring.
-Updated: 2026-10-23 KST.
+Status: **30-MINUTE TARGET / EXTERNAL SCHEDULER CHANGE REQUIRED**. The external scheduler is configured historically, but its 30-minute recurrence must be changed in cron-job.org and then verified. The original workflow_dispatch end-to-end test of article #5 occurred on 2026-10-23 KST.
+Updated: 2026-11-01 KST.
 
 ## Architecture
 
@@ -13,10 +13,10 @@ GitHub `schedule:` is deliberately disabled because scheduled runs were skipped.
 
 ### External schedule (configure in cron-job.org account; never put authentication tokens in GitHub or Notion documents)
 
-- Name: `EMFLS Notion 2h publishing`
+- Name: existing EMFLS Notion publishing job (keep the existing job, do not create a second one)
 - Time zone: `Asia/Seoul`
-- Frequency: **every hour at `:30`** (00:30, 01:30, ... 23:30 KST). Update the cron-job.org job schedule manually from two-hour to hourly; repository code already enforces the one-hour cooldown.
-- If the service offers a five-field cron syntax with the time zone configured: `30 * * * *`.
+- Frequency: **every 30 minutes**, at `:00` and `:30` every hour (00:00, 00:30, ... 23:30 KST). Update the **existing** cron-job.org task; do not create a second publisher. The repository enforces at most one article per 30-minute interval.
+- If the service offers a five-field cron syntax with the time zone configured: `*/30 * * * *`.
 - URL: `https://api.github.com/repos/emfls/emfls.github.io/actions/workflows/notion-two-hour-publisher.yml/dispatches`
 - HTTP method: `POST`
 - Request body type: `application/json`
@@ -33,7 +33,7 @@ cron-job.org documentation: https://cron-job.org/en/faq/
 
 ### End-to-end smoke test after configuring the scheduler
 
-1. Confirm the latest successfully published Notion page is publicly reachable, and its publication slot was at least one hour ago. This publisher enforces a strict one-hour gap and can wait up to ten minutes for small scheduler drift.
+1. Confirm the latest successfully published Notion page is publicly reachable and the last publication slot is respected. The publisher enforces a strict 30-minute gap and can wait up to ten minutes for small scheduler drift.
 2. Use the scheduler's **Execute now / Test run** feature once.
 3. Verify that GitHub Actions launched a new **workflow_dispatch** run: https://github.com/emfls/emfls.github.io/actions/workflows/notion-two-hour-publisher.yml
 4. Verify run steps: stage one page -> commit and auto-merge PR -> GitHub Pages live verified -> Notion `발행완료`.
@@ -48,11 +48,11 @@ The third-party scheduler stores the GitHub token; use a single-repository fine-
 
 Use the separate read-only ChatGPT monitoring task for run-state and missing-publication alerts. Monitoring must never modify GitHub files or Notion rows, dispatch workflows, or pretend an HTTP success from GitHub is a published article.
 
-### One-time action for switching to hourly publishing
+### One-time action for switching to 30-minute publishing (target: 48 articles per full day)
 
-1. Open the already configured cron-job.org job and change its Custom schedule from every two hours at :30 to every hour at :30.
-2. Save and confirm Next executions are hourly.
+1. Open the **existing** cron-job.org job and change its Custom schedule to every 30 minutes at :00 and :30 (Asia/Seoul). Do not add a duplicate job.
+2. Save and confirm the next executions are spaced 30 minutes apart, including both :00 and :30.
 3. The endpoint, token, POST method, request headers, and JSON body stay unchanged.
-4. Confirm a subsequent workflow_dispatch run publishes no more than one article, with the one-hour cooldown respected.
+4. Confirm a subsequent workflow_dispatch run publishes no more than one article, with the 30-minute cooldown respected.
 
-The external scheduler was tested with an HTTP 204 request, and article #5 successfully published in an end-to-end run on 2026-10-23. The **hourly recurrence remains pending** until the cron-job.org schedule is manually updated and subsequently verified.
+The external scheduler was historically tested with HTTP 204 and article #5 published in an end-to-end run on 2026-10-23. **The 30-minute cron-job.org recurrence has not been verified by this repository change.** HTTP 204 from workflow_dispatch is dispatch acceptance, not proof of publication. A full day produces at most 48 publishing opportunities; actual successful releases may be fewer if the queue is empty, GitHub Actions delays occur, a run fails, or live publication verification blocks the next release.
