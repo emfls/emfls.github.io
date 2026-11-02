@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 USB에 4GB 이상 파일 복사 안 될 때: FAT32·exFAT·NTFS 차이와 데이터 보존 해결법</title>
+<meta name="description" content="64GB USB 메모리에 남은 공간이 30GB인데 5GB짜리 동영상을 복사하자 &#x27;대상 파일 시스템에 비해 파일이 너무 큽니다&#x27;라는 메시지가 뜨는 경우가 있습니다. 저장 공간이 넉넉한데도 파일이 들어가지 않는 이유는 무엇일까요?">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#0d1117">
+<link rel="canonical" href="https://emfls.github.io/kor/report/it/usb-file-too-large-4gb-fat32-exfat-ntfs-safe-transfer-2026.html">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2026 USB에 4GB 이상 파일 복사 안 될 때: FAT32·exFAT·NTFS 차이와 데이터 보존 해결법">
+<meta property="og:description" content="64GB USB 메모리에 남은 공간이 30GB인데 5GB짜리 동영상을 복사하자 &#x27;대상 파일 시스템에 비해 파일이 너무 큽니다&#x27;라는 메시지가 뜨는 경우가 있습니다. 저장 공간이 넉넉한데도 파일이 들어가지 않는 이유는 무엇일까요?">
+<meta property="og:url" content="https://emfls.github.io/kor/report/it/usb-file-too-large-4gb-fat32-exfat-ntfs-safe-transfer-2026.html">
+<meta property="og:site_name" content="emfls">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2026 USB에 4GB 이상 파일 복사 안 될 때: FAT32·exFAT·NTFS 차이와 데이터 보존 해결법">
+<meta name="twitter:description" content="64GB USB 메모리에 남은 공간이 30GB인데 5GB짜리 동영상을 복사하자 &#x27;대상 파일 시스템에 비해 파일이 너무 큽니다&#x27;라는 메시지가 뜨는 경우가 있습니다. 저장 공간이 넉넉한데도 파일이 들어가지 않는 이유는 무엇일까요?">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"2026 USB에 4GB 이상 파일 복사 안 될 때: FAT32·exFAT·NTFS 차이와 데이터 보존 해결법","description":"64GB USB 메모리에 남은 공간이 30GB인데 5GB짜리 동영상을 복사하자 '대상 파일 시스템에 비해 파일이 너무 큽니다'라는 메시지가 뜨는 경우가 있습니다. 저장 공간이 넉넉한데도 파일이 들어가지 않는 이유는 무엇일까요?","url":"https://emfls.github.io/kor/report/it/usb-file-too-large-4gb-fat32-exfat-ntfs-safe-transfer-2026.html","mainEntityOfPage":"https://emfls.github.io/kor/report/it/usb-file-too-large-4gb-fat32-exfat-ntfs-safe-transfer-2026.html","inLanguage":"ko","author":{"@type":"Organization","name":"emfls"},"publisher":{"@type":"Organization","name":"emfls","url":"https://emfls.github.io"},"datePublished":"2026-11-02","dateModified":"2026-11-02"}</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-QP5Q67GE5B');</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+<style>
+:root{color-scheme:dark;--bg:#0d1117;--surface:#161b22;--surface2:#1c2430;--border:#30363d;--text:#e6edf3;--muted:#abb6c3;--accent:#79c0ff;--soft:#c8b6ff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Apple SD Gothic Neo","Malgun Gothic",system-ui,-apple-system,sans-serif;line-height:1.8;word-break:keep-all}
+a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thickness:2px}
+.skip{position:absolute;left:-9999px;top:4px;z-index:1000;padding:8px 16px;background:white;color:black}.skip:focus{left:4px}
+.site-header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px max(18px,calc((100vw - 900px)/2));background:linear-gradient(90deg,#4e54c8,#8f94fb);border-bottom:1px solid #6867cc}
+.brand{color:white;text-decoration:none;font-size:1.14rem;font-weight:850;letter-spacing:.02em}
+.site-header nav{display:flex;gap:12px}.site-header nav a{color:#fff;text-decoration:none;font-size:.86rem;font-weight:600}
+.site-header nav a:hover{text-decoration:underline}
+.shell{max-width:900px;margin:auto;padding:20px 18px 70px}
+.breadcrumb{font-size:.81rem;color:var(--muted);margin:3px 0 18px}.breadcrumb a{color:#d4deff;text-decoration:none}
+.hero{position:relative;overflow:hidden;border:1px solid #47577b;border-radius:18px;padding:42px 32px;background:linear-gradient(135deg,#122140,#172c53 52%,#302754 100%);box-shadow:0 15px 40px #0003}
+.hero:after{content:"";position:absolute;right:-80px;top:-100px;width:310px;height:310px;border-radius:50%;background:radial-gradient(circle,#9b8bff27,transparent 70%);pointer-events:none}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid #8092e05c;background:#ffffff12;border-radius:99px;padding:4px 13px;color:#e3dcff;font-size:.79rem;font-weight:700;margin-bottom:18px}
+.hero h1{font-weight:850;line-height:1.42;letter-spacing:-.037em;font-size:clamp(1.55rem,4vw,2.25rem);margin:0 0 16px;position:relative;z-index:1;overflow-wrap:anywhere}
+.hero .deck{font-size:.99rem;color:#e2e7f5;max-width:680px;margin:0 0 15px}
+.hero-meta{font-size:.82rem;color:#c8d2e5;display:flex;flex-wrap:wrap;gap:6px 18px}
+.highlight-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:17px 0 20px}
+.highlight{padding:17px 16px;border:1px solid var(--border);background:var(--surface);border-radius:13px}
+.highlight .value{display:block;color:#d6caff;font-size:1.12rem;font-weight:800;line-height:1.45}
+.highlight .label{display:block;color:var(--muted);font-size:.76rem;margin-top:5px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
+.contents,.section,.intro,.info-bottom{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:24px 27px;box-shadow:0 3px 15px #0002}
+.contents h2,.info-bottom h2{font-size:1.02rem;color:#d4c5ff;margin:0 0 12px}
+.contents ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 25px;margin:0;padding-left:19px}
+.contents li{font-size:.86rem;line-height:1.6;padding:3px 0}
+.contents a{color:#d3ddec;text-decoration:none}.contents a:hover{text-decoration:underline}
+.intro{border-left:4px solid #7e96e4;background:linear-gradient(125deg,#1a2335,var(--surface));}
+.section h2{font-size:1.32rem;line-height:1.5;margin:0 0 17px;color:#d4c5ff;letter-spacing:-.022em;border-bottom:1px solid #354052;padding-bottom:12px;scroll-margin-top:20px}
+.section h3{font-size:1.045rem;margin:23px 0 8px;color:#c3dcff;scroll-margin-top:20px}
+.section p,.intro p{font-size:.955rem;margin:0 0 14px;color:#d9e0e8;line-height:1.85}
+.section p:last-child,.intro p:last-child{margin-bottom:0}
+.section strong,.intro strong{color:#fff;font-weight:750}
+.section li,.intro li{font-size:.94rem;line-height:1.8;margin:5px 0;color:#d8e0e8}
+.section ul,.section ol,.intro ul,.intro ol{padding-left:22px;margin:12px 0 20px}
+.section blockquote{margin:16px 0;padding:13px 17px;border-left:3px solid #a18cff;background:#252440;border-radius:0 8px 8px 0}
+.section a{overflow-wrap:anywhere}
+.section hr{border:0;border-top:1px solid var(--border);margin:24px 0}
+.section ul,.section ol{background:#1c2430;border-radius:9px;padding:12px 20px 12px 37px;border:1px solid #28384b}
+.notion-code{max-width:100%;overflow-x:auto;white-space:pre;tab-size:2;margin:14px 0 9px;padding:14px 16px;border:1px solid #34465f;border-radius:9px;background:#141d2c;color:#e7efff;font-size:.88rem;line-height:1.65}
+.notion-code code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.section .notion-code-caption,.intro .notion-code-caption{margin:0 0 17px;color:#aebdd5;font-size:.82rem}
+.details-table{overflow-x:auto}
+.section table{border-collapse:collapse;width:100%;min-width:500px;margin:14px 0}
+.section th,.section td{padding:12px;text-align:left;border-bottom:1px solid var(--border);font-size:.89rem}
+.section th{background:#202a3c;color:#d3caff}
+.cta{display:inline-flex;align-items:center;gap:8px;margin-top:8px;padding:11px 17px;border-radius:10px;background:#254975;color:white;text-decoration:none;font-size:.9rem;font-weight:700;border:1px solid #4e75a9}
+.cta:hover{background:#305989}
+.notice{border-left:4px solid #57b59b;padding:13px 16px;background:#122e2b;border-radius:4px 9px 9px 4px;color:#cfe6dd;font-size:.88rem;margin:16px 0}
+.info-bottom p{font-size:.87rem;color:var(--muted);margin:0 0 10px}
+.pills{display:flex;gap:9px;flex-wrap:wrap}.pills a{display:inline-block;border:1px solid #45516c;border-radius:99px;padding:6px 13px;text-decoration:none;color:#d5e3ff;font-size:.84rem}
+.site-footer{font-size:.8rem;color:#9ba9b8;text-align:center;margin-top:24px;padding-top:24px;border-top:1px solid var(--border)}
+.adsbygoogle,div[id^="aswift_"]{max-width:100%!important;overflow:hidden}
+@media(max-width:650px){.shell{padding:14px 12px 45px}.site-header{padding:14px}.hero{padding:29px 20px}.hero h1{font-size:1.58rem}.highlight-row{gap:7px}.highlight{padding:13px 9px}.highlight .value{font-size:.92rem}.highlight .label{font-size:.7rem}.contents,.section,.intro,.info-bottom{padding:19px 17px}.contents ol{grid-template-columns:1fr}.section h2{font-size:1.18rem}.site-header nav{gap:9px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-header"><a class="brand" href="/">emfls</a><nav aria-label="상단 메뉴"><a href="/kor/report/">생활정보</a><a href="/kor/report/it/">관련 주제</a><a href="/">홈</a></nav></header>
+<main class="shell" id="main">
+<div class="breadcrumb"><a href="/">홈</a> › <a href="/kor/report/">생활정보</a> › <a href="/kor/report/it/">IT · 기기</a></div>
+<article>
+<header class="hero">
+<span class="eyebrow">IT · 기기 · 최신 가이드</span>
+<h1>2026 USB에 4GB 이상 파일 복사 안 될 때: FAT32·exFAT·NTFS 차이와 데이터 보존 해결법</h1>
+<p class="deck">64GB USB 메모리에 남은 공간이 30GB인데 5GB짜리 동영상을 복사하자 &#x27;대상 파일 시스템에 비해 파일이 너무 큽니다&#x27;라는 메시지가 뜨는 경우가 있습니다. 저장 공간이 넉넉한데도 파일이 들어가지 않는 이유는 무엇일까요?</p>
+<div class="hero-meta"><span>최초 발행 2026-11-02</span><span>내용 확인 2026-11-02</span><span>작성 emfls</span></div>
+</header>
+
+<nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">1. USB 공간이 남았는데 큰 파일만 복사되지 않는 이유</a></li><li><a href="#section-02">2. Windows 11에서 USB 파일 시스템 확인하기</a></li><li><a href="#section-03">3. Mac에서는 어디에서 확인하나요?</a></li><li><a href="#section-04">4. FAT32·exFAT·NTFS는 무엇이 다른가?</a></li><li><a href="#section-05">5. USB를 포맷하지 않고 해결하는 방법부터 검토하기</a></li><li><a href="#section-06">6. 포맷 전에 반드시 확인해야 할 안전 조건</a></li><li><a href="#section-07">7. Windows 11에서 exFAT으로 포맷하는 안전한 절차</a></li><li><a href="#section-08">8. Mac에서 exFAT으로 변경하는 방법</a></li><li><a href="#section-09">9. TV·차량·게임기에서는 왜 exFAT USB가 인식되지 않을까?</a></li><li><a href="#section-10">10. 실제로는 다른 원인일 수 있는 경우</a></li><li><a href="#section-11">11. 포맷 후에도 꼭 해야 할 파일 검증</a></li><li><a href="#section-12">12. FAT32와 32GB 제한을 혼동하지 마세요</a></li><li><a href="#section-13">13. 자주 묻는 질문</a></li><li><a href="#section-14">결론: 포맷보다 먼저 원인을 구분하세요</a></li></ol></nav>
+<div class="layout">
+<div class="intro"><p>64GB USB 메모리에 남은 공간이 30GB인데 5GB짜리 동영상을 복사하자 &#x27;대상 파일 시스템에 비해 파일이 너무 큽니다&#x27;라는 메시지가 뜨는 경우가 있습니다. 저장 공간이 넉넉한데도 파일이 들어가지 않는 이유는 무엇일까요?</p>
+<p>원인은 USB의 전체 용량이 아니라 <strong>파일 시스템이 한 개 파일에 허용하는 최대 크기</strong>일 수 있습니다. 특히 FAT32 형식의 USB에는 약 4GiB에 이르는 단일 파일을 저장할 수 없습니다. 그렇다고 USB를 바로 포맷하면 중요한 사진과 문서가 삭제될 수 있습니다.</p>
+<p>이 글은 Microsoft의 파일 시스템 비교와 Windows 포맷 문서, Apple의 외장 드라이브 지원 안내를 기반으로 <strong>현재 형식 확인 → 포맷 없는 대안 검토 → 백업 검증 후 변경</strong>이라는 순서로 정리했습니다. 이 3단계 흐름은 독자를 위해 구성한 자체 설명 체계입니다. 검토 기준일은 2026년 11월 1일입니다.</p></div>
+<section class="section" aria-labelledby="section-01"><h2 id="section-01">1. USB 공간이 남았는데 큰 파일만 복사되지 않는 이유</h2><p>USB 전체 용량과 한 개 파일에 허용되는 크기는 서로 다른 개념입니다. 5GB 파일을 저장하려면 USB에 5GB 이상의 공간이 남아야 하지만 그것만으로 충분하지 않을 수 있습니다. 해당 USB의 파일 시스템도 그 크기의 파일을 허용해야 합니다.</p>
+<p>Microsoft의 파일 시스템 비교표에 따르면 <strong>FAT32의 최대 단일 파일 크기는 약 4GiB</strong>이고, exFAT 및 NTFS는 훨씬 큰 개별 파일을 지원합니다. 참고로 4GiB는 4,294,967,296바이트로, 광고나 탐색기 화면에서 흔히 쓰는 &#x27;4GB&#x27;와 단위가 정확히 일치하지는 않습니다. 따라서 경계 부근의 파일은 반올림된 표시 숫자보다 실제 크기와 오류 문구를 확인하세요.</p>
+<div class="details-table"><table><thead><tr><th scope="col">상황</th><th scope="col">의심할 원인</th><th scope="col">첫 번째 확인</th></tr></thead><tbody><tr><td>1GB는 복사되고 5GB 파일만 실패</td><td>FAT32 단일 파일 제한</td><td>USB 파일 시스템</td></tr><tr><td>작은 파일 여러 개는 잘 복사됨</td><td>개별 파일 제한과 전체 용량의 차이</td><td>가장 큰 파일의 크기</td></tr><tr><td>작은 파일도 복사되지 않음</td><td>공간 부족·쓰기 방지·장치 오류 등</td><td>남은 공간과 오류 문구</td></tr><tr><td>Mac에서 파일은 읽히지만 저장할 수 없음</td><td>NTFS 쓰기 제한 등</td><td>Finder의 포맷 정보</td></tr><tr><td>TV나 차량이 USB를 인식하지 못함</td><td>기기별 지원 파일 시스템</td><td>제조사 설명서</td></tr></tbody></table></div>
+<p>공식 자료: <a href="https://learn.microsoft.com/ko-kr/windows/win32/fileio/filesystem-functionality-comparison" rel="noopener noreferrer">Microsoft — 파일 시스템 기능 비교</a></p></section>
+<section class="section" aria-labelledby="section-02"><h2 id="section-02">2. Windows 11에서 USB 파일 시스템 확인하기</h2><p>이 단계는 파일을 삭제하거나 포맷하지 않는 <strong>조회 작업</strong>입니다.</p>
+<ol>
+<li>USB 메모리 또는 외장 SSD를 연결합니다.</li>
+<li>Windows 키 + E를 눌러 파일 탐색기를 엽니다.</li>
+<li>왼쪽 메뉴의 <strong>내 PC</strong>를 선택합니다.</li>
+<li>대상 USB 드라이브를 마우스 오른쪽 버튼으로 클릭합니다.</li>
+<li><strong>속성</strong>을 엽니다.</li>
+<li>일반 탭의 <strong>파일 시스템</strong> 항목을 확인합니다.</li>
+<li>FAT32, exFAT, NTFS 가운데 무엇인지 기록합니다.</li>
+<li>같은 창에서 남은 저장 공간도 확인합니다.</li>
+</ol>
+<p>먼저 USB가 FAT32인지 확인하는 것이 중요합니다. 같은 64GB USB라도 FAT32로 준비했을 수 있고 exFAT이나 NTFS로 준비했을 수 있기 때문입니다.</p>
+<p><strong>주의:</strong> 파일 탐색기에는 내부 디스크와 다른 외장 드라이브도 함께 표시됩니다. USB 이름만 믿지 말고 <strong>용량·드라이브 문자·실제 연결 장치</strong>가 일치하는지 확인하세요.</p></section>
+<section class="section" aria-labelledby="section-03"><h2 id="section-03">3. Mac에서는 어디에서 확인하나요?</h2><p>Apple의 공식 안내에 따르면 Finder에서 다음과 같이 확인할 수 있습니다.</p>
+<ol>
+<li>Mac의 Finder에서 외장 드라이브를 선택합니다.</li>
+<li>메뉴에서 <strong>파일 → 정보 가져오기</strong>를 선택합니다.</li>
+<li>또는 Command + I를 누릅니다.</li>
+<li>정보 창의 <strong>포맷</strong> 항목을 확인합니다.</li>
+<li>남은 저장 공간도 함께 확인합니다.</li>
+</ol>
+<p>Apple은 macOS에서 NTFS 드라이브를 읽을 수는 있지만 기본적으로 쓰지 못할 수 있다고 설명합니다. 따라서 Windows에서는 정상적으로 저장한 USB가 Mac에서 읽기 전용처럼 동작한다면, <strong>FAT32의 4GiB 제한과 별개로 NTFS의 쓰기 지원 여부</strong>를 살펴봐야 합니다.</p>
+<p>공식 자료: <a href="https://support.apple.com/ko-kr/101830" rel="noopener noreferrer">Apple — Mac에서 외장 드라이브에 파일을 저장할 수 없는 경우</a></p></section>
+<section class="section" aria-labelledby="section-04"><h2 id="section-04">4. FAT32·exFAT·NTFS는 무엇이 다른가?</h2><div class="details-table"><table><thead><tr><th scope="col">비교 항목</th><th scope="col">FAT32</th><th scope="col">exFAT</th><th scope="col">NTFS</th></tr></thead><tbody><tr><td>단일 파일 약 4GiB 초과 저장</td><td>제한 발생</td><td>일반적으로 가능</td><td>일반적으로 가능</td></tr><tr><td>Windows 11 지원</td><td>지원</td><td>지원</td><td>지원</td></tr><tr><td>Mac의 기본 사용</td><td>지원되는 형식</td><td>지원되는 형식</td><td>읽기 가능, 쓰기 제한 가능</td></tr><tr><td>오래된 TV·차량 호환성</td><td>기기별 확인</td><td>기기별 확인</td><td>기기별 확인</td></tr><tr><td>대표 사용 목적</td><td>구형 장치와의 호환</td><td>Windows·Mac 사이 대용량 파일 교환</td><td>Windows 중심 저장 장치</td></tr><tr><td>파일 시스템 고급 기능</td><td>상대적으로 단순</td><td>이동식 저장 장치에 적합</td><td>권한·저널링 등 기능 제공</td></tr></tbody></table></div>
+<p><strong>무조건 exFAT이나 NTFS가 더 좋다는 뜻은 아닙니다.</strong> 오래된 기기가 FAT32만 지원할 수도 있으며, 특정 제조사가 정해 놓은 조건이 있을 수 있습니다. 어느 파일 시스템이 적합한지는 <strong>USB를 연결할 기기와 파일 용도</strong>에 따라 결정됩니다.</p>
+<p>Microsoft 비교표에는 exFAT이 NTFS와 달리 메타데이터 전용 저널링을 제공하지 않는다는 차이도 설명됩니다. 이것은 즉시 고장이 난다는 뜻이 아니라 파일 시스템의 기능 차이를 말합니다.</p>
+<p>공식 자료: <a href="https://learn.microsoft.com/ko-kr/windows/win32/fileio/filesystem-functionality-comparison" rel="noopener noreferrer">Microsoft — 파일 시스템 기능 비교</a>, <a href="https://support.apple.com/en-gb/guide/disk-utility/dsku19ed921c/22.7/mac/26" rel="noopener noreferrer">Apple — Mac 디스크 유틸리티의 파일 시스템 형식</a></p></section>
+<section class="section" aria-labelledby="section-05"><h2 id="section-05">5. USB를 포맷하지 않고 해결하는 방법부터 검토하기</h2><p>USB에 중요한 자료가 있으면 새 포맷을 하기 전에 다른 전송 방법을 먼저 알아보는 편이 안전합니다.</p>
+<p><strong>첫 번째 방법: 이미 exFAT이나 NTFS로 된 다른 저장 장치 사용.</strong> Windows PC나 Mac 등 실제 사용 장치에서 지원하는 형식이라면 기존 자료를 손대지 않고 큰 파일을 복사할 수 있습니다.</p>
+<p><strong>두 번째 방법: 신뢰할 수 있는 다른 전송 경로 이용.</strong> 두 컴퓨터 사이에서 파일만 옮기려는 목적이라면 네트워크 파일 공유나 적절한 클라우드 저장소를 사용할 수 있습니다. 다만 민감한 파일은 개인정보와 접근 권한에 주의해야 합니다.</p>
+<p><strong>세 번째 방법: 파일 분할.</strong> 받는 쪽에서 다시 결합할 수 있고 사용하는 도구를 충분히 이해한다면, 하나의 파일을 제한보다 작은 여러 조각으로 나눌 수 있습니다. 다만 일부 조각이라도 누락되면 복원할 수 없을 수 있으므로 테스트 후 사용하세요.</p>
+<p><strong>네 번째 방법: 지원 형식으로 다시 포맷.</strong> 앞으로 계속 큰 파일을 USB로 옮겨야 한다면 exFAT으로 바꾸는 방안을 고려할 수 있지만, 반드시 기존 데이터를 다른 곳에 백업한 뒤 진행해야 합니다.</p>
+<p><strong>자주 하는 실수:</strong> ZIP으로 압축하기만 하면 5GB 영상이 무조건 4GB 이하로 줄어든다고 생각하는 것입니다. 이미 압축된 영상 파일은 압축 효율이 낮을 수 있으며, 결과 파일 하나가 제한보다 크면 FAT32에서는 여전히 복사되지 않습니다.</p></section>
+<section class="section" aria-labelledby="section-06"><h2 id="section-06">6. 포맷 전에 반드시 확인해야 할 안전 조건</h2><p>포맷은 단순히 파일 시스템 이름을 바꾸는 작업이 아닙니다. Microsoft의 공식 포맷 안내는 새 파일 시스템을 만드는 과정에서 저장된 데이터가 삭제될 수 있다고 경고합니다.</p>
+<p>포맷을 결정하기 전에 다음을 확인하세요.</p>
+<ul>
+<li>USB가 실제로 FAT32이며 문제가 단일 파일 크기 제한과 관련되는가?</li>
+<li>USB 안의 모든 중요한 사진·문서·영상·백업 파일을 <strong>다른 장치로 복사</strong>했는가?</li>
+<li>백업본을 실제로 열어 내용을 확인했는가?</li>
+<li>포맷할 USB와 컴퓨터 내장 저장소를 <strong>용량과 드라이브 문자</strong>로 구별했는가?</li>
+<li>USB가 Windows 설치·복구용 장치가 아닌가?</li>
+<li>TV·차량·게임기 등의 사용 기기가 변경하려는 형식을 지원하는가?</li>
+</ul>
+<p>특히 <strong>빠른 포맷도 데이터를 안전하게 보존하는 기능이 아닙니다.</strong> 파일을 다른 곳에 옮기지 않은 상태에서는 빠른 포맷 역시 진행하지 마세요.</p>
+<p>자료가 사라져 복구가 필요한 상태라면 새 파일을 쓰거나 포맷을 시도하지 말고, 데이터 복구 가능성을 먼저 검토해야 합니다. 포맷 후에는 이전 데이터의 복구를 보장할 수 없습니다.</p>
+<p>공식 자료: <a href="https://learn.microsoft.com/ko-kr/windows-server/administration/windows-commands/format" rel="noopener noreferrer">Microsoft — Windows format 명령의 데이터 삭제 위험</a></p></section>
+<section class="section" aria-labelledby="section-07"><h2 id="section-07">7. Windows 11에서 exFAT으로 포맷하는 안전한 절차</h2><p><strong>백업 파일이 정상인지 확인한 뒤에만</strong> 다음 작업을 진행하세요. 기존 USB 파일은 삭제될 수 있습니다.</p>
+<ol>
+<li>USB를 PC에 연결하고 파일 탐색기를 엽니다.</li>
+<li><strong>내 PC</strong>에서 해당 USB를 찾습니다.</li>
+<li>이름, 드라이브 문자, 용량으로 올바른 장치인지 재확인합니다.</li>
+<li>USB 드라이브를 마우스 오른쪽 버튼으로 클릭합니다.</li>
+<li><strong>포맷</strong>을 선택합니다.</li>
+<li><strong>파일 시스템</strong> 목록에서 <strong>exFAT</strong>을 선택합니다.</li>
+<li>일반적인 파일 저장 용도라면 할당 단위 크기를 기본값으로 둡니다.</li>
+<li>볼륨 이름을 정한 후 데이터 삭제 경고를 확인합니다.</li>
+<li><strong>시작</strong>을 눌러 포맷을 진행합니다.</li>
+<li>완료 뒤 USB 속성에 exFAT이 표시되는지 확인합니다.</li>
+<li>작은 테스트 파일을 복사해 실제로 정상 작동하는지 확인합니다.</li>
+<li>백업한 기존 파일을 USB로 다시 복사합니다.</li>
+</ol>
+<p>파일 시스템 옵션은 기기의 크기와 종류에 따라 다르게 제공될 수 있습니다. 만약 해당 형식이 나타나지 않거나 포맷 과정에서 오류가 발생하면, 무턱대고 파티션을 삭제하거나 정체를 알 수 없는 포맷 도구를 설치하기보다는 장치 제조사의 공식 지원 자료를 확인하세요.</p>
+<p><strong>주의:</strong> 내장 시스템 드라이브, 복구 파티션, 부팅용 USB는 일반 자료 보관용 USB와 다릅니다. 잘못된 드라이브 포맷은 Windows 자체나 복구 환경에 영향을 줄 수 있습니다.</p>
+<p>공식 자료: <a href="https://learn.microsoft.com/ko-kr/windows-server/administration/windows-commands/format" rel="noopener noreferrer">Microsoft — format 명령과 파일 시스템 종류</a></p></section>
+<section class="section" aria-labelledby="section-08"><h2 id="section-08">8. Mac에서 exFAT으로 변경하는 방법</h2><p>Apple은 Mac과 Windows에서 함께 사용할 외장 드라이브를 <strong>디스크 유틸리티에서 지우고 포맷</strong>하는 공식 절차를 제공합니다.</p>
+<p><strong>데이터를 백업하고 복구 가능성을 검증한 다음</strong> 아래 단계를 진행하세요.</p>
+<ol>
+<li>Mac에서 **디스크 유틸리티(Disk Utility)**를 엽니다.</li>
+<li><strong>보기 → 모든 기기 보기</strong>를 선택합니다.</li>
+<li>왼쪽 목록에서 대상 외장 USB를 선택합니다.</li>
+<li>내부 SSD나 다른 외장 저장 장치를 선택하지 않았는지 확인합니다.</li>
+<li>**지우기(Erase)**를 선택합니다.</li>
+<li>이름을 지정하고 형식에서 <strong>exFAT</strong>을 선택합니다.</li>
+<li>필요한 경우 연결할 기기의 요구에 맞는 파티션 방식을 선택합니다.</li>
+<li>데이터 삭제 경고를 확인한 뒤 진행합니다.</li>
+<li>완료 후 Finder에서 포맷 정보를 다시 확인합니다.</li>
+<li>테스트 파일을 넣어 정상적으로 쓰고 읽을 수 있는지 확인합니다.</li>
+</ol>
+<p>Apple은 Windows 컴퓨터와 파일을 주고받는 장치에 대해 MS-DOS(FAT) 또는 exFAT 형식을 안내합니다. 그러나 이는 사용 목적에 따른 안내이며, 모든 구형 장치가 exFAT을 지원한다는 보장은 아닙니다.</p>
+<p>공식 자료: <a href="https://support.apple.com/en-ca/guide/disk-utility/dskutl1010/mac" rel="noopener noreferrer">Apple — Windows 컴퓨터용으로 디스크 포맷하기</a></p></section>
+<section class="section" aria-labelledby="section-09"><h2 id="section-09">9. TV·차량·게임기에서는 왜 exFAT USB가 인식되지 않을까?</h2><p>파일 시스템은 PC뿐 아니라 <strong>USB를 읽는 기기에서도 지원해야</strong> 합니다. 구형 TV, 자동차 오디오, 게임기, 인화기, 산업용 장비 등에서는 지원 목록이 다를 수 있습니다.</p>
+<p>포맷하기 전에 기기의 설명서에서 다음을 확인하세요.</p>
+<ul>
+<li>지원 파일 시스템이 FAT32·exFAT·NTFS 중 무엇인가?</li>
+<li>지원하는 USB 저장 용량에 제한이 있는가?</li>
+<li>MBR·GPT처럼 파티션 형식에 요구 조건이 있는가?</li>
+<li>영상 파일이 목적이라면 지원하는 코덱과 확장명은 무엇인가?</li>
+</ul>
+<p>예를 들어 USB가 인식되는데 동영상만 재생되지 않는다면 <strong>파일 시스템이 아니라 영상 코덱</strong>의 문제일 수 있습니다. 반대로 파일은 정상인데 기기가 USB를 아예 읽지 못한다면 지원 저장 형식도 확인할 필요가 있습니다.</p>
+<p>이 경우에는 &#x27;큰 파일을 옮기려면 무조건 exFAT이 정답&#x27;이라고 결론 내리기보다 장치의 공식 요구 형식을 우선해야 합니다. 서로 다른 용도에 맞는 USB를 별도로 사용하는 편이 간단할 수도 있습니다.</p></section>
+<section class="section" aria-labelledby="section-10"><h2 id="section-10">10. 실제로는 다른 원인일 수 있는 경우</h2><p>파일 복사가 실패한다고 언제나 FAT32 때문은 아닙니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">증상</th><th scope="col">먼저 확인할 문제</th></tr></thead><tbody><tr><td>5GB 동영상만 복사 실패, USB는 FAT32</td><td>단일 파일 크기 한계</td></tr><tr><td>USB가 exFAT인데도 5GB 파일이 실패</td><td>남은 공간·장치 상태·실제 대상 경로</td></tr><tr><td>500MB 파일도 복사 실패</td><td>쓰기 방지·저장 용량·오류·연결</td></tr><tr><td>Mac에서 읽을 수 있지만 저장 불가</td><td>NTFS 기본 쓰기 제한 등</td></tr><tr><td>복사는 됐는데 파일이 열리지 않음</td><td>파일 손상·원본 문제·복사 검증</td></tr><tr><td>다른 PC에서도 USB가 보이지 않음</td><td>저장 장치 이상·파티션·연결 문제</td></tr></tbody></table></div>
+<p>현재 파일 시스템이 exFAT으로 표시된다면 FAT32 제한을 고치기 위해 다시 포맷할 이유는 없습니다. 특히 모든 작은 파일조차 복사할 수 없다면 실제 원인을 먼저 좁혀야 합니다.</p></section>
+<section class="section" aria-labelledby="section-11"><h2 id="section-11">11. 포맷 후에도 꼭 해야 할 파일 검증</h2><p>새 USB에 대용량 파일 복사가 성공했다면 중요한 자료를 옮기기 전에 정상적으로 읽을 수 있는지 확인하세요.</p>
+<ol>
+<li>USB 속성에서 <strong>exFAT으로 포맷됐는지</strong> 확인합니다.</li>
+<li>원본을 보존한 상태에서 테스트할 큰 파일을 복사합니다.</li>
+<li>복사가 완전히 끝날 때까지 기다립니다.</li>
+<li>Windows의 안전한 하드웨어 제거 또는 Mac의 추출 기능을 사용합니다.</li>
+<li>USB를 다시 연결합니다.</li>
+<li>파일 이름과 크기를 원본과 비교합니다.</li>
+<li>동영상이라면 시작 부분과 끝부분을 재생합니다.</li>
+<li>문서라면 실제로 열어 내용을 확인합니다.</li>
+<li>중요한 데이터는 필요하면 체크섬·해시값 비교도 검토합니다.</li>
+</ol>
+<p><strong>파일 크기가 같다고 파일 내용까지 완전히 같다는 사실이 증명되지는 않습니다.</strong> 중요한 파일은 실제 열기와 추가 검증까지 마친 뒤 원본 삭제 여부를 결정하세요.</p>
+<p>exFAT은 NTFS와 같은 메타데이터 저널링 기능을 제공하지 않습니다. 따라서 USB가 기록 작업 중일 때 임의로 분리하지 않고 파일 복사 완료를 확인하는 습관이 중요합니다.</p>
+<p>공식 자료: <a href="https://learn.microsoft.com/ko-kr/windows/win32/fileio/filesystem-functionality-comparison" rel="noopener noreferrer">Microsoft — 파일 시스템 저널링 기능 비교</a></p></section>
+<section class="section" aria-labelledby="section-12"><h2 id="section-12">12. FAT32와 32GB 제한을 혼동하지 마세요</h2><p>FAT32에 관해 &#x27;4GB 제한&#x27;과 &#x27;32GB 제한&#x27;이라는 설명을 함께 보게 됩니다. 그러나 뜻이 다릅니다.</p>
+<p><strong>약 4GiB 제한은 개별 파일 하나의 최대 크기</strong>와 관련됩니다. 반면 &#x27;32GB 이하면 MS-DOS(FAT), 초과하면 exFAT&#x27;이라는 설명은 Apple이 Windows와 함께 사용할 디스크를 디스크 유틸리티에서 포맷할 때 제공하는 선택 가이드입니다.</p>
+<p>따라서 &#x27;64GB USB이니까 FAT32일 리 없다&#x27;고 판단하는 것은 잘못입니다. <strong>실제 파일 시스템은 탐색기 또는 Finder에서 직접 확인</strong>해야 합니다.</p>
+<p>또한 exFAT으로 포맷된 64GB USB라고 해서 언제나 60GB가 넘는 파일 하나를 넣을 수 있는 것은 아닙니다. 그 순간 남아 있는 실제 저장 공간과 장치의 상태를 확인해야 합니다.</p>
+<p>공식 자료: <a href="https://support.apple.com/en-ca/guide/disk-utility/dskutl1010/mac" rel="noopener noreferrer">Apple — Windows용 포맷 형식 선택</a>, <a href="https://learn.microsoft.com/ko-kr/windows/win32/fileio/filesystem-functionality-comparison" rel="noopener noreferrer">Microsoft — 파일 시스템 기능 비교</a></p></section>
+<section class="section" aria-labelledby="section-13"><h2 id="section-13">13. 자주 묻는 질문</h2><h3>Q. USB에 20GB가 남았는데 5GB 파일을 복사하지 못합니다.</h3>
+<p>FAT32일 수 있습니다. <strong>드라이브 속성에서 파일 시스템을 확인</strong>하세요. FAT32라면 개별 파일 크기 한계가 원인일 가능성이 있습니다.</p>
+<h3>Q. FAT32를 exFAT으로 바꾸면 USB 안에 있던 사진도 남나요?</h3>
+<p>일반적인 재포맷 작업에서는 기존 파일이 삭제될 수 있습니다. <strong>백업하고 파일을 실제로 열어 확인한 뒤</strong> 변경해야 합니다.</p>
+<h3>Q. ZIP 압축으로 5GB 영상을 4GB 이하로 만들 수 있나요?</h3>
+<p>반드시 그렇지는 않습니다. 압축 후 파일 하나가 FAT32 제한보다 작아져야 합니다. 영상처럼 이미 압축된 파일은 용량이 거의 줄지 않을 수 있습니다.</p>
+<h3>Q. Windows와 Mac에서 같이 쓰려면 무엇이 좋나요?</h3>
+<p>일반적인 파일 교환에는 exFAT이 실용적인 후보입니다. 하지만 연결할 TV·게임기·회사 장비 등의 호환 조건을 확인해야 합니다.</p>
+<h3>Q. NTFS로 포맷하면 Mac에서도 자유롭게 파일을 넣을 수 있나요?</h3>
+<p>Apple은 macOS가 NTFS에서 읽기는 가능하지만 기본적으로 쓰기를 지원하지 않는다고 안내합니다. <strong>Windows와 Mac 양쪽에서 기록하려는 목적이라면 exFAT 등을 고려</strong>하세요.</p>
+<h3>Q. 빠른 포맷은 안전하게 파일만 정리하는 것 아닌가요?</h3>
+<p>아닙니다. 빠른 포맷도 기존 데이터에 접근하지 못하게 만들 수 있으며 파일을 보존하는 기능이 아닙니다. 반드시 백업이 필요합니다.</p>
+<h3>Q. exFAT으로 바꾼 뒤 TV에서 USB가 보이지 않습니다.</h3>
+<p>TV가 exFAT을 지원하지 않을 수 있습니다. TV 제조사 설명서에서 지원 파일 시스템과 파티션 방식을 확인하세요.</p>
+<h3>Q. 작은 파일도 복사되지 않는데 포맷해야 할까요?</h3>
+<p>FAT32의 4GiB 제한과는 다른 문제일 가능성이 큽니다. <strong>쓰기 방지·남은 공간·오류 메시지·장치 상태</strong>부터 확인하세요.</p></section>
+<section class="section" aria-labelledby="section-14"><h2 id="section-14">결론: 포맷보다 먼저 원인을 구분하세요</h2><p>USB에 큰 파일이 들어가지 않을 때는 <strong>전체 용량</strong>과 <strong>개별 파일 크기 제한</strong>을 구별하는 것이 핵심입니다. USB가 FAT32라면 약 4GiB 이상 파일에서 제한을 만날 수 있습니다. Windows와 Mac 사이에 큰 파일을 자주 옮긴다면 exFAT이 합리적인 선택일 수 있지만, 목적 기기의 호환성을 반드시 확인해야 합니다.</p>
+<p>그리고 어떤 형식을 선택하든 <strong>포맷 전 백업과 백업 파일 검증</strong>을 생략하지 마세요. USB의 기존 자료를 잃을 위험을 감수하면서까지 서둘러 포맷할 필요는 없습니다.</p>
+<hr>
+<p><strong>검토 기준일: 2026년 11월 1일.</strong> 본문은 Microsoft와 Apple의 공식 문서에서 파일 시스템 한계, 포맷, macOS 호환성을 확인하고 독자적인 점검 절차로 재구성했습니다. 기기의 실제 지원 형식은 모델과 제조사에 따라 달라질 수 있습니다.</p>
+<h3>공식 참고 자료</h3>
+<ul>
+<li><a href="https://learn.microsoft.com/ko-kr/windows/win32/fileio/filesystem-functionality-comparison" rel="noopener noreferrer">Microsoft — FAT32·exFAT·NTFS 파일 시스템 기능 비교</a></li>
+<li><a href="https://learn.microsoft.com/ko-kr/windows-server/administration/windows-commands/format" rel="noopener noreferrer">Microsoft — Windows의 포맷 명령 및 데이터 삭제 경고</a></li>
+<li><a href="https://support.apple.com/en-ca/guide/disk-utility/dskutl1010/mac" rel="noopener noreferrer">Apple — Windows PC와 함께 사용할 외장 디스크 포맷</a></li>
+<li><a href="https://support.apple.com/en-gb/guide/disk-utility/dsku19ed921c/22.7/mac/26" rel="noopener noreferrer">Apple — Mac 디스크 유틸리티에서 사용 가능한 파일 시스템</a></li>
+<li><a href="https://support.apple.com/ko-kr/101830" rel="noopener noreferrer">Apple — Mac에서 외장 드라이브에 파일을 저장할 수 없는 경우</a></li>
+</ul></section>
+<section class="info-bottom">
+<h2>정보 출처와 확인 안내</h2>
+<p>작성·갱신일과 적용 범위는 본문에서 확인하세요. 정책·행사 일정·혜택·제품 정보는 변경될 수 있으므로 중요한 판단 전 공식 기관 및 판매처의 최신 안내를 확인하시기 바랍니다.</p>
+<div class="pills"><a href="/kor/report/it/">같은 분야의 글</a><a href="/kor/report/">생활정보 전체</a><a href="/">emfls 홈</a></div>
+</section>
+</div>
+</article>
+<footer class="site-footer">© 2026 emfls · 공식 기관 안내를 우선 확인하세요</footer>
+</main>
+</body>
+</html>
