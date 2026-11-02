@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 중고 노트북 배터리 12분 검증법: batteryreport 설계용량·완충용량·충전 제한·교체 판단</title>
+<meta name="description" content="중고 노트북을 구매할 때 판매자가 “배터리 100%까지 충전됩니다”라고 말하면 상태가 좋다고 생각하기 쉽습니다. 하지만 현재 충전 잔량이 100%라는 사실은 배터리가 새 제품일 때의 용량을 유지한다는 뜻이 아닙니다. 배터리 표시가 100%여도 실제로 저장할 수 있는 에">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#0d1117">
+<link rel="canonical" href="https://emfls.github.io/kor/report/it/used-windows-laptop-battery-health-report-design-full-charge-12min-test-2026.html">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2026 중고 노트북 배터리 12분 검증법: batteryreport 설계용량·완충용량·충전 제한·교체 판단">
+<meta property="og:description" content="중고 노트북을 구매할 때 판매자가 “배터리 100%까지 충전됩니다”라고 말하면 상태가 좋다고 생각하기 쉽습니다. 하지만 현재 충전 잔량이 100%라는 사실은 배터리가 새 제품일 때의 용량을 유지한다는 뜻이 아닙니다. 배터리 표시가 100%여도 실제로 저장할 수 있는 에">
+<meta property="og:url" content="https://emfls.github.io/kor/report/it/used-windows-laptop-battery-health-report-design-full-charge-12min-test-2026.html">
+<meta property="og:site_name" content="emfls">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2026 중고 노트북 배터리 12분 검증법: batteryreport 설계용량·완충용량·충전 제한·교체 판단">
+<meta name="twitter:description" content="중고 노트북을 구매할 때 판매자가 “배터리 100%까지 충전됩니다”라고 말하면 상태가 좋다고 생각하기 쉽습니다. 하지만 현재 충전 잔량이 100%라는 사실은 배터리가 새 제품일 때의 용량을 유지한다는 뜻이 아닙니다. 배터리 표시가 100%여도 실제로 저장할 수 있는 에">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"2026 중고 노트북 배터리 12분 검증법: batteryreport 설계용량·완충용량·충전 제한·교체 판단","description":"중고 노트북을 구매할 때 판매자가 “배터리 100%까지 충전됩니다”라고 말하면 상태가 좋다고 생각하기 쉽습니다. 하지만 현재 충전 잔량이 100%라는 사실은 배터리가 새 제품일 때의 용량을 유지한다는 뜻이 아닙니다. 배터리 표시가 100%여도 실제로 저장할 수 있는 에","url":"https://emfls.github.io/kor/report/it/used-windows-laptop-battery-health-report-design-full-charge-12min-test-2026.html","mainEntityOfPage":"https://emfls.github.io/kor/report/it/used-windows-laptop-battery-health-report-design-full-charge-12min-test-2026.html","inLanguage":"ko","author":{"@type":"Organization","name":"emfls"},"publisher":{"@type":"Organization","name":"emfls","url":"https://emfls.github.io"},"datePublished":"2026-11-02","dateModified":"2026-11-02"}</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-QP5Q67GE5B');</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+<style>
+:root{color-scheme:dark;--bg:#0d1117;--surface:#161b22;--surface2:#1c2430;--border:#30363d;--text:#e6edf3;--muted:#abb6c3;--accent:#79c0ff;--soft:#c8b6ff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Apple SD Gothic Neo","Malgun Gothic",system-ui,-apple-system,sans-serif;line-height:1.8;word-break:keep-all}
+a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thickness:2px}
+.skip{position:absolute;left:-9999px;top:4px;z-index:1000;padding:8px 16px;background:white;color:black}.skip:focus{left:4px}
+.site-header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px max(18px,calc((100vw - 900px)/2));background:linear-gradient(90deg,#4e54c8,#8f94fb);border-bottom:1px solid #6867cc}
+.brand{color:white;text-decoration:none;font-size:1.14rem;font-weight:850;letter-spacing:.02em}
+.site-header nav{display:flex;gap:12px}.site-header nav a{color:#fff;text-decoration:none;font-size:.86rem;font-weight:600}
+.site-header nav a:hover{text-decoration:underline}
+.shell{max-width:900px;margin:auto;padding:20px 18px 70px}
+.breadcrumb{font-size:.81rem;color:var(--muted);margin:3px 0 18px}.breadcrumb a{color:#d4deff;text-decoration:none}
+.hero{position:relative;overflow:hidden;border:1px solid #47577b;border-radius:18px;padding:42px 32px;background:linear-gradient(135deg,#122140,#172c53 52%,#302754 100%);box-shadow:0 15px 40px #0003}
+.hero:after{content:"";position:absolute;right:-80px;top:-100px;width:310px;height:310px;border-radius:50%;background:radial-gradient(circle,#9b8bff27,transparent 70%);pointer-events:none}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid #8092e05c;background:#ffffff12;border-radius:99px;padding:4px 13px;color:#e3dcff;font-size:.79rem;font-weight:700;margin-bottom:18px}
+.hero h1{font-weight:850;line-height:1.42;letter-spacing:-.037em;font-size:clamp(1.55rem,4vw,2.25rem);margin:0 0 16px;position:relative;z-index:1;overflow-wrap:anywhere}
+.hero .deck{font-size:.99rem;color:#e2e7f5;max-width:680px;margin:0 0 15px}
+.hero-meta{font-size:.82rem;color:#c8d2e5;display:flex;flex-wrap:wrap;gap:6px 18px}
+.highlight-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:17px 0 20px}
+.highlight{padding:17px 16px;border:1px solid var(--border);background:var(--surface);border-radius:13px}
+.highlight .value{display:block;color:#d6caff;font-size:1.12rem;font-weight:800;line-height:1.45}
+.highlight .label{display:block;color:var(--muted);font-size:.76rem;margin-top:5px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
+.contents,.section,.intro,.info-bottom{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:24px 27px;box-shadow:0 3px 15px #0002}
+.contents h2,.info-bottom h2{font-size:1.02rem;color:#d4c5ff;margin:0 0 12px}
+.contents ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 25px;margin:0;padding-left:19px}
+.contents li{font-size:.86rem;line-height:1.6;padding:3px 0}
+.contents a{color:#d3ddec;text-decoration:none}.contents a:hover{text-decoration:underline}
+.intro{border-left:4px solid #7e96e4;background:linear-gradient(125deg,#1a2335,var(--surface));}
+.section h2{font-size:1.32rem;line-height:1.5;margin:0 0 17px;color:#d4c5ff;letter-spacing:-.022em;border-bottom:1px solid #354052;padding-bottom:12px;scroll-margin-top:20px}
+.section h3{font-size:1.045rem;margin:23px 0 8px;color:#c3dcff;scroll-margin-top:20px}
+.section p,.intro p{font-size:.955rem;margin:0 0 14px;color:#d9e0e8;line-height:1.85}
+.section p:last-child,.intro p:last-child{margin-bottom:0}
+.section strong,.intro strong{color:#fff;font-weight:750}
+.section li,.intro li{font-size:.94rem;line-height:1.8;margin:5px 0;color:#d8e0e8}
+.section ul,.section ol,.intro ul,.intro ol{padding-left:22px;margin:12px 0 20px}
+.section blockquote{margin:16px 0;padding:13px 17px;border-left:3px solid #a18cff;background:#252440;border-radius:0 8px 8px 0}
+.section a{overflow-wrap:anywhere}
+.section hr{border:0;border-top:1px solid var(--border);margin:24px 0}
+.section ul,.section ol{background:#1c2430;border-radius:9px;padding:12px 20px 12px 37px;border:1px solid #28384b}
+.notion-code{max-width:100%;overflow-x:auto;white-space:pre;tab-size:2;margin:14px 0 9px;padding:14px 16px;border:1px solid #34465f;border-radius:9px;background:#141d2c;color:#e7efff;font-size:.88rem;line-height:1.65}
+.notion-code code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.section .notion-code-caption,.intro .notion-code-caption{margin:0 0 17px;color:#aebdd5;font-size:.82rem}
+.details-table{overflow-x:auto}
+.section table{border-collapse:collapse;width:100%;min-width:500px;margin:14px 0}
+.section th,.section td{padding:12px;text-align:left;border-bottom:1px solid var(--border);font-size:.89rem}
+.section th{background:#202a3c;color:#d3caff}
+.cta{display:inline-flex;align-items:center;gap:8px;margin-top:8px;padding:11px 17px;border-radius:10px;background:#254975;color:white;text-decoration:none;font-size:.9rem;font-weight:700;border:1px solid #4e75a9}
+.cta:hover{background:#305989}
+.notice{border-left:4px solid #57b59b;padding:13px 16px;background:#122e2b;border-radius:4px 9px 9px 4px;color:#cfe6dd;font-size:.88rem;margin:16px 0}
+.info-bottom p{font-size:.87rem;color:var(--muted);margin:0 0 10px}
+.pills{display:flex;gap:9px;flex-wrap:wrap}.pills a{display:inline-block;border:1px solid #45516c;border-radius:99px;padding:6px 13px;text-decoration:none;color:#d5e3ff;font-size:.84rem}
+.site-footer{font-size:.8rem;color:#9ba9b8;text-align:center;margin-top:24px;padding-top:24px;border-top:1px solid var(--border)}
+.adsbygoogle,div[id^="aswift_"]{max-width:100%!important;overflow:hidden}
+@media(max-width:650px){.shell{padding:14px 12px 45px}.site-header{padding:14px}.hero{padding:29px 20px}.hero h1{font-size:1.58rem}.highlight-row{gap:7px}.highlight{padding:13px 9px}.highlight .value{font-size:.92rem}.highlight .label{font-size:.7rem}.contents,.section,.intro,.info-bottom{padding:19px 17px}.contents ol{grid-template-columns:1fr}.section h2{font-size:1.18rem}.site-header nav{gap:9px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-header"><a class="brand" href="/">emfls</a><nav aria-label="상단 메뉴"><a href="/kor/report/">생활정보</a><a href="/kor/report/it/">관련 주제</a><a href="/">홈</a></nav></header>
+<main class="shell" id="main">
+<div class="breadcrumb"><a href="/">홈</a> › <a href="/kor/report/">생활정보</a> › <a href="/kor/report/it/">IT · 기기</a></div>
+<article>
+<header class="hero">
+<span class="eyebrow">IT · 기기 · 최신 가이드</span>
+<h1>2026 중고 노트북 배터리 12분 검증법: batteryreport 설계용량·완충용량·충전 제한·교체 판단</h1>
+<p class="deck">중고 노트북을 구매할 때 판매자가 “배터리 100%까지 충전됩니다”라고 말하면 상태가 좋다고 생각하기 쉽습니다. 하지만 현재 충전 잔량이 100%라는 사실은 배터리가 새 제품일 때의 용량을 유지한다는 뜻이 아닙니다. 배터리 표시가 100%여도 실제로 저장할 수 있는 에</p>
+<div class="hero-meta"><span>최초 발행 2026-11-02</span><span>내용 확인 2026-11-02</span><span>작성 emfls</span></div>
+</header>
+
+<nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">1. 가장 먼저 구분할 세 가지 숫자</a></li><li><a href="#section-02">2. 거래 현장 12분 테스트: 어떤 순서가 효율적일까?</a></li><li><a href="#section-03">3. 배터리가 부풀어 있다면 수치 확인보다 사용 중지</a></li><li><a href="#section-04">4. PowerShell·명령 프롬프트에서 batteryreport 만들기</a></li><li><a href="#section-05">5. 보고서에서 꼭 읽을 다섯 가지 항목</a></li><li><a href="#section-06">6. 핵심 계산: 완충 용량 ÷ 설계 용량 × 100</a></li><li><a href="#section-07">7. 숫자 80%의 함정: 현재 충전 제한과 배터리 열화는 별개</a></li><li><a href="#section-08">8. 충전기를 꽂아도 배터리가 줄어든다면?</a></li><li><a href="#section-09">9. 실제 배터리 사용 시간은 왜 수치만으로 예측하기 어렵나요?</a></li><li><a href="#section-10">10. 전원을 뽑고 2분만 써봐도 되나요?</a></li><li><a href="#section-11">11. 배터리 사용량 보고서에서 이상한 기록이 보이면</a></li><li><a href="#section-12">12. Cycle Count(충전 사이클 수)가 낮으면 상태가 좋은가요?</a></li><li><a href="#section-13">13. 배터리 보고서 숫자가 설계 용량보다 더 크다면?</a></li><li><a href="#section-14">14. 중고 거래에서는 배터리 수치 외에 무엇을 확인해야 하나요?</a></li><li><a href="#section-15">15. 제조사 공식 PC 상태 검사와 비교하기</a></li><li><a href="#section-16">16. 용량 70%와 90%, 어느 쪽을 사야 할까? 실제 판단 예시</a></li><li><a href="#section-17">17. 노트북을 구매한 뒤 배터리를 오래 쓰는 관리법</a></li><li><a href="#section-18">18. 구매 전에 판매자에게 물어볼 다섯 가지</a></li><li><a href="#section-19">19. 나만의 12분 점검 결과표</a></li><li><a href="#section-20">20. 자주 묻는 질문</a></li><li><a href="#section-21">21. 최종 구매 전 점검표</a></li><li><a href="#section-22">공식 출처 및 사실 검증 범위</a></li></ol></nav>
+<div class="layout">
+<div class="intro"><p>중고 노트북을 구매할 때 판매자가 “배터리 100%까지 충전됩니다”라고 말하면 상태가 좋다고 생각하기 쉽습니다. 하지만 <strong>현재 충전 잔량이 100%라는 사실은 배터리가 새 제품일 때의 용량을 유지한다는 뜻이 아닙니다.</strong> 배터리 표시가 100%여도 실제로 저장할 수 있는 에너지량은 사용 기간과 충전 습관, 온도 등의 영향을 받아 줄어들 수 있습니다.</p>
+<p>반대로 “80%까지만 충전돼요”라는 설명도 반드시 배터리가 20% 닳았다는 증거는 아닙니다. 일부 Windows 노트북은 장시간 100% 충전 상태를 피하려고 <strong>스마트 충전이나 제조사 충전 제한 기능</strong>을 사용합니다. 따라서 중고 거래에서는 <strong>충전 잔량, 배터리 용량, 충전 제한 설정, 충전기의 전력 공급</strong>을 서로 다른 항목으로 확인해야 합니다.</p>
+<p>이 글은 Microsoft 공식 문서에서 제공하는 batteryreport 기능을 바탕으로 구성한 **독자 제작 ‘12분 현장 검증 절차’**입니다. 거래 현장에서 수치·기능·외관을 빠르게 확인하기 위한 선별 도구이지, 배터리의 남은 수명이나 향후 고장 여부를 12분 만에 정확하게 인증하는 시험은 아닙니다. 중요한 구매라면 더 긴 사용 시험과 제조사 공식 진단이 필요할 수 있습니다.</p></div>
+<section class="section" aria-labelledby="section-01"><h2 id="section-01">1. 가장 먼저 구분할 세 가지 숫자</h2><p>배터리를 확인할 때 다음 수치는 이름부터 다릅니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">확인 항목</th><th scope="col">의미</th><th scope="col">이 숫자만으로 알 수 없는 것</th></tr></thead><tbody><tr><td>현재 잔량 100%</td><td>현재 인식된 충전 가능 범위에서 가득 찬 상태</td><td>새 배터리 대비 실제 저장 용량</td></tr><tr><td>설계 용량(Design Capacity)</td><td>제조사가 설계 시 정의한 배터리 용량</td><td>지금 남아 있는 최대 충전량</td></tr><tr><td>완전 충전 용량(Full Charge Capacity)</td><td>현재 배터리가 가득 충전됐을 때의 추정 용량</td><td>실제 한 번 충전으로 몇 시간 사용할지</td></tr></tbody></table></div>
+<p>Windows가 보고하는 설계 용량과 완전 충전 용량은 일반적으로 mWh(밀리와트시) 단위입니다. Microsoft의 하드웨어 설계 문서는 <strong>Design Capacity</strong>와 <strong>Last Full Charge Capacity</strong>를 별도의 배터리 정보로 설명합니다.</p>
+<p>예를 들어 설계 용량이 60,000mWh이고 완전 충전 용량이 45,000mWh라면, 현재 보고되는 완충 가능 용량은 초기 설계값의 약 75%입니다. 그러나 이것이 사용 시간이 반드시 신제품의 75%라고 단정할 근거는 아닙니다. 화면 밝기, CPU 부하, 동영상 재생, 무선망과 앱 사용량에 따라 실제 사용 시간은 달라집니다.</p>
+<p>공식 참고: <a href="https://support.microsoft.com/ko-kr/windows/experience/power-battery/caring-for-your-battery-in-windows" rel="noopener noreferrer">Microsoft — Windows 배터리 관리</a>, <a href="https://learn.microsoft.com/en-us/windows-hardware/design/component-guidelines/battery-and-charging" rel="noopener noreferrer">Microsoft Learn — 배터리 용량 정보의 정의</a></p></section>
+<section class="section" aria-labelledby="section-02"><h2 id="section-02">2. 거래 현장 12분 테스트: 어떤 순서가 효율적일까?</h2><p>이 순서는 <strong>중고 거래 전 빠른 선별을 위한 자체 점검 모델</strong>입니다. 각 항목에 1~3분 정도 배분하는 예시이며 컴퓨터 속도와 판매자의 협조에 따라 더 오래 걸릴 수 있습니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">순서</th><th scope="col">목표 시간</th><th scope="col">확인할 것</th><th scope="col">결과</th></tr></thead><tbody><tr><td>①</td><td>0~2분</td><td>배터리 팽창·케이스 들뜸·충전기 외관</td><td>안전 문제 선별</td></tr><tr><td>②</td><td>2~5분</td><td>batteryreport 생성, 설계·완충 용량 기록</td><td>용량 비율 계산</td></tr><tr><td>③</td><td>5~7분</td><td>현재 잔량과 스마트 충전·충전 제한 구분</td><td>80% 충전 설명 확인</td></tr><tr><td>④</td><td>7~9분</td><td>충전기 연결 상태·느린 충전 경고 확인</td><td>전원 공급 문제 분리</td></tr><tr><td>⑤</td><td>9~11분</td><td>최근 배터리 사용 이력·앱별 사용량 확인</td><td>이상한 소비 패턴 점검</td></tr><tr><td>⑥</td><td>11~12분</td><td>판매자와 배터리 교체 이력·추가 시험 합의</td><td>거래 결정 전 미확인 사항 정리</td></tr></tbody></table></div>
+<p><strong>이 절차는 실제 방전 시간을 측정하는 장시간 시험이 아닙니다.</strong> 12분 동안 정상 작동한다고 해서 3시간 이상의 실사용 시간이 보장되지는 않습니다. 반대로 배터리 보고서가 없다는 이유만으로 고장 판정도 할 수 없습니다.</p>
+<h3>현장 점검을 위해 준비할 것</h3>
+<p>판매자 동의를 받은 상태에서 노트북을 실행하고 명령 프롬프트를 사용할 수 있는지 확인합니다. 가능하면 해당 제품용 정품 또는 제조사 권장 충전기와 전원 콘센트도 필요합니다. 회사에서 관리하던 장치라면 관리자 정책으로 일부 명령과 설정이 제한될 수 있습니다.</p></section>
+<section class="section" aria-labelledby="section-03"><h2 id="section-03">3. 배터리가 부풀어 있다면 수치 확인보다 사용 중지</h2><p>숫자를 보기 전에 <strong>외관</strong>부터 확인해야 합니다. Microsoft는 열화된 리튬 이온 배터리가 매우 짧은 사용 시간을 보이거나 눈에 띄게 팽창할 수 있다고 안내합니다. 배터리가 장치 외관을 밀어내는 상태라면 <strong>즉시 사용을 중단하고, 배터리를 누르거나 구멍을 뚫지 말라</strong>고 명시합니다.</p>
+<h3>관찰할 징후</h3>
+<ul>
+<li>하판이 비정상적으로 부풀거나 틈이 벌어짐</li>
+<li>트랙패드 주변이 위로 들리거나 눌림이 비정상적으로 변함</li>
+<li>평평한 표면에 놓았을 때 케이스가 눈에 띄게 뒤틀림</li>
+<li>충전 중 평소와 다른 냄새나 심한 열이 발생</li>
+<li>배터리 관련 안전 경고가 반복적으로 표시</li>
+</ul>
+<p>다만 하판 틈새나 트랙패드 불량이 언제나 배터리 팽창을 의미하는 것은 아닙니다. 실제 팽창이 의심되면 <strong>더 강하게 눌러 확인하지 말고</strong> 사용을 중단하고 제조사 또는 적절한 수리 전문가에게 진단을 맡기는 것이 안전합니다.</p>
+<p><strong>중고 구매 판단:</strong> 배터리 팽창이 의심되는 장치를 현장에서 계속 충전하거나 충격을 가하면서 시험하지 마세요. 배터리 상태를 설명할 수 없는 경우 거래를 보류하는 편이 합리적입니다.</p>
+<p>공식 출처: <a href="https://support.microsoft.com/ko-kr/windows/experience/power-battery/caring-for-your-battery-in-windows" rel="noopener noreferrer">Microsoft — Windows 배터리 관리·팽창 경고</a></p></section>
+<section class="section" aria-labelledby="section-04"><h2 id="section-04">4. PowerShell·명령 프롬프트에서 batteryreport 만들기</h2><p>Windows 11에는 별도 유료 진단 프로그램 없이 배터리 사용량 보고서를 생성할 수 있는 기능이 있습니다. Microsoft가 안내하는 명령은 다음과 같습니다.</p>
+<pre class="notion-code"><code>powercfg /batteryreport</code></pre>
+<h3>직접 실행하기</h3>
+<ol>
+<li>작업 중인 파일을 저장합니다.</li>
+<li><strong>시작</strong> 메뉴에서 <strong>명령 프롬프트</strong>를 검색합니다.</li>
+<li>Microsoft 공식 안내에 따라 <strong>관리자 권한으로 실행</strong>을 선택합니다.</li>
+<li>명령 프롬프트에 위 명령을 입력하고 Enter를 누릅니다.</li>
+<li>Windows가 화면에 출력한 <strong>HTML 보고서 저장 경로</strong>를 확인합니다.</li>
+<li>파일 탐색기에서 해당 경로를 열고 배터리 보고서 파일을 브라우저로 실행합니다.</li>
+<li><strong>Installed batteries(설치된 배터리)</strong> 항목을 찾습니다.</li>
+<li><strong>DESIGN CAPACITY</strong>와 <strong>FULL CHARGE CAPACITY</strong>를 기록합니다.</li>
+</ol>
+<p>Microsoft의 powercfg 명령어 문서에 따르면 <strong>/batteryreport</strong>는 배터리 사용 특성에 관한 HTML 보고서를 생성합니다. 출력 경로를 별도로 지정할 수도 있고, 경로를 지정하지 않으면 실행 환경의 기본 위치에 보고서를 만듭니다.</p>
+<h3>저장 위치가 어디인가요?</h3>
+<p>파일이 반드시 바탕화면에 저장되는 것은 아닙니다. 명령 프롬프트에 표시된 <strong>실제 경로</strong>를 확인하세요. 사용자 계정명이나 관리 권한에 따라 저장 위치가 달라질 수 있습니다.</p>
+<h3>명령을 실행해도 보고서가 생성되지 않으면</h3>
+<ul>
+<li>명령을 정확히 입력했는지 확인합니다.</li>
+<li>Windows에서 실제 배터리를 인식하는 기기인지 확인합니다.</li>
+<li>회사 관리 장치라면 명령 사용 제한이 있는지 확인합니다.</li>
+<li>접근 권한이나 저장 경로 오류가 나타나면 해당 메시지를 기록합니다.</li>
+<li>추가 진단이 필요하다면 제조사 공식 지원을 이용합니다.</li>
+</ul>
+<p>보고서 파일이 없다는 이유만으로 특정 배터리가 불량이라고 단정해서는 안 됩니다. Windows 설치·드라이버·펌웨어·권한의 영향을 받을 수 있습니다.</p>
+<p>공식 출처: <a href="https://support.microsoft.com/ko-kr/windows/experience/power-battery/caring-for-your-battery-in-windows" rel="noopener noreferrer">Microsoft — Windows 11 배터리 보고서 만들기</a>, <a href="https://learn.microsoft.com/ko-kr/windows-hardware/design/device-experiences/powercfg-command-line-options" rel="noopener noreferrer">Microsoft Learn — powercfg /batteryreport</a></p></section>
+<section class="section" aria-labelledby="section-05"><h2 id="section-05">5. 보고서에서 꼭 읽을 다섯 가지 항목</h2><p>batteryreport HTML을 열면 여러 표가 나옵니다. 현장에서 모든 항목을 읽기보다는 다음 다섯 가지만 먼저 확인하는 편이 효율적입니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">보고서 부분</th><th scope="col">무엇을 확인하나요?</th><th scope="col">해석 주의</th></tr></thead><tbody><tr><td>Installed batteries</td><td>설계 용량·완전 충전 용량·배터리 식별 정보</td><td>제조사 보고 값과 현재 추정치</td></tr><tr><td>Recent usage</td><td>최근 전원 상태 변화</td><td>실제 사용 패턴에 영향받음</td></tr><tr><td>Battery usage</td><td>배터리로 소비한 기록</td><td>배터리 성능뿐 아니라 부하 영향</td></tr><tr><td>Battery capacity history</td><td>시간에 따른 완충 용량 기록</td><td>보고 데이터가 충분한지 확인</td></tr><tr><td>Battery life estimates</td><td>기록을 바탕으로 추정한 사용 시간</td><td>실제 사용 시간 보증 아님</td></tr></tbody></table></div>
+<p>Microsoft는 공식 배터리 관리 안내에서 <strong>Installed batteries, Recent usage, Battery usage</strong> 등을 먼저 볼 항목으로 제시합니다.</p>
+<h3>Battery life estimates는 몇 시간 보증인가요?</h3>
+<p>아닙니다. ‘추정’은 실제 사용 내역과 배터리 데이터 등을 바탕으로 계산한 값입니다. 화면 밝기 100% 상태에서 게임을 하는 경우와 화면 밝기를 낮춰 문서를 작성하는 경우의 실제 배터리 사용 시간은 다릅니다.</p>
+<h3>Cycle count가 없으면 문제가 있나요?</h3>
+<p>장치에 따라 배터리 사이클 수가 표시되거나 보고되지 않을 수 있습니다. Microsoft의 하드웨어 문서는 배터리 펌웨어에서 사이클 수와 설계·완충 용량 등의 정보를 제공하는 방식을 설명합니다. <strong>보고서에서 사이클 수가 없거나 비어 있다는 사실만으로 주행거리 조작처럼 고장 또는 사기를 확정할 수는 없습니다.</strong></p>
+<p>공식 출처: <a href="https://support.microsoft.com/ko-kr/windows/experience/power-battery/caring-for-your-battery-in-windows" rel="noopener noreferrer">Microsoft — batteryreport 보고서 읽기</a>, <a href="https://learn.microsoft.com/en-us/windows-hardware/design/component-guidelines/battery-and-charging" rel="noopener noreferrer">Microsoft Learn — Battery and charging</a></p></section>
+<section class="section" aria-labelledby="section-06"><h2 id="section-06">6. 핵심 계산: 완충 용량 ÷ 설계 용량 × 100</h2><p>배터리 상태를 설명할 때 자주 사용하는 기초 지표는 다음 비율입니다.</p>
+<p><strong>설계 용량 대비 완충 용량 비율(%) = Full Charge Capacity ÷ Design Capacity × 100</strong></p>
+<h3>계산 예시</h3>
+<div class="details-table"><table><thead><tr><th scope="col">설계 용량</th><th scope="col">완충 용량</th><th scope="col">계산된 비율</th><th scope="col">읽는 방법</th></tr></thead><tbody><tr><td>60,000mWh</td><td>57,000mWh</td><td>95%</td><td>설계값에 가까운 현재 추정 용량</td></tr><tr><td>60,000mWh</td><td>48,000mWh</td><td>80%</td><td>설계값보다 감소한 상태</td></tr><tr><td>60,000mWh</td><td>42,000mWh</td><td>70%</td><td>용량 감소가 더 큰 상태</td></tr><tr><td>60,000mWh</td><td>33,000mWh</td><td>55%</td><td>배터리 사용 시간과 교체 비용 확인 필요</td></tr></tbody></table></div>
+<p>위 숫자는 <strong>원리를 설명하기 위한 가상 계산 예시</strong>입니다. 실제 중고 제품을 측정한 데이터가 아니며, <strong>95%면 무조건 안전, 80% 이하면 교체</strong>와 같은 통일된 공식 판정선이 아닙니다.</p>
+<h3>왜 80%가 절대 기준이 아닌가요?</h3>
+<p>개별 제조사나 보증 상품은 서로 다른 서비스 조건을 적용할 수 있습니다. 배터리 팽창, 예기치 않은 종료, 용량 데이터 오류, 충전기와 전원회로 문제 등은 단순한 비율 하나로 판단하기 어렵습니다.</p>
+<p>예를 들어 용량 비율이 88%라도 사용 목적이 고성능 영상 편집이라면 배터리만으로 작업할 시간이 짧을 수 있고, 75%라도 항상 전원을 연결해서 사용하는 용도에서는 다른 문제가 더 중요할 수 있습니다.</p>
+<p><strong>중고 거래용 권장 판단:</strong> 비율을 단독 합격·탈락 기준으로 사용하지 말고 <strong>판매 가격, 배터리 교체 가능성, 실사용 목적, 제조사 공식 진단, 안전 문제</strong>와 함께 검토하세요.</p>
+<p>공식 근거: <a href="https://learn.microsoft.com/en-us/windows-hardware/design/component-guidelines/battery-and-charging" rel="noopener noreferrer">Microsoft Learn — Design Capacity 및 Last Full Charge Capacity 정의</a></p></section>
+<section class="section" aria-labelledby="section-07"><h2 id="section-07">7. 숫자 80%의 함정: 현재 충전 제한과 배터리 열화는 별개</h2><p>중고 노트북에서 가장 오해하기 쉬운 상황입니다.</p>
+<p>판매자가 “충전기를 계속 꽂아도 80%에서 멈추는데 원래 그런 모델이에요”라고 말한다면 다음 두 가지를 구분해야 합니다.</p>
+<ul>
+<li><strong>충전 제한:</strong> 제조사나 Windows의 스마트 충전 기능이 배터리 수명을 위해 목표 충전량을 낮춘 상태</li>
+<li><strong>배터리 열화:</strong> 배터리가 처음 설계된 에너지량에 비해 현재 저장할 수 있는 최대 에너지량이 감소한 상태</li>
+</ul>
+<p>Microsoft는 스마트 충전 기능이 적용된 일부 Windows 장치에서 <strong>배터리가 100%까지 충전되지 않을 수 있다</strong>고 안내합니다. 충전이 80% 전후에서 멈추는 현상만으로 열화를 판정할 수 없습니다.</p>
+<h3>확인 순서</h3>
+<ol>
+<li>현재 작업 표시줄에 표시되는 배터리 잔량을 기록합니다.</li>
+<li><strong>설정 → 시스템 → 전원 및 배터리</strong>에서 제공되는 충전 관련 상태를 확인합니다.</li>
+<li>제조사 전용 관리 프로그램에 <strong>스마트 충전, 충전 상한, 배터리 보호</strong> 같은 설정이 있는지 확인합니다.</li>
+<li>batteryreport의 <strong>FULL CHARGE CAPACITY</strong> 값을 별도로 읽습니다.</li>
+<li>설정과 보고서를 종합해 설명을 판단합니다.</li>
+</ol>
+<p>제조사에 따라 스마트 충전 기능을 켜거나 끄는 경로가 다릅니다. Microsoft도 기기 제조사에서 제공하는 구현 방식이 다르다고 안내합니다. 특정 모델에 해당 기능이 있는지는 <strong>해당 제조사·모델의 공식 설명서</strong>를 확인하세요.</p>
+<p><strong>중요:</strong> 배터리 교체를 검토하기 전에 충전 제한 설정이 활성화돼 있는지 확인하면 불필요한 오판을 줄일 수 있습니다.</p>
+<p>공식 출처: <a href="https://support.microsoft.com/ko-kr/windows/experience/power-battery/use-smart-charging-in-windows" rel="noopener noreferrer">Microsoft — Windows 스마트 충전 사용</a></p></section>
+<section class="section" aria-labelledby="section-08"><h2 id="section-08">8. 충전기를 꽂아도 배터리가 줄어든다면?</h2><p>충전 중인데 잔량이 줄어드는 이유가 언제나 배터리 열화인 것은 아닙니다. Microsoft는 <strong>충전기의 전력 부족, 비호환 충전기, 잘못된 USB-C 포트, 전력 요구를 충족하지 못하는 케이블</strong> 등을 원인으로 제시합니다.</p>
+<h3>판매자에게 확인할 것</h3>
+<ol>
+<li>충전기가 원래 제품과 함께 제공된 제품인지 확인합니다.</li>
+<li>아니라면 제조사 권장 출력과 호환성을 확인합니다.</li>
+<li>USB-C를 지원하더라도 모든 포트가 충전을 허용하는지 확인합니다.</li>
+<li>연결한 USB-C 케이블이 필요한 전력 수준을 지원하는지 확인합니다.</li>
+<li>배터리 아이콘에 ‘느리게 충전’, ‘충전 중 방전’ 등의 안내가 나타나는지 확인합니다.</li>
+<li>전원을 많이 사용하는 앱을 끄고 다시 충전 상태를 살펴봅니다.</li>
+</ol>
+<h3>왜 충전기 출력이 중요할까요?</h3>
+<p>예를 들어 노트북이 높은 전력을 요구하는데 충전기가 제공하는 전력이 낮으면 <strong>배터리 저장 용량이 충분해도 충전 속도가 매우 느리거나 사용 중 잔량이 줄어들 수 있습니다.</strong></p>
+<p>따라서 중고 거래에서 충전기 문제가 있는데 배터리 교체만 하면 해결된다고 단정하면 안 됩니다. 반대로 충전기가 정품이어도 케이블·포트·전원회로 문제가 발생할 수 있습니다.</p>
+<p><strong>안전상 주의:</strong> 과열·타는 냄새·커넥터 손상이 의심되면 계속 충전하지 말고 사용을 중단한 뒤 제조사 점검을 받는 편이 안전합니다.</p>
+<p>공식 출처: <a href="https://support.microsoft.com/ko-kr/windows/experience/power-battery/pc-is-charging-slowly-or-discharging-while-it-s-plugged-in" rel="noopener noreferrer">Microsoft — 충전이 느리거나 전원 연결 중 방전될 때</a></p></section>
+<section class="section" aria-labelledby="section-09"><h2 id="section-09">9. 실제 배터리 사용 시간은 왜 수치만으로 예측하기 어렵나요?</h2><p>완충 용량이 크다고 해서 동일한 사용 시간을 보장하는 것은 아닙니다. 배터리로 저장할 수 있는 에너지와 앱이 소비하는 에너지가 모두 영향을 주기 때문입니다.</p>
+<h3>동일한 PC에서도 달라지는 요인</h3>
+<ul>
+<li>화면 밝기와 주사율</li>
+<li>CPU·GPU에 걸리는 작업 부하</li>
+<li>백그라운드 동기화·업데이트 앱</li>
+<li>동영상 재생과 화상회의</li>
+<li>Wi-Fi·블루투스 장치 사용</li>
+<li>전원 모드 및 에너지 절약 설정</li>
+<li>기기 온도와 배터리 상태</li>
+</ul>
+<p>Microsoft는 Windows의 <strong>설정 → 시스템 → 전원 및 배터리 → 배터리 사용량</strong>에서 앱별 사용량을 확인하는 방법을 안내합니다.</p>
+<h3>테스트를 공정하게 하려면</h3>
+<p>판매자 제품 A와 B를 비교할 때 한쪽은 밝기 100%로 게임을 실행하고, 다른 쪽은 밝기 30%로 문서를 보는 방식은 공정하지 않습니다.</p>
+<p>가능하다면 <strong>같은 화면 밝기, 같은 네트워크 조건, 비슷한 작업</strong>, 그리고 충분한 시간으로 시험하세요. 거래 현장의 12분 테스트는 이런 장시간 비교를 대체하지 못합니다.</p>
+<p>공식 출처: <a href="https://support.microsoft.com/ko-kr/windows/experience/power-battery/battery-saving-tips-for-windows" rel="noopener noreferrer">Microsoft — Windows 배터리 절약 팁 및 앱별 사용량</a>, <a href="https://support.microsoft.com/ko-kr/windows/experience/power-battery/power-settings-in-windows-11" rel="noopener noreferrer">Microsoft — Windows 11 전원 설정</a></p></section>
+<section class="section" aria-labelledby="section-10"><h2 id="section-10">10. 전원을 뽑고 2분만 써봐도 되나요?</h2><p>판매자의 동의하에 충전기를 분리하고 짧게 일반 사용을 해보는 것은 <strong>전원 연결 없이 부팅·실행이 가능한지</strong> 확인하는 데 도움이 될 수 있습니다.</p>
+<p>하지만 배터리 잔량이 2분 동안 3% 내려갔다고 해서 이를 단순히 60분으로 환산해 전체 사용 시간을 예측하는 것은 정확하지 않습니다. 화면 밝기, 배터리 잔량 표시의 보정, 백그라운드 작업 등이 결과를 왜곡할 수 있습니다.</p>
+<h3>짧은 시험으로 확인할 수 있는 것</h3>
+<ul>
+<li>충전기 없이도 Windows가 정상 작동하는가?</li>
+<li>전원 케이블을 제거하자마자 꺼지지는 않는가?</li>
+<li>갑자기 재부팅하거나 화면이 꺼지지는 않는가?</li>
+<li>짧은 일반 작업에서 이상한 소음·경고가 나타나는가?</li>
+</ul>
+<h3>짧은 시험으로 확인할 수 없는 것</h3>
+<ul>
+<li>장시간 문서 작업이나 게임의 실제 사용 시간</li>
+<li>배터리의 남은 수명 연수</li>
+<li>앞으로 몇 회의 충전을 견딜지</li>
+<li>셀 내부의 손상 여부</li>
+<li>고부하 작업 중의 모든 안정성 문제</li>
+</ul>
+<p><strong>거래 조건상 배터리 성능이 특히 중요하다면 현장 12분 점검을 통과했더라도 충분한 장시간 시험 또는 제조사 진단을 추가 요구하는 것이 합리적입니다.</strong></p></section>
+<section class="section" aria-labelledby="section-11"><h2 id="section-11">11. 배터리 사용량 보고서에서 이상한 기록이 보이면</h2><p>보고서는 과거 사용 정보에 영향을 받기 때문에 한두 줄만 보고 고장을 단정하면 안 됩니다.</p>
+<h3>Recent usage 확인</h3>
+<p>최근에 배터리로 사용했는지, 전원 연결 상태였는지, 절전 상태가 있었는지 확인할 수 있습니다. 사용자가 며칠 동안 전원만 연결한 채 노트북을 썼다면 실제 배터리 방전 기록이 충분하지 않을 수 있습니다.</p>
+<h3>Battery capacity history 확인</h3>
+<p>최근 완충 용량 변화가 크게 나타난다면 해당 변화의 시점과 기록이 반복되는지 살펴볼 수 있습니다. 다만 보고서는 펌웨어와 시스템이 제공하는 데이터를 사용하므로 <strong>데이터가 급변했다는 사실만으로 배터리 셀이 갑자기 물리적으로 그만큼 손상됐다고 확정할 수는 없습니다.</strong></p>
+<h3>Battery life estimates 확인</h3>
+<p>이 항목이 과거 사용 패턴을 바탕으로 산출한 추정치임을 기억하세요. 게임과 영상 편집 작업이 많은 노트북은 문서 작업 중심 기기보다 예상 시간이 짧게 나올 수 있습니다.</p>
+<h3>기록이 거의 없다면?</h3>
+<p>Windows를 새로 설치했거나 보고서 생성 당시 사용 기록이 충분하지 않은 등 여러 가능성이 있습니다. <strong>이력이 짧다는 것만으로 배터리가 새것이라는 뜻도, 판매자가 기록을 의도적으로 삭제했다는 증거도 아닙니다.</strong></p></section>
+<section class="section" aria-labelledby="section-12"><h2 id="section-12">12. Cycle Count(충전 사이클 수)가 낮으면 상태가 좋은가요?</h2><p>일부 기기는 배터리 충전 사이클 수를 보고합니다. 그러나 사이클 수는 배터리 상태를 판단할 때 고려할 수 있는 여러 정보 중 하나입니다.</p>
+<p>Microsoft의 하드웨어 설명에는 배터리 펌웨어에서 <strong>Cycle Count, Design Capacity, Last Full Charge Capacity</strong> 등을 제공하는 구조가 나옵니다. 하지만 실제 Windows 보고서에 어떤 값이 나타나는지는 하드웨어와 드라이버의 지원 상황에 영향을 받을 수 있습니다.</p>
+<h3>오해하기 쉬운 세 가지</h3>
+<ul>
+<li>사이클 수가 낮아도 장기간 고온이나 부적절한 보관으로 열화됐을 가능성을 배제할 수 없습니다.</li>
+<li>사이클 수가 높아도 현재 완충 용량과 안전 상태를 따로 확인해야 합니다.</li>
+<li>사이클 수가 미표시라고 자동으로 사기 거래나 배터리 교체 불가를 의미하지는 않습니다.</li>
+</ul>
+<p>배터리가 교체된 적이 있다면 장치 전체의 사용 연수와 배터리의 사용 연수가 다를 수 있습니다. 판매자에게 교체 이력과 제조사 수리 내역이 있는지 문의하세요.</p>
+<p>공식 출처: <a href="https://learn.microsoft.com/en-us/windows-hardware/design/component-guidelines/battery-and-charging" rel="noopener noreferrer">Microsoft Learn — 배터리의 설계 용량과 사이클 정보</a></p></section>
+<section class="section" aria-labelledby="section-13"><h2 id="section-13">13. 배터리 보고서 숫자가 설계 용량보다 더 크다면?</h2><p>일부 보고서에는 완전 충전 용량이 설계 용량과 비슷하거나 일시적으로 더 크게 보이는 경우도 있습니다. 그렇다고 배터리가 실제로 ‘신제품보다 오래 간다’고 단정해서는 안 됩니다.</p>
+<p>배터리 관련 값은 시스템과 배터리 관리 회로에서 보고하는 정보에 기반합니다. 장치에 따라 제조사 추정값, 펌웨어 정보, 배터리 교체 여부와 데이터 갱신 상태를 확인해야 합니다.</p>
+<h3>점검 순서</h3>
+<ol>
+<li>보고서의 배터리 모델·식별 정보가 맞는지 확인합니다.</li>
+<li>설치된 배터리가 정품 또는 제조사 지원 교체품인지 확인합니다.</li>
+<li>같은 방식으로 보고서를 다시 생성해 값이 일관적인지 확인합니다.</li>
+<li>제조사 전용 진단 앱에서 배터리 상태가 표시되는지 확인합니다.</li>
+<li>비정상적인 용량·충전 오류와 함께 이상 증상이 있다면 공식 서비스센터 진단을 요청합니다.</li>
+</ol>
+<p><strong>결론을 성급히 내리지 마세요.</strong> 비율 하나만으로 새 배터리, 비정품 배터리, 펌웨어 조작 여부를 확정할 수 없습니다.</p></section>
+<section class="section" aria-labelledby="section-14"><h2 id="section-14">14. 중고 거래에서는 배터리 수치 외에 무엇을 확인해야 하나요?</h2><p>배터리만 상태가 좋아도 구매 후 큰 비용이 발생할 수 있습니다. <strong>노트북 전체 상태</strong>의 핵심 항목도 함께 확인하세요.</p>
+<h3>현장에서 짧게 점검할 항목</h3>
+<ul>
+<li>모니터에 눈에 띄는 파손·줄무늬가 있는가?</li>
+<li>키보드와 트랙패드가 정상 입력되는가?</li>
+<li>충전 포트가 느슨하거나 커넥터가 손상돼 있지 않은가?</li>
+<li>설치된 저장 장치 용량이 판매 설명과 일치하는가?</li>
+<li>Wi-Fi와 스피커·카메라가 필요한 기능을 수행하는가?</li>
+<li>Windows가 정상 부팅되고 불필요한 관리자 잠금이나 조직 관리 정책이 걸려 있지 않은가?</li>
+<li>배터리 교체나 주요 부품 수리 이력이 있는가?</li>
+</ul>
+<p><strong>중요:</strong> 판매자가 설명한 모델과 구성 사양은 Windows 설정의 <strong>시스템 → 정보</strong>, 제조사 모델 번호 및 공식 사양표와 비교하는 편이 좋습니다. 중고 기기의 원소유권, 분실·도난 여부, Windows 라이선스의 적법성은 배터리 보고서만으로 확인할 수 없습니다.</p>
+<p>따라서 이 글의 배터리 검증을 노트북 전체 거래 검증으로 착각하지 마세요.</p></section>
+<section class="section" aria-labelledby="section-15"><h2 id="section-15">15. 제조사 공식 PC 상태 검사와 비교하기</h2><p>Microsoft는 <strong>PC 상태 검사(PC Health Check)</strong> 앱에서 일부 장치의 원래 배터리 용량 대비 현재 상태를 확인할 수 있다고 안내합니다.</p>
+<p>다만 Microsoft 설명에 따르면 이 앱의 <strong>배터리 용량 기능은 3년이 넘은 기기</strong>를 대상으로 제공됩니다. 지원되지 않는 제품에서는 배터리 용량 정보가 보이지 않을 수 있습니다.</p>
+<h3>두 도구의 차이</h3>
+<div class="details-table"><table><thead><tr><th scope="col">도구</th><th scope="col">확인하기 좋은 정보</th><th scope="col">제한</th></tr></thead><tbody><tr><td>powercfg /batteryreport</td><td>배터리 사용 이력·설계 용량·완충 용량</td><td>데이터와 드라이버 지원에 영향받음</td></tr><tr><td>PC 상태 검사</td><td>지원 장치의 용량 상태 요약</td><td>일부 기기와 제공 조건 제한</td></tr><tr><td>제조사 공식 진단 앱</td><td>해당 모델의 전원·배터리 진단 항목</td><td>제품과 앱 버전마다 다름</td></tr><tr><td>짧은 사용 시험</td><td>전원 분리 후 기본 작동 여부</td><td>전체 사용 시간 예측 불가</td></tr><tr><td>정식 서비스센터 진단</td><td>제조사 지원 범위의 하드웨어 점검</td><td>비용·예약·접수 조건 확인 필요</td></tr></tbody></table></div>
+<p><strong>한 프로그램에 문제가 있다고 다른 프로그램이 반드시 틀린 것은 아닙니다.</strong> 원인이 불명확하면 해당 모델의 제조사 지원자료와 실제 증상을 함께 확인하세요.</p>
+<p>공식 출처: <a href="https://support.microsoft.com/ko-kr/windows/experience/compatibility/how-to-use-the-pc-health-check-app" rel="noopener noreferrer">Microsoft — PC 상태 검사 앱 사용법</a></p></section>
+<section class="section" aria-labelledby="section-16"><h2 id="section-16">16. 용량 70%와 90%, 어느 쪽을 사야 할까? 실제 판단 예시</h2><p>다음은 <strong>판단 방식을 설명하기 위한 가상 거래 사례</strong>입니다. 특정 중고 제품의 실측치나 가격 자료가 아닙니다.</p>
+<h3>사례 A: 설계 용량 대비 90%</h3>
+<p>판매자는 교체 이력이 없다고 설명합니다. 외관에 팽창 징후가 없고 충전 상태도 정상입니다. 배터리 사용 시간이 중요하지만 제품 가격이 적절하다면 <strong>추가 사용 시험을 요청한 후 검토할 수 있는 상태</strong>라고 판단할 수 있습니다.</p>
+<p>다만 90%라는 수치만으로 사고·수리 이력이 없거나 배터리가 오래 간다는 사실까지 증명되지는 않습니다.</p>
+<h3>사례 B: 설계 용량 대비 70%</h3>
+<p>배터리 사용 시간이 구매 목적에 중요하다면 더 신중할 필요가 있습니다. <strong>제조사 배터리 교체 비용, 부품 공급 여부, 배터리 사용 시 작업 시간</strong>을 확인하세요. 가격이 저렴하다는 이유만으로 예상 교체 비용을 무시하면 최종 지출이 커질 수 있습니다.</p>
+<h3>사례 C: 충전 잔량이 80%에서 멈추지만 완충 용량 비율은 높음</h3>
+<p>충전 제한이나 스마트 충전 기능이 원인인지 먼저 확인해야 합니다. <strong>충전 제한을 배터리 수명 80%로 혼동하지 않는 것</strong>이 핵심입니다.</p>
+<h3>사례 D: 용량 비율은 높지만 하판이 들뜸</h3>
+<p>외관 팽창이 의심된다면 배터리 보고서 수치와 관계없이 <strong>안전 문제를 우선</strong>해야 합니다. 추가 현장 충전 시험을 중단하고 전문 점검을 받는 편이 적절합니다.</p></section>
+<section class="section" aria-labelledby="section-17"><h2 id="section-17">17. 노트북을 구매한 뒤 배터리를 오래 쓰는 관리법</h2><p>중고 배터리의 상태를 확인했다면 구매 후 사용 습관도 중요합니다.</p>
+<p>Microsoft는 리튬 이온 배터리가 시간이 지나며 자연스럽게 노화되고, 높은 온도와 오랜 기간 100% 충전 상태 유지 등이 열화에 영향을 줄 수 있다고 안내합니다.</p>
+<h3>실행할 만한 방법</h3>
+<ol>
+<li>가능하면 기기가 과열되는 환경을 피합니다.</li>
+<li>노트북 제조사가 제공하는 <strong>스마트 충전·충전 제한</strong> 기능을 확인합니다.</li>
+<li>항상 방전시키는 습관보다 일상적으로 적절한 잔량을 유지하는 데 관심을 둡니다.</li>
+<li>장기간 보관해야 한다면 Microsoft가 안내한 <strong>약 40~60% 충전 상태</strong>와 서늘하고 건조한 보관 환경을 참고합니다.</li>
+<li>필요하지 않은 백그라운드 앱과 지나치게 밝은 화면을 조정합니다.</li>
+<li>충전기는 제조사 권장 전력·호환성 기준을 확인합니다.</li>
+<li>정기적으로 배터리 보고서 기록을 남겨 변화 추이를 살펴봅니다.</li>
+</ol>
+<p>배터리 수명은 사용 패턴과 환경에 따라 달라지므로 <strong>항상 똑같은 충전 비율을 반드시 지켜야 한다</strong>는 식의 단정적인 규칙보다 모델의 권장사항을 우선하세요.</p>
+<p>공식 출처: <a href="https://support.microsoft.com/ko-kr/windows/experience/power-battery/caring-for-your-battery-in-windows" rel="noopener noreferrer">Microsoft — 배터리 관리와 장기 보관</a>, <a href="https://support.microsoft.com/ko-kr/windows/experience/power-battery/use-smart-charging-in-windows" rel="noopener noreferrer">Microsoft — 스마트 충전</a></p></section>
+<section class="section" aria-labelledby="section-18"><h2 id="section-18">18. 구매 전에 판매자에게 물어볼 다섯 가지</h2><p>단순히 “배터리 상태 어때요?”라고 묻는 것보다 다음처럼 <strong>검증 가능한 질문</strong>을 요청하는 편이 좋습니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">질문</th><th scope="col">확인하려는 내용</th><th scope="col">필요한 증거</th></tr></thead><tbody><tr><td>batteryreport를 직접 실행할 수 있나요?</td><td>실제 현재 용량과 보고서</td><td>현장 HTML 생성·열기</td></tr><tr><td>배터리를 교체한 적이 있나요?</td><td>사용 연수·부품 상태</td><td>수리 내역·부품 정보</td></tr><tr><td>80% 충전 제한을 켜놓았나요?</td><td>충전 상한과 열화 구분</td><td>제조사 앱·설정 확인</td></tr><tr><td>충전기가 원래 제품과 같은 규격인가요?</td><td>전력 부족 가능성</td><td>어댑터 모델·출력 표기</td></tr><tr><td>전원 분리 상태에서 시험해 볼 수 있나요?</td><td>최소한의 독립 작동</td><td>판매자 동의하에 짧게 실행</td></tr></tbody></table></div>
+<p>판매자가 보고서 공개를 거부한다고 곧바로 사기라고 단정해서는 안 됩니다. 개인정보·관리자 권한·사용 방법 문제일 수도 있습니다. 다만 구매자가 필수로 생각하는 확인 절차를 수행할 수 없다면 <strong>확인되지 않은 위험을 거래 가격과 결정에 반영</strong>해야 합니다.</p></section>
+<section class="section" aria-labelledby="section-19"><h2 id="section-19">19. 나만의 12분 점검 결과표</h2><p>이 표는 거래 현장에서 결과를 빠짐없이 기록할 수 있도록 만든 <strong>원고 자체 체크 템플릿</strong>입니다. 제조사나 국가기관의 공식 배터리 인증서가 아닙니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">항목</th><th scope="col">기록</th></tr></thead><tbody><tr><td>제품 모델</td><td>제조사·정확한 모델명</td></tr><tr><td>판매자가 제시한 상태</td><td>배터리·충전기·교체 이력 설명</td></tr><tr><td>설계 용량</td><td>______ mWh</td></tr><tr><td>완전 충전 용량</td><td>______ mWh</td></tr><tr><td>계산 비율</td><td>______ %</td></tr><tr><td>현재 잔량</td><td>______ %</td></tr><tr><td>충전 제한 기능</td><td>있음 / 없음 / 확인 불가</td></tr><tr><td>충전기 규격</td><td>확인 / 미확인</td></tr><tr><td>팽창·과열 징후</td><td>없음 / 의심 / 확인 불가</td></tr><tr><td>전원 분리 테스트</td><td>정상 / 이상 / 미실시</td></tr><tr><td>배터리 사용 이력</td><td>충분 / 부족 / 확인 불가</td></tr><tr><td>추가 확인할 내용</td><td>배터리 교체 비용·정식 진단 등</td></tr></tbody></table></div>
+<h3>결과를 어떻게 판단할까?</h3>
+<p><strong>즉시 보류 권장:</strong> 배터리 팽창 등 안전 문제가 의심될 때, 정상 충전기로도 위험한 발열이나 이상 증상이 있을 때.</p>
+<p><strong>추가 진단 권장:</strong> 용량 자료가 불일치하거나, 전원 분리 직후 꺼지거나, 충전기 전력 부족인지 배터리 문제인지 구분되지 않을 때.</p>
+<p><strong>조건부 검토:</strong> 설계 대비 완충 용량, 충전 제한 설정, 기본 작동을 확인했으며 남은 미확인 사항과 교체 비용을 수용할 수 있을 때.</p>
+<p>이 판단 범주는 <strong>독자의 위험 점검을 위한 자체 분류</strong>이며 특정 성능 보증, 제조사 공식 등급 또는 중고거래 적합 판정은 아닙니다.</p></section>
+<section class="section" aria-labelledby="section-20"><h2 id="section-20">20. 자주 묻는 질문</h2><h3>Q. 윈도우11에서 배터리 성능을 어디에서 보나요?</h3>
+<p><strong>명령 프롬프트에서 powercfg /batteryreport</strong>를 실행하고 출력된 HTML 보고서를 열면 설계 용량과 완전 충전 용량, 배터리 사용 이력 등을 확인할 수 있습니다.</p>
+<h3>Q. 배터리가 100% 충전되면 상태가 좋은 건가요?</h3>
+<p>반드시 그렇지는 않습니다. 현재 표시된 충전 잔량과 새 배터리 대비 완충 용량은 다른 숫자입니다. 보고서의 DESIGN CAPACITY와 FULL CHARGE CAPACITY를 비교하세요.</p>
+<h3>Q. 배터리가 80%에서 더 이상 충전되지 않아요. 수명 80%인가요?</h3>
+<p>그렇게 단정할 수 없습니다. 일부 Windows 노트북의 <strong>스마트 충전 또는 제조사 충전 제한</strong> 기능 때문일 수 있습니다.</p>
+<h3>Q. 배터리 용량 75%면 무조건 교체해야 하나요?</h3>
+<p>모든 제품에 적용되는 단일 판정 기준은 아닙니다. 사용 목적, 장치 모델, 제조사 권장 기준, 실제 사용 시간, 안전 상태, 교체 비용을 함께 고려하세요.</p>
+<h3>Q. 배터리 사이클 수가 없으면 교체품인가요?</h3>
+<p>그렇지 않습니다. 실제 보고서에 사이클 수가 표시되는지는 하드웨어와 펌웨어 지원에 영향을 받을 수 있습니다. 보고되지 않는다는 사실만으로 교체 여부를 단정하지 마세요.</p>
+<h3>Q. 충전기를 연결했는데 배터리가 계속 줄어요.</h3>
+<p>배터리 자체 문제 외에도 <strong>충전기 전력 부족, 케이블 규격, 충전 포트 호환성</strong>이 원인일 수 있습니다. 제조사 권장 충전기와 출력 정보를 확인하세요.</p>
+<h3>Q. batteryreport의 예상 사용 시간을 믿어도 되나요?</h3>
+<p>과거 이용 패턴과 보고된 용량을 토대로 한 추정 정보입니다. 실제 작업 부하와 화면 밝기, 앱 사용량이 다르면 사용 시간도 달라집니다.</p>
+<h3>Q. 보고서에서 완충 용량이 설계 용량보다 높습니다.</h3>
+<p>보고 수치와 펌웨어·배터리 교체 정보를 다시 점검하세요. 단일 숫자로 조작이나 성능을 확정할 수 없습니다.</p>
+<h3>Q. batteryreport를 만들려면 유료 프로그램이 필요한가요?</h3>
+<p>아닙니다. Windows에 기본 포함된 <strong>powercfg</strong> 명령을 사용할 수 있습니다. Microsoft는 명령 프롬프트에서 실행하는 공식 절차를 제공하고 있습니다.</p>
+<h3>Q. 중고 거래에서 12분 테스트만 통과하면 안심해도 되나요?</h3>
+<p>아닙니다. 12분 검증은 위험 요소를 빠르게 선별하는 방법이며 <strong>장시간 사용, 추후 고장 가능성, 노트북의 다른 부품 상태</strong>까지 보증하지 않습니다.</p></section>
+<section class="section" aria-labelledby="section-21"><h2 id="section-21">21. 최종 구매 전 점검표</h2><ul>
+<li>☐ 배터리 현재 잔량과 설계 용량·완충 용량의 차이를 이해했습니다.</li>
+<li>☐ 외관에 팽창·손상·과도한 발열이 의심되지 않는지 확인했습니다.</li>
+<li>☐ Windows에서 직접 batteryreport HTML을 생성했습니다.</li>
+<li>☐ DESIGN CAPACITY와 FULL CHARGE CAPACITY 수치를 기록했습니다.</li>
+<li>☐ 완충 용량 ÷ 설계 용량 × 100으로 비율을 계산했습니다.</li>
+<li>☐ 하나의 숫자를 공식 합격선처럼 사용하지 않았습니다.</li>
+<li>☐ 충전 상한이나 스마트 충전 설정을 확인했습니다.</li>
+<li>☐ 충전기 모델·출력·케이블·충전 포트 호환성을 확인했습니다.</li>
+<li>☐ Recent usage와 용량 이력을 확인했지만 기록 부족 여부를 고려했습니다.</li>
+<li>☐ 가능한 경우 판매자 동의를 받아 전원 분리 후 기본 작동을 시험했습니다.</li>
+<li>☐ 짧은 테스트가 실제 배터리 사용 시간을 증명하지 않는다는 점을 확인했습니다.</li>
+<li>☐ 앱별 배터리 사용량과 전원 설정이 결과에 영향을 줄 수 있음을 이해했습니다.</li>
+<li>☐ 배터리 교체 이력, 공식 부품 공급, 수리비를 문의했습니다.</li>
+<li>☐ 업무용 잠금·관리 정책 등 노트북 전체 거래 위험도 별도로 확인했습니다.</li>
+<li>☐ 안전 문제와 중요 정보 불일치가 있다면 거래를 보류했습니다.</li>
+</ul>
+<p><strong>정리:</strong> 중고 노트북에서 봐야 할 것은 단순한 ‘잔량 100%’가 아닙니다. Windows의 <strong>powercfg /batteryreport</strong>로 설계 용량과 현재 완충 용량을 확인하고, <strong>충전 제한·충전기 전력 부족·배터리의 물리적 안전</strong>을 별도로 구분해야 합니다. 12분 점검은 빠른 선별 방법일 뿐이며, 사용 시간이 중요한 구매라면 제조사 진단이나 더 긴 실제 사용 시험을 추가하는 편이 좋습니다.</p></section>
+<section class="section" aria-labelledby="section-22"><h2 id="section-22">공식 출처 및 사실 검증 범위</h2><ol>
+<li><a href="https://support.microsoft.com/ko-kr/windows/experience/power-battery/caring-for-your-battery-in-windows" rel="noopener noreferrer">Microsoft — Windows에서 배터리 관리</a>: Windows 11 batteryreport 실행, 배터리 열화와 팽창 경고, 장기 보관 시 충전 상태.</li>
+<li><a href="https://learn.microsoft.com/ko-kr/windows-hardware/design/device-experiences/powercfg-command-line-options" rel="noopener noreferrer">Microsoft Learn — powercfg 명령줄 옵션</a>: batteryreport 생성 구문, HTML 보고서 및 기본 출력 방식.</li>
+<li><a href="https://learn.microsoft.com/en-us/windows-hardware/design/component-guidelines/battery-and-charging" rel="noopener noreferrer">Microsoft Learn — Battery and charging</a>: 설계 용량·완충 용량·사이클 수의 의미.</li>
+<li><a href="https://support.microsoft.com/ko-kr/windows/experience/power-battery/use-smart-charging-in-windows" rel="noopener noreferrer">Microsoft — 스마트 충전 사용</a>: 스마트 충전과 100% 미도달 현상, 제조사별 구현.</li>
+<li><a href="https://support.microsoft.com/ko-kr/windows/experience/power-battery/pc-is-charging-slowly-or-discharging-while-it-s-plugged-in" rel="noopener noreferrer">Microsoft — 충전이 느리거나 전원 연결 상태에서 방전될 때</a>: 충전기 전력·케이블·포트 호환성과 느린 충전.</li>
+<li><a href="https://support.microsoft.com/ko-kr/windows/experience/power-battery/battery-saving-tips-for-windows" rel="noopener noreferrer">Microsoft — Windows 배터리 절약 팁</a>: 앱별 배터리 사용량, 전원 모드와 절전.</li>
+<li><a href="https://support.microsoft.com/ko-kr/windows/experience/power-battery/power-settings-in-windows-11" rel="noopener noreferrer">Microsoft — Windows 11 전원 설정</a>: 전원·배터리 설정과 효율 최적화.</li>
+<li><a href="https://support.microsoft.com/ko-kr/windows/experience/compatibility/how-to-use-the-pc-health-check-app" rel="noopener noreferrer">Microsoft — PC 상태 검사 앱 사용</a>: 지원 기기에서 배터리 용량 상태 확인 및 기능 조건.</li>
+<li><a href="https://support.microsoft.com/en-us/windows/security/windows-security/device-performance-and-health-in-the-windows-security-app" rel="noopener noreferrer">Microsoft — Windows 보안의 장치 성능 및 상태</a>: 배터리·저장 공간·앱 상태 점검.</li>
+</ol>
+<p><strong>정보 확인일: 2026년 11월 1일.</strong> 이 글의 ‘12분 검증법’과 결과 분류표는 Microsoft의 진단 기능을 조합한 독자적인 실전 점검 모델이며, 제조사 진단·보증 기준이 아닙니다. 배터리 팽창 등 안전 문제는 즉시 사용을 중지하고, 중고 거래 전 정확한 부품·충전기 호환성 및 수리 가능 여부를 확인하세요.</p></section>
+<section class="info-bottom">
+<h2>정보 출처와 확인 안내</h2>
+<p>작성·갱신일과 적용 범위는 본문에서 확인하세요. 정책·행사 일정·혜택·제품 정보는 변경될 수 있으므로 중요한 판단 전 공식 기관 및 판매처의 최신 안내를 확인하시기 바랍니다.</p>
+<div class="pills"><a href="/kor/report/it/">같은 분야의 글</a><a href="/kor/report/">생활정보 전체</a><a href="/">emfls 홈</a></div>
+</section>
+</div>
+</article>
+<footer class="site-footer">© 2026 emfls · 공식 기관 안내를 우선 확인하세요</footer>
+</main>
+</body>
+</html>
