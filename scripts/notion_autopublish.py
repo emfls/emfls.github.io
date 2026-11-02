@@ -12,6 +12,7 @@ import sys
 import time
 from urllib.parse import quote, urlparse
 from urllib.request import Request, urlopen
+from urllib.error import HTTPError, URLError
 
 from publish_scheduled_queue import KST, SITE, validate_article, previous_release_is_live
 from notion_article_template import render_article
@@ -23,18 +24,47 @@ API = "https://api.notion.com/v1"
 
 
 def api(method, path, payload=None):
+    """Retry transient Notion outages without changing what is published.
+
+    Only GET, read-only query POST and idempotent page-property PATCH requests
+    are made through this helper, so sending the same request again is safe.
+    """
     token = os.environ.get("NOTION_API_TOKEN")
     if not token:
         raise RuntimeError("GitHub secret NOTION_API_TOKEN is missing")
     data = None if payload is None else json.dumps(payload, ensure_ascii=False).encode("utf-8")
-    request = Request(API + path, data=data, method=method, headers={
-        "Authorization": "Bearer " + token,
-        "Notion-Version": "2025-09-03",
-        "Content-Type": "application/json",
-    })
-    with urlopen(request, timeout=30) as response:
-        return json.loads(response.read().decode("utf-8"))
-
+    retryable_statuses = {429, 500, 502, 503, 504}
+    max_attempts = 4
+    for attempt in range(1, max_attempts + 1):
+        request = Request(API + path, data=data, method=method, headers={
+            "Authorization": "Bearer " + token,
+            "Notion-Version": "2025-09-03",
+            "Content-Type": "application/json",
+        })
+        try:
+            with urlopen(request, timeout=30) as response:
+                return json.loads(response.read().decode("utf-8"))
+        except HTTPError as exc:
+            if exc.code not in retryable_statuses or attempt == max_attempts:
+                raise
+            try:
+                retry_after = float(exc.headers.get("Retry-After", "0"))
+            except (TypeError, ValueError):
+                retry_after = 0
+            delay = min(30.0, max(2 ** attempt, retry_after))
+            print(f"NOTION_API_RETRY: {method} {path} HTTP {exc.code}; "
+                  f"attempt {attempt}/{max_attempts}, sleep {delay}s",
+                  file=sys.stderr, flush=True)
+            time.sleep(delay)
+        except (URLError, TimeoutError, ConnectionError, OSError) as exc:
+            if attempt == max_attempts:
+                raise
+            delay = 2 ** attempt
+            print(f"NOTION_API_RETRY: {method} {path} {type(exc).__name__}; "
+                  f"attempt {attempt}/{max_attempts}, sleep {delay}s",
+                  file=sys.stderr, flush=True)
+            time.sleep(delay)
+    raise RuntimeError("Unreachable Notion API retry state")
 
 def text_prop(prop):
     key = "title" if prop.get("type") == "title" else "rich_text"
