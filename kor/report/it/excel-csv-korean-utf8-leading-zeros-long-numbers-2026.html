@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 엑셀 CSV 한글 깨짐·앞자리 0 사라짐 해결법: UTF-8·Power Query·16자리 번호 보존</title>
+<meta name="description" content="쇼핑몰 주문 내역, 택배 송장, 고객 명단을 CSV 파일로 내려받아 엑셀에서 열었는데 한글은 깨지고 우편번호 &#x27;01234&#x27;는 &#x27;1234&#x27;로 변해 당황한 적이 있나요? 주문번호가 &#x27;1.23457E+19&#x27;처럼 표시되거나">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#0d1117">
+<link rel="canonical" href="https://emfls.github.io/kor/report/it/excel-csv-korean-utf8-leading-zeros-long-numbers-2026.html">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2026 엑셀 CSV 한글 깨짐·앞자리 0 사라짐 해결법: UTF-8·Power Query·16자리 번호 보존">
+<meta property="og:description" content="쇼핑몰 주문 내역, 택배 송장, 고객 명단을 CSV 파일로 내려받아 엑셀에서 열었는데 한글은 깨지고 우편번호 &#x27;01234&#x27;는 &#x27;1234&#x27;로 변해 당황한 적이 있나요? 주문번호가 &#x27;1.23457E+19&#x27;처럼 표시되거나">
+<meta property="og:url" content="https://emfls.github.io/kor/report/it/excel-csv-korean-utf8-leading-zeros-long-numbers-2026.html">
+<meta property="og:site_name" content="emfls">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2026 엑셀 CSV 한글 깨짐·앞자리 0 사라짐 해결법: UTF-8·Power Query·16자리 번호 보존">
+<meta name="twitter:description" content="쇼핑몰 주문 내역, 택배 송장, 고객 명단을 CSV 파일로 내려받아 엑셀에서 열었는데 한글은 깨지고 우편번호 &#x27;01234&#x27;는 &#x27;1234&#x27;로 변해 당황한 적이 있나요? 주문번호가 &#x27;1.23457E+19&#x27;처럼 표시되거나">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"2026 엑셀 CSV 한글 깨짐·앞자리 0 사라짐 해결법: UTF-8·Power Query·16자리 번호 보존","description":"쇼핑몰 주문 내역, 택배 송장, 고객 명단을 CSV 파일로 내려받아 엑셀에서 열었는데 한글은 깨지고 우편번호 '01234'는 '1234'로 변해 당황한 적이 있나요? 주문번호가 '1.23457E+19'처럼 표시되거나","url":"https://emfls.github.io/kor/report/it/excel-csv-korean-utf8-leading-zeros-long-numbers-2026.html","mainEntityOfPage":"https://emfls.github.io/kor/report/it/excel-csv-korean-utf8-leading-zeros-long-numbers-2026.html","inLanguage":"ko","author":{"@type":"Organization","name":"emfls"},"publisher":{"@type":"Organization","name":"emfls","url":"https://emfls.github.io"},"datePublished":"2026-11-03","dateModified":"2026-11-03"}</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-QP5Q67GE5B');</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+<style>
+:root{color-scheme:dark;--bg:#0d1117;--surface:#161b22;--surface2:#1c2430;--border:#30363d;--text:#e6edf3;--muted:#abb6c3;--accent:#79c0ff;--soft:#c8b6ff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Apple SD Gothic Neo","Malgun Gothic",system-ui,-apple-system,sans-serif;line-height:1.8;word-break:keep-all}
+a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thickness:2px}
+.skip{position:absolute;left:-9999px;top:4px;z-index:1000;padding:8px 16px;background:white;color:black}.skip:focus{left:4px}
+.site-header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px max(18px,calc((100vw - 900px)/2));background:linear-gradient(90deg,#4e54c8,#8f94fb);border-bottom:1px solid #6867cc}
+.brand{color:white;text-decoration:none;font-size:1.14rem;font-weight:850;letter-spacing:.02em}
+.site-header nav{display:flex;gap:12px}.site-header nav a{color:#fff;text-decoration:none;font-size:.86rem;font-weight:600}
+.site-header nav a:hover{text-decoration:underline}
+.shell{max-width:900px;margin:auto;padding:20px 18px 70px}
+.breadcrumb{font-size:.81rem;color:var(--muted);margin:3px 0 18px}.breadcrumb a{color:#d4deff;text-decoration:none}
+.hero{position:relative;overflow:hidden;border:1px solid #47577b;border-radius:18px;padding:42px 32px;background:linear-gradient(135deg,#122140,#172c53 52%,#302754 100%);box-shadow:0 15px 40px #0003}
+.hero:after{content:"";position:absolute;right:-80px;top:-100px;width:310px;height:310px;border-radius:50%;background:radial-gradient(circle,#9b8bff27,transparent 70%);pointer-events:none}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid #8092e05c;background:#ffffff12;border-radius:99px;padding:4px 13px;color:#e3dcff;font-size:.79rem;font-weight:700;margin-bottom:18px}
+.hero h1{font-weight:850;line-height:1.42;letter-spacing:-.037em;font-size:clamp(1.55rem,4vw,2.25rem);margin:0 0 16px;position:relative;z-index:1;overflow-wrap:anywhere}
+.hero .deck{font-size:.99rem;color:#e2e7f5;max-width:680px;margin:0 0 15px}
+.hero-meta{font-size:.82rem;color:#c8d2e5;display:flex;flex-wrap:wrap;gap:6px 18px}
+.highlight-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:17px 0 20px}
+.highlight{padding:17px 16px;border:1px solid var(--border);background:var(--surface);border-radius:13px}
+.highlight .value{display:block;color:#d6caff;font-size:1.12rem;font-weight:800;line-height:1.45}
+.highlight .label{display:block;color:var(--muted);font-size:.76rem;margin-top:5px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
+.contents,.section,.intro,.info-bottom{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:24px 27px;box-shadow:0 3px 15px #0002}
+.contents h2,.info-bottom h2{font-size:1.02rem;color:#d4c5ff;margin:0 0 12px}
+.contents ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 25px;margin:0;padding-left:19px}
+.contents li{font-size:.86rem;line-height:1.6;padding:3px 0}
+.contents a{color:#d3ddec;text-decoration:none}.contents a:hover{text-decoration:underline}
+.intro{border-left:4px solid #7e96e4;background:linear-gradient(125deg,#1a2335,var(--surface));}
+.section h2{font-size:1.32rem;line-height:1.5;margin:0 0 17px;color:#d4c5ff;letter-spacing:-.022em;border-bottom:1px solid #354052;padding-bottom:12px;scroll-margin-top:20px}
+.section h3{font-size:1.045rem;margin:23px 0 8px;color:#c3dcff;scroll-margin-top:20px}
+.section p,.intro p{font-size:.955rem;margin:0 0 14px;color:#d9e0e8;line-height:1.85}
+.section p:last-child,.intro p:last-child{margin-bottom:0}
+.section strong,.intro strong{color:#fff;font-weight:750}
+.section li,.intro li{font-size:.94rem;line-height:1.8;margin:5px 0;color:#d8e0e8}
+.section ul,.section ol,.intro ul,.intro ol{padding-left:22px;margin:12px 0 20px}
+.section blockquote{margin:16px 0;padding:13px 17px;border-left:3px solid #a18cff;background:#252440;border-radius:0 8px 8px 0}
+.section a{overflow-wrap:anywhere}
+.section hr{border:0;border-top:1px solid var(--border);margin:24px 0}
+.section ul,.section ol{background:#1c2430;border-radius:9px;padding:12px 20px 12px 37px;border:1px solid #28384b}
+.notion-code{max-width:100%;overflow-x:auto;white-space:pre;tab-size:2;margin:14px 0 9px;padding:14px 16px;border:1px solid #34465f;border-radius:9px;background:#141d2c;color:#e7efff;font-size:.88rem;line-height:1.65}
+.notion-code code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.section .notion-code-caption,.intro .notion-code-caption{margin:0 0 17px;color:#aebdd5;font-size:.82rem}
+.details-table{overflow-x:auto}
+.section table{border-collapse:collapse;width:100%;min-width:500px;margin:14px 0}
+.section th,.section td{padding:12px;text-align:left;border-bottom:1px solid var(--border);font-size:.89rem}
+.section th{background:#202a3c;color:#d3caff}
+.cta{display:inline-flex;align-items:center;gap:8px;margin-top:8px;padding:11px 17px;border-radius:10px;background:#254975;color:white;text-decoration:none;font-size:.9rem;font-weight:700;border:1px solid #4e75a9}
+.cta:hover{background:#305989}
+.notice{border-left:4px solid #57b59b;padding:13px 16px;background:#122e2b;border-radius:4px 9px 9px 4px;color:#cfe6dd;font-size:.88rem;margin:16px 0}
+.info-bottom p{font-size:.87rem;color:var(--muted);margin:0 0 10px}
+.pills{display:flex;gap:9px;flex-wrap:wrap}.pills a{display:inline-block;border:1px solid #45516c;border-radius:99px;padding:6px 13px;text-decoration:none;color:#d5e3ff;font-size:.84rem}
+.site-footer{font-size:.8rem;color:#9ba9b8;text-align:center;margin-top:24px;padding-top:24px;border-top:1px solid var(--border)}
+.adsbygoogle,div[id^="aswift_"]{max-width:100%!important;overflow:hidden}
+@media(max-width:650px){.shell{padding:14px 12px 45px}.site-header{padding:14px}.hero{padding:29px 20px}.hero h1{font-size:1.58rem}.highlight-row{gap:7px}.highlight{padding:13px 9px}.highlight .value{font-size:.92rem}.highlight .label{font-size:.7rem}.contents,.section,.intro,.info-bottom{padding:19px 17px}.contents ol{grid-template-columns:1fr}.section h2{font-size:1.18rem}.site-header nav{gap:9px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-header"><a class="brand" href="/">emfls</a><nav aria-label="상단 메뉴"><a href="/kor/report/">생활정보</a><a href="/kor/report/it/">관련 주제</a><a href="/">홈</a></nav></header>
+<main class="shell" id="main">
+<div class="breadcrumb"><a href="/">홈</a> › <a href="/kor/report/">생활정보</a> › <a href="/kor/report/it/">IT · 기기</a></div>
+<article>
+<header class="hero">
+<span class="eyebrow">IT · 기기 · 최신 가이드</span>
+<h1>2026 엑셀 CSV 한글 깨짐·앞자리 0 사라짐 해결법: UTF-8·Power Query·16자리 번호 보존</h1>
+<p class="deck">쇼핑몰 주문 내역, 택배 송장, 고객 명단을 CSV 파일로 내려받아 엑셀에서 열었는데 한글은 깨지고 우편번호 &#x27;01234&#x27;는 &#x27;1234&#x27;로 변해 당황한 적이 있나요? 주문번호가 &#x27;1.23457E+19&#x27;처럼 표시되거나</p>
+<div class="hero-meta"><span>최초 발행 2026-11-03</span><span>내용 확인 2026-11-03</span><span>작성 emfls</span></div>
+</header>
+
+<nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">1. 증상별 원인부터 구분하기</a></li><li><a href="#section-02">2. 복구보다 먼저 해야 할 일: 원본 CSV 보존</a></li><li><a href="#section-03">3. 실제로 문제가 생기기 쉬운 가상 CSV 예시</a></li><li><a href="#section-04">4. 파일을 더블클릭하지 말고 Excel에서 데이터로 가져오기</a></li><li><a href="#section-05">5. 한글 깨짐 해결: UTF-8과 파일 원본 설정</a></li><li><a href="#section-06">6. 모든 값이 한 열에 몰리면: 구분 기호 확인</a></li><li><a href="#section-07">7. 앞자리 0 보존: Power Query에서 반드시 확인할 단계</a></li><li><a href="#section-08">8. 16자리 이상 주문번호는 왜 더 위험할까?</a></li><li><a href="#section-09">9. 제품코드가 날짜로 바뀐다면?</a></li><li><a href="#section-10">10. Excel 2024·Microsoft 365 자동 데이터 변환 옵션</a></li><li><a href="#section-11">11. 이미 0이 사라진 파일을 복원할 수 있을까?</a></li><li><a href="#section-12">12. CSV를 다시 저장하면 왜 같은 문제가 반복되나요?</a></li><li><a href="#section-13">13. 현실적인 사례 세 가지</a></li><li><a href="#section-14">14. 데이터가 많은 경우의 실무용 검수표</a></li><li><a href="#section-15">15. 매일 반복하는 업무라면 Power Query 변환 규칙 재사용</a></li><li><a href="#section-16">16. 자주 묻는 질문</a></li><li><a href="#section-17">17. 정리: 한글, 구분 기호, 식별번호를 각각 지켜야 합니다</a></li><li><a href="#section-18">공식 참고 자료</a></li></ol></nav>
+<div class="layout">
+<div class="intro"><p>쇼핑몰 주문 내역, 택배 송장, 고객 명단을 CSV 파일로 내려받아 엑셀에서 열었는데 한글은 깨지고 우편번호 &#x27;01234&#x27;는 &#x27;1234&#x27;로 변해 당황한 적이 있나요? 주문번호가 &#x27;1.23457E+19&#x27;처럼 표시되거나 제품코드 &#x27;1/2&#x27;가 날짜로 바뀌는 문제도 발생할 수 있습니다.</p>
+<p>이런 현상은 하나의 오류가 아닙니다. <strong>한글 깨짐은 문자 인코딩, 앞자리 0 소실은 데이터 형식, 모든 값이 한 열로 모이는 문제는 구분 기호</strong>를 우선 확인해야 합니다. 원인을 잘못 판단하고 파일을 덮어써 버리면 화면만 이상했던 데이터를 실제로 손상시킬 위험이 있습니다.</p>
+<p>이 글은 Microsoft의 Excel·Power Query 공식 지원 자료를 바탕으로 2026년 11월 1일 기준 사용할 수 있는 방법을 정리했습니다. 중요한 것은 파일을 열기만 하는 것이 아니라 <strong>원본 값이 한 글자도 바뀌지 않았는지 검증</strong>하는 것입니다. Excel 버전, 언어 설정, 원본 CSV의 작성 방식에 따라 실제 메뉴와 변환 결과는 달라질 수 있습니다.</p></div>
+<section class="section" aria-labelledby="section-01"><h2 id="section-01">1. 증상별 원인부터 구분하기</h2><div class="details-table"><table><thead><tr><th scope="col">증상</th><th scope="col">가능성 높은 원인</th><th scope="col">해결 방향</th></tr></thead><tbody><tr><td>김하나라는 이름이 깨진 문자로 표시됨</td><td>문자 인코딩 불일치</td><td>파일 원본 인코딩 확인</td></tr><tr><td>모든 값이 A열에만 들어옴</td><td>구분 기호 불일치</td><td>쉼표·세미콜론·탭 선택</td></tr><tr><td>우편번호 01234가 1234로 변함</td><td>숫자 자동 변환</td><td>열을 텍스트로 가져오기</td></tr><tr><td>20자리 주문번호가 E+19로 표시됨</td><td>일반 숫자 처리·정밀도 제한</td><td>원본을 텍스트로 가져오기</td></tr><tr><td>제품코드 1/2가 날짜로 바뀜</td><td>날짜 자동 인식</td><td>형식 변경 전에 텍스트 지정</td></tr><tr><td>코드 123E5가 지수로 변함</td><td>과학적 표기 자동 인식</td><td>코드 열을 텍스트로 유지</td></tr><tr><td>다시 저장한 CSV를 열자 0이 사라짐</td><td>CSV가 셀 서식을 보관하지 않음</td><td>검증된 XLSX를 별도 보관</td></tr></tbody></table></div>
+<p>한글을 바로잡기 위해 UTF-8을 선택하더라도 우편번호가 숫자로 처리되면 0은 여전히 없어질 수 있습니다. 반대로 열 형식을 텍스트로 지정해도 인코딩이 잘못되면 한글은 깨집니다.</p>
+<p>출처: <a href="https://support.microsoft.com/ko-kr/excel/opening-csv-utf-8-files-correctly-in-excel" rel="noopener noreferrer">Microsoft — CSV UTF-8 파일 열기</a>, <a href="https://support.microsoft.com/ko-kr/excel/keeping-leading-zeros-and-large-numbers" rel="noopener noreferrer">Microsoft — 앞자리 0과 긴 숫자 유지</a></p></section>
+<section class="section" aria-labelledby="section-02"><h2 id="section-02">2. 복구보다 먼저 해야 할 일: 원본 CSV 보존</h2><p>손상된 것처럼 보이는 파일을 곧바로 수정해 저장하지 마세요. 우선 다운로드한 CSV를 복사해서 원본 보관용과 작업용으로 나눕니다.</p>
+<ol>
+<li>원본 CSV를 다른 이름으로 복사합니다.</li>
+<li>수정했던 Excel 파일이 있다면 원본과 혼동하지 않게 분리합니다.</li>
+<li>원본 파일을 Windows 메모장이나 신뢰할 수 있는 텍스트 편집기로 엽니다.</li>
+<li>우편번호와 주문번호의 앞자리·뒷자리를 확인합니다.</li>
+<li>한글도 원본 텍스트에서 정상인지 살펴봅니다.</li>
+<li>실제 작업은 새 Excel 통합 문서에서 진행합니다.</li>
+</ol>
+<p>텍스트 편집기에서도 값이 이미 잘못돼 있다면 원본 시스템에서 다시 내려받는 방법을 우선 검토합니다. 데이터가 바뀐 뒤 Excel의 표시 형식만 수정하는 방식은 원본 값을 복원하는 것과 다릅니다.</p></section>
+<section class="section" aria-labelledby="section-03"><h2 id="section-03">3. 실제로 문제가 생기기 쉬운 가상 CSV 예시</h2><p>다음은 실습을 위한 가상 데이터입니다. 개인 정보를 포함하지 않은 예시로, 각 값의 의미를 명확히 하기 위해 일부러 특수한 제품코드와 긴 주문번호를 넣었습니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">이름</th><th scope="col">우편번호</th><th scope="col">제품코드</th><th scope="col">주문번호</th><th scope="col">수량</th></tr></thead><tbody><tr><td>김하나</td><td>01234</td><td>00071</td><td>12345678901234567890</td><td>2</td></tr><tr><td>이도윤</td><td>06500</td><td>1/2</td><td>99887766554433221100</td><td>1</td></tr><tr><td>박서준</td><td>04567</td><td>123E5</td><td>00123456789012345678</td><td>3</td></tr></tbody></table></div>
+<p>위에서 수량은 더하거나 합산해도 되는 숫자지만, 우편번호·제품코드·주문번호는 숫자처럼 보여도 원문이 중요한 식별자입니다.</p>
+<p>예를 들어 &#x27;01234&#x27;는 숫자 1234와 같은 의미라고 볼 수 없습니다. 제품코드 &#x27;00071&#x27;도 71과 같은 상품이라는 보장은 없습니다. 특히 20자리 주문번호는 합계나 평균을 낼 대상이 아니므로 <strong>처음부터 텍스트</strong>로 다루는 것이 적절합니다.</p>
+<p>CSV는 대체로 쉼표로 구분하는 텍스트 파일입니다. 셀 색상, 열 너비, 텍스트 서식과 같은 통합 문서 속성을 함께 저장하지 않습니다. 어떤 프로그램으로 읽느냐에 따라 같은 CSV가 다르게 보일 수 있는 이유입니다.</p>
+<p>출처: <a href="https://support.microsoft.com/ko-kr/excel/get-started/import-or-export-text-txt-or-csv-files" rel="noopener noreferrer">Microsoft — 텍스트 및 CSV 파일 가져오기</a></p></section>
+<section class="section" aria-labelledby="section-04"><h2 id="section-04">4. 파일을 더블클릭하지 말고 Excel에서 데이터로 가져오기</h2><p>중요한 CSV라면 Excel의 &#x27;파일 열기&#x27;보다 <strong>데이터 → 텍스트/CSV에서</strong> 경로를 추천합니다. 미리 보기에서 인코딩과 구분 기호를 확인하고 Power Query 편집기에서 열 형식을 지정할 수 있기 때문입니다.</p>
+<ol>
+<li>Excel의 빈 통합 문서를 엽니다.</li>
+<li><strong>데이터</strong> 탭으로 이동합니다.</li>
+<li><strong>데이터 가져오기 → 파일에서 → 텍스트/CSV에서</strong>를 선택합니다. 버전에 따라 &#x27;텍스트/CSV에서&#x27; 메뉴가 리본에 바로 보일 수 있습니다.</li>
+<li>수정하지 않은 원본 CSV를 선택합니다.</li>
+<li>미리 보기 화면에서 이름과 열 개수를 확인합니다.</li>
+<li>중요한 식별번호가 있다면 바로 <strong>로드</strong>하지 말고 <strong>데이터 변환(Transform Data)</strong> 또는 편집 메뉴를 선택합니다.</li>
+<li>열 형식을 확인한 뒤 <strong>닫기 및 로드</strong>로 가져옵니다.</li>
+</ol>
+<p>Power Query는 CSV 파일의 열 이름이나 데이터 형식을 자동 감지할 수 있습니다. 따라서 미리 보기에서 한글이 정상이라고 숫자 코드까지 보존됐다고 판단하면 안 됩니다.</p>
+<p>공식 근거: <a href="https://support.microsoft.com/ko-kr/excel/import-data-from-data-sources-power-query" rel="noopener noreferrer">Microsoft — 데이터 원본에서 데이터 가져오기</a></p></section>
+<section class="section" aria-labelledby="section-05"><h2 id="section-05">5. 한글 깨짐 해결: UTF-8과 파일 원본 설정</h2><p>문자가 깨지는 현상은 실제 CSV의 문자 인코딩과 Excel이 해석하는 문자 인코딩이 다르기 때문에 생길 수 있습니다. 한글이 들어 있는 업무용 CSV는 사용한 시스템에 따라 인코딩 방식이 달라질 수 있습니다.</p>
+<p><strong>해결 순서</strong></p>
+<ol>
+<li>CSV 원본을 따로 보관합니다.</li>
+<li>Excel의 텍스트/CSV 가져오기 화면을 엽니다.</li>
+<li><strong>파일 원본(File Origin)</strong> 또는 문자 인코딩 선택 항목을 찾습니다.</li>
+<li>원본이 UTF-8로 저장됐다면 UTF-8 계열 인코딩을 선택합니다. 일부 화면에서는 &#x27;65001: Unicode (UTF-8)&#x27;로 표시됩니다.</li>
+<li>미리 보기에서 한글·영문·특수문자를 함께 확인합니다.</li>
+<li>여러 인코딩을 시도했다면 가장 정확하게 원본 내용이 표시되는 설정을 사용합니다.</li>
+<li>텍스트가 정상으로 보이면 다음 단계에서 열의 형식을 확인합니다.</li>
+</ol>
+<p>Microsoft는 <strong>UTF-8 인코딩 CSV에 BOM(바이트 순서 표시)이 포함되어 있다면 Excel에서 정상적으로 열 수 있다</strong>고 안내합니다. BOM이 없는 UTF-8 CSV는 Power Query나 텍스트 가져오기 기능을 통해 여는 방법을 제시합니다.</p>
+<p>BOM이 없다는 사실 자체가 파일 손상을 의미하지는 않습니다. BOM이 없더라도 정상적인 UTF-8 문서일 수 있습니다. 반대로 텍스트 편집기에 재저장할 때 잘못된 인코딩을 선택하면 원본을 다시 왜곡할 수 있으므로 원본 복사본에서만 시험하세요.</p>
+<p>출처: <a href="https://support.microsoft.com/ko-kr/excel/opening-csv-utf-8-files-correctly-in-excel" rel="noopener noreferrer">Microsoft — Excel에서 CSV UTF-8 파일을 올바르게 열기</a></p></section>
+<section class="section" aria-labelledby="section-06"><h2 id="section-06">6. 모든 값이 한 열에 몰리면: 구분 기호 확인</h2><p>원본에 이름·우편번호·주소가 각각 존재하는데 A열에 전부 붙어 들어온다면 CSV의 구분 문자를 Excel이 다르게 해석했을 수 있습니다.</p>
+<p>CSV는 일반적으로 쉼표를 사용하지만 파일을 만든 시스템이나 지역 설정에 따라 세미콜론과 같은 다른 구분자가 쓰일 수 있습니다. 탭으로 구분된 텍스트를 CSV라고 부르는 경우도 있습니다.</p>
+<ol>
+<li>원본을 텍스트 편집기로 열어 값 사이의 실제 문자를 확인합니다.</li>
+<li>Excel 데이터 가져오기 미리 보기로 돌아옵니다.</li>
+<li><strong>구분 기호(Delimiter)</strong> 옵션을 선택합니다.</li>
+<li>쉼표·세미콜론·탭 중 실제 원본과 맞는 항목을 지정합니다.</li>
+<li>미리 보기에서 열이 의도한 위치에 나뉘는지 확인합니다.</li>
+</ol>
+<p>지역 설정을 바꿔 구분 기호를 해결하는 방법도 있지만, Microsoft는 Windows의 기본 구분 기호를 변경하면 다른 프로그램에도 영향을 줄 수 있다고 안내합니다. 특정 파일을 읽는 문제라면 <strong>해당 파일의 가져오기 옵션을 먼저 변경</strong>하는 것이 안전합니다.</p>
+<p>주소나 설명문에 쉼표가 들어간다면 따옴표로 묶인 필드가 존재할 수 있습니다. 이런 경우 모든 쉼표를 일괄 치환하지 말고 가져오기 기능이 CSV 필드를 올바르게 처리하는지 확인하세요.</p>
+<p>출처: <a href="https://support.microsoft.com/ko-kr/excel/get-started/import-or-export-text-txt-or-csv-files" rel="noopener noreferrer">Microsoft — CSV 구분 기호 설정</a></p></section>
+<section class="section" aria-labelledby="section-07"><h2 id="section-07">7. 앞자리 0 보존: Power Query에서 반드시 확인할 단계</h2><p>우편번호 &#x27;01234&#x27;, 제품코드 &#x27;00071&#x27;을 숫자로 바꾸면 앞의 0이 사라질 수 있습니다. 이런 값은 계산용 숫자가 아니라 <strong>문자열 식별자</strong>입니다.</p>
+<p><strong>Power Query에서 바르게 처리하는 방법</strong></p>
+<ol>
+<li>가져오기 미리 보기에서 <strong>데이터 변환</strong>을 누릅니다.</li>
+<li>편집기에서 우편번호·상품코드·주문번호 열을 찾습니다.</li>
+<li>열 머리글의 데이터 형식 아이콘 또는 <strong>홈 → 데이터 형식</strong>을 선택합니다.</li>
+<li>해당 열을 **텍스트(Text)**로 지정합니다.</li>
+<li>오른쪽의 **적용된 단계(Applied Steps)**를 확인합니다.</li>
+<li>자동 생성된 <strong>변경된 형식(Changed Type)</strong> 단계가 이미 식별번호를 숫자로 바꾸고 있다면 해당 단계를 수정하거나 제거하고, 올바른 형식을 원본부터 적용합니다.</li>
+<li>우편번호 &#x27;01234&#x27;, 상품코드 &#x27;00071&#x27;이 그대로 보이는지 확인합니다.</li>
+<li><strong>닫기 및 로드</strong>로 결과를 가져옵니다.</li>
+</ol>
+<p>가장 중요한 부분은 6번입니다. Power Query가 먼저 숫자로 변환해 앞자리 0을 없앤 뒤, 그 결과를 다시 텍스트로 바꿔도 &#x27;01234&#x27;가 아니라 &#x27;1234&#x27;만 남을 수 있습니다.</p>
+<p>Microsoft는 Power Query가 비구조화된 데이터 원본에 대해 열 형식을 자동 추정하고 <strong>형식 변경</strong> 단계를 추가한다고 설명합니다. 자동 변경이 어떻게 적용됐는지 확인하는 것이 실수 예방의 핵심입니다.</p>
+<p>공식 출처: <a href="https://support.microsoft.com/ko-kr/excel/add-or-change-data-types-power-query" rel="noopener noreferrer">Microsoft — Power Query에서 데이터 형식 추가 또는 변경</a>, <a href="https://support.microsoft.com/ko-kr/excel/keeping-leading-zeros-and-large-numbers" rel="noopener noreferrer">Microsoft — 앞자리 0과 긴 숫자 유지</a></p></section>
+<section class="section" aria-labelledby="section-08"><h2 id="section-08">8. 16자리 이상 주문번호는 왜 더 위험할까?</h2><p>한글 깨짐은 화면에서 쉽게 발견할 수 있지만 긴 주문번호의 변형은 확인하기 어렵습니다. 제품이나 주문을 식별하는 코드가 과학적 표기법처럼 보이면 단순한 표시 문제인지, 실제 숫자 정보가 바뀐 것인지 구별해야 합니다.</p>
+<p>Microsoft에 따르면 Excel의 일반 숫자 정밀도는 최대 <strong>15자리</strong>입니다. 16자리 이상의 숫자 데이터를 일반 숫자로 취급하면 뒤쪽 자릿수가 바뀔 수 있습니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">원본 값</th><th scope="col">잘못 처리할 경우</th><th scope="col">안전한 방식</th></tr></thead><tbody><tr><td>12345678901234567890</td><td>일부 뒷자리 정보가 달라질 수 있음</td><td>텍스트로 원문 유지</td></tr><tr><td>00123456789012345678</td><td>앞자리 0과 뒤쪽 정밀도 손실 위험</td><td>텍스트로 원문 유지</td></tr><tr><td>123E5</td><td>지수 표기 숫자로 해석 가능</td><td>코드 문자열 유지</td></tr></tbody></table></div>
+<p><strong>이미 뒷자리가 바뀐 숫자는 셀 너비를 늘리거나 숫자 표시 형식을 조정해도 원래의 자릿수를 복구할 수 없습니다.</strong> 원래의 CSV 파일이나 원본 시스템과 다시 대조해야 합니다.</p>
+<p>출처: <a href="https://support.microsoft.com/ko-kr/excel/keeping-leading-zeros-and-large-numbers" rel="noopener noreferrer">Microsoft — 15자리 정밀도와 큰 숫자 처리</a></p></section>
+<section class="section" aria-labelledby="section-09"><h2 id="section-09">9. 제품코드가 날짜로 바뀐다면?</h2><p>제품코드 &#x27;1/2&#x27;나 &#x27;3-4&#x27;가 날짜처럼 보이는 형식으로 변환되는 사례도 있습니다. Excel은 날짜를 쉽게 입력하도록 돕는 기능이 있기 때문에 특정 문자열을 사용자가 의도하지 않은 날짜로 판단할 수 있습니다.</p>
+<p>이런 경우에는 데이터를 입력한 다음 형식을 고치는 것보다, <strong>입력하거나 불러오기 전에 텍스트로 지정</strong>하는 것이 안전합니다.</p>
+<ul>
+<li>CSV를 가져올 때: Power Query에서 해당 열을 텍스트로 읽고 적용된 단계를 확인합니다.</li>
+<li>직접 입력할 때: <strong>Ctrl+1 → 셀 서식 → 텍스트</strong>로 지정한 다음 입력합니다.</li>
+<li>적은 수의 값을 직접 입력할 때: 값 앞에 아포스트로피를 붙이면 Excel에서 텍스트로 취급할 수 있습니다.</li>
+<li>많은 행을 처리할 때: 수동으로 고치기보다 처음부터 원본 CSV를 알맞게 가져옵니다.</li>
+</ul>
+<p>최신 Excel의 자동 변환 설정은 일부 제품·버전에서 제공됩니다. 모든 버전에서 날짜 자동 인식을 완전히 끌 수 있다고 단정하면 안 됩니다.</p>
+<p>출처: <a href="https://support.microsoft.com/ko-kr/excel/stop-automatically-changing-numbers-to-dates" rel="noopener noreferrer">Microsoft — 숫자가 날짜로 자동 변경되지 않게 설정</a></p></section>
+<section class="section" aria-labelledby="section-10"><h2 id="section-10">10. Excel 2024·Microsoft 365 자동 데이터 변환 옵션</h2><p>Microsoft 365용 Excel, Excel 2024 등에서는 **자동 데이터 변환(Automatic Data Conversion)**을 제어하는 기능이 제공됩니다. Windows용 지원 제품에서는 <strong>파일 → 옵션 → 데이터</strong>에서 관련 항목을 확인할 수 있습니다.</p>
+<p>공식 안내상 제어할 수 있는 주요 변환은 다음과 같습니다.</p>
+<ul>
+<li>앞자리 0을 제거하고 숫자로 바꾸는 동작</li>
+<li>16자리 이상을 일반 숫자로 처리해 일부 정밀도를 잃는 동작</li>
+<li>E가 포함된 숫자처럼 보이는 문자열을 과학적 표기법으로 바꾸는 동작</li>
+<li>날짜로 해석될 수 있는 연속 문자열을 날짜로 바꾸는 동작</li>
+<li>CSV·TXT 로드 시 자동 변환이 일어날 수 있다는 경고 표시</li>
+</ul>
+<p>다만 이 설정을 끈다고 해서 파일 원본의 인코딩이 자동으로 수정되는 것은 아닙니다. 한글 깨짐은 별도로 해결해야 하며, 구분 기호도 확인해야 합니다.</p>
+<p>또한 Excel 2019·2021과 같은 이전 제품에 최신 설정 메뉴가 그대로 있다고 가정하면 안 됩니다. Power Query로 중요한 열을 텍스트로 읽는 방법은 버전에 따른 자동 변환 옵션 차이와 별개로 유용합니다.</p>
+<p>출처: <a href="https://support.microsoft.com/ko-kr/excel/data-import-and-analysis-options-in-excel" rel="noopener noreferrer">Microsoft — Excel 데이터 가져오기 및 분석 옵션</a></p></section>
+<section class="section" aria-labelledby="section-11"><h2 id="section-11">11. 이미 0이 사라진 파일을 복원할 수 있을까?</h2><p>우편번호 &#x27;01234&#x27;가 &#x27;1234&#x27;로 바뀌었다면 표시 형식 &#x27;00000&#x27;을 적용해 다섯 자리로 보이게 할 수는 있습니다. 하지만 이것이 반드시 원본 복원을 의미하지는 않습니다.</p>
+<p>코드의 길이가 정해져 있지 않거나, 원래 값이 &#x27;001234&#x27;인지 &#x27;01234&#x27;인지 알 수 없다면 숫자 1234만으로 원래 문자를 판단할 수 없기 때문입니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">현재 상황</th><th scope="col">권장 조치</th></tr></thead><tbody><tr><td>원본 CSV가 남아 있음</td><td>다시 가져오며 텍스트 지정</td></tr><tr><td>원본 시스템에서 재다운로드 가능</td><td>원본 파일을 새로 내려받기</td></tr><tr><td>공식 코드 규격이 고정 자리수임</td><td>규격과 원본 기록을 대조하며 재구성</td></tr><tr><td>16자리 이상 숫자가 변경됨</td><td>원본 대조, 표시 형식만으로 복구 불가</td></tr><tr><td>변형 파일을 이미 덮어씀</td><td>백업·이전 버전·원본 서비스 확인</td></tr></tbody></table></div>
+<p>실무적으로는 <strong>잘못된 결과를 보정하는 것보다 처음부터 정확히 가져오는 것이 안정적</strong>입니다. 전체 행을 임의로 수정했다가 오히려 정상적인 다른 코드를 바꿀 수 있으므로 원본을 우선 확보하세요.</p></section>
+<section class="section" aria-labelledby="section-12"><h2 id="section-12">12. CSV를 다시 저장하면 왜 같은 문제가 반복되나요?</h2><p>CSV는 기본적으로 <strong>데이터 값을 교환하기 위한 텍스트 형식</strong>입니다. Excel 통합 문서의 여러 시트, 셀 서식, 수식과 같은 기능을 그대로 저장하기 위한 형식이 아닙니다.</p>
+<p>따라서 CSV를 올바르게 읽은 뒤 셀 서식을 텍스트로 바꿔도, 다시 CSV로 저장하고 더블클릭하면 Excel이 해당 열을 새로 해석할 수 있습니다.</p>
+<p>권장 방식은 다음과 같습니다.</p>
+<ol>
+<li>원본 CSV는 그대로 보관합니다.</li>
+<li>텍스트/CSV 가져오기로 올바른 데이터 형식을 적용합니다.</li>
+<li>중요한 코드 열을 원본 문자와 대조합니다.</li>
+<li>**파일 → 다른 이름으로 저장 → Excel 통합 문서(.xlsx)**로 별도 저장합니다.</li>
+<li>XLSX를 다시 열어 데이터 형식과 식별번호를 재검수합니다.</li>
+</ol>
+<p>CSV를 꼭 제출해야 한다면 상대방 시스템의 인코딩·구분 기호·열 처리 요구사항에 맞춰 내보내고, 그 시스템에서 다시 가져와 검증해야 합니다. Excel에서 만든 XLSX를 CSV로 바꾸었다는 사실만으로 정확성을 보장할 수 없습니다.</p>
+<p>출처: <a href="https://support.microsoft.com/ko-kr/excel/file-formats-that-are-supported-in-excel" rel="noopener noreferrer">Microsoft — Excel에서 지원하는 파일 형식</a></p></section>
+<section class="section" aria-labelledby="section-13"><h2 id="section-13">13. 현실적인 사례 세 가지</h2><h3>사례 1. 택배 송장 작업을 하다가 우편번호가 바뀐 경우</h3>
+<p>쇼핑몰에서 주문 CSV를 내려받아 곧바로 Excel로 연 뒤 우편번호가 &#x27;1234&#x27;처럼 네 자리로 표시됐다고 합시다. 배송지 데이터는 정확해야 하므로 원본 CSV를 다시 불러오고 우편번호 열을 텍스트로 지정합니다. 다른 주소·수취인 정보도 인코딩 문제가 없는지 함께 확인합니다.</p>
+<h3>사례 2. 거래처 명단에서 한글과 계좌 식별번호가 동시에 이상한 경우</h3>
+<p>회사명은 깨지고 긴 번호는 과학적 표기법으로 표시된다면 인코딩과 데이터 형식이 각각 문제일 수 있습니다. 한글부터 올바르게 보이게 한 뒤 식별번호 열을 텍스트로 지정합니다. <strong>한글을 고쳤다고 두 번째 문제가 자동으로 해결되는 것은 아닙니다.</strong></p>
+<h3>사례 3. 제품코드 &#x27;1/2&#x27;가 날짜처럼 바뀐 경우</h3>
+<p>원본에서 해당 문자는 코드였으므로 날짜로 바꿔서는 안 됩니다. Power Query에서 자동으로 추가된 형식 변경 단계를 살펴보고 필요하면 수정·제거한 뒤, 해당 열을 텍스트로 설정합니다. 마지막으로 원본 &#x27;1/2&#x27;와 가져온 값이 정확히 일치하는지 확인합니다.</p>
+<p>세 사례 모두 화면 표시보다 <strong>원문과의 일치 여부</strong>를 기준으로 판단해야 합니다.</p></section>
+<section class="section" aria-labelledby="section-14"><h2 id="section-14">14. 데이터가 많은 경우의 실무용 검수표</h2><p>수백~수천 행의 주문 파일을 다룬다면 다음 점검표를 권장합니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">검수 항목</th><th scope="col">확인할 데이터</th><th scope="col">합격 조건</th></tr></thead><tbody><tr><td>한글</td><td>이름·주소·상호명</td><td>깨진 문자 없음</td></tr><tr><td>열 분리</td><td>첫 줄과 예외 행의 열 수</td><td>필드가 의도한 열에 배치</td></tr><tr><td>앞자리 0</td><td>01234·00071</td><td>원문과 동일</td></tr><tr><td>긴 번호</td><td>16자리 이상 식별번호</td><td>모든 자릿수 일치</td></tr><tr><td>날짜형 코드</td><td>1/2·3-4</td><td>문자 원문 유지</td></tr><tr><td>지수형 코드</td><td>123E5</td><td>원문 유지</td></tr><tr><td>행 수</td><td>처음·중간·마지막 행</td><td>누락·중복 없이 확인</td></tr><tr><td>저장 파일</td><td>XLSX 재열기</td><td>모든 중요 필드 동일</td></tr></tbody></table></div>
+<p>이 표는 Microsoft가 공인한 검사 기준이 아니라, 원고에서 제안하는 <strong>데이터 무결성 점검 절차</strong>입니다. 실제 업무에서는 첫 줄만 보지 말고 중간 행·마지막 행 및 문제가 생길 수 있는 예외값을 확인하세요.</p></section>
+<section class="section" aria-labelledby="section-15"><h2 id="section-15">15. 매일 반복하는 업무라면 Power Query 변환 규칙 재사용</h2><p>같은 형식의 CSV를 매일 불러온다면 Power Query의 변환 단계를 저장해 반복 적용할 수 있습니다. 코드 열의 텍스트 지정, 잘못 추정된 데이터 형식 수정, 구분자 선택을 매번 수동으로 반복하는 것보다 오류를 줄이는 데 도움이 됩니다.</p>
+<p>다만 자동화해도 검수는 필요합니다.</p>
+<ul>
+<li>원본 CSV 열 이름이 바뀌면 쿼리가 제대로 작동하지 않을 수 있습니다.</li>
+<li>내보내기 시스템의 인코딩이 바뀌면 한글이 다시 깨질 수 있습니다.</li>
+<li>신규 제품코드에 날짜처럼 보이는 문자가 들어갈 수 있습니다.</li>
+<li>원본 행 수와 가져온 결과 행 수를 비교해야 합니다.</li>
+<li>새로 고침 후에도 앞자리 0과 긴 번호가 그대로 유지되는지 확인해야 합니다.</li>
+</ul>
+<p><strong>자동 변환 규칙을 만들었다는 사실이 원본 데이터의 영구적인 정확성을 보장하는 것은 아닙니다.</strong> 중요한 업무 데이터일수록 원본·변환 결과·최종 전달 파일을 구분해 보관하는 편이 좋습니다.</p>
+<p>출처: <a href="https://support.microsoft.com/ko-kr/excel/keeping-leading-zeros-and-large-numbers" rel="noopener noreferrer">Microsoft — Power Query와 데이터 새로 고침</a></p></section>
+<section class="section" aria-labelledby="section-16"><h2 id="section-16">16. 자주 묻는 질문</h2><h3>Q. 메모장에서는 한글이 정상인데 엑셀에서만 깨집니다. 원본 파일이 손상된 건가요?</h3>
+<p>반드시 그렇지는 않습니다. 인코딩 해석이 다를 수 있으므로 Excel의 텍스트/CSV 데이터 가져오기에서 파일 원본을 확인하세요. 원본 복사본을 보존한 상태에서 진행하는 것이 좋습니다.</p>
+<h3>Q. UTF-8로 열면 우편번호의 앞자리 0도 복원되나요?</h3>
+<p>아닙니다. <strong>UTF-8은 문자 인코딩 문제를 다루는 설정</strong>입니다. 앞자리 0이 소실되는 문제는 숫자 자동 변환과 관련이 있으므로 텍스트 열로 가져와야 합니다.</p>
+<h3>Q. 이미 숫자로 바뀐 셀을 텍스트로 바꾸면 원래 코드가 복구되나요?</h3>
+<p>반드시 그렇지 않습니다. 특히 16자리 이상 숫자의 뒷자리가 실제로 변경된 경우에는 원본 CSV나 원본 시스템을 다시 확인해야 합니다.</p>
+<h3>Q. E+19로 보이는 숫자는 모두 손상된 데이터인가요?</h3>
+<p>그렇지는 않습니다. 표시 형식 때문에 지수 형태로 보일 수 있습니다. 다만 16자리 이상 식별번호를 일반 숫자로 변환했다면 정밀도 손실이 있을 수 있으므로 원본과 비교해야 합니다.</p>
+<h3>Q. 제품코드 1/2를 날짜로 바꾸지 않으려면 어떻게 하나요?</h3>
+<p>데이터를 가져오기 전에 해당 열을 텍스트로 지정하세요. 이미 날짜로 변했다면 변환 이력을 검토하고 원본에서 다시 가져오는 편이 정확합니다.</p>
+<h3>Q. CSV가 아닌 XLSX로 저장하면 무엇이 좋은가요?</h3>
+<p>Excel에서 확인한 열 서식과 여러 시트 같은 통합 문서 속성을 보관할 수 있습니다. 단, XLSX로 저장하기 전에 이미 데이터가 변형됐다면 저장 형식만 바꿔도 원래 정보가 되돌아오지는 않습니다.</p>
+<h3>Q. Mac에서도 같은 절차를 쓸 수 있나요?</h3>
+<p>Mac용 Excel도 데이터 가져오기 기능을 제공하지만 메뉴 위치와 지원 범위는 버전에 따라 다릅니다. 중요한 점은 파일의 인코딩·구분 기호·열의 텍스트 형식을 별도로 확인하는 것입니다.</p>
+<h3>Q. 온라인 서비스가 CSV만 받는다면 어떻게 해야 하나요?</h3>
+<p>상대 서비스가 요구하는 인코딩과 구분 기호를 확인하고, 다시 CSV로 내보낸 뒤 실제 제출 시스템에서 값이 보존됐는지 검증하세요. 특히 식별번호가 있는 경우에는 일부 표본이 아닌 오류 가능성이 높은 값도 확인해야 합니다.</p></section>
+<section class="section" aria-labelledby="section-17"><h2 id="section-17">17. 정리: 한글, 구분 기호, 식별번호를 각각 지켜야 합니다</h2><p>CSV 파일을 안전하게 가져오는 권장 순서는 <strong>① 원본 보관 → ② Excel 데이터 탭에서 텍스트/CSV 가져오기 → ③ 파일 원본 인코딩 점검 → ④ 구분 기호 확인 → ⑤ 식별번호 열을 텍스트로 지정 → ⑥ 자동 형식 변경 단계 점검 → ⑦ 원본과 데이터 비교 → ⑧ XLSX 별도 저장</strong>입니다.</p>
+<p>화면에 표가 정상적으로 보이는 것만으로 데이터가 온전히 보존됐다고 볼 수 없습니다. 특히 <strong>우편번호·제품코드·주문번호처럼 숫자와 닮았지만 계산 대상이 아닌 값</strong>은 처음부터 텍스트로 읽는 것이 정확합니다. 이미 일부 숫자가 변형되었다면 임의로 0을 채우거나 서식을 바꾸기보다 원본 파일을 다시 확보하세요.</p>
+<hr></section>
+<section class="section" aria-labelledby="section-18"><h2 id="section-18">공식 참고 자료</h2><ul>
+<li><a href="https://support.microsoft.com/ko-kr/excel/opening-csv-utf-8-files-correctly-in-excel" rel="noopener noreferrer">Microsoft — Excel에서 CSV UTF-8 파일을 올바르게 열기</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/get-started/import-or-export-text-txt-or-csv-files" rel="noopener noreferrer">Microsoft — 텍스트(.txt 또는 .csv) 파일 가져오기 또는 내보내기</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/keeping-leading-zeros-and-large-numbers" rel="noopener noreferrer">Microsoft — 앞에 오는 0과 더 큰 숫자를 유지</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/import-data-from-data-sources-power-query" rel="noopener noreferrer">Microsoft — 데이터 원본에서 데이터 가져오기(파워 쿼리)</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/add-or-change-data-types-power-query" rel="noopener noreferrer">Microsoft — 데이터 형식 추가 또는 변경(파워 쿼리)</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/data-import-and-analysis-options-in-excel" rel="noopener noreferrer">Microsoft — Excel의 데이터 가져오기 및 분석 옵션</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/stop-automatically-changing-numbers-to-dates" rel="noopener noreferrer">Microsoft — 숫자가 날짜로 자동 변경되지 않게 설정</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/file-formats-that-are-supported-in-excel" rel="noopener noreferrer">Microsoft — Excel에서 지원하는 파일 형식</a></li>
+</ul>
+<p><em>검증 기준: 2026년 11월 1일. 메뉴 이름과 지원 제품·버전은 Microsoft의 소프트웨어 업데이트 등에 따라 달라질 수 있습니다.</em></p></section>
+<section class="info-bottom">
+<h2>정보 출처와 확인 안내</h2>
+<p>작성·갱신일과 적용 범위는 본문에서 확인하세요. 정책·행사 일정·혜택·제품 정보는 변경될 수 있으므로 중요한 판단 전 공식 기관 및 판매처의 최신 안내를 확인하시기 바랍니다.</p>
+<div class="pills"><a href="/kor/report/it/">같은 분야의 글</a><a href="/kor/report/">생활정보 전체</a><a href="/">emfls 홈</a></div>
+</section>
+</div>
+</article>
+<footer class="site-footer">© 2026 emfls · 공식 기관 안내를 우선 확인하세요</footer>
+</main>
+</body>
+</html>
