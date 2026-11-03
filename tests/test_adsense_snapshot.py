@@ -769,6 +769,106 @@ class AdSenseSnapshotContractTest(TestCase):
         self.assertNotIn("internal.invalid", message)
         self.assertNotIn("token=secret", message)
 
+    def test_oauth_refresh_http_error_logs_only_allowlisted_oauth_error_code(self):
+        for oauth_code in sorted(collector.OAUTH_TOKEN_ERROR_CODES):
+            with self.subTest(oauth_code=oauth_code):
+                body = {
+                    "error": oauth_code,
+                    "error_description": "private account detail REFRESH_TOKEN_SENTINEL",
+                }
+
+                def failing_open(request, timeout):
+                    raise urllib.error.HTTPError(
+                        request.full_url,
+                        400,
+                        "Bad Request",
+                        hdrs=None,
+                        fp=io.BytesIO(json.dumps(body).encode()),
+                    )
+
+                with self.assertRaises(collector.GoogleAPIError) as captured:
+                    collector.collect_snapshot(
+                        ROOT / "tmp-adsense-oauth-error-never-written.json",
+                        account_name="accounts/pub-test",
+                        client_id="CLIENT_ID_SENTINEL",
+                        client_secret="CLIENT_SECRET_SENTINEL",
+                        refresh_token="REFRESH_TOKEN_SENTINEL",
+                        now=NOW,
+                        open_url=failing_open,
+                    )
+
+                message = str(captured.exception)
+                self.assertIn(f"OAUTH_{oauth_code.upper()}", message)
+                self.assertNotIn("error_description", message)
+                self.assertNotIn("private account detail", message)
+                for secret in ("CLIENT_ID_SENTINEL", "CLIENT_SECRET_SENTINEL", "REFRESH_TOKEN_SENTINEL"):
+                    self.assertNotIn(secret, message)
+
+    def test_unknown_oauth_error_code_is_not_logged(self):
+        private_code = "unrecognized_private_oauth_code"
+        body = {"error": private_code, "error_description": "private description ACCESS_TOKEN_SENTINEL"}
+
+        def failing_open(request, timeout):
+            raise urllib.error.HTTPError(
+                request.full_url, 400, "Bad Request", hdrs=None,
+                fp=io.BytesIO(json.dumps(body).encode()),
+            )
+
+        with self.assertRaises(collector.GoogleAPIError) as captured:
+            collector.collect_snapshot(
+                ROOT / "tmp-adsense-unknown-oauth-never-written.json",
+                account_name="accounts/pub-test",
+                client_id="CLIENT_ID_SENTINEL",
+                client_secret="CLIENT_SECRET_SENTINEL",
+                refresh_token="REFRESH_TOKEN_SENTINEL",
+                now=NOW,
+                open_url=failing_open,
+            )
+
+        message = str(captured.exception)
+        self.assertIn("OAUTH_REFRESH", message)
+        self.assertIn("HTTP 400", message)
+        for private_value in (private_code, "error_description", "private description", "ACCESS_TOKEN_SENTINEL", "CLIENT_ID_SENTINEL", "CLIENT_SECRET_SENTINEL", "REFRESH_TOKEN_SENTINEL"):
+            self.assertNotIn(private_value, message)
+
+    def test_oauth_error_code_is_not_classified_outside_oauth_refresh(self):
+        error = urllib.error.HTTPError(
+            "https://adsense.googleapis.com/v2/accounts/pub-test", 401, "Unauthorized",
+            hdrs=None, fp=io.BytesIO(json.dumps({"error": "invalid_grant", "error_description": "private"}).encode()),
+        )
+
+        classified = collector._structured_http_error(error, "ACCOUNT_GET", ("ACCESS_TOKEN_SENTINEL",))
+
+        self.assertIsNone(classified.classification)
+        self.assertIsNone(classified.google_status)
+        self.assertIn("ACCOUNT_GET", str(classified))
+        self.assertNotIn("invalid_grant", str(classified))
+        self.assertNotIn("private", str(classified))
+
+    def test_malformed_json_http_error_body_reports_only_stage_and_http_status(self):
+        def failing_open(request, timeout):
+            raise urllib.error.HTTPError(
+                request.full_url, 400, "Bad Request", hdrs=None,
+                fp=io.BytesIO(b'{"error": invalid, "token": "ACCESS_TOKEN_SENTINEL"}'),
+            )
+
+        with self.assertRaises(collector.GoogleAPIError) as captured:
+            collector.collect_snapshot(
+                ROOT / "tmp-adsense-malformed-json-never-written.json",
+                account_name="accounts/pub-test",
+                client_id="CLIENT_ID_SENTINEL",
+                client_secret="CLIENT_SECRET_SENTINEL",
+                refresh_token="REFRESH_TOKEN_SENTINEL",
+                now=NOW,
+                open_url=failing_open,
+            )
+
+        message = str(captured.exception)
+        self.assertIn("OAUTH_REFRESH", message)
+        self.assertIn("HTTP 400", message)
+        for private_value in ("ACCESS_TOKEN_SENTINEL", "CLIENT_ID_SENTINEL", "CLIENT_SECRET_SENTINEL", "REFRESH_TOKEN_SENTINEL", '"token"'):
+            self.assertNotIn(private_value, message)
+
     def test_api_queries_keep_site_and_page_url_reports_separate_and_never_store_tokens(self):
         current, prior, page = reports()
         response_bodies = [
