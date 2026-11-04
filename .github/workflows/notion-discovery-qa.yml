@@ -1,0 +1,58 @@
+name: Notion Static Discovery QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - scripts/refresh_notion_discovery.py
+      - tests/test_notion_discovery.py
+      - .github/workflows/notion-two-hour-publisher.yml
+      - .github/workflows/notion-discovery-qa.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Syntax and isolated regression tests
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/refresh_notion_discovery.py
+          python3 -m unittest discover -s tests -p 'test_notion_discovery.py' -v
+      - name: Integration dry run against existing published Notion guide
+        shell: bash
+        run: |
+          set -euo pipefail
+          DESTINATION="$(python3 - <<'PY'
+          import sys
+          sys.path.insert(0, "scripts")
+          from refresh_notion_discovery import get_entries
+          rows = get_entries()
+          if not rows:
+              raise SystemExit("No Notion publication ledger entries available")
+          print(rows[0]["relative"])
+          PY
+          )"
+          python3 scripts/refresh_notion_discovery.py "$DESTINATION"
+          python3 scripts/build_content_index.py
+          DESTINATION="$DESTINATION" python3 - <<'PY'
+          import os
+          from pathlib import Path
+          dest = Path(os.environ["DESTINATION"])
+          for p in (Path("index.html"), dest.parent / "index.html", dest):
+              assert 'notion-discovery:start' in p.read_text(encoding="utf-8"), p
+          assert '/kor/report/recent/' in Path("index.html").read_text(encoding="utf-8")
+          assert 'https://emfls.github.io/' + str(dest) in Path("feed.xml").read_text(encoding="utf-8")
+          assert Path("kor/report/recent/index.html").exists()
+          assert Path("data/content-index-ko.json").exists()
+          print("INTEGRATION_DISCOVERY_PASS")
+          PY
+          git diff --check
