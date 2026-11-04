@@ -95,7 +95,10 @@ def marked_section(source: str, anchor: str, section: str) -> str:
         return source[:start] + block.strip("\n") + source[stop:]
     if anchor not in source:
         raise ValueError("Could not locate static discovery insertion point")
-    return source.replace(anchor, block + anchor, 1)
+    prefix, suffix = source.split(anchor, 1)
+    # Some legacy category pages indent the insertion point on a blank line.
+    # Avoid turning that indentation into a newly added trailing-space line.
+    return prefix.rstrip(" \t") + block + anchor + suffix
 
 
 def a(row: dict) -> str:
