@@ -91,7 +91,32 @@ jobs:
                     " invalid Notion drafts 발행실패; attempted the next ready draft.")
           PY
 
-      - name: Commit page, category sitemap and publication ledger
+      - name: Connect new article to static site discovery and RSS
+        if: steps.stage.outputs.status == 'SOURCE_STAGED'
+        env:
+          DESTINATION: ${{ steps.stage.outputs.destination }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/refresh_notion_discovery.py "$DESTINATION"
+          python3 scripts/build_content_index.py
+          python3 - <<'PY'
+          from pathlib import Path
+          import os
+          path = Path(os.environ["DESTINATION"])
+          article = path.read_text(encoding="utf-8")
+          home = Path("index.html").read_text(encoding="utf-8")
+          category = (path.parent / "index.html").read_text(encoding="utf-8")
+          rss = Path("feed.xml").read_text(encoding="utf-8")
+          assert 'notion-discovery:start' in home, "Homepage static links missing"
+          assert 'notion-discovery:start' in category, "Category static links missing"
+          assert '/kor/report/recent/' in home, "Archive link missing"
+          assert 'notion-discovery:start' in article, "New article related links missing"
+          assert str(path) in rss, "Latest article absent from RSS"
+          print("DISCOVERY_LINKS_VALIDATED")
+          PY
+
+      - name: Commit page and discovery links through protected-main PR
         if: steps.stage.outputs.status == 'SOURCE_STAGED'
         env:
           DESTINATION: ${{ steps.stage.outputs.destination }}
@@ -100,7 +125,10 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- "$DESTINATION" "$(dirname "$DESTINATION")/sitemap.xml"
+          git add -- "$DESTINATION" "$(dirname "$DESTINATION")/sitemap.xml" \
+            "$(dirname "$DESTINATION")/index.html" index.html \
+            kor/report/recent/index.html feed.xml \
+            data/content-index-ko.json data/home-feed-ko.json
           git add -f data/scheduled-publication-ledger.jsonl
           git diff --cached --check
           git commit -m "content: publish one original Notion guide"
@@ -110,7 +138,7 @@ jobs:
           export GH_TOKEN="$GITHUB_TOKEN"
           gh pr create --head "$branch" --base main \
             --title "content: publish one Notion guide" \
-            --body "Automated publication of one validated Notion draft. Includes its category sitemap and deduplication ledger."
+            --body "Automated publication of one validated Notion draft. Includes category sitemap, static homepage/category/related links, RSS, indexes and deduplication ledger."
           if ! gh pr merge "$branch" --squash --delete-branch; then
             echo "::error::GitHub main branch requires at least one approving review by a user with write access. PR is created, but unattended merge is blocked. Configure an approved automation bypass/reviewer before relying on fully automatic publishing."
             exit 1
