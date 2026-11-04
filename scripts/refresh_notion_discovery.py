@@ -138,9 +138,15 @@ def update_category(entries: list[dict], category: str) -> None:
         '">이 분야의 이전 글도 보기</a></p></section>'
     )
     match = re.search(r'<div class="grid"(?:\s[^>]*)?>', source)
-    if not match and BEGIN not in source:
-        raise ValueError("Category page grid insertion point missing: " + str(path))
-    anchor = match.group(0) if match else ""
+    if match:
+        anchor = match.group(0)
+    elif '<aside class="guide-note"' in source:
+        # The travel hub is a bespoke <main> layout, not a generic card grid.
+        anchor = '<aside class="guide-note"'
+    elif BEGIN in source:
+        anchor = ""
+    else:
+        raise ValueError("Category page discovery insertion point missing: " + str(path))
     put(path, marked_section(source, anchor, section))
 
 
