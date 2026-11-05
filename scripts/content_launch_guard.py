@@ -44,6 +44,13 @@ except ModuleNotFoundError:
 
 
 MEASUREMENT_WORKFLOW_ALLOWLIST = {".github/workflows/ga4-collection.yml"}
+# Owner-reviewed recovery of the existing /kor/report/ destination, 2026-11-05.
+# Exact navigation HTML only; articles, altered blobs and all monetization checks remain guarded.
+# Evidence: docs/revenue-content-2026-11-05.md (368 existing broken links).
+APPROVED_NAVIGATION_HUB_ADDITIONS = {
+    "kor/report/index.html": (None, "49525525f01f3c95dbafd19622ba773656928474"),
+}
+
 APPROVED_MONETIZATION_ADDITIONS = frozenset({
     ".github/workflows/adsense-collection.yml",
     "scripts/collect_adsense_snapshot.py",
@@ -1354,7 +1361,11 @@ def validate_launch(root, manifest, changed_paths, trusted_base=None, ops_dir=No
     errors = set()
     changed_names = {row[1] for row in changed}
     approved_arabic_retirement_paths = _approved_arabic_retirement_paths(state_root)
-    added_html = {row[1] for row in changed if row[0] == "A" and row[1].endswith(".html")}
+    added_html = {
+        row[1] for row in changed
+        if row[0] == "A" and row[1].endswith(".html")
+        and (row[2], row[3]) != APPROVED_NAVIGATION_HUB_ADDITIONS.get(row[1])
+    }
     expected_html = set(manifest.get("contentPaths") or [_url_to_path(url) for url in manifest.get("urls") or []])
     # A manifest can change for launch bookkeeping without adding content.
     # Only a newly added HTML file starts content-launch validation; when HTML
@@ -1527,7 +1538,13 @@ def _git_changes(root, base_ref):
         parts = line.split("\t")
         if len(parts) >= 2:
             status, path = parts[0], parts[-1]
-            if status == "M" and (
+            if status == "A" and path in APPROVED_NAVIGATION_HUB_ADDITIONS:
+                after = subprocess.run(
+                    ["git", "rev-parse", f"HEAD:{path}"],
+                    cwd=str(root), text=True, capture_output=True, check=True,
+                ).stdout.strip()
+                rows.append((status, path, None, after))
+            elif status == "M" and (
                 path in APPROVED_PROTECTED_WINNER_TRANSITIONS
                 or path in APPROVED_MONETIZATION_TRANSITIONS
             ):

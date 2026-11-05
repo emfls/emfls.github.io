@@ -956,3 +956,35 @@ def test_guard_allows_only_exact_november_5_content_transitions(tmp_path):
     assert "PROTECTED_WINNER_CHANGED" in validate_launch(
         tmp_path, manifest([]), [("M", "kor/report/camp/namyangju.html", "b" * 40, "f" * 40)]
     )
+
+
+def test_guard_exempts_only_the_exact_reviewed_navigation_hub_addition(tmp_path):
+    from scripts.content_launch_guard import APPROVED_NAVIGATION_HUB_ADDITIONS
+
+    setup_data(tmp_path)
+    path = "kor/report/index.html"
+    assert APPROVED_NAVIGATION_HUB_ADDITIONS == {
+        path: (None, "49525525f01f3c95dbafd19622ba773656928474")
+    }
+    before, after = APPROVED_NAVIGATION_HUB_ADDITIONS[path]
+    exact = ("A", path, before, after)
+    assert validate_launch(tmp_path, manifest([]), [exact]) == []
+    for changed in [
+        [("A", path, None, "f" * 40)],
+        [("A", "kor/report/other/index.html", None, after)],
+        [("A", path, "b" * 40, after)],
+        [exact, ("A", "kor/report/camp/new-article.html")],
+    ]:
+        assert "MANIFEST_DIFF_MISMATCH" in validate_launch(tmp_path, manifest([]), changed)
+
+
+def test_git_changes_captures_exact_added_navigation_hub_blob(monkeypatch, tmp_path):
+    path = "kor/report/index.html"
+    after = "49525525f01f3c95dbafd19622ba773656928474"
+    def fake_run(command, **kwargs):
+        if command == ["git", "diff", "--name-status", "base-sha", "HEAD"]:
+            return type("Result", (), {"stdout": f"A\t{path}\n"})()
+        assert command == ["git", "rev-parse", f"HEAD:{path}"]
+        return type("Result", (), {"stdout": after + "\n"})()
+    monkeypatch.setattr("scripts.content_launch_guard.subprocess.run", fake_run)
+    assert _git_changes(tmp_path, "base-sha") == [("A", path, None, after)]
