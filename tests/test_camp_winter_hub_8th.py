@@ -104,7 +104,7 @@ class WinterHubEighthTaskTest(unittest.TestCase):
             "2026-11-16~2027-04-30",
             "2027-01-01~2027-02-28",
             "2026년 9월 29일",
-            "확인일 2026-10-15",
+            "확인일 2026-10-16",
         ):
             self.assertIn(fragment, self.html)
 

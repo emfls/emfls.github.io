@@ -1467,5 +1467,5 @@
 
 ## 2026-11-05 — Winter checklist links to the live packing tool
 - Added one contextual paragraph in the existing winter camping checklist linking to camping.guidehollow.com, a live HTTP200 personalized packing tool. No operating facts, dates, metadata, scripts, ads, URL, sitemap, queue or48/day30-minute schedule changed.
-- Six focused winter-hub checks pass, including a new placement/link regression (RED then GREEN). Existing seventh test expects10/15 while main says10/16 and fails identically on exact starting main3365ffc3; not changed. Removing the single added paragraph reproduces the entire original HTML byte-for-byte.
+- Seven focused winter-hub checks pass, including a new placement/link regression (RED then GREEN). Reproduced the existing10/15 date assertion failure on exact starting main3365ffc3, then aligned only that assertion to the already-maintained10/16 content. Removing the single added paragraph reproduces the entire original HTML byte-for-byte.
 - Corrected earlier review inference: no repository rule requires a newly dated complete OBSERVING registry for this non-WINNER page; local_qa.sh explicitly uses the immutable ops-pinned snapshot. No registry/allowlist change. Committed Guard, normal PR/CI and deployment checks pending.
