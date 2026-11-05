@@ -154,3 +154,13 @@ index 8d9dfe3..aab404b 100644
  if __name__ == "__main__":
 
 ```
+
+## Exact navigation destination recovery
+
+Production /kor/report/ returned HTTP 404 on 2026-11-05, and main has no kor/report/index.html. The current full-site scan identifies 368 existing links (367 absent from the old baseline) into that missing destination. The owner-delegated repair restores this navigation endpoint with one reviewed static hub, not a queued article. Its exact new blob is 49525525f01f3c95dbafd19622ba773656928474; the hub is added in the separate content PR after this approval.
+
+The exact path+blob pair is excluded only from article-manifest candidate intake. An altered blob, different path, malformed before-blob, or any additional article remains subject to every existing article/candidate/manifest check. Article queue/counters/48-day cadence, WINNERs, experiments and monetization checks remain unchanged. All 17 internal destinations exist. Parent review verified mobile 390px and desktop 1458px without horizontal overflow; the page adds no ad unit and reuses the existing GA4 ID.
+
+The hub+content scan passes relative to exact current main: no new critical/warning issues; critical count drops from 1,113 to 745 by resolving 368 broken links.
+
+Full main and three-page content scans both have 1,113 existing critical issues and 420 warnings; the three-page update adds no issue IDs. The fixed operating baseline is not modified. An exact current-main issue snapshot is saved only in /tmp for comparing this repair. The remote historical SEO workflow currently fails on missing local-ops Naver inputs; branch API reports no required status contexts and no rulesets. Local actual Guard/SEO QA and normal GitHub branch policy remain required for release.
