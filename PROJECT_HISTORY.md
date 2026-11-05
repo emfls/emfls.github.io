@@ -1445,3 +1445,12 @@
 ## 2026-11-05 — Camping improvement exact-transition review
 - Owner delegated immediate researched improvements; recorded only three exact camping/travel WINNER blob transitions and complete source-reviewed patch in docs/revenue-content-2026-11-05.md. Existing protection checks remain active.
 - Content, scheduler (48/day, 30 minutes), queue, ads and GA4 are unchanged in this approval stage. Focused Guard 45 PASS after RED/GREEN; exact-head CI and separate content release remain pending.
+
+## 2026-11-05 — Source-reviewed camping/travel content proposal
+- Applied only three reviewed HTML changes and two souvenir date expectations, based on the exact-transition approval proposal. Title tags/canonicals/ad markup/GA4/non-schema scripts, JSON-LD and in-page links checked. Publisher/queue unchanged.
+- Focused Guard and page tests pass; exact-head SEO QA, approval merge, Pages and live verification remain pending. No revenue uplift claimed.
+
+## 2026-11-05 — Navigation recovery and camping/travel release validation
+- Restored the existing /kor/report/ destination with one exact reviewed static hub, resolving 368 existing broken internal links. Mobile390/desktop1458 visual review and all17 link destinations pass. Adds no ad units; publisher/queue remain unchanged.
+- Current-main comparison SEO QA PASS: new critical/warning0, existing critical1113→745 and warnings420. Original ops baseline remains unchanged. Hosted legacy SEO workflow failed due missing local-ops Naver input; main reports no required status-check contexts/rulesets.
+- Exact transition/hub approval PR493 merged normally; Guard47 and combined focused50 tests pass. Content Pages deployment and live verification pending. Existing Hadong question-title test fails identically on origin/main (1failed/3passed), outside this change.
