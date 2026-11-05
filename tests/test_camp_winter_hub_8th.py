@@ -72,6 +72,11 @@ class WinterHubEighthTaskTest(unittest.TestCase):
         cls.page = PageParser()
         cls.page.feed(cls.html)
 
+    def test_checklist_links_to_the_personalized_packing_tool(self):
+        checklist = re.search(r'<section[^>]*id="checklist"[^>]*>(.*?)</section>', self.html, re.DOTALL).group(1)
+        self.assertEqual(self.html.count('href="https://camping.guidehollow.com/"'), 1)
+        self.assertIn('<a href="https://camping.guidehollow.com/">인원·숙박일·날씨에 맞춘 캠핑 준비물 목록 만들기</a>', checklist)
+
     def test_question_title_and_reviewed_meta_description(self):
         self.assertEqual("".join(self.page.title), "2026 겨울 캠핑장 추천, 문 여는 공공 야영장은?")
         description = next(

@@ -376,3 +376,7 @@
 - [ ] 2026-11-05 existing camping-page next-reading paths
   - [x] Four measured pages: scoped nav/CSS only; existing metadata/scripts/ads/facts preserved. Focused52 and exact-main SEO delta0 pass; mobile/desktop4page checks and packing-tool click pass.
   - [ ] Separate exact-transition approvalPR503, content PR, normal merge, Pages success and4public-response blob checks. Preserve48/day30-minute publisher/queue; measure effects after deployment.
+
+- [ ] 2026-11-05 winter camping checklist packing-tool discovery
+  - [x] One contextual paragraph and focused placement regression;6focused checks pass. Existing10/15 date assertion fails identically on main10/16 content. No metadata/ad/script/fact/schedule changes; no freshness blanket gate exists.
+  - [ ] Committed-head pinned Guard, normal PR/CI and merge, Pages success and public exact-blob verification. Preserve preexisting uncommitted records.
