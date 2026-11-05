@@ -345,14 +345,15 @@ APPROVED_TASK15_PROTECTED_TRANSITIONS = {
 for _path, _blob_pair in APPROVED_TASK15_PROTECTED_TRANSITIONS.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
-# Owner-delegated official-source camping improvements, 2026-11-05.
+# Owner-delegated official-source camping/travel improvements, 2026-11-05.
 # Evidence and full before/after patch: docs/revenue-content-2026-11-05.md.
 # Exact blobs only; all WINNER, experiment, deletion and monetization checks stay active.
-APPROVED_NOVEMBER_5_CAMPING_TRANSITIONS = {
+APPROVED_NOVEMBER_5_CONTENT_TRANSITIONS = {
     "kor/report/camp/gyeonggi-best.html": ("61d94655410ddb7e621cedc66c24098bd064b5b6", "4ba21616b89fd1bef0a23b44ffebc355bff5b55c"),
     "kor/report/camp/pyeongtaek.html": ("17c6310bd6ada1388163ba51f514a34a012f1c6e", "b631bae28b4017f5d5ace5932557869ff4d1d090"),
+    "kor/report/travel/korean-souvenir-foreigners-2026.html": ('07262385d87ab2da932427b013ba9c5a0328d8e3', 'de0396fdbb36bd9742256902033a8d02057ff2f7'),
 }
-for _path, _blob_pair in APPROVED_NOVEMBER_5_CAMPING_TRANSITIONS.items():
+for _path, _blob_pair in APPROVED_NOVEMBER_5_CONTENT_TRANSITIONS.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
 # User-approved AdSense placement on the 29-day top-30 camping pages, 2026-10-14.

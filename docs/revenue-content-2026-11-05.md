@@ -2,7 +2,7 @@
 
 The owner delegated immediate researched improvements on 2026-11-05. Preserve 48/day, 30-minute publication, queue, ads and GA4. Revenue uplift is unmeasured.
 
-Approve only the exact two camping blob pairs in APPROVED_NOVEMBER_5_CAMPING_TRANSITIONS; changed inputs/outputs, reverse transitions and unrelated WINNER changes remain blocked. Source-reviewed content will be a separate PR after this approval reaches main.
+Approve only the exact three camping/travel blob pairs in APPROVED_NOVEMBER_5_CONTENT_TRANSITIONS; changed inputs/outputs, reverse transitions and unrelated WINNER changes remain blocked. Source-reviewed content will be a separate PR after this approval reaches main.
 
 Sources reviewed 2026-11-05:
 - https://gocamping.or.kr/bsite/camp/info/read.do?c_no=1736 — registered address, 45 general sites, spring/summer/autumn operation; registration updated 2025-12-19.
@@ -13,6 +13,8 @@ Sources reviewed 2026-11-05:
 Gyeonggi adds a registered alternative distinct from unverified wild-camping candidates. Pyeongtaek corrects the address and explains booking/vehicle/winter checks. Souvenir aligns unsupported popularity claims with the existing title and adds budget/purchasing guidance. URLs, title tags, canonicals, advertising, GA4 and non-schema scripts are preserved.
 
 Focused exact-transition regression: RED (missing approval) then GREEN, including changed input/output, reversed pairs and unrelated WINNER blocking.
+
+The pinned operating snapshot also protects the souvenir URL as a WINNER. Its exact 07262385d87ab2da932427b013ba9c5a0328d8e3 → de0396fdbb36bd9742256902033a8d02057ff2f7 pair is included under the same owner-approved three-page scope.
 
 ## Complete proposed content patch
 
