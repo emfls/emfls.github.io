@@ -368,6 +368,6 @@
 - [ ] Kanana Space content release: content-only PR based on reviewed intake; exact-head SEO QA/Launch Guard, normal merge, Pages deployment and HTTP/canonical/body verification pending.
 
 - [ ] 2026-11-05 researched camping/travel improvement release
-  - [x] Source review and exact two-page WINNER transition proposal with positive/negative regression (45 Guard tests pass).
+  - [x] Source review and exact three-page WINNER transition proposal with positive/negative regression (45 Guard tests pass).
   - [x] Separate content proposal: three HTML files plus two date expectations; canonical/ads/GA and page integrity preserved.
   - [ ] Exact-head QA, normal approval merge, content merge, Pages/SEO QA and public HTML verification; preserve 48/day, 30 minutes and all user edits.

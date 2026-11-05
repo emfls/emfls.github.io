@@ -1443,7 +1443,7 @@
 - 남은 검증: 첫 예약 Actions 실행, Pages 공개 본문/URL/SHA, IndexNow 단일 URL의 실제 200/202 결과. 그 전까지 첫 원고 상태는 READY이며 Task 53은 수행 중이다.
 
 ## 2026-11-05 — Camping improvement exact-transition review
-- Owner delegated immediate researched improvements; recorded only two exact camping WINNER blob transitions and complete source-reviewed patch in docs/revenue-content-2026-11-05.md. Existing protection checks remain active.
+- Owner delegated immediate researched improvements; recorded only three exact camping/travel WINNER blob transitions and complete source-reviewed patch in docs/revenue-content-2026-11-05.md. Existing protection checks remain active.
 - Content, scheduler (48/day, 30 minutes), queue, ads and GA4 are unchanged in this approval stage. Focused Guard 45 PASS after RED/GREEN; exact-head CI and separate content release remain pending.
 
 ## 2026-11-05 — Source-reviewed camping/travel content proposal
