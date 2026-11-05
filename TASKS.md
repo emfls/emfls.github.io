@@ -372,3 +372,7 @@
   - [x] Separate content proposal: three HTML files plus two date expectations; canonical/ads/GA and page integrity preserved.
   - [x] Exact current-main comparison SEO QA: no new critical/warnings, 368 broken links resolved; exact approval PR493 merged normally.
   - [x] Content PR494 merged; Pages41951885546 success; report hub+three improved URLs HTTP200 and exact approved blobs4/4. Publisher48/day30minutes and user edits preserved. Revenue effect remains unmeasured.
+
+- [ ] 2026-11-05 existing camping-page next-reading paths
+  - [x] Four measured pages: scoped nav/CSS only; existing metadata/scripts/ads/facts preserved. Focused52 and exact-main SEO delta0 pass; mobile/desktop4page checks and packing-tool click pass.
+  - [ ] Separate exact-transition approvalPR503, content PR, normal merge, Pages success and4public-response blob checks. Preserve48/day30-minute publisher/queue; measure effects after deployment.
