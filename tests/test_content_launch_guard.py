@@ -935,3 +935,24 @@ def test_protected_winner_transition_source_has_unique_page_keys():
     )
     keys = [ast.literal_eval(key) for key in assignment.value.keys if key is not None]
     assert len(keys) == len(set(keys)), "protected winner page keys must be unique in source"
+
+
+def test_guard_allows_only_exact_november_5_camping_transitions(tmp_path):
+    from scripts.content_launch_guard import APPROVED_NOVEMBER_5_CAMPING_TRANSITIONS
+
+    setup_data(tmp_path)
+    revenue_path = tmp_path / "data/revenue-opportunities.json"
+    revenue = json.loads(revenue_path.read_text(encoding="utf-8"))
+    expected = {"kor/report/camp/gyeonggi-best.html", "kor/report/camp/pyeongtaek.html"}
+    assert set(APPROVED_NOVEMBER_5_CAMPING_TRANSITIONS) == expected
+    revenue["protectedWinners"].extend({"url": f"/{path}"} for path in expected)
+    write_json(revenue_path, revenue)
+    for path, (before, after) in APPROVED_NOVEMBER_5_CAMPING_TRANSITIONS.items():
+        assert validate_launch(tmp_path, manifest([]), [("M", path, before, after)]) == []
+        for pair in [(before, "f" * 40), ("b" * 40, after), (after, before)]:
+            assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+                tmp_path, manifest([]), [("M", path, *pair)]
+            )
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+        tmp_path, manifest([]), [("M", "kor/report/camp/namyangju.html", "b" * 40, "f" * 40)]
+    )
