@@ -6,6 +6,8 @@ on:
     paths:
       - scripts/refresh_notion_discovery.py
       - tests/test_notion_discovery.py
+      - tests/test_pages_deployment_recovery.py
+      - scripts/recover_pages_deployment.py
       - .github/workflows/notion-two-hour-publisher.yml
       - .github/workflows/notion-discovery-qa.yml
   workflow_dispatch:
@@ -25,7 +27,8 @@ jobs:
       - name: Syntax and isolated regression tests
         run: |
           set -euo pipefail
-          python3 -m py_compile scripts/refresh_notion_discovery.py
+          python3 -m py_compile scripts/refresh_notion_discovery.py scripts/recover_pages_deployment.py
+          python3 -m unittest discover -s tests -p 'test_pages_deployment_recovery.py' -v
           python3 -m unittest discover -s tests -p 'test_notion_discovery.py' -v
       - name: Integration dry run against existing published Notion guide
         shell: bash
