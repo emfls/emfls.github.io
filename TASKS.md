@@ -1,3 +1,7 @@
+## November 2026 revenue content review — HOLD
+
+- [ ] Review the four proposed page edits and verify official booking information. Resolve the missing immutable protection sources and current complete OBSERVING ledger before exact WINNER transition review, guard, CI and any deployment. This draft does not authorize bypassing protection.
+
 # Tasks
 
 작업 완료 후 항목을 삭제하지 말고 `[x]`로 변경한다. 같은 우선순위에서는 위 항목부터 수행한다.

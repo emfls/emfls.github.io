@@ -1,3 +1,8 @@
+## 2026-11-05 — November revenue content review draft (HOLD)
+
+- Proposed changes to Jeongeup, Gyeonggi, Pyeongtaek and Maple pages improve selection and move existing related links. Existing URLs, canonical, analytics and ad identifiers are preserved. Current booking prices and actual winter operations remain unverified where indicated.
+- Review only: all four appear as WINNER in the 2026-10-22 operational snapshot; the 2026-09-01 experiment registry is stale. Required authority files are absent from the immutable main base, so the launch guard cannot validate complete protection state. Do not merge or deploy until a current provenance-backed experiment ledger and trusted-base solution are in place, exact transitions are reviewed, and guard/CI pass.
+
 ## 2026-10-16 — JP Travel sitemap noindex entry cleanup
 
 - `jp/report/travel/index.html` declares `noindex,follow`; removed only its `/jp/report/travel/` URL entry from `jp/report/travel/sitemap.xml`. URL count 78 → 77; remaining 77 URLs and XML structure preserved.
