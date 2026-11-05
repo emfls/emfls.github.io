@@ -1454,3 +1454,8 @@
 - Restored the existing /kor/report/ destination with one exact reviewed static hub, resolving 368 existing broken internal links. Mobile390/desktop1458 visual review and all17 link destinations pass. Adds no ad units; publisher/queue remain unchanged.
 - Current-main comparison SEO QA PASS: new critical/warning0, existing critical1113→745 and warnings420. Original ops baseline remains unchanged. Hosted legacy SEO workflow failed due missing local-ops Naver input; main reports no required status-check contexts/rulesets.
 - Exact transition/hub approval PR493 merged normally; Guard47 and combined focused50 tests pass. Content Pages deployment and live verification pending. Existing Hadong question-title test fails identically on origin/main (1failed/3passed), outside this change.
+
+## 2026-11-05 — Camping/travel and navigation deployment verified
+- Approval PR493 and content PR494 merged normally; product main561f0cc2af4c35905fe8751a59bfa7232a0952d0. Pages run41951885546 completed success. At 2026-11-05T10:58:38+09:00, report hub plus all3 improved URLs returned HTTP200 and exact approved Git blobs (4/4 byte matches).
+- Focused50 tests/actual pinned Guard PASS; exact-current-main SEO comparison PASS (new critical/warning0, critical1113→745 through368 repaired links, warning420). Fixed ops baseline unchanged; remote historical SEO QA41950527237 failed due missing Naver ops inputs and was not claimed green. Existing unrelated Hadong title failure reproduced on main.
+- Existing title/canonical/ad/GA signatures and 48/day30-minute publisher/queue preserved. Revenue increase remains unmeasured; follow-up comparison begins from this deployment.

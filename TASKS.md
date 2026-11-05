@@ -367,8 +367,8 @@
 
 - [ ] Kanana Space content release: content-only PR based on reviewed intake; exact-head SEO QA/Launch Guard, normal merge, Pages deployment and HTTP/canonical/body verification pending.
 
-- [ ] 2026-11-05 researched camping/travel improvement release
+- [x] 2026-11-05 researched camping/travel improvement release
   - [x] Source review and exact three-page WINNER transition proposal with positive/negative regression (45 Guard tests pass).
   - [x] Separate content proposal: three HTML files plus two date expectations; canonical/ads/GA and page integrity preserved.
   - [x] Exact current-main comparison SEO QA: no new critical/warnings, 368 broken links resolved; exact approval PR493 merged normally.
-  - [ ] Content merge, Pages and public HTML verification; preserve 48/day, 30 minutes and all user edits.
+  - [x] Content PR494 merged; Pages41951885546 success; report hub+three improved URLs HTTP200 and exact approved blobs4/4. Publisher48/day30minutes and user edits preserved. Revenue effect remains unmeasured.
