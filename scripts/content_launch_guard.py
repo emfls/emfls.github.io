@@ -44,6 +44,13 @@ except ModuleNotFoundError:
 
 
 MEASUREMENT_WORKFLOW_ALLOWLIST = {".github/workflows/ga4-collection.yml"}
+# Owner-reviewed recovery of the existing /kor/report/ destination, 2026-11-05.
+# Exact navigation HTML only; articles, altered blobs and all monetization checks remain guarded.
+# Evidence: docs/revenue-content-2026-11-05.md (368 existing broken links).
+APPROVED_NAVIGATION_HUB_ADDITIONS = {
+    "kor/report/index.html": (None, "49525525f01f3c95dbafd19622ba773656928474"),
+}
+
 APPROVED_MONETIZATION_ADDITIONS = frozenset({
     ".github/workflows/adsense-collection.yml",
     "scripts/collect_adsense_snapshot.py",
@@ -343,6 +350,17 @@ APPROVED_TASK15_PROTECTED_TRANSITIONS = {
     "kor/report/camp/dangjin.html": ("4c7976b4f7a006c43fc15839f60c5f8e2414953b", "25fb6fe9af78732c25f1c2dc10d0a15c887c6b72"),
 }
 for _path, _blob_pair in APPROVED_TASK15_PROTECTED_TRANSITIONS.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
+
+# Owner-delegated official-source camping/travel improvements, 2026-11-05.
+# Evidence and full before/after patch: docs/revenue-content-2026-11-05.md.
+# Exact blobs only; all WINNER, experiment, deletion and monetization checks stay active.
+APPROVED_NOVEMBER_5_CONTENT_TRANSITIONS = {
+    "kor/report/camp/gyeonggi-best.html": ("61d94655410ddb7e621cedc66c24098bd064b5b6", "4ba21616b89fd1bef0a23b44ffebc355bff5b55c"),
+    "kor/report/camp/pyeongtaek.html": ("17c6310bd6ada1388163ba51f514a34a012f1c6e", "b631bae28b4017f5d5ace5932557869ff4d1d090"),
+    "kor/report/travel/korean-souvenir-foreigners-2026.html": ('07262385d87ab2da932427b013ba9c5a0328d8e3', 'de0396fdbb36bd9742256902033a8d02057ff2f7'),
+}
+for _path, _blob_pair in APPROVED_NOVEMBER_5_CONTENT_TRANSITIONS.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
 # User-approved AdSense placement on the 29-day top-30 camping pages, 2026-10-14.
@@ -1343,7 +1361,11 @@ def validate_launch(root, manifest, changed_paths, trusted_base=None, ops_dir=No
     errors = set()
     changed_names = {row[1] for row in changed}
     approved_arabic_retirement_paths = _approved_arabic_retirement_paths(state_root)
-    added_html = {row[1] for row in changed if row[0] == "A" and row[1].endswith(".html")}
+    added_html = {
+        row[1] for row in changed
+        if row[0] == "A" and row[1].endswith(".html")
+        and (row[2], row[3]) != APPROVED_NAVIGATION_HUB_ADDITIONS.get(row[1])
+    }
     expected_html = set(manifest.get("contentPaths") or [_url_to_path(url) for url in manifest.get("urls") or []])
     # A manifest can change for launch bookkeeping without adding content.
     # Only a newly added HTML file starts content-launch validation; when HTML
@@ -1516,7 +1538,13 @@ def _git_changes(root, base_ref):
         parts = line.split("\t")
         if len(parts) >= 2:
             status, path = parts[0], parts[-1]
-            if status == "M" and (
+            if status == "A" and path in APPROVED_NAVIGATION_HUB_ADDITIONS:
+                after = subprocess.run(
+                    ["git", "rev-parse", f"HEAD:{path}"],
+                    cwd=str(root), text=True, capture_output=True, check=True,
+                ).stdout.strip()
+                rows.append((status, path, None, after))
+            elif status == "M" and (
                 path in APPROVED_PROTECTED_WINNER_TRANSITIONS
                 or path in APPROVED_MONETIZATION_TRANSITIONS
             ):

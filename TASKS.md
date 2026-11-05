@@ -366,3 +366,7 @@
   - Draft/FAQ source comparison and local four-viewport preview complete. Search volume/performance/crawler evidence remain unmeasured. No protected page modifications.
 
 - [ ] Kanana Space content release: content-only PR based on reviewed intake; exact-head SEO QA/Launch Guard, normal merge, Pages deployment and HTTP/canonical/body verification pending.
+
+- [ ] 2026-11-05 researched camping/travel improvement release
+  - [x] Source review and exact three-page WINNER transition proposal with positive/negative regression (45 Guard tests pass).
+  - [ ] Exact-head QA, normal approval merge, separate content PR, Pages/SEO QA and public HTML verification; preserve 48/day, 30 minutes and all user edits.

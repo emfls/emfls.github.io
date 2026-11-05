@@ -1441,3 +1441,7 @@
 - GitHub 읽기 전용 UI: 예약 workflow 활성화/수동 실행 UI 표시, 현재 run 0개; Actions 설정은 allow-all 및 `GITHUB_TOKEN` 기본 write, workflow는 `contents:write`/`pages:write`; Pages는 `main` 루트에서 서비스 중. `PAGES_DEPLOY_TOKEN`, `INDEXNOW_KEY` 이름은 존재하지만 값은 열지 않았고 실제 token 동작은 run 전이라 검증되지 않았다.
 - 첫 큐 원고는 교육부·서울시교육청 일정과 일치한다. 현재일 dry-run은 `NOT_STARTED`; 2026-10-23 00:17 KST 격리 dry-run은 정확한 첫 큐 파일과 URL을 `READY`로 반환했다. 큐 SHA-256은 전후 `80d6d7569d2150a5426b24c2576fe081e0bd74c15326a74965680cbd4d8dc3cd`로 같고 대상 live URL은 예약 전 HTTP 화면에서 404. 발행·IndexNow 제출은 수행하지 않았다.
 - 남은 검증: 첫 예약 Actions 실행, Pages 공개 본문/URL/SHA, IndexNow 단일 URL의 실제 200/202 결과. 그 전까지 첫 원고 상태는 READY이며 Task 53은 수행 중이다.
+
+## 2026-11-05 — Camping improvement exact-transition review
+- Owner delegated immediate researched improvements; recorded only three exact camping/travel WINNER blob transitions and complete source-reviewed patch in docs/revenue-content-2026-11-05.md. Existing protection checks remain active.
+- Content, scheduler (48/day, 30 minutes), queue, ads and GA4 are unchanged in this approval stage. Focused Guard 45 PASS after RED/GREEN; exact-head CI and separate content release remain pending.
