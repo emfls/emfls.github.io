@@ -21,7 +21,7 @@ class KoreanSouvenirRevenuePathTest(unittest.TestCase):
 
         schemas = re.findall(r'<script type="application/ld\+json">(.*?)</script>', html, re.S)
         page_schema = next(item for item in map(json.loads, schemas) if item.get("@type") == "WebPage")
-        self.assertEqual("2026-08-25", page_schema["dateModified"])
+        self.assertEqual("2026-11-05", page_schema["dateModified"])
 
 
 if __name__ == "__main__":
