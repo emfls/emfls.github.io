@@ -9,6 +9,7 @@ permissions:
   contents: write
   pages: write
   pull-requests: write
+  actions: write # Rerun a failed GitHub Pages deployment job, never a publisher job.
 
 concurrency:
   group: scheduled-korean-article-publication
@@ -71,6 +72,15 @@ jobs:
               elif remaining > 600:
                   print(f"Cooldown has {remaining:.0f} seconds left; publisher will return COOLDOWN without publishing")
           PY
+
+      # If the previous merged page is not live, inspect only the Pages deployment
+      # for current main. Retry its failed deploy job at most twice and wait for
+      # verified public content. A failed/unknown recovery blocks the next draft.
+      - name: Recover failed Pages deploy and verify previous article
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/recover_pages_deployment.py
 
       - name: Load next ready Notion article and stage one page
         id: stage
