@@ -988,3 +988,24 @@ def test_git_changes_captures_exact_added_navigation_hub_blob(monkeypatch, tmp_p
         return type("Result", (), {"stdout": after + "\n"})()
     monkeypatch.setattr("scripts.content_launch_guard.subprocess.run", fake_run)
     assert _git_changes(tmp_path, "base-sha") == [("A", path, None, after)]
+
+
+def test_guard_allows_only_exact_reader_path_transitions(tmp_path):
+    from scripts.content_launch_guard import APPROVED_READER_PATH_TRANSITIONS_20261105
+
+    setup_data(tmp_path)
+    revenue_path = tmp_path / "data/revenue-opportunities.json"
+    revenue = json.loads(revenue_path.read_text(encoding="utf-8"))
+    paths = {f"kor/report/camp/{name}.html" for name in ("gyeonggi-best", "pyeongtaek", "cheorwon", "jeongseon")}
+    assert set(APPROVED_READER_PATH_TRANSITIONS_20261105) == paths
+    revenue["protectedWinners"].extend({"url": f"/{path}"} for path in paths)
+    write_json(revenue_path, revenue)
+    for path, (before, after) in APPROVED_READER_PATH_TRANSITIONS_20261105.items():
+        assert validate_launch(tmp_path, manifest([]), [("M", path, before, after)]) == []
+        for pair in [(before, "f" * 40), ("b" * 40, after), (after, before)]:
+            assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+                tmp_path, manifest([]), [("M", path, *pair)]
+            )
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+        tmp_path, manifest([]), [("M", "kor/report/camp/namyangju.html", "b" * 40, "f" * 40)]
+    )

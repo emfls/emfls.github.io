@@ -363,6 +363,17 @@ APPROVED_NOVEMBER_5_CONTENT_TRANSITIONS = {
 for _path, _blob_pair in APPROVED_NOVEMBER_5_CONTENT_TRANSITIONS.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
+# Owner-delegated next-reading navigation on four existing revenue pages, 2026-11-05.
+# Evidence and full diff: docs/revenue-reader-paths-2026-11-05.md; exact blobs only.
+APPROVED_READER_PATH_TRANSITIONS_20261105 = {
+    "kor/report/camp/gyeonggi-best.html": ("4ba21616b89fd1bef0a23b44ffebc355bff5b55c", "2d0a4ff260f49571c41bf6f1ef550fe5c6980749"),
+    "kor/report/camp/pyeongtaek.html": ("b631bae28b4017f5d5ace5932557869ff4d1d090", "9e5a63ab577bd29a3b75c993e48062b574082f6b"),
+    "kor/report/camp/cheorwon.html": ("c1aadf2a33f1865ada29aa277a351347ed18b18d", "09dca99bf5db9969f37b57cf2bc3dac15ec82e55"),
+    "kor/report/camp/jeongseon.html": ("e91280a85c6939d3be02808287773c4cab5cd495", "102a6320e3f8f29c61fdd361d4502ce3385ee5b1"),
+}
+for _path, _blob_pair in APPROVED_READER_PATH_TRANSITIONS_20261105.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
+
 # User-approved AdSense placement on the 29-day top-30 camping pages, 2026-10-14.
 # Evidence: reports/camp-cluster-inventory-2026-10-14.csv; exact blob pairs only.
 APPROVED_AD_PLACEMENT_TRANSITIONS = {
