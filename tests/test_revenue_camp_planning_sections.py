@@ -8,11 +8,11 @@ ROOT = Path(__file__).resolve().parents[1]
 PAGES = {
     "namyangju.html": ({"gyeonggi-best.html", "hanam.html"}, "2026-10-15"),
     # c3fa79b82a5925473d997a5a646566e42b9c3f71 refreshed these pages on 2026-10-15.
-    "jeongseon.html": ({"gangwon-best.html", "taebaek.html", "pyeongchang.html"}, "2026-10-15"),
+    "jeongseon.html": ({"cheorwon.html", "winter-public-campsites-2026.html"}, "2026-10-15"),
     "hadong.html": ({"gyeongnam-best.html", "jinju.html", "gimhae.html"}, "2026-10-15"),
     "gwangyang.html": ({"jeonnam-best.html", "suncheon.html", "yeosu.html"}, "2026-08-21"),
     "yangyang.html": ({"gangwon-best.html", "sokcho.html", "gangneung.html"}, "2026-08-21"),
-    "gyeonggi-best.html": ({"namyangju.html", "goyang.html", "uijeongbu.html"}, "2026-10-14"),
+    "gyeonggi-best.html": ({"pyeongtaek.html", "winter-public-campsites-2026.html"}, "2026-10-14"),
     "taebaek.html": ({"gangwon-best.html", "jeongseon.html", "pyeongchang.html"}, "2026-08-22"),
     "gyeongnam-best.html": ({"hadong.html", "jinju.html", "gimhae.html"}, "2026-08-26"),
     "geumsan.html": ({"chungcheong-camping-best.html", "nonsan.html", "gongju.html"}, "2026-08-22"),
@@ -20,7 +20,7 @@ PAGES = {
     "yeongam.html": ({"jeonnam-best.html", "mokpo.html", "hwasun.html"}, "2026-08-26"),
     "damyang.html": ({"jeonnam-best.html", "jangseong.html", "hwasun.html"}, "2026-08-26"),
     "gimpo.html": ({"gyeonggi-best.html", "goyang.html", "incheon.html"}, "2026-10-16"),
-    "cheorwon.html": ({"gangwon-best.html", "taebaek.html", "pyeongchang.html"}, "2026-10-14"),
+    "cheorwon.html": ({"jeongseon.html", "winter-public-campsites-2026.html"}, "2026-10-14"),
     "jangseong.html": ({"jeonnam-best.html", "hwasun.html", "damyang.html"}, "2026-10-16"),
     "hwasun.html": ({"jeonnam-best.html", "jangseong.html", "damyang.html"}, "2026-08-26"),
     "goyang.html": ({"gyeonggi-best.html", "namyangju.html", "uijeongbu.html"}, "2026-10-14"),
@@ -34,7 +34,7 @@ PAGES = {
     "gangwon-best.html": ({"jeongseon.html", "taebaek.html", "pyeongchang.html"}, "2026-08-23"),
     "uijeongbu.html": ({"gyeonggi-best.html", "namyangju.html", "goyang.html"}, "2026-08-24"),
     "yeongdong.html": ({"chungcheong-camping-best.html", "geumsan.html", "okcheon.html"}, "2026-08-24"),
-    "pyeongtaek.html": ({"gyeonggi-best.html", "goyang.html", "namyangju.html", "free-camping-top20.html"}, "2026-10-14"),
+    "pyeongtaek.html": ({"gyeonggi-best.html", "winter-public-campsites-2026.html"}, "2026-10-14"),
     "hoengseong.html": ({"gangwon-best.html", "pyeongchang.html", "wonju.html"}, "2026-08-24"),
     "jeonnam-best.html": ({"jangseong.html", "hwasun.html", "gwangyang.html"}, "2026-08-26"),
     "incheon.html": ({"gyeonggi-best.html", "goyang.html", "pyeongtaek.html"}, "2026-08-26"),
@@ -67,12 +67,16 @@ class PlanningSectionParser(HTMLParser):
         self.section_depth = 0
         self.current_term = False
         self.terms = []
+        self.navigation = []
+        self.ids = []
         self.links = []
         self.in_json_ld = False
         self.json_ld = []
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
+        if attrs.get("id"):
+            self.ids.append(attrs["id"])
         if tag == "script" and attrs.get("type") == "application/ld+json":
             self.in_json_ld = True
         if tag == "section" and attrs.get("data-revenue-planning") == "camp":
@@ -83,6 +87,8 @@ class PlanningSectionParser(HTMLParser):
             return
         if tag == "section":
             self.section_depth += 1
+        elif tag == "nav":
+            self.navigation.append(attrs)
         elif tag == "dt":
             self.current_term = True
         elif tag == "a" and attrs.get("href"):
@@ -172,20 +178,27 @@ class RevenueCampPlanningSectionsTest(unittest.TestCase):
             )
         )
 
-    def test_pyeongtaek_adds_exactly_one_contextual_free_camping_link(self):
-        source = ROOT / "kor/report/camp/pyeongtaek.html"
-        destination = ROOT / "kor/report/camp/free-camping-top20.html"
-        html = source.read_text(encoding="utf-8")
-        self.assertTrue(destination.is_file())
-        self.assertEqual(
-            1,
-            html.count('<a href="/kor/report/camp/free-camping-top20.html">전국 무료캠핑 비교</a>'),
-        )
-        destination_html = destination.read_text(encoding="utf-8")
-        self.assertIn(
-            '<link rel="canonical" href="https://emfls.github.io/kor/report/camp/free-camping-top20.html">',
-            destination_html,
-        )
+    def test_four_next_reading_modules_are_accessible_and_have_three_real_destinations(self):
+        for name in ("gyeonggi-best", "pyeongtaek", "cheorwon", "jeongseon"):
+            with self.subTest(page=name):
+                path = ROOT / f"kor/report/camp/{name}.html"
+                parser = PlanningSectionParser()
+                parser.feed(path.read_text(encoding="utf-8"))
+                self.assertEqual(1, len(parser.navigation))
+                nav = parser.navigation[0]
+                self.assertIn("camp-next-reading", nav.get("class", "").split())
+                self.assertIn(nav.get("aria-labelledby"), parser.ids)
+                self.assertEqual(len(parser.ids), len(set(parser.ids)))
+                self.assertEqual(3, len(parser.links))
+                self.assertEqual(3, len(set(parser.links)))
+                self.assertIn("/kor/util/camping-packing-checklist/", parser.links)
+                for href in parser.links:
+                    destination = ROOT / href.lstrip("/")
+                    if href.endswith("/"):
+                        destination /= "index.html"
+                    self.assertTrue(destination.is_file(), href)
+                    self.assertNotEqual(path, destination)
+
 
 
 if __name__ == "__main__":

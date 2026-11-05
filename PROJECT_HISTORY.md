@@ -1459,3 +1459,8 @@
 - Approval PR493 and content PR494 merged normally; product main561f0cc2af4c35905fe8751a59bfa7232a0952d0. Pages run41951885546 completed success. At 2026-11-05T10:58:38+09:00, report hub plus all3 improved URLs returned HTTP200 and exact approved Git blobs (4/4 byte matches).
 - Focused50 tests/actual pinned Guard PASS; exact-current-main SEO comparison PASS (new critical/warning0, critical1113→745 through368 repaired links, warning420). Fixed ops baseline unchanged; remote historical SEO QA41950527237 failed due missing Naver ops inputs and was not claimed green. Existing unrelated Hadong title failure reproduced on main.
 - Existing title/canonical/ad/GA signatures and 48/day30-minute publisher/queue preserved. Revenue increase remains unmeasured; follow-up comparison begins from this deployment.
+
+## 2026-11-05 — Four measured camping-page reading paths
+- Owner delegated immediate additional-reading improvements on Gyeonggi BEST, Pyeongtaek, Cheorwon and Jeongseon. Replaced only the existing quick-planning nav and added scoped CSS; compare-region, winter-operation and packing-tool destinations are explicit. Existing facts, title/H1/meta/canonical, all scripts/JSON-LD and ads remain identical to main8f72d04d.
+- Focused52 tests PASS, including exact WINNER transition positives/negatives and accessible3-destination/no-self-link checks. Full current-main SEO delta PASS: new critical/warnings0, existing745/420 unchanged. Existing fixed ops baseline and 48/day30-minute publisher/queue unchanged.
+- Browser review4pages at390/1458px: no document/nav overflow, touch cards≥85px; mobile legible, ads separatebelow, packing-tool click works. ApprovalPR503 is separate; content merge, Pages/live verification pending. Revenue effects are unmeasured.
