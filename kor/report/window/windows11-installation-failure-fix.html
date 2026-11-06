@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="Windows 11 설치 실패 시 100% 해결할 수 있는 방법을 단계별로 안내합니다. 부팅 오류, 설치 중단, 드라이버 문제 등 모든 설치 실패 상황에 대한 완벽한 해결 가이드를 제공합니다." />
+            content="Windows 11 설치에 실패하면 오류 코드와 설치 방식을 먼저 확인하세요. 드라이버, 저장 공간, USB 부팅과 PC 호환성을 점검하는 순서를 안내합니다." />
         <meta
             name="keywords"
             content="Windows 11, 설치 실패, 부팅 오류, 설치 중단, 드라이버 문제, 하드웨어 호환성, 설치 오류 해결" />
@@ -31,7 +31,7 @@
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754"
             crossorigin="anonymous"></script>
 
-        <title>Windows 11 설치 실패? 이 방법으로 100% 해결 - 완벽한 문제 해결 가이드</title>
+        <title>Windows 11 설치 실패 해결 | 오류 코드·USB 부팅·호환성 확인</title>
         <style>
             body {
                 font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -201,11 +201,16 @@
     </head>
     <body>
         <div class="container">
-            <h1>Windows 11 설치 실패? 이 방법으로 100% 해결</h1>
+            <h1>Windows 11 설치 실패 해결 | 오류 코드·USB 부팅·호환성 확인</h1>
 
-            <div class="danger">
-                <strong>🚨 설치 실패 시 즉시 확인:</strong> Windows 11 설치 실패는 다양한 원인으로 발생할 수 있습니다.
-                이 가이드를 통해 체계적으로 문제를 진단하고 해결하여 성공적인 설치를 완료하세요.
+            <div class="info">
+                <h2>설치가 실패한 화면에서 먼저 확인할 것</h2>
+                <ul>
+                    <li><strong>Windows 업데이트나 업그레이드 중</strong> 실패했다면 오류 코드 전체를 확인하세요. <code>0xC1900101</code> 계열은 드라이버부터, <code>0x80070070</code> 계열은 시스템 드라이브의 여유 공간부터 점검합니다. <a href="https://support.microsoft.com/ko-kr/windows/deployment/install-upgrade/get-help-with-windows-upgrade-and-installation-errors">Microsoft 오류 코드별 안내</a></li>
+                    <li><strong>설치 USB에서 부팅되지 않으면</strong> PC의 부팅 메뉴에서 USB가 보이는지 확인하세요. 미디어를 다시 만들 때는 USB 안의 파일을 백업한 뒤 <a href="https://support.microsoft.com/ko-kr/windows/deployment/install-upgrade/create-installation-media-for-windows">Microsoft 공식 설치 미디어 만들기</a>를 따릅니다.</li>
+                    <li><strong>이 PC에서는 Windows 11을 실행할 수 없다고 나오면</strong> PC 상태 검사 앱에서 CPU, TPM 2.0, UEFI와 보안 부팅 지원 여부를 확인하세요. <a href="https://support.microsoft.com/ko-kr/windows/experience/compatibility/windows-11-system-requirements">Windows 11 시스템 요구 사항</a></li>
+                </ul>
+                <p>기존 Windows에 로그인할 수 있고 파일과 앱을 유지하려면, 설치 미디어의 <code>setup.exe</code>를 Windows에서 실행하고 유지할 항목을 확인하세요. 클린 설치는 대상 드라이브의 파일·앱·설정을 지울 수 있으므로 먼저 백업하세요. <a href="https://support.microsoft.com/ko-kr/windows/deployment/install-upgrade/reinstall-windows-with-the-installation-media">Microsoft 재설치 안내</a></p>
             </div>
 
             <h2>🔍 Windows 11 설치 실패 유형 분석</h2>
@@ -294,22 +299,9 @@
                     <label><input type="checkbox" /> BIOS/UEFI 부팅 순서 설정</label><br />
                     <label><input type="checkbox" /> 설치 미디어 재생성</label><br />
                     <label><input type="checkbox" /> 다른 USB 포트 시도</label><br />
-                    <label><input type="checkbox" /> Secure Boot 임시 비활성화</label><br />
                     <label><input type="checkbox" /> 다른 PC에서 미디어 테스트</label>
                 </div>
 
-                <div class="code-block">
-                    # PowerShell로 부팅 가능한 USB 생성 (고급 사용자용)<br />
-                    # 관리자 권한으로 실행<br />
-                    diskpart<br />
-                    list disk<br />
-                    select disk X # USB 드라이브 번호<br />
-                    clean<br />
-                    create partition primary<br />
-                    active<br />
-                    format fs=fat32 quick<br />
-                    assign
-                </div>
             </div>
 
             <div class="timeline-item priority-high">
@@ -354,15 +346,7 @@
                     </tbody>
                 </table>
 
-                <h4>호환성 우회 방법 (임시 해결책):</h4>
-                <div class="code-block">
-                    # 레지스트리 수정으로 호환성 검사 우회<br />
-                    # 주의: 이 방법은 비공식적이며 위험할 수 있습니다<br />
-                    reg add "HKLM\SYSTEM\Setup\LabConfig" /v "BypassTPMCheck" /t REG_DWORD /d 1 /f<br />
-                    reg add "HKLM\SYSTEM\Setup\LabConfig" /v "BypassCPUCheck" /t REG_DWORD /d 1 /f<br />
-                    reg add "HKLM\SYSTEM\Setup\LabConfig" /v "BypassSecureBootCheck" /t REG_DWORD /d 1 /f<br />
-                    reg add "HKLM\SYSTEM\Setup\LabConfig" /v "BypassStorageCheck" /t REG_DWORD /d 1 /f
-                </div>
+                <p>PC 상태 검사 앱이 표시한 항목부터 확인하세요. 지원 장치에서 TPM 또는 UEFI 설정을 바꿔야 한다면 PC 제조사 안내를 따릅니다. <a href="https://support.microsoft.com/ko-kr/windows/experience/compatibility/windows-11-system-requirements">Microsoft 시스템 요구 사항</a></p>
 
                 <div class="checklist">
                     <h4>✅ 호환성 문제 해결 체크리스트</h4>
@@ -370,7 +354,6 @@
                     <label><input type="checkbox" /> TPM 2.0 활성화</label><br />
                     <label><input type="checkbox" /> Secure Boot 설정</label><br />
                     <label><input type="checkbox" /> 최신 BIOS 업데이트</label><br />
-                    <label><input type="checkbox" /> 필요시 우회 방법 적용</label>
                 </div>
             </div>
 
@@ -510,46 +493,17 @@
                 <ol>
                     <li><strong>디스크 상태 확인:</strong> SMART 정보 및 배드 섹터</li>
                     <li><strong>파티션 테이블:</strong> MBR vs GPT 확인</li>
-                    <li><strong>여유 공간:</strong> 최소 64GB 이상 확보</li>
+                    <li><strong>저장 공간:</strong> Windows 11의 최소 저장장치 용량은 64GB입니다. 실제 업그레이드에 필요한 빈 공간은 Windows 업데이트 안내를 확인하세요.</li>
                     <li><strong>파일 시스템:</strong> NTFS 포맷 상태</li>
                 </ol>
 
-                <h4>디스크 준비 과정:</h4>
-                <div class="solution-steps">
-                    <strong>디스크 완전 초기화:</strong>
-                    <ol>
-                        <li>설치 화면에서 Shift + F10으로 명령 프롬프트 실행</li>
-                        <li><code>diskpart</code> 명령 실행</li>
-                        <li><code>list disk</code>로 디스크 확인</li>
-                        <li><code>select disk 0</code> (설치할 디스크 선택)</li>
-                        <li><code>clean</code> 명령으로 완전 초기화</li>
-                        <li><code>convert gpt</code>로 GPT 변환</li>
-                        <li>설치 프로그램으로 돌아가서 진행</li>
-                    </ol>
-                </div>
-
-                <div class="code-block">
-                    # DiskPart 명령어 시퀀스<br />
-                    diskpart<br />
-                    list disk<br />
-                    select disk 0<br />
-                    clean<br />
-                    convert gpt<br />
-                    create partition efi size=100<br />
-                    format quick fs=fat32<br />
-                    assign letter=s<br />
-                    create partition msr size=16<br />
-                    create partition primary<br />
-                    format quick fs=ntfs<br />
-                    assign letter=c<br />
-                    exit
-                </div>
+                <h4>설치 대상 디스크 확인</h4>
+                <p>설치 화면에서 디스크의 용량과 모델을 대조하세요. 대상 디스크를 식별하지 못했거나 백업이 없다면 설치를 멈추고 저장장치 제조사의 진단 안내를 확인하세요. <a href="https://support.microsoft.com/ko-kr/windows/deployment/install-upgrade/reinstall-windows-with-the-installation-media">파일 유지 재설치 및 클린 설치 절차</a></p>
 
                 <div class="checklist">
                     <h4>✅ 디스크 문제 해결 체크리스트</h4>
                     <label><input type="checkbox" /> 디스크 상태 진단</label><br />
                     <label><input type="checkbox" /> 중요 데이터 백업</label><br />
-                    <label><input type="checkbox" /> 디스크 완전 초기화</label><br />
                     <label><input type="checkbox" /> GPT 파티션 테이블 설정</label><br />
                     <label><input type="checkbox" /> 설치 재시도</label>
                 </div>
@@ -649,7 +603,7 @@
                         <tr>
                             <td><span class="error-code">0x80300024</span></td>
                             <td>파티션 오류</td>
-                            <td>디스크 초기화</td>
+                            <td>설치 대상 디스크 확인</td>
                             <td>새 하드 드라이브</td>
                         </tr>
                         <tr>
@@ -725,15 +679,14 @@
             <h2>📊 설치 성공률 향상 팁</h2>
 
             <div class="success">
-                <h3>성공률 90% 이상 달성 방법</h3>
+                <h3>설치를 다시 시도하기 전 확인할 항목</h3>
                 <div class="checklist">
                     <label><input type="checkbox" /> 최신 BIOS/UEFI 업데이트</label><br />
                     <label><input type="checkbox" /> 메모리 진단 테스트 통과</label><br />
                     <label><input type="checkbox" /> 디스크 오류 검사 완료</label><br />
                     <label><input type="checkbox" /> 불필요한 하드웨어 제거</label><br />
                     <label><input type="checkbox" /> 공식 설치 미디어 사용</label><br />
-                    <label><input type="checkbox" /> 클린 설치 방식 선택</label><br />
-                    <label><input type="checkbox" /> 네트워크 연결 해제 (초기 설치 시)</label>
+                    <label><input type="checkbox" /> 파일과 앱을 유지할 수 있는 설치 방식 확인</label>
                 </div>
             </div>
 
