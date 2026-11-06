@@ -1,3 +1,8 @@
+## 2026-11-06 — 보은국민여가캠핑장 예약 안내 정정
+
+- 보은 캠핑 글에서 공식 예약 링크, 문의처, 오토·글램핑 요금과 오토캠핑 면수를 운영처 안내와 일치시켰다. 월요일 휴장과 날짜별 운영 확인을 안내한다. [보은군 예약 안내](https://kukmincamp.boeun.go.kr/bbs/board.php?bo_table=reservation&mode=info)
+- 네이버 최근 30일 94클릭. 배포가 확인되면 첫 온전한 7일의 페이지 조회·검색 클릭을 직전 같은 요일과 비교한다. AdSense 예상 수익은 사이트 단위로 별도 기록한다.
+
 ## 2026-10-16 — JP Travel sitemap noindex entry cleanup
 
 - `jp/report/travel/index.html` declares `noindex,follow`; removed only its `/jp/report/travel/` URL entry from `jp/report/travel/sitemap.xml`. URL count 78 → 77; remaining 77 URLs and XML structure preserved.

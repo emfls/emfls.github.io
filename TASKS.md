@@ -2,6 +2,9 @@
 
 작업 완료 후 항목을 삭제하지 말고 `[x]`로 변경한다. 같은 우선순위에서는 위 항목부터 수행한다.
 
+- [ ] 보은국민여가캠핑장 예약 안내 정정
+  - 본문 수정 및 공식 예약 링크 확인. 보호된 페이지의 정확한 변경 전후 버전과 GitHub Pages 공개본을 검증한 뒤 완료 처리한다.
+
 - [ ] SC-20261012-040 — Preserve source windows and evidence confidence in improvement candidates
   - 상태: verified-source metadata and heuristic-only labels implemented; focused RED/GREEN tests pass. Exact-head SEO QA, Launch Guard, full unittest, pytest, and Control Tower review are tracked in the existing SC-040 OUTBOX.
   - 범위: candidate builder, its regression tests, and this task record only. Generated inventory was not rewritten because the exact latest-main 18 MB input could not be retrieved through the approved connector. No ad, revenue attribution, publication, launch, or protected-content rule changed.
