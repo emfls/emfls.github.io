@@ -990,6 +990,22 @@ def test_git_changes_captures_exact_added_navigation_hub_blob(monkeypatch, tmp_p
     assert _git_changes(tmp_path, "base-sha") == [("A", path, None, after)]
 
 
+def test_guard_allows_only_the_reviewed_boeun_booking_transition(tmp_path):
+    setup_data(tmp_path)
+    path = "kor/report/camp/boeun.html"
+    revenue_path = tmp_path / "data/revenue-opportunities.json"
+    revenue = json.loads(revenue_path.read_text(encoding="utf-8"))
+    revenue["protectedWinners"].append({"url": f"/{path}"})
+    write_json(revenue_path, revenue)
+    before = "6b2e855305a914627904e73188cdcbba5c8bb79d"
+    after = "0bbed5e589902264d2046d58e92201436e071d66"
+    assert validate_launch(tmp_path, manifest([]), [("M", path, before, after)]) == []
+    for old, new in [(before, "f" * 40), ("b" * 40, after), (after, before)]:
+        assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+            tmp_path, manifest([]), [("M", path, old, new)]
+        )
+
+
 def test_guard_allows_only_exact_reader_path_transitions(tmp_path):
     from scripts.content_launch_guard import APPROVED_READER_PATH_TRANSITIONS_20261105
 
