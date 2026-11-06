@@ -104,7 +104,6 @@ class AdSenseCollectorCommandTest(unittest.TestCase):
         workflow = (ROOT / ".github/workflows/adsense-collection.yml").read_text(encoding="utf-8")
         for required in (
             "workflow_dispatch:",
-            'cron: "47 1 * * *"',
             "ADSENSE_ACCOUNT_NAME: ${{ vars.ADSENSE_ACCOUNT_NAME }}",
             "ADSENSE_OAUTH_CLIENT_ID: ${{ secrets.ADSENSE_OAUTH_CLIENT_ID }}",
             "ADSENSE_OAUTH_CLIENT_SECRET: ${{ secrets.ADSENSE_OAUTH_CLIENT_SECRET }}",
@@ -139,10 +138,8 @@ class AdSenseCollectorCommandTest(unittest.TestCase):
         for derived_publisher in ("scripts/seo_audit.py", "scripts/quality_audit.py", "scripts/revenue_growth.py"):
             self.assertNotIn(derived_publisher, workflow)
 
-    def test_adsense_stays_scheduled_while_localized_sources_are_manual_only(self):
-        adsense = (ROOT / ".github/workflows/adsense-collection.yml").read_text(encoding="utf-8")
-        self.assertIn('cron: "47 1 * * *"', adsense)
-        for name in ("ga4-collection.yml", "gsc-collection.yml"):
+    def test_hosted_measurement_collectors_are_manual_after_local_cutover(self):
+        for name in ("adsense-collection.yml", "ga4-collection.yml", "gsc-collection.yml"):
             workflow = (ROOT / ".github/workflows" / name).read_text(encoding="utf-8")
             trigger_block = workflow.split("permissions:", 1)[0]
             self.assertIn("workflow_dispatch:", trigger_block)
