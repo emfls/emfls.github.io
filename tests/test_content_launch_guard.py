@@ -1038,6 +1038,27 @@ def test_guard_allows_only_the_reviewed_jeju_camping_transition(tmp_path):
         )
 
 
+def test_guard_allows_only_reviewed_naver_guide_transitions(tmp_path):
+    setup_data(tmp_path)
+    reviewed = {
+        "kor/column/imjin-war-joseon-character-growth-guide-2026.html": ("8eef4d479bb11756837ea4fb7c6a75a7bbb52427", "9f453f43fc21826e9bc5faea1ccc573226fd6444"),
+        "kor/report/camp/choenan.html": ("2935381bf3aa47932c8a6580884f99d979615043", "83adb0d7f6ffb91e2e1f712e6de464fc86d16140"),
+        "kor/report/window/windows11-start-menu-windows10-style.html": ("43ce883a2389e7e95e44e25127c726d090eab547", "fd300d7198ca5ce3059b8c1beba38c273c6fdc07"),
+    }
+    revenue_path = tmp_path / "data/revenue-opportunities.json"
+    revenue = json.loads(revenue_path.read_text(encoding="utf-8"))
+    revenue["protectedWinners"].extend({"url": f"/{path}"} for path in reviewed)
+    write_json(revenue_path, revenue)
+    assert validate_launch(
+        tmp_path, manifest([]), [("M", path, before, after) for path, (before, after) in reviewed.items()]
+    ) == []
+    for path, (before, after) in reviewed.items():
+        for old, new in [(before, "f" * 40), ("b" * 40, after), (after, before)]:
+            assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+                tmp_path, manifest([]), [("M", path, old, new)]
+            )
+
+
 def test_guard_allows_only_exact_reader_path_transitions(tmp_path):
     from scripts.content_launch_guard import APPROVED_READER_PATH_TRANSITIONS_20261105
 
