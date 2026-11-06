@@ -373,6 +373,11 @@ APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault("kor/report/camp/boeun.html", s
     ("6b2e855305a914627904e73188cdcbba5c8bb79d", "0bbed5e589902264d2046d58e92201436e071d66")
 )
 
+# Jeju reservation links and official Hallasan rules reviewed in PR #571.
+APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault("kor/report/camp/jeju-camping-best.html", set()).add(
+    ("66dd8913a913378f9d823a634c70ee412962869c", "19f69265ba34d9c00b973e376100c10b63edb53c")
+)
+
 # Owner-delegated next-reading navigation on four existing revenue pages, 2026-11-05.
 # Evidence and full diff: docs/revenue-reader-paths-2026-11-05.md; exact blobs only.
 APPROVED_READER_PATH_TRANSITIONS_20261105 = {
