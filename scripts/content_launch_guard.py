@@ -363,6 +363,11 @@ APPROVED_NOVEMBER_5_CONTENT_TRANSITIONS = {
 for _path, _blob_pair in APPROVED_NOVEMBER_5_CONTENT_TRANSITIONS.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
+# Microsoft-sourced installation guidance in PR #555.
+APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault("kor/report/window/windows11-installation-failure-fix.html", set()).add(
+    ("416d5020eaef44105ef0a82627b5254da9533b23", "a3e7e45340aae403219d3b133b0b66b0db6820d5")
+)
+
 # Boeun campground booking facts reviewed in PR #551.
 APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault("kor/report/camp/boeun.html", set()).add(
     ("6b2e855305a914627904e73188cdcbba5c8bb79d", "0bbed5e589902264d2046d58e92201436e071d66")
