@@ -363,6 +363,11 @@ APPROVED_NOVEMBER_5_CONTENT_TRANSITIONS = {
 for _path, _blob_pair in APPROVED_NOVEMBER_5_CONTENT_TRANSITIONS.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
+# Boeun campground booking facts reviewed in PR #551.
+APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault("kor/report/camp/boeun.html", set()).add(
+    ("6b2e855305a914627904e73188cdcbba5c8bb79d", "0bbed5e589902264d2046d58e92201436e071d66")
+)
+
 # Owner-delegated next-reading navigation on four existing revenue pages, 2026-11-05.
 # Evidence and full diff: docs/revenue-reader-paths-2026-11-05.md; exact blobs only.
 APPROVED_READER_PATH_TRANSITIONS_20261105 = {
