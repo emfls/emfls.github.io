@@ -126,6 +126,9 @@ def rich_text_to_html(items, sources):
     for item in items:
         value = escape(item.get("plain_text", ""))
         annotations = item.get("annotations") or {}
+        if not annotations.get("code"):
+            bold = r"\1" if annotations.get("bold") else r"<strong>\1</strong>"
+            value = re.sub(r"(?<![\\*])\*\*(?!\s)([^*\r\n]+?)(?<!\s)\*\*(?!\*)", bold, value)
         if annotations.get("bold"):
             value = "<strong>" + value + "</strong>"
         if annotations.get("italic"):

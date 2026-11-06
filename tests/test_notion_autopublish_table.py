@@ -17,6 +17,19 @@ def rich(text, href=None, bold=False):
     }
 
 
+def test_literal_bold_is_rendered_and_removed_from_the_search_summary():
+    page = [{"type": "paragraph", "has_children": False,
+             "paragraph": {"rich_text": [rich("Open **Settings & tools**.")]}}]
+    with patch.object(publisher, "get_blocks", return_value=page):
+        html, _, summary = publisher.to_html("literal-bold")
+
+    assert html == "<p>Open <strong>Settings &amp; tools</strong>.</p>"
+    assert summary == "Open Settings &amp; tools."
+    code = {**rich("**/file"), "annotations": {"code": True}}
+    assert publisher.rich_text_to_html([code], []) == "**/file"
+    assert publisher.rich_text_to_html([rich("**already bold**", bold=True)], []) == "<strong>already bold</strong>"
+
+
 def table_fixture():
     return {
         "id": "tbl-1",
