@@ -395,3 +395,7 @@
 - [ ] 2026-11-05 winter camping checklist packing-tool discovery
   - [x] One contextual paragraph and focused placement regression;7focused checks pass. Existing10/15 assertion failure reproduced on main, then only the assertion aligned to maintained10/16 content. No metadata/ad/script/fact/schedule changes; no freshness blanket gate exists.
   - [ ] Committed-head pinned Guard, normal PR/CI and merge, Pages success and public exact-blob verification. Preserve preexisting uncommitted records.
+
+- [ ] 2026-11-06 Daebudo registered campsite alternatives
+  - [x] Verify two registry entries and add their addresses and booking contacts to the existing article.
+  - [ ] Review the protected page transition, verify SEO QA and confirm public deployment.
