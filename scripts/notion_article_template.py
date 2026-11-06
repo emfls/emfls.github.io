@@ -86,7 +86,7 @@ def render_article(
         "{{TITLE}}": escape(title),
         "{{DESCRIPTION}}": escape(description[:165], quote=True),
         "{{CANONICAL}}": escape(url, quote=True),
-        "{{CATEGORY_HREF}}": "/kor/report/" + category + "/",
+        'href="/kor/report/" data-category-link': f'href="/kor/report/{category}/"',
         "{{CATEGORY_LABEL}}": escape(CATEGORY_LABELS[category]),
         "{{PUBLISHED_DATE}}": escape(published_date),
         "{{MODIFIED_DATE}}": escape(modified_date),

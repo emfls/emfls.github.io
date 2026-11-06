@@ -3,7 +3,13 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PAGES = ("hadong", "sejong", "buyeo", "boryeong", "seocheon")
+PAGES = {
+    "hadong": ("하동", "평사리공원"),
+    "sejong": ("세종", "전월산"),
+    "buyeo": ("부여", "수리바위"),
+    "boryeong": ("보령", "성주산자연휴양림"),
+    "seocheon": ("서천", "해수욕장"),
+}
 
 
 class CampPageParser(HTMLParser):
@@ -73,14 +79,14 @@ def page(name):
     return parser
 
 
-def test_factcheck_14_pages_use_current_date_and_question_titles():
-    for name in PAGES:
+def test_factcheck_14_pages_use_region_metadata_and_dated_sources():
+    for name, (region, topic) in PAGES.items():
         parsed = page(name)
         title = " ".join("".join(parsed.title).split())
         h1 = " ".join("".join(parsed.h1).split())
-        assert "2026" in title and "?" in title
-        assert "2026" in parsed.description and ("?" in parsed.description or "어디" in parsed.description)
-        assert "2026" in h1
+        assert title.startswith(f"{region}캠핑장") and "2026" in title, name
+        assert h1 == title, name
+        assert region in parsed.description and topic in parsed.description, name
         assert parsed.source_notes, name
         assert all("확인일 2026-10-15" in note for note in parsed.source_notes), name
 
