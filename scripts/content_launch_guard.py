@@ -378,6 +378,15 @@ APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault("kor/report/camp/jeju-camping-b
     ("66dd8913a913378f9d823a634c70ee412962869c", "19f69265ba34d9c00b973e376100c10b63edb53c")
 )
 
+# Official-source corrections for the three protected guides in PR #574.
+APPROVED_NOVEMBER_7_NAVER_TRANSITIONS = {
+    "kor/column/imjin-war-joseon-character-growth-guide-2026.html": ("8eef4d479bb11756837ea4fb7c6a75a7bbb52427", "9f453f43fc21826e9bc5faea1ccc573226fd6444"),
+    "kor/report/camp/choenan.html": ("2935381bf3aa47932c8a6580884f99d979615043", "83adb0d7f6ffb91e2e1f712e6de464fc86d16140"),
+    "kor/report/window/windows11-start-menu-windows10-style.html": ("43ce883a2389e7e95e44e25127c726d090eab547", "fd300d7198ca5ce3059b8c1beba38c273c6fdc07"),
+}
+for _path, _blob_pair in APPROVED_NOVEMBER_7_NAVER_TRANSITIONS.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
+
 # Owner-delegated next-reading navigation on four existing revenue pages, 2026-11-05.
 # Evidence and full diff: docs/revenue-reader-paths-2026-11-05.md; exact blobs only.
 APPROVED_READER_PATH_TRANSITIONS_20261105 = {
