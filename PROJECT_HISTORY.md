@@ -1473,3 +1473,4 @@
 ## 2026-11-06 — Restore Yeongdeok and Notion template links
 - Corrected the two Yeongdeok links to the live Gyeongbuk camping guide. Pages serves the raw Notion template as HTML, so it now links to the report hub until the renderer replaces the marked links with the article category. The link audit and fixed baseline still examine actual HTML, including the raw template.
 - Both focused regressions failed on the prior sources and now pass. Sample article output matches the previous bytes in all 15 categories. Yeongdeok is outside the pinned and current WINNER sets. The existing schedule and page monetization markup are preserved.
+- Aligned the five-page metadata regression to the region titles and topic descriptions approved and merged in PR #98. The published pages and existing source-date and restriction checks are unchanged.
