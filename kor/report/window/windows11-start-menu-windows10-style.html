@@ -240,10 +240,11 @@
         <div class="container">
             <h1>Windows 11 시작 메뉴 Windows 10처럼 바꾸는 방법</h1>
 
-            <div class="info">
-                <strong>🔄 Windows 10 스타일 복원:</strong> Windows 11의 새로운 시작 메뉴가 불편하다면 이 가이드를 통해
-                익숙한 Windows 10 스타일로 되돌릴 수 있습니다. 무료부터 유료까지 다양한 방법을 제공하며, 각각의 장단점을
-                상세히 설명합니다.
+            <div class="info" id="windows-settings">
+                <strong>시작 버튼만 왼쪽으로 옮기기:</strong> 작업 표시줄의 빈 곳을 우클릭한 뒤
+                <strong>작업 표시줄 설정 → 작업 표시줄 동작 → 작업 표시줄 맞춤 → 왼쪽</strong>을 선택하세요.
+                <p>시작 버튼과 작업 표시줄 아이콘이 왼쪽으로 이동합니다. 시작 메뉴 내부는 Windows 11 형태로 유지되며, 라이브 타일은 기본 설정에서 복원할 수 없습니다.</p>
+                <a href="https://support.microsoft.com/ko-kr/windows/experience/personalization/customize-the-windows-start-menu">Microsoft 시작 메뉴 설정 안내</a>
             </div>
 
             <h2>🔍 Windows 10 vs Windows 11 시작 메뉴 비교</h2>
@@ -318,7 +319,7 @@
                         <td>⭐⭐⭐</td>
                     </tr>
                     <tr>
-                        <td>레지스트리 수정</td>
+                        <td>Windows 기본 설정</td>
                         <td>무료</td>
                         <td><span class="rating-poor">제한적</span></td>
                         <td><span class="rating-fair">보통</span></td>
@@ -586,79 +587,8 @@
 
             <div class="timeline-item priority-medium">
                 <div class="timeline-badge">4</div>
-                <h3>레지스트리 수정 - 부분적 변경 (무료)</h3>
-
-                <div class="warning">
-                    <strong>⚠️ 제한적 효과:</strong> 레지스트리 수정으로는 완전한 Windows 10 스타일 복원이 불가능하며,
-                    시작 버튼 위치 정도만 변경할 수 있습니다. 백업 필수!
-                </div>
-
-                <h4>시작 버튼 좌측 정렬하기:</h4>
-                <ol>
-                    <li>작업 표시줄 우클릭 → <strong>"작업 표시줄 설정"</strong></li>
-                    <li><strong>"작업 표시줄 동작"</strong> 섹션 찾기</li>
-                    <li><strong>"작업 표시줄 맞춤"</strong>을 <strong>"왼쪽"</strong>으로 변경</li>
-                    <li>즉시 적용됨</li>
-                </ol>
-
-                <h4>고급 레지스트리 수정 (고급 사용자용):</h4>
-                <div class="danger">
-                    <strong>🚨 위험:</strong> 레지스트리 수정은 시스템에 영향을 줄 수 있습니다. 반드시 백업 후
-                    진행하세요.
-                </div>
-
-                <div class="code-block">
-                    # 레지스트리 편집기 실행<br />
-                    Win + R → regedit<br />
-                    <br />
-                    # 시작 메뉴 관련 키<br />
-                    HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced<br />
-                    <br />
-                    # 작업 표시줄 정렬 (0=왼쪽, 1=중앙)<br />
-                    TaskbarAl = 0<br />
-                    <br />
-                    # 검색 박스 표시 (0=숨김, 1=아이콘, 2=박스)<br />
-                    SearchboxTaskbarMode = 1
-                </div>
-
-                <h4>PowerShell을 통한 자동 설정:</h4>
-                <div class="code-block">
-                    # PowerShell 관리자 권한으로 실행<br />
-                    # 작업 표시줄 왼쪽 정렬<br />
-                    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name
-                    "TaskbarAl" -Value 0<br />
-                    <br />
-                    # 검색 아이콘만 표시<br />
-                    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search" -Name
-                    "SearchboxTaskbarMode" -Value 1<br />
-                    <br />
-                    # 작업 보기 버튼 숨기기<br />
-                    Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" -Name
-                    "ShowTaskViewButton" -Value 0<br />
-                    <br />
-                    # 탐색기 재시작<br />
-                    Stop-Process -Name "explorer" -Force<br />
-                    Start-Process "explorer"
-                </div>
-
-                <h4>레지스트리 수정으로 가능한 변경사항:</h4>
-                <ul>
-                    <li>✅ 작업 표시줄 왼쪽 정렬</li>
-                    <li>✅ 검색 박스 스타일 변경</li>
-                    <li>✅ 작업 보기 버튼 숨기기</li>
-                    <li>✅ 위젯 버튼 제거</li>
-                    <li>❌ 시작 메뉴 내부 레이아웃 변경</li>
-                    <li>❌ 라이브 타일 복원</li>
-                </ul>
-
-                <div class="checklist">
-                    <h4>✅ 레지스트리 수정 체크리스트</h4>
-                    <label><input type="checkbox" /> 레지스트리 백업 생성</label><br />
-                    <label><input type="checkbox" /> 작업 표시줄 왼쪽 정렬</label><br />
-                    <label><input type="checkbox" /> 불필요한 버튼 제거</label><br />
-                    <label><input type="checkbox" /> 탐색기 재시작</label><br />
-                    <label><input type="checkbox" /> 변경사항 확인</label>
-                </div>
+                <h3>Windows 기본 설정으로 정렬 바꾸기</h3>
+                <p><a href="#windows-settings">왼쪽 정렬 단계</a>를 따라 설정하세요. 원래 위치로 되돌리려면 같은 화면에서 <strong>가운데</strong>를 선택하면 됩니다.</p>
             </div>
 
             <div class="timeline-item priority-low">
@@ -803,7 +733,7 @@
                             <th>StartAllBack</th>
                             <th>Start11</th>
                             <th>Open-Shell</th>
-                            <th>레지스트리</th>
+                            <th>Windows 기본 설정</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -861,7 +791,7 @@
                     <li><strong>완벽한 복원 원하는 사용자:</strong> StartAllBack (유료지만 최고)</li>
                     <li><strong>다양한 스타일 원하는 사용자:</strong> Start11 (커스터마이징 최강)</li>
                     <li><strong>무료 솔루션 원하는 사용자:</strong> Open-Shell (무료 중 최고)</li>
-                    <li><strong>최소한의 변경만 원하는 사용자:</strong> 레지스트리 수정 (기본적)</li>
+                    <li><strong>시작 버튼 위치만 바꾸려는 사용자:</strong> Windows 기본 설정</li>
                 </ul>
             </div>
 
