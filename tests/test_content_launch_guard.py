@@ -990,6 +990,22 @@ def test_git_changes_captures_exact_added_navigation_hub_blob(monkeypatch, tmp_p
     assert _git_changes(tmp_path, "base-sha") == [("A", path, None, after)]
 
 
+def test_guard_allows_only_the_reviewed_windows_installation_transition(tmp_path):
+    setup_data(tmp_path)
+    path = "kor/report/window/windows11-installation-failure-fix.html"
+    revenue_path = tmp_path / "data/revenue-opportunities.json"
+    revenue = json.loads(revenue_path.read_text(encoding="utf-8"))
+    revenue["protectedWinners"].append({"url": f"/{path}"})
+    write_json(revenue_path, revenue)
+    before = "416d5020eaef44105ef0a82627b5254da9533b23"
+    after = "a3e7e45340aae403219d3b133b0b66b0db6820d5"
+    assert validate_launch(tmp_path, manifest([]), [("M", path, before, after)]) == []
+    for old, new in [(before, "f" * 40), ("b" * 40, after), (after, before)]:
+        assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+            tmp_path, manifest([]), [("M", path, old, new)]
+        )
+
+
 def test_guard_allows_only_the_reviewed_boeun_booking_transition(tmp_path):
     setup_data(tmp_path)
     path = "kor/report/camp/boeun.html"
