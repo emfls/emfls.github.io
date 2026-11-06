@@ -1022,6 +1022,22 @@ def test_guard_allows_only_the_reviewed_boeun_booking_transition(tmp_path):
         )
 
 
+def test_guard_allows_only_the_reviewed_jeju_camping_transition(tmp_path):
+    setup_data(tmp_path)
+    path = "kor/report/camp/jeju-camping-best.html"
+    revenue_path = tmp_path / "data/revenue-opportunities.json"
+    revenue = json.loads(revenue_path.read_text(encoding="utf-8"))
+    revenue["protectedWinners"].append({"url": f"/{path}"})
+    write_json(revenue_path, revenue)
+    before = "66dd8913a913378f9d823a634c70ee412962869c"
+    after = "19f69265ba34d9c00b973e376100c10b63edb53c"
+    assert validate_launch(tmp_path, manifest([]), [("M", path, before, after)]) == []
+    for old, new in [(before, "f" * 40), ("b" * 40, after), (after, before)]:
+        assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+            tmp_path, manifest([]), [("M", path, old, new)]
+        )
+
+
 def test_guard_allows_only_exact_reader_path_transitions(tmp_path):
     from scripts.content_launch_guard import APPROVED_READER_PATH_TRANSITIONS_20261105
 
