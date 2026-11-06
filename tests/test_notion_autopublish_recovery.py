@@ -1,4 +1,4 @@
-"""Regression tests for 30-minute publisher recovery and fail-closed behavior."""
+"""Regression tests for hourly publisher recovery and fail-closed behavior."""
 from datetime import datetime, timedelta
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -11,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import notion_autopublish as publisher
 
 
-class ThirtyMinuteRecoveryTests(TestCase):
+class HourlyRecoveryTests(TestCase):
     def setUp(self):
         self.tmp = TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
@@ -81,18 +81,36 @@ class ThirtyMinuteRecoveryTests(TestCase):
         self.assertEqual(live.call_count, 3)
         self.assertEqual(sleep.call_count, 2)
 
-    def test_30min_cooldown_still_prevents_duplicate_publication(self):
+    def test_45_minutes_since_last_release_is_still_in_hourly_cooldown(self):
         previous = {"notionPageId": "recent-page", "title": "방금 발행",
                     "url": publisher.SITE + "/kor/report/it/recent.html",
-                    "slotKst": (datetime.now(publisher.KST) - timedelta(minutes=10)).isoformat()}
+                    "slotKst": (datetime.now(publisher.KST) - timedelta(minutes=45)).isoformat()}
         self.ledger.write_text(json.dumps(previous, ensure_ascii=False) + "\n", encoding="utf-8")
         with patch.object(publisher, "previous_release_is_live", return_value=True), \
              patch.object(publisher, "ready_rows", return_value=[
                  {"id": "next-page", "properties": {"발행순서": {"number": 213}}},
-             ]), patch.object(publisher, "article") as article:
-            result = publisher.stage()
+             ]), patch.object(publisher, "article", side_effect=AssertionError("staging attempted during cooldown")) as article, \
+             patch.object(publisher.time, "sleep") as sleep:
+            result = publisher.stage(wait_for_slot=True)
         self.assertEqual(result["status"], "COOLDOWN")
         article.assert_not_called()
+        sleep.assert_not_called()
+
+
+    def test_scheduler_waits_only_until_the_hourly_boundary(self):
+        before = datetime(2026, 11, 6, 20, 1, tzinfo=publisher.KST)
+        previous = {"notionPageId": "recent-page", "title": "방금 발행",
+                    "url": publisher.SITE + "/kor/report/it/recent.html",
+                    "slotKst": (before - timedelta(minutes=58)).isoformat()}
+        self.ledger.write_text(json.dumps(previous, ensure_ascii=False) + "\n", encoding="utf-8")
+        with patch.object(publisher, "previous_release_is_live", return_value=True), \
+             patch.object(publisher, "ready_rows", return_value=[]), \
+             patch.object(publisher, "datetime", wraps=datetime) as clock, \
+             patch.object(publisher.time, "sleep") as sleep:
+            clock.now.side_effect = [before, before + timedelta(minutes=2)]
+            result = publisher.stage(wait_for_slot=True)
+        self.assertEqual(result["status"], "QUEUE_EMPTY")
+        sleep.assert_called_once_with(120)
 
 
 if __name__ == "__main__":

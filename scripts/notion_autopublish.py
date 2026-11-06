@@ -21,6 +21,8 @@ ROOT = Path(__file__).resolve().parent.parent
 LEDGER = ROOT / "data/scheduled-publication-ledger.jsonl"
 SOURCE_ID = "bf74df89-89b9-4fa7-b89f-1dfe513162e9"
 API = "https://api.notion.com/v1"
+PUBLICATION_INTERVAL = timedelta(hours=1)
+MAX_SLOT_WAIT_SECONDS = 600
 
 
 def api(method, path, payload=None):
@@ -358,7 +360,7 @@ def candidate_sitemap(draft, url):
     return dest, sitemap, old
 
 
-def stage():
+def stage(*, wait_for_slot=False):
     if not os.environ.get("NOTION_API_TOKEN"):
         return {"status": "NEEDS_NOTION_API_TOKEN"}
     # Pages deployments can become readable shortly after the workflow starts.
@@ -384,7 +386,7 @@ def stage():
             reconciled_ids.add(row["id"])
             print("NOTION_RECONCILED_ALREADY_LIVE: " + row["id"], file=sys.stderr)
     # Finalization of an already-live page must not waste the next available
-    # 30-minute publication slot. Only still-pending rows can be staged.
+    # publication slot. Only still-pending rows can be staged.
     if reconciled_ids:
         ready = [row for row in ready if row["id"] not in reconciled_ids]
     last = next((r for r in reversed(history) if r.get("notionPageId")), None)
@@ -394,8 +396,18 @@ def stage():
     initial_page = os.environ.get("NOTION_INITIAL_PAGE_ID", "").strip()
     if initial_page and (not ready or ready[0]["id"] != initial_page):
         return {"status": "INITIAL_PAGE_ALREADY_CONSUMED"}
-    if not initial_page and last and now - datetime.fromisoformat(last["slotKst"]).astimezone(KST) < timedelta(minutes=30):
-        return {"status": "COOLDOWN"}
+    if not initial_page and last:
+        last_slot = datetime.fromisoformat(last["slotKst"])
+        if last_slot.tzinfo is None:
+            raise ValueError("Last publication timestamp has no timezone")
+        next_slot = last_slot.astimezone(KST) + PUBLICATION_INTERVAL
+        remaining = (next_slot - now).total_seconds()
+        if wait_for_slot and 0 < remaining <= MAX_SLOT_WAIT_SECONDS:
+            print(f"Waiting {remaining:.0f} seconds for hourly publication cooldown", file=sys.stderr, flush=True)
+            time.sleep(remaining)
+            now = datetime.now(KST)
+        if now < next_slot:
+            return {"status": "COOLDOWN"}
     if not ready:
         return {"status": "QUEUE_EMPTY"}
     failed_count = 0
@@ -440,9 +452,10 @@ if __name__ == "__main__":
     parser.add_argument("command", choices=("stage", "finalize"))
     parser.add_argument("--page-id")
     parser.add_argument("--url")
+    parser.add_argument("--wait-for-slot", action="store_true")
     args = parser.parse_args()
     try:
-        result = finalize(args.page_id, args.url) if args.command == "finalize" else stage()
+        result = finalize(args.page_id, args.url) if args.command == "finalize" else stage(wait_for_slot=args.wait_for_slot)
         print(json.dumps(result, ensure_ascii=False))
     except Exception as e:
         print("Notion publisher failed: " + str(e), file=sys.stderr)
