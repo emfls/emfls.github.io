@@ -5,7 +5,7 @@ import json
 
 ROOT = Path(__file__).parents[1]
 BASE = "https://emfls.github.io/game/"
-CATEGORIES = {"Quick & Reflex", "Puzzle & Logic", "Classic & Board", "Action & Arcade", "Quiz & Knowledge"}
+CATEGORIES = {"Quick & Reflex", "Puzzle & Logic", "Classic & Board", "Action & Arcade", "Quiz & Knowledge", "Story & Simulation"}
 
 
 class HubParser(HTMLParser):
@@ -44,10 +44,10 @@ def sitemap_children():
 def test_three_way_inventory_parity_and_no_duplicates():
     cards = parse_hub(); hub_list = [a["href"] for c in cards for a in c["anchors"]]; hub = set(hub_list)
     repo, sitemap_list = repo_set(), sitemap_children(); sitemap = set(sitemap_list)
-    assert len(repo) == len(sitemap_list) == len(hub_list) == 25
-    assert len(sitemap_list) == len(sitemap) == 25
+    assert len(repo) == len(sitemap_list) == len(hub_list) == 26
+    assert len(sitemap_list) == len(sitemap) == 26
     assert len(hub_list) == len(hub) and repo == sitemap == hub
-    assert "LadderGame/" in repo
+    assert {"LadderGame/", "youngforty-escape/"} <= repo
     assert len([a["href"] for c in cards for a in c["anchors"]]) == len(hub)
 
 
@@ -66,8 +66,8 @@ def test_card_anchor_and_category_contract():
 def test_filters_search_and_accessibility_structure():
     text = page_text(); start = text.index('<div class="filters"'); end = text.index('<ul id="gameList">')
     filters = text[start:end]
-    assert filters.count('class="category-button"') == 6 and filters.count('type="button"') == 6
-    assert filters.count('aria-pressed=') == 6 and 'aria-pressed="true"' in filters
+    assert filters.count('class="category-button"') == len(CATEGORIES) + 1 and filters.count('type="button"') == len(CATEGORIES) + 1
+    assert filters.count('aria-pressed=') == len(CATEGORIES) + 1 and 'aria-pressed="true"' in filters
     assert text.index("</div>", start) < text.index('<ul id="gameList">')
     assert 'for="searchInput"' in text and 'id="searchInput"' in text and 'aria-live="polite"' in text
     assert "onclick=\"launchGame" not in text and "user-select:none" not in text
