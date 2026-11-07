@@ -398,6 +398,14 @@ APPROVED_READER_PATH_TRANSITIONS_20261105 = {
 for _path, _blob_pair in APPROVED_READER_PATH_TRANSITIONS_20261105.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
+# Exact campground guidance and official booking versions reviewed in PR #581.
+APPROVED_CAMPING_GUIDANCE_TRANSITIONS_20261107 = {
+    "kor/report/camp/index.html": ("0004ec0cf70327c431b5a04a39057b787ea39748", "801b3c69aa69889de8a5b676aea6cade2c5eaea1"),
+    "kor/report/camp/jeongeup.html": ("d8cc4c9ebb5dcdbd00d8471881aaadb53171dc30", "54f92bfc07767fd5fb6bfc37d2d73919341f2a92"),
+}
+for _path, _blob_pair in APPROVED_CAMPING_GUIDANCE_TRANSITIONS_20261107.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
+
 # User-approved AdSense placement on the 29-day top-30 camping pages, 2026-10-14.
 # Evidence: reports/camp-cluster-inventory-2026-10-14.csv; exact blob pairs only.
 APPROVED_AD_PLACEMENT_TRANSITIONS = {
