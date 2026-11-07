@@ -1,0 +1,14 @@
+# Exact functional/content transitions — 2026-11-07
+
+Authority: the owner's delegated batch instruction recorded in `emfls-delegated-improvements-2026-11-07.md`. These two version pairs only are added to the existing WINNER approval mechanism; source content is a separate downstream PR. Modified/reverse/unrelated versions and OBSERVING changes remain blocked. No experiment registry, status, baseline, ad, analytics, publishing cadence or queue change is approved here. PR589 stays Draft/HOLD; Nonsan tests stay unchanged.
+
+| File | Before blob | After blob | Reason and evidence |
+| --- | --- | --- | --- |
+| util/dice3d/index.html | 887b501ae434026819e122547e338c7e9bc60479 | af2475c7a99ab1d7eea7836c796446d8a6874d2a |166 GA4 views in completed KST10/10–11/6. Roll references a missing result element and always throws; add visible accessible result and correct non-independent repeat rejection. All6 exact outputs, boundaries and identical successive draws tested.|
+| kor/report/camp/jinju.html | 6f9706cfdc9bc23db2e75df806bf5fd9806b4a04 | 52c0fc468ceeea9a6ab99528622b508dcbb37254 |GA4 views230→41 in equal completed28-day KST periods; mobile Naver landings166→28. Replace only one unidentified facility card and matching summary with a source-backed deck/glamping comparison. No title/booking experiment or claim that this fixes the traffic decline.|
+
+Primary source checked11/7: [Wolasan official camping inventory](https://www.foresttrip.go.kr/pot/rm/fa/selectCmpgrArmpListView.do?hmpgId=ID02030114&menuId=002002002). Five decks each5×7m/35㎡/max6; seven glamping units each38㎡/max4. Inventory does not establish current availability, operation, tourism registration or car-camping permission. Fees and unverified amenities are not asserted.
+
+Actual original/pinned inputs classify both as WINNER. Inspected dated experiment files contain no direct target row; historical cooldown=false is not a current global clearance. Current registry completeness remains UNKNOWN. Existing normal immutable-input guard has no additional freshness clearance gate. No source data was changed to make these transitions eligible. Record deployment as a new functional/content intervention; do not merge its after-period into an earlier experiment's effect.
+
+Before registration the frozen content change fails PROTECTED_WINNER_CHANGED. Focused approval controls must accept only these exact pairs, reject altered/reversed versions, unrelated WINNER and an OBSERVING target. The existing PR589 negative control remains. Functional and source tests, actual pinned Guard, unchanged-checker exact-main SEO comparison, normal PR merge, Pages success and live verification remain release requirements. Revenue effects are unmeasured. Revert through a normal reviewed reverse-version approval and content PR; never disable protection.

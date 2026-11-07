@@ -1100,3 +1100,26 @@ def test_exact_qr_reader_approval_preserves_other_winner_and_experiment_guards(t
         assert "PROTECTED_WINNER_CHANGED" in validate_launch(tmp_path, manifest([]), changed)
     write_json(tmp_path / "data/experiments.json", {"experiments": [{"url": "/util/qrcode/", "status": "OBSERVING"}]})
     assert "PROTECTED_EXPERIMENT_CHANGED" in validate_launch(tmp_path, manifest([]), approved_change)
+
+
+def test_batch_repairs_allow_only_two_exact_versions_and_preserve_observation(tmp_path):
+    from scripts.content_launch_guard import APPROVED_UTILITY_CONTENT_REPAIRS_20261107
+
+    setup_data(tmp_path)
+    reviewed = APPROVED_UTILITY_CONTENT_REPAIRS_20261107
+    assert set(reviewed) == {"util/dice3d/index.html", "kor/report/camp/jinju.html"}
+    revenue_path = tmp_path / "data/revenue-opportunities.json"
+    revenue = json.loads(revenue_path.read_text())
+    revenue["protectedWinners"].extend({"url": f"/{p}"} for p in reviewed)
+    write_json(revenue_path, revenue)
+    for path, (before, after) in reviewed.items():
+        change = [("M", path, before, after)]
+        assert validate_launch(tmp_path, manifest([]), change) == []
+        for pair in [(before, "0" * 40), ("0" * 40, after), (after, before)]:
+            assert "PROTECTED_WINNER_CHANGED" in validate_launch(tmp_path, manifest([]), [("M", path, *pair)])
+        write_json(tmp_path / "data/experiments.json", {"experiments": [{"url": f"/{path}", "status": "OBSERVING"}]})
+        assert "PROTECTED_EXPERIMENT_CHANGED" in validate_launch(tmp_path, manifest([]), change)
+        write_json(tmp_path / "data/experiments.json", {"experiments": []})
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+        tmp_path, manifest([]), [("M", "kor/report/camp/namyangju.html", "b" * 40, "f" * 40)]
+    )
