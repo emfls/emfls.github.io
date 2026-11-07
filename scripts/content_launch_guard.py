@@ -429,6 +429,14 @@ APPROVED_CAMP_MOBILE_REPAIRS_20261107 = {
 for _path, _blob_pair in APPROVED_CAMP_MOBILE_REPAIRS_20261107.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
+# Owner-authorized top-anchor occlusion repair; official bottom-only loader option.
+APPROVED_BOTTOM_ANCHOR_TRANSITIONS_20261107 = {
+    'kor/report/camp/suwon.html': ('af4c894588719175bb835f76b7b8befe18a53d93', 'f25c43067a1fe88dc64ec4166deb64bc40efaf06'),
+    'kor/report/camp/siheung.html': ('ab2c7489a2e7a9f4223a68f625b9f9823da900eb', 'e29e3327dbf0a247e5ef05aad517502483889130'),
+}
+for _path, _blob_pair in APPROVED_BOTTOM_ANCHOR_TRANSITIONS_20261107.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
+
 # User-approved AdSense placement on the 29-day top-30 camping pages, 2026-10-14.
 # Evidence: reports/camp-cluster-inventory-2026-10-14.csv; exact blob pairs only.
 APPROVED_AD_PLACEMENT_TRANSITIONS = {

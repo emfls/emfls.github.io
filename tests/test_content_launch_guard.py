@@ -1143,3 +1143,27 @@ def test_mobile_camp_repairs_are_exact_and_do_not_override_observation(tmp_path)
         write_json(tmp_path / "data/experiments.json", {"experiments": [{"url": f"/{path}", "status": "OBSERVING"}]})
         assert "PROTECTED_EXPERIMENT_CHANGED" in validate_launch(tmp_path, manifest([]), change)
         write_json(tmp_path / "data/experiments.json", {"experiments": []})
+
+
+def test_bottom_anchor_approval_is_exact_and_preserves_observation(tmp_path):
+    from scripts.content_launch_guard import APPROVED_BOTTOM_ANCHOR_TRANSITIONS_20261107
+
+    setup_data(tmp_path)
+    reviewed = APPROVED_BOTTOM_ANCHOR_TRANSITIONS_20261107
+    assert set(reviewed) == {"kor/report/camp/suwon.html", "kor/report/camp/siheung.html"}
+    revenue_path = tmp_path / "data/revenue-opportunities.json"
+    revenue = json.loads(revenue_path.read_text())
+    revenue["protectedWinners"].extend({"url": f"/{p}"} for p in reviewed)
+    revenue["protectedWinners"].append({"url": "/util/qrcode/"})
+    write_json(revenue_path, revenue)
+    for path, (before, after) in reviewed.items():
+        change = [("M", path, before, after)]
+        assert validate_launch(tmp_path, manifest([]), change) == []
+        for pair in [(before, "0" * 40), ("0" * 40, after), (after, before)]:
+            assert "PROTECTED_WINNER_CHANGED" in validate_launch(tmp_path, manifest([]), [("M", path, *pair)])
+        write_json(tmp_path / "data/experiments.json", {"experiments": [{"url": f"/{path}", "status": "OBSERVING"}]})
+        assert "PROTECTED_EXPERIMENT_CHANGED" in validate_launch(tmp_path, manifest([]), change)
+        write_json(tmp_path / "data/experiments.json", {"experiments": []})
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+        tmp_path, manifest([]), [("M", "util/qrcode/index.html", "b" * 40, "f" * 40)]
+    )
