@@ -1078,3 +1078,25 @@ def test_guard_allows_only_exact_reader_path_transitions(tmp_path):
     assert "PROTECTED_WINNER_CHANGED" in validate_launch(
         tmp_path, manifest([]), [("M", "kor/report/camp/namyangju.html", "b" * 40, "f" * 40)]
     )
+
+
+def test_exact_qr_reader_approval_preserves_other_winner_and_experiment_guards(tmp_path):
+    setup_data(tmp_path)
+    path = "util/qrcode/index.html"
+    before = "6463855d25193eec0de68bd005b2c6023c6c706f"
+    after = "3c6b52474b286a17856c232fe09334183052a138"
+    revenue_path = tmp_path / "data/revenue-opportunities.json"
+    revenue = json.loads(revenue_path.read_text())
+    revenue["protectedWinners"].extend([{"url": "/util/qrcode/"}, {"url": "/kor/report/camp/"}])
+    write_json(revenue_path, revenue)
+    approved_change = [("M", path, before, after)]
+    assert validate_launch(tmp_path, manifest([]), approved_change) == []
+    for changed in [
+        [("M", path, "0" * 40, after)],
+        [("M", path, before, "0" * 40)],
+        [("M", "kor/report/camp/namyangju.html", before, after)],
+        [("M", "kor/report/camp/index.html", "801b3c69aa69889de8a5b676aea6cade2c5eaea1", "c74ca678422106668fc8f8fa45ab3a5359a97b1d")],
+    ]:
+        assert "PROTECTED_WINNER_CHANGED" in validate_launch(tmp_path, manifest([]), changed)
+    write_json(tmp_path / "data/experiments.json", {"experiments": [{"url": "/util/qrcode/", "status": "OBSERVING"}]})
+    assert "PROTECTED_EXPERIMENT_CHANGED" in validate_launch(tmp_path, manifest([]), approved_change)

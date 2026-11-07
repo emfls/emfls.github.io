@@ -406,6 +406,13 @@ APPROVED_CAMPING_GUIDANCE_TRANSITIONS_20261107 = {
 for _path, _blob_pair in APPROVED_CAMPING_GUIDANCE_TRANSITIONS_20261107.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
+# User approved this exact QR image-reader repair and normal release on 2026-11-07.
+APPROVED_QR_IMAGE_READER_TRANSITIONS_20261107 = {
+    "util/qrcode/index.html": ("6463855d25193eec0de68bd005b2c6023c6c706f", "3c6b52474b286a17856c232fe09334183052a138"),
+}
+for _path, _blob_pair in APPROVED_QR_IMAGE_READER_TRANSITIONS_20261107.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
+
 # User-approved AdSense placement on the 29-day top-30 camping pages, 2026-10-14.
 # Evidence: reports/camp-cluster-inventory-2026-10-14.csv; exact blob pairs only.
 APPROVED_AD_PLACEMENT_TRANSITIONS = {
@@ -1483,7 +1490,7 @@ def validate_launch(root, manifest, changed_paths, trusted_base=None, ops_dir=No
 
     base_documents = trusted_base.get("json", {}) if trusted_base else {}
     ctr = base_documents.get("data/experiments.json") or _read(state_root / "data/experiments.json", {"experiments": []})
-    protected_experiments = {_url_to_path(row.get("url")) for row in ctr.get("experiments") or [] if row.get("status") == "OBSERVING"}
+    protected_experiments = {_url_to_content_path(row.get("url")) for row in ctr.get("experiments") or [] if row.get("status") == "OBSERVING"}
     revenue = base_documents.get("data/revenue-opportunities.json") or _read(state_root / "data/revenue-opportunities.json", {})
     protected_winners = {_url_to_content_path(row.get("url")) for row in revenue.get("protectedWinners") or []}
     if changed_names & protected_experiments:
