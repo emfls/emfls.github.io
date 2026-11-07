@@ -27,6 +27,18 @@ BASE_COMMITTED_PAGE_FIELDS = (
 
 
 class SeoAuditParserTests(unittest.TestCase):
+    def test_site_audit_excludes_nested_worktrees_but_keeps_worktree_root(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary) / ".worktrees" / "current"
+            for relative in ("index.html", ".worktrees/other/index.html"):
+                path = root / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("<html><title>Page</title><body>Public page</body></html>")
+
+            paths = {page["path"] for page in audit_site(root)["pages"]}
+
+        self.assertEqual(paths, {"index.html"})
+
     def test_site_audit_artifact_stays_below_git_host_blob_limit(self):
         path = ops_path("data/site-audit.json")
         self.assertLess(path.stat().st_size, MAX_AUDIT_FILE_BYTES)

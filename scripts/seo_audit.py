@@ -332,9 +332,9 @@ def audit_site(root):
     pages = []
     parser_errors = []
     for path in sorted(root.rglob("*.html")):
-        if any(part in {".git", ".venv", "node_modules"} for part in path.parts):
-            continue
         relative = path.relative_to(root)
+        if any(part in {".git", ".venv", "node_modules", ".worktrees"} for part in relative.parts):
+            continue
         if relative.parts[:3] == ("kor", "stockwiki", "dist"):
             continue
         if relative.as_posix() == "reports/site-quality-dashboard.html":
