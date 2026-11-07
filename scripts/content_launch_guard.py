@@ -413,6 +413,14 @@ APPROVED_QR_IMAGE_READER_TRANSITIONS_20261107 = {
 for _path, _blob_pair in APPROVED_QR_IMAGE_READER_TRANSITIONS_20261107.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
+# Owner-delegated batch: exact dice recovery and official Jinju facility comparison.
+APPROVED_UTILITY_CONTENT_REPAIRS_20261107 = {
+    "util/dice3d/index.html": ("887b501ae434026819e122547e338c7e9bc60479", "af2475c7a99ab1d7eea7836c796446d8a6874d2a"),
+    "kor/report/camp/jinju.html": ("6f9706cfdc9bc23db2e75df806bf5fd9806b4a04", "52c0fc468ceeea9a6ab99528622b508dcbb37254"),
+}
+for _path, _blob_pair in APPROVED_UTILITY_CONTENT_REPAIRS_20261107.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
+
 # User-approved AdSense placement on the 29-day top-30 camping pages, 2026-10-14.
 # Evidence: reports/camp-cluster-inventory-2026-10-14.csv; exact blob pairs only.
 APPROVED_AD_PLACEMENT_TRANSITIONS = {
