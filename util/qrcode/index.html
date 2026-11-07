@@ -47,7 +47,7 @@
         <!-- qrcode.js (Generator) -->
         <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
         <!-- html5-qrcode (Scanner) -->
-        <script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
+        <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
         <style>
             body {
@@ -169,6 +169,10 @@
             #reader {
                 margin-top: 17px;
                 margin-bottom: 18px;
+            }
+            #reader canvas {
+                max-width: 100%;
+                height: auto;
             }
             #reader > div {
                 border-radius: 12px;
@@ -422,54 +426,114 @@
             const startCamBtn = document.getElementById("startCamBtn");
             const stopCamBtn = document.getElementById("stopCamBtn");
             const scanResult = document.getElementById("scanResult");
+            const imageInput = document.getElementById("imgUpload");
             let camActive = false;
-            startCamBtn.onclick = () => {
+            let scannerBusy = false;
+            let scanGeneration = 0;
+
+            function setScannerBusy(busy) {
+                scannerBusy = busy;
+                imageInput.disabled = busy;
+                startCamBtn.disabled = busy;
+                stopCamBtn.disabled = busy;
+            }
+            async function stopCamera() {
+                if (html5Qr && camActive) {
+                    await html5Qr.stop();
+                    camActive = false;
+                }
+                startCamBtn.style.display = "";
+                stopCamBtn.style.display = "none";
+            }
+
+            startCamBtn.onclick = async () => {
+                if (scannerBusy || camActive) return;
+                if (typeof Html5Qrcode === "undefined") {
+                    scanResult.textContent = "QR reader could not load. Refresh and try again.";
+                    return;
+                }
+                const generation = ++scanGeneration;
+                setScannerBusy(true);
                 readerDiv.style.display = "";
                 scanResult.textContent = "";
                 startCamBtn.style.display = "none";
                 stopCamBtn.style.display = "";
-                html5Qr = new Html5Qrcode("reader");
-                html5Qr.start(
-                    { facingMode: "environment" },
-                    { fps: 10, qrbox: 240 },
-                    (code) => {
-                        scanResult.innerHTML = `<b>Result:</b> ${escapeHtml(code)}`;
-                        html5Qr.stop();
-                        camActive = false;
-                        startCamBtn.style.display = "";
-                        stopCamBtn.style.display = "none";
-                    },
-                    (err) => {}
-                );
-                camActive = true;
+                try {
+                    if (!html5Qr) html5Qr = new Html5Qrcode("reader");
+                    await html5Qr.start(
+                        { facingMode: "environment" },
+                        { fps: 10, qrbox: 240 },
+                        async (code) => {
+                            if (generation !== scanGeneration || scannerBusy || !camActive) return;
+                            ++scanGeneration;
+                            setScannerBusy(true);
+                            scanResult.innerHTML = `<b>Result:</b> ${escapeHtml(code)}`;
+                            try {
+                                await stopCamera();
+                            } catch {
+                                scanResult.textContent = "QR read, but the camera could not stop. Try Stop Camera.";
+                            } finally {
+                                setScannerBusy(false);
+                            }
+                        },
+                        () => {}
+                    );
+                    camActive = true;
+                    if (generation !== scanGeneration) await stopCamera();
+                } catch {
+                    camActive = false;
+                    startCamBtn.style.display = "";
+                    stopCamBtn.style.display = "none";
+                    scanResult.textContent = "Camera unavailable or permission denied. Choose an image instead.";
+                } finally {
+                    setScannerBusy(false);
+                }
             };
-            stopCamBtn.onclick = () => {
-                if (html5Qr && camActive) {
-                    html5Qr.stop().then(() => {
-                        readerDiv.style.display = "none";
-                        startCamBtn.style.display = "";
-                        stopCamBtn.style.display = "none";
-                    });
+            stopCamBtn.onclick = async () => {
+                if (scannerBusy) return;
+                ++scanGeneration;
+                setScannerBusy(true);
+                try {
+                    await stopCamera();
+                    readerDiv.style.display = "none";
+                } catch {
+                    scanResult.textContent = "Camera could not stop. Try Stop Camera again.";
+                } finally {
+                    setScannerBusy(false);
                 }
             };
             window.addEventListener("beforeunload", () => {
-                if (html5Qr && camActive) html5Qr.stop();
+                ++scanGeneration;
+                if (html5Qr && camActive && !scannerBusy) html5Qr.stop().catch(() => {});
             });
 
             // QR Reading from Image
-            document.getElementById("imgUpload").onchange = function (e) {
+            imageInput.onchange = async (e) => {
                 const file = e.target.files[0];
-                if (!file) return;
+                if (!file || scannerBusy) return;
+                const generation = ++scanGeneration;
+                setScannerBusy(true);
                 scanResult.textContent = "Scanning...";
-                Html5Qrcode.getCameras().then(() => {
-                    Html5Qrcode.scanFile(file, true)
-                        .then((code) => {
-                            scanResult.innerHTML = `<b>Result:</b> ${escapeHtml(code)}`;
-                        })
-                        .catch(() => {
-                            scanResult.textContent = "No QR code found in this image.";
-                        });
-                });
+                try {
+                    await stopCamera();
+                    if (typeof Html5Qrcode === "undefined") {
+                        scanResult.textContent = "QR reader could not load. Refresh and try again.";
+                        return;
+                    }
+                    readerDiv.style.display = "";
+                    if (!html5Qr) html5Qr = new Html5Qrcode("reader");
+                    const code = await html5Qr.scanFile(file, true);
+                    if (generation === scanGeneration) scanResult.innerHTML = `<b>Result:</b> ${escapeHtml(code)}`;
+                } catch {
+                    if (generation === scanGeneration) {
+                        scanResult.textContent = camActive
+                            ? "Camera could not stop. Try Stop Camera before choosing an image."
+                            : "No QR code found. Choose another image and try again.";
+                    }
+                } finally {
+                    imageInput.value = "";
+                    setScannerBusy(false);
+                }
             };
 
             // Simple HTML escape (for QR result)
