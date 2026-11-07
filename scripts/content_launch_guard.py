@@ -421,6 +421,14 @@ APPROVED_UTILITY_CONTENT_REPAIRS_20261107 = {
 for _path, _blob_pair in APPROVED_UTILITY_CONTENT_REPAIRS_20261107.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
+# Exact owner-delegated Suwon booking and Siheung fee/arrival repairs, 2026-11-07.
+APPROVED_CAMP_MOBILE_REPAIRS_20261107 = {
+    "kor/report/camp/suwon.html": ("ab537b9e6df215abf86290a0074b51d5ca1ff89d", "af4c894588719175bb835f76b7b8befe18a53d93"),
+    "kor/report/camp/siheung.html": ("28d8cf9cc4d6f3e91ecffabc5c9ff0234ede7968", "ab2c7489a2e7a9f4223a68f625b9f9823da900eb"),
+}
+for _path, _blob_pair in APPROVED_CAMP_MOBILE_REPAIRS_20261107.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
+
 # User-approved AdSense placement on the 29-day top-30 camping pages, 2026-10-14.
 # Evidence: reports/camp-cluster-inventory-2026-10-14.csv; exact blob pairs only.
 APPROVED_AD_PLACEMENT_TRANSITIONS = {
