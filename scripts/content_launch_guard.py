@@ -437,6 +437,11 @@ APPROVED_BOTTOM_ANCHOR_TRANSITIONS_20261107 = {
 for _path, _blob_pair in APPROVED_BOTTOM_ANCHOR_TRANSITIONS_20261107.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
+# Exact publisher-navigation flow repair after a confirmed reservation-link overlap.
+APPROVED_CAMP_HOME_FLOW_TRANSITIONS_20261107 = {'kor/report/camp/suwon.html': ('f25c43067a1fe88dc64ec4166deb64bc40efaf06', 'e23d6dc419279c375951906e661481dd3769b651'), 'kor/report/camp/siheung.html': ('e29e3327dbf0a247e5ef05aad517502483889130', '70a331f666df05ec5c3700fd056c20630d83a94c')}
+for _path, _blob_pair in APPROVED_CAMP_HOME_FLOW_TRANSITIONS_20261107.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
+
 # User-approved AdSense placement on the 29-day top-30 camping pages, 2026-10-14.
 # Evidence: reports/camp-cluster-inventory-2026-10-14.csv; exact blob pairs only.
 APPROVED_AD_PLACEMENT_TRANSITIONS = {
