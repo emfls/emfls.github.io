@@ -1345,3 +1345,20 @@ def test_home_search_exact_approval_keeps_other_versions_winners_and_observation
     assert 'PROTECTED_WINNER_CHANGED' in validate_launch(tmp_path, manifest([]), [('M', 'util/qrcode/index.html', before, after)])
     write_json(tmp_path / 'data/experiments.json', {'experiments': [{'url': '/', 'status': 'OBSERVING'}]})
     assert 'PROTECTED_EXPERIMENT_CHANGED' in validate_launch(tmp_path, manifest([]), change)
+
+
+def test_home_search_contrast_exact_approval_keeps_other_versions_winners_and_observations_closed(tmp_path):
+    from scripts.content_launch_guard import APPROVED_HOME_SEARCH_CONTRAST_20261108
+    setup_data(tmp_path)
+    assert set(APPROVED_HOME_SEARCH_CONTRAST_20261108) == {'index.html'}
+    before, after = APPROVED_HOME_SEARCH_CONTRAST_20261108['index.html']
+    revenue = json.loads((tmp_path / 'data/revenue-opportunities.json').read_text())
+    revenue['protectedWinners'].extend({'url': url} for url in ('/', '/util/qrcode/'))
+    write_json(tmp_path / 'data/revenue-opportunities.json', revenue)
+    change = [('M', 'index.html', before, after)]
+    assert validate_launch(tmp_path, manifest([]), change) == []
+    for a, b in ((before, '0' * 40), ('0' * 40, after), (after, before)):
+        assert 'PROTECTED_WINNER_CHANGED' in validate_launch(tmp_path, manifest([]), [('M', 'index.html', a, b)])
+    assert 'PROTECTED_WINNER_CHANGED' in validate_launch(tmp_path, manifest([]), [('M', 'util/qrcode/index.html', before, after)])
+    write_json(tmp_path / 'data/experiments.json', {'experiments': [{'url': '/', 'status': 'OBSERVING'}]})
+    assert 'PROTECTED_EXPERIMENT_CHANGED' in validate_launch(tmp_path, manifest([]), change)

@@ -437,6 +437,13 @@ APPROVED_HOME_SEARCH_20261108 = {
 for _path, _blob_pair in APPROVED_HOME_SEARCH_20261108.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
+# Readable homepage search cards, including hover; separately frozen visual repair.
+APPROVED_HOME_SEARCH_CONTRAST_20261108 = {
+    "index.html": ("4e5ea704995ec67d6516e01b6de6f90db775bb4c", "e028aa2ccf40412cf9fa1d476ea6d2bae3a45af1"),
+}
+for _path, _blob_pair in APPROVED_HOME_SEARCH_CONTRAST_20261108.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
+
 # Microsoft-sourced installation guidance in PR #555.
 APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault("kor/report/window/windows11-installation-failure-fix.html", set()).add(
     ("416d5020eaef44105ef0a82627b5254da9533b23", "a3e7e45340aae403219d3b133b0b66b0db6820d5")
