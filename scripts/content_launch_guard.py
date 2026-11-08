@@ -389,6 +389,13 @@ APPROVED_ANSAN_BOOKING_20261108 = {
 for _path, _blob_pair in APPROVED_ANSAN_BOOKING_20261108.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
+# Follow-up publisher home-button occlusion reproduced on public Ansan at 390px.
+APPROVED_ANSAN_HOME_FLOW_20261108 = {
+    "kor/report/camp/ansan.html": ("a278b6da758135bac5ad3f53c0ccef931c63d6cf", "63f48ca998c0ee01e40202fab83fe531f1a6f725"),
+}
+for _path, _blob_pair in APPROVED_ANSAN_HOME_FLOW_20261108.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
+
 # Microsoft-sourced installation guidance in PR #555.
 APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault("kor/report/window/windows11-installation-failure-fix.html", set()).add(
     ("416d5020eaef44105ef0a82627b5254da9533b23", "a3e7e45340aae403219d3b133b0b66b0db6820d5")
