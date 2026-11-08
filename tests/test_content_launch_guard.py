@@ -1235,3 +1235,22 @@ def test_mobile_camping_booking_approval_keeps_other_versions_and_observations_c
     write_json(tmp_path / "data/revenue-opportunities.json", revenue)
     assert "PROTECTED_WINNER_CHANGED" in validate_launch(
         tmp_path, manifest([]), [("M", "util/qrcode/index.html", "b" * 40, "f" * 40)])
+
+
+def test_ansan_booking_exact_approval_does_not_open_neighbors_or_observations(tmp_path):
+    from scripts.content_launch_guard import APPROVED_ANSAN_BOOKING_20261108
+
+    setup_data(tmp_path)
+    path = "kor/report/camp/ansan.html"
+    assert set(APPROVED_ANSAN_BOOKING_20261108) == {path}
+    before, after = APPROVED_ANSAN_BOOKING_20261108[path]
+    revenue = json.loads((tmp_path / "data/revenue-opportunities.json").read_text())
+    revenue["protectedWinners"].extend({"url": f"/{p}"} for p in (path, "util/qrcode/index.html"))
+    write_json(tmp_path / "data/revenue-opportunities.json", revenue)
+    change = [("M", path, before, after)]
+    assert validate_launch(tmp_path, manifest([]), change) == []
+    for a, b in ((before, "0" * 40), ("0" * 40, after), (after, before)):
+        assert "PROTECTED_WINNER_CHANGED" in validate_launch(tmp_path, manifest([]), [("M", path, a, b)])
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(tmp_path, manifest([]), [("M", "util/qrcode/index.html", before, after)])
+    write_json(tmp_path / "data/experiments.json", {"experiments": [{"url": f"/{path}", "status": "OBSERVING"}]})
+    assert "PROTECTED_EXPERIMENT_CHANGED" in validate_launch(tmp_path, manifest([]), change)
