@@ -1290,3 +1290,23 @@ def test_maple_reader_approval_is_exact_and_preserves_other_winners_and_experime
         assert "PROTECTED_EXPERIMENT_CHANGED" in validate_launch(tmp_path, manifest([]), change)
         write_json(tmp_path / "data/experiments.json", {"experiments": []})
     assert "PROTECTED_WINNER_CHANGED" in validate_launch(tmp_path, manifest([]), [("M", "util/qrcode/index.html", "0" * 40, "1" * 40)])
+
+
+def test_esim_exact_approval_keeps_other_versions_winners_and_observations_closed(tmp_path):
+    from scripts.content_launch_guard import APPROVED_ESIM_SEARCH_20261108
+    setup_data(tmp_path)
+    approved = APPROVED_ESIM_SEARCH_20261108
+    assert set(approved) == {f"kor/util/japan-esim-data-calculator/{name}" for name in ("index.html", "app.js")}
+    revenue = json.loads((tmp_path / "data/revenue-opportunities.json").read_text())
+    # The real route maps to index.html; the synthetic JS row also checks its frozen pair.
+    revenue["protectedWinners"].extend({"url": f"/{p}"} for p in (*approved, "util/qrcode/index.html"))
+    write_json(tmp_path / "data/revenue-opportunities.json", revenue)
+    for path, (before, after) in approved.items():
+        change = [("M", path, before, after)]
+        assert validate_launch(tmp_path, manifest([]), change) == []
+        for a, b in ((before, "0" * 40), ("0" * 40, after), (after, before)):
+            assert "PROTECTED_WINNER_CHANGED" in validate_launch(tmp_path, manifest([]), [("M", path, a, b)])
+        write_json(tmp_path / "data/experiments.json", {"experiments": [{"url": f"/{path}", "status": "OBSERVING"}]})
+        assert "PROTECTED_EXPERIMENT_CHANGED" in validate_launch(tmp_path, manifest([]), change)
+        write_json(tmp_path / "data/experiments.json", {"experiments": []})
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(tmp_path, manifest([]), [("M", "util/qrcode/index.html", "0" * 40, "1" * 40)])
