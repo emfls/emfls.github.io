@@ -1,3 +1,10 @@
+## 2026-11-08 — 김포 검색 답변·예약 접근 복구
+
+- GSC완료10/9~11/5(태평양)7click/138impression/평균6.75,같은URLquery'김포 노지캠핑'14imp·'김포 차박'3imp(각0click)확인. 별도GA4 10/11~11/7(서울)43조회·39사용자·기록광고수익0.072257은AdSense URL직접수익이아니다. 클릭손실/예상수익/네이버검색어대응을추정하지않는다.
+- 공개390px에서실제예약링크없음·등록시설카드4217px아래/미확인4곳뒤를확인,김포한강카드만첫배치·부분확인일·운영처요금/추가비·차량/인원/숙박형태·시설/상품별미확인조건과운영처연결땡큐예약/jump보완. 고캠핑/운영처면수차이를잔여석으로보장하지않는다. 390px 하단CTA고정재현에서홈icon이중앙hit를가로챔→같은페이지홈container만normalflow. 제목/H1/meta/scripts/ad/GA/기존다른시설상태·확인일보존.
+- 정확승인PR647/main b6730b2e 선행,HTML f2bb1fe4d849831bd7cdfec2fd2ca0860a312c0a→de4cf2fa3dcf6f3b889ffecf475225acaac47fdf. current/pin WINNER/PROTECT,cooldownfalse·직접실험0이나globalUNKNOWN/일부pin자료NOT_AVAILABLE보존. 74관련tests/독립검토PASS,320/390/430 CTA48px이상·중앙hittrue·가로넘침없음/실제클릭→예약시설명확인. 기존제목기대값3실패는정확main동일재현,검사/제목수정없음.
+- 정확main147112fb의동일전체SEO 신규critical/warning0,기존735/420·자동발행IT글끊긴관련링크/템플릿placeholder기준실패보존. CLI Guard는커밋diff를읽으므로실제콘텐츠커밋뒤검사·공개배포결과는후속기록. 기존15관측/원장/pin/발행·광고설정/PR589/논산보존,수익/순위효과UNMEASURED. 로컬 reports/emfls-gimpo-search-2026-11-08/.
+
 ## 2026-11-08 — eSIM 검색 답변·계산 복구 공개 확인 완료
 
 - 승인PR641→콘텐츠PR642/main ee7513f6ce41fae50e12e9cd5f5b7f98391accac·Pages42453934400 success,deploy15:15:31KST. 공개HTML/JS정확blob2/2·390px기본1.3GB/고사용172.2GB실제클릭정상. 로컬320/390/430·82관련검사·실OPS Guard·독립검토·정확mainSEO신규0 PASS,기존실패/기준보존.
