@@ -1,7 +1,7 @@
 # Tasks
 
-- [ ] 김포 기존 검색답변·예약 접근 공개 확인
-  - 정확승인PR647 병합,동결de4cf2fa·74관련tests/독립검토/모바일3폭PASS. 실제커밋Guard·콘텐츠PR·Pages·공개동작확인후완료. 기존제목기대값실패/원장UNKNOWN/15관측보존,순위·수익효과미측정.
+- [x] 김포 기존 검색답변·예약 접근 공개 확인
+  - 정확승인PR647 병합,동결de4cf2fa·74관련tests/독립검토/모바일3폭PASS. 실제커밋Guard/콘텐츠PR648/mainf1108539·Pages42467165708 deploy18:27:07KST success·공개3폭CTA/목적지확인완료. 기존09/18관측연결·미래NOT_READY. 기존제목기대값실패/원장UNKNOWN/15관측보존,순위·수익효과미측정.
 
 - [x] 기존eSIM하루검색답변·계산상한복구 공개 배포 확인
   - 정확승인PR641 병합,관련82검사/독립검토/320·390·430PASS. 콘텐츠PR642/main ee7513f6·Pages42453934400 deploy15:15:31KST success·공개HTML/JS exact2/2·기본/고사용계산PASS. 기존09/18점검에관측연결,미래NOT_READY. GSC3click/136impression·GA4별도6조회로 소표본,효과미측정. 기존14관측/설정/원장 보존.
