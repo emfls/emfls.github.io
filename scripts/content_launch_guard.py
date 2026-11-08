@@ -429,6 +429,14 @@ APPROVED_GIMPO_BOOKING_20261108 = {
 for _path, _blob_pair in APPROVED_GIMPO_BOOKING_20261108.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
+# Homepage search recovery under the owner delegation; exact versions only.
+# docs/home-search-recovery-2026-11-08.md; observation gates remain active.
+APPROVED_HOME_SEARCH_20261108 = {
+    "index.html": ("f83c43f37a66792c8f983c8901ca57b3bab79e82", "4e5ea704995ec67d6516e01b6de6f90db775bb4c"),
+}
+for _path, _blob_pair in APPROVED_HOME_SEARCH_20261108.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
+
 # Microsoft-sourced installation guidance in PR #555.
 APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault("kor/report/window/windows11-installation-failure-fix.html", set()).add(
     ("416d5020eaef44105ef0a82627b5254da9533b23", "a3e7e45340aae403219d3b133b0b66b0db6820d5")
