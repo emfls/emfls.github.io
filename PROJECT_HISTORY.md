@@ -1,3 +1,11 @@
+## 2026-11-08 — 당일 AdSense·최근7일상위20과 메이플 검색 답변 보완
+
+- 14:32:38~43KST 사이트단독오늘partial AdSense $0.91/PV405/RPM2.25/광고노출1332/요청1926/매칭1724·coverage89.51%;mobile97.39%·desktop76.59%. API실제갱신시각/시간별과거값미제공으로동일시각비교불가,완료하루와비교하지않는다. 정책센터현재게재제한없음/APIpolicy0·일반전쟁정책알림1을구분. coverage차이를코드오류/재고부족으로확정하지않는다.
+- GA4정확11/1~7 host필터상위20/1063조회·397samehost링크검사(내부깨짐/JS누락/canonical/noindex이상0). 3메이플글79/57/33조회에서동일head/footer광고로더중복만확인. 실제비숍390px정상방문은filled광고·network로더1요청이라게재실패/수익손실원인증명은아님. 11관측은읽기전용. 기존생성경로가세legacycolumn슬러그를계속덮는증거없어정적3파일만최소수정한다.
+- 부족한GSC query,page만최근완료10/9~11/5와전9/11~10/8 각100행추가(태평양일자,GA4서울기간과구분). 무자본글실제query '메이플플래닛 쌀먹'37click/263imp/pos6.16,'플래닛 쌀먹'38/208/6.31 확인. 누락0/표본전체순위/NaverqueryURL임의연결금지. 기존Naver30일15·60일18충돌보존.
+- 무자본글첫답에서정책상RMT와게임내메소를분리,48px두jump와미판매제외·물약/입장/이동비·총시간비교표/절차로구체화. 공식정책5-9재확인11/8만명시,시급/환율/수익예측없음. 제목/meta/head/GA4/manualins/push/광고설정보존. 나머지2글은footerloader1개제거만. 기존C33문구/금지claim회귀는본문을고쳐해결하고테스트기준은바꾸지않았다.
+- 정확승인PR637→별도콘텐츠PR.71관련tests/고정OPS Guard/독립검토/모바일320·390·430 PASS. 정확main4b6ecca0의동일전체SEO검사신규critical/warning0,기존734/420·OPSplaceholder실패보존. 상세최소원문/동결버전/후속공개/당일완료값은로컬 reports/emfls-today-revenue-2026-11-08. 수익효과UNMEASURED.
+
 ## 2026-11-08 — 3차 안산 공개 배포·가림 복구 및 관측 연결 완료
 
 - 콘텐츠PR631/main58d9e100 Pages42444377804 deploy12:51:32KST, 가림CSS PR633/main54c92e8d5df8cffe1fcd4daad76b306d598364a7 Pages42444933581 deploy13:00:12KST success. 최종공개blob63f48ca998c0ee01e40202fab83fe531f1a6f725 일치. 공개320/390/430 동일y799·48px CTA중앙hittrue·공식예약site실제이동 PASS. 기존10URL blob불변.
