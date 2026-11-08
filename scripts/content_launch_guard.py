@@ -444,6 +444,14 @@ APPROVED_HOME_SEARCH_CONTRAST_20261108 = {
 for _path, _blob_pair in APPROVED_HOME_SEARCH_CONTRAST_20261108.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
+# Existing equipment guide's optional reader paths; owner delegation, exact versions only.
+# docs/maple-equipment-reader-path-2026-11-08.md; no experiment override.
+APPROVED_MAPLE_EQUIPMENT_PATH_20261108 = {
+    "kor/column/maple-planet-equip-setup-guide-2026.html": ("eee2813e285e284fc2ff03efdc412f2489571288", "ae1714d2c486f7037b087432bc4060aa75e20b0e"),
+}
+for _path, _blob_pair in APPROVED_MAPLE_EQUIPMENT_PATH_20261108.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
+
 # Microsoft-sourced installation guidance in PR #555.
 APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault("kor/report/window/windows11-installation-failure-fix.html", set()).add(
     ("416d5020eaef44105ef0a82627b5254da9533b23", "a3e7e45340aae403219d3b133b0b66b0db6820d5")
