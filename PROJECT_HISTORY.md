@@ -1,3 +1,9 @@
+## 2026-11-08 — 홈페이지 다중 단어 검색 복구
+
+- 공개 홈의 예시 ‘포천 캠핑장’·김포/제주 캠핑장·메이플 장비가 기존 글이 있어도0결과. 기존 구문 순위 보존·모든 단어 매칭/제목 지역 우선, 단일 인덱스 요청·최신 검색만 표시·지움/오류 재시도 복구. 오늘partial19:55 GA4홈18조회/15사용자·완료11/1~7의63조회는 이용 맥락이며 수익 예측이 아니다.
+- 정확승인PR652/main82fc0d71 선행, root f83c43f3→4e5ea704. 실제OPS/pin WINNER/PROTECT·cooldownfalse·직접실험0,전역UNKNOWN/일부pin자료미확인보존. Node4/Python관련28/Guard65 PASS·독립검토PASS·모바일320/390/430/실제포천연결 확인. 정시 발행의 검색JS보존 계약 포함. head/GA/광고/제목/정적 링크·기존16관측·원장/pin/PR589/논산 불변.
+- 정확main3c6313c1 동일전체SEO 신규critical/warning0,기존735/420·기존brokenlink2 baseline실패보존. 실제커밋Guard·Pages·공개최종결과는후속기록. 공통탐색개입 별도시점/버전기록,GA4홈전11/1~7·후11/9~15 원천완료후11/16 비교;기존3시간점검 재사용. 실사용검색성공률NOT_AVAILABLE·수익/순위효과UNMEASURED. 로컬 reports/emfls-home-search-2026-11-08/.
+
 ## 2026-11-08 — 김포 검색 답변·예약 접근 공개 배포 완료
 
 - 정확승인PR647→콘텐츠PR648/main f1108539df60269787b417287ddb046503359f27,Pages42467165708 success·deployjob18:27:07KST. 공개de4cf2fa exact·320/390/430 jump/48px+ CTA중앙hit/넘침없음·실제클릭→같은예약시설/주소확인.
