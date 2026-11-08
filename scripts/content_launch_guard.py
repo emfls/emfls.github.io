@@ -371,6 +371,16 @@ APPROVED_IKSAN_NOTICE_REPAIR_20261108 = {
 for _path, _blob_pair in APPROVED_IKSAN_NOTICE_REPAIR_20261108.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
+# Existing mobile-reader booking repairs under the owner's November 8 delegation.
+# Exact reviewed versions; docs/mobile-camping-booking-recovery-2026-11-08.md.
+APPROVED_MOBILE_CAMPING_BOOKING_20261108 = {
+    "kor/report/camp/sejong.html": ("53d89a2bdb4c089709b86c39164ddbcbcaf99aa3", "ffdc657cf2a771ca08f4cdead9d0181b305f4ce2"),
+    "kor/report/camp/boryeong.html": ("6e980d69f539b42661a4dcf69ad1588807f2de29", "5b4f133583feabea7dc3b466a0407a8819b98671"),
+    "kor/report/camp/naju.html": ("6d5beddfe111bdb3b627ad4a126151271ec88a88", "9598b42e60fff56344805d93770a3f6dc638040f"),
+}
+for _path, _blob_pair in APPROVED_MOBILE_CAMPING_BOOKING_20261108.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
+
 # Microsoft-sourced installation guidance in PR #555.
 APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault("kor/report/window/windows11-installation-failure-fix.html", set()).add(
     ("416d5020eaef44105ef0a82627b5254da9533b23", "a3e7e45340aae403219d3b133b0b66b0db6820d5")
