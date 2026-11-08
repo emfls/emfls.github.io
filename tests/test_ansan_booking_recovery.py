@@ -27,6 +27,12 @@ class AnsanBookingRecoveryTest(unittest.TestCase):
             self.assertIn(detail, html)
         self.assertNotIn('무료 화랑', html)
 
+    def test_publisher_home_button_cannot_cover_booking_link(self):
+        html = (ROOT / 'kor/report/camp/ansan.html').read_text()
+        home_css = html.split('/* 홈 버튼 스타일 */')[1].split('</style>')[0]
+        self.assertNotIn('position: fixed', home_css)
+        self.assertIn('class="home-button"', html)
+
 
 if __name__ == '__main__':
     unittest.main()
