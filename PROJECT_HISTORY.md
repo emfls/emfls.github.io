@@ -1,3 +1,10 @@
+## 2026-11-08 — 3차 안산 공개 배포·가림 복구 및 관측 연결 완료
+
+- 콘텐츠PR631/main58d9e100 Pages42444377804 deploy12:51:32KST, 가림CSS PR633/main54c92e8d5df8cffe1fcd4daad76b306d598364a7 Pages42444933581 deploy13:00:12KST success. 최종공개blob63f48ca998c0ee01e40202fab83fe531f1a6f725 일치. 공개320/390/430 동일y799·48px CTA중앙hittrue·공식예약site실제이동 PASS. 기존10URL blob불변.
+- 최종63관련tests/고정OPS Guard/독립본문·CSS검토 PASS. 기존검사 exactmain 비교 신규critical/warning0,기존734/420·OPSplaceholder실패 유지. CSS를단어로세는파서의word_count 차이로출력전체동일assert는실패했으며PASS로쓰지않고변경없는전체검사로무회귀를확인했다. 실기·Naver인앱·실예약·실광고게재전수는미검증.
+- 기존09·18 EMFLS heartbeat를정상앱action으로갱신해기존10코호트와안산전11/1~7·후11/9~15·11/8혼합제외·11/16이후원천완료조건연결. 기존ACTIVE/같은chat/같은schedule/단1예약을DB·설정으로검증,다음dispatch18:01:38KST. 미래비교는NOT_READY. 신규안산GA4정확7일기준12조회·모바일m.search8랜딩세션 확보,네이버URL동기간미확보NOT_AVAILABLE·30일대안보존. 사이트전체광고와원래콘텐츠/가림을별도개입기록.
+- 수익효과미측정. 최신수익·회계분해·채널/기기/섹터·후보배제·관측/한계는로컬 reports/emfls-revenue-wave3-2026-11-08/REPORT.md 와원문JSON. PR589/논산/원장/보호pin/SEO기준/기존10관측/광고설정/정시발행/DNS/중단CSV프로젝트불변. 사용자가추가로승인하거나인증할단계없음.
+
 ## 2026-11-08 — 안산 공개 예약 링크의 고정 홈 가림 후속 복구
 
 - 콘텐츠PR631/main58d9e100 Pages42444377804 deploy12:51:32 KST 성공. 공개HTML a278b6da 정확일치 뒤390px 실제 클릭에서 기존fixed홈링크가 CTA중앙(x146.59,y822.97)을가로채는 장애를 재현했다. 링크정상·가로넘침없음만으로사용정상처리하지 않았다.
