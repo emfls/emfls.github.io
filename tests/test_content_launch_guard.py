@@ -1191,3 +1191,23 @@ def test_camp_home_flow_approval_keeps_unreviewed_versions_blocked(tmp_path):
     assert "PROTECTED_WINNER_CHANGED" in validate_launch(
         tmp_path, manifest([]), [("M", "util/qrcode/index.html", "b" * 40, "f" * 40)]
     )
+
+
+def test_iksan_notice_repair_approval_is_exact_and_keeps_observation_protected(tmp_path):
+    from scripts.content_launch_guard import APPROVED_IKSAN_NOTICE_REPAIR_20261108
+
+    setup_data(tmp_path)
+    path = "kor/report/camp/iksan.html"
+    before, after = APPROVED_IKSAN_NOTICE_REPAIR_20261108[path]
+    assert set(APPROVED_IKSAN_NOTICE_REPAIR_20261108) == {path}
+    revenue = json.loads((tmp_path / "data/revenue-opportunities.json").read_text())
+    revenue["protectedWinners"].extend([{"url": f"/{path}"}, {"url": "/kor/report/camp/nonsan.html"}])
+    write_json(tmp_path / "data/revenue-opportunities.json", revenue)
+    change = [("M", path, before, after)]
+    assert validate_launch(tmp_path, manifest([]), change) == []
+    for pair in [(before, "0" * 40), ("0" * 40, after), (after, before)]:
+        assert "PROTECTED_WINNER_CHANGED" in validate_launch(tmp_path, manifest([]), [("M", path, *pair)])
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+        tmp_path, manifest([]), [("M", "kor/report/camp/nonsan.html", before, after)])
+    write_json(tmp_path / "data/experiments.json", {"experiments": [{"url": f"/{path}", "status": "OBSERVING"}]})
+    assert "PROTECTED_EXPERIMENT_CHANGED" in validate_launch(tmp_path, manifest([]), change)
