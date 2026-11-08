@@ -406,6 +406,21 @@ APPROVED_MAPLE_READER_20261108 = {
 for _path, _blob_pair in APPROVED_MAPLE_READER_20261108.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
+# Existing eSIM calculator repair under the owner delegation; exact versions only.
+# docs/esim-search-recovery-2026-11-08.md; experiment and cooldown gates remain active.
+APPROVED_ESIM_SEARCH_20261108 = {
+    "kor/util/japan-esim-data-calculator/index.html": (
+        "993c7610169b2d10c4f111929d2fa330d901d040",
+        "010557d00c6d82db4c5477e39e4a7f0624e73265"
+    ),
+    "kor/util/japan-esim-data-calculator/app.js": (
+        "562d0d3ba429e1df9258ff7e379496ff84e28aa8",
+        "57a746dc2cd6b8a2059f3a017a8a865d6999818a"
+    )
+}
+for _path, _blob_pair in APPROVED_ESIM_SEARCH_20261108.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(tuple(_blob_pair))
+
 # Microsoft-sourced installation guidance in PR #555.
 APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault("kor/report/window/windows11-installation-failure-fix.html", set()).add(
     ("416d5020eaef44105ef0a82627b5254da9533b23", "a3e7e45340aae403219d3b133b0b66b0db6820d5")
