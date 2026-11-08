@@ -396,6 +396,16 @@ APPROVED_ANSAN_HOME_FLOW_20261108 = {
 for _path, _blob_pair in APPROVED_ANSAN_HOME_FLOW_20261108.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
+# Measured Maple reader repair under the November 8 owner delegation; exact blobs.
+# docs/maple-reader-recovery-2026-11-08.md; observing/cooldown gates remain active.
+APPROVED_MAPLE_READER_20261108 = {
+    "kor/column/maple-planet-bishop-4th-skill-quest-guide-2026.html": ("311260d8f5592fa0d534624349fef5e3252a55ad", "91a8e3b888091f427511ff5caca129a5bdcde58c"),
+    "kor/column/maple-planet-no-capital-rice-farming-2026.html": ("873ab21ba21523a22e83cffaf61e1dab3e4ec5d3", "7bf0825aa5a1fa2d1a61545031fb8e4285adf74c"),
+    "kor/column/mapleland-bishop-free-leveling-guide-2026.html": ("33321d79ea9f2cf35bad23357db8f95ec535cab4", "7fea9eb7f94f7c12b5258f6a77d9d0f83604111a"),
+}
+for _path, _blob_pair in APPROVED_MAPLE_READER_20261108.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
+
 # Microsoft-sourced installation guidance in PR #555.
 APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault("kor/report/window/windows11-installation-failure-fix.html", set()).add(
     ("416d5020eaef44105ef0a82627b5254da9533b23", "a3e7e45340aae403219d3b133b0b66b0db6820d5")
