@@ -1,3 +1,10 @@
+## 2026-11-08 — 기존 eSIM 계산기의 하루 검색 답변·계산 오류 복구
+
+- GSC 완료10/9~11/5는3click/136impression/평균7.24,같은URL query에서일본여행데이터사용량·하루사용량확인. 별도GA4 10/11~11/7은6조회소표본이므로클릭손실/수익예측을만들지않는다. 기존화면은전체만표시하고공개30일/영상600분에서80GB/96GB상한고정재현.
+- 일일×일수의숨은상한·합산전반올림제거,하루MB/GB·전체예상·20%여유용량분리. 입력clamp/계수/추천구간보존,JS hash버전으로신HTML구JS캐시혼합방지. title/meta/canonical/GA/광고/기존link불변. 기존메인사이트한도구이며중단한CSV/Excel/서브도메인업무와무관.
+- 정상정확승인PR641/main1539f786선행,HTML010557d00c6d82db4c5477e39e4a7f0624e73265·JS57a746dc2cd6b8a2059f3a017a8a865d6999818a동결. 실OPS/pin route WINNER/PROTECT,cooldownfalse,직접실험일치0이나전체UNKNOWN보존. Guard는HTMLroute만보호해JS계산은별도수치QA/독립검토로확인. 원장/pin/14관측/PR589/논산/발행·광고설정불변.
+- Node11/Python관련8/Guard63 PASS·독립검토PASS,320/390/430고정입력172.2GB·가로넘침없음확인. 정확main1539f786의동일SEO비교신규critical/warning0,기존734/420·OPSplaceholder실패보존. 공개배포확정결과는후속기록. 전11/1~7·후11/9~15/11/8제외/11/16이후원천완료조건,수익·상위노출효과UNMEASURED. 최소증거로컬 reports/emfls-esim-search-2026-11-08/.
+
 ## 2026-11-08 — 당일 메이플 개선 공개 배포·수익 재조회 완료
 
 - 정상승인PR637→콘텐츠PR638/main1cd642a4c9f8fa04eaf44e52f89cebd95ffeaa05,Pages42452013972 success/deploy14:46:27KST. 공개3HTML exactblob일치·390px단일loader/기존광고단위/queue1·canonical유지,무자본320/390/430 빠른답/두jump/표/넘침없음 확인.71관련tests/실제OPS Guard/독립검토/정확mainSEO무회귀PASS,기존전체실패·기준보존.
