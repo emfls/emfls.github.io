@@ -1,3 +1,12 @@
+## 2026-11-08 — 네이버 지표 대조와 익산 이용조건 복구 공개 확인
+
+- 기존 스냅샷을 재사용하고 공식 차트 CSV로 실제 최근30일10/9~11/7, 이전9/9~10/8을 확인했다. 업데이트일11/7과 데이터 기간을 별도 기록한다. 사이트 전체 클릭15,229→13,447(-1,782), 모바일12,077→9,741(-2,336), PC3,152→3,706(+554). 이 기기별 일별 합계는 일치하지만 URL TOP30의 비교 가능한15행은 기기 모순이 있어 MISMATCH로 보존·비교 제외했다. 반올림 원문·화면 평균CTR·총클릭÷노출·상대%·%p를 분리하며 공지의 통계변경을 이번 원인으로 단정하지 않는다. 검색어30개는 URL에 임의 결합하지 않았다.
+- 관측6개·논산·최근11/5 변경·MISMATCH를 제외하고 익산86→69클릭(-17, 겹치는30일 창의 순변화)을 검토했다. 이미 지난10월 시설 제한을 현행으로 표시하는 문제를 고치고 공식600W·온수·차량조건 및 두 예약 목적지를 연결했다. 제목/설명/head·scripts·광고 단위 바이트 보존. 고양·장성은 새 오류와 URL검색어 대응이 부족해 수량을 채우지 않았다.
+- 정상 정확버전 승인PR623→콘텐츠PR624/main `49ad4ce6041cd8e63ab297196c42c643524eb3e3`, Pages42437498477 deploy11:13:00 KST success.11:14 공개HTTP200·승인blob `4605e779e53a2e36217c7ead32436839e1d8f960` 일치. 로컬320/390/430px 가로넘침 없음·예약버튼48px,390/430 hit PASS; 공개390px 표시 확인. 두 공식예약은 로그인 필요로 실제예약/잔여석은 미검증이다. 공개 광고코드 보존과 실제광고노출 검증은 구분하며 이 검사는 모든광고상태/실기휴대폰 정상 보장이 아니다.
+- 관련65 tests·고정pin실제Guard PASS. 승인 전 PROTECTED_WINNER_CHANGED를 확인했고 정확pair 외 WINNER·OBSERVING 차단 유지. 변경 없는 전체SEO검사기로 정확시작main과19417페이지 대조 시 신규critical/warning0(기존734/420). 기존OPS SEO기준의 템플릿치환자 링크 실패는 유지했으며 전체/원격SEO green으로 보고하지 않는다. 원장3개 hash·pin 불변, 전역 최신완전성UNKNOWN.
+- 로컬 대시보드에 실제기간·지표정의·15개MISMATCH 제외를 반영하고5 관련tests/빌드 PASS. 사용자가 CSV·Excel·100유틸을 중지하고DNS를 직접삭제했으므로 csv자동화 삭제·파생HTTP점검 중지, 과거원본 보존. 본도메인/www·ready/weapons/games 유지 지시를 기록했다. 메인사이트 정시발행과 수익점검은 유지한다.
+- 기존emfls09/18 자동화를 실제 갱신했다. 익산은11/8 혼합일 제외, 전11/1~7 대 후11/9~15,11/16 이후 원천완료 확인 때 비교하며 미확보URL기간은NOT_AVAILABLE/NOT_READY다. 기존6개11/8~14와 사이트전체광고개입은별도유지. 검색클릭 회복·수익효과 미측정. 원문·배포·복원방법: 로컬 reports/emfls-naver-recovery-2026-11-08 및 docs/iksan-notice-repair-2026-11-08.md.
+
 ## 2026-11-07 — 광고·측정 후속 공개 검증과 남은 전파 상태
 
 - 정상 승인PR603→605의 두 bottom 로더 속성은21:44:47 KST 배포됐다. 소스만으로 실제 상단 광고가 바뀌지 않아 공식 UI 위치 `상단 또는 하단`→`하단만`을21:51:49 저장했다(사이트 전체·기타옵션 동일). 이후 새 모바일320/390/430px 실제 일반 앵커의 하단 게재를 확인했다. 소스 배포와 설정 저장/실제 게재 확인을 구분한다.
@@ -1588,12 +1597,3 @@
 - Added one contextual paragraph in the existing winter camping checklist linking to camping.guidehollow.com, a live HTTP200 personalized packing tool. No operating facts, dates, metadata, scripts, ads, URL, sitemap, queue or48/day30-minute schedule changed.
 - Seven focused winter-hub checks pass, including a new placement/link regression (RED then GREEN). Reproduced the existing10/15 date assertion failure on exact starting main3365ffc3, then aligned only that assertion to the already-maintained10/16 content. Removing the single added paragraph reproduces the entire original HTML byte-for-byte.
 - Corrected earlier review inference: no repository rule requires a newly dated complete OBSERVING registry for this non-WINNER page; local_qa.sh explicitly uses the immutable ops-pinned snapshot. No registry/allowlist change. Committed Guard, normal PR/CI and deployment checks pending.
-## 2026-11-08 — 네이버 지표 대조와 익산 이용조건 복구 공개 확인
-
-- 기존 스냅샷을 재사용하고 공식 차트 CSV로 실제 최근30일10/9~11/7, 이전9/9~10/8을 확인했다. 업데이트일11/7과 데이터 기간을 별도 기록한다. 사이트 전체 클릭15,229→13,447(-1,782), 모바일12,077→9,741(-2,336), PC3,152→3,706(+554). 이 기기별 일별 합계는 일치하지만 URL TOP30의 비교 가능한15행은 기기 모순이 있어 MISMATCH로 보존·비교 제외했다. 반올림 원문·화면 평균CTR·총클릭÷노출·상대%·%p를 분리하며 공지의 통계변경을 이번 원인으로 단정하지 않는다. 검색어30개는 URL에 임의 결합하지 않았다.
-- 관측6개·논산·최근11/5 변경·MISMATCH를 제외하고 익산86→69클릭(-17, 겹치는30일 창의 순변화)을 검토했다. 이미 지난10월 시설 제한을 현행으로 표시하는 문제를 고치고 공식600W·온수·차량조건 및 두 예약 목적지를 연결했다. 제목/설명/head·scripts·광고 단위 바이트 보존. 고양·장성은 새 오류와 URL검색어 대응이 부족해 수량을 채우지 않았다.
-- 정상 정확버전 승인PR623→콘텐츠PR624/main `49ad4ce6041cd8e63ab297196c42c643524eb3e3`, Pages42437498477 deploy11:13:00 KST success.11:14 공개HTTP200·승인blob `4605e779e53a2e36217c7ead32436839e1d8f960` 일치. 로컬320/390/430px 가로넘침 없음·예약버튼48px,390/430 hit PASS; 공개390px 표시 확인. 두 공식예약은 로그인 필요로 실제예약/잔여석은 미검증이다. 공개 광고코드 보존과 실제광고노출 검증은 구분하며 이 검사는 모든광고상태/실기휴대폰 정상 보장이 아니다.
-- 관련65 tests·고정pin실제Guard PASS. 승인 전 PROTECTED_WINNER_CHANGED를 확인했고 정확pair 외 WINNER·OBSERVING 차단 유지. 변경 없는 전체SEO검사기로 정확시작main과19417페이지 대조 시 신규critical/warning0(기존734/420). 기존OPS SEO기준의 템플릿치환자 링크 실패는 유지했으며 전체/원격SEO green으로 보고하지 않는다. 원장3개 hash·pin 불변, 전역 최신완전성UNKNOWN.
-- 로컬 대시보드에 실제기간·지표정의·15개MISMATCH 제외를 반영하고5 관련tests/빌드 PASS. 사용자가 CSV·Excel·100유틸을 중지하고DNS를 직접삭제했으므로 csv자동화 삭제·파생HTTP점검 중지, 과거원본 보존. 본도메인/www·ready/weapons/games 유지 지시를 기록했다. 메인사이트 정시발행과 수익점검은 유지한다.
-- 기존emfls09/18 자동화를 실제 갱신했다. 익산은11/8 혼합일 제외, 전11/1~7 대 후11/9~15,11/16 이후 원천완료 확인 때 비교하며 미확보URL기간은NOT_AVAILABLE/NOT_READY다. 기존6개11/8~14와 사이트전체광고개입은별도유지. 검색클릭 회복·수익효과 미측정. 원문·배포·복원방법: 로컬 reports/emfls-naver-recovery-2026-11-08 및 docs/iksan-notice-repair-2026-11-08.md.
-
