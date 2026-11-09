@@ -24,8 +24,9 @@ def test_operations_moved_to_local_execution_are_manual_only():
 
 def test_partial_adsense_collection_and_indexnow_push_trigger_are_preserved():
     adsense = (ROOT / ".github/workflows/adsense-collection.yml").read_text(encoding="utf-8")
-    assert "workflow_dispatch:" in adsense.split("permissions:", 1)[0]
-    assert 'cron: "47 1 * * *"' in adsense
+    adsense_triggers = adsense.split("permissions:", 1)[0]
+    assert "workflow_dispatch:" in adsense_triggers
+    assert "schedule:" not in adsense_triggers
 
     indexnow = (ROOT / ".github/workflows/indexnow-submit.yml").read_text(encoding="utf-8")
     trigger_block = indexnow.split("permissions:", 1)[0]
