@@ -1,0 +1,211 @@
+name: Keyword Hunter targeted artifact
+
+on:
+  workflow_dispatch:
+    inputs:
+      keywords:
+        description: 1 to 5 distinct Korean search terms, one per line
+        type: string
+        required: true
+        default: |
+          현대자동차서비스센터
+          현대자동차정비예약
+          블루핸즈예약
+
+permissions:
+  contents: read
+
+concurrency:
+  group: keyword-hunter-targeted-artifact
+  cancel-in-progress: false
+
+jobs:
+  targeted-measurement:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TZ: Asia/Seoul
+      KEYWORD_HUNTER_TARGETS_JSON: ${{ inputs.keywords }}
+      KEYWORD_HUNTER_RUN_ID: ${{ github.run_id }}-${{ github.run_attempt }}
+    steps:
+      - name: Check out source without a persisted Git credential
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install pytest
+        run: python3 -m pip install pytest
+
+      - name: Validate targets and Actions secrets
+        env:
+          NAVER_SEARCHAD_API_KEY: ${{ secrets.NAVER_SEARCHAD_API_KEY }}
+          NAVER_SEARCHAD_SECRET_KEY: ${{ secrets.NAVER_SEARCHAD_SECRET_KEY }}
+          NAVER_SEARCHAD_CUSTOMER_ID: ${{ secrets.NAVER_SEARCHAD_CUSTOMER_ID }}
+          NAVER_API_HUB_CLIENT_ID: ${{ secrets.NAVER_API_HUB_CLIENT_ID }}
+          NAVER_API_HUB_CLIENT_SECRET: ${{ secrets.NAVER_API_HUB_CLIENT_SECRET }}
+          NAVER_WEB_SEARCH_API_HUB_CLIENT_ID: ${{ secrets.NAVER_WEB_SEARCH_API_HUB_CLIENT_ID }}
+          NAVER_WEB_SEARCH_API_HUB_CLIENT_SECRET: ${{ secrets.NAVER_WEB_SEARCH_API_HUB_CLIENT_SECRET }}
+        run: |
+          python3 - <<'PY'
+          import os
+          import re
+          import sys
+          from scripts.keyword_hunter_targeted import parse_targets
+
+          targets = parse_targets(os.environ.get("KEYWORD_HUNTER_TARGETS_JSON", ""))
+          if any(not re.fullmatch(r"[가-힣0-9 ]+", target) for target in targets):
+              print("Target terms must contain Korean letters, digits, and spaces only.", file=sys.stderr)
+              raise SystemExit(2)
+          required = (
+              "NAVER_SEARCHAD_API_KEY",
+              "NAVER_SEARCHAD_SECRET_KEY",
+              "NAVER_SEARCHAD_CUSTOMER_ID",
+              "NAVER_API_HUB_CLIENT_ID",
+              "NAVER_API_HUB_CLIENT_SECRET",
+              "NAVER_WEB_SEARCH_API_HUB_CLIENT_ID",
+              "NAVER_WEB_SEARCH_API_HUB_CLIENT_SECRET",
+          )
+          missing = [name for name in required if not os.environ.get(name)]
+          if missing:
+              print("ACTIONS_CREDENTIALS_NOT_VERIFIED; missing configured Actions secrets: " + ", ".join(missing), file=sys.stderr)
+              raise SystemExit(2)
+          print(f"Validated {len(targets)} distinct exact target(s) and secret presence.")
+          PY
+
+      - name: Run targeted offline regressions
+        run: python3 -m pytest tests/test_keyword_hunter_targeted.py tests/test_keyword_hunter_targeted_artifact_workflow.py -q
+
+      - name: Measure exact targets in the ephemeral runner only
+        id: measure
+        env:
+          NAVER_SEARCHAD_API_KEY: ${{ secrets.NAVER_SEARCHAD_API_KEY }}
+          NAVER_SEARCHAD_SECRET_KEY: ${{ secrets.NAVER_SEARCHAD_SECRET_KEY }}
+          NAVER_SEARCHAD_CUSTOMER_ID: ${{ secrets.NAVER_SEARCHAD_CUSTOMER_ID }}
+          NAVER_API_HUB_CLIENT_ID: ${{ secrets.NAVER_API_HUB_CLIENT_ID }}
+          NAVER_API_HUB_CLIENT_SECRET: ${{ secrets.NAVER_API_HUB_CLIENT_SECRET }}
+          NAVER_WEB_SEARCH_API_HUB_CLIENT_ID: ${{ secrets.NAVER_WEB_SEARCH_API_HUB_CLIENT_ID }}
+          NAVER_WEB_SEARCH_API_HUB_CLIENT_SECRET: ${{ secrets.NAVER_WEB_SEARCH_API_HUB_CLIENT_SECRET }}
+        run: python3 scripts/keyword_hunter_targeted.py --root .
+
+      - name: Verify no persistent or publication state changed
+        if: always() && steps.measure.outcome != 'skipped'
+        run: |
+          git diff --exit-code HEAD -- data/keywords_master.csv data/published_keywords.json data/content-launch-counter.json data/content-launch-manifest.json data/content-launch-decisions.json data/content-launch-queue.json data/revenue-opportunities.json data/adsense/2026-08-01-safety-baseline.json
+          if git status --porcelain --untracked-files=all | grep -E '^.. kor/.*\.html$'; then
+            echo "::error::HTML changed during targeted measurement"
+            exit 1
+          fi
+
+      - name: Sanitize the run report
+        if: always() && steps.measure.outcome != 'skipped'
+        env:
+          INPUT_REPORT_PATH: reports/keyword-targeted-validation/${{ github.run_id }}-${{ github.run_attempt }}.json
+          OUTPUT_REPORT_PATH: ${{ runner.temp }}/keyword-hunter-targeted-artifact.json
+        run: |
+          python3 - <<'PY'
+          import json
+          import math
+          import os
+          import re
+          from datetime import datetime
+          from pathlib import Path
+
+          source = json.loads(Path(os.environ["INPUT_REPORT_PATH"]).read_text(encoding="utf-8"))
+          def timestamp(value):
+              if not isinstance(value, str) or len(value) > 40 or any(char.isspace() for char in value):
+                  return None
+              try:
+                  datetime.fromisoformat(value)
+                  return value
+              except ValueError:
+                  return None
+          def number(value):
+              return value if type(value) in (int, float) and math.isfinite(value) else None
+          def status(value, allowed):
+              return value if isinstance(value, str) and value in allowed else "UNKNOWN"
+
+          source_statuses = source.get("sourceStatuses") if isinstance(source.get("sourceStatuses"), dict) else {}
+          targets = []
+          for row in source.get("targets", []):
+              if not isinstance(row, dict):
+                  continue
+              keyword = row.get("keyword")
+              if not isinstance(keyword, str) or not re.fullmatch(r"[가-힣0-9 ]{1,100}", keyword):
+                  continue
+              ads = row.get("searchAds") if isinstance(row.get("searchAds"), dict) else {}
+              trend = row.get("dataLab") if isinstance(row.get("dataLab"), dict) else {}
+              web = row.get("webSearch") if isinstance(row.get("webSearch"), dict) else {}
+              note = ads.get("volumeNote")
+              if note not in (None, "LOWER_BOUND_CENSORED", "MISSING"):
+                  note = "UNKNOWN"
+              competition = ads.get("competition")
+              if competition not in (None, "높음", "중간", "낮음", "HIGH", "MEDIUM", "LOW", "UNKNOWN"):
+                  competition = None
+              targets.append({
+                  "keyword": keyword,
+                  "searchAds": {
+                      "status": status(ads.get("status"), {"VERIFIED", "CENSORED", "METRIC_MISSING", "TARGET_ROW_NOT_RETURNED", "NOT_ATTEMPTED_AFTER_SOURCE_FAILURE", "UNKNOWN"}),
+                      "checkedAt": timestamp(ads.get("checkedAt")),
+                      "exactTargetReturned": ads.get("exactTargetReturned") if type(ads.get("exactTargetReturned")) is bool else None,
+                      "monthlyPc": number(ads.get("monthlyPc")),
+                      "monthlyMobile": number(ads.get("monthlyMobile")),
+                      "monthlyTotal": number(ads.get("monthlyTotal")),
+                      "competition": competition,
+                      "volumeNote": note,
+                  },
+                  "dataLab": {
+                      "status": status(trend.get("status"), {"VERIFIED", "NO_VALIDATED_TREND", "UNKNOWN"}),
+                      "checkedAt": timestamp(trend.get("checkedAt")),
+                      "trend1m": number(trend.get("trend1m")),
+                      "trend3m": number(trend.get("trend3m")),
+                      "trendMomentum": number(trend.get("trendMomentum")),
+                      "seasonality": number(trend.get("seasonality")),
+                  },
+                  "webSearch": {
+                      "status": status(web.get("status"), {"VERIFIED", "UNVERIFIED", "UNKNOWN"}),
+                      "checkedAt": timestamp(web.get("checkedAt")),
+                      "metricType": "WEB_RESULT_COUNT_NOT_DEMAND",
+                      "resultCount": number(web.get("resultCount")),
+                  },
+              })
+
+          statuses = {
+              name: status(source_statuses.get(name), {"OK", "API_ERROR", "AUTH_ERROR", "RATE_LIMITED", "NETWORK_ERROR", "QUOTA_EXHAUSTED", "NOT_CONFIGURED", "UNKNOWN"})
+              for name in ("NAVER_SEARCH_ADS", "NAVER_DATALAB", "NAVER_WEB_SEARCH")
+          }
+          output = {
+              "schemaVersion": 1,
+              "runId": os.environ["KEYWORD_HUNTER_RUN_ID"],
+              "checkedAt": timestamp(source.get("checkedAt")),
+              "status": status(source.get("status"), {"VERIFIED", "PARTIAL", "UNKNOWN"}),
+              "sourceStatuses": statuses,
+              "targetCount": len(targets),
+              "targets": targets,
+              "limitations": [
+                  "DataLab values are relative interest, not monthly search volume.",
+                  "Web result count is supply, not demand.",
+                  "Missing, censored, and unreturned exact metrics are not converted to zero.",
+                  "No opportunity score or editorial decision is computed.",
+              ],
+          }
+          Path(os.environ["OUTPUT_REPORT_PATH"]).write_text(
+              json.dumps(output, ensure_ascii=False, indent=2, allow_nan=False) + "\n",
+              encoding="utf-8",
+          )
+          print(f"Sanitized report ready for {len(targets)} exact target(s).")
+          PY
+
+      - name: Upload this run's sanitized measurement artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: keyword-targeted-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/keyword-hunter-targeted-artifact.json
+          retention-days: 7
+          if-no-files-found: warn
