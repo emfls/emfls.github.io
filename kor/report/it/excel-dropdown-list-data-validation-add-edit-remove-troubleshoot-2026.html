@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 엑셀 드롭다운 목록 만들기: 데이터 유효성 검사·항목 추가·삭제·오류 해결</title>
+<meta name="description" content="직원 근무표·주문 관리표·재고 목록을 엑셀로 만들 때 매번 ‘접수’, ‘발송’, ‘완료’를 키보드로 입력하면 오타나 띄어쓰기 차이로 집계가 어긋나기 쉽습니다. 이럴 때 셀을 눌러 정해진 값 중 하나를 선택하는 드롭다운 목록을 만들면 입력 방식을 통일할 수 있습니다.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#0d1117">
+<link rel="canonical" href="https://emfls.github.io/kor/report/it/excel-dropdown-list-data-validation-add-edit-remove-troubleshoot-2026.html">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2026 엑셀 드롭다운 목록 만들기: 데이터 유효성 검사·항목 추가·삭제·오류 해결">
+<meta property="og:description" content="직원 근무표·주문 관리표·재고 목록을 엑셀로 만들 때 매번 ‘접수’, ‘발송’, ‘완료’를 키보드로 입력하면 오타나 띄어쓰기 차이로 집계가 어긋나기 쉽습니다. 이럴 때 셀을 눌러 정해진 값 중 하나를 선택하는 드롭다운 목록을 만들면 입력 방식을 통일할 수 있습니다.">
+<meta property="og:url" content="https://emfls.github.io/kor/report/it/excel-dropdown-list-data-validation-add-edit-remove-troubleshoot-2026.html">
+<meta property="og:site_name" content="emfls">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2026 엑셀 드롭다운 목록 만들기: 데이터 유효성 검사·항목 추가·삭제·오류 해결">
+<meta name="twitter:description" content="직원 근무표·주문 관리표·재고 목록을 엑셀로 만들 때 매번 ‘접수’, ‘발송’, ‘완료’를 키보드로 입력하면 오타나 띄어쓰기 차이로 집계가 어긋나기 쉽습니다. 이럴 때 셀을 눌러 정해진 값 중 하나를 선택하는 드롭다운 목록을 만들면 입력 방식을 통일할 수 있습니다.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"2026 엑셀 드롭다운 목록 만들기: 데이터 유효성 검사·항목 추가·삭제·오류 해결","description":"직원 근무표·주문 관리표·재고 목록을 엑셀로 만들 때 매번 ‘접수’, ‘발송’, ‘완료’를 키보드로 입력하면 오타나 띄어쓰기 차이로 집계가 어긋나기 쉽습니다. 이럴 때 셀을 눌러 정해진 값 중 하나를 선택하는 드롭다운 목록을 만들면 입력 방식을 통일할 수 있습니다.","url":"https://emfls.github.io/kor/report/it/excel-dropdown-list-data-validation-add-edit-remove-troubleshoot-2026.html","mainEntityOfPage":"https://emfls.github.io/kor/report/it/excel-dropdown-list-data-validation-add-edit-remove-troubleshoot-2026.html","inLanguage":"ko","author":{"@type":"Organization","name":"emfls"},"publisher":{"@type":"Organization","name":"emfls","url":"https://emfls.github.io"},"datePublished":"2026-11-10","dateModified":"2026-11-10"}</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-QP5Q67GE5B');</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+<style>
+:root{color-scheme:dark;--bg:#0d1117;--surface:#161b22;--surface2:#1c2430;--border:#30363d;--text:#e6edf3;--muted:#abb6c3;--accent:#79c0ff;--soft:#c8b6ff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Apple SD Gothic Neo","Malgun Gothic",system-ui,-apple-system,sans-serif;line-height:1.8;word-break:keep-all}
+a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thickness:2px}
+.skip{position:absolute;left:-9999px;top:4px;z-index:1000;padding:8px 16px;background:white;color:black}.skip:focus{left:4px}
+.site-header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px max(18px,calc((100vw - 900px)/2));background:linear-gradient(90deg,#4e54c8,#8f94fb);border-bottom:1px solid #6867cc}
+.brand{color:white;text-decoration:none;font-size:1.14rem;font-weight:850;letter-spacing:.02em}
+.site-header nav{display:flex;gap:12px}.site-header nav a{color:#fff;text-decoration:none;font-size:.86rem;font-weight:600}
+.site-header nav a:hover{text-decoration:underline}
+.shell{max-width:900px;margin:auto;padding:20px 18px 70px}
+.breadcrumb{font-size:.81rem;color:var(--muted);margin:3px 0 18px}.breadcrumb a{color:#d4deff;text-decoration:none}
+.hero{position:relative;overflow:hidden;border:1px solid #47577b;border-radius:18px;padding:42px 32px;background:linear-gradient(135deg,#122140,#172c53 52%,#302754 100%);box-shadow:0 15px 40px #0003}
+.hero:after{content:"";position:absolute;right:-80px;top:-100px;width:310px;height:310px;border-radius:50%;background:radial-gradient(circle,#9b8bff27,transparent 70%);pointer-events:none}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid #8092e05c;background:#ffffff12;border-radius:99px;padding:4px 13px;color:#e3dcff;font-size:.79rem;font-weight:700;margin-bottom:18px}
+.hero h1{font-weight:850;line-height:1.42;letter-spacing:-.037em;font-size:clamp(1.55rem,4vw,2.25rem);margin:0 0 16px;position:relative;z-index:1;overflow-wrap:anywhere}
+.hero .deck{font-size:.99rem;color:#e2e7f5;max-width:680px;margin:0 0 15px}
+.hero-meta{font-size:.82rem;color:#c8d2e5;display:flex;flex-wrap:wrap;gap:6px 18px}
+.highlight-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:17px 0 20px}
+.highlight{padding:17px 16px;border:1px solid var(--border);background:var(--surface);border-radius:13px}
+.highlight .value{display:block;color:#d6caff;font-size:1.12rem;font-weight:800;line-height:1.45}
+.highlight .label{display:block;color:var(--muted);font-size:.76rem;margin-top:5px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
+.contents,.section,.intro,.info-bottom{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:24px 27px;box-shadow:0 3px 15px #0002}
+.contents h2,.info-bottom h2{font-size:1.02rem;color:#d4c5ff;margin:0 0 12px}
+.contents ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 25px;margin:0;padding-left:19px}
+.contents li{font-size:.86rem;line-height:1.6;padding:3px 0}
+.contents a{color:#d3ddec;text-decoration:none}.contents a:hover{text-decoration:underline}
+.intro{border-left:4px solid #7e96e4;background:linear-gradient(125deg,#1a2335,var(--surface));}
+.section h2{font-size:1.32rem;line-height:1.5;margin:0 0 17px;color:#d4c5ff;letter-spacing:-.022em;border-bottom:1px solid #354052;padding-bottom:12px;scroll-margin-top:20px}
+.section h3{font-size:1.045rem;margin:23px 0 8px;color:#c3dcff;scroll-margin-top:20px}
+.section p,.intro p{font-size:.955rem;margin:0 0 14px;color:#d9e0e8;line-height:1.85}
+.section p:last-child,.intro p:last-child{margin-bottom:0}
+.section strong,.intro strong{color:#fff;font-weight:750}
+.section li,.intro li{font-size:.94rem;line-height:1.8;margin:5px 0;color:#d8e0e8}
+.section ul,.section ol,.intro ul,.intro ol{padding-left:22px;margin:12px 0 20px}
+.section blockquote{margin:16px 0;padding:13px 17px;border-left:3px solid #a18cff;background:#252440;border-radius:0 8px 8px 0}
+.section a{overflow-wrap:anywhere}
+.section hr{border:0;border-top:1px solid var(--border);margin:24px 0}
+.section ul,.section ol{background:#1c2430;border-radius:9px;padding:12px 20px 12px 37px;border:1px solid #28384b}
+.notion-code{max-width:100%;overflow-x:auto;white-space:pre;tab-size:2;margin:14px 0 9px;padding:14px 16px;border:1px solid #34465f;border-radius:9px;background:#141d2c;color:#e7efff;font-size:.88rem;line-height:1.65}
+.notion-code code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.section .notion-code-caption,.intro .notion-code-caption{margin:0 0 17px;color:#aebdd5;font-size:.82rem}
+.details-table{overflow-x:auto}
+.section table{border-collapse:collapse;width:100%;min-width:500px;margin:14px 0}
+.section th,.section td{padding:12px;text-align:left;border-bottom:1px solid var(--border);font-size:.89rem}
+.section th{background:#202a3c;color:#d3caff}
+.cta{display:inline-flex;align-items:center;gap:8px;margin-top:8px;padding:11px 17px;border-radius:10px;background:#254975;color:white;text-decoration:none;font-size:.9rem;font-weight:700;border:1px solid #4e75a9}
+.cta:hover{background:#305989}
+.notice{border-left:4px solid #57b59b;padding:13px 16px;background:#122e2b;border-radius:4px 9px 9px 4px;color:#cfe6dd;font-size:.88rem;margin:16px 0}
+.info-bottom p{font-size:.87rem;color:var(--muted);margin:0 0 10px}
+.pills{display:flex;gap:9px;flex-wrap:wrap}.pills a{display:inline-block;border:1px solid #45516c;border-radius:99px;padding:6px 13px;text-decoration:none;color:#d5e3ff;font-size:.84rem}
+.site-footer{font-size:.8rem;color:#9ba9b8;text-align:center;margin-top:24px;padding-top:24px;border-top:1px solid var(--border)}
+.adsbygoogle,div[id^="aswift_"]{max-width:100%!important;overflow:hidden}
+@media(max-width:650px){.shell{padding:14px 12px 45px}.site-header{padding:14px}.hero{padding:29px 20px}.hero h1{font-size:1.58rem}.highlight-row{gap:7px}.highlight{padding:13px 9px}.highlight .value{font-size:.92rem}.highlight .label{font-size:.7rem}.contents,.section,.intro,.info-bottom{padding:19px 17px}.contents ol{grid-template-columns:1fr}.section h2{font-size:1.18rem}.site-header nav{gap:9px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-header"><a class="brand" href="/">emfls</a><nav aria-label="상단 메뉴"><a href="/kor/report/">생활정보</a><a href="/kor/report/it/">관련 주제</a><a href="/">홈</a></nav></header>
+<main class="shell" id="main">
+<div class="breadcrumb"><a href="/">홈</a> › <a href="/kor/report/">생활정보</a> › <a href="/kor/report/it/">IT · 기기</a></div>
+<article>
+<header class="hero">
+<span class="eyebrow">IT · 기기 · 최신 가이드</span>
+<h1>2026 엑셀 드롭다운 목록 만들기: 데이터 유효성 검사·항목 추가·삭제·오류 해결</h1>
+<p class="deck">직원 근무표·주문 관리표·재고 목록을 엑셀로 만들 때 매번 ‘접수’, ‘발송’, ‘완료’를 키보드로 입력하면 오타나 띄어쓰기 차이로 집계가 어긋나기 쉽습니다. 이럴 때 셀을 눌러 정해진 값 중 하나를 선택하는 드롭다운 목록을 만들면 입력 방식을 통일할 수 있습니다.</p>
+<div class="hero-meta"><span>최초 발행 2026-11-10</span><span>내용 확인 2026-11-10</span><span>작성 emfls</span></div>
+</header>
+
+<nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">1. 먼저 결론: 상황별 가장 적합한 드롭다운 설정</a></li><li><a href="#section-02">2. 가장 빠른 방법: 직접 입력해 드롭다운 만들기</a></li><li><a href="#section-03">3. 추천 방법: 셀 범위를 이용해 드롭다운 만들기</a></li><li><a href="#section-04">4. 항목을 추가해도 자동 확장되게 만드는 방법</a></li><li><a href="#section-05">5. 이미 만든 드롭다운 수정하기: 원본 종류부터 확인</a></li><li><a href="#section-06">6. 목록에 없는 값 입력 막기: 오류 경고 ‘중지’</a></li><li><a href="#section-07">7. 드롭다운 목록 삭제하기: 항목 삭제와 규칙 제거의 차이</a></li><li><a href="#section-08">8. 드롭다운 화살표가 안 보이거나 메뉴가 회색일 때</a></li><li><a href="#section-09">9. 다른 시트에서 가져온 드롭다운이 안 될 때</a></li><li><a href="#section-10">10. 웹용 Excel에서는 수정 범위를 구분해야 합니다</a></li><li><a href="#section-11">11. 실제 업무 적용 예시: 주문상태 입력표 5분 완성</a></li><li><a href="#section-12">12. 자주 묻는 질문</a></li><li><a href="#section-13">13. 최종 점검 체크리스트</a></li><li><a href="#section-14">공식 참고자료</a></li></ol></nav>
+<div class="layout">
+<div class="intro"><p>직원 근무표·주문 관리표·재고 목록을 엑셀로 만들 때 매번 ‘접수’, ‘발송’, ‘완료’를 키보드로 입력하면 오타나 띄어쓰기 차이로 집계가 어긋나기 쉽습니다. 이럴 때 셀을 눌러 정해진 값 중 하나를 선택하는 <strong>드롭다운 목록</strong>을 만들면 입력 방식을 통일할 수 있습니다.</p>
+<p>엑셀 드롭다운은 <strong>데이터 → 데이터 유효성 검사 → 허용: 목록</strong>에서 설정합니다. 항목을 직접 입력하는 빠른 방법과 별도 셀 범위를 원본으로 쓰는 방법이 있으며, 나중에 목록을 추가·삭제하는 방식도 다릅니다. 아래 설명은 Windows용 Microsoft 365·Excel 2024를 중심으로 하고, Mac·웹용 Excel의 차이도 구분했습니다. 메뉴 이름은 버전과 언어 설정에 따라 조금 다를 수 있습니다.</p></div>
+<section class="section" aria-labelledby="section-01"><h2 id="section-01">1. 먼저 결론: 상황별 가장 적합한 드롭다운 설정</h2><div class="details-table"><table><thead><tr><th scope="col">사용 상황</th><th scope="col">원본 구성</th><th scope="col">장점</th><th scope="col">주의할 점</th></tr></thead><tbody><tr><td>선택 항목이 3~5개로 고정됨</td><td>원본 칸에 항목 직접 입력</td><td>1분 만에 만들 수 있음</td><td>항목이 바뀌면 설정을 수정해야 함</td></tr><tr><td>다른 셀에 이미 항목 표가 있음</td><td>셀 범위 참조</td><td>원본 목록을 한곳에서 관리</td><td>참조 범위를 벗어나면 새 항목이 빠질 수 있음</td></tr><tr><td>항목이 자주 추가됨</td><td>Excel 표와 연결된 목록</td><td>추가·삭제 관리가 쉬움</td><td>참조 구조를 확인해야 함</td></tr><tr><td>사용자가 목록 이외 값을 넣으면 안 됨</td><td>오류 경고 ‘중지’</td><td>일반적인 직접 입력 실수를 막음</td><td>붙여넣기 등의 우회 입력은 별도 검증 필요</td></tr><tr><td>기존 드롭다운을 전부 없애고 싶음</td><td>데이터 유효성 검사 ‘모두 지우기’</td><td>선택 규칙만 제거 가능</td><td>셀의 기존 값은 별개로 확인</td></tr></tbody></table></div>
+<p>핵심은 목록의 <strong>선택지와 저장된 셀 값은 서로 다르다</strong>는 점입니다. 목록에서 항목을 삭제해도 이미 입력돼 있는 값이 자동으로 모두 바뀌는 것은 아닙니다.</p></section>
+<section class="section" aria-labelledby="section-02"><h2 id="section-02">2. 가장 빠른 방법: 직접 입력해 드롭다운 만들기</h2><p>예를 들어 D열에 ‘주문상태’를 입력하는 표를 만들었다고 가정하겠습니다.</p>
+<ol>
+<li>D2:D100처럼 선택 목록을 적용할 셀을 모두 선택합니다.</li>
+<li>리본 메뉴에서 <strong>데이터 → 데이터 유효성 검사</strong>를 선택합니다.</li>
+<li><strong>설정</strong> 탭에서 ‘허용’을 <strong>목록</strong>으로 변경합니다.</li>
+<li>‘원본’에 다음을 입력합니다.</li>
+</ol>
+<p>접수,상품준비,배송중,배송완료</p>
+<ol>
+<li><strong>셀 안에 드롭다운 표시</strong> 항목이 켜져 있는지 확인합니다.</li>
+<li><strong>확인</strong>을 누른 뒤 D2 셀을 선택해 화살표가 나타나는지 테스트합니다.</li>
+</ol>
+<p>지역 설정이나 Excel 환경에 따라 목록 구분 기호가 다르게 처리될 수 있습니다. 한 줄이 통째로 하나의 선택지로 나오면 셀 범위 방식으로 만들면 문제를 피하기 쉽습니다.</p>
+<p>공식 근거: <a href="https://support.microsoft.com/ko-kr/excel/get-started/create-a-drop-down-list" rel="noopener noreferrer">Microsoft — 드롭다운 목록 만들기</a></p></section>
+<section class="section" aria-labelledby="section-03"><h2 id="section-03">3. 추천 방법: 셀 범위를 이용해 드롭다운 만들기</h2><p>선택 항목이 나중에 바뀔 가능성이 있다면 별도의 ‘목록’ 시트를 만들어 관리하는 편이 효율적입니다.</p>
+<p>먼저 ‘목록’ 시트의 A열에 아래와 같이 입력합니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">셀</th><th scope="col">값</th></tr></thead><tbody><tr><td>A1</td><td>주문상태</td></tr><tr><td>A2</td><td>접수</td></tr><tr><td>A3</td><td>상품준비</td></tr><tr><td>A4</td><td>배송중</td></tr><tr><td>A5</td><td>배송완료</td></tr></tbody></table></div>
+<p>그다음 다음 순서로 설정합니다.</p>
+<ol>
+<li>실제 주문표에서 드롭다운을 적용할 D2:D100을 선택합니다.</li>
+<li><strong>데이터 → 데이터 유효성 검사 → 설정</strong>으로 이동합니다.</li>
+<li>‘허용’에서 <strong>목록</strong>을 선택합니다.</li>
+<li>‘원본’ 칸을 누르고 <strong>목록 시트의 A2:A5</strong>를 선택합니다. A1의 ‘주문상태’는 제목이므로 제외합니다.</li>
+<li>확인한 뒤 실제 셀에서 네 가지 항목이 제대로 표시되는지 확인합니다.</li>
+</ol>
+<p>원본 목록에서 일부 항목을 수정하면 드롭다운에도 반영되는지 확인하세요. 다만 원본 참조를 A2:A5로 한정했다면 A6에 새 항목을 추가하는 것만으로는 포함되지 않을 수 있습니다. 이때는 원본 범위를 확장하거나 뒤에서 설명하는 표 기반 관리 방법을 활용합니다.</p>
+<p><strong>중요:</strong> 다른 시트에 있는 원본을 수식으로 직접 입력했는데 참조 오류가 난다면, 범위를 직접 선택하거나 해당 셀 범위에 이름을 정의하는 방식으로 구성하세요.</p></section>
+<section class="section" aria-labelledby="section-04"><h2 id="section-04">4. 항목을 추가해도 자동 확장되게 만드는 방법</h2><p>매달 새 부서·담당자·판매채널이 추가되는 경우에는 <strong>Excel 표(Table)</strong>를 원본 목록 관리에 활용하는 것이 좋습니다. Microsoft는 드롭다운의 원본 데이터를 표로 관리하면 항목 추가·삭제 시 연결된 목록이 함께 갱신되도록 구성할 수 있다고 안내합니다.</p>
+<ol>
+<li>선택 항목을 한 열에 정리하고 맨 위에 제목을 둡니다.</li>
+<li>원본 목록 안의 셀을 클릭한 뒤 <strong>Ctrl+T</strong>를 누릅니다.</li>
+<li>‘머리글 포함’ 여부를 실제 데이터 구성에 맞게 선택해 표로 변환합니다.</li>
+<li>드롭다운을 만드는 셀에서 <strong>데이터 유효성 검사 → 목록</strong>을 지정합니다.</li>
+<li>원본으로 해당 목록 열을 연결합니다. 구조화 참조가 원본 칸에서 바로 받아들여지지 않는 환경이라면 <strong>이름 관리자에서 이름을 정의한 뒤</strong> 그 이름을 원본으로 연결하는 방법을 사용합니다.</li>
+<li>원본 표의 마지막 행 아래에 새 항목을 추가하고 드롭다운에도 나타나는지 시험합니다.</li>
+</ol>
+<p>표와 이름 참조가 어떻게 연결됐는지 확인하지 않고 ‘자동 확장된다’고 가정하면 일부 항목이 빠질 수 있습니다. 반드시 <strong>새 항목 1개 추가 → 드롭다운에 표시되는지 확인</strong>하는 테스트까지 진행하세요.</p>
+<p>공식 근거: <a href="https://support.microsoft.com/ko-kr/excel/get-started/create-a-drop-down-list" rel="noopener noreferrer">Microsoft — 드롭다운 목록 만들기</a>, <a href="https://support.microsoft.com/ko-kr/excel/add-or-remove-items-from-a-drop-down-list" rel="noopener noreferrer">Microsoft — 드롭다운 목록에서 항목 추가·제거</a></p></section>
+<section class="section" aria-labelledby="section-05"><h2 id="section-05">5. 이미 만든 드롭다운 수정하기: 원본 종류부터 확인</h2><p>다른 사람이 만든 파일은 드롭다운의 원본이 직접 입력인지, 셀 범위인지, 이름 정의인지부터 구별해야 합니다.</p>
+<ol>
+<li>드롭다운이 있는 셀을 선택합니다.</li>
+<li><strong>데이터 → 데이터 유효성 검사</strong>를 엽니다.</li>
+<li><strong>설정 → 원본</strong>을 확인합니다.</li>
+</ol>
+<div class="details-table"><table><thead><tr><th scope="col">원본 칸의 내용 예시</th><th scope="col">의미</th><th scope="col">수정 방법</th></tr></thead><tbody><tr><td>접수,배송중,완료</td><td>직접 입력한 목록</td><td>원본 칸의 항목을 수정</td></tr><tr><td>=$H$2:$H$5</td><td>특정 셀 범위를 참조</td><td>해당 셀을 바꾸고 범위 확대 필요 시 원본 수정</td></tr><tr><td>=OrderStatus</td><td>이름이 정의된 범위</td><td>수식 → 이름 관리자에서 참조 대상 확인</td></tr><tr><td>다른 시트의 목록을 참조</td><td>별도 관리 시트 사용</td><td>원본 시트의 실제 항목과 참조 범위 확인</td></tr></tbody></table></div>
+<p>여러 셀에 동일 규칙이 적용돼 있다면 설정 변경 창에서 <strong>동일한 설정을 사용하는 다른 셀에도 변경 내용 적용</strong> 옵션을 사용할 수 있습니다. 일부 셀에만 다른 규칙이 있는지 먼저 확인하세요.</p></section>
+<section class="section" aria-labelledby="section-06"><h2 id="section-06">6. 목록에 없는 값 입력 막기: 오류 경고 ‘중지’</h2><p>드롭다운을 만들었다고 해서 모든 잘못된 입력이 자동으로 차단되는 것은 아닙니다. 특히 직접 타이핑하는 값을 제한하려면 오류 경고 설정을 확인해야 합니다.</p>
+<ol>
+<li>규칙이 적용된 셀을 선택합니다.</li>
+<li><strong>데이터 → 데이터 유효성 검사 → 오류 경고</strong>로 이동합니다.</li>
+<li>유효하지 않은 데이터 입력 시 오류 메시지를 표시하도록 설정합니다.</li>
+<li>목록에 없는 직접 입력을 막으려면 오류 경고 스타일을 <strong>중지</strong>로 선택합니다.</li>
+<li>예를 들어 제목을 ‘선택 오류’, 메시지를 ‘목록에 있는 주문상태를 선택하세요’로 입력합니다.</li>
+<li>확인 후 일부러 목록에 없는 취소요청을 입력해 차단되는지 확인합니다.</li>
+</ol>
+<p><strong>경고·정보</strong> 스타일은 사용자가 잘못된 값을 입력했을 때 안내하는 성격으로, 확인 절차를 거쳐 입력이 진행될 수 있습니다. 입력 자체를 막으려면 ‘중지’ 스타일이 적합합니다.</p>
+<p>단, <strong>데이터 유효성 검사를 데이터 무결성의 유일한 수단으로 생각해서는 안 됩니다.</strong> 외부 데이터 가져오기·복사해서 붙여넣기 등으로 기존 셀 규칙과 맞지 않는 값이 들어갈 수 있으므로 중요한 업무 자료는 별도 검증이 필요합니다.</p>
+<p>공식 근거: <a href="https://support.microsoft.com/ko-kr/excel/get-started/apply-data-validation-to-cells" rel="noopener noreferrer">Microsoft — 셀에 데이터 유효성 검사 적용</a>, <a href="https://support.microsoft.com/ko-kr/excel/more-on-data-validation" rel="noopener noreferrer">Microsoft — 데이터 유효성 검사 자세히 보기</a></p></section>
+<section class="section" aria-labelledby="section-07"><h2 id="section-07">7. 드롭다운 목록 삭제하기: 항목 삭제와 규칙 제거의 차이</h2><p>‘배송중’이라는 선택지만 없애는 것과 D열에 붙어 있는 드롭다운 기능 전체를 없애는 것은 서로 다릅니다.</p>
+<p><strong>특정 선택지 삭제:</strong> 원본 목록의 항목을 지우고 필요한 경우 참조 범위를 조정합니다. 원본이 직접 입력 목록이면 데이터 유효성 검사 창에서 원본 항목을 삭제합니다.</p>
+<p><strong>드롭다운 자체 삭제:</strong></p>
+<ol>
+<li>해당 규칙이 적용된 셀 범위를 선택합니다.</li>
+<li><strong>데이터 → 데이터 유효성 검사</strong>를 엽니다.</li>
+<li><strong>설정 → 모두 지우기</strong>를 선택합니다.</li>
+<li>확인한 뒤 드롭다운 화살표가 사라졌는지 확인합니다.</li>
+</ol>
+<p>유효성 검사 규칙을 없애는 것과 셀에 이미 저장된 값 자체를 지우는 것은 별개의 작업입니다. 기존 값까지 비워야 한다면 규칙 제거 후 해당 셀 값을 별도로 검토해 삭제해야 합니다.</p>
+<p>공식 근거: <a href="https://support.microsoft.com/ko-kr/excel/more-on-data-validation" rel="noopener noreferrer">Microsoft — 데이터 유효성 검사 자세히 보기</a></p></section>
+<section class="section" aria-labelledby="section-08"><h2 id="section-08">8. 드롭다운 화살표가 안 보이거나 메뉴가 회색일 때</h2><div class="details-table"><table><thead><tr><th scope="col">증상</th><th scope="col">가능한 원인</th><th scope="col">먼저 할 일</th></tr></thead><tbody><tr><td>셀을 눌러도 화살표가 안 보임</td><td>규칙이 없거나 셀 안 드롭다운 표시 해제</td><td>데이터 유효성 검사 설정 확인</td></tr><tr><td>데이터 유효성 검사 메뉴가 회색</td><td>시트 보호·공유·편집 제한</td><td>시트 보호 및 편집 권한 확인</td></tr><tr><td>새로 추가한 항목이 보이지 않음</td><td>원본 범위가 이전 항목까지만 지정됨</td><td>원본 범위를 늘리거나 표·이름 참조 확인</td></tr><tr><td>원본 항목이 한 줄로 표시됨</td><td>목록 구분 기호가 다르게 처리됨</td><td>직접 입력 대신 셀 범위를 원본으로 지정</td></tr><tr><td>목록 항목에 빈 줄이 나옴</td><td>원본 범위에 공백 포함</td><td>목록의 빈 셀 정리</td></tr><tr><td>오류 메시지가 나오는데 직접 입력은 됨</td><td>경고 스타일이 ‘정보’ 또는 ‘경고’</td><td>필요 시 ‘중지’로 변경</td></tr><tr><td>여러 셀 중 일부에서만 작동</td><td>서로 다른 규칙 적용·누락</td><td>적용 범위를 다시 선택하고 설정 통일</td></tr><tr><td>웹용 Excel에서 목록 수정이 제한됨</td><td>웹 버전의 편집 지원 범위 차이</td><td>필요한 경우 데스크톱 Excel에서 수정</td></tr></tbody></table></div>
+<p><strong>문제 해결 순서:</strong> 규칙이 적용됐는지 확인 → 원본 칸의 값과 참조 범위를 확인 → 시트 보호 여부 확인 → 실제 시험 입력 순으로 진행하면 불필요한 파일 재작성 가능성을 줄일 수 있습니다.</p>
+<p>Microsoft 공식 문서에 따르면 시트가 보호되거나 특정 공유 설정이 적용된 경우 데이터 유효성 검사 설정을 변경하지 못할 수 있습니다.</p></section>
+<section class="section" aria-labelledby="section-09"><h2 id="section-09">9. 다른 시트에서 가져온 드롭다운이 안 될 때</h2><p>원본 항목을 다른 시트에서 관리하는 구성은 업무용 서식에서 흔하지만, 이름 참조가 꼬이면 목록이 표시되지 않을 수 있습니다.</p>
+<ol>
+<li>원본 시트를 찾아 항목이 실제로 존재하는지 확인합니다.</li>
+<li><strong>수식 → 이름 관리자</strong>를 열고 사용 중인 이름이 올바른 범위를 가리키는지 확인합니다.</li>
+<li>드롭다운 셀에서 <strong>데이터 유효성 검사 → 원본</strong>에 같은 이름 또는 범위가 지정됐는지 확인합니다.</li>
+<li>원본 범위에 빈 셀이나 잘못된 참조(#REF!)가 없는지 확인합니다.</li>
+<li>임시로 같은 시트에 간단한 3개 항목 목록을 만들어 테스트해 보면 원본 참조 문제와 기능 자체 문제를 구분할 수 있습니다.</li>
+</ol>
+<p><strong>주의:</strong> 회사 공용 파일이라면 원본 목록 시트가 숨겨져 있거나 보호돼 있을 수 있습니다. 무단으로 암호 해제를 시도하기보다 파일 담당자에게 수정 권한을 확인하세요.</p></section>
+<section class="section" aria-labelledby="section-10"><h2 id="section-10">10. 웹용 Excel에서는 수정 범위를 구분해야 합니다</h2><p>웹용 Excel에서도 드롭다운을 만들고 사용하는 기능이 제공되지만, Microsoft의 항목 수정 문서는 <strong>웹용 Excel에서 원본을 직접 입력한 드롭다운과 범위·이름 참조 목록의 편집 절차가 다르다</strong>고 안내합니다.</p>
+<ul>
+<li>직접 입력한 목록: 데이터 유효성 검사 원본 칸에서 항목을 수정할 수 있습니다.</li>
+<li>셀 범위를 참조한 목록: 원본 셀에 항목을 추가·삭제하고 참조 범위가 맞는지 확인합니다.</li>
+<li>이름 정의를 참조한 목록: 이름 자체의 참조 범위를 바꿔야 한다면 데스크톱 Excel이 필요할 수 있습니다.</li>
+</ul>
+<p>웹에서 변경되지 않는다고 파일이 고장 난 것은 아닙니다. 가능한 기능의 범위를 먼저 확인하세요.</p>
+<p>공식 근거: <a href="https://support.microsoft.com/ko-kr/excel/add-or-remove-items-from-a-drop-down-list" rel="noopener noreferrer">Microsoft — 드롭다운 목록에서 항목 추가·제거</a></p></section>
+<section class="section" aria-labelledby="section-11"><h2 id="section-11">11. 실제 업무 적용 예시: 주문상태 입력표 5분 완성</h2><p>주문표에 다음과 같이 열을 구성한다고 가정하겠습니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">A열</th><th scope="col">B열</th><th scope="col">C열</th><th scope="col">D열</th></tr></thead><tbody><tr><td>주문번호</td><td>주문일</td><td>고객명</td><td>주문상태</td></tr><tr><td>1001</td><td>2026-11-04</td><td>김가람</td><td>접수</td></tr><tr><td>1002</td><td>2026-11-04</td><td>이하늘</td><td>배송중</td></tr><tr><td>1003</td><td>2026-11-04</td><td>박새봄</td><td>배송완료</td></tr></tbody></table></div>
+<p>별도의 ‘목록’ 시트에 상태 네 가지를 만들고 D2:D500에 드롭다운을 지정합니다. 그다음 실무 관점에서 다음 네 가지를 시험합니다.</p>
+<ol>
+<li>D2에 있는 기존 ‘접수’를 다른 상태로 변경할 수 있는가?</li>
+<li>목록에 없는 ‘배송완료됨’을 입력했을 때 의도한 경고가 나오는가?</li>
+<li>새 항목 ‘교환처리’를 목록에 추가하면 D열 선택지에도 표시되는가?</li>
+<li>기존 필터·집계에서 배송완료와 배송완료됨을 다른 값으로 계산하지 않는가?</li>
+</ol>
+<p>네 번째 단계까지 확인해야 표를 나중에 피벗 테이블이나 COUNTIF 수식으로 집계할 때 결과가 틀어지는 일을 줄일 수 있습니다. 데이터 입력을 표준화하는 것이 드롭다운의 실질적인 목적입니다.</p></section>
+<section class="section" aria-labelledby="section-12"><h2 id="section-12">12. 자주 묻는 질문</h2><h3>Q. 엑셀에서 드롭다운을 가장 빨리 만드는 방법은?</h3>
+<p>셀 선택 → 데이터 → 데이터 유효성 검사 → 허용 ‘목록’ → 원본에 쉼표로 구분한 선택지 입력 → 확인 순서입니다.</p>
+<h3>Q. 항목을 새로 넣었는데 드롭다운에 나타나지 않습니다.</h3>
+<p>원본을 특정 셀 범위로 지정한 경우 새 항목이 그 범위 밖에 있을 수 있습니다. 원본 범위를 확대하거나 Excel 표와 이름 참조로 구성했는지 확인하세요.</p>
+<h3>Q. 선택 목록은 없애고 이미 입력한 글자는 남길 수 있나요?</h3>
+<p>가능합니다. 데이터 유효성 검사 규칙을 제거하면 됩니다. 다만 셀 값이 그대로 남았는지는 작업 직후 확인하세요.</p>
+<h3>Q. 목록에 없는 값을 입력하지 못하게 하려면요?</h3>
+<p>데이터 유효성 검사 → 오류 경고에서 스타일을 <strong>중지</strong>로 선택하세요. 다만 붙여넣기 등 다른 입력 경로는 별도 확인해야 합니다.</p>
+<h3>Q. 드롭다운이 다른 컴퓨터에서만 안 보입니다.</h3>
+<p>해당 파일이 편집 가능한 상태인지, 사용 중인 Excel 버전이 무엇인지, 목록 원본이 외부 범위·이름 참조에 연결되어 있는지를 확인하세요. 간단한 새 통합 문서에서 드롭다운을 만들어 비교하는 방법도 도움이 됩니다.</p></section>
+<section class="section" aria-labelledby="section-13"><h2 id="section-13">13. 최종 점검 체크리스트</h2><ul>
+<li>☐ 목록 항목의 철자·띄어쓰기를 통일했다.</li>
+<li>☐ 선택지에 제목 행이나 빈 셀이 들어가지 않았는지 확인했다.</li>
+<li>☐ 데이터 유효성 검사에서 ‘목록’을 선택했다.</li>
+<li>☐ 셀 안에 드롭다운 표시 옵션을 확인했다.</li>
+<li>☐ 원본 항목 추가·삭제 후 실제 반영 여부를 시험했다.</li>
+<li>☐ 목록 외 입력 차단이 필요하다면 오류 경고 ‘중지’를 설정했다.</li>
+<li>☐ 중요 데이터는 붙여넣기 등의 예외 입력도 별도로 검증했다.</li>
+</ul>
+<p><strong>결론:</strong> 선택 항목이 적고 바뀌지 않는다면 직접 입력 방식이 빠릅니다. 항목이 자주 바뀌는 업무용 명단이라면 <strong>원본 목록을 별도 시트에서 관리하고 표·이름 범위 참조를 점검</strong>하는 편이 유지보수에 유리합니다.</p></section>
+<section class="section" aria-labelledby="section-14"><h2 id="section-14">공식 참고자료</h2><ul>
+<li><a href="https://support.microsoft.com/ko-kr/excel/get-started/create-a-drop-down-list" rel="noopener noreferrer">Microsoft Support — 드롭다운 목록 만들기</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/add-or-remove-items-from-a-drop-down-list" rel="noopener noreferrer">Microsoft Support — 드롭다운 목록에서 항목 추가 또는 제거</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/get-started/apply-data-validation-to-cells" rel="noopener noreferrer">Microsoft Support — 셀에 데이터 유효성 검사 적용</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/more-on-data-validation" rel="noopener noreferrer">Microsoft Support — 데이터 유효성 검사 자세히 보기</a></li>
+</ul></section>
+
+<!-- notion-discovery:start -->
+<section class="section" aria-label="관련 글"><h2>함께 읽으면 좋은 같은 분야의 글</h2><ul><li><a href="/kor/report/it/iphone-duplicate-contacts-merge-link-icloud-gmail-restore-2026.html">2026 아이폰 중복 연락처 합치기: 중복된 항목 보기 안 뜸·iCloud·Gmail 링크 차이·삭제 복구</a></li>
+<li><a href="/kor/report/it/excel-duplicate-values-highlight-remove-countif-multiple-columns-2026.html">2026 엑셀 중복값 찾기·제거 방법: 조건부 서식·COUNTIF·여러 열 기준과 삭제 전 확인</a></li>
+<li><a href="/kor/report/it/galaxy-smart-switch-transfer-wireless-usb-photo-missing-kakaotalk-backup-2026.html">2026 갤럭시 스마트 스위치 데이터 옮기기: 무선·USB 연결, 사진 누락·카카오톡 백업·전송 오류 해결</a></li>
+<li><a href="/kor/report/it/iphone-duplicate-photos-merge-duplicates-album-missing-icloud-recovery-2026.html">2026 아이폰 중복 사진 삭제 방법: 병합·중복된 항목 안 보임·iCloud 동기화·30일 복구</a></li></ul></section>
+<!-- notion-discovery:end -->
+<section class="info-bottom">
+<h2>정보 출처와 확인 안내</h2>
+<p>작성·갱신일과 적용 범위는 본문에서 확인하세요. 정책·행사 일정·혜택·제품 정보는 변경될 수 있으므로 중요한 판단 전 공식 기관 및 판매처의 최신 안내를 확인하시기 바랍니다.</p>
+<div class="pills"><a href="/kor/report/it/">같은 분야의 글</a><a href="/kor/report/">생활정보 전체</a><a href="/">emfls 홈</a></div>
+</section>
+</div>
+</article>
+<footer class="site-footer">© 2026 emfls · 공식 기관 안내를 우선 확인하세요</footer>
+</main>
+</body>
+</html>
