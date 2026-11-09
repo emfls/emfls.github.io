@@ -1709,3 +1709,8 @@
 - Added one contextual paragraph in the existing winter camping checklist linking to camping.guidehollow.com, a live HTTP200 personalized packing tool. No operating facts, dates, metadata, scripts, ads, URL, sitemap, queue or48/day30-minute schedule changed.
 - Seven focused winter-hub checks pass, including a new placement/link regression (RED then GREEN). Reproduced the existing10/15 date assertion failure on exact starting main3365ffc3, then aligned only that assertion to the already-maintained10/16 content. Removing the single added paragraph reproduces the entire original HTML byte-for-byte.
 - Corrected earlier review inference: no repository rule requires a newly dated complete OBSERVING registry for this non-WINNER page; local_qa.sh explicitly uses the immutable ops-pinned snapshot. No registry/allowlist change. Committed Guard, normal PR/CI and deployment checks pending.
+
+## 2026-11-06 — Nonsan campsite address and booking path
+
+- Search results for Nonsan campsites emphasize location and booking. Recent Search Advisor and GA4 evidence supported prioritizing the existing article.
+- GoCamping lists Surak Auto Campground at Surakgyegok-gil 274-15. Updated the registered address and added the booking enquiry and official listing paths. Prepared one page for review under the pinned WINNER guard.
