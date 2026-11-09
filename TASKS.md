@@ -480,3 +480,8 @@
 - [ ] 2026-11-05 winter camping checklist packing-tool discovery
   - [x] One contextual paragraph and focused placement regression;7focused checks pass. Existing10/15 assertion failure reproduced on main, then only the assertion aligned to maintained10/16 content. No metadata/ad/script/fact/schedule changes; no freshness blanket gate exists.
   - [ ] Committed-head pinned Guard, normal PR/CI and merge, Pages success and public exact-blob verification. Preserve preexisting uncommitted records.
+
+- [ ] 2026-11-06 align hosted measurement trigger tests with local scheduling
+  - [x] Confirm PR #103 and the three local scheduled collection results.
+  - [x] Verify manual hosted dispatch and existing OAuth and snapshot contracts.
+  - [ ] Review the test-only change and address the remaining baseline failures separately.
