@@ -10,6 +10,10 @@ from scripts.content_health_reports import (
     normalize_search_intent,
 )
 
+from scripts.notion_article_template import TEMPLATE, render_article
+
+ROOT = Path(__file__).resolve().parents[1]
+
 
 class ContentHealthReportTests(unittest.TestCase):
     def test_duplicate_groups_ignore_blank_values(self):
@@ -42,6 +46,37 @@ class ContentHealthReportTests(unittest.TestCase):
             broken = find_broken_internal_links(root)
 
         self.assertEqual(broken, [{"source": "/", "target": "/missing.html"}])
+
+    def test_yeongdeok_regional_links_target_the_published_gyeongbuk_guide(self):
+        destination = "/kor/report/camp/gyeongbuk-camping-best.html"
+        self.assertTrue((ROOT / destination.lstrip("/")).is_file())
+        html = (ROOT / "kor/report/camp/yeongdeok.html").read_text(encoding="utf-8")
+        self.assertEqual(html.count(f'href="{destination}"'), 2)
+        self.assertNotIn('href="/kor/report/camp/gyeongbuk-best.html"', html)
+
+    def test_notion_template_has_live_links_and_renders_the_category(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            for path in (root / "index.html", root / "kor/report/index.html"):
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text('<a href="/missing.html">Real broken link</a>', encoding="utf-8")
+            template = root / "scripts/templates/notion_article.html"
+            template.parent.mkdir(parents=True)
+            template.write_bytes(TEMPLATE.read_bytes())
+            self.assertEqual(find_broken_internal_links(root), [
+                {"source": "/", "target": "/missing.html"},
+                {"source": "/kor/report/", "target": "/missing.html"},
+            ])
+
+        article = render_article(
+            title="캠핑 준비", description="캠핑 준비 안내",
+            url="https://emfls.github.io/kor/report/camp/test-article.html",
+            category="camp",
+            body="<h2>준비 사항</h2><p>방문 전 확인하세요.</p>",
+            published_date="2026-11-06",
+        )
+        self.assertEqual(article.count('href="/kor/report/camp/"'), 3)
+        self.assertNotIn("data-category-link", article)
 
     def test_stale_requires_a_known_date_and_keeps_unknown_separate(self):
         pages = [
