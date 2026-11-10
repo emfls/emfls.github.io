@@ -142,6 +142,14 @@ def find_broken_internal_links(root):
             html = path.read_text(encoding="utf-8")
         except (OSError, UnicodeError):
             continue
+        # The raw Notion source template is reachable on GitHub Pages.
+        # Only exempt its unresolved tokens once the raw page is explicitly
+        # noindexed. Any other HTML (including broken article links) is scanned.
+        if (
+            path.relative_to(root).as_posix() == "scripts/templates/notion_article.html"
+            and '<meta name="robots" content="noindex,nofollow">' in html
+        ):
+            continue
         parser = LinkParser()
         parser.feed(html)
         source = _source_url(path, root)
