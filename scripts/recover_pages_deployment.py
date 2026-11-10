@@ -176,12 +176,12 @@ def recover(
         if remaining <= 0:
             break
         sleep(min(POLL_SECONDS, remaining))
-        # A deploy may fail while we wait. Previously we never re-read its state,
-        # leaving recovery to the next hourly publisher even with time remaining.
-        if not started_retry:
-            run = api("GET", f"/repos/{repo}/actions/runs/{run['id']}", token)
-            if run.get("head_sha") != sha or run.get("event") != "dynamic":
-                raise RecoveryError("Pages run identity changed while waiting")
+        # Refresh even after the one allowed retry so diagnostics describe the
+        # current attempt, not the failed attempt cached before the POST.
+        # started_retry still prevents any additional retry in this invocation.
+        run = api("GET", f"/repos/{repo}/actions/runs/{run['id']}", token)
+        if run.get("head_sha") != sha or run.get("event") != "dynamic":
+            raise RecoveryError("Pages run identity changed while waiting")
     raise RecoveryError(
         f"Previous article was not live after {wait_seconds}s of Pages recovery; "
         f"url={last['url']} run={run['id']}; publishing remains blocked"
