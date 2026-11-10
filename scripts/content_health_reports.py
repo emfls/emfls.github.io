@@ -130,6 +130,9 @@ def find_broken_internal_links(root):
         path for path in sorted(root.rglob("*"))
         if path.is_file()
         if not any(part in {".git", ".venv", "node_modules"} for part in path.parts)
+        # Notion HTML templates are source inputs, not published HTML pages.
+        # Never suppress broken links from actual published article paths.
+        if path.relative_to(root).parts[:2] != ("scripts", "templates")
     ]
     html_paths = [path for path in public_files if path.suffix.lower() == ".html"]
     public_urls = {
