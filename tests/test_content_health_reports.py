@@ -51,7 +51,8 @@ class ContentHealthReportTests(unittest.TestCase):
             source = folder / "notion_article.html"
             source.write_text(
                 '<meta name="robots" content="noindex,nofollow">'
-                '<a href="{{CATEGORY_HREF}}">raw placeholder</a>',
+                '<a href="{{CATEGORY_HREF}}">raw placeholder</a>'
+                '<a href="/broken-static-nav.html">broken static link</a>',
                 encoding="utf-8",
             )
             (root / "index.html").write_text(
@@ -60,7 +61,10 @@ class ContentHealthReportTests(unittest.TestCase):
             )
             self.assertEqual(
                 find_broken_internal_links(root),
-                [{"source": "/", "target": "/missing-article.html"}],
+                [
+                    {"source": "/", "target": "/missing-article.html"},
+                    {"source": "/scripts/templates/notion_article.html", "target": "/broken-static-nav.html"},
+                ],
             )
 
             # Without noindex, the raw template remains a public HTML route:
