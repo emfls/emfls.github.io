@@ -34,6 +34,8 @@ class RecoveryTests(unittest.TestCase):
             encoding="utf-8")
         self.api_calls = []
         self.posts = 0
+        self.current_sha = SHA
+        self.run_reads = 0
         self.run = {
             "id": 700, "name": "pages build and deployment", "head_sha": SHA,
             "event": "dynamic", "status": "completed", "conclusion": "failure",
@@ -49,6 +51,11 @@ class RecoveryTests(unittest.TestCase):
         self.assertEqual(token, "dummy")
         if method == "GET" and path.endswith("/actions/runs?per_page=100"):
             return {"workflow_runs": [self.run]}
+        if method == "GET" and path.endswith("/git/ref/heads/main"):
+            return {"object": {"sha": self.current_sha}}
+        if method == "GET" and path.endswith("/actions/runs/700"):
+            self.run_reads += 1
+            return dict(self.run)
         if method == "GET" and path.endswith("/jobs?per_page=100"):
             return self.jobs
         if method == "POST" and path.endswith("/actions/jobs/12/rerun"):
@@ -107,6 +114,76 @@ class RecoveryTests(unittest.TestCase):
         result = self.call(live_check)
         self.assertEqual(result["status"], "BECAME_LIVE")
         self.assertEqual(self.posts, 0)
+
+    def test_pending_deployment_that_fails_can_be_retried_in_same_invocation(self):
+        self.run.update({"status": "in_progress", "conclusion": None})
+        now = [0]
+        def sleep(seconds):
+            now[0] += seconds
+            self.run.update({"status": "completed", "conclusion": "failure"})
+        result = recovery.recover(
+            self.root, REPO, SHA, "dummy", api=self.api,
+            live_check=lambda root: self.posts > 0, sleep=sleep,
+            monotonic=lambda: now[0], wait_seconds=40)
+        self.assertEqual(result["status"], "RECOVERED_LIVE")
+        self.assertEqual(self.posts, 1)
+
+    def test_page_became_live_while_success_response_arrived(self):
+        self.run["conclusion"] = "success"
+        checks = 0
+        def live_check(root):
+            nonlocal checks
+            checks += 1
+            return checks > 1
+        result = self.call(live_check)
+        self.assertEqual(result["status"], "BECAME_LIVE")
+        self.assertEqual(self.posts, 0)
+
+    def test_changed_main_blocks_deployment_retry(self):
+        self.current_sha = "b" * 40
+        with self.assertRaisesRegex(recovery.RecoveryError, "main changed"):
+            self.call(lambda root: False)
+        self.assertEqual(self.posts, 0)
+
+    def test_retry_is_not_repeated_within_one_invocation(self):
+        now = [0]
+        def sleep(seconds):
+            now[0] += seconds
+        with self.assertRaisesRegex(recovery.RecoveryError, "publishing remains blocked"):
+            recovery.recover(
+                self.root, REPO, SHA, "dummy", api=self.api,
+                live_check=lambda root: False, sleep=sleep,
+                monotonic=lambda: now[0], wait_seconds=40)
+        self.assertEqual(self.posts, 1)
+
+    def test_retry_request_uncertain_failure_is_not_repeated(self):
+        def api(method, path, token):
+            value = self.api(method, path, token)
+            if method == "POST":
+                raise recovery.RecoveryError("request outcome unknown")
+            return value
+        with self.assertRaisesRegex(recovery.RecoveryError, "outcome unknown"):
+            recovery.recover(self.root, REPO, SHA, "dummy", api=api,
+                             live_check=lambda root: False)
+        self.assertEqual(self.posts, 1)
+
+    def test_publisher_runs_qa_before_merge_and_recovery_before_finalization(self):
+        workflow = (SCRIPTS.parent / ".github/workflows/notion-two-hour-publisher.yml").read_text()
+        qa = workflow.index('python3 scripts/run_notion_discovery_qa.py --destination')
+        merge = workflow.index('gh pr merge')
+        verify = workflow.index('id: verify')
+        recover = workflow.index('name: Recover current Pages deployment')
+        finalize = workflow.index('name: Mark Notion item published')
+        self.assertLess(qa, merge)
+        self.assertLess(merge, verify)
+        self.assertLess(verify, recover)
+        self.assertIn('deadline=time.monotonic()+600', workflow[verify:recover])
+        self.assertIn('timeout=min(15,remaining)', workflow[verify:recover])
+        self.assertLess(recover, finalize)
+        self.assertIn("steps.verify.outcome == 'failure'", workflow[recover:finalize])
+        self.assertIn('git fetch --no-tags origin main', workflow[recover:finalize])
+        self.assertIn('--sha "$(git rev-parse origin/main)"', workflow[recover:finalize])
+        self.assertNotIn('continue-on-error', workflow[recover:finalize])
 
     def test_successful_but_not_live_run_is_not_rerun(self):
         self.run["conclusion"] = "success"

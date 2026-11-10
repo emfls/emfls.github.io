@@ -7,7 +7,7 @@ changes the Notion status, or overrides the live-page check.
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
+import argparse
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
@@ -127,46 +127,61 @@ def recover(
         raise RecoveryError("GITHUB_REPOSITORY missing or invalid")
 
     run = latest_pages_run(api, repo, sha, token)
-    state = run.get("status")
-    conclusion = run.get("conclusion")
-    attempt = int(run.get("run_attempt") or 1)
     started_retry = False
-    print(
-        f"PAGES_RECOVERY_DETECTED: last_url={last['url']} "
-        f"run={run['id']} status={state} conclusion={conclusion} attempt={attempt}",
-        flush=True,
-    )
-
-    if state == "completed" and conclusion == "failure":
-        if attempt >= MAX_RUN_ATTEMPTS:
-            raise RecoveryError(
-                f"Pages run {run['id']} exhausted {MAX_RUN_ATTEMPTS} attempts; "
-                "manual intervention required"
-            )
-        job_id = failed_deploy_job(api, repo, run, token)
-        # GitHub API: rerun exactly the failing deploy job, not another writer.
-        api("POST", f"/repos/{repo}/actions/jobs/{job_id}/rerun", token)
-        started_retry = True
-        print(f"PAGES_RECOVERY_RERUN_REQUESTED: run={run['id']} job={job_id}", flush=True)
-    elif state in ("queued", "in_progress", "waiting", "requested", "pending"):
-        print(f"PAGES_RECOVERY_DEPLOY_IN_PROGRESS: run={run['id']}", flush=True)
-    else:
-        raise RecoveryError(
-            f"Previous page still not live but Pages run {run['id']} is "
-            f"status={state} conclusion={conclusion}; not rerunning a successful/cancelled run"
-        )
-
     deadline = monotonic() + max(0, wait_seconds)
     while True:
+        # Content can become readable between the initial probe and a completed
+        # run response. Recheck before refusing a successful/cancelled run.
+        if live_check(root):
+            status = "RECOVERED_LIVE" if started_retry else "BECAME_LIVE"
+            return {"status": status, "url": last["url"], "pages_run_id": run["id"]}
+        state = run.get("status")
+        conclusion = run.get("conclusion")
+        attempt = int(run.get("run_attempt") or 1)
+        print(
+            f"PAGES_RECOVERY_DETECTED: last_url={last['url']} "
+            f"run={run['id']} status={state} conclusion={conclusion} attempt={attempt}",
+            flush=True,
+        )
+        if not started_retry:
+            if state == "completed" and conclusion == "failure":
+                if attempt >= MAX_RUN_ATTEMPTS:
+                    raise RecoveryError(
+                        f"Pages run {run['id']} exhausted {MAX_RUN_ATTEMPTS} attempts; "
+                        "manual intervention required"
+                    )
+                job_id = failed_deploy_job(api, repo, run, token)
+                # Never redeploy a stale commit after another writer advances main.
+                current = api("GET", f"/repos/{repo}/git/ref/heads/main", token)
+                if current.get("object", {}).get("sha") != sha:
+                    raise RecoveryError("Current main changed; refusing to retry a stale deployment")
+                # At most ONE retry per invocation. An uncertain API response aborts
+                # instead of making another POST. Global attempt cap is preserved.
+                api("POST", f"/repos/{repo}/actions/jobs/{job_id}/rerun", token)
+                started_retry = True
+                print(f"PAGES_RECOVERY_RERUN_REQUESTED: run={run['id']} job={job_id}", flush=True)
+            elif state in ("queued", "in_progress", "waiting", "requested", "pending"):
+                print(f"PAGES_RECOVERY_DEPLOY_IN_PROGRESS: run={run['id']}", flush=True)
+            else:
+                raise RecoveryError(
+                    f"Previous page still not live but Pages run {run['id']} is "
+                    f"status={state} conclusion={conclusion}; not rerunning a successful/cancelled run"
+                )
         # Keep the original exact published-title guard as the source of truth.
         if live_check(root):
             status = "RECOVERED_LIVE" if started_retry else "BECAME_LIVE"
             print(f"PAGES_RECOVERY_LIVE_VERIFIED: url={last['url']}", flush=True)
-            return {"status": status, "url": last["url"], "pages_run_id": run["id"]}
+            return {"status": status, "url": last['url'], "pages_run_id": run['id']}
         remaining = deadline - monotonic()
         if remaining <= 0:
             break
         sleep(min(POLL_SECONDS, remaining))
+        # A deploy may fail while we wait. Previously we never re-read its state,
+        # leaving recovery to the next hourly publisher even with time remaining.
+        if not started_retry:
+            run = api("GET", f"/repos/{repo}/actions/runs/{run['id']}", token)
+            if run.get("head_sha") != sha or run.get("event") != "dynamic":
+                raise RecoveryError("Pages run identity changed while waiting")
     raise RecoveryError(
         f"Previous article was not live after {wait_seconds}s of Pages recovery; "
         f"url={last['url']} run={run['id']}; publishing remains blocked"
@@ -174,11 +189,15 @@ def recover(
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--sha", help="Exact merged main SHA (default: checkout HEAD)")
+    parser.add_argument("--wait-seconds", type=int, default=WAIT_SECONDS)
+    args = parser.parse_args()
     token = os.environ.get("GITHUB_TOKEN", "")
     repo = os.environ.get("GITHUB_REPOSITORY", "")
-    sha = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+    sha = args.sha or subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     try:
-        result = recover(ROOT, repo, sha, token)
+        result = recover(ROOT, repo, sha, token, wait_seconds=args.wait_seconds)
         print(json.dumps(result, ensure_ascii=False, sort_keys=True))
         return 0
     except (RecoveryError, ValueError, OSError) as exc:
