@@ -43,6 +43,29 @@ class ContentHealthReportTests(unittest.TestCase):
 
         self.assertEqual(broken, [{"source": "/", "target": "/missing.html"}])
 
+    def test_link_audit_ignores_unrendered_template_but_keeps_real_broken_links(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            template_dir = root / "scripts" / "templates"
+            template_dir.mkdir(parents=True)
+            (template_dir / "notion_article.html").write_text(
+                '<a href="{{CATEGORY_HREF}}">Unrendered source token</a>',
+                encoding="utf-8",
+            )
+            (root / "index.html").write_text(
+                '<a href="/existing.html">valid</a>'
+                '<a href="/actually-missing.html">must still flag</a>',
+                encoding="utf-8",
+            )
+            (root / "existing.html").write_text("OK", encoding="utf-8")
+
+            broken = find_broken_internal_links(root)
+
+        self.assertEqual(
+            broken,
+            [{"source": "/", "target": "/actually-missing.html"}],
+        )
+
     def test_stale_requires_a_known_date_and_keeps_unknown_separate(self):
         pages = [
             {"url": "/old", "updated_date": "2025-01-01", "published_date": "", "category": "report"},
