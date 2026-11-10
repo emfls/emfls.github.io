@@ -19,7 +19,9 @@ jobs:
   publish:
     if: github.repository == 'emfls/emfls.github.io'
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    # Covers previous deploy recovery (11m), cooldown (10m), verification (10m),
+    # current deploy recovery (11m), QA and setup. The hourly schedule is unchanged.
+    timeout-minutes: 50
     env:
       TZ: Asia/Seoul
       NOTION_API_TOKEN: ${{ secrets.NOTION_API_TOKEN }}
@@ -99,6 +101,15 @@ jobs:
           print("DISCOVERY_LINKS_VALIDATED")
           PY
 
+      # Bot PR runs need human approval. Run the same fail-closed QA here,
+      # before any PR is created or merged, without expanding permissions.
+      - name: Validate staged article with shared discovery QA
+        if: steps.stage.outputs.status == 'SOURCE_STAGED'
+        env:
+          DESTINATION: ${{ steps.stage.outputs.destination }}
+        shell: bash
+        run: python3 scripts/run_notion_discovery_qa.py --destination "$DESTINATION"
+
       - name: Commit page and discovery links through protected-main PR
         if: steps.stage.outputs.status == 'SOURCE_STAGED'
         env:
@@ -134,6 +145,8 @@ jobs:
           echo "PR merged to main. GitHub Pages deploys automatically; verifying live page in the next step."
 
       - name: Verify published page content
+        id: verify
+        continue-on-error: true
         if: steps.stage.outputs.status == 'SOURCE_STAGED'
         env:
           DESTINATION: ${{ steps.stage.outputs.destination }}
@@ -148,18 +161,32 @@ jobs:
           url=os.environ["PUBLIC_URL"]
           path=os.environ["DESTINATION"]
           title=open(path,encoding="utf-8").read().split("<title>",1)[1].split("</title>",1)[0]
+          deadline=time.monotonic()+600
           for retry in range(40):
+              remaining=deadline-time.monotonic()
+              if remaining<=0:
+                  break
               try:
                   request=Request(url+"?notion-verify="+str(retry),headers={"Cache-Control":"no-cache"})
-                  with urlopen(request,timeout=15) as response:
+                  with urlopen(request,timeout=min(15,remaining)) as response:
                       if response.status==200 and title in response.read().decode("utf-8",errors="replace"):
                           print("LIVE VERIFIED:",url)
                           raise SystemExit(0)
               except (HTTPError,URLError,TimeoutError):
                   pass
-              time.sleep(15)
+              time.sleep(min(15,max(0,deadline-time.monotonic())))
           raise SystemExit("NOT_LIVE: public page could not be verified")
           PY
+
+      # The original verifier can expire just before Pages reports its timeout.
+      # Wait for that result and retry only the failed deploy, not the publisher.
+      - name: Recover current Pages deployment after live verification timeout
+        if: steps.stage.outputs.status == 'SOURCE_STAGED' && steps.verify.outcome == 'failure'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin main
+          python3 scripts/recover_pages_deployment.py --sha "$(git rev-parse origin/main)"
 
       - name: Mark Notion item published after live verification
         if: steps.stage.outputs.status == 'SOURCE_STAGED'
