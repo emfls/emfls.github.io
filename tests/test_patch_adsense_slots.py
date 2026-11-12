@@ -145,3 +145,14 @@ def test_incomplete_or_duplicate_marker_pairs_are_never_success():
     for markers in [('EMFLS_AUTO_FEED_3',),('EMFLS_AUTO_FEED_7',),('EMFLS_AUTO_FEED_3','EMFLS_AUTO_FEED_3','EMFLS_AUTO_FEED_7')]:
         source = ''.join(f'<!-- {x} -->' for x in markers)
         assert m.patch_feed(source) == (source,'PARTIAL_MARKER_HOLD')
+
+
+def test_orphan_closers_outside_containers_do_not_hide_exact_anchors():
+    m = module()
+    source = '</div>' + column() + '</div>'
+    after, state = m.patch_column(source)
+    assert state == 'PATCHED'
+    assert after.startswith('</div>') and after.endswith('</div>')
+    assert after.replace(m.ad_slot('EMFLS_AUTO_ATF_SLOT',280),'',1).replace(m.ad_slot('EMFLS_AUTO_INARTICLE_SLOT',250,kind='article'),'',1) == source
+    malformed = column().replace('hero</div></header>','hero</header></div>')
+    assert m.patch_column(malformed) == (malformed,'ANCHOR_HOLD')

@@ -55,7 +55,10 @@ class _Spans(HTMLParser):
     def handle_endtag(self, tag):
         if tag not in {"div", "header", "section", "aside"}:
             return
-        if not self.stack or self.stack[-1]["tag"] != tag:
+        # Browsers ignore orphan closers; mismatched nested containers stay unsafe.
+        if not self.stack:
+            return
+        if self.stack[-1]["tag"] != tag:
             raise ValueError("Unbalanced container")
         node = self.stack.pop()
         node["end"] = self.source.index(">", self.position()) + 1
