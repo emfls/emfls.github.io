@@ -1,3 +1,11 @@
+## 2026-11-13 — 승인된 RPM241 exact 전이의 monetization Guard 연결
+
+- 사용자가 승인한 e61550880a..748f688596 누적241파일의 정확 before/after blob을 APPROVED_RPM_OPTIMIZATION_20261113_TRANSITIONS에 고정했다. canonical mapping SHA256 e57490fd96798e4830971fb130cb98da761a0f237f992efbcf3b75779cfbceda, 기존 protected-winner 전이에 합류했다.
+- 등록만으로는 별도 monetization 판정이 실패함을 재현했다. 해당 registry의 정확 A/M와 before=None 관계만 허용하고, Git 변경 수집이 승인된 A파일 after blob도 가져오게 보완했다. 원본241파일의 새 내용을 재승인하는 wildcard는 없다. 변조/다른 경로/삭제/rename/OBSERVING 차단을 유지한다.
+- 정상 원격 fetch main64812ebe75의9파일은 승인241과 겹침0, merge b068889a로 통합했다. 관련104 PASS·실제 Git 추가/변조 통합 회귀 PASS·독립 검수 해결 확인. 현재 원고/광고/보호 대상 HTML/CSS는 이번 후속에서 바꾸지 않았다.
+- 전체 pytest1675 PASS/40 FAIL/3 skip. 최신 main의 선택40개도 모두 FAIL이며 후보 실패 집합과 정확히 같아 관측된 신규 실패0이다. 기준본 전체를 반복한 것은 아니다. 작업트리 Guard PASS/errors0 확인, 커밋 기준 재검증 결과는 Vault 보고서에 남긴다. 레거시 실패를 green으로 표시하지 않는다.
+- 기존 모바일 검수는 사용자 승인 후 재사용했다. 이번 범위는 Guard해소 로컬 커밋과 PR준비, 원격 push/PR생성/병합/배포0. 원본 사용자 checkout·OPS·예약·계정/권한은 그대로다.
+
 ## 2026-11-13 — 광고 슬롯 파서의 외부 orphan 닫는 태그 처리
 
 - 1차 미해결 DOM 84개 중 73개는 컨테이너 밖 여분 닫는 태그였다. 빈 stack에 한해 브라우저와 같이 무시하고 중첩 불일치는 계속 거절한다. 원문을 정규화하거나 수정하지 않는다.

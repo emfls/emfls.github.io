@@ -1,3 +1,8 @@
+- [x] 2026-11-13 RPM241 exact 승인 등록과 monetization Guard 해소 준비
+  - 고정241 before/after 등록·protected 전이 합류·정확 A/M 허용·추가파일 blob 수집. 관련104 PASS, 전체1675 PASS/40기존FAIL/3skip, 최신 main 선택40개와 실패 집합 동일·관측 신규0. 정상 최신main merge, Guard PASS 작업트리 검증.
+- [ ] RPM 후보 정상 PR/원격 CI 후속
+  - 최종 커밋 기준 Guard를 재검증하고 PR준비 결과로 인계한다. 레거시40 FAIL은 통과로 표시하지 않는다. 자동 원격 push/PR생성/병합/배포는 이번 지시에 포함하지 않는다. 보호130·앵커11 및 준비물/캠핑/게임의 미적용 상태 유지.
+
 - [x] 2026-11-13 광고 슬롯 DOM 보류의 독립 후속 검수
   - 외부 orphan 태그73개 지원, 원문 보존, 최종 칼럼232/보호130/앵커11. 관련97 PASS·독립 검수 PASS. 전체 QA/monetization gate의 출고 HOLD는 유지한다.
 
