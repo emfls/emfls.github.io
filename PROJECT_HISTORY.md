@@ -1,3 +1,11 @@
+## 2026-11-13 — AdSense 슬롯 격리 후보, 운영 출고 HOLD
+
+- feature/adsense-rpm-slots-optimization에서 현재 main e61550880a 기반 칼럼 생성기와 159개 기존 칼럼, 복리/BMI 2개에 슬롯을 준비했다. 실제 계정의 기존 display/in-article 코드를 읽어 재사용했고 ATF 280px·본문 250px 예약 공간을 뒀다.
+- 현재 원장과 고정 pin을 합쳐 보호 130개·앵커 불명 84개 칼럼을 보존했다. WINNER 준비물 도구·캠핑 인피드는 별도 미적용 diff만 준비, FlappyDot 의도적 광고 중단 정책은 유지했다. 보호/원장/광고 계정/예약 변경 없음.
+- 새/기존 집중 회귀 20 PASS, 독립 검수 marker 문제 해결 후 재검수 PASS. 320/390px 실제 로컬 화면·계산·슬롯 잔존 확인. 실광고·GA 요청은 CSP 차단, Active View/field CLS/수익 효과는 미측정이다.
+- 전체 unittest 984개 실패18/오류1과 초기 pytest42실패를 baseline 대조했고, 입력/fixture 정리 및 고정 pin 복원 후 전체 pytest 1666 PASS/40 FAIL/3 skip. 실패40은 baseline 재현 목록에 포함된다. 이후 marker 판정만 수정 후 집중20 PASS. 전체 QA 실패는 유지하며 정상 CI·출고와 구분한다.
+- 코드·정책·미적용 범위·복구: docs/adsense-slots-2026-11-13.md. 이번에는 로컬 commit만, push/PR/병합/배포 0.
+
 ## 2026-11-10 — Pages 복구 관측 시간과 재시도 로그 보완
 
 - 원래 배포의 종료를 기다린 시간까지 660초 복구 한도에 포함되어, 재시도 결과보다 발행 작업이 먼저 끝나는 사례를 재현했다. 현재 글의 복구 관측 한도만 900초로 명시하고 전체 직렬 작업 한도는 55분으로 제한한다. Pages 자체의 10분 한도나 시간당 발행 간격을 변경하지 않는다.

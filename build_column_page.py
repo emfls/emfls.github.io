@@ -7,6 +7,7 @@ Gemini 출력(PDF 또는 텍스트)을 읽어 emfls.github.io 컬럼 HTML 페이
 import os, re, json
 from datetime import datetime
 from automation_security import require_automation_enabled
+from scripts.patch_adsense_slots import ad_slot
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 PDF_FILE   = os.path.join(SCRIPT_DIR, ".gemini_output.pdf")
@@ -94,6 +95,7 @@ def extract_title_and_sections(content):
 
 def sections_to_html(sections):
     html = ""
+    rendered_sections = 0
     for sec in sections:
         if not sec.get("heading") and not sec.get("body"):
             continue
@@ -116,6 +118,9 @@ def sections_to_html(sections):
             html += f'<div class="section"><h2>{heading}</h2>{body_html}</div>\n'
         else:
             html += f'<div class="section">{body_html}</div>\n'
+        rendered_sections += 1
+        if rendered_sections == 3:
+            html += ad_slot("EMFLS_AUTO_INARTICLE_SLOT", 250, kind="article")
     return html
 
 def build_html(title, sections_html, slug, content):
@@ -192,6 +197,7 @@ footer a{{color:#58a6ff;text-decoration:none;}}
     <h1>{title}</h1>
     <div class="meta">✍️ emfls.com &nbsp;|&nbsp; 📅 {today}</div>
   </header>
+  {ad_slot("EMFLS_AUTO_ATF_SLOT", 280)}
 
   <div class="intro-box">{description}</div>
 
