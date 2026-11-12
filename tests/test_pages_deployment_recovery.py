@@ -2,6 +2,9 @@
 from __future__ import annotations
 
 from datetime import datetime
+from contextlib import redirect_stdout
+import io
+import re
 from pathlib import Path
 import importlib.util
 import json
@@ -165,6 +168,47 @@ class RecoveryTests(unittest.TestCase):
         with self.assertRaisesRegex(recovery.RecoveryError, "outcome unknown"):
             recovery.recover(self.root, REPO, SHA, "dummy", api=api,
                              live_check=lambda root: False)
+        self.assertEqual(self.posts, 1)
+
+    def test_current_release_budget_covers_initial_tail_and_full_retry(self):
+        workflow = (SCRIPTS.parent / ".github/workflows/notion-two-hour-publisher.yml").read_text()
+        fallback = workflow.split('name: Recover current Pages deployment', 1)[1].split('name: Mark Notion', 1)[0]
+        setting = re.search(r'--wait-seconds (\d+)', fallback)
+        self.assertIsNotNone(setting, 'Current-release recovery needs an explicit bounded total budget')
+        budget = int(setting.group(1))
+        self.assertEqual(budget, 900)
+        now = [0]
+        self.run.update({"status": "in_progress", "conclusion": None})
+        def sleep(seconds):
+            now[0] += seconds
+            if self.posts:
+                self.run.update({"status": "in_progress", "conclusion": None, "run_attempt": 2})
+            elif now[0] >= 100:
+                self.run.update({"status": "completed", "conclusion": "failure"})
+        # First deployment fails 100s into recovery; retry takes another 620s.
+        # The old 660s total deadline ended before this valid retry could finish.
+        result = recovery.recover(
+            self.root, REPO, SHA, "dummy", api=self.api,
+            live_check=lambda root: now[0] >= 720, sleep=sleep,
+            monotonic=lambda: now[0], wait_seconds=budget)
+        self.assertEqual(result["status"], "RECOVERED_LIVE")
+        self.assertEqual(self.posts, 1)
+        self.assertLessEqual(now[0], budget)
+
+    def test_retry_status_is_refreshed_without_another_retry(self):
+        now = [0]
+        def sleep(seconds):
+            now[0] += seconds
+            self.run.update({"status": "in_progress", "conclusion": None, "run_attempt": 2})
+        captured = io.StringIO()
+        with redirect_stdout(captured):
+            with self.assertRaisesRegex(recovery.RecoveryError, "publishing remains blocked"):
+                recovery.recover(
+                    self.root, REPO, SHA, "dummy", api=self.api,
+                    live_check=lambda root: False, sleep=sleep,
+                    monotonic=lambda: now[0], wait_seconds=40)
+        self.assertGreater(self.run_reads, 0)
+        self.assertIn('status=in_progress conclusion=None attempt=2', captured.getvalue())
         self.assertEqual(self.posts, 1)
 
     def test_publisher_runs_qa_before_merge_and_recovery_before_finalization(self):

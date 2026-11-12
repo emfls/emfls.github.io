@@ -20,8 +20,9 @@ jobs:
     if: github.repository == 'emfls/emfls.github.io'
     runs-on: ubuntu-latest
     # Covers previous deploy recovery (11m), cooldown (10m), verification (10m),
-    # current deploy recovery (11m), QA and setup. The hourly schedule is unchanged.
-    timeout-minutes: 50
+    # current deploy recovery (15m), QA, network overhead and setup.
+    # The hourly schedule and single-writer concurrency are unchanged.
+    timeout-minutes: 55
     env:
       TZ: Asia/Seoul
       NOTION_API_TOKEN: ${{ secrets.NOTION_API_TOKEN }}
@@ -186,7 +187,9 @@ jobs:
         run: |
           set -euo pipefail
           git fetch --no-tags origin main
-          python3 scripts/recover_pages_deployment.py --sha "$(git rev-parse origin/main)"
+          # Includes the tail of the original deploy plus one full 10-minute
+          # deploy retry and queue/propagation margin. Does NOT extend Pages' cap.
+          python3 scripts/recover_pages_deployment.py --sha "$(git rev-parse origin/main)" --wait-seconds 900
 
       - name: Mark Notion item published after live verification
         if: steps.stage.outputs.status == 'SOURCE_STAGED'
