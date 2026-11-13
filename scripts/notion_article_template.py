@@ -101,6 +101,16 @@ def render_article(
         if token not in content:
             raise ValueError("Missing template token: " + token)
         content = content.replace(token, value)
+    # The source template is publicly served from the Pages branch: keep
+    # the unrendered source noindex, but publish rendered articles as indexable.
+    raw_robots = '<meta name="robots" content="noindex,nofollow">'
+    if content.count(raw_robots) != 1:
+        raise ValueError("Unexpected source-template robots directive")
+    content = content.replace(
+        raw_robots,
+        '<meta name="robots" content="index,follow,max-image-preview:large">',
+        1,
+    )
     if re.search(r"\{\{[A-Z_]+\}\}", content):
         raise ValueError("Unrendered article template token")
     if content.count("G-QP5Q67GE5B") != 2:

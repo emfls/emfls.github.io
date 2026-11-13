@@ -43,6 +43,50 @@ class ContentHealthReportTests(unittest.TestCase):
 
         self.assertEqual(broken, [{"source": "/", "target": "/missing.html"}])
 
+    def test_noindex_source_template_is_not_an_indexable_link_source(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            folder = root / "scripts" / "templates"
+            folder.mkdir(parents=True)
+            source = folder / "notion_article.html"
+            source.write_text(
+                '<meta name="robots" content="noindex,nofollow">'
+                '<a href="{{CATEGORY_HREF}}">raw placeholder</a>'
+                '<a href="/broken-static-nav.html">broken static link</a>',
+                encoding="utf-8",
+            )
+            (root / "index.html").write_text(
+                '<a href="/missing-article.html">broken public article</a>',
+                encoding="utf-8",
+            )
+            self.assertEqual(
+                find_broken_internal_links(root),
+                [
+                    {"source": "/", "target": "/missing-article.html"},
+                    {"source": "/scripts/templates/notion_article.html", "target": "/broken-static-nav.html"},
+                ],
+            )
+
+            # Without noindex, the raw template remains a public HTML route:
+            # don't silently hide its unresolved public link.
+            source.write_text(
+                '<meta name="robots" content="index,follow">'
+                '<a href="{{CATEGORY_HREF}}">raw placeholder</a>',
+                encoding="utf-8",
+            )
+            broken = find_broken_internal_links(root)
+            self.assertIn(
+                {"source": "/", "target": "/missing-article.html"},
+                broken,
+            )
+            self.assertIn(
+                {
+                    "source": "/scripts/templates/notion_article.html",
+                    "target": "/scripts/templates/{{CATEGORY_HREF}}",
+                },
+                broken,
+            )
+
     def test_stale_requires_a_known_date_and_keeps_unknown_separate(self):
         pages = [
             {"url": "/old", "updated_date": "2025-01-01", "published_date": "", "category": "report"},
