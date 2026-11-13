@@ -1,3 +1,25 @@
+## 2026-11-13 — 승인된 RPM241 exact 전이의 monetization Guard 연결
+
+- 사용자가 승인한 e61550880a..748f688596 누적241파일의 정확 before/after blob을 APPROVED_RPM_OPTIMIZATION_20261113_TRANSITIONS에 고정했다. canonical mapping SHA256 e57490fd96798e4830971fb130cb98da761a0f237f992efbcf3b75779cfbceda, 기존 protected-winner 전이에 합류했다.
+- 등록만으로는 별도 monetization 판정이 실패함을 재현했다. 해당 registry의 정확 A/M와 before=None 관계만 허용하고, Git 변경 수집이 승인된 A파일 after blob도 가져오게 보완했다. 원본241파일의 새 내용을 재승인하는 wildcard는 없다. 변조/다른 경로/삭제/rename/OBSERVING 차단을 유지한다.
+- 정상 원격 fetch main64812ebe75의9파일은 승인241과 겹침0, merge b068889a로 통합했다. 관련104 PASS·실제 Git 추가/변조 통합 회귀 PASS·독립 검수 해결 확인. 현재 원고/광고/보호 대상 HTML/CSS는 이번 후속에서 바꾸지 않았다.
+- 전체 pytest1675 PASS/40 FAIL/3 skip. 최신 main의 선택40개도 모두 FAIL이며 후보 실패 집합과 정확히 같아 관측된 신규 실패0이다. 기준본 전체를 반복한 것은 아니다. 작업트리 Guard PASS/errors0 확인, 커밋 기준 재검증 결과는 Vault 보고서에 남긴다. 레거시 실패를 green으로 표시하지 않는다.
+- 기존 모바일 검수는 사용자 승인 후 재사용했다. 이번 범위는 Guard해소 로컬 커밋과 PR준비, 원격 push/PR생성/병합/배포0. 원본 사용자 checkout·OPS·예약·계정/권한은 그대로다.
+
+## 2026-11-13 — 광고 슬롯 파서의 외부 orphan 닫는 태그 처리
+
+- 1차 미해결 DOM 84개 중 73개는 컨테이너 밖 여분 닫는 태그였다. 빈 stack에 한해 브라우저와 같이 무시하고 중첩 불일치는 계속 거절한다. 원문을 정규화하거나 수정하지 않는다.
+- 최종 칼럼232 적용/130보호/11앵커 HOLD. 보류는 2카드7개·index1개·닫히지 않은 컨테이너3개다. 삽입 제거 시232개 모두 최초 main과 바이트 동일, 나머지141개도 무변경이다.
+- 관련 최종97 PASS 및 독립 좁은 재검수 PASS. 원천/보호/자동 발행/계정 설정은 그대로다. 전체 QA 기존40 FAIL과 monetization Guard HOLD는 해제하지 않았다. 1차 로컬 커밋 9f981c4f2b에 이어 기능 브랜치에서만 보완, 원격 push/병합/배포0.
+
+## 2026-11-13 — AdSense 슬롯 격리 후보, 운영 출고 HOLD
+
+- feature/adsense-rpm-slots-optimization에서 현재 main e61550880a 기반 칼럼 생성기와 159개 기존 칼럼, 복리/BMI 2개에 슬롯을 준비했다. 실제 계정의 기존 display/in-article 코드를 읽어 재사용했고 ATF 280px·본문 250px 예약 공간을 뒀다.
+- 현재 원장과 고정 pin을 합쳐 보호 130개·앵커 불명 84개 칼럼을 보존했다. WINNER 준비물 도구·캠핑 인피드는 별도 미적용 diff만 준비, FlappyDot 의도적 광고 중단 정책은 유지했다. 보호/원장/광고 계정/예약 변경 없음.
+- 새/기존 집중 회귀 20 PASS, 독립 검수 marker 문제 해결 후 재검수 PASS. 320/390px 실제 로컬 화면·계산·슬롯 잔존 확인. 실광고·GA 요청은 CSP 차단, Active View/field CLS/수익 효과는 미측정이다.
+- 전체 unittest 984개 실패18/오류1과 초기 pytest42실패를 baseline 대조했고, 입력/fixture 정리 및 고정 pin 복원 후 전체 pytest 1666 PASS/40 FAIL/3 skip. 실패40은 baseline 재현 목록에 포함된다. 이후 marker 판정만 수정 후 집중20 PASS. 전체 QA 실패는 유지하며 정상 CI·출고와 구분한다.
+- 코드·정책·미적용 범위·복구: docs/adsense-slots-2026-11-13.md. 이번에는 로컬 commit만, push/PR/병합/배포 0.
+
 ## 2026-11-10 — Pages 복구 관측 시간과 재시도 로그 보완
 
 - 원래 배포의 종료를 기다린 시간까지 660초 복구 한도에 포함되어, 재시도 결과보다 발행 작업이 먼저 끝나는 사례를 재현했다. 현재 글의 복구 관측 한도만 900초로 명시하고 전체 직렬 작업 한도는 55분으로 제한한다. Pages 자체의 10분 한도나 시간당 발행 간격을 변경하지 않는다.

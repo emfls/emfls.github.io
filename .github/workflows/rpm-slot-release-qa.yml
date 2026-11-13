@@ -1,0 +1,67 @@
+name: RPM Slot Release QA
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/rpm-slot-release-qa.yml
+      - build_column_page.py
+      - scripts/content_launch_guard.py
+      - scripts/patch_adsense_slots.py
+      - tests/test_rpm_optimization_guard.py
+      - tests/test_patch_adsense_slots.py
+      - kor/column/**
+      - util/bmi/index.html
+      - util/compound-interest/index.html
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.number == 727
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install pytest requests PyYAML
+      - name: Existing discovery integration and RPM regressions
+        run: |
+          python -B scripts/run_notion_discovery_qa.py
+          python -B -m pytest -q tests/test_rpm_optimization_guard.py tests/test_content_launch_guard.py tests/test_patch_adsense_slots.py tests/test_remove_sensitive_page_ads.py tests/test_adsense_interactive_spacing.py tests/test_automation_security.py tests/test_generator_domain_contract.py
+
+  guard:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.number == 727
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      APPROVED_HEAD: b512e0da4acf4e7c03ccf9c1c9557ccd51c730ec
+      TRUSTED_PIN: 9a5ef58d459697642f36d2f494be6c48387ac9b3
+      BASE_REF: dae1bd3f876a769363c92a409e2ff0a37f699801
+      APPROVED_BASE_DELTA_SHA256: d4e795708e8fb5b79b4f95ee3832b2eeb324385df611f3dd784ef8added81229
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Bind approved source and run exact transition Guard
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor "$APPROVED_HEAD" HEAD
+          git merge-base --is-ancestor "$BASE_REF" HEAD
+          test "$(git rev-parse HEAD^1)" = "$BASE_REF"
+          git diff --raw -z --no-abbrev --no-renames "$APPROVED_HEAD" HEAD -- . ':(exclude).github/workflows/rpm-slot-release-qa.yml' ':(exclude)PROJECT_HISTORY.md' ':(exclude)TASKS.md' > "$RUNNER_TEMP/rpm-base-delta.bin"
+          printf '%s  %s\n' "$APPROVED_BASE_DELTA_SHA256" "$RUNNER_TEMP/rpm-base-delta.bin" | sha256sum -c -
+          printf '%s\n' '671f28e3bdd447324a0ee7b167bc7889dcafd538d3d308e3759b2e75f8ba4c0b  scripts/content_launch_guard.py' | sha256sum -c -
+          git show "$TRUSTED_PIN:data/content-launch-manifest.json" > "$RUNNER_TEMP/rpm-manifest.json"
+          printf '%s  %s\n' 'c5be62d05c4021c57df52bcb4c3ef688ace53a75866938f22e469eb439b57b31' "$RUNNER_TEMP/rpm-manifest.json" | sha256sum -c -
+          python -S -B scripts/content_launch_guard.py --root . --manifest "$RUNNER_TEMP/rpm-manifest.json" --base-ref "$TRUSTED_PIN" --change-base-ref "$BASE_REF"
