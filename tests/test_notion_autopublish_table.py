@@ -30,6 +30,50 @@ def test_literal_bold_is_rendered_and_removed_from_the_search_summary():
     assert publisher.rich_text_to_html([rich("**already bold**", bold=True)], []) == "<strong>already bold</strong>"
 
 
+
+def test_search_summary_preserves_the_complete_first_paragraph():
+    from html import escape
+
+    intro = "A complete introductory sentence with clear conditions. " * 4 + "Keep A & B <safe>."
+    assert len(intro) > 165
+    page = [
+        {"type": "paragraph", "has_children": False,
+         "paragraph": {"rich_text": [rich(intro, bold=True)]}},
+        {"type": "paragraph", "has_children": False,
+         "paragraph": {"rich_text": [rich("A second paragraph is not the summary.")]}},
+    ]
+    with patch.object(publisher, "get_blocks", return_value=page):
+        body, sources, summary = publisher.to_html("complete-introduction")
+
+    assert summary == escape(intro)
+    assert "<strong>" not in summary
+    assert body.startswith("<p><strong>" + escape(intro) + "</strong></p>")
+    assert body.endswith("<p>A second paragraph is not the summary.</p>")
+    assert sources == []
+
+
+def test_template_keeps_long_descriptions_consistent_and_escaped():
+    from html import escape
+    import json
+    import re
+
+    description = "Conditions & <script>alert(1)</script> remain literal. " * 4
+    assert len(description) > 165
+    rendered = publisher.render_article(
+        title="Complete description", description=description,
+        url="https://emfls.github.io/kor/report/it/complete-description.html",
+        category="it", body="<h2>Details</h2><p>Existing article body.</p>",
+        published_date="2026-11-14",
+    )
+    encoded = escape(description, quote=True)
+    for attribute in ['name="description"', 'property="og:description"', 'name="twitter:description"']:
+        assert '<meta ' + attribute + ' content="' + encoded + '">' in rendered
+    assert '<p class="deck">' + encoded + '</p>' in rendered
+    structured = json.loads(re.search(r'<script type="application/ld\+json">(.*?)</script>', rendered, re.S)[1])
+    assert structured["description"] == description
+    assert '<script>alert(1)</script>' not in rendered
+
+
 def table_fixture():
     return {
         "id": "tbl-1",
@@ -163,3 +207,11 @@ class NativeTablePublisherTests(unittest.TestCase):
 
     def test_malformed_table_rejected(self):
         test_malformed_table_row_is_rejected_instead_of_truncated()
+
+
+class CompleteDescriptionTests(unittest.TestCase):
+    def test_full_first_paragraph(self):
+        test_search_summary_preserves_the_complete_first_paragraph()
+
+    def test_consistent_escaped_description(self):
+        test_template_keeps_long_descriptions_consistent_and_escaped()

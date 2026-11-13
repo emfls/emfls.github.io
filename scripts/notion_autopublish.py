@@ -257,7 +257,8 @@ def to_html(page_id):
         if not val and not nested:
             continue
         if kind == "paragraph" and not summary:
-            summary = re.sub(r"<[^>]+>", "", val)[:150]
+            # Cutting escaped text can split both sentences and HTML entities.
+            summary = re.sub(r"<[^>]+>", "", val)
         tag = {
             "paragraph": "p", "heading_1": "h2", "heading_2": "h2",
             "heading_3": "h3", "quote": "blockquote",

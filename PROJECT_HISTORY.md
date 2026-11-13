@@ -1761,3 +1761,7 @@
 - Completed existing speed-test/PDF/EV-warning/AION2 search summaries in16 fields only; all other HTML bytes preserved. Current protection/experiment targets do not overlap. Detail: docs/search-description-wave2-2026-11-14.md.
 - Related82 tests, raw-byte/semantic independent review and exact-base SEO delta PASS (new0; existing646/420;19,507pages). Committed Guard/PR/Pages/public evidence pending. No rank or revenue uplift claimed.
 - Previous pilot PR744 actually merged to498a52cb4f; Pages43433123884 success and public3/3 exact HTML verified2026-11-13 22:25KST. Its complete-period observation remains pending.
+
+## 2026-11-14 — Prevent repeated Notion description truncation
+- Removed only first-paragraph150/template165 hard cuts; existing escaping/unescape/JSON protection preserved. No existing HTML/queue/schedule/ad changes. Two RED→GREEN regressions,114 related/22 workflow-style unittest checks, exact existing render workflow checks and independent diff/AST review PASS. Offline390/1280 long-deck visual/overflow/overlap checks PASS. Detail: docs/notion-complete-description-2026-11-14.md. Final Guard/CI/release pending.
+- Follow-up page PR753 actually merged to faa765f42d; Pages43509140914 success, public4URL200/exact HTML at2026-11-14 06:17:46KST. Search/revenue effects remain unmeasured.
