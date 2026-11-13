@@ -58,7 +58,14 @@ class OverseasStockTaxClusterTests(unittest.TestCase):
         self.assertIn("입력값은 서버로 전송되지 않습니다", html)
         self.assertIn("신고 세액을 보장하지 않습니다", html)
         self.assertIn("국내·국외 과세대상 주식의 손익통산", html)
-        self.assertNotIn("<ins class=\"adsbygoogle\"", html)
+        # Phase2 explicitly adds two ads; the calculation itself stays local.
+        self.assertEqual(html.count('<ins class="adsbygoogle"'), 2)
+        self.assertEqual(html.count('pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'), 1)
+        self.assertEqual(html.count('<!-- EMFLS_PHASE2_ATF_SLOT -->'), 1)
+        self.assertEqual(html.count('<!-- EMFLS_PHASE2_RESULT_SLOT -->'), 1)
+        calculation = next(script for script in re.findall(r"<script(?:\s[^>]*)?>(.*?)</script>", html, re.S) if "estimateOverseasStockTax" in script)
+        for transmission in ("fetch(", "XMLHttpRequest", "sendBeacon", "dataLayer.push"):
+            self.assertNotIn(transmission, calculation)
 
     def test_cluster_pages_link_to_pillar_and_calculator(self):
         pillar_path = "/kor/column/overseas-stock-tax-2026.html"

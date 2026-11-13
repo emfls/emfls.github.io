@@ -43,6 +43,40 @@ except ModuleNotFoundError:
     from external_content_opportunity import launch_readiness
 
 
+# Phase2 owner-requested calculator/camping slots, 2026-11-13.
+# Exact current-main transitions only; OBSERVING/HOLD/deletions remain blocked.
+APPROVED_PHASE2_TRANSITIONS = {
+    'kor/report/camp/ansan.html': ('63f48ca998c0ee01e40202fab83fe531f1a6f725', '606d668b102097b78ba81d1168fc4c7746e3b223'),
+    'kor/report/camp/anseong.html': ('25e9f4794a032bec1442e78ed8f5d78879a92807', '855d76fa2f2a5c9033bd78ccec06c4a07655d9a8'),
+    'kor/report/camp/autocamping-best.html': ('10fa8e9dd6f5896485390ed4fe581bafb42cca4f', 'aa0d1109321cf4df5115c47d9cdc767afe6e0e44'),
+    'kor/report/camp/autumn-camping-top10.html': ('8369c1688d3f9f25899f2818af4be24724bb25bb', '4111b81dc94b49ce35d2f7d232a380cc246c67f8'),
+    'kor/report/camp/backpacking-best.html': ('5e33f06f17e259fb3f58ea364c823696dc76d38b', '89557f3225a6e4eb4259408f672b9b402c486ad6'),
+    'kor/report/camp/chungcheong-camping-best.html': ('dedffa37a1bf779189d99b4c30359e3033c37fcb', 'a27a8a8c571bcc6bfa775be3be06edb25088c5cf'),
+    'kor/report/camp/gwangmyeong.html': ('7144b75d23ac3976834dad644c91dc380e15c036', 'ebf17894378786a5fef171998b97d5f67cf4c842'),
+    'kor/report/camp/gyeongbuk-camping-best.html': ('62b9420bcc9f7863ddd955366ebfa309f715cb61', '2a0c73c627d84f24c392b21d0fd3dd6fe9d475b0'),
+    'kor/report/camp/gyeonggi-best.html': ('2d0a4ff260f49571c41bf6f1ef550fe5c6980749', '79e955f8aab8c71b24ac7660eb30cebc53cd92ac'),
+    'kor/report/camp/gyeongnam-best.html': ('11b37fa1a222cc6140dd1d4880a05fa12aa95eee', '705f44676b63e0bfa29c51efe35ac326814af720'),
+    'kor/report/camp/hoengseong.html': ('7a150523eaa82bd6af7a0b10a00a363b076ec4f8', '348e71f4cba1a465c5ff5afb1121b39d74d29a0e'),
+    'kor/report/camp/hongcheon.html': ('b29334ecff8e07e730c984f7c376600629c35562', '01cbae0ef8dcb9b8a86871dc18c11598cc6924e3'),
+    'kor/report/camp/jeju-camping-best.html': ('19f69265ba34d9c00b973e376100c10b63edb53c', '3ce46d4651c4208638c68413da341cbd70d26c4c'),
+    'kor/report/camp/jeonbuk-camping-best.html': ('248ede9f09a338aa6d8d8c62c740fe5b3a3c2f8f', '3343d4d9b3d704bf961b17ba53945391f3026840'),
+    'kor/report/camp/jeonnam-best.html': ('9e59e46126edeb342b96a89185c358d190637db4', 'd6b2ef63aff1bc5c1a45a123c8f24d1bec9c8b87'),
+    'kor/report/camp/pohang.html': ('387ac142b73ac9287cea9297c569815a81f99b90', '0185901ebb10ce645aaf0e0c6df25223ca873845'),
+    'kor/report/camp/valley-camping-top10.html': ('18644ef4ca2871b585feec0845293b34e47ff7b7', '99308df78e4d7889a0541f868d8e0e5f11111005'),
+    'kor/report/camp/yangyang.html': ('650634c710f7661a0ded6ad62594637ab2c005ca', 'a1ce7dc3013ea99b5bdebb37a94b229bcc58b325'),
+    'kor/util/camping-packing-checklist/index.html': ('02eaaab9950939aba3b61e1a41cac07abdb97348', '3747ad2f5e201e7e100aea809745ec4a68cb902d'),
+    'kor/util/car-inspection-cost/index.html': ('bf714783609f104ba1283762ff10eb27ccb1f65c', 'b7c6085c2211b31a121908e592cd0a15450fa27d'),
+    'kor/util/date-calculator/index.html': ('3152de4def89e124d4b0c3542e44c17939851704', 'd6a70f917087c6fb197745a1c67327e067fc6b0a'),
+    'kor/util/fin-calc/index.html': ('5f501e1c6f0d2131df9b68f2b9a9fb11e4f5c933', 'a4c18713cbfe41dd58a6ee4a8637e8dfc003cc93'),
+    'kor/util/overseas-stock-tax-calculator/index.html': ('6d2ec2ee859c283fe95154a46e1c39806cedbf8a', '2ddf6b56d343de289f3f57acc676784e2d211caa'),
+    'kor/util/retirement-pension-withdrawal/index.html': ('345f89e9d0d219188c2381de3b06c78fa78da86d', 'a95ab00fb9fa3703abd3b787773994b35c159415'),
+    'kor/util/road-trip-cost-calculator/index.html': ('ce9739419778d67ab31eb627a04307400bf0fbde', '6e9eb58ceff56d8d97d55260c0fb3b309a6384b0'),
+    'kor/util/water-purifier-rental-price-comparison/index.html': ('1ea8f51257c41a35a2bf7edfe7e3505d1b44a6a7', 'c17a65e00e2060a3a764ae2e3e42c6f01a287525'),
+    'util/age/index.html': ('b0b3901a5cc9e8023e22717b3a63de106c5a8747', '5c26e729a1cc8d7691dbb0e5a0710b637b50bcc4'),
+    'util/break-even-calculator/index.html': ('76de93c82b059d34a4d3c8ad801bcb0bf1f687e3', 'bc7634f7cf932062d68535ef0c3a717c95c13802'),
+}
+
+
 # Owner-approved RPM proposal, 2026-11-13. Exact cumulative base..head only.
 # Base e61550880a45f4f6f570631ad69e8fb670c4d329; approved head 748f688596d4085a7ffa083c2f37c5f05119bd7c.
 # No protected HOLD pages, deletions, renames or subsequent blobs are authorized.
@@ -816,6 +850,9 @@ for _path, _blob_pairs in APPROVED_AD_PLACEMENT_TRANSITIONS.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).update(_blob_pairs)
 
 for _path, _blob_pair in APPROVED_RPM_OPTIMIZATION_20261113_TRANSITIONS.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
+
+for _path, _blob_pair in APPROVED_PHASE2_TRANSITIONS.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
 APPROVED_MONETIZATION_TRANSITIONS = {
