@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 엑셀 피벗 테이블 만들기: 월별 매출 합계·개수 오류·새로 고침·원본 범위 변경</title>
+<meta name="description" content="거래처 매출표·쇼핑몰 주문 내역·재고 데이터를 엑셀로 정리할 때 지역별 합계, 월별 매출, 상품별 주문 건수를 계산하려고 복잡한 수식을 만들 필요는 없습니다. 피벗 테이블(PivotTable) 을 이용하면 기존 데이터의 열을 행·열·값 영역에 배치해 원하는 요약표를 만들 수 있습니다.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#0d1117">
+<link rel="canonical" href="https://emfls.github.io/kor/report/it/excel-pivot-table-create-sales-sum-count-refresh-source-range-2026.html">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2026 엑셀 피벗 테이블 만들기: 월별 매출 합계·개수 오류·새로 고침·원본 범위 변경">
+<meta property="og:description" content="거래처 매출표·쇼핑몰 주문 내역·재고 데이터를 엑셀로 정리할 때 지역별 합계, 월별 매출, 상품별 주문 건수를 계산하려고 복잡한 수식을 만들 필요는 없습니다. 피벗 테이블(PivotTable) 을 이용하면 기존 데이터의 열을 행·열·값 영역에 배치해 원하는 요약표를 만들 수 있습니다.">
+<meta property="og:url" content="https://emfls.github.io/kor/report/it/excel-pivot-table-create-sales-sum-count-refresh-source-range-2026.html">
+<meta property="og:site_name" content="emfls">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2026 엑셀 피벗 테이블 만들기: 월별 매출 합계·개수 오류·새로 고침·원본 범위 변경">
+<meta name="twitter:description" content="거래처 매출표·쇼핑몰 주문 내역·재고 데이터를 엑셀로 정리할 때 지역별 합계, 월별 매출, 상품별 주문 건수를 계산하려고 복잡한 수식을 만들 필요는 없습니다. 피벗 테이블(PivotTable) 을 이용하면 기존 데이터의 열을 행·열·값 영역에 배치해 원하는 요약표를 만들 수 있습니다.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"2026 엑셀 피벗 테이블 만들기: 월별 매출 합계·개수 오류·새로 고침·원본 범위 변경","description":"거래처 매출표·쇼핑몰 주문 내역·재고 데이터를 엑셀로 정리할 때 지역별 합계, 월별 매출, 상품별 주문 건수를 계산하려고 복잡한 수식을 만들 필요는 없습니다. 피벗 테이블(PivotTable) 을 이용하면 기존 데이터의 열을 행·열·값 영역에 배치해 원하는 요약표를 만들 수 있습니다.","url":"https://emfls.github.io/kor/report/it/excel-pivot-table-create-sales-sum-count-refresh-source-range-2026.html","mainEntityOfPage":"https://emfls.github.io/kor/report/it/excel-pivot-table-create-sales-sum-count-refresh-source-range-2026.html","inLanguage":"ko","author":{"@type":"Organization","name":"emfls"},"publisher":{"@type":"Organization","name":"emfls","url":"https://emfls.github.io"},"datePublished":"2026-11-14","dateModified":"2026-11-14"}</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-QP5Q67GE5B');</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+<style>
+:root{color-scheme:dark;--bg:#0d1117;--surface:#161b22;--surface2:#1c2430;--border:#30363d;--text:#e6edf3;--muted:#abb6c3;--accent:#79c0ff;--soft:#c8b6ff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Apple SD Gothic Neo","Malgun Gothic",system-ui,-apple-system,sans-serif;line-height:1.8;word-break:keep-all}
+a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thickness:2px}
+.skip{position:absolute;left:-9999px;top:4px;z-index:1000;padding:8px 16px;background:white;color:black}.skip:focus{left:4px}
+.site-header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px max(18px,calc((100vw - 900px)/2));background:linear-gradient(90deg,#4e54c8,#8f94fb);border-bottom:1px solid #6867cc}
+.brand{color:white;text-decoration:none;font-size:1.14rem;font-weight:850;letter-spacing:.02em}
+.site-header nav{display:flex;gap:12px}.site-header nav a{color:#fff;text-decoration:none;font-size:.86rem;font-weight:600}
+.site-header nav a:hover{text-decoration:underline}
+.shell{max-width:900px;margin:auto;padding:20px 18px 70px}
+.breadcrumb{font-size:.81rem;color:var(--muted);margin:3px 0 18px}.breadcrumb a{color:#d4deff;text-decoration:none}
+.hero{position:relative;overflow:hidden;border:1px solid #47577b;border-radius:18px;padding:42px 32px;background:linear-gradient(135deg,#122140,#172c53 52%,#302754 100%);box-shadow:0 15px 40px #0003}
+.hero:after{content:"";position:absolute;right:-80px;top:-100px;width:310px;height:310px;border-radius:50%;background:radial-gradient(circle,#9b8bff27,transparent 70%);pointer-events:none}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid #8092e05c;background:#ffffff12;border-radius:99px;padding:4px 13px;color:#e3dcff;font-size:.79rem;font-weight:700;margin-bottom:18px}
+.hero h1{font-weight:850;line-height:1.42;letter-spacing:-.037em;font-size:clamp(1.55rem,4vw,2.25rem);margin:0 0 16px;position:relative;z-index:1;overflow-wrap:anywhere}
+.hero .deck{font-size:.99rem;color:#e2e7f5;max-width:680px;margin:0 0 15px}
+.hero-meta{font-size:.82rem;color:#c8d2e5;display:flex;flex-wrap:wrap;gap:6px 18px}
+.highlight-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:17px 0 20px}
+.highlight{padding:17px 16px;border:1px solid var(--border);background:var(--surface);border-radius:13px}
+.highlight .value{display:block;color:#d6caff;font-size:1.12rem;font-weight:800;line-height:1.45}
+.highlight .label{display:block;color:var(--muted);font-size:.76rem;margin-top:5px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
+.contents,.section,.intro,.info-bottom{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:24px 27px;box-shadow:0 3px 15px #0002}
+.contents h2,.info-bottom h2{font-size:1.02rem;color:#d4c5ff;margin:0 0 12px}
+.contents ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 25px;margin:0;padding-left:19px}
+.contents li{font-size:.86rem;line-height:1.6;padding:3px 0}
+.contents a{color:#d3ddec;text-decoration:none}.contents a:hover{text-decoration:underline}
+.intro{border-left:4px solid #7e96e4;background:linear-gradient(125deg,#1a2335,var(--surface));}
+.section h2{font-size:1.32rem;line-height:1.5;margin:0 0 17px;color:#d4c5ff;letter-spacing:-.022em;border-bottom:1px solid #354052;padding-bottom:12px;scroll-margin-top:20px}
+.section h3{font-size:1.045rem;margin:23px 0 8px;color:#c3dcff;scroll-margin-top:20px}
+.section p,.intro p{font-size:.955rem;margin:0 0 14px;color:#d9e0e8;line-height:1.85}
+.section p:last-child,.intro p:last-child{margin-bottom:0}
+.section strong,.intro strong{color:#fff;font-weight:750}
+.section li,.intro li{font-size:.94rem;line-height:1.8;margin:5px 0;color:#d8e0e8}
+.section ul,.section ol,.intro ul,.intro ol{padding-left:22px;margin:12px 0 20px}
+.section blockquote{margin:16px 0;padding:13px 17px;border-left:3px solid #a18cff;background:#252440;border-radius:0 8px 8px 0}
+.section a{overflow-wrap:anywhere}
+.section hr{border:0;border-top:1px solid var(--border);margin:24px 0}
+.section ul,.section ol{background:#1c2430;border-radius:9px;padding:12px 20px 12px 37px;border:1px solid #28384b}
+.notion-code{max-width:100%;overflow-x:auto;white-space:pre;tab-size:2;margin:14px 0 9px;padding:14px 16px;border:1px solid #34465f;border-radius:9px;background:#141d2c;color:#e7efff;font-size:.88rem;line-height:1.65}
+.notion-code code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.section .notion-code-caption,.intro .notion-code-caption{margin:0 0 17px;color:#aebdd5;font-size:.82rem}
+.details-table{overflow-x:auto}
+.section table{border-collapse:collapse;width:100%;min-width:500px;margin:14px 0}
+.section th,.section td{padding:12px;text-align:left;border-bottom:1px solid var(--border);font-size:.89rem}
+.section th{background:#202a3c;color:#d3caff}
+.cta{display:inline-flex;align-items:center;gap:8px;margin-top:8px;padding:11px 17px;border-radius:10px;background:#254975;color:white;text-decoration:none;font-size:.9rem;font-weight:700;border:1px solid #4e75a9}
+.cta:hover{background:#305989}
+.notice{border-left:4px solid #57b59b;padding:13px 16px;background:#122e2b;border-radius:4px 9px 9px 4px;color:#cfe6dd;font-size:.88rem;margin:16px 0}
+.info-bottom p{font-size:.87rem;color:var(--muted);margin:0 0 10px}
+.pills{display:flex;gap:9px;flex-wrap:wrap}.pills a{display:inline-block;border:1px solid #45516c;border-radius:99px;padding:6px 13px;text-decoration:none;color:#d5e3ff;font-size:.84rem}
+.site-footer{font-size:.8rem;color:#9ba9b8;text-align:center;margin-top:24px;padding-top:24px;border-top:1px solid var(--border)}
+.adsbygoogle,div[id^="aswift_"]{max-width:100%!important;overflow:hidden}
+@media(max-width:650px){.shell{padding:14px 12px 45px}.site-header{padding:14px}.hero{padding:29px 20px}.hero h1{font-size:1.58rem}.highlight-row{gap:7px}.highlight{padding:13px 9px}.highlight .value{font-size:.92rem}.highlight .label{font-size:.7rem}.contents,.section,.intro,.info-bottom{padding:19px 17px}.contents ol{grid-template-columns:1fr}.section h2{font-size:1.18rem}.site-header nav{gap:9px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-header"><a class="brand" href="/">emfls</a><nav aria-label="상단 메뉴"><a href="/kor/report/">생활정보</a><a href="/kor/report/it/">관련 주제</a><a href="/">홈</a></nav></header>
+<main class="shell" id="main">
+<div class="breadcrumb"><a href="/">홈</a> › <a href="/kor/report/">생활정보</a> › <a href="/kor/report/it/">IT · 기기</a></div>
+<article>
+<header class="hero">
+<span class="eyebrow">IT · 기기 · 최신 가이드</span>
+<h1>2026 엑셀 피벗 테이블 만들기: 월별 매출 합계·개수 오류·새로 고침·원본 범위 변경</h1>
+<p class="deck">거래처 매출표·쇼핑몰 주문 내역·재고 데이터를 엑셀로 정리할 때 지역별 합계, 월별 매출, 상품별 주문 건수를 계산하려고 복잡한 수식을 만들 필요는 없습니다. 피벗 테이블(PivotTable) 을 이용하면 기존 데이터의 열을 행·열·값 영역에 배치해 원하는 요약표를 만들 수 있습니다.</p>
+<div class="hero-meta"><span>최초 발행 2026-11-14</span><span>내용 확인 2026-11-14</span><span>작성 emfls</span></div>
+</header>
+
+<nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">1. 엑셀 피벗 테이블, 언제 쓰면 편할까?</a></li><li><a href="#section-02">2. 실습용 주문 데이터 8줄을 직접 입력해 보기</a></li><li><a href="#section-03">3. 피벗 테이블 만들기 전에 원본 표를 정리하는 방법</a></li><li><a href="#section-04">4. 피벗 테이블 처음 만드는 방법: 삽입 → 피벗 테이블</a></li><li><a href="#section-05">5. 지역별 매출 합계 만들기: 행·값 두 영역만 기억하세요</a></li><li><a href="#section-06">6. 지역 × 판매채널 교차표 만들기</a></li><li><a href="#section-07">7. 합계 대신 개수가 나오는 오류: 값 필드 설정</a></li><li><a href="#section-08">8. 주문 건수와 매출액 합계를 동시에 확인하는 방법</a></li><li><a href="#section-09">9. 월별 매출 합계 만들기: 날짜 그룹화 주의</a></li><li><a href="#section-10">10. 새 주문을 추가했는데 매출액이 안 바뀔 때: 새로 고침</a></li><li><a href="#section-11">11. 새로 고쳐도 새 행이 빠진다면: 원본 범위부터 확인</a></li><li><a href="#section-12">12. 피벗 테이블 필드 목록이 사라졌을 때</a></li><li><a href="#section-13">13. 피벗 테이블 #SPILL! 오류가 나올 때</a></li><li><a href="#section-14">14. 합계가 틀렸을 때 실제로 확인할 6가지</a></li><li><a href="#section-15">15. 피벗 테이블과 SUMIF 함수 중 무엇이 더 좋을까?</a></li><li><a href="#section-16">16. Mac·웹용 Excel에서 사용할 때의 차이</a></li><li><a href="#section-17">17. 자주 묻는 질문</a></li><li><a href="#section-18">18. 최종 1분 검수 체크리스트</a></li><li><a href="#section-19">Microsoft 공식 참고자료</a></li></ol></nav>
+<div class="layout">
+<div class="intro"><p>거래처 매출표·쇼핑몰 주문 내역·재고 데이터를 엑셀로 정리할 때 지역별 합계, 월별 매출, 상품별 주문 건수를 계산하려고 복잡한 수식을 만들 필요는 없습니다. <strong>피벗 테이블(PivotTable)</strong> 을 이용하면 기존 데이터의 열을 행·열·값 영역에 배치해 원하는 요약표를 만들 수 있습니다.</p>
+<p>다만 처음 사용하면 &#x27;금액 합계&#x27;가 아니라 &#x27;금액 개수&#x27;가 나오거나, 원본에 새로운 주문을 추가했는데 매출 합계가 바뀌지 않아 당황하기 쉽습니다. 이 글은 Microsoft의 공식 사용법을 바탕으로 <strong>5분 실습 데이터 → 첫 피벗 테이블 → 값 필드 오류 → 데이터 새로 고침 → 원본 범위 변경</strong> 순서로 설명합니다.</p>
+<p>설명 기준은 Windows용 Microsoft 365 Excel·Excel 2024입니다. Mac 및 웹용 Excel은 메뉴 구성이 다를 수 있고 일부 자동 새로 고침 기능은 버전·배포 상태에 따라 차이가 있습니다.</p></div>
+<section class="section" aria-labelledby="section-01"><h2 id="section-01">1. 엑셀 피벗 테이블, 언제 쓰면 편할까?</h2><div class="details-table"><table><thead><tr><th scope="col">분석 목적</th><th scope="col">피벗 테이블 필드 배치</th><th scope="col">얻는 결과</th></tr></thead><tbody><tr><td>지역별 매출 합계</td><td>행: 지역 / 값: 매출액(합계)</td><td>서울·부산 등의 금액 비교</td></tr><tr><td>판매채널별 매출</td><td>행: 채널 / 값: 매출액(합계)</td><td>온라인·오프라인 총액</td></tr><tr><td>지역 × 채널 교차표</td><td>행: 지역 / 열: 채널 / 값: 매출액</td><td>어느 지역에서 어떤 채널이 강한지</td></tr><tr><td>지역별 주문 건수</td><td>행: 지역 / 값: 주문번호(개수)</td><td>주문이 몇 건인지</td></tr><tr><td>월별 매출 변화</td><td>행: 주문일(월별 그룹) / 값: 매출액</td><td>10월·11월 비교</td></tr><tr><td>특정 상품만 보기</td><td>필터: 상품명 / 행: 지역 / 값: 매출액</td><td>상품을 골라 집계</td></tr></tbody></table></div>
+<p><strong>피벗 테이블은 원본 데이터를 직접 삭제하거나 정렬해 변경하지 않고 요약 결과를 보여 주는 기능</strong>입니다. 원본을 수정한 후에는 결과를 최신 상태로 갱신해야 할 수 있습니다.</p>
+<p>공식 출처: <a href="https://support.microsoft.com/ko-kr/excel/get-started/create-a-pivottable-to-analyze-worksheet-data" rel="noopener noreferrer">Microsoft — 피벗 테이블을 만들어 워크시트 데이터 분석</a></p></section>
+<section class="section" aria-labelledby="section-02"><h2 id="section-02">2. 실습용 주문 데이터 8줄을 직접 입력해 보기</h2><p>다음 표를 엑셀 새 시트의 A1:D9에 그대로 입력하면 별도 파일 다운로드 없이 실습할 수 있습니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">주문일</th><th scope="col">지역</th><th scope="col">채널</th><th scope="col">매출액</th></tr></thead><tbody><tr><td>2026-10-03</td><td>서울</td><td>온라인</td><td>120000</td></tr><tr><td>2026-10-04</td><td>부산</td><td>오프라인</td><td>90000</td></tr><tr><td>2026-10-10</td><td>서울</td><td>온라인</td><td>80000</td></tr><tr><td>2026-10-13</td><td>서울</td><td>오프라인</td><td>60000</td></tr><tr><td>2026-11-01</td><td>부산</td><td>온라인</td><td>70000</td></tr><tr><td>2026-11-02</td><td>부산</td><td>오프라인</td><td>50000</td></tr><tr><td>2026-11-03</td><td>서울</td><td>오프라인</td><td>100000</td></tr><tr><td>2026-11-04</td><td>부산</td><td>온라인</td><td>30000</td></tr></tbody></table></div>
+<p>모든 값은 설명을 위한 <strong>가상 주문 데이터</strong>입니다. 실제 판매 자료나 통계가 아닙니다.</p>
+<p>실습 데이터의 총합은 <strong>600,000원</strong>입니다. 지역별로 서울 360,000원·부산 240,000원, 채널별로 온라인 300,000원·오프라인 300,000원입니다. 피벗 테이블로 만든 뒤 이 숫자와 일치하면 집계가 정상인지 확인하기 좋습니다.</p>
+<p><strong>날짜 입력 주의:</strong> 날짜를 입력했는데 엑셀이 텍스트로 인식한다면 월별 그룹화가 제대로 되지 않을 수 있습니다. 단순히 날짜처럼 보이는 것과 엑셀의 실제 날짜 데이터인 것은 다릅니다.</p></section>
+<section class="section" aria-labelledby="section-03"><h2 id="section-03">3. 피벗 테이블 만들기 전에 원본 표를 정리하는 방법</h2><p>Microsoft는 피벗 테이블을 만들기 전 데이터를 <strong>한 줄의 머리글(헤더)</strong> 이 있는 열 형태로 정리하도록 안내합니다.</p>
+<ol>
+<li>첫 행에 &#x27;주문일·지역·채널·매출액&#x27;처럼 각 열 이름을 입력합니다.</li>
+<li>한 열에는 같은 종류의 데이터를 넣습니다. 예를 들어 매출액 열에는 금액 숫자를 입력합니다.</li>
+<li>제목 행에 빈 머리글을 두지 않습니다.</li>
+<li>표 안에 병합된 셀이 있다면 가능하면 해제하고 각 행을 완전한 기록으로 정리합니다.</li>
+<li>매출액 열에 &#x27;12만원&#x27; 같은 문자와 숫자 120000을 섞어 입력하지 않습니다.</li>
+<li>별도 소계·총계 행이 원본 범위에 함께 들어 있으면 중복 합계가 발생할 수 있으므로 제거하거나 범위에서 제외합니다.</li>
+</ol>
+<p>예를 들어 같은 매출액 열에 숫자 120000과 텍스트 120,000원이 섞여 있으면 피벗 테이블의 요약 방식이나 결과가 달라질 수 있습니다.</p>
+<p><strong>실무 팁:</strong> 데이터에 새로운 주문을 자주 추가한다면 원본을 Excel 표(Table)로 바꾸는 방법이 유용합니다. 목록 안의 셀을 선택하고 <strong>Ctrl+T</strong>를 눌러 표로 만든 다음 피벗 테이블을 생성하면 데이터 범위를 관리하기 편합니다.</p></section>
+<section class="section" aria-labelledby="section-04"><h2 id="section-04">4. 피벗 테이블 처음 만드는 방법: 삽입 → 피벗 테이블</h2><p>앞의 실습 데이터로 바로 진행해 보겠습니다.</p>
+<ol>
+<li>원본 데이터 범위인 <strong>A1:D9</strong>에서 아무 셀이나 클릭합니다.</li>
+<li>상단 <strong>삽입 → 피벗 테이블</strong>을 선택합니다.</li>
+<li>데이터 원본이 $A$1:$D$9 또는 해당 Excel 표로 설정돼 있는지 확인합니다.</li>
+<li>피벗 테이블을 넣을 위치로 <strong>새 워크시트</strong>를 선택합니다.</li>
+<li><strong>확인</strong>을 누릅니다.</li>
+<li>새 시트에서 빈 피벗 테이블과 <strong>피벗 테이블 필드</strong> 창이 나타나는지 확인합니다.</li>
+</ol>
+<p>원본을 먼저 표(Table)로 만들었다면 데이터 범위 대신 표 이름이 표시될 수 있습니다. 예상과 다른 범위가 잡히면 그대로 진행하지 말고 원본 선택부터 확인하세요.</p>
+<p><strong>새 워크시트를 권장하는 이유:</strong> 처음에는 피벗 결과가 차지하는 크기를 예상하기 어렵습니다. 원본 시트의 빈 공간에 만들기보다 별도 시트에 두면 기존 주문 데이터나 수식을 덮어쓸 위험을 줄일 수 있습니다.</p>
+<p>공식 출처: <a href="https://support.microsoft.com/ko-kr/excel/get-started/create-a-pivottable-to-analyze-worksheet-data" rel="noopener noreferrer">Microsoft — 피벗 테이블 만들기</a></p></section>
+<section class="section" aria-labelledby="section-05"><h2 id="section-05">5. 지역별 매출 합계 만들기: 행·값 두 영역만 기억하세요</h2><p>처음 피벗 테이블을 만들면 오른쪽에 필드 목록과 네 개의 배치 영역이 표시됩니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">피벗 영역</th><th scope="col">의미</th><th scope="col">실습에 넣을 필드</th></tr></thead><tbody><tr><td>필터</td><td>표 전체에서 선택해서 볼 조건</td><td>필요하면 채널</td></tr><tr><td>열</td><td>가로 방향으로 나열할 분류</td><td>필요하면 채널</td></tr><tr><td>행</td><td>세로 방향으로 나열할 분류</td><td>지역</td></tr><tr><td>값</td><td>계산할 숫자 또는 항목</td><td>매출액(합계)</td></tr></tbody></table></div>
+<h3>실제 배치</h3>
+<ol>
+<li>필드 목록의 <strong>지역</strong>을 아래쪽 <strong>행</strong> 영역으로 끌어 놓습니다.</li>
+<li><strong>매출액</strong>을 <strong>값</strong> 영역으로 끌어 놓습니다.</li>
+<li>값 필드가 &#x27;합계: 매출액&#x27;인지 확인합니다.</li>
+</ol>
+<p>정상이라면 다음과 같은 집계가 나옵니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">지역</th><th scope="col">매출액 합계</th></tr></thead><tbody><tr><td>부산</td><td>240,000</td></tr><tr><td>서울</td><td>360,000</td></tr><tr><td>총합계</td><td>600,000</td></tr></tbody></table></div>
+<p>지역 표시 순서는 정렬 설정에 따라 달라질 수 있지만 총합계는 같아야 합니다. 총액이 다르다면 원본 값과 피벗 테이블에 적용된 필터를 먼저 확인하세요.</p>
+<p><strong>중요:</strong> 피벗 테이블의 합계 숫자는 자동으로 계산된 결과입니다. 그 숫자를 직접 수정하기보다 <strong>원본 데이터</strong>를 고치고 집계를 새로 고쳐야 합니다.</p>
+<p>공식 출처: <a href="https://support.microsoft.com/ko-kr/excel/get-started/use-the-field-list-to-arrange-fields-in-a-pivottable" rel="noopener noreferrer">Microsoft — 필드 목록을 사용하여 필드 정렬</a></p></section>
+<section class="section" aria-labelledby="section-06"><h2 id="section-06">6. 지역 × 판매채널 교차표 만들기</h2><p>이번에는 온라인·오프라인 매출을 지역별로 함께 비교하겠습니다.</p>
+<ol>
+<li>기존 피벗 테이블에서 <strong>지역</strong>이 &#x27;행&#x27;에 있는지 확인합니다.</li>
+<li><strong>채널</strong> 필드를 <strong>열</strong> 영역에 놓습니다.</li>
+<li><strong>매출액</strong> 필드는 <strong>값</strong> 영역에 그대로 둡니다.</li>
+<li>값 계산이 <strong>합계</strong>인지 확인합니다.</li>
+</ol>
+<p>실습 데이터의 예상 결과는 다음과 같습니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">지역</th><th scope="col">온라인</th><th scope="col">오프라인</th><th scope="col">총합계</th></tr></thead><tbody><tr><td>부산</td><td>100,000</td><td>140,000</td><td>240,000</td></tr><tr><td>서울</td><td>200,000</td><td>160,000</td><td>360,000</td></tr><tr><td>총합계</td><td>300,000</td><td>300,000</td><td>600,000</td></tr></tbody></table></div>
+<p>열의 표시 순서는 자동 정렬에 따라 다를 수 있습니다. <strong>부산 온라인 100,000원</strong>, <strong>서울 온라인 200,000원</strong>, <strong>총합계 600,000원</strong>을 확인하면 필드 배치가 의도대로 되었는지 빠르게 검증할 수 있습니다.</p>
+<p>이 교차표는 단순히 SUMIF 수식 한 개로 합계를 구하는 경우와 달리 행·열의 기준을 바꿔 여러 관점에서 데이터를 탐색하기 쉽다는 장점이 있습니다.</p></section>
+<section class="section" aria-labelledby="section-07"><h2 id="section-07">7. 합계 대신 개수가 나오는 오류: 값 필드 설정</h2><p>&#x27;매출액 합계&#x27;가 필요한데 피벗 테이블에 <strong>&#x27;개수: 매출액&#x27;</strong>이라고 표시되는 경우가 있습니다. 숫자로 계산되어야 할 열에 텍스트·빈값 등이 섞여 있을 때 요약 방식이 개수로 설정될 수 있습니다.</p>
+<h3>개수 → 합계로 바꾸는 방법</h3>
+<ol>
+<li>피벗 테이블의 <strong>값</strong> 영역에서 &#x27;매출액&#x27; 필드를 찾습니다.</li>
+<li>필드 옆 메뉴를 열고 <strong>값 필드 설정</strong>을 선택합니다.</li>
+<li>값 요약 기준에서 <strong>합계(Sum)</strong> 를 선택합니다.</li>
+<li>확인을 누릅니다.</li>
+<li>결과가 예제의 <strong>600,000원</strong>과 일치하는지 확인합니다.</li>
+</ol>
+<p>그러나 매출액 열이 실제로 텍스트라면 단순히 &#x27;합계&#x27;를 선택해도 기대한 결과가 나오지 않을 수 있습니다.</p>
+<h3>숫자로 인식되지 않는 데이터 찾기</h3>
+<ul>
+<li>120000처럼 일반 숫자로 입력된 값인지 확인합니다.</li>
+<li>120000원처럼 단위가 함께 입력된 텍스트는 숫자 데이터로 정리합니다.</li>
+<li>복사·붙여넣기 과정에서 생긴 앞뒤 공백이나 특수문자가 있는지 확인합니다.</li>
+<li>비어 있는 셀이 있다면 정말 미입력인지, 0원을 뜻하는지 구별합니다.</li>
+<li>수정 후 반드시 피벗 테이블을 <strong>새로 고침</strong>합니다.</li>
+</ul>
+<p><strong>주의:</strong> 0원과 빈칸을 임의로 같은 값으로 바꾸면 실제 거래·주문 건수 집계가 달라질 수 있습니다. 데이터의 업무상 의미를 먼저 확인하세요.</p></section>
+<section class="section" aria-labelledby="section-08"><h2 id="section-08">8. 주문 건수와 매출액 합계를 동시에 확인하는 방법</h2><p>금액만이 아니라 주문 건수도 필요하다면 값 영역에 필드를 더 추가할 수 있습니다.</p>
+<p>실습 데이터에는 별도의 주문번호가 없으므로 <strong>주문일</strong>을 값 영역에 추가해 &#x27;개수&#x27;로 설정하면 됩니다. 다만 같은 날짜에 여러 주문이 있는 경우에도 각 행이 하나의 주문이라는 전제에서만 주문 건수로 해석할 수 있습니다.</p>
+<ol>
+<li><strong>지역</strong> 필드는 &#x27;행&#x27;에 둡니다.</li>
+<li><strong>매출액</strong>은 &#x27;값&#x27;에 두고 합계로 설정합니다.</li>
+<li><strong>주문일</strong>을 &#x27;값&#x27; 영역에 한 번 더 추가합니다.</li>
+<li><strong>값 필드 설정</strong>에서 주문일의 요약 방식을 <strong>개수(Count)</strong> 로 변경합니다.</li>
+<li>결과를 확인합니다.</li>
+</ol>
+<div class="details-table"><table><thead><tr><th scope="col">지역</th><th scope="col">매출액 합계</th><th scope="col">주문일 개수</th></tr></thead><tbody><tr><td>부산</td><td>240,000</td><td>4</td></tr><tr><td>서울</td><td>360,000</td><td>4</td></tr><tr><td>총합계</td><td>600,000</td><td>8</td></tr></tbody></table></div>
+<p>실제 주문 데이터에서는 <strong>주문번호</strong>를 별도 필드로 두고 그 개수를 집계하는 편이 의미가 명확합니다. 한 주문이 여러 상품 행으로 나뉜 데이터라면 &#x27;행 개수&#x27;와 &#x27;고유 주문 건수&#x27;는 다르므로 중복 주문번호 처리 기준을 먼저 정해야 합니다.</p></section>
+<section class="section" aria-labelledby="section-09"><h2 id="section-09">9. 월별 매출 합계 만들기: 날짜 그룹화 주의</h2><p>피벗 테이블에서 주문일 필드를 &#x27;행&#x27;에, 매출액 필드를 &#x27;값&#x27;에 놓으면 날짜별 매출을 집계할 수 있습니다. 월별로 보려면 날짜 필드를 월 단위로 그룹화합니다.</p>
+<h3>날짜가 정상적인 Excel 날짜인 경우</h3>
+<ol>
+<li>새 피벗 테이블을 만듭니다.</li>
+<li><strong>주문일</strong>을 &#x27;행&#x27;, <strong>매출액</strong>을 &#x27;값&#x27;에 넣습니다.</li>
+<li>피벗 결과의 날짜 셀을 선택하고 마우스 오른쪽 단추를 클릭합니다.</li>
+<li>버전에 따라 <strong>그룹</strong> 메뉴를 선택합니다.</li>
+<li>그룹 기준에서 <strong>월</strong>을 고릅니다. 데이터가 여러 해에 걸쳐 있다면 <strong>연도도 함께</strong> 선택해 서로 다른 해의 같은 달이 합쳐지지 않게 합니다.</li>
+<li>확인한 뒤 월별 결과를 검토합니다.</li>
+</ol>
+<p>실습 예제에서는 <strong>2026년 10월 350,000원</strong>, <strong>11월 250,000원</strong>이 나와야 합니다.</p>
+<h3>그룹화할 수 없다는 오류가 나면</h3>
+<p>원본의 &#x27;주문일&#x27; 열에 다음과 같은 값이 있는지 확인하세요.</p>
+<ul>
+<li>빈 셀이나 오류 값</li>
+<li>날짜처럼 보이지만 실제로는 텍스트인 항목</li>
+<li>같은 열에 날짜와 일반 문자가 섞인 경우</li>
+<li>필터로 가려져 있었지만 원본 범위에 포함된 잘못된 값</li>
+</ul>
+<p><strong>실무 팁:</strong> 날짜의 표시 형식을 &#x27;2026-10&#x27;으로 바꿨다고 원본 날짜가 월별 집계 기준으로 바뀌는 것은 아닙니다. 실제 날짜 값과 표시 형식을 구별하는 것이 중요합니다.</p></section>
+<section class="section" aria-labelledby="section-10"><h2 id="section-10">10. 새 주문을 추가했는데 매출액이 안 바뀔 때: 새로 고침</h2><p>원본에 새 데이터를 입력해도 피벗 테이블이 이전 집계 상태로 남아 있을 수 있습니다.</p>
+<h3>수동으로 새로 고치는 방법</h3>
+<ol>
+<li>피벗 테이블의 아무 셀이나 클릭합니다.</li>
+<li><strong>마우스 오른쪽 단추 → 새로 고침</strong>을 선택합니다.</li>
+<li>또는 상단 <strong>피벗 테이블 분석 → 새로 고침</strong>을 클릭합니다.</li>
+<li>Windows에서는 <strong>Alt+F5</strong> 단축키를 사용할 수도 있습니다.</li>
+<li>여러 피벗 테이블을 갱신하려면 <strong>모두 새로 고침</strong>을 선택합니다.</li>
+</ol>
+<p>Microsoft 공식 문서는 로컬 통합 문서 데이터를 사용하는 <strong>일부 최신 버전</strong>에서 자동 새로 고침도 지원한다고 안내합니다. 하지만 구버전과 설정 상태에 따라 자동 적용 여부가 다를 수 있으므로, <strong>원본 변경 후 실제 결과가 갱신됐는지 확인</strong>하는 방법이 안전합니다.</p>
+<p>공식 출처: <a href="https://support.microsoft.com/ko-kr/excel/refresh-pivottable-data" rel="noopener noreferrer">Microsoft — 피벗 테이블 데이터 새로 고침</a></p></section>
+<section class="section" aria-labelledby="section-11"><h2 id="section-11">11. 새로 고쳐도 새 행이 빠진다면: 원본 범위부터 확인</h2><p>기존 원본 범위를 $A$1:$D$9로 고정해 피벗 테이블을 만들었다면 A10:D10에 새 주문을 추가해도 기존 원본 범위 밖이기 때문에 포함되지 않을 수 있습니다.</p>
+<h3>데이터 원본 변경 방법</h3>
+<ol>
+<li>피벗 테이블 안쪽을 선택합니다.</li>
+<li><strong>피벗 테이블 분석 → 데이터 원본 변경</strong>을 선택합니다.</li>
+<li>현재 원본 범위가 어디까지인지 확인합니다.</li>
+<li>새로 추가한 행까지 포함되도록 범위를 변경합니다.</li>
+<li>확인 후 <strong>새로 고침</strong>을 실행합니다.</li>
+<li>총합계가 실제 원본 값과 같은지 확인합니다.</li>
+</ol>
+<h3>계속 늘어나는 데이터라면 Excel 표 사용</h3>
+<p>앞으로 데이터를 수십·수백 행씩 추가한다면 원본 데이터를 <strong>Ctrl+T로 Excel 표로 만든 뒤 그 표를 피벗 테이블의 원본으로 지정</strong>하는 편이 좋습니다. 표에 새 행이 포함되도록 확장됐는지 확인하고 피벗 데이터를 갱신하세요.</p>
+<p>Microsoft는 기존 피벗 테이블의 원본을 다른 Excel 표나 범위로 변경할 수 있다고 설명합니다. 단, 데이터 모델 기반 등 일부 구성에서는 변경 방식이 제한될 수 있습니다.</p>
+<p>공식 출처: <a href="https://support.microsoft.com/ko-kr/excel/change-the-source-data-for-a-pivottable" rel="noopener noreferrer">Microsoft — 피벗 테이블의 원본 데이터 변경</a></p></section>
+<section class="section" aria-labelledby="section-12"><h2 id="section-12">12. 피벗 테이블 필드 목록이 사라졌을 때</h2><p>지역·채널·매출액을 드래그해야 하는데 오른쪽 필드 목록이 사라졌다면 다음을 확인하세요.</p>
+<ol>
+<li>피벗 테이블 바깥이 아니라 <strong>피벗 테이블 안쪽 셀</strong>을 선택합니다.</li>
+<li>상단의 <strong>피벗 테이블 분석</strong> 탭이 표시되는지 확인합니다.</li>
+<li><strong>필드 목록</strong> 항목을 선택해 다시 표시합니다.</li>
+<li>여전히 보이지 않으면 리본의 피벗 테이블 영역을 확인합니다.</li>
+</ol>
+<p>피벗 테이블을 선택하지 않은 상태에서는 분석 탭이 나타나지 않을 수 있습니다. 워크시트의 빈 셀만 선택하고 있지 않은지부터 확인하세요.</p>
+<p>공식 출처: <a href="https://support.microsoft.com/ko-kr/excel/get-started/use-the-field-list-to-arrange-fields-in-a-pivottable" rel="noopener noreferrer">Microsoft — 필드 목록을 사용하여 피벗 테이블의 필드 정렬</a></p></section>
+<section class="section" aria-labelledby="section-13"><h2 id="section-13">13. 피벗 테이블 #SPILL! 오류가 나올 때</h2><p>일부 Microsoft 365 Excel 환경에서는 피벗 테이블이 확장해야 할 영역에 다른 데이터나 병합 셀이 있어 제대로 확장하지 못하면 <strong>#SPILL!</strong> 오류가 표시될 수 있습니다.</p>
+<p>Microsoft는 이런 상황의 예로 <strong>셀에 남은 데이터·수식, 병합 셀, 워크시트의 끝 경계</strong>를 들고 있습니다.</p>
+<h3>확인 순서</h3>
+<ol>
+<li>피벗 테이블이 확장될 아래쪽·오른쪽에 다른 값이 있는지 살펴봅니다.</li>
+<li>새로 고침으로 지역이나 상품 목록이 늘어날 수 있다는 점을 고려합니다.</li>
+<li>주변의 중요한 데이터는 삭제하지 말고 별도 위치로 이동하거나 백업합니다.</li>
+<li>병합된 셀이 피벗 확장 범위를 막고 있다면 구조를 검토합니다.</li>
+<li>공간이 충분한 새 시트에 피벗 테이블을 이동하거나 다시 만들어 봅니다.</li>
+</ol>
+<p><strong>주의:</strong> #SPILL! 오류가 나오더라도 원본 데이터가 없어졌다는 뜻은 아닙니다. 피벗 테이블이 결과를 펼칠 공간이 없는 상태일 수 있습니다. 모든 Excel 버전에서 같은 오류 표시가 제공되는 것은 아닙니다.</p>
+<p>공식 출처: <a href="https://support.microsoft.com/ko-kr/excel/how-to-correct-a-pivottable-spill-error" rel="noopener noreferrer">Microsoft — 피벗 테이블 #SPILL! 오류 수정</a></p></section>
+<section class="section" aria-labelledby="section-14"><h2 id="section-14">14. 합계가 틀렸을 때 실제로 확인할 6가지</h2><p>피벗 테이블에 숫자가 나오기만 하면 분석이 끝났다고 생각하기 쉽지만, <strong>원본의 의미와 범위를 확인하지 않으면 잘못된 합계</strong>가 만들어질 수 있습니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">확인 사항</th><th scope="col">잘못됐을 때 나타나는 현상</th><th scope="col">해결 방향</th></tr></thead><tbody><tr><td>매출액 데이터가 숫자인지</td><td>금액 대신 개수 또는 0에 가까운 값 표시</td><td>원본의 텍스트·공백 확인</td></tr><tr><td>원본 범위가 전체인지</td><td>신규 주문이 합계에서 누락</td><td>범위 수정·표 사용</td></tr><tr><td>데이터가 중복되었는지</td><td>실제보다 큰 금액</td><td>동일 주문 중복 여부 검증</td></tr><tr><td>필터가 걸려 있는지</td><td>특정 지역·상품 합계만 표시</td><td>필터 모두 해제 후 비교</td></tr><tr><td>소계 행을 원본에 포함했는지</td><td>합계가 이중 계산됨</td><td>소계·총계 행 제외</td></tr><tr><td>새로 고침이 되었는지</td><td>오래된 데이터 표시</td><td>수동 새로 고침 후 비교</td></tr></tbody></table></div>
+<p>예제 파일이라면 피벗 테이블의 총합계가 <strong>600,000원</strong>과 일치해야 합니다. 결과가 500,000원이라면 먼저 100,000원 매출 행이 원본 범위 밖에 있거나 필터로 제외됐는지 확인하는 방식으로 문제를 좁힐 수 있습니다.</p>
+<p>실제 회사 데이터에서는 반품·취소·환불 금액을 매출에서 어떻게 처리할지도 일관되게 정의해야 합니다. 피벗 테이블은 합계를 계산할 뿐, 어떤 거래가 매출인지 자동으로 판단해 주지는 않습니다.</p></section>
+<section class="section" aria-labelledby="section-15"><h2 id="section-15">15. 피벗 테이블과 SUMIF 함수 중 무엇이 더 좋을까?</h2><p>이전에 엑셀 수식을 사용했다면 두 방법의 차이가 궁금할 수 있습니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">목적</th><th scope="col">피벗 테이블</th><th scope="col">SUMIF·SUMIFS</th></tr></thead><tbody><tr><td>기준을 바꿔가며 탐색</td><td>행·열 필드 드래그로 편리</td><td>수식 기준을 수정해야 함</td></tr><tr><td>고정된 양식에서 특정 셀에 결과 표시</td><td>별도 요약 영역을 관리</td><td>필요한 셀에 직접 수식 배치 가능</td></tr><tr><td>여러 지역·상품의 전체 현황</td><td>한 번에 교차표 구성</td><td>여러 수식 작성 필요할 수 있음</td></tr><tr><td>원본 수정 후 반영</td><td>새로 고침/자동 새로 고침 상태 확인</td><td>계산 설정에 따라 수식 재계산</td></tr><tr><td>사용자 입력 오류 관리</td><td>원본 데이터 정리 필수</td><td>원본 데이터 정리 필수</td></tr></tbody></table></div>
+<p><strong>추천 기준:</strong> 매출을 지역·월·채널별로 계속 바꾸어 보고 싶다면 피벗 테이블, 이미 완성된 정형 보고서의 특정 셀에 고정된 조건의 결과를 넣으려면 SUMIFS가 적합할 수 있습니다.</p>
+<p>두 기능은 경쟁 관계가 아닙니다. 피벗 테이블로 데이터를 탐색하고 최종 보고서에는 필요한 집계 결과를 활용할 수도 있습니다.</p></section>
+<section class="section" aria-labelledby="section-16"><h2 id="section-16">16. Mac·웹용 Excel에서 사용할 때의 차이</h2><p>Microsoft는 <strong>Mac용 Excel과 웹용 Excel에서도 피벗 테이블 사용을 지원</strong>하지만 화면 구성과 제공되는 옵션은 Windows 데스크톱 버전과 같지 않을 수 있다고 안내합니다.</p>
+<h3>Mac용 Excel</h3>
+<ul>
+<li>원본 범위를 선택한 후 <strong>삽입 → 피벗 테이블</strong>로 시작합니다.</li>
+<li>필드를 행·열·값·필터에 배치하는 개념은 동일합니다.</li>
+<li>단축키와 리본 메뉴의 배치가 Windows와 다를 수 있으므로 표시되는 명령을 우선합니다.</li>
+</ul>
+<h3>웹용 Excel</h3>
+<ul>
+<li>웹 스프레드시트에서 원본 데이터 범위를 선택합니다.</li>
+<li><strong>삽입 → 피벗 테이블</strong>을 통해 새 시트나 기존 시트에 피벗 테이블을 만듭니다.</li>
+<li>일부 구독·환경에서는 권장 피벗 테이블 옵션이 제공될 수 있습니다.</li>
+<li>원본 변경 후 갱신이 필요하면 피벗 테이블을 선택해 <strong>새로 고침</strong>을 실행합니다.</li>
+</ul>
+<p>예전에 작성된 도움말의 화면과 실제 메뉴가 다르다면 현재 사용 중인 버전의 지원 범위를 확인하세요. 특히 <strong>자동 새로 고침</strong> 동작은 엑셀 버전과 설정에 따라 차이가 있습니다.</p>
+<p>공식 출처: <a href="https://support.microsoft.com/ko-kr/excel/get-started/create-a-pivottable-to-analyze-worksheet-data" rel="noopener noreferrer">Microsoft — 피벗 테이블 만들기</a></p></section>
+<section class="section" aria-labelledby="section-17"><h2 id="section-17">17. 자주 묻는 질문</h2><h3>Q. 피벗 테이블을 가장 빨리 만드는 방법은?</h3>
+<p>헤더가 있는 원본 데이터를 준비하고 그 안의 셀을 선택한 뒤 <strong>삽입 → 피벗 테이블 → 새 워크시트 → 확인</strong>을 누릅니다. 그다음 원하는 열을 &#x27;행&#x27;과 &#x27;값&#x27; 영역에 배치하세요.</p>
+<h3>Q. 피벗 테이블 값이 개수로 나오는 이유는?</h3>
+<p>값 필드의 요약 방식이 &#x27;개수&#x27;로 설정됐을 수 있습니다. <strong>값 필드 설정 → 합계</strong>를 확인하고, 원본 금액 열에 문자나 공백이 없는지도 점검하세요.</p>
+<h3>Q. 새 데이터를 추가했는데 피벗에 반영되지 않습니다.</h3>
+<p>원본 데이터의 범위에 새 행이 포함돼 있는지 확인하고 <strong>새로 고침</strong>을 실행하세요. 고정 범위를 사용 중이라면 데이터 원본 변경이 필요할 수 있습니다.</p>
+<h3>Q. 피벗 테이블은 원본 데이터가 바뀌면 자동으로 갱신되나요?</h3>
+<p>Excel 버전과 설정에 따라 다릅니다. 최신 Microsoft 365 일부 환경에서 로컬 데이터 자동 새로 고침을 지원하지만, <strong>모든 Excel에서 항상 자동 갱신된다고 가정하지 마세요.</strong></p>
+<h3>Q. 월별 매출을 만들려면 어떻게 하나요?</h3>
+<p>실제 날짜 형식의 주문일을 &#x27;행&#x27;에 넣고, 날짜를 <strong>월(필요하면 연도 포함)</strong> 단위로 그룹화한 뒤 매출액을 &#x27;값&#x27;의 합계로 배치합니다.</p>
+<h3>Q. 피벗 테이블 필드 목록이 보이지 않습니다.</h3>
+<p>피벗 테이블 안쪽 셀을 클릭하고 <strong>피벗 테이블 분석 → 필드 목록</strong>을 확인하세요.</p>
+<h3>Q. #SPILL! 오류가 나오는데 원본이 지워진 건가요?</h3>
+<p>반드시 그렇지는 않습니다. 일부 Microsoft 365 Excel에서는 피벗 결과가 확장될 영역에 데이터나 병합 셀이 있으면 #SPILL! 오류가 나타날 수 있습니다. 주변의 차단 영역을 확인하세요.</p>
+<h3>Q. 피벗 테이블을 만들면 원본 엑셀 표가 변경되나요?</h3>
+<p>피벗 테이블은 원본을 기준으로 별도 요약 결과를 만듭니다. 원본 데이터가 자동으로 정리·삭제되지는 않습니다. 결과를 수정하려면 원본부터 점검하는 것이 적절합니다.</p></section>
+<section class="section" aria-labelledby="section-18"><h2 id="section-18">18. 최종 1분 검수 체크리스트</h2><ul>
+<li>☐ 원본의 첫 행에 빈칸 없는 제목이 있다.</li>
+<li>☐ 매출액 열은 실제 숫자로 입력되어 있다.</li>
+<li>☐ 소계·총계 행을 원본 범위에 중복 포함하지 않았다.</li>
+<li>☐ 필요한 필드를 행·열·값 영역에 배치했다.</li>
+<li>☐ 값의 요약 방식이 합계 또는 의도한 개수인지 확인했다.</li>
+<li>☐ 새 행이 원본 범위에 들어 있는지 점검했다.</li>
+<li>☐ 새로 고침 후 예제 총합계 600,000원과 결과를 비교했다.</li>
+<li>☐ 다른 사용자에게 공유하기 전 실제 개인·고객 정보가 포함되지 않았는지 검토했다.</li>
+</ul>
+<p><strong>결론:</strong> 처음에는 &#x27;삽입 → 피벗 테이블&#x27;과 &#x27;행·열·값&#x27;의 세 영역만 익히면 됩니다. 가장 흔한 실수는 <strong>합계 대신 개수로 집계</strong>, <strong>원본 범위 밖에 신규 데이터 추가</strong>, <strong>새로 고침 누락</strong>입니다. 예제의 총합계 600,000원을 기준으로 스스로 검산해 보면 피벗 테이블의 작동 원리를 빠르게 이해할 수 있습니다.</p></section>
+<section class="section" aria-labelledby="section-19"><h2 id="section-19">Microsoft 공식 참고자료</h2><ul>
+<li><a href="https://support.microsoft.com/ko-kr/excel/get-started/create-a-pivottable-to-analyze-worksheet-data" rel="noopener noreferrer">Microsoft — 피벗 테이블을 만들어 워크시트 데이터 분석</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/get-started/use-the-field-list-to-arrange-fields-in-a-pivottable" rel="noopener noreferrer">Microsoft — 필드 목록을 사용하여 피벗 테이블의 필드 정렬</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/refresh-pivottable-data" rel="noopener noreferrer">Microsoft — 피벗 테이블 데이터 새로 고침</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/change-the-source-data-for-a-pivottable" rel="noopener noreferrer">Microsoft — 피벗 테이블의 원본 데이터 변경</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/how-to-correct-a-pivottable-spill-error" rel="noopener noreferrer">Microsoft — 피벗 테이블 #SPILL! 오류 수정</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/design-the-layout-and-format-of-a-pivottable" rel="noopener noreferrer">Microsoft — 피벗 테이블 레이아웃 및 서식 디자인</a></li>
+</ul></section>
+
+<!-- notion-discovery:start -->
+<section class="section" aria-label="관련 글"><h2>함께 읽으면 좋은 같은 분야의 글</h2><ul><li><a href="/kor/report/it/excel-sumif-sumifs-conditional-sum-monthly-sales-2026.html">2026 엑셀 SUMIF·SUMIFS 함수 사용법: 여러 조건 합계·월별 매출·0 오류 해결</a></li>
+<li><a href="/kor/report/it/excel-vlookup-na-error-exact-match-xlookup-2026.html">2026 엑셀 VLOOKUP 함수 사용법·#N/A 오류 해결: 정확히 일치·범위 고정·XLOOKUP 비교</a></li>
+<li><a href="/kor/report/it/excel-dropdown-list-data-validation-add-edit-remove-troubleshoot-2026.html">2026 엑셀 드롭다운 목록 만들기: 데이터 유효성 검사·항목 추가·삭제·오류 해결</a></li>
+<li><a href="/kor/report/it/excel-formulas-not-calculating-manual-auto-text-show-formulas-spill-2026.html">2026 엑셀 수식 계산 안됨 해결법: 자동 계산·수식 그대로 표시·텍스트 서식·#SPILL 오류</a></li></ul></section>
+<!-- notion-discovery:end -->
+<section class="info-bottom">
+<h2>정보 출처와 확인 안내</h2>
+<p>작성·갱신일과 적용 범위는 본문에서 확인하세요. 정책·행사 일정·혜택·제품 정보는 변경될 수 있으므로 중요한 판단 전 공식 기관 및 판매처의 최신 안내를 확인하시기 바랍니다.</p>
+<div class="pills"><a href="/kor/report/it/">같은 분야의 글</a><a href="/kor/report/">생활정보 전체</a><a href="/">emfls 홈</a></div>
+</section>
+</div>
+</article>
+<footer class="site-footer">© 2026 emfls · 공식 기관 안내를 우선 확인하세요</footer>
+</main>
+</body>
+</html>
