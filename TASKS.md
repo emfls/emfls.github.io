@@ -1,7 +1,12 @@
+- [x] 2026-11-14 기존노출2페이지 설명·계산예시 연결 로컬교정
+  - 차박실측약속3필드·오해CTA2곳만교정. 관련76/독립rawbytes/320·390·430px경로QA PASS. docs/intent-path-repair-2026-11-14.md.
+- [ ] 두 페이지 정상 PR·최종Guard·SEO·Pages·공개 확인과 완료기간 관측
+  - 실제본문·의료기준·광고·정시발행 보존. 검색/수익효과 UNMEASURED; 새예약없음.
+
 - [x] 2026-11-14 공통 발행기 설명문 절단 재발 방지·로컬 검증
   - 강제150/165절단2곳 제거, escaping·기존발행보호 보존. 회귀RED→GREEN/관련114/unittest22/기존렌더QA/독립검수/390·1280화면QA PASS. docs/notion-complete-description-2026-11-14.md.
-- [ ] 원천 수정 정상 PR·CI·Pages 및 다음 기존 정시 발행 관측
-  - 기존HTML재생성·수동발행·새예약 없음. 원천길이가길면deck높이가늘며 실제미래발행은별도관측. 수익효과미측정.
+- [x] 원천 수정 정상 PR·CI·Pages 및 다음 기존 정시 발행 관측
+  - PR754/main7c8f6d83dc 정상반영·Pages/NotionQA성공.07시기존발행43515612521→main9dd9090e1b/Pages43515883876/공개·Notion완료07:03KST.140자intro이므로긴설명경계는미행사. 새예약없음·수익효과미측정.
 
 - [x] 2026-11-14 후속4개 검색 설명 로컬 교정·검증
   - 인터넷속도/PDF/거북이경고/아이온2의16필드만 변경. 관련82·독립검수·정확main SEO신규0. docs/search-description-wave2-2026-11-14.md.
