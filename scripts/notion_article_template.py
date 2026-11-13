@@ -84,7 +84,7 @@ def render_article(
         ) + "</div>"
     replacements = {
         "{{TITLE}}": escape(title),
-        "{{DESCRIPTION}}": escape(description[:165], quote=True),
+        "{{DESCRIPTION}}": escape(description, quote=True),
         "{{CANONICAL}}": escape(url, quote=True),
         "{{CATEGORY_HREF}}": "/kor/report/" + category + "/",
         "{{CATEGORY_LABEL}}": escape(CATEGORY_LABELS[category]),

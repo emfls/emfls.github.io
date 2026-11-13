@@ -1,7 +1,14 @@
+- [x] 2026-11-14 공통 발행기 설명문 절단 재발 방지·로컬 검증
+  - 강제150/165절단2곳 제거, escaping·기존발행보호 보존. 회귀RED→GREEN/관련114/unittest22/기존렌더QA/독립검수/390·1280화면QA PASS. docs/notion-complete-description-2026-11-14.md.
+- [ ] 원천 수정 정상 PR·CI·Pages 및 다음 기존 정시 발행 관측
+  - 기존HTML재생성·수동발행·새예약 없음. 원천길이가길면deck높이가늘며 실제미래발행은별도관측. 수익효과미측정.
+
 - [x] 2026-11-14 후속4개 검색 설명 로컬 교정·검증
   - 인터넷속도/PDF/거북이경고/아이온2의16필드만 변경. 관련82·독립검수·정확main SEO신규0. docs/search-description-wave2-2026-11-14.md.
-- [ ] 후속4개 정상 출고·공개 확인 및 완료기간 관측
-  - 정상Guard/PR/Pages/공개4URL을 별도 기록하고 원천별7일·14~28일을 비교. 효과UNMEASURED, 새예약 없음.
+- [x] 후속4개 PR753·Pages·공개 확인
+  - mainfaa765f42d/Pages43509140914 success,11/14 06:17:46KST 공개4URL200·정확HTML 일치.
+- [ ] 후속4개 완료기간 관측
+  - 원천별7일·14~28일 비교. 효과UNMEASURED, 새예약 없음.
 
 - [x] 2026-11-13 검색 유입 자동차 글3개 설명문 교정·로컬 검증
   - description/OG/Twitter/JSON-LD12필드만 완결요약. 본문·제목·광고 보존, 관련82검사·독립검수·정확main SEO신규0. docs/search-description-pilot-2026-11-13.md.
