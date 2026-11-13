@@ -43,7 +43,8 @@ jobs:
     env:
       APPROVED_HEAD: b512e0da4acf4e7c03ccf9c1c9557ccd51c730ec
       TRUSTED_PIN: 9a5ef58d459697642f36d2f494be6c48387ac9b3
-      BASE_REF: ${{ github.event.pull_request.base.sha || 'origin/main' }}
+      BASE_REF: 6849e0f64e615834e21c551637f89c80f95bd764
+      APPROVED_BASE_DELTA_SHA256: b4a6c3ce4671bfb212a0a61be88d544b1241583296ceab173fa7d64eaf4ee10e
     steps:
       - uses: actions/checkout@v4
         with:
@@ -56,8 +57,10 @@ jobs:
         run: |
           set -euo pipefail
           git merge-base --is-ancestor "$APPROVED_HEAD" HEAD
-          unexpected="$(git diff --name-only "$APPROVED_HEAD" HEAD -- . ':(exclude).github/workflows/rpm-slot-release-qa.yml' ':(exclude)PROJECT_HISTORY.md' ':(exclude)TASKS.md')"
-          if [[ -n "$unexpected" ]]; then printf '%s\n' "$unexpected"; exit 1; fi
+          git merge-base --is-ancestor "$BASE_REF" HEAD
+          test "$(git rev-parse HEAD^1)" = "$BASE_REF"
+          git diff --raw -z --no-abbrev --no-renames "$APPROVED_HEAD" HEAD -- . ':(exclude).github/workflows/rpm-slot-release-qa.yml' ':(exclude)PROJECT_HISTORY.md' ':(exclude)TASKS.md' > "$RUNNER_TEMP/rpm-base-delta.bin"
+          printf '%s  %s\n' "$APPROVED_BASE_DELTA_SHA256" "$RUNNER_TEMP/rpm-base-delta.bin" | sha256sum -c -
           printf '%s\n' '671f28e3bdd447324a0ee7b167bc7889dcafd538d3d308e3759b2e75f8ba4c0b  scripts/content_launch_guard.py' | sha256sum -c -
           git show "$TRUSTED_PIN:data/content-launch-manifest.json" > "$RUNNER_TEMP/rpm-manifest.json"
           printf '%s  %s\n' 'c5be62d05c4021c57df52bcb4c3ef688ace53a75866938f22e469eb439b57b31' "$RUNNER_TEMP/rpm-manifest.json" | sha256sum -c -
