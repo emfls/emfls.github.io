@@ -1765,3 +1765,8 @@
 ## 2026-11-14 — Prevent repeated Notion description truncation
 - Removed only first-paragraph150/template165 hard cuts; existing escaping/unescape/JSON protection preserved. No existing HTML/queue/schedule/ad changes. Two RED→GREEN regressions,114 related/22 workflow-style unittest checks, exact existing render workflow checks and independent diff/AST review PASS. Offline390/1280 long-deck visual/overflow/overlap checks PASS. Detail: docs/notion-complete-description-2026-11-14.md. Final Guard/CI/release pending.
 - Follow-up page PR753 actually merged to faa765f42d; Pages43509140914 success, public4URL200/exact HTML at2026-11-14 06:17:46KST. Search/revenue effects remain unmeasured.
+
+## 2026-11-14 — Correct two measured guide promises and destinations
+- Corrected the EV camping guide's three unsupported measured-comparison descriptions and linked its battery CTA to the existing assumed eight-hour table. The flu guide's school-return calculator CTA now opens its existing worked time examples. Exactly five HTML replacements; all other bytes, ads/GA4/JSON-LD/dates preserved. Detail: docs/intent-path-repair-2026-11-14.md.
+- Related76 checks, independent raw-byte/semantic review and offline320/390/430px link/overflow QA PASS. Final committed Guard, exact-base SEO, normal release/public checks remain gates; no search/revenue uplift claimed.
+- Earlier source fix PR754 merged to7c8f6d83dc with successful Pages/Notion QA. First existing07:00 publisher43515612521 used that source and published main9dd9090e1b, Pages43515883876/live exact HTML/Notion completion verified07:03KST. Its140-character intro did not exercise the removed long-description boundary.
