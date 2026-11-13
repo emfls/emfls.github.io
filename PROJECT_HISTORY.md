@@ -1756,3 +1756,8 @@
 ## 2026-11-13 — Three measured car-guide search descriptions
 - Replaced only twelve description fields across double-parking, charging-limit and navigation-reset guides with complete, existing-body summaries. Title/H1/body/canonical/date/ads/GA4 preserved; no protected or OBSERVING/COOLDOWN path transition. Scope and pre-release evidence: docs/search-description-pilot-2026-11-13.md.
 - Related82 tests and independent byte/semantic review PASS. Exact-base full-site SEO delta: no new critical/warnings, existing646/420; original OPS baseline unchanged. Committed Guard, normal PR/Pages/public verification pending; no ranking or revenue uplift claimed.
+
+## 2026-11-14 — Four follow-up search descriptions
+- Completed existing speed-test/PDF/EV-warning/AION2 search summaries in16 fields only; all other HTML bytes preserved. Current protection/experiment targets do not overlap. Detail: docs/search-description-wave2-2026-11-14.md.
+- Related82 tests, raw-byte/semantic independent review and exact-base SEO delta PASS (new0; existing646/420;19,507pages). Committed Guard/PR/Pages/public evidence pending. No rank or revenue uplift claimed.
+- Previous pilot PR744 actually merged to498a52cb4f; Pages43433123884 success and public3/3 exact HTML verified2026-11-13 22:25KST. Its complete-period observation remains pending.
