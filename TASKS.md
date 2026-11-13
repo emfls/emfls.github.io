@@ -1,6 +1,13 @@
+- [x] 2026-11-14 비상키트 보유량 오류 복귀 로컬 수정
+  - 정상값복귀후남는aria-invalid/붉은테두리1listener교정. RED→GREEN/Node11/Python76/독립diff/390px실동작PASS. docs/kit-input-recovery-2026-11-14.md.
+- [ ] 비상키트 최종Guard·정상PR·Pages·공개 확인
+  - 기존재고·계산·수량·상품·광고·GA4보존. 수익효과UNMEASURED.
+
 - [x] 2026-11-14 기존노출2페이지 설명·계산예시 연결 로컬교정
   - 차박실측약속3필드·오해CTA2곳만교정. 관련76/독립rawbytes/320·390·430px경로QA PASS. docs/intent-path-repair-2026-11-14.md.
-- [ ] 두 페이지 정상 PR·최종Guard·SEO·Pages·공개 확인과 완료기간 관측
+- [x] 두 페이지 정상 PR·최종Guard·SEO·Pages·공개 확인
+  - PR757/maina288d27bbe·Pages43524816709 success08:09:22KST·공개2URL exactHTML/390px 링크08:11KST PASS.
+- [ ] 두 페이지 완료기간 관측
   - 실제본문·의료기준·광고·정시발행 보존. 검색/수익효과 UNMEASURED; 새예약없음.
 
 - [x] 2026-11-14 공통 발행기 설명문 절단 재발 방지·로컬 검증
