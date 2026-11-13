@@ -1,3 +1,8 @@
+- [x] 2026-11-13 Phase2 계산기10·실제10명소 캠핑18의 격리 로컬 슬롯 후보
+  - 표시/조작48px·minheight250·In-feed내부최소250(실측253이상), 현재/pin보호확인·exact28등록·28byte원문복원·멱등성. 관련131 PASS, 최종 전체QA/Guard 영수증은 Vault EMFLS_Phase2_20261113에서 확인. 원격반영0.
+- [ ] Phase2 잔여22개 캠핑 대상/앵커 확정과 정상 출고 검토
+  - 실제185개 중 지정10명소 조건은18개. 임의의40개 선택·카드신설·OBSERVING/HOLD 해제 금지. 전체66 기존실패를통과로바꾸지 않고 최신main/보호/정상CI를재검증한다. 기존Phase1배포승인을새Phase2운영배포승인으로확대하지 않는다.
+
 - [x] 2026-11-13 RPM241 exact 승인 등록과 monetization Guard 해소 준비
   - 고정241 before/after 등록·protected 전이 합류·정확 A/M 허용·추가파일 blob 수집. 관련104 PASS, 전체1675 PASS/40기존FAIL/3skip, 최신 main 선택40개와 실패 집합 동일·관측 신규0. 정상 최신main merge, Guard PASS 작업트리 검증.
 - [ ] RPM 후보 정상 PR/원격 CI 후속

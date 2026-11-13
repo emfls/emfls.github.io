@@ -1,3 +1,11 @@
+## 2026-11-13 — Phase2 계산기·캠핑 슬롯 로컬 후보
+
+- 사용자 Phase2 지시에 따라 main afc3439f25에서 feature/adsense-phase2-calculators-camp를 분리했다. 계산기10개에 ATF/결과 display 슬롯과 누락 loader3개, 실제10명소 그리드18개에3/7번째 뒤 native In-feed2개를 준비했다. 캠핑은 실제185개이므로 요청40개를 임의로 고르지 않았고 잔여22개는 대상·앵커 미확정이다. 기존167개 캠핑 HTML은 보존했다.
+- 이전 정상 UI에서 확인한 display6016035748/In-feed5441320677 코드 재사용, Advertisement 표기·250px 예약공간·최소48px 계산 조작 간격을 유지했다. 캠핑은 320px의15px 스크롤바를 포함해 내부 폭253px 이상을 확보했고 overflow:hidden으로 광고를 자르지 않았다. 계산·SEO·GA·기존 원문은 삽입 제거 시28개 모두 byte 동일하다.
+- 현재/고정 pin의 OBSERVING·HOLD는 보존하며 실제28개 exact before/after만 APPROVED_PHASE2_TRANSITIONS로 합류했다. 동적/숨김 조상·부분marker·DOM불일치·symlink·동시수정은 보류한다. 재apply28 ALREADY_PATCHED. 독립 지적 해결 후 관련131회귀 PASS, 전체main 기준66 FAIL/1649 PASS/3skip과 후보의 기존66 실패 집합이 같았으며 최종커밋 전체/Guard 영수증은 Vault EMFLS_Phase2_20261113에 보존한다. 전체를 green으로 표시하지 않는다.
+- ego 실제56폭 조합 및 독립Playwright 최종캠핑36조합 검증, 계산 재실행/3금융탭/4날짜탭/준비물 재생성 후 광고노드·queue잔존 확인. 실광고/GA는CSP차단. 해외주식의 옛광고0 계약만 최신명시요구의 정확2개·로더1개·계산전송없음 검사로 전환하고 세금/범위/수치 검사는 유지했다.
+- 로컬 커밋·인수인계까지이며 원격 push/PR/병합/배포0. 계정·예약·보호기준·수익측정 변경 없음. CPC/수익 기대치는 실측이 아니며 실제 fill·field CLS·Active View·RPM 효과는 미측정이다.
+
 ## 2026-11-13 — 승인된 RPM241 exact 전이의 monetization Guard 연결
 
 - 사용자가 승인한 e61550880a..748f688596 누적241파일의 정확 before/after blob을 APPROVED_RPM_OPTIMIZATION_20261113_TRANSITIONS에 고정했다. canonical mapping SHA256 e57490fd96798e4830971fb130cb98da761a0f237f992efbcf3b75779cfbceda, 기존 protected-winner 전이에 합류했다.
