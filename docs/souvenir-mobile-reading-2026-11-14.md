@@ -22,3 +22,11 @@ The approval regression first fails with `PROTECTED_WINNER_CHANGED`, then passes
 One read-only Antigravity review used15,952 input/5,151 output/cache0 tokens with Git unchanged; Codex usage/savings UNKNOWN. Codex accepts the CSS/ARIA review, exact-approval requirement and unverified device/revenue boundaries. Its assertion that unmapped global HOLD records create a new blanket release gate is unsupported by the existing rules; those records are preserved without claiming global SAFE_OPEN. Its treatment of the preexisting iframe interaction as a mandatory blocker on this unrelated card repair is also rejected. No provider edits or tests were allowed.
 
 Rollback requires the normal protected process for the precise prior HTML; a reverse transition is deliberately not preapproved. Actual devices/screen readers, search ranking and revenue effects remain unmeasured. Account analytics and selection evidence remain in the local operating report.
+
+## Separate content revision
+
+ApprovalPR772 merged normally to73ad14dfa8503668a65dee3b8e811d7cd6ca0439 with HTML changes0. Its actual committed pinned Guard and81 related checks pass; the two remote RPM-specific checks were SKIPPED by their existing condition and are not described as PASS. The content branch applies exactly the separately approved HTML blob, leaving its facts, dates, scripts and links intact. Final exact-main SEO, committed content Guard and normal PR/Pages/public verification remain release gates.
+
+Previous digital-keyPR765 reached successful Pages and an exact public HTML match. Its public mobile check remains PARTIAL after an initial advertising interception and later strict-position wait timeout; that earlier observation is not promoted to full mobile PASS here.
+
+The exact approval-main SEO comparison covers19,519pages in one audit: parser errors0, new critical/warnings0, existing646/420 unchanged and the prior165 broken internal links unchanged. Other19,518HTML blobs and168production files match the base; original OPS baseline/pin/ledgers remain intact. The complete audit/cache is retained outside the repository for date-bounded reuse. No legacy sitewide issue is called fixed by this revision.
