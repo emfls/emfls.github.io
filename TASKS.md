@@ -1,3 +1,7 @@
+- [x] 2026-11-14 EV 화면 안내의 끊긴 소개문1곳 교정·로컬 검증
+  - 기존 완결 description을 deck에 재사용. head/본문/날짜/광고/11목차 보존. docs/screen-guide-introduction-2026-11-14.md.
+  - 관련78·독립검수·4폭/8native·정확main SEO 신규0/0 확인. 배포/공개 검증의 실제 상태는 해당 PR과 운영 보고서에 기록하며 수익효과는 별도 관측한다.
+
 - [x] 2026-11-14 도색 안내 모바일 바로가기의 정확 변경 후보
   - 첫 설명 뒤 named nav1·기존 답변section ID4. 원문/CSS/scripts/metadata/dates/ads 보존. docs/paint-guide-mobile-navigation-2026-11-14.md.
 - [x] 정확 WINNER 승인 PR778 먼저 정상 병합
