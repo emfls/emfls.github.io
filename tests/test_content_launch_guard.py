@@ -1006,6 +1006,41 @@ def test_guard_allows_only_the_reviewed_windows_installation_transition(tmp_path
         )
 
 
+def test_windows_diagnostic_approval_keeps_other_versions_and_observations_blocked(tmp_path):
+    setup_data(tmp_path)
+    path = "kor/report/window/windows11-installation-failure-fix.html"
+    neighbor = "util/qrcode/index.html"
+    before = "a3e7e45340aae403219d3b133b0b66b0db6820d5"
+    after = "277bf3469f7fc9ba74288b8cdf00d5f11010b233"
+    revenue_path = tmp_path / "data/revenue-opportunities.json"
+    revenue = json.loads(revenue_path.read_text(encoding="utf-8"))
+    revenue["protectedWinners"].extend({"url": f"/{p}"} for p in (path, neighbor))
+    write_json(revenue_path, revenue)
+    change = [("M", path, before, after)]
+    assert validate_launch(tmp_path, manifest([]), change) == []
+    for old, new in (
+        (before, "f" * 40),
+        ("b" * 40, after),
+        ("416d5020eaef44105ef0a82627b5254da9533b23", after),
+        (before, "29bc6c227d32e6d853fc39fda80abc2e842f66c2"),
+        (after, before),
+    ):
+        assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+            tmp_path, manifest([]), [("M", path, old, new)]
+        )
+    other = ("M", neighbor, before, after)
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(tmp_path, manifest([]), [other])
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(tmp_path, manifest([]), change + [other])
+    for status in ("D", "R100"):
+        assert "DELETION_NOT_ALLOWED" in validate_launch(
+            tmp_path, manifest([]), [(status, path, before, after)]
+        )
+    write_json(tmp_path / "data/experiments.json", {
+        "experiments": [{"url": f"/{path}", "status": "OBSERVING"}],
+    })
+    assert "PROTECTED_EXPERIMENT_CHANGED" in validate_launch(tmp_path, manifest([]), change)
+
+
 def test_guard_allows_only_the_reviewed_boeun_booking_transition(tmp_path):
     setup_data(tmp_path)
     path = "kor/report/camp/boeun.html"

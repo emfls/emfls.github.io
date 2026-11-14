@@ -1,7 +1,12 @@
+- [x] 2026-11-14 Windows 설치 진단의 정확 후보·WINNER 승인 준비
+  - 안전모드/0x8007025D/VM단정·본문2링크·320px기존overflow의10치환동결, a3e7e45340→277bf3469f. RED→GREEN/관련77/독립bytes·공식검수. docs/windows-install-diagnostics-2026-11-14.md.
+- [ ] Windows 정확 승인 PR 먼저 정상 병합 후 별도 콘텐츠 PR
+  - 이번 승인 준비에는 HTML 변경0. 기존 제목·설명·광고·GA·발행/원장보존. 실기설치/검색·수익효과 미검증.
+
 - [x] 2026-11-14 입소대기 현재 공지·메뉴 및 충전결제 진단 연결 보완
   - 입소대기20치환으로2027공지/현재메뉴/FAQ/출처일치, EV7치환으로6증상→기존5답변절. 관련76PASS, docs/application-and-payment-paths-2026-11-14.md.
-- [ ] 신청·결제 경로 최종Guard·SEO·정상PR·Pages·공개 확인
-  - 제목/H1/설명/광고/GA/정시발행 보존. 수익·검색효과 UNMEASURED, 새예약없음.
+- [x] 신청·결제 경로 최종Guard·SEO·정상PR·Pages·공개 확인
+  - PR760/mainc6935394d1·Pages43534849535 success09:33:15KST·공개2원문/390px답변6·공식신청경로PASS. 수익·검색효과 UNMEASURED, 새예약없음.
 
 - [x] 2026-11-14 비상키트 보유량 오류 복귀 로컬 수정
   - 정상값복귀후남는aria-invalid/붉은테두리1listener교정. RED→GREEN/Node11/Python76/독립diff/390px실동작PASS. docs/kit-input-recovery-2026-11-14.md.
