@@ -1,3 +1,8 @@
+- [x] 2026-11-14 한국 기념품 모바일 카드·선택표 정확 후보 준비
+  - 320px grid214px에240/220px최소카드가넘치는현상재현. 카드2규칙·표읽기안내/명명/초점5치환, 기존사실/광고/메타/날짜보존. docs/souvenir-mobile-reading-2026-11-14.md.
+- [ ] 정확 WINNER 승인 PR 먼저 정상 병합 후 별도 콘텐츠 PR·Pages·공개 확인
+  - de0396fdbb→7b88491649만허용. 관련회귀·독립검수·4폭23카드/20바로가기확인, 기존표가로/Chrome키보드는원래정상. 수익효과별도미측정.
+
 - [x] 2026-11-14 Naver Mobile 실제 TOP30·디지털키 소개문 복구 준비
   - 선정 근거는 기존 로컬 운영 보고서에 보관. deck/JSONLDdescription2곳만기존완결메타로일치, 나머지원문보존. docs/digital-key-introduction-2026-11-14.md.
 - [ ] 디지털키 최종Guard·정확main SEO·정상PR·Pages·공개 확인
