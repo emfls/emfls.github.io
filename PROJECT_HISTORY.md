@@ -1,3 +1,8 @@
+## 2026-11-14 — Complete three existing car summaries
+
+- Repaired five description/deck fields each in the smart-key and remote-climate guides, and only the turtle guide's cut deck. Its previously completed metadata remains byte-identical. Eleven exact substitutions preserve titles, dates, remaining Article fields, CSS, scripts, ads, body and links. Detail: docs/car-three-description-repair-2026-11-14.md.
+- Related78 tests, independent byte review,12 page/viewport combinations and24 native movements passed. Exact-main19,523-page SEO has no new critical/warning or parser errors; existing646/420 remain. Existing source-destination counts11/10/20 are distinct from actual click counts. Actual merge/Pages/public evidence is recorded in the associated PR as observed. Current manuals, vehicles, search-snippet adoption and revenue uplift remain unverified.
+
 ## 2026-11-14 — Complete the existing screen-guide introduction
 
 - Replaced only the cut visible deck with the already complete description. Metadata/Article, title, dates, CSS, six scripts, existing prose and eleven contents links remain identical. The November13 metadata observation is preserved, with this November14 visible-deck intervention recorded separately. Detail: docs/screen-guide-introduction-2026-11-14.md.
