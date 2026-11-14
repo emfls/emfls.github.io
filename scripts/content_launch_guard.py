@@ -738,6 +738,12 @@ APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault("kor/report/window/windows11-in
     ("416d5020eaef44105ef0a82627b5254da9533b23", "a3e7e45340aae403219d3b133b0b66b0db6820d5")
 )
 
+# Current Microsoft diagnostic guidance under the owner delegation; exact versions only.
+# docs/windows-install-diagnostics-2026-11-14.md; no observation override.
+APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault("kor/report/window/windows11-installation-failure-fix.html", set()).add(
+    ("a3e7e45340aae403219d3b133b0b66b0db6820d5", "277bf3469f7fc9ba74288b8cdf00d5f11010b233")
+)
+
 # Boeun campground booking facts reviewed in PR #551.
 APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault("kor/report/camp/boeun.html", set()).add(
     ("6b2e855305a914627904e73188cdcbba5c8bb79d", "0bbed5e589902264d2046d58e92201436e071d66")
