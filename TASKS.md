@@ -1,7 +1,12 @@
+- [x] 2026-11-14 입소대기 현재 공지·메뉴 및 충전결제 진단 연결 보완
+  - 입소대기20치환으로2027공지/현재메뉴/FAQ/출처일치, EV7치환으로6증상→기존5답변절. 관련76PASS, docs/application-and-payment-paths-2026-11-14.md.
+- [ ] 신청·결제 경로 최종Guard·SEO·정상PR·Pages·공개 확인
+  - 제목/H1/설명/광고/GA/정시발행 보존. 수익·검색효과 UNMEASURED, 새예약없음.
+
 - [x] 2026-11-14 비상키트 보유량 오류 복귀 로컬 수정
   - 정상값복귀후남는aria-invalid/붉은테두리1listener교정. RED→GREEN/Node11/Python76/독립diff/390px실동작PASS. docs/kit-input-recovery-2026-11-14.md.
-- [ ] 비상키트 최종Guard·정상PR·Pages·공개 확인
-  - 기존재고·계산·수량·상품·광고·GA4보존. 수익효과UNMEASURED.
+- [x] 비상키트 최종Guard·정상PR·Pages·공개 확인
+  - PR758/mainad09967474·Pages43530081510 success08:52:19KST·공개exactHTML/390px오류복귀08:54KST PASS. 기존재고·계산·상품·광고·GA4보존, 수익효과UNMEASURED.
 
 - [x] 2026-11-14 기존노출2페이지 설명·계산예시 연결 로컬교정
   - 차박실측약속3필드·오해CTA2곳만교정. 관련76/독립rawbytes/320·390·430px경로QA PASS. docs/intent-path-repair-2026-11-14.md.
