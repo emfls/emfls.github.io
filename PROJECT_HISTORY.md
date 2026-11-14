@@ -1,3 +1,8 @@
+## 2026-11-14 — Apply the separately approved paint navigation
+
+- Approval PR778 merged normally to3b2e0833e0 with no HTML changes. Related78 checks, six permission-boundary assertions, committed pinned Guard and independent review PASS; two RPM-specific hosted checks were SKIPPED. This separate content branch applies only the frozen84675a26cf candidate. Existing metadata, dates, prose, CSS and scripts remain identical. Exact-main SEO/committed Guard, normal content merge, Pages and public checks remain release gates. Search/revenue effects remain unmeasured.
+- Applied-candidate78 checks and exact-main19,522-page SEO pass: no parser/new critical/new warning errors, existing646/420 retained. Raw blobs verified;19,515 exact cached parse records reused and seven changed/new records parsed once. Production168 match the approved main and original OPS8 files remain unchanged. Committed Guard, normal merge and public release remain pending.
+
 ## 2026-11-14 — Register the exact paint-guide navigation revision
 
 - One named navigation block after the existing first explanation points to four existing answer sections. Five exact replacements preserve all existing prose, metadata, dates, CSS, table, source links and executable scripts/advertising. Detail: docs/paint-guide-mobile-navigation-2026-11-14.md.
