@@ -1,8 +1,14 @@
+- [x] 2026-11-14 CarPlay 검색 설명·소개문 계약의 정확5필드 후보
+  - meta3의즉시해결/USB초기화약속을실제조건별가이드로맞추고deck/Article.description절단복구. 제목/본문/날짜/광고보존. docs/carplay-description-intent-2026-11-14.md.
+- [ ] 최종 독립검수·4폭읽기·관련검사·정확mainSEO/커밋Guard·정상PR/Pages/공개 확인
+  - 0fffb5c88c→96ec4ea731. 최근meta복원이력과성과기간분리,queryURL추측join/수익lift보장0.
+
 - [x] 2026-11-14 한국 기념품 모바일 카드·선택표 정확 후보 준비
   - 320px grid214px에240/220px최소카드가넘치는현상재현. 카드2규칙·표읽기안내/명명/초점5치환, 기존사실/광고/메타/날짜보존. docs/souvenir-mobile-reading-2026-11-14.md.
 - [x] 정확 WINNER 승인 PR772 먼저 정상 병합
   - main73ad14dfa8, HTML0·pair1·81회귀/실커밋Guard/독립검수PASS. 원격RPM조건2check는SKIPPED.
-- [ ] 승인된 콘텐츠 별도 PR·Pages·공개 확인
+- [x] 승인된 기념품 콘텐츠 별도 PR773·Pages·공개 확인
+  - main3a591b/Pages43577163847success17:44:23·공개exact/23카드5native/유효TabRight조건PASS. 초기PARTIAL·전체headerfitfalse는보존,실기/수익효과미확인.
   - de0396fdbb→7b88491649만허용. 관련회귀·독립검수·4폭23카드/20바로가기확인, 기존표가로/Chrome키보드는원래정상. 수익효과별도미측정.
 
 - [x] 2026-11-14 Naver Mobile 실제 TOP30·디지털키 소개문 복구 준비
