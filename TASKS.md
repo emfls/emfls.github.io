@@ -2,7 +2,8 @@
   - 첫 설명 뒤 named nav1·기존 답변section ID4. 원문/CSS/scripts/metadata/dates/ads 보존. docs/paint-guide-mobile-navigation-2026-11-14.md.
 - [x] 정확 WINNER 승인 PR778 먼저 정상 병합
   - main3b2e0833e0, HTML0·관련78·경계6·실커밋Guard·독립검수 PASS. RPM 전용 hosted2검사는 SKIPPED.
-- [ ] 별도 콘텐츠 PR·정확main SEO/커밋Guard·Pages/공개 확인
+- [x] 별도 콘텐츠 PR779·정확main SEO/커밋Guard·Pages/공개 확인
+  - main0cca605c50, Pages43589762659 success·공개HTTP200/정확10425B·320px4native목적지PASS. 검색/수익효과관측은별도미측정.
   - c779b36018→84675a26cf만 허용. 관련78·경계6·독립검수·4폭17 native/keyboard PASS. 수익 효과 미측정.
 
 - [x] 2026-11-14 CarPlay 검색 설명·소개문 계약의 정확5필드 후보
