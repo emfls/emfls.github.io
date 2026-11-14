@@ -1,3 +1,8 @@
+## 2026-11-14 — Complete the existing screen-guide introduction
+
+- Replaced only the cut visible deck with the already complete description. Metadata/Article, title, dates, CSS, six scripts, existing prose and eleven contents links remain identical. The November13 metadata observation is preserved, with this November14 visible-deck intervention recorded separately. Detail: docs/screen-guide-introduction-2026-11-14.md.
+- Related78 checks, independent exact-byte review, four-viewport last-line/overflow checks and eight native Hyundai/Kia jumps passed. Exact-main19,522-page SEO has no new critical/warning or parser errors; existing646/420 and165 broken links remain. Committed Guard and actual merge/Pages/public evidence are recorded in the associated PR as observed; local checks are not publication or revenue success.
+
 ## 2026-11-14 — Apply the separately approved paint navigation
 
 - Approval PR778 merged normally to3b2e0833e0 with no HTML changes. Related78 checks, six permission-boundary assertions, committed pinned Guard and independent review PASS; two RPM-specific hosted checks were SKIPPED. This separate content branch applies only the frozen84675a26cf candidate. Existing metadata, dates, prose, CSS and scripts remain identical. Exact-main SEO/committed Guard, normal content merge, Pages and public checks remain release gates. Search/revenue effects remain unmeasured.

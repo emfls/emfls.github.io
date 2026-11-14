@@ -1,0 +1,9 @@
+# Complete the visible screen-guide introduction
+
+The visible `.deck` paragraph ended in a cut quotation while the existing meta and Article descriptions were already complete. One exact paragraph replacement reuses that existing complete description. The rest of the HTML, including the full first body paragraph, title, dates, CSS, six scripts, advertisements, three metadata descriptions, Article JSON-LD and eleven contents links, remains byte-identical.
+
+Exact page: `kor/report/car/ev-navigation-screen-frozen-reset-2026.html`, blob `b046faf7e520002c3f5e215fc7a5f7d258e307e5` → `d6885b649dd70324380a756ac11d36e33a47b78b`. Authority: `docs/emfls-delegated-improvements-2026-11-07.md`. No protection/experiment state is changed. The November13 metadata revision is preserved; this November14 visible-introduction intervention must be distinguished when interpreting later results.
+
+Local verification passed at320/390/430/1280px: complete visible introduction, its last line, no document overflow, all eleven unique source destinations, and eight native movements to the existing Hyundai/Kia headings. Related78 checks and independent raw-byte review passed. Exact-main SEO compared19,522 raw-verified HTML files, reusing19,514 parse records and parsing eight changed/new files. New critical/warnings and parser errors0; existing646/420 and165 broken links remain.
+
+The associated PR records committed Guard, normal merge, Pages and public-source/mobile evidence as they become available. Local verification here does not claim public publication, indexing, a vehicle repair or revenue uplift. No new schedule or advertising/account setting is introduced. The existing renderer repair is unchanged. Restore only the scoped paragraph through the normal review process if a regression is confirmed.
