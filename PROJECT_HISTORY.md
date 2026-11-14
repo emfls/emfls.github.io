@@ -1,3 +1,8 @@
+## 2026-11-14 — Register the exact paint-guide navigation revision
+
+- One named navigation block after the existing first explanation points to four existing answer sections. Five exact replacements preserve all existing prose, metadata, dates, CSS, table, source links and executable scripts/advertising. Detail: docs/paint-guide-mobile-navigation-2026-11-14.md.
+- Related78 checks, six permission-boundary assertions and independent raw-byte/semantic review PASS. Local320/390/430/1280px first-answer/overflow checks and16 native clicks plus one keyboard Enter PASS. Only c779b36018→84675a26cf at the exact protected path is registered; other versions and observations remain blocked. This approval branch changes no HTML. Normal approval merge, separate content PR, exact-main SEO/committed Guard, Pages and public verification remain gates. Search/revenue effects remain unmeasured.
+
 ## 2026-11-13 — Phase2 계산기·캠핑 슬롯 로컬 후보
 
 - 사용자 Phase2 지시에 따라 main afc3439f25에서 feature/adsense-phase2-calculators-camp를 분리했다. 계산기10개에 ATF/결과 display 슬롯과 누락 loader3개, 실제10명소 그리드18개에3/7번째 뒤 native In-feed2개를 준비했다. 캠핑은 실제185개이므로 요청40개를 임의로 고르지 않았고 잔여22개는 대상·앵커 미확정이다. 기존167개 캠핑 HTML은 보존했다.

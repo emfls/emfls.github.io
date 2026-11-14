@@ -1,3 +1,8 @@
+- [x] 2026-11-14 도색 안내 모바일 바로가기의 정확 변경 후보
+  - 첫 설명 뒤 named nav1·기존 답변section ID4. 원문/CSS/scripts/metadata/dates/ads 보존. docs/paint-guide-mobile-navigation-2026-11-14.md.
+- [ ] 정확 WINNER 승인 PR 먼저 병합한 뒤 별도 콘텐츠 PR·SEO/Guard·Pages/공개 확인
+  - c779b36018→84675a26cf만 허용. 관련78·경계6·독립검수·4폭17 native/keyboard PASS. 수익 효과 미측정.
+
 - [x] 2026-11-14 CarPlay 검색 설명·소개문 계약의 정확5필드 후보
   - meta3의즉시해결/USB초기화약속을실제조건별가이드로맞추고deck/Article.description절단복구. 제목/본문/날짜/광고보존. docs/carplay-description-intent-2026-11-14.md.
 - [ ] 최종 독립검수·4폭읽기·관련검사·정확mainSEO/커밋Guard·정상PR/Pages/공개 확인

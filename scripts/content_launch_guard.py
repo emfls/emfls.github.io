@@ -867,6 +867,12 @@ APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault("kor/report/travel/korean-souve
     ("de0396fdbb36bd9742256902033a8d02057ff2f7", "7b88491649614aa97ede3d2d51ca6c2bc03f409b")
 )
 
+# Native jumps to four existing paint-guide answers; no observation override.
+# docs/paint-guide-mobile-navigation-2026-11-14.md
+APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault("kor/report/car/car-full-paint-cost-guide.html", set()).add(
+    ("c779b3601865d64c6a1e2588ea82eeab73176b09", "84675a26cf2feb7d29228e32e4e345af1a434a10")
+)
+
 APPROVED_MONETIZATION_TRANSITIONS = {
     "scripts/collect_adsense_snapshot.py": {
         ("94f34228ed8b10213085b3de19bbab14e4fee0de", "83595861b3ea484b7fd9ad0c7fb11515f6516692"),
