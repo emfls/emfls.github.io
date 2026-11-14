@@ -588,3 +588,6 @@
 - [ ] 2026-11-05 winter camping checklist packing-tool discovery
   - [x] One contextual paragraph and focused placement regression;7focused checks pass. Existing10/15 assertion failure reproduced on main, then only the assertion aligned to maintained10/16 content. No metadata/ad/script/fact/schedule changes; no freshness blanket gate exists.
   - [ ] Committed-head pinned Guard, normal PR/CI and merge, Pages success and public exact-blob verification. Preserve preexisting uncommitted records.
+- [x] 2026-11-15 차량2 안내의 절단 설명문6필드 교정·로컬 검증
+  - 이중주차deck1·브레이크meta3/Article/deck5만 복구. 기존 메타 관측과 새 소개문 개입을 구분. docs/car-two-description-repair-2026-11-15.md.
+  - 관련78·독립검수·4폭8화면·정확main SEO 신규0/0. 실제 배포/공개 증거는 해당 PR 후속 기록, 검색·수익효과는 별도 관측.
