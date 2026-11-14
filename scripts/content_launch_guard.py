@@ -861,6 +861,12 @@ for _path, _blob_pair in APPROVED_RPM_OPTIMIZATION_20261113_TRANSITIONS.items():
 for _path, _blob_pair in APPROVED_PHASE2_TRANSITIONS.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
+# Measured souvenir card bounds and named table scrolling; exact owner-delegated revision.
+# docs/souvenir-mobile-reading-2026-11-14.md; no observation override.
+APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault("kor/report/travel/korean-souvenir-foreigners-2026.html", set()).add(
+    ("de0396fdbb36bd9742256902033a8d02057ff2f7", "7b88491649614aa97ede3d2d51ca6c2bc03f409b")
+)
+
 APPROVED_MONETIZATION_TRANSITIONS = {
     "scripts/collect_adsense_snapshot.py": {
         ("94f34228ed8b10213085b3de19bbab14e4fee0de", "83595861b3ea484b7fd9ad0c7fb11515f6516692"),

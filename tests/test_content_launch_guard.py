@@ -1415,3 +1415,33 @@ def test_maple_equipment_path_approval_keeps_other_blobs_winners_and_observation
     assert 'PROTECTED_WINNER_CHANGED' in validate_launch(tmp_path, manifest([]), [('M', 'util/qrcode/index.html', before, after)])
     write_json(tmp_path / 'data/experiments.json', {'experiments': [{'url': f'/{path}', 'status': 'OBSERVING'}]})
     assert 'PROTECTED_EXPERIMENT_CHANGED' in validate_launch(tmp_path, manifest([]), change)
+
+
+def test_souvenir_mobile_approval_keeps_other_versions_and_observations_blocked(tmp_path):
+    setup_data(tmp_path)
+    path = "kor/report/travel/korean-souvenir-foreigners-2026.html"
+    neighbor = "util/qrcode/index.html"
+    before = "de0396fdbb36bd9742256902033a8d02057ff2f7"
+    after = "7b88491649614aa97ede3d2d51ca6c2bc03f409b"
+    revenue_path = tmp_path / "data/revenue-opportunities.json"
+    revenue = json.loads(revenue_path.read_text(encoding="utf-8"))
+    revenue["protectedWinners"].extend({"url": f"/{p}"} for p in (path, neighbor))
+    write_json(revenue_path, revenue)
+    change = [("M", path, before, after)]
+    assert validate_launch(tmp_path, manifest([]), change) == []
+    for old, new in ((before, "f" * 40), ("b" * 40, after),
+                     ("07262385d87ab2da932427b013ba9c5a0328d8e3", after), (after, before)):
+        assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+            tmp_path, manifest([]), [("M", path, old, new)]
+        )
+    other = ("M", neighbor, before, after)
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(tmp_path, manifest([]), [other])
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(tmp_path, manifest([]), change + [other])
+    for status in ("D", "R100"):
+        assert "DELETION_NOT_ALLOWED" in validate_launch(
+            tmp_path, manifest([]), [(status, path, before, after)]
+        )
+    write_json(tmp_path / "data/experiments.json", {
+        "experiments": [{"url": f"/{path}", "status": "OBSERVING"}],
+    })
+    assert "PROTECTED_EXPERIMENT_CHANGED" in validate_launch(tmp_path, manifest([]), change)
