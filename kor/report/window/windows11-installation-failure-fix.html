@@ -197,6 +197,13 @@
                 padding: 15px;
                 margin: 15px 0;
             }
+            @media (max-width: 650px) {
+                body { padding: 12px; }
+                .container { padding: 16px; }
+                .timeline-item { padding: 16px; }
+                .timeline-badge { position: static; margin-bottom: 12px; }
+                th, td { padding: 8px; font-size: 0.9rem; }
+            }
         </style>
     </head>
     <body>
@@ -205,6 +212,7 @@
 
             <div class="info">
                 <h2>설치가 실패한 화면에서 먼저 확인할 것</h2>
+                <p><a href="#error-code-check">오류 코드표 바로 보기</a> · <a href="#restart-check">설치 중단·안전 모드 확인</a></p>
                 <ul>
                     <li><strong>Windows 업데이트나 업그레이드 중</strong> 실패했다면 오류 코드 전체를 확인하세요. <code>0xC1900101</code> 계열은 드라이버부터, <code>0x80070070</code> 계열은 시스템 드라이브의 여유 공간부터 점검합니다. <a href="https://support.microsoft.com/ko-kr/windows/deployment/install-upgrade/get-help-with-windows-upgrade-and-installation-errors">Microsoft 오류 코드별 안내</a></li>
                     <li><strong>설치 USB에서 부팅되지 않으면</strong> PC의 부팅 메뉴에서 USB가 보이는지 확인하세요. 미디어를 다시 만들 때는 USB 안의 파일을 백업한 뒤 <a href="https://support.microsoft.com/ko-kr/windows/deployment/install-upgrade/create-installation-media-for-windows">Microsoft 공식 설치 미디어 만들기</a>를 따릅니다.</li>
@@ -330,8 +338,8 @@
                         </tr>
                         <tr>
                             <td><span class="error-code">0x8007025D</span></td>
-                            <td>I/O 오류 (하드웨어 문제)</td>
-                            <td>메모리/저장소 점검</td>
+                            <td>설치 데이터 처리 오류</td>
+                            <td>전체 오류 문구·실패 단계 기록</td>
                         </tr>
                         <tr>
                             <td><span class="error-code">0x80300024</span></td>
@@ -359,7 +367,7 @@
 
             <div class="timeline-item priority-high">
                 <div class="timeline-badge">3단계</div>
-                <h3>설치 중단 및 재시작 문제 해결</h3>
+                <h3 id="restart-check">설치 중단 및 재시작 문제 해결</h3>
 
                 <div class="info">
                     <strong>💡 설치 중단 원인:</strong> 하드웨어 충돌, 드라이버 문제, 메모리 오류 등이 설치 과정에서
@@ -368,7 +376,7 @@
 
                 <h4>설치 중단 시 대응 방법:</h4>
                 <ol>
-                    <li><strong>안전 모드로 부팅:</strong> F8 키 또는 Shift + 재시작</li>
+                    <li><strong>기존 Windows의 안전 모드 진단:</strong> Windows 복구 환경에서 문제 해결 → 고급 옵션 → 시작 설정 → 다시 시작을 선택한 뒤 4 또는 F4로 안전 모드를 시작합니다. 암호화된 장치는 BitLocker 복구 키를 먼저 확인하세요. <a href="https://support.microsoft.com/ko-kr/windows/experience/startup-boot/windows-startup-settings">Microsoft 시작 설정 안내</a></li>
                     <li><strong>클린 부팅:</strong> 불필요한 서비스 및 프로그램 비활성화</li>
                     <li><strong>하드웨어 분리:</strong> 필수가 아닌 장치 임시 제거</li>
                     <li><strong>메모리 테스트:</strong> Windows 메모리 진단 도구 실행</li>
@@ -408,7 +416,7 @@
                     <label><input type="checkbox" /> 하드웨어 최소화</label><br />
                     <label><input type="checkbox" /> 메모리 진단 테스트</label><br />
                     <label><input type="checkbox" /> 디스크 오류 검사</label><br />
-                    <label><input type="checkbox" /> 안전 모드 설치 시도</label><br />
+                    <label><input type="checkbox" /> 안전 모드에서 증상 재현 여부 확인</label><br />
                     <label><input type="checkbox" /> 설치 로그 확인</label>
                 </div>
             </div>
@@ -523,7 +531,7 @@
                 <ol>
                     <li>VMware 또는 VirtualBox에서 테스트 설치</li>
                     <li>동일한 설정으로 가상 환경에서 성공 여부 확인</li>
-                    <li>성공 시 하드웨어 문제, 실패 시 소프트웨어 문제</li>
+                    <li>가상 머신의 성공·실패만으로 실제 PC의 원인을 확정하지 말고, 실제 실패 단계와 로그를 함께 확인하세요.</li>
                 </ol>
 
                 <h4>Windows 11 대안:</h4>
@@ -574,10 +582,11 @@
                 </div>
             </div>
 
-            <h2>🔧 오류 코드별 상세 해결 방법</h2>
+            <h2 id="error-code-check">🔧 오류 코드별 상세 해결 방법</h2>
 
             <div class="danger">
                 <h3>치명적 오류 코드</h3>
+                <p><code>0x8007025D</code>의 Win32 기본 코드 <code>0x25D</code>(605)는 잘못된 형식의 버퍼 데이터를 뜻합니다. 이 코드만으로 메모리·저장소 고장을 확정할 수 없으므로 전체 오류 문구와 실패 단계, 설치 미디어·로그를 함께 확인하세요. <a href="https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes--500-999-">Microsoft 기본 코드 0x25D(605) 정의</a></p>
                 <table>
                     <thead>
                         <tr>
@@ -596,9 +605,9 @@
                         </tr>
                         <tr>
                             <td><span class="error-code">0x8007025D</span></td>
-                            <td>I/O 장치 오류</td>
-                            <td>다른 USB 포트 사용</td>
-                            <td>메모리/저장소 교체</td>
+                            <td>설치 데이터 처리 오류</td>
+                            <td>전체 오류 문구·설치 미디어 확인</td>
+                            <td>로그·진단 결과로 원인 확인</td>
                         </tr>
                         <tr>
                             <td><span class="error-code">0x80300024</span></td>
