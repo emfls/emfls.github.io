@@ -2,6 +2,7 @@
 
 - Approval PR778 merged normally to3b2e0833e0 with no HTML changes. Related78 checks, six permission-boundary assertions, committed pinned Guard and independent review PASS; two RPM-specific hosted checks were SKIPPED. This separate content branch applies only the frozen84675a26cf candidate. Existing metadata, dates, prose, CSS and scripts remain identical. Exact-main SEO/committed Guard, normal content merge, Pages and public checks remain release gates. Search/revenue effects remain unmeasured.
 - Applied-candidate78 checks and exact-main19,522-page SEO pass: no parser/new critical/new warning errors, existing646/420 retained. Raw blobs verified;19,515 exact cached parse records reused and seven changed/new records parsed once. Production168 match the approved main and original OPS8 files remain unchanged. Committed Guard, normal merge and public release remain pending.
+- Release follow-up: PR779 merged normally to0cca605c5040d91d9db0c71b7eb46310a2d34631. Pages43589762659 succeeded; the public response at2026-11-14 20:25:54KST was HTTP200/exact10425B/SHA192fbc453a6948ddb1b6c4a6331995ada2cdbd7d9028cacaeadd9ced08acef7c. A normal public320px visit verified all four actual native destinations, stable unobscured headings and no document overflow. This does not establish an ad-overlay fix, all-device behavior, indexing or revenue uplift. This follow-up changes only completion records.
 
 ## 2026-11-14 — Register the exact paint-guide navigation revision
 
