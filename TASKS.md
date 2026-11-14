@@ -1,7 +1,11 @@
 - [x] 2026-11-14 Windows 설치 진단의 정확 후보·WINNER 승인 준비
   - 안전모드/0x8007025D/VM단정·본문2링크·320px기존overflow의10치환동결, a3e7e45340→277bf3469f. RED→GREEN/관련77/독립bytes·공식검수. docs/windows-install-diagnostics-2026-11-14.md.
-- [ ] Windows 정확 승인 PR 먼저 정상 병합 후 별도 콘텐츠 PR
-  - 이번 승인 준비에는 HTML 변경0. 기존 제목·설명·광고·GA·발행/원장보존. 실기설치/검색·수익효과 미검증.
+- [x] Windows 정확 승인 PR 먼저 정상 병합
+  - 승인PR762/main12992e3d76, HTML변경0·최종pair1개. 관련77/실커밋Guard/독립검수PASS, RPM전용원격2check는조건에따라SKIPPED이며PASS아님.
+- [x] 승인된 Windows HTML1개 별도 콘텐츠 브랜치에 적용
+  - exact277bf3469f/10치환·후보와byte동일. 320/390/430/1280px2링크8이동·표6개넘침없음/관련77 PASS.
+- [ ] Windows 콘텐츠 최종Guard·SEO·정상PR·Pages·공개 확인
+  - 기존 제목·설명·광고·GA·발행/원장보존. 실기설치/검색·수익효과 미검증.
 
 - [x] 2026-11-14 입소대기 현재 공지·메뉴 및 충전결제 진단 연결 보완
   - 입소대기20치환으로2027공지/현재메뉴/FAQ/출처일치, EV7치환으로6증상→기존5답변절. 관련76PASS, docs/application-and-payment-paths-2026-11-14.md.
