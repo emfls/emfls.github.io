@@ -1,0 +1,9 @@
+# Complete three existing car-guide summaries
+
+The smart-key and remote-climate guides ended mid-sentence in the three search/social descriptions, Article.description and visible deck. Each now has one complete, body-supported summary across those five fields. The turtle-warning guide already had complete metadata from the earlier November14 revision; only its cut visible deck reuses that existing summary. Total scope:5+5+1 exact replacements across three existing pages.
+
+Titles, dates, the rest of each Article object, CSS, executable scripts, advertising, the full body and existing links remain unchanged. No new numeric battery compatibility, repair-time guarantee or vehicle procedure is introduced. The turtle metadata observation is preserved, while this later visible-deck intervention is recorded separately when interpreting future results. No observation/protection/account state or publishing cadence is changed.
+
+Related78 tests, independent exact-byte review,12 page/viewport combinations and24 actual native movements passed. Description parity and final-line visibility were checked at320/390/430/1280px; source destination counts are11/10/20 and are not counts of actual clicks. Exact-main SEO verified19,523 raw HTML blobs, reused19,511 parse records and parsed twelve changed/new files. New critical/warning and parser errors0; existing646/420 remain. Complete source and deployed evidence is recorded in the associated PR as observed.
+
+The reviewed summaries describe existing content; current official manuals and real vehicles were not independently tested. A source description change does not establish current search-snippet adoption, indexing, ranking, loading-speed or revenue improvement. No new schedule is created. Revert only the scoped fields through normal review if a regression is confirmed.
