@@ -4,20 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>2026 USB에 4GB 이상 파일 복사 안 될 때: FAT32·exFAT·NTFS 차이와 데이터 보존 해결법</title>
-<meta name="description" content="64GB USB 메모리에 남은 공간이 30GB인데 5GB짜리 동영상을 복사하자 &#x27;대상 파일 시스템에 비해 파일이 너무 큽니다&#x27;라는 메시지가 뜨는 경우가 있습니다. 저장 공간이 넉넉한데도 파일이 들어가지 않는 이유는 무엇일까요?">
+<meta name="description" content="Microsoft의 파일 시스템 비교표에 따르면 FAT32의 최대 단일 파일 크기는 약 4GiB이고, exFAT 및 NTFS는 훨씬 큰 개별 파일을 지원합니다. FAT32, exFAT, NTFS 가운데 무엇인지 기록합니다.">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#0d1117">
 <link rel="canonical" href="https://emfls.github.io/kor/report/it/usb-file-too-large-4gb-fat32-exfat-ntfs-safe-transfer-2026.html">
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2026 USB에 4GB 이상 파일 복사 안 될 때: FAT32·exFAT·NTFS 차이와 데이터 보존 해결법">
-<meta property="og:description" content="64GB USB 메모리에 남은 공간이 30GB인데 5GB짜리 동영상을 복사하자 &#x27;대상 파일 시스템에 비해 파일이 너무 큽니다&#x27;라는 메시지가 뜨는 경우가 있습니다. 저장 공간이 넉넉한데도 파일이 들어가지 않는 이유는 무엇일까요?">
+<meta property="og:description" content="Microsoft의 파일 시스템 비교표에 따르면 FAT32의 최대 단일 파일 크기는 약 4GiB이고, exFAT 및 NTFS는 훨씬 큰 개별 파일을 지원합니다. FAT32, exFAT, NTFS 가운데 무엇인지 기록합니다.">
 <meta property="og:url" content="https://emfls.github.io/kor/report/it/usb-file-too-large-4gb-fat32-exfat-ntfs-safe-transfer-2026.html">
 <meta property="og:site_name" content="emfls">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2026 USB에 4GB 이상 파일 복사 안 될 때: FAT32·exFAT·NTFS 차이와 데이터 보존 해결법">
-<meta name="twitter:description" content="64GB USB 메모리에 남은 공간이 30GB인데 5GB짜리 동영상을 복사하자 &#x27;대상 파일 시스템에 비해 파일이 너무 큽니다&#x27;라는 메시지가 뜨는 경우가 있습니다. 저장 공간이 넉넉한데도 파일이 들어가지 않는 이유는 무엇일까요?">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"2026 USB에 4GB 이상 파일 복사 안 될 때: FAT32·exFAT·NTFS 차이와 데이터 보존 해결법","description":"64GB USB 메모리에 남은 공간이 30GB인데 5GB짜리 동영상을 복사하자 '대상 파일 시스템에 비해 파일이 너무 큽니다'라는 메시지가 뜨는 경우가 있습니다. 저장 공간이 넉넉한데도 파일이 들어가지 않는 이유는 무엇일까요?","url":"https://emfls.github.io/kor/report/it/usb-file-too-large-4gb-fat32-exfat-ntfs-safe-transfer-2026.html","mainEntityOfPage":"https://emfls.github.io/kor/report/it/usb-file-too-large-4gb-fat32-exfat-ntfs-safe-transfer-2026.html","inLanguage":"ko","author":{"@type":"Organization","name":"emfls"},"publisher":{"@type":"Organization","name":"emfls","url":"https://emfls.github.io"},"datePublished":"2026-11-02","dateModified":"2026-11-02"}</script>
+<meta name="twitter:description" content="Microsoft의 파일 시스템 비교표에 따르면 FAT32의 최대 단일 파일 크기는 약 4GiB이고, exFAT 및 NTFS는 훨씬 큰 개별 파일을 지원합니다. FAT32, exFAT, NTFS 가운데 무엇인지 기록합니다.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"2026 USB에 4GB 이상 파일 복사 안 될 때: FAT32·exFAT·NTFS 차이와 데이터 보존 해결법","description": "Microsoft의 파일 시스템 비교표에 따르면 FAT32의 최대 단일 파일 크기는 약 4GiB이고, exFAT 및 NTFS는 훨씬 큰 개별 파일을 지원합니다. FAT32, exFAT, NTFS 가운데 무엇인지 기록합니다.","url":"https://emfls.github.io/kor/report/it/usb-file-too-large-4gb-fat32-exfat-ntfs-safe-transfer-2026.html","mainEntityOfPage":"https://emfls.github.io/kor/report/it/usb-file-too-large-4gb-fat32-exfat-ntfs-safe-transfer-2026.html","inLanguage":"ko","author":{"@type":"Organization","name":"emfls"},"publisher":{"@type":"Organization","name":"emfls","url":"https://emfls.github.io"},"datePublished":"2026-11-02","dateModified":"2026-11-02"}</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-QP5Q67GE5B');</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
@@ -87,7 +87,7 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <article>
 <header class="hero">
 <span class="eyebrow">IT · 기기 · 최신 가이드</span>
-<h1>2026 USB에 4GB 이상 파일 복사 안 될 때: FAT32·exFAT·NTFS 차이와 데이터 보존 해결법</h1>
+<h1>USB에 4GB 이상 파일 복사 안 될 때 — Windows 11에서 USB 파일 시스템 확인하기 실전 가이드</h1>
 <p class="deck">64GB USB 메모리에 남은 공간이 30GB인데 5GB짜리 동영상을 복사하자 &#x27;대상 파일 시스템에 비해 파일이 너무 큽니다&#x27;라는 메시지가 뜨는 경우가 있습니다. 저장 공간이 넉넉한데도 파일이 들어가지 않는 이유는 무엇일까요?</p>
 <div class="hero-meta"><span>최초 발행 2026-11-02</span><span>내용 확인 2026-11-02</span><span>작성 emfls</span></div>
 </header>
@@ -168,11 +168,11 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <section class="section" aria-labelledby="section-08"><h2 id="section-08">8. Mac에서 exFAT으로 변경하는 방법</h2><p>Apple은 Mac과 Windows에서 함께 사용할 외장 드라이브를 <strong>디스크 유틸리티에서 지우고 포맷</strong>하는 공식 절차를 제공합니다.</p>
 <p><strong>데이터를 백업하고 복구 가능성을 검증한 다음</strong> 아래 단계를 진행하세요.</p>
 <ol>
-<li>Mac에서 **디스크 유틸리티(Disk Utility)**를 엽니다.</li>
+<li>Mac에서 <strong>디스크 유틸리티(Disk Utility)</strong>를 엽니다.</li>
 <li><strong>보기 → 모든 기기 보기</strong>를 선택합니다.</li>
 <li>왼쪽 목록에서 대상 외장 USB를 선택합니다.</li>
 <li>내부 SSD나 다른 외장 저장 장치를 선택하지 않았는지 확인합니다.</li>
-<li>**지우기(Erase)**를 선택합니다.</li>
+<li><strong>지우기(Erase)</strong>를 선택합니다.</li>
 <li>이름을 지정하고 형식에서 <strong>exFAT</strong>을 선택합니다.</li>
 <li>필요한 경우 연결할 기기의 요구에 맞는 파티션 방식을 선택합니다.</li>
 <li>데이터 삭제 경고를 확인한 뒤 진행합니다.</li>
