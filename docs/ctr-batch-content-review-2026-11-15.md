@@ -26,6 +26,7 @@ No alternative is selected implicitly, repeated strings are not replaced globall
 - Eight pages remove existing valid internal tool links: the CSAT result guide removes three calculator links, and seven glamping guides remove a powerbank-calculator link. These registered changes are included for review, without a claim that the targets were broken or that removal improves revenue.
 - Exact-base site comparison finds zero new critical issues, **five new duplicate warnings** (four title groups and one description group, across eight unique pages), and 165 broken links both before and after. The warnings are retained explicitly; the audit is not a zero-warning certification. Existing issues are not relabelled as regressions or success.
 - `git diff --check` reports 16 trailing-whitespace lines supplied in the exact outputs. They are retained to preserve the registered output blobs, rather than silently reformatted.
+- The committed pinned Launch Guard returns **FAIL: `MONETIZATION_OR_ANALYTICS_CHANGED`**. Its path rule classifies `kor/report/coin/ads-guide.html` (an ADS coin guide) as an advertising path. This is the single reproduced trigger; that file's executable scripts and ad attributes are unchanged. No guard exception or pattern weakening is added in this content PR. The failed gate remains a merge blocker requiring separate review.
 
 ## Verification and limits
 

@@ -603,3 +603,4 @@
   - PR804 approval merged normally; 3,264 exact HTML outputs applied on the requested isolated branch. Related80 PASS; source/output hashes and reversal verified. docs/ctr-batch-content-review-2026-11-15.md.
 - [ ] Resolve CTR batch input conflicts and review findings before content merge
   - Hold54 active rows/49 paths; seven merged rows skipped. New critical0/warnings5; eight pages remove valid tool links. Fresh local geometry1,323 files, other1,941 supplied assertions only. Draft PR is separate from public deployment and measured effects.
+  - Committed pinned Guard FAIL/MONETIZATION_OR_ANALYTICS_CHANGED: the single trigger is the ADS coin guide filename matching the advertising-path rule. Scripts/ad attributes unchanged; preserve the gate and review separately.
