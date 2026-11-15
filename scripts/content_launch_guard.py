@@ -879,6 +879,46 @@ APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault("kor/report/camp/free-camping-t
     ("47c77761bdb7562d6c2c795f2d88bdd84a959533", "768eacd1f8f2fd6c17979f9af8e3a1036f54773b")
 )
 
+# Exact user-requested CTR proposals; no observation or other-version override.
+# docs/ctr-batch-exact-approval-2026-11-15.md
+APPROVED_CTR_BATCH_20261115_TRANSITIONS = {
+    "kor/report/window/windows11-folder-icon-customization.html": ("fd9b06f7864dc15c3314d71431741296caa79579", "b76b609b1f52246b435f430fb04c55d713774772"),
+    "kor/report/window/windows11-start-menu-windows10-style.html": ("fd300d7198ca5ce3059b8c1beba38c273c6fdc07", "86afd6fd25066280d05758619585a81dbba5f883"),
+    "kor/report/window/windows11-memory-usage-optimization.html": ("59709b6fa3bed959a6a82e287bd71dbfe36c9c7e", "45632c09ee5741525277a988af30eec79b91d023"),
+    "kor/report/window/windows-update-error-0x8024002C-fix.html": ("36912c75269432fee9d6403eadf801fbebb9dcb2", "54527ecb90b4cf7f4eff8685eb4cd7e0271b66f9"),
+    "kor/report/visa/trinidad-tobago.html": ("4555bb0b60cb486a1dd5358cf09c08c0ced7acb1", "782afba48152bc9b30d5d80e3b6845efad80dd35"),
+    "kor/report/visa/andorra.html": ("1545621fb2146b5136184594bd97a31215d6f940", "3fd0e44ff4fac0c4bf383bcae8d604e674942620"),
+    "kor/report/travel/france-calais.html": ("e276628619768ed602cbdf085337d3ca63e5d47b", "8968c095952c4aa47488caad9045a9f23e095201"),
+    "kor/report/travel/korea-busan.html": ("dc32a76d77fbbb9154b846f4580601ebfe1bd77c", "a664ed3fab446ea9ff542dc55f8552dc6b60b228"),
+    "kor/report/travel/japan-fujisawa.html": ("52080a6dd16f4e30c83a0ad712761918e4aaeda4", "1787a77cf5e47ef0ca83571459e62594e9776e97"),
+    "kor/report/travel/japan-nagano.html": ("a53a9dc9583f4f2db5e010c96db10bc4d3cee850", "9d3612e7c32d3621d6163b851ac9b94fb802c589"),
+    "kor/report/travel/spain-lacoruna.html": ("4123f26d813ca5a9d8076a03bafdc082846527b0", "1526935a44696f261896a300e88e10a6327c53e1"),
+    "kor/report/travel/korea-pohang.html": ("a0453d9670060c3019ede19d8d1d72cdba016aae", "810122824064302722b99f8a9fe5f620b3401174"),
+    "kor/report/travel/malaysia-georgetown.html": ("4e0fc6ce5c4551debf3e99ee6a239867f1fc0d8c", "71716fe7d66156c1e0e364018ae5a64754e71df4"),
+    "kor/report/travel/russia-vladimir.html": ("24dea38a6d0528d69d158a30a2e7bf189e6e8b94", "c3d9b33756c62886032b8deee778f3ca5a22fc0c"),
+    "kor/report/travel/egypt-karnak.html": ("89758f440df090b91dbde79450906bd83570dbb0", "4c85a26b8e03f26e837c86ee66cd220b54e4da6d"),
+    "kor/report/travel/egypt-portsaid.html": ("85f5748d3726f1a0749af3d3b784b8b408506b03", "cd0d5e040e6229f301d81736585659234d427d37"),
+    "kor/report/travel/korea-nonsan.html": ("333a88930103112d1c6f77b8cb2bd9afb000a842", "62bb1c9ff03478fecebf1a0029e99bdd86ee54cb"),
+    "kor/report/travel/cambodia-preah-dak.html": ("b069a60d27f606c9fb4008e92cff519f7d9575fa", "4bddfe367f70d167032ecfa3fbf64433c8072b31"),
+    "kor/report/travel/국내-여행.html": ("c7284281fff48d966a9f856172fd53b0a252916b", "8ad681f85157c85a0a8e6f31a61246862924f1e0"),
+    "kor/report/travel/belgium-liege.html": ("9b24997471620bfcbc3e49962747ca9949d1df8c", "549324b049f2294178b31356a52c5cf16729c26f"),
+    "kor/report/travel/greece-patras.html": ("10f9c2ed5dafd98d9b69a1a4ade0afd91b7a7e60", "745f6777f6f0705e0428f9d862ffc436f5639221"),
+    "kor/report/travel/srilanka-colombo.html": ("88dea5a7ae13736752b0b6df0d9190f5807eb43d", "86727ea9a2c9121c3ae43570a7fa1a5163ca1c27"),
+    "kor/report/travel/korea-sacheon.html": ("108cad5e88991dfb9ed4b5f49b33ff8ae62b8059", "afb987083a29d1ecbf51a264547b2b95b25762bc"),
+    "kor/report/travel/italy-prato.html": ("c45d0c7c172a4fed20952ad7e0337440af2b1aee", "573573e1e855cd1d39a46aab756e0661c2265a2e"),
+    "kor/report/travel/turkey-kocaeli.html": ("0558ff53e8ac6a44967e55b04cfa7ecda1c34b1e", "bc18f9c0c532899def45c31417ef81455b7233c0"),
+    "kor/report/travel/romania-targu-mures.html": ("dbb23f1338a638f8b483a60f9b16d5624fafa8e1", "c129fd54571929728905aa6d90f1a99c9bb6230d"),
+    "kor/report/travel/canada-markham.html": ("f398e27ba7f738d39e3541b5ba4072c8b5bfa634", "7f137f59b7013c39b6ab4ede1ecdc8775849b2e4"),
+    "kor/report/travel/india-lucknow.html": ("368f3fc4c4fbd210a64b23d989924b0ae929774e", "0dc366b808ca5f6a1d2bd7cf0bfa0833f0b50146"),
+    "kor/report/travel/switzerland-zurich.html": ("693d0bcb782320a8d28d0a2a7da7625da386301f", "fce6cda698ebb8bd96a987dcee55a3644e1413d8"),
+    "kor/report/travel/north-macedonia-struga.html": ("f9d31807dfcdd1c3c62f8ff440a93badcc3ac06e", "a9e8d1c1b7b6bae327a8434e026036d2a972134c"),
+    "kor/report/travel/zimbabwe-shamva.html": ("f0f55994c5ac77bbdee4d1e5f0297f513f718cdf", "59e4b535377fd9561ecec3b701d6e2d5657b4929"),
+    "kor/report/travel/hongkong-victoria-peak.html": ("cc3faaa6909af92d732ed23b52a48838881d22a6", "99800ac7889c63fcd61a04ec34a4c01e0b75592d"),
+}
+
+for _path, _blob_pair in APPROVED_CTR_BATCH_20261115_TRANSITIONS.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
+
 APPROVED_MONETIZATION_TRANSITIONS = {
     "scripts/collect_adsense_snapshot.py": {
         ("94f34228ed8b10213085b3de19bbab14e4fee0de", "83595861b3ea484b7fd9ad0c7fb11515f6516692"),
