@@ -873,6 +873,12 @@ APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault("kor/report/car/car-full-paint-
     ("c779b3601865d64c6a1e2588ea82eeab73176b09", "84675a26cf2feb7d29228e32e4e345af1a434a10")
 )
 
+# Native jumps to twenty existing camping candidate cards; no observation override.
+# docs/free-camping-place-navigation-2026-11-15.md
+APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault("kor/report/camp/free-camping-top20.html", set()).add(
+    ("47c77761bdb7562d6c2c795f2d88bdd84a959533", "768eacd1f8f2fd6c17979f9af8e3a1036f54773b")
+)
+
 APPROVED_MONETIZATION_TRANSITIONS = {
     "scripts/collect_adsense_snapshot.py": {
         ("94f34228ed8b10213085b3de19bbab14e4fee0de", "83595861b3ea484b7fd9ad0c7fb11515f6516692"),
