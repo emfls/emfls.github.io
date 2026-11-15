@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 엑셀 #VALUE! 오류 해결법: 숫자·문자 혼합, 숨은 공백, 날짜 계산·IFERROR 주의</title>
+<meta name="description" content="엑셀에서 금액을 더하거나 날짜 차이를 계산했는데 #VALUE!가 나타나면 수식을 다시 입력하기 전에 참조한 셀의 값이 숫자인지, 텍스트인지 확인해야 합니다. 겉으로는 300처럼 보이더라도 셀 안에 300원이나 보이지 않는 공백이 섞여 있으면 계산이 실패할 수 있습니다.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#0d1117">
+<link rel="canonical" href="https://emfls.github.io/kor/report/it/excel-value-error-fix-text-numbers-hidden-spaces-dates-iferror-2026.html">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2026 엑셀 #VALUE! 오류 해결법: 숫자·문자 혼합, 숨은 공백, 날짜 계산·IFERROR 주의">
+<meta property="og:description" content="엑셀에서 금액을 더하거나 날짜 차이를 계산했는데 #VALUE!가 나타나면 수식을 다시 입력하기 전에 참조한 셀의 값이 숫자인지, 텍스트인지 확인해야 합니다. 겉으로는 300처럼 보이더라도 셀 안에 300원이나 보이지 않는 공백이 섞여 있으면 계산이 실패할 수 있습니다.">
+<meta property="og:url" content="https://emfls.github.io/kor/report/it/excel-value-error-fix-text-numbers-hidden-spaces-dates-iferror-2026.html">
+<meta property="og:site_name" content="emfls">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2026 엑셀 #VALUE! 오류 해결법: 숫자·문자 혼합, 숨은 공백, 날짜 계산·IFERROR 주의">
+<meta name="twitter:description" content="엑셀에서 금액을 더하거나 날짜 차이를 계산했는데 #VALUE!가 나타나면 수식을 다시 입력하기 전에 참조한 셀의 값이 숫자인지, 텍스트인지 확인해야 합니다. 겉으로는 300처럼 보이더라도 셀 안에 300원이나 보이지 않는 공백이 섞여 있으면 계산이 실패할 수 있습니다.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"2026 엑셀 #VALUE! 오류 해결법: 숫자·문자 혼합, 숨은 공백, 날짜 계산·IFERROR 주의","description":"엑셀에서 금액을 더하거나 날짜 차이를 계산했는데 #VALUE!가 나타나면 수식을 다시 입력하기 전에 참조한 셀의 값이 숫자인지, 텍스트인지 확인해야 합니다. 겉으로는 300처럼 보이더라도 셀 안에 300원이나 보이지 않는 공백이 섞여 있으면 계산이 실패할 수 있습니다.","url":"https://emfls.github.io/kor/report/it/excel-value-error-fix-text-numbers-hidden-spaces-dates-iferror-2026.html","mainEntityOfPage":"https://emfls.github.io/kor/report/it/excel-value-error-fix-text-numbers-hidden-spaces-dates-iferror-2026.html","inLanguage":"ko","author":{"@type":"Organization","name":"emfls"},"publisher":{"@type":"Organization","name":"emfls","url":"https://emfls.github.io"},"datePublished":"2026-11-15","dateModified":"2026-11-15"}</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-QP5Q67GE5B');</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+<style>
+:root{color-scheme:dark;--bg:#0d1117;--surface:#161b22;--surface2:#1c2430;--border:#30363d;--text:#e6edf3;--muted:#abb6c3;--accent:#79c0ff;--soft:#c8b6ff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Apple SD Gothic Neo","Malgun Gothic",system-ui,-apple-system,sans-serif;line-height:1.8;word-break:keep-all}
+a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thickness:2px}
+.skip{position:absolute;left:-9999px;top:4px;z-index:1000;padding:8px 16px;background:white;color:black}.skip:focus{left:4px}
+.site-header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px max(18px,calc((100vw - 900px)/2));background:linear-gradient(90deg,#4e54c8,#8f94fb);border-bottom:1px solid #6867cc}
+.brand{color:white;text-decoration:none;font-size:1.14rem;font-weight:850;letter-spacing:.02em}
+.site-header nav{display:flex;gap:12px}.site-header nav a{color:#fff;text-decoration:none;font-size:.86rem;font-weight:600}
+.site-header nav a:hover{text-decoration:underline}
+.shell{max-width:900px;margin:auto;padding:20px 18px 70px}
+.breadcrumb{font-size:.81rem;color:var(--muted);margin:3px 0 18px}.breadcrumb a{color:#d4deff;text-decoration:none}
+.hero{position:relative;overflow:hidden;border:1px solid #47577b;border-radius:18px;padding:42px 32px;background:linear-gradient(135deg,#122140,#172c53 52%,#302754 100%);box-shadow:0 15px 40px #0003}
+.hero:after{content:"";position:absolute;right:-80px;top:-100px;width:310px;height:310px;border-radius:50%;background:radial-gradient(circle,#9b8bff27,transparent 70%);pointer-events:none}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid #8092e05c;background:#ffffff12;border-radius:99px;padding:4px 13px;color:#e3dcff;font-size:.79rem;font-weight:700;margin-bottom:18px}
+.hero h1{font-weight:850;line-height:1.42;letter-spacing:-.037em;font-size:clamp(1.55rem,4vw,2.25rem);margin:0 0 16px;position:relative;z-index:1;overflow-wrap:anywhere}
+.hero .deck{font-size:.99rem;color:#e2e7f5;max-width:680px;margin:0 0 15px}
+.hero-meta{font-size:.82rem;color:#c8d2e5;display:flex;flex-wrap:wrap;gap:6px 18px}
+.highlight-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:17px 0 20px}
+.highlight{padding:17px 16px;border:1px solid var(--border);background:var(--surface);border-radius:13px}
+.highlight .value{display:block;color:#d6caff;font-size:1.12rem;font-weight:800;line-height:1.45}
+.highlight .label{display:block;color:var(--muted);font-size:.76rem;margin-top:5px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
+.contents,.section,.intro,.info-bottom{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:24px 27px;box-shadow:0 3px 15px #0002}
+.contents h2,.info-bottom h2{font-size:1.02rem;color:#d4c5ff;margin:0 0 12px}
+.contents ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 25px;margin:0;padding-left:19px}
+.contents li{font-size:.86rem;line-height:1.6;padding:3px 0}
+.contents a{color:#d3ddec;text-decoration:none}.contents a:hover{text-decoration:underline}
+.intro{border-left:4px solid #7e96e4;background:linear-gradient(125deg,#1a2335,var(--surface));}
+.section h2{font-size:1.32rem;line-height:1.5;margin:0 0 17px;color:#d4c5ff;letter-spacing:-.022em;border-bottom:1px solid #354052;padding-bottom:12px;scroll-margin-top:20px}
+.section h3{font-size:1.045rem;margin:23px 0 8px;color:#c3dcff;scroll-margin-top:20px}
+.section p,.intro p{font-size:.955rem;margin:0 0 14px;color:#d9e0e8;line-height:1.85}
+.section p:last-child,.intro p:last-child{margin-bottom:0}
+.section strong,.intro strong{color:#fff;font-weight:750}
+.section li,.intro li{font-size:.94rem;line-height:1.8;margin:5px 0;color:#d8e0e8}
+.section ul,.section ol,.intro ul,.intro ol{padding-left:22px;margin:12px 0 20px}
+.section blockquote{margin:16px 0;padding:13px 17px;border-left:3px solid #a18cff;background:#252440;border-radius:0 8px 8px 0}
+.section a{overflow-wrap:anywhere}
+.section hr{border:0;border-top:1px solid var(--border);margin:24px 0}
+.section ul,.section ol{background:#1c2430;border-radius:9px;padding:12px 20px 12px 37px;border:1px solid #28384b}
+.notion-code{max-width:100%;overflow-x:auto;white-space:pre;tab-size:2;margin:14px 0 9px;padding:14px 16px;border:1px solid #34465f;border-radius:9px;background:#141d2c;color:#e7efff;font-size:.88rem;line-height:1.65}
+.notion-code code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.section .notion-code-caption,.intro .notion-code-caption{margin:0 0 17px;color:#aebdd5;font-size:.82rem}
+.details-table{overflow-x:auto}
+.section table{border-collapse:collapse;width:100%;min-width:500px;margin:14px 0}
+.section th,.section td{padding:12px;text-align:left;border-bottom:1px solid var(--border);font-size:.89rem}
+.section th{background:#202a3c;color:#d3caff}
+.cta{display:inline-flex;align-items:center;gap:8px;margin-top:8px;padding:11px 17px;border-radius:10px;background:#254975;color:white;text-decoration:none;font-size:.9rem;font-weight:700;border:1px solid #4e75a9}
+.cta:hover{background:#305989}
+.notice{border-left:4px solid #57b59b;padding:13px 16px;background:#122e2b;border-radius:4px 9px 9px 4px;color:#cfe6dd;font-size:.88rem;margin:16px 0}
+.info-bottom p{font-size:.87rem;color:var(--muted);margin:0 0 10px}
+.pills{display:flex;gap:9px;flex-wrap:wrap}.pills a{display:inline-block;border:1px solid #45516c;border-radius:99px;padding:6px 13px;text-decoration:none;color:#d5e3ff;font-size:.84rem}
+.site-footer{font-size:.8rem;color:#9ba9b8;text-align:center;margin-top:24px;padding-top:24px;border-top:1px solid var(--border)}
+.adsbygoogle,div[id^="aswift_"]{max-width:100%!important;overflow:hidden}
+@media(max-width:650px){.shell{padding:14px 12px 45px}.site-header{padding:14px}.hero{padding:29px 20px}.hero h1{font-size:1.58rem}.highlight-row{gap:7px}.highlight{padding:13px 9px}.highlight .value{font-size:.92rem}.highlight .label{font-size:.7rem}.contents,.section,.intro,.info-bottom{padding:19px 17px}.contents ol{grid-template-columns:1fr}.section h2{font-size:1.18rem}.site-header nav{gap:9px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-header"><a class="brand" href="/">emfls</a><nav aria-label="상단 메뉴"><a href="/kor/report/">생활정보</a><a href="/kor/report/it/">관련 주제</a><a href="/">홈</a></nav></header>
+<main class="shell" id="main">
+<div class="breadcrumb"><a href="/">홈</a> › <a href="/kor/report/">생활정보</a> › <a href="/kor/report/it/">IT · 기기</a></div>
+<article>
+<header class="hero">
+<span class="eyebrow">IT · 기기 · 최신 가이드</span>
+<h1>2026 엑셀 #VALUE! 오류 해결법: 숫자·문자 혼합, 숨은 공백, 날짜 계산·IFERROR 주의</h1>
+<p class="deck">엑셀에서 금액을 더하거나 날짜 차이를 계산했는데 #VALUE!가 나타나면 수식을 다시 입력하기 전에 참조한 셀의 값이 숫자인지, 텍스트인지 확인해야 합니다. 겉으로는 300처럼 보이더라도 셀 안에 300원이나 보이지 않는 공백이 섞여 있으면 계산이 실패할 수 있습니다.</p>
+<div class="hero-meta"><span>최초 발행 2026-11-15</span><span>내용 확인 2026-11-15</span><span>작성 emfls</span></div>
+</header>
+
+<nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">1. 먼저 구분: #VALUE!, #N/A, #SPILL!, #DIV/0!은 다릅니다</a></li><li><a href="#section-02">2. 3분 진단: 원본은 건드리지 않고 문제 셀 찾기</a></li><li><a href="#section-03">3. 가장 흔한 예: 숫자 1200과 &#x27;300원&#x27;을 더할 때</a></li><li><a href="#section-04">4. SUM으로 바꾸면 #VALUE!가 없어지는 이유와 함정</a></li><li><a href="#section-05">5. 눈에 안 보이는 공백 때문에 계산이 안 될 때</a></li><li><a href="#section-06">6. 날짜를 빼는데 #VALUE!가 나타날 때</a></li><li><a href="#section-07">7. IFERROR로 #VALUE!를 없애도 되나요?</a></li><li><a href="#section-08">8. 복잡한 수식은 &#x27;수식 계산&#x27;으로 원인 추적</a></li><li><a href="#section-09">9. 원본을 훼손하지 않고 문제 데이터 정리하는 방법</a></li><li><a href="#section-10">10. 그대로 따라 하는 실전 점검 예제</a></li><li><a href="#section-11">11. 자주 묻는 질문</a></li><li><a href="#section-12">12. 마무리: #VALUE! 오류는 &#x27;숨기기&#x27;보다 &#x27;원인 분리&#x27;가 먼저</a></li><li><a href="#section-13">공식 출처</a></li></ol></nav>
+<div class="layout">
+<div class="intro"><p>엑셀에서 금액을 더하거나 날짜 차이를 계산했는데 <strong>#VALUE!</strong>가 나타나면 수식을 다시 입력하기 전에 <strong>참조한 셀의 값이 숫자인지, 텍스트인지</strong> 확인해야 합니다. 겉으로는 300처럼 보이더라도 셀 안에 300원이나 보이지 않는 공백이 섞여 있으면 계산이 실패할 수 있습니다.</p>
+<p>Microsoft는 #VALUE!를 <strong>수식의 입력 방식 또는 참조한 셀에 문제가 있음을 나타내는 포괄적인 오류</strong>라고 설명합니다. 즉 모든 #VALUE!의 원인이 같지는 않습니다. 계산식을 일괄적으로 바꾸거나 IFERROR로 숨기기보다, 오류가 생긴 <strong>원본 값을 찾아 수정</strong>하는 것이 안전합니다.</p>
+<p>이 글은 <strong>숫자+문자 혼합, 복사한 데이터의 숨은 공백, 텍스트 숫자, 날짜 빼기, IFERROR로 오류 감추기, 수식 계산 단계 추적</strong>을 실제로 재현할 수 있는 예제 중심으로 설명합니다.</p>
+<p><strong>기준일: 2026년 11월 4일.</strong> Microsoft 365·Excel 2024·2021·2019·2016 및 웹용 Excel 등에서 확인할 수 있는 공통 원칙을 중심으로 작성했습니다. 메뉴 이름과 제공 기능은 버전별로 조금 다를 수 있습니다.</p></div>
+<section class="section" aria-labelledby="section-01"><h2 id="section-01">1. 먼저 구분: #VALUE!, #N/A, #SPILL!, #DIV/0!은 다릅니다</h2><div class="details-table"><table><thead><tr><th scope="col">오류</th><th scope="col">주로 의미하는 문제</th><th scope="col">먼저 확인할 것</th></tr></thead><tbody><tr><td><strong>#VALUE!</strong></td><td>수식과 셀 값의 <strong>형식·내용이 맞지 않을 수 있음</strong></td><td>숫자처럼 보이는 텍스트, 공백, 잘못된 인수</td></tr><tr><td><strong>#N/A</strong></td><td>조회 함수에서 원하는 값을 찾지 못함</td><td>조회 대상과 일치 조건</td></tr><tr><td><strong>#SPILL!</strong></td><td>동적 배열의 결과가 펼쳐질 공간이 없음</td><td>결과 범위에 값·병합 셀 등이 있는지</td></tr><tr><td><strong>#DIV/0!</strong></td><td>0 또는 빈 셀 등으로 나누려고 시도</td><td>분모가 실제로 0인지</td></tr><tr><td><strong>#REF!</strong></td><td>수식이 유효하지 않은 셀 참조를 포함</td><td>삭제·이동된 행, 열, 시트</td></tr><tr><td><strong>#####</strong></td><td>열 너비 부족 또는 일부 날짜·시간 표시 문제</td><td>열 너비, 음수 날짜·시간</td></tr></tbody></table></div>
+<p>기존 엑셀 수식 계산 문제를 다룬 글이 <strong>계산 옵션과 #SPILL!</strong>, VLOOKUP 글이 <strong>#N/A</strong>에 중점을 둔다면, 이 원고는 <strong>#VALUE! 자체의 데이터형 진단과 복구</strong>에 집중합니다.</p>
+<p>공식 근거: <a href="https://support.microsoft.com/ko-kr/excel/how-to-correct-a-value-error" rel="noopener noreferrer">Microsoft — #VALUE! 오류를 수정하는 방법</a>, <a href="https://support.microsoft.com/ko-kr/excel/detect-formula-errors-in-excel" rel="noopener noreferrer">Microsoft — Excel 수식 오류 감지</a>.</p></section>
+<section class="section" aria-labelledby="section-02"><h2 id="section-02">2. 3분 진단: 원본은 건드리지 않고 문제 셀 찾기</h2><p>실제 업무 파일에서 바로 대량 수정하지 마세요. 먼저 <strong>통합 문서 사본</strong>을 만들거나, 새 시트의 빈 셀에 진단용 수식을 넣어 원인을 찾습니다.</p>
+<ol>
+<li><strong>#VALUE!가 나온 셀을 선택</strong>합니다.</li>
+<li>상단의 <strong>수식 입력줄</strong>에서 참조하는 셀을 확인합니다.</li>
+<li>참조한 셀 하나를 클릭해 <strong>숫자·단위·공백·날짜 표시</strong>를 확인합니다.</li>
+<li>빈 셀에 =ISNUMBER(A2)를 입력해 숫자 여부를 검사합니다.</li>
+<li>다른 빈 셀에 =ISTEXT(A2)를 넣어 텍스트 여부를 확인합니다.</li>
+<li>텍스트가 포함됐다면 기존 값을 덮어쓰지 말고 <strong>새 열에서 변환을 시도</strong>합니다.</li>
+<li>변환 결과가 원본 데이터와 의미상 일치하는지 확인한 다음 계산식을 다시 실행합니다.</li>
+</ol>
+<div class="details-table"><table><thead><tr><th scope="col">검사 수식</th><th scope="col">TRUE가 뜻하는 것</th><th scope="col">중요한 해석</th></tr></thead><tbody><tr><td>=ISNUMBER(A2)</td><td>A2가 숫자형 값으로 저장됨</td><td><strong>날짜도 내부적으로 숫자</strong>이므로 날짜일 수 있음</td></tr><tr><td>=ISTEXT(A2)</td><td>A2가 텍스트형 값</td><td>숫자로 보이는 텍스트인지 추가 확인</td></tr><tr><td>=LEN(A2)</td><td>문자 수 반환</td><td>예상보다 길면 공백·기호 가능성 점검</td></tr><tr><td>=TRIM(A2)</td><td>일반 공백을 정리한 텍스트</td><td>모든 특수 공백을 처리하지는 못함</td></tr><tr><td>=CLEAN(A2)</td><td>일부 인쇄 불가 문자 제거</td><td>유니코드의 모든 제어 문자 제거를 보장하지 않음</td></tr></tbody></table></div>
+<p><strong>주의:</strong> 셀을 오른쪽에 정렬했다는 이유만으로 숫자형이라고 단정하지 마세요. 사용자가 정렬을 바꿀 수 있습니다. <strong>ISNUMBER·ISTEXT의 실제 결과</strong>를 함께 보세요.</p>
+<p>공식 근거: <a href="https://support.microsoft.com/ko-kr/excel/how-to-correct-a-value-error" rel="noopener noreferrer">Microsoft — #VALUE! 오류</a>.</p></section>
+<section class="section" aria-labelledby="section-03"><h2 id="section-03">3. 가장 흔한 예: 숫자 1200과 &#x27;300원&#x27;을 더할 때</h2><p>예제용 새 시트에 아래와 같이 입력해 보세요.</p>
+<div class="details-table"><table><thead><tr><th scope="col">셀</th><th scope="col">입력 값</th><th scope="col">의미</th></tr></thead><tbody><tr><td>A2</td><td>1200</td><td>실제 숫자</td></tr><tr><td>B2</td><td>300원</td><td>단위를 포함한 <strong>텍스트</strong></td></tr><tr><td>C2</td><td>=A2+B2</td><td>#VALUE!가 발생할 수 있는 계산</td></tr><tr><td>D2</td><td>=VALUE(SUBSTITUTE(B2,&quot;원&quot;,&quot;&quot;))</td><td>단위 제거 후 숫자로 변환</td></tr><tr><td>E2</td><td>=A2+D2</td><td>정상 데이터라면 <strong>1500</strong></td></tr></tbody></table></div>
+<h3>해결 순서</h3>
+<ol>
+<li>B2의 원본 값을 확인합니다.</li>
+<li>문자 <strong>원</strong>이 단위이고 숫자는 <strong>300</strong>이라는 사실을 확인합니다.</li>
+<li>별도 열 D2에 다음을 입력합니다.</li>
+</ol>
+<pre class="notion-code"><code>=VALUE(SUBSTITUTE(B2,&quot;원&quot;,&quot;&quot;))</code></pre>
+<ol>
+<li>D2에 숫자 <strong>300</strong>이 표시되는지 확인합니다.</li>
+<li>E2에서 =A2+D2를 실행해 <strong>1500</strong>이 나오는지 점검합니다.</li>
+</ol>
+<p><strong>단위를 무작정 지우지 마세요.</strong> 300원은 금액이지만 300m은 길이일 수 있고, 300A는 상품 코드일 수 있습니다. 데이터가 무엇을 뜻하는지 확인한 후 변환해야 합니다.</p>
+<h3>앞으로는 &#x27;300원&#x27;이라고 보이면서 숫자 계산도 되게 하려면?</h3>
+<p>원본은 <strong>300</strong>처럼 숫자로 저장한 뒤, 셀 표시 형식에서 **사용자 지정 → #,##0&quot;원&quot;**을 사용하면 됩니다. 화면에는 <strong>300원</strong>으로 보이면서 내부 값은 숫자로 유지할 수 있습니다.</p>
+<p>이 방법은 금액·수량 등의 <strong>실제 숫자 데이터</strong>에 적합합니다. 부품 번호나 우편번호 등 <strong>식별자</strong>에는 무조건 적용하지 마세요.</p>
+<p>공식 근거: <a href="https://support.microsoft.com/ko-kr/excel/functions/value-function" rel="noopener noreferrer">Microsoft — VALUE 함수</a>, <a href="https://support.microsoft.com/ko-kr/excel/format-numbers" rel="noopener noreferrer">Microsoft — 숫자 형식 지정</a>.</p></section>
+<section class="section" aria-labelledby="section-04"><h2 id="section-04">4. SUM으로 바꾸면 #VALUE!가 없어지는 이유와 함정</h2><p>다음 두 수식은 상황에 따라 결과가 다를 수 있습니다.</p>
+<pre class="notion-code"><code>=A2+B2+C2</code></pre>
+<pre class="notion-code"><code>=SUM(A2:C2)</code></pre>
+<p>Microsoft는 텍스트가 섞인 데이터에서 <strong>더하기 기호를 사용하는 방식과 SUM 함수의 동작이 다를 수 있다</strong>고 안내합니다. SUM은 <strong>범위에 있는 일반 텍스트를 계산에서 무시</strong>할 수 있기 때문입니다.</p>
+<p>예를 들어 A2가 <strong>100</strong>, B2가 <strong>&#x27;200원&#x27;</strong>, C2가 <strong>300</strong>이라면:</p>
+<ul>
+<li>=A2+B2+C2: B2가 숫자로 계산되지 않아 <strong>#VALUE!</strong>가 발생할 수 있습니다.</li>
+<li>=SUM(A2:C2): 텍스트형 B2를 무시해 <strong>400</strong>이 나올 수 있습니다.</li>
+<li>업무상 기대한 총액: <strong>600</strong>이라면 400은 <strong>겉으로 정상처럼 보이는 잘못된 합계</strong>입니다.</li>
+</ul>
+<p><strong>중요:</strong> 오류가 사라지는 것보다 <strong>계산에 들어가야 할 항목을 빠짐없이 포함했는지</strong> 확인하는 것이 더 중요합니다. 거래 금액을 집계할 때 SUM으로 수식을 무조건 바꾸는 해결법은 위험할 수 있습니다.</p>
+<p>공식 근거: <a href="https://support.microsoft.com/ko-kr/excel/how-to-correct-a-value-error" rel="noopener noreferrer">Microsoft — #VALUE! 오류의 공백·텍스트 해결</a>.</p></section>
+<section class="section" aria-labelledby="section-05"><h2 id="section-05">5. 눈에 안 보이는 공백 때문에 계산이 안 될 때</h2><p>웹사이트에서 매출 데이터를 복사하거나 CSV를 열면 <strong>숫자 앞뒤에 공백, 줄바꿈, 보이지 않는 문자</strong>가 끼어들 수 있습니다.</p>
+<p>Microsoft는 이런 문제를 찾기 위해 <strong>ISTEXT</strong>, 일부 공백 처리를 위한 <strong>TRIM</strong>, 일부 인쇄 불가 문자를 정리하는 <strong>CLEAN</strong> 함수를 안내합니다.</p>
+<h3>단계 1. 공백을 정리해 결과 비교하기</h3>
+<pre class="notion-code"><code>=TRIM(A2)</code></pre>
+<p>이 수식은 일반적인 앞뒤 공백과 불필요한 중간 공백을 정리합니다.</p>
+<h3>단계 2. 인쇄되지 않는 문자도 정리하기</h3>
+<pre class="notion-code"><code>=TRIM(CLEAN(A2))</code></pre>
+<p>다만 CLEAN은 주로 <strong>ASCII 0~31 범위의 제어 문자</strong>를 제거하도록 설계됐고, TRIM은 주로 <strong>일반 공백(코드 32)</strong>을 처리합니다.</p>
+<p>따라서 인터넷에서 복사한 데이터에 <strong>줄바꿈·탭·특수한 유니코드 공백</strong>이 있으면 이 조합만으로 모든 문제가 해결된다고 보장할 수 없습니다.</p>
+<h3>단계 3. 웹 문서에서 흔한 NBSP 공백까지 고려하기</h3>
+<p>A2가 숫자처럼 보이는 문자열이고, 일반 공백과 <strong>줄바꿈 없는 공백(CHAR(160))</strong>이 섞였다는 사실을 확인했다면 아래와 같이 새 열에서 시험할 수 있습니다.</p>
+<pre class="notion-code"><code>=VALUE(TRIM(CLEAN(SUBSTITUTE(A2,CHAR(160),&quot; &quot;))))</code></pre>
+<p>이는 <strong>숫자형으로 변환 가능한 데이터</strong>라는 전제가 있을 때만 사용하세요. <strong>&#x27;미정&#x27;, &#x27;품절&#x27;, &#x27;해당 없음&#x27;</strong> 같은 데이터는 숫자로 바꿀 수 없으므로 VALUE에서 다시 오류가 발생하는 것이 정상일 수 있습니다.</p>
+<p>또한 일부 텍스트의 공백·줄바꿈은 의도된 데이터입니다. 주소·상품명·메모 등에는 일괄 적용하지 마세요.</p>
+<p>공식 근거: <a href="https://support.microsoft.com/ko-kr/excel/functions/trim-function" rel="noopener noreferrer">Microsoft — TRIM</a>, <a href="https://support.microsoft.com/ko-kr/excel/functions/clean-function" rel="noopener noreferrer">Microsoft — CLEAN</a>, <a href="https://support.microsoft.com/ko-kr/excel/functions/value-function" rel="noopener noreferrer">Microsoft — VALUE</a>.</p></section>
+<section class="section" aria-labelledby="section-06"><h2 id="section-06">6. 날짜를 빼는데 #VALUE!가 나타날 때</h2><p>날짜를 빼서 <strong>경과 일수</strong>를 구하는 경우에도 #VALUE!가 나타날 수 있습니다.</p>
+<p>예를 들어:</p>
+<ul>
+<li>A2에 시작 날짜 <strong>2026-11-01</strong></li>
+<li>B2에 종료 날짜 <strong>2026-11-04</strong></li>
+<li>C2에 =B2-A2</li>
+</ul>
+<p>A2·B2가 모두 Excel에서 인식한 <strong>실제 날짜 값</strong>이라면 <strong>3</strong>일이라는 결과를 얻을 수 있습니다. 반면 한쪽이 <strong>텍스트로 저장된 날짜</strong>여서 Excel이 숫자 날짜로 해석하지 못하면 오류가 생길 수 있습니다.</p>
+<h3>먼저 확인할 세 가지</h3>
+<ol>
+<li>=ISNUMBER(A2), =ISNUMBER(B2)를 각각 입력합니다.</li>
+<li>두 값의 실제 데이터형이 일치하는지 살펴봅니다.</li>
+<li>텍스트 날짜라면 파일에 사용된 <strong>년/월/일, 월/일/년, 일/월/년</strong> 순서를 확인한 후 변환합니다.</li>
+</ol>
+<h3>날짜 형식을 제대로 지정하는 방법</h3>
+<p>정형화된 날짜 데이터를 변환하려면 <strong>데이터 → 텍스트 나누기 → 날짜 열 형식</strong>이나 별도 열의 DATE 함수를 검토할 수 있습니다. 변환하기 전에 <strong>원본 날짜의 년·월·일 순서</strong>를 알아야 합니다.</p>
+<p>날짜가 단순히 왼쪽 정렬돼 있다는 이유만으로 모든 경우에 텍스트라고 단정하지는 마세요. 수식이나 표시 설정의 영향도 있을 수 있으므로 <strong>ISNUMBER 검사</strong>가 더 명확합니다.</p>
+<p><strong>주의:</strong> 엑셀 날짜는 일련번호로 관리됩니다. 원래 상품 코드였던 1-2를 실수로 날짜로 변환한 사례와, 실제 날짜를 빼려는 사례는 <strong>서로 다른 문제</strong>입니다.</p>
+<p>공식 근거: <a href="https://support.microsoft.com/ko-kr/excel/how-to-correct-a-value-error" rel="noopener noreferrer">Microsoft — #VALUE! 오류: 날짜 빼기</a>, <a href="https://support.microsoft.com/ko-kr/excel/how-to-correct-a-value-error-in-the-days-function" rel="noopener noreferrer">Microsoft — DAYS 함수의 #VALUE! 오류</a>.</p></section>
+<section class="section" aria-labelledby="section-07"><h2 id="section-07">7. IFERROR로 #VALUE!를 없애도 되나요?</h2><p><strong>원인을 고치기 전에는 권장하지 않습니다.</strong> IFERROR는 오류를 해결하는 함수가 아니라, <strong>오류가 발생하면 지정한 다른 값으로 표시하도록 처리</strong>하는 함수입니다.</p>
+<pre class="notion-code"><code>=IFERROR(A2+B2,0)</code></pre>
+<p>위의 수식은 계산에 오류가 생기면 <strong>0을 보여 줍니다.</strong> 매출이 0원이라는 뜻과 <strong>계산을 하지 못했다는 뜻</strong>은 전혀 다릅니다.</p>
+<h3>업무 상황별 권장</h3>
+<div class="details-table"><table><thead><tr><th scope="col">상황</th><th scope="col">IFERROR 사용 판단</th></tr></thead><tbody><tr><td>매출·정산·회계 데이터</td><td><strong>원인 해결 우선</strong>. 오류를 0으로 숨기지 않기</td></tr><tr><td>안내용 대시보드에 일부 값이 아직 없음</td><td>원인이 명확하고 설계상 허용된다면 대체 표시 고려</td></tr><tr><td>본문에서 오류를 독자에게 알려야 함</td><td>오류 메시지나 진단 필요 상태 표시</td></tr><tr><td>숨은 텍스트·공백 때문에 계산 실패</td><td>데이터형을 바로잡은 뒤 원래 수식 사용</td></tr><tr><td>아직 완성되지 않은 임시 수식</td><td>최종 검수 전에 오류 원인을 재확인</td></tr></tbody></table></div>
+<p>예를 들어 &#x27;값 확인 필요&#x27;를 표시하도록 만들 수도 있습니다.</p>
+<pre class="notion-code"><code>=IFERROR(A2+B2,&quot;값 확인 필요&quot;)</code></pre>
+<p>다만 이 수식은 #VALUE!뿐만 아니라 여러 종류의 Excel 오류도 처리하므로 <strong>어떤 오류가 났는지 숨겨질 수 있습니다.</strong> 데이터 품질 확인과 수식 검증이 끝난 후에만 사용 여부를 결정하세요.</p>
+<p>공식 근거: <a href="https://support.microsoft.com/ko-kr/excel/functions/iferror-function" rel="noopener noreferrer">Microsoft — IFERROR 함수</a>, <a href="https://support.microsoft.com/ko-kr/excel/how-to-correct-a-value-error" rel="noopener noreferrer">Microsoft — #VALUE! 오류에서 IFERROR 주의</a>.</p></section>
+<section class="section" aria-labelledby="section-08"><h2 id="section-08">8. 복잡한 수식은 &#x27;수식 계산&#x27;으로 원인 추적</h2><p>IF, SUM, VALUE, DATE 등 여러 함수를 중첩하면 <strong>어느 단계에서 #VALUE!가 생기는지</strong> 파악하기 어렵습니다.</p>
+<p>Microsoft는 이러한 경우 수식의 일부를 단계별로 살펴보는 <strong>수식 계산(Evaluate Formula)</strong> 기능을 안내합니다.</p>
+<h3>단계별 진단</h3>
+<ol>
+<li>오류가 표시된 셀을 선택합니다.</li>
+<li>Excel의 <strong>수식</strong> 탭을 엽니다.</li>
+<li>사용 가능한 경우 <strong>수식 계산</strong>을 클릭합니다.</li>
+<li><strong>계산</strong>을 한 단계씩 눌러 중간 결과를 살펴봅니다.</li>
+<li>어느 참조·연산에서 오류가 시작되는지 확인합니다.</li>
+<li>문제가 되는 셀의 데이터형 또는 수식을 수정합니다.</li>
+<li>수정 후 전체 수식 결과가 기대한 값과 일치하는지 검사합니다.</li>
+</ol>
+<p>기능의 위치와 지원 여부는 제품·운영체제에 따라 달라질 수 있습니다. 특히 일부 웹 버전과 데스크톱 Excel의 기능은 같지 않을 수 있습니다.</p>
+<p><strong>예시:</strong> =IF(A2&gt;0,B2+C2,0)에서 조건 A2가 참인 경우, B2 또는 C2에 계산 불가능한 문자열이 있으면 덧셈 단계에서 #VALUE!가 나타날 수 있습니다.</p>
+<p>공식 근거: <a href="https://support.microsoft.com/ko-kr/excel/evaluate-a-nested-formula-one-step-at-a-time" rel="noopener noreferrer">Microsoft — 중첩 수식의 단계별 계산</a>.</p></section>
+<section class="section" aria-labelledby="section-09"><h2 id="section-09">9. 원본을 훼손하지 않고 문제 데이터 정리하는 방법</h2><p>업무용 Excel을 수정할 때 가장 위험한 행동은 <strong>원본 열 전체를 선택해 일괄 치환</strong>하는 것입니다. 숫자로 보이는 값 중에도 실제로는 <strong>주문번호, 우편번호, 상품코드, 계좌 식별문자</strong> 등이 있을 수 있습니다.</p>
+<h3>안전한 순서</h3>
+<ol>
+<li>원본 통합 문서를 <strong>복사</strong>해 작업 사본을 만듭니다.</li>
+<li>오류가 발생한 열 바로 옆에 <strong>진단용 새 열</strong>을 추가합니다.</li>
+<li><strong>ISNUMBER·ISTEXT</strong>로 실제 자료형을 검사합니다.</li>
+<li>단위·공백·날짜 형식 등 원인을 확인합니다.</li>
+<li>필요한 셀에만 <strong>VALUE·TRIM·CLEAN</strong> 같은 함수로 변환을 시험합니다.</li>
+<li>수식을 수정한 뒤 계산 결과를 <strong>예상 합계·원본 자료와 비교</strong>합니다.</li>
+<li>변환이 검증되면 필요에 따라 <strong>값만 붙여넣기</strong>를 고려합니다.</li>
+<li>결과를 검토하기 전까지 원본을 보존합니다.</li>
+</ol>
+<p><strong>확인 기준:</strong> #VALUE!가 없어졌다는 것만으로 성공이 아닙니다. 결과 숫자가 <strong>원래 계산 목적과 일치</strong>해야 합니다.</p></section>
+<section class="section" aria-labelledby="section-10"><h2 id="section-10">10. 그대로 따라 하는 실전 점검 예제</h2><p>새 통합 문서에 아래 데이터를 입력하세요.</p>
+<div class="details-table"><table><thead><tr><th scope="col">셀</th><th scope="col">입력값</th><th scope="col">역할</th></tr></thead><tbody><tr><td>A2</td><td>1000</td><td>정상 금액</td></tr><tr><td>B2</td><td>200원</td><td>문자 단위가 섞인 금액</td></tr><tr><td>C2</td><td>=A2+B2</td><td>오류 재현</td></tr><tr><td>D2</td><td>=ISTEXT(B2)</td><td>텍스트 진단</td></tr><tr><td>E2</td><td>=VALUE(SUBSTITUTE(B2,&quot;원&quot;,&quot;&quot;))</td><td>변환</td></tr><tr><td>F2</td><td>=A2+E2</td><td>결과 확인</td></tr></tbody></table></div>
+<h3>예상되는 결과</h3>
+<ul>
+<li>C2: <strong>#VALUE!</strong></li>
+<li>D2: <strong>TRUE</strong></li>
+<li>E2: <strong>200</strong></li>
+<li>F2: <strong>1200</strong></li>
+</ul>
+<p>이 예제를 통해 <strong>원인 확인 → 별도 열 변환 → 계산 검증</strong> 과정을 재현할 수 있습니다. 다른 업무 파일에서는 원이라는 단위가 실제로 존재하지 않을 수도 있으므로, 수식을 그대로 대량 적용하지 말고 필요한 부분만 조정하세요.</p>
+<h3>테스트가 정상인데 실제 파일은 계속 실패한다면?</h3>
+<ul>
+<li>업무 파일의 원본 데이터에 다른 공백·기호가 있을 수 있습니다.</li>
+<li>외부 데이터 연결이나 파일 권한 문제가 있을 수 있습니다.</li>
+<li>중첩된 수식의 다른 단계에서 #VALUE!가 발생할 수 있습니다.</li>
+<li>지역 설정에 따라 날짜·숫자 구분 방식이 다를 수 있습니다.</li>
+</ul>
+<p>이런 경우 해당 셀의 <strong>수식·참조 값·Excel 버전</strong>을 기록하면 문제를 더 빨리 좁힐 수 있습니다.</p></section>
+<section class="section" aria-labelledby="section-11"><h2 id="section-11">11. 자주 묻는 질문</h2><h3>Q1. 엑셀 #VALUE!는 무조건 텍스트 때문에 생기나요?</h3>
+<p>아닙니다. 잘못된 함수 인수, 인식되지 않은 날짜, 계산 연산이나 참조 문제 등 <strong>여러 원인</strong>이 있습니다. 텍스트 혼합과 숨은 공백은 흔한 원인일 뿐입니다.</p>
+<h3>Q2. #VALUE!를 0으로 바꾸면 계산은 정상인가요?</h3>
+<p>아닙니다. IFERROR(...,0)는 오류가 발생한 결과를 <strong>0으로 대신 표시</strong>하는 것이지 원인을 해결하지 않습니다. 합계가 잘못될 수 있습니다.</p>
+<h3>Q3. SUM(A2:C2)는 되는데 A2+B2+C2는 오류가 나요.</h3>
+<p>범위 안의 텍스트를 <strong>SUM이 무시</strong>하기 때문일 수 있습니다. 계산에서 제외된 값이 있는지 확인하세요.</p>
+<h3>Q4. 숫자 옆에 &#x27;원&#x27;만 붙였는데 왜 오류가 나나요?</h3>
+<p>실제 셀 값이 <strong>300원</strong><strong>이라는 텍스트</strong>라면 덧셈에 사용할 수 없습니다. 실제 값은 <strong>300</strong>으로 유지하고 <strong>사용자 지정 표시 형식</strong>으로 단위를 나타내는 방식이 적합할 수 있습니다.</p>
+<h3>Q5. 셀을 숫자 형식으로 바꾸면 해결되나요?</h3>
+<p>반드시 그렇지는 않습니다. <strong>서식 변경</strong>은 <strong>실제 텍스트 값을 숫자로 변환하는 작업</strong>과 다릅니다. ISNUMBER로 확인하세요.</p>
+<h3>Q6. 엑셀 날짜 차이가 #VALUE!로 나옵니다.</h3>
+<p>한쪽 날짜가 <strong>텍스트</strong>이거나 <strong>지역별 날짜 표기가 일치하지 않을 수</strong> 있습니다. 실제 날짜형인지 검사하고 원본 순서를 확인한 후 변환하세요.</p>
+<h3>Q7. CLEAN과 TRIM을 사용했는데도 오류가 납니다.</h3>
+<p>두 함수가 모든 유니코드 공백·제어 문자를 제거하는 것은 아닙니다. <strong>CHAR(160)</strong> 등 특정 문자가 들어 있는지 확인할 수 있지만, 원래 의미가 있는 문자열까지 무조건 제거하지 마세요.</p></section>
+<section class="section" aria-labelledby="section-12"><h2 id="section-12">12. 마무리: #VALUE! 오류는 &#x27;숨기기&#x27;보다 &#x27;원인 분리&#x27;가 먼저</h2><p>엑셀의 <strong>#VALUE!는 수식과 셀 데이터가 기대한 방식으로 계산되지 않는다는 신호</strong>입니다. 특히 <strong>숫자에 문자 단위가 섞였거나, 복사한 데이터에 보이지 않는 공백이 있거나, 날짜가 텍스트로 저장된 경우</strong>를 먼저 확인하세요.</p>
+<p><strong>추천 순서:</strong> ISNUMBER/ISTEXT로 자료형 검사 → 실제 셀 내용 확인 → 별도 열에서 필요한 변환 → 결과 숫자 검증 → 원래 수식 재계산.</p>
+<p>IFERROR나 SUM으로 화면에서 오류를 없애는 데만 집중하지 않으면, <strong>겉보기에 정상인 잘못된 합계</strong>를 만드는 위험도 줄일 수 있습니다.</p></section>
+<section class="section" aria-labelledby="section-13"><h2 id="section-13">공식 출처</h2><ul>
+<li><a href="https://support.microsoft.com/ko-kr/excel/how-to-correct-a-value-error" rel="noopener noreferrer">Microsoft — #VALUE! 오류를 수정하는 방법</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/detect-formula-errors-in-excel" rel="noopener noreferrer">Microsoft — Excel에서 수식 오류 감지</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/functions/value-function" rel="noopener noreferrer">Microsoft — VALUE 함수</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/functions/trim-function" rel="noopener noreferrer">Microsoft — TRIM 함수</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/functions/clean-function" rel="noopener noreferrer">Microsoft — CLEAN 함수</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/functions/iferror-function" rel="noopener noreferrer">Microsoft — IFERROR 함수</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/evaluate-a-nested-formula-one-step-at-a-time" rel="noopener noreferrer">Microsoft — 중첩 수식의 단계별 계산</a></li>
+</ul>
+<p><strong>작성 및 공식 자료 검토: 2026년 11월 4일.</strong></p></section>
+
+<!-- notion-discovery:start -->
+<section class="section" aria-label="관련 글"><h2>함께 읽으면 좋은 같은 분야의 글</h2><ul><li><a href="/kor/report/it/excel-formulas-not-calculating-manual-auto-text-show-formulas-spill-2026.html">2026 엑셀 수식 계산 안됨 해결법: 자동 계산·수식 그대로 표시·텍스트 서식·#SPILL 오류</a></li>
+<li><a href="/kor/report/it/excel-copy-paste-not-working-september-2026-fix-merged-cells-paste-special-web.html">2026 엑셀 복사 붙여넣기 안됨 해결법: 9월 오류 수정·병합 셀·선택하여 붙여넣기·웹 엑셀</a></li>
+<li><a href="/kor/report/it/iphone-korean-keyboard-language-switch-fix-2026.html">2026 아이폰 한글 키보드 안됨 해결법: 한영 전환 버튼 없음·한국어 추가·두벌식 10키·자동 수정 오류</a></li>
+<li><a href="/kor/report/it/excel-stop-numbers-changing-to-dates-1-2-12-2-text-format-csv-2026.html">2026 엑셀 숫자가 날짜로 바뀔 때 해결법: 1-2·12/2 자동 변환 방지, 텍스트 서식·CSV</a></li></ul></section>
+<!-- notion-discovery:end -->
+<section class="info-bottom">
+<h2>정보 출처와 확인 안내</h2>
+<p>작성·갱신일과 적용 범위는 본문에서 확인하세요. 정책·행사 일정·혜택·제품 정보는 변경될 수 있으므로 중요한 판단 전 공식 기관 및 판매처의 최신 안내를 확인하시기 바랍니다.</p>
+<div class="pills"><a href="/kor/report/it/">같은 분야의 글</a><a href="/kor/report/">생활정보 전체</a><a href="/">emfls 홈</a></div>
+</section>
+</div>
+</article>
+<footer class="site-footer">© 2026 emfls · 공식 기관 안내를 우선 확인하세요</footer>
+</main>
+</body>
+</html>
