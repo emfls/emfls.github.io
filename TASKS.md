@@ -1,3 +1,7 @@
+- [x] 2026-11-16 Wave 2B+2C multilingual utility and game optimization
+  - Updated 300 utility + 255 game HTML pages across ten locales, synchronized ten locale sitemaps (`update_sitemap_lastmod.py`), and preserved all scripts, canonicals, structured-data dates, and game/utility mechanics.
+  - Verified committed `content_launch_guard.py` against current `origin/main`, `seo_qa.py` (`0` new critical/warnings), `sitemap_audit.py` (`0` missing lastmod/invalid XML/duplicates), and mobile `320px`/`390px` horizontal-overflow fit.
+
 - [x] 2026-11-16 Wave 2A English finance metadata and Korean calculator links
   - Updated 123 English finance pages and added one calculator card to each of 83 Korean pages; preserved Korean search metadata and factual paragraphs.
   - Deterministic rerun, independent source comparison and requested mobile samples pass. Local preparation only.
