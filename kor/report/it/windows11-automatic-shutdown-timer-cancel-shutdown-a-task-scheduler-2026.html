@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 윈도우11 자동 종료 예약·취소 방법: shutdown 1시간·2시간·작업 스케줄러·저장 안 된 파일 주의</title>
+<meta name="description" content="윈도우11에서 영상을 인코딩하거나 대용량 파일을 내려받은 후 1시간 뒤 PC를 끄고 싶거나, 매일 특정 시각에 컴퓨터를 종료하고 싶을 때는 별도 유료 프로그램 없이도 기본 명령어와 작업 스케줄러를 이용할 수 있습니다.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#0d1117">
+<link rel="canonical" href="https://emfls.github.io/kor/report/it/windows11-automatic-shutdown-timer-cancel-shutdown-a-task-scheduler-2026.html">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2026 윈도우11 자동 종료 예약·취소 방법: shutdown 1시간·2시간·작업 스케줄러·저장 안 된 파일 주의">
+<meta property="og:description" content="윈도우11에서 영상을 인코딩하거나 대용량 파일을 내려받은 후 1시간 뒤 PC를 끄고 싶거나, 매일 특정 시각에 컴퓨터를 종료하고 싶을 때는 별도 유료 프로그램 없이도 기본 명령어와 작업 스케줄러를 이용할 수 있습니다.">
+<meta property="og:url" content="https://emfls.github.io/kor/report/it/windows11-automatic-shutdown-timer-cancel-shutdown-a-task-scheduler-2026.html">
+<meta property="og:site_name" content="emfls">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2026 윈도우11 자동 종료 예약·취소 방법: shutdown 1시간·2시간·작업 스케줄러·저장 안 된 파일 주의">
+<meta name="twitter:description" content="윈도우11에서 영상을 인코딩하거나 대용량 파일을 내려받은 후 1시간 뒤 PC를 끄고 싶거나, 매일 특정 시각에 컴퓨터를 종료하고 싶을 때는 별도 유료 프로그램 없이도 기본 명령어와 작업 스케줄러를 이용할 수 있습니다.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"2026 윈도우11 자동 종료 예약·취소 방법: shutdown 1시간·2시간·작업 스케줄러·저장 안 된 파일 주의","description":"윈도우11에서 영상을 인코딩하거나 대용량 파일을 내려받은 후 1시간 뒤 PC를 끄고 싶거나, 매일 특정 시각에 컴퓨터를 종료하고 싶을 때는 별도 유료 프로그램 없이도 기본 명령어와 작업 스케줄러를 이용할 수 있습니다.","url":"https://emfls.github.io/kor/report/it/windows11-automatic-shutdown-timer-cancel-shutdown-a-task-scheduler-2026.html","mainEntityOfPage":"https://emfls.github.io/kor/report/it/windows11-automatic-shutdown-timer-cancel-shutdown-a-task-scheduler-2026.html","inLanguage":"ko","author":{"@type":"Organization","name":"emfls"},"publisher":{"@type":"Organization","name":"emfls","url":"https://emfls.github.io"},"datePublished":"2026-11-16","dateModified":"2026-11-16"}</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-QP5Q67GE5B');</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+<style>
+:root{color-scheme:dark;--bg:#0d1117;--surface:#161b22;--surface2:#1c2430;--border:#30363d;--text:#e6edf3;--muted:#abb6c3;--accent:#79c0ff;--soft:#c8b6ff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Apple SD Gothic Neo","Malgun Gothic",system-ui,-apple-system,sans-serif;line-height:1.8;word-break:keep-all}
+a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thickness:2px}
+.skip{position:absolute;left:-9999px;top:4px;z-index:1000;padding:8px 16px;background:white;color:black}.skip:focus{left:4px}
+.site-header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px max(18px,calc((100vw - 900px)/2));background:linear-gradient(90deg,#4e54c8,#8f94fb);border-bottom:1px solid #6867cc}
+.brand{color:white;text-decoration:none;font-size:1.14rem;font-weight:850;letter-spacing:.02em}
+.site-header nav{display:flex;gap:12px}.site-header nav a{color:#fff;text-decoration:none;font-size:.86rem;font-weight:600}
+.site-header nav a:hover{text-decoration:underline}
+.shell{max-width:900px;margin:auto;padding:20px 18px 70px}
+.breadcrumb{font-size:.81rem;color:var(--muted);margin:3px 0 18px}.breadcrumb a{color:#d4deff;text-decoration:none}
+.hero{position:relative;overflow:hidden;border:1px solid #47577b;border-radius:18px;padding:42px 32px;background:linear-gradient(135deg,#122140,#172c53 52%,#302754 100%);box-shadow:0 15px 40px #0003}
+.hero:after{content:"";position:absolute;right:-80px;top:-100px;width:310px;height:310px;border-radius:50%;background:radial-gradient(circle,#9b8bff27,transparent 70%);pointer-events:none}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid #8092e05c;background:#ffffff12;border-radius:99px;padding:4px 13px;color:#e3dcff;font-size:.79rem;font-weight:700;margin-bottom:18px}
+.hero h1{font-weight:850;line-height:1.42;letter-spacing:-.037em;font-size:clamp(1.55rem,4vw,2.25rem);margin:0 0 16px;position:relative;z-index:1;overflow-wrap:anywhere}
+.hero .deck{font-size:.99rem;color:#e2e7f5;max-width:680px;margin:0 0 15px}
+.hero-meta{font-size:.82rem;color:#c8d2e5;display:flex;flex-wrap:wrap;gap:6px 18px}
+.highlight-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:17px 0 20px}
+.highlight{padding:17px 16px;border:1px solid var(--border);background:var(--surface);border-radius:13px}
+.highlight .value{display:block;color:#d6caff;font-size:1.12rem;font-weight:800;line-height:1.45}
+.highlight .label{display:block;color:var(--muted);font-size:.76rem;margin-top:5px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
+.contents,.section,.intro,.info-bottom{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:24px 27px;box-shadow:0 3px 15px #0002}
+.contents h2,.info-bottom h2{font-size:1.02rem;color:#d4c5ff;margin:0 0 12px}
+.contents ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 25px;margin:0;padding-left:19px}
+.contents li{font-size:.86rem;line-height:1.6;padding:3px 0}
+.contents a{color:#d3ddec;text-decoration:none}.contents a:hover{text-decoration:underline}
+.intro{border-left:4px solid #7e96e4;background:linear-gradient(125deg,#1a2335,var(--surface));}
+.section h2{font-size:1.32rem;line-height:1.5;margin:0 0 17px;color:#d4c5ff;letter-spacing:-.022em;border-bottom:1px solid #354052;padding-bottom:12px;scroll-margin-top:20px}
+.section h3{font-size:1.045rem;margin:23px 0 8px;color:#c3dcff;scroll-margin-top:20px}
+.section p,.intro p{font-size:.955rem;margin:0 0 14px;color:#d9e0e8;line-height:1.85}
+.section p:last-child,.intro p:last-child{margin-bottom:0}
+.section strong,.intro strong{color:#fff;font-weight:750}
+.section li,.intro li{font-size:.94rem;line-height:1.8;margin:5px 0;color:#d8e0e8}
+.section ul,.section ol,.intro ul,.intro ol{padding-left:22px;margin:12px 0 20px}
+.section blockquote{margin:16px 0;padding:13px 17px;border-left:3px solid #a18cff;background:#252440;border-radius:0 8px 8px 0}
+.section a{overflow-wrap:anywhere}
+.section hr{border:0;border-top:1px solid var(--border);margin:24px 0}
+.section ul,.section ol{background:#1c2430;border-radius:9px;padding:12px 20px 12px 37px;border:1px solid #28384b}
+.notion-code{max-width:100%;overflow-x:auto;white-space:pre;tab-size:2;margin:14px 0 9px;padding:14px 16px;border:1px solid #34465f;border-radius:9px;background:#141d2c;color:#e7efff;font-size:.88rem;line-height:1.65}
+.notion-code code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.section .notion-code-caption,.intro .notion-code-caption{margin:0 0 17px;color:#aebdd5;font-size:.82rem}
+.details-table{overflow-x:auto}
+.section table{border-collapse:collapse;width:100%;min-width:500px;margin:14px 0}
+.section th,.section td{padding:12px;text-align:left;border-bottom:1px solid var(--border);font-size:.89rem}
+.section th{background:#202a3c;color:#d3caff}
+.cta{display:inline-flex;align-items:center;gap:8px;margin-top:8px;padding:11px 17px;border-radius:10px;background:#254975;color:white;text-decoration:none;font-size:.9rem;font-weight:700;border:1px solid #4e75a9}
+.cta:hover{background:#305989}
+.notice{border-left:4px solid #57b59b;padding:13px 16px;background:#122e2b;border-radius:4px 9px 9px 4px;color:#cfe6dd;font-size:.88rem;margin:16px 0}
+.info-bottom p{font-size:.87rem;color:var(--muted);margin:0 0 10px}
+.pills{display:flex;gap:9px;flex-wrap:wrap}.pills a{display:inline-block;border:1px solid #45516c;border-radius:99px;padding:6px 13px;text-decoration:none;color:#d5e3ff;font-size:.84rem}
+.site-footer{font-size:.8rem;color:#9ba9b8;text-align:center;margin-top:24px;padding-top:24px;border-top:1px solid var(--border)}
+.adsbygoogle,div[id^="aswift_"]{max-width:100%!important;overflow:hidden}
+@media(max-width:650px){.shell{padding:14px 12px 45px}.site-header{padding:14px}.hero{padding:29px 20px}.hero h1{font-size:1.58rem}.highlight-row{gap:7px}.highlight{padding:13px 9px}.highlight .value{font-size:.92rem}.highlight .label{font-size:.7rem}.contents,.section,.intro,.info-bottom{padding:19px 17px}.contents ol{grid-template-columns:1fr}.section h2{font-size:1.18rem}.site-header nav{gap:9px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-header"><a class="brand" href="/">emfls</a><nav aria-label="상단 메뉴"><a href="/kor/report/">생활정보</a><a href="/kor/report/it/">관련 주제</a><a href="/">홈</a></nav></header>
+<main class="shell" id="main">
+<div class="breadcrumb"><a href="/">홈</a> › <a href="/kor/report/">생활정보</a> › <a href="/kor/report/it/">IT · 기기</a></div>
+<article>
+<header class="hero">
+<span class="eyebrow">IT · 기기 · 최신 가이드</span>
+<h1>2026 윈도우11 자동 종료 예약·취소 방법: shutdown 1시간·2시간·작업 스케줄러·저장 안 된 파일 주의</h1>
+<p class="deck">윈도우11에서 영상을 인코딩하거나 대용량 파일을 내려받은 후 1시간 뒤 PC를 끄고 싶거나, 매일 특정 시각에 컴퓨터를 종료하고 싶을 때는 별도 유료 프로그램 없이도 기본 명령어와 작업 스케줄러를 이용할 수 있습니다.</p>
+<div class="hero-meta"><span>최초 발행 2026-11-16</span><span>내용 확인 2026-11-16</span><span>작성 emfls</span></div>
+</header>
+
+<nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">1. 바로 찾는 명령어: 1시간·2시간·3시간 후 종료</a></li><li><a href="#section-02">2. 윈도우11에서 자동 종료 예약하는 가장 쉬운 방법</a></li><li><a href="#section-03">3. 자동 종료 예약 취소: shutdown /a</a></li><li><a href="#section-04">4. 명령어의 의미: /s, /t, /r, /a, /f</a></li><li><a href="#section-05">5. 매일 밤 11시에 종료하려면? 작업 스케줄러 사용</a></li><li><a href="#section-06">6. 명령어로 반복 작업을 관리하는 방법</a></li><li><a href="#section-07">7. 실제 종료 시간이 맞지 않거나 실행되지 않는 이유</a></li><li><a href="#section-08">8. 절전·최대 절전·종료는 무엇이 다른가요?</a></li><li><a href="#section-09">9. 데이터 손실을 막는 5가지 체크리스트</a></li><li><a href="#section-10">10. 자주 묻는 질문</a></li><li><a href="#section-11">11. 마무리: 목적에 따라 명령을 선택하세요</a></li></ol></nav>
+<div class="layout">
+<div class="intro"><p>윈도우11에서 영상을 인코딩하거나 대용량 파일을 내려받은 후 <strong>1시간 뒤 PC를 끄고 싶거나</strong>, 매일 특정 시각에 컴퓨터를 종료하고 싶을 때는 별도 유료 프로그램 없이도 기본 명령어와 작업 스케줄러를 이용할 수 있습니다.</p>
+<p>다만 <strong>자동 종료 예약과 절전 모드는 다르며</strong>, 종료가 실행되면 <strong>저장하지 않은 문서·프로그램 작업이 손실될 수 있습니다.</strong> 특히 Microsoft 공식 문서에는 shutdown /t에 <strong>0보다 큰 대기 시간을 지정하면 </strong><strong>/f</strong><strong>가 암묵적으로 적용</strong>된다고 명시되어 있습니다. 따라서 시간만 넉넉하게 주면 데이터가 반드시 보호된다는 생각은 위험합니다.</p>
+<p>이 글에서는 <strong>1시간·2시간·3시간 뒤 자동 종료, 예약 취소, 매일 같은 시간 종료, 종료가 안 되는 이유, 절전·화면 끄기와의 차이</strong>를 Microsoft 공식 명령어를 기준으로 정리합니다.</p>
+<p><strong>확인 기준: 2026년 11월 4일.</strong> Windows 11의 기본 기능을 중심으로 설명하며, 회사·학교 관리 PC와 보안 정책이 적용된 기기는 일부 기능이 제한될 수 있습니다.</p></div>
+<section class="section" aria-labelledby="section-01"><h2 id="section-01">1. 바로 찾는 명령어: 1시간·2시간·3시간 후 종료</h2><p>시간 계산의 기준은 <strong>명령을 입력한 시점부터 지난 초</strong>입니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">종료 예약</th><th scope="col">입력할 명령어</th><th scope="col">실제 대기 시간</th></tr></thead><tbody><tr><td>10분 뒤 종료</td><td>shutdown /s /t 600</td><td>600초</td></tr><tr><td>30분 뒤 종료</td><td>shutdown /s /t 1800</td><td>1,800초</td></tr><tr><td><strong>1시간 뒤 종료</strong></td><td>shutdown /s /t 3600</td><td>3,600초</td></tr><tr><td><strong>2시간 뒤 종료</strong></td><td>shutdown /s /t 7200</td><td>7,200초</td></tr><tr><td><strong>3시간 뒤 종료</strong></td><td>shutdown /s /t 10800</td><td>10,800초</td></tr><tr><td>예약 취소</td><td>shutdown /a</td><td>실행 전 대기 중인 종료 중단</td></tr></tbody></table></div>
+<p><strong>가장 중요한 주의사항:</strong> 위와 같이 <strong>/t</strong><strong>를 0보다 크게 지정하면 실행 중인 프로그램을 강제로 닫는 </strong><strong>/f</strong><strong> 동작이 암묵적으로 포함</strong>됩니다. 작업이 저장되지 않았다면 <strong>데이터를 잃을 수 있으므로</strong>, 문서를 모두 저장하고 필요한 백그라운드 작업이 끝날 것으로 확신할 때만 사용하세요.</p>
+<p>공식 근거: <a href="https://learn.microsoft.com/ko-kr/windows-server/administration/windows-commands/shutdown" rel="noopener noreferrer">Microsoft Learn — shutdown 명령어의 /s·/t·/a·/f 정의</a>.</p></section>
+<section class="section" aria-labelledby="section-02"><h2 id="section-02">2. 윈도우11에서 자동 종료 예약하는 가장 쉬운 방법</h2><h3>방법 1. Windows + R 실행창 사용</h3>
+<ol>
+<li>먼저 Word·Excel·편집 프로그램 등에서 <strong>문서를 저장</strong>합니다.</li>
+<li>키보드에서 <strong>Windows 키 + R</strong>을 누릅니다.</li>
+<li>실행창에 아래 명령을 입력합니다.</li>
+</ol>
+<pre class="notion-code"><code>shutdown /s /t 3600</code></pre>
+<ol>
+<li><strong>확인</strong> 또는 Enter를 누릅니다.</li>
+<li>Windows에 예약된 종료 관련 안내가 표시될 수 있습니다.</li>
+<li>종료 예정 시각과 진행 중인 작업이 충돌하지 않는지 점검합니다.</li>
+</ol>
+<p>위 명령은 <strong>입력한 순간부터 1시간 뒤</strong> PC 종료를 시도합니다. 예를 들어 오후 9시에 입력하면 오후 10시가 목표 시각입니다. 매일 오후 10시에 반복 실행한다는 의미는 아닙니다.</p>
+<h3>방법 2. 명령 프롬프트·터미널 사용</h3>
+<ol>
+<li>작업 표시줄에서 <strong>터미널</strong> 또는 <strong>명령 프롬프트</strong>를 검색해 실행합니다.</li>
+<li>다음 명령을 입력합니다.</li>
+</ol>
+<pre class="notion-code"><code>shutdown /s /t 7200</code></pre>
+<ol>
+<li>Enter를 누르면 <strong>2시간 뒤 종료</strong>가 예약됩니다.</li>
+<li>종료 전까지 예약을 변경해야 한다면 먼저 <strong>취소</strong>하고 새로운 명령을 입력하는 편이 안전합니다.</li>
+</ol>
+<p><strong>관리자 권한으로 실행하는 것이 항상 필요한 것은 아닙니다.</strong> 일반 PC에서는 현재 계정으로 실행할 수 있지만 조직 정책이 제한하면 권한 오류가 발생할 수 있습니다.</p></section>
+<section class="section" aria-labelledby="section-03"><h2 id="section-03">3. 자동 종료 예약 취소: shutdown /a</h2><p>종료까지 남은 시간이 아직 끝나지 않았다면 대기 중인 종료를 취소할 수 있습니다.</p>
+<ol>
+<li><strong>Windows + R</strong>을 누릅니다.</li>
+<li>아래 명령어를 입력합니다.</li>
+</ol>
+<pre class="notion-code"><code>shutdown /a</code></pre>
+<ol>
+<li>Enter를 누릅니다.</li>
+<li>취소됐다는 안내가 표시되는지 확인합니다.</li>
+<li>원하는 시간으로 다시 예약할 때는 기존 예약이 취소됐는지 확인한 다음 새 명령을 입력합니다.</li>
+</ol>
+<p>Microsoft에 따르면 <strong>/a</strong><strong>는 종료가 대기 중인 시간 제한 기간에 실행해야</strong> 합니다. 즉 이미 전원이 꺼진 뒤에 이 명령을 입력해 종료를 되돌리는 것은 불가능합니다.</p>
+<h3>예약 취소가 안 되는 대표적인 상황</h3>
+<ul>
+<li>이미 종료 실행이 진행된 상태</li>
+<li>현재 Windows에 취소할 <strong>대기 중 종료 예약이 없는</strong> 상태</li>
+<li>작업 스케줄러 등에서 별도로 생성한 <strong>미래의 예약 작업</strong>을 삭제·비활성화해야 하는 상태</li>
+<li>조직 관리 정책이나 업데이트 등 <strong>다른 주체가 종료를 실행</strong>하는 상태</li>
+</ul>
+<p><strong>중요한 구별:</strong> shutdown /a는 <strong>현재 대기 중인 종료 요청</strong>을 취소하는 명령입니다. <strong>작업 스케줄러에 저장된 매일 밤 종료 예약 자체를 지우는 명령은 아닙니다.</strong></p>
+<p>공식 근거: <a href="https://learn.microsoft.com/ko-kr/windows-server/administration/windows-commands/shutdown" rel="noopener noreferrer">Microsoft Learn — shutdown /a</a>.</p></section>
+<section class="section" aria-labelledby="section-04"><h2 id="section-04">4. 명령어의 의미: /s, /t, /r, /a, /f</h2><div class="details-table"><table><thead><tr><th scope="col">옵션</th><th scope="col">의미</th><th scope="col">알아둘 점</th></tr></thead><tbody><tr><td>/s</td><td>컴퓨터 종료</td><td>지정 시 종료 대상으로 동작</td></tr><tr><td>/t 3600</td><td>3,600초 기다림</td><td><strong>0보다 크면 /f가 암묵 적용</strong></td></tr><tr><td>/a</td><td>대기 중 종료 중단</td><td>대기 시간 중 별도 명령으로 실행</td></tr><tr><td>/r</td><td>종료 후 다시 시작</td><td>자동 종료가 아니라 <strong>재부팅</strong></td></tr><tr><td>/f</td><td>실행 앱 강제 종료</td><td>저장하지 않은 데이터 손실 가능</td></tr><tr><td>/h</td><td>최대 절전 모드</td><td>종료와 다르며 지원·설정 여부 확인 필요</td></tr></tbody></table></div>
+<h3>shutdown /s /t 0은 어떤 명령인가요?</h3>
+<pre class="notion-code"><code>shutdown /s /t 0</code></pre>
+<p>이 명령은 <strong>대기 시간 없이 바로 종료를 시도</strong>하므로, 예약 취소를 연습하려는 경우에는 사용하지 마세요. 위의 <strong>양수 /t 값</strong>과 달리 대기 시간을 주지 않는 명령입니다.</p>
+<h3>shutdown /r /t 3600은요?</h3>
+<pre class="notion-code"><code>shutdown /r /t 3600</code></pre>
+<p>이 명령은 <strong>1시간 뒤 재시작</strong>하는 것으로, PC 전원을 끄고 계속 꺼진 상태로 두려는 목적과 다릅니다. 다운로드가 끝난 뒤 PC를 완전히 꺼 두려는 상황이라면 <strong>/s</strong><strong>와 </strong><strong>/r</strong><strong>를 혼동하지 마세요.</strong></p>
+<p>공식 근거: <a href="https://learn.microsoft.com/ko-kr/windows-server/administration/windows-commands/shutdown" rel="noopener noreferrer">Microsoft Learn — shutdown 전체 매개변수</a>.</p></section>
+<section class="section" aria-labelledby="section-05"><h2 id="section-05">5. 매일 밤 11시에 종료하려면? 작업 스케줄러 사용</h2><p>shutdown /s /t 3600은 <strong>명령을 실행한 시점부터 한 번만</strong> 대기합니다. 매일 같은 시간에 종료하려면 <strong>작업 스케줄러(Task Scheduler)</strong>에서 반복 작업을 만듭니다.</p>
+<h3>그래픽 화면에서 설정하기</h3>
+<ol>
+<li>Windows 검색창에 <strong>작업 스케줄러</strong>를 입력해 실행합니다.</li>
+<li>오른쪽 메뉴에서 <strong>기본 작업 만들기</strong>를 선택합니다.</li>
+<li>작업 이름을 <strong>매일_자동종료</strong>처럼 구별하기 쉽게 지정합니다.</li>
+<li>트리거는 <strong>매일</strong>을 선택합니다.</li>
+<li>실행 시각을 예를 들어 <strong>오후 11:00</strong>으로 지정합니다.</li>
+<li>동작은 <strong>프로그램 시작</strong>을 선택합니다.</li>
+<li>프로그램/스크립트에 다음 값을 입력합니다.</li>
+</ol>
+<pre class="notion-code"><code>shutdown.exe</code></pre>
+<ol>
+<li>인수 추가 칸에는 아래와 같이 입력합니다.</li>
+</ol>
+<pre class="notion-code"><code>/s /t 0</code></pre>
+<ol>
+<li>작업 요약을 확인한 다음 <strong>마침</strong>을 누릅니다.</li>
+<li>작업 스케줄러 라이브러리에서 방금 만든 작업을 선택해 <strong>트리거·조건·다음 실행 시간</strong>을 확인합니다.</li>
+</ol>
+<p><strong>주의:</strong> 위 작업은 시간이 되면 <strong>즉시 종료를 시도</strong>합니다. 실행 시 열린 프로그램과 저장되지 않은 파일은 상황에 따라 종료를 막거나 데이터 손실 위험을 만들 수 있습니다. 작업 실행 시간에 자료를 잃지 않도록 <strong>사전 저장·업무 종료 확인</strong>이 필요합니다.</p>
+<h3>매일 종료 예약을 멈추려면?</h3>
+<p>작업 스케줄러에서 <strong>매일_자동종료</strong> 작업을 선택해 <strong>사용 안 함</strong> 또는 <strong>삭제</strong>를 선택합니다.</p>
+<ul>
+<li><strong>사용 안 함:</strong> 일정은 남기고 실행만 중단</li>
+<li><strong>삭제:</strong> 해당 예약 작업을 제거</li>
+<li><strong>shutdown /a</strong><strong>:</strong> 이미 실행되어 대기 중인 종료 요청에 대한 별도 취소</li>
+</ul>
+<p>이 세 기능은 서로 다릅니다. <strong>반복 예약을 지우려면 작업 스케줄러 자체에서 처리</strong>해야 합니다.</p>
+<p>공식 근거: <a href="https://learn.microsoft.com/ko-kr/windows-server/administration/windows-commands/schtasks" rel="noopener noreferrer">Microsoft Learn — schtasks와 작업 스케줄러</a>, <a href="https://learn.microsoft.com/ko-kr/windows-server/administration/windows-commands/schtasks-create" rel="noopener noreferrer">Microsoft Learn — schtasks create</a>.</p></section>
+<section class="section" aria-labelledby="section-06"><h2 id="section-06">6. 명령어로 반복 작업을 관리하는 방법</h2><p>숙련자라면 Windows의 schtasks 명령으로 예약 작업을 만들고 확인할 수도 있습니다.</p>
+<p>다만 매일 반복되는 작업은 <strong>이미 같은 이름의 예약이 있는지 확인</strong>하고, 실행할 계정과 컴퓨터가 켜져 있을 조건을 검토해야 합니다.</p>
+<h3>먼저 예약된 작업 확인하기</h3>
+<pre class="notion-code"><code>schtasks /query /tn &quot;매일_자동종료&quot;</code></pre>
+<p>작업이 없다면 등록되지 않았다는 안내가 나타날 수 있습니다.</p>
+<h3>특정 작업 예약 삭제하기</h3>
+<pre class="notion-code"><code>schtasks /delete /tn &quot;매일_자동종료&quot;</code></pre>
+<p>삭제 확인 메시지가 나타나면 <strong>정확한 작업 이름</strong>인지 확인하고 진행합니다.</p>
+<p><strong>절대 주의:</strong> schtasks /delete /tn * /f처럼 모든 작업을 삭제하는 명령을 복사해 실행하지 마세요. 이는 <strong>PC의 다른 예약 작업까지 삭제할 수 있습니다.</strong> 이름을 지정해 필요한 작업 하나만 관리하는 것이 안전합니다.</p>
+<p>공식 근거: <a href="https://learn.microsoft.com/ko-kr/windows-server/administration/windows-commands/schtasks-query" rel="noopener noreferrer">Microsoft Learn — schtasks query</a>, <a href="https://learn.microsoft.com/ko-kr/windows-server/administration/windows-commands/schtasks-delete" rel="noopener noreferrer">Microsoft Learn — schtasks delete</a>.</p></section>
+<section class="section" aria-labelledby="section-07"><h2 id="section-07">7. 실제 종료 시간이 맞지 않거나 실행되지 않는 이유</h2><p>자동 종료 예약이 작동하지 않는다면 <strong>명령이 실행됐는지, 예약 방식이 무엇인지, 컴퓨터가 당시 켜져 있었는지</strong>부터 구별하세요.</p>
+<div class="details-table"><table><thead><tr><th scope="col">증상</th><th scope="col">의심할 항목</th><th scope="col">먼저 확인할 일</th></tr></thead><tbody><tr><td>명령 입력 후 아무 변화가 없음</td><td>실행 실패·권한 제한·명령 오타</td><td>명령 프롬프트에서 입력 결과 확인</td></tr><tr><td>지정한 시각에 꺼지지 않음</td><td>작업 스케줄러 트리거·조건</td><td>다음 실행 시각·실행 기록 확인</td></tr><tr><td>예약 시각 전에 PC가 이미 절전 상태</td><td>절전·작업 깨우기 조건</td><td>작업의 조건 탭과 전원 설정 점검</td></tr><tr><td>예약 취소 명령이 실패</td><td>대기 중 종료가 없거나 이미 실행됨</td><td>예약 종류부터 확인</td></tr><tr><td>종료 대신 다시 켜짐</td><td>/r 또는 업데이트·전원 설정</td><td>사용한 명령과 이벤트 기록 확인</td></tr><tr><td>업무용 PC에서 실행 안 됨</td><td>관리자·그룹 정책 제한</td><td>IT 관리 부서에 문의</td></tr></tbody></table></div>
+<h3>컴퓨터가 꺼져 있어도 작업 스케줄러가 자동으로 켜 주나요?</h3>
+<p>일반적인 예약 작업을 만든 것만으로 <strong>전원이 완전히 꺼진 PC가 정해진 시각에 자동으로 켜지는 것을 보장하지 않습니다.</strong> 절전 상태에서 깨울 수 있는지와 전원이 꺼진 상태에서 켜지는지는 다른 문제입니다.</p>
+<p>또한 작업 스케줄러의 <strong>&#x27;작업을 실행하기 위해 컴퓨터 깨우기&#x27;</strong> 옵션은 하드웨어·전원 설정의 지원 여부에 따라 동작이 달라질 수 있습니다.</p>
+<h3>예약 시각이 지나도 실행이 안 된다면?</h3>
+<ol>
+<li>작업 스케줄러에서 <strong>트리거 시작 시각</strong> 확인</li>
+<li><strong>조건</strong> 탭의 전원·유휴 조건 확인</li>
+<li><strong>마지막 실행 결과</strong> 확인</li>
+<li><strong>기록</strong> 탭에서 실행 여부 확인</li>
+<li>컴퓨터가 해당 시각에 <strong>켜져 있었는지 또는 절전 상태였는지</strong> 확인</li>
+</ol>
+<p>작업 실행 결과가 성공으로 기록돼도 <strong>실제로 안전하게 작업이 종료됐는지</strong>까지 보장하는 것은 아니므로, 원인을 구분해 봐야 합니다.</p></section>
+<section class="section" aria-labelledby="section-08"><h2 id="section-08">8. 절전·최대 절전·종료는 무엇이 다른가요?</h2><div class="details-table"><table><thead><tr><th scope="col">기능</th><th scope="col">일반적인 목적</th><th scope="col">특징</th></tr></thead><tbody><tr><td><strong>디스플레이 끄기</strong></td><td>모니터만 꺼 두기</td><td>PC 작업이 계속 실행될 수 있음</td></tr><tr><td><strong>절전</strong></td><td>사용 중이던 작업을 빠르게 이어서 하기</td><td>소비전력 감소, 앱 실행 상태 보존에 초점</td></tr><tr><td><strong>최대 절전</strong></td><td>장시간 사용하지 않으면서 세션을 보존</td><td>지원되는 기기에서 디스크 기반으로 작업 상태 보존</td></tr><tr><td><strong>종료</strong></td><td>PC 사용을 끝내고 전원 끄기</td><td>실행 중이던 앱과 작업 세션이 종료될 수 있음</td></tr><tr><td><strong>재시작</strong></td><td>업데이트·오류 해결을 위한 재부팅</td><td>다시 켜서 운영체제 실행</td></tr></tbody></table></div>
+<p>대용량 파일 다운로드나 영상 렌더링이 끝나기를 기다리는 상황이라면 <strong>컴퓨터가 먼저 절전 상태로 들어가 작업이 멈추지 않는지</strong>도 확인해야 합니다.</p>
+<p>다만 무조건 절전을 해제한 채 컴퓨터를 밤새 켜 두는 방식은 <strong>전력 소비·발열·장비 상태</strong>를 고려해야 합니다. 컴퓨터나 프로그램 자체에 <strong>작업 완료 후 종료</strong> 옵션이 있다면 그 기능을 우선 검토할 수도 있습니다.</p></section>
+<section class="section" aria-labelledby="section-09"><h2 id="section-09">9. 데이터 손실을 막는 5가지 체크리스트</h2><p>자동 종료는 편리하지만 다음 상황에서는 신중해야 합니다.</p>
+<ol>
+<li><strong>열린 문서 저장:</strong> Excel, Word, 그림 편집 프로그램, 영상 프로젝트 등</li>
+<li><strong>작업 완료 예상 시간 확인:</strong> 다운로드·백업·파일 복사가 남아 있는지</li>
+<li><strong>외장 저장장치 작업 종료:</strong> 쓰기 작업 중 자동 종료 방지</li>
+<li><strong>다른 사용자 확인:</strong> 가족이나 직장 동료가 동일 PC를 사용 중인지</li>
+<li><strong>취소 방법 확보:</strong> 일회성 예약은 shutdown /a, 반복 예약은 작업 스케줄러에서 중지</li>
+</ol>
+<p>특히 <strong>명령어에 </strong><strong>/t 3600</strong><strong>처럼 양수 대기 시간을 지정하면 </strong><strong>/f</strong><strong>가 암묵적으로 포함될 수 있다는 Microsoft 설명</strong>은 놓치기 쉽습니다.</p>
+<p><strong>자동 종료는 작업이 끝났다는 사실을 확인해 주는 기능이 아닙니다.</strong> 지정한 시간에 종료를 시도할 뿐입니다.</p></section>
+<section class="section" aria-labelledby="section-10"><h2 id="section-10">10. 자주 묻는 질문</h2><h3>Q. 1시간 뒤 자동 종료는 어떤 명령인가요?</h3>
+<pre class="notion-code"><code>shutdown /s /t 3600</code></pre>
+<p>명령 실행 시점부터 <strong>3,600초 후 종료</strong>를 예약합니다. 다만 저장하지 않은 파일의 손실 가능성을 확인한 후 사용하세요.</p>
+<h3>Q. 예약을 취소하려면 어떻게 하나요?</h3>
+<pre class="notion-code"><code>shutdown /a</code></pre>
+<p><strong>대기 중인 종료가 실행되기 전</strong>에 입력하세요. 작업 스케줄러에 등록된 <strong>미래의 반복 예약은 별도로 비활성화·삭제</strong>해야 합니다.</p>
+<h3>Q. 2시간 뒤 종료하려면 숫자만 바꾸면 되나요?</h3>
+<p>네. 2시간은 <strong>7,200초</strong>이므로 shutdown /s /t 7200을 사용합니다. 단, 컴퓨터가 여전히 켜져 있고 예약 명령을 정상적으로 받아들였다는 전제가 있습니다.</p>
+<h3>Q. 컴퓨터 자동 종료 시간이 지난 뒤에도 꺼지지 않습니다.</h3>
+<p>명령이 제대로 실행됐는지, 예약 취소 여부, PC 상태, 작업 스케줄러의 조건과 기록을 확인하세요. 특히 <strong>절전 상태·전원 설정·조직 관리 정책</strong>이 영향을 줄 수 있습니다.</p>
+<h3>Q. 매일 특정 시각에 종료하려면 명령을 매번 입력해야 하나요?</h3>
+<p>아닙니다. <strong>작업 스케줄러의 &#x27;매일&#x27; 트리거</strong>를 이용하면 반복 예약을 설정할 수 있습니다.</p>
+<h3>Q. shutdown /s /t 0도 취소할 수 있나요?</h3>
+<p><strong>대기 시간이 없으므로 취소할 여유가 없습니다.</strong> 취소 시험용으로 사용하지 마세요.</p>
+<h3>Q. 컴퓨터를 종료하면 다운로드가 끝까지 완료되나요?</h3>
+<p>아닙니다. <strong>종료 시각까지 다운로드가 끝나지 않았다면</strong> 중단될 수 있습니다. 다운로드 프로그램의 종료 후 동작 설정이 있다면 작업 완료 조건을 지원하는지 확인하세요.</p>
+<h3>Q. 자동 종료와 화면 자동 꺼짐은 같은가요?</h3>
+<p>아닙니다. <strong>화면만 꺼지는 것</strong>과 <strong>운영체제를 종료하는 것</strong>은 전혀 다른 동작입니다. 사용 목적에 맞춰 별도로 설정하세요.</p></section>
+<section class="section" aria-labelledby="section-11"><h2 id="section-11">11. 마무리: 목적에 따라 명령을 선택하세요</h2><p><strong>한 번만 1시간 뒤 종료</strong>하고 싶다면 shutdown /s /t 3600, <strong>취소</strong>하려면 shutdown /a, <strong>매일 같은 시각에 종료</strong>하고 싶다면 Windows <strong>작업 스케줄러</strong>를 사용합니다.</p>
+<p>가장 중요한 점은 <strong>양수 </strong><strong>/t</strong><strong> 값이 </strong><strong>/f</strong><strong>를 암묵적으로 적용할 수 있다는 Microsoft의 공식 설명</strong>입니다. 따라서 영상 편집·문서 작성·백업 중인 PC에서는 종료 예약보다 <strong>작업 저장과 완료 여부 확인</strong>을 우선해야 합니다.</p>
+<h3>공식 근거</h3>
+<ul>
+<li><a href="https://learn.microsoft.com/ko-kr/windows-server/administration/windows-commands/shutdown" rel="noopener noreferrer">Microsoft Learn — shutdown 명령어: Windows 11 지원, /s, /t, /a, /f</a></li>
+<li><a href="https://learn.microsoft.com/ko-kr/windows-server/administration/windows-commands/schtasks" rel="noopener noreferrer">Microsoft Learn — 작업 스케줄러 명령어 전체</a></li>
+<li><a href="https://learn.microsoft.com/ko-kr/windows-server/administration/windows-commands/schtasks-create" rel="noopener noreferrer">Microsoft Learn — schtasks create</a></li>
+<li><a href="https://learn.microsoft.com/ko-kr/windows-server/administration/windows-commands/schtasks-query" rel="noopener noreferrer">Microsoft Learn — schtasks query</a></li>
+<li><a href="https://learn.microsoft.com/ko-kr/windows-server/administration/windows-commands/schtasks-delete" rel="noopener noreferrer">Microsoft Learn — schtasks delete</a></li>
+</ul>
+<p><strong>자료 확인일: 2026년 11월 4일.</strong> Windows 설정·명령어 권한 및 작업 스케줄러의 동작은 장치 관리 정책과 전원 구성에 영향을 받을 수 있습니다.</p></section>
+
+<!-- notion-discovery:start -->
+<section class="section" aria-label="관련 글"><h2>함께 읽으면 좋은 같은 분야의 글</h2><ul><li><a href="/kor/report/it/windows11-show-file-extensions-hide-extension-rename-jpg-pdf-2026.html">2026 윈도우11 파일 확장자 표시 방법: JPG·PDF 확장명 숨기기 해제·파일 형식 변경 주의</a></li>
+<li><a href="/kor/report/it/windows11-c-drive-low-disk-space-storage-sense-temp-files-windows-old-2026.html">2026 윈도우11 C드라이브 용량 부족 해결법: 저장소 센스·임시 파일·Windows.old·다운로드 삭제 주의</a></li>
+<li><a href="/kor/report/it/windows11-taskbar-missing-frozen-explorer-restart-autohide-update-2026.html">2026 윈도우11 작업 표시줄 사라짐·먹통 해결법: 탐색기 재시작·자동 숨김·시작 메뉴·업데이트</a></li>
+<li><a href="/kor/report/it/pdf-file-not-opening-windows11-chrome-edge-acrobat-corrupt-2026.html">2026 PDF 파일 안 열릴 때 해결법: 윈도우11·크롬·엣지·Acrobat, 손상된 파일 구별</a></li></ul></section>
+<!-- notion-discovery:end -->
+<section class="info-bottom">
+<h2>정보 출처와 확인 안내</h2>
+<p>작성·갱신일과 적용 범위는 본문에서 확인하세요. 정책·행사 일정·혜택·제품 정보는 변경될 수 있으므로 중요한 판단 전 공식 기관 및 판매처의 최신 안내를 확인하시기 바랍니다.</p>
+<div class="pills"><a href="/kor/report/it/">같은 분야의 글</a><a href="/kor/report/">생활정보 전체</a><a href="/">emfls 홈</a></div>
+</section>
+</div>
+</article>
+<footer class="site-footer">© 2026 emfls · 공식 기관 안내를 우선 확인하세요</footer>
+</main>
+</body>
+</html>
