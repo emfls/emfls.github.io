@@ -604,3 +604,10 @@
 - [ ] Resolve CTR batch input conflicts and review findings before content merge
   - Hold54 active rows/49 paths; seven merged rows skipped. New critical0/warnings5; eight pages remove valid tool links. Fresh local geometry1,323 files, other1,941 supplied assertions only. Draft PR is separate from public deployment and measured effects.
   - Committed pinned Guard FAIL/MONETIZATION_OR_ANALYTICS_CHANGED: the single trigger is the ADS coin guide filename matching the advertising-path rule. Scripts/ad attributes unchanged; preserve the gate and review separately.
+
+
+- [x] 2026-11-15 Resolve the CTR subset blockers without changing Guard or registered outputs
+  - Restore17 exact-base files (duplicate8/tool-link8/ADS gate1). Remaining3,247 outputs unchanged; protected32 all retained. Related80/committed pinned Guard PASS; exact-base SEO new critical/warnings0/0, broken165 unchanged.
+  - Local Chromium all3,247 retained files/6,494 unique320/390px measurements fit: fresh1,937 plus same-input reused1,310. docs/ctr-batch-content-review-2026-11-15.md preserves the earlier3,264-file failure snapshot.
+- [ ] Resolve the71 held or unchanged active rows/66 paths in a separate reviewed input
+  - No implicit alternative/global replacement/new after hashes. Review only the validated subset in PR805; content merge/Pages/public and revenue evidence remain separate. Hosted check states must be reported as actually observed.
