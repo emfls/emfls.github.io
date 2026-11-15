@@ -1878,3 +1878,8 @@
 - Updated 300 utility and 255 game pages across ten locales (`cn`, `de`, `es`, `fr`, `id`, `in`, `jp`, `pt`, `ru`, `vn`) with localized titles, meta descriptions, single unique visible H1 headings, and lightweight locale-hub navigation while preserving scripts, canonical links, structured-data dates, advertisements, analytics, trust sections, and interactive attributes.
 - Retained existing localized RU/VN quiz descriptors inside visible introductions; fixed measured form, FAQ, and board overflow while preserving internal board scrolling, square 2048 tiles, and calibrated MarbleFlick canvas pointer input.
 - Rebased cleanly onto `origin/main` (`3c19c74efe`), updated ten locale sitemaps via `update_sitemap_lastmod.py`, and verified release launch guards, SEO baseline checks, MBTI regression tests, and mobile responsive viewport geometry (`320px`, `360px`, `390px`).
+
+## 2026-11-16 — Wave 3A Korean metadata, markdown, and link remediation
+
+- Updated 10 Korean report pages (`gov`, `car`, `parenting`, `seasonal`, `it`) via single-page isolated editorial passes: removed raw markdown bold markers across metadata, JSON-LD, decks, and body prose; repaired malformed official portal URLs (`cont.insure.or.kr`, `ips.go.kr`); replaced truncated or question-only descriptions with direct factual summaries; and aligned CSAT guide pill links to valid section anchors.
+- Preserved all executable analytics/AdSense scripts, canonical links, CSS styles, structured-data dates, and factual body paragraphs; synchronized leaf sitemaps via `update_sitemap_lastmod.py`, and verified launch guards, SEO baseline checks, sitemap audit, targeted pytest suites, and mobile viewport fit (`320px`, `360px`, `390px`).
