@@ -596,3 +596,8 @@
   - 정확47c77761→768eacd1, 승인전 RED→pair후 GREEN/관련79·역적용 독립검수. HTML없는 승인 PR부터 정상 병합한다.
 - [x] 승인PR798 정상병합 후 별도 콘텐츠 브랜치 정확 HTML 적용·로컬검증
   - main9c22e43b·후보바이트동일·4폭80native/키보드·관련79·SEO19536신규0/0. 최종커밋Guard/Pages/공개검증은해당PR후속기록,수익효과별도관측.
+
+- [x] 2026-11-15 Prepare32 exact protected CTR proposal pairs
+  - Approval-only branch, HTML0; exact current input/output/reversal and negative guard boundaries verified, related80 PASS. docs/ctr-batch-exact-approval-2026-11-15.md.
+- [ ] Apply independently validated CTR content after the separate protection approval; keep conflicting input and malformed JSON holds explicit
+  - Proposal rows and unique changed files are counted separately. PR creation is separate from public release.

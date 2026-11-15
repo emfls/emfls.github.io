@@ -1,0 +1,9 @@
+# Exact protection approvals for the requested CTR batch
+
+The owner requested an isolated branch and reviewable PR for registered CTR replacements. Current and pinned evidence identify32 WINNER paths in that input. Register only their reviewed before/after Git blob pairs in `APPROVED_CTR_BATCH_20261115_TRANSITIONS`, retaining all earlier approvals and the restrictions on other versions, other protected pages, deletion/rename and observations.
+
+This approval PR changes no HTML. Merge it normally before applying protected HTML in the separate requested content branch. Each proposed pair matches the current source and declared output under one first-occurrence replacement per instruction, and reverses to the original bytes. Executable scripts, canonical URLs and ad attributes remain intact. A regression first rejects the pairs before registration, then checks every pair with altered/reversed blobs, deletion/rename and OBSERVING; unrelated/mixed protected changes remain blocked.
+
+The input includes overlapping alternatives, output-hash mismatches, a changed index and one newly invalid JSON-LD block. Those issues are held separately; this narrow approval does not approve excluded inputs or certify every source assertion. The existing manual hold concerns `camp/nonsan.html`, which is absent from the batch, rather than the separate protected `travel/korea-nonsan.html` proposal.
+
+Private measurement and operating reports remain outside this repository. Input counts are proposal counts, not proof of a corresponding number of changed files. Mobile assertions supplied with the input, fresh local geometry checks, CI, PR creation and public release are separate states. No search, traffic or revenue result is claimed. Exact pair data and negative guard tests provide the review boundary and rollback reference.

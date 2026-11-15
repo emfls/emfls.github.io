@@ -1840,3 +1840,7 @@
 ## 2026-11-15 — Apply the separately approved camping-place navigation
 - ApprovalPR798 merged normally to9c22e43bc1 with no HTML change; committed pinned Guard and79 related checks pass. RPM-specific hosted verify/guard were SKIPPED, not reported as PASS. The separate content branch applies only frozen HTML768eacd1f8, preserving existing warnings, metadata, dates, CSS/scripts, links and advertisements.
 - Four viewport widths/80 native place jumps and keyboard Enter/Space pass on identical candidate bytes. Exact approval-main SEO covers19,536pages:19,508identical parse records reused/28parsed, parser/new critical/warnings0; existing646/420/broken165 andOPS8/production168 retained. Final committed Guard and normal content PR/Pages/public checks remain distinct. No ranking/revenue improvement claimed.
+
+## 2026-11-15 — Prepare exact protection approvals for the requested CTR batch
+- Register32 independently identified current/pinned WINNER before/after pairs only; no HTML change and all earlier approvals/observations retained. Each pair passes source/output/reversal validation. Regression initially rejects unregistered pairs, then checks all32 with altered/reversed blobs, D/R and OBSERVING plus unrelated/mixed changes; related80 PASS.
+- Input overlaps/output mismatches, a changed index and newly invalid JSON remain separate holds. Private reports and measurements stay outside Git. docs/ctr-batch-exact-approval-2026-11-15.md; normal approval merge precedes the separate content PR. No traffic/revenue effect claimed.
