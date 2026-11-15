@@ -611,3 +611,11 @@
   - Local Chromium all3,247 retained files/6,494 unique320/390px measurements fit: fresh1,937 plus same-input reused1,310. docs/ctr-batch-content-review-2026-11-15.md preserves the earlier3,264-file failure snapshot.
 - [ ] Resolve the71 held or unchanged active rows/66 paths in a separate reviewed input
   - No implicit alternative/global replacement/new after hashes. Review only the validated subset in PR805; content merge/Pages/public and revenue evidence remain separate. Hosted check states must be reported as actually observed.
+
+- [x] 2026-11-15 Prepare the second exact CTR subset on the requested new branch
+  - New manifest remainder344 rows/339paths:273new plus refreshed government index1 included,70rows/65paths held,3254merged rows skipped. Included274 declared after blobs/SHA/reversal exact. docs/ctr-second-batch-review-2026-11-15.md.
+  - Fresh274files/548local320/390px measurements fit; exact-base19547-page SEO new0/0. Full baseline/candidate both1728PASS/26FAIL/3skip, identical failure IDs. Requested validate_launch.py absent; supported committed Guard is reported separately.
+- [x] 2026-11-15 Verify and promote the 274-file second exact CTR subset for main release
+  - Synced cleanly with `origin/main` (`a46c930940`, PR #815); committed guard (`PASS`, `errors: []`), ops-backed guard/policy/protection/url-planner pytest (`199 passed`), `origin/main`-baseline `seo_qa.py` across 19,549 pages (`0` new critical / `0` new warnings), and 320px/390px viewport checks verified.
+- [ ] Resolve the 70 held second-batch rows/65 conflicting paths separately before any future batch
+  - No test-assert weakening, global replacements, or old-row reactivation; remaining held rows stay excluded from this 274-file merge.
