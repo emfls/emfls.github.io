@@ -599,5 +599,7 @@
 
 - [x] 2026-11-15 Prepare32 exact protected CTR proposal pairs
   - Approval-only branch, HTML0; exact current input/output/reversal and negative guard boundaries verified, related80 PASS. docs/ctr-batch-exact-approval-2026-11-15.md.
-- [ ] Apply independently validated CTR content after the separate protection approval; keep conflicting input and malformed JSON holds explicit
-  - Proposal rows and unique changed files are counted separately. PR creation is separate from public release.
+- [x] Apply independently validated CTR content after the separate protection approval; keep conflicting input and malformed JSON holds explicit
+  - PR804 approval merged normally; 3,264 exact HTML outputs applied on the requested isolated branch. Related80 PASS; source/output hashes and reversal verified. docs/ctr-batch-content-review-2026-11-15.md.
+- [ ] Resolve CTR batch input conflicts and review findings before content merge
+  - Hold54 active rows/49 paths; seven merged rows skipped. New critical0/warnings5; eight pages remove valid tool links. Fresh local geometry1,323 files, other1,941 supplied assertions only. Draft PR is separate from public deployment and measured effects.
