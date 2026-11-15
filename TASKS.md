@@ -591,3 +591,8 @@
 - [x] 2026-11-15 차량2 안내의 절단 설명문6필드 교정·로컬 검증
   - 이중주차deck1·브레이크meta3/Article/deck5만 복구. 기존 메타 관측과 새 소개문 개입을 구분. docs/car-two-description-repair-2026-11-15.md.
   - 관련78·독립검수·4폭8화면·정확main SEO 신규0/0. 실제 배포/공개 증거는 해당 PR 후속 기록, 검색·수익효과는 별도 관측.
+- [x] 2026-11-15 무료캠핑 TOP20 장소 탐색 정확후보·보호 회귀 검증
+  - named native details nav1/H2 ID20. 원문 안전고지·메타·날짜·광고·CSS/JS 보존. docs/free-camping-place-navigation-2026-11-15.md.
+  - 정확47c77761→768eacd1, 승인전 RED→pair후 GREEN/관련79·역적용 독립검수. HTML없는 승인 PR부터 정상 병합한다.
+- [ ] 승인 후 별도 콘텐츠 PR·정확main SEO·Guard·Pages·공개 확인
+  - 현재 WINNER이며 다른 버전/관측/삭제 보호를 유지한다. 실제 검색·수익효과는 별도 관측.
