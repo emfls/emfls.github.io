@@ -1871,3 +1871,4 @@
 - Applied reviewed English titles, descriptions and headings to 123 stock, crypto and SEC pages. Existing structured-data dates and unrelated content remain unchanged; each page has one H1.
 - Added one repeatable, theme-matched calculator card to 83 Korean pages. Existing titles, descriptions, factual paragraphs, scripts and advertisements are preserved; missing stock headings retain their original wording.
 - Contained the Microsoft financial table in a labelled keyboard-accessible scroll region and allowed company information links to wrap. Independent source comparison and the requested narrow-screen samples pass. This is local preparation; public deployment and search effects are unverified.
+- Synchronized sitemap lastmod values from committed page history and restored the checklist entry's missing historical date. Local sitemap audit reports no missing dates, invalid XML or duplicate URLs.
