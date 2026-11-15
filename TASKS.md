@@ -1,3 +1,7 @@
+- [x] 2026-11-16 Wave 3A Korean metadata, markdown, and link remediation
+  - Updated 10 Korean report pages (`gov`, `car`, `parenting`, `seasonal`, `it`) to eliminate leaked markdown bold markers in metadata/JSON-LD/body text, fix malformed official portal URLs, restore truncated descriptions with direct factual summaries, and align CSAT pill anchors.
+  - Synchronized affected leaf sitemaps (`update_sitemap_lastmod.py`) and verified committed `content_launch_guard.py`, `seo_qa.py` (`0` new critical/warnings), `sitemap_audit.py` (`0` missing lastmod/invalid XML/duplicates), targeted pytest, and mobile `320px`/`360px`/`390px` horizontal-overflow fit.
+
 - [x] 2026-11-16 Wave 2B+2C multilingual utility and game optimization
   - Updated 300 utility + 255 game HTML pages across ten locales, synchronized ten locale sitemaps (`update_sitemap_lastmod.py`), and preserved all scripts, canonicals, structured-data dates, and game/utility mechanics.
   - Verified committed `content_launch_guard.py` against current `origin/main`, `seo_qa.py` (`0` new critical/warnings), `sitemap_audit.py` (`0` missing lastmod/invalid XML/duplicates), and mobile `320px`/`390px` horizontal-overflow fit.
