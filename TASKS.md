@@ -1,3 +1,8 @@
+- [x] 2026-11-16 Wave 2A English finance metadata and Korean calculator links
+  - Updated 123 English finance pages and added one calculator card to each of 83 Korean pages; preserved Korean search metadata and factual paragraphs.
+  - Deterministic rerun, independent source comparison and requested mobile samples pass. Local preparation only.
+  - Synchronized sitemap dates with committed page history; local XML, date completeness and duplicate checks pass.
+
 - [x] 2026-11-14 차량3 안내의 끊긴 설명문11필드 교정·로컬 검증
   - 스마트키/원격공조5필드씩·거북이경고deck1만 복구. 기존 거북이메타4/제목/날짜/본문/광고 보존. docs/car-three-description-repair-2026-11-14.md.
   - 관련78·독립검수·12화면조합/24native·정확main SEO 신규0/0. 실제 Pages/공개 검증은 해당 PR 후속 기록으로 구분하며 검색/수익효과는 미측정.
