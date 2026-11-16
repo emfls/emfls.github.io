@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 엑셀 한 셀 텍스트 나누기: 쉼표·공백 분리, TEXTSPLIT·빠른 채우기·#SPILL! 해결</title>
+<meta name="description" content="엑셀에서 A열에 **홍길동,010-1234-5678,서울**처럼 이름·전화번호·지역이 한 셀에 모여 있을 때, 이를 세 개 열로 분리하려면 어떻게 해야 할까요? 엑셀에는 데이터 → 텍스트 나누기, TEXTSPLIT 함수, 빠른 채우기라는 세 가지 대표적인 방법이 있습니다.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#0d1117">
+<link rel="canonical" href="https://emfls.github.io/kor/report/it/excel-split-text-into-columns-textsplit-comma-space-flash-fill-spill-2026.html">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2026 엑셀 한 셀 텍스트 나누기: 쉼표·공백 분리, TEXTSPLIT·빠른 채우기·#SPILL! 해결">
+<meta property="og:description" content="엑셀에서 A열에 **홍길동,010-1234-5678,서울**처럼 이름·전화번호·지역이 한 셀에 모여 있을 때, 이를 세 개 열로 분리하려면 어떻게 해야 할까요? 엑셀에는 데이터 → 텍스트 나누기, TEXTSPLIT 함수, 빠른 채우기라는 세 가지 대표적인 방법이 있습니다.">
+<meta property="og:url" content="https://emfls.github.io/kor/report/it/excel-split-text-into-columns-textsplit-comma-space-flash-fill-spill-2026.html">
+<meta property="og:site_name" content="emfls">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2026 엑셀 한 셀 텍스트 나누기: 쉼표·공백 분리, TEXTSPLIT·빠른 채우기·#SPILL! 해결">
+<meta name="twitter:description" content="엑셀에서 A열에 **홍길동,010-1234-5678,서울**처럼 이름·전화번호·지역이 한 셀에 모여 있을 때, 이를 세 개 열로 분리하려면 어떻게 해야 할까요? 엑셀에는 데이터 → 텍스트 나누기, TEXTSPLIT 함수, 빠른 채우기라는 세 가지 대표적인 방법이 있습니다.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"2026 엑셀 한 셀 텍스트 나누기: 쉼표·공백 분리, TEXTSPLIT·빠른 채우기·#SPILL! 해결","description":"엑셀에서 A열에 **홍길동,010-1234-5678,서울**처럼 이름·전화번호·지역이 한 셀에 모여 있을 때, 이를 세 개 열로 분리하려면 어떻게 해야 할까요? 엑셀에는 데이터 → 텍스트 나누기, TEXTSPLIT 함수, 빠른 채우기라는 세 가지 대표적인 방법이 있습니다.","url":"https://emfls.github.io/kor/report/it/excel-split-text-into-columns-textsplit-comma-space-flash-fill-spill-2026.html","mainEntityOfPage":"https://emfls.github.io/kor/report/it/excel-split-text-into-columns-textsplit-comma-space-flash-fill-spill-2026.html","inLanguage":"ko","author":{"@type":"Organization","name":"emfls"},"publisher":{"@type":"Organization","name":"emfls","url":"https://emfls.github.io"},"datePublished":"2026-11-16","dateModified":"2026-11-16"}</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-QP5Q67GE5B');</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+<style>
+:root{color-scheme:dark;--bg:#0d1117;--surface:#161b22;--surface2:#1c2430;--border:#30363d;--text:#e6edf3;--muted:#abb6c3;--accent:#79c0ff;--soft:#c8b6ff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Apple SD Gothic Neo","Malgun Gothic",system-ui,-apple-system,sans-serif;line-height:1.8;word-break:keep-all}
+a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thickness:2px}
+.skip{position:absolute;left:-9999px;top:4px;z-index:1000;padding:8px 16px;background:white;color:black}.skip:focus{left:4px}
+.site-header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px max(18px,calc((100vw - 900px)/2));background:linear-gradient(90deg,#4e54c8,#8f94fb);border-bottom:1px solid #6867cc}
+.brand{color:white;text-decoration:none;font-size:1.14rem;font-weight:850;letter-spacing:.02em}
+.site-header nav{display:flex;gap:12px}.site-header nav a{color:#fff;text-decoration:none;font-size:.86rem;font-weight:600}
+.site-header nav a:hover{text-decoration:underline}
+.shell{max-width:900px;margin:auto;padding:20px 18px 70px}
+.breadcrumb{font-size:.81rem;color:var(--muted);margin:3px 0 18px}.breadcrumb a{color:#d4deff;text-decoration:none}
+.hero{position:relative;overflow:hidden;border:1px solid #47577b;border-radius:18px;padding:42px 32px;background:linear-gradient(135deg,#122140,#172c53 52%,#302754 100%);box-shadow:0 15px 40px #0003}
+.hero:after{content:"";position:absolute;right:-80px;top:-100px;width:310px;height:310px;border-radius:50%;background:radial-gradient(circle,#9b8bff27,transparent 70%);pointer-events:none}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid #8092e05c;background:#ffffff12;border-radius:99px;padding:4px 13px;color:#e3dcff;font-size:.79rem;font-weight:700;margin-bottom:18px}
+.hero h1{font-weight:850;line-height:1.42;letter-spacing:-.037em;font-size:clamp(1.55rem,4vw,2.25rem);margin:0 0 16px;position:relative;z-index:1;overflow-wrap:anywhere}
+.hero .deck{font-size:.99rem;color:#e2e7f5;max-width:680px;margin:0 0 15px}
+.hero-meta{font-size:.82rem;color:#c8d2e5;display:flex;flex-wrap:wrap;gap:6px 18px}
+.highlight-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:17px 0 20px}
+.highlight{padding:17px 16px;border:1px solid var(--border);background:var(--surface);border-radius:13px}
+.highlight .value{display:block;color:#d6caff;font-size:1.12rem;font-weight:800;line-height:1.45}
+.highlight .label{display:block;color:var(--muted);font-size:.76rem;margin-top:5px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
+.contents,.section,.intro,.info-bottom{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:24px 27px;box-shadow:0 3px 15px #0002}
+.contents h2,.info-bottom h2{font-size:1.02rem;color:#d4c5ff;margin:0 0 12px}
+.contents ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 25px;margin:0;padding-left:19px}
+.contents li{font-size:.86rem;line-height:1.6;padding:3px 0}
+.contents a{color:#d3ddec;text-decoration:none}.contents a:hover{text-decoration:underline}
+.intro{border-left:4px solid #7e96e4;background:linear-gradient(125deg,#1a2335,var(--surface));}
+.section h2{font-size:1.32rem;line-height:1.5;margin:0 0 17px;color:#d4c5ff;letter-spacing:-.022em;border-bottom:1px solid #354052;padding-bottom:12px;scroll-margin-top:20px}
+.section h3{font-size:1.045rem;margin:23px 0 8px;color:#c3dcff;scroll-margin-top:20px}
+.section p,.intro p{font-size:.955rem;margin:0 0 14px;color:#d9e0e8;line-height:1.85}
+.section p:last-child,.intro p:last-child{margin-bottom:0}
+.section strong,.intro strong{color:#fff;font-weight:750}
+.section li,.intro li{font-size:.94rem;line-height:1.8;margin:5px 0;color:#d8e0e8}
+.section ul,.section ol,.intro ul,.intro ol{padding-left:22px;margin:12px 0 20px}
+.section blockquote{margin:16px 0;padding:13px 17px;border-left:3px solid #a18cff;background:#252440;border-radius:0 8px 8px 0}
+.section a{overflow-wrap:anywhere}
+.section hr{border:0;border-top:1px solid var(--border);margin:24px 0}
+.section ul,.section ol{background:#1c2430;border-radius:9px;padding:12px 20px 12px 37px;border:1px solid #28384b}
+.notion-code{max-width:100%;overflow-x:auto;white-space:pre;tab-size:2;margin:14px 0 9px;padding:14px 16px;border:1px solid #34465f;border-radius:9px;background:#141d2c;color:#e7efff;font-size:.88rem;line-height:1.65}
+.notion-code code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.section .notion-code-caption,.intro .notion-code-caption{margin:0 0 17px;color:#aebdd5;font-size:.82rem}
+.details-table{overflow-x:auto}
+.section table{border-collapse:collapse;width:100%;min-width:500px;margin:14px 0}
+.section th,.section td{padding:12px;text-align:left;border-bottom:1px solid var(--border);font-size:.89rem}
+.section th{background:#202a3c;color:#d3caff}
+.cta{display:inline-flex;align-items:center;gap:8px;margin-top:8px;padding:11px 17px;border-radius:10px;background:#254975;color:white;text-decoration:none;font-size:.9rem;font-weight:700;border:1px solid #4e75a9}
+.cta:hover{background:#305989}
+.notice{border-left:4px solid #57b59b;padding:13px 16px;background:#122e2b;border-radius:4px 9px 9px 4px;color:#cfe6dd;font-size:.88rem;margin:16px 0}
+.info-bottom p{font-size:.87rem;color:var(--muted);margin:0 0 10px}
+.pills{display:flex;gap:9px;flex-wrap:wrap}.pills a{display:inline-block;border:1px solid #45516c;border-radius:99px;padding:6px 13px;text-decoration:none;color:#d5e3ff;font-size:.84rem}
+.site-footer{font-size:.8rem;color:#9ba9b8;text-align:center;margin-top:24px;padding-top:24px;border-top:1px solid var(--border)}
+.adsbygoogle,div[id^="aswift_"]{max-width:100%!important;overflow:hidden}
+@media(max-width:650px){.shell{padding:14px 12px 45px}.site-header{padding:14px}.hero{padding:29px 20px}.hero h1{font-size:1.58rem}.highlight-row{gap:7px}.highlight{padding:13px 9px}.highlight .value{font-size:.92rem}.highlight .label{font-size:.7rem}.contents,.section,.intro,.info-bottom{padding:19px 17px}.contents ol{grid-template-columns:1fr}.section h2{font-size:1.18rem}.site-header nav{gap:9px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-header"><a class="brand" href="/">emfls</a><nav aria-label="상단 메뉴"><a href="/kor/report/">생활정보</a><a href="/kor/report/it/">관련 주제</a><a href="/">홈</a></nav></header>
+<main class="shell" id="main">
+<div class="breadcrumb"><a href="/">홈</a> › <a href="/kor/report/">생활정보</a> › <a href="/kor/report/it/">IT · 기기</a></div>
+<article>
+<header class="hero">
+<span class="eyebrow">IT · 기기 · 최신 가이드</span>
+<h1>2026 엑셀 한 셀 텍스트 나누기: 쉼표·공백 분리, TEXTSPLIT·빠른 채우기·#SPILL! 해결</h1>
+<p class="deck">엑셀에서 A열에 **홍길동,010-1234-5678,서울**처럼 이름·전화번호·지역이 한 셀에 모여 있을 때, 이를 세 개 열로 분리하려면 어떻게 해야 할까요? 엑셀에는 데이터 → 텍스트 나누기, TEXTSPLIT 함수, 빠른 채우기라는 세 가지 대표적인 방법이 있습니다.</p>
+<div class="hero-meta"><span>최초 발행 2026-11-16</span><span>내용 확인 2026-11-16</span><span>작성 emfls</span></div>
+</header>
+
+<nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">1. 가장 먼저 선택할 방법: 비교표</a></li><li><a href="#section-02">2. 쉼표 기준으로 나누기: 데이터 → 텍스트 나누기</a></li><li><a href="#section-03">3. 공백으로 텍스트 나누기: 성명과 주소는 다르게</a></li><li><a href="#section-04">4. TEXTSPLIT 함수: 원본을 유지하면서 여러 열로 자동 분리</a></li><li><a href="#section-05">5. TEXTSPLIT 결과를 세로 행으로 나누기</a></li><li><a href="#section-06">6. 텍스트 사이에 빈 값이 많을 때: ignore_empty</a></li><li><a href="#section-07">7. TEXTSPLIT #SPILL! 오류가 발생할 때</a></li><li><a href="#section-08">8. TEXTSPLIT #NAME? 오류: 버전부터 확인</a></li><li><a href="#section-09">9. 빠른 채우기: 함수 없이 성명·상품코드 분리</a></li><li><a href="#section-10">10. 휴대전화 번호·우편번호가 잘리거나 날짜로 바뀐다면?</a></li><li><a href="#section-11">11. 웹용 Excel과 Mac용 Excel은 방법이 같을까요?</a></li><li><a href="#section-12">12. 자주 묻는 질문</a></li><li><a href="#section-13">13. 최종 체크리스트: 데이터가 망가지지 않게 분리하기</a></li><li><a href="#section-14">공식 참고 자료</a></li></ol></nav>
+<div class="layout">
+<div class="intro"><p>엑셀에서 A열에 **홍길동,010-1234-5678,서울**처럼 이름·전화번호·지역이 한 셀에 모여 있을 때, 이를 세 개 열로 분리하려면 어떻게 해야 할까요? 엑셀에는 <strong>데이터 → 텍스트 나누기</strong>, <strong>TEXTSPLIT 함수</strong>, <strong>빠른 채우기</strong>라는 세 가지 대표적인 방법이 있습니다.</p>
+<p>사용자가 자주 검색하는 &#x27;엑셀 셀 나누기&#x27;는 실제로 두 가지 뜻이 섞인 표현입니다. <strong>한 셀에 들어 있는 글자를 여러 셀로 나누는 것</strong>과 <strong>이미 존재하는 셀의 격자 자체를 둘로 쪼개는 것</strong>은 다릅니다. Excel에서는 일반적인 워크시트 셀 하나를 Word 표처럼 임의로 잘라 독립된 두 셀로 만드는 기능은 없지만, <strong>셀 내용은 구분 기호·수식·입력 패턴으로 분리</strong>할 수 있습니다.</p>
+<p>이 글에서는 쉼표·공백·하이픈·줄바꿈을 기준으로 나누는 방법, TEXTSPLIT 지원 버전, #SPILL! 및 #NAME? 오류 원인, 휴대전화 번호와 우편번호를 보존하는 방법을 실무 예제로 정리합니다.</p>
+<p><strong>검토일: 2026년 11월 4일.</strong> 메뉴 명칭은 Excel 데스크톱·웹·Mac과 업데이트 상태에 따라 다를 수 있습니다.</p></div>
+<section class="section" aria-labelledby="section-01"><h2 id="section-01">1. 가장 먼저 선택할 방법: 비교표</h2><div class="details-table"><table><thead><tr><th scope="col">상황</th><th scope="col">추천 방법</th><th scope="col">장점</th><th scope="col">주의점</th></tr></thead><tbody><tr><td>A열에 김철수,서울,영업이 들어 있음</td><td><strong>데이터 → 텍스트 나누기</strong></td><td>쉼표·공백 등으로 한꺼번에 분리</td><td><strong>오른쪽 기존 데이터 덮어쓰기 위험</strong></td></tr><tr><td>수식으로 원본 변경에 따라 자동 반영하고 싶음</td><td><strong>TEXTSPLIT</strong></td><td>분리된 결과가 동적으로 갱신</td><td>Microsoft 365·Excel 2024 등 지원 버전 확인</td></tr><tr><td>성명·상품 코드의 규칙을 눈으로 예시 입력하고 싶음</td><td><strong>빠른 채우기</strong></td><td>함수 없이 패턴 추론</td><td>규칙이 불규칙하면 잘못 채워질 수 있음</td></tr><tr><td>CSV 파일을 대량으로 가져옴</td><td><strong>데이터 가져오기·Power Query</strong></td><td>열 데이터 형식과 변환 단계 관리</td><td>코드가 날짜·숫자로 바뀌지 않도록 점검</td></tr><tr><td>한 셀을 진짜 두 격자 칸으로 나누고 싶음</td><td><strong>행·열 삽입 또는 표 구조 재설계</strong></td><td>워크시트 구조를 변경</td><td>텍스트 나누기와 다른 작업</td></tr></tbody></table></div>
+<p>Microsoft도 &#x27;텍스트 나누기 마법사&#x27;, &#x27;TEXTSPLIT&#x27;, &#x27;빠른 채우기&#x27;를 각각 별도로 소개합니다. 가장 안전한 시작은 <strong>원본을 복사해 테스트용 시트에서 나눠 보는 것</strong>입니다.</p>
+<p>공식 자료: <a href="https://support.microsoft.com/ko-kr/excel/get-started/split-text-into-different-columns-with-the-convert-text-to-columns-wizard" rel="noopener noreferrer">Microsoft — 텍스트 나누기 마법사</a>, <a href="https://support.microsoft.com/ko-kr/excel/functions/textsplit-function" rel="noopener noreferrer">Microsoft — TEXTSPLIT 함수</a>.</p></section>
+<section class="section" aria-labelledby="section-02"><h2 id="section-02">2. 쉼표 기준으로 나누기: 데이터 → 텍스트 나누기</h2><p>예시 데이터는 다음과 같습니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">A열: 원본</th></tr></thead><tbody><tr><td>김철수,서울,영업</td></tr><tr><td>박영희,부산,기획</td></tr><tr><td>이민수,대전,개발</td></tr></tbody></table></div>
+<p>원하는 결과는 <strong>이름 / 지역 / 부서</strong>가 B·C·D열에 각각 들어가는 것입니다.</p>
+<h3>단계별 설정</h3>
+<ol>
+<li><strong>작업 전 원본 통합 문서를 복사</strong>해 둡니다.</li>
+<li>B·C·D열 등 결과가 들어갈 위치에 <strong>빈 열이 충분히 있는지</strong> 확인합니다.</li>
+<li>예시처럼 A열 데이터가 들어 있는 범위를 선택합니다.</li>
+<li>리본 메뉴 <strong>데이터 → 텍스트 나누기</strong>를 선택합니다.</li>
+<li>&#x27;텍스트를 열로 변환&#x27; 마법사에서 <strong>구분 기호로 분리됨</strong>을 선택합니다.</li>
+<li>구분 기호에서 <strong>쉼표</strong>를 체크하고, 원하지 않는 공백·탭 등의 선택은 해제합니다.</li>
+<li>아래의 <strong>데이터 미리 보기</strong>에서 세 항목으로 나뉘는지 확인합니다.</li>
+<li>마지막 단계에서 <strong>대상(Destination)을 빈 결과 범위</strong>로 지정합니다. 예: $B$2.</li>
+<li>마침을 누른 뒤 B·C·D열이 정상적으로 채워졌는지 점검합니다.</li>
+</ol>
+<p>기본 설정 그대로 진행하면 분할 결과가 <strong>원본 셀이나 오른쪽 열의 데이터를 덮어쓸 수 있으므로</strong>, 결과 대상 지정과 빈 공간 확인이 중요합니다. 실행 전에 <strong>원본 보존</strong>, 실행 후 <strong>일부 행 대조</strong>를 반드시 하세요.</p>
+<p>예상 결과:</p>
+<div class="details-table"><table><thead><tr><th scope="col">B열</th><th scope="col">C열</th><th scope="col">D열</th></tr></thead><tbody><tr><td>김철수</td><td>서울</td><td>영업</td></tr><tr><td>박영희</td><td>부산</td><td>기획</td></tr><tr><td>이민수</td><td>대전</td><td>개발</td></tr></tbody></table></div>
+<p><strong>실무 판단:</strong> 한 번 분리하고 끝나는 정적 데이터라면 텍스트 나누기가 편합니다. 원본이 자주 바뀌고 분리 결과도 갱신해야 한다면 <strong>TEXTSPLIT 같은 수식 방식</strong>을 검토하세요.</p>
+<p>공식 근거: <a href="https://support.microsoft.com/ko-kr/excel/get-started/split-text-into-different-columns-with-the-convert-text-to-columns-wizard" rel="noopener noreferrer">Microsoft — 텍스트를 여러 열로 분할</a>.</p></section>
+<section class="section" aria-labelledby="section-03"><h2 id="section-03">3. 공백으로 텍스트 나누기: 성명과 주소는 다르게</h2><p>A2에 서울 강남구 역삼동이 들어 있을 때 공백 기준으로 나누면 세 부분으로 분리할 수 있습니다.</p>
+<ol>
+<li>A2를 선택합니다.</li>
+<li><strong>데이터 → 텍스트 나누기</strong>로 이동합니다.</li>
+<li>구분 기호 방식에서 <strong>공백</strong>을 선택합니다.</li>
+<li>미리 보기에서 의도한 열 개수를 확인합니다.</li>
+<li>빈 결과 열을 대상으로 지정해 분리합니다.</li>
+</ol>
+<p>그런데 <strong>한 사람이 여러 공백을 사용</strong>하면 예상하지 못한 빈 열이 만들어질 수 있습니다. 마법사의 <strong>연속 구분 기호를 하나로 처리</strong> 같은 옵션을 확인하세요. 이 옵션은 구분 기호가 연속된 경우를 다룰 때 유용합니다.</p>
+<h3>무조건 공백으로 나누면 안 되는 경우</h3>
+<ul>
+<li>서울특별시 강남구 테헤란로 123: 주소를 구성하는 공백이 <strong>항목 경계와 일치하지 않을 수 있음</strong></li>
+<li>김철수 팀장: 사람 이름과 직책으로 나뉠 수도 있지만, 이름 내부에 공백이 들어간 외국인 성명은 다름</li>
+<li>상품 A 128GB: 상품명이 여러 단어일 경우 잘못 분리될 수 있음</li>
+<li>2026-11-04 09:30: 날짜와 시간이 분리되지만 각각의 형식이 의도와 다르게 처리될 수 있음</li>
+</ul>
+<p><strong>원칙:</strong> 구분 문자가 데이터의 <strong>실제 항목 경계</strong>인지 확인해야 합니다. 공백이 있다고 무조건 분리하면 개인정보나 주소 자료의 정확성이 떨어질 수 있습니다.</p></section>
+<section class="section" aria-labelledby="section-04"><h2 id="section-04">4. TEXTSPLIT 함수: 원본을 유지하면서 여러 열로 자동 분리</h2><p>TEXTSPLIT은 원본 문자열에서 <strong>구분 기호를 기준으로 여러 열 또는 행으로 결과를 펼치는 함수</strong>입니다. Microsoft에 따르면 Microsoft 365용 Excel과 Excel 2024(Windows·Mac)에서 지원합니다.</p>
+<h3>기본 수식</h3>
+<p>A2에 아래와 같은 값을 입력합니다.</p>
+<pre class="notion-code"><code>김철수,서울,영업</code></pre>
+<p>B2 셀에 다음 수식을 입력합니다.</p>
+<pre class="notion-code"><code>=TEXTSPLIT(A2,&quot;,&quot;)</code></pre>
+<p>결과는 <strong>B2=김철수, C2=서울, D2=영업</strong>입니다. B2에만 수식을 입력하지만 결과가 오른쪽 여러 셀에 펼쳐집니다.</p>
+<h3>한 칸 공백으로 나누기</h3>
+<pre class="notion-code"><code>=TEXTSPLIT(A2,&quot; &quot;)</code></pre>
+<h3>슬래시로 나누기</h3>
+<pre class="notion-code"><code>=TEXTSPLIT(A2,&quot;/&quot;)</code></pre>
+<p>예: 서울/부산/대전은 세 개 열로 분리됩니다.</p>
+<h3>구분 기호가 두 종류라면?</h3>
+<p>Microsoft 예제에는 여러 구분 기호를 <strong>배열 상수</strong>로 넣는 방법이 있습니다.</p>
+<pre class="notion-code"><code>=TEXTSPLIT(A2,{&quot;,&quot;,&quot;;&quot;})</code></pre>
+<p>이 수식은 <strong>쉼표와 세미콜론을 모두 구분자</strong>로 취급합니다. 특정 열이 예상보다 많이 나뉜다면 실제 문자열에 그 기호가 <strong>의도적으로 포함된 내용</strong>인지 확인하세요.</p>
+<p><strong>주의:</strong> 수식의 쉼표와 세미콜론 구분자 사용 방식은 지역별 Excel 설정에 따라 달라질 수 있습니다. 이 글의 예시는 쉼표를 함수 인수 구분자로 사용하는 환경을 기준으로 했습니다.</p>
+<p>공식 근거: <a href="https://support.microsoft.com/ko-kr/excel/functions/textsplit-function" rel="noopener noreferrer">Microsoft — TEXTSPLIT 구문·예제</a>.</p></section>
+<section class="section" aria-labelledby="section-05"><h2 id="section-05">5. TEXTSPLIT 결과를 세로 행으로 나누기</h2><p>TEXTSPLIT은 오른쪽 열이 아니라 <strong>아래쪽 행</strong>으로 결과를 분리할 수도 있습니다.</p>
+<p>A2에 사과,배,포도가 있다고 가정합니다. 아래 수식은 쉼표를 <strong>행 구분 기호</strong>로 지정합니다.</p>
+<pre class="notion-code"><code>=TEXTSPLIT(A2,,&quot;,&quot;)</code></pre>
+<p>결과는 아래로 펼쳐집니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">B열</th></tr></thead><tbody><tr><td>사과</td></tr><tr><td>배</td></tr><tr><td>포도</td></tr></tbody></table></div>
+<p>두 번째 인수(열 구분 기호)는 비워 두고 <strong>세 번째 인수(행 구분 기호)</strong>에 쉼표를 넣었다는 점이 핵심입니다.</p>
+<h3>쉼표와 세미콜론이 함께 있으면 2차원 표로</h3>
+<p>A2에 다음 데이터를 입력합니다.</p>
+<pre class="notion-code"><code>김철수,서울;박영희,부산</code></pre>
+<p>B2에 아래 수식을 입력합니다.</p>
+<pre class="notion-code"><code>=TEXTSPLIT(A2,&quot;,&quot;,&quot;;&quot;)</code></pre>
+<p>예상 결과:</p>
+<div class="details-table"><table><thead><tr><th scope="col">이름</th><th scope="col">지역</th></tr></thead><tbody><tr><td>김철수</td><td>서울</td></tr><tr><td>박영희</td><td>부산</td></tr></tbody></table></div>
+<p>쉼표는 <strong>열을 나누고</strong>, 세미콜론은 <strong>행을 나눕니다.</strong> 단순한 복수 항목을 표 형태로 바꾸는 데 유용합니다.</p></section>
+<section class="section" aria-labelledby="section-06"><h2 id="section-06">6. 텍스트 사이에 빈 값이 많을 때: ignore_empty</h2><p>A2에 사과,,배,포도처럼 쉼표가 두 번 들어 있다면 중간에 빈 항목이 존재합니다.</p>
+<p>기본 수식은 다음과 같습니다.</p>
+<pre class="notion-code"><code>=TEXTSPLIT(A2,&quot;,&quot;)</code></pre>
+<p>빈 필드를 <strong>무시하고 나누고 싶다면</strong> 네 번째 인수 ignore_empty를 TRUE로 지정합니다.</p>
+<pre class="notion-code"><code>=TEXTSPLIT(A2,&quot;,&quot;,,TRUE)</code></pre>
+<p>하지만 이 옵션을 함부로 쓰면 안 됩니다. 예를 들어 <strong>주문번호,수량,배송상태</strong> 형태의 CSV를 나눌 때 중간의 빈 값은 <strong>&#x27;수량 미입력&#x27;</strong> 같은 중요한 의미일 수 있습니다.</p>
+<ul>
+<li>단순 태그 목록: 비어 있는 항목을 무시해도 되는지 검토</li>
+<li>고객·주문·계약 데이터: <strong>빈 항목 위치를 유지</strong>하는 것이 더 안전</li>
+<li>자동화용 데이터: 값이 없는 것을 0 또는 다른 값으로 임의 변경하지 않기</li>
+</ul>
+<p>공식 근거: <a href="https://support.microsoft.com/ko-kr/excel/functions/textsplit-function" rel="noopener noreferrer">Microsoft — TEXTSPLIT ignore_empty 인수</a>.</p></section>
+<section class="section" aria-labelledby="section-07"><h2 id="section-07">7. TEXTSPLIT #SPILL! 오류가 발생할 때</h2><p>TEXTSPLIT을 입력했는데 <strong>#SPILL!</strong> 오류가 표시되면 대개 분리 결과가 펼쳐질 범위에 문제가 있습니다.</p>
+<h3>우선 확인할 항목</h3>
+<ol>
+<li>수식을 넣은 셀의 오른쪽 또는 아래쪽에 <strong>기존 값</strong>이 있는지 확인합니다.</li>
+<li>결과 범위에 <strong>병합 셀</strong>이 있는지 봅니다.</li>
+<li>결과가 워크시트 범위를 벗어나지 않는지 확인합니다.</li>
+<li>수식이 <strong>Excel 표(Table) 내부</strong>에 있는지 확인합니다. 동적 배열 수식의 결과가 표 내부에서 정상적으로 펼쳐지지 않는 경우가 있으므로, 가능하면 <strong>표 외부의 빈 셀</strong>에서 시험합니다.</li>
+<li>여전히 오류가 난다면 <strong>경고 표시와 Excel의 오류 설명</strong>을 확인합니다.</li>
+</ol>
+<h3>안전한 해결</h3>
+<p>원본 A열을 그대로 둔 상태에서 <strong>충분한 빈 공간이 있는 다른 위치(예: H2)</strong>에 수식을 넣어 결과를 비교해 보세요. 기존 값을 삭제하기보다는 <strong>빈 결과 영역으로 수식을 옮기는 방식</strong>이 안전합니다.</p>
+<p>공식 근거: <a href="https://support.microsoft.com/ko-kr/excel/how-to-correct-a-spill-error" rel="noopener noreferrer">Microsoft — #SPILL! 오류 해결</a>.</p></section>
+<section class="section" aria-labelledby="section-08"><h2 id="section-08">8. TEXTSPLIT #NAME? 오류: 버전부터 확인</h2><p>=TEXTSPLIT(A2,&quot;,&quot;)를 입력했는데 <strong>#NAME?</strong>이 표시되면 수식 철자 오류뿐 아니라 <strong>해당 Excel 버전에서 함수를 지원하지 않을 가능성</strong>도 검토해야 합니다.</p>
+<p>Microsoft의 TEXTSPLIT 안내는 지원 대상으로 <strong>Microsoft 365용 Excel과 Excel 2024(Windows·Mac)</strong>를 명시합니다. 구형 Excel 영구 버전에서는 사용할 수 없을 수 있습니다.</p>
+<h3>확인 순서</h3>
+<ol>
+<li>TEXTSPLIT 철자를 확인합니다.</li>
+<li>사용 중인 Excel의 <strong>제품 버전과 업데이트 상태</strong>를 확인합니다.</li>
+<li>셀 수식에서 함수 이름이 자동 제안되는지 살펴봅니다.</li>
+<li>지원하지 않는 환경이면 <strong>데이터 → 텍스트 나누기</strong>를 사용합니다.</li>
+<li>별도 열에 예시를 넣고 <strong>빠른 채우기</strong>를 사용하는 방법도 검토합니다.</li>
+</ol>
+<p><strong>주의:</strong> 지원하지 않는 함수를 IFERROR로 감싼다고 해서 기능이 생기지는 않습니다. 오류를 숨기기보다 지원 여부를 먼저 확인해야 합니다.</p>
+<p>공식 근거: <a href="https://support.microsoft.com/ko-kr/excel/functions/textsplit-function" rel="noopener noreferrer">Microsoft — TEXTSPLIT 지원 버전</a>, <a href="https://support.microsoft.com/ko-kr/excel/how-to-correct-a-name-error" rel="noopener noreferrer">Microsoft — #NAME? 오류</a>.</p></section>
+<section class="section" aria-labelledby="section-09"><h2 id="section-09">9. 빠른 채우기: 함수 없이 성명·상품코드 분리</h2><p><strong>빠른 채우기(Flash Fill)</strong>는 사용자가 입력한 예시를 바탕으로 패턴을 추정해 나머지 값을 자동으로 채웁니다.</p>
+<p>예를 들어 A열에 다음과 같이 입력돼 있다고 가정합니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">A열: 원본</th><th scope="col">B열: 원하는 성</th></tr></thead><tbody><tr><td>김철수</td><td>김</td></tr><tr><td>박영희</td><td>박</td></tr><tr><td>이민수</td><td>이</td></tr></tbody></table></div>
+<h3>단계별 방법</h3>
+<ol>
+<li>원본 A열 옆에 비어 있는 B열을 마련합니다.</li>
+<li>B2에 첫 번째 예시인 <strong>김</strong>을 직접 입력합니다.</li>
+<li>B3로 이동해 <strong>박</strong>이라는 예시를 넣거나, B3 셀에서 <strong>데이터 → 빠른 채우기</strong>를 실행합니다.</li>
+<li>Windows Excel에서는 <strong>Ctrl+E</strong>를 이용해 수동으로 빠른 채우기를 시작할 수도 있습니다.</li>
+<li>제안된 결과를 검토한 후 정상적인 값만 사용합니다.</li>
+</ol>
+<p><strong>매우 중요한 한계:</strong> 이 예제는 한 글자 성을 가진 이름만 담고 있습니다. <strong>남궁·선우 같은 복성이나 외국인 이름</strong>에는 단순한 &#x27;첫 글자만 추출&#x27; 규칙이 맞지 않습니다. 개인정보나 고객 DB에 사용할 때는 <strong>원본과 분리 결과를 표본 검증</strong>해야 합니다.</p>
+<h3>자동 제안이 안 나타나면?</h3>
+<ul>
+<li><strong>데이터 → 빠른 채우기</strong>로 수동 실행</li>
+<li>Windows에서는 <strong>파일 → 옵션 → 고급 → 자동 빠른 채우기</strong>가 켜져 있는지 확인</li>
+<li>예시 데이터가 서로 일관된 패턴인지 확인</li>
+<li>Excel 버전 및 운영체제별 지원·메뉴 차이를 확인</li>
+</ul>
+<p>빠른 채우기로 만든 결과는 원본이 변경된다고 해서 수식처럼 자동으로 다시 계산된다고 가정하면 안 됩니다. <strong>반복 갱신이 필요한 업무</strong>에는 TEXTSPLIT이나 Power Query가 더 적합할 수 있습니다.</p>
+<p>공식 근거: <a href="https://support.microsoft.com/ko-kr/excel/using-flash-fill-in-excel" rel="noopener noreferrer">Microsoft — Excel 빠른 채우기 사용</a>, <a href="https://support.microsoft.com/ko-kr/excel/enable-flash-fill-in-excel" rel="noopener noreferrer">Microsoft — 빠른 채우기 활성화</a>.</p></section>
+<section class="section" aria-labelledby="section-10"><h2 id="section-10">10. 휴대전화 번호·우편번호가 잘리거나 날짜로 바뀐다면?</h2><p>텍스트를 분리할 때 <strong>하이픈을 무조건 구분 기호로 선택</strong>하면 전화번호 010-1234-5678이 세 개 항목으로 갈라질 수 있습니다.</p>
+<p>특히 숫자처럼 보이는 코드에는 다음 문제가 생길 수 있습니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">원본 예시</th><th scope="col">주의할 위험</th><th scope="col">권장 점검</th></tr></thead><tbody><tr><td>010-1234-5678</td><td>하이픈을 기준으로 분리</td><td>전화번호는 <strong>전체 문자열 유지</strong></td></tr><tr><td>01234</td><td>숫자로 해석되며 앞자리 0 소실</td><td><strong>텍스트 열 형식</strong></td></tr><tr><td>1-2</td><td>날짜로 해석될 가능성</td><td>원래 코드라면 텍스트 지정</td></tr><tr><td>16자리 이상 주문번호</td><td>숫자 정밀도 손실</td><td>원본 문자열로 유지</td></tr><tr><td>2026-11-04</td><td>날짜 변환 또는 문자열 유지 혼동</td><td>실제 날짜인지 코드인지 구분</td></tr></tbody></table></div>
+<p>텍스트 나누기 마법사에는 결과 열을 <strong>&#x27;텍스트&#x27; 형식으로 지정</strong>하는 단계가 있습니다. 원본이 <strong>숫자가 아니라 식별 코드</strong>라면 해당 열의 데이터 형식을 먼저 확인하세요.</p>
+<p>원본 CSV의 데이터가 이미 잘못 변환돼 있다면, 사후에 표시 형식만 바꿔도 <strong>앞자리 0이나 긴 주문번호의 원래 값이 복구되는 것은 아닙니다.</strong> 원본 파일에서 다시 가져와야 할 수 있습니다.</p>
+<p>공식 근거: <a href="https://support.microsoft.com/ko-kr/excel/text-import-wizard" rel="noopener noreferrer">Microsoft — 텍스트 가져오기 마법사</a>.</p></section>
+<section class="section" aria-labelledby="section-11"><h2 id="section-11">11. 웹용 Excel과 Mac용 Excel은 방법이 같을까요?</h2><p>동일한 기능 이름이라도 제품별로 지원 여부가 다릅니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">기능</th><th scope="col">Windows 데스크톱 Excel</th><th scope="col">Mac용 Excel</th><th scope="col">웹용 Excel</th></tr></thead><tbody><tr><td>텍스트 나누기 마법사</td><td>일반적으로 사용 가능</td><td>버전·메뉴 확인</td><td><strong>데스크톱과 같은 마법사가 없을 수 있음</strong></td></tr><tr><td>TEXTSPLIT</td><td><strong>Microsoft 365·2024 지원</strong></td><td><strong>Microsoft 365·2024 지원</strong></td><td>지원 환경에서 함수 사용 가능</td></tr><tr><td>빠른 채우기</td><td><strong>Ctrl+E·데이터 메뉴</strong></td><td>데이터 메뉴 사용</td><td>데스크톱과 동일 동작을 가정하지 않기</td></tr></tbody></table></div>
+<p>Microsoft의 웹용 Excel 안내에서는 <strong>텍스트 나누기 마법사 대신 TEXTSPLIT 같은 함수로 분리</strong>하는 방법을 소개합니다. 따라서 메뉴를 찾기 어려울 때는 사용하는 제품이 <strong>웹 버전인지 데스크톱 버전인지</strong>부터 확인하세요.</p>
+<p>공식 근거: <a href="https://support.microsoft.com/ko-kr/excel/split-a-cell-in-excel" rel="noopener noreferrer">Microsoft — Excel 셀 분할 및 웹용 Excel</a>.</p></section>
+<section class="section" aria-labelledby="section-12"><h2 id="section-12">12. 자주 묻는 질문</h2><h3>Q. 엑셀 한 셀을 실제로 두 칸으로 나눌 수 있나요?</h3>
+<p>일반 워크시트의 격자 셀 하나를 Word 표의 셀처럼 자유롭게 두 격자로 쪼개는 기능과 <strong>내용을 여러 셀로 분리하는 작업</strong>은 다릅니다. 내용을 나누려면 <strong>텍스트 나누기·TEXTSPLIT·빠른 채우기</strong>를 사용하고, 표의 모양이 문제라면 <strong>행·열 구조를 변경</strong>하세요.</p>
+<h3>Q. 쉼표 뒤에 공백이 있는데 공백까지 같이 잘라야 하나요?</h3>
+<p>김철수, 서울처럼 쉼표 뒤 공백이 포함됐다면 <strong>쉼표를 구분자로 지정</strong>한 뒤 결과의 앞 공백 여부를 확인하세요. 필요에 따라 TRIM으로 정리할 수 있지만, 사람 이름·주소 등에 필요한 공백까지 임의로 제거하지는 마세요.</p>
+<h3>Q. 구분 기호가 쉼표와 세미콜론 두 개입니다.</h3>
+<p>지원하는 Excel에서는 =TEXTSPLIT(A2,{&quot;,&quot;,&quot;;&quot;})처럼 <strong>복수 구분자를 배열 상수</strong>로 지정하는 방법이 있습니다. 결과가 뜻대로 나뉘는지 테스트 데이터로 확인하세요.</p>
+<h3>Q. 텍스트 나누기를 눌렀더니 다른 열 데이터가 사라졌습니다.</h3>
+<p>분리 결과의 <strong>대상 위치가 기존 데이터와 겹쳤을 가능성</strong>이 있습니다. 즉시 실행 취소 가능 여부를 확인하고, 원본 사본을 사용해 <strong>빈 결과 영역</strong>으로 다시 시도하세요.</p>
+<h3>Q. TEXTSPLIT을 입력했는데 #SPILL!이 뜹니다.</h3>
+<p>결과가 펼쳐질 위치에 값·병합 셀이 있거나 결과 범위가 차단됐을 수 있습니다. <strong>충분한 빈 공간으로 수식을 옮겨</strong> 확인하세요.</p>
+<h3>Q. Excel 2021에서 TEXTSPLIT을 사용할 수 있나요?</h3>
+<p>Microsoft의 TEXTSPLIT 공식 문서는 <strong>Microsoft 365 및 Excel 2024</strong> 등을 지원 대상으로 표기합니다. 해당 함수가 없는 구형 버전에서는 <strong>데이터 → 텍스트 나누기</strong>나 <strong>빠른 채우기</strong>를 사용하는 것이 현실적입니다.</p>
+<h3>Q. 이름 1만 개를 성과 이름으로 자동 분리해도 되나요?</h3>
+<p>기술적으로 가능하지만 <strong>복성·영문 이름·이름 내부 공백·동명이인</strong> 등 예외가 많습니다. 이름 분리 자체가 <strong>정확한 성·이름 구조를 보장하지 않으므로</strong> 검증 가능한 별도 데이터를 함께 확인해야 합니다.</p></section>
+<section class="section" aria-labelledby="section-13"><h2 id="section-13">13. 최종 체크리스트: 데이터가 망가지지 않게 분리하기</h2><ol>
+<li>원본 파일을 <strong>다른 이름으로 저장</strong>하거나 복사합니다.</li>
+<li>나눌 기준이 되는 <strong>쉼표·공백·슬래시·줄바꿈</strong>이 데이터 구조와 일치하는지 확인합니다.</li>
+<li>결과를 쓸 <strong>빈 열·빈 행</strong>을 충분히 확보합니다.</li>
+<li>전화번호·우편번호·주문번호 등은 <strong>텍스트로 보존</strong>합니다.</li>
+<li>결과를 소량 샘플로 테스트하고 예외 행을 확인합니다.</li>
+<li>동적 갱신이 필요한 경우 <strong>TEXTSPLIT</strong>, 일회성 정리는 <strong>텍스트 나누기</strong>, 패턴 기반 분리는 <strong>빠른 채우기</strong>를 우선 검토합니다.</li>
+<li>데이터를 덮어쓰지 않았는지, 원본의 행 수·이름·코드가 유지됐는지 최종 대조합니다.</li>
+</ol>
+<p><strong>정리:</strong> 가장 손쉬운 방법은 <strong>데이터 → 텍스트 나누기</strong>입니다. 원본 문자열이 계속 바뀐다면 <strong>TEXTSPLIT</strong>이 편리하고, 규칙이 비교적 단순한 데이터라면 <strong>빠른 채우기</strong>를 이용할 수 있습니다. 어떤 방법이든 분리된 결과가 원본과 동일한 의미를 유지하는지 확인하는 것이 중요합니다.</p></section>
+<section class="section" aria-labelledby="section-14"><h2 id="section-14">공식 참고 자료</h2><ul>
+<li><a href="https://support.microsoft.com/ko-kr/excel/get-started/split-text-into-different-columns-with-the-convert-text-to-columns-wizard" rel="noopener noreferrer">Microsoft — 텍스트 나누기 마법사로 여러 열 분리</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/functions/textsplit-function" rel="noopener noreferrer">Microsoft — TEXTSPLIT 함수: 구문·지원 버전·예제</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/using-flash-fill-in-excel" rel="noopener noreferrer">Microsoft — Excel 빠른 채우기 사용</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/enable-flash-fill-in-excel" rel="noopener noreferrer">Microsoft — Excel에서 빠른 채우기 활성화</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/split-a-cell-in-excel" rel="noopener noreferrer">Microsoft — Excel 셀 분할과 웹용 Excel</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/how-to-correct-a-spill-error" rel="noopener noreferrer">Microsoft — #SPILL! 오류 해결</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/excel/text-import-wizard" rel="noopener noreferrer">Microsoft — 텍스트 가져오기 마법사</a></li>
+</ul>
+<p><strong>작성·검토일: 2026년 11월 4일.</strong></p></section>
+
+<!-- notion-discovery:start -->
+<section class="section" aria-label="관련 글"><h2>함께 읽으면 좋은 같은 분야의 글</h2><ul><li><a href="/kor/report/it/excel-formulas-not-calculating-manual-auto-text-show-formulas-spill-2026.html">2026 엑셀 수식 계산 안됨 해결법: 자동 계산·수식 그대로 표시·텍스트 서식·#SPILL 오류</a></li>
+<li><a href="/kor/report/it/excel-value-error-fix-text-numbers-hidden-spaces-dates-iferror-2026.html">2026 엑셀 #VALUE! 오류 해결법: 숫자·문자 혼합, 숨은 공백, 날짜 계산·IFERROR 주의</a></li>
+<li><a href="/kor/report/it/excel-stop-numbers-changing-to-dates-1-2-12-2-text-format-csv-2026.html">2026 엑셀 숫자가 날짜로 바뀔 때 해결법: 1-2·12/2 자동 변환 방지, 텍스트 서식·CSV</a></li>
+<li><a href="/kor/report/it/excel-line-break-alt-enter-wrap-text-auto-fit-row-mac-2026.html">2026 엑셀 셀 줄바꿈 방법: Alt+Enter·자동 줄바꿈·행 높이·맥 단축키·안됨 해결</a></li></ul></section>
+<!-- notion-discovery:end -->
+<section class="info-bottom">
+<h2>정보 출처와 확인 안내</h2>
+<p>작성·갱신일과 적용 범위는 본문에서 확인하세요. 정책·행사 일정·혜택·제품 정보는 변경될 수 있으므로 중요한 판단 전 공식 기관 및 판매처의 최신 안내를 확인하시기 바랍니다.</p>
+<div class="pills"><a href="/kor/report/it/">같은 분야의 글</a><a href="/kor/report/">생활정보 전체</a><a href="/">emfls 홈</a></div>
+</section>
+</div>
+</article>
+<footer class="site-footer">© 2026 emfls · 공식 기관 안내를 우선 확인하세요</footer>
+</main>
+</body>
+</html>
