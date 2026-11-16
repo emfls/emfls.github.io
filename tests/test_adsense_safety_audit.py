@@ -48,6 +48,20 @@ class AdsenseSafetyAuditTests(unittest.TestCase):
         self.assertEqual(result["assessment"], "manual_review_required")
         self.assertNotIn("violation", result["assessment"])
 
+    def test_game_page_ad_slots_sit_after_all_sections(self):
+        root = Path(__file__).resolve().parents[1]
+        pages = (
+            "jp/game/ConnectFour", "jp/game/TicTacToe", "jp/game/CardMatch", "jp/game/SnakeGame",
+            "kor/game/ConnectFour", "kor/game/Gomoku",
+            "game/Gomoku", "game/CardMatch", "game/NumberHunt", "game/TicTacToe",
+        )
+        for page in pages:
+            html = (root / page / "index.html").read_text(encoding="utf-8")
+            slot = html.index('<ins class="adsbygoogle"')
+            self.assertEqual(html.count('<ins class="adsbygoogle"'), 1, page)
+            self.assertGreater(slot, html.rindex("</section>"), page)
+            self.assertLess(slot, html.rindex("</body>"), page)
+
 
 if __name__ == "__main__":
     unittest.main()
