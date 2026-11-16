@@ -1,3 +1,9 @@
+## 2026-11-16 — Wave 4A 8-page high-RPM Korean car, compare & gov CTR remediation
+
+- Updated 8 AdSense-enabled high-RPM Korean pages (`2026-car-insurance-mileage-refund-photo-registration.html`, `2026-electric-car-insurance-battery-new-value-charging-accident-towing-riders.html`, `2026-apartment-ev-charger-installation-subsidy-consent-cost-checklist.html`, `black-friday-2026-overseas-shopping-customs-tax-150-200-pccc-renewal.html`, `carbon-electric-mat-ten-models-temperature-price-electricity-2026.html`, `humidifier-13-models-ultrasonic-steam-evaporative-maintenance-2026.html`, `mobile-gift-certificate-expired-refund-90-95-100-five-years-2026.html`, `2026-car-regional-development-bond-refund-unredeemed-nh-shinhan-discount.html`) via parallel single-file Codex workers and Antigravity Claude Sonnet 5.5 independent verification (preserved `kia-000270.html` and `hybe-352820.html` untouched per `protectedWinners`).
+- Converted awkward question-fragment H1s and teaser descriptions into conclusion-first numbers summaries, added an internal revenue funnel link from Black Friday duty guide to `pccc-2026-customs-portal-renewal-otp-reissue-theft-report.html`, and preserved all GA4/AdSense scripts, canonicals, and factual numbers.
+- Verified committed `content_launch_guard.py` (`PASS`), `sitemap_audit.py` (`9498` URLs, `0` errors), targeted `pytest` (`34 passed, 3 skipped`), `git diff --check`, and Playwright mobile check (`320px`/`390px`, `0px` overflow).
+
 ## 2026-11-16 — Wave 3C 10-thread single-page Korean report, game & StockWiki CTR remediation
 
 - Updated 10 Korean pages (`kor/game/Gomoku/index.html`, `kor/report/ai/chatgpt-subscription-cancel-refund-korea-ios-android-web-2026.html`, `kor/report/stock/us/tsla.html`, `kor/stockwiki/stocks/{005930,000660,035420,035720,NVDA,TSLA,AAPL}/index.html`) via 1-page-per-worker 10-thread Codex execution followed by coordinator integration.
