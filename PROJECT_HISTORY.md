@@ -1,3 +1,9 @@
+## 2026-11-16 — Wave 3B 10-thread single-page Korean CTR, geo & schema remediation
+
+- Updated 10 Korean pages (`kor/game/MBTI/index.html`, `kor/report/camp/glamping-{cheonan,daejeon,ganghwa,gapyeong,incheon,pocheon,yongin}.html`, `kor/report/it/game-ssalmuk-account-ban-macro-multi-account-real-money-trading-2026.html`, `kor/report/it/wow-token-2026-gold-game-time-rmt-cashout-limits-guide.html`) via 1-page-per-worker 10-thread Codex execution followed by coordinator integration.
+- Repaired Pyeongtaek `geo.placename`/`geo.position`/`keywords` leaks on `glamping-pocheon` and `glamping-yongin`, fixed `geo.region="KR-41"` -> `KR-30` on `glamping-daejeon`, removed off-topic `/kor/util/power-bank-wh-calculator/` footer links across glamping pages, restored untruncated descriptions + AIO bracket title hooks, and added `WebApplication` JSON-LD on `kor/game/MBTI/index.html`. Preserved all existing non-JSON-LD scripts, canonicals, and ads.
+- Synchronized affected leaf sitemaps (`update_sitemap_lastmod.py`) and verified committed `content_launch_guard.py`, baseline `seo_audit.py`/`seo_qa.py`, `sitemap_audit.py`, 10-module OPS `pytest`, and headless Playwright `320px`/`360px`/`390px` horizontal-overflow fit.
+
 ## 2026-11-14 — Complete three existing car summaries
 
 - Repaired five description/deck fields each in the smart-key and remote-climate guides, and only the turtle guide's cut deck. Its previously completed metadata remains byte-identical. Eleven exact substitutions preserve titles, dates, remaining Article fields, CSS, scripts, ads, body and links. Detail: docs/car-three-description-repair-2026-11-14.md.
