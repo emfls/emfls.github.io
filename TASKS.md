@@ -1,3 +1,7 @@
+- [x] 2026-11-16 Wave 3B 10-thread single-page Korean CTR, geo & schema remediation
+  - Remediated 10 Korean glamping, IT/gaming report, and MBTI quick-test pages (`glamping-pocheon`, `glamping-yongin`, `glamping-daejeon`, `glamping-cheonan`, `glamping-ganghwa`, `glamping-gapyeong`, `glamping-incheon`, `game-ssalmuk`, `wow-token`, `kor/game/MBTI/index.html`) to fix regional geo metadata leaks, remove off-topic footer links, expand descriptions, align AIO bracket title hooks, and add `WebApplication` JSON-LD on `kor/game/MBTI/index.html`.
+  - Synchronized affected sitemaps (`update_sitemap_lastmod.py`) and passed committed `content_launch_guard.py`, 10-module OPS `pytest`, `sitemap_audit.py`, baseline `seo_audit.py`/`seo_qa.py`, and Playwright `320/360/390px` geometry checks.
+
 - [x] 2026-11-16 Wave 3A Korean metadata, markdown, and link remediation
   - Updated 10 Korean report pages (`gov`, `car`, `parenting`, `seasonal`, `it`) to eliminate leaked markdown bold markers in metadata/JSON-LD/body text, fix malformed official portal URLs, restore truncated descriptions with direct factual summaries, and align CSAT pill anchors.
   - Synchronized affected leaf sitemaps (`update_sitemap_lastmod.py`) and verified committed `content_launch_guard.py`, `seo_qa.py` (`0` new critical/warnings), `sitemap_audit.py` (`0` missing lastmod/invalid XML/duplicates), targeted pytest, and mobile `320px`/`360px`/`390px` horizontal-overflow fit.
