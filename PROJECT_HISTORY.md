@@ -1,3 +1,9 @@
+## 2026-11-16 — Wave 3C 10-thread single-page Korean report, game & StockWiki CTR remediation
+
+- Updated 10 Korean pages (`kor/game/Gomoku/index.html`, `kor/report/ai/chatgpt-subscription-cancel-refund-korea-ios-android-web-2026.html`, `kor/report/stock/us/tsla.html`, `kor/stockwiki/stocks/{005930,000660,035420,035720,NVDA,TSLA,AAPL}/index.html`) via 1-page-per-worker 10-thread Codex execution followed by coordinator integration.
+- Upgraded thin `오목` title + `og:url`/box-sizing CSS on Gomoku, replaced pain-question teaser with direct conclusion-first summary on ChatGPT cancel/refund, updated stale `2025` title to `2026` + Twitter metadata on `us/tsla.html`, added Korean company-ticker CTR titles + StockWiki metric summaries + fixed missing `035720` -> `카카오` breadcrumb/H1 label, and preserved zero ads, executable scripts, JSON-LD counts, and canonicals.
+- Synchronized affected sitemaps (`update_sitemap_lastmod.py`) and verified committed `content_launch_guard.py`, baseline `seo_audit.py`/`seo_qa.py`, `sitemap_audit.py`, targeted `pytest` including `test_stockwiki_ad_safety.py`, and headless Playwright `320px`/`360px`/`390px` horizontal-overflow fit.
+
 ## 2026-11-16 — Wave 3B 10-thread single-page Korean CTR, geo & schema remediation
 
 - Updated 10 Korean pages (`kor/game/MBTI/index.html`, `kor/report/camp/glamping-{cheonan,daejeon,ganghwa,gapyeong,incheon,pocheon,yongin}.html`, `kor/report/it/game-ssalmuk-account-ban-macro-multi-account-real-money-trading-2026.html`, `kor/report/it/wow-token-2026-gold-game-time-rmt-cashout-limits-guide.html`) via 1-page-per-worker 10-thread Codex execution followed by coordinator integration.
