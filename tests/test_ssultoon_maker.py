@@ -22,6 +22,9 @@ def test_ssultoon_maker_page_seo_adsense_and_structure():
     assert "독자 BEST 댓글" in html
     assert "ssultoonCanvas" in html
     assert "webtoonCanvasList" in html
+    assert "toon.guidehollow.com/assets/toons" in html
+    assert "본 웹툰 이미지는 AI 도구를 활용해 제작되었습니다" in html
+    assert "drawChar" not in html
     for bad in ("장면 커스텀", "대사 입력", "미리보기", "생성하기"):
         assert bad not in html
     assert len(html.encode("utf-8")) > 6000
