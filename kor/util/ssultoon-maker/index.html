@@ -301,9 +301,20 @@
       let episodes = [];
       let activeIdx = 0;
 
+      const THEME_COUPANG_MAP = [
+        [0, 5], // EP01 직장 야근: 무선키보드 · 분쟁서류문구
+        [1, 4], // EP02 결혼·신혼: 수납장 · 신혼주방
+        [2, 5], // EP03 주차 분쟁: 차량용품 · 분쟁서류문구
+        [3, 1], // EP04 자취 보안: 공기청정기 · 수납정리
+        [4, 1], // EP05 전세 이사: 이사주방 · 수납정리
+        [5, 0], // EP06 중고거래: 포장라벨문구 · 무선키보드
+      ];
+
       function pickCoupang(offset) {
         if (!episodes.length) return null;
-        return episodes[(activeIdx + offset) % episodes.length].coupang;
+        const group = THEME_COUPANG_MAP[activeIdx % THEME_COUPANG_MAP.length] || [activeIdx];
+        const target = group[offset % group.length] % episodes.length;
+        return episodes[target].coupang;
       }
 
       function renderEpisode(idx, syncUrl) {
@@ -337,20 +348,20 @@
           b.classList.toggle("is-selected", i === idx);
         });
 
-        const mobileTop = pickCoupang(5);
+        const mobileTop = pickCoupang(0);
         const midA = pickCoupang(0);
-        const midB = pickCoupang(2);
-        const endC = pickCoupang(4);
+        const midB = pickCoupang(1);
+        const endC = pickCoupang(1);
         document.getElementById("mobileTopCoupang").innerHTML = mobileTop ? renderCoupangInfeed(mobileTop) : "";
-        document.getElementById("wingLeft").innerHTML = [pickCoupang(1), pickCoupang(2)].filter(Boolean).map(renderCoupangWing).join("");
-        document.getElementById("wingRight").innerHTML = [pickCoupang(3), pickCoupang(4)].filter(Boolean).map(renderCoupangWing).join("");
+        document.getElementById("wingLeft").innerHTML = [pickCoupang(0), pickCoupang(1)].filter(Boolean).map(renderCoupangWing).join("");
+        document.getElementById("wingRight").innerHTML = [pickCoupang(1), pickCoupang(0)].filter(Boolean).map(renderCoupangWing).join("");
         document.getElementById("bottomCoupangCard").innerHTML = endC ? renderCoupangInfeed(endC) : "";
 
         const stream = document.getElementById("webtoonCanvasList");
         const parts = [];
         ep.panels.forEach((p, i) => {
           const cNum = p.panelNumber || (i + 1);
-          const eager = cNum <= 3 ? "eager" : "lazy";
+          const eager = cNum <= 1 ? "eager" : "lazy";
           parts.push(`<div class="comic-cut" data-cut="${cNum}"><img src="${cutSrc(ep.id, cNum)}" alt="${esc(ep.title)} ${cNum}컷 - ${esc(p.dialogue)}" width="690" height="1120" loading="${eager}" /></div>`);
           if (cNum === 4 && midA) parts.push(renderCoupangInfeed(midA));
           else if (cNum === 9 && cutCount >= 11 && midB) parts.push(renderCoupangInfeed(midB));
