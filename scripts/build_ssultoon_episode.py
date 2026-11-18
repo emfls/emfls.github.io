@@ -398,18 +398,106 @@ EPISODES = [
 ]
 
 
+EPISODE_CUT_COUNTS = {
+    "ep01-office-cider": 18,
+    "ep02-love-wedding": 14,
+    "ep03-car-parking": 16,
+    "ep04-mystery-mirror": 15,
+    "ep05-finance-jeonse": 17,
+    "ep06-secondhand-brick": 13,
+}
+
+EPISODE_COUPANG_MAP = {
+    "ep01-office-cider": {
+        "badge": "직장인 데스크 추천",
+        "title": "휴대·재택 업무 효율 높이는 무선 블루투스 키보드 특가 모음",
+        "reason": "급한 외근·메모·업무 정리에 손목 피로가 적은 컴팩트 키보드를 많이 비교합니다.",
+        "cta": "무선 키보드 쿠팡 최저가 보기",
+        "url": "https://link.coupang.com/a/iG9mTjBUg8",
+        "guideUrl": "https://shopping.guidehollow.com/guides/digital",
+        "guideLabel": "무선 키보드 선택 가이드",
+    },
+    "ep02-love-wedding": {
+        "badge": "신혼·생활 수납 추천",
+        "title": "축의금 방명록·예식 청첩장 서류 깔끔 정리 수납장 특가",
+        "reason": "예식장 영수증·서류를 깔끔히 분류하기 좋은 다단 수납장을 함께 비교해보세요.",
+        "cta": "생활 수납장 쿠팡 확인하기",
+        "url": "https://link.coupang.com/a/iG9mVheC0i",
+        "guideUrl": "https://shopping.guidehollow.com/guides/living",
+        "guideLabel": "수납가구 규격 가이드",
+    },
+    "ep03-car-parking": {
+        "badge": "주차·차량 대비 추천",
+        "title": "주차 테러·이중주차 대비 차량 액세서리·루프랙 특가 모음",
+        "reason": "차량 관리와 이동 편의를 챙기는 운전자 필수 액세서리를 모아 비교할 수 있습니다.",
+        "cta": "차량용품 쿠팡 확인하기",
+        "url": "https://link.coupang.com/a/iG9otClG7U",
+        "guideUrl": "https://shopping.guidehollow.com/guides/travel",
+        "guideLabel": "차량·여행용품 가이드",
+    },
+    "ep04-mystery-mirror": {
+        "badge": "자취방 쾌적 환경 추천",
+        "title": "자취방·신규 입주 곰팡이·미세먼지 잡는 공기청정기 특가 모음",
+        "reason": "원룸·투룸 실내 공기 질 관리와 소음 적은 필터 모델을 함께 비교해보세요.",
+        "cta": "공기청정기 쿠팡 최저가 보기",
+        "url": "https://link.coupang.com/a/iG9mZqYo6S",
+        "guideUrl": "https://shopping.guidehollow.com/guides/living",
+        "guideLabel": "생활가전 체크 가이드",
+    },
+    "ep05-finance-jeonse": {
+        "badge": "새 집 입주 주방 추천",
+        "title": "입주 첫날 바로 쓰는 인덕션·가스 겸용 코팅 프라이팬 모음",
+        "reason": "이사 직후 인덕션·가스레인지 호환 걱정 없이 오래 쓰는 주방 조리도구 모음입니다.",
+        "cta": "코팅 프라이팬 쿠팡 확인하기",
+        "url": "https://link.coupang.com/a/iG9mXT9nRA",
+        "guideUrl": "https://shopping.guidehollow.com/guides/kitchen",
+        "guideLabel": "주방조리도구 선택 가이드",
+    },
+    "ep06-secondhand-brick": {
+        "badge": "택배·거래 포장 추천",
+        "title": "거래 내역서·소포장 라벨·문구류 실속 비교 인기템 모음",
+        "reason": "전자기기 안전 포장·라벨링과 영수증 정리를 꼼꼼히 도와주는 포장 문구 세트입니다.",
+        "cta": "포장·문구류 쿠팡 확인하기",
+        "url": "https://link.coupang.com/a/iG9orI6mBw",
+        "guideUrl": "https://shopping.guidehollow.com/guides/living",
+        "guideLabel": "생활정리 구매 가이드",
+    },
+}
+
+
 def build_payload() -> dict:
+    cleaned_episodes: list[dict] = []
+    for ep in EPISODES:
+        raw_panels = ep["panels"]
+        target_n = EPISODE_CUT_COUNTS.get(ep["id"], len(raw_panels))
+        picked = (raw_panels[: target_n - 2] + raw_panels[-2:]) if (4 <= target_n < len(raw_panels)) else list(raw_panels)
+        renumbered = []
+        for idx, panel in enumerate(picked, start=1):
+            p = dict(panel)
+            p["panelNumber"] = idx
+            p["aiPrompt"] = f"Korean vertical webtoon cut {idx}/{len(picked)} ({p['camera']}, {p['scene']}, {p['expression']}) — {p['dialogue']}"
+            renumbered.append(p)
+        ep_clean = {
+            k: v
+            for k, v in ep.items()
+            if k not in ("rating", "viewsLabel", "bestComments", "panels", "badgeText")
+        }
+        ep_clean["cutCount"] = len(renumbered)
+        ep_clean["coupang"] = EPISODE_COUPANG_MAP.get(ep["id"], EPISODE_COUPANG_MAP["ep01-office-cider"])
+        ep_clean["panels"] = renumbered
+        cleaned_episodes.append(ep_clean)
+
     return {
-        "schemaVersion": 2,
+        "schemaVersion": 3,
         "generatedDate": "2026-11-18",
         "makerUrl": "/kor/util/ssultoon-maker/",
-        "episodeCount": len(EPISODES),
+        "episodeCount": len(cleaned_episodes),
         "allowedScenes": sorted(ALLOWED_SCENES),
         "allowedExpressions": sorted(ALLOWED_EXPRESSIONS),
         "allowedBubbleTypes": sorted(ALLOWED_BUBBLE_TYPES),
         "allowedSfx": sorted(ALLOWED_SFX),
         "allowedCameras": sorted(ALLOWED_CAMERAS),
-        "episodes": EPISODES,
+        "episodes": cleaned_episodes,
     }
 
 
@@ -419,17 +507,25 @@ def validate_payload(payload: dict) -> list[str]:
     if not isinstance(episodes, list) or len(episodes) < 5:
         return ["episodes must contain at least 5 episodes"]
     seen_ids: set[str] = set()
+    cut_counts: set[int] = set()
     for ep in episodes:
         eid = ep.get("id", "")
         if not eid or eid in seen_ids:
             errors.append(f"duplicate or missing episode id: {eid!r}")
         seen_ids.add(eid)
+        for forbidden in ("rating", "viewsLabel", "bestComments"):
+            if forbidden in ep:
+                errors.append(f"{eid}: forbidden fake server field {forbidden}")
         for field in ("genre", "presetKey", "title", "hook", "summary", "aiDisclosure", "shortsScript"):
             if not isinstance(ep.get(field), str) or not ep[field].strip():
                 errors.append(f"{eid}: missing {field}")
+        coup = ep.get("coupang") or {}
+        if not str(coup.get("url", "")).startswith("https://link.coupang.com/"):
+            errors.append(f"{eid}: invalid or missing coupang url")
         panels = ep.get("panels") or []
-        if len(panels) != 18:
-            errors.append(f"{eid}: panels count must be 18, got {len(panels)}")
+        if not (12 <= len(panels) <= 18):
+            errors.append(f"{eid}: panels count must be in 12..18, got {len(panels)}")
+        cut_counts.add(len(panels))
         for idx, panel in enumerate(panels, start=1):
             if panel.get("panelNumber") != idx:
                 errors.append(f"{eid}: panelNumber mismatch at {idx}")
@@ -453,6 +549,8 @@ def validate_payload(payload: dict) -> list[str]:
             url = link.get("url", "")
             if not url.startswith("/kor/"):
                 errors.append(f"{eid}: highCpcTip link must start with /kor/, got {url!r}")
+    if len(cut_counts) < 4:
+        errors.append(f"episodes must vary cut counts by story length (>=4 distinct sizes), got {sorted(cut_counts)}")
     return errors
 
 
