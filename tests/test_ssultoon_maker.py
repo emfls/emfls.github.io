@@ -26,12 +26,15 @@ def test_ssultoon_maker_page_seo_adsense_coupang_and_no_fake_server():
     assert "mobileTopCoupang" in html
     assert "bottomCoupangCard" in html
     assert "infeed-coupang-card" in html
-    assert "이 포스팅은 쿠팡 파트너스 활동의 일환으로" in html
+    assert html.count("이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.") == 1
+    assert "top-coupang-disclosure" in html
     assert "toon.guidehollow.com/assets/toons" in html
     assert "cut-${pad}.webp" in html
-    assert "ad-thumb-img" in html
     assert "promo-event-banner" in html
-    assert "pick-goldbox.webp" in html
+    assert "https://ads-partners.coupang.com/widgets.html" in html
+    assert "https://ads-partners.coupang.com/banners/" in html
+    assert "pick-goldbox.webp" not in html
+    assert "ad-thumb-img" not in html
     assert "본 웹툰 이미지는 AI 도구를 활용해 제작되었습니다" in html
     for bad in (
         "장면 커스텀",
