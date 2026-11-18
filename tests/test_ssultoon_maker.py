@@ -26,6 +26,9 @@ def test_ssultoon_maker_page_seo_adsense_and_structure():
     assert '"@type": "FAQPage"' in html
     assert '"@type": "BreadcrumbList"' in html
     assert "ssultoonCanvas" in html
+    assert "storyIdeaInput" not in html
+    assert "autoBuildBtn" not in html
+    assert "toon.guidehollow.com" in html
     assert "/kor/util/retirement-pension-withdrawal/" in html
     assert "/kor/util/car-inspection-cost/" in html
 
