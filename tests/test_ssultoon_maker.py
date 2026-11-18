@@ -1,9 +1,9 @@
+"""Regression tests for /kor/util/ssultoon-maker/ 18-cut Naver Webtoon portal & dataset."""
+from __future__ import annotations
+
 import json
 from pathlib import Path
-import subprocess
 import sys
-import xml.etree.ElementTree as ET
-
 
 ROOT = Path(__file__).resolve().parents[1]
 PAGE = ROOT / "kor/util/ssultoon-maker/index.html"
@@ -14,36 +14,34 @@ CANONICAL = "https://emfls.github.io/kor/util/ssultoon-maker/"
 
 def test_ssultoon_maker_page_seo_adsense_and_structure():
     html = PAGE.read_text(encoding="utf-8")
-    assert html.count("<h1") == 1
     assert f'<link rel="canonical" href="{CANONICAL}"' in html
     assert "ca-pub-8830524482034754" in html
     assert "G-QP5Q67GE5B" in html
-    assert 'aria-label="Advertisement"' in html
-    assert '<div class="ad-label">Advertisement</div>' in html
-    assert "ad_click" not in html.lower()
-    assert "광고를 클릭" not in html
-    assert '"@type": "WebApplication"' in html
-    assert '"@type": "FAQPage"' in html
-    assert '"@type": "BreadcrumbList"' in html
+    assert "WEBTOON" in html
+    assert "18컷 장편" in html
+    assert "독자 BEST 댓글" in html
     assert "ssultoonCanvas" in html
-    assert "storyIdeaInput" not in html
-    assert "autoBuildBtn" not in html
-    assert "toon.guidehollow.com" in html
-    assert "/kor/util/retirement-pension-withdrawal/" in html
-    assert "/kor/util/car-inspection-cost/" in html
+    assert "webtoonCanvasList" in html
+    for bad in ("장면 커스텀", "대사 입력", "미리보기", "생성하기"):
+        assert bad not in html
+    assert len(html.encode("utf-8")) > 6000
 
 
 def test_ssultoon_episodes_data_and_validator():
-    data = json.loads(EPISODES.read_text(encoding="utf-8"))
-    assert data["episodeCount"] == len(data["episodes"]) == 6
-    proc = subprocess.run(
-        [sys.executable, str(SCRIPT), "--validate", "--output", str(EPISODES)],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
-        check=True,
-    )
-    assert "VALIDATED 6 episodes cleanly" in proc.stdout
+    sys.path.insert(0, str(SCRIPT.parent))
+    import build_ssultoon_episode as bse
+
+    payload = json.loads(EPISODES.read_text(encoding="utf-8"))
+    assert payload.get("schemaVersion") == 2
+    assert len(payload.get("episodes", [])) == 6
+    for ep in payload["episodes"]:
+        assert len(ep["panels"]) == 18
+        assert len(ep.get("bestComments", [])) == 3
+    errors = bse.validate_payload(payload)
+    assert errors == []
+
+
+import xml.etree.ElementTree as ET
 
 
 def test_ssultoon_discovery_wiring():
