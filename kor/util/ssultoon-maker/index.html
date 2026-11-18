@@ -106,10 +106,23 @@
     .wing-guide { font-size: 12px; font-weight: 700; color: #1d4ed8; text-align: center; }
 
     .ad-disclosure { font-size: 11px; color: #595959; line-height: 1.4; }
-    .infeed-coupang-card { margin: 16px 0; padding: 16px 18px; background: #f9fafb; border: 1px solid #e5e7eb; border-top: 2.5px solid var(--nv-green); border-radius: 6px; display: grid; gap: 7px; }
+    .ad-thumb-wrap { overflow: hidden; border-radius: 6px; border: 1px solid #e5e7eb; background: #f8fafc; }
+    .ad-thumb-img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block; }
+    .coupang-banner { display: grid; grid-template-columns: 152px minmax(0, 1fr); gap: 14px; align-items: center; }
+    .coupang-banner-body { display: grid; gap: 6px; min-width: 0; }
+    .infeed-coupang-card { margin: 16px 0; padding: 16px 18px; background: #f9fafb; border: 1px solid #e5e7eb; border-top: 2.5px solid var(--nv-green); border-radius: 6px; display: grid; gap: 8px; }
     .coupang-cta { display: inline-flex; align-items: center; justify-content: center; background: #111111; color: #ffffff; font-weight: 700; font-size: 13.5px; padding: 9px 15px; border-radius: 4px; min-height: 40px; }
     .mobile-top-coupang { max-width: 690px; margin: 10px auto 0; }
     .mobile-top-coupang .infeed-coupang-card { margin: 0; }
+    .promo-event-banner { margin: 20px auto; max-width: 690px; padding: 16px 18px; border-radius: 8px; border: 1.5px solid #f59e0b; background: linear-gradient(135deg, #fffbeb 0%, #ffffff 55%, #ecfdf5 100%); display: grid; grid-template-columns: 176px minmax(0, 1fr); gap: 16px; align-items: center; }
+    .promo-event-media { overflow: hidden; border-radius: 6px; border: 1px solid #fde68a; background: #ffffff; }
+    .promo-event-media img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block; }
+    .promo-event-body { display: grid; gap: 6px; min-width: 0; }
+    .promo-event-tag { display: inline-flex; align-items: center; width: max-content; max-width: 100%; padding: 3px 10px; border-radius: 999px; background: #fef3c7; border: 1px solid #f59e0b; color: #b45309; font-size: 11px; font-weight: 800; }
+    .promo-event-title { margin: 0; font-size: 16px; font-weight: 900; color: #111111; line-height: 1.35; }
+    .promo-event-desc { margin: 0; font-size: 13px; color: #444444; line-height: 1.45; }
+    .promo-event-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 4px; }
+    .promo-event-cta { display: inline-flex; align-items: center; justify-content: center; background: #111111; color: #00dc64; font-size: 13px; font-weight: 900; padding: 9px 15px; border-radius: 5px; }
 
     @media (min-width: 1180px) {
       .viewer-stage { max-width: 1122px; display: grid; grid-template-columns: 192px minmax(0, 690px) 192px; gap: 18px; align-items: start; justify-content: center; }
@@ -142,6 +155,7 @@
       .series-box { grid-template-columns: 1fr; padding: 14px; }
       .series-poster { width: 124px; }
       .poster-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+      .coupang-banner, .promo-event-banner { grid-template-columns: 1fr; padding: 14px; }
       #prevEpBtn, #nextEpBtn, #epJumpSelect { min-height: 44px; }
     }
   </style>
@@ -240,6 +254,21 @@
     </aside>
 
     <section class="post-stack" aria-label="실전 해결 가이드 및 추천 상품">
+      <aside class="promo-event-banner" data-promo-banner="goldbox" aria-label="쿠팡 골드박스 오늘의 특가 이벤트 프로모션">
+        <div class="promo-event-media">
+          <img src="https://toon.guidehollow.com/assets/ads/pick-goldbox.webp" alt="쿠팡 골드박스 오늘의 특가 이벤트 프로모션" width="640" height="420" loading="lazy" />
+        </div>
+        <div class="promo-event-body">
+          <div class="promo-event-tag">EVENT · 쿠팡 골드박스 오늘의 특가 프로모션</div>
+          <h3 class="promo-event-title">매일 오전 7시 오픈! 생필품·디지털·주방 일일 특가 기획전</h3>
+          <p class="promo-event-desc">웹툰 독자님들이 가장 많이 찾는 생활·자취·데스크 필수품 오늘의 할인 품목을 한눈에 확인하세요.</p>
+          <div class="ad-disclosure">이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</div>
+          <div class="promo-event-actions">
+            <a class="promo-event-cta" href="https://link.coupang.com/a/iH5tIYeHsG" target="_blank" rel="noopener noreferrer sponsored">골드박스 이벤트 특가 바로가기 ↗</a>
+            <a style="font-size:13px;font-weight:700;color:#1d4ed8;" href="https://shopping.guidehollow.com/" target="_blank" rel="noopener noreferrer">분야별 구매 기준 가이드 →</a>
+          </div>
+        </div>
+      </aside>
       <div id="tipCard" class="nv-card"></div>
       <div id="bottomCoupangCard"></div>
     </section>
@@ -271,24 +300,32 @@
       }
 
       function renderCoupangInfeed(coup) {
+        const img = coup.image || "https://toon.guidehollow.com/assets/ads/pick-goldbox.webp";
         return `
           <aside class="infeed-coupang-card" aria-label="생활 추천 상품">
             <div class="ad-disclosure">${COUPANG_FTC}</div>
-            <div style="font-size:12px;font-weight:800;color:#059669;">${esc(coup.badge)}</div>
-            <div style="font-size:16px;font-weight:800;color:#111111;">${esc(coup.title)}</div>
-            <div style="font-size:13.5px;color:#555555;">${esc(coup.reason)}</div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;">
-              <a class="coupang-cta" href="${esc(coup.url)}" target="_blank" rel="noopener noreferrer sponsored">${esc(coup.cta)} ↗</a>
-              <a style="display:inline-flex;align-items:center;font-size:13px;font-weight:700;color:#1d4ed8;" href="${esc(coup.guideUrl)}" target="_blank" rel="noopener noreferrer">${esc(coup.guideLabel)} →</a>
+            <div class="coupang-banner">
+              <div class="ad-thumb-wrap"><img class="ad-thumb-img" src="${esc(img)}" alt="${esc(coup.title)}" width="640" height="420" loading="lazy" /></div>
+              <div class="coupang-banner-body">
+                <div style="font-size:12px;font-weight:800;color:#059669;">${esc(coup.badge)}</div>
+                <div style="font-size:16px;font-weight:800;color:#111111;">${esc(coup.title)}</div>
+                <div style="font-size:13.5px;color:#555555;">${esc(coup.reason)}</div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;">
+                  <a class="coupang-cta" href="${esc(coup.url)}" target="_blank" rel="noopener noreferrer sponsored">${esc(coup.cta)} ↗</a>
+                  <a style="display:inline-flex;align-items:center;font-size:13px;font-weight:700;color:#1d4ed8;" href="${esc(coup.guideUrl)}" target="_blank" rel="noopener noreferrer">${esc(coup.guideLabel)} →</a>
+                </div>
+              </div>
             </div>
           </aside>
         `;
       }
 
       function renderCoupangWing(coup) {
+        const img = coup.image || "https://toon.guidehollow.com/assets/ads/pick-goldbox.webp";
         return `
           <div class="wing-card">
             <div class="ad-disclosure">${COUPANG_FTC}</div>
+            <div class="ad-thumb-wrap"><img class="ad-thumb-img" src="${esc(img)}" alt="${esc(coup.title)}" width="640" height="420" loading="lazy" /></div>
             <div class="wing-badge">${esc(coup.badge)}</div>
             <div class="wing-title">${esc(coup.title)}</div>
             <div class="wing-reason">${esc(coup.reason)}</div>

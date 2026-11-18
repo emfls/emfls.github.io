@@ -29,6 +29,9 @@ def test_ssultoon_maker_page_seo_adsense_coupang_and_no_fake_server():
     assert "이 포스팅은 쿠팡 파트너스 활동의 일환으로" in html
     assert "toon.guidehollow.com/assets/toons" in html
     assert "cut-${pad}.webp" in html
+    assert "ad-thumb-img" in html
+    assert "promo-event-banner" in html
+    assert "pick-goldbox.webp" in html
     assert "본 웹툰 이미지는 AI 도구를 활용해 제작되었습니다" in html
     for bad in (
         "장면 커스텀",
@@ -68,6 +71,7 @@ def test_ssultoon_episodes_data_and_validator():
         assert "rating" not in ep
         assert "viewsLabel" not in ep
         assert ep["coupang"]["url"].startswith("https://link.coupang.com/")
+        assert ep["coupang"]["image"].startswith("https://toon.guidehollow.com/assets/ads/")
     assert len(cut_counts) >= 4
     errors = bse.validate_payload(payload)
     assert errors == []
