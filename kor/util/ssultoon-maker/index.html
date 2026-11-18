@@ -145,8 +145,71 @@
     .ep-viewer-bar { scroll-margin-top: 8px; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 4px; border-top: 1px solid #111111; border-bottom: 1px solid #ebebeb; margin-bottom: 12px; flex-wrap: wrap; }
     .v-ep-select { min-height: 40px; max-width: 175px; border: 1px solid #d9d9d9; border-radius: 4px; background: #ffffff; color: #111111; font-size: 12.5px; font-weight: 700; padding: 0 6px; font-family: inherit; }
     .comic-stream { background: #ffffff; }
-    .comic-cut { background: #ffffff; margin: 0; padding: 0; }
-    .comic-cut img { width: 100%; height: auto; display: block; }
+    .comic-cut.cut {
+      position: relative;
+      isolation: isolate;
+      width: 100%;
+      margin: 0 0 clamp(14px, 3vw, 24px);
+      padding: 0;
+      background: #f8fafc;
+      overflow: hidden;
+      aspect-ratio: 1 / 1;
+      container-type: inline-size;
+      border-radius: 4px;
+      border: 1px solid #e5e7eb;
+    }
+    .comic-cut.cut.full { aspect-ratio: 1 / 1.12; margin-bottom: clamp(24px, 5vw, 44px); }
+    .comic-cut.cut.wide { aspect-ratio: 1.18 / 1; }
+    .comic-cut.cut.insert { width: auto; aspect-ratio: 1.12 / 1; margin-inline: 5.5%; }
+    .comic-cut.cut.proof { width: auto; aspect-ratio: 1.12 / 1; margin-inline: 4%; border: 4px solid #384340; }
+    .comic-cut.cut img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: 50% 34%; }
+    .comic-cut.cut.wide img, .comic-cut.cut.insert img, .comic-cut.cut.proof img { object-position: 50% 45%; }
+
+    .letter {
+      z-index: 1;
+      position: absolute;
+      margin: 0;
+      padding: .46em .68em;
+      max-width: 78%;
+      color: #201e18;
+      background: #fff8e7;
+      font-size: clamp(.82rem, 3.55cqw, 1.1rem);
+      font-weight: 700;
+      line-height: 1.36;
+      white-space: pre-line;
+      overflow-wrap: anywhere;
+      word-break: keep-all;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
+    }
+    .letter-spk {
+      display: inline-block;
+      margin-right: 6px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-size: 0.8em;
+      font-weight: 800;
+      background: rgba(0, 0, 0, 0.08);
+      color: #111111;
+    }
+    .tl { top: 4.5%; left: 4.5%; }
+    .tr { top: 4.5%; right: 4.5%; }
+    .bl { bottom: 5%; left: 4.5%; }
+    .br { bottom: 5%; right: 4.5%; }
+    .say { border: 1.5px solid #352b21; border-radius: 1.05em; max-width: 72%; }
+    .say:after { content: ""; position: absolute; background: inherit; border-right: 1.5px solid #352b21; border-bottom: 1.5px solid #352b21; width: .52em; height: .52em; bottom: -.3em; transform: rotate(45deg); }
+    .tail-l:after { left: 22%; }
+    .tail-r:after { right: 22%; }
+    .say.bl:after, .say.br:after { bottom: auto; top: -.3em; transform: rotate(225deg); }
+    .thought { color: #fff8e7; background: rgba(24, 34, 30, 0.92); border: 1.5px dashed #d9cba9; border-radius: 1.05em; font-weight: 650; max-width: 72%; }
+    .thought .letter-spk { background: rgba(255, 255, 255, 0.16); color: #ecfdf5; }
+    .caption { color: #fff8ea; background: rgba(24, 30, 27, 0.92); border-left: 3.5px solid #eab96f; font-weight: 650; max-width: 86%; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.34); }
+    .phone { color: #16241d; background: #dce8df; border: 1px solid #86a391; border-radius: .65em; max-width: 74%; }
+    .paper { color: #2b2318; background: #f8e8b7; border: 1px solid #998352; border-radius: .2em; max-width: 76%; }
+    @media (max-width: 380px) {
+      .comic-cut.cut, .comic-cut.cut.wide { aspect-ratio: 1 / 1.14; }
+      .comic-cut.cut.insert, .comic-cut.cut.proof { aspect-ratio: 1 / 1.16; }
+      .letter { font-size: 3.85cqw; padding: .42em .58em; max-width: 84%; }
+    }
 
     .float-scroll-nav { position: fixed; right: 18px; bottom: 20px; z-index: 80; display: flex; flex-direction: column; gap: 8px; }
     .float-circle { width: 42px; height: 42px; border-radius: 50%; background: #ffffff; border: 1px solid #d9d9d9; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800; color: #333333; cursor: pointer; }
@@ -414,12 +477,46 @@
         document.getElementById("wingRight").innerHTML = renderCoupangWing(OFFICIAL_WING_SKYSCRAPERS[(idx % (OFFICIAL_WING_SKYSCRAPERS.length - 1)) + 1]);
         document.getElementById("bottomCoupangCard").innerHTML = endC ? renderCoupangInfeed(endC) : "";
 
+        function renderCutFigureHtml(epItem, p, cNum, totalCuts) {
+          const camera = String((p && p.camera) || "");
+          const scene = String((p && p.scene) || "");
+          const speaker = String((p && p.speaker) || "").trim();
+          const bubbleType = String((p && p.bubbleType) || "");
+          const narration = String((p && p.narration) || "").trim();
+          const dialogue = String((p && p.dialogue) || "").trim();
+
+          let variant = "std";
+          if (cNum === 1 || cNum === totalCuts || camera === "climax_impact") {
+            variant = "full";
+          } else if (camera === "evidence_zoom") {
+            variant = cNum % 2 === 0 ? "proof" : "insert";
+          } else if (camera === "wide") {
+            variant = "wide";
+          }
+
+          let dlgRole = cNum % 2 === 1 ? "say tail-l" : "say tail-r";
+          if (camera === "evidence_zoom" || /증거|공문|창구|원칙|청구|발령|확인|차단|통보|판결|내역/.test(speaker)) {
+            dlgRole = "paper";
+          } else if (scene === "톡방·메신저" || /알림|문자|카톡|계좌/.test(speaker)) {
+            dlgRole = "phone";
+          } else if (bubbleType === "속마음" || (speaker.startsWith("나(") && cNum % 3 === 0)) {
+            dlgRole = "thought";
+          }
+
+          const capPos = cNum % 2 === 1 ? "tl" : "tr";
+          const dlgPos = cNum % 2 === 1 ? "br" : "bl";
+          const spkHtml = speaker ? `<span class="letter-spk">${esc(speaker)}</span>` : "";
+          const capHtml = narration ? `<p class="letter caption ${capPos}">${esc(narration)}</p>` : "";
+          const dlgHtml = dialogue ? `<p class="letter ${dlgRole} ${dlgPos}">${spkHtml}${esc(dialogue)}</p>` : "";
+          const eager = cNum <= 1 ? "eager" : "lazy";
+          return `<figure class="comic-cut cut ${variant}" data-cut="${cNum}" aria-label="장면 ${cNum}"><img src="${cutSrc(epItem.id, cNum)}" alt="${esc(epItem.title)} - ${esc(speaker)}: ${esc(dialogue)} (${esc(narration)})" width="1080" height="1080" loading="${eager}" />${capHtml}${dlgHtml}</figure>`;
+        }
+
         const stream = document.getElementById("webtoonCanvasList");
         const parts = [];
         ep.panels.forEach((p, i) => {
           const cNum = p.panelNumber || (i + 1);
-          const eager = cNum <= 1 ? "eager" : "lazy";
-          parts.push(`<div class="comic-cut" data-cut="${cNum}"><img src="${cutSrc(ep.id, cNum)}" alt="${esc(ep.title)} - ${esc(p.speaker || '')}: ${esc(p.dialogue || '')} (${esc(p.narration || '')})" width="1080" height="1520" loading="${eager}" /></div>`);
+          parts.push(renderCutFigureHtml(ep, p, cNum, cutCount));
           if (cNum === 4 && midA) parts.push(renderCoupangInfeed(midA));
           else if (cNum === 9 && cutCount >= 11 && midB) parts.push(renderCoupangInfeed(midB));
         });

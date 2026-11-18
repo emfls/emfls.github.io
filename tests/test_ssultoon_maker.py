@@ -30,6 +30,8 @@ def test_ssultoon_maker_page_seo_adsense_coupang_and_no_fake_server():
     assert "top-coupang-disclosure" in html
     assert "toon.guidehollow.com/assets/toons" in html
     assert "cut-${pad}.webp" in html
+    assert "comic-cut cut" in html
+    assert "letter caption" in html
     assert "promo-event-banner" in html
     assert "https://ads-partners.coupang.com/widgets.html" in html
     assert "https://ads-partners.coupang.com/banners/" in html
