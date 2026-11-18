@@ -171,20 +171,20 @@
   <main class="wrap">
     <section class="series-box" aria-label="선택된 웹툰 작품 정보">
       <div class="series-poster">
-        <img id="spotCoverImg" src="https://toon.guidehollow.com/assets/toons/ep01-office-cider/cover.svg" alt="대표 썰툰 표지" width="480" height="620" />
+        <img id="spotCoverImg" src="https://toon.guidehollow.com/assets/toons/ep01-office-cider/cover.webp" alt="대표 썰툰 표지" width="720" height="930" />
         <canvas id="ssultoonCanvas" width="1" height="1" aria-hidden="true"></canvas>
       </div>
       <div>
         <h1 id="spotTitle" class="series-h1">금요일 퇴근 5분 전마다 카톡 보내던 팀장, 월요일 아침 제 책상 앞에 무릎 꿇은 이유</h1>
-        <div id="spotMeta" class="series-authors"><strong>EMFLS 편집부</strong> · 글 / <strong>AI 웹툰 스튜디오</strong> · 그림 &nbsp;|&nbsp; 스토리 맞춤 18컷 · 무료 연재</div>
+        <div id="spotMeta" class="series-authors"><strong>EMFLS 편집부</strong> · 글 / <strong>AI 웹툰 스튜디오</strong> · 그림 &nbsp;|&nbsp; 현실 공감 단편 완결 · 무료 웹툰</div>
         <p id="spotHook" class="series-synop">"가족이랑 밥 먹는 중인데요?" 웃으며 씹던 팀장이 14개월 치 카톡 PDF를 보자 얼굴이 하얗게 질렸습니다.</p>
         <div id="spotTags" class="series-tags">
           <span class="series-tag">#사이다참교육</span>
           <span class="series-tag">#직장공감</span>
-          <span class="series-tag">#맞춤컷연재</span>
+          <span class="series-tag">#현실사이다단편</span>
         </div>
         <div class="series-cta-row">
-          <button id="jumpStreamBtn" type="button" class="btn-first-ep">첫 화 보기</button>
+          <button id="jumpStreamBtn" type="button" class="btn-first-ep">단편 웹툰 바로보기</button>
           <a id="jumpCalcBtn" class="btn-outline" href="#tipCard">이 사연 맞춤 계산기 ↓</a>
           <a class="btn-outline" href="/kor/util/">전체 계산기</a>
         </div>
@@ -193,9 +193,9 @@
     </section>
 
     <div class="sec-head">
-      <h2 class="sec-title">회차 선택 (스토리 길이에 맞춘 13~18컷 · 클릭 시 흰 배경 세로 뷰어가 열립니다)</h2>
+      <h2 class="sec-title">단편 웹툰 선택 (클릭 시 흰 배경 세로 뷰어가 열립니다)</h2>
     </div>
-    <section id="posterGrid" class="poster-grid" aria-label="웹툰 회차 선택"></section>
+    <section id="posterGrid" class="poster-grid" aria-label="단편 웹툰 선택"></section>
 
     <aside class="emfls-ad-wrap" aria-label="Advertisement">
       <ins class="adsbygoogle"
@@ -219,9 +219,9 @@
             <div class="ai-disclosure-sm" style="margin-top:2px;">* 본 웹툰 이미지는 AI 도구를 활용해 제작되었습니다.</div>
           </div>
           <div style="display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;align-items:center;">
-            <select id="epJumpSelect" class="v-ep-select" aria-label="회차 빠른 이동"></select>
-            <button type="button" id="prevEpBtn" class="btn-outline" style="height:40px;padding:0 12px;font-size:13px;">◀ 이전화</button>
-            <button type="button" id="nextEpBtn" class="btn-first-ep" style="min-width:auto;height:40px;padding:0 14px;font-size:13px;">다음화 ▶</button>
+            <select id="epJumpSelect" class="v-ep-select" aria-label="다른 작품 빠른 이동"></select>
+            <button type="button" id="prevEpBtn" class="btn-outline" style="height:40px;padding:0 12px;font-size:13px;">◀ 이전 작품</button>
+            <button type="button" id="nextEpBtn" class="btn-first-ep" style="min-width:auto;height:40px;padding:0 14px;font-size:13px;">다음 작품 ▶</button>
           </div>
         </div>
         <div id="webtoonCanvasList" class="comic-stream"></div>
@@ -263,11 +263,11 @@
 
       function cutSrc(epId, cutNum) {
         const pad = String(cutNum).padStart(2, "0");
-        return `${ART_ORIGIN}/${encodeURIComponent(epId)}/cut-${pad}.svg`;
+        return `${ART_ORIGIN}/${encodeURIComponent(epId)}/cut-${pad}.webp`;
       }
 
       function coverSrc(epId) {
-        return `${ART_ORIGIN}/${encodeURIComponent(epId)}/cover.svg`;
+        return `${ART_ORIGIN}/${encodeURIComponent(epId)}/cover.webp`;
       }
 
       function renderCoupangInfeed(coup) {
@@ -324,9 +324,9 @@
         const cutCount = (ep.panels || []).length;
         document.getElementById("spotTitle").textContent = ep.title;
         document.getElementById("spotHook").textContent = ep.hook;
-        document.getElementById("spotMeta").innerHTML = `<strong>EMFLS 편집부</strong> · 글 / <strong>AI 웹툰 스튜디오</strong> · 그림 &nbsp;|&nbsp; ${idx + 1} / ${episodes.length}화 · ${esc(ep.genre)} · 총 ${cutCount}컷 · 무료 연재`;
-        document.getElementById("epTitle").textContent = `${String(ep.episodeNo || idx + 1).padStart(2, "0")}화 ${ep.title}`;
-        document.getElementById("epCutMeta").textContent = `${idx + 1} / ${episodes.length}화 · ${ep.genre} · 스토리 맞춤 ${cutCount}컷`;
+        document.getElementById("spotMeta").innerHTML = `<strong>EMFLS 편집부</strong> · 글 / <strong>AI 웹툰 스튜디오</strong> · 그림 &nbsp;|&nbsp; ${esc(ep.genre)} · 단편 완결 · 무료 웹툰`;
+        document.getElementById("epTitle").textContent = ep.title;
+        document.getElementById("epCutMeta").textContent = `${ep.genre} · 단편 완결 · 무료 감상`;
         const coverImg = document.getElementById("spotCoverImg");
         if (coverImg) coverImg.src = coverSrc(ep.id);
 
@@ -362,7 +362,7 @@
         ep.panels.forEach((p, i) => {
           const cNum = p.panelNumber || (i + 1);
           const eager = cNum <= 1 ? "eager" : "lazy";
-          parts.push(`<div class="comic-cut" data-cut="${cNum}"><img src="${cutSrc(ep.id, cNum)}" alt="${cNum}컷 (${esc(p.stage || '')}) ${esc(p.speaker || '')}: ${esc(p.dialogue || '')} — ${esc(p.narration || '')}" width="690" height="1120" loading="${eager}" /></div>`);
+          parts.push(`<div class="comic-cut" data-cut="${cNum}"><img src="${cutSrc(ep.id, cNum)}" alt="${esc(ep.title)} - ${esc(p.speaker || '')}: ${esc(p.dialogue || '')} (${esc(p.narration || '')})" width="1080" height="1520" loading="${eager}" /></div>`);
           if (cNum === 4 && midA) parts.push(renderCoupangInfeed(midA));
           else if (cNum === 9 && cutCount >= 11 && midB) parts.push(renderCoupangInfeed(midB));
         });
@@ -403,17 +403,17 @@
         grid.innerHTML = episodes.map((ep, i) => `
           <button type="button" class="poster-btn" data-ep-idx="${i}">
             <div class="poster-thumb">
-              <img src="${coverSrc(ep.id)}" alt="${esc(ep.title)}" width="480" height="620" loading="lazy" />
+              <img src="${coverSrc(ep.id)}" alt="${esc(ep.title)}" width="720" height="930" loading="lazy" />
             </div>
             <div class="poster-name">${esc(ep.title)}</div>
-            <div class="poster-stat">${esc(ep.genre)} · ${(ep.panels || []).length}컷</div>
+            <div class="poster-stat">${esc(ep.genre)} · 단편 완결</div>
           </button>
         `).join("");
 
         const jumpSel = document.getElementById("epJumpSelect");
         if (jumpSel) {
           jumpSel.innerHTML = episodes.map((ep, i) =>
-            `<option value="${i}">${String(ep.episodeNo || i + 1).padStart(2, "0")}화 (${(ep.panels || []).length}컷) · ${esc(ep.genre)}</option>`
+            `<option value="${i}">[${esc(ep.genre)}] ${esc(ep.title)}</option>`
           ).join("");
           jumpSel.addEventListener("change", function () {
             renderEpisode(Number(jumpSel.value), true);

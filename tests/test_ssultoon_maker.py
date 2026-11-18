@@ -18,7 +18,7 @@ def test_ssultoon_maker_page_seo_adsense_coupang_and_no_fake_server():
     assert f'<link rel="canonical" href="{CANONICAL}"' in html
     assert "ca-pub-8830524482034754" in html
     assert "G-QP5Q67GE5B" in html
-    assert "첫 화 보기" in html
+    assert "단편 웹툰 바로보기" in html
     assert "ssultoonCanvas" in html
     assert "webtoonCanvasList" in html
     assert "wingLeft" in html
@@ -28,6 +28,7 @@ def test_ssultoon_maker_page_seo_adsense_coupang_and_no_fake_server():
     assert "infeed-coupang-card" in html
     assert "이 포스팅은 쿠팡 파트너스 활동의 일환으로" in html
     assert "toon.guidehollow.com/assets/toons" in html
+    assert "cut-${pad}.webp" in html
     assert "본 웹툰 이미지는 AI 도구를 활용해 제작되었습니다" in html
     for bad in (
         "장면 커스텀",
@@ -43,6 +44,9 @@ def test_ssultoon_maker_page_seo_adsense_coupang_and_no_fake_server():
         "별점",
         "9.98",
         "482만",
+        "이전화",
+        "다음화",
+        "18컷",
     ):
         assert bad not in html
     assert len(html.encode("utf-8")) > 6000
