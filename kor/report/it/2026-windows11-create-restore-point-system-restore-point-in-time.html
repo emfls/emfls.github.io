@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 윈도우11 복원 지점 만들기: 시스템 보호 켜기·rstrui 복구·특정 시점 복원 차이</title>
+<meta name="description" content="작성 및 공식 자료 확인: 2026년 11월 4일. 메뉴 이름과 제공 기능은 Windows 빌드·버전 및 관리 정책에 따라 다를 수 있습니다.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#0d1117">
+<link rel="canonical" href="https://emfls.github.io/kor/report/it/2026-windows11-create-restore-point-system-restore-point-in-time.html">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2026 윈도우11 복원 지점 만들기: 시스템 보호 켜기·rstrui 복구·특정 시점 복원 차이">
+<meta property="og:description" content="작성 및 공식 자료 확인: 2026년 11월 4일. 메뉴 이름과 제공 기능은 Windows 빌드·버전 및 관리 정책에 따라 다를 수 있습니다.">
+<meta property="og:url" content="https://emfls.github.io/kor/report/it/2026-windows11-create-restore-point-system-restore-point-in-time.html">
+<meta property="og:site_name" content="emfls">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2026 윈도우11 복원 지점 만들기: 시스템 보호 켜기·rstrui 복구·특정 시점 복원 차이">
+<meta name="twitter:description" content="작성 및 공식 자료 확인: 2026년 11월 4일. 메뉴 이름과 제공 기능은 Windows 빌드·버전 및 관리 정책에 따라 다를 수 있습니다.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"2026 윈도우11 복원 지점 만들기: 시스템 보호 켜기·rstrui 복구·특정 시점 복원 차이","description":"작성 및 공식 자료 확인: 2026년 11월 4일. 메뉴 이름과 제공 기능은 Windows 빌드·버전 및 관리 정책에 따라 다를 수 있습니다.","url":"https://emfls.github.io/kor/report/it/2026-windows11-create-restore-point-system-restore-point-in-time.html","mainEntityOfPage":"https://emfls.github.io/kor/report/it/2026-windows11-create-restore-point-system-restore-point-in-time.html","inLanguage":"ko","author":{"@type":"Organization","name":"emfls"},"publisher":{"@type":"Organization","name":"emfls","url":"https://emfls.github.io"},"datePublished":"2026-11-18","dateModified":"2026-11-18"}</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-QP5Q67GE5B');</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+<style>
+:root{color-scheme:dark;--bg:#0d1117;--surface:#161b22;--surface2:#1c2430;--border:#30363d;--text:#e6edf3;--muted:#abb6c3;--accent:#79c0ff;--soft:#c8b6ff}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Apple SD Gothic Neo","Malgun Gothic",system-ui,-apple-system,sans-serif;line-height:1.8;word-break:keep-all}
+a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thickness:2px}
+.skip{position:absolute;left:-9999px;top:4px;z-index:1000;padding:8px 16px;background:white;color:black}.skip:focus{left:4px}
+.site-header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px max(18px,calc((100vw - 900px)/2));background:linear-gradient(90deg,#4e54c8,#8f94fb);border-bottom:1px solid #6867cc}
+.brand{color:white;text-decoration:none;font-size:1.14rem;font-weight:850;letter-spacing:.02em}
+.site-header nav{display:flex;gap:12px}.site-header nav a{color:#fff;text-decoration:none;font-size:.86rem;font-weight:600}
+.site-header nav a:hover{text-decoration:underline}
+.shell{max-width:900px;margin:auto;padding:20px 18px 70px}
+.breadcrumb{font-size:.81rem;color:var(--muted);margin:3px 0 18px}.breadcrumb a{color:#d4deff;text-decoration:none}
+.hero{position:relative;overflow:hidden;border:1px solid #47577b;border-radius:18px;padding:42px 32px;background:linear-gradient(135deg,#122140,#172c53 52%,#302754 100%);box-shadow:0 15px 40px #0003}
+.hero:after{content:"";position:absolute;right:-80px;top:-100px;width:310px;height:310px;border-radius:50%;background:radial-gradient(circle,#9b8bff27,transparent 70%);pointer-events:none}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid #8092e05c;background:#ffffff12;border-radius:99px;padding:4px 13px;color:#e3dcff;font-size:.79rem;font-weight:700;margin-bottom:18px}
+.hero h1{font-weight:850;line-height:1.42;letter-spacing:-.037em;font-size:clamp(1.55rem,4vw,2.25rem);margin:0 0 16px;position:relative;z-index:1;overflow-wrap:anywhere}
+.hero .deck{font-size:.99rem;color:#e2e7f5;max-width:680px;margin:0 0 15px}
+.hero-meta{font-size:.82rem;color:#c8d2e5;display:flex;flex-wrap:wrap;gap:6px 18px}
+.highlight-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:17px 0 20px}
+.highlight{padding:17px 16px;border:1px solid var(--border);background:var(--surface);border-radius:13px}
+.highlight .value{display:block;color:#d6caff;font-size:1.12rem;font-weight:800;line-height:1.45}
+.highlight .label{display:block;color:var(--muted);font-size:.76rem;margin-top:5px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
+.contents,.section,.intro,.info-bottom{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:24px 27px;box-shadow:0 3px 15px #0002}
+.contents h2,.info-bottom h2{font-size:1.02rem;color:#d4c5ff;margin:0 0 12px}
+.contents ol{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 25px;margin:0;padding-left:19px}
+.contents li{font-size:.86rem;line-height:1.6;padding:3px 0}
+.contents a{color:#d3ddec;text-decoration:none}.contents a:hover{text-decoration:underline}
+.intro{border-left:4px solid #7e96e4;background:linear-gradient(125deg,#1a2335,var(--surface));}
+.section h2{font-size:1.32rem;line-height:1.5;margin:0 0 17px;color:#d4c5ff;letter-spacing:-.022em;border-bottom:1px solid #354052;padding-bottom:12px;scroll-margin-top:20px}
+.section h3{font-size:1.045rem;margin:23px 0 8px;color:#c3dcff;scroll-margin-top:20px}
+.section p,.intro p{font-size:.955rem;margin:0 0 14px;color:#d9e0e8;line-height:1.85}
+.section p:last-child,.intro p:last-child{margin-bottom:0}
+.section strong,.intro strong{color:#fff;font-weight:750}
+.section li,.intro li{font-size:.94rem;line-height:1.8;margin:5px 0;color:#d8e0e8}
+.section ul,.section ol,.intro ul,.intro ol{padding-left:22px;margin:12px 0 20px}
+.section blockquote{margin:16px 0;padding:13px 17px;border-left:3px solid #a18cff;background:#252440;border-radius:0 8px 8px 0}
+.section a{overflow-wrap:anywhere}
+.section hr{border:0;border-top:1px solid var(--border);margin:24px 0}
+.section ul,.section ol{background:#1c2430;border-radius:9px;padding:12px 20px 12px 37px;border:1px solid #28384b}
+.notion-code{max-width:100%;overflow-x:auto;white-space:pre;tab-size:2;margin:14px 0 9px;padding:14px 16px;border:1px solid #34465f;border-radius:9px;background:#141d2c;color:#e7efff;font-size:.88rem;line-height:1.65}
+.notion-code code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+.section .notion-code-caption,.intro .notion-code-caption{margin:0 0 17px;color:#aebdd5;font-size:.82rem}
+.details-table{overflow-x:auto}
+.section table{border-collapse:collapse;width:100%;min-width:500px;margin:14px 0}
+.section th,.section td{padding:12px;text-align:left;border-bottom:1px solid var(--border);font-size:.89rem}
+.section th{background:#202a3c;color:#d3caff}
+.cta{display:inline-flex;align-items:center;gap:8px;margin-top:8px;padding:11px 17px;border-radius:10px;background:#254975;color:white;text-decoration:none;font-size:.9rem;font-weight:700;border:1px solid #4e75a9}
+.cta:hover{background:#305989}
+.notice{border-left:4px solid #57b59b;padding:13px 16px;background:#122e2b;border-radius:4px 9px 9px 4px;color:#cfe6dd;font-size:.88rem;margin:16px 0}
+.info-bottom p{font-size:.87rem;color:var(--muted);margin:0 0 10px}
+.pills{display:flex;gap:9px;flex-wrap:wrap}.pills a{display:inline-block;border:1px solid #45516c;border-radius:99px;padding:6px 13px;text-decoration:none;color:#d5e3ff;font-size:.84rem}
+.site-footer{font-size:.8rem;color:#9ba9b8;text-align:center;margin-top:24px;padding-top:24px;border-top:1px solid var(--border)}
+.adsbygoogle,div[id^="aswift_"]{max-width:100%!important;overflow:hidden}
+@media(max-width:650px){.shell{padding:14px 12px 45px}.site-header{padding:14px}.hero{padding:29px 20px}.hero h1{font-size:1.58rem}.highlight-row{gap:7px}.highlight{padding:13px 9px}.highlight .value{font-size:.92rem}.highlight .label{font-size:.7rem}.contents,.section,.intro,.info-bottom{padding:19px 17px}.contents ol{grid-template-columns:1fr}.section h2{font-size:1.18rem}.site-header nav{gap:9px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">본문으로 건너뛰기</a>
+<header class="site-header"><a class="brand" href="/">emfls</a><nav aria-label="상단 메뉴"><a href="/kor/report/">생활정보</a><a href="/kor/report/it/">관련 주제</a><a href="/">홈</a></nav></header>
+<main class="shell" id="main">
+<div class="breadcrumb"><a href="/">홈</a> › <a href="/kor/report/">생활정보</a> › <a href="/kor/report/it/">IT · 기기</a></div>
+<article>
+<header class="hero">
+<span class="eyebrow">IT · 기기 · 최신 가이드</span>
+<h1>2026 윈도우11 복원 지점 만들기: 시스템 보호 켜기·rstrui 복구·특정 시점 복원 차이</h1>
+<p class="deck">작성 및 공식 자료 확인: 2026년 11월 4일. 메뉴 이름과 제공 기능은 Windows 빌드·버전 및 관리 정책에 따라 다를 수 있습니다.</p>
+<div class="hero-meta"><span>최초 발행 2026-11-18</span><span>내용 확인 2026-11-18</span><span>작성 emfls</span></div>
+</header>
+
+<nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">윈도우11 복원 지점 만드는 방법: 5단계</a></li><li><a href="#section-02">시스템 복원이 정확히 되돌리는 것</a></li><li><a href="#section-03">복원 지점이 없는 이유와 해결 순서</a></li><li><a href="#section-04">시스템 복원 실행 방법: Win + R → rstrui.exe</a></li><li><a href="#section-05">PC가 부팅되지 않을 때: Windows 복구 환경(WinRE)</a></li><li><a href="#section-06">2026년 주의: &#x27;시스템 복원&#x27;과 &#x27;특정 시점 복원&#x27;은 다릅니다</a></li><li><a href="#section-07">특정 시점 복원은 어떻게 켜나요?</a></li><li><a href="#section-08">내 상황에 맞는 복구 방법 결정</a></li><li><a href="#section-09">복원하기 전·후 체크리스트</a></li><li><a href="#section-10">자주 묻는 질문</a></li><li><a href="#section-11">결론</a></li><li><a href="#section-12">공식 근거</a></li></ol></nav>
+<div class="layout">
+<div class="intro"><blockquote><strong>핵심 정리</strong>: 윈도우11에서 드라이버 설치·프로그램 변경 전에 복원 지점을 만들려면 <strong>시작 메뉴에서 &#x27;복원 지점 만들기&#x27;를 검색 → 시스템 보호 확인 → 만들기</strong> 순서로 진행합니다. 문제가 생긴 뒤 되돌릴 때는 <strong>Win + R → rstrui.exe</strong>를 사용합니다. 다만 Windows 11의 <strong>&#x27;시스템 복원&#x27;과 새 &#x27;특정 시점 복원&#x27;은 서로 다른 기능</strong>입니다. 후자는 개인 파일까지 과거 상태로 되돌릴 수 있어 구분해야 합니다.</blockquote>
+<p><strong>작성 및 공식 자료 확인:</strong> 2026년 11월 4일. 메뉴 이름과 제공 기능은 Windows 빌드·버전 및 관리 정책에 따라 다를 수 있습니다.</p></div>
+<section class="section" aria-labelledby="section-01"><h2 id="section-01">윈도우11 복원 지점 만드는 방법: 5단계</h2><ol>
+<li>중요한 문서·사진을 다른 저장장치나 신뢰할 수 있는 백업 서비스에 먼저 복사합니다.</li>
+<li>시작 메뉴 검색에 <strong>&#x27;복원 지점 만들기&#x27;</strong>를 입력합니다.</li>
+<li>검색 결과를 열어 <strong>시스템 속성 → 시스템 보호</strong> 탭으로 이동합니다.</li>
+<li><strong>보호 설정</strong>에서 Windows가 설치된 드라이브(일반적으로 C:)의 보호 상태를 확인합니다. <strong>끔</strong>이면 해당 드라이브를 선택하고 <strong>구성 → 시스템 보호 켜기 → 적용</strong>을 진행합니다.</li>
+<li>보호가 활성화된 드라이브를 선택하고 <strong>만들기</strong>를 누른 뒤, &#x27;2026-11-04 그래픽 드라이버 업데이트 전&#x27;처럼 알아보기 쉬운 이름을 입력합니다.</li>
+</ol>
+<p>만들기 버튼이 비활성화되어 있으면 먼저 보호 상태, 관리자 권한 및 회사·학교 PC의 관리 정책을 확인해야 합니다. 마이크로소프트는 시스템 보호 설정 화면을 명령으로도 열 수 있다고 안내합니다.</p>
+<pre class="notion-code"><code>systempropertiesprotection.exe</code></pre>
+<p><strong>입력 방법:</strong> Win + R을 누른 뒤 위 명령을 입력하고 Enter. 이 명령은 <strong>복원 지점 생성 화면을 여는 기능</strong>이지, 자동으로 복원 지점을 만들거나 PC를 되돌리는 명령이 아닙니다.</p></section>
+<section class="section" aria-labelledby="section-02"><h2 id="section-02">시스템 복원이 정확히 되돌리는 것</h2><p>기존의 <strong>시스템 복원(System Restore)</strong>은 선택한 복원 지점 당시의 <strong>시스템 파일·레지스트리·설치 프로그램·설정</strong>으로 되돌립니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">항목</th><th scope="col">기존 시스템 복원에서 기대할 변화</th></tr></thead><tbody><tr><td>설치한 프로그램</td><td>복원 지점 이후 설치·업데이트한 앱이 영향을 받을 수 있음</td></tr><tr><td>장치 드라이버</td><td>이전 상태로 되돌아갈 수 있음</td></tr><tr><td>Windows 설정·레지스트리</td><td>선택한 시점의 상태로 되돌아감</td></tr><tr><td>개인 문서·사진</td><td>원칙적으로 직접 삭제하거나 되돌리는 대상이 아님</td></tr><tr><td>백업</td><td><strong>시스템 복원은 파일 백업을 대체하지 못함</strong></td></tr></tbody></table></div>
+<p><strong>중요:</strong> 개인 파일이 유지되는 방식이라는 말은 데이터 손실 가능성이 0이라는 보장이 아닙니다. 시스템이 불안정하거나 저장장치 자체에 문제가 있다면 별도 백업부터 확인하세요. 복원 과정에서 설치한 프로그램이나 업데이트가 영향을 받는지도 반드시 확인해야 합니다.</p></section>
+<section class="section" aria-labelledby="section-03"><h2 id="section-03">복원 지점이 없는 이유와 해결 순서</h2><p>복원 화면에 &#x27;시스템 드라이브에 만들어진 복원 지점이 없습니다&#x27;와 같은 안내가 보일 수 있습니다. 다음과 같이 구별하면 됩니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">증상</th><th scope="col">확인할 것</th><th scope="col">대응</th></tr></thead><tbody><tr><td>&#x27;시스템 보호: 끔&#x27;</td><td>대상 드라이브 보호 상태</td><td>시스템 보호 켜기 후 새 복원 지점 생성</td></tr><tr><td>복원 목록이 비어 있음</td><td>다른 복원 지점 표시 여부</td><td>더 많은 복원 지점 표시 확인란 확인</td></tr><tr><td>예전 지점이 사라짐</td><td>디스크 사용량·Windows 업데이트·정리 이력</td><td>저장 공간과 시스템 보호 구성 검토</td></tr><tr><td>&#x27;만들기&#x27; 버튼 회색</td><td>보호 설정·관리 정책</td><td>보호 활성화, 관리자 권한, IT 정책 확인</td></tr><tr><td>공간 부족 메시지</td><td>C: 여유 공간과 시스템 보호 할당량</td><td>저장 공간 확보 후 다시 시도</td></tr></tbody></table></div>
+<h3>예전에 보호를 꺼두었다면 과거로 돌아갈 수 있나요?</h3>
+<p><strong>지금 시스템 보호를 켜더라도 이미 지나간 날짜의 복원 지점이 만들어지는 것은 아닙니다.</strong> 복원하려는 날짜에 해당하는 유효한 복원 지점이 없으면 해당 시점으로 되돌릴 수 없습니다.</p>
+<p>따라서 문제가 생긴 뒤 복원 지점부터 만들기보다는 <strong>PC가 정상일 때 미리 활성화</strong>하는 것이 중요합니다.</p></section>
+<section class="section" aria-labelledby="section-04"><h2 id="section-04">시스템 복원 실행 방법: Win + R → rstrui.exe</h2><p>윈도우 바탕화면까지 정상적으로 열리는 경우 아래 순서로 진행합니다.</p>
+<ol>
+<li>작업 내용을 저장하고 전원 어댑터를 연결합니다.</li>
+<li><strong>Win + R</strong>을 눌러 실행 창을 엽니다.</li>
+<li>아래 명령을 입력한 뒤 Enter를 누릅니다.</li>
+</ol>
+<pre class="notion-code"><code>rstrui.exe</code></pre>
+<ol>
+<li><strong>시스템 복원</strong> 마법사에서 &#x27;다음&#x27;을 선택합니다.</li>
+<li>문제 발생 <strong>이전 날짜</strong>의 복원 지점을 선택합니다.</li>
+<li>가능하면 <strong>영향을 받는 프로그램 검색</strong>을 눌러 제거·복원될 프로그램을 확인합니다.</li>
+<li>선택 내용을 검토하고 <strong>다음 → 마침</strong>을 눌러 복원을 시작합니다.</li>
+<li>Windows가 다시 시작되면 문제가 해결됐는지, 중요한 앱과 드라이버가 정상 작동하는지 확인합니다.</li>
+</ol>
+<p><strong>주의:</strong> 실제 복원을 시작한 뒤에는 컴퓨터 전원을 강제로 끄지 마세요. 노트북은 전원을 연결하고 실행하는 것이 안전합니다. 회사·학교 PC라면 관리자의 승인이 필요할 수 있습니다.</p>
+<h3>어떤 날짜를 선택해야 하나요?</h3>
+<p>예를 들어 <strong>11월 4일에 새 그래픽 드라이버를 설치한 직후 문제가 생겼다면</strong>, 가능할 경우 <strong>11월 3일처럼 문제 발생 이전의 지점</strong>을 우선 검토합니다. 11월 4일 문제가 발생한 <strong>이후</strong> 만든 지점을 선택해도 문제가 제거되지 않을 수 있습니다.</p>
+<p>복원 지점의 <strong>이름·날짜·만든 이유</strong>를 함께 확인하세요. &#x27;영향을 받는 프로그램 검색&#x27;을 통해 실제로 어떤 변경이 실행 취소될지 점검하는 것이 중요합니다.</p></section>
+<section class="section" aria-labelledby="section-05"><h2 id="section-05">PC가 부팅되지 않을 때: Windows 복구 환경(WinRE)</h2><p>로그인 화면까지 진입할 수 없더라도 Windows 복구 환경이 열린다면 다음 경로를 사용할 수 있습니다.</p>
+<p><strong>문제 해결 → 고급 옵션 → 시스템 복원</strong></p>
+<p>장치에 BitLocker 또는 장치 암호화가 켜져 있으면 <strong>복구 키</strong>를 요구할 수 있습니다. 마이크로소프트 계정·회사 IT 관리자 등 키를 보관한 위치를 확인해야 하며, 복구 키를 모르는 상태에서 무작정 초기화부터 진행하지 않는 편이 좋습니다.</p>
+<p>복구 환경 진입법은 현재 부팅 상태에 따라 달라집니다. Windows가 실행 중이라면 <strong>설정 → 시스템 → 복구 → 고급 시작 옵션</strong>에서 재시작을 선택할 수 있습니다. PC가 부팅되지 않는 경우 자동 복구 화면 진입이나 복구 미디어가 필요할 수 있습니다.</p>
+<p>참고: &#x27;Windows가 부팅되지 않음&#x27; 자체는 시스템 복원이 아닌 <strong>시동 복구·문제 업데이트 제거</strong>가 더 적합한 경우도 있습니다. 원인이 분명하지 않다면 복원 전에 문제 발생 시점을 기록하세요.</p></section>
+<section class="section" aria-labelledby="section-06"><h2 id="section-06">2026년 주의: &#x27;시스템 복원&#x27;과 &#x27;특정 시점 복원&#x27;은 다릅니다</h2><p>Microsoft는 Windows 11에 <strong>특정 시점 복원(Point-in-time restore)</strong>을 새 복구 기능으로 안내하고 있습니다. 이것은 기존 제어판 기반의 <strong>시스템 복원</strong>과 달리 <strong>로컬 파일까지 이전 상태로 되돌릴 수 있는 복원 방식</strong>입니다.</p>
+<div class="details-table"><table><thead><tr><th scope="col">비교</th><th scope="col">기존 시스템 복원</th><th scope="col">특정 시점 복원</th></tr></thead><tbody><tr><td>되돌리는 대상</td><td>시스템 파일·설정·앱</td><td>시스템 드라이브의 운영체제·앱·설정·개인 파일 등</td></tr><tr><td>개인 파일 영향</td><td>원칙적으로 직접 복원 대상이 아님</td><td><strong>복원 지점 이후 변경된 로컬 파일이 손실될 수 있음</strong></td></tr><tr><td>복원 지점 생성</td><td>이벤트 기준 자동 또는 수동</td><td>설정된 주기에 따라 자동</td></tr><tr><td>복원 지점 보존</td><td>디스크 공간·설정 등에 좌우됨</td><td><strong>기본 최대 72시간</strong></td></tr><tr><td>설정 경로</td><td>제어판 기반 시스템 보호</td><td>설정 → 시스템 → 복구 → 특정 시점 복원</td></tr><tr><td>복구 실행</td><td>Windows 또는 WinRE</td><td>WinRE 복구 환경에서 실행</td></tr><tr><td>제공 환경</td><td>Windows 10·11</td><td>지원되는 Windows 11 환경(기능 표시 여부 확인)</td></tr></tbody></table></div>
+<p><strong>가장 위험한 혼동:</strong> &#x27;시스템 복원은 개인 사진·문서를 건드리지 않는다&#x27;는 설명을 새 <strong>특정 시점 복원</strong>에 그대로 적용하면 안 됩니다. 특정 시점 복원은 복원 지점 이후 저장한 로컬 파일, 앱 변경 및 일부 자격 증명 등을 잃을 수 있으므로 반드시 별도 백업과 영향을 확인해야 합니다.</p>
+<p>Microsoft의 특정 시점 복원 설명은 Windows 11 버전 24H2 이상 환경을 다루며, 기능이 실제 제공되는지는 <strong>Windows 빌드, 디스크 용량, 장치 관리 정책</strong> 등으로 달라질 수 있습니다.</p></section>
+<section class="section" aria-labelledby="section-07"><h2 id="section-07">특정 시점 복원은 어떻게 켜나요?</h2><p>지원되는 Windows 11에서 다음 메뉴가 표시된다면 확인할 수 있습니다.</p>
+<ol>
+<li><strong>설정 → 시스템 → 복구</strong>를 엽니다.</li>
+<li><strong>특정 시점 복원</strong> 항목이 있는지 확인합니다.</li>
+<li><strong>보기 또는 편집</strong>을 선택하고 권한 확인을 진행합니다.</li>
+<li>기능이 제공되고 사용 가능한 상태라면 켜기·저장 공간 등 구성 항목을 확인합니다.</li>
+<li>복구하려면 WinRE에서 <strong>문제 해결 → 특정 시점 복원</strong>으로 이동합니다.</li>
+</ol>
+<p>일반 가정용 Windows Home·일부 Pro 장치에서는 기본 활성화될 수 있지만, <strong>OS 드라이브가 200GB보다 작거나 조직에서 관리하는 PC</strong>는 기본 설정이 다를 수 있습니다. 메뉴가 없으면 특정 시점 복원을 사용할 수 있는지 장치의 Windows 버전과 관리 상태를 확인하세요.</p>
+<p><strong>특정 시점 복원은 시스템 보호의 &#x27;복원 지점 만들기&#x27; 버튼과 같은 도구가 아닙니다.</strong> 기존 시스템 복원 안내를 참고해 수동 지점을 만든 뒤, 새 복원 기능에 바로 사용할 수 있다고 생각하면 안 됩니다.</p></section>
+<section class="section" aria-labelledby="section-08"><h2 id="section-08">내 상황에 맞는 복구 방법 결정</h2><div class="details-table"><table><thead><tr><th scope="col">상황</th><th scope="col">먼저 고려할 방법</th></tr></thead><tbody><tr><td>드라이버 설치 후 화면·소리 이상</td><td><strong>기존 시스템 복원</strong> 또는 드라이버 되돌리기</td></tr><tr><td>문제 발생 시점이 최근이고 새 특정 시점 복원에 유효한 지점이 있음</td><td><strong>특정 시점 복원</strong>, 단 최근 로컬 파일 손실 위험 검토</td></tr><tr><td>3일 이상 지난 시스템 변경을 되돌리고 싶음</td><td>사용 가능한 <strong>기존 시스템 복원</strong> 지점 검토</td></tr><tr><td>특정 Windows 업데이트 후 오류</td><td><strong>업데이트 제거</strong> 검토</td></tr><tr><td>문서·사진을 실수로 삭제</td><td><strong>파일 백업·휴지통·파일 기록</strong> 확인. 시스템 복원으로 해결한다고 가정하지 않기</td></tr><tr><td>Windows 파일 손상·업데이트 문제지만 앱과 파일을 유지하고 싶음</td><td><strong>Windows 업데이트로 현재 버전 다시 설치</strong> 옵션 검토</td></tr><tr><td>어떤 복구도 안 되고 초기화가 필요함</td><td><strong>백업 후 이 PC 초기화</strong>, 앱 삭제 여부 확인</td></tr></tbody></table></div>
+<p>새 복구 기능이 있다고 해도 모든 문제를 해결하거나 모든 파일을 복구할 수 있다는 뜻은 아닙니다. <strong>원인에 따라 되돌리는 범위가 가장 작은 수단부터 검토</strong>하는 것이 합리적입니다.</p></section>
+<section class="section" aria-labelledby="section-09"><h2 id="section-09">복원하기 전·후 체크리스트</h2><p><strong>복원 전</strong></p>
+<ul>
+<li>☐ 중요한 문서·사진·프로젝트 파일의 별도 백업을 확인했다.</li>
+<li>☐ 기존 시스템 복원인지, <strong>파일까지 영향받는 특정 시점 복원인지</strong> 구분했다.</li>
+<li>☐ 문제 발생 날짜와 선택할 복원 지점을 비교했다.</li>
+<li>☐ 설치 앱·드라이버·업데이트 변경 목록을 확인했다.</li>
+<li>☐ 노트북을 전원에 연결하고 BitLocker 복구 키 보관 여부를 확인했다.</li>
+</ul>
+<p><strong>복원 후</strong></p>
+<ul>
+<li>☐ Windows 로그인과 기본 장치 기능이 정상인지 확인했다.</li>
+<li>☐ 사용 중인 보안·업무 프로그램이 제대로 작동하는지 확인했다.</li>
+<li>☐ 보안 업데이트를 다시 검사했다.</li>
+<li>☐ 외부 장치·프린터·네트워크·드라이버가 정상인지 확인했다.</li>
+<li>☐ 특히 <strong>특정 시점 복원</strong>을 썼다면 최근 수정한 로컬 파일과 자격 증명에 영향이 없는지 점검했다.</li>
+</ul></section>
+<section class="section" aria-labelledby="section-10"><h2 id="section-10">자주 묻는 질문</h2><h3>Q1. 시스템 복원 지점만 만들면 삭제한 사진도 복구할 수 있나요?</h3>
+<p><strong>아니요.</strong> 기존 시스템 복원은 개인 파일 백업 기능이 아닙니다. 실수로 삭제한 문서는 휴지통·OneDrive 버전 기록·파일 기록 또는 별도 백업에서 찾아야 합니다.</p>
+<h3>Q2. 시스템 보호가 꺼져 있었는데 오늘 켜면 어제 상태로 복원되나요?</h3>
+<p><strong>기존 복원 지점이 없었다면 불가능합니다.</strong> 지금 만든 복원 지점은 현재 상태를 기록하는 것이므로 과거 기록을 거슬러 생성하지는 못합니다.</p>
+<h3>Q3. Win + R에 rstrui.exe를 입력하면 즉시 복원되나요?</h3>
+<p>아닙니다. <strong>시스템 복원 마법사</strong>가 열리며, 사용자가 복원 지점을 선택하고 마지막 확인을 거쳐야 적용됩니다.</p>
+<h3>Q4. 복원 지점이 자동으로 생기나요?</h3>
+<p>기존 시스템 복원은 시스템 보호가 켜져 있을 때 특정 이벤트에서 자동 생성될 수 있지만, 항상 원하는 날짜에 만들어진다고 보장하지 않습니다. 중요 변경 전에는 <strong>수동 생성 여부를 직접 확인</strong>하세요. 새 특정 시점 복원은 별도의 자동 주기와 보존 정책이 있습니다.</p>
+<h3>Q5. 윈도우11에서 &#x27;특정 시점 복원&#x27; 메뉴가 보이지 않아요.</h3>
+<p>설치된 Windows 버전, OS 드라이브 크기 및 조직 관리 정책에 따라 기능 제공·기본 설정이 달라질 수 있습니다. <strong>시스템 보호</strong> 기능과 혼동하지 말고 <strong>설정 → 시스템 → 복구</strong>에서 먼저 지원 여부를 확인하세요.</p>
+<h3>Q6. 복원 중 전원을 꺼도 되나요?</h3>
+<p>권장하지 않습니다. 복구가 중단되면 시스템이 불안정해질 수 있습니다. 전원 연결을 유지하고, 복원 종료 안내와 정상 부팅을 확인한 뒤 사용하세요.</p></section>
+<section class="section" aria-labelledby="section-11"><h2 id="section-11">결론</h2><p>윈도우11의 <strong>&#x27;복원 지점 만들기&#x27;는 현재 시스템 구성을 저장해 향후 시스템 오류에 대비하는 방법</strong>입니다. 문제가 생기면 rstrui.exe로 적절한 지점을 골라 되돌릴 수 있습니다. <strong>2026년의 새 &#x27;특정 시점 복원&#x27;은 개인 파일까지 변경할 수 있는 별도 기능</strong>이므로, 복구 메뉴의 이름과 대상 범위를 반드시 구분한 후 사용해야 합니다.</p></section>
+<section class="section" aria-labelledby="section-12"><h2 id="section-12">공식 근거</h2><ol>
+<li><a href="https://support.microsoft.com/ko-kr/windows/experience/backup-recovery/system-protection" rel="noopener noreferrer">Microsoft 지원 — 시스템 보호: 켜기·복원 지점 수동 생성</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/windows/experience/backup-recovery/system-restore" rel="noopener noreferrer">Microsoft 지원 — 시스템 복원: rstrui.exe·영향 받는 프로그램·WinRE</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/windows/experience/backup-recovery/point-time-restore-for-windows" rel="noopener noreferrer">Microsoft 지원 — 특정 시점 복원: 개인 파일 변경·기존 시스템 복원과 비교</a></li>
+<li><a href="https://learn.microsoft.com/ko-kr/windows/configuration/point-in-time-restore" rel="noopener noreferrer">Microsoft Learn — 특정 시점 복원 지원 및 구성·기본 보존</a></li>
+<li><a href="https://support.microsoft.com/ko-kr/windows/experience/backup-recovery/recovery-options-in-windows" rel="noopener noreferrer">Microsoft 지원 — Windows 복구 옵션 비교</a></li>
+</ol>
+<hr>
+<p><strong>발행용 메타데이터</strong></p>
+<ul>
+<li>SEO 제목: 2026 윈도우11 복원 지점 만들기·시스템 복원｜rstrui·복원 지점 없음 해결</li>
+<li>메타 설명: 윈도우11 복원 지점 만들기와 시스템 보호 켜는 법, rstrui.exe로 복구하는 순서, 복원 지점이 없거나 버튼이 회색일 때 해결 방법을 정리했습니다. 새로운 특정 시점 복원과 개인 파일 영향 차이도 설명합니다.</li>
+<li>기본 키워드: 윈도우11 복원 지점 만들기, 시스템 보호 켜기, 시스템 복원 rstrui, 윈도우 복원 지점 없음</li>
+<li>확장 키워드: 윈도우11 특정 시점 복원, 복원 지점 만들기 버튼 회색, Windows 복구 환경, 복원하면 파일 삭제</li>
+<li>카테고리: it</li>
+<li>슬러그: 2026-windows11-create-restore-point-system-restore-point-in-time</li>
+<li>편집·자료 확인일: 2026-11-04</li>
+<li>최종 상태: 발행대기. 실제 배포 확인 전까지 발행 완료로 표시하지 않음.</li>
+</ul></section>
+
+<!-- notion-discovery:start -->
+<section class="section" aria-label="관련 글"><h2>함께 읽으면 좋은 같은 분야의 글</h2><ul><li><a href="/kor/report/it/google-account-permanent-delete-vs-remove-device-gmail-takeout-recovery-2026.html">2026 구글 계정 삭제 방법: 갤럭시 계정 제거·Gmail만 삭제·사진 백업·복구 차이</a></li>
+<li><a href="/kor/report/it/check-my-ip-address-windows11-galaxy-iphone-public-private-2026.html">2026 내 IP 주소 확인 방법: 윈도우11·갤럭시·아이폰 공인 IP와 사설 IP 차이</a></li>
+<li><a href="/kor/report/it/excel-file-password-encrypt-remove-sheet-workbook-protection-2026.html">2026 엑셀 파일 암호 설정·해제 방법: 열기 비밀번호·시트 보호·통합 문서 보호 차이</a></li>
+<li><a href="/kor/report/it/galaxy-notification-history-dismissed-alerts-24-hours-kakaotalk-2026.html">2026 갤럭시 지운 알림 다시 보기: 알림 기록 켜기·24시간·카카오톡 알림 복구 한계</a></li></ul></section>
+<!-- notion-discovery:end -->
+<section class="info-bottom">
+<h2>정보 출처와 확인 안내</h2>
+<p>작성·갱신일과 적용 범위는 본문에서 확인하세요. 정책·행사 일정·혜택·제품 정보는 변경될 수 있으므로 중요한 판단 전 공식 기관 및 판매처의 최신 안내를 확인하시기 바랍니다.</p>
+<div class="pills"><a href="/kor/report/it/">같은 분야의 글</a><a href="/kor/report/">생활정보 전체</a><a href="/">emfls 홈</a></div>
+</section>
+</div>
+</article>
+<footer class="site-footer">© 2026 emfls · 공식 기관 안내를 우선 확인하세요</footer>
+</main>
+</body>
+</html>
