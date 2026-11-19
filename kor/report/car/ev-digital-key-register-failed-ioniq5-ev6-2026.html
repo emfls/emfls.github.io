@@ -203,6 +203,133 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <div><a href="/kor/report/car/ev-navigation-screen-frozen-reset-2026.html">2026 아이오닉 5·EV6 내비게이션 화면 먹통 리셋·재부팅 해결법</a><p class="why">인포테인먼트 화면 멈춤·인식 불량 시 핀홀 리셋 및 계기판 구별</p></div>
 </div>
 </aside>
+<section id="digital-key-diagnosis" aria-labelledby="digital-key-diagnosis-title">
+<h2 id="digital-key-diagnosis-title">디지털 키 등록 실패 5초 원인 진단기</h2>
+<div class="diagnosis-options">
+<label for="digital-key-model">차종·연식 구분
+<select id="digital-key-model">
+<option value="">차종 선택</option>
+<option value="ioniq5-older">구형 아이오닉5</option>
+<option value="ioniq5-ccnc">신형 ccNC 아이오닉5</option>
+<option value="ev6">EV6</option>
+</select>
+</label>
+<label for="digital-key-stage">실패 단계
+<select id="digital-key-stage">
+<option value="">실패 단계 선택</option>
+<option value="menu">차량 메뉴 없음</option>
+<option value="registration">등록 중 오류</option>
+<option value="start">문은 열리는데 시동 불가</option>
+<option value="sharing">가족 공유 안됨</option>
+</select>
+</label>
+</div>
+<p id="digital-key-error" role="alert"></p>
+<p id="digital-key-result" role="status" aria-atomic="true">차종과 실패 단계를 선택하면 점검 순서가 표시됩니다.</p>
+</section>
+<style>
+#digital-key-diagnosis {
+  box-sizing: border-box;
+  margin-block: 1rem;
+  padding: 1rem;
+  border: 1px solid color-mix(in srgb, currentColor 24%, transparent);
+  border-radius: .75rem;
+  background: color-mix(in srgb, currentColor 4%, transparent);
+  overflow-wrap: anywhere;
+}
+#digital-key-diagnosis h2 { margin: 0 0 .75rem; font-size: 1.125rem; }
+#digital-key-diagnosis .diagnosis-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .75rem;
+}
+#digital-key-diagnosis select {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  margin-top: .25rem;
+  padding: .35rem .5rem;
+  border: 1px solid currentColor;
+  border-radius: .375rem;
+  background: Canvas;
+  color: CanvasText;
+  font: inherit;
+}
+#digital-key-result { margin: .75rem 0 0; white-space: pre-line; }
+#digital-key-error { margin: 0; }
+#digital-key-error:not(:empty) {
+  margin-top: .75rem;
+  padding: .5rem;
+  border: 1px solid currentColor;
+  border-radius: .375rem;
+  font-weight: 700;
+}
+#digital-key-result:empty { margin: 0; }
+@media (width < 650px) {
+  #digital-key-diagnosis .diagnosis-options { grid-template-columns: 1fr; }
+}
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const model = document.getElementById('digital-key-model');
+  const stage = document.getElementById('digital-key-stage');
+  const result = document.getElementById('digital-key-result');
+  const error = document.getElementById('digital-key-error');
+  const vehicles = {
+    'ioniq5-older': { check: '구형 아이오닉5의 연식·트림·선택사양과 디지털 키 세대를 확인하세요.', account: '블루링크' },
+    'ioniq5-ccnc': { check: '신형 ccNC 아이오닉5의 트림·선택사양과 디지털 키 세대를 확인하세요.', account: '블루링크' },
+    ev6: { check: 'EV6의 연식·트림·선택사양과 디지털 키 세대를 확인하세요.', account: '기아 커넥트' }
+  };
+  const sharingSteps = Array.from(
+    document.querySelectorAll('section[aria-labelledby="section-11"] > ol > li'),
+    step => step.textContent.trim()
+  );
+  const steps = {
+    menu: () => [
+      '해당 차량 사양에서 스마트폰 키를 지원하는지 공식 설명서로 확인하세요.',
+      '지원 차량이면 설명서의 등록 메뉴나 공식 앱의 등록 경로를 확인하세요. 일부 현대 디지털 키 2 차량은 내비게이션 메뉴 없이 자동 등록됩니다.'
+    ],
+    registration: account => [
+      '공식 지원 스마트폰 목록을 확인하고 휴대폰 운영체제와 관련 앱을 업데이트하세요.',
+      account + '에서 차량과 소유자 계정의 연결을 확인하세요. 중고차라면 이전 소유자의 등록 해제와 소유권 변경 절차를 확인하세요.',
+      '공식 앱의 등록 경로에서 지원 월렛으로 이동하세요. NFC 인증이 필요한 차량은 설명서에 나온 패드의 지정 위치에 휴대폰을 놓으세요.',
+      account === '블루링크'
+        ? '현대 디지털 키 2에서 차량 메뉴가 필요한 경우 설정 → 차량 → 디지털 키 → 나의 스마트폰 키 → 등록을 확인하세요. 앱과 차량에서 등록 완료 여부를 확인하세요.'
+        : '차량 설명서의 등록 절차를 마치고 앱과 차량에서 완료 여부를 확인하세요.'
+    ],
+    start: () => [
+      '차량 설명서에서 도어 인증과 실내 시동 인증 방법을 각각 확인하세요.',
+      'NFC 시동이면 충전 패드의 지정 위치와 휴대폰 NFC 안테나 위치를 맞추세요. 근접 시동이면 차량이 디지털 키 2인지 2 터치인지, 스마트폰이 UWB를 지원하는지 확인하세요.',
+      '차량이 키를 인식해도 READY가 뜨지 않으면 차량의 시동 조건과 경고를 확인하세요. 키가 사라졌다면 월렛, 소유자 계정, 기기 변경 여부를 확인하세요.'
+    ],
+    sharing: () => sharingSteps
+  };
+
+  function updateDiagnosis() {
+    error.textContent = '';
+    if ((model.value && !Object.hasOwn(vehicles, model.value)) ||
+        (stage.value && !Object.hasOwn(steps, stage.value))) {
+      result.textContent = '';
+      error.textContent = '선택값을 확인할 수 없습니다. 차종과 실패 단계를 다시 선택하세요.';
+      return;
+    }
+    if (!model.value || !stage.value) {
+      result.textContent = '차종과 실패 단계를 선택하면 점검 순서가 표시됩니다.';
+      return;
+    }
+
+    const vehicle = vehicles[model.value];
+    result.textContent = [vehicle.check, ...steps[stage.value](vehicle.account)]
+      .map((step, index) => (index + 1) + '. ' + step).join('\n');
+  }
+
+  model.addEventListener('change', updateDiagnosis);
+  stage.addEventListener('change', updateDiagnosis);
+  updateDiagnosis();
+});
+</script>
 <section class="section" aria-labelledby="section-07"><h2 id="section-07">7. 등록 화면에서 멈췄다면: 원인별 체크 순서</h2><p>디지털 키 등록이 완료되지 않는 증상은 크게 <strong>차량 사양 문제</strong>, <strong>스마트폰 호환 문제</strong>, <strong>소유자 계정 문제</strong>, <strong>NFC 인식 문제</strong>로 나눌 수 있습니다.</p>
 <h3>차량 메뉴 자체가 없는 경우</h3>
 <p>차량 연식·트림·선택사양에서 해당 디지털 키 기능이 지원되는지 확인합니다. 메뉴가 없다면 휴대폰만 초기화하는 것은 해결책이 아닐 수 있습니다.</p>
@@ -389,7 +516,10 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <section class="info-bottom">
 <h2>정보 출처와 확인 안내</h2>
 <p>작성·갱신일과 적용 범위는 본문에서 확인하세요. 정책·행사 일정·혜택·제품 정보는 변경될 수 있으므로 중요한 판단 전 공식 기관 및 판매처의 최신 안내를 확인하시기 바랍니다.</p>
-<div class="pills"><a href="/kor/report/car/">같은 분야의 글</a><a href="/kor/report/">생활정보 전체</a><a href="/">emfls 홈</a><a href="/util/electricity-cost-calculator/">전기요금 계산기</a><a href="/kor/util/power-bank-wh-calculator/">배터리 Wh 계산기</a></div>
+<div class="pills"><a href="/kor/report/car/">같은 분야의 글</a><a href="/kor/report/">생활정보 전체</a><a href="/">emfls 홈</a><a href="/util/electricity-cost-calculator/">전기요금 계산기</a><a href="/kor/util/power-bank-wh-calculator/">배터리 Wh 계산기</a><a href="/kor/report/car/car-recall-self-paid-repair-refund-guide-2026.html">자동차 리콜 전 자비 수리비 환급 방법</a>
+<a href="/kor/report/car/ev-double-parking-neutral-n-mode-ioniq5-ev6-2026.html">아이오닉 5·EV6 이중주차 중립(N) 설정</a>
+<a href="/kor/report/car/ev-navigation-screen-frozen-reset-2026.html">아이오닉 5·EV6 내비게이션 먹통 리셋</a>
+</div>
 </section>
 </div>
 </article>

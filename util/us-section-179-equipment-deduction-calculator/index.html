@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>US Section 179 Equipment & Bonus Depreciation Tax Savings Calculator (2025–2026)</title>
+<meta name="description" content="Estimate 2025 ($2.50M cap) and 2026 ($2.56M cap) IRS Section 179 immediate expensing, dollar-for-dollar phase-out thresholds, heavy SUV limits, 100% bonus depreciation, and first-year cash tax savings.">
+<link rel="canonical" href="https://emfls.github.io/util/us-section-179-equipment-deduction-calculator/">
+<link rel="stylesheet" href="../new-tools.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QP5Q67GE5B')</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Section 179 Deduction & Bonus Depreciation Calculator", "url": "https://emfls.github.io/util/us-section-179-equipment-deduction-calculator/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any", "dateModified": "2026-11-19"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "dateModified": "2026-11-19", "mainEntity": [{"@type": "Question", "name": "What is the IRS Section 179 spending cap and business-use requirement?", "acceptedAnswer": {"@type": "Answer", "text": "To qualify for Section 179 expensing or bonus depreciation, property must be used more than 50% for active business; in 2026 the Section 179 cap is $2,560,000 phasing out above $4,090,000 ($2,500,000 / $4,000,000 in 2025)."}}, {"@type": "Question", "name": "What is the Section 179 limit for heavy SUVs over 6,000 lbs GVWR?", "acceptedAnswer": {"@type": "Answer", "text": "Heavy SUVs between 6,001 and 14,000 lbs GVWR are capped at $31,300 under Section 179 for 2025 and $32,000 for 2026 before applying eligible bonus depreciation."}}]}</script>
+<style>
+.section179-form .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.section179-form input, .section179-form select { box-sizing: border-box; width: 100%; min-width: 0; }
+.section179-form button { margin-top: 14px; max-width: 100%; white-space: normal; }
+.section179-form .result { white-space: pre-wrap; overflow-wrap: anywhere; }
+#section179-error:empty, #section179-result:empty { display: none; }
+@media (width < 650px) {
+  .section179-form .grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<main class="tool-shell">
+<header class="hero"><h1>US Section 179 & Bonus Depreciation Calculator (2025–2026)</h1><p>Calculate first-year business equipment and heavy SUV deductions, phase-out reductions, 100% bonus depreciation spillover, and estimated net after-tax equipment cost.</p></header>
+<section class="panel">
+  <form class="section179-form" id="section179-form" novalidate>
+    <div class="grid">
+      <div>
+        <label for="tax-year">Tax year</label>
+        <select id="tax-year" name="tax-year"><option value="2026">2026</option><option value="2025">2025</option></select>
+      </div>
+      <div>
+        <label for="asset-type">Asset type</label>
+        <select id="asset-type" name="asset-type" aria-describedby="asset-note">
+          <option value="equipment">Standard qualifying equipment</option>
+          <option value="suv">Heavy SUV (&gt;6,000 lbs GVWR)</option>
+        </select>
+        <p class="note" id="asset-note">The SUV option covers vehicles subject to the SUV cap through 14,000 lbs GVWR.</p>
+      </div>
+      <div>
+        <label for="asset-cost">Total asset purchase cost ($)</label>
+        <input id="asset-cost" name="asset-cost" type="number" min="0.01" max="1000000000000" step="0.01" value="75000" required>
+      </div>
+      <div>
+        <label for="other-purchases">Other annual Section 179 qualifying purchases ($)</label>
+        <input id="other-purchases" name="other-purchases" type="number" min="0" max="1000000000000" step="0.01" value="0" required aria-describedby="purchases-note">
+        <p class="note" id="purchases-note">For the phase-out, enter the business-use share of other qualifying property placed in service this year.</p>
+      </div>
+      <div>
+        <label for="business-use">Business use (%)</label>
+        <input id="business-use" name="business-use" type="number" min="0" max="100" step="any" value="100" required aria-describedby="use-note">
+        <p class="note" id="use-note">Business use must exceed 50% for this estimate.</p>
+      </div>
+      <div>
+        <label for="business-income">Business taxable income limit ($, optional)</label>
+        <input id="business-income" name="business-income" type="number" min="-1000000000000" max="1000000000000" step="0.01" aria-describedby="income-note">
+        <p class="note" id="income-note">Enter the taxable income available for Section 179 after other applicable deductions. Enter a negative amount for a loss or leave blank to skip the income check.</p>
+      </div>
+      <div>
+        <label for="tax-rate">Combined federal and state marginal tax rate (%)</label>
+        <input id="tax-rate" name="tax-rate" type="number" min="0" max="100" step="any" value="30" required>
+      </div>
+    </div>
+    <button type="submit">Calculate deductions &amp; tax savings</button>
+    <div id="section179-error" class="error" role="alert"></div>
+    <pre id="section179-result" class="result" aria-live="polite"></pre>
+  </form>
+</section>
+<section class="panel">
+  <h2>What this estimate includes</h2>
+  <ul>
+    <li><strong>2025.</strong> The Section 179 maximum is $2,500,000. The dollar-for-dollar phase-out starts above $4,000,000 and reaches zero at $6,500,000. The heavy SUV cap is $31,300.</li>
+    <li><strong>2026.</strong> The Section 179 maximum is $2,560,000. The dollar-for-dollar phase-out starts above $4,090,000 and reaches zero at $6,650,000. The heavy SUV cap is $32,000.</li>
+  </ul>
+  <p>The estimate assigns the available Section 179 election to this asset first. It applies 100% bonus depreciation to eligible business basis outside that election and assumes the qualifying asset was acquired after January 19, 2025 and placed in service in the selected tax year. See <a href="https://www.irs.gov/publications/p946">IRS Publication 946</a>, <a href="https://www.irs.gov/irb/2025-45_IRB">Revenue Procedure 2025-32</a>, and <a href="https://www.irs.gov/irb/2026-06_IRB">IRS Notice 2026-11</a>.</p>
+  <p class="note">Estimated cash tax savings equal the Year 1 deduction times your combined rate. The estimate assumes you can use the full Year 1 deduction at that rate. State depreciation rules and limits on the use of losses can change your actual savings.</p>
+  <div class="links">
+    <a href="/util/irs-tax-brackets-401k-catchup-calculator/">IRS tax brackets &amp; 401(k) catch-up</a>
+    <a href="/util/hsa-tax-savings-calculator/">HSA tax savings</a>
+    <a href="/util/break-even-calculator/">Break-even calculator</a>
+    <a href="/util/">All tools</a>
+  </div>
+</section>
+<section class="panel faq">
+  <h2>FAQ</h2>
+  <details>
+    <summary>What is the IRS Section 179 spending cap and business-use requirement?</summary>
+    <p>The annual Section 179 limits above apply to the business-use share of qualifying property. Section 179 requires business use above 50%. For listed property such as a heavy SUV, this threshold also applies to bonus depreciation. This calculator uses the above-50% threshold for both asset choices.</p>
+  </details>
+  <details>
+    <summary>What is the Section 179 limit for heavy SUVs over 6,000 lbs GVWR?</summary>
+    <p>For SUVs subject to the cap, the Section 179 limit is $31,300 in 2025 and $32,000 in 2026. Eligible remaining business basis can qualify for bonus depreciation.</p>
+  </details>
+  <details>
+    <summary>What happens if taxable income limits my Section 179 deduction?</summary>
+    <p>The elected amount exceeding the income limit carries forward to a later tax year, subject to that year's limits. The full election reduces the basis available for bonus depreciation in Year 1.</p>
+  </details>
+</section>
+</main>
+<footer>Estimate only · emfls.github.io</footer>
+<script>
+const section179Rules = {
+  2025: { maximum: 2500000, phaseOutStart: 4000000, suvCap: 31300 },
+  2026: { maximum: 2560000, phaseOutStart: 4090000, suvCap: 32000 }
+};
+const section179Form = document.getElementById('section179-form');
+const section179Error = document.getElementById('section179-error');
+const section179Result = document.getElementById('section179-result');
+const formatDollars = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format;
+
+function readSection179Number(input) {
+  if (!input.required && input.value === '' && !input.validity.badInput) {
+    return null;
+  }
+
+  const value = input.valueAsNumber;
+  if (!Number.isFinite(value) || value < Number(input.min) || value > Number(input.max) || input.validity.stepMismatch) {
+    const min = Number(input.min).toLocaleString('en-US');
+    const max = Number(input.max).toLocaleString('en-US');
+    const precision = input.step === '0.01' ? ' Use dollars and cents.' : '';
+    throw new RangeError(`Enter a value from ${min} to ${max} for “${input.labels[0].textContent}”.${precision}`);
+  }
+  return value;
+}
+
+function calculateSection179() {
+  section179Error.textContent = '';
+  section179Result.textContent = '';
+  const inputs = section179Form.elements;
+  const year = Number(inputs['tax-year'].value);
+  const assetType = inputs['asset-type'].value;
+  if (!Number.isFinite(year) || (year !== 2025 && year !== 2026)) {
+    section179Error.textContent = 'Select tax year 2025 or 2026.';
+    return;
+  }
+  if (assetType !== 'equipment' && assetType !== 'suv') {
+    section179Error.textContent = 'Select a qualifying asset type.';
+    return;
+  }
+
+  let cost, otherPurchases, usePct, income, taxRate;
+  try {
+    cost = readSection179Number(inputs['asset-cost']);
+    otherPurchases = readSection179Number(inputs['other-purchases']);
+    usePct = readSection179Number(inputs['business-use']);
+    income = readSection179Number(inputs['business-income']);
+    taxRate = readSection179Number(inputs['tax-rate']);
+  } catch (error) {
+    if (!(error instanceof RangeError)) throw error;
+    section179Error.textContent = error.message;
+    return;
+  }
+
+  if (usePct <= 50) {
+    section179Error.textContent = 'Business use must exceed 50% to qualify for this estimate.';
+    return;
+  }
+
+  const rules = section179Rules[year];
+  const basis = cost * (usePct / 100);
+  const qualifyingPurchases = basis + otherPurchases;
+  const phaseOutReduction = Math.min(rules.maximum, Math.max(0, qualifyingPurchases - rules.phaseOutStart));
+  const annualLimit = rules.maximum - phaseOutReduction;
+  const elected = Math.min(basis, annualLimit, assetType === 'suv' ? rules.suvCap : annualLimit);
+  const deduction = income === null ? elected : Math.min(elected, Math.max(0, income));
+  const carryforward = elected - deduction;
+  const bonusBasis = basis - elected;
+  const totalDeduction = deduction + bonusBasis;
+  const taxSavings = totalDeduction * (taxRate / 100);
+  const netCost = cost - taxSavings;
+
+  const lines = [
+    `Eligible business basis: ${formatDollars(basis)}`,
+    `Total qualifying purchases for phase-out: ${formatDollars(qualifyingPurchases)}`,
+    `Section 179 phase-out reduction: ${formatDollars(phaseOutReduction)}`,
+    `Annual Section 179 limit after phase-out: ${formatDollars(annualLimit)}`,
+    `Section 179 deduction this year: ${formatDollars(deduction)}`,
+    `Remaining eligible basis / 100% bonus deduction: ${formatDollars(bonusBasis)}`,
+    `Total Year 1 deduction: ${formatDollars(totalDeduction)}`,
+    `Estimated cash tax savings: ${formatDollars(taxSavings)}`,
+    `Estimated net after-tax equipment cost: ${formatDollars(netCost)}`
+  ];
+  if (carryforward > 0) {
+    lines.push(`Section 179 carryforward to future years (income limit): ${formatDollars(carryforward)}`);
+  } else if (income === null) {
+    lines.push('Business taxable income limit was not checked.');
+  }
+  section179Result.textContent = lines.join('\n');
+}
+
+section179Form.addEventListener('input', calculateSection179);
+section179Form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  calculateSection179();
+});
+calculateSection179();
+</script>
+</body>
+</html>

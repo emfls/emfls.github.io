@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Debt Snowball vs Debt Avalanche Calculator – Payoff Timeline & Interest Saved</title>
+<meta name="description" content="Compare Debt Snowball (smallest balance first) against Debt Avalanche (highest APR first) across multiple balances, monthly minimum payments, and extra monthly debt budget.">
+<link rel="canonical" href="https://emfls.github.io/util/debt-snowball-vs-avalanche-calculator/">
+<link rel="stylesheet" href="../new-tools.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QP5Q67GE5B')</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Debt Snowball vs Avalanche Calculator", "url": "https://emfls.github.io/util/debt-snowball-vs-avalanche-calculator/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any", "dateModified": "2026-11-19"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "dateModified": "2026-11-19", "mainEntity": [{"@type": "Question", "name": "Which method saves more money mathematically: Debt Snowball or Debt Avalanche?", "acceptedAnswer": {"@type": "Answer", "text": "Debt Avalanche directs extra payments to the highest APR balance first and minimizes total interest cost, whereas Debt Snowball eliminates small balances quickly for behavioral momentum."}}, {"@type": "Question", "name": "What if my minimum payment does not cover monthly interest on a debt?", "acceptedAnswer": {"@type": "Answer", "text": "If a balance accrues more monthly interest than its assigned payment, the debt never amortizes downward; this calculator detects non-amortizing inputs cleanly and prompts a sufficient payment."}}]}</script>
+</head>
+<body>
+<style>
+  .debt-tool { overflow-wrap: anywhere; }
+  .debt-tool .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .debt-tool fieldset {
+    min-inline-size: 0;
+    margin: 0;
+    padding: .75rem;
+    border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+    border-radius: .5rem;
+  }
+  .debt-tool legend { padding: 0 .25rem; font-weight: 700; }
+  .debt-tool input { box-sizing: border-box; width: 100%; min-width: 0; }
+  .debt-tool .debt-budget { margin-top: 1rem; max-width: 24rem; }
+  .debt-tool button { margin-top: .875rem; max-width: 100%; white-space: normal; }
+  .debt-tool .result,
+  .debt-tool .error { min-width: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .debt-tool .result:empty,
+  .debt-tool .error:empty { display: none; }
+  .debt-tool .links { flex-wrap: wrap; }
+  @media (width < 650px) {
+    .debt-tool .grid { grid-template-columns: 1fr; }
+  }
+</style>
+<main class="tool-shell debt-tool">
+<header class="hero"><h1>Debt Snowball vs. Debt Avalanche Payoff Calculator</h1><p>Compare payoff months, total interest paid, and exact interest saved between smallest-balance Snowball momentum and highest-APR Avalanche math.</p></header>
+<section class="panel" aria-labelledby="debts-heading">
+  <h2 id="debts-heading">Your debts</h2>
+  <p id="debt-help" class="note">Enter a zero balance for any unused debt. Use up to two decimal places for dollar amounts and APRs.</p>
+  <form id="debtForm" aria-describedby="debt-help" novalidate>
+    <div class="grid">
+      <fieldset>
+        <legend>Debt 1</legend>
+        <div class="grid">
+          <div><label for="name1">Name or label</label><input id="name1" maxlength="60" value="Credit card"></div>
+          <div><label for="balance1">Balance ($)</label><input id="balance1" type="number" min="0" max="10000000" step="0.01" value="4500" required></div>
+          <div><label for="apr1">APR (%)</label><input id="apr1" type="number" min="0" max="100" step="0.01" value="21.99" required></div>
+          <div><label for="minimum1">Minimum monthly payment ($)</label><input id="minimum1" type="number" min="0" max="10000000" step="0.01" value="135" required></div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Debt 2</legend>
+        <div class="grid">
+          <div><label for="name2">Name or label</label><input id="name2" maxlength="60" value="Car loan"></div>
+          <div><label for="balance2">Balance ($)</label><input id="balance2" type="number" min="0" max="10000000" step="0.01" value="9500" required></div>
+          <div><label for="apr2">APR (%)</label><input id="apr2" type="number" min="0" max="100" step="0.01" value="7.49" required></div>
+          <div><label for="minimum2">Minimum monthly payment ($)</label><input id="minimum2" type="number" min="0" max="10000000" step="0.01" value="260" required></div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Debt 3</legend>
+        <div class="grid">
+          <div><label for="name3">Name or label</label><input id="name3" maxlength="60" value="Personal loan"></div>
+          <div><label for="balance3">Balance ($)</label><input id="balance3" type="number" min="0" max="10000000" step="0.01" value="2200" required></div>
+          <div><label for="apr3">APR (%)</label><input id="apr3" type="number" min="0" max="100" step="0.01" value="13.99" required></div>
+          <div><label for="minimum3">Minimum monthly payment ($)</label><input id="minimum3" type="number" min="0" max="10000000" step="0.01" value="100" required></div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Debt 4</legend>
+        <div class="grid">
+          <div><label for="name4">Name or label</label><input id="name4" maxlength="60" value="Debt 4"></div>
+          <div><label for="balance4">Balance ($)</label><input id="balance4" type="number" min="0" max="10000000" step="0.01" value="0" required></div>
+          <div><label for="apr4">APR (%)</label><input id="apr4" type="number" min="0" max="100" step="0.01" value="0" required></div>
+          <div><label for="minimum4">Minimum monthly payment ($)</label><input id="minimum4" type="number" min="0" max="10000000" step="0.01" value="0" required></div>
+        </div>
+      </fieldset>
+    </div>
+    <div class="debt-budget">
+      <label for="extra">Monthly extra debt budget ($)</label>
+      <input id="extra" type="number" min="0" max="10000000" step="0.01" value="300" required>
+    </div>
+    <button type="submit">Compare payoff strategies</button>
+  </form>
+  <div id="error" class="error" role="alert"></div>
+  <div aria-live="polite">
+    <div class="grid">
+      <pre id="snowballResult" class="result"></pre>
+      <pre id="avalancheResult" class="result"></pre>
+    </div>
+    <p id="result" class="result"></p>
+  </div>
+</section>
+<section class="panel">
+  <h2>What this estimate includes</h2>
+  <p>The monthly budget combines the starting minimum payments on active debts and your extra budget. Each month the calculator adds interest at APR divided by 12, rounded to the nearest cent, then pays each active debt up to its minimum. Any money left goes to the highest-priority remaining debt, with unused payments applied to the next debt that same month.</p>
+  <p>Snowball ranks debts by their smallest balance at the start of each month. Avalanche ranks debts by their highest APR. Ties follow the order you entered the debts. The estimate assumes fixed rates and payments and excludes fees, new charges, and daily interest.</p>
+  <p class="note">Your tool input is processed in your browser. Analytics and advertising may receive ordinary usage and device data.</p>
+  <div class="links">
+    <a href="/util/loan-payment-calculator/">Loan payment calculator</a>
+    <a href="/util/heloc-vs-cashout-refinance-calculator/">HELOC vs. cash-out refinance</a>
+    <a href="/util/irs-tax-brackets-401k-catchup-calculator/">IRS tax brackets and 401(k) catch-up</a>
+    <a href="/util/">All tools</a>
+  </div>
+</section>
+<section class="panel faq">
+  <h2>FAQ</h2>
+  <details><summary>How do the payoff strategies differ?</summary><p>Snowball prioritizes clearing smaller balances. Avalanche prioritizes higher-rate balances to reduce interest costs. The comparison shows the interest difference for the payments you entered.</p></details>
+  <details><summary>What if my minimum payment is lower than monthly interest?</summary><p>The balance can grow while that debt receives only its minimum. Extra payments and freed minimum payments can still pay it off. The calculator reports an error if a strategy cannot finish within 600 months.</p></details>
+</section>
+</main>
+<footer>Estimate only · emfls.github.io</footer>
+<script>
+const money = new Intl.NumberFormat('en-US', {style: 'currency', currency: 'USD'});
+const maxMonths = 600;
+const formatMoney = cents => money.format(cents / 100);
+const byId = id => document.getElementById(id);
+
+function readNumber(id, label, unit) {
+  const input = byId(id);
+  const value = Number(input.value);
+  const max = Number(input.max);
+  if (input.value === '' || input.validity.badInput || input.validity.stepMismatch ||
+      !Number.isFinite(value) || value < 0 || value > max) {
+    const range = unit === '$' ? '$0 to ' + formatMoney(max * 100) : '0% to ' + max + '%';
+    throw new Error(label + ' must be a number from ' + range + ' with up to two decimal places.');
+  }
+  return Math.round(value * 100);
+}
+
+function monthlyInterest(debt) {
+  // APR is in basis points and the balance is in cents.
+  return Math.round(debt.balance * debt.apr / (10000 * 12));
+}
+
+function simulatePayoff(debts, extra, method) {
+  const active = debts.map(debt => ({...debt}));
+  const order = [];
+  let interest = 0;
+  if (!active.length) return {months: 0, interest, order};
+
+  const budget = active.reduce((sum, debt) => sum + debt.minimum, extra);
+  if (budget === 0) return {error: 'The total monthly budget is $0.00. Add a payment to pay off the active debts.'};
+
+  const firstShortfalls = active.filter(debt => monthlyInterest(debt) > debt.minimum);
+  const priority = method === 'Snowball' ? (a, b) => a.balance - b.balance : (a, b) => b.apr - a.apr;
+
+  for (let month = 1; month <= maxMonths; month++) {
+    const remaining = active.filter(debt => debt.balance > 0);
+    const ranked = [...remaining].sort(priority);
+    let available = budget;
+
+    function pay(debt, amount) {
+      const payment = Math.min(debt.balance, amount);
+      debt.balance -= payment;
+      available -= payment;
+      if (payment > 0 && debt.balance === 0) order.push(debt.name);
+    }
+
+    for (const debt of remaining) {
+      const charge = monthlyInterest(debt);
+      // If even the whole budget cannot reduce this balance, its interest cannot fall.
+      if (charge >= budget) {
+        return {error: `Debt ${method} cannot reduce "${debt.name}" in month ${month}. Its monthly interest of ${formatMoney(charge)} meets or exceeds the total monthly budget of ${formatMoney(budget)}. Increase the monthly budget.`};
+      }
+      debt.balance += charge;
+      interest += charge;
+      pay(debt, debt.minimum);
+    }
+
+    for (const debt of ranked) {
+      if (available === 0) break;
+      pay(debt, available);
+    }
+
+    if (order.length === active.length) return {months: month, interest, order};
+  }
+
+  const balance = active.reduce((sum, debt) => sum + debt.balance, 0);
+  const shortfall = firstShortfalls.length
+    ? ' First-month interest exceeded the minimum payment on ' + firstShortfalls.map(debt => '"' + debt.name + '"').join(', ') + '.'
+    : '';
+  return {error: `Debt ${method} did not pay off all debts within ${maxMonths} months. ${formatMoney(balance)} remains.${shortfall} Increase the monthly budget.`};
+}
+
+function payoffSummary(method, outcome) {
+  const years = Math.floor(outcome.months / 12);
+  const months = outcome.months % 12;
+  const term = `${years} year${years === 1 ? '' : 's'}, ${months} month${months === 1 ? '' : 's'}`;
+  return `Debt ${method}\nPayoff time: ${outcome.months} month${outcome.months === 1 ? '' : 's'} (${term})\nTotal interest: ${formatMoney(outcome.interest)}\nPayoff order: ${outcome.order.join(' → ') || 'No active debts'}`;
+}
+
+function calculateDebtPayoff() {
+  const error = byId('error');
+  const result = byId('result');
+  const snowballResult = byId('snowballResult');
+  const avalancheResult = byId('avalancheResult');
+  error.textContent = '';
+  result.textContent = '';
+  snowballResult.textContent = '';
+  avalancheResult.textContent = '';
+
+  const debts = [];
+  let extra;
+  try {
+    for (let row = 1; row <= 4; row++) {
+      const label = 'Debt ' + row;
+      const name = byId('name' + row).value.trim() || label;
+      const balance = readNumber('balance' + row, label + ' balance', '$');
+      const apr = readNumber('apr' + row, label + ' APR', '%');
+      const minimum = readNumber('minimum' + row, label + ' minimum monthly payment', '$');
+      if (balance > 0) debts.push({name, balance, apr, minimum});
+    }
+    extra = readNumber('extra', 'Monthly extra debt budget', '$');
+  } catch (inputError) {
+    error.textContent = inputError.message;
+    return;
+  }
+
+  const snowball = simulatePayoff(debts, extra, 'Snowball');
+  const avalanche = simulatePayoff(debts, extra, 'Avalanche');
+  const errors = [...new Set([snowball.error, avalanche.error].filter(Boolean))];
+  if (errors.length) {
+    error.textContent = errors.join('\n');
+    return;
+  }
+
+  snowballResult.textContent = payoffSummary('Snowball', snowball);
+  avalancheResult.textContent = payoffSummary('Avalanche', avalanche);
+  const difference = snowball.interest - avalanche.interest;
+  if (difference === 0) {
+    result.textContent = 'Both strategies cost the same in interest. Interest saved: $0.00.';
+  } else {
+    const winner = difference > 0 ? 'Avalanche' : 'Snowball';
+    result.textContent = `Debt ${winner} saves ${formatMoney(Math.abs(difference))} in interest.`;
+  }
+}
+
+const debtForm = byId('debtForm');
+debtForm.addEventListener('input', calculateDebtPayoff);
+debtForm.addEventListener('submit', event => {
+  event.preventDefault();
+  calculateDebtPayoff();
+});
+calculateDebtPayoff();
+</script>
+</body>
+</html>
