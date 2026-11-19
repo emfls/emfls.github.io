@@ -1,3 +1,9 @@
+## 2026-11-20 — 국가장학금 1차 신청 일정 정정
+
+- 한국전통문화대학교 학생과와 부산대학교 공식 공지에 맞춰 2027학년도 1학기 1차 신청 기간을 2026-11-24 09:00~2027-01-07 18:00 KST로 정정했다. 서류제출·가구원 동의 마감은 2027-01-14 18:00 KST로 별도 안내하고, 2차 일정은 예고로 표시했다.
+- 본문, 네 가지 메타 설명, 사이트 검색 결과 한 건, 사이트맵 갱신일을 맞췄다. 로컬 320px·390px에서 일정 표의 가로 스크롤 없이 두 마감을 확인했다.
+- [한국전통문화대학교 공지](https://www.knuh.ac.kr/mec/ots/brd/view.do?atcSer=47994&mnuBaseId=MNU0000146&topBaseId=MNU0000009&tplSer=2) · [부산대학교 공지](https://mathedu.pusan.ac.kr/bbs/mathedu/1121/1474389/artclView.do)
+
 ## 2026-11-16 — Wave 5C 10-page High-CPC Seasonal Tax, Scholarship, Card & Auto-CSAT CTR remediation via Antigravity built-in Claude swarm
 
 - Updated 10 non-protected AdSense-enabled high-CPC Korean pages (`kor/report/gov/{2027-national-scholarship-first-semester-five-income-brackets-application,donation-tax-credit-2026-religious-general-political-carryover-receipts,education-tax-credit-2026-elementary-arts-college-income-uniform,elementary-school-2027-enrollment-notice-gov24-orientation,card-point-integrated-lookup-bank-transfer-hcoin-2026,business-registration-certificate-hometax-gov24-pdf-2026,car-registration-certificate-reissue-car365-gov24-free-vs-600-2026,card-loss-one-stop-report-reissue-60day-2026}.html`, `kor/report/car/ev-double-parking-neutral-n-mode-ioniq5-ev6-2026.html`, `kor/report/seasonal/2027-csat-results-dec11-objection-score-report-2026.html`) via parallel `1 file = 1 worker` Antigravity built-in Claude (`claude-sonnet-5-5-high`) swarm workers (respecting `protectedWinners` boundary).
