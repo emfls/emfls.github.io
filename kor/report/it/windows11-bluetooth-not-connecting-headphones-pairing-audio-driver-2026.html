@@ -97,6 +97,14 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <div class="intro"><p>블루투스 이어폰이나 마우스를 노트북에 연결하려는데 장치 이름이 목록에 나타나지 않나요? &#x27;연결됨&#x27;이라고 표시되지만 이어폰에서 소리가 들리지 않거나, 어제까지 잘 쓰던 블루투스 버튼이 Windows 11에서 사라지는 경우도 있습니다.</p>
 <p>이 문제는 무조건 드라이버를 삭제한다고 해결되지 않습니다. <strong>장치를 검색하지 못하는 상황, 페어링은 됐지만 연결이 안 되는 상황, 연결됐지만 오디오 출력이 잘못된 상황, Bluetooth 어댑터 자체가 보이지 않는 상황</strong>은 원인과 해결 순서가 다릅니다.</p>
 <p>이번 글은 <strong>2026년 10월 25일 기준 Microsoft 공식 Windows 11 고객지원 문서</strong>를 바탕으로 이어폰·헤드셋·스피커·마우스·키보드의 Bluetooth 연결, 장치 검색 고급 설정, 드라이버 업데이트·롤백, 오디오 품질과 마이크 문제까지 정리했습니다.</p></div>
+<section class="section wave11-summary-card" style="border-left:4px solid #79c0ff;background:#152235;box-sizing:border-box;max-width:100%">
+<h2 style="margin-top:0">핵심 요약 (한눈에 보는 결론)</h2>
+<ul>
+<li>이어폰이 목록에 없으면 <strong>페어링 모드와 배터리</strong>부터 확인하세요. 연결됐는데 소리가 안 나면 <strong>설정 → 시스템 → 소리 → 출력</strong>에서 이어폰을 선택하세요.</li>
+<li>Bluetooth 스위치가 켜져 있는데 연결만 실패한다면 <strong>스위치를 끄고 10초 기다린 뒤</strong> 다시 켜세요.</li>
+<li>처음부터 <strong>어댑터 드라이버를 삭제하지 마세요.</strong> 목록에 보이는 이어폰만 연결이 안 된다면 해당 장치를 제거한 뒤 다시 등록하세요.</li>
+</ul>
+</section>
 <section class="section" aria-labelledby="section-01"><h2 id="section-01">핵심 요약: 증상별로 먼저 할 일</h2><div class="details-table"><table><thead><tr><th scope="col">증상</th><th scope="col">우선 확인할 설정</th></tr></thead><tbody><tr><td>이어폰 이름이 목록에 안 뜸</td><td>이어폰 <strong>페어링 모드</strong>, 배터리, 검색 설정</td></tr><tr><td>장치는 보이지만 연결 안 됨</td><td><strong>장치 제거 후 다시 추가</strong></td></tr><tr><td>연결됐지만 소리가 안 남</td><td><strong>시스템 → 사운드 → 출력 장치</strong></td></tr><tr><td>Bluetooth 버튼 자체가 사라짐</td><td>어댑터 인식·드라이버·비행기 모드</td></tr><tr><td>연결 후 몇 분 만에 끊김</td><td>전원 절약·전파 간섭·Bluetooth 서비스</td></tr><tr><td>화상회의 때만 소리가 이상함</td><td>마이크 입력·LE 오디오 호환성</td></tr><tr><td>Windows 업데이트 후 갑자기 안 됨</td><td>드라이버 업데이트·<strong>롤백 가능 여부</strong></td></tr><tr><td>데스크톱에서 Bluetooth가 없음</td><td>PC가 실제 Bluetooth 하드웨어를 지원하는지</td></tr></tbody></table></div>
 <p><strong>권장 순서:</strong> Bluetooth 켜기 → 비행기 모드 확인 → 액세서리 충전·페어링 모드 → PC 가까이 이동 → 장치 제거 후 재등록 → 도움말 보기 문제 해결사 → Windows 업데이트·드라이버 확인 → 하드웨어 점검입니다.</p>
 <p>공식 출처: <a href="https://support.microsoft.com/ko-kr/windows/hardware/bluetooth/fix-bluetooth-problems-in-windows" rel="noopener noreferrer">Microsoft - Bluetooth 문제 해결</a>, <a href="https://support.microsoft.com/ko-kr/windows/hardware/bluetooth/troubleshoot-bluetooth-not-connecting-in-windows" rel="noopener noreferrer">Microsoft - 페어링·연결되지 않을 때</a></p></section>
@@ -115,7 +123,7 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <li>작업 표시줄 오른쪽의 <strong>네트워크·소리·배터리 아이콘</strong> 영역을 누릅니다.</li>
 <li><strong>Bluetooth</strong> 항목이 표시되는지 확인합니다.</li>
 <li>꺼져 있다면 눌러 켭니다.</li>
-<li>**&#x27;연결되지 않음&#x27;<strong>이 표시되면 켜져 있지만 현재 연결된 장치가 없다는 뜻일 수 있습니다.</li>
+<li><strong>&#x27;연결되지 않음&#x27;</strong>이 표시되면 켜져 있지만 현재 연결된 장치가 없다는 뜻일 수 있습니다.</li>
 </ol>
 <h3>Windows 설정 앱에서 확인</h3>
 <ol>
@@ -132,6 +140,29 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 </ol>
 <p>일부 노트북에는 제조사 전용 무선 기능 스위치나 단축키가 있을 수 있습니다. Bluetooth 버튼이 없는 경우 Windows의 설정 오류라고 단정하기 전에 <strong>PC 자체에 Bluetooth 어댑터가 탑재돼 있는지</strong> 확인하세요.</p>
 <p>공식 출처: <a href="https://support.microsoft.com/ko-kr/windows/hardware/bluetooth/turn-bluetooth-on-or-off-in-windows" rel="noopener noreferrer">Microsoft - Bluetooth 켜기 및 끄기</a></p></section>
+
+<!-- wave11-mid-display -->
+<aside class="emfls-ad-slot" aria-label="Advertisement" style="box-sizing:border-box;width:100%;max-width:100%;min-width:0;min-height:280px;margin:28px 0;text-align:center;clear:both">
+  <ins class="adsbygoogle" style="display:block;text-align:center;min-height:280px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</aside>
+<section class="section wave11-decision-box" aria-label="상황별 핵심 판단 비교표">
+<h2>상황별 핵심 판단·점검 비교표</h2>
+<div class="details-table" style="overflow-x:auto;max-width:100%">
+<table class="wave11-decision-table" style="width:100%;min-width:0;border-collapse:collapse;margin:8px 0">
+<thead>
+<tr><th scope="col" style="word-break:keep-all;overflow-wrap:anywhere">증상</th><th scope="col" style="word-break:keep-all;overflow-wrap:anywhere">먼저 확인</th><th scope="col" style="word-break:keep-all;overflow-wrap:anywhere">다음 조치</th></tr>
+</thead>
+<tbody>
+<tr><td style="word-break:keep-all;overflow-wrap:anywhere">이어폰이 목록에 없음</td><td style="word-break:keep-all;overflow-wrap:anywhere">배터리와 페어링 모드</td><td style="word-break:keep-all;overflow-wrap:anywhere">검색 옵션이 있으면 고급 선택</td></tr>
+<tr><td style="word-break:keep-all;overflow-wrap:anywhere">페어링 후 연결 실패</td><td style="word-break:keep-all;overflow-wrap:anywhere">다른 기기 연결 여부</td><td style="word-break:keep-all;overflow-wrap:anywhere">장치 제거 후 재등록</td></tr>
+<tr><td style="word-break:keep-all;overflow-wrap:anywhere">연결 후 소리 없음</td><td style="word-break:keep-all;overflow-wrap:anywhere">시스템 → 소리 → 출력</td><td style="word-break:keep-all;overflow-wrap:anywhere">이어폰 선택 후 음량 확인</td></tr>
+<tr><td style="word-break:keep-all;overflow-wrap:anywhere">블루투스 버튼 없음</td><td style="word-break:keep-all;overflow-wrap:anywhere">비행기 모드 확인</td><td style="word-break:keep-all;overflow-wrap:anywhere">장치 관리자에서 어댑터 확인</td></tr>
+<tr><td style="word-break:keep-all;overflow-wrap:anywhere">연결이 자주 끊김</td><td style="word-break:keep-all;overflow-wrap:anywhere">배터리, 거리, 전파 간섭</td><td style="word-break:keep-all;overflow-wrap:anywhere">전원 관리와 블루투스 지원 서비스 확인</td></tr>
+</tbody>
+</table>
+</div>
+</section>
 <section class="section" aria-labelledby="section-04"><h2 id="section-04">3. 이어폰이 검색되지 않으면 &#x27;페어링 모드&#x27;부터 확인</h2><p>무선 이어폰은 충전 케이스에서 꺼냈다고 해서 항상 다른 장치와 새로 연결할 수 있는 <strong>페어링 모드</strong>가 되는 것은 아닙니다.</p>
 <h3>확인 순서</h3>
 <ol>
@@ -149,7 +180,7 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <p>블루투스 마우스는 별도 <strong>페어링 버튼 또는 채널 선택 버튼</strong>이 있을 수 있습니다. USB 수신기 전용 무선 마우스라면 Windows Bluetooth 검색만으로 연결할 수 없습니다. <strong>Bluetooth 지원 모델인지 USB 동글 전용 모델인지</strong> 제품 사양을 확인해야 합니다.</p>
 <p>공식 출처: <a href="https://support.microsoft.com/ko-kr/windows/hardware/bluetooth/troubleshoot-bluetooth-not-connecting-in-windows" rel="noopener noreferrer">Microsoft - 페어링 모드·배터리·범위 확인</a></p></section>
 <section class="section" aria-labelledby="section-05"><h2 id="section-05">4. 장치 검색 설정을 &#x27;고급&#x27;으로 바꾸는 방법</h2><p>이어폰이 페어링 모드인데도 Windows 11 장치 추가 목록에 보이지 않는다면 <strong>Bluetooth 장치 검색 옵션</strong>을 살펴볼 수 있습니다.</p>
-<p>Microsoft는 검색 설정에 </strong>기본값(Default)**과 <strong>고급(Advanced)</strong> 옵션을 안내합니다. 일반적으로 기본값은 흔한 장치 유형을 표시하고, 고급은 더 다양한 Bluetooth 장치 유형을 검색합니다.</p>
+<p>Microsoft는 검색 설정에 <strong>기본값(Default)</strong>과 <strong>고급(Advanced)</strong> 옵션을 안내합니다. 일반적으로 기본값은 흔한 장치 유형을 표시하고, 고급은 더 다양한 Bluetooth 장치 유형을 검색합니다.</p>
 <h3>장치 검색 고급 설정 순서</h3>
 <ol>
 <li><strong>설정 → Bluetooth 및 장치 → 장치</strong>로 이동합니다.</li>
@@ -168,7 +199,7 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <ol>
 <li><strong>설정 → Bluetooth 및 장치</strong>를 엽니다.</li>
 <li>문제가 있는 이어폰·마우스·스피커를 찾습니다.</li>
-<li>장치 옆 **점 세 개(기타 옵션)<strong>를 선택합니다.</li>
+<li>장치 옆 <strong>점 세 개(기타 옵션)</strong>를 선택합니다.</li>
 <li><strong>장치 제거</strong>를 선택합니다.</li>
 <li>이어폰 등을 껐다가 다시 켭니다.</li>
 <li>제조사 설명서대로 <strong>페어링 모드</strong>를 활성화합니다.</li>
@@ -257,7 +288,7 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <li><strong>설정 → 시스템 → 소리</strong>로 이동합니다.</li>
 <li><strong>출력</strong>의 Bluetooth LE Audio 장치를 선택합니다.</li>
 <li><strong>출력 설정 → 형식</strong>에서 마이크 사용 중 형식을 확인합니다.</li>
-<li>실제로 메뉴가 제공된다면 </strong>스테레오(2채널)**와 <strong>모노(1채널)</strong> 옵션을 살펴봅니다.</li>
+<li>실제로 메뉴가 제공된다면 <strong>스테레오(2채널)</strong>와 <strong>모노(1채널)</strong> 옵션을 살펴봅니다.</li>
 <li>마이크를 켰을 때 소리가 끊기는 경우 Microsoft 안내에 따라 <strong>모노</strong>로 비교 시험할 수 있습니다.</li>
 </ol>
 <p><strong>해당 메뉴가 없으면 현재 하드웨어·드라이버에서 지원되지 않을 수 있습니다.</strong> 메뉴가 없다는 이유로 비공식 드라이버나 코덱 변경 프로그램을 설치하지 마세요.</p>
@@ -456,6 +487,22 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <h2>정보 출처와 확인 안내</h2>
 <p>작성·갱신일과 적용 범위는 본문에서 확인하세요. 정책·행사 일정·혜택·제품 정보는 변경될 수 있으므로 중요한 판단 전 공식 기관 및 판매처의 최신 안내를 확인하시기 바랍니다.</p>
 <div class="pills"><a href="/kor/report/it/">같은 분야의 글</a><a href="/kor/report/">생활정보 전체</a><a href="/">emfls 홈</a></div>
+</section>
+
+<!-- wave11-lower-article -->
+<aside class="emfls-ad-slot" aria-label="Advertisement" style="box-sizing:border-box;width:100%;max-width:100%;min-width:0;min-height:250px;margin:28px 0;text-align:center;clear:both">
+  <ins class="adsbygoogle" style="display:block;text-align:center;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-layout="in-article" data-ad-format="fluid" data-ad-slot="3423411629"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</aside>
+<section class="section related-content wave11-cluster-funnel" style="box-sizing:border-box;width:100%;max-width:100%">
+<h2 style="margin-top:0">함께 확인하면 좋은 계산기·관련 가이드</h2>
+<ul>
+<li><a href="/kor/report/it/windows11-blurry-text-resolution-scale-text-size-monitor-2026.html">윈도우 11 외부 모니터 배율·글자 흐림 해결법</a></li>
+<li><a href="/kor/report/it/windows11-korean-english-key-toggle-not-working-ime-2026.html">윈도우 11 한영키 안될 때 Microsoft IME 복구</a></li>
+<li><a href="/kor/report/it/keyboard-cleaning-guide.html">키보드·PC 주변기기 안전 청소 가이드</a></li>
+<li><a href="/kor/util/power-bank-wh-calculator/">무선기기·보조배터리 전력량(Wh) 계산기</a></li>
+<li><a href="/kor/report/it/">IT·윈도우 문제 해결 전체 목록</a></li>
+</ul>
 </section>
 </div>
 </article>
