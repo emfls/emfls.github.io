@@ -134,6 +134,50 @@ pre,.details-table{min-width:0;max-width:100%;overflow-x:auto}pre{white-space:pr
 <li>내 차 공식 설명서에 <strong>시스템 리셋 버튼</strong>이나 <strong>터치스크린 다시 시작하기</strong>가 명시돼 있다면 안내에 따라 한 번만 재시작을 시도합니다.</li>
 <li>복구되지 않거나 반복적으로 꺼지면 <strong>화면·소프트웨어·전원 계통을 서비스센터에서 점검</strong>받습니다.</li>
 </ol>
+<section id="tool-mount" class="notice" aria-labelledby="reset-guide-title" style="overflow-wrap:anywhere">
+<h3 id="reset-guide-title" style="margin-top:0">차종별 화면 먹통 10초 리셋 위치 확인기</h3>
+<p>안전한 곳에 정차하고 P단과 주차 브레이크를 확인하세요. 누르는 시간과 재시작 대기 시간은 차량 설명서를 따르세요.</p>
+<div class="pills" role="group" aria-label="차종 선택">
+<button type="button" data-reset-model="ioniq" style="font:inherit;min-height:44px;max-width:100%">아이오닉 5 (핀홀 vs MAP+SETUP)</button>
+<button type="button" data-reset-model="ev6" style="font:inherit;min-height:44px;max-width:100%">기아 EV6 (전환바 좌측 리셋 구멍)</button>
+<button type="button" data-reset-model="tesla" style="font:inherit;min-height:44px;max-width:100%">테슬라 (양쪽 스크롤 휠)</button>
+<button type="button" data-reset-model="ccnc" style="font:inherit;min-height:44px;max-width:100%">기타 현대·기아 ccNC (MAP+SETUP)</button>
+</div>
+<p id="reset-guide-result" role="status" style="margin-top:12px;white-space:pre-line">차종을 선택하세요. 속도계나 경고등을 제대로 볼 수 없다면 운행을 재개하기 전에 정비 지원을 요청하세요.</p>
+</section>
+<script>
+(() => {
+  const guides = {
+    ioniq: [
+      '위치 · 연식과 사양에 맞는 설명서의 조작 패널 그림에서 전용 리셋 버튼을 찾으세요.',
+      '방법 · 핀홀 버튼이 표시된 경우 설명서에 따라 펜이나 클립으로 길게 누르세요.',
+      '주의 · 임의로 MAP+SETUP을 누르거나 마이크 홀을 찌르지 마세요. 본문 3절을 참고하세요.'
+    ],
+    ev6: [
+      '위치 · 전환바 왼쪽 구멍이 전용 리셋 버튼인지 해당 연식의 기아 설명서에서 확인하세요.',
+      '방법 · 설명서에 표시된 전용 버튼만 안내대로 길게 누르세요.',
+      '주의 · 공조 전환 버튼과 오디오 전원 버튼은 별도 기능입니다. 본문 4절을 참고하세요.'
+    ],
+    tesla: [
+      '위치 · Model 3 스티어링 휠의 양쪽 스크롤 버튼을 찾으세요.',
+      '방법 · P단에서 두 버튼을 화면이 검게 바뀔 때까지 함께 누르고 약 30초 기다리세요.',
+      '주의 · 재시작 중에는 주행 정보와 카메라 영상이 표시되지 않습니다. 다른 모델은 해당 설명서를 확인하세요. 본문 5절을 참고하세요.'
+    ],
+    ccnc: [
+      '위치 · 해당 현대·기아 ccNC 설명서의 조작 패널 그림에서 전용 리셋 버튼을 찾으세요.',
+      '방법 · 전용 버튼이 표시된 경우에만 설명서에 따라 길게 누르세요.',
+      '주의 · 공통 절차로 확인된 조작은 전용 리셋 버튼입니다. MAP+SETUP 조합은 임의로 사용하지 마세요. 본문 3·4절을 참고하세요.'
+    ]
+  };
+  const buttons = document.querySelectorAll('#tool-mount [data-reset-model]');
+  const result = document.getElementById('reset-guide-result');
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      result.textContent = guides[button.dataset.resetModel].join('\n');
+    });
+  });
+})();
+</script>
 <p><strong>주의:</strong> 디스플레이가 검게 변했다고 고전압 배터리 고장, ICCU 문제, 12V 방전이라고 단정할 수 없습니다. 반대로 경고등이나 주행 정보도 사라졌는데 단순 내비게이션 오류라고 생각해서는 안 됩니다.</p></section>
 <section class="section" aria-labelledby="section-02"><h2 id="section-02">2. &#x27;화면 먹통&#x27;도 네 가지 증상이 다릅니다</h2><div class="details-table"><table><thead><tr><th scope="col">나타난 현상</th><th scope="col">가능한 원인·상황</th><th scope="col">우선 판단</th></tr></thead><tbody><tr><td>지도 화면만 멈췄고 다른 메뉴·물리 버튼은 반응</td><td>내비게이션 기능 또는 특정 앱 오류</td><td>안전하게 정차한 뒤 시스템 재시작 여부 확인</td></tr><tr><td>화면이 검지만 오디오는 들리거나 버튼 반응이 있음</td><td>화면 끄기 설정, 밝기 관련 상태, 표시 계통 이상 가능</td><td>전원 버튼 기능과 시스템 설명서 확인</td></tr><tr><td>전체 화면이 멈추고 터치·메뉴·음성 등이 반응하지 않음</td><td>인포테인먼트 시스템 오류 가능</td><td>해당 모델 공식 리셋 절차 검토</td></tr><tr><td>계기판·속도·주행상태·안전 경고 표시도 비정상</td><td>단순 내비게이션 이외의 표시·전원 문제 가능</td><td>운행 중단, 전문 점검 우선</td></tr><tr><td>후방카메라 영상이 안 보이거나 안전 기능 경고가 발생</td><td>카메라·디스플레이·시스템 등 복수 원인 가능</td><td>시야와 안전을 확보하고 정비 요청</td></tr><tr><td>리셋 후 수분 내 다시 멈춤</td><td>소프트웨어·하드웨어·연결 계통 등 반복 오류 가능</td><td>반복 강제 재시작보다 점검 기록 확보</td></tr></tbody></table></div>
 <p>증상은 원인을 확정하는 진단표가 아니라 <strong>정비의 우선순위를 결정하기 위한 분류</strong>입니다. 인포테인먼트 디스플레이와 계기판은 외관상 한 장의 긴 화면처럼 보여도 표시하는 정보와 장애 위험이 다릅니다.</p>
@@ -257,7 +301,7 @@ pre,.details-table{min-width:0;max-width:100%;overflow-x:auto}pre{white-space:pr
 <section class="info-bottom">
 <h2>정보 출처와 확인 안내</h2>
 <p>작성·갱신일과 적용 범위는 본문에서 확인하세요. 정책·행사 일정·혜택·제품 정보는 변경될 수 있으므로 중요한 판단 전 공식 기관 및 판매처의 최신 안내를 확인하시기 바랍니다.</p>
-<div class="pills"><a href="/kor/report/car/">같은 분야의 글</a><a href="/kor/report/">생활정보 전체</a><a href="/">emfls 홈</a><a href="/util/electricity-cost-calculator/">전기요금 계산기</a><a href="/kor/util/power-bank-wh-calculator/">배터리 Wh 계산기</a></div>
+<div class="pills" style="overflow-wrap:anywhere"><a href="/kor/report/car/">같은 분야의 글</a><a href="/kor/report/">생활정보 전체</a><a href="/">emfls 홈</a><a href="/util/electricity-cost-calculator/">전기요금 계산기</a><a href="/kor/util/power-bank-wh-calculator/">배터리 Wh 계산기</a><a href="/kor/report/car/car-recall-self-paid-repair-refund-guide-2026.html">자동차 리콜 전 자비 수리비 환급 조회·30일 보상</a><a href="/kor/report/car/ev-subsidy-resale-clawback-2026.html">전기차 보조금 의무운행 기간과 매매 시 환수 기준</a></div>
 </section>
 </div>
 </article>

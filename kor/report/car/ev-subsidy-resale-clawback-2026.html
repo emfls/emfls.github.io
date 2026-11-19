@@ -113,6 +113,29 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 </ul>
 <p><a href="#section-02">2년·8년 기준 확인</a> · <a href="#section-09">승인 절차·제출서류 확인</a></p>
 </section>
+<section class="ev-clawback-tool quick-summary" aria-labelledby="ev-clawback-title">
+<h2 id="ev-clawback-title">전기차 보조금 의무운행 예상 환수율 계산기</h2>
+<form id="ev-clawback-form" novalidate aria-describedby="ev-clawback-note">
+<div class="next-step-grid">
+<label for="ev-clawback-type" style="grid-column:1/-1">처분 유형
+<select id="ev-clawback-type" name="disposition" style="display:block;width:100%;padding:8px;font:inherit">
+<option value="local">동일 지자체 매매(사전승계 원칙)</option>
+<option value="domestic">타 시·도 매매·일반 말소(2년 기준표)</option>
+<option value="export">수출 목적 말소(8년 기준표)</option>
+</select>
+</label>
+<label for="ev-clawback-months">최초 등록 후 운행 개월 수 (0~96개월)
+<input id="ev-clawback-months" name="months" type="number" min="0" max="96" step="any" inputmode="decimal" required style="display:block;width:100%;padding:8px;font:inherit">
+</label>
+<label for="ev-clawback-subsidy">관련 지방비 또는 적용 기준 보조금 (만 원)
+<input id="ev-clawback-subsidy" name="subsidy" type="number" min="0" max="1000000" step="any" inputmode="decimal" required style="display:block;width:100%;padding:8px;font:inherit">
+</label>
+</div>
+<button class="cta" type="submit" style="cursor:pointer;font-family:inherit">예상 환수율 확인</button>
+<p><output id="ev-clawback-result" for="ev-clawback-type ev-clawback-months ev-clawback-subsidy" role="status"></output></p>
+<p id="ev-clawback-note"></p>
+</form>
+</section>
 <div class="hero-meta"><span>최초 발행 2026-11-04</span><span>내용 확인 2026-11-04</span><span>작성 emfls</span></div>
 </header>
 
@@ -272,11 +295,60 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <section class="info-bottom">
 <h2>정보 출처와 확인 안내</h2>
 <p>작성·갱신일과 적용 범위는 본문에서 확인하세요. 정책·행사 일정·혜택·제품 정보는 변경될 수 있으므로 중요한 판단 전 공식 기관 및 판매처의 최신 안내를 확인하시기 바랍니다.</p>
-<div class="pills"><a href="/kor/report/car/">같은 분야의 글</a><a href="/kor/report/">생활정보 전체</a><a href="/">emfls 홈</a></div>
+<div class="pills"><a href="/kor/report/car/car-recall-self-paid-repair-refund-guide-2026.html">자동차 리콜 전 자비 수리비 환급</a><a href="/kor/report/car/ev-double-parking-neutral-n-mode-ioniq5-ev6-2026.html">아이오닉 5·EV6 이중주차 중립(N) 모드</a><a href="/kor/report/car/">같은 분야의 글</a><a href="/kor/report/">생활정보 전체</a><a href="/">emfls 홈</a></div>
 </section>
 </div>
 </article>
 <footer class="site-footer">© 2026 emfls · 공식 기관 안내를 우선 확인하세요</footer>
 </main>
+<script>
+(() => {
+  const form = document.getElementById('ev-clawback-form');
+  const result = document.getElementById('ev-clawback-result');
+  const thresholds = {
+    domestic: [3, 6, 9, 12, 15, 18, 21, 24],
+    export: [6, 12, 18, 24, 30, 36, 48, 96]
+  };
+  const rates = [70, 65, 60, 55, 50, 40, 30, 20];
+  const formatAmount = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 4 });
+
+  document.getElementById('ev-clawback-note').textContent =
+    '인천시 공개 사례 기준입니다. 실제 지자체 기준과 국비 적용 여부는 사전 판매승인 공문을 확인하세요.';
+
+  form.addEventListener('input', () => {
+    result.textContent = '';
+  });
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const { disposition, months, subsidy } = form.elements;
+    const elapsed = months.valueAsNumber;
+    const amount = subsidy.valueAsNumber;
+    const type = disposition.value;
+
+    if (!Number.isFinite(elapsed) || elapsed < 0 || elapsed > 96) {
+      result.textContent = '최초 등록 후 운행 개월 수를 0~96개월 사이로 입력하세요.';
+      return;
+    }
+    if (!Number.isFinite(amount) || amount < 0 || amount > Number(subsidy.max)) {
+      result.textContent = '보조금 금액을 0~1,000,000만 원 사이로 입력하세요.';
+      return;
+    }
+    if (type === 'local') {
+      result.textContent = '동일 지자체 매매는 사전 승인과 매수인의 잔여 의무운행기간 승계가 원칙입니다.';
+      return;
+    }
+    if (type !== 'domestic' && type !== 'export') {
+      result.textContent = '처분 유형을 선택하세요.';
+      return;
+    }
+
+    const bracket = thresholds[type].findIndex((limit) => elapsed < limit);
+    const rate = rates[bracket] ?? 0;
+    const estimatedAmount = amount * (rate / 100);
+    result.textContent = `예상 환수율 ${rate}% · 예상 환수액 ${formatAmount.format(estimatedAmount)}만 원`;
+  });
+})();
+</script>
 </body>
 </html>

@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HSA Tax Savings & 2025–2026 IRS Limit Calculator – Triple Tax Advantage</title>
+<meta name="description" content="Estimate 2025 ($4,300/$8,550) and 2026 ($4,400/$8,750) IRS HSA contribution limits, HDHP deductibles, federal plus FICA payroll tax savings, and tax-free compound growth.">
+<link rel="canonical" href="https://emfls.github.io/util/hsa-tax-savings-calculator/">
+<link rel="stylesheet" href="../new-tools.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QP5Q67GE5B')</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "HSA Tax Savings Calculator", "url": "https://emfls.github.io/util/hsa-tax-savings-calculator/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any", "dateModified": "2026-11-19"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "dateModified": "2026-11-19", "mainEntity": [{"@type": "Question", "name": "What are the official 2025 and 2026 IRS HSA contribution limits?", "acceptedAnswer": {"@type": "Answer", "text": "Under IRS Rev. Proc. 2024-25 and Rev. Proc. 2025-19, the Self-Only limit is $4,300 in 2025 and $4,400 in 2026, while the Family limit is $8,550 in 2025 and $8,750 in 2026, plus an extra $1,000 catch-up contribution at age 55 or older."}}, {"@type": "Question", "name": "What happens if HSA funds are spent on non-qualified expenses?", "acceptedAnswer": {"@type": "Answer", "text": "Before age 65, non-qualified HSA withdrawals are subject to ordinary income tax plus an additional 20% IRS penalty under Publication 969 rules."}}]}</script>
+</head>
+<body>
+<main class="tool-shell">
+<header class="hero"><h1>HSA Tax Savings & Limit Calculator (2025–2026)</h1><p>Calculate official IRS contribution caps, immediate federal + FICA tax savings, and long-term tax-free HSA growth for Self-Only and Family HDHP coverage.</p></header>
+<section class="panel" id="tool-mount">
+  <h2>Estimate your HSA tax savings</h2>
+  <form id="hsa-form" novalidate>
+    <div class="grid">
+      <div>
+        <label for="tax-year">Tax year</label>
+        <select id="tax-year">
+          <option value="2026" selected>2026</option>
+          <option value="2025">2025</option>
+        </select>
+      </div>
+      <div>
+        <label for="coverage">HDHP coverage</label>
+        <select id="coverage">
+          <option value="self">Self-only</option>
+          <option value="family">Family</option>
+        </select>
+      </div>
+      <div>
+        <label for="catch-up">Age 55+ catch-up</label>
+        <select id="catch-up" aria-describedby="eligibility-note">
+          <option value="no">No</option>
+          <option value="yes">Yes, eligible at year-end</option>
+        </select>
+      </div>
+      <div>
+        <label for="payroll">Section 125 payroll deduction</label>
+        <select id="payroll" aria-describedby="fica-note">
+          <option value="no">No</option>
+          <option value="yes">Yes, estimate 7.65% FICA savings</option>
+        </select>
+      </div>
+      <div>
+        <label for="employee">Planned annual employee contribution ($)</label>
+        <input id="employee" type="number" min="0" max="1000000" step="0.01" value="3000" required>
+      </div>
+      <div>
+        <label for="employer">Annual employer contribution ($)</label>
+        <input id="employer" type="number" min="0" max="1000000" step="0.01" value="500" required>
+      </div>
+      <div>
+        <label for="federal-rate">Federal marginal tax rate (%)</label>
+        <input id="federal-rate" type="number" min="0" max="100" step="any" value="22" required>
+      </div>
+      <div>
+        <label for="state-rate">State tax rate (%)</label>
+        <input id="state-rate" type="number" min="0" max="100" step="any" value="0" aria-describedby="state-note" required>
+      </div>
+      <div>
+        <label for="return-rate">Expected annual investment return (%)</label>
+        <input id="return-rate" type="number" min="0" max="15" step="any" value="5" required>
+      </div>
+      <div>
+        <label for="years">Investment horizon (years)</label>
+        <input id="years" type="number" min="1" max="45" step="1" value="20" required>
+      </div>
+      <div>
+        <label for="balance">Current HSA balance ($)</label>
+        <input id="balance" type="number" min="0" max="1000000000" step="0.01" value="0" required>
+      </div>
+    </div>
+    <button type="submit" style="margin-top:14px">Calculate HSA savings &amp; growth</button>
+    <div id="error" class="error hidden" role="alert"></div>
+    <pre id="result" class="result" aria-live="polite">Estimate appears here.</pre>
+  </form>
+</section>
+<section class="panel">
+  <h2>IRS contribution and HDHP limits</h2>
+  <button type="button" id="compare-limits" aria-controls="limit-result">Compare 2025 vs 2026 Limits</button>
+  <pre id="limit-result" class="result" aria-live="polite">Show the contribution limits, minimum deductibles, and out-of-pocket maximums for both years.</pre>
+  <p class="note">Sources: <a href="https://www.irs.gov/pub/irs-drop/rp-24-25.pdf">IRS Rev. Proc. 2024-25</a> and <a href="https://www.irs.gov/pub/irs-drop/rp-25-19.pdf">IRS Rev. Proc. 2025-19</a>.</p>
+</section>
+<section class="panel">
+  <h2>What this estimate includes</h2>
+  <p class="note" id="eligibility-note">The estimate assumes full-year HSA eligibility. Select the $1,000 catch-up if you are 55 or older by year-end, eligible to contribute, and unenrolled in Medicare. Contribution room is generally prorated for partial-year eligibility and is zero for every month enrolled in Medicare, including retroactive coverage. An eligible spouse makes their own catch-up contribution to a separate HSA.</p>
+  <p class="note" id="fica-note">The 7.65% estimate applies to eligible employee contributions through a Section 125 cafeteria plan and assumes the full 6.2% Social Security and 1.45% Medicare rates apply to those wages. Direct contributions generally qualify for a federal income tax deduction but yield zero payroll tax savings.</p>
+  <p class="note" id="state-note">Use 0% for state contribution savings in California and New Jersey, where state treatment differs from federal HSA rules. The growth and withdrawal figures reflect federal tax treatment.</p>
+  <p class="note">The projection adds the same eligible employee and employer amounts at the end of each year and compounds at a constant annual return. It assumes no fees, withdrawals, or future changes to contributions or eligibility.</p>
+  <p class="note">Your entries are processed in your browser.</p>
+  <div class="links">
+    <a href="/util/loan-payment-calculator/">Loan payment calculator</a>
+    <a href="/util/heloc-vs-cashout-refinance-calculator/">HELOC vs. cash-out refinance</a>
+    <a href="/util/compound-interest/">Compound interest</a>
+    <a href="/util/fin-calc/">Simple finance calculator</a>
+    <a href="/util/">All tools</a>
+  </div>
+</section>
+<section class="panel faq">
+  <h2>FAQ</h2>
+  <details>
+    <summary>What are the official 2025 and 2026 IRS HSA contribution limits?</summary>
+    <p>The self-only limit is $4,300 in 2025 and $4,400 in 2026. The family limit is $8,550 in 2025 and $8,750 in 2026. An eligible account holder age 55 or older by year-end may add $1,000. Employer contributions count toward the limit.</p>
+  </details>
+  <details>
+    <summary>What happens if HSA funds are spent on non-qualified expenses?</summary>
+    <p>Non-qualified withdrawals are generally subject to ordinary federal income tax. An additional 20% federal tax generally applies before age 65, with exceptions for disability or death. At age 65 or older, ordinary income tax still applies to non-qualified withdrawals. Qualified medical withdrawals are federally tax-free.</p>
+  </details>
+  <p class="note">See <a href="https://www.irs.gov/publications/p969">IRS Publication 969</a> for eligibility and distribution rules.</p>
+</section>
+</main>
+<footer>Estimate only · emfls.github.io</footer>
+<script>
+(() => {
+  const limits = {
+    '2025': {
+      self: { cap: 4300, deductible: 1650, outOfPocket: 8300 },
+      family: { cap: 8550, deductible: 3300, outOfPocket: 16600 }
+    },
+    '2026': {
+      self: { cap: 4400, deductible: 1700, outOfPocket: 8500 },
+      family: { cap: 8750, deductible: 3400, outOfPocket: 17000 }
+    }
+  };
+  const catchUpAmount = 1000;
+  const payrollPercent = 7.65;
+  const form = document.getElementById('hsa-form');
+  const numericInputs = form.querySelectorAll('input[type="number"]');
+  const error = document.getElementById('error');
+  const result = document.getElementById('result');
+  const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+
+  function showError(message) {
+    result.textContent = 'Estimate cleared. Correct the inputs to continue.';
+    error.textContent = message;
+    error.classList.remove('hidden');
+  }
+
+  function calculate() {
+    const year = form.elements['tax-year'].value;
+    const coverage = form.elements.coverage.value;
+    if (!Object.hasOwn(limits, year) || !Object.hasOwn(limits[year], coverage)) {
+      showError('Select a supported tax year and coverage type.');
+      return;
+    }
+
+    for (const input of numericInputs) {
+      input.removeAttribute('aria-invalid');
+    }
+    for (const input of numericInputs) {
+      const value = input.valueAsNumber;
+      if (!Number.isFinite(value) || value < Number(input.min) || value > Number(input.max) || !input.validity.valid) {
+        const precision = input.step === '1' ? ' as a whole number' : input.step === '0.01' ? ' with up to two decimal places' : '';
+        input.setAttribute('aria-invalid', 'true');
+        showError(`Enter ${input.labels[0].textContent.toLowerCase()} from ${Number(input.min).toLocaleString('en-US')} to ${Number(input.max).toLocaleString('en-US')}${precision}.`);
+        return;
+      }
+    }
+
+    const federalPercent = form.elements['federal-rate'].valueAsNumber;
+    const statePercent = form.elements['state-rate'].valueAsNumber;
+    const ficaPercent = form.elements.payroll.value === 'yes' ? payrollPercent : 0;
+    if (federalPercent + statePercent + ficaPercent > 100) {
+      showError('Federal, state, and payroll tax rates must total 100% or less.');
+      return;
+    }
+
+    const { cap, deductible, outOfPocket } = limits[year][coverage];
+    const catchUp = form.elements['catch-up'].value === 'yes' ? catchUpAmount : 0;
+    const maxLimit = cap + catchUp;
+    const employeeCents = Math.round(form.elements.employee.valueAsNumber * 100);
+    const employerCents = Math.round(form.elements.employer.valueAsNumber * 100);
+    const capCents = maxLimit * 100;
+    const effectiveCap = Math.max(0, capCents - employerCents) / 100;
+    const eligibleEmployee = Math.min(employeeCents / 100, effectiveCap);
+    const eligibleAnnual = eligibleEmployee + Math.min(employerCents, capCents) / 100;
+    const excess = Math.max(0, employeeCents + employerCents - capCents) / 100;
+    const federal = eligibleEmployee * federalPercent / 100;
+    const state = eligibleEmployee * statePercent / 100;
+    const fica = eligibleEmployee * ficaPercent / 100;
+    const totalSavings = federal + state + fica;
+
+    const years = form.elements.years.valueAsNumber;
+    const balance = form.elements.balance.valueAsNumber;
+    const growthFactor = 1 + form.elements['return-rate'].valueAsNumber / 100;
+    let future = balance;
+    for (let yearIndex = 0; yearIndex < years; yearIndex++) {
+      future = future * growthFactor + eligibleAnnual;
+    }
+    const growth = future - (balance + eligibleAnnual * years);
+    if (![effectiveCap, eligibleAnnual, excess, federal, state, fica, totalSavings, future, growth].every(Number.isFinite)) {
+      showError('The estimate is outside the supported range. Adjust the entries.');
+      return;
+    }
+
+    const format = (amount) => money.format(amount);
+    const lines = [
+      `${year} ${coverage === 'self' ? 'self-only' : 'family'} HSA contribution cap: ${format(maxLimit)} (includes ${format(catchUp)} catch-up)`,
+      `HDHP minimum deductible: ${format(deductible)}`,
+      `HDHP maximum out-of-pocket: ${format(outOfPocket)}`,
+      `Employee headroom after employer contribution: ${format(effectiveCap)}`,
+      `Employee contribution used: ${format(eligibleEmployee)}`
+    ];
+    if (excess > 0) {
+      lines.push(`Warning: combined planned contributions exceed the IRS cap by ${format(excess)}. The excess is excluded from these estimates.`);
+    }
+    lines.push(
+      '',
+      `Immediate federal income tax savings: ${format(federal)}`,
+      `Payroll FICA savings (${ficaPercent}%): ${format(fica)}`,
+      `Estimated state income tax savings: ${format(state)}`,
+      `Total estimated current-year tax savings: ${format(totalSavings)}`,
+      '',
+      `Projected HSA balance after ${years} ${years === 1 ? 'year' : 'years'}: ${format(future)}`,
+      `Projected investment growth: ${format(Math.max(0, growth))}`,
+      `Qualified medical withdrawal value (federally tax-free): ${format(future)}`,
+      'Non-qualified withdrawals generally incur ordinary federal income tax plus a 20% federal penalty before age 65, except in cases such as disability or death. From age 65, ordinary income tax still applies.'
+    );
+    error.textContent = '';
+    error.classList.add('hidden');
+    result.textContent = lines.join('\n');
+  }
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    calculate();
+    form.querySelector('[aria-invalid="true"]')?.focus();
+  });
+  form.addEventListener('input', calculate);
+  document.getElementById('compare-limits').addEventListener('click', () => {
+    const comparison = [];
+    for (const [year, coverage] of Object.entries(limits)) {
+      const { self, family } = coverage;
+      comparison.push(
+        `${year} (self-only / family)`,
+        `HSA contribution limit: ${money.format(self.cap)} / ${money.format(family.cap)}`,
+        `HDHP minimum deductible: ${money.format(self.deductible)} / ${money.format(family.deductible)}`,
+        `HDHP maximum out-of-pocket: ${money.format(self.outOfPocket)} / ${money.format(family.outOfPocket)}`,
+        ''
+      );
+    }
+    comparison.push(`Age 55+ catch-up in either year: ${money.format(catchUpAmount)} if eligible and unenrolled in Medicare.`);
+    document.getElementById('limit-result').textContent = comparison.join('\n');
+  });
+  calculate();
+})();
+</script>
+</body>
+</html>
