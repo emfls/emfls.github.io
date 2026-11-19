@@ -919,6 +919,48 @@ APPROVED_CTR_BATCH_20261115_TRANSITIONS = {
 for _path, _blob_pair in APPROVED_CTR_BATCH_20261115_TRANSITIONS.items():
     APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
 
+# Exact owner-authorized Wave 9 top-traffic transitions (update_id=542580474);
+# docs/wave9-top-traffic-approval-2026-11-19.md
+APPROVED_WAVE9_TOP_TRAFFIC_20261119_TRANSITIONS = {
+    "index.html": ("a86915bf728fed8d7db36b92c3c1fcb0935cf263", "e25a3976994129ab6d48f0a9ea68eff779f39fe2"),
+    "kor/column/baby-cold-no-sick-family-2026.html": ("027d6f032037b7d282bd6c1e35c3a2b85118988b", "51e6eafc9a23ecbeac201c7e4311251cca9ee3a6"),
+    "kor/column/crimson-desert-starter-gear-guide-2026.html": ("6fdd13635b6e80c06a72ca39ba1bd30149945376", "3da812df317948251de554e481202da59622fdb0"),
+    "kor/column/imjin-war-joseon-character-growth-guide-2026.html": ("9f453f43fc21826e9bc5faea1ccc573226fd6444", "e14c8cc7904d8d58ac64260ce184e8ce41ec1661"),
+    "kor/column/maple-planet-beginner-free-tips-2026.html": ("984341978b5cf9b866b6526a9e4a03fe3768b66d", "65a286ebe760e2735dd28cee791ff6b82274b160"),
+    "kor/column/maple-planet-bishop-4th-skill-quest-guide-2026.html": ("91a8e3b888091f427511ff5caca129a5bdcde58c", "7351ccff7c1d403aa50678617f5b1a7245a8b4e4"),
+    "kor/column/maple-planet-equip-setup-guide-2026.html": ("ae1714d2c486f7037b087432bc4060aa75e20b0e", "829c823a596b82dab97c0c97e1c0d33a3e883c96"),
+    "kor/column/maple-planet-no-capital-rice-farming-2026.html": ("7bf0825aa5a1fa2d1a61545031fb8e4285adf74c", "0397307a3f82946feb3470efb618eccbd6d19804"),
+    "kor/column/maple-planet-suncall-blizzard-hp-zero-setup-2026.html": ("c85ffd0becf02460bf6b6cdee82cedcca811295d", "b5d66bc0105f2090a64ae5adea906d05e626a95e"),
+    "kor/column/maple-planet-warrior-lv60-70-quest-guide-2026.html": ("e7dce2ac8aec518fd4a72ca8ff78a1e467c4a837", "73310d463029e2fb940df2252f36414b06afe0de"),
+    "kor/column/mapleland-bishop-free-leveling-guide-2026.html": ("7fea9eb7f94f7c12b5258f6a77d9d0f83604111a", "0fca09b65910e4cfb2b2e2f502e1443fae72effe"),
+    "kor/column/maplestory-artifact-setup-guide-2026.html": ("ae0ad863770114d67a5899d664577de2222ee6de", "46ee01220c2c34c58fb6b8eaeff4beed1bd5e19f"),
+    "kor/report/camp/boeun.html": ("0bbed5e589902264d2046d58e92201436e071d66", "dcbaeba41d6bac88dc019eb721a84fd0379d4be4"),
+    "kor/report/camp/changnyeong.html": ("6bb2c0455b39403733be78c8173910176c964d59", "4b036d36ef59af3564dd3cda901043316aa3f079"),
+    "kor/report/camp/chapark-beach-top.html": ("ee49c7617471e2e483a08d428162297a9542452f", "ae132a98bfc1e55108c21ba9b8095841d2b9dc13"),
+    "kor/report/camp/choenan.html": ("83adb0d7f6ffb91e2e1f712e6de464fc86d16140", "9c3d775f8d4d0319778fe529992e71879b3750e5"),
+    "kor/report/camp/daegu.html": ("e1a0b4b485f2466bfac7402b30facdb512fb2591", "9166fc2272c9d5a74f35abe00d96d103db46b0f6"),
+    "kor/report/camp/damyang.html": ("08b3a168198983223a45cedb8a671fa9b47db005", "e5d45ec683b32659d990235867652abfd5cb0686"),
+    "kor/report/camp/gangjin.html": ("eb79e84a3e8169cc8ed43625baeb4ed0df528df3", "cee49519b811f62050d0749a7ae8285d210753da"),
+    "kor/report/camp/hwasun.html": ("faa3e48e6f3eddd6128969dbf9ffdea7b7b8492e", "167ce6d5d2df3dc22eb42b09fc71018c3af2a836"),
+    "kor/report/camp/ulsan.html": ("a718bbe5b71c3da9db118541d63be3572cef8a0b", "c2f41c6d23b4e0e7045b2053528f51546e0400d9"),
+    "kor/report/camp/yongin.html": ("82b1916a402ea18f0eff78620461a40a407b1f01", "8f7eca567e1508bfa5b3a56583c92e19d512202f"),
+    "kor/report/car/car-full-paint-cost-guide.html": ("84675a26cf2feb7d29228e32e4e345af1a434a10", "cbdc16bb767eda074a65353b98767e645c4be09e"),
+    "kor/report/maple/maple-raising-boss-cp-2026.html": ("bb25213c270d6c85abea4376b1f43dd8b0013c59", "5d14411bff74e4c46d23b4a3d8afb268d317f852"),
+    "kor/report/maple/maple-raising-potential-tier-2026.html": ("319298674c6b09d9d0b523cbd5741c8121d23b96", "87cc50e3393730f3f9797558bff22aae856c37d7"),
+    "kor/report/maple/maple-raising-warrior-2026.html": ("860a3c8ebb6edf758160420d4d9505d9606b525b", "c9a42a13cf2699f1af96c33317983a62989fd924"),
+    "kor/report/nikke/nikke-beginner-2026.html": ("9aa5fd9ed0b0fd7b857ee8344aac4088b955f4f8", "f5e4e0723f8261b3cbd705d66bd1c2adfc59ecaa"),
+    "kor/report/travel/korean-souvenir-foreigners-2026.html": ("7b88491649614aa97ede3d2d51ca6c2bc03f409b", "cc97565181466f5b780a80f3bf3a70874f5500ec"),
+    "kor/report/window/windows11-battery-life-optimization.html": ("9444661c526e262e1bd1ac1870f9e0b20ce1b86d", "8dcd7e1ee339b6fa2c8f20de8b99a64e9def6a54"),
+    "kor/report/window/windows11-dual-boot-guide.html": ("5f623fc0ea50d796b866e576f86b487922dc9d18", "192e7cb30e3191c15457639ac844b87fc9411dea"),
+    "kor/report/window/windows11-folder-icon-customization.html": ("b76b609b1f52246b435f430fb04c55d713774772", "c611f0a7f7a62eb099ce6f7c46768f9e38b49c1b"),
+    "kor/report/window/windows11-installation-failure-fix.html": ("277bf3469f7fc9ba74288b8cdf00d5f11010b233", "05cddfb30ed09ab5505b471cd688123388c5d71b"),
+    "kor/report/window/windows11-memory-usage-optimization.html": ("45632c09ee5741525277a988af30eec79b91d023", "1926694a34128fe885dcfd64fdf53ef15966179f"),
+    "kor/report/window/windows11-start-menu-windows10-style.html": ("86afd6fd25066280d05758619585a81dbba5f883", "0966dbd9e4198a3922ff9e279d66d3deb821de2e"),
+}
+
+for _path, _blob_pair in APPROVED_WAVE9_TOP_TRAFFIC_20261119_TRANSITIONS.items():
+    APPROVED_PROTECTED_WINNER_TRANSITIONS.setdefault(_path, set()).add(_blob_pair)
+
 APPROVED_MONETIZATION_TRANSITIONS = {
     "scripts/collect_adsense_snapshot.py": {
         ("94f34228ed8b10213085b3de19bbab14e4fee0de", "83595861b3ea484b7fd9ad0c7fb11515f6516692"),

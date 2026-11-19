@@ -1508,3 +1508,36 @@ def test_bulk_ctr_exact_approvals_preserve_other_versions_and_observations(tmp_p
     all_changes = [("M", p, *pair) for p, pair in pairs.items()]
     assert validate_launch(tmp_path, manifest([]), all_changes) == []
     assert "PROTECTED_WINNER_CHANGED" in validate_launch(tmp_path, manifest([]), all_changes + [other])
+
+
+def test_wave9_top_traffic_exact_approvals_preserve_other_versions_and_observations(tmp_path):
+    from scripts.content_launch_guard import APPROVED_WAVE9_TOP_TRAFFIC_20261119_TRANSITIONS
+    setup_data(tmp_path)
+    pairs = APPROVED_WAVE9_TOP_TRAFFIC_20261119_TRANSITIONS
+    assert len(pairs) == 34
+    neighbor = "util/qrcode/index.html"
+    revenue_path = tmp_path / "data/revenue-opportunities.json"
+    revenue = json.loads(revenue_path.read_text(encoding="utf-8"))
+    revenue["protectedWinners"].extend({"url": f"/{p}"} for p in [*pairs, neighbor])
+    write_json(revenue_path, revenue)
+    for path, (before, after) in pairs.items():
+        assert before != after and len(before) == len(after) == 40
+        change = [("M", path, before, after)]
+        write_json(tmp_path / "data/experiments.json", {"experiments": []})
+        assert validate_launch(tmp_path, manifest([]), change) == []
+        for old, new in ((before, "f" * 40), ("b" * 40, after), (after, before)):
+            assert "PROTECTED_WINNER_CHANGED" in validate_launch(
+                tmp_path, manifest([]), [("M", path, old, new)])
+        for status in ("D", "R100"):
+            assert "DELETION_NOT_ALLOWED" in validate_launch(
+                tmp_path, manifest([]), [(status, path, before, after)])
+        write_json(tmp_path / "data/experiments.json", {
+            "experiments": [{"url": f"/{path}", "status": "OBSERVING"}]})
+        assert "PROTECTED_EXPERIMENT_CHANGED" in validate_launch(tmp_path, manifest([]), change)
+    write_json(tmp_path / "data/experiments.json", {"experiments": []})
+    before, after = next(iter(pairs.values()))
+    other = ("M", neighbor, before, after)
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(tmp_path, manifest([]), [other])
+    all_changes = [("M", p, *pair) for p, pair in pairs.items()]
+    assert validate_launch(tmp_path, manifest([]), all_changes) == []
+    assert "PROTECTED_WINNER_CHANGED" in validate_launch(tmp_path, manifest([]), all_changes + [other])
