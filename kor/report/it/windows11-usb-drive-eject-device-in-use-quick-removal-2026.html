@@ -97,6 +97,14 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <div class="intro"><p>외장 SSD나 USB 메모리에 파일을 복사하고 분리하려는데 Windows 11에서 “이 장치는 현재 사용 중입니다”라는 메시지가 나타나는 경우가 있습니다. 파일 탐색기 창을 닫았는데도 오류가 계속되거나, 작업 표시줄에서 안전 제거 아이콘이 보이지 않는 경우도 있습니다.</p>
 <p>이때 무조건 케이블을 뽑거나, 장치를 포맷해 해결하려는 것은 적절하지 않습니다. 문제의 원인은 <strong>파일을 사용 중인 프로그램</strong>, <strong>완료되지 않은 저장·동기화 작업</strong>, <strong>외장 저장 장치의 제거 정책</strong> 등으로 나뉘기 때문입니다.</p>
 <p>이 글에서는 Microsoft의 공식 Windows 11 도움말과 Microsoft Learn, Sysinternals 설명을 바탕으로 <strong>파일 저장 확인 → 안전 제거 재시도 → 사용 프로그램 확인 → 제거 정책 점검 → 복사 결과 검증</strong>이라는 순서로 해결합니다. 데이터 보존을 우선으로 하는 독자적인 실전 진단 가이드입니다.</p></div>
+<section class="section wave24-summary-card" style="border-left:4px solid #79c0ff;background:#152235;box-sizing:border-box;max-width:100%">
+<h2 style="margin-top:0">핵심 요약 (한눈에 보는 결론)</h2>
+<ul>
+<li><strong>‘사용 중’ 오류</strong>가 뜨면 복사·저장·동기화가 끝났는지 확인하고, 열린 파일과 관련 앱을 정상 종료한 뒤 안전 제거를 다시 시도하세요.</li>
+<li><strong>제거 정책</strong>은 장치별로 확인하세요. 빠른 제거는 Windows 10 버전 1809 이후 기본 정책이며, 향상된 성능을 쓰는 장치는 안전 제거가 필수입니다.</li>
+<li><strong>저장 중 강제 분리</strong>는 피하세요. 빠른 제거 정책이 적용된 장치도 진행 중인 파일 작업이 끝날 때까지 기다리세요.</li>
+</ul>
+</section>
 <section class="section" aria-labelledby="section-01"><h2 id="section-01">1. 우선 증상을 구별하세요</h2><div class="details-table"><table><thead><tr><th scope="col">문제</th><th scope="col">우선 확인할 사항</th><th scope="col">첫 조치</th></tr></thead><tbody><tr><td>“이 장치는 현재 사용 중입니다”</td><td>파일을 열어 둔 앱·백업 프로그램</td><td>해당 작업의 정상 종료</td></tr><tr><td>파일 복사 직후 꺼내기 실패</td><td>후속 파일 작업·동기화</td><td>대상 파일 열림 여부 확인</td></tr><tr><td>안전 제거 아이콘이 안 보임</td><td>숨겨진 시스템 트레이 아이콘</td><td>작업 표시줄의 ∧ 표시 확인</td></tr><tr><td>장치 이름을 모르겠음</td><td>드라이브 문자·장치 모델</td><td>파일 탐색기로 먼저 식별</td></tr><tr><td>특정 업무용 PC에서만 실패</td><td>보안·백업·관리 정책</td><td>IT 관리자에게 문의</td></tr><tr><td>외장 SSD 파일이 실제로 사라짐</td><td>복사 실패·파일 손상</td><td>추가 쓰기 중단과 원본 보호</td></tr><tr><td>USB 드라이브가 처음부터 안 보임</td><td>인식·케이블·포트 문제</td><td>안전 제거가 아닌 장치 인식 점검</td></tr></tbody></table></div>
 <p><strong>핵심은 장치가 보이지만 분리할 수 없는 상황과, 장치가 아예 인식되지 않는 상황을 구별하는 것</strong>입니다. 두 문제를 같은 해결책으로 다루면 원인을 놓치게 됩니다.</p></section>
 <section class="section" aria-labelledby="section-02"><h2 id="section-02">2. Windows 11 기본 안전 제거 절차</h2><p>Microsoft 지원 문서는 데이터 손실을 방지하기 위해 USB 플래시 드라이브와 외장 하드 드라이브 등을 분리할 때 안전 제거 기능을 사용하도록 안내합니다.</p>
@@ -121,6 +129,29 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 </ol>
 <p>일부 프로그램은 창이 닫혀 있어도 백그라운드에서 파일을 사용할 수 있습니다. 따라서 파일 탐색기만 닫았는데 해결되지 않았다고 곧바로 시스템 오류로 결론 내릴 필요는 없습니다.</p>
 <p><strong>피해야 할 행동:</strong> 저장 중인 프로그램을 아무렇게나 강제 종료하거나, 오류가 난 상태에서 외장 드라이브 케이블을 급히 빼지 마세요.</p></section>
+
+<!-- wave24-mid-display -->
+<aside class="emfls-ad-slot" aria-label="Advertisement" style="box-sizing:border-box;width:100%;max-width:100%;min-width:0;min-height:280px;margin:28px 0;text-align:center;clear:both">
+  <ins class="adsbygoogle" style="display:block;text-align:center;min-height:280px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</aside>
+<section class="section wave24-decision-box" aria-label="상황별 핵심 판단 비교표">
+<h2>상황별 핵심 판단·점검 비교표</h2>
+<div class="details-table" style="overflow-x:auto;max-width:100%">
+<table class="wave24-decision-table" style="width:100%;min-width:0;border-collapse:collapse;margin:8px 0">
+<thead>
+<tr><th scope="col" style="word-break:keep-all;overflow-wrap:anywhere">상황</th><th scope="col" style="word-break:keep-all;overflow-wrap:anywhere">확인할 점</th><th scope="col" style="word-break:keep-all;overflow-wrap:anywhere">다음 조치</th></tr>
+</thead>
+<tbody>
+<tr><th scope="row" style="word-break:keep-all;overflow-wrap:anywhere">‘사용 중’ 오류</th><td style="word-break:keep-all;overflow-wrap:anywhere">열린 파일·백업·동기화</td><td style="word-break:keep-all;overflow-wrap:anywhere">작업을 마친 뒤 꺼내기 재시도</td></tr>
+<tr><th scope="row" style="word-break:keep-all;overflow-wrap:anywhere">아이콘이 안 보임</th><td style="word-break:keep-all;overflow-wrap:anywhere">작업 표시줄의 ∧</td><td style="word-break:keep-all;overflow-wrap:anywhere">숨겨진 아이콘에서 안전 제거 찾기</td></tr>
+<tr><th scope="row" style="word-break:keep-all;overflow-wrap:anywhere">빠른 제거</th><td style="word-break:keep-all;overflow-wrap:anywhere">저장·동기화 진행 여부</td><td style="word-break:keep-all;overflow-wrap:anywhere">파일 작업을 마친 뒤 분리</td></tr>
+<tr><th scope="row" style="word-break:keep-all;overflow-wrap:anywhere">향상된 성능</th><td style="word-break:keep-all;overflow-wrap:anywhere">쓰기 캐시 사용 가능</td><td style="word-break:keep-all;overflow-wrap:anywhere">안전 제거 안내가 뜬 뒤 분리</td></tr>
+<tr><th scope="row" style="word-break:keep-all;overflow-wrap:anywhere">제거가 계속 실패</th><td style="word-break:keep-all;overflow-wrap:anywhere">저장 작업이 끝났는지 확인</td><td style="word-break:keep-all;overflow-wrap:anywhere">PC를 정상 종료한 뒤 분리 고려</td></tr>
+</tbody>
+</table>
+</div>
+</section>
 <section class="section" aria-labelledby="section-04"><h2 id="section-04">4. 파일을 잡고 있는 프로그램을 찾는 공식 방법</h2><p>Microsoft의 Sysinternals <strong>Process Explorer</strong>는 현재 프로세스가 열어 둔 파일·디렉터리 등의 핸들을 확인하는 진단 도구입니다. 어떤 프로그램이 특정 파일이나 폴더를 사용 중인지 찾는 기능도 제공합니다.</p>
 <p>일반 사용자가 먼저 할 일은 모든 프로그램을 강제로 종료하는 것이 아니라, 원인을 확인하는 것입니다.</p>
 <ol>
@@ -146,8 +177,8 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 </ol>
 <p><strong>장치 관리자에서 드라이버를 삭제하는 행동은 일반적인 외장 드라이브 안전 제거 과정과 다릅니다.</strong> 단순히 안전 제거 아이콘이 없다는 이유로 드라이버를 지우지 마세요.</p></section>
 <section class="section" aria-labelledby="section-06"><h2 id="section-06">6. 빠른 제거와 향상된 성능은 무엇이 다른가요?</h2><p>Microsoft Learn은 Windows의 외장 스토리지 제거 정책을 두 가지로 설명합니다.</p>
-<p>**빠른 제거(Quick removal)<strong>는 장치를 분리하기 쉽도록 관리하며, Microsoft 문서에 따르면 Windows 10 버전 1809 이후 기본 정책입니다. 이 정책에서는 디스크의 쓰기 캐싱이 사용되지 않도록 관리되기 때문에 공식 설명상 안전 제거 절차 없이 제거할 수 있도록 설계됐습니다.</p>
-<p></strong>향상된 성능(Better performance)**은 쓰기 캐싱을 이용할 수 있으며, 이 정책에서는 반드시 하드웨어 안전 제거 과정을 거쳐야 합니다. 캐시에 남아 있는 작업이 끝나도록 보장하기 위해서입니다.</p>
+<p><strong>빠른 제거(Quick removal)</strong>는 장치를 분리하기 쉽도록 관리하며, Microsoft 문서에 따르면 Windows 10 버전 1809 이후 기본 정책입니다. 이 정책에서는 디스크의 쓰기 캐싱이 사용되지 않도록 관리되기 때문에 공식 설명상 안전 제거 절차 없이 제거할 수 있도록 설계됐습니다.</p>
+<p><strong>향상된 성능(Better performance)</strong>은 쓰기 캐싱을 이용할 수 있으며, 이 정책에서는 반드시 하드웨어 안전 제거 과정을 거쳐야 합니다. 캐시에 남아 있는 작업이 끝나도록 보장하기 위해서입니다.</p>
 <div class="details-table"><table><thead><tr><th scope="col">정책</th><th scope="col">공식 설명의 특징</th><th scope="col">제거할 때 주의점</th></tr></thead><tbody><tr><td>빠른 제거</td><td>쓰기 캐싱을 하지 않도록 관리</td><td>진행 중인 실제 파일 작업은 중단하지 않아야 함</td></tr><tr><td>향상된 성능</td><td>외장 드라이브에 쓰기 캐시 사용 가능</td><td>안전 제거 절차 필수</td></tr><tr><td>현재 정책을 모름</td><td>장치별로 선택·변경 가능</td><td>추측하지 말고 해당 장치의 정책 확인</td></tr></tbody></table></div>
 <p><strong>빠른 제거는 ‘파일을 저장하는 중에도 뽑아도 안전하다’는 말이 아닙니다.</strong> 저장·동기화 중인 작업을 끊는 것은 별도 위험을 만들 수 있습니다. Microsoft의 일반 사용자 안내는 안전 제거를 계속 권장하고 있으므로, 일상에서는 안전 제거 기능을 사용하는 습관이 이해하기 쉽고 안전합니다.</p>
 <p>공식 출처: <a href="https://learn.microsoft.com/ko-kr/windows/client-management/client-tools/change-default-removal-policy-external-storage-media" rel="noopener noreferrer">Microsoft Learn — 기본 미디어 제거 정책</a></p></section>
@@ -253,6 +284,22 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <h2>정보 출처와 확인 안내</h2>
 <p>작성·갱신일과 적용 범위는 본문에서 확인하세요. 정책·행사 일정·혜택·제품 정보는 변경될 수 있으므로 중요한 판단 전 공식 기관 및 판매처의 최신 안내를 확인하시기 바랍니다.</p>
 <div class="pills"><a href="/kor/report/it/">같은 분야의 글</a><a href="/kor/report/">생활정보 전체</a><a href="/">emfls 홈</a></div>
+</section>
+
+<!-- wave24-lower-article -->
+<aside class="emfls-ad-slot" aria-label="Advertisement" style="box-sizing:border-box;width:100%;max-width:100%;min-width:0;min-height:250px;margin:28px 0;text-align:center;clear:both">
+  <ins class="adsbygoogle" style="display:block;text-align:center;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-layout="in-article" data-ad-format="fluid" data-ad-slot="3423411629"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</aside>
+<section class="section related-content wave24-cluster-funnel" style="box-sizing:border-box;width:100%;max-width:100%">
+<h2 style="margin-top:0">함께 확인하면 좋은 계산기·관련 가이드</h2>
+<ul>
+<li><a href="/kor/report/it/2026-windows11-create-restore-point-system-restore-point-in-time.html">윈도우11 시스템 복원 지점 만들기·시점 복구 가이드</a></li>
+<li><a href="/kor/report/it/backup-restore-test-windows-mac-sha256-file-integrity-15-minute-check.html">윈도우·맥 파일 백업 복구 15분 검증 체크리스트</a></li>
+<li><a href="/kor/report/it/windows11-wifi-connected-no-internet-missing-icon-dns-network-reset-2026.html">윈도우11 와이파이 연결됨·인터넷 안 됨 해결법</a></li>
+<li><a href="/kor/util/quickmemo/">점검 명령어·파일 목록 브라우저 빠른 메모장</a></li>
+<li><a href="/kor/report/it/">윈도우11·저장장치 문제 해결 가이드 전체 목록</a></li>
+</ul>
 </section>
 </div>
 </article>
