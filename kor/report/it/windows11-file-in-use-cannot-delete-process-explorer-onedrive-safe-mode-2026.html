@@ -122,6 +122,14 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <div class="intro"><p>Windows 11에서 오래된 PDF나 동영상 파일을 지우려는데 <strong>“다른 프로그램에서 이 파일을 사용 중이므로 작업을 완료할 수 없습니다”</strong>라는 창이 나타나는 경우가 있습니다. 열려 있는 프로그램을 모두 닫은 것 같은데도 삭제가 되지 않는다면 무슨 문제일까요?</p>
 <p>핵심은 <strong>파일을 화면에 띄워 놓은 앱과, 실제로 파일을 사용하고 있는 프로세스가 반드시 같지는 않다</strong>는 점입니다. 미리 보기, 동기화, 백업, 파일 압축 해제, 편집 프로그램의 백그라운드 작업이 파일을 열어 둔 상태일 수 있습니다. 이런 경우 폴더를 강제로 지우기보다 <strong>누가 파일을 사용하고 있는지 확인하고 정상 종료하는 절차</strong>가 먼저입니다.</p>
 <p>이 글은 2026년 11월 기준 Microsoft의 Windows, OneDrive, Sysinternals 공식 안내를 바탕으로 작성했습니다. 설명은 <strong>삭제해도 되는 개인 파일</strong>을 대상으로 합니다. 회사 문서, 백업 원본, Windows 시스템 폴더, 실행 중인 서비스의 데이터 파일은 대상이 아닙니다.</p></div>
+<section class="section wave26-summary-card" style="border-left:4px solid #79c0ff;background:#152235;box-sizing:border-box;max-width:100%">
+<h2 style="margin-top:0">핵심 요약 (한눈에 보는 결론)</h2>
+<ul>
+<li><strong>‘사용 중’ 오류가 뜨면</strong> 파일을 연 앱에서 작업을 저장하고 정상 종료하세요. 잠금이 계속되면 탐색기를 재시작하거나 Process Explorer로 사용 중인 앱을 찾으세요.</li>
+<li><strong>삭제 전 30초 점검</strong>으로 파일 확장자, 전체 경로, 원본 여부를 확인하세요. OneDrive에서 0x8007018b가 뜨면 동기화 완료를 기다리세요.</li>
+<li><strong>파일 핸들을 강제로 닫지 마세요.</strong> 재부팅해도 잠겨 있다면 백업을 확인한 개인 파일에만 안전 모드를 사용하세요.</li>
+</ul>
+</section>
 <section class="section" aria-labelledby="section-01"><h2 id="section-01">1. 오류 문구부터 구분하세요</h2><p>같은 ‘삭제 안 됨’이라도 원인은 다를 수 있습니다.</p>
 <div class="details-table"><table><thead><tr><th scope="col">보이는 메시지·현상</th><th scope="col">우선 의심할 원인</th><th scope="col">첫 조치</th></tr></thead><tbody><tr><td>다른 프로그램에서 파일을 사용 중</td><td>앱이 파일 핸들을 유지</td><td>관련 편집 프로그램을 저장·종료</td></tr><tr><td>파일을 다른 프로세스가 사용 중</td><td>미리 보기·백그라운드 프로세스</td><td>탐색기와 관련 앱 상태 확인</td></tr><tr><td>OneDrive에서 이동·삭제 오류 0x8007018b</td><td>동기화 또는 OneDrive가 파일 사용 중</td><td>동기화 완료 기다리기</td></tr><tr><td>관리자 권한이 필요함, 액세스 거부</td><td>권한·소유자·보호 폴더 문제</td><td>실제 파일 위치와 권한 확인</td></tr><tr><td>경로를 찾을 수 없음</td><td>이름·경로·동기화 상태 문제</td><td>원본 위치와 파일 존재 여부 확인</td></tr></tbody></table></div>
 <p><strong>주의:</strong> “사용 중”은 <strong>접근 권한 부족</strong>이나 <strong>디스크 손상</strong>과 다른 문제입니다. 오류를 구분하지 않고 소유권을 변경하거나 강제 삭제 명령을 실행하면 정상 데이터를 잃을 수 있습니다.</p></section>
@@ -144,6 +152,27 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <li>몇 초 후 다시 삭제를 시도합니다.</li>
 </ol>
 <p>정상 종료로 문제가 해결되면 추가적인 초기화·명령어 실행은 필요하지 않습니다. 미리 보기 창이 원인인지 확인하려면 창을 끈 상태에서만 재시험한 후, 필요하다면 다시 켜세요.</p></section>
+
+<!-- wave26-mid-display -->
+<aside class="emfls-ad-slot" aria-label="Advertisement" style="box-sizing:border-box;width:100%;max-width:100%;min-width:0;min-height:280px;margin:28px 0;text-align:center;clear:both">
+  <ins class="adsbygoogle" style="display:block;text-align:center;min-height:280px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</aside>
+<section class="section wave26-decision-box" aria-label="상황별 핵심 판단 비교표">
+<h2>상황별 핵심 판단·점검 비교표</h2>
+<div class="details-table" style="overflow-x:auto;max-width:100%">
+<table class="wave26-decision-table" style="width:100%;min-width:0;border-collapse:collapse;margin:8px 0">
+<thead><tr><th scope="col" style="word-break:keep-all;overflow-wrap:anywhere">상황</th><th scope="col" style="word-break:keep-all;overflow-wrap:anywhere">확인할 항목</th><th scope="col" style="word-break:keep-all;overflow-wrap:anywhere">할 일</th></tr></thead>
+<tbody>
+<tr><th scope="row" style="word-break:keep-all;overflow-wrap:anywhere">앱에서 파일을 열어 둠</th><td style="word-break:keep-all;overflow-wrap:anywhere">저장할 작업</td><td style="word-break:keep-all;overflow-wrap:anywhere">저장 후 앱 정상 종료</td></tr>
+<tr><th scope="row" style="word-break:keep-all;overflow-wrap:anywhere">탐색기에서 잠김</th><td style="word-break:keep-all;overflow-wrap:anywhere">미리 보기 창</td><td style="word-break:keep-all;overflow-wrap:anywhere">미리 보기 끄기 또는 탐색기 재시작</td></tr>
+<tr><th scope="row" style="word-break:keep-all;overflow-wrap:anywhere">잠근 앱을 모름</th><td style="word-break:keep-all;overflow-wrap:anywhere">Process Explorer 검색 결과</td><td style="word-break:keep-all;overflow-wrap:anywhere">사용 앱 확인 후 정상 종료</td></tr>
+<tr><th scope="row" style="word-break:keep-all;overflow-wrap:anywhere">OneDrive 파일 잠김</th><td style="word-break:keep-all;overflow-wrap:anywhere">구름 아이콘의 동기화 상태</td><td style="word-break:keep-all;overflow-wrap:anywhere">동기화 완료 대기</td></tr>
+<tr><th scope="row" style="word-break:keep-all;overflow-wrap:anywhere">재부팅 후에도 잠김</th><td style="word-break:keep-all;overflow-wrap:anywhere">자동 실행 앱과 개인 파일 백업</td><td style="word-break:keep-all;overflow-wrap:anywhere">필요 시 안전 모드로 진단</td></tr>
+</tbody>
+</table>
+</div>
+</section>
 <section class="section" aria-labelledby="section-04"><h2 id="section-04">4. 프로그램을 닫았는데도 파일이 사용 중일 때</h2><p>프로그램 창이 사라졌어도 백그라운드 프로세스가 남아 있을 수 있습니다. 이때는 <strong>Ctrl + Shift + Esc</strong>로 작업 관리자를 열어 확인할 수 있습니다.</p>
 <ol>
 <li>작업 관리자의 <strong>프로세스</strong> 목록을 엽니다.</li>
@@ -284,6 +313,22 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <h2>정보 출처와 확인 안내</h2>
 <p>작성·갱신일과 적용 범위는 본문에서 확인하세요. 정책·행사 일정·혜택·제품 정보는 변경될 수 있으므로 중요한 판단 전 공식 기관 및 판매처의 최신 안내를 확인하시기 바랍니다.</p>
 <div class="pills"><a href="/kor/report/it/">같은 분야의 글</a><a href="/kor/report/">생활정보 전체</a><a href="/">emfls 홈</a></div>
+</section>
+
+<!-- wave26-lower-article -->
+<aside class="emfls-ad-slot" aria-label="Advertisement" style="box-sizing:border-box;width:100%;max-width:100%;min-width:0;min-height:250px;margin:28px 0;text-align:center;clear:both">
+  <ins class="adsbygoogle" style="display:block;text-align:center;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-layout="in-article" data-ad-format="fluid" data-ad-slot="3423411629"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</aside>
+<section class="section related-content wave26-cluster-funnel" style="box-sizing:border-box;width:100%;max-width:100%">
+<h2 style="margin-top:0">함께 확인하면 좋은 계산기·관련 가이드</h2>
+<ul>
+<li><a href="/kor/report/it/windows11-onedrive-sync-not-working-red-x-sync-pending-reset-2026.html">윈도우11 원드라이브 동기화 오류·잠금 해제 해결법</a></li>
+<li><a href="/kor/report/it/windows11-desktop-files-missing-onedrive-folder-path-recovery-2026.html">윈도우11 바탕화면 파일 사라짐 원드라이브 복구법</a></li>
+<li><a href="/kor/report/it/windows11-usb-drive-eject-device-in-use-quick-removal-2026.html">윈도우11 사용 중인 USB 안전 제거 안 될 때 해결 절차</a></li>
+<li><a href="/kor/util/quickmemo/">점검 명령어·파일 경로 임시 기록 브라우저 메모장</a></li>
+<li><a href="/kor/report/it/">윈도우11 파일·동기화 문제 해결 가이드 전체 목록</a></li>
+</ul>
 </section>
 </div>
 </article>

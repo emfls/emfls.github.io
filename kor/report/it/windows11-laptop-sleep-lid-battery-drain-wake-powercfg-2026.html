@@ -97,6 +97,14 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <div class="intro"><p>노트북 덮개를 닫고 가방에 넣었는데 몇 시간 뒤 꺼내 보니 배터리가 크게 줄어 있거나 본체가 뜨거운 경우가 있습니다. 반대로 잠깐 자리를 비운 뒤 돌아왔더니 마우스를 건드리지 않았는데도 PC가 깨어 있을 수 있습니다.</p>
 <p>이 문제를 해결할 때 가장 먼저 구분해야 할 것은 <strong>화면만 꺼졌는지, Windows가 절전 상태로 들어갔는지, 절전에서 다시 깨어났는지</strong>입니다. 이 세 현상은 겉보기에는 비슷하지만 확인할 설정과 진단 명령이 다릅니다.</p>
 <p>이 글에서는 Microsoft의 Windows 전원 설정과 공식 powercfg 명령 문서를 바탕으로, <strong>‘덮개 → 절전 진입 → 깨어남 → 배터리 소모’의 4단계 기록법</strong>을 구성했습니다. 이 기록법은 설명을 위해 직접 정리한 방법이며, 모든 노트북에서 특정 결과를 보장하는 진단 표준은 아닙니다.</p></div>
+<section class="section wave26-summary-card" style="border-left:4px solid #79c0ff;background:#152235;box-sizing:border-box;max-width:100%">
+<h2 style="margin-top:0">핵심 요약 (한눈에 보는 결론)</h2>
+<ul>
+<li><strong>가방 속 노트북이 뜨거우면</strong> 꺼내 평평하고 통풍이 되는 곳에 두세요. 과열되거나 이상한 냄새·소음이 나면 사용을 중단하고 제조사 안내를 확인하세요.</li>
+<li><strong>15분 점검</strong>은 배터리 잔량과 시각을 기록하는 것부터 시작하세요. 배터리 사용과 전원 연결 시 덮개 동작을 각각 확인하고 <code>powercfg /a</code>로 지원 절전 상태를 확인하세요.</li>
+<li><strong>화면이 꺼졌다고 절전으로 판단하지 마세요.</strong> 화면 끄기 시간과 절전 진입 시간은 별도 설정입니다.</li>
+</ul>
+</section>
 <section class="section" aria-labelledby="section-01"><h2 id="section-01">1. 화면 꺼짐·절전·최대 절전·종료는 다르다</h2><div class="details-table"><table><thead><tr><th scope="col">상태</th><th scope="col">실제 의미</th><th scope="col">사용자가 알아둘 차이</th></tr></thead><tbody><tr><td>화면 끄기</td><td>디스플레이만 꺼지는 상태</td><td>PC와 앱은 계속 작동할 수 있음</td></tr><tr><td>절전(Sleep)</td><td>빠른 복귀를 위한 저전력 상태</td><td>장치에 따라 일부 백그라운드 활동이 가능</td></tr><tr><td>최대 절전(Hibernate)</td><td>작업 상태를 저장하고 전원을 크게 줄이는 방식</td><td>일반 절전보다 복귀 시간이 길 수 있음</td></tr><tr><td>시스템 종료(Shut down)</td><td>PC를 종료</td><td>다시 사용하려면 부팅 필요</td></tr></tbody></table></div>
 <p>Microsoft는 화면 끄기 시간과 PC 절전 시간을 별도로 설정하도록 합니다. 그러므로 <strong>화면이 검게 변했다는 사실만으로 절전 진입에 성공했다고 볼 수 없습니다.</strong></p>
 <p>최대 절전 모드는 일부 PC에서 표시되지 않을 수 있습니다. 배터리를 아끼기 위해 Windows의 모든 전원 설정을 바꾸기보다 내 노트북이 어떤 상태를 지원하는지 확인하는 편이 먼저입니다.</p>
@@ -117,6 +125,30 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <p>반대로 노트북을 가방에 넣고 이동하는 용도라면 덮개를 닫았을 때 계속 작동하도록 설정된 것은 발열·배터리 소모 측면에서 불리할 수 있습니다. 이동 전에는 PC가 실제로 저전력 상태에 들어가는지 확인하세요.</p>
 <p>회사에서 관리하는 PC는 정책 때문에 일부 옵션을 바꿀 수 없을 수 있습니다. 이 경우 정책을 우회하지 말고 IT 관리자에게 문의하세요.</p>
 <p>공식 자료: <a href="https://support.microsoft.com/en-us/windows/experience/power-battery/shut-down-sleep-or-hibernate-your-pc" rel="noopener noreferrer">Microsoft — Shut down, sleep, or hibernate your PC</a>, <a href="https://support.microsoft.com/en-us/windows/experience/power-battery/battery-saving-tips-for-windows" rel="noopener noreferrer">Microsoft — Battery saving tips</a></p></section>
+
+<!-- wave26-mid-display -->
+<aside class="emfls-ad-slot" aria-label="Advertisement" style="box-sizing:border-box;width:100%;max-width:100%;min-width:0;min-height:280px;margin:28px 0;text-align:center;clear:both">
+  <ins class="adsbygoogle" style="display:block;text-align:center;min-height:280px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</aside>
+<section class="section wave26-decision-box" aria-label="상황별 핵심 판단 비교표">
+<h2>상황별 핵심 판단·점검 비교표</h2>
+<div class="details-table" style="overflow-x:auto;max-width:100%">
+<table class="wave26-decision-table" style="width:100%;min-width:0;border-collapse:collapse;margin:8px 0">
+<colgroup><col style="width:28%"><col style="width:35%"><col></colgroup>
+<thead>
+<tr><th scope="col" style="word-break:keep-all;overflow-wrap:anywhere">증상</th><th scope="col" style="word-break:keep-all;overflow-wrap:anywhere">첫 점검</th><th scope="col" style="word-break:keep-all;overflow-wrap:anywhere">확인할 단서</th></tr>
+</thead>
+<tbody>
+<tr><th scope="row" style="word-break:keep-all;overflow-wrap:anywhere">덮개를 닫아도 켜져 있음</th><td style="word-break:keep-all;overflow-wrap:anywhere">제어판의 전원 옵션</td><td style="word-break:keep-all;overflow-wrap:anywhere">덮개 동작이 ‘아무것도 안 함’인지</td></tr>
+<tr><th scope="row" style="word-break:keep-all;overflow-wrap:anywhere">화면만 꺼짐</th><td style="word-break:keep-all;overflow-wrap:anywhere">전원 및 배터리 설정</td><td style="word-break:keep-all;overflow-wrap:anywhere">화면 끄기와 절전 진입 시간</td></tr>
+<tr><th scope="row" style="word-break:keep-all;overflow-wrap:anywhere">절전 진입이 안 됨</th><td style="word-break:keep-all;overflow-wrap:anywhere"><code style="overflow-wrap:normal;font-size:.85em">powercfg /requests</code></td><td style="word-break:keep-all;overflow-wrap:anywhere">앱·서비스·드라이버의 전원 요청</td></tr>
+<tr><th scope="row" style="word-break:keep-all;overflow-wrap:anywhere">저절로 깨어남</th><td style="word-break:keep-all;overflow-wrap:anywhere"><code style="overflow-wrap:normal;font-size:.85em">powercfg /lastwake</code></td><td style="word-break:keep-all;overflow-wrap:anywhere">가장 최근 절전 해제에 관한 정보</td></tr>
+<tr><th scope="row" style="word-break:keep-all;overflow-wrap:anywhere">대기 중 배터리 급감</th><td style="word-break:keep-all;overflow-wrap:anywhere"><code style="overflow-wrap:normal;font-size:.85em">powercfg /a</code></td><td style="word-break:keep-all;overflow-wrap:anywhere">Modern Standby 지원 시 SleepStudy 확인</td></tr>
+</tbody>
+</table>
+</div>
+</section>
 <section class="section" aria-labelledby="section-04"><h2 id="section-04">4. Windows 11의 &#x27;화면 끄기 시간&#x27;과 &#x27;절전 시간&#x27;은 따로 설정해야 한다</h2><p>덮개 설정이 정상이라면 다음에는 PC를 사용하지 않을 때의 동작을 확인합니다.</p>
 <ol>
 <li><strong>Windows 키 + I</strong>로 설정을 엽니다.</li>
@@ -239,6 +271,22 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <h2>정보 출처와 확인 안내</h2>
 <p>작성·갱신일과 적용 범위는 본문에서 확인하세요. 정책·행사 일정·혜택·제품 정보는 변경될 수 있으므로 중요한 판단 전 공식 기관 및 판매처의 최신 안내를 확인하시기 바랍니다.</p>
 <div class="pills"><a href="/kor/report/it/">같은 분야의 글</a><a href="/kor/report/">생활정보 전체</a><a href="/">emfls 홈</a></div>
+</section>
+
+<!-- wave26-lower-article -->
+<aside class="emfls-ad-slot" aria-label="Advertisement" style="box-sizing:border-box;width:100%;max-width:100%;min-width:0;min-height:250px;margin:28px 0;text-align:center;clear:both">
+  <ins class="adsbygoogle" style="display:block;text-align:center;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-layout="in-article" data-ad-format="fluid" data-ad-slot="3423411629"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</aside>
+<section class="section related-content wave26-cluster-funnel" style="box-sizing:border-box;width:100%;max-width:100%">
+<h2 style="margin-top:0">함께 확인하면 좋은 계산기·관련 가이드</h2>
+<ul>
+<li><a href="/kor/report/it/used-windows-laptop-battery-health-report-design-full-charge-12min-test-2026.html">윈도우 노트북 배터리 성능 보고서·수명 12분 점검법</a></li>
+<li><a href="/kor/report/compare/laptop-five-models-lg-lenovo-samsung-apple-asus-battery-weight-2026.html">2026 노트북 5종 배터리 시간·무게·가격 비교</a></li>
+<li><a href="/kor/report/it/windows11-taskbar-missing-frozen-explorer-restart-autohide-update-2026.html">윈도우11 작업 표시줄 먹통·사라짐 해결 가이드</a></li>
+<li><a href="/kor/util/power-bank-wh-calculator/">노트북 보조배터리 mAh→Wh 변환 및 기내반입 계산기</a></li>
+<li><a href="/kor/report/it/">윈도우11 노트북·전원 관리 가이드 전체 목록</a></li>
+</ul>
 </section>
 </div>
 </article>
