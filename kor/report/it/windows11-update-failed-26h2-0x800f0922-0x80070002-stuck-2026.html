@@ -97,6 +97,14 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <div class="intro"><p>Windows 11 업데이트가 0%에서 멈추거나, 설치 중 100%에 도달한 뒤 다시 실패하는 경우가 있습니다. 재부팅할 때 &quot;변경 내용을 실행 취소하는 중&quot;이라는 메시지가 나오거나 0x800f0922·0x80070002와 같은 오류 코드만 남기도 합니다.</p>
 <p>이때 인터넷에 떠도는 복구 명령을 무작정 실행하거나 EFI 시스템 파티션을 삭제하는 것은 위험합니다. 업데이트 오류는 <strong>다운로드 실패, 설치 구성 요소 문제, 특정 버전의 알려진 문제</strong>를 먼저 구별해야 합니다.</p>
 <p>이 글은 2026년 11월 1일 기준 Microsoft 지원 문서와 Windows 릴리스 정보를 바탕으로 <strong>10분 기본 진단 → 오류 코드 구분 → DISM·SFC → 복구 설치</strong> 순서로 안내합니다. 특히 2026년 9월 출시된 Windows 11 버전 26H2와 2026년 5월에 발생했던 0x800f0922 특정 업데이트 사례를 혼동하지 않도록 구성했습니다.</p></div>
+<section class="section wave22-summary-card" style="border-left:4px solid #79c0ff;background:#152235;box-sizing:border-box;max-width:100%">
+<h2 style="margin-top:0">핵심 요약 (한눈에 보는 결론)</h2>
+<ul>
+<li><strong>업데이트가 실패하면</strong> Windows 버전·빌드, 실패한 KB 번호, 오류 코드와 발생 단계를 기록하세요. 중요한 파일을 백업하고 연결·저장 공간·문제 해결사부터 점검하세요.</li>
+<li><strong>26H2가 보이지 않으면</strong> 2026년 9월 29일 일반 공급된 버전이므로, winver로 현재 버전을 확인하고 Windows 업데이트에 설치 제안이 있는지 살펴보세요.</li>
+<li><strong>피해야 할 실수</strong> 0x800f0922 코드만 보고 EFI 시스템 파티션을 삭제·포맷하거나 크기를 바꾸지 마세요.</li>
+</ul>
+</section>
 <section class="section" aria-labelledby="section-01"><h2 id="section-01">1. 먼저 증상과 오류 코드를 분류하세요</h2><div class="details-table"><table><thead><tr><th scope="col">증상</th><th scope="col">가능한 원인 범주</th><th scope="col">첫 단계</th></tr></thead><tbody><tr><td>다운로드 0%에서 움직이지 않음</td><td>연결·다운로드·업데이트 서비스 문제</td><td>인터넷과 문제 해결사 확인</td></tr><tr><td>설치 50~99%에서 오래 멈춤</td><td>처리 시간·시스템 구성 요소 문제</td><td>진행 여부 확인, 강제 종료 자제</td></tr><tr><td>재부팅 때 &quot;변경 내용 실행 취소&quot;</td><td>설치 실패 후 롤백</td><td>실패 KB 번호와 코드 기록</td></tr><tr><td>0x800f0922</td><td>저장 공간·구성 요소·특정 KB 문제 등</td><td>버전과 KB부터 확인</td></tr><tr><td>0x80070002</td><td>필요한 파일을 찾지 못하는 오류</td><td>캐시와 시스템 파일 점검</td></tr><tr><td>0x800f081f</td><td>필요한 복구 원본·구성 요소 누락 가능</td><td>공식 DISM 복구 검토</td></tr><tr><td>26H2 설치 항목이 안 보임</td><td>실제 버전·제공 조건·관리 정책</td><td>winver와 릴리스 상태 확인</td></tr><tr><td>업데이트만 계속 다시 다운로드</td><td>캐시 또는 업데이트 처리 오류</td><td>문제 해결사, 반복 시 캐시 확인</td></tr></tbody></table></div>
 <p><strong>진행률이 몇 분 동안 바뀌지 않는다고 시스템이 완전히 멈췄다는 뜻은 아닙니다.</strong> Microsoft도 업데이트 설치 시간은 업데이트 크기와 기기·인터넷 환경에 따라 달라질 수 있다고 안내합니다.</p></section>
 <section class="section" aria-labelledby="section-02"><h2 id="section-02">2. 진단 전에 반드시 기록할 세 가지</h2><h3>① Windows 버전과 OS 빌드</h3>
@@ -114,6 +122,53 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 </ul>
 <p>따라서 <strong>26H2가 보이지 않는다고 바로 오류 코드 문제라고 결론 내리지 마세요.</strong> 먼저 winver에서 현재 버전을 보고, Windows 업데이트에 실제로 설치 제안이 있는지 확인합니다. 필요하면 Microsoft의 <a href="https://learn.microsoft.com/ko-kr/windows/release-health/" rel="noopener noreferrer">Windows 릴리스 상태</a>에서 알려진 문제와 호환성 정보를 확인합니다.</p>
 <p>공식 자료: <a href="https://learn.microsoft.com/ko-kr/windows/release-health/windows11-release-information" rel="noopener noreferrer">Windows 11 릴리스 정보</a>, <a href="https://learn.microsoft.com/ko-kr/windows/release-health/status-windows-11-26h2" rel="noopener noreferrer">Windows 11 26H2 알려진 문제</a></p></section>
+
+<!-- wave22-mid-display -->
+<aside class="emfls-ad-slot" aria-label="Advertisement" style="box-sizing:border-box;width:100%;max-width:100%;min-width:0;min-height:280px;margin:28px 0;text-align:center;clear:both">
+  <ins class="adsbygoogle" style="display:block;text-align:center;min-height:280px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</aside>
+<section class="section wave22-decision-box" aria-label="상황별 핵심 판단 비교표">
+<h2>상황별 핵심 판단·점검 비교표</h2>
+<div class="details-table" style="overflow-x:auto;max-width:100%">
+<table class="wave22-decision-table" style="width:100%;min-width:0;border-collapse:collapse;margin:8px 0">
+<thead>
+<tr>
+<th scope="col" style="word-break:keep-all;overflow-wrap:anywhere">상황</th>
+<th scope="col" style="word-break:keep-all;overflow-wrap:anywhere">판단</th>
+<th scope="col" style="word-break:keep-all;overflow-wrap:anywhere">첫 점검</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="word-break:keep-all;overflow-wrap:anywhere">다운로드 0%</td>
+<td style="word-break:keep-all;overflow-wrap:anywhere">연결 문제 가능</td>
+<td style="word-break:keep-all;overflow-wrap:anywhere">인터넷 확인 후 문제 해결사 실행</td>
+</tr>
+<tr>
+<td style="word-break:keep-all;overflow-wrap:anywhere">재부팅 후 변경 취소</td>
+<td style="word-break:keep-all;overflow-wrap:anywhere">설치 실패 후 롤백 가능</td>
+<td style="word-break:keep-all;overflow-wrap:anywhere">정상 부팅 후 KB·오류 코드 기록</td>
+</tr>
+<tr>
+<td style="word-break:keep-all;overflow-wrap:anywhere">0x800f0922</td>
+<td style="word-break:keep-all;overflow-wrap:anywhere">KB에 따라 원인이 다를 수 있음</td>
+<td style="word-break:keep-all;overflow-wrap:anywhere">실패한 KB의 알려진 문제 확인</td>
+</tr>
+<tr>
+<td style="word-break:keep-all;overflow-wrap:anywhere">0x80070002</td>
+<td style="word-break:keep-all;overflow-wrap:anywhere">필요한 파일을 찾지 못함</td>
+<td style="word-break:keep-all;overflow-wrap:anywhere">문제 해결사 실행 후 반복 시 캐시 점검</td>
+</tr>
+<tr>
+<td style="word-break:keep-all;overflow-wrap:anywhere">26H2 미표시</td>
+<td style="word-break:keep-all;overflow-wrap:anywhere">장치 제공 조건·관리 정책 확인 필요</td>
+<td style="word-break:keep-all;overflow-wrap:anywhere">winver와 설치 제안 확인</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
 <section class="section" aria-labelledby="section-04"><h2 id="section-04">4. 가장 먼저 실행하는 10분 점검</h2><p>Microsoft는 Windows 업데이트 문제를 해결하기 전 <strong>중요한 개인 파일을 백업</strong>하도록 안내합니다. 특히 아래 단계에서 복구 명령이나 다시 설치를 검토할 가능성이 있다면 더 중요합니다.</p>
 <ol>
 <li>문서·사진·작업 중인 자료를 다른 위치에 백업합니다.</li>
@@ -287,6 +342,22 @@ sfc /scannow</code></pre>
 <h2>정보 출처와 확인 안내</h2>
 <p>작성·갱신일과 적용 범위는 본문에서 확인하세요. 정책·행사 일정·혜택·제품 정보는 변경될 수 있으므로 중요한 판단 전 공식 기관 및 판매처의 최신 안내를 확인하시기 바랍니다.</p>
 <div class="pills"><a href="/kor/report/it/">같은 분야의 글</a><a href="/kor/report/">생활정보 전체</a><a href="/">emfls 홈</a></div>
+</section>
+
+<!-- wave22-lower-article -->
+<aside class="emfls-ad-slot" aria-label="Advertisement" style="box-sizing:border-box;width:100%;max-width:100%;min-width:0;min-height:250px;margin:28px 0;text-align:center;clear:both">
+  <ins class="adsbygoogle" style="display:block;text-align:center;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-layout="in-article" data-ad-format="fluid" data-ad-slot="3423411629"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</aside>
+<section class="section related-content wave22-cluster-funnel" style="box-sizing:border-box;width:100%;max-width:100%">
+<h2 style="margin-top:0">함께 확인하면 좋은 계산기·관련 가이드</h2>
+<ul>
+<li><a href="/kor/report/it/2026-windows11-create-restore-point-system-restore-point-in-time.html">윈도우11 시스템 복원 지점 만들기·업데이트 전 백업</a></li>
+<li><a href="/kor/report/it/windows11-desktop-files-missing-onedrive-folder-path-recovery-2026.html">윈도우11 업데이트 후 바탕화면 파일 사라짐 OneDrive 복구</a></li>
+<li><a href="/kor/report/it/windows11-activation-error-digital-license-home-pro-motherboard-15min-2026.html">윈도우11 정품 인증 0xC004F 오류·디지털 라이선스 해결</a></li>
+<li><a href="/kor/util/date-calculator/">윈도우 업데이트 지원 종료일·백업 주기 날짜 계산기</a></li>
+<li><a href="/kor/report/it/">윈도우11 업데이트·오류코드 해결 가이드 전체 목록</a></li>
+</ul>
 </section>
 </div>
 </article>

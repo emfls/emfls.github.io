@@ -96,6 +96,14 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <div class="layout">
 <div class="intro"><p>MacBook 또는 iMac의 Wi-Fi는 연결됐는데 Safari에서 인터넷이 열리지 않거나, 집 공유기의 이름이 안 보이거나, 비밀번호를 제대로 입력해도 연결할 수 없을 때가 있습니다. 이때 <strong>무선 네트워크에 연결하지 못하는 문제</strong>와 <strong>공유기까지는 연결됐지만 외부 인터넷이 안 되는 문제</strong>를 먼저 나눠야 합니다. 한 번에 DNS, 보안 설정, 네트워크 위치를 모두 변경하면 원인 파악이 어려워지기 때문입니다.</p>
 <p>Apple 공식 고객지원은 Mac의 Wi-Fi 문제에서 <strong>네트워크 상태 확인, 다른 네트워크 테스트, 재시동, VPN 및 보안 소프트웨어 점검, 공유기 설정, 무선 진단</strong> 등을 안내합니다. 이 글은 2026년 11월 1일 기준 공식 자료를 바탕으로, 위험도가 낮은 점검부터 DHCP·DNS 및 기타 세부 설정까지 순서대로 설명합니다.</p></div>
+<section class="section wave22-summary-card" style="border-left:4px solid #79c0ff;background:#152235;box-sizing:border-box;max-width:100%">
+<h2 style="margin-top:0">핵심 요약 (한눈에 보는 결론)</h2>
+<ul>
+<li><strong>5분 점검:</strong> Wi-Fi를 껐다 켠 뒤 같은 Wi-Fi에서 휴대전화도 웹페이지를 열 수 있는지 확인하세요. 둘 다 안 되면 공유기와 인터넷 회선부터 살펴보세요.</li>
+<li><strong>DHCP 갱신 조건:</strong> Mac에 연결됨으로 표시돼도 IP나 라우터 주소가 이상하다면 TCP/IP를 확인하세요. DHCP를 쓰는 환경이면 임대를 갱신해 보세요.</li>
+<li><strong>피할 실수:</strong> 처음부터 DNS·보안 설정·네트워크 위치를 한꺼번에 바꾸면 원인을 찾기 어려워집니다.</li>
+</ul>
+</section>
 <section class="section" aria-labelledby="section-01"><h2 id="section-01">1. 증상별로 가장 먼저 확인할 해결 방법</h2><div class="details-table"><table><thead><tr><th scope="col">지금 겪는 문제</th><th scope="col">먼저 의심할 원인</th><th scope="col">첫 번째 해결 행동</th></tr></thead><tbody><tr><td>Wi-Fi 연결됐지만 인터넷 없음</td><td>인터넷 회선·라우터·VPN·DNS</td><td>다른 기기로 같은 와이파이 테스트</td></tr><tr><td>Wi-Fi 목록에 공유기 이름이 없음</td><td>Wi-Fi 꺼짐·범위·라우터</td><td>Wi-Fi 켜기, 공유기 상태</td></tr><tr><td>비밀번호 오류가 반복됨</td><td>저장 정보·보안 방식·암호 변경</td><td>암호 확인, 해당 네트워크 지우기</td></tr><tr><td>연결됐다가 자꾸 끊어짐</td><td>신호·간섭·공유기·앱</td><td>다른 위치에서 테스트, 무선 진단</td></tr><tr><td>특정 사이트에서만 오류</td><td>사이트·DNS·VPN</td><td>다른 사이트와 브라우저 비교</td></tr><tr><td>Mac에서만 안 됨</td><td>Mac 네트워크 구성</td><td>다른 네트워크·핫스팟으로 확인</td></tr><tr><td>모든 장치에서 인터넷 안 됨</td><td>공유기·통신사 회선</td><td>모뎀·라우터·ISP 점검</td></tr><tr><td>회사·학교 네트워크만 실패</td><td>인증서·정책·기기 등록</td><td>네트워크 관리자에게 문의</td></tr><tr><td>IP 주소가 비정상적으로 보임</td><td>DHCP 설정·주소 할당</td><td>TCP/IP 설정 확인</td></tr><tr><td>공용 Wi-Fi에 연결됐지만 웹이 안 됨</td><td>로그인·이용약관 절차</td><td>시설 공식 인증 안내 확인</td></tr></tbody></table></div>
 <p>첫 단계는 Mac의 연결 문제를 확정하기보다 <strong>같은 와이파이에서 다른 기기도 인터넷이 안 되는지</strong> 알아보는 것입니다. 다른 기기도 안 된다면 Mac 내부 파일을 삭제하거나 운영체제를 초기화해도 회선 자체는 복구되지 않습니다.</p>
 <p>공식 근거: <a href="https://support.apple.com/ko-kr/101588" rel="noopener noreferrer">Apple — Mac Wi-Fi 인터넷 연결 오류</a></p></section>
@@ -111,6 +119,53 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <p>Mac에서 와이파이 표시가 연결됨으로 나와도 공유기의 외부 인터넷 회선이 끊겼다면 웹페이지는 열리지 않을 수 있습니다. <strong>Wi-Fi 연결과 인터넷 연결은 별개의 상태</strong>입니다.</p>
 <p>핫스팟에서 정상 작동한다면 해당 공유기나 네트워크 구성을 의심할 근거가 생기지만, Mac의 모든 문제가 없다는 뜻은 아닙니다. 핫스팟 이용에는 통신사 데이터 요금과 사용량 제한이 있을 수 있습니다.</p>
 <p>공식 출처: <a href="https://support.apple.com/ko-kr/guide/mac-help/mh11395/27/mac/27" rel="noopener noreferrer">Apple — Mac 인터넷 연결 점검</a>, <a href="https://support.apple.com/ko-kr/101588" rel="noopener noreferrer">Apple — Mac에서 Wi-Fi를 통해 인터넷에 연결되지 않을 때</a></p></section>
+<section class="section wave22-decision-box" aria-label="상황별 핵심 판단 비교표">
+<h2>상황별 핵심 판단·점검 비교표</h2>
+<div class="details-table" style="overflow-x:auto;max-width:100%">
+<table class="wave22-decision-table" style="width:100%;min-width:0;border-collapse:collapse;margin:8px 0">
+<thead>
+<tr>
+<th scope="col" style="word-break:keep-all;overflow-wrap:anywhere">상황</th>
+<th scope="col" style="word-break:keep-all;overflow-wrap:anywhere">판단 기준</th>
+<th scope="col" style="word-break:keep-all;overflow-wrap:anywhere">다음 점검</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="word-break:keep-all;overflow-wrap:anywhere">같은 Wi-Fi의 모든 기기에서 실패</td>
+<td style="word-break:keep-all;overflow-wrap:anywhere">공유기·회선부터 확인</td>
+<td style="word-break:keep-all;overflow-wrap:anywhere">공유기·모뎀 전원 및 케이블 점검</td>
+</tr>
+<tr>
+<td style="word-break:keep-all;overflow-wrap:anywhere">핫스팟은 되고 집 Wi-Fi만 실패</td>
+<td style="word-break:keep-all;overflow-wrap:anywhere">집 공유기 설정 점검</td>
+<td style="word-break:keep-all;overflow-wrap:anywhere">암호·보안 방식·DHCP 확인</td>
+</tr>
+<tr>
+<td style="word-break:keep-all;overflow-wrap:anywhere">IP나 라우터 주소가 이상함</td>
+<td style="word-break:keep-all;overflow-wrap:anywhere">TCP/IP 주소 할당 확인</td>
+<td style="word-break:keep-all;overflow-wrap:anywhere">DHCP 사용 시 임대 갱신</td>
+</tr>
+<tr>
+<td style="word-break:keep-all;overflow-wrap:anywhere">특정 사이트만 안 열림</td>
+<td style="word-break:keep-all;overflow-wrap:anywhere">다른 사이트·브라우저와 비교</td>
+<td style="word-break:keep-all;overflow-wrap:anywhere">DNS 설정을 확인하고 기존 값 기록</td>
+</tr>
+<tr>
+<td style="word-break:keep-all;overflow-wrap:anywhere">공용 Wi-Fi 연결 후 웹 접속 실패</td>
+<td style="word-break:keep-all;overflow-wrap:anywhere">로그인·약관 동의 필요 여부</td>
+<td style="word-break:keep-all;overflow-wrap:anywhere">시설 공식 접속 안내 확인</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- wave22-mid-display -->
+<aside class="emfls-ad-slot" aria-label="Advertisement" style="box-sizing:border-box;width:100%;max-width:100%;min-width:0;min-height:280px;margin:28px 0;text-align:center;clear:both">
+  <ins class="adsbygoogle" style="display:block;text-align:center;min-height:280px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</aside>
 <section class="section" aria-labelledby="section-03"><h2 id="section-03">3. macOS 시스템 설정에서 네트워크 상태를 확인하는 방법</h2><ol>
 <li><strong>Apple 메뉴 → 시스템 설정</strong>을 엽니다.</li>
 <li>왼쪽에서 <strong>네트워크</strong>를 선택합니다.</li>
@@ -358,6 +413,22 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <h2>정보 출처와 확인 안내</h2>
 <p>작성·갱신일과 적용 범위는 본문에서 확인하세요. 정책·행사 일정·혜택·제품 정보는 변경될 수 있으므로 중요한 판단 전 공식 기관 및 판매처의 최신 안내를 확인하시기 바랍니다.</p>
 <div class="pills"><a href="/kor/report/it/">같은 분야의 글</a><a href="/kor/report/">생활정보 전체</a><a href="/">emfls 홈</a></div>
+</section>
+
+<!-- wave22-lower-article -->
+<aside class="emfls-ad-slot" aria-label="Advertisement" style="box-sizing:border-box;width:100%;max-width:100%;min-width:0;min-height:250px;margin:28px 0;text-align:center;clear:both">
+  <ins class="adsbygoogle" style="display:block;text-align:center;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-layout="in-article" data-ad-format="fluid" data-ad-slot="3423411629"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</aside>
+<section class="section related-content wave22-cluster-funnel" style="box-sizing:border-box;width:100%;max-width:100%">
+<h2 style="margin-top:0">함께 확인하면 좋은 계산기·관련 가이드</h2>
+<ul>
+<li><a href="/kor/report/it/public-wifi-captive-portal-login-page-not-opening-iphone-galaxy-windows-2026.html">카페·호텔 공용 와이파이 로그인 창 안 뜰 때 해결법</a></li>
+<li><a href="/kor/report/it/windows11-wifi-connected-no-internet-missing-icon-dns-network-reset-2026.html">윈도우11 와이파이 인터넷 없음·네트워크 초기화 방법</a></li>
+<li><a href="/kor/report/it/computer-clock-wrong-cert-date-invalid-windows11-mac-time-sync-2026.html">맥·윈도우 시간 동기화·인증서 오류 해결 가이드</a></li>
+<li><a href="/kor/util/time-diff/">네트워크 동기화·지역별 시차 확인 시간 계산기</a></li>
+<li><a href="/kor/report/it/">맥북·네트워크·시스템 오류 가이드 전체 목록</a></li>
+</ul>
 </section>
 </div>
 </article>
