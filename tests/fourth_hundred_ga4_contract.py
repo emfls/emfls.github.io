@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 MARKER = "fourth-hundred-ga4-priority-2026-08-11"
-REVIEW_DATES = {"kor/report/camp/haman.html": "2026-10-15"}
+REVIEW_DATES = {"kor/report/camp/haman.html": "2026-10-15", "util/compound-interest/index.html": "2026-11-19"}
 def assert_batch(test, batch):
     for relative, schema_type, category, hub in batch:
         path=ROOT/relative; test.assertTrue(path.is_file(),relative); source=path.read_text(encoding="utf-8")

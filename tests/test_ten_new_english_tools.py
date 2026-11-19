@@ -39,6 +39,7 @@ class TenNewEnglishToolsTest(unittest.TestCase):
                     "unix-timestamp": "2026-08-15",
                     "date-difference": "2026-09-21",
                     "aspect-ratio": "2026-09-21",
+                    "loan-payment-calculator": "2026-11-19",
                 }
                 expected_date = expected_dates.get(slug, "2026-08-09")
                 if slug == "reading-time":
