@@ -17,7 +17,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2026 크롬·엣지·파이어폭스 확장 프로그램 권한 감사: 모든 사이트 읽기 15분 점검법">
 <meta name="twitter:description" content="이번 글은 Google Chrome, Microsoft Edge, Mozilla Firefox의 공식 도움말을 바탕으로 구성한 ‘15분 브라우저 확장 권한 감사’ 실습입니다. 확장 프로그램의 사이트 접근은 별도 확장 관리에서 설정할 수 있습니다.">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"2026 크롬·엣지·파이어폭스 확장 프로그램 권한 감사: 모든 사이트 읽기 15분 점검법","description":"이번 글은 Google Chrome, Microsoft Edge, Mozilla Firefox의 공식 도움말을 바탕으로 구성한 ‘15분 브라우저 확장 권한 감사’ 실습입니다. 확장 프로그램의 사이트 접근은 별도 확장 관리에서 설정할 수 있습니다.","url":"https://emfls.github.io/kor/report/it/browser-extension-permission-audit-chrome-edge-firefox-15min-2026.html","mainEntityOfPage":"https://emfls.github.io/kor/report/it/browser-extension-permission-audit-chrome-edge-firefox-15min-2026.html","inLanguage":"ko","author":{"@type":"Organization","name":"emfls"},"publisher":{"@type":"Organization","name":"emfls","url":"https://emfls.github.io"},"datePublished":"2026-11-02","dateModified":"2026-11-02"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"2026 크롬·엣지·파이어폭스 확장 프로그램 권한 감사: 모든 사이트 읽기 15분 점검법","description":"이번 글은 Google Chrome, Microsoft Edge, Mozilla Firefox의 공식 도움말을 바탕으로 구성한 ‘15분 브라우저 확장 권한 감사’ 실습입니다. 확장 프로그램의 사이트 접근은 별도 확장 관리에서 설정할 수 있습니다.","url":"https://emfls.github.io/kor/report/it/browser-extension-permission-audit-chrome-edge-firefox-15min-2026.html","mainEntityOfPage":"https://emfls.github.io/kor/report/it/browser-extension-permission-audit-chrome-edge-firefox-15min-2026.html","inLanguage":"ko","author":{"@type":"Organization","name":"emfls"},"publisher":{"@type":"Organization","name":"emfls","url":"https://emfls.github.io"},"datePublished":"2026-11-02","dateModified":"2026-11-19"}</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-QP5Q67GE5B');</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
@@ -77,6 +77,16 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 .adsbygoogle,div[id^="aswift_"]{max-width:100%!important;overflow:hidden}
 @media(max-width:650px){.shell{padding:14px 12px 45px}.site-header{padding:14px}.hero{padding:29px 20px}.hero h1{font-size:1.58rem}.highlight-row{gap:7px}.highlight{padding:13px 9px}.highlight .value{font-size:.92rem}.highlight .label{font-size:.7rem}.contents,.section,.intro,.info-bottom{padding:19px 17px}.contents ol{grid-template-columns:1fr}.section h2{font-size:1.18rem}.site-header nav{gap:9px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.ext-tool,.ext-tool *{box-sizing:border-box;min-width:0}
+.ext-tool{margin:18px 0;padding:clamp(14px,3vw,26px);border:1px solid #47577b;border-radius:13px;background:var(--surface);overflow-wrap:anywhere}
+.ext-tool h2{margin:0 0 14px;color:#d4c5ff;font-size:clamp(1.1rem,2.4vw,1.4rem);line-height:1.45}
+.ext-tool-controls{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1.6fr) minmax(0,1fr);gap:12px}
+.ext-tool label{display:block;font-size:.875rem;font-weight:700}
+.ext-tool select{display:block;width:100%;max-width:100%;min-height:44px;margin-top:4px;padding:6px 8px;border:1px solid #52617a;border-radius:8px;background:var(--surface2);color:var(--text);font:inherit;font-weight:400}
+.ext-tool select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.ext-tool-result{margin-top:14px;padding:10px 13px;border-radius:8px;background:var(--surface2);font-size:.875rem}
+.ext-tool-result output{color:#d4c5ff;font-weight:800}
+@media(max-width:650px){.ext-tool-controls{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head>
 <body>
@@ -91,6 +101,67 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <p class="deck">이번 글은 Google Chrome, Microsoft Edge, Mozilla Firefox의 공식 도움말을 바탕으로 구성한 ‘15분 브라우저 확장 권한 감사’ 실습입니다. 확장 프로그램의 사이트 접근은 별도 확장 관리에서 설정할 수 있습니다.</p>
 <div class="hero-meta"><span>최초 발행 2026-11-02</span><span>내용 확인 2026-11-02</span><span>작성 emfls</span></div>
 </header>
+
+<section class="ext-tool" aria-label="브라우저 확장프로그램 권한 위험도 진단기">
+  <h2>크롬·엣지·파이어폭스 확장프로그램 권한 위험도 자가진단기</h2>
+  <div class="ext-tool-controls">
+    <label for="ext-tool-access">사이트 접근 권한 범위
+      <select id="ext-tool-access">
+        <option value="click">클릭할 때만</option>
+        <option value="specific">특정 사이트에만 허용</option>
+        <option value="all">모든 웹사이트에서 데이터 읽기 및 변경</option>
+      </select>
+    </label>
+    <label for="ext-tool-signs">최근 동작 징후
+      <select id="ext-tool-signs">
+        <option value="normal">정상</option>
+        <option value="suspicious">개발자 변경·새 권한 재승인 팝업·원치 않는 검색창 변경</option>
+      </select>
+    </label>
+    <label for="ext-tool-browser">브라우저 종류
+      <select id="ext-tool-browser">
+        <option value="chrome">Chrome</option>
+        <option value="edge">Microsoft Edge</option>
+        <option value="firefox">Firefox</option>
+      </select>
+    </label>
+  </div>
+  <div class="ext-tool-result">
+    <div>위험도 <output id="ext-tool-risk" for="ext-tool-access ext-tool-signs" aria-live="polite"></output></div>
+    <div>확장 관리 경로 <span id="ext-tool-path" aria-live="polite"></span></div>
+    <div>점검 순서 <span id="ext-tool-steps"></span></div>
+  </div>
+  <script>
+  (() => {
+    const tool = document.currentScript.closest('.ext-tool');
+    const access = tool.querySelector('#ext-tool-access');
+    const signs = tool.querySelector('#ext-tool-signs');
+    const browser = tool.querySelector('#ext-tool-browser');
+    const risk = tool.querySelector('#ext-tool-risk');
+    const path = tool.querySelector('#ext-tool-path');
+    const paths = {
+      chrome: 'chrome://extensions → 세부정보 → 사이트 액세스',
+      edge: 'edge://extensions → 세부정보 → 사이트 액세스',
+      firefox: 'about:addons → 확장 기능 → 권한 및 데이터'
+    };
+
+    function update() {
+      let tier = '낮음';
+      if (signs.value === 'suspicious') {
+        tier = '즉시 비활성화·삭제 권장';
+      } else if (access.value === 'all') {
+        tier = '점검 필요';
+      }
+      risk.textContent = tier;
+      path.textContent = paths[browser.value];
+    }
+
+    tool.querySelector('#ext-tool-steps').textContent = '사이트 액세스 제한 → 의심 확장 제거 → 비밀번호·세션 점검';
+    tool.addEventListener('change', update);
+    update();
+  })();
+  </script>
+</section>
 
 <nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">1. 먼저 구분하세요: 웹사이트 권한과 확장 프로그램 권한</a></li><li><a href="#section-02">2. 15분 감사의 핵심: 확장 하나마다 세 가지 질문</a></li><li><a href="#section-03">3. 독자 제작 ‘15분 권한 감사’ 시간표</a></li><li><a href="#section-04">4. Chrome: 확장 목록을 빠르게 여는 방법</a></li><li><a href="#section-05">5. Chrome의 세 가지 사이트 접근 권한 차이</a></li><li><a href="#section-06">6. Chrome에서 ‘모든 사이트’를 ‘특정 사이트’로 줄여보기</a></li><li><a href="#section-07">7. Chrome에서 시크릿 모드 권한도 따로 확인하기</a></li><li><a href="#section-08">8. Chrome에서 로컬 파일 접근 권한을 확인하는 이유</a></li><li><a href="#section-09">9. Microsoft Edge 확장 권한은 어디에서 변경하나요?</a></li><li><a href="#section-10">10. Edge에서 확장 기능을 끄거나 제거하는 방법</a></li><li><a href="#section-11">11. Firefox는 Chrome·Edge와 무엇이 다른가요?</a></li><li><a href="#section-12">12. Firefox 사생활 보호 창에서도 확장이 실행되는지 확인</a></li><li><a href="#section-13">13. 확장 프로그램의 ‘권한 경고’는 어떻게 해석할까?</a></li><li><a href="#section-14">14. 독자 제작 ‘필요성 × 접근 범위’ 의사결정표</a></li><li><a href="#section-15">15. 5분 비교 실험: 한 번에 하나씩 끄고 확인</a></li><li><a href="#section-16">16. 크롬 ‘안전 확인’에서 확장 위험 경고가 나오면</a></li><li><a href="#section-17">17. 홈페이지·검색엔진이 저절로 바뀌었다면</a></li><li><a href="#section-18">18. 권한을 줄여도 이미 유출된 정보가 자동으로 회수되지는 않습니다</a></li><li><a href="#section-19">19. 결과 기록용 ‘확장 권한 영수증’ 템플릿</a></li><li><a href="#section-20">20. 자주 묻는 질문</a></li><li><a href="#section-21">21. 15분 권한 감사 완료 체크리스트</a></li><li><a href="#section-22">공식 출처 및 사실 검증 범위</a></li></ol></nav>
 <div class="layout">
