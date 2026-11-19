@@ -91,6 +91,15 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 .details-table{max-width:100%;min-width:0;overflow-x:auto}
 pre{max-width:100%;overflow-x:auto}code{overflow-wrap:anywhere;white-space:pre-wrap}
 @media(max-width:650px){.quick-summary,.next-step-reads{padding:19px 17px}.quick-summary,.next-step-reads,.next-step-grid,.highlight-row,.two-col,.info-grid,.target-grid{grid-template-columns:1fr}.quick-summary,.next-step-reads,.highlight-row,.two-col,.info-grid,.target-grid{overflow-wrap:anywhere}}
+.ev12v-tool,.ev12v-tool *{box-sizing:border-box;min-width:0}
+.ev12v-tool{margin:0 0 18px;padding:18px 20px;border:1px solid #47577b;border-radius:13px;background:var(--surface);overflow-wrap:anywhere}
+.ev12v-tool h2{margin:0 0 12px;color:#d4c5ff;font-size:1.13rem;line-height:1.45}
+.ev12v-tool .ev12v-fields{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr) minmax(0,1.25fr);align-items:end;gap:10px}
+.ev12v-tool label{display:block;font-size:.86rem;font-weight:700;line-height:1.45}
+.ev12v-tool select{display:block;width:100%;max-width:100%;min-height:44px;margin-top:5px;padding:8px;color:var(--text);background:var(--surface2);border:1px solid #596b84;border-radius:8px;font:inherit;font-weight:400}
+.ev12v-tool select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.ev12v-tool [role="status"]{margin:12px 0 0;padding:10px 12px;border-left:3px solid var(--accent);border-radius:4px 8px 8px 4px;background:var(--surface2);font-size:.9rem;line-height:1.55}
+@media(max-width:650px){.ev12v-tool{padding:15px}.ev12v-tool .ev12v-fields{grid-template-columns:minmax(0,1fr)}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
@@ -115,6 +124,68 @@ pre{max-width:100%;overflow-x:auto}code{overflow-wrap:anywhere;white-space:pre-w
 </div>
 <p><strong>30초 우선 진단:</strong> 문 안 열림 여부(스마트키·비상키 구분) → 실내 READY 표시등 확인 → 12V 충전 경고등·ICCU 관련 점검 필요 여부 기록. <a href="#section-01">증상별 진단표로 이동</a></p>
 <p>차량·연식마다 비상키 위치와 12V 점프 단자 구조가 다르므로 임의 연결 전 반드시 공식 사용설명서를 우선 확인하세요.</p>
+</section>
+<section class="ev12v-tool" aria-label="전기차 12V 방전 자가진단">
+<h2>전기차 12V 보조배터리·문 안 열림·READY 오류 30초 안전 판정기</h2>
+<div class="ev12v-fields">
+<label>현재 증상
+<select name="symptom">
+<option value="">증상을 선택하세요</option>
+<option value="door">스마트키 무반응·문 안 열림</option>
+<option value="ready">문은 열리나 READY 불빛 안 켜짐</option>
+<option value="warning">주행/정차 중 12V 충전 경고등 점등</option>
+<option value="hazard">배터리 주변 발열·냄새·부풀어 오름</option>
+</select></label>
+<label>구동용 고전압 배터리 잔량
+<select name="charge">
+<option value="">잔량을 선택하세요</option>
+<option value="enough">20% 이상 충분</option>
+<option value="low">20% 미만 부족</option>
+</select></label>
+<label>블랙박스 상시전원·12V BATT RESET 버튼 유무
+<select name="equipment">
+<option value="">해당 조합을 선택하세요</option>
+<option value="on">상시전원 사용 / RESET 있음</option>
+<option value="off">상시전원 미사용 / RESET 없음</option>
+</select></label>
+</div>
+<p role="status">현재 증상을 선택하면 우선 조치를 안내합니다.</p>
+<script>
+(() => {
+  const tool = document.currentScript.parentElement;
+  const symptom = tool.querySelector('[name="symptom"]');
+  const charge = tool.querySelector('[name="charge"]');
+  const equipment = tool.querySelector('[name="equipment"]');
+  const result = tool.querySelector('[role="status"]');
+  const prompt = result.textContent;
+  const actions = {
+    door: '해당 차종·연식 설명서에서 비상키로 문을 여는 방법을 확인하세요. 문이 열리지 않으면 억지로 벌리지 말고 제조사 긴급출동을 요청하세요.',
+    ready: '주행을 시도하지 마세요. 계기판 경고 문구를 기록하고 제조사 긴급출동에 12V 배터리와 충전 계통 점검을 요청하세요. 단자에 임의로 점프 케이블을 연결하지 마세요.',
+    warning: '주행 중이면 안전한 곳에 정차하세요. 계속 주행하기 전에 제조사 긴급출동에 연락해 안내를 받으세요. 경고가 꺼져도 서비스센터에서 충전 계통을 점검받으세요.',
+    hazard: '차량에서 떨어져 안전한 곳으로 이동하세요. 배터리에 손대거나 충전·재시동·점프스타트를 하지 마세요. 타는 냄새, 연기 또는 불꽃이 나면 즉시 119에 전기차임을 알리세요. 그 외에는 제조사 긴급출동을 요청하세요.'
+  };
+  const chargeNotes = {
+    enough: '고전압 잔량이 충분해도 12V 계통 점검이 필요할 수 있습니다.',
+    low: '마지막으로 확인한 고전압 잔량이 20% 미만이었다면 출동 기사에게 그 수치도 알리세요.'
+  };
+  const equipmentNotes = {
+    on: '상시전원 사용을 알리고 블랙박스 전력 소비를 점검받으세요. RESET은 해당 차종·연식 공식 설명서에 절차가 있는 경우에만 따르세요.',
+    off: 'RESET 버튼을 찾으려고 실내 패널을 분해하지 마세요. 같은 증상이 반복되면 충전 계통도 함께 점검받으세요.'
+  };
+
+  function showAdvice() {
+    const selected = symptom.value;
+    if (selected === 'door' || selected === 'ready') {
+      result.textContent = [actions[selected], chargeNotes[charge.value], equipmentNotes[equipment.value]].filter(Boolean).join(' ');
+      return;
+    }
+    result.textContent = actions[selected] || prompt;
+  }
+
+  tool.addEventListener('change', showAdvice);
+  showAdvice();
+})();
+</script>
 </section>
 <nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">1. 30초 증상별 진단표부터 확인하세요</a></li><li><a href="#section-02">2. 전기차에는 왜 배터리가 두 종류 있나요?</a></li><li><a href="#section-03">3. ‘시동 안 걸림’은 READY 표시로 구분해야 합니다</a></li><li><a href="#section-04">4. 문이 안 열릴 때는 스마트키 문제와 차량 12V 문제를 구분합니다</a></li><li><a href="#section-05">5. 아이오닉 5 등에서 비상키를 미리 알아둬야 하는 이유</a></li><li><a href="#section-06">6. 12V 배터리 세이버+는 어떤 기능인가요?</a></li><li><a href="#section-07">7. 세이버+가 있으니 배터리 교체와 점검은 필요 없나요?</a></li><li><a href="#section-08">8. 블랙박스 상시 녹화가 12V 문제와 연결될 수 있나요?</a></li><li><a href="#section-09">9. 12V 충전 경고등이 켜졌을 때는 단순 방전과 구분하세요</a></li><li><a href="#section-10">10. ICCU와 12V 배터리를 같은 부품이라고 생각하면 안 됩니다</a></li><li><a href="#section-11">11. 전기차에 12V 점프스타트를 해도 되나요?</a></li><li><a href="#section-12">12. 전문가 출동을 요청할 때 정확히 전달할 내용</a></li><li><a href="#section-13">13. ‘12V BATT RESET’ 버튼이 모든 전기차에 있는 건가요?</a></li><li><a href="#section-14">14. 방전 직후 일단 문이 열렸다면 무엇부터 할까요?</a></li><li><a href="#section-15">15. 반복 방전 시 배터리만 교체하면 해결되나요?</a></li><li><a href="#section-16">16. 배터리가 방전된 전기차를 밀어서 시동 걸 수 있나요?</a></li><li><a href="#section-17">17. 블랙박스가 켜져 있는데 12V 방전이 아니라는 뜻인가요?</a></li><li><a href="#section-18">18. 겨울에 12V 문제가 생기면 가장 주의할 것은?</a></li><li><a href="#section-19">19. 10분간 할 수 있는 안전한 확인 절차</a></li><li><a href="#section-20">20. 제조사 서비스센터에 남길 방전 기록표</a></li><li><a href="#section-21">21. 중고 전기차 구매 전에도 12V 방전 이력을 확인하세요</a></li><li><a href="#section-22">22. 자주 묻는 질문</a></li><li><a href="#section-23">보충. 캠핑·차박 중 저전압 방전 예방: 유틸리티 모드는 별도로 확인하세요</a></li><li><a href="#section-24">23. 최종 방전 대처 체크리스트</a></li><li><a href="#section-25">공식 출처 및 검증 범위</a></li></ol></nav>
 <div class="layout">

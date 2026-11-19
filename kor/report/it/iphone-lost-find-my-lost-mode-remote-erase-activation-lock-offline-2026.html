@@ -93,6 +93,19 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 .layout>*,.quick-summary *,.next-step-reads *,.highlight-row>*,.two-col>*,.info-grid>*,.target-grid>*{min-width:0;max-width:100%;box-sizing:border-box}
 @media(max-width:650px){.next-step-reads{padding:19px 17px;overflow-wrap:anywhere}.next-step-reads,.next-step-grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.lost-tool,.lost-tool *{box-sizing:border-box;min-width:0}
+.lost-tool{margin:18px 0;padding:clamp(12px,3vw,22px);border:1px solid #47577b;border-radius:13px;background:var(--surface);overflow-wrap:anywhere;line-height:1.55}
+.lost-tool h2{margin:0 0 12px;color:#d4c5ff;font-size:1.15rem}
+.lost-tool-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}
+.lost-tool label{display:grid;gap:4px;font-size:.9rem;font-weight:700}
+.lost-tool select{width:100%;min-height:44px;padding:6px 8px;border:1px solid #63738a;border-radius:8px;background:var(--bg);color:var(--text);font:inherit;font-size:1rem}
+.lost-tool select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.lost-tool-result{margin-top:12px;padding:10px 12px;border-radius:8px;background:var(--surface2);font-size:.9rem}
+.lost-tool-result ol{margin:6px 0 0;padding-inline-start:1.5em}
+.lost-tool-result li+li{margin-top:4px}
+.lost-tool p{margin:8px 0 0;font-size:.9rem}
+.lost-tool .lost-tool-warning{color:#ffd89a}
+@media(max-width:650px){.lost-tool-fields{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head>
 <body>
@@ -116,6 +129,90 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <div class="hero-meta"><span>최초 발행 2026-10-30</span><span>내용 확인 2026-10-30</span><span>작성 emfls</span></div>
 </header>
 
+<section class="lost-tool" aria-label="아이폰 분실 대응 단계 판정기">
+<h2>아이폰 분실 골든타임 대응·원격 지우기 판정기</h2>
+<div class="lost-tool-fields">
+<label>나의 찾기 활성화 여부
+<select id="lost-tool-find"><option value="on">켜짐</option><option value="unknown" selected>모름 또는 꺼짐</option></select>
+</label>
+<label>현재 상태
+<select id="lost-tool-connection"><option value="online">지도 위치 보임·온라인</option><option value="offline" selected>오프라인 또는 전원 꺼짐</option></select>
+</label>
+<label>상황 구분
+<select id="lost-tool-situation"><option value="missing">단순 분실 의심</option><option value="stolen">도난·타인 수거 의심</option><option value="erased">이미 원격 지우기 실행 후</option></select>
+</label>
+<label>Apple Pay·금융앱 로그인 여부
+<select id="lost-tool-finance"><option value="yes">예</option><option value="no" selected>아니오</option></select>
+</label>
+</div>
+<div class="lost-tool-result" aria-live="polite" aria-atomic="true">
+<strong>지금 할 일 · 순서대로</strong>
+<ol><li></li><li></li><li></li><li></li><li></li></ol>
+</div>
+<p class="lost-tool-warning"><strong></strong></p>
+<p><a href="https://www.lost112.go.kr/">경찰청 LOST112</a> · <a href="https://support.apple.com/ko-kr/101593">Apple Support</a></p>
+<script>
+(() => {
+  const tool = document.currentScript.closest('.lost-tool');
+  const [find, connection, situation, finance] = tool.querySelectorAll('select');
+  const items = tool.querySelectorAll('.lost-tool-result li');
+  tool.querySelector('.lost-tool-warning strong').textContent =
+    '‘Remove This Device’ 절대 누르지 마세요 (기기 제거 금지 — 활성화 잠금 유지). 원격 지우기 후에도 나의 찾기 목록에 기기를 남겨 두세요.';
+
+  function update() {
+    const findOn = find.value === 'on';
+    const offline = connection.value === 'offline';
+    const stolen = situation.value === 'stolen';
+    const erased = situation.value === 'erased';
+    const steps = [];
+
+    if (erased) {
+      steps.push(
+        offline
+          ? 'icloud.com/find에서 지우기 상태를 확인하세요. 보류 중이면 다음 온라인 연결 때 시작되며, 그 전에 기기를 찾으면 요청을 취소할 수 있습니다.'
+          : 'icloud.com/find에서 지우기 완료 여부를 확인하세요. 완료된 지우기는 되돌릴 수 없습니다.',
+        '나의 찾기 목록에 기기를 남겨 활성화 잠금을 유지하세요. 지우기를 다시 요청하기 전에 현재 상태부터 확인하세요.'
+      );
+    } else if (findOn) {
+      steps.push(
+        offline
+          ? 'icloud.com/find에서 지금 분실로 표시를 요청하세요. 기기가 켜지고 인터넷에 연결되면 분실 모드가 적용됩니다. 마지막 위치와 확인 시각이 보이면 기록하세요.'
+          : 'icloud.com/find에서 지금 분실로 표시하고, 지도 위치와 확인 시각을 기록하세요.',
+        stolen
+          ? '낯선 위치에 직접 찾아가지 말고 경찰에 신고하세요. 통신사에 분실 신고와 회선 보호를 요청하세요.'
+          : '주변과 마지막 방문 장소를 확인하세요. 온라인이고 가까이 있는 것으로 보이면 나의 찾기에서 소리를 재생하세요.'
+      );
+    } else {
+      steps.push(
+        'icloud.com/find에 본인 Apple 계정으로 로그인해 기기 목록을 확인하세요. 기기가 보이면 즉시 분실로 표시하세요. 분실 전에 나의 찾기가 꺼져 있었다면 분실 모드와 원격 지우기는 사용할 수 없습니다.',
+        stolen
+          ? '직접 회수하려 하지 말고 경찰에 신고하세요. 통신사에 분실 신고와 회선 보호를 요청하세요.'
+          : '다른 전화로 본인 번호에 연락하고 마지막 방문 장소에 분실물을 문의하세요.'
+      );
+    }
+
+    const accountAdvice = '신뢰하는 다른 기기에서 Apple 계정의 낯선 변경 사항을 확인하고, 이상이 있거나 암호 노출이 의심되면 암호를 변경하세요.';
+    steps.push(finance.value === 'yes'
+      ? '카드사·은행 공식 고객센터에 즉시 연락해 이상 거래를 확인하고 필요한 경우 이용 정지를 요청하세요. ' + accountAdvice
+      : accountAdvice);
+
+    let eraseAdvice = '원격 지우기는 보류하세요. 회수 방법을 먼저 시도하고, 회수가 어렵고 개인정보 보호가 더 급하면 백업 상태를 확인한 뒤 지우기를 검토하세요.';
+    if (erased) {
+      eraseAdvice = '분실 상태가 계속되면 통신사에 회선 보호를 요청하고, 도난이 의심되면 경찰에 신고하세요.';
+    } else if (!findOn) {
+      eraseAdvice = '원격 지우기는 보류하세요. 나의 찾기가 활성화된 것으로 확인되면 분실 모드와 회수 시도를 먼저 진행하세요.';
+    }
+    steps.push(eraseAdvice, 'LOST112에서 습득 휴대폰을 조회하세요. 기기나 계정 상태 확인이 필요하면 Apple Support에 문의하세요.');
+    items.forEach((item, index) => {
+      item.textContent = steps[index];
+    });
+  }
+
+  tool.addEventListener('change', update);
+  update();
+})();
+</script>
+</section>
 <nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">1분 요약: 아이폰을 잃어버린 직후 해야 할 일</a></li><li><a href="#section-02">1. &#x27;나의 찾기&#x27;와 &#x27;분실 모드&#x27;, &#x27;활성화 잠금&#x27;은 어떻게 다른가요?</a></li><li><a href="#section-03">2. PC에서 아이폰 위치 찾기: icloud.com/find</a></li><li><a href="#section-04">3. 가족 아이폰·아이패드·맥에서 나의 찾기 사용하기</a></li><li><a href="#section-05">4. 아이폰 분실 모드 켜기: 화면 잠금과 연락처 표시</a></li><li><a href="#section-06">5. 분실 모드가 켜지면 Apple Pay와 알림은 어떻게 되나요?</a></li><li><a href="#section-07">6. 아이폰 전원이 꺼졌거나 배터리가 없다면 위치가 보이나요?</a></li><li><a href="#section-08">7. 다른 사람이 내 아이폰 위치를 보고 있을까요? 가족 공유와 위치 공유</a></li><li><a href="#section-09">8. 나의 찾기에서 아이폰이 안 보일 때 확인할 원인</a></li><li><a href="#section-10">9. 아이폰 도난이 의심된다면 통신사·경찰 신고부터 확인</a></li><li><a href="#section-11">10. 경찰청 LOST112에서 습득 아이폰 검색하는 방법</a></li><li><a href="#section-12">11. 원격 지우기는 언제 해야 하나요? 삭제 전 판단 기준</a></li><li><a href="#section-13">12. 원격 지우기 후 &#x27;나의 찾기에서 제거&#x27;하면 안 되는 이유</a></li><li><a href="#section-14">13. &#x27;아이폰 찾았습니다&#x27; 문자·전화가 왔다면 피싱부터 의심하세요</a></li><li><a href="#section-15">14. 아이폰을 찾았다면 분실 모드 해제와 계정 보호 확인</a></li><li><a href="#section-16">15. 분실 전에 &#x27;나의 iPhone 찾기&#x27; 켜는 방법</a></li><li><a href="#section-17">16. &#x27;도난당한 기기 보호&#x27;는 분실 모드와 어떤 차이가 있나요?</a></li><li><a href="#section-18">자주 묻는 질문 FAQ</a></li><li><a href="#section-19">아이폰 분실 최종 체크리스트</a></li><li><a href="#section-20">마무리: 분실 모드를 먼저 켜고, 원격 지우기는 신중하게 결정하세요</a></li></ol></nav>
 <div class="layout">
 <div class="intro"><p>아이폰을 택시에 두고 내렸거나 가방을 잃어버렸다면 무엇부터 해야 할까요? 다른 휴대전화로 전화를 걸어 봐도 벨소리가 들리지 않고, 나의 찾기 지도에는 마지막 위치만 보이거나 전원이 꺼진 것으로 표시될 수 있습니다.</p>

@@ -85,6 +85,15 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 .layout>*,.quick-summary *,.next-step-reads *,.highlight-row>*,.two-col>*,.info-grid>*,.target-grid>*{min-width:0;max-width:100%;box-sizing:border-box}
 @media(max-width:650px){.next-step-reads{padding:19px 17px;overflow-wrap:anywhere}.next-step-reads,.next-step-grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.silson-tool,.silson-tool *{box-sizing:border-box;min-width:0}
+.silson-tool{max-width:100%;margin:16px 0;padding:clamp(14px,4vw,24px);border:1px solid #47577b;border-radius:13px;background:var(--surface);overflow-wrap:anywhere}
+.silson-tool h2{margin:0 0 8px;color:#d4c5ff;font-size:1.2rem;line-height:1.45}
+.silson-tool p{margin:8px 0;color:var(--muted);font-size:.88rem}
+.silson-tool-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 14px}
+.silson-tool label{display:block;font-weight:700;font-size:.9rem}
+.silson-tool select,.silson-tool input{display:block;width:100%;max-width:100%;min-height:44px;padding:8px;border:1px solid #47577b;border-radius:8px;background:var(--bg);color:var(--text);font:inherit}
+.silson-tool output{display:block;margin-top:12px;padding:10px 12px;background:var(--surface2);border-radius:8px;font-weight:700;white-space:pre-line}
+@media(max-width:650px){.silson-tool-grid{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head>
 <body>
@@ -99,6 +108,99 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <p class="deck">실손24 보험금 청구 7단계와 네이버·토스 10월 7일 개선 정리. 의료기관 10만 5,643곳 중 5만 340곳(47.7%) 연계, 병원 미조회·진료내역 없음 해결법, 고객센터 1811-3000까지 안내합니다.</p>
 <div class="hero-meta"><span>최초 발행 2026-11-05</span><span>내용 확인 2026-11-05</span><span>작성 emfls</span></div>
 </header>
+
+<section class="silson-tool" aria-label="실손24 청구·예상 환급액 계산기">
+<h2>실손24 청구 확인과 1~4세대 보험금 계산기</h2>
+<p>병원 진료비 중 약관상 보장되는 금액을 통원 1회 또는 입원 1건 기준으로 입력하세요.</p>
+<div class="silson-tool-grid">
+<label>가입 세대
+<select id="silson-generation" aria-describedby="silson-assumptions">
+<option value="1">1세대 구실손(2009.9 이전)</option>
+<option value="2">2세대 표준화(2009.10~2017.3)</option>
+<option value="3">3세대 착한실손(2017.4~2021.6)</option>
+<option value="4" selected>4세대(2021.7~)</option>
+</select></label>
+<label>진료 구분
+<select id="silson-visit" aria-describedby="silson-assumptions">
+<option value="clinic">통원 · 의원</option>
+<option value="hospital">통원 · 병원</option>
+<option value="general">통원 · 종합병원</option>
+<option value="tertiary">통원 · 상급종합병원</option>
+<option value="inpatient">입원</option>
+</select></label>
+<label>급여 본인부담금(원)
+<input id="silson-covered" type="number" min="0" step="1" inputmode="numeric" placeholder="0">
+</label>
+<label>비급여 의료비(원)
+<input id="silson-uncovered" type="number" min="0" step="1" inputmode="numeric" placeholder="0">
+</label>
+</div>
+<output id="silson-estimate" for="silson-generation silson-visit silson-covered silson-uncovered" aria-live="polite"></output>
+<p id="silson-assumptions"></p>
+<p>약관별 보장 한도, 약국 조제비, 상급병실료 차액, 3세대 별도 비급여 특약은 계산에서 제외합니다. 비급여는 해당 보장에 가입한 경우를 가정합니다.</p>
+<p id="silson-eligibility"></p>
+<p><a href="#section-06">실손24 참여 병원·약국 확인 방법</a></p>
+<script>
+(() => {
+  const tool = document.currentScript.closest('.silson-tool');
+  const generation = tool.querySelector('#silson-generation');
+  const visit = tool.querySelector('#silson-visit');
+  const covered = tool.querySelector('#silson-covered');
+  const uncovered = tool.querySelector('#silson-uncovered');
+  const estimate = tool.querySelector('#silson-estimate');
+  const assumptions = tool.querySelector('#silson-assumptions');
+  const won = new Intl.NumberFormat('ko-KR');
+  const legacyMinimum = {clinic: 10000, hospital: 15000, general: 15000, tertiary: 20000};
+  const examples = {
+    1: '1세대 예시 약관은 통원 5천 원, 입원 공제 0원을 적용합니다.',
+    2: '2세대 표준형 예시는 입원 20%, 통원은 진료비의 20%와 기관별 최소 공제액(1만~2만 원) 중 큰 금액을 적용합니다.',
+    3: '3세대 선택형Ⅱ 예시는 급여 10%와 비급여 20%를 합산하고, 통원은 이 합계와 기관별 최소 공제액(1만~2만 원) 중 큰 금액을 적용합니다.',
+    4: '4세대 입원은 급여 20%·비급여 30%를 적용합니다. 통원은 급여 20%와 의원·병원 1만 원 또는 종합·상급종합병원 2만 원 중 큰 금액을, 비급여는 30%와 3만 원 중 큰 금액을 각각 공제합니다.'
+  };
+
+  function update() {
+    const selected = generation.value;
+    const kind = visit.value;
+    const outpatient = kind !== 'inpatient';
+    assumptions.textContent = examples[selected];
+    const coveredCost = Number(covered.value);
+    const uncoveredCost = Number(uncovered.value);
+    const total = coveredCost + uncoveredCost;
+    if (!covered.validity.valid || !uncovered.validity.valid || !Number.isSafeInteger(total)) {
+      estimate.textContent = '의료비를 0원 이상의 정수로 입력하세요.';
+      return;
+    }
+    if (total === 0) {
+      estimate.textContent = '의료비를 입력하면 참고용 추정치가 표시됩니다.';
+      return;
+    }
+
+    let deductible;
+    if (selected === '4') {
+      const coveredMinimum = kind === 'clinic' || kind === 'hospital' ? 10000 : 20000;
+      const coveredDeduction = Math.max(coveredCost * 0.20, outpatient ? coveredMinimum : 0);
+      const uncoveredDeduction = Math.max(uncoveredCost * 0.30, outpatient ? 30000 : 0);
+      deductible = Math.min(coveredCost, coveredDeduction) + Math.min(uncoveredCost, uncoveredDeduction);
+    } else if (selected === '1') {
+      deductible = outpatient ? 5000 : 0;
+    } else {
+      const percentage = coveredCost * (selected === '2' ? 0.20 : 0.10) + uncoveredCost * 0.20;
+      deductible = Math.max(percentage, outpatient ? legacyMinimum[kind] : 0);
+    }
+
+    const outOfPocket = Math.min(total, Math.round(deductible));
+    estimate.textContent = '참고용 추정치\n예상 자기부담금 ' + won.format(outOfPocket) +
+      '원 · 예상 청구 가능액 ' + won.format(total - outOfPocket) + '원';
+  }
+
+  tool.querySelector('#silson-eligibility').textContent =
+    '실손24 앱·웹에서 방문한 병원·약국의 연계 여부와 청구할 진료내역을 확인하세요. 연계 기관의 진료내역이 조회되면 전산청구를 진행할 수 있습니다. 미연계 기관은 가입 보험사의 일반 청구 경로를 확인하세요.';
+  tool.addEventListener('input', update);
+  tool.addEventListener('change', update);
+  update();
+})();
+</script>
+</section>
 
 <nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">1. 실손24 핵심 변화: 2026년 10월 7일 무엇이 달라졌나요?</a></li><li><a href="#section-02">2. 참여 병원은 몇 곳인가요? 47.7%의 정확한 의미</a></li><li><a href="#section-03">3. 실손24로 청구할 수 있는 사람은 누구인가요?</a></li><li><a href="#section-04">4. 실손24 앱·웹으로 보험금 청구하는 7단계</a></li><li><a href="#section-05">5. 네이버·토스에서 실손24를 이용하는 방법</a></li><li><a href="#section-06">6. 실손24 참여병원과 참여약국 찾는 법</a></li><li><a href="#section-07">7. 약국 약제비도 실손24로 청구할 수 있나요?</a></li><li><a href="#section-08">8. 어떤 서류가 자동 전송되고, 무엇은 직접 준비해야 하나요?</a></li><li><a href="#section-09">9. 진료받은 병원이 나오지 않는다면 어떻게 하나요?</a></li><li><a href="#section-10">10. 병원은 나오는데 진료내역이 없거나 &#x27;현재 병원 사정으로 청구가 어려워요&#x27;라고 떠요</a></li><li><a href="#section-11">11. 진료내역은 보이지만 선택 버튼이 눌리지 않는 이유</a></li><li><a href="#section-12">12. 자녀의 실손보험을 부모가 대신 청구할 수 있나요?</a></li><li><a href="#section-13">13. 부모님·제3자를 대신해 청구할 때는 무엇이 다른가요?</a></li><li><a href="#section-14">14. &#x27;신규청구&#x27;와 &#x27;추가청구&#x27;는 어떻게 선택하나요?</a></li><li><a href="#section-15">15. 실손24로 접수했는데 보험금이 안 들어온다면?</a></li><li><a href="#section-16">16. 실손24에서 이미 청구한 서류를 다시 확인할 수 있나요?</a></li><li><a href="#section-17">17. 실손24 고객센터와 보험회사, 어디에 물어봐야 하나요?</a></li><li><a href="#section-18">18. 보이스피싱·유료 대행 광고에 주의하세요</a></li><li><a href="#section-19">19. 실손24 청구 전 3분 체크리스트</a></li><li><a href="#section-20">20. 자주 묻는 질문(FAQ)</a></li><li><a href="#section-21">결론: 청구 방법보다 먼저 확인할 것은 &#x27;연계 의료기관&#x27;과 &#x27;실제 진료내역&#x27;</a></li></ol></nav>
 <div class="layout">
