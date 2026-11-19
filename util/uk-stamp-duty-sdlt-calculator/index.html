@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UK Stamp Duty (SDLT) Calculator – 2025–2026 Residential, First-Time Buyer & Surcharge</title>
+<meta name="description" content="Calculate England and Northern Ireland Stamp Duty Land Tax (SDLT) under post-April 2025 residential bands, First-Time Buyer relief up to £500,000, the 5% additional property surcharge, and optional 2% non-UK resident surcharge.">
+<link rel="canonical" href="https://emfls.github.io/util/uk-stamp-duty-sdlt-calculator/">
+<link rel="stylesheet" href="../new-tools.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QP5Q67GE5B')</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "UK Stamp Duty Land Tax (SDLT) Calculator", "url": "https://emfls.github.io/util/uk-stamp-duty-sdlt-calculator/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any", "dateModified": "2026-11-19"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "dateModified": "2026-11-19", "mainEntity": [{"@type": "Question", "name": "What happened to UK First-Time Buyer Stamp Duty thresholds from April 2025?", "acceptedAnswer": {"@type": "Answer", "text": "From 1 April 2025, the First-Time Buyer 0% threshold in England and Northern Ireland reverted to \u00a3300,000 with 5% on \u00a3300,001 to \u00a3500,000, and properties over \u00a3500,000 pay full standard residential rates."}}, {"@type": "Question", "name": "Does the 5% additional property surcharge apply to the entire purchase price?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. When buying an additional residential dwelling, the 5% surcharge adds 5 percentage points to every standard residential SDLT band from \u00a30 upward."}}]}</script>
+</head>
+<body>
+<style>
+#sdlt-form .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+#sdlt-form .grid > div { min-width: 0; }
+#sdlt-form input[type="number"], #sdlt-form select { box-sizing: border-box; width: 100%; }
+#sdlt-form .sdlt-checkbox { display: flex; align-items: flex-start; gap: .5rem; }
+#sdlt-form input[type="checkbox"] { width: auto; flex: none; }
+#sdlt-form:not(:has(#buyer-type option[value="first-time"]:checked)) .main-home,
+#sdlt-form .error:empty, #sdlt-form .result:empty, #sdlt-notice:empty { display: none; }
+#sdlt-form .result { white-space: pre-wrap; overflow-wrap: anywhere; }
+@media (width < 650px) {
+  #sdlt-form .grid { grid-template-columns: 1fr; }
+}
+</style>
+<main class="tool-shell">
+<header class="hero"><h1>UK Stamp Duty (SDLT) Calculator (England & Northern Ireland)</h1><p>Estimate residential Stamp Duty Land Tax in England and Northern Ireland using rates effective from 1 April 2025.</p></header>
+<section class="panel">
+  <form id="sdlt-form" novalidate>
+    <div class="grid">
+      <div>
+        <label for="price">Purchase price (£ GBP)</label>
+        <input id="price" type="number" inputmode="decimal" min="0.01" max="1000000000" step="0.01" value="300000" required aria-describedby="sdlt-error">
+      </div>
+      <div>
+        <label for="buyer-type">Buyer type</label>
+        <select id="buyer-type">
+          <option value="standard">Standard / home mover</option>
+          <option value="first-time">First-time buyer (all buyers)</option>
+          <option value="additional">Additional property</option>
+        </select>
+      </div>
+      <div class="main-home">
+        <label class="sdlt-checkbox" for="main-home">
+          <input id="main-home" type="checkbox">
+          <span>All buyers will live here as their only or main home</span>
+        </label>
+      </div>
+      <div>
+        <label class="sdlt-checkbox" for="non-resident">
+          <input id="non-resident" type="checkbox">
+          <span>Non-UK resident for SDLT (+2 percentage points)</span>
+        </label>
+      </div>
+    </div>
+    <button type="submit" style="margin-top:14px">Calculate SDLT</button>
+    <div id="sdlt-error" class="error" role="alert"></div>
+    <p id="sdlt-notice" class="note" aria-live="polite"></p>
+    <pre id="sdlt-result" class="result" aria-live="polite"></pre>
+    <pre id="sdlt-breakdown" class="result"></pre>
+  </form>
+</section>
+<section class="panel">
+  <h2>What this estimate includes</h2>
+  <p>Each rate applies to the portion of the price in its band. The total is rounded down to the nearest pound after adding all bands. The effective rate divides the total SDLT payable by the purchase price.</p>
+  <p>This calculator covers the purchase price or lease premium for individual residential purchases in England and Northern Ireland. Scotland uses Land and Buildings Transaction Tax (LBTT). Wales uses Land Transaction Tax (LTT). For new leases with rent or other special cases, see the <a href="https://www.gov.uk/stamp-duty-land-tax/residential-property-rates">HMRC residential SDLT guidance</a>.</p>
+  <p class="note">Your tool input is processed in your browser. Analytics and advertising may receive ordinary usage and device data.</p>
+  <div class="links">
+    <a href="/util/uk-remortgage-fee-vs-rate-calculator/">UK remortgage fee vs rate calculator</a>
+    <a href="/util/loan-payment-calculator/">Loan payment calculator</a>
+    <a href="/util/">All tools</a>
+  </div>
+</section>
+<section class="panel faq">
+  <h2>FAQ</h2>
+  <details><summary>Who qualifies for first-time buyer relief?</summary><p>Every buyer must have never owned a home anywhere in the world and intend to live in this property as their only or main home. For purchases up to £500,000, the first £300,000 is taxed at 0% and the rest at 5% before any non-UK resident surcharge. Above £500,000, standard bands apply across the full purchase price.</p></details>
+  <details><summary>Can I get a refund when I replace my main home?</summary><p>If you pay the additional property surcharge when buying your new main home, you can usually claim back the higher-rate portion if you dispose of your former main home within 36 months of the purchase and otherwise qualify. See <a href="https://www.gov.uk/guidance/stamp-duty-land-tax-buying-an-additional-residential-property#when-and-how-to-get-a-refund">HMRC’s refund guidance</a> for eligibility and claim deadlines.</p></details>
+  <details><summary>How do the two surcharges interact?</summary><p>Additional property rates add 5 percentage points to each standard band when the higher rates apply. The <a href="https://www.gov.uk/guidance/rates-of-stamp-duty-land-tax-for-non-uk-residents">non-UK resident surcharge</a> adds another 2 percentage points to each applicable band, including any 0% band and first-time buyer bands. For a straightforward purchase, the surcharges generally apply from £40,000.</p></details>
+</section>
+</main>
+<footer>Estimate only · emfls.github.io</footer>
+<script>
+const form = document.getElementById('sdlt-form');
+const priceInput = document.getElementById('price');
+const buyerType = document.getElementById('buyer-type');
+const mainHome = document.getElementById('main-home');
+const nonResident = document.getElementById('non-resident');
+const error = document.getElementById('sdlt-error');
+const notice = document.getElementById('sdlt-notice');
+const result = document.getElementById('sdlt-result');
+const breakdown = document.getElementById('sdlt-breakdown');
+const gbp = new Intl.NumberFormat('en-GB', {
+  style: 'currency', currency: 'GBP', minimumFractionDigits: 0, maximumFractionDigits: 4
+});
+const standardBands = [[125000, 0], [250000, 2], [925000, 5], [1500000, 10], [null, 12]];
+const firstTimeBands = [[300000, 0], [500000, 5]];
+
+function calculateSDLT() {
+  const price = priceInput.valueAsNumber;
+  if (!Number.isFinite(price) || !priceInput.validity.valid) {
+    error.textContent = `Enter a purchase price from £0.01 to ${gbp.format(Number(priceInput.max))}, with up to two decimal places.`;
+    notice.textContent = '';
+    result.textContent = '';
+    breakdown.textContent = '';
+    return;
+  }
+
+  const firstTime = buyerType.value === 'first-time';
+  const additional = buyerType.value === 'additional';
+  const relief = firstTime && mainHome.checked && price <= 500000;
+  const higherRate = additional && price >= 40000;
+  const surcharge = (higherRate ? 5 : 0) + (nonResident.checked && price >= 40000 ? 2 : 0);
+  const messages = [];
+  if (firstTime && price > 500000) {
+    messages.push('First-time buyer relief is unavailable because the price exceeds £500,000. Standard rates apply to the whole purchase price.');
+  } else if (firstTime && !mainHome.checked) {
+    messages.push('First-time buyer relief requires all buyers to use the property as their only or main home. Standard rates apply to the whole purchase price.');
+  }
+  if (price < 40000 && (additional || nonResident.checked)) {
+    messages.push('The selected surcharge does not apply to a purchase below £40,000 in this estimate.');
+  }
+
+  const pricePence = Math.round(price * 100);
+  const lines = ['Band-by-band breakdown'];
+  let lower = 0;
+  // Keep band taxes in hundredths of a penny so the final whole-pound floor is exact.
+  let taxUnits = 0;
+  for (const [upper, baseRate] of relief ? firstTimeBands : standardBands) {
+    const portion = Math.min(pricePence, upper === null ? pricePence : upper * 100) - lower * 100;
+    const rate = baseRate + surcharge;
+    const bandTaxUnits = portion * rate;
+    const band = lower === 0 ? `Up to ${gbp.format(upper)}`
+      : upper === null ? `Above ${gbp.format(lower)}`
+        : `Over ${gbp.format(lower)} to ${gbp.format(upper)}`;
+    lines.push(`${band}\n${gbp.format(portion / 100)} × ${rate}% = ${gbp.format(bandTaxUnits / 10000)}`);
+    taxUnits += bandTaxUnits;
+    if (upper === null || pricePence <= upper * 100) break;
+    lower = upper;
+  }
+
+  const total = Math.floor(taxUnits / 10000);
+  const effectiveRate = (total / price * 100).toFixed(2);
+  const rateName = relief ? 'First-time buyer relief' : higherRate ? 'Additional property rates' : 'Standard residential rates';
+  const residentRate = nonResident.checked && price >= 40000 ? ' + non-UK resident surcharge' : '';
+  error.textContent = '';
+  notice.textContent = messages.join(' ');
+  result.textContent = `Estimated SDLT payable: ${gbp.format(total)}\nEffective SDLT rate: ${effectiveRate}%\n${rateName}${residentRate}`;
+  breakdown.textContent = lines.join('\n\n');
+}
+
+form.addEventListener('input', calculateSDLT);
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  calculateSDLT();
+});
+calculateSDLT();
+</script>
+</body>
+</html>

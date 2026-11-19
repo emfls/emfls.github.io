@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2025–2026 IRS Federal Tax Brackets & 401(k) SECURE 2.0 Catch-Up Calculator</title>
+<meta name="description" content="Estimate 2025 and 2026 US federal income tax, marginal and effective tax rates, standard deduction, 401(k) deferral limits ($23,500/$24,500), and SECURE 2.0 age 60–63 super catch-up ($11,250) savings.">
+<link rel="canonical" href="https://emfls.github.io/util/irs-tax-brackets-401k-catchup-calculator/">
+<link rel="stylesheet" href="../new-tools.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QP5Q67GE5B')</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "IRS Tax Brackets & 401(k) Catch-Up Calculator", "url": "https://emfls.github.io/util/irs-tax-brackets-401k-catchup-calculator/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any", "dateModified": "2026-11-19"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "dateModified": "2026-11-19", "mainEntity": [{"@type": "Question", "name": "What is the SECURE 2.0 401(k) super catch-up limit for ages 60 to 63?", "acceptedAnswer": {"@type": "Answer", "text": "For 2025 and 2026, employees turning ages 60, 61, 62, or 63 can contribute an enhanced $11,250 catch-up above the base elective deferral limit ($23,500 in 2025; $24,500 in 2026), replacing the standard age-50 catch-up."}}, {"@type": "Question", "name": "How does pre-tax 401(k) contribution reduce federal income tax?", "acceptedAnswer": {"@type": "Answer", "text": "Pre-tax elective deferrals reduce taxable ordinary income dollar for dollar after subtracting your filing-status standard deduction."}}]}</script>
+<style>
+  .tax-tool .grid { grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 650px) {
+    .tax-tool .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  .tax-tool .grid > div { min-width: 0; }
+  .tax-tool .grid input,
+  .tax-tool .grid select { box-sizing: border-box; width: 100%; min-width: 0; }
+  .tax-tool .error:empty { display: none; }
+  .tax-tool .result { white-space: pre-wrap; overflow-wrap: anywhere; }
+</style>
+</head>
+<body>
+<main class="tool-shell tax-tool">
+<header class="hero"><h1>IRS Federal Tax Brackets & 401(k) Catch-Up Calculator (2025–2026)</h1><p>Compute progressive federal income tax, marginal vs. effective rate, and pre-tax 401(k) catch-up savings including SECURE 2.0 ages 60–63 super catch-up.</p></header>
+<section class="panel">
+  <form id="tax-form" aria-label="Federal income tax and 401(k) inputs">
+    <div class="grid">
+      <div>
+        <label for="year">Tax year</label>
+        <select id="year">
+          <option value="2025">2025</option>
+          <option value="2026" selected>2026</option>
+        </select>
+      </div>
+      <div>
+        <label for="filing">Filing status</label>
+        <select id="filing">
+          <option value="single">Single</option>
+          <option value="mfj">Married filing jointly</option>
+          <option value="hoh">Head of household</option>
+        </select>
+      </div>
+      <div>
+        <label for="income">Annual ordinary income before 401(k) ($)</label>
+        <input id="income" type="number" min="0" max="1000000000" step="0.01" value="120000" required aria-describedby="income-note">
+        <p class="note" id="income-note">For a joint return, enter combined income before the standard deduction.</p>
+      </div>
+      <div>
+        <label for="compensation">Your eligible 401(k) compensation ($)</label>
+        <input id="compensation" type="number" min="0" max="1000000000" step="0.01" value="120000" required aria-describedby="compensation-note">
+        <p class="note" id="compensation-note">Use your own pay eligible for deferral under your plan.</p>
+      </div>
+      <div>
+        <label for="age">Your age at year-end</label>
+        <input id="age" type="number" min="0" max="120" step="1" value="62" required>
+      </div>
+      <div>
+        <label for="contribution">Planned employee deferral, including catch-up ($)</label>
+        <input id="contribution" type="number" min="0" max="1000000000" step="0.01" value="35750" required aria-describedby="contribution-note">
+        <p class="note" id="contribution-note">Enter the total you plan to defer. The estimate applies the limits below.</p>
+      </div>
+      <div>
+        <label for="wages">Prior-year FICA wages with this employer ($)</label>
+        <input id="wages" type="number" min="0" max="1000000000" step="0.01" value="120000" aria-describedby="wages-note">
+        <p class="note" id="wages-note">Needed for 2026 catch-up contributions. Enter 0 if you had no prior-year FICA wages with this employer.</p>
+      </div>
+    </div>
+  </form>
+  <div id="error" class="error" role="alert"></div>
+  <pre id="result" class="result" aria-live="polite" aria-atomic="true">Estimate appears here.</pre>
+</section>
+<section class="panel">
+  <h2>What this estimate includes</h2>
+  <p>The calculator applies each federal bracket to its portion of taxable ordinary income. The marginal bracket is the highest rate applied. Both effective rates divide federal income tax by the same annual ordinary income before deferral.</p>
+  <p>The estimate uses the basic standard deduction and covers one employee’s contributions to a traditional 401(k) plan that offers catch-up contributions. The figures cover regular federal income tax before credits. The model excludes itemized and additional deductions, payroll and state taxes, and preferential capital gains rates.</p>
+  <p>IRS sources for <a href="https://www.irs.gov/pub/irs-drop/rp-24-40.pdf">2025 tax brackets</a>, <a href="https://www.irs.gov/pub/irs-drop/rp-25-32.pdf">2026 tax brackets and both years’ basic deductions</a>, and <a href="https://www.irs.gov/retirement-plans/cola-increases-for-dollar-limitations-on-benefits-and-contributions">401(k) limits</a>.</p>
+  <div class="links">
+    <a href="/util/hsa-tax-savings-calculator/">HSA tax savings</a>
+    <a href="/util/loan-payment-calculator/">Loan payment calculator</a>
+    <a href="/util/compound-interest/">Compound interest</a>
+    <a href="/util/fin-calc/">Simple finance calculator</a>
+    <a href="/util/">All tools</a>
+  </div>
+</section>
+<section class="panel faq">
+  <h2>FAQ</h2>
+  <details>
+    <summary>What is the SECURE 2.0 401(k) super catch-up limit for ages 60 to 63?</summary>
+    <p>For 2025 and 2026, employees turning ages 60, 61, 62, or 63 can contribute an enhanced $11,250 catch-up above the base elective deferral limit ($23,500 in 2025; $24,500 in 2026), replacing the standard age-50 catch-up.</p>
+  </details>
+  <details>
+    <summary>How does pre-tax 401(k) contribution reduce federal income tax?</summary>
+    <p>Pre-tax elective deferrals reduce taxable ordinary income dollar for dollar after subtracting your filing-status standard deduction.</p>
+  </details>
+  <details>
+    <summary>When does the Roth catch-up requirement apply?</summary>
+    <p>For 2026, if your 2025 FICA wages from the employer sponsoring your plan exceeded $150,000, your catch-up contributions must be Roth. The calculator counts those dollars toward your deferral and excludes them from current-year tax savings. <a href="https://www.irs.gov/retirement-plans/plan-participant-employee/retirement-topics-catch-up-contributions">IRS catch-up guidance</a></p>
+  </details>
+  <details>
+    <summary>What does the defined contribution limit cover?</summary>
+    <p>The annual additions limit is the lesser of 100% of eligible compensation or $70,000 in 2025 and $72,000 in 2026. It includes regular employee deferrals, employer contributions and employee after-tax contributions. Eligible catch-up contributions are separate. Your plan may impose lower limits.</p>
+  </details>
+</section>
+</main>
+<footer>Estimate only · emfls.github.io</footer>
+<script>
+(() => {
+  const rules = {
+    2025: {
+      elective: 23500, catchUp: 7500, annualAdditions: 70000,
+      filing: {
+        single: [15750, [11925, 48475, 103350, 197300, 250525, 626350]],
+        mfj: [31500, [23850, 96950, 206700, 394600, 501050, 751600]],
+        hoh: [23625, [17000, 64850, 103350, 197300, 250500, 626350]]
+      }
+    },
+    2026: {
+      elective: 24500, catchUp: 8000, annualAdditions: 72000,
+      filing: {
+        single: [16100, [12400, 50400, 105700, 201775, 256225, 640600]],
+        mfj: [32200, [24800, 100800, 211400, 403550, 512450, 768700]],
+        hoh: [24150, [17700, 67450, 105700, 201750, 256200, 640600]]
+      }
+    }
+  };
+  const rates = [10, 12, 22, 24, 32, 35, 37];
+  const dollars = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+  const money = cents => dollars.format(cents / 100);
+  const form = document.getElementById('tax-form');
+  const error = document.getElementById('error');
+  const result = document.getElementById('result');
+  const yearInput = document.getElementById('year');
+  const filingInput = document.getElementById('filing');
+  const numericInputs = [
+    ['income', 'annual ordinary income'],
+    ['compensation', 'eligible 401(k) compensation'],
+    ['age', 'year-end age'],
+    ['contribution', 'planned deferral'],
+    ['wages', 'prior-year FICA wages']
+  ].map(([id, label]) => [document.getElementById(id), label]);
+
+  function progressiveTax(taxable, cutoffs) {
+    let lower = 0;
+    let taxUnits = 0;
+    let marginal = 0;
+    // Tax units are hundredths of a cent so bracket boundaries stay exact.
+    for (const [index, rate] of rates.entries()) {
+      if (taxable <= lower) break;
+      const upper = index < cutoffs.length ? cutoffs[index] * 100 : taxable;
+      taxUnits += (Math.min(taxable, upper) - lower) * rate;
+      marginal = rate;
+      lower = upper;
+    }
+    return { cents: Math.round(taxUnits / 100), marginal };
+  }
+
+  function showError(message) {
+    result.textContent = '';
+    error.textContent = message;
+  }
+
+  function calculate() {
+    const year = yearInput.value;
+    const filing = filingInput.value;
+    if (!Object.hasOwn(rules, year) || !Object.hasOwn(rules[year].filing, filing)) {
+      showError('Select a supported tax year and filing status.');
+      return;
+    }
+
+    const values = [];
+    for (const [input, label] of numericInputs) {
+      if (!input.required && input.value === '' && !input.validity.badInput) {
+        values.push(null);
+        continue;
+      }
+      const value = input.valueAsNumber;
+      const isAge = input.id === 'age';
+      if (!Number.isFinite(value) || value < Number(input.min) || value > Number(input.max) ||
+          input.validity.badInput || input.validity.stepMismatch || (isAge && !Number.isInteger(value))) {
+        showError(isAge
+          ? 'Enter a whole-number year-end age from 0 to 120.'
+          : `Enter ${label} from $0 to $1 billion, with up to two decimal places.`);
+        return;
+      }
+      values.push(value);
+    }
+
+    const [income, compensation, age, planned, wages] = values;
+    const { elective, catchUp, annualAdditions } = rules[year];
+    const [deduction, cutoffs] = rules[year].filing[filing];
+    const catchUpLimit = age >= 60 && age <= 63 ? 11250 : age >= 50 ? catchUp : 0;
+    const gross = Math.round(income * 100);
+    const requested = Math.round(planned * 100);
+    const allowed = Math.min(requested, Math.round(compensation * 100), (elective + catchUpLimit) * 100);
+    const catchUpUsed = Math.max(0, allowed - elective * 100);
+    const needsWages = year === '2026' && catchUpUsed > 0;
+    if (needsWages && wages === null) {
+      showError('Enter prior-year FICA wages to determine how your 2026 catch-up is taxed.');
+      return;
+    }
+
+    const roth = needsWages && wages > 150000 ? catchUpUsed : 0;
+    const preTax = allowed - roth;
+    const beforeIncome = Math.max(0, gross - deduction * 100);
+    const afterIncome = Math.max(0, beforeIncome - preTax);
+    const before = progressiveTax(beforeIncome, cutoffs);
+    const after = progressiveTax(afterIncome, cutoffs);
+    const effectiveRate = tax => gross === 0 ? '0.00%' : `${(tax.cents / gross * 100).toFixed(2)}%`;
+
+    const lines = [
+      `Annual federal income tax saved: ${money(before.cents - after.cents)}`,
+      '',
+      'Before 401(k)',
+      `Taxable income: ${money(beforeIncome)}`,
+      `Federal income tax: ${money(before.cents)}`,
+      `Marginal bracket: ${before.marginal}%  ·  Effective rate: ${effectiveRate(before)}`,
+      '',
+      'After 401(k)',
+      `Taxable income: ${money(afterIncome)}`,
+      `Federal income tax: ${money(after.cents)}`,
+      `Marginal bracket: ${after.marginal}%  ·  Effective rate: ${effectiveRate(after)}`,
+      '',
+      `Basic standard deduction: ${money(deduction * 100)}`,
+      `Employee elective deferral limit: ${money(elective * 100)}`,
+      `Age-based catch-up limit: ${money(catchUpLimit * 100)}`,
+      `Defined contribution cap before catch-up: ${money(annualAdditions * 100)}`,
+      `Pre-tax deferral: ${money(preTax)}`,
+      `Catch-up included in pre-tax deferral: ${money(catchUpUsed - roth)}`,
+      `Roth catch-up: ${money(roth)}`
+    ];
+    if (allowed < requested) {
+      lines.push(`Planned deferral above the modeled limit: ${money(requested - allowed)}`);
+    }
+    error.textContent = '';
+    result.textContent = lines.join('\n');
+  }
+
+  form.addEventListener('input', calculate);
+  form.addEventListener('submit', event => event.preventDefault());
+  calculate();
+})();
+</script>
+</body>
+</html>

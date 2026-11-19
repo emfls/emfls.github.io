@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UK Remortgage Fee vs Rate Calculator – Break-Even & Net Cost Comparison</title>
+<meta name="description" content="Compare a fee-free UK remortgage rate against a lower interest rate deal with an upfront arrangement or product fee over your 2-year, 3-year, or 5-year fixed term.">
+<link rel="canonical" href="https://emfls.github.io/util/uk-remortgage-fee-vs-rate-calculator/">
+<link rel="stylesheet" href="../new-tools.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QP5Q67GE5B')</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "UK Remortgage Fee vs Rate Calculator", "url": "https://emfls.github.io/util/uk-remortgage-fee-vs-rate-calculator/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any", "dateModified": "2026-11-19"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "dateModified": "2026-11-19", "mainEntity": [{"@type": "Question", "name": "Should you add a UK mortgage product fee to the loan or pay it upfront?", "acceptedAnswer": {"@type": "Answer", "text": "Adding the product fee to the mortgage balance accrues interest at the mortgage rate across the term, whereas paying it upfront increases immediate cash outlay; this calculator compares net cost across your fixed deal horizon."}}, {"@type": "Question", "name": "What if the product fee takes longer than the fixed deal period to recover?", "acceptedAnswer": {"@type": "Answer", "text": "When arithmetic fee recovery exceeds your chosen deal term or mortgage maturity, no break-even occurs inside the deal period and total net cost identifies the cheaper option."}}]}</script>
+</head>
+<body>
+<style>
+.remortgage-tool .grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.remortgage-tool .grid > * {
+  min-width: 0;
+}
+.remortgage-tool input, .remortgage-tool select {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+}
+.remortgage-tool .result {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.remortgage-tool .result:empty, .remortgage-tool .error:empty {
+  display: none;
+}
+@media (width < 650px) {
+  .remortgage-tool .grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+</style>
+<main class="tool-shell remortgage-tool">
+<header class="hero"><h1>UK Remortgage Product Fee vs. Rate Calculator</h1><p>Compare two UK fixed-rate remortgage deals by monthly repayment, upfront arrangement fee, capped break-even months, and net borrowing cost over your deal period.</p></header>
+<section class="panel">
+  <form id="remortgage-form" novalidate>
+    <div class="grid">
+      <div><label for="balance">Outstanding mortgage balance (£)</label><input id="balance" type="number" min="0" max="1000000000" step="0.01" value="250000" required></div>
+      <div><label for="years">Amortization term (years)</label><input id="years" type="number" min="0" max="100" step="any" value="25" required></div>
+    </div>
+    <h2>Deal A (Fee-Free)</h2>
+    <div class="grid">
+      <div><label for="rateA">Deal A interest rate (%)</label><input id="rateA" type="number" min="0" max="100" step="0.01" value="4.79" required></div>
+      <div><label for="feeA">Deal A product fee (£)</label><input id="feeA" type="number" min="0" max="1000000000" step="0.01" value="0" required></div>
+    </div>
+    <h2>Deal B (Lower Rate + Fee)</h2>
+    <div class="grid">
+      <div><label for="rateB">Deal B interest rate (%)</label><input id="rateB" type="number" min="0" max="100" step="0.01" value="4.34" required></div>
+      <div><label for="feeB">Deal B product fee (£)</label><input id="feeB" type="number" min="0" max="1000000000" step="0.01" value="999" required></div>
+    </div>
+    <h2>Comparison settings</h2>
+    <div class="grid">
+      <div>
+        <label for="feeMode">Fee payment mode</label>
+        <select id="feeMode">
+          <option value="upfront">Pay fee upfront</option>
+          <option value="financed">Add fee to loan balance</option>
+        </select>
+      </div>
+      <div><label for="exitYears">Fixed deal comparison horizon (years)</label><input id="exitYears" type="number" min="0" max="100" step="0.5" value="2" required></div>
+    </div>
+    <button type="submit" style="margin-top:14px">Compare remortgage deals</button>
+    <div id="error" class="error" role="alert"></div>
+  </form>
+</section>
+<section class="panel" aria-labelledby="comparison-heading">
+  <h2 id="comparison-heading">Deal comparison</h2>
+  <div aria-live="polite" aria-atomic="true">
+    <pre id="verdict" class="result"></pre>
+    <div class="grid">
+      <pre id="resultA" class="result"></pre>
+      <pre id="resultB" class="result"></pre>
+    </div>
+  </div>
+</section>
+<section class="panel">
+  <h2>What this estimate includes</h2>
+  <p>The calculator assumes fixed rates and equal monthly principal-and-interest repayments. It rounds years to the nearest month, uses a minimum comparison horizon of one month, and stops at mortgage payoff. It excludes early repayment charges, legal fees, and other remortgaging costs.</p>
+  <p class="note">Your calculator inputs are processed in your browser. Analytics and advertising may receive ordinary usage and device data.</p>
+  <div class="links">
+    <a href="/util/uk-stamp-duty-sdlt-calculator/">UK stamp duty calculator</a>
+    <a href="/util/loan-payment-calculator/">Loan payment calculator</a>
+    <a href="/util/heloc-vs-cashout-refinance-calculator/">HELOC vs cash-out refinance calculator</a>
+    <a href="/util/">All tools</a>
+  </div>
+</section>
+<section class="panel faq">
+  <h2>FAQ</h2>
+  <details>
+    <summary>Should you add a UK mortgage product fee to the loan or pay it upfront?</summary>
+    <p>Adding the fee increases the balance you pay interest on. Paying upfront leaves the starting loan balance unchanged. Both options include the entire fee in net borrowing cost.</p>
+  </details>
+  <details>
+    <summary>What if the product fee takes longer than the fixed deal period to recover?</summary>
+    <p>The break-even month is the first month when the higher-fee deal's cumulative interest savings cover its extra fee. If that month falls beyond the comparison horizon, the result shows whether the fee could still be recovered by payoff at the entered rates.</p>
+  </details>
+  <details>
+    <summary>How is net borrowing cost calculated?</summary>
+    <p>It is the product fee plus interest paid through the comparison month. That equals repayments made plus any upfront fee and the remaining balance, minus your original outstanding mortgage balance.</p>
+  </details>
+</section>
+</main>
+<footer>Estimate only · emfls.github.io</footer>
+<script>
+const form = document.getElementById('remortgage-form');
+const error = document.getElementById('error');
+const verdict = document.getElementById('verdict');
+const resultA = document.getElementById('resultA');
+const resultB = document.getElementById('resultB');
+const money = new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' });
+
+function amortize(balance, annualRate, fee, financed, n) {
+  const principal = balance + (financed ? fee : 0);
+  const rate = annualRate / 1200;
+  const logGrowth = Math.log1p(rate);
+  const annuityFactor = -Math.expm1(-n * logGrowth);
+  const monthly = rate === 0 ? principal / n : principal * (rate / annuityFactor);
+  const schedule = [{ balance: principal, interest: 0 }];
+
+  for (let month = 1; month <= n; month++) {
+    const previous = schedule[month - 1];
+    const remaining = n - month;
+    const balanceFraction = rate === 0
+      ? remaining / n
+      : -Math.expm1(-remaining * logGrowth) / annuityFactor;
+    schedule.push({
+      balance: principal * balanceFraction,
+      interest: previous.interest + previous.balance * rate
+    });
+  }
+  return { monthly, upfront: financed ? 0 : fee, fee, schedule };
+}
+
+function breakEven(a, b, n, exitMonth) {
+  if (a.fee === b.fee) {
+    return 'Break-even: Both deals have the same fee. There is no extra fee to recover.';
+  }
+  const higher = a.fee > b.fee ? a : b;
+  const lower = higher === a ? b : a;
+  const deal = higher === a ? 'Deal A' : 'Deal B';
+  const extraFee = higher.fee - lower.fee;
+  const firstMonth = higher.schedule.findIndex((row, month) => {
+    return lower.schedule[month].interest - row.interest >= extraFee;
+  });
+  const beMonths = firstMonth < 0 ? n + 1 : firstMonth;
+  if (beMonths > n) {
+    return `Break-even: No break-even within the ${exitMonth}-month deal comparison or the ${n}-month mortgage term.`;
+  }
+  if (beMonths > exitMonth) {
+    return `Break-even: No break-even within the ${exitMonth}-month deal comparison. ${deal} breaks even in month ${beMonths}, within the mortgage term at the entered rates.`;
+  }
+  return `Break-even: ${deal} recovers its extra fee in month ${beMonths}, within the deal comparison.`;
+}
+
+function dealSummary(label, deal, exitMonth) {
+  const row = deal.schedule[exitMonth];
+  return [
+    label,
+    `Monthly repayment: ${money.format(deal.monthly)}`,
+    `Product fee: ${money.format(deal.fee)}`,
+    `Upfront fee: ${money.format(deal.upfront)}`,
+    `Interest paid: ${money.format(row.interest)}`,
+    `Remaining balance: ${money.format(row.balance)}`,
+    `Net borrowing cost: ${money.format(deal.fee + row.interest)}`
+  ].join('\n');
+}
+
+function compareDeals() {
+  error.textContent = '';
+  verdict.textContent = '';
+  resultA.textContent = '';
+  resultB.textContent = '';
+
+  const fields = [
+    ['balance', 'Enter a mortgage balance greater than £0 and no more than £1 billion.', true],
+    ['years', 'Enter an amortization term greater than 0 and no more than 100 years.', true],
+    ['rateA', 'Enter a Deal A interest rate between 0% and 100%.'],
+    ['feeA', 'Enter a Deal A product fee between £0 and £1 billion.'],
+    ['rateB', 'Enter a Deal B interest rate between 0% and 100%.'],
+    ['feeB', 'Enter a Deal B product fee between £0 and £1 billion.'],
+    ['exitYears', 'Enter a comparison horizon greater than 0 and no more than 100 years.', true]
+  ];
+  const values = [];
+  for (const [id, message, positive] of fields) {
+    const input = document.getElementById(id);
+    const value = input.valueAsNumber;
+    if (!Number.isFinite(value) || value < Number(input.min) || value > Number(input.max) ||
+        (positive && value <= 0)) {
+      error.textContent = message;
+      return;
+    }
+    values.push(value);
+  }
+  const [balance, years, rateA, feeA, rateB, feeB, exitYears] = values;
+  const n = Math.round(years * 12);
+  if (n < 1) {
+    error.textContent = 'The amortization term must round to at least one monthly payment.';
+    return;
+  }
+
+  const requestedMonths = Math.max(1, Math.round(exitYears * 12));
+  const exitMonth = Math.min(n, requestedMonths);
+  const horizon = `Month ${exitMonth}${requestedMonths > n ? ' (capped at payoff)' : ''}`;
+  const financed = document.getElementById('feeMode').value === 'financed';
+  const a = amortize(balance, rateA, feeA, financed, n);
+  const b = amortize(balance, rateB, feeB, financed, n);
+  const costDifference = a.fee - b.fee + (a.schedule[exitMonth].interest - b.schedule[exitMonth].interest);
+  const saving = Math.abs(costDifference);
+  const winner = saving < 0.005
+    ? 'Both deals have the same net borrowing cost to the nearest penny.'
+    : `Deal ${costDifference > 0 ? 'B' : 'A'} saves ${money.format(saving)} in net borrowing cost.`;
+  verdict.textContent = [`Comparison horizon: ${horizon}`, winner, breakEven(a, b, n, exitMonth)].join('\n');
+  resultA.textContent = dealSummary('Deal A', a, exitMonth);
+  resultB.textContent = dealSummary('Deal B', b, exitMonth);
+}
+
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  compareDeals();
+});
+form.addEventListener('input', compareDeals);
+compareDeals();
+</script>
+</body>
+</html>
