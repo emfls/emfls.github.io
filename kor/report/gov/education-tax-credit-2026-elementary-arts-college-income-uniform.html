@@ -87,8 +87,17 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 .tax-tool dt{color:var(--muted);font-size:.82rem}
 .tax-tool dd{margin:0;color:var(--accent);font-size:1.06rem;font-weight:750}
 .tax-tool ul{margin:12px 0 0;padding-left:20px;color:#d9e0e8;font-size:.84rem;line-height:1.65}
+.tax-tool .tax-college-rows{margin:12px 0 0;padding:12px;border:1px solid #354052;border-radius:9px;background:#121926}
+.tax-tool .tax-rows-head{margin:0 0 8px;color:#d4c5ff;font-size:.86rem;font-weight:700}
+.tax-tool .tax-rows-grid{display:grid;gap:8px}
+.tax-tool .tax-college-row{display:grid;grid-template-columns:84px repeat(2,minmax(0,1fr));gap:8px 12px;align-items:end;padding-top:8px;border-top:1px solid #263244}
+.tax-tool .tax-college-row:first-child{padding-top:0;border-top:0}
+.tax-tool .tax-college-tag{color:#d4c5ff;font-size:.84rem;font-weight:700;padding-bottom:9px}
+.tax-tool .tax-warning{margin:0 0 10px;padding:9px 12px;border:1px solid #574523;border-radius:8px;background:#241c10;color:#ffd88a;font-size:.83rem;line-height:1.55}
+.tax-tool .tax-warning[data-mode="per-student"]{border-color:#2c5b4f;background:#102520;color:#b8eedd}
 @media(max-width:650px){
-.tax-tool{padding:16px 14px}.tax-tool .tax-fields,.tax-tool .tax-results{grid-template-columns:minmax(0,1fr)}
+.tax-tool{padding:16px 14px}.tax-tool .tax-fields,.tax-tool .tax-results,.tax-tool .tax-college-row{grid-template-columns:minmax(0,1fr)}
+.tax-tool .tax-college-tag{padding-bottom:0}
 .shell{padding:14px 12px 45px}.site-header{padding:14px}.hero{padding:29px 20px}.hero h1{font-size:1.58rem}.highlight-row{gap:7px}.highlight{padding:13px 9px}.highlight .value{font-size:.92rem}.highlight .label{font-size:.7rem}.contents,.section,.intro,.info-bottom{padding:19px 17px}.contents ol{grid-template-columns:1fr}.section h2{font-size:1.18rem}.site-header nav{gap:9px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
@@ -113,16 +122,22 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <label>본인 교육비·학자금대출 상환액 (만 원)<input id="edu-self" type="number" min="0" step="any" inputmode="decimal" value="0"></label>
 <label>초·중·고·취학전 인원수 (명)<input id="edu-school-count" type="number" min="0" max="10" step="1" inputmode="numeric" value="1"></label>
 <label>해당 1인당 평균 연간 적격 교육비 (만 원)<input id="edu-school-cost" type="number" min="0" step="any" inputmode="decimal" value="250"></label>
-<label>대학생(공제요건 충족) 인원수 (명)<input id="edu-college-count" type="number" min="0" step="1" inputmode="numeric" value="0"></label>
+<label>대학생(공제요건 충족) 인원수 (명)<input id="edu-college-count" type="number" min="0" max="10" step="1" inputmode="numeric" value="0"></label>
 <label>대학생 1인당 연간 등록금 (만 원)<input id="edu-college-cost" type="number" min="0" step="any" inputmode="decimal" value="700"></label>
 <label>참고: 비과세 학자금 등 보전액 (만 원)<input id="edu-support" type="number" min="0" step="any" inputmode="decimal" value="0" aria-describedby="edu-support-note"></label>
 </div>
 <p class="tax-note" id="edu-support-note">보전액은 대학 등록금에 포함된 공제 제외 장학금·지원금의 총액입니다. 대학생 수로 나눠 1인당 한도 적용 전에 차감합니다. 본인·취학 전·초중고 교육비는 지원금을 뺀 적격 비용을 입력하세요.</p>
+<div class="tax-college-rows" id="edu-college-rows" hidden>
+<p class="tax-rows-head">대학생별 개별 입력 (장학금·등록금이 학생마다 다를 때)</p>
+<div class="tax-rows-grid" id="edu-college-rows-grid"></div>
+<p class="tax-note">학생별 금액을 비워 두면 위 공동 입력값으로 동일 등록금·장학금 균등분배 계산을 유지합니다. 한 명이라도 입력하면 빈 칸은 기본 등록금·장학금 0원으로 처리해 학생마다 900만 원 한도를 따로 적용합니다.</p>
+</div>
 <dl class="tax-results" aria-live="polite" aria-atomic="true">
 <div><dt>한도 적용 후 적격 교육비</dt><dd><output id="edu-eligible">—</output></dd></div>
 <div><dt>국세 세액공제 (15%)</dt><dd><output id="edu-national">—</output></dd></div>
 <div><dt>지방소득세 포함 추정 (16.5%)</dt><dd><output id="edu-combined">—</output></dd></div>
 </dl>
+<p class="tax-note tax-warning" id="edu-split-warning" role="status" aria-live="polite" hidden></p>
 <p class="tax-note">취학 전·초중고는 1인당 300만 원, 대학생은 1인당 900만 원까지 적용합니다. 학생별 비용이나 장학금 차이가 크면 각각 계산해 합산하세요. 실제 환급액은 결정세액 등에 따라 달라집니다.</p>
 <ul>
 <li>중·고 교복비는 1인당 50만 원, 학교 현장체험학습비는 30만 원까지 300만 원 한도에 포함하세요.</li>
@@ -136,17 +151,129 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
   const won = new Intl.NumberFormat('ko-KR');
 
   function amount(name) {
-    const value = field(name).valueAsNumber;
+    const el = field(name);
+    const raw = el.valueAsNumber;
+    const value = Number.isFinite(raw) ? raw : Number(el.value);
     return Number.isFinite(value) ? Math.max(0, value) : 0;
+  }
+
+  function parseOptional(input) {
+    if (!input) return null;
+    const raw = String(input.value ?? '').trim();
+    if (!raw) return null;
+    const num = Number(raw);
+    return Number.isFinite(num) ? Math.max(0, num) : null;
+  }
+
+  function buildRow(index, defaultTuition) {
+    const row = document.createElement('div');
+    row.className = 'tax-college-row';
+    const tag = document.createElement('span');
+    tag.className = 'tax-college-tag';
+    tag.textContent = '대학생 ' + index;
+
+    const tuitionLabel = document.createElement('label');
+    tuitionLabel.textContent = '등록금 (만 원)';
+    const tuitionInput = document.createElement('input');
+    tuitionInput.type = 'number';
+    tuitionInput.min = '0';
+    tuitionInput.step = 'any';
+    tuitionInput.inputMode = 'decimal';
+    tuitionInput.placeholder = String(defaultTuition);
+    tuitionInput.setAttribute('data-col-tuition', String(index));
+    tuitionLabel.appendChild(tuitionInput);
+
+    const schLabel = document.createElement('label');
+    schLabel.textContent = '공제 제외 장학금 (만 원)';
+    const schInput = document.createElement('input');
+    schInput.type = 'number';
+    schInput.min = '0';
+    schInput.step = 'any';
+    schInput.inputMode = 'decimal';
+    schInput.placeholder = '0';
+    schInput.setAttribute('data-col-scholarship', String(index));
+    schLabel.appendChild(schInput);
+
+    row.appendChild(tag);
+    row.appendChild(tuitionLabel);
+    row.appendChild(schLabel);
+    return row;
+  }
+
+  function syncCollegeRows(count, defaultTuition) {
+    const box = field('college-rows');
+    const grid = field('college-rows-grid');
+    if (count < 2) {
+      box.hidden = true;
+      return [];
+    }
+    box.hidden = false;
+    while (grid.children.length < count) {
+      grid.appendChild(buildRow(grid.children.length + 1, defaultTuition));
+    }
+    while (grid.children.length > count) {
+      grid.removeChild(grid.lastElementChild);
+    }
+    const rows = Array.from(grid.querySelectorAll('.tax-college-row'));
+    rows.forEach((row, idx) => {
+      const tuitionInput = row.querySelector('[data-col-tuition]');
+      if (tuitionInput) {
+        tuitionInput.setAttribute('data-col-tuition', String(idx + 1));
+        tuitionInput.placeholder = String(defaultTuition);
+      }
+      const schInput = row.querySelector('[data-col-scholarship]');
+      if (schInput) {
+        schInput.setAttribute('data-col-scholarship', String(idx + 1));
+      }
+    });
+    return rows;
   }
 
   function render() {
     const schoolCount = Math.min(Number(field('school-count').max), Math.floor(amount('school-count')));
-    const collegeCount = Math.floor(amount('college-count'));
-    const supportPerStudent = collegeCount ? amount('support') / collegeCount : 0;
-    const collegeNet = Math.max(0, amount('college-cost') - supportPerStudent);
-    const eligible = amount('self') + schoolCount * Math.min(300, amount('school-cost'))
-      + collegeCount * Math.min(900, collegeNet);
+    const collegeMax = Number(field('college-count').max) || 10;
+    const collegeCount = Math.min(collegeMax, Math.floor(amount('college-count')));
+    const defaultTuition = amount('college-cost');
+    const splitWarn = field('split-warning');
+    const rows = syncCollegeRows(collegeCount, defaultTuition);
+
+    let collegeEligible = 0;
+    if (collegeCount === 1) {
+      const collegeNet = Math.max(0, defaultTuition - amount('support'));
+      collegeEligible = Math.min(900, collegeNet);
+      splitWarn.hidden = true;
+      splitWarn.textContent = '';
+      splitWarn.removeAttribute('data-mode');
+    } else if (collegeCount >= 2) {
+      const parsed = rows.map(row => ({
+        tuition: parseOptional(row.querySelector('[data-col-tuition]')),
+        scholarship: parseOptional(row.querySelector('[data-col-scholarship]')),
+      }));
+      const hasIndividual = parsed.some(item => item.tuition !== null || item.scholarship !== null);
+      if (hasIndividual) {
+        collegeEligible = parsed.reduce((sum, item) => {
+          const tuition = item.tuition !== null ? item.tuition : defaultTuition;
+          const scholarship = item.scholarship !== null ? item.scholarship : 0;
+          return sum + Math.min(900, Math.max(0, tuition - scholarship));
+        }, 0);
+        splitWarn.hidden = false;
+        splitWarn.setAttribute('data-mode', 'per-student');
+        splitWarn.textContent = '대학생별 등록금·공제 제외 장학금을 각각 차감한 뒤 1인당 900만 원 한도를 개별 적용해 합산했습니다.';
+      } else {
+        const supportPerStudent = amount('support') / collegeCount;
+        const collegeNet = Math.max(0, defaultTuition - supportPerStudent);
+        collegeEligible = collegeCount * Math.min(900, collegeNet);
+        splitWarn.hidden = false;
+        splitWarn.setAttribute('data-mode', 'pooled');
+        splitWarn.textContent = '※ 대학생 2명 이상 묶음 입력은 동일 등록금·장학금 균등분배 가정 참고치입니다. 학생별 등록금이나 장학금이 다르면 위 [대학생별 개별 입력]에 각자 금액을 넣어야 1인당 900만 원 한도가 정확히 적용됩니다.';
+      }
+    } else {
+      splitWarn.hidden = true;
+      splitWarn.textContent = '';
+      splitWarn.removeAttribute('data-mode');
+    }
+
+    const eligible = amount('self') + schoolCount * Math.min(300, amount('school-cost')) + collegeEligible;
 
     const eligibleWon = Math.round(eligible * 10000);
     const format = value => Number.isSafeInteger(eligibleWon) ? won.format(Math.round(value)) + '원' : '계산 범위 초과';
