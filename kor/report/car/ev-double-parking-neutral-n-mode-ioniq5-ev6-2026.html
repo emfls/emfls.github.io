@@ -119,6 +119,43 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <div class="intro"><p>아파트 주차장에서 이중주차를 하려고 전기차의 변속 다이얼을 N(중립)에 놓았는데, 전원을 끄자 다시 P(주차)로 돌아가는 상황을 경험할 수 있습니다. 오토홀드(AUTO HOLD)나 전자식 파킹 브레이크(EPB)가 켜져 있으면 N단을 선택해도 차가 움직이지 않을 수 있습니다. <strong>일반적인 N단 변속과 다른 사람이 차량을 밀어 이동시킬 수 있도록 하는 &#x27;중립(N) 주차&#x27;는 같은 절차가 아닙니다.</strong></p>
 <p>이 글은 2026년형 <strong>현대 아이오닉 5와 기아 EV6의 공식 사용설명서</strong>를 기준으로, N단 주차 진입 방법과 실패 원인을 차종별로 비교한 안내입니다. 직접 차량을 밀어 실험한 경험담이 아니며, 연식·변속장치·소프트웨어에 따라 조작이 다를 수 있습니다. 다른 전기차에 절차를 그대로 적용하지 말고 해당 차량 설명서를 확인하세요.</p>
 <p><strong>가장 중요한 안전 조건은 평지입니다. 경사진 주차장·경사로·차량이 임의로 움직일 수 있는 장소에서는 중립주차를 하지 마세요.</strong> N단에서는 바퀴가 자유롭게 굴러갈 수 있어 사람과 차량의 충돌 사고로 이어질 수 있습니다.</p></div>
+<style>
+.mini-selector{padding:16px 18px;border:1px solid #47577b;border-radius:13px;background:var(--surface2);overflow-wrap:anywhere}
+.mini-selector h2{margin:0 0 6px;color:#d4c5ff;font-size:1.1rem}
+.mini-selector p{margin:8px 0 0;font-size:.94rem}
+.mini-selector .model-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.mini-selector button{min-width:0;min-height:44px;padding:7px 10px;border:1px solid #4e75a9;border-radius:8px;background:#254975;color:white;font:inherit;cursor:pointer;overflow-wrap:anywhere}
+.mini-selector button:hover{background:#305989}
+.mini-selector button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media(max-width:650px){.mini-selector .model-buttons{grid-template-columns:minmax(0,1fr)}}
+</style>
+<section class="mini-selector" id="tool-mount" aria-label="차종별 N단 중립주차 빠른 확인">
+<h2>차종별 N단 중립주차 빠른 확인</h2>
+<p>차종을 선택하세요. 중립주차는 평지에서만 진행하세요.</p>
+<div class="model-buttons">
+<button type="button" data-model="ioniq5">아이오닉 5</button>
+<button type="button" data-model="ev6">기아 EV6</button>
+<button type="button" data-model="ev3-niro">EV3·니로 EV</button>
+<button type="button" data-model="ray-casper">레이 EV·캐스퍼 일렉트릭</button>
+</div>
+<p class="model-result" role="status" aria-atomic="true"></p>
+</section>
+<script>
+{
+  const selector = document.getElementById('tool-mount');
+  const result = selector.querySelector('.model-result');
+  const instructions = {
+    ioniq5: '2026년형. 평지에 완전히 정차해 브레이크를 밟은 채 시동이 켜져 있거나 ON 상태에서 P 버튼을 누릅니다. 전원이 켜진 상태에서 EPB와 AUTO HOLD를 해제하고 시동을 끕니다. 브레이크를 계속 밟고 다이얼을 한 단계 돌려 1초 이상 유지한 뒤 계기판의 N 표시를 확인하세요.',
+    ev6: '2026년형. 평지에 정차해 DRIVE READY 상태에서 브레이크를 밟고 P 버튼을 누르면 EPB가 자동 체결됩니다. AUTO HOLD 버튼을 눌러 해제한 뒤, 브레이크를 밟은 채 EPB 스위치를 눌러 수동 해제하고 시동을 끕니다. 브레이크를 계속 밟고 다이얼을 좌우 어느 한쪽으로 한 단계 돌려 약 1초 이상 유지한 뒤 계기판의 N 표시를 확인하세요.'
+  };
+  const manual = '차량 사용설명서에서 해당 연식의 중립주차 지원 여부와 변속, EPB, 브레이크 조작 순서를 확인하세요.';
+  for (const button of selector.querySelectorAll('button[data-model]')) {
+    button.addEventListener('click', () => {
+      result.textContent = button.textContent + ' — ' + (instructions[button.dataset.model] ?? manual);
+    });
+  }
+}
+</script>
 <section class="section" aria-labelledby="section-01"><h2 id="section-01">1. 핵심 결론: P 자동 전환 때문에 N단이 풀리는 이유</h2><p>현대자동차 2026 아이오닉 5 공식 설명서는 R·D·N 상태에서 시동을 끄면 안전을 위해 자동으로 P단이 체결될 수 있다고 설명합니다. 기아 2026 EV6 설명서도 정차 상태에서 N단으로 두고 시동을 끄는 경우 자동 P 전환이 작동할 수 있다고 안내합니다.</p>
 <p>그래서 <strong>N단으로 변속한 다음 전원을 끄는 간단한 조작</strong>만으로는 이중주차를 의도한 상태가 유지되지 않을 수 있습니다. 제조사가 별도로 설명하는 &#x27;N단 주차&#x27; 절차를 따라야 합니다.</p>
 <div class="details-table"><table><thead><tr><th scope="col">헷갈리기 쉬운 상태</th><th scope="col">목적</th><th scope="col">주의할 점</th></tr></thead><tbody><tr><td>P(주차)</td><td>일반 주차 시 바퀴 고정</td><td>주차 브레이크를 함께 사용</td></tr><tr><td>일반 N(중립)</td><td>차량 동력을 분리해 일시적으로 중립 유지</td><td>시동 종료·도어 조작 시 P 자동 전환 가능</td></tr><tr><td>N(중립) 주차</td><td>평지 이중주차 시 외부에서 차량을 제한적으로 이동할 수 있게 함</td><td>차종별로 시동 종료 후 별도 조작 필요</td></tr><tr><td>N단 유지 모드</td><td>자동 세차기 등에서 N 상태 유지</td><td>일부 차량은 ACC 상태 유지로 장시간 사용 시 12V 방전 위험</td></tr></tbody></table></div>
@@ -207,11 +244,15 @@ EPB 체결 여부, P단 전환, 시동 종료 후 변속 가능 시간 등 다�
 <li><a href="https://ownersmanual.kia.com/full_webhelp/CV1/2026/ko_KR/topics/chapter1_14_7.html" rel="noopener noreferrer">기아 EV6 2026 — 사용설명서 요약본, 감속기와 N단 주차</a></li>
 </ol>
 <p>이 글은 <strong>이중주차를 위한 정상 N단 주차 방법</strong>에 초점을 둡니다. 자동세차, 고장 차량 견인, 12V 배터리 방전 및 임의의 주차 브레이크 수리는 각각 별도의 안전 절차가 필요합니다.</p></section>
-<section class="next-step-reads" data-next-step="bottom" aria-label="이어서 확인하면 해결되는 글"><h2>🚗 견인·보험·통행료 누수 막아주는 전기차 필수 가이드</h2><div class="next-step-grid"><div><a href="/kor/report/car/electric-vehicle-towing-flatbed-neutral-tow-mode-ioniq5-ev6-tesla-2026.html">2026 전기차 견인 방법 총정리: 아이오닉 5·EV6·테슬라 평판견인, N단·견인모드 주의</a><p>모터 손상 없이 이동하려면 일반 견인차 대신 평판견인(플랫베드)과 N단 전환 조건을 미리 알고 있어야 수백만 원 수리비를 피합니다.</p></div><div><a href="/kor/report/car/2026-electric-car-insurance-battery-new-value-charging-accident-towing-riders.html">2026 전기차 보험 특약: 배터리 신품가액·충전 사고·견인 조건</a><p>배터리 교체 감가상각과 긴급 견인 거리 초과 비용을 본인 부담하지 않도록 갱신 전 특약 구성을 확인하세요.</p></div><div><a href="/kor/report/car/electric-vehicle-highway-toll-discount-2026-2027-hipass-registration.html">2026 전기차 고속도로 통행료 30% 할인: 2027년 20%·하이패스 감면코드 등록</a><p>전용 단말기 감면코드를 등록하지 않아 매달 통행료 할인을 놓치고 있다면 등록 여부와 연간 절감액을 바로 확인하세요.</p></div></div></section>
+<section class="next-step-reads" data-next-step="bottom" aria-label="이어서 확인하면 해결되는 글"><h2>🚗 견인·보험·통행료 누수 막아주는 전기차 필수 가이드</h2><div class="next-step-grid"><div><a href="/kor/report/car/electric-vehicle-towing-flatbed-neutral-tow-mode-ioniq5-ev6-tesla-2026.html">2026 전기차 견인 방법 총정리: 아이오닉 5·EV6·테슬라 평판견인, N단·견인모드 주의</a><p>모터 손상 없이 이동하려면 일반 견인차 대신 평판견인(플랫베드)과 N단 전환 조건을 미리 알고 있어야 수백만 원 수리비를 피합니다.</p></div><div><a href="/kor/report/car/2026-electric-car-insurance-battery-new-value-charging-accident-towing-riders.html">2026 전기차 보험 특약: 배터리 신품가액·충전 사고·견인 조건</a><p>배터리 교체 감가상각과 긴급 견인 거리 초과 비용을 본인 부담하지 않도록 갱신 전 특약 구성을 확인하세요.</p></div><div><a href="/kor/report/car/electric-vehicle-highway-toll-discount-2026-2027-hipass-registration.html">2026 전기차 고속도로 통행료 30% 할인: 2027년 20%·하이패스 감면코드 등록</a><p>전용 단말기 감면코드를 등록하지 않아 매달 통행료 할인을 놓치고 있다면 등록 여부와 연간 절감액을 바로 확인하세요.</p></div>
+<div><a href="/kor/report/car/car-recall-self-paid-repair-refund-guide-2026.html">리콜 전 자비 수리비 보상 청구</a><p>차대번호로 리콜 대상 여부를 확인하고 자비 수리비 보상에 필요한 서류를 챙기세요.</p></div>
+<div><a href="/kor/report/car/ev-navigation-screen-frozen-reset-2026.html">전기차 내비게이션 화면 먹통 대처</a><p>아이오닉 5·EV6 화면이 멈췄을 때 리셋 버튼 위치와 재시작 절차를 확인하세요.</p></div>
+<div><a href="/kor/report/car/ev-subsidy-resale-clawback-2026.html">전기차 중고 매매와 보조금 환수</a><p>전기차를 팔기 전에 의무운행기간과 거래 유형별 승인 조건을 확인하세요.</p></div>
+</div></section>
 <section class="info-bottom">
 <h2>정보 출처와 확인 안내</h2>
 <p>작성·갱신일과 적용 범위는 본문에서 확인하세요. 정책·행사 일정·혜택·제품 정보는 변경될 수 있으므로 중요한 판단 전 공식 기관 및 판매처의 최신 안내를 확인하시기 바랍니다.</p>
-<div class="pills"><a href="/kor/report/gov/car-tax-december-2026-wetax-due-date-payment.html">12월 자동차세 납부 마감</a><a href="/kor/report/car/2026-car-insurance-mileage-refund-photo-registration.html">자동차보험 주행거리 환급</a><a href="/kor/report/gov/2026-car-regional-development-bond-refund-unredeemed-nh-shinhan-discount.html">자동차 채권 미환급금 조회</a><a href="/kor/report/car/">같은 분야의 글</a><a href="/kor/report/">생활정보 전체</a><a href="/">emfls 홈</a><a href="/util/electricity-cost-calculator/">전기요금 계산기</a><a href="/kor/util/power-bank-wh-calculator/">배터리 Wh 계산기</a></div>
+<div class="pills"><a href="/kor/report/gov/car-tax-december-2026-wetax-due-date-payment.html">12월 자동차세 납부 마감</a><a href="/kor/report/car/2026-car-insurance-mileage-refund-photo-registration.html">자동차보험 주행거리 환급</a><a href="/kor/report/gov/2026-car-regional-development-bond-refund-unredeemed-nh-shinhan-discount.html">자동차 채권 미환급금 조회</a><a href="/kor/report/car/">같은 분야의 글</a><a href="/kor/report/">생활정보 전체</a><a href="/">emfls 홈</a><a href="/util/electricity-cost-calculator/">전기요금 계산기</a><a href="/kor/util/power-bank-wh-calculator/">배터리 Wh 계산기</a><a href="/kor/report/car/car-recall-self-paid-repair-refund-guide-2026.html">리콜 전 자비 수리비 보상 청구</a><a href="/kor/report/car/ev-navigation-screen-frozen-reset-2026.html">전기차 내비게이션 화면 먹통 대처</a><a href="/kor/report/car/ev-subsidy-resale-clawback-2026.html">전기차 중고 매매와 보조금 환수</a></div>
 </section>
 </div>
 </article>
