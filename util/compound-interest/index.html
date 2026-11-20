@@ -24,7 +24,7 @@
     <meta name="language" content="en" />
     <meta name="theme-color" content="#1875d1" />
     <link rel="canonical" href="https://emfls.github.io/util/compound-interest/" />
-    <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+    <link rel="icon" href="/icon-192.png" />
     <!-- Open Graph -->
     <meta property="og:title" content="Compound Interest with Monthly Deposit Calculator" />
     <meta property="og:description" content="Compare compound and simple interest with monthly deposits. Get tables and interactive charts instantly. Free, browser-based." />
@@ -196,16 +196,22 @@
       section#faq dt { font-weight: bold; margin-top: 8px;}
       section#faq dd { margin: 0 0 7px 0; font-size: 0.99em; color: #1e589e;}
     </style>
-  </head>
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+<style>
+  .emfls-ad-slot { box-sizing: border-box; width: 100%; max-width: 520px; height: 278px; margin: 48px auto; text-align: center; clear: both; }
+  .emfls-ad-slot .ad-label { height: 28px; font: 12px/20px system-ui, sans-serif; color: #64748b; }
+</style>
+</head>
   <body>
     <main>
       <div class="container" itemscope itemtype="https://schema.org/WebApplication">
         <h1 class="logo" itemprop="name">📈 Compound vs Simple Interest Calculator</h1>
         <p class="desc" itemprop="description">
           Instantly compare investment growth for compound and simple interest.<br>
-          Supports monthly deposit (installment plan) and one-off principal.
+          Deposits are added at each month-end. Compound growth uses the equivalent monthly rate for the selected frequency.
         </p>
-        <form id="form" autocomplete="off">
+        <noscript><p>Enable JavaScript to calculate in your browser.</p></noscript>
+<form method="dialog" id="form" autocomplete="off">
           <div class="form-row">
             <label for="principal">Principal ($)</label>
             <input type="number" id="principal" min="0" step="0.01" value="10000" required />
@@ -220,7 +226,7 @@
           </div>
           <div class="form-row">
             <label for="years">Years</label>
-            <input type="number" id="years" min="1" step="1" value="10" required />
+            <input type="number" id="years" max="1000" min="1" step="1" value="10" required />
           </div>
           <div class="form-row">
             <label for="freq">Compound Frequency</label>
@@ -236,10 +242,11 @@
         </form>
         <div class="result-block" id="result"></div>
 <!-- EMFLS_AUTO_RESULT_SLOT -->
-<aside class="emfls-ad-slot" aria-label="Advertisement" style="box-sizing:border-box;width:100%;max-width:300px;min-width:0;min-height:250px;margin:48px auto;text-align:center;clear:both">
-<div style="font:12px/20px system-ui,sans-serif;color:#65758b;margin-bottom:8px">Advertisement</div>
-<ins class="adsbygoogle" style="display:block;text-align:center;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
-<script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+<aside class="emfls-ad-slot" aria-label="Advertisement">
+  <div class="ad-label">Advertisement</div>
+  <ins class="adsbygoogle" style="display:block;min-width:0;max-width:100%;width:100%;height:250px"
+       data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748"></ins>
+  <script>(window.adsbygoogle = window.adsbygoogle || []).push({});</script>
 </aside>
 
         <canvas id="chart" width="420" height="230"></canvas>
@@ -250,9 +257,15 @@
         <div class="table-block" id="tableBlock"></div>
         <div class="footer">
           Compare compound and simple interest, with or without monthly deposits.<br>
-          100% browser-based. No login. No data sent anywhere.
+          Calculation inputs stay in your browser. Analytics and advertising may receive ordinary usage and device data.
         </div>
         <!-- FAQ section for GEO/SGE/SEO -->
+        <aside class="emfls-ad-slot" aria-label="Advertisement">
+  <div class="ad-label">Advertisement</div>
+  <ins class="adsbygoogle" style="display:block;min-width:0;max-width:100%;width:100%;height:250px"
+       data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748"></ins>
+  <script>(window.adsbygoogle = window.adsbygoogle || []).push({});</script>
+</aside>
         <section aria-labelledby="faq-head" id="faq">
           <h2 id="faq-head">FAQ – Compound vs Simple Interest Calculator</h2>
           <dl>
@@ -263,7 +276,7 @@
             <dt>Which compounding frequency is best?</dt>
             <dd>More frequent compounding (e.g., monthly or daily) can increase total returns, especially for long-term investments.</dd>
             <dt>Is my data uploaded or saved?</dt>
-            <dd>No. All calculations run entirely in your browser. No personal or financial data is stored or sent anywhere.</dd>
+            <dd>Calculation inputs stay in your browser. Analytics and advertising may receive ordinary usage and device data.</dd>
             <dt>Is this calculator free to use?</dt>
             <dd>Yes! It is 100% free, browser-only, and works on desktop and mobile devices.</dd>
           </dl>
@@ -281,35 +294,20 @@
       function formatMoney(v) {
         return '$' + Number(v).toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2});
       }
-      // 복리 계산(월 불입 포함)
-      function compoundWithDeposit(P, PMT, r, n, t) {
-        // P: 초기, PMT: 매월, r: 연이율(0.xx), n: 년간 복리주기, t: 년
-        // FV = P*(1+r/n)^(nt) + PMT*{[(1+r/n)^(nt)-1]/(r/n)}
-        let periods = n * t;
-        let i = r / n;
-        let fvP = P * Math.pow(1 + i, periods);
-        let fvPMT = PMT > 0 ? PMT * ((Math.pow(1 + i, periods) - 1) / i) * (i > 0 ? 1 : 0) : 0;
-        // PMT는 월불입이므로 월→주기에 맞게 변환 필요
-        // 예) 월불입인데 n=1(연1회), n=2(반기), n=4(분기)...
-        // PMT를 주기별로 합치려면: PMT_total_per_period = PMT * (12/n)
-        if (n !== 12 && PMT > 0) {
-          let m_per_period = 12 / n;
-          let fvPMT_adj = 0;
-          for (let i = 1; i <= periods; i++) {
-            // 각 기간별 월불입이 쌓이는 복리 효과 누적
-            fvPMT_adj += PMT * Math.pow(1 + r / n, periods - i + 1) * (m_per_period > 1 ? m_per_period : 1);
-          }
-          fvPMT = fvPMT_adj;
-        }
-        return fvP + fvPMT;
+      function compoundWithDeposit(principal, deposit, rate, frequency, years) {
+        const months = years * 12;
+        const logMonthlyGrowth = frequency * Math.log1p(rate / frequency) / 12;
+        const monthlyRate = Math.expm1(logMonthlyGrowth);
+        if (monthlyRate === 0) return principal + deposit * months;
+        const growth = Math.exp(months * logMonthlyGrowth);
+        const deposits = deposit === 0 ? 0 : deposit * (Math.expm1(months * logMonthlyGrowth) / monthlyRate);
+        return principal * growth + deposits;
       }
-      // 단리 계산(월 불입 포함)
-      function simpleWithDeposit(P, PMT, r, t) {
-        // FV = P*(1+rt) + PMT*12*t*(1 + r*t/2)
-        let fvP = P * (1 + r * t);
-        let fvPMT = PMT * 12 * t;
-        let interestPMT = fvPMT * r * t / 2;
-        return fvP + fvPMT + interestPMT;
+
+      function simpleWithDeposit(principal, deposit, rate, years) {
+        const months = years * 12;
+        // The first month-end deposit earns for months - 1 months, the last for zero.
+        return principal * (1 + rate * years) + deposit * months * (1 + rate / 12 * (months - 1) / 2);
       }
 
       function drawChart(years, compVals, simpVals) {
@@ -335,7 +333,7 @@
         // X labels
         ctx.fillStyle = "#777";
         for (let y = 1; y <= years; y++) {
-          let x = ox + (W) * (y-1) / (years-1);
+          let x = ox + (W) * (y-1) / Math.max(1,years-1);
           ctx.fillText(y, x-4, oy+H+17);
         }
         // Line function
@@ -345,8 +343,8 @@
           ctx.beginPath();
           for (let y = 1; y <= years; y++) {
             let val = data[y-1];
-            let px = ox + (W) * (y-1) / (years-1);
-            let py = oy + H - ((val - minV) / (maxV-minV)) * H;
+            let px = ox + (W) * (y-1) / Math.max(1,years-1);
+            let py = oy + H - ((val - minV) / (maxV-minV || 1)) * H;
             if (y === 1) ctx.moveTo(px, py);
             else ctx.lineTo(px, py);
           }
@@ -355,8 +353,8 @@
           ctx.fillStyle = color;
           for (let y = 1; y <= years; y++) {
             let val = data[y-1];
-            let px = ox + (W) * (y-1) / (years-1);
-            let py = oy + H - ((val - minV) / (maxV-minV)) * H;
+            let px = ox + (W) * (y-1) / Math.max(1,years-1);
+            let py = oy + H - ((val - minV) / (maxV-minV || 1)) * H;
             ctx.beginPath(); ctx.arc(px, py, 3.1, 0, Math.PI*2); ctx.fill();
           }
         }
@@ -365,14 +363,19 @@
         drawLine(simpVals, "#fc8642");
       }
 
+      form.addEventListener('input', () => {
+        result.textContent = '';
+        tableBlock.textContent = '';
+        ctx.clearRect(0, 0, chart.width, chart.height);
+      });
       form.onsubmit = function(e) {
         e.preventDefault();
         let P = parseFloat(form.principal.value);
         let PMT = parseFloat(form.monthly.value);
         let r = parseFloat(form.rate.value) / 100;
-        let t = parseInt(form.years.value);
+        let t = form.years.valueAsNumber;
         let n = parseInt(form.freq.value);
-        if (isNaN(P) || isNaN(PMT) || isNaN(r) || isNaN(t) || isNaN(n) || P < 0 || PMT < 0 || r < 0 || t < 1) {
+        if (isNaN(P) || isNaN(PMT) || isNaN(r) || isNaN(t) || isNaN(n) || P < 0 || PMT < 0 || r < 0 || !Number.isInteger(t) || t < 1 || t > 1000) {
           result.innerHTML = '<span style="color:#d33;">Please enter valid values.</span>';
           tableBlock.innerHTML = '';
           ctx.clearRect(0,0,chart.width,chart.height);
@@ -387,6 +390,12 @@
         // 최종값
         let FV = compArr[t-1], FVsimple = simpArr[t-1];
         let totalPaid = P + PMT*12*t;
+        if (![FV, FVsimple, totalPaid].every(Number.isFinite)) {
+          result.textContent = 'These values exceed the calculation range.';
+          tableBlock.textContent = '';
+          ctx.clearRect(0, 0, chart.width, chart.height);
+          return;
+        }
         let interest = FV - totalPaid, interestSimple = FVsimple - totalPaid;
         result.innerHTML =
           `<b>Compound:</b> <span style="color:#1975be">${formatMoney(FV)}</span> (Total Interest: <b>${formatMoney(interest)}</b>)<br>
@@ -457,7 +466,7 @@
           "name": "Is my data uploaded or saved?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. All calculations run entirely in your browser. No personal or financial data is stored or sent anywhere."
+            "text": "Calculation inputs stay in your browser. Analytics and advertising may receive ordinary usage and device data."
           }
         },
         {
