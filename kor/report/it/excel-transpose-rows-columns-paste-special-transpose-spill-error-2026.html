@@ -78,6 +78,17 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 @media(max-width:650px){.shell{padding:14px 12px 45px}.site-header{padding:14px}.hero{padding:29px 20px}.hero h1{font-size:1.58rem}.highlight-row{gap:7px}.highlight{padding:13px 9px}.highlight .value{font-size:.92rem}.highlight .label{font-size:.7rem}.contents,.section,.intro,.info-bottom{padding:19px 17px}.contents ol{grid-template-columns:1fr}.section h2{font-size:1.18rem}.site-header nav{gap:9px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
+<style>
+.traffic-summary{font-size:.94rem;line-height:1.65;margin:12px 0 0}
+.traffic-summary a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.traffic-draft{scroll-margin-top:60px;min-width:0;max-width:100%;box-sizing:border-box;margin:16px 0;padding:14px;border:1px solid #506079;border-radius:10px;background:#1b2535;color:#eef3ff;overflow-wrap:anywhere}
+.traffic-draft table{width:100%;table-layout:fixed;border-collapse:collapse;margin:0;color:inherit;background:transparent;font-size:.875rem}
+.traffic-draft caption{text-align:left;color:inherit;font-size:1rem;font-weight:700;line-height:1.45;margin-bottom:8px}
+.traffic-draft th,.traffic-draft td{padding:7px;vertical-align:top;text-align:left;line-height:1.55;border:1px solid #53637e;color:inherit;background:transparent}
+.traffic-draft th:first-child{width:34%}
+.traffic-draft p{margin:10px 0 0;line-height:1.65;color:inherit;font-size:.875rem}
+.traffic-draft a{display:inline-block;padding:3px 0;color:#c3d8ff}
+</style>
 </head>
 <body>
 <a class="skip" href="#main">본문으로 건너뛰기</a>
@@ -88,10 +99,23 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <header class="hero">
 <span class="eyebrow">IT · 기기 · 최신 가이드</span>
 <h1>2026 엑셀 행 열 바꾸기 방법: 가로·세로 전환, 선택하여 붙여넣기·TRANSPOSE·#SPILL 해결</h1>
-<p class="deck">엑셀에서 세로로 정리된 이름·점수를 가로로 바꾸거나, 가로로 나열된 월별 매출을 세로 표로 바꾸고 싶다면 행/열 바꿈 기능을 사용하면 됩니다. 가장 쉬운 방법은 복사 → 선택하여 붙여넣기 → 행/열 바꿈입니다. 반면 원본 값이 바뀔 때 결과도 자동으로 바뀌어야 한다면 TRANSPOSE 함수가 적합합니다.</p>
+<p class="traffic-summary">행과 열을 한 번만 바꾸려면 복사한 뒤 행/열 바꿈으로 붙여 넣으세요. 원본이 수정될 때 결과도 따라와야 한다면 빈 출력 범위에 TRANSPOSE 수식을 입력하세요. <a href="#decision-checklist">상황별 비교표 보기</a></p>
 <div class="hero-meta"><span>최초 발행 2026-11-17</span><span>내용 확인 2026-11-17</span><span>작성 emfls</span></div>
 </header>
 
+<section class="traffic-draft" id="decision-checklist" aria-label="전치할 때 원본과 결과를 맞추는 방법">
+<table>
+<caption>전치할 때 원본과 결과를 맞추는 방법</caption>
+<thead><tr><th scope="col">상황</th><th scope="col">확인할 것</th></tr></thead>
+<tbody>
+<tr><th scope="row">한 번만 배치 변경</th><td>원본을 복사한 뒤 겹치지 않는 빈 위치에 행/열 바꿈으로 붙여 넣으세요.</td></tr>
+<tr><th scope="row">원본과 연결 유지</th><td>원본이 4행 2열이면 결과에는 2행 4열 공간이 필요합니다. 동적 배열 Excel에서는 맨 왼쪽 위 한 셀에 수식을 넣으세요.</td></tr>
+<tr><th scope="row">결과가 펼쳐지지 않음</th><td>출력할 위치에 기존 값이나 병합 셀이 있는지 확인하세요. 다른 자료를 지우기 전에 넉넉한 빈 위치에서 다시 시험하세요.</td></tr>
+</tbody>
+</table>
+<p><a href="/kor/report/it/excel-merge-unmerge-cells-data-loss-fix-2026.html">병합 해제 전 데이터 확인</a> · <a href="/kor/report/it/excel-formulas-not-calculating-manual-auto-text-show-formulas-spill-2026.html">배열 수식의 오류 원인 찾기</a></p>
+<p>공식 안내 · <a class="source-link" href="https://support.microsoft.com/ko-kr/excel/functions/transpose-function">Microsoft TRANSPOSE 함수</a></p>
+</section>
 <nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">1. 엑셀 행·열 바꾸기, 어떤 방법을 선택해야 할까?</a></li><li><a href="#section-02">2. 예제로 이해하는 가로·세로 전환</a></li><li><a href="#section-03">3. 방법 ① 복사·선택하여 붙여넣기로 행 열 바꾸기</a></li><li><a href="#section-04">4. 방법 ② TRANSPOSE 함수로 원본과 연결하기</a></li><li><a href="#section-05">5. Excel 2016·2019처럼 구버전을 사용한다면?</a></li><li><a href="#section-06">6. TRANSPOSE 함수 #SPILL! 오류 해결법</a></li><li><a href="#section-07">7. 엑셀 표(Table)에서 &#x27;행/열 바꿈&#x27; 버튼이 안 될 때</a></li><li><a href="#section-08">8. 가로로 된 월별 매출을 세로로 바꾸는 실무 예제</a></li><li><a href="#section-09">9. 빈칸이 0으로 표시될 때의 해결 방향</a></li><li><a href="#section-10">10. 수식·서식까지 완벽히 그대로 뒤집고 싶다면?</a></li><li><a href="#section-11">11. 행·열 바꾸기가 안 될 때 체크리스트</a></li><li><a href="#section-12">12. 자주 묻는 질문(FAQ)</a></li><li><a href="#section-13">최종 요약</a></li><li><a href="#section-14">Microsoft 공식 자료</a></li></ol></nav>
 <div class="layout">
 <div class="intro"><p>엑셀에서 <strong>세로로 정리된 이름·점수를 가로로 바꾸거나</strong>, 가로로 나열된 월별 매출을 세로 표로 바꾸고 싶다면 <strong>행/열 바꿈</strong> 기능을 사용하면 됩니다. 가장 쉬운 방법은 <strong>복사 → 선택하여 붙여넣기 → 행/열 바꿈</strong>입니다. 반면 <strong>원본 값이 바뀔 때 결과도 자동으로 바뀌어야 한다면 </strong><strong>TRANSPOSE</strong><strong> 함수</strong>가 적합합니다.</p>
@@ -125,7 +149,7 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <h3>왜 D1처럼 떨어진 셀을 골라야 하나요?</h3>
 <p>원본 영역 A1:B4와 결과 영역이 겹치면 정상적으로 행·열 바꿈을 수행하기 어렵습니다. Microsoft는 <strong>행·열 바꿈 대상 영역이 원본 범위와 겹쳐서는 안 된다</strong>고 안내합니다.</p>
 <p>다른 빈 영역에 전환한 다음, 결과를 확인하고 나서 원본을 정리하는 것이 안전합니다. 이미 데이터가 있는 위치에 붙여넣으면 <strong>기존 데이터가 덮어써질 수 있으므로</strong> 빈 범위인지 확인하세요.</p></section>
-<section class="section" aria-labelledby="section-04"><h2 id="section-04">4. 방법 ② TRANSPOSE 함수로 원본과 연결하기</h2><p>원본 값을 수시로 수정하는 업무용 파일에는 TRANSPOSE 함수를 고려할 수 있습니다.</p>
+<section class="section" aria-labelledby="section-04"><h2 id="section-04">4. 방법 ② TRANSPOSE 함수로 원본과 연결하기</h2><p>원본에서 값 하나를 바꿔 결과도 따라 바뀌어야 한다면 TRANSPOSE 함수를 사용하세요. 복사해 붙인 값은 원본과 독립적으로 남습니다.</p>
 <p>Microsoft가 안내하는 기본 구문은 다음과 같습니다.</p>
 <pre class="notion-code"><code>=TRANSPOSE(범위)</code></pre>
 <p>앞선 예제의 A1:B4를 전환하고 싶다면 결과가 들어갈 <strong>D1</strong> 셀에 다음 수식을 입력합니다.</p>

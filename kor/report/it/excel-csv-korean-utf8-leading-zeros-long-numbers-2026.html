@@ -78,6 +78,17 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 @media(max-width:650px){.shell{padding:14px 12px 45px}.site-header{padding:14px}.hero{padding:29px 20px}.hero h1{font-size:1.58rem}.highlight-row{gap:7px}.highlight{padding:13px 9px}.highlight .value{font-size:.92rem}.highlight .label{font-size:.7rem}.contents,.section,.intro,.info-bottom{padding:19px 17px}.contents ol{grid-template-columns:1fr}.section h2{font-size:1.18rem}.site-header nav{gap:9px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
+<style>
+.traffic-summary{font-size:.94rem;line-height:1.65;margin:12px 0 0}
+.traffic-summary a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.traffic-draft{scroll-margin-top:60px;min-width:0;max-width:100%;box-sizing:border-box;margin:16px 0;padding:14px;border:1px solid #506079;border-radius:10px;background:#1b2535;color:#eef3ff;overflow-wrap:anywhere}
+.traffic-draft table{width:100%;table-layout:fixed;border-collapse:collapse;margin:0;color:inherit;background:transparent;font-size:.875rem}
+.traffic-draft caption{text-align:left;color:inherit;font-size:1rem;font-weight:700;line-height:1.45;margin-bottom:8px}
+.traffic-draft th,.traffic-draft td{padding:7px;vertical-align:top;text-align:left;line-height:1.55;border:1px solid #53637e;color:inherit;background:transparent}
+.traffic-draft th:first-child{width:34%}
+.traffic-draft p{margin:10px 0 0;line-height:1.65;color:inherit;font-size:.875rem}
+.traffic-draft a{display:inline-block;padding:3px 0;color:#c3d8ff}
+</style>
 </head>
 <body>
 <a class="skip" href="#main">본문으로 건너뛰기</a>
@@ -88,10 +99,23 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <header class="hero">
 <span class="eyebrow">IT · 기기 · 최신 가이드</span>
 <h1>2026 엑셀 CSV 한글 깨짐·앞자리 0 사라짐 해결법: UTF-8·Power Query·16자리 번호 보존</h1>
-<p class="deck">한글 깨짐은 문자 인코딩, 앞자리 0 소실은 데이터 형식, 모든 값이 한 열로 모이는 문제는 구분 기호를 우선 확인해야 합니다. 한글을 바로잡기 위해 UTF-8을 선택하더라도 우편번호가 숫자로 처리되면 0은 여전히 없어질 수 있습니다.</p>
+<p class="traffic-summary">CSV에서 한글이 깨지는 문제와 앞자리 0이 사라지는 문제는 따로 처리합니다. 원본을 복제해 텍스트 가져오기에서 인코딩을 확인하고, 주문번호·우편번호 열을 텍스트로 지정한 뒤 로드하세요. <a href="#decision-checklist">상황별 비교표 보기</a></p>
 <div class="hero-meta"><span>최초 발행 2026-11-03</span><span>내용 확인 2026-11-03</span><span>작성 emfls</span></div>
 </header>
 
+<section class="traffic-draft" id="decision-checklist" aria-label="CSV 가져오기 전에 세 칸만 점검하세요">
+<table>
+<caption>CSV 가져오기 전에 세 칸만 점검하세요</caption>
+<thead><tr><th scope="col">상황</th><th scope="col">확인할 것</th></tr></thead>
+<tbody>
+<tr><th scope="row">한글이 깨짐</th><td>원본 인코딩에 맞춰 미리 보기에서 이름 하나를 읽어 보세요. UTF-8 파일은 데이터 탭의 텍스트/CSV 가져오기를 사용할 수 있습니다.</td></tr>
+<tr><th scope="row">00123이 123이 됨</th><td>코드 열을 숫자로 해석하기 전에 텍스트로 지정하세요. Excel에서 바뀐 뒤 셀 서식만 텍스트로 바꿔도 원래 자릿수는 돌아오지 않습니다.</td></tr>
+<tr><th scope="row">긴 번호의 뒷자리 달라짐</th><td>16자리 이상의 식별번호는 원본을 보존하고 텍스트 열로 다시 가져오세요. 불러온 값의 첫자리·끝자리를 원본과 비교하세요.</td></tr>
+</tbody>
+</table>
+<p><a href="/kor/report/it/excel-vlookup-na-error-exact-match-xlookup-2026.html">코드가 같은데 조회되지 않을 때</a> · <a href="/kor/report/it/excel-formulas-not-calculating-manual-auto-text-show-formulas-spill-2026.html">문자와 숫자 때문에 계산이 다를 때</a></p>
+<p>공식 안내 · <a class="source-link" href="https://support.microsoft.com/ko-kr/excel/keeping-leading-zeros-and-large-numbers">Microsoft 앞자리 0과 긴 숫자 보존</a></p>
+</section>
 <nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">1. 증상별 원인부터 구분하기</a></li><li><a href="#section-02">2. 복구보다 먼저 해야 할 일: 원본 CSV 보존</a></li><li><a href="#section-03">3. 실제로 문제가 생기기 쉬운 가상 CSV 예시</a></li><li><a href="#section-04">4. 파일을 더블클릭하지 말고 Excel에서 데이터로 가져오기</a></li><li><a href="#section-05">5. 한글 깨짐 해결: UTF-8과 파일 원본 설정</a></li><li><a href="#section-06">6. 모든 값이 한 열에 몰리면: 구분 기호 확인</a></li><li><a href="#section-07">7. 앞자리 0 보존: Power Query에서 반드시 확인할 단계</a></li><li><a href="#section-08">8. 16자리 이상 주문번호는 왜 더 위험할까?</a></li><li><a href="#section-09">9. 제품코드가 날짜로 바뀐다면?</a></li><li><a href="#section-10">10. Excel 2024·Microsoft 365 자동 데이터 변환 옵션</a></li><li><a href="#section-11">11. 이미 0이 사라진 파일을 복원할 수 있을까?</a></li><li><a href="#section-12">12. CSV를 다시 저장하면 왜 같은 문제가 반복되나요?</a></li><li><a href="#section-13">13. 현실적인 사례 세 가지</a></li><li><a href="#section-14">14. 데이터가 많은 경우의 실무용 검수표</a></li><li><a href="#section-15">15. 매일 반복하는 업무라면 Power Query 변환 규칙 재사용</a></li><li><a href="#section-16">16. 자주 묻는 질문</a></li><li><a href="#section-17">17. 정리: 한글, 구분 기호, 식별번호를 각각 지켜야 합니다</a></li><li><a href="#section-18">공식 참고 자료</a></li></ol></nav>
 <div class="layout">
 <div class="intro"><p>쇼핑몰 주문 내역, 택배 송장, 고객 명단을 CSV 파일로 내려받아 엑셀에서 열었는데 한글은 깨지고 우편번호 &#x27;01234&#x27;는 &#x27;1234&#x27;로 변해 당황한 적이 있나요? 주문번호가 &#x27;1.23457E+19&#x27;처럼 표시되거나 제품코드 &#x27;1/2&#x27;가 날짜로 바뀌는 문제도 발생할 수 있습니다.</p>
@@ -100,7 +124,7 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <section class="section" aria-labelledby="section-01"><h2 id="section-01">1. 증상별 원인부터 구분하기</h2><div class="details-table"><table><thead><tr><th scope="col">증상</th><th scope="col">가능성 높은 원인</th><th scope="col">해결 방향</th></tr></thead><tbody><tr><td>김하나라는 이름이 깨진 문자로 표시됨</td><td>문자 인코딩 불일치</td><td>파일 원본 인코딩 확인</td></tr><tr><td>모든 값이 A열에만 들어옴</td><td>구분 기호 불일치</td><td>쉼표·세미콜론·탭 선택</td></tr><tr><td>우편번호 01234가 1234로 변함</td><td>숫자 자동 변환</td><td>열을 텍스트로 가져오기</td></tr><tr><td>20자리 주문번호가 E+19로 표시됨</td><td>일반 숫자 처리·정밀도 제한</td><td>원본을 텍스트로 가져오기</td></tr><tr><td>제품코드 1/2가 날짜로 바뀜</td><td>날짜 자동 인식</td><td>형식 변경 전에 텍스트 지정</td></tr><tr><td>코드 123E5가 지수로 변함</td><td>과학적 표기 자동 인식</td><td>코드 열을 텍스트로 유지</td></tr><tr><td>다시 저장한 CSV를 열자 0이 사라짐</td><td>CSV가 셀 서식을 보관하지 않음</td><td>검증된 XLSX를 별도 보관</td></tr></tbody></table></div>
 <p>한글을 바로잡기 위해 UTF-8을 선택하더라도 우편번호가 숫자로 처리되면 0은 여전히 없어질 수 있습니다. 반대로 열 형식을 텍스트로 지정해도 인코딩이 잘못되면 한글은 깨집니다.</p>
 <p>출처: <a href="https://support.microsoft.com/ko-kr/excel/opening-csv-utf-8-files-correctly-in-excel" rel="noopener noreferrer">Microsoft — CSV UTF-8 파일 열기</a>, <a href="https://support.microsoft.com/ko-kr/excel/keeping-leading-zeros-and-large-numbers" rel="noopener noreferrer">Microsoft — 앞자리 0과 긴 숫자 유지</a></p></section>
-<section class="section" aria-labelledby="section-02"><h2 id="section-02">2. 복구보다 먼저 해야 할 일: 원본 CSV 보존</h2><p>손상된 것처럼 보이는 파일을 곧바로 수정해 저장하지 마세요. 우선 다운로드한 CSV를 복사해서 원본 보관용과 작업용으로 나눕니다.</p>
+<section class="section" aria-labelledby="section-02"><h2 id="section-02">2. 복구보다 먼저 해야 할 일: 원본 CSV 보존</h2><p>다운로드한 CSV는 텍스트 편집기로 먼저 열어 한글과 식별번호의 원래 모습을 확인하세요. 우선 다운로드한 CSV를 복사해서 원본 보관용과 작업용으로 나눕니다.</p>
 <ol>
 <li>원본 CSV를 다른 이름으로 복사합니다.</li>
 <li>수정했던 Excel 파일이 있다면 원본과 혼동하지 않게 분리합니다.</li>
