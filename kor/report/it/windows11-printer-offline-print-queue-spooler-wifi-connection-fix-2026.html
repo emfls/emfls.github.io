@@ -78,6 +78,17 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 @media(max-width:650px){.shell{padding:14px 12px 45px}.site-header{padding:14px}.hero{padding:29px 20px}.hero h1{font-size:1.58rem}.highlight-row{gap:7px}.highlight{padding:13px 9px}.highlight .value{font-size:.92rem}.highlight .label{font-size:.7rem}.contents,.section,.intro,.info-bottom{padding:19px 17px}.contents ol{grid-template-columns:1fr}.section h2{font-size:1.18rem}.site-header nav{gap:9px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
+<style>
+.traffic-summary{font-size:.94rem;line-height:1.65;margin:12px 0 0}
+.traffic-summary a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.traffic-draft{scroll-margin-top:60px;min-width:0;max-width:100%;box-sizing:border-box;margin:16px 0;padding:14px;border:1px solid #506079;border-radius:10px;background:#1b2535;color:#eef3ff;overflow-wrap:anywhere}
+.traffic-draft table{width:100%;table-layout:fixed;border-collapse:collapse;margin:0;color:inherit;background:transparent;font-size:.875rem}
+.traffic-draft caption{text-align:left;color:inherit;font-size:1rem;font-weight:700;line-height:1.45;margin-bottom:8px}
+.traffic-draft th,.traffic-draft td{padding:7px;vertical-align:top;text-align:left;line-height:1.55;border:1px solid #53637e;color:inherit;background:transparent}
+.traffic-draft th:first-child{width:34%}
+.traffic-draft p{margin:10px 0 0;line-height:1.65;color:inherit;font-size:.875rem}
+.traffic-draft a{display:inline-block;padding:3px 0;color:#c3d8ff}
+</style>
 </head>
 <body>
 <a class="skip" href="#main">본문으로 건너뛰기</a>
@@ -87,11 +98,23 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <article>
 <header class="hero">
 <span class="eyebrow">IT · 기기 · 최신 가이드</span>
-<h1>2026 윈도우11 프린터 오프라인·인쇄 안됨 해결법: 인쇄 대기열 삭제·스풀러 재시작·무선 프린터 연결</h1>
+<h1>2026 윈도우11 프린터 오프라인·인쇄 안됨 해결법: 인쇄 대기열 삭제·스풀러 재시작·무선 프린터 연결</h1><p class="traffic-summary">인쇄를 여러 번 누르기 전에 대상 프린터와 대기열의 첫 문서를 확인하세요. 같은 문서가 쌓였다면 내 중복 작업을 먼저 취소하고 한 장만 다시 보내는 편이 결과를 확인하기 쉽습니다. <a href="#decision-checklist">상황별 비교표 보기</a></p>
 <p class="deck">Windows 11의 프린터 설정 경로, 인쇄 대기열 취소, 스풀러 서비스 재시작, Wi-Fi 프린터 추가, USB 인식 오류, 네트워크 공유, 드라이버 복구와 ARM 기반 Copilot+ PC의 주의사항까지 순서대로 안내합니다.</p>
 <div class="hero-meta"><span>최초 발행 2026-10-30</span><span>내용 확인 2026-10-30</span><span>작성 emfls</span></div>
 </header>
 
+<section class="traffic-draft" id="decision-checklist" aria-label="오프라인과 대기열 정체를 나누는 점검표">
+<table>
+<caption>오프라인과 대기열 정체를 나누는 점검표</caption>
+<thead><tr><th scope="col">상황</th><th scope="col">확인할 것</th></tr></thead>
+<tbody>
+<tr><th scope="row">엉뚱한 장치로 보내짐</th><td>문서의 인쇄 화면에서 실제 프린터 이름을 다시 고릅니다. PDF로 저장하는 가상 프린터나 이전에 쓰던 장치로 선택돼 있으면 출력물이 나오지 않습니다.</td></tr>
+<tr><th scope="row">내 문서 한 건만 멈춤</th><td>해당 프린터의 인쇄 대기열에서 내 문서 이름과 상태를 확인하고 그 작업만 취소해 봅니다. 공유 프린터에서는 다른 사람의 작업이 있는지도 보세요.</td></tr>
+<tr><th scope="row">모든 문서가 오프라인</th><td>본체 전원·오류 표시와 USB 또는 네트워크 연결을 확인합니다. 연결이 돌아온 뒤 대기 중인 문서가 남아 있는지 보고 중복 없이 시험 인쇄하세요.</td></tr>
+</tbody>
+</table>
+<p><a href="/kor/report/it/windows11-wifi-connected-no-internet-missing-icon-dns-network-reset-2026.html">Windows Wi-Fi 연결 상태 확인</a> · <a href="/kor/report/it/hwp-hwpx-to-pdf-convert-hancom-windows-font-layout-fix-2026.html">한글 문서의 PDF 출력 결과 확인</a></p>
+</section>
 <nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">지금 바로 확인하는 증상별 해결표</a></li><li><a href="#section-02">1. &#x27;프린터 오프라인&#x27;과 &#x27;인쇄 대기 중&#x27;은 왜 다른가요?</a></li><li><a href="#section-03">2. 가장 먼저 프린터 본체와 연결 상태 확인</a></li><li><a href="#section-04">3. Windows 11에서 올바른 프린터가 선택됐는지 확인하기</a></li><li><a href="#section-05">4. Windows 11 인쇄 대기열 보기: 출력이 멈춘 문서 찾기</a></li><li><a href="#section-06">5. 인쇄 대기열 삭제: 멈춘 문서만 취소하는 방법</a></li><li><a href="#section-07">6. 인쇄 스풀러 다시 시작: Windows 서비스에서 해결</a></li><li><a href="#section-08">7. 인쇄 대기열이 지워지지 않으면 스풀 폴더 수동 정리</a></li><li><a href="#section-09">8. Windows 11 &#x27;도움말 보기&#x27; 프린터 문제 해결사 실행</a></li><li><a href="#section-10">9. 무선 프린터 연결 안 될 때: PC와 동일한 Wi-Fi 확인</a></li><li><a href="#section-11">10. Windows 11에 프린터 다시 추가하는 방법: USB·Wi-Fi 구분</a></li><li><a href="#section-12">11. 기본 프린터가 자꾸 바뀌는 문제: Windows 자동 관리 해제</a></li><li><a href="#section-13">12. 사무실 공유 프린터 연결 안 됨: 호스트 PC·네트워크 공유 확인</a></li><li><a href="#section-14">13. 프린터 드라이버 업데이트·재설치: 모델과 Windows 버전 확인</a></li><li><a href="#section-15">14. Copilot+ PC에서 프린터 설치 오류: ARM 장치 예외 확인</a></li><li><a href="#section-16">15. Word·Excel·PDF 중 특정 앱에서만 인쇄 안 될 때</a></li><li><a href="#section-17">16. 출력은 되는데 느리거나 흐릿하면 다른 문제입니다</a></li><li><a href="#section-18">17. 복구 후 테스트 인쇄와 재발 방지 확인</a></li><li><a href="#section-19">자주 묻는 질문 FAQ</a></li><li><a href="#section-20">출력 오류 해결 전후 체크리스트</a></li><li><a href="#section-21">마무리: 대기열부터 확인하고, 스풀러 파일 삭제는 마지막에 하세요</a></li></ol></nav>
 <div class="layout">
 <div class="intro"><p>인쇄 버튼을 눌렀는데 프린터는 아무 반응이 없고 Windows 11에는 <strong>&#x27;오프라인&#x27;</strong>, <strong>&#x27;오류&#x27;</strong>, <strong>&#x27;인쇄 중&#x27;</strong>만 표시되나요? 방금 출력한 서류가 대기열에서 사라지지 않거나 프린터가 여러 개 등록돼 엉뚱한 기기로 인쇄되는 문제도 흔합니다.</p>

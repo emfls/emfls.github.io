@@ -78,6 +78,17 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 @media(max-width:650px){.shell{padding:14px 12px 45px}.site-header{padding:14px}.hero{padding:29px 20px}.hero h1{font-size:1.58rem}.highlight-row{gap:7px}.highlight{padding:13px 9px}.highlight .value{font-size:.92rem}.highlight .label{font-size:.7rem}.contents,.section,.intro,.info-bottom{padding:19px 17px}.contents ol{grid-template-columns:1fr}.section h2{font-size:1.18rem}.site-header nav{gap:9px}h1,h2,h3,p,li,strong,a,code,pre{overflow-wrap:anywhere;word-break:break-word;max-width:100%}table{table-layout:fixed!important;width:100%!important;min-width:0!important}th,td{word-break:break-word;overflow-wrap:anywhere;font-size:0.8rem;padding:6px 4px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
+<style>
+.traffic-summary{font-size:.94rem;line-height:1.65;margin:12px 0 0}
+.traffic-summary a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.traffic-draft{scroll-margin-top:60px;min-width:0;max-width:100%;box-sizing:border-box;margin:16px 0;padding:14px;border:1px solid #506079;border-radius:10px;background:#1b2535;color:#eef3ff;overflow-wrap:anywhere}
+.traffic-draft table{width:100%;table-layout:fixed;border-collapse:collapse;margin:0;color:inherit;background:transparent;font-size:.875rem}
+.traffic-draft caption{text-align:left;color:inherit;font-size:1rem;font-weight:700;line-height:1.45;margin-bottom:8px}
+.traffic-draft th,.traffic-draft td{padding:7px;vertical-align:top;text-align:left;line-height:1.55;border:1px solid #53637e;color:inherit;background:transparent}
+.traffic-draft th:first-child{width:34%}
+.traffic-draft p{margin:10px 0 0;line-height:1.65;color:inherit;font-size:.875rem}
+.traffic-draft a{display:inline-block;padding:3px 0;color:#c3d8ff}
+</style>
 </head>
 <body>
 <a class="skip" href="#main">본문으로 건너뛰기</a>
@@ -87,11 +98,23 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <article>
 <header class="hero">
 <span class="eyebrow">IT · 기기 · 최신 가이드</span>
-<h1>2026 윈도우11 카메라 안됨 해결법: 0xA00F4244·웹캠 권한·줌·팀즈·드라이버</h1>
+<h1>2026 윈도우11 카메라 안됨 해결법: 0xA00F4244·웹캠 권한·줌·팀즈·드라이버</h1><p class="traffic-summary">회의 전에 Windows 카메라 앱에서 먼저 미리보기를 열어 보세요. 여기서 영상이 나오면 회의 앱의 장치 선택·권한을, 여기서도 안 나오면 가림막·연결·Windows 접근 설정을 확인하세요. <a href="#decision-checklist">상황별 비교표 보기</a></p>
 <p class="deck">윈도우11 카메라 안됨 해결법: 카메라 개인정보 권한, 물리적 가림막, 외장 USB 웹캠, 0xA00F4244 오류, Windows 11 24H2 기본 카메라 모드, 드라이버 업데이트·롤백 순서까지 정리했습니다. 노트북 화면 위쪽의 카메라 렌즈를 확인합니다.</p>
 <div class="hero-meta"><span>최초 발행 2026-10-29</span><span>내용 확인 2026-10-29</span><span>작성 emfls</span></div>
 </header>
 
+<section class="traffic-draft" id="decision-checklist" aria-label="카메라 앱과 회의 앱의 결과로 좁히는 점검표">
+<table>
+<caption>카메라 앱과 회의 앱의 결과로 좁히는 점검표</caption>
+<thead><tr><th scope="col">상황</th><th scope="col">확인할 것</th></tr></thead>
+<tbody>
+<tr><th scope="row">카메라 앱도 검은 화면</th><td>카메라 가림막과 기기 자체의 카메라 스위치를 확인합니다. 외장 웹캠이면 연결 상태도 확인한 뒤 미리보기를 다시 엽니다.</td></tr>
+<tr><th scope="row">카메라 앱은 정상, 회의 앱만 실패</th><td>회의 앱의 영상 설정에서 사용할 카메라를 직접 고릅니다. Windows의 카메라 액세스와 데스크톱 앱 허용 여부도 확인하세요.</td></tr>
+<tr><th scope="row">브라우저 회의에서만 실패</th><td>해당 회의 사이트에 카메라 권한이 있는지 확인하고 다른 앱의 미리보기를 닫으세요. 브라우저 안에서 내장·외장 중 선택한 장치를 다시 봅니다.</td></tr>
+</tbody>
+</table>
+<p><a href="/kor/report/it/windows11-microphone-not-working-input-permission-teams-zoom-chrome-driver-2026.html">회의 앱 마이크 입력 확인</a> · <a href="/kor/report/it/windows11-bluetooth-not-connecting-headphones-pairing-audio-driver-2026.html">블루투스 회의용 헤드셋 연결</a></p>
+</section>
 <nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">빠른 해결표: 증상부터 구분하세요</a></li><li><a href="#section-02">1. 카메라 앱에서 되는지 확인하면 원인을 빠르게 구분할 수 있습니다</a></li><li><a href="#section-03">2. 노트북 카메라가 검은 화면일 때: 가림막과 기능 키 확인</a></li><li><a href="#section-04">3. 윈도우11 카메라 권한 켜기: 앱에서 액세스하도록 허용</a></li><li><a href="#section-05">4. Teams·줌에서만 카메라가 안 된다면 앱 설정부터 확인</a></li><li><a href="#section-06">5. Chrome·Edge에서 웹 화상회의 카메라 허용 방법</a></li><li><a href="#section-07">6. 카메라가 다른 프로그램에서 사용 중이라고 나오면</a></li><li><a href="#section-08">7. 카메라 오류 0xA00F4244(NoCamerasAreAttached) 해결</a></li><li><a href="#section-09">8. 검은 화면·권한 거부·정책 오류 코드는 서로 다릅니다</a></li><li><a href="#section-10">9. Windows 11 카메라 문제 해결사: 도움말 보기부터 실행</a></li><li><a href="#section-11">10. Windows 업데이트·선택적 업데이트에서 카메라 드라이버 확인</a></li><li><a href="#section-12">11. 업데이트 후부터 카메라가 안 된다면 드라이버 롤백</a></li><li><a href="#section-13">12. 카메라 드라이버 재설치는 마지막에: 복구 수단 확보하기</a></li><li><a href="#section-14">13. Windows 11 24H2 이상 기본 카메라 모드로 복구하기</a></li><li><a href="#section-15">14. 화상회의에서 카메라가 흐릿하고 끊길 때 확인할 설정</a></li><li><a href="#section-16">15. 회사·학교 PC에서 카메라 접근이 막혔다면</a></li><li><a href="#section-17">16. 카메라가 해결되지 않았다면 수리 전에 확인할 사항</a></li><li><a href="#section-18">17. Windows 11 카메라 문제 최종 체크리스트</a></li><li><a href="#section-19">자주 묻는 질문 FAQ</a></li><li><a href="#section-20">마무리: 드라이버 제거보다 카메라 앱·권한 확인이 먼저입니다</a></li></ol></nav>
 <div class="layout">
 <div class="intro"><p>노트북 화상회의를 시작하려는데 화면이 검게 나오거나, Windows 11 카메라 앱에 <strong>0xA00F4244(NoCamerasAreAttached)</strong> 오류가 표시되나요? Teams나 줌에서는 카메라를 찾을 수 없다고 나오는데 정작 카메라 앱에서는 정상으로 보이는 경우도 있습니다.</p>
