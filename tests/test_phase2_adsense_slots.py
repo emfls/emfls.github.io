@@ -8,6 +8,11 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = "a56e7bf3c461ed9130f97de652b7718ea94fa535"
+PHASE2_RELEASE = "2152bc6419936acb37a039d2801e535aae6db10f"
+FIXED_HEIGHT_UPGRADES = {
+    "kor/util/overseas-stock-tax-calculator/index.html",
+    "kor/util/fin-calc/index.html",
+}
 CALCULATORS = [
     "kor/util/overseas-stock-tax-calculator/index.html",
     "kor/util/retirement-pension-withdrawal/index.html",
@@ -39,9 +44,14 @@ def test_calculator_has_two_persistent_separate_labeled_slots(path):
     nodes = module.Boundaries(text).nodes
     for node in (n for n in nodes if "emfls-phase2" in n["classes"]):
         fragment = text[node["start"]:node["end"]]
-        assert 'aria-label="Advertisement"' in fragment
-        assert "min-height:250px" in fragment and "margin:48px 0" in fragment
-        assert "Advertisement</div>" in fragment and "overflow:hidden" not in fragment
+        if path in FIXED_HEIGHT_UPGRADES:
+            assert 'aria-label="광고"' in fragment and '<span class="ad-label">광고</span>' in fragment
+            assert '<div class="ad-space"><ins class="adsbygoogle"' in fragment
+            assert 'height:250px' in fragment and 'data-ad-slot="6016035748"' in fragment
+        else:
+            assert 'aria-label="Advertisement"' in fragment and "Advertisement</div>" in fragment
+            assert "min-height:250px" in fragment and "margin:48px 0" in fragment
+        assert "overflow:hidden" not in fragment
         assert not any(p.get("role") == "tabpanel" or p.get("aria-live") for p in node["ancestor_attrs"])
         assert "form" not in node["ancestor_tags"]
 
@@ -68,11 +78,19 @@ def test_patches_are_idempotent_and_remove_to_exact_original():
         original = subprocess.check_output(["git", "-C", str(ROOT), "show", BASE + ":" + path]).decode()
         current = (ROOT / path).read_text()
         patched, state = module.patch_page(path, original)
-        assert state == "PATCHED" and patched == current
+        reference = current
+        if path in FIXED_HEIGHT_UPGRADES:
+            # The original release remains reproducible after the pages receive later editorial updates.
+            reference = subprocess.check_output(["git", "-C", str(ROOT), "show", PHASE2_RELEASE + ":" + path]).decode()
+            assert module.patch_page(path, current) == (current, "ALREADY_PATCHED")
+            edited_body = module.remove_additions(current)
+            restored, restore_state = module.patch_page(path, edited_body)
+            assert restore_state == "PATCHED" and module.remove_additions(restored) == edited_body
+        assert state == "PATCHED" and patched == reference
         assert module.patch_page(path, patched) == (patched, "ALREADY_PATCHED")
         assert module.remove_additions(patched) == original
         # Original business logic, markup and measurements survive byte-for-byte.
-        assert module.remove_additions(current).encode() == original.encode()
+        assert module.remove_additions(reference).encode() == original.encode()
 
 
 def test_partial_markers_and_bad_anchors_fail_closed():
