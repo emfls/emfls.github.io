@@ -38,7 +38,7 @@
             crossorigin="anonymous"></script>
         <!-- External: highlight.js (for code coloring) -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.8.0/styles/github.min.css" />
-        <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.8.0/lib/highlight.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.8.0/highlight.min.js"></script>
         <!-- External: xml-js, papaparse -->
         <script src="https://cdn.jsdelivr.net/npm/xml-js@1.6.11/dist/xml-js.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
@@ -229,7 +229,14 @@
                 color: #19788a;
             }
         </style>
-    </head>
+    <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+<style>
+  .emfls-ad-slot { box-sizing: border-box; width: 100%; max-width: 670px; min-width: 0; margin: 48px auto; text-align: center; clear: both; }
+  .emfls-ad-slot .ad-label { display: block; height: 20px; font: 12px/20px system-ui, sans-serif; }
+  .emfls-ad-slot .ad-space { height: 250px; width: 100%; overflow: hidden; }
+  #backBtn, #backBtn:hover { position: static; display: block; width: fit-content; max-width: 90%; margin: 32px auto; transform: none; box-sizing: border-box; }
+</style>
+</head>
     <body>
         <main>
             <div class="container" itemscope itemtype="https://schema.org/WebApplication">
@@ -260,6 +267,11 @@
                     <button class="action-mini" id="copyBtn">복사</button>
                     <button class="action-mini" id="downloadBtn">다운로드</button>
                 </div>
+                <aside class="emfls-ad-slot" aria-label="광고">
+                  <span class="ad-label">광고</span>
+                  <div class="ad-space"><ins class="adsbygoogle" style="display:block;width:100%;height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748"></ins></div>
+                  <script>(window.adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </aside>
                 <div class="footer">
                     JSON, XML, CSV 지원. 오류 감지 및 하이라이트 제공.<br />
                     데이터는 어디에도 전송되지 않습니다. 모든 처리는 브라우저에서만 이루어집니다.
@@ -279,7 +291,7 @@
                             소규모/중규모 데이터에 최적화되어 있습니다. 매우 큰 파일의 경우 브라우저 메모리 한계가 있을 수 있습니다.
                         </dd>
                         <dt>색상 강조 기능이 있나요?</dt>
-                        <dd>네, 모든 출력 결과는 highlight.js를 사용하여 색상 강조됩니다.</dd>
+                        <dd>JSON과 XML은 구문을 색상으로 구분하고, CSV는 복사하기 쉬운 일반 텍스트로 표시합니다.</dd>
                         <dt>결과를 다운로드하거나 복사할 수 있나요?</dt>
                         <dd>네! 변환 후 복사 또는 다운로드 버튼을 사용하세요.</dd>
                     </dl>
@@ -358,7 +370,7 @@
             }
             // ========== Display Output ==========
             function displayOutput() {
-                if (!dataObject) {
+                if (dataObject === null) {
                     document.getElementById("outputView").textContent = "";
                     return;
                 }
@@ -367,8 +379,11 @@
                     if (outputFormat === "json") out = JSON.stringify(dataObject, null, 2);
                     else if (outputFormat === "xml") out = js2xml(dataObject, { compact: true, spaces: 2 });
                     else if (outputFormat === "csv") out = Papa.unparse(dataObject);
-                    document.getElementById("outputView").textContent = out;
-                    hljs.highlightElement(document.getElementById("outputView"));
+                    const output = document.getElementById("outputView");
+                    output.textContent = out;
+                    if (window.hljs && outputFormat !== "csv") {
+                        output.innerHTML = hljs.highlight(out, { language: outputFormat }).value;
+                    }
                 } catch (e) {
                     document.getElementById("outputView").textContent = "변환 오류: " + (e.message || e);
                 }
@@ -471,7 +486,7 @@
                         "name": "색상 강조 기능이 있나요?",
                         "acceptedAnswer": {
                             "@type": "Answer",
-                            "text": "네, 모든 출력 결과는 highlight.js를 사용하여 색상 강조됩니다."
+                            "text": "JSON과 XML은 구문을 색상으로 구분하고, CSV는 복사하기 쉬운 일반 텍스트로 표시합니다."
                         }
                     },
                     {
@@ -485,5 +500,10 @@
                 ]
             }
         </script>
-    </body>
+    <aside class="emfls-ad-slot" aria-label="광고">
+  <span class="ad-label">광고</span>
+  <div class="ad-space"><ins class="adsbygoogle" style="display:block;width:100%;height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748"></ins></div>
+  <script>(window.adsbygoogle = window.adsbygoogle || []).push({});</script>
+</aside>
+</body>
 </html>

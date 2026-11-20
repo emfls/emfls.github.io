@@ -203,14 +203,21 @@
         }
       }
     </style>
-  </head>
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+<style>
+  .emfls-ad-slot { box-sizing: border-box; width: 100%; max-width: 670px; min-width: 0; margin: 48px auto; text-align: center; clear: both; }
+  .emfls-ad-slot .ad-label { display: block; height: 20px; font: 12px/20px system-ui, sans-serif; }
+  .emfls-ad-slot .ad-space { height: 250px; width: 100%; overflow: hidden; }
+  #backBtn, #backBtn:hover { position: static; display: block; width: fit-content; max-width: 90%; margin: 32px auto; transform: none; box-sizing: border-box; }
+</style>
+</head>
   <body>
     <div class="container">
-      <div class="logo">🔤 영어 발음 변환기</div>
+      <h1 class="logo">🔤 영어 발음 변환기</h1>
       <div class="desc">
         영어 단어 또는 문장을 입력하세요.<br />
-        간단한 IPA 스타일 발음으로 변환됩니다.<br />
-        <b>규칙 기반 학습 및 재미용 (공식 IPA 아님!)</b>
+        기본 단어는 사전 발음을, 나머지는 철자 규칙으로 추정한 발음을 표시합니다.<br />
+        <b>발음은 억양과 문맥에 따라 달라집니다.</b>
       </div>
       <form id="form" autocomplete="off">
         <div class="form-row">
@@ -218,16 +225,21 @@
         </div>
         <button type="submit" class="action-btn">변환</button>
       </form>
-      <div id="result"></div>
+      <div id="result" aria-live="polite"><div class="ipa"></div></div>
+      <aside class="emfls-ad-slot" aria-label="광고">
+        <span class="ad-label">광고</span>
+        <div class="ad-space"><ins class="adsbygoogle" style="display:block;width:100%;height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748"></ins></div>
+        <script>(window.adsbygoogle = window.adsbygoogle || []).push({});</script>
+      </aside>
       <section id="faq" aria-labelledby="faq-head">
         <h3 id="faq-head">FAQ – 영어 발음 (IPA) 변환기</h3>
         <dl>
           <dt>이것이 진짜 IPA인가요?</dt>
-          <dd>아니요. 이 도구는 간단한 규칙으로 영어 발음을 대략 표기합니다. 언어학 또는 시험용이 아닌 학습 및 재미용입니다.</dd>
+          <dd>아니요. 기본 단어에는 사전 발음을 쓰고 그 밖의 단어에는 철자 규칙을 적용합니다. 언어학 또는 시험용이 아닌 학습 및 재미용입니다.</dd>
           <dt>입력한 텍스트가 서버로 전송되나요?</dt>
           <dd>아니요. 모든 변환은 브라우저 내에서 이루어집니다. 텍스트가 밖으로 나가지 않습니다.</dd>
           <dt>어떤 영어 억양을 사용하나요?</dt>
-          <dd>미국식과 영국식 규칙을 혼합하여 단순화했습니다. 어떤 실제 방언에도 완전히 일치하지 않습니다.</dd>
+          <dd>기본 단어는 미국식 대표 발음 한 가지를 표시합니다. 문맥에 따른 강세·약형과 지역별 차이는 표시하지 않으며, 등록되지 않은 단어는 철자로 추정합니다.</dd>
           <dt>문장도 사용할 수 있나요?</dt>
           <dd>네. 단어든 전체 문장이든 입력할 수 있습니다. 각 단어가 개별적으로 변환됩니다.</dd>
           <dt>이 도구는 무료인가요?</dt>
@@ -235,121 +247,45 @@
         </dl>
       </section>
       <div class="footer">
-        영어를 단순화된 규칙에 따라 대략적인 IPA 발음으로 변환합니다.<br />
+        단어마다 사전값을 먼저 찾고 미등록 단어는 철자로 추정합니다.<br />
         학습 및 재미용입니다.<br />
         <span style="color: #bbb">100% 브라우저 내 실행, 데이터 업로드 없음.</span>
       </div>
     </div>
     <a href="../" id="backBtn">Other Util</a>
     <script>
-      // ... 기존 JS 그대로 ...
-      function toIPA(word) {
-        if (!word.trim()) return "";
-        let w = word.toLowerCase();
-        // 대표 패턴 우선 치환 (긴 것 → 짧은 것 순)
-        const rules = [
-          // ch, sh, th, ph, wh, qu
-          [/(sch)/g, "sk"],
-          [/ch/g, "tʃ"],
-          [/sh/g, "ʃ"],
-          [/th/g, "θ"],
-          [/ph/g, "f"],
-          [/wh/g, "w"],
-          [/qu/g, "kw"],
-          // 이중모음/장모음
-          [/oo/g, "uː"],
-          [/ee/g, "iː"],
-          [/ea/g, "iː"],
-          [/ou/g, "aʊ"],
-          [/ow/g, "aʊ"],
-          [/ai/g, "eɪ"],
-          [/ay/g, "eɪ"],
-          [/oa/g, "oʊ"],
-          [/ie/g, "aɪ"],
-          [/igh/g, "aɪ"],
-          [/ei/g, "iː"],
-          [/oy/g, "ɔɪ"],
-          [/oi/g, "ɔɪ"],
-          // gn, kn, wr, mb
-          [/gn/g, "n"],
-          [/kn/g, "n"],
-          [/wr/g, "r"],
-          [/mb\b/g, "m"],
-          // 끝 silent e
-          [/e\b/g, ""],
-          // 자주 쓰이는 단어 (불규칙)
-          [/\bthe\b/g, "ðə"],
-          [/\band\b/g, "ænd"],
-          [/\bof\b/g, "ʌv"],
-          [/\ba\b/g, "ə"],
-          [/\bto\b/g, "tuː"],
-          [/\bis\b/g, "ɪz"],
-          [/\byou\b/g, "juː"],
-          [/\bi\b/g, "aɪ"]
-        ];
-        // 한글자(알파벳) 규칙
-        const letters = {
-          a: "æ",
-          b: "b",
-          c: "k",
-          d: "d",
-          e: "ɛ",
-          f: "f",
-          g: "g",
-          h: "h",
-          i: "ɪ",
-          j: "dʒ",
-          k: "k",
-          l: "l",
-          m: "m",
-          n: "n",
-          o: "ɒ",
-          p: "p",
-          q: "k",
-          r: "r",
-          s: "s",
-          t: "t",
-          u: "ʌ",
-          v: "v",
-          w: "w",
-          x: "ks",
-          y: "j",
-          z: "z"
-        };
-        // 규칙 적용
-        for (const [pattern, rep] of rules) w = w.replace(pattern, rep);
-        // 알파벳→IPA 단순 치환
-        let ipa = "";
-        for (let i = 0; i < w.length; ++i) {
-          const ch = w[i];
-          ipa += letters[ch] !== undefined ? letters[ch] : ch;
-        }
-        // 단어 구분
-        let output = ipa
-          .split(/\s+/)
-          .map((x) => (x ? "/" + x + "/" : ""))
-          .join(" ");
-        return output;
-      }
-      const form = document.getElementById("form");
-      const input = document.getElementById("input");
-      const result = document.getElementById("result");
-      form.onsubmit = function (e) {
-        e.preventDefault();
-        const val = input.value.trim();
-        if (!val) return;
-        const ipa = toIPA(val);
-        result.innerHTML = `<div class="ipa">${ipa}</div>`;
+      const pronunciations = new Map(Object.entries({
+        this: "ðɪs", that: "ðæt", these: "ðiːz", those: "ðoʊz", they: "ðeɪ",
+        them: "ðem", their: "ðer", the: "ðə", then: "ðen", there: "ðer",
+        think: "θɪŋk", thing: "θɪŋ", thin: "θɪn", three: "θriː",
+        and: "ænd", of: "ʌv", a: "ə", to: "tuː", is: "ɪz", you: "juː", i: "aɪ",
+        enough: "ɪˈnʌf", school: "skuːl", photo: "ˈfoʊtoʊ", hello: "həˈloʊ"
+      }));
+      // 한 번 처리한 발음 기호에 철자 규칙을 다시 적용하지 않는다.
+      const sounds = {
+        sch: "sk", igh: "aɪ", ch: "tʃ", sh: "ʃ", th: "θ", ph: "f", wh: "w", qu: "kw",
+        oo: "uː", ee: "iː", ea: "iː", ou: "aʊ", ow: "aʊ", ai: "eɪ", ay: "eɪ",
+        oa: "oʊ", ie: "aɪ", ei: "iː", oy: "ɔɪ", oi: "ɔɪ", ng: "ŋ", kn: "n", wr: "r",
+        a: "æ", c: "k", e: "ɛ", i: "ɪ", j: "dʒ", o: "ɒ", q: "k", u: "ʌ", x: "ks", y: "j"
       };
-      input.addEventListener("input", () => {
-        if (!input.value.trim()) {
-          result.innerHTML = "";
-          return;
-        }
-        const ipa = toIPA(input.value);
-        result.innerHTML = `<div class="ipa">${ipa}</div>`;
-      });
-      input.focus();
+      const spelling = /sch|igh|ch|sh|th|ph|wh|qu|oo|ee|ea|ou|ow|ai|ay|oa|ie|ei|oy|oi|ng|kn|wr|[a-z]/g;
+      const input = document.getElementById("input");
+      const result = document.querySelector("#result .ipa");
+      function renderPronunciation() {
+        result.textContent = input.value.trim().replace(/[A-Za-z]+/g, (word) => {
+          const lower = word.toLowerCase();
+          const pronunciation = pronunciations.get(lower) ?? lower
+            .replace(/^gn/, "n").replace(/mb$/, "m").replace(/(.)e$/, "$1")
+            .replace(spelling, (chunk) => sounds[chunk] ?? chunk);
+          return "/" + pronunciation + "/";
+        });
+      }
+      document.getElementById("form").onsubmit = (event) => {
+        event.preventDefault();
+        renderPronunciation();
+      };
+      input.addEventListener("input", renderPronunciation);
+
     </script>
     <!-- FAQPage 구조화 데이터 (SEO/SGE/네이버/구글 리치 결과 대응) -->
     <script type="application/ld+json">
@@ -362,7 +298,7 @@
           "name": "이것이 진짜 IPA인가요?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "아니요. 이 도구는 간단한 규칙으로 영어 발음을 대략 표기합니다. 언어학 또는 시험용이 아닌 학습 및 재미용입니다."
+            "text": "아니요. 기본 단어에는 사전 발음을 쓰고 그 밖의 단어에는 철자 규칙을 적용합니다. 언어학 또는 시험용이 아닌 학습 및 재미용입니다."
           }
         },
         {
@@ -378,7 +314,7 @@
           "name": "어떤 영어 억양을 사용하나요?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "미국식과 영국식 규칙을 혼합하여 단순화했습니다. 어떤 실제 방언에도 완전히 일치하지 않습니다."
+            "text": "기본 단어는 미국식 대표 발음 한 가지를 표시합니다. 문맥에 따른 강세·약형과 지역별 차이는 표시하지 않으며, 등록되지 않은 단어는 철자로 추정합니다."
           }
         },
         {
@@ -409,5 +345,10 @@
   <p>Reviewed on August 11, 2026. This browser tool may vary by device, browser, input data, local processing limits, or pseudorandom behavior. Verify the result independently before important use.</p>
   <p><a href="/kor/util/">Related tools</a></p>
 </section>
+<aside class="emfls-ad-slot" aria-label="광고">
+  <span class="ad-label">광고</span>
+  <div class="ad-space"><ins class="adsbygoogle" style="display:block;width:100%;height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748"></ins></div>
+  <script>(window.adsbygoogle = window.adsbygoogle || []).push({});</script>
+</aside>
 </body>
 </html>
