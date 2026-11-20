@@ -78,6 +78,17 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 @media(max-width:650px){.shell{padding:14px 12px 45px}.site-header{padding:14px}.hero{padding:29px 20px}.hero h1{font-size:1.58rem}.highlight-row{gap:7px}.highlight{padding:13px 9px}.highlight .value{font-size:.92rem}.highlight .label{font-size:.7rem}.contents,.section,.intro,.info-bottom{padding:19px 17px}.contents ol{grid-template-columns:1fr}.section h2{font-size:1.18rem}.site-header nav{gap:9px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
+<style>
+.traffic-summary{font-size:.94rem;line-height:1.65;margin:12px 0 0}
+.traffic-summary a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.traffic-draft{scroll-margin-top:60px;min-width:0;max-width:100%;box-sizing:border-box;margin:16px 0;padding:14px;border:1px solid #506079;border-radius:10px;background:#1b2535;color:#eef3ff;overflow-wrap:anywhere}
+.traffic-draft table{width:100%;table-layout:fixed;border-collapse:collapse;margin:0;color:inherit;background:transparent;font-size:.875rem}
+.traffic-draft caption{text-align:left;color:inherit;font-size:1rem;font-weight:700;line-height:1.45;margin-bottom:8px}
+.traffic-draft th,.traffic-draft td{padding:7px;vertical-align:top;text-align:left;line-height:1.55;border:1px solid #53637e;color:inherit;background:transparent}
+.traffic-draft th:first-child{width:34%}
+.traffic-draft p{margin:10px 0 0;line-height:1.65;color:inherit;font-size:.875rem}
+.traffic-draft a{display:inline-block;padding:3px 0;color:#c3d8ff}
+</style>
 </head>
 <body>
 <a class="skip" href="#main">본문으로 건너뛰기</a>
@@ -88,10 +99,23 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <header class="hero">
 <span class="eyebrow">IT · 기기 · 최신 가이드</span>
 <h1>백업 완료 표시만 믿지 마세요: 윈도우·맥에서 파일 복구를 15분 검증하는 실전 실험</h1>
-<p class="deck">백업 완료 표시만 믿지 마세요: 이 글에서 제안하는 15분 백업 검증 실험과 점검표는 공식 제품 기능을 활용해 구성한 독자적인 실습 절차입니다. 특정 운영체제가 자동으로 “15분이면 모든 백업이 검증된다”고 보장한다는 뜻은 아닙니다.</p>
+<p class="traffic-summary">백업본을 별도 폴더에 복원해 열어 보세요. 저장 시점이 같은 원본과 복원본의 SHA-256을 비교하면 파일명이 같아도 내용이 달라진 경우를 가려낼 수 있습니다. <a href="#decision-checklist">상황별 비교표 보기</a></p>
 <div class="hero-meta"><span>최초 발행 2026-11-02</span><span>내용 확인 2026-11-02</span><span>작성 emfls</span></div>
 </header>
 
+<section class="traffic-draft" id="decision-checklist" aria-label="백업에서 파일 한 개를 복원해 점검하는 순서">
+<table>
+<caption>백업에서 파일 한 개를 복원해 점검하는 순서</caption>
+<thead><tr><th scope="col">상황</th><th scope="col">확인할 것</th></tr></thead>
+<tbody>
+<tr><th scope="row">원본 보존</th><td>일을 마치고 저장한 문서 한 개를 골라 수정 시각을 적어 두세요. 복원 위치는 빈 폴더로 지정하세요.</td></tr>
+<tr><th scope="row">복원본 열기</th><td>원본 경로와 다른 폴더에서 문서·사진을 열어 내용과 버전을 확인하세요.</td></tr>
+<tr><th scope="row">해시 비교</th><td>두 파일에 같은 알고리즘을 적용하세요. 불일치하면 원본 변경 시점과 복원한 버전을 먼저 대조하세요.</td></tr>
+</tbody>
+</table>
+<p><a href="/kor/report/it/windows11-onedrive-sync-not-working-red-x-sync-pending-reset-2026.html">OneDrive 동기화 보류 점검</a> · <a href="/kor/report/it/iphone-icloud-backup-not-working-next-backup-size-greyed-out-photo-sync-2026.html">아이폰 iCloud 백업 상태 확인</a></p>
+<p>공식 안내 · <a class="source-link" href="https://learn.microsoft.com/ko-kr/powershell/module/microsoft.powershell.utility/get-filehash?view=powershell-7.6">Microsoft Learn 파일 해시 확인</a></p>
+</section>
 <nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">1. 백업 성공의 기준을 다섯 단계로 나누기</a></li><li><a href="#section-02">2. 왜 ‘클라우드에 동기화됨’과 ‘독립 백업’은 다를까?</a></li><li><a href="#section-03">3. 준비물: 15분 실험에 필요한 것은 세 가지</a></li><li><a href="#section-04">4. 독자 제작 실습: 15분 검증 시간표</a></li><li><a href="#section-05">5. 1차 검증: 백업 저장소를 원본과 별도로 열기</a></li><li><a href="#section-06">6. 2차 검증: 파일 이름이 아니라 실제 내용을 확인</a></li><li><a href="#section-07">7. 3차 검증: Windows 11에서 SHA-256으로 사본 비교하기</a></li><li><a href="#section-08">8. Mac에서 SHA-256 비교하기</a></li><li><a href="#section-09">9. SHA-256 결과 해석표: 통과·보류·실패를 구별하기</a></li><li><a href="#section-10">10. Windows 파일 기록(File History) 복원 시험하기</a></li><li><a href="#section-11">11. Mac Time Machine 백업 복원 시험하기</a></li><li><a href="#section-12">12. 실패 유형 A: 파일은 있지만 암호·계정이 없어 열 수 없음</a></li><li><a href="#section-13">13. 실패 유형 B: 백업은 있는데 가장 중요한 폴더가 빠져 있음</a></li><li><a href="#section-14">14. 실패 유형 C: 원본과 백업이 동시에 삭제되거나 손상됨</a></li><li><a href="#section-15">15. 점수표: ‘백업됨’이 아니라 ‘복원 준비됨’ 판정하기</a></li><li><a href="#section-16">16. 일상에서 실행하는 ‘무손실 복원 리허설’ 세 가지</a></li><li><a href="#section-17">17. 15분 실험 기록 양식: 다음 번에는 같은 실수를 하지 않기</a></li><li><a href="#section-18">18. 자주 묻는 질문</a></li><li><a href="#section-19">19. 백업이 ‘정말 복구되는지’ 최종 체크리스트</a></li><li><a href="#section-20">공식 출처 및 검증 기준</a></li></ol></nav>
 <div class="layout">
 <div class="intro"><p>외장하드에 사진을 복사해 두었고, 클라우드에도 파란 체크 표시가 나타납니다. 그래서 “백업은 끝났다”고 생각하기 쉽습니다. 하지만 원본을 잃어버린 뒤에야 <strong>백업 파일이 열리지 않거나, 필요한 폴더가 빠져 있거나, 복원할 계정과 비밀번호를 모른다는 사실</strong>을 알아차릴 수도 있습니다.</p>
@@ -126,7 +150,7 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <div class="details-table"><table><thead><tr><th scope="col">시간 목표</th><th scope="col">활동</th><th scope="col">확인할 결과</th></tr></thead><tbody><tr><td>0~3분</td><td>중요한 파일 3개와 백업 위치 선정</td><td>원본·백업 경로 기록</td></tr><tr><td>3~6분</td><td>백업 장치 또는 클라우드에서 파일 찾기</td><td>세 파일이 실제 존재</td></tr><tr><td>6~9분</td><td>원본과 다른 폴더로 복사 또는 복원</td><td>안전한 복원 사본 생성</td></tr><tr><td>9~12분</td><td>복원본 열고 내용 확인</td><td>문서·사진·영상 정상</td></tr><tr><td>12~15분</td><td>1개 파일의 SHA-256 비교, 결과 기록</td><td>원본과 복원본 일치 여부</td></tr></tbody></table></div>
 <h3>실험 전 체크</h3>
 <p>원본 파일과 백업 파일의 <strong>이름이 같아도 다른 버전일 수 있습니다.</strong> 이 경우 같은 시점의 데이터인지 확인하세요. 예를 들어 어제 백업한 문서와 오늘 수정한 원본을 비교한다면 SHA-256 값이 다른 것은 당연할 수 있습니다.</p>
-<p>또한 파일을 복원하는 동안 다른 프로그램에서 원본을 편집하지 않는 편이 좋습니다. 비교 대상이 변하면 결과 해석이 어려워질 수 있습니다.</p></section>
+<p>또한 파일을 복원하는 동안 다른 프로그램에서 원본을 편집하지 않는 편이 좋습니다. 저장 중인 파일은 백업본과 버전이 달라 해시가 다를 수 있습니다. 파일을 닫고 같은 저장 시점의 복사본 두 개를 다시 비교하세요.</p></section>
 <section class="section" aria-labelledby="section-05"><h2 id="section-05">5. 1차 검증: 백업 저장소를 원본과 별도로 열기</h2><p>외장 드라이브에 파일을 복사한 경우, 사용 중인 컴퓨터의 원본 폴더를 계속 바라보면서 백업했다고 착각할 수 있습니다.</p>
 <h3>외장 SSD·USB라면</h3>
 <ol>
