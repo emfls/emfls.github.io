@@ -164,7 +164,17 @@
       section#faq dt { font-weight: bold; margin-top: 8px;}
       section#faq dd { margin: 0 0 7px 0; font-size: 0.99em; color: #286673;}
     </style>
-  </head>
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+    <style>
+    .emfls-ad-slot { box-sizing:border-box; width:100%; min-width:0; margin:48px auto; text-align:center; clear:both }
+    .emfls-ad-slot .ad-label { display:block; height:20px; font:12px/20px system-ui,sans-serif; color:inherit }
+    .emfls-ad-slot .ad-space { width:100%; height:250px }
+    .tool-notes { line-height:1.65; overflow-wrap:anywhere }
+    .tool-notes h2 { font-size:1.1rem }
+
+    #backBtn, #backBtn:hover { position:static; display:block; width:fit-content; max-width:90%; margin:32px auto; transform:none; box-sizing:border-box }
+    </style>
+</head>
   <body>
     <main>
       <div class="container" itemscope itemtype="https://schema.org/WebApplication">
@@ -180,11 +190,13 @@
           <label for="crcType" id="crcTypeLabel">CRC 종류</label>
           <select id="crcType">
             <option value="crc32">CRC-32</option>
-            <option value="crc16">CRC-16-IBM</option>
-            <option value="crc16ccitt">CRC-16-CCITT</option>
+            <option value="crc16">CRC-16/CMS</option>
+            <option value="crc16ccitt">CRC-16/IBM-3740 (CCITT-FALSE)</option>
           </select>
         </div>
         <div class="input-row">
+          <label for="inputMode">입력 형식</label>
+          <select id="inputMode"><option value="text">텍스트 (UTF-8)</option><option value="hex">16진 바이트</option></select>
           <label for="inputText" id="inputTextLabel">입력 (텍스트 또는 헥스)</label>
           <textarea id="inputText" rows="4" placeholder="텍스트나 헥스 문자열을 입력하세요"></textarea>
         </div>
@@ -192,7 +204,10 @@
 
         <div class="result-area" id="resultArea"></div>
 
-        <div class="footer" id="footer">
+        <aside class="emfls-ad-slot emfls-phase2" aria-label="광고"><span class="ad-label">광고</span><div class="ad-space"><ins class="adsbygoogle" style="display:block;width:100%;height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748"></ins></div><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></aside>
+<section class="tool-notes"><h2>같은 문자열에서 다른 CRC가 나오는 이유</h2><p>텍스트 모드는 공백과 줄바꿈까지 포함해 UTF-8 바이트를 계산합니다. 16진 모드는 한 바이트를 두 자리로 입력합니다. 텍스트 123456789와 16진수 31 32 33 34 35 36 37 38 39의 CRC-32는 모두 CBF43926입니다. CRC는 전송 오류를 검사하며 파일의 작성자를 인증하지 않습니다.</p><p><a href="https://www.rfc-editor.org/rfc/rfc1952#section-8">RFC 1952의 CRC-32 계산</a></p></section>
+<aside class="emfls-ad-slot emfls-phase2" aria-label="광고"><span class="ad-label">광고</span><div class="ad-space"><ins class="adsbygoogle" style="display:block;width:100%;height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748"></ins></div><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></aside>
+<div class="footer" id="footer">
           <b>팁:</b> 펌웨어, 네트워크 패킷, 파일 검증 등에 사용하세요.<br />
           <span style="color: #20477f">데이터는 절대 외부로 전송되지 않습니다.</span>
         </div>
@@ -204,9 +219,9 @@
             <dt>CRC란 무엇인가요?</dt>
             <dd>CRC(순환 중복 검사)는 통신 또는 저장 중 데이터의 우발적 오류를 검출하기 위해 사용되는 해시 함수입니다.</dd>
             <dt>어떤 CRC 유형을 지원하나요?</dt>
-            <dd>이 도구는 CRC-32, CRC-16-IBM, CRC-16-CCITT를 지원합니다. 향후 추가 알고리즘이 추가될 수 있습니다.</dd>
+            <dd>이 도구는 CRC-32, CRC-16/CMS, CRC-16/IBM-3740 (CCITT-FALSE)를 지원합니다. 향후 추가 알고리즘이 추가될 수 있습니다.</dd>
             <dt>헥스 값을 입력할 수 있나요?</dt>
-            <dd>네, "0x" 접두어나 공백이 포함된 헥스 문자열을 입력할 수 있습니다. 예: "0x12 34 56" 또는 "123456".</dd>
+            <dd>네, 16진 바이트 모드에서 "0x" 접두어나 공백이 포함된 헥스 문자열을 입력할 수 있습니다. 예: "0x12 34 56" 또는 "123456".</dd>
             <dt>내 데이터가 업로드되거나 저장되나요?</dt>
             <dd>아니요. 모든 계산은 브라우저에서만 이루어집니다. 데이터는 기기를 벗어나지 않습니다.</dd>
             <dt>CRC는 어디에 사용되나요?</dt>
@@ -218,22 +233,20 @@
     <a href="../" id="backBtn">다른 유틸리티</a>
     <script>
       // CRC 계산 함수 (간단 구현)
-      function crc32(str) {
-        let crc = 0 ^ -1;
-        for (let i = 0; i < str.length; i++) {
-          crc =
-            (crc >>> 8) ^
-            [
-              0x00000000, 0x77073096, 0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3,
-              0x0edb8832, 0x79dcb8a4, 0xe0d5e91e, 0x97d2d988, 0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91
-            ][(crc ^ str.charCodeAt(i)) & 0x0f];
+      function crc32(bytes) {
+        let crc = 0xffffffff;
+        for (const byte of bytes) {
+          crc ^= byte;
+          for (let bit = 0; bit < 8; bit++) {
+            crc = (crc >>> 1) ^ ((crc & 1) ? 0xedb88320 : 0);
+          }
         }
-        return ((crc ^ -1) >>> 0).toString(16).toUpperCase().padStart(8, "0");
+        return ((~crc) >>> 0).toString(16).toUpperCase().padStart(8, "0");
       }
-      function crc16(str) {
+      function crc16(bytes) {
         let crc = 0xffff;
-        for (let i = 0; i < str.length; i++) {
-          crc ^= str.charCodeAt(i) << 8;
+        for (let i = 0; i < bytes.length; i++) {
+          crc ^= bytes[i] << 8;
           for (let j = 0; j < 8; j++) {
             if (crc & 0x8000) crc = (crc << 1) ^ 0x8005;
             else crc = crc << 1;
@@ -242,10 +255,10 @@
         }
         return crc.toString(16).toUpperCase().padStart(4, "0");
       }
-      function crc16ccitt(str) {
+      function crc16ccitt(bytes) {
         let crc = 0xffff;
-        for (let i = 0; i < str.length; i++) {
-          crc ^= str.charCodeAt(i) << 8;
+        for (let i = 0; i < bytes.length; i++) {
+          crc ^= bytes[i] << 8;
           for (let j = 0; j < 8; j++) {
             crc = crc & 0x8000 ? (crc << 1) ^ 0x1021 : crc << 1;
           }
@@ -256,25 +269,23 @@
 
       document.getElementById("calcBtn").onclick = function () {
         const type = document.getElementById("crcType").value;
-        let text = document.getElementById("inputText").value;
-        if (!text.trim()) {
-          document.getElementById("resultArea").textContent = "입력된 텍스트가 없습니다.";
-          return;
-        }
-        // 헥스 입력 지원: 0x 접두어, 공백 허용
-        text = text.trim();
-        if (/^(0x)?[a-fA-F0-9\s]+$/.test(text)) {
-          text = text.replace(/0x/g, "").replace(/\s+/g, "");
-          text =
-            text
-              .match(/.{1,2}/g)
-              ?.map((byte) => String.fromCharCode(parseInt(byte, 16)))
-              .join("") || "";
+        const text = document.getElementById("inputText").value;
+        const mode = document.getElementById("inputMode").value;
+        let bytes;
+        if (mode === "hex") {
+          const hex = text.trim().replace(/^0x/i, "").replace(/\s+/g, "");
+          if (!/^(?:[0-9a-f]{2})+$/i.test(hex)) {
+            document.getElementById("resultArea").textContent = "16진수는 한 바이트당 두 자리로 입력하세요.";
+            return;
+          }
+          bytes = Uint8Array.from(hex.match(/../g), pair => parseInt(pair, 16));
+        } else {
+          bytes = new TextEncoder().encode(text);
         }
         let result = "";
-        if (type === "crc32") result = crc32(text);
-        else if (type === "crc16") result = crc16(text);
-        else if (type === "crc16ccitt") result = crc16ccitt(text);
+        if (type === "crc32") result = crc32(bytes);
+        else if (type === "crc16") result = crc16(bytes);
+        else if (type === "crc16ccitt") result = crc16ccitt(bytes);
         document.getElementById("resultArea").textContent = result ? "CRC: " + result : "오류가 발생했습니다.";
       };
     </script>
@@ -297,7 +308,7 @@
           "name": "어떤 CRC 유형을 지원하나요?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "이 도구는 CRC-32, CRC-16-IBM, CRC-16-CCITT를 지원합니다. 향후 추가 알고리즘이 추가될 수 있습니다."
+            "text": "이 도구는 CRC-32, CRC-16/CMS, CRC-16/IBM-3740 (CCITT-FALSE)를 지원합니다. 향후 추가 알고리즘이 추가될 수 있습니다."
           }
         },
         {

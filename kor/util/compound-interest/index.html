@@ -198,7 +198,17 @@
       section#faq dt { font-weight: bold; margin-top: 8px; }
       section#faq dd { margin: 0 0 7px 0; font-size: 0.99em; color: #1e589e; }
     </style>
-  </head>
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+    <style>
+    .emfls-ad-slot { box-sizing:border-box; width:100%; min-width:0; margin:48px auto; text-align:center; clear:both }
+    .emfls-ad-slot .ad-label { display:block; height:20px; font:12px/20px system-ui,sans-serif; color:inherit }
+    .emfls-ad-slot .ad-space { width:100%; height:250px }
+    .tool-notes { line-height:1.65; overflow-wrap:anywhere }
+    .tool-notes h2 { font-size:1.1rem }
+
+    #backBtn, #backBtn:hover { position:static; display:block; width:fit-content; max-width:90%; margin:32px auto; transform:none; box-sizing:border-box }
+    </style>
+</head>
   <body>
     <main>
       <div class="container" itemscope itemtype="https://schema.org/WebApplication">
@@ -207,7 +217,7 @@
           복리와 단리 성장 비교를 즉시 확인하세요.<br />
           월 불입(적립식) 또는 일시불 원금 모두 지원합니다.
         </p>
-        <form id="form" autocomplete="off">
+        <form method="dialog" id="form" autocomplete="off">
           <div class="form-row">
             <label for="principal">원금 ($)</label>
             <input type="number" id="principal" min="0" step="0.01" value="10000" required />
@@ -222,7 +232,7 @@
           </div>
           <div class="form-row">
             <label for="years">기간 (년)</label>
-            <input type="number" id="years" min="1" step="1" value="10" required />
+            <input type="number" id="years" min="1" max="150" step="1" value="10" required />
           </div>
           <div class="form-row">
             <label for="freq">복리 빈도</label>
@@ -243,7 +253,10 @@
           <span style="background:#fc8642"></span> 단리
         </div>
         <div class="table-block" id="tableBlock"></div>
-        <div class="footer">
+        <aside class="emfls-ad-slot emfls-phase2" aria-label="광고"><span class="ad-label">광고</span><div class="ad-space"><ins class="adsbygoogle" style="display:block;width:100%;height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748"></ins></div><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></aside>
+<section class="tool-notes"><h2>월말 납입과 세전 비교</h2><p>매달 말에 같은 금액을 넣고 마지막 납입금에는 이자가 붙지 않는다고 가정합니다. 연 명목금리와 선택한 복리 주기에서 같은 연간 수익을 내는 월 이율로 환산합니다. 단리는 각 납입금이 남은 개월 수에 비례해 이자를 얻습니다. 세금·수수료·상품별 일수 계산은 제외합니다. 연 0%에 원금 1,000달러와 월 100달러를 1년간 넣으면 두 방식 모두 2,200달러입니다.</p><p><a href="https://finlife.fss.or.kr/finlife/main/main.do?menuNo=700000">금융감독원 금융상품 비교공시</a></p></section>
+<aside class="emfls-ad-slot emfls-phase2" aria-label="광고"><span class="ad-label">광고</span><div class="ad-space"><ins class="adsbygoogle" style="display:block;width:100%;height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748"></ins></div><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></aside>
+<div class="footer">
           월 불입을 포함한 복리와 단리 비교를 제공합니다.<br />
           100% 브라우저 기반. 로그인 불필요. 데이터 전송 없음.
         </div>
@@ -278,26 +291,15 @@
       }
       // 복리 계산 (월 불입 포함)
       function compoundWithDeposit(P, PMT, r, n, t) {
-        let periods = n * t;
-        let i = r / n;
-        let fvP = P * Math.pow(1 + i, periods);
-        let fvPMT = PMT > 0 ? PMT * ((Math.pow(1 + i, periods) - 1) / i) * (i > 0 ? 1 : 0) : 0;
-        if (n !== 12 && PMT > 0) {
-          let m_per_period = 12 / n;
-          let fvPMT_adj = 0;
-          for (let k = 1; k <= periods; k++) {
-            fvPMT_adj += PMT * Math.pow(1 + r / n, periods - k + 1) * (m_per_period > 1 ? m_per_period : 1);
-          }
-          fvPMT = fvPMT_adj;
-        }
-        return fvP + fvPMT;
+        const months = 12 * t;
+        const monthlyLog = n * Math.log1p(r / n) / 12;
+        if (monthlyLog === 0) return P + PMT * months;
+        return P * Math.exp(months * monthlyLog) +
+          PMT * Math.expm1(months * monthlyLog) / Math.expm1(monthlyLog);
       }
-      // 단리 계산 (월 불입 포함)
       function simpleWithDeposit(P, PMT, r, t) {
-        let fvP = P * (1 + r * t);
-        let fvPMT = PMT * 12 * t;
-        let interestPMT = fvPMT * r * t / 2;
-        return fvP + fvPMT + interestPMT;
+        const months = 12 * t;
+        return P * (1 + r * t) + PMT * months * (1 + r * (months - 1) / 24);
       }
 
       function drawChart(years, compVals, simpVals) {
@@ -323,7 +325,7 @@
         // X 레이블
         ctx.fillStyle = "#777";
         for (let y = 1; y <= years; y++) {
-          let x = ox + (W) * (y-1) / (years-1);
+          let x = ox + (W) * (y-1) / Math.max(1, years-1);
           ctx.fillText(y, x-4, oy+H+17);
         }
         // 선 그리기 함수
@@ -333,8 +335,8 @@
           ctx.beginPath();
           for (let y = 1; y <= years; y++) {
             let val = data[y-1];
-            let px = ox + (W) * (y-1) / (years-1);
-            let py = oy + H - ((val - minV) / (maxV-minV)) * H;
+            let px = ox + (W) * (y-1) / Math.max(1, years-1);
+            let py = oy + H - ((val - minV) / (maxV-minV || 1)) * H;
             if (y === 1) ctx.moveTo(px, py);
             else ctx.lineTo(px, py);
           }
@@ -343,8 +345,8 @@
           ctx.fillStyle = color;
           for (let y = 1; y <= years; y++) {
             let val = data[y-1];
-            let px = ox + (W) * (y-1) / (years-1);
-            let py = oy + H - ((val - minV) / (maxV-minV)) * H;
+            let px = ox + (W) * (y-1) / Math.max(1, years-1);
+            let py = oy + H - ((val - minV) / (maxV-minV || 1)) * H;
             ctx.beginPath(); ctx.arc(px, py, 3.1, 0, Math.PI*2); ctx.fill();
           }
         }
@@ -360,7 +362,7 @@
         let r = parseFloat(form.rate.value) / 100;
         let t = parseInt(form.years.value);
         let n = parseInt(form.freq.value);
-        if (isNaN(P) || isNaN(PMT) || isNaN(r) || isNaN(t) || isNaN(n) || P < 0 || PMT < 0 || r < 0 || t < 1) {
+        if (isNaN(P) || isNaN(PMT) || isNaN(r) || isNaN(t) || isNaN(n) || P < 0 || PMT < 0 || r < 0 || t < 1 || t > 150 || !Number.isFinite(compoundWithDeposit(P, PMT, r, n, t))) {
           result.innerHTML = '<span style="color:#d33;">유효한 값을 입력해주세요.</span>';
           tableBlock.innerHTML = '';
           ctx.clearRect(0,0,chart.width,chart.height);
