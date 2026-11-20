@@ -78,6 +78,17 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 @media(max-width:650px){.shell{padding:14px 12px 45px}.site-header{padding:14px}.hero{padding:29px 20px}.hero h1{font-size:1.58rem}.highlight-row{gap:7px}.highlight{padding:13px 9px}.highlight .value{font-size:.92rem}.highlight .label{font-size:.7rem}.contents,.section,.intro,.info-bottom{padding:19px 17px}.contents ol{grid-template-columns:1fr}.section h2{font-size:1.18rem}.site-header nav{gap:9px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
+<style>
+.traffic-summary{font-size:.94rem;line-height:1.65;margin:12px 0 0}
+.traffic-summary a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.traffic-draft{scroll-margin-top:60px;min-width:0;max-width:100%;box-sizing:border-box;margin:16px 0;padding:14px;border:1px solid #506079;border-radius:10px;background:#1b2535;color:#eef3ff;overflow-wrap:anywhere}
+.traffic-draft table{width:100%;table-layout:fixed;border-collapse:collapse;margin:0;color:inherit;background:transparent;font-size:.875rem}
+.traffic-draft caption{text-align:left;color:inherit;font-size:1rem;font-weight:700;line-height:1.45;margin-bottom:8px}
+.traffic-draft th,.traffic-draft td{padding:7px;vertical-align:top;text-align:left;line-height:1.55;border:1px solid #53637e;color:inherit;background:transparent}
+.traffic-draft th:first-child{width:34%}
+.traffic-draft p{margin:10px 0 0;line-height:1.65;color:inherit;font-size:.875rem}
+.traffic-draft a{display:inline-block;padding:3px 0;color:#c3d8ff}
+</style>
 </head>
 <body>
 <a class="skip" href="#main">본문으로 건너뛰기</a>
@@ -88,10 +99,23 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <header class="hero">
 <span class="eyebrow">IT · 기기 · 최신 가이드</span>
 <h1>2026 엑셀 IF 함수 사용법: 합격·불합격·빈칸 처리·AND/OR·IFS 중첩 조건</h1>
-<p class="deck">엑셀에서 점수에 따라 합격·불합격을 자동으로 표시하거나, 판매액에 따라 수당을 계산하고, 입력하지 않은 셀에는 &#x27;미입력&#x27;을 나타내고 싶을 때 가장 먼저 배울 함수가 IF 함수입니다. IF는 조건에 따라 두 결과 중 하나를 선택합니다. 단, 여러 조건을 섞거나 빈칸·문자·숫자를 잘못 처리하면 예상과 다른 결과가 나올 수 있습니다.</p>
+<p class="traffic-summary">IF 수식을 만들 때는 참일 때와 거짓일 때의 결과부터 적어 보세요. 빈칸과 0을 구별해야 하는 업무라면 빈 셀을 먼저 처리한 뒤 금액이나 점수를 비교하세요. <a href="#decision-checklist">상황별 비교표 보기</a></p>
 <div class="hero-meta"><span>최초 발행 2026-11-16</span><span>내용 확인 2026-11-16</span><span>작성 emfls</span></div>
 </header>
 
+<section class="traffic-draft" id="decision-checklist" aria-label="조건식이 맞는지 세 값으로 검산하기">
+<table>
+<caption>조건식이 맞는지 세 값으로 검산하기</caption>
+<thead><tr><th scope="col">상황</th><th scope="col">확인할 것</th></tr></thead>
+<tbody>
+<tr><th scope="row">빈칸을 미입력으로 처리</th><td>빈 셀을 먼저 검사해 결과를 비워 두고, 그 뒤에 점수 기준을 적용하세요. 실제 점수 0은 별도로 시험하세요.</td></tr>
+<tr><th scope="row">경계값 판정</th><td>70점 이상 합격이면 69·70·71을 넣어 70점부터 합격이 나오는지 보세요. 여러 구간은 높은 기준부터 비교하세요.</td></tr>
+<tr><th scope="row">아래로 수식 복사</th><td>행마다 달라지는 실제값은 상대참조, 하나로 유지할 목표 셀은 절대참조로 두고 두 번째 행의 수식을 확인하세요.</td></tr>
+</tbody>
+</table>
+<p><a href="/kor/report/it/excel-formulas-not-calculating-manual-auto-text-show-formulas-spill-2026.html">수식이 값으로 계산되지 않을 때</a> · <a href="/kor/report/it/excel-conditional-formatting-row-color-overdue-rules-not-working-2026.html">같은 기준을 색으로 표시하기</a></p>
+<p>공식 안내 · <a class="source-link" href="https://support.microsoft.com/ko-kr/excel/functions/if-function">Microsoft IF 함수</a></p>
+</section>
 <nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">1. 엑셀 IF 함수 기본 형식</a></li><li><a href="#section-02">2. 가장 많이 사용하는 비교 연산자 6개</a></li><li><a href="#section-03">3. 예제 ① 합격·불합격 자동 표시</a></li><li><a href="#section-04">4. 예제 ② 빈칸이면 &#x27;미입력&#x27;, 점수가 있으면 합격 여부 표시</a></li><li><a href="#section-05">5. 예제 ③ 숫자로 결과 반환하기: 성과급 계산</a></li><li><a href="#section-06">6. 예제 ④ AND 함수: 두 조건 모두 만족해야 통과</a></li><li><a href="#section-07">7. 예제 ⑤ OR 함수: 조건 하나만 충족하면 혜택 적용</a></li><li><a href="#section-08">8. 예제 ⑥ 중첩 IF: A·B·C·D 학점 표시</a></li><li><a href="#section-09">9. 예제 ⑦ IFS 함수: 중첩 IF를 간단히 쓰기</a></li><li><a href="#section-10">10. IF와 IFERROR·SUMIF·COUNTIF의 차이</a></li><li><a href="#section-11">11. IF 함수가 안 될 때 가장 흔한 오류 6가지</a></li><li><a href="#section-12">12. 실무에서 바로 복사해 쓰는 IF 함수 6개</a></li><li><a href="#section-13">자주 묻는 질문(FAQ)</a></li><li><a href="#section-14">핵심 요약</a></li><li><a href="#section-15">Microsoft 공식 자료</a></li></ol></nav>
 <div class="layout">
 <div class="intro"><p>엑셀에서 점수에 따라 <strong>합격·불합격을 자동으로 표시</strong>하거나, 판매액에 따라 수당을 계산하고, 입력하지 않은 셀에는 <strong>&#x27;미입력&#x27;</strong>을 나타내고 싶을 때 가장 먼저 배울 함수가 <strong>IF 함수</strong>입니다. IF는 조건에 따라 두 결과 중 하나를 선택합니다. 단, 여러 조건을 섞거나 빈칸·문자·숫자를 잘못 처리하면 예상과 다른 결과가 나올 수 있습니다.</p>
@@ -157,7 +181,7 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 </ul>
 <p>OR은 조건 <strong>하나 이상</strong>이 TRUE면 TRUE를 반환합니다. 따라서 AND와 OR를 잘못 바꾸면 혜택 대상자가 완전히 달라질 수 있습니다.</p></section>
 <section class="section" aria-labelledby="section-08"><h2 id="section-08">8. 예제 ⑥ 중첩 IF: A·B·C·D 학점 표시</h2><p>한 번의 IF는 두 갈래로 분기합니다. 학점처럼 <strong>세 갈래 이상</strong> 구분하려면 IF 함수 안에 IF 함수를 넣는 <strong>중첩 IF</strong>를 사용할 수 있습니다.</p>
-<p>B2의 점수를 다음 기준으로 평가한다고 가정합니다.</p>
+<p>B2의 점수를 등급으로 바꾸기 전에 각 등급의 최저점과 바로 아래 점수를 짝지어 시험값으로 적어 두세요.</p>
 <div class="details-table"><table><thead><tr><th scope="col">점수</th><th scope="col">학점</th></tr></thead><tbody><tr><td>90점 이상</td><td>A</td></tr><tr><td>80~89점</td><td>B</td></tr><tr><td>70~79점</td><td>C</td></tr><tr><td>70점 미만</td><td>D</td></tr></tbody></table></div>
 <pre class="notion-code"><code>=IF(B2&gt;=90,&quot;A&quot;,IF(B2&gt;=80,&quot;B&quot;,IF(B2&gt;=70,&quot;C&quot;,&quot;D&quot;)))</code></pre>
 <p><strong>큰 기준부터 작은 기준 순서로 검사</strong>하는 것이 핵심입니다. 예컨대 B2&gt;=70을 맨 앞에 놓으면 95점도 70점 조건을 먼저 통과하여 C가 될 수 있습니다.</p>

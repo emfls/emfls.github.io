@@ -78,6 +78,17 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 @media(max-width:650px){.shell{padding:14px 12px 45px}.site-header{padding:14px}.hero{padding:29px 20px}.hero h1{font-size:1.58rem}.highlight-row{gap:7px}.highlight{padding:13px 9px}.highlight .value{font-size:.92rem}.highlight .label{font-size:.7rem}.contents,.section,.intro,.info-bottom{padding:19px 17px}.contents ol{grid-template-columns:1fr}.section h2{font-size:1.18rem}.site-header nav{gap:9px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
+<style>
+.traffic-summary{font-size:.94rem;line-height:1.65;margin:12px 0 0}
+.traffic-summary a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.traffic-draft{scroll-margin-top:60px;min-width:0;max-width:100%;box-sizing:border-box;margin:16px 0;padding:14px;border:1px solid #506079;border-radius:10px;background:#1b2535;color:#eef3ff;overflow-wrap:anywhere}
+.traffic-draft table{width:100%;table-layout:fixed;border-collapse:collapse;margin:0;color:inherit;background:transparent;font-size:.875rem}
+.traffic-draft caption{text-align:left;color:inherit;font-size:1rem;font-weight:700;line-height:1.45;margin-bottom:8px}
+.traffic-draft th,.traffic-draft td{padding:7px;vertical-align:top;text-align:left;line-height:1.55;border:1px solid #53637e;color:inherit;background:transparent}
+.traffic-draft th:first-child{width:34%}
+.traffic-draft p{margin:10px 0 0;line-height:1.65;color:inherit;font-size:.875rem}
+.traffic-draft a{display:inline-block;padding:3px 0;color:#c3d8ff}
+</style>
 </head>
 <body>
 <a class="skip" href="#main">본문으로 건너뛰기</a>
@@ -88,10 +99,23 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <header class="hero">
 <span class="eyebrow">IT · 기기 · 최신 가이드</span>
 <h1>엑셀 VLOOKUP 함수 사용법·#N/A 오류 해결 — 복사 가능한 실습 예제 실전 가이드</h1>
-<p class="deck">엑셀에서 상품코드로 단가를 자동 입력하거나, 사번으로 직원의 부서를 찾을 때 가장 자주 등장하는 함수 중 하나가 VLOOKUP입니다. 하지만 수식을 복사하자마자 #N/A, #REF!, 잘못된 가격이 나온다면 함수를 다시 외우기보다 네 가지를 확인하는 편이 빠릅니다.</p>
+<p class="traffic-summary">제품코드를 찾는 VLOOKUP은 표의 첫 열에 코드가 있어야 하며 마지막 인수를 FALSE로 지정해야 정확히 일치하는 값을 찾습니다. 목록에 코드가 보이는데 #N/A라면 값의 자료형부터 비교하세요. <a href="#decision-checklist">상황별 비교표 보기</a></p>
 <div class="hero-meta"><span>최초 발행 2026-11-10</span><span>내용 확인 2026-11-10</span><span>작성 emfls</span></div>
 </header>
 
+<section class="traffic-draft" id="decision-checklist" aria-label="정확히 찾기에서 먼저 확인할 세 가지">
+<table>
+<caption>정확히 찾기에서 먼저 확인할 세 가지</caption>
+<thead><tr><th scope="col">상황</th><th scope="col">확인할 것</th></tr></thead>
+<tbody>
+<tr><th scope="row">검색 열의 위치</th><td>선택한 표 범위의 맨 왼쪽 열이 코드 열인지 확인하세요. 반환 열 번호는 시트 전체가 아니라 이 범위 안에서 셉니다.</td></tr>
+<tr><th scope="row">겉보기만 같은 코드</th><td>숫자 123과 텍스트 00123이 같은 식별자인지 먼저 정한 뒤 양쪽 열의 자료형·공백을 대조하세요.</td></tr>
+<tr><th scope="row">아래로 복사하면 실패</th><td>조회 범위를 절대참조로 고정한 뒤 첫 행과 마지막 행의 수식을 비교하세요. 값을 숨기기 전에 실제 누락 코드 한 건도 시험하세요.</td></tr>
+</tbody>
+</table>
+<p><a href="/kor/report/it/excel-csv-korean-utf8-leading-zeros-long-numbers-2026.html">앞자리 0이 있는 제품코드 가져오기</a> · <a href="/kor/report/it/excel-if-function-examples-blank-and-or-ifs-nested-conditions-2026.html">조회 결과를 조건별로 처리하기</a></p>
+<p>공식 안내 · <a class="source-link" href="https://support.microsoft.com/ko-kr/excel/functions/vlookup-function">Microsoft VLOOKUP 함수</a></p>
+</section>
 <nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">1. VLOOKUP 한눈에 보기: 정확히 일치하려면 FALSE</a></li><li><a href="#section-02">2. 복사 가능한 실습 예제: 상품코드로 가격 가져오기</a></li><li><a href="#section-03">3. #N/A 오류가 뜰 때: 7가지 원인을 순서대로 확인</a></li><li><a href="#section-04">4. 숫자로 보이는데 #N/A: 숫자 123과 텍스트 &quot;123&quot;의 차이</a></li><li><a href="#section-05">5. 앞뒤 공백 때문에 검색 안 됨: TRIM·SUBSTITUTE</a></li><li><a href="#section-06">6. 수식을 아래로 복사하면 일부 행에서만 오류: 범위 고정</a></li><li><a href="#section-07">7. #REF! 오류가 나면: 반환 열번호가 범위보다 큰지 확인</a></li><li><a href="#section-08">8. 값은 나오지만 가격이 틀리다면 TRUE 설정부터 확인</a></li><li><a href="#section-09">9. 검색열이 오른쪽에 있다면? VLOOKUP의 왼쪽 검색 제한</a></li><li><a href="#section-10">10. XLOOKUP으로 바꾸기: 같은 예제를 비교</a></li><li><a href="#section-11">11. 오류 대신 &#x27;미등록&#x27; 표시: IFNA와 IFERROR</a></li><li><a href="#section-12">12. 같은 코드가 여러 번 있으면 어떤 값이 나오나요?</a></li><li><a href="#section-13">13. 실무에서 자주 헷갈리는 수식 5개 비교</a></li><li><a href="#section-14">14. 오류별 5분 점검 체크리스트</a></li><li><a href="#section-15">15. 자주 묻는 질문 10개</a></li><li><a href="#section-16">16. 보고서 제출 전 최종 체크리스트</a></li><li><a href="#section-17">결론</a></li><li><a href="#section-18">공식 출처 및 확인 기준</a></li></ol></nav>
 <div class="layout">
 <div class="intro"><p>엑셀에서 상품코드로 단가를 자동 입력하거나, 사번으로 직원의 부서를 찾을 때 가장 자주 등장하는 함수 중 하나가 <strong>VLOOKUP</strong>입니다. 하지만 수식을 복사하자마자 <strong>#N/A</strong>, <strong>#REF!</strong>, <strong>잘못된 가격</strong>이 나온다면 함수를 다시 외우기보다 네 가지를 확인하는 편이 빠릅니다.</p>
@@ -108,7 +132,7 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <p><strong>F3 셀에 </strong><strong>P003</strong><strong>을 입력</strong>하고 G3 셀에 다음 수식을 입력합니다.</p>
 <p>=VLOOKUP(F3,$B$4:$D$7,3,FALSE)</p>
 <p><strong>예상 결과는 1800</strong>입니다.</p>
-<p>왜 그렇게 되는지 분해하면 다음과 같습니다.</p>
+<p>먼저 표 범위의 첫 열에서 F3 값이 실제로 발견되는지 확인한 다음, 세 번째 열을 반환하도록 지정했는지 검산하세요.</p>
 <ol>
 <li>F3에 입력된 P003을 읽습니다.</li>
 <li>B4:D7 범위의 <strong>첫 열인 B열</strong>에서 P003을 찾습니다.</li>

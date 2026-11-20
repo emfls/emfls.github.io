@@ -78,6 +78,17 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 @media(max-width:650px){.shell{padding:14px 12px 45px}.site-header{padding:14px}.hero{padding:29px 20px}.hero h1{font-size:1.58rem}.highlight-row{gap:7px}.highlight{padding:13px 9px}.highlight .value{font-size:.92rem}.highlight .label{font-size:.7rem}.contents,.section,.intro,.info-bottom{padding:19px 17px}.contents ol{grid-template-columns:1fr}.section h2{font-size:1.18rem}.site-header nav{gap:9px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
+<style>
+.traffic-summary{font-size:.94rem;line-height:1.65;margin:12px 0 0}
+.traffic-summary a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.traffic-draft{scroll-margin-top:60px;min-width:0;max-width:100%;box-sizing:border-box;margin:16px 0;padding:14px;border:1px solid #506079;border-radius:10px;background:#1b2535;color:#eef3ff;overflow-wrap:anywhere}
+.traffic-draft table{width:100%;table-layout:fixed;border-collapse:collapse;margin:0;color:inherit;background:transparent;font-size:.875rem}
+.traffic-draft caption{text-align:left;color:inherit;font-size:1rem;font-weight:700;line-height:1.45;margin-bottom:8px}
+.traffic-draft th,.traffic-draft td{padding:7px;vertical-align:top;text-align:left;line-height:1.55;border:1px solid #53637e;color:inherit;background:transparent}
+.traffic-draft th:first-child{width:34%}
+.traffic-draft p{margin:10px 0 0;line-height:1.65;color:inherit;font-size:.875rem}
+.traffic-draft a{display:inline-block;padding:3px 0;color:#c3d8ff}
+</style>
 </head>
 <body>
 <a class="skip" href="#main">본문으로 건너뛰기</a>
@@ -88,10 +99,23 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <header class="hero">
 <span class="eyebrow">IT · 기기 · 최신 가이드</span>
 <h1>2026 엑셀 수식 계산 안됨 해결법: 자동 계산·수식 그대로 표시·텍스트 서식·#SPILL 오류</h1>
-<p class="deck">엑셀 수식 계산 안됨 해결법: 자동 계산이 꺼진 문제, 수식 표시 보기, 텍스트 서식으로 저장된 수식, 수식 자체에 발생한 오류는 겉으로 비슷해 보여도 해결 방법이 서로 다릅니다. 셀의 수식이 계산 결과로 표시되는지 확인합니다.</p>
+<p class="traffic-summary">셀에 수식 글자가 보이는지, 값이 그대로인지, 오류 코드가 나오는지부터 나누세요. 세 경우는 해결 방법이 달라 계산 옵션을 바꾸기 전에 한 셀로 원인을 좁힐 수 있습니다. <a href="#decision-checklist">상황별 비교표 보기</a></p>
 <div class="hero-meta"><span>최초 발행 2026-11-10</span><span>내용 확인 2026-11-10</span><span>작성 emfls</span></div>
 </header>
 
+<section class="traffic-draft" id="decision-checklist" aria-label="계산이 멈춘 것처럼 보일 때 첫 점검">
+<table>
+<caption>계산이 멈춘 것처럼 보일 때 첫 점검</caption>
+<thead><tr><th scope="col">상황</th><th scope="col">확인할 것</th></tr></thead>
+<tbody>
+<tr><th scope="row">여러 셀이 수식 글자로 보임</th><td>수식 표시가 켜졌는지 확인하세요. 한 셀만 문제라면 텍스트 서식이나 수식 앞의 작은따옴표를 점검하세요.</td></tr>
+<tr><th scope="row">값이 갱신되지 않음</th><td>참조 셀을 바꾼 다음 다시 계산해 보세요. 이때만 값이 바뀌면 계산 옵션의 수동·자동 설정을 확인하세요.</td></tr>
+<tr><th scope="row">합계가 예상보다 작음</th><td>숫자처럼 보이는 텍스트가 합산 범위에 있는지 확인하세요. 원본 식별번호는 보존하고 계산에 쓰는 금액 열만 변환하세요.</td></tr>
+</tbody>
+</table>
+<p><a href="/kor/report/it/excel-csv-korean-utf8-leading-zeros-long-numbers-2026.html">CSV에서 숫자와 텍스트 구분하기</a> · <a href="/kor/report/it/excel-transpose-rows-columns-paste-special-transpose-spill-error-2026.html">동적 배열의 출력 범위 확인</a></p>
+<p>공식 안내 · <a class="source-link" href="https://support.microsoft.com/ko-kr/excel/how-to-avoid-broken-formulas-in-excel">Microsoft Excel 수식 점검</a></p>
+</section>
 <nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">1. 엑셀 수식 계산 안됨: 30초 증상별 진단표</a></li><li><a href="#section-02">2. 숫자를 바꿨는데 합계가 안 바뀐다면: 자동 계산 켜기</a></li><li><a href="#section-03">3. F9를 눌러 수식만 재계산하기: 자동과 수동의 차이</a></li><li><a href="#section-04">4. =SUM(A1:A10)이 결과 대신 그대로 표시될 때</a></li><li><a href="#section-05">5. 특정 셀만 계산이 안 된다면: 텍스트 서식과 F2·Enter</a></li><li><a href="#section-06">6. 직접 만들어 확인하는 1분 테스트</a></li><li><a href="#section-07">7. SUM인데 0만 나오는 경우: 참조 범위와 숫자·텍스트 구분</a></li><li><a href="#section-08">8. #NAME?, #VALUE!, #REF!, #DIV/0! 오류별 해결</a></li><li><a href="#section-09">9. #SPILL! 오류: 동적 배열 수식이 확장되지 않는 경우</a></li><li><a href="#section-10">10. 수식이 자기 자신을 참조한다면: 순환 참조 확인</a></li><li><a href="#section-11">11. 일부 셀만 다른 값이 나오는 경우: 수식 복사·상대 참조 확인</a></li><li><a href="#section-12">12. 회사에서 받은 엑셀 파일일 때 주의할 점</a></li><li><a href="#section-13">13. Mac용·웹용 Excel은 메뉴가 같나요?</a></li><li><a href="#section-14">14. 5분 실전 해결 순서</a></li><li><a href="#section-15">15. 자주 묻는 질문(FAQ)</a></li><li><a href="#section-16">16. 최종 체크리스트</a></li><li><a href="#section-17">공식 출처 및 검증 기준</a></li></ol></nav>
 <div class="layout">
 <div class="intro"><p>엑셀에서 숫자를 바꿨는데 합계가 그대로이거나, =SUM(A1:A10)을 입력했는데 결과가 아니라 수식이 통째로 보인다면 원인부터 구분해야 합니다. <strong>자동 계산이 꺼진 문제</strong>, <strong>수식 표시 보기</strong>, <strong>텍스트 서식으로 저장된 수식</strong>, <strong>수식 자체에 발생한 오류</strong>는 겉으로 비슷해 보여도 해결 방법이 서로 다릅니다.</p>
@@ -235,7 +259,7 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <li>전체 범위에 무분별한 <strong>찾기 및 바꾸기·형식 변환</strong>을 사용하지 않습니다.</li>
 </ul>
 <p>특히 #REF! 같은 오류가 나타났을 때 원본 구조를 잘 모른 채 수식을 임의로 제거하거나 숫자 결과를 직접 입력하면 <strong>오류가 눈에 보이지 않게 되더라도 계산의 신뢰성은 더 나빠질 수 있습니다.</strong></p></section>
-<section class="section" aria-labelledby="section-13"><h2 id="section-13">13. Mac용·웹용 Excel은 메뉴가 같나요?</h2><p>기본 수식 원리는 비슷하지만 메뉴와 단축키는 다를 수 있습니다.</p>
+<section class="section" aria-labelledby="section-13"><h2 id="section-13">13. Mac용·웹용 Excel은 메뉴가 같나요?</h2><p>Windows·Mac·웹에서 단축키가 다르면 리본의 수식 탭에서 계산 옵션 또는 수식 표시의 현재 상태를 확인하세요.</p>
 <h3>Mac용 Excel</h3>
 <p>Mac용 Excel에서도 수식 표시 및 수식 결과 전환 기능이 제공됩니다. Microsoft 문서에는 <strong>Ctrl + `</strong> 단축키가 안내돼 있지만, <strong>키보드 배열과 언어 설정에 따라 동작이 달라질 수 있다</strong>고 설명합니다. 단축키를 찾기 어렵다면 리본의 <strong>수식 표시</strong> 메뉴를 사용하세요.</p>
 <p>수식 계산 옵션과 환경설정의 위치도 Windows 데스크톱과 다릅니다. 자신의 Mac Excel 버전에 맞는 Microsoft 지원 문서를 확인하는 것이 정확합니다.</p>
