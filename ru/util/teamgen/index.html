@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Введите имена и выберите количество команд для мгновенного разделения на случайные группы. 100% в браузере, без загрузки данных!" />
+      content="Введите имена и выберите количество команд для мгновенного разделения на случайные группы. Список имён обрабатывается прямо в браузере." />
     <meta
       name="keywords"
       content="случайные команды, разделение на группы, перемешивание имен, создание команд, учебные группы, класс, формирование команд, генератор групп" />
@@ -16,7 +16,7 @@
     <meta property="og:title" content="Генератор случайных команд – Разделение на группы онлайн" />
     <meta
       property="og:description"
-      content="Введите имена и выберите количество команд для мгновенного разделения на случайные группы. 100% в браузере, без загрузки данных!" />
+      content="Введите имена и выберите количество команд для мгновенного разделения на случайные группы. Список имён обрабатывается прямо в браузере." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/ru/util/teamgen/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
@@ -24,7 +24,7 @@
     <meta name="twitter:title" content="Генератор случайных команд – Разделение на группы онлайн" />
     <meta
       name="twitter:description"
-      content="Введите имена и выберите количество команд для мгновенного разделения на случайные группы. 100% в браузере, без загрузки данных!" />
+      content="Введите имена и выберите количество команд для мгновенного разделения на случайные группы. Список имён обрабатывается прямо в браузере." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -70,7 +70,7 @@
       <div class="result-list" id="resultList"></div>
       <a href="../" id="backBtn">Другие инструменты</a>
       <div class="footer">
-        Проверено: 2026-08-10. Разделение использует обычный генератор браузера, не проходило аудит и не является криптографической жеребьёвкой.<br />Имена обрабатываются локально; страница загружает аналитику и рекламу.<br />
+        Проверено: 2026-08-10. Разделение использует обычный генератор браузера, не проходило аудит и не является криптографической жеребьёвкой.<br />Имена распределяются по командам в вашем браузере. На странице подключены Google Аналитика и Google AdSense.<br />
       </div>
     </div>
     <script>
@@ -114,8 +114,13 @@
         teams.forEach((team, i) => {
           const block = document.createElement("div");
           block.className = "team-block";
-          block.innerHTML = `<div class="team-title">Команда ${i + 1}</div>
-            <div class="team-names">${team.join(", ")}</div>`;
+          const title = document.createElement("div");
+          title.className = "team-title";
+          title.textContent = `Команда ${i + 1}`;
+          const memberNames = document.createElement("div");
+          memberNames.className = "team-names";
+          memberNames.textContent = team.join(", ");
+          block.append(title, memberNames);
           resultList.appendChild(block);
         });
       };
@@ -135,9 +140,9 @@
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Загружаются или сохраняются ли данные?</div>
+        <div style="color: #8f94fb; font-weight: bold">Куда отправляется список имён?</div>
         <div style="color: #f0f0f0">
-          Нет. Всё обрабатывается локально в вашем браузере. Нет загрузок, сохранения или отслеживания.
+          Генератор не отправляет список имён на сервер и не сохраняет его. Для статистики посещений и показа рекламы сервисы Google могут обрабатывать сведения об устройстве и использовании страницы.
         </div>
       </div>
 
