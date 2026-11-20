@@ -78,6 +78,17 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 @media(max-width:650px){.shell{padding:14px 12px 45px}.site-header{padding:14px}.hero{padding:29px 20px}.hero h1{font-size:1.58rem}.highlight-row{gap:7px}.highlight{padding:13px 9px}.highlight .value{font-size:.92rem}.highlight .label{font-size:.7rem}.contents,.section,.intro,.info-bottom{padding:19px 17px}.contents ol{grid-template-columns:1fr}.section h2{font-size:1.18rem}.site-header nav{gap:9px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
+<style>
+.traffic-summary{font-size:.94rem;line-height:1.65;margin:12px 0 0}
+.traffic-summary a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.traffic-draft{scroll-margin-top:60px;min-width:0;max-width:100%;box-sizing:border-box;margin:16px 0;padding:14px;border:1px solid #506079;border-radius:10px;background:#1b2535;color:#eef3ff;overflow-wrap:anywhere}
+.traffic-draft table{width:100%;table-layout:fixed;border-collapse:collapse;margin:0;color:inherit;background:transparent;font-size:.875rem}
+.traffic-draft caption{text-align:left;color:inherit;font-size:1rem;font-weight:700;line-height:1.45;margin-bottom:8px}
+.traffic-draft th,.traffic-draft td{padding:7px;vertical-align:top;text-align:left;line-height:1.55;border:1px solid #53637e;color:inherit;background:transparent}
+.traffic-draft th:first-child{width:34%}
+.traffic-draft p{margin:10px 0 0;line-height:1.65;color:inherit;font-size:.875rem}
+.traffic-draft a{display:inline-block;padding:3px 0;color:#c3d8ff}
+</style>
 </head>
 <body>
 <a class="skip" href="#main">본문으로 건너뛰기</a>
@@ -87,11 +98,23 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <article>
 <header class="hero">
 <span class="eyebrow">IT · 기기 · 최신 가이드</span>
-<h1>USB에 4GB 이상 파일 복사 안 될 때 — Windows 11에서 USB 파일 시스템 확인하기 실전 가이드</h1>
+<h1>USB에 4GB 이상 파일 복사 안 될 때 — Windows 11에서 USB 파일 시스템 확인하기 실전 가이드</h1><p class="traffic-summary">USB에 남은 공간이 충분해도 FAT32는 단일 파일을 4GiB 미만으로 제한합니다. 큰 파일 하나만 실패하면 USB의 파일 시스템과 수신 기기가 지원하는 형식을 먼저 확인하세요. <a href="#decision-checklist">상황별 비교표 보기</a></p>
 <p class="deck">64GB USB 메모리에 남은 공간이 30GB인데 5GB짜리 동영상을 복사하자 &#x27;대상 파일 시스템에 비해 파일이 너무 큽니다&#x27;라는 메시지가 뜨는 경우가 있습니다. 저장 공간이 넉넉한데도 파일이 들어가지 않는 이유는 무엇일까요?</p>
 <div class="hero-meta"><span>최초 발행 2026-11-02</span><span>내용 확인 2026-11-02</span><span>작성 emfls</span></div>
 </header>
 
+<section class="traffic-draft" id="decision-checklist" aria-label="큰 파일 복사 전 USB 선택 기준">
+<table>
+<caption>큰 파일 복사 전 USB 선택 기준</caption>
+<thead><tr><th scope="col">상황</th><th scope="col">확인할 것</th></tr></thead>
+<tbody>
+<tr><th scope="row">작은 파일은 되고 큰 영상 하나만 실패</th><td>Windows 드라이브 속성에서 FAT32인지 확인하고 실패 파일의 바이트 크기를 봅니다. 다른 파일을 지워도 파일 하나의 크기 한도는 그대로입니다.</td></tr>
+<tr><th scope="row">Windows와 Mac에서 주고받기</th><td>두 기기가 읽고 쓸 수 있는 exFAT 장치가 있으면 먼저 시험 복사합니다. 복사본 크기와 재생 여부를 확인하기 전에는 원본을 보관하세요.</td></tr>
+<tr><th scope="row">TV·차량에서 재생할 파일</th><td>사용설명서에서 USB 형식과 영상 형식 양쪽을 확인하세요. 재포맷은 드라이브 내용을 지우므로 기존 자료를 다른 곳에 복사해 확인하고 진행합니다.</td></tr>
+</tbody>
+</table>
+<p><a href="/kor/report/it/windows11-usb-external-drive-not-recognized-disk-management-raw-data-safety-2026.html">외장 드라이브가 보이지 않을 때</a> · <a href="/kor/report/it/backup-restore-test-windows-mac-sha256-file-integrity-15-minute-check.html">백업 사본과 원본 대조</a></p>
+</section>
 <nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">1. USB 공간이 남았는데 큰 파일만 복사되지 않는 이유</a></li><li><a href="#section-02">2. Windows 11에서 USB 파일 시스템 확인하기</a></li><li><a href="#section-03">3. Mac에서는 어디에서 확인하나요?</a></li><li><a href="#section-04">4. FAT32·exFAT·NTFS는 무엇이 다른가?</a></li><li><a href="#section-05">5. USB를 포맷하지 않고 해결하는 방법부터 검토하기</a></li><li><a href="#section-06">6. 포맷 전에 반드시 확인해야 할 안전 조건</a></li><li><a href="#section-07">7. Windows 11에서 exFAT으로 포맷하는 안전한 절차</a></li><li><a href="#section-08">8. Mac에서 exFAT으로 변경하는 방법</a></li><li><a href="#section-09">9. TV·차량·게임기에서는 왜 exFAT USB가 인식되지 않을까?</a></li><li><a href="#section-10">10. 실제로는 다른 원인일 수 있는 경우</a></li><li><a href="#section-11">11. 포맷 후에도 꼭 해야 할 파일 검증</a></li><li><a href="#section-12">12. FAT32와 32GB 제한을 혼동하지 마세요</a></li><li><a href="#section-13">13. 자주 묻는 질문</a></li><li><a href="#section-14">결론: 포맷보다 먼저 원인을 구분하세요</a></li></ol></nav>
 <div class="layout">
 <div class="intro"><p>64GB USB 메모리에 남은 공간이 30GB인데 5GB짜리 동영상을 복사하자 &#x27;대상 파일 시스템에 비해 파일이 너무 큽니다&#x27;라는 메시지가 뜨는 경우가 있습니다. 저장 공간이 넉넉한데도 파일이 들어가지 않는 이유는 무엇일까요?</p>

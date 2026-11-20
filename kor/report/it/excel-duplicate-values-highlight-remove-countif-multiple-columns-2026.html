@@ -78,6 +78,17 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 @media(max-width:650px){.shell{padding:14px 12px 45px}.site-header{padding:14px}.hero{padding:29px 20px}.hero h1{font-size:1.58rem}.highlight-row{gap:7px}.highlight{padding:13px 9px}.highlight .value{font-size:.92rem}.highlight .label{font-size:.7rem}.contents,.section,.intro,.info-bottom{padding:19px 17px}.contents ol{grid-template-columns:1fr}.section h2{font-size:1.18rem}.site-header nav{gap:9px}h1,h2,h3,p,li,strong,a,code,pre{overflow-wrap:anywhere;word-break:break-word;max-width:100%}table{table-layout:fixed!important;width:100%!important;min-width:0!important}th,td{word-break:break-word;overflow-wrap:anywhere;font-size:0.8rem;padding:6px 4px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
+<style>
+.traffic-summary{font-size:.94rem;line-height:1.65;margin:12px 0 0}
+.traffic-summary a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.traffic-draft{scroll-margin-top:60px;min-width:0;max-width:100%;box-sizing:border-box;margin:16px 0;padding:14px;border:1px solid #506079;border-radius:10px;background:#1b2535;color:#eef3ff;overflow-wrap:anywhere}
+.traffic-draft table{width:100%;table-layout:fixed;border-collapse:collapse;margin:0;color:inherit;background:transparent;font-size:.875rem}
+.traffic-draft caption{text-align:left;color:inherit;font-size:1rem;font-weight:700;line-height:1.45;margin-bottom:8px}
+.traffic-draft th,.traffic-draft td{padding:7px;vertical-align:top;text-align:left;line-height:1.55;border:1px solid #53637e;color:inherit;background:transparent}
+.traffic-draft th:first-child{width:34%}
+.traffic-draft p{margin:10px 0 0;line-height:1.65;color:inherit;font-size:.875rem}
+.traffic-draft a{display:inline-block;padding:3px 0;color:#c3d8ff}
+</style>
 </head>
 <body>
 <a class="skip" href="#main">본문으로 건너뛰기</a>
@@ -87,11 +98,23 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <article>
 <header class="hero">
 <span class="eyebrow">IT · 기기 · 최신 가이드</span>
-<h1>2026 엑셀 중복값 찾기·제거 방법: 조건부 서식·COUNTIF·여러 열 기준과 삭제 전 확인</h1>
+<h1>2026 엑셀 중복값 찾기·제거 방법: 조건부 서식·COUNTIF·여러 열 기준과 삭제 전 확인</h1><p class="traffic-summary">고객 이름이 두 번 나와도 주문 두 건이 모두 유효할 수 있습니다. 먼저 주문번호처럼 한 행을 구분하는 열을 정하고, 원본을 복사한 시트에서 결과를 확인하세요. <a href="#decision-checklist">상황별 비교표 보기</a></p>
 <p class="deck">엑셀 중복값 찾기·제거 방법: 이 글에서는 Microsoft의 공식 Excel 도움말을 기준으로 조건부 서식으로 중복값 표시 → COUNTIF로 중복 횟수 확인 → 여러 열을 묶어 판정 → 필요한 경우에만 중복 제거 순서로 설명합니다.</p>
 <div class="hero-meta"><span>최초 발행 2026-11-09</span><span>내용 확인 2026-11-09</span><span>작성 emfls</span></div>
 </header>
 
+<section class="traffic-draft" id="decision-checklist" aria-label="중복 처리 전 선택 기준">
+<table>
+<caption>중복 처리 전 선택 기준</caption>
+<thead><tr><th scope="col">상황</th><th scope="col">확인할 것</th></tr></thead>
+<tbody>
+<tr><th scope="row">같은 이름·다른 주문</th><td>주문번호가 다르면 두 행을 보존하세요. 품목 단위 표라면 주문번호와 품목번호 조합을 확인합니다.</td></tr>
+<tr><th scope="row">겹친 값만 찾기</th><td>대상 범위에 조건부 서식의 중복값 표시를 적용합니다. 행을 지우기 전에 색이 표시된 행끼리 비교할 수 있습니다.</td></tr>
+<tr><th scope="row">중복 행을 실제로 정리</th><td>복사본에서 비교 열을 선택해 중복 제거를 실행하고 빠진 행 수와 주문 합계가 의도한 대로인지 확인하세요.</td></tr>
+</tbody>
+</table>
+<p><a href="/kor/report/it/excel-filter-not-working-missing-rows-blank-protected-sheet-sort-greyed-2026.html">필터에서 일부 행이 빠질 때</a> · <a href="/kor/report/it/excel-csv-korean-utf8-leading-zeros-long-numbers-2026.html">CSV에서 앞자리 0을 보존하는 법</a></p>
+</section>
 <nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">1. 내 상황에 맞는 중복값 처리 방법부터 고르기</a></li><li><a href="#section-02">2. 예제: 고객명은 중복이어도 주문을 지우면 안 되는 경우</a></li><li><a href="#section-03">3. 가장 쉬운 방법: 조건부 서식으로 중복값에 색 표시</a></li><li><a href="#section-04">4. COUNTIF로 중복 횟수 확인하기</a></li><li><a href="#section-05">5. 첫 번째 기록만 남기고 두 번째부터 &#x27;중복&#x27; 표시</a></li><li><a href="#section-06">6. 이름 하나가 아니라 여러 열 조합으로 중복 확인</a></li><li><a href="#section-07">7. 중복값을 실제로 제거하는 방법: 삭제 전 백업 필수</a></li><li><a href="#section-08">8. 원본을 삭제하지 않고 고유값 목록만 만들기</a></li><li><a href="#section-09">9. 중복인데 다르게 보이거나, 다른 값인데 중복으로 잡히는 이유</a></li><li><a href="#section-10">10. 자주 묻는 질문</a></li><li><a href="#section-11">11. 핵심 체크리스트</a></li><li><a href="#section-12">공식 참고자료</a></li></ol></nav>
 <div class="layout">
 <div class="intro"><p>엑셀에서 고객 명단, 주문 내역, 거래처 목록을 정리하다 보면 같은 이름이나 번호가 여러 번 나타납니다. 이때 <strong>중복값을 찾는 것과 중복 행을 삭제하는 것은 완전히 다른 작업</strong>입니다. 예를 들어 같은 고객이 두 차례 주문했다면 고객명은 중복이지만 주문 내역은 모두 보존해야 합니다.</p>
