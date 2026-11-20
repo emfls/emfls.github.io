@@ -78,6 +78,17 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 @media(max-width:650px){.shell{padding:14px 12px 45px}.site-header{padding:14px}.hero{padding:29px 20px}.hero h1{font-size:1.58rem}.highlight-row{gap:7px}.highlight{padding:13px 9px}.highlight .value{font-size:.92rem}.highlight .label{font-size:.7rem}.contents,.section,.intro,.info-bottom{padding:19px 17px}.contents ol{grid-template-columns:1fr}.section h2{font-size:1.18rem}.site-header nav{gap:9px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
+<style>
+.traffic-summary{font-size:.94rem;line-height:1.65;margin:12px 0 0}
+.traffic-summary a{color:inherit;text-decoration:underline;text-underline-offset:3px}
+.traffic-draft{scroll-margin-top:60px;min-width:0;max-width:100%;box-sizing:border-box;margin:16px 0;padding:14px;border:1px solid #506079;border-radius:10px;background:#1b2535;color:#eef3ff;overflow-wrap:anywhere}
+.traffic-draft table{width:100%;table-layout:fixed;border-collapse:collapse;margin:0;color:inherit;background:transparent;font-size:.875rem}
+.traffic-draft caption{text-align:left;color:inherit;font-size:1rem;font-weight:700;line-height:1.45;margin-bottom:8px}
+.traffic-draft th,.traffic-draft td{padding:7px;vertical-align:top;text-align:left;line-height:1.55;border:1px solid #53637e;color:inherit;background:transparent}
+.traffic-draft th:first-child{width:34%}
+.traffic-draft p{margin:10px 0 0;line-height:1.65;color:inherit;font-size:.875rem}
+.traffic-draft a{display:inline-block;padding:3px 0;color:#c3d8ff}
+</style>
 </head>
 <body>
 <a class="skip" href="#main">본문으로 건너뛰기</a>
@@ -88,10 +99,23 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <header class="hero">
 <span class="eyebrow">IT · 기기 · 최신 가이드</span>
 <h1>2026 엑셀 체크박스 만들기: 삽입 메뉴 안 보임·TRUE/FALSE·완료율·행 색 자동 변경</h1>
-<p class="deck">엑셀로 업무 체크리스트, 출고 점검표, 여행 준비물 목록을 만들 때 항목마다 체크박스를 넣고 싶지만 삽입 탭에 체크박스가 보이지 않거나, 체크했는데 완료 개수와 색상이 바뀌지 않는 경우가 있습니다.</p>
+<p class="traffic-summary">엑셀의 셀 안 체크박스는 선택하면 TRUE, 해제하면 FALSE입니다. 숫자 합계 대신 TRUE 개수를 세고 실제 업무 항목 수로 나누면 완료율을 확인할 수 있습니다. <a href="#decision-checklist">상황별 비교표 보기</a></p>
 <div class="hero-meta"><span>최초 발행 2026-11-17</span><span>내용 확인 2026-11-17</span><span>작성 emfls</span></div>
 </header>
 
+<section class="traffic-draft" id="decision-checklist" aria-label="엑셀 체크리스트가 예상대로 집계되지 않을 때">
+<table>
+<caption>엑셀 체크리스트가 예상대로 집계되지 않을 때</caption>
+<thead><tr><th scope="col">상황</th><th scope="col">확인할 것</th></tr></thead>
+<tbody>
+<tr><th scope="row">체크박스 삽입</th><td>지원되는 Excel에서 대상 셀을 선택하고 삽입 탭의 체크박스를 선택하세요. 개발 도구의 양식 컨트롤과는 입력 방식이 다릅니다.</td></tr>
+<tr><th scope="row">개수 검산</th><td>셀 10개 중 7개를 체크하면 COUNTIF로 집계한 TRUE는 7개이고 완료율은 70%입니다.</td></tr>
+<tr><th scope="row">범위 점검</th><td>새 항목을 추가한 뒤에는 분자와 분모가 같은 행을 가리키는지 확인하세요. 비어 있는 미사용 행은 전체 항목 수에서 빼세요.</td></tr>
+</tbody>
+</table>
+<p><a href="/kor/report/it/excel-conditional-formatting-row-color-overdue-rules-not-working-2026.html">기한이 지난 행에 조건부 서식 적용</a> · <a href="/kor/report/it/excel-duplicate-values-highlight-remove-countif-multiple-columns-2026.html">COUNTIF로 중복값 확인</a></p>
+<p>공식 안내 · <a class="source-link" href="https://support.microsoft.com/en-us/excel/using-check-boxes-in-excel">Microsoft Excel 셀 체크박스 사용법</a></p>
+</section>
 <nav class="contents" aria-label="글 목차"><h2>이 글의 목차</h2><ol><li><a href="#section-01">1. 한눈에 보는 엑셀 체크박스 2가지 방식</a></li><li><a href="#section-02">2. Microsoft 365 엑셀에서 체크박스 10개 한 번에 넣기</a></li><li><a href="#section-03">3. 체크된 개수 자동 계산하기: COUNTIF</a></li><li><a href="#section-04">4. 체크리스트 완료율 % 계산하기</a></li><li><a href="#section-05">5. 체크하면 해당 행 전체가 색상으로 바뀌게 만들기</a></li><li><a href="#section-06">6. 삽입 탭에 체크박스가 없을 때 해결 방법</a></li><li><a href="#section-07">7. 구버전 엑셀 체크박스: 개발 도구에서 만들기</a></li><li><a href="#section-08">8. 구버전 양식 체크박스를 TRUE/FALSE 셀에 연결하기</a></li><li><a href="#section-09">9. 체크박스 삭제 방법: Delete를 한 번 눌러도 안 없어질 수 있음</a></li><li><a href="#section-10">10. 체크박스 대신 TRUE·FALSE 또는 네모 기호만 보일 때</a></li><li><a href="#section-11">11. 실제 적용 사례: 출고 체크리스트 만들기</a></li><li><a href="#section-12">12. 자주 묻는 질문</a></li><li><a href="#section-13">마무리: 체크박스가 안 보이면 버전부터 구별</a></li><li><a href="#section-14">공식 출처 및 검증 범위</a></li></ol></nav>
 <div class="layout">
 <div class="intro"><p>엑셀로 업무 체크리스트, 출고 점검표, 여행 준비물 목록을 만들 때 항목마다 체크박스를 넣고 싶지만 <strong>삽입 탭에 체크박스가 보이지 않거나</strong>, 체크했는데 완료 개수와 색상이 바뀌지 않는 경우가 있습니다.</p>
@@ -126,7 +150,7 @@ a{color:var(--accent);text-underline-offset:3px}a:hover{text-decoration-thicknes
 <p>예를 들어 B2:B101에 체크박스를 넣었다면 범위를 바꿉니다.</p>
 <pre class="notion-code"><code>=COUNTIF(B2:B101,TRUE)</code></pre>
 <p><strong>COUNTIF(범위, 조건)</strong>은 지정한 조건을 만족하는 셀 개수를 세는 Microsoft Excel 기본 함수입니다. 논리값 TRUE가 조건인 경우 선택된 체크박스 개수를 계산하는 데 활용할 수 있습니다.</p></section>
-<section class="section" aria-labelledby="section-04"><h2 id="section-04">4. 체크리스트 완료율 % 계산하기</h2><p>체크한 개수뿐 아니라 전체 항목 중 몇 퍼센트가 끝났는지도 보고 싶다면 아래처럼 구성합니다.</p>
+<section class="section" aria-labelledby="section-04"><h2 id="section-04">4. 체크리스트 완료율 % 계산하기</h2><p>완료율은 체크한 항목 수를 실제 업무 항목 수로 나눕니다. 예비로 만든 빈 행까지 분모에 넣으면 실제보다 낮게 표시됩니다.</p>
 <div class="details-table"><table><thead><tr><th scope="col">열</th><th scope="col">용도</th></tr></thead><tbody><tr><td>A열</td><td>번호</td></tr><tr><td>B열</td><td>해야 할 일</td></tr><tr><td>C열</td><td>체크박스</td></tr><tr><td>D열</td><td>자동 상태</td></tr></tbody></table></div>
 <p><strong>B2:B11</strong>에 할 일 10개를 적고 <strong>C2:C11</strong>에 체크박스를 삽입합니다.</p>
 <p>완료율을 별도의 셀에 다음처럼 입력합니다.</p>
