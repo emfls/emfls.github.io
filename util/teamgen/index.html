@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Enter names, pick number of teams, and split into random groups! Instantly assign teams, 100% browser-only, no upload." />
+      content="Enter names, pick number of teams, and split into random groups! The generator shuffles the names in your browser." />
     <meta
       name="keywords"
       content="random team generator, group splitter, shuffle names, make teams, group, study group, classroom, class, 팀 편성, 조 짜기, 조 편성기, 랜덤 팀, 랜덤 조" />
@@ -16,13 +16,13 @@
     <meta property="og:title" content="Random Team Generator – Group Splitter Online" />
     <meta
       property="og:description"
-      content="Split names into random teams/groups. Shuffle instantly, works in your browser, no data upload." />
+      content="Split names into random teams/groups. Shuffle the list in your browser without uploading the names." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://emfls.github.io/util/teamgen/" />
     <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Random Team Generator – Group Splitter Online" />
-    <meta name="twitter:description" content="Randomly assign names to n teams. Fast, private, and browser-only!" />
+    <meta name="twitter:description" content="Randomly assign names to n teams. Your browser shuffles the list." />
     <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
@@ -241,7 +241,7 @@
       <div class="result-list" id="resultList"></div>
       <a href="../" id="backBtn">Other Util</a>
       <div class="footer">
-        100% browser-based. No tracking or upload.<br />
+        Your browser splits the names into teams. This page uses Google Analytics and Google AdSense.<br />
         Made by Itagi – Free for all!
       </div>
     </div>
@@ -285,8 +285,13 @@
         teams.forEach((team, i) => {
           const block = document.createElement("div");
           block.className = "team-block";
-          block.innerHTML = `<div class="team-title">Team ${i + 1}</div>
-          <div class="team-names">${team.join(", ")}</div>`;
+          const title = document.createElement("div");
+          title.className = "team-title";
+          title.textContent = `Team ${i + 1}`;
+          const memberNames = document.createElement("div");
+          memberNames.className = "team-names";
+          memberNames.textContent = team.join(", ");
+          block.append(title, memberNames);
           resultList.appendChild(block);
         });
       };
@@ -306,8 +311,8 @@
       </div>
 
       <div style="margin-bottom: 12px">
-        <div style="color: #8f94fb; font-weight: bold">Is my data uploaded or stored?</div>
-        <div style="color: #f0f0f0">No. Everything runs in your browser. Nothing is uploaded, saved, or tracked.</div>
+        <div style="color: #8f94fb; font-weight: bold">What happens to the names I enter?</div>
+        <div style="color: #f0f0f0">The generator uses the names in this tab without sending the list to a server or saving it. Google Analytics and Google AdSense may process device and usage data for analytics and advertising.</div>
       </div>
 
       <div style="margin-bottom: 12px">

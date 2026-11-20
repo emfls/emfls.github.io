@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width,initial-scale=1.0" />
         <meta
             name="description"
-            content="Создавайте и сканируйте QR-коды мгновенно. Всё обрабатывается в браузере, без необходимости загрузки файлов. Скачивайте, настраивайте и читайте QR-коды с лёгкостью." />
+            content="Создавайте и сканируйте QR-коды мгновенно. Текст и изображения QR-кодов обрабатываются прямо в браузере. Скачивайте, настраивайте и читайте QR-коды с лёгкостью." />
         <meta
             name="keywords"
             content="QR-код, Генератор QR, Сканер QR, QR Онлайн, Бесплатный QR инструмент, Читатель QR, QR с веб-камерой, QR на изображении, Приватность" />
@@ -17,7 +17,7 @@
         <meta property="og:title" content="Генератор и Сканер QR-кодов – Бесплатный Онлайн Инструмент" />
         <meta
             property="og:description"
-            content="Создавайте и сканируйте QR-коды мгновенно. Всё обрабатывается в браузере, без необходимости загрузки файлов. Скачивайте, настраивайте и читайте QR-коды с лёгкостью." />
+            content="Создавайте и сканируйте QR-коды мгновенно. Текст и изображения QR-кодов обрабатываются прямо в браузере. Скачивайте, настраивайте и читайте QR-коды с лёгкостью." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://emfls.github.io/ru/util/qrcode/" />
         <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
@@ -25,7 +25,7 @@
         <meta name="twitter:title" content="Генератор и Сканер QR-кодов – Бесплатный Онлайн Инструмент" />
         <meta
             name="twitter:description"
-            content="Создавайте и сканируйте QR-коды мгновенно. Всё обрабатывается в браузере, без необходимости загрузки файлов. Скачивайте, настраивайте и читайте QR-коды с лёгкостью." />
+            content="Создавайте и сканируйте QR-коды мгновенно. Текст и изображения QR-кодов обрабатываются прямо в браузере. Скачивайте, настраивайте и читайте QR-коды с лёгкостью." />
         <meta name="twitter:image" content="https://emfls.github.io/thumbnail.png" />
 
         <!-- Google tag (gtag.js) -->
@@ -46,9 +46,14 @@
         <!-- qrcode.js (генерация) -->
         <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
         <!-- html5-qrcode (сканирование) -->
-        <script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
         <link rel="stylesheet" href="style.css" />
+        <style>
+            .container, .input-area, #imgUpload { box-sizing: border-box; max-width: 100%; }
+            #qrCode canvas, #reader video { max-width: 100%; height: auto; }
+            #scanResult { overflow-wrap: anywhere; }
+        </style>
     <style>h1{max-width:100%;min-width:0;overflow-wrap:anywhere;white-space:normal!important}body{overflow-wrap:anywhere}input,textarea,select,button{box-sizing:border-box;max-width:100%;min-width:0}canvas{max-width:100%;height:auto}@media(max-width:600px){.container,body>section{box-sizing:border-box;max-width:100%;min-width:0}.url-input-row{flex-wrap:wrap}}</style>
 </head>
     <body>
@@ -57,7 +62,7 @@
             <div class="desc">
                 Генерируйте QR-коды для текста или ссылок,<br />
                 и сканируйте их с камеры или изображения.<br />
-                <span style="color: #199aac; font-size: 0.97em">Все функции выполняются в браузере.</span>
+                <span style="color: #199aac; font-size: 0.97em">Создание и распознавание QR-кодов выполняется в браузере.</span>
             </div>
             <div class="tab-toggle">
                 <button class="tab-btn active" id="genTab">Генерировать</button>
@@ -105,7 +110,7 @@
                 <div id="scanResult" class="output-box"></div>
             </div>
             <div class="footer">
-                Без загрузок и отслеживания, всё обрабатывается в браузере.<br />
+                Инструмент распознаёт QR-коды в браузере и не отправляет выбранный файл или кадры с камеры на сервер. Для статистики посещений и показа рекламы сервисы Google Аналитика и Google AdSense могут обрабатывать сведения об устройстве и использовании страницы.<br />
                 Использует <a href="https://github.com/davidshimjs/qrcodejs" target="_blank" style="color: #1664a7">QRCode.js</a> и <a href="https://github.com/mebjas/html5-qrcode" target="_blank" style="color: #1664a7">html5-qrcode</a>.
             </div>
             <a href="../" id="backBtn">Другие инструменты</a>
@@ -129,31 +134,38 @@
                 genSection.classList.remove("active");
             };
 
-            // Генерация QR
-            let qrObj = null;
+            // Создание QR-кода
             function updateQR() {
                 const text = document.getElementById("qrInput").value.trim();
-                const size = parseInt(document.getElementById("qrSize").value, 10);
+                const size = Number(document.getElementById("qrSize").value);
                 const level = document.getElementById("qrLevel").value;
-                const qrCodeDiv = document.getElementById("qrCode");
-                qrCodeDiv.innerHTML = "";
+                const preview = document.getElementById("qrCode");
+                const download = document.getElementById("qrDownload");
+                preview.replaceChildren();
+                download.style.display = "none";
+                download.removeAttribute("href");
                 if (!text) return;
-                qrObj = new QRCode(qrCodeDiv, {
-                    text: text,
-                    width: size,
-                    height: size,
-                    correctLevel: QRCode.CorrectLevel[level]
-                });
-                setTimeout(() => {
-                    const canvas = qrCodeDiv.querySelector("canvas");
-                    if (canvas) {
-                        const url = canvas.toDataURL();
-                        const dl = document.getElementById("qrDownload");
-                        dl.href = url;
-                        dl.download = "qrcode.png";
-                        dl.style.display = "";
-                    }
-                }, 300);
+                // Белое поле шириной не менее четырёх модулей с каждой стороны.
+                const margin = Math.ceil(size * 4 / 29);
+                const codeSize = size - 2 * margin;
+                const drawing = document.createElement("div");
+                try {
+                    new QRCode(drawing, {
+                        text, width: codeSize, height: codeSize, correctLevel: QRCode.CorrectLevel[level]
+                    });
+                    const canvas = document.createElement("canvas");
+                    canvas.width = canvas.height = size;
+                    const ctx = canvas.getContext("2d");
+                    ctx.fillStyle = "#fff";
+                    ctx.fillRect(0, 0, size, size);
+                    ctx.drawImage(drawing.querySelector("canvas"), margin, margin);
+                    canvas.setAttribute("aria-label", "Созданный QR-код");
+                    preview.append(canvas);
+                    download.href = canvas.toDataURL("image/png");
+                    download.style.display = "";
+                } catch {
+                    preview.textContent = "Не удалось создать QR-код. Сократите текст и повторите попытку.";
+                }
             }
             document.getElementById("qrGenBtn").onclick = updateQR;
             document.getElementById("qrInput").addEventListener("keyup", (e) => {
@@ -162,70 +174,66 @@
             document.getElementById("qrSize").onchange = updateQR;
             document.getElementById("qrLevel").onchange = updateQR;
 
-            // Сканирование QR
+            // Чтение QR-кода с камеры или из файла
             let html5Qr = null;
             const readerDiv = document.getElementById("reader");
             const startCamBtn = document.getElementById("startCamBtn");
             const stopCamBtn = document.getElementById("stopCamBtn");
             const scanResult = document.getElementById("scanResult");
-            let camActive = false;
-            startCamBtn.onclick = () => {
+            const upload = document.getElementById("imgUpload");
+            let cameraRunning = false;
+            function scanner() {
+                if (!html5Qr) html5Qr = new Html5Qrcode("reader");
+                return html5Qr;
+            }
+            async function stopCamera() {
+                if (!cameraRunning) return;
+                cameraRunning = false;
+                await scanner().stop();
+                readerDiv.style.display = "none";
+                startCamBtn.disabled = upload.disabled = false;
+                stopCamBtn.style.display = "none";
+            }
+            startCamBtn.onclick = async () => {
+                startCamBtn.disabled = upload.disabled = true;
                 readerDiv.style.display = "";
                 scanResult.textContent = "";
-                startCamBtn.style.display = "none";
-                stopCamBtn.style.display = "";
-                html5Qr = new Html5Qrcode("reader");
-                html5Qr.start(
-                    { facingMode: "environment" },
-                    { fps: 10, qrbox: 240 },
-                    (code) => {
-                        scanResult.innerHTML = `<b>Результат:</b> ${escapeHtml(code)}`;
-                        html5Qr.stop();
-                        camActive = false;
-                        startCamBtn.style.display = "";
-                        stopCamBtn.style.display = "none";
-                    },
-                    (err) => {}
-                );
-                camActive = true;
-            };
-            stopCamBtn.onclick = () => {
-                if (html5Qr && camActive) {
-                    html5Qr.stop().then(() => {
-                        readerDiv.style.display = "none";
-                        startCamBtn.style.display = "";
-                        stopCamBtn.style.display = "none";
-                    });
+                try {
+                    await scanner().start(
+                        { facingMode: "environment" }, { fps: 10, qrbox: 220 },
+                        async (code) => {
+                            scanResult.textContent = "Результат: " + code;
+                            await stopCamera();
+                        }
+                    );
+                    cameraRunning = true;
+                    stopCamBtn.style.display = "";
+                } catch {
+                    readerDiv.style.display = "none";
+                    startCamBtn.disabled = upload.disabled = false;
+                    scanResult.textContent = "Не удалось включить камеру. Проверьте разрешения или выберите файл с изображением.";
                 }
             };
-            window.addEventListener("beforeunload", () => {
-                if (html5Qr && camActive) html5Qr.stop();
-            });
-
-            // Сканирование с изображения
-            document.getElementById("imgUpload").onchange = function (e) {
-                const file = e.target.files[0];
+            stopCamBtn.onclick = stopCamera;
+            genTab.addEventListener("click", stopCamera);
+            window.addEventListener("pagehide", stopCamera);
+            upload.onchange = async () => {
+                const file = upload.files[0];
                 if (!file) return;
-                scanResult.textContent = "Сканирование...";
-                Html5Qrcode.scanFile(file, true)
-                    .then((code) => {
-                        scanResult.innerHTML = `<b>Результат:</b> ${escapeHtml(code)}`;
-                    })
-                    .catch(() => {
-                        scanResult.textContent = "Не удалось обнаружить QR-код на изображении.";
-                    });
+                startCamBtn.disabled = upload.disabled = true;
+                scanResult.textContent = "Распознаём код…";
+                readerDiv.style.display = "";
+                try {
+                    const code = await scanner().scanFile(file, false);
+                    scanResult.textContent = "Результат: " + code;
+                } catch {
+                    scanResult.textContent = "Не удалось распознать код. Выберите чёткое изображение, на котором QR-код виден целиком.";
+                } finally {
+                    upload.value = "";
+                    readerDiv.style.display = "none";
+                    startCamBtn.disabled = upload.disabled = false;
+                }
             };
-
-            function escapeHtml(text) {
-                if (!text) return "";
-                return text.replace(/[&<>"']/g, (ch) => ({
-                    "&": "&amp;",
-                    "<": "&lt;",
-                    ">": "&gt;",
-                    '"': "&quot;",
-                    "'": "&#039;"
-                })[ch]);
-            }
         </script>
     </body>
 </html>
