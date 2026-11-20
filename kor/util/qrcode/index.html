@@ -46,7 +46,7 @@
         <!-- qrcode.js (생성기) -->
         <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
         <!-- html5-qrcode (스캐너) -->
-        <script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
         <style>
             body {
@@ -116,6 +116,8 @@
                 margin-top: 11px;
                 display: block;
             }
+            .container, .input-area, #imgUpload, body > section { box-sizing: border-box; max-width: 100%; }
+            #qrCode img, #qrCode canvas, #reader video { max-width: 100%; height: auto; }
             .input-area {
                 width: 100%;
                 min-height: 44px;
@@ -151,7 +153,8 @@
                 font-weight: bold;
                 cursor: pointer;
                 margin-top: 6px;
-                margin-left: 35%;
+                display: block;
+                margin-inline: auto;
                 transition: background 0.13s;
             }
             .qr-btn:active {
@@ -232,10 +235,17 @@
                 }
             }
         </style>
-    </head>
+    <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+<style>
+  .emfls-ad-slot { box-sizing: border-box; width: 100%; max-width: 670px; min-width: 0; margin: 48px auto; text-align: center; clear: both; }
+  .emfls-ad-slot .ad-label { display: block; height: 20px; font: 12px/20px system-ui, sans-serif; }
+  .emfls-ad-slot .ad-space { height: 250px; width: 100%; overflow: hidden; }
+  #backBtn, #backBtn:hover { position: static; display: block; width: fit-content; max-width: 90%; margin: 32px auto; transform: none; box-sizing: border-box; }
+</style>
+</head>
     <body>
         <div class="container">
-            <div class="logo">🔳 QR 코드 생성기 & 읽기</div>
+            <h1 class="logo">🔳 QR 코드 생성기 & 읽기</h1>
             <div class="desc">
                 원하는 텍스트나 링크로 QR 코드를 생성하고,<br />
                 카메라 또는 이미지를 통해 QR 코드를 스캔해 보세요.<br />
@@ -286,8 +296,13 @@
                 <div id="reader" style="width: 100%; max-width: 370px; margin: auto; display: none"></div>
                 <div class="or">또는</div>
                 <input type="file" id="imgUpload" accept="image/*" style="display: block; margin: auto" />
-                <div id="scanResult" class="output-box"></div>
+                <div id="scanResult" class="output-box" role="status"></div>
             </div>
+            <aside class="emfls-ad-slot" aria-label="광고">
+              <span class="ad-label">광고</span>
+              <div class="ad-space"><ins class="adsbygoogle" style="display:block;width:100%;height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748"></ins></div>
+              <script>(window.adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </aside>
             <div class="footer">
                 업로드나 추적 없이 모두 브라우저에서 처리됩니다.<br />
                 <a href="https://github.com/davidshimjs/qrcodejs" target="_blank" style="color: #1664a7">QRCode.js</a>
@@ -317,31 +332,37 @@
             };
 
             // QR 코드 생성
-            let qrObj = null;
             function updateQR() {
                 const text = document.getElementById("qrInput").value.trim();
-                const size = parseInt(document.getElementById("qrSize").value, 10);
+                const size = Number(document.getElementById("qrSize").value);
                 const level = document.getElementById("qrLevel").value;
-                const qrCodeDiv = document.getElementById("qrCode");
-                qrCodeDiv.innerHTML = "";
+                const preview = document.getElementById("qrCode");
+                const download = document.getElementById("qrDownload");
+                preview.replaceChildren();
+                download.style.display = "none";
+                download.removeAttribute("href");
                 if (!text) return;
-                qrObj = new QRCode(qrCodeDiv, {
-                    text: text,
-                    width: size,
-                    height: size,
-                    correctLevel: QRCode.CorrectLevel[level]
-                });
-                setTimeout(() => {
-                    // 다운로드 링크 보이기
-                    const canvas = qrCodeDiv.querySelector("canvas");
-                    if (canvas) {
-                        const url = canvas.toDataURL();
-                        const dl = document.getElementById("qrDownload");
-                        dl.href = url;
-                        dl.download = "qrcode.png";
-                        dl.style.display = "";
-                    }
-                }, 300);
+                // 가장 작은 QR(21모듈)에도 사방에 최소 4모듈의 흰 여백을 남긴다.
+                const margin = Math.ceil(size * 4 / 29);
+                const codeSize = size - 2 * margin;
+                const drawing = document.createElement("div");
+                try {
+                    new QRCode(drawing, {
+                        text, width: codeSize, height: codeSize, correctLevel: QRCode.CorrectLevel[level]
+                    });
+                    const canvas = document.createElement("canvas");
+                    canvas.width = canvas.height = size;
+                    const ctx = canvas.getContext("2d");
+                    ctx.fillStyle = "#fff";
+                    ctx.fillRect(0, 0, size, size);
+                    ctx.drawImage(drawing.querySelector("canvas"), margin, margin);
+                    canvas.setAttribute("aria-label", "생성한 QR 코드");
+                    preview.append(canvas);
+                    download.href = canvas.toDataURL("image/png");
+                    download.style.display = "";
+                } catch {
+                    preview.textContent = "QR 코드를 만들 수 없습니다. 텍스트 길이를 줄여 다시 시도하세요.";
+                }
             }
             document.getElementById("qrGenBtn").onclick = updateQR;
             document.getElementById("qrInput").addEventListener("keyup", (e) => {
@@ -356,64 +377,60 @@
             const startCamBtn = document.getElementById("startCamBtn");
             const stopCamBtn = document.getElementById("stopCamBtn");
             const scanResult = document.getElementById("scanResult");
-            let camActive = false;
-            startCamBtn.onclick = () => {
+            const upload = document.getElementById("imgUpload");
+            let cameraRunning = false;
+            function scanner() {
+                if (!html5Qr) html5Qr = new Html5Qrcode("reader");
+                return html5Qr;
+            }
+            async function stopCamera() {
+                if (!cameraRunning) return;
+                cameraRunning = false;
+                await scanner().stop();
+                readerDiv.style.display = "none";
+                startCamBtn.disabled = upload.disabled = false;
+                stopCamBtn.style.display = "none";
+            }
+            startCamBtn.onclick = async () => {
+                startCamBtn.disabled = upload.disabled = true;
                 readerDiv.style.display = "";
                 scanResult.textContent = "";
-                startCamBtn.style.display = "none";
-                stopCamBtn.style.display = "";
-                html5Qr = new Html5Qrcode("reader");
-                html5Qr.start(
-                    { facingMode: "environment" },
-                    { fps: 10, qrbox: 240 },
-                    (code) => {
-                        scanResult.innerHTML = `<b>결과:</b> ${escapeHtml(code)}`;
-                        html5Qr.stop();
-                        camActive = false;
-                        startCamBtn.style.display = "";
-                        stopCamBtn.style.display = "none";
-                    },
-                    (err) => {}
-                );
-                camActive = true;
-            };
-            stopCamBtn.onclick = () => {
-                if (html5Qr && camActive) {
-                    html5Qr.stop().then(() => {
-                        readerDiv.style.display = "none";
-                        startCamBtn.style.display = "";
-                        stopCamBtn.style.display = "none";
-                    });
+                try {
+                    await scanner().start(
+                        { facingMode: "environment" }, { fps: 10, qrbox: 220 },
+                        async (code) => {
+                            scanResult.textContent = "결과: " + code;
+                            await stopCamera();
+                        }
+                    );
+                    cameraRunning = true;
+                    stopCamBtn.style.display = "";
+                } catch {
+                    readerDiv.style.display = "none";
+                    startCamBtn.disabled = upload.disabled = false;
+                    scanResult.textContent = "카메라를 열 수 없습니다. 카메라 권한을 확인하거나 이미지 파일을 선택하세요.";
                 }
             };
-            window.addEventListener("beforeunload", () => {
-                if (html5Qr && camActive) html5Qr.stop();
-            });
-
-            // 이미지에서 QR 코드 읽기
-            document.getElementById("imgUpload").onchange = function (e) {
-                const file = e.target.files[0];
+            stopCamBtn.onclick = stopCamera;
+            genTab.addEventListener("click", stopCamera);
+            window.addEventListener("pagehide", stopCamera);
+            upload.onchange = async () => {
+                const file = upload.files[0];
                 if (!file) return;
-                scanResult.textContent = "스캔 중...";
-                Html5Qrcode.getCameras().then(() => {
-                    Html5Qrcode.scanFile(file, true)
-                        .then((code) => {
-                            scanResult.innerHTML = `<b>결과:</b> ${escapeHtml(code)}`;
-                        })
-                        .catch(() => {
-                            scanResult.textContent = "이 이미지에서 QR 코드를 찾을 수 없습니다.";
-                        });
-                });
+                startCamBtn.disabled = upload.disabled = true;
+                scanResult.textContent = "읽는 중…";
+                readerDiv.style.display = "";
+                try {
+                    const code = await scanner().scanFile(file, false);
+                    scanResult.textContent = "결과: " + code;
+                } catch {
+                    scanResult.textContent = "이미지를 읽을 수 없습니다. QR 전체가 선명하게 보이는 파일을 선택하세요.";
+                } finally {
+                    upload.value = "";
+                    readerDiv.style.display = "none";
+                    startCamBtn.disabled = upload.disabled = false;
+                }
             };
-
-            // 간단한 HTML 이스케이프 (결과 표시용)
-            function escapeHtml(text) {
-                if (!text) return "";
-                return text.replace(
-                    /[&<>"']/g,
-                    (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[ch]
-                );
-            }
         </script>
         <section
             style="
@@ -456,5 +473,10 @@
                 </p>
             </div>
         </section>
-    </body>
+    <aside class="emfls-ad-slot" aria-label="광고">
+  <span class="ad-label">광고</span>
+  <div class="ad-space"><ins class="adsbygoogle" style="display:block;width:100%;height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748"></ins></div>
+  <script>(window.adsbygoogle = window.adsbygoogle || []).push({});</script>
+</aside>
+</body>
 </html>

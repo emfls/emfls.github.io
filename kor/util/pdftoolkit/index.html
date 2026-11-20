@@ -321,10 +321,17 @@
                 }
             }
         </style>
-    </head>
+    <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+<style>
+  .emfls-ad-slot { box-sizing: border-box; width: 100%; max-width: 670px; min-width: 0; margin: 48px auto; text-align: center; clear: both; }
+  .emfls-ad-slot .ad-label { display: block; height: 20px; font: 12px/20px system-ui, sans-serif; }
+  .emfls-ad-slot .ad-space { height: 250px; width: 100%; overflow: hidden; }
+  #backBtn, #backBtn:hover { position: static; display: block; width: fit-content; max-width: 90%; margin: 32px auto; transform: none; box-sizing: border-box; }
+</style>
+</head>
     <body>
         <div class="container">
-            <div class="logo">📄 PDF 도구 모음</div>
+            <h1 class="logo">📄 PDF 도구 모음</h1>
             <div class="desc">
                 PDF 파일을 병합, 압축, 분할, 암호화, 회전하거나 이미지를 PDF로 변환하세요.<br />
                 모든 처리는 브라우저 내에서 이루어집니다. 업로드나 워터마크 없음.
@@ -468,6 +475,11 @@
             </form>
 
             <!-- FAQ SECTION -->
+            <aside class="emfls-ad-slot" aria-label="광고">
+              <span class="ad-label">광고</span>
+              <div class="ad-space"><ins class="adsbygoogle" style="display:block;width:100%;height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748"></ins></div>
+              <script>(window.adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </aside>
             <section id="faq" aria-labelledby="faq-head">
                 <h3 id="faq-head" style="color:#236de4; text-align:center; margin-bottom:9px;">자주 묻는 질문 – PDF 도구 모음</h3>
                 <dl>
@@ -926,13 +938,10 @@
                 const degrees = parseInt(rotateDegrees.value, 10) || 0;
                 const srcBytes = await rotateFile.arrayBuffer();
                 const srcPdf = await PDFLib.PDFDocument.load(srcBytes);
-                const outPdf = await PDFLib.PDFDocument.create();
-                const copiedPages = await outPdf.copyPages(srcPdf, srcPdf.getPageIndices());
-                copiedPages.forEach((p) => {
-                    p.setRotation(degrees);
-                    outPdf.addPage(p);
-                });
-                const outBytes = await outPdf.save();
+                for (const page of srcPdf.getPages()) {
+                    page.setRotation(PDFLib.degrees((page.getRotation().angle + degrees) % 360));
+                }
+                const outBytes = await srcPdf.save();
                 downloadBlob(outBytes, getPdfFileName(rotateFilename.value, "rotated.pdf"), "rotateDownload");
             } catch (err) {
                 alert("회전 실패: " + err);
@@ -1020,5 +1029,10 @@
             }
         };
         </script>
-    </body>
+    <aside class="emfls-ad-slot" aria-label="광고">
+  <span class="ad-label">광고</span>
+  <div class="ad-space"><ins class="adsbygoogle" style="display:block;width:100%;height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748"></ins></div>
+  <script>(window.adsbygoogle = window.adsbygoogle || []).push({});</script>
+</aside>
+</body>
 </html>
