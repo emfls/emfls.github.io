@@ -1,3 +1,8 @@
+## 2026-11-20 — 유치원 일반모집 온라인 접수 시각 보완
+
+- KERIS와 경상남도교육청 공식 안내를 근거로 2027학년도 일반모집 온라인 접수가 2026-11-17 09:00부터 2026-11-23 18:00까지라고 명시했다. 현장 접수 시각은 기관별 모집요강을 확인하도록 안내했다.
+- 본문·FAQ·검색 설명·검색 인덱스 한 행·사이트맵 한 건을 일치시켰다. 320px·390px에서 일정 표의 마감 시각을 확인했고 관련 테스트 43건을 통과했다.
+
 ## 2026-11-16 — Wave 5C 10-page High-CPC Seasonal Tax, Scholarship, Card & Auto-CSAT CTR remediation via Antigravity built-in Claude swarm
 
 - Updated 10 non-protected AdSense-enabled high-CPC Korean pages (`kor/report/gov/{2027-national-scholarship-first-semester-five-income-brackets-application,donation-tax-credit-2026-religious-general-political-carryover-receipts,education-tax-credit-2026-elementary-arts-college-income-uniform,elementary-school-2027-enrollment-notice-gov24-orientation,card-point-integrated-lookup-bank-transfer-hcoin-2026,business-registration-certificate-hometax-gov24-pdf-2026,car-registration-certificate-reissue-car365-gov24-free-vs-600-2026,card-loss-one-stop-report-reissue-60day-2026}.html`, `kor/report/car/ev-double-parking-neutral-n-mode-ioniq5-ev6-2026.html`, `kor/report/seasonal/2027-csat-results-dec11-objection-score-report-2026.html`) via parallel `1 file = 1 worker` Antigravity built-in Claude (`claude-sonnet-5-5-high`) swarm workers (respecting `protectedWinners` boundary).
