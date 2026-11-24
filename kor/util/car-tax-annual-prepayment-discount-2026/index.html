@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>2026 자동차세 1월 연납 할인 계산기 (5%·실질 4.58%·전기차 13만 원·차령 경감)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="description" content="2026년 자동차세 1월 연납 5%(실질 4.58%) 할인 세액, 배기량별 세율, 최초등록연도별 차령 감면(최대 50%), 전기차 정액 13만 원 및 정기분 분납 대비 절감액 즉시 계산기." />
+  <link rel="canonical" href="https://emfls.github.io/kor/util/car-tax-annual-prepayment-discount-2026/" />
+  <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+
+  <!-- Preconnects -->
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="2026 자동차세 1월 연납 할인 계산기 (5%·배기량·전기차)" />
+  <meta property="og:description" content="2026년 자동차세 1월 연납 할인율(실질 4.58%), 차령 경감(3년차~12년차 50%), 전기차 정액 13만 원 정밀 세액 계산기" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://emfls.github.io/kor/util/car-tax-annual-prepayment-discount-2026/" />
+  <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --success: #16a34a;
+      --success-bg: #f0fdf4;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+    .wrapper {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 3rem 1rem;
+    }
+    .header-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+    .header-nav a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 0.75rem;
+      line-height: 1.3;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-box {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-box h2 {
+      font-size: 1.1rem;
+      color: var(--primary-dark);
+      margin-bottom: 0.5rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .badge-cartax {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #7dd3fc;
+    }
+    .warning-box {
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      color: #92400e;
+    }
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    @media (max-width: 600px) {
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .result-item {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .result-item .label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+    .result-item .val {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .calculator-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+    }
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      color: #334155;
+    }
+    .form-group .helper-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+    .form-control {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .statutory-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.875rem;
+    }
+    .statutory-table th, .statutory-table td {
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      text-align: left;
+    }
+    .statutory-table th {
+      background: #f8fafc;
+      font-weight: 700;
+    }
+    .faq-section {
+      margin-top: 2.5rem;
+    }
+    .faq-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .faq-question {
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 0.35rem;
+    }
+    .faq-answer {
+      font-size: 0.9rem;
+      color: #475569;
+    }
+    .internal-nav {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+    .internal-nav ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .ad-container {
+      margin: 2rem 0;
+      text-align: center;
+      min-height: 250px;
+    }
+  </style>
+
+  <!-- JSON-LD: WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 자동차세 연납 할인 계산기",
+    "description": "2026년 1월 자동차세 연납 5%(실질 4.58%) 할인, 배기량별 세율, 차령 경감(최대 50%), 전기차 13만 원 계산기",
+    "url": "https://emfls.github.io/kor/util/car-tax-annual-prepayment-discount-2026/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All",
+    "inLanguage": "ko-KR"
+  }
+  </script>
+
+  <!-- JSON-LD: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "2026년 자동차세 1월 연납 할인율은 얼마인가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "2026년 연납 공제율은 법정 5.0%가 유지되며, 1월 연납 시 2~12월(11개월분)에 대해 5%가 공제되어 1년 전체 세액 기준 실질 4.5833%가 할인됩니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "전기차와 수소차의 자동차세는 얼마이며 연납 할인이 되나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "비영업용 전기차·수소차는 배기량과 무관하게 본세 100,000원에 지방교육세 30,000원이 가산되어 연 130,000원 정액 부과됩니다. 차령 경감은 적용되지 않지만 1월 연납 시 약 4.58% 할인이 적용되어 약 124,040원만 납부하면 됩니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "차령 경감은 몇 년차부터 몇 %씩 적용되나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "최초 신규 등록일로부터 2년차까지는 경감이 없으며, 3년차부터 매년 5%씩 감면되어 12년차 이상이 되면 최대 50%까지 자동차세(본세)가 감면됩니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "1월 연납 시기를 놓치면 어떻게 되나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "3월(실질 3.75%), 6월(실질 2.50%), 9월(실질 1.25%)에도 연납 신청이 가능하며, 연납을 하지 않을 경우 6월(1기분)과 12월(2기분)에 50%씩 정기분 고지서로 납부하게 됩니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "연납 후 차량을 매매하거나 폐차하면 세금은 환급되나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "네, 연납 후 양도 또는 폐차할 경우 소유권 이전일 또는 말소일 이후의 일수만큼 일할 계산하여 관할 구청에서 남은 세금을 100% 환급해 줍니다."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- JSON-LD: BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "홈",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "한국어 계산기 허브",
+        "item": "https://emfls.github.io/kor/util/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "2026 자동차세 연납 할인 계산기",
+        "item": "https://emfls.github.io/kor/util/car-tax-annual-prepayment-discount-2026/"
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <div class="wrapper">
+    <nav class="header-nav">
+      <a href="/kor/util/">← 한국어 도구 목록</a>
+      <span>2026 지방세법 기준</span>
+    </nav>
+
+    <h1>2026 자동차세 연납 할인 계산기</h1>
+    <p class="subtitle">1월 연납 5%(실질 4.58%) 할인 · 배기량별 세율 · 차령 경감(최대 50%) · 전기차 13만 원</p>
+
+    <!-- Ad Slot 1 (Top) -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center; min-height: 250px"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"></ins>
+      <script>
+        if (!['127.0.0.1', 'localhost', ''].includes(window.location.hostname)) {
+          if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+        }
+      </script>
+    </div>
+
+    <!-- Summary Box -->
+    <div class="summary-box">
+      <span class="badge badge-cartax">2026 지방세법 확정</span>
+      <h2>1월 연납 시 세액 절감액</h2>
+      <div class="result-grid">
+        <div class="result-item">
+          <div class="label">최종 납부 세액 (연납 적용)</div>
+          <div class="val" id="res-final-payable">496,160원</div>
+        </div>
+        <div class="result-item">
+          <div class="label">연납 공제 절감액</div>
+          <div class="val" id="res-prepay-discount" style="color: var(--success);">-23,830원 (4.58% 할인)</div>
+        </div>
+        <div class="result-item">
+          <div class="label">정기분 납부 시 연세액</div>
+          <div class="val" id="res-annual-regular" style="color: var(--text-muted); font-size: 1.1rem;">519,990원</div>
+        </div>
+        <div class="result-item">
+          <div class="label">차령 경감 적용 현황</div>
+          <div class="val" id="res-car-age" style="font-size: 1.1rem;">1년차 (0% 감면)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loss Aversion Warning Box -->
+    <div class="warning-box">
+      <strong>⚠️ 1월 16일~31일 연납을 놓치면 연간 세금 혜택이 크게 축소됩니다!</strong><br />
+      1월 연납 시 실질 4.58%를 할인받지만, 3월 연납은 3.75%, 6월 연납은 2.50%로 공제폭이 급감합니다. 1월 연납 할인율은 11개월분 선납에 따른 <strong>연환산 약 5.0% 수준의 무위험 확정 수익</strong>을 제공하므로 은행 정기예금(연 3% 초반)보다 확실한 절세 효과를 냅니다.
+    </div>
+
+    <!-- Calculator Card -->
+    <div class="calculator-card">
+      <form id="cartax-form">
+        <div class="form-group">
+          <label for="vehicleType">차량 유형</label>
+          <select id="vehicleType" class="form-control">
+            <option value="passenger" selected>비영업용 일반 승용차 (가솔린·디젤·하이브리드)</option>
+            <option value="electric">전기차 / 수소차 (비영업용 정액 13만 원)</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="cc-group">
+          <label for="engineCc">배기량 (cc)</label>
+          <input inputmode="decimal" type="number" id="engineCc" class="form-control" value="1999" min="500" max="6000" step="1" />
+          <div class="helper-text">예: 아반떼(1598cc), 소나타/K5(1999cc), 그랜저(2497cc), 모닝/캐스퍼(999cc)</div>
+        </div>
+
+        <div class="form-group">
+          <label for="firstRegYear">최초 등록 연도</label>
+          <select id="firstRegYear" class="form-control">
+            <option value="2026" selected>2026년 (신차 - 1년차)</option>
+            <option value="2025">2025년 (2년차 - 감면 0%)</option>
+            <option value="2024">2024년 (3년차 - 5% 감면)</option>
+            <option value="2023">2023년 (4년차 - 10% 감면)</option>
+            <option value="2022">2022년 (5년차 - 15% 감면)</option>
+            <option value="2021">2021년 (6년차 - 20% 감면)</option>
+            <option value="2020">2020년 (7년차 - 25% 감면)</option>
+            <option value="2019">2019년 (8년차 - 30% 감면)</option>
+            <option value="2018">2018년 (9년차 - 35% 감면)</option>
+            <option value="2017">2017년 (10년차 - 40% 감면)</option>
+            <option value="2016">2016년 (11년차 - 45% 감면)</option>
+            <option value="2015">2015년 이전 (12년차 이상 - 최대 50% 감면)</option>
+          </select>
+          <div class="helper-text">자동차등록증 상의 '최초등록일' 연도를 선택하세요.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="prepayMonth">납부 방식 선택</label>
+          <select id="prepayMonth" class="form-control">
+            <option value="jan" selected>1월 연납 (1.16~1.31 신청 - 4.58% 할인)</option>
+            <option value="mar">3월 연납 (3.16~3.31 신청 - 3.75% 할인)</option>
+            <option value="jun">6월 연납 (6.16~6.30 신청 - 2.50% 할인)</option>
+            <option value="sep">9월 연납 (9.16~9.30 신청 - 1.25% 할인)</option>
+            <option value="regular">정기분 납부 (6월/12월 50% 분납 - 할인 없음)</option>
+          </select>
+        </div>
+      </form>
+
+      <!-- Detailed Breakdown Table -->
+      <table class="statutory-table">
+        <thead>
+          <tr>
+            <th>구분</th>
+            <th>산출 금액</th>
+            <th>비고</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>자동차세 본세 (차령 경감 반영)</td>
+            <td id="res-base-tax">399,800원</td>
+            <td>배기량별 세율 × 차령 감면</td>
+          </tr>
+          <tr>
+            <td>지방교육세 (본세의 30%)</td>
+            <td id="res-edu-tax">119,940원</td>
+            <td>지방세법 가산세목</td>
+          </tr>
+          <tr>
+            <td>정기분 1기분 (6월 납부액)</td>
+            <td id="res-june-tax">259,995원</td>
+            <td>연세액 50% (10만 원 이하 전액)</td>
+          </tr>
+          <tr>
+            <td>정기분 2기분 (12월 납부액)</td>
+            <td id="res-dec-tax">259,995원</td>
+            <td>연세액 50%</td>
+          </tr>
+          <tr>
+            <td>1월 연납 시 절감 금액</td>
+            <td id="res-jan-discount" style="font-weight: 700; color: var(--success);">23,830원</td>
+            <td id="res-yield">연 5.0% 확정수익 효과</td>
+          </tr>
+          <tr>
+            <td>10년간 누적 자동차세 (연납 기준)</td>
+            <td id="res-10yr-total" style="font-weight: 700;">3,850,000원</td>
+            <td>신차부터 10년 유지 시 누적액</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- SVG Comparison Chart -->
+      <div style="margin-top: 1.5rem; text-align: center;">
+        <h4 style="font-size: 0.95rem; margin-bottom: 0.75rem; color: #334155;">정기분 납부 vs 1월 연납 세액 비교</h4>
+        <svg viewBox="0 0 400 110" style="width: 100%; max-width: 460px; height: auto; background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
+          <!-- Regular Bar -->
+          <text x="10" y="32" font-size="12" fill="#64748b" font-weight="600">정기분 납부</text>
+          <rect id="bar-regular" x="100" y="18" width="260" height="22" rx="4" fill="#94a3b8" />
+          
+          <!-- Prepay Bar -->
+          <text x="10" y="78" font-size="12" fill="#0284c7" font-weight="700">1월 연납</text>
+          <rect id="bar-prepay" x="100" y="64" width="248" height="22" rx="4" fill="#0284c7" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+      <h2 style="font-size: 1.3rem; margin-bottom: 1rem; color: #0f172a;">2026 자동차세 연납 자주 묻는 질문 (FAQ)</h2>
+      
+      <div class="faq-item">
+        <div class="faq-question">Q. 2026년 자동차세 1월 연납 할인율은 왜 5%인데 실질로는 4.58%인가요?</div>
+        <div class="faq-answer">
+          지방세법상 1월 연납 공제는 1월분 세금을 제외하고 2월부터 12월까지 남은 11개월분 세액에 대해서만 5% 공제를 적용합니다. 따라서 <code>1년 연세액 × (11/12) × 5% = 4.5833%</code>가 되어 실제 1년 전체 세금 기준 할인율은 4.58%가 됩니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 전기차 자동차세 13만 원도 연납 할인을 받을 수 있나요?</div>
+        <div class="faq-answer">
+          네, 전기차·수소차는 배기량이 없어 본세 100,000원 + 지방교육세 30,000원 = 연 130,000원이 고정 부과되지만, 1월 연납 시 동일하게 4.58%가 공제되어 <strong>124,040원</strong>만 납부하시면 됩니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 오래된 차량의 차령 경감은 어떻게 적용되나요?</div>
+        <div class="faq-answer">
+          비영업용 일반 승용차는 신규 등록 후 2년차까지는 100% 부과되지만, 3년차부터 매년 5%씩 감면율이 누적됩니다. 예를 들어 5년차는 15%, 8년차는 30%, 12년차 이상은 최대 50%까지 본세가 감면됩니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 위택스(Wetax) 또는 이택스(서울)에서 연납 신청은 어떻게 하나요?</div>
+        <div class="faq-answer">
+          매년 1월 16일부터 1월 31일까지 위택스(전국) 또는 서울시 이택스 웹사이트/스마트위택스 앱에서 공인인증서나 간편인증으로 로그인한 후 '자동차세 연납 신청' 메뉴를 통해 즉시 신청 및 카드/계좌이체 납부가 가능합니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 연납 후 자동차를 팔거나 폐차하면 남은 세금은 어떻게 되나요?</div>
+        <div class="faq-answer">
+          연납 납부 후 명의이전이나 말소 등록이 이루어지면, 구청 세무과에서 소유권 이전일 이후 잔여 일수를 일할 계산하여 차액을 등록된 환급계좌로 100% 환급해 줍니다.
+        </div>
+      </div>
+    </section>
+
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="다음 필수 확인 계산기" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">다음 필수 확인 계산기 (Next Check)</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">방금 계산한 결과를 바탕으로 바로 이어서 점검하세요:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/kor/util/car-insurance-special-discounts-stacking-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">자동차보험 5대 중복할인 특약 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">자동차세 연납 할인에 이어 마일리지·티맵 특약 중복 절감액을 계산하세요.</span></a>
+    <a href="/kor/util/car-insurance-200man-self-pay-vs-claim-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">자동차보험 할증 vs 자비처리 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">접촉사고 시 보험처리와 자비처리 중 3년 총비용이 싼 쪽을 확인하세요.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+
+    <!-- Ad Slot 2 (Bottom) -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center; min-height: 250px"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"></ins>
+      <script>
+        if (!['127.0.0.1', 'localhost', ''].includes(window.location.hostname)) {
+          if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+        }
+      </script>
+    </div>
+
+    <!-- Internal Navigation Hub -->
+    <div class="internal-nav">
+      <strong>관련 절세 & 금융 계산기:</strong>
+      <ul>
+        <li><a href="/kor/util/finance-tax-2026/">2026 세금·연봉·부동산 계산기 모음 허브</a></li>
+        <li><a href="/kor/util/car-insurance-200man-self-pay-vs-claim-2026/">자동차보험 200만 원 할증 기준 자비 vs 보험처리 계산기</a></li>
+        <li><a href="/kor/util/salary-take-home-4-insurance-2026/">2026 연봉 실수령액 & 4대보험 인상 계산기</a></li>
+        <li><a href="/kor/util/nhis-regional-subscriber-premium-2026/">2026 지역가입자 건강보험료 계산기</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 대한민국 세무·금융·복지 핵심 계산기</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">2026년도 국세청·고용노동부 기준 연계 계산 도구:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/kor/util/car-tax-annual-prepayment-discount-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2027 자동차세 연납 할인 계산기 | 1월 연납 할인율과 세액</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026 statutory calculator for 2027 자동차세 연납 할인 계산기 | 1월 연납 할인율과 세액.</span>
+    </a>
+    <a href="/kor/util/child-birth-parental-allowance-tax-credit-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 출산·양육 지원금 총정리(첫만남이용권·부모급여·아동수당) &amp; 연말정산 자녀세액공제 상향 계산기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 첫만남이용권(첫째 200만/둘째 300만), 부모급여(0세 월 100만/1세 월 50만), 아동수당(월 10만) 및 2026 연말정산 자녀세액공제 상향(첫...</span>
+    </a>
+    <a href="/kor/util/commercial-property-vat-refund-rental-yield-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 상가·오피스텔 부가세 환급 &amp; 세후 임대수익률 계산기 | 포괄양수도·10년 추징</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 상가 및 오피스텔 분양 건물분 부가가치세 10% 조기환급, 10년(20기) 사후관리 추징 계산, 포괄양수도 비교, 취득세 4.6% 및 대출 레버리지 세후 ...</span>
+    </a>
+    <a href="/kor/util/comprehensive-income-tax-freelancer-3-3-refund-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 프리랜서 3.3% 종합소득세 환급 계산기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2025년 귀속 프리랜서·N잡러 3.3% 원천징수 환급액과 추가납부액을 계산하세요. 8단계 세율로 단순경비율·기준경비율·장부 신고를 비교합니다.</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>2026 글로벌 세무·금융·복지 계산기 전수 보기 &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</body>
+</html>

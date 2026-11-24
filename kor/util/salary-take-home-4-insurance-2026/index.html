@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>2026 연봉 실수령액 계산기 | 4대보험 인상 반영</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="description" content="국민연금 9.5%·건강보험 7.19% 인상을 반영한 연봉별 월 실수령액과 2025년 대비 달라지는 금액을 비교합니다." />
+  <link rel="canonical" href="https://emfls.github.io/kor/util/salary-take-home-4-insurance-2026/" />
+  <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+
+  <!-- Preconnects -->
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="2026 연봉 실수령액 계산기 | 4대보험 인상 반영" />
+  <meta property="og:description" content="국민연금 9.5%·건강보험 7.19% 인상을 반영한 연봉별 월 실수령액과 2025년 대비 달라지는 금액을 비교합니다." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://emfls.github.io/kor/util/salary-take-home-4-insurance-2026/" />
+  <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --success: #16a34a;
+      --success-bg: #f0fdf4;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+    .wrapper {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 3rem 1rem;
+    }
+    .header-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+    .header-nav a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 0.75rem;
+      line-height: 1.3;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-box {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-box h2 {
+      font-size: 1.1rem;
+      color: var(--primary-dark);
+      margin-bottom: 0.5rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .badge-salary {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #7dd3fc;
+    }
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    @media (max-width: 600px) {
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .result-item {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .result-item .label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+    .result-item .val {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .calculator-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+    }
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      color: #334155;
+    }
+    .form-group .helper-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+    .form-control {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .statutory-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.875rem;
+    }
+    .statutory-table th, .statutory-table td {
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      text-align: left;
+    }
+    .statutory-table th {
+      background: #f8fafc;
+      font-weight: 700;
+    }
+    .faq-section {
+      margin-top: 2.5rem;
+    }
+    .faq-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .faq-question {
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 0.35rem;
+    }
+    .faq-answer {
+      font-size: 0.9rem;
+      color: #475569;
+    }
+    .internal-nav {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+    .internal-nav ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .ad-container {
+      margin: 2rem 0;
+      text-align: center;
+      min-height: 250px;
+    }
+  </style>
+
+  <!-- JSON-LD: WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 연봉 실수령액 계산기",
+    "description": "2026년 국민연금 9.5%, 건강보험 7.19%, 장기요양 13.14% 반영 연봉별 실수령액 및 2025년 대비 공제 증가액 비교 계산기",
+    "url": "https://emfls.github.io/kor/util/salary-take-home-4-insurance-2026/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All",
+    "inLanguage": "ko-KR"
+  }
+  </script>
+
+  <!-- JSON-LD: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "2026년 국민연금 보험료율은 어떻게 인상되나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "1998년 이후 27년 만에 9.0%에서 9.5%로 0.5%p 인상되며, 직장가입자 근로자 부담분은 기존 4.5%에서 4.75%로 상향 조정됩니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "2026년 건강보험료와 장기요양보험료는 얼마나 오르나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "건강보험료율은 7.19%(근로자 3.595%)로 0.1%p 인상되며, 장기요양보험료율은 건강보험료의 13.14%로 전년(12.95%) 대비 동반 인상됩니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "비과세 식대 20만 원은 실수령액에 어떤 영향을 주나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "월 급여 중 비과세 식대(최대 20만 원)는 국민연금·건강보험·고용보험 및 근로소득세 과세표준에서 제외되므로, 월 3~5만 원 이상의 세금 및 4대보험 절감 효과를 줍니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "부양가족 수와 자녀 수에 따라 소득세가 왜 달라지나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "국세청 간이세액표에 따라 본인 및 부양가족 1인당 연 150만 원의 인적공제가 적용되고, 8~20세 자녀 1인당 15만 원(2명 35만 원)의 세액공제가 추가되어 매월 원천징수되는 근로소득세가 크게 감소합니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "2026년 최저시급과 최저 월급은 얼마인가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "2026년 최저시급은 10,320원이며, 주 40시간(월 209시간 유급 주휴수당 포함) 기준 법정 최저 월급은 세전 2,156,880원입니다."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- JSON-LD: BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "홈",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "한국어 계산기 허브",
+        "item": "https://emfls.github.io/kor/util/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "2026 연봉 실수령액 계산기",
+        "item": "https://emfls.github.io/kor/util/salary-take-home-4-insurance-2026/"
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <div class="wrapper">
+    <nav class="header-nav">
+      <a href="/kor/util/">← 한국어 도구 목록</a>
+      <span>2026 4대보험 개정 법령 기준</span>
+    </nav>
+
+    <h1>2026 연봉 실수령액 계산기</h1>
+    <p class="subtitle">국민연금 9.5%·건강보험 7.19%·장기요양 13.14% 반영 및 2025년 대비 인상액 비교</p>
+
+    <!-- Ad Slot 1 (Top) -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center; min-height: 250px"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"></ins>
+      <script>
+        if (!['127.0.0.1', 'localhost', ''].includes(window.location.hostname)) {
+          if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+        }
+      </script>
+    </div>
+
+    <!-- Summary Box -->
+    <div class="summary-box">
+      <h2>2026년 예상 실수령액 요약</h2>
+      <div class="badge badge-salary">2026 4대보험 개정 요율 적용</div>
+
+      <div class="result-grid">
+        <div class="result-item">
+          <div class="label">월 예상 실수령액 (세후)</div>
+          <div id="res-monthly-takehome-2026" class="val">0원 / 월</div>
+        </div>
+        <div class="result-item">
+          <div class="label">연간 총 실수령액</div>
+          <div id="res-annual-takehome-2026" class="val" style="color:var(--primary-dark);">0원 / 연</div>
+        </div>
+      </div>
+
+      <div style="margin-top:1rem; padding-top:0.75rem; border-top:1px dashed #bae6fd; font-size:0.9rem; color:#334155;">
+        월 세전 급여: <strong id="res-monthly-gross">0원</strong> | 총 공제액: <strong id="res-total-deductions" style="color:var(--danger);">0원</strong>
+      </div>
+    </div>
+
+    <!-- 2025 vs 2026 Increase Comparison Card -->
+    <div style="background:#fff7ed; border:1px solid #fed7aa; border-radius:12px; padding:1.25rem; margin-bottom:1.5rem;">
+      <h3 style="font-size:1.05rem; color:#c2410c; margin-bottom:0.5rem;">2025년 대비 2026년 4대보험 인상 체감 분석</h3>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; font-size:0.9rem;">
+        <div>4대보험 월 추가 공제액: <strong id="res-monthly-ins-diff" style="color:#ea580c;">+0원 / 월</strong></div>
+        <div>연간 누적 추가 공제액: <strong id="res-annual-ins-diff" style="color:#ea580c;">+0원 / 연</strong></div>
+      </div>
+      <div style="margin-top:0.5rem; font-size:0.85rem; color:#9a3412;">
+        * 실수령액 변동: 월 <strong id="res-monthly-takehome-diff">0원</strong> (국민연금 +0.25%p, 건강보험 +0.05%p 인상분 반영)
+      </div>
+    </div>
+
+    <!-- Visual SVG Bar Chart -->
+    <div style="background:#fff; border:1px solid var(--border); border-radius:12px; padding:1.25rem; margin-bottom:2rem; text-align:center;">
+      <h3 style="font-size:0.95rem; margin-bottom:0.75rem; color:#1e293b;">월 급여 배분 구조 (실수령액 vs 총 공제액)</h3>
+      <svg viewBox="0 0 500 80" style="width:100%; max-width:480px; height:auto;">
+        <rect x="20" y="15" width="260" height="20" rx="4" fill="#e2e8f0"/>
+        <rect id="bar-takehome" x="20" y="15" width="180" height="20" rx="4" fill="#0284c7"/>
+        <text x="290" y="30" font-size="12" font-weight="bold" fill="#0284c7">실수령액</text>
+
+        <rect x="20" y="45" width="260" height="20" rx="4" fill="#e2e8f0"/>
+        <rect id="bar-deduction" x="20" y="45" width="80" height="20" rx="4" fill="#ef4444"/>
+        <text x="290" y="60" font-size="12" font-weight="bold" fill="#ef4444">총 공제액</text>
+      </svg>
+    </div>
+
+    <!-- Input Form -->
+    <div class="calculator-card">
+      <form id="salary-form" onsubmit="event.preventDefault();">
+        <div class="form-group">
+          <label for="annualSalary">연봉 (세전, 원)</label>
+          <input inputmode="decimal" type="number" id="annualSalary" class="form-control" value="50000000" step="1000000" min="0" />
+          <div class="helper-text">기본급, 정기상여금 등 연간 총 계약 급여</div>
+        </div>
+
+        <div class="form-group">
+          <label for="nonTaxableMeal">월 비과세 식대 (기본 20만 원)</label>
+          <input inputmode="decimal" type="number" id="nonTaxableMeal" class="form-control" value="200000" step="50000" min="0" />
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+          <div class="form-group">
+            <label for="dependentsCount">부양가족 수 (본인 포함)</label>
+            <input inputmode="decimal" type="number" id="dependentsCount" class="form-control" value="1" step="1" min="1" max="10" />
+          </div>
+          <div class="form-group">
+            <label for="childrenCount">8~20세 자녀 수</label>
+            <input inputmode="decimal" type="number" id="childrenCount" class="form-control" value="0" step="1" min="0" max="5" />
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Deductions Breakdown Table -->
+    <h3 style="font-size:1.15rem; margin-bottom:0.75rem;">2026년 월별 공제액 세부 항목표</h3>
+    <table class="statutory-table">
+      <thead>
+        <tr>
+          <th>항목</th>
+          <th>2026 요율 (근로자)</th>
+          <th>월 공제액</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>국민연금</strong></td>
+          <td>4.75% (전년 4.5%에서 +0.25%p 인상)</td>
+          <td><span id="res-nps-2026">0원</span></td>
+        </tr>
+        <tr>
+          <td><strong>건강보험</strong></td>
+          <td>3.595% (전년 3.545%에서 +0.05%p 인상)</td>
+          <td><span id="res-nhi-2026">0원</span></td>
+        </tr>
+        <tr>
+          <td><strong>장기요양보험</strong></td>
+          <td>건보료의 13.14% (전년 12.95%에서 인상)</td>
+          <td><span id="res-ltc-2026">0원</span></td>
+        </tr>
+        <tr>
+          <td><strong>고용보험</strong></td>
+          <td>0.90%</td>
+          <td><span id="res-ei-2026">0원</span></td>
+        </tr>
+        <tr style="background:#f1f5f9; font-weight:bold;">
+          <td>4대보험 소계</td>
+          <td>-</td>
+          <td><span id="res-total-ins-2026">0원</span></td>
+        </tr>
+        <tr>
+          <td><strong>근로소득세</strong></td>
+          <td>간이세액표 누진세율 적용</td>
+          <td><span id="res-tax-income">0원</span></td>
+        </tr>
+        <tr>
+          <td><strong>지방소득세</strong></td>
+          <td>소득세의 10%</td>
+          <td><span id="res-tax-local">0원</span></td>
+        </tr>
+        <tr style="background:#fef2f2; font-weight:bold; color:#dc2626;">
+          <td>월 총 공제액 합계</td>
+          <td>4대보험 + 세금</td>
+          <td><span id="res-total-tax">0원</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- FAQ Section -->
+    <div class="faq-section">
+      <h3 style="font-size:1.15rem; margin-bottom:1rem;">자주 묻는 질문 (FAQ)</h3>
+      <div class="faq-item">
+        <div class="faq-question">Q. 국민연금 상한액이 오르면 고소득자는 얼마나 더 내나요?</div>
+        <div class="faq-answer">2026년 기준소득월액 상한액(기본 637만 원)을 적용받는 고소득 근로자는 월 최대 302,575원을 납부하게 되어, 요율 인상 및 상한 상향에 따라 월 약 2~3만 원 이상의 추가 공제가 발생합니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">Q. 연봉 협상 시 4대보험 인상을 고려하여 얼마나 올려야 실수령액이 유지되나요?</div>
+        <div class="faq-answer">4대보험 요율 인상으로 인해 연봉이 동결되면 실질 수령액이 연간 수십만 원 줄어들게 됩니다. 따라서 전년과 동일한 실수령액을 유지하려면 최소 1.5~2.5% 이상의 명목 연봉 인상이 필요합니다.</div>
+      </div>
+    </div>
+
+    <!-- Ad Slot 2 (Bottom) -->
+    
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="다음 필수 확인 계산기" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">다음 필수 확인 계산기 (Next Check)</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">방금 계산한 결과를 바탕으로 바로 이어서 점검하세요:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/kor/util/year-end-tax-adjustment-refund-calculator/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">2026 연말정산 환급금 미리보기 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">매달 뗀 근로소득세 중 연말정산으로 돌려받을 금액을 확인하세요.</span></a>
+    <a href="/kor/util/annual-leave-allowance-ordinary-wage-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">연차수당·통상임금 계산기 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">정기상여금 포함 통상시급으로 미사용 연차수당을 정확히 산출하세요.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+<div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center; min-height: 250px"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"></ins>
+      <script>
+        if (!['127.0.0.1', 'localhost', ''].includes(window.location.hostname)) {
+          if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+        }
+      </script>
+    </div>
+
+    <!-- Internal Links -->
+    <nav class="internal-nav">
+      <strong>관련 금융 & 법정 계산기 바로가기</strong>
+      <ul>
+        <li><a href="/kor/util/">한국어 재무·세무 도구 전체보기</a></li>
+        <li><a href="/kor/util/compound-interest/">복리 vs 단리 월 불입 이자 계산기</a></li>
+        <li><a href="/kor/util/health-insurance-dependent-disqualification-2026/">2026 건강보험 피부양자 탈락 판정기</a></li>
+        <li><a href="/util/">Global Financial Calculators Hub (English)</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 대한민국 세무·금융·복지 핵심 계산기</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">2026년도 국세청·고용노동부 기준 연계 계산 도구:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/kor/util/severance-pay-exact-tax-calculator-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 퇴직금 &amp; 퇴직소득세 정확 계산기 (3개월 평균임금 및 환산급여공제 5단계)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 근로기준법상 3개월 평균임금(상여금 및 연차수당 3/12 산입)과 소득세법 제48조 퇴직소득세(근속연수공제, 환산급여공제 5단계, 기본세율 8단계) 및 I...</span>
+    </a>
+    <a href="/kor/util/silson-4th-gen-non-covered-surcharge-switch-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 4세대 실손보험 비급여 할증·전환 손익분기 계산기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">비급여 보험금 100만·150만·300만 원 기준으로 4세대 실손보험의 갱신 보험료를 계산하고, 1·2·3세대 유지 비용과 추가 청구 손익을 비교하세요.</span>
+    </a>
+    <a href="/kor/util/small-business-severance-weekly-holiday-pay-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 소상공인 1인 총인건비 계산기 | 최저시급 10,320원·주휴수당·4대보험·두루누리 80%</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026 최저시급 10,320원(월 209시간 2,156,880원), 주휴수당 82,560원, 인상된 2026 4대보험 사업주 부담(국민연금 4.75%·건보 3.59...</span>
+    </a>
+    <a href="/kor/util/stress-dsr-3-mortgage-limit-refinance-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 스트레스 DSR 주담대 한도·갈아타기 계산기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 하반기 스트레스 DSR 기준으로 주택담보대출 한도를 계산하고, 중도상환수수료 1.20%와 0.65% 예시로 대환 손익분기와 순이자 절감액을 비교하세요.</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>2026 글로벌 세무·금융·복지 계산기 전수 보기 &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</body>
+</html>

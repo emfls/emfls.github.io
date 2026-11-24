@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2026 Roth IRA Conversion &amp; Medicare IRMAA $1 Cliff Calculator</title>
+  <meta name="description" content="Find 2026 Roth conversion room before the next federal bracket or Medicare IRMAA tier. Estimate conversion tax and one year of Part B and Part D surcharges.">
+  <link rel="canonical" href="https://emfls.github.io/util/us-roth-conversion-irmaa-cliff-calculator/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="EMFLS">
+  <meta property="og:title" content="2026 Roth IRA Conversion &amp; Medicare IRMAA $1 Cliff Calculator">
+  <meta property="og:description" content="Compare federal tax on a Roth conversion with the one-year Medicare surcharge it could trigger.">
+  <meta property="og:url" content="https://emfls.github.io/util/us-roth-conversion-irmaa-cliff-calculator/">
+  <meta property="og:image" content="https://emfls.github.io/assets/og/calc-us-roth-conversion-irmaa-cliff.webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="2026 Roth IRA Conversion &amp; Medicare IRMAA $1 Cliff Calculator">
+  <meta name="twitter:description" content="Find your Roth conversion room before the next tax bracket or Medicare surcharge.">
+  <meta name="twitter:image" content="https://emfls.github.io/assets/og/calc-us-roth-conversion-irmaa-cliff.webp">
+  <link rel="icon" href="/icon-192.png">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <link rel="stylesheet" href="../new-tools.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { window.dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 Roth IRA Conversion & Medicare IRMAA $1 Cliff Calculator",
+    "url": "https://emfls.github.io/util/us-roth-conversion-irmaa-cliff-calculator/",
+    "description": "Estimate 2026 federal Roth conversion tax and illustrate one year of Medicare IRMAA using 2026 CMS figures.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Which Medicare premium year can a 2026 Roth conversion affect?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Social Security generally uses tax information from two years earlier, so a 2026 conversion can affect 2028 Medicare premiums. This calculator uses the published 2026 CMS schedule to illustrate the possible cost. The 2028 thresholds and premiums may differ."}
+      },
+      {
+        "@type": "Question",
+        "name": "How much can the first $1 IRMAA cliff cost?",
+        "acceptedAnswer": {"@type": "Answer", "text": "On the 2026 schedule, going from $109,000 to $109,001 as a single filer, or from $218,000 to $218,001 on a joint return, adds $95.70 a month for each person enrolled in both Part B and Part D. That is $1,148.40 over 12 months for one person or $2,296.80 for two."}
+      },
+      {
+        "@type": "Question",
+        "name": "What income counts toward Medicare IRMAA?",
+        "acceptedAnswer": {"@type": "Answer", "text": "Medicare IRMAA uses adjusted gross income plus tax-exempt interest. The taxable portion of a traditional IRA conversion generally increases adjusted gross income in the conversion year. If you have after-tax IRA basis, IRS Form 8606 helps determine the taxable portion."}
+      },
+      {
+        "@type": "Question",
+        "name": "What happens if a Roth conversion reaches the next federal tax bracket?",
+        "acceptedAnswer": {"@type": "Answer", "text": "The higher federal rate applies only to taxable dollars above the bracket cutoff. The conversion tax estimate is the difference between regular federal income tax with and without the conversion. Medicare uses a separate tier schedule and can apply a higher surcharge to each covered month."}
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use SSA-44 to reduce IRMAA after a Roth conversion?",
+        "acceptedAnswer": {"@type": "Answer", "text": "A Roth conversion alone does not qualify as a life-changing event. If a qualifying event such as retirement that reduces your work and income applies, use Form SSA-44 to request that Social Security review your IRMAA using more recent income information."}
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "EMFLS", "item": "https://emfls.github.io/"},
+      {"@type": "ListItem", "position": 2, "name": "Calculators", "item": "https://emfls.github.io/util/"},
+      {"@type": "ListItem", "position": 3, "name": "Roth Conversion & IRMAA", "item": "https://emfls.github.io/util/us-roth-conversion-irmaa-cliff-calculator/"}
+    ]
+  }
+  </script>
+  <style>
+    .hero nav { display: flex; flex-wrap: wrap; gap: 4px 10px; margin-bottom: 16px; font-size: .9rem; }
+    .hero nav a { color: inherit; }
+    .irmaa-tool .grid > * { min-width: 0; }
+    .irmaa-tool select { padding-right: 26px; }
+    .irmaa-tool h3 { margin: 0 0 8px; }
+    .irmaa-tool p:last-child { margin-bottom: 0; }
+    .irmaa-tool ul { padding-left: 1.25rem; }
+    .irmaa-tool li + li { margin-top: .4rem; }
+    .takeaways { border-left: 5px solid #60a5fa; }
+    .cliff-warning { background: #fff7e6; border-left: 5px solid #b45309; }
+    .field-note { margin: 4px 0 0; }
+    .result { white-space: normal; }
+    .result dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 0; }
+    .result dl > div { border-top: 1px solid #9ac2ff; padding-top: 8px; }
+    .result dt { color: #334155; }
+    .result dd { margin: 2px 0 0; font-weight: 750; font-variant-numeric: tabular-nums; }
+    .result .primary { grid-column: 1 / -1; border-top: 0; padding-top: 0; }
+    .primary dd { color: #173f8a; font-size: clamp(1.3rem, 5vw, 2rem); }
+    .error:empty { display: none; }
+    .table-scroll { max-width: 100%; overflow-x: auto; }
+    .table-scroll:focus-visible { outline: 3px solid #b45309; outline-offset: 2px; }
+    table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+    caption { text-align: left; font-weight: 700; margin-bottom: 8px; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #d9e0ea; }
+    thead th { background: #eaf3ff; vertical-align: bottom; }
+    .ad-panel { padding: 12px; text-align: center; }
+    .ad-panel .adsbygoogle { display: block; width: 100%; min-height: 280px; }
+    @media (max-width: 520px) {
+      .result dl { grid-template-columns: minmax(0, 1fr); }
+    }
+  </style>
+  <script type="module" src="./app.js"></script>
+<style id="emfls-cro-calc-first-v1">
+/* EMFLS CRO v1 — calculator-first on mobile (CSS-only, no DOM/content/JS change; reversible by deleting this <style>) */
+@media (max-width: 760px) {
+  main.tool-shell { display: flex; flex-direction: column; }
+  main.tool-shell > * { order: 3; }
+  main.tool-shell > .hero, main.tool-shell > header, main.tool-shell > nav { order: 0; }
+  main.tool-shell > section.takeaways + section.panel { order: 1; }
+  main.tool-shell > section.takeaways + section.panel + aside.emfls-ad-slot { order: 1; }
+  main.tool-shell > section.takeaways { order: 2; }
+}
+</style>
+</head>
+<body>
+<main class="tool-shell irmaa-tool">
+  <header class="hero">
+    <nav aria-label="Breadcrumb">
+      <a href="/">EMFLS</a><span aria-hidden="true">›</span>
+      <a href="/util/">Calculators</a><span aria-hidden="true">›</span>
+      <span aria-current="page">Roth Conversion &amp; IRMAA</span>
+    </nav>
+    <h1>2026 Roth IRA Conversion &amp; Medicare IRMAA $1 Cliff Calculator</h1>
+    <p>See how much you can convert before your next federal tax bracket or Medicare Part B and Part D surcharge tier.</p>
+  </header>
+
+  <section class="panel takeaways" aria-labelledby="takeaways-title">
+    <h2 id="takeaways-title">Key takeaways</h2>
+    <ul>
+      <li><strong>Your conversion room is the smaller of two amounts.</strong> Federal brackets use taxable income after deductions. Medicare uses adjusted gross income plus tax-exempt interest.</li>
+      <li><strong>Two-year look-back.</strong> A taxable 2026 conversion can affect <strong>2028 Medicare premiums</strong>. The calculator uses official 2026 Medicare figures for illustration. The 2028 schedule may differ.</li>
+      <li><strong>2026 standard Part B premium is $202.90 per month.</strong> IRMAA adds a surcharge for each person enrolled in the affected coverage.</li>
+    </ul>
+  </section>
+
+  <aside class="panel cliff-warning" aria-labelledby="cliff-title">
+    <h2 id="cliff-title">The $1 cliff can add $1,148.40 for one year</h2>
+    <p>Under the 2026 schedule, moving from $109,000 to $109,001 for single filers, or from $218,000 to $218,001 on a joint return, adds <strong>$95.70 per month</strong> per person with both Part B and Part D. Over 12 months, that is <strong>$1,148.40 for one person</strong> or <strong>$2,296.80 for two</strong>. Leave room for other income you expect to report.</p>
+  </aside>
+
+  <section class="panel" aria-labelledby="calculator-title">
+    <h2 id="calculator-title">Calculate your conversion room</h2>
+    <noscript><p>Enable JavaScript to calculate with your own figures.</p></noscript>
+    <form id="conversion-form" autocomplete="off" novalidate>
+      <div class="grid">
+        <div>
+          <label for="filing">2026 filing status</label>
+          <select id="filing">
+            <option value="single">Single</option>
+            <option value="mfj">Married filing jointly</option>
+            <option value="mfs">Married filing separately (lived together)</option>
+          </select>
+        </div>
+        <div>
+          <label for="conversion">Planned pre-tax Roth conversion ($)</label>
+          <input id="conversion" inputmode="decimal" value="5,001" required aria-describedby="conversion-note">
+          <p class="note field-note" id="conversion-note">The model treats the entire entered conversion as taxable.</p>
+        </div>
+        <div>
+          <label for="agi">Adjusted gross income before conversion ($)</label>
+          <input id="agi" inputmode="decimal" value="104,000" required aria-describedby="agi-note">
+          <p class="note field-note" id="agi-note">Use expected 2026 AGI before this conversion. Enter household AGI for a joint return.</p>
+        </div>
+        <div>
+          <label for="interest">Tax-exempt interest ($)</label>
+          <input id="interest" inputmode="decimal" value="0" required aria-describedby="interest-note">
+          <p class="note field-note" id="interest-note">Include municipal bond interest reported as tax-exempt.</p>
+        </div>
+        <div class="full">
+          <label for="deduction">Deductions from AGI ($)</label>
+          <input id="deduction" inputmode="decimal" value="16,100" required aria-describedby="deduction-note">
+          <p class="note field-note" id="deduction-note">Starts at the basic standard deduction. Enter your applicable total, including any eligible additional or itemized deductions. Use $0 if none apply.</p>
+        </div>
+        <div>
+          <label for="part-b">Expected Part B enrollees in 2028</label>
+          <select id="part-b">
+            <option value="0">0</option>
+            <option value="1" selected>1</option>
+            <option value="2" disabled>2 (joint return)</option>
+          </select>
+        </div>
+        <div>
+          <label for="part-d">Expected Part D enrollees in 2028</label>
+          <select id="part-d">
+            <option value="0">0</option>
+            <option value="1" selected>1</option>
+            <option value="2" disabled>2 (joint return)</option>
+          </select>
+        </div>
+      </div>
+    </form>
+    <p id="error" class="error" role="alert"></p>
+    <section id="results" class="result" aria-labelledby="results-title" hidden>
+      <h3 id="results-title">Estimated results</h3>
+      <dl>
+        <div class="primary"><dt>Max conversion before either threshold</dt><dd id="safe-room"></dd></div>
+        <div><dt>Room before next IRMAA tier</dt><dd id="irmaa-room"></dd></div>
+        <div><dt>Room before next federal bracket</dt><dd id="tax-room"></dd></div>
+        <div><dt>2026 taxable income</dt><dd id="taxable-income"></dd></div>
+        <div><dt>Federal bracket</dt><dd id="tax-bracket"></dd></div>
+        <div><dt>2026 Medicare MAGI</dt><dd id="magi"></dd></div>
+        <div><dt>Illustrative Medicare IRMAA tier</dt><dd id="tier"></dd></div>
+        <div><dt>Regular federal income tax</dt><dd id="federal-tax"></dd></div>
+        <div><dt>Annual Part B + D surcharge</dt><dd id="annual-irmaa"></dd></div>
+        <div><dt>Additional 2026 federal tax</dt><dd id="conversion-tax"></dd></div>
+        <div><dt>Additional IRMAA for one year</dt><dd id="irmaa-delta"></dd></div>
+        <div><dt>Combined conversion cost</dt><dd id="combined-cost"></dd></div>
+        <div><dt>Effective combined conversion rate</dt><dd id="combined-rate"></dd></div>
+      </dl>
+      <p id="result-note" aria-live="polite" aria-atomic="true"></p>
+    </section>
+
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="Next essential calculators" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">Next Essential Check</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">Run these 2 companion checks with the numbers you just calculated:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/util/us-mega-backdoor-roth-401k-after-tax-limit-calculator-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">2026 Mega Backdoor Roth 401(k) &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">Check if your 401(k) allows up to $72,000 in total tax-free contributions.</span></a>
+    <a href="/util/us-roth-conversion-ladder-irmaa-bracket-filler-calculator-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">Roth Conversion &amp; IRMAA Cliff &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">Model multi-year Roth conversions without triggering Medicare surcharges.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+  </section>
+
+  <aside class="panel ad-panel" aria-label="Advertisement">
+    <span class="note">Advertisement</span>
+    <!-- A manual ad unit needs a data-ad-slot issued for this publisher. -->
+    <ins data-ad-slot="6016035748" class="adsbygoogle" data-ad-client="ca-pub-8830524482034754"
+         data-ad-format="auto" data-full-width-responsive="true"></ins>
+  </aside>
+
+  <section class="panel" aria-labelledby="parameters-title">
+    <h2 id="parameters-title">2026 official CMS and IRS parameters</h2>
+    <p>Monthly surcharge amounts are per enrollee. The CMS married-filing-separately column applies if you lived with your spouse at any time during the tax year. If you lived apart for the entire year, CMS uses the individual IRMAA scale.</p>
+    <div class="table-scroll" tabindex="0" role="region" aria-label="2026 Medicare IRMAA thresholds">
+      <table>
+        <caption>2026 Medicare IRMAA by MAGI and filing status</caption>
+        <thead>
+          <tr><th scope="col">Tier</th><th scope="col">Single</th><th scope="col">Married joint</th><th scope="col">Married separate, lived together</th><th scope="col">Part B surcharge</th><th scope="col">Part B total</th><th scope="col">Part D surcharge</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">0</th><td>≤ $109,000</td><td>≤ $218,000</td><td>≤ $109,000</td><td>$0.00</td><td>$202.90</td><td>$0.00</td></tr>
+          <tr><th scope="row">1</th><td>&gt; $109,000 to ≤ $137,000</td><td>&gt; $218,000 to ≤ $274,000</td><td>—</td><td>$81.20</td><td>$284.10</td><td>$14.50</td></tr>
+          <tr><th scope="row">2</th><td>&gt; $137,000 to ≤ $171,000</td><td>&gt; $274,000 to ≤ $342,000</td><td>—</td><td>$202.90</td><td>$405.80</td><td>$37.50</td></tr>
+          <tr><th scope="row">3</th><td>&gt; $171,000 to ≤ $205,000</td><td>&gt; $342,000 to ≤ $410,000</td><td>—</td><td>$324.60</td><td>$527.50</td><td>$60.40</td></tr>
+          <tr><th scope="row">4</th><td>&gt; $205,000 to &lt; $500,000</td><td>&gt; $410,000 to &lt; $750,000</td><td>&gt; $109,000 to &lt; $391,000</td><td>$446.30</td><td>$649.20</td><td>$83.30</td></tr>
+          <tr><th scope="row">5</th><td>≥ $500,000</td><td>≥ $750,000</td><td>≥ $391,000</td><td>$487.00</td><td>$689.90</td><td>$91.00</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Part D surcharges are in addition to the plan premium. <a href="https://www.cms.gov/newsroom/fact-sheets/2026-medicare-parts-b-premiums-deductibles">CMS 2026 premium and surcharge schedule</a></p>
+    <div class="table-scroll" tabindex="0" role="region" aria-label="2026 federal income tax brackets">
+      <table>
+        <caption>2026 federal ordinary income tax bracket ceilings</caption>
+        <thead>
+          <tr><th scope="col">Rate</th><th scope="col">Single</th><th scope="col">Married joint</th><th scope="col">Married separate</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">10%</th><td>$12,400</td><td>$24,800</td><td>$12,400</td></tr>
+          <tr><th scope="row">12%</th><td>$50,400</td><td>$100,800</td><td>$50,400</td></tr>
+          <tr><th scope="row">22%</th><td>$105,700</td><td>$211,400</td><td>$105,700</td></tr>
+          <tr><th scope="row">24%</th><td>$201,775</td><td>$403,550</td><td>$201,775</td></tr>
+          <tr><th scope="row">32%</th><td>$256,225</td><td>$512,450</td><td>$256,225</td></tr>
+          <tr><th scope="row">35%</th><td>$640,600</td><td>$768,700</td><td>$384,350</td></tr>
+          <tr><th scope="row">37%</th><td colspan="3">Income above the 35% bracket ceiling</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Basic standard deductions are $16,100 for single and married separate filers and $32,200 for married joint filers. <a href="https://www.irs.gov/pub/irs-drop/rp-25-32.pdf">IRS Revenue Procedure 2025-32, sections 4.01 and 4.14</a></p>
+  </section>
+
+  <aside class="panel ad-panel" aria-label="Advertisement">
+    <span class="note">Advertisement</span>
+    <ins data-ad-slot="3423411629" class="adsbygoogle" data-ad-client="ca-pub-8830524482034754"
+         data-ad-format="auto" data-full-width-responsive="true"></ins>
+  </aside>
+
+  <section class="panel" aria-labelledby="method-title">
+    <h2 id="method-title">How the estimate works</h2>
+    <p>Enter a fully taxable conversion and compare the same household with and without it. The calculator adds the increase in 2026 federal income tax to the increase in 12 months of Medicare surcharges, then divides the sum by the entered conversion amount. Conversion room is measured from your income before the conversion.</p>
+    <p>The estimate applies ordinary income rates and holds deductions fixed. It excludes state tax, credits, preferential capital gains rates, AMT, net investment income tax and changes to deduction phaseouts or taxable Social Security. Income is compared at cent precision. Your filed return and the applicable Medicare schedule determine your actual surcharge. If you have after-tax IRA basis, determine your taxable conversion amount with <a href="https://www.irs.gov/forms-pubs/about-form-8606">IRS Form 8606</a>.</p>
+    <p>After a qualifying life-changing event that reduces your income, you can ask Social Security to use more recent information. A Roth conversion alone does not qualify. <a href="https://www.ssa.gov/forms/ssa-44.pdf">Download Form SSA-44</a> · <a href="https://secure.ssa.gov/poms.nsf/lnx/0601120005">SSA qualifying-event rules</a> · <a href="https://secure.ssa.gov/POMS.NSF/LNX/0601101030">SSA two-year look-back policy</a></p>
+  </section>
+
+  <section class="panel faq" aria-labelledby="faq-title">
+    <h2 id="faq-title">Frequently asked questions</h2>
+    <details>
+      <summary>Which Medicare premium year can a 2026 Roth conversion affect?</summary>
+      <p>Social Security generally uses tax information from two years earlier, so a 2026 conversion can affect 2028 Medicare premiums. This calculator uses the published 2026 CMS schedule to illustrate the possible cost. The 2028 thresholds and premiums may differ.</p>
+    </details>
+    <details>
+      <summary>How much can the first $1 IRMAA cliff cost?</summary>
+      <p>On the 2026 schedule, going from $109,000 to $109,001 as a single filer, or from $218,000 to $218,001 on a joint return, adds $95.70 a month for each person enrolled in both Part B and Part D. That is $1,148.40 over 12 months for one person or $2,296.80 for two.</p>
+    </details>
+    <details>
+      <summary>What income counts toward Medicare IRMAA?</summary>
+      <p>Medicare IRMAA uses adjusted gross income plus tax-exempt interest. The taxable portion of a traditional IRA conversion generally increases adjusted gross income in the conversion year. If you have after-tax IRA basis, IRS Form 8606 helps determine the taxable portion.</p>
+    </details>
+    <details>
+      <summary>What happens if a Roth conversion reaches the next federal tax bracket?</summary>
+      <p>The higher federal rate applies only to taxable dollars above the bracket cutoff. The conversion tax estimate is the difference between regular federal income tax with and without the conversion. Medicare uses a separate tier schedule and can apply a higher surcharge to each covered month.</p>
+    </details>
+    <details>
+      <summary>Can I use SSA-44 to reduce IRMAA after a Roth conversion?</summary>
+      <p>A Roth conversion alone does not qualify as a life-changing event. If a qualifying event such as retirement that reduces your work and income applies, use Form SSA-44 to request that Social Security review your IRMAA using more recent income information.</p>
+    </details>
+  </section>
+
+  <section class="panel" aria-labelledby="related-title">
+    <h2 id="related-title">Related calculators</h2>
+    <nav class="links" aria-label="Related calculators">
+      <a href="/util/irs-tax-brackets-401k-catchup-calculator/">IRS tax brackets &amp; 401(k) catch-up</a>
+      <a href="/util/hsa-tax-savings-calculator/">HSA tax savings</a>
+      <a href="/util/compound-interest/">Compound interest</a>
+    </nav>
+  </section>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 United States Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for United States:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/us-roth-conversion-ladder-irmaa-bracket-filler-calculator-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Roth Conversion &amp; Medicare IRMAA Cliff Calculator</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate federal tax on a 2026 Roth conversion, fill the 12%, 22%, or 24% bracket, and compa...</span>
+    </a>
+    <a href="/util/us-roth-conversion-tax-bracket-filling-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Roth Conversion Tax Bracket Optimizer</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026 statutory calculator for 2026 Roth Conversion Tax Bracket Optimizer.</span>
+    </a>
+    <a href="/util/us-roth-ira-5-year-conversion-ladder-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">US 2026 FIRE Roth IRA 5-Year Conversion Ladder Calculator</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026 statutory calculator for US 2026 FIRE Roth IRA 5-Year Conversion Ladder Calculator.</span>
+    </a>
+    <a href="/util/us-roth-ira-5-year-ordering-rules-conversion-penalty-form-8606-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Roth IRA 5-Year Rules &amp; Withdrawal Calculator (2026)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">See which Roth IRA dollars come out first, when each five-year clock clears, and what you ma...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+<footer>Planning estimate · emfls.github.io</footer>
+</body>
+</html>

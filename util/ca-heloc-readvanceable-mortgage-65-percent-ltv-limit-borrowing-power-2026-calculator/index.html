@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Canada HELOC & Readvanceable Mortgage 65% LTV Limit Calculator (2026)</title>
+<meta name="description" content="Calculate Canadian OSFI B-20 readvanceable mortgage borrowing power, the 65% HELOC cap, 80% combined LTV limit, Interest Act semi-annual compounding, and 5-year equity growth.">
+<link rel="canonical" href="https://emfls.github.io/util/ca-heloc-readvanceable-mortgage-65-percent-ltv-limit-borrowing-power-2026-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Canada HELOC & Readvanceable Mortgage 65% LTV Limit Calculator (2026)">
+<meta property="og:description" content="Determine OSFI Guideline B-20 readvanceable HELOC credit limits, statutory Canadian compounding, and month-by-month equity conversion.">
+<meta property="og:url" content="https://emfls.github.io/util/ca-heloc-readvanceable-mortgage-65-percent-ltv-limit-borrowing-power-2026-calculator/">
+<link rel="stylesheet" href="../new-tools.css">
+<link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+<link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+<meta name="google-adsense-account" content="ca-pub-8830524482034754">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","G-QP5Q67GE5B");</script>
+<script>
+if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+  const adScript = document.createElement('script');
+  adScript.async = true;
+  adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+  adScript.crossOrigin = 'anonymous';
+  document.head.append(adScript);
+}
+</script>
+<style>
+:root {
+  --bg-color: #f8fafc;
+  --card-bg: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --border-color: #e2e8f0;
+  --primary: #2563eb;
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-main);
+  line-height: 1.5;
+  padding: 0 1rem 3rem;
+}
+.site-header {
+  max-width: 900px;
+  margin: 0 auto 1.5rem;
+  padding: 1rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+}
+.brand { font-size: 1.25rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+.site-header nav a { margin-left: 1rem; color: var(--text-muted); text-decoration: none; font-size: 0.95rem; }
+main { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem; }
+.hero h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 0.5rem; }
+.hero p { color: var(--text-muted); font-size: 1rem; }
+.panel {
+  overflow-x: hidden;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.grid-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+.field { display: flex; flex-direction: column; gap: 0.35rem; }
+.field label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+.field input, .field select {
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #fdfdfd;
+}
+.results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-top: 1rem; }
+.result-card {
+  padding: 1rem;
+  border-radius: 8px;
+  background: #f1f5f9;
+  border-left: 4px solid var(--primary);
+}
+.result-card.highlight { border-left-color: var(--success); background: #ecfdf5; }
+.result-card.warning-border { border-left-color: var(--warning); background: #fffbeb; }
+.result-card .label { font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 0.25rem; }
+.result-card .val { font-size: 1.35rem; font-weight: 800; color: var(--text-main); }
+.result-card .sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; }
+.chart-container { width: 100%; margin-top: 1.5rem; overflow-x: auto; }
+.key-takeaways ul { padding-left: 1.25rem; margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.table-wrap { width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 1rem; }
+.statutory-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem; }
+.statutory-table th, .statutory-table td { border: 1px solid var(--border-color); padding: 0.65rem 0.85rem; text-align: left; }
+.statutory-table th { background: #f8fafc; font-weight: 600; }
+.faq details { border-bottom: 1px solid var(--border-color); padding: 0.75rem 0; }
+.faq summary { font-weight: 600; cursor: pointer; color: var(--primary); }
+.faq p { margin-top: 0.5rem; font-size: 0.95rem; color: var(--text-muted); }
+.links { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem; }
+.links a { color: var(--primary); text-decoration: none; font-size: 0.9rem; }
+.emfls-ad-slot { background: #ffffff; border: 1px solid var(--border-color); border-radius: 8px; padding: 0.5rem; text-align: center; margin: 1rem 0; }
+.ad-label { font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
+footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 2rem; }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Canada HELOC & Readvanceable Mortgage 65% LTV Limit Calculator",
+  "url": "https://emfls.github.io/util/ca-heloc-readvanceable-mortgage-65-percent-ltv-limit-borrowing-power-2026-calculator/",
+  "applicationCategory": "FinancialApplication",
+  "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript. Requires HTML5.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "CAD"
+  },
+  "featureList": [
+    "OSFI Guideline B-20 65% revolving HELOC loan-to-value cap modeling",
+    "80% Combined Loan-to-Value (CLTV) maximum lending ceiling",
+    "Statutory Canadian Interest Act semi-annual compounding formula",
+    "OSFI mortgage stress test qualification rate simulation",
+    "5-year month-by-month readvanceable credit expansion schedule"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the OSFI 65% HELOC limit rule in Canada?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Under OSFI Guideline B-20, federally regulated financial institutions in Canada cannot grant a revolving Home Equity Line of Credit (HELOC) exceeding 65% of the property’s appraised market value."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does a readvanceable mortgage work up to 80% LTV?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In a readvanceable mortgage (or combined collateral mortgage plan), the total combined borrowing limit can reach up to 80% LTV, but any lending between 65% and 80% LTV must be held in an amortizing term mortgage."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does statutory Canadian semi-annual compounding affect mortgage payments?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Section 6 of the Canadian Interest Act mandates that mortgage interest cannot be compounded more frequently than semi-annually. This results in an effective monthly interest rate of (1 + r/2)^(1/6) - 1, slightly lower than US monthly compounding."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the OSFI mortgage stress test qualifying rate?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Canadian borrowers must qualify at the greater of 5.25% or the contractual mortgage interest rate plus 2.00%, ensuring serviceability under potential interest rate increases."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When does automatic readvanceable credit expand?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "With every regular monthly mortgage payment, the principal portion paid down is automatically converted into available credit on the HELOC portion, dollar-for-dollar, until the total HELOC balance reaches the 65% LTV cap."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://emfls.github.io/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Calculators",
+      "item": "https://emfls.github.io/util/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Canada HELOC 65% LTV Calculator",
+      "item": "https://emfls.github.io/util/ca-heloc-readvanceable-mortgage-65-percent-ltv-limit-borrowing-power-2026-calculator/"
+    }
+  ]
+}
+</script>
+<style id="emfls-cro-calc-first-b2-v1">
+/* EMFLS CRO B2 — mobile calculator-first ordering for non-Patch-B EN templates (CSS-only, reversible) */
+@media (max-width: 760px) {
+  main:has(form, input, select),
+  .tool-shell:has(form, input, select),
+  .container:has(form, input, select) {
+    display: flex;
+    flex-direction: column;
+  }
+  main:has(form, input, select) > *,
+  .tool-shell:has(form, input, select) > *,
+  .container:has(form, input, select) > * {
+    order: 4;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  main:has(form, input, select) > nav,
+  main:has(form, input, select) > header,
+  main:has(form, input, select) > .hero,
+  main:has(form, input, select) > h1,
+  main:has(form, input, select) > .lead,
+  .tool-shell:has(form, input, select) > nav,
+  .tool-shell:has(form, input, select) > header,
+  .tool-shell:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > h1,
+  .tool-shell:has(form, input, select) > .lead,
+  .container:has(form, input, select) > nav,
+  .container:has(form, input, select) > header,
+  .container:has(form, input, select) > .hero,
+  .container:has(form, input, select) > h1,
+  .container:has(form, input, select) > .lead {
+    order: 0;
+  }
+  main:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .tool-shell:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .container:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav) {
+    order: 1;
+  }
+  main:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .tool-shell:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .container:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container) {
+    order: 2;
+  }
+  main:has(form, input, select) > .emfls-next-check,
+  .tool-shell:has(form, input, select) > .emfls-next-check,
+  .container:has(form, input, select) > .emfls-next-check {
+    order: 2;
+  }
+  main:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .tool-shell:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .container:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]) {
+    order: 3;
+  }
+  main:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > .hero,
+  .container:has(form, input, select) > header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="brand">EMFLS</a>
+  <nav>
+    <a href="/util/">Calculators</a>
+    <a href="/util/2026-global-tax-finance-calculators/">Articles</a>
+  </nav>
+</header>
+<main>
+  <section class="hero">
+    <h1>Canada HELOC & Readvanceable Mortgage 65% LTV Limit Calculator</h1>
+    <p>Calculate maximum borrowing capacity under OSFI B-20 rules: 80% combined LTV limit, 65% revolving HELOC cap, Interest Act semi-annual compounding, and stress test qualification.</p>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+  </aside>
+
+  <section class="panel">
+    <div class="grid-form">
+      <div class="field">
+        <label for="homeValue">Appraised Property Value (CAD)</label>
+        <input type="number" inputmode="decimal" id="homeValue" value="850000" min="100000" max="10000000" step="10000">
+      </div>
+      <div class="field">
+        <label for="mortgageBalance">Current Mortgage Balance (CAD)</label>
+        <input type="number" inputmode="decimal" id="mortgageBalance" value="510000" min="0" max="10000000" step="5000">
+      </div>
+      <div class="field">
+        <label for="mortgageRate">Contract Mortgage Rate (%)</label>
+        <input type="number" inputmode="decimal" id="mortgageRate" value="4.89" min="1.0" max="15.0" step="0.05">
+      </div>
+      <div class="field">
+        <label for="amortizationYears">Amortization Period (Years)</label>
+        <input type="number" inputmode="decimal" id="amortizationYears" value="25" min="5" max="30" step="1">
+      </div>
+      <div class="field">
+        <label for="helocRate">HELOC Prime + Spread Rate (%)</label>
+        <input type="number" inputmode="decimal" id="helocRate" value="6.95" min="1.0" max="18.0" step="0.05">
+      </div>
+      <div class="field">
+        <label for="currentHelocBalance">Current HELOC Balance Drawn (CAD)</label>
+        <input type="number" inputmode="decimal" id="currentHelocBalance" value="0" min="0" max="5000000" step="5000">
+      </div>
+    </div>
+
+    <div class="results-grid">
+      <div class="result-card highlight">
+        <div class="label">Total Allowable HELOC Limit</div>
+        <div class="val" id="resHelocLimit">$0</div>
+        <div class="sub">Capped at 65% LTV ($552,500 max)</div>
+      </div>
+      <div class="result-card highlight">
+        <div class="label">Available HELOC Funds Today</div>
+        <div class="val" id="resAvailableNow">$0</div>
+        <div class="sub">Undrawn borrowing power</div>
+      </div>
+      <div class="result-card">
+        <div class="label">Monthly Mortgage Payment</div>
+        <div class="val" id="resMonthlyPayment">$0/mo</div>
+        <div class="sub">Semi-annual statutory compounding</div>
+      </div>
+      <div class="result-card warning-border">
+        <div class="label">OSFI Stress Test Payment</div>
+        <div class="val" id="resStressPayment">$0/mo</div>
+        <div class="sub">Qualifying rate: contract + 2.0%</div>
+      </div>
+    </div>
+
+    <div class="results-grid" style="margin-top:1.5rem;">
+      <div class="result-card">
+        <div class="label">5-Year Readvanceable Expansion</div>
+        <div class="val" id="res5YrExpansion">+$0</div>
+        <div class="sub">Automatic credit line growth</div>
+      </div>
+      <div class="result-card">
+        <div class="label">Projected 5-Year HELOC Limit</div>
+        <div class="val" id="res5YrTotalLimit">$0</div>
+        <div class="sub">After 60 months of principal paydown</div>
+      </div>
+      <div class="result-card">
+        <div class="label">Crosses Below 65% LTV</div>
+        <div class="val" id="resCrossMonth">-</div>
+        <div class="sub">Milestone to unlock full 65% HELOC cap</div>
+      </div>
+    </div>
+
+    <div class="chart-container" id="helocGrowthChart"></div>
+  </section>
+
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="Next essential calculators" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">Next Essential Check</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">Run these 2 companion checks with the numbers you just calculated:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/util/ca-fhsa-vs-rrsp-hbp-60k-first-home-buyer-calculator-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">Canada FHSA vs RRSP HBP ($60k) &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">Compare FHSA tax-free growth against the $60,000 Home Buyers&#x27; Plan.</span></a>
+    <a href="/util/ca-mortgage-stress-test-cmhc-insurance-1-5m-calculator-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">Canada Mortgage Stress Test &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">Calculate maximum home price with OSFI stress test &amp; CMHC premiums.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+
+  <section class="panel key-takeaways" aria-labelledby="takeaways-title">
+    <h2 id="takeaways-title">Answer-First: OSFI B-20 HELOC Rules</h2>
+    <ul>
+      <li><strong>65% Standalone Revolving HELOC Cap:</strong> OSFI Guideline B-20 dictates that revolving lines of credit secured by residential property cannot exceed 65% of the property’s appraised market value.</li>
+      <li><strong>80% Combined LTV Maximum:</strong> Canadian lenders can approve combined mortgage and HELOC financing up to 80% LTV, but any lending portion between 65% and 80% must be an amortizing fixed or variable term loan.</li>
+      <li><strong>Canadian Statutory Compounding:</strong> Under Section 6 of the Canadian <em>Interest Act</em>, mortgage interest is calculated semi-annually, not in advance. Monthly payments use $r_m = (1 + r/2)^0.16666666666666666 - 1$.</li>
+      <li><strong>Automatic Readvanceable Growth:</strong> In a readvanceable mortgage (e.g. RBC Homeline, TD FlexLine, BMO Homeowner ReadiLine), each dollar of principal paid on the term mortgage automatically increases available HELOC borrowing capacity until the 65% cap is met.</li>
+    </ul>
+  </section>
+
+  <section class="panel" aria-labelledby="milestones-title">
+    <h2 id="milestones-title">5-Year Readvanceable Equity Conversion Schedule</h2>
+    <div class="table-wrap" role="region" tabindex="0" aria-label="5-Year Readvanceable Equity Conversion Schedule"><table class="statutory-table">
+      <thead>
+        <tr>
+          <th>Timeline</th>
+          <th>Mortgage Balance</th>
+          <th>Mortgage LTV</th>
+          <th>Total HELOC Limit</th>
+          <th>HELOC Credit Growth</th>
+        </tr>
+      </thead>
+      <tbody id="milestonesBody">
+        <tr><td colspan="5" style="text-align:center;">Calculating schedule...</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="panel faq" aria-labelledby="faq-title">
+    <h2 id="faq-title">Frequently Asked Questions</h2>
+    <details>
+      <summary>What is the OSFI 65% HELOC limit rule in Canada?</summary>
+      <p>Under OSFI Guideline B-20, federally regulated financial institutions in Canada cannot grant a revolving Home Equity Line of Credit (HELOC) exceeding 65% of the property’s appraised market value.</p>
+    </details>
+    <details>
+      <summary>How does a readvanceable mortgage work up to 80% LTV?</summary>
+      <p>In a readvanceable mortgage (or combined collateral mortgage plan), the total combined borrowing limit can reach up to 80% LTV, but any lending between 65% and 80% LTV must be held in an amortizing term mortgage.</p>
+    </details>
+    <details>
+      <summary>How does statutory Canadian semi-annual compounding affect mortgage payments?</summary>
+      <p>Section 6 of the Canadian Interest Act mandates that mortgage interest cannot be compounded more frequently than semi-annually. This results in an effective monthly interest rate of (1 + r/2)^(1/6) - 1, slightly lower than US monthly compounding.</p>
+    </details>
+    <details>
+      <summary>What is the OSFI mortgage stress test qualifying rate?</summary>
+      <p>Canadian borrowers must qualify at the greater of 5.25% or the contractual mortgage interest rate plus 2.00%, ensuring serviceability under potential interest rate increases.</p>
+    </details>
+    <details>
+      <summary>When does automatic readvanceable credit expand?</summary>
+      <p>With every regular monthly mortgage payment, the principal portion paid down is automatically converted into available credit on the HELOC portion, dollar-for-dollar, until the total HELOC balance reaches the 65% LTV cap.</p>
+    </details>
+  </section>
+
+  <section class="panel" aria-labelledby="scope-title">
+    <h2 id="scope-title">Calculation assumptions and methodology</h2>
+    <p>Calculations use statutory Canadian semi-annual compounding for amortizing mortgages and simple monthly interest for the revolving HELOC portion. Appraisals and property values are assumed constant over the 5-year projection period.</p>
+    <nav class="links" aria-label="Related calculators">
+      <a href="/util/ca-mortgage-renewal-payment-shock-2026-semi-annual-compounding-osfi-switch-calculator/">Canada Mortgage Renewal Calculator</a>
+      <a href="/util/loan-payment-calculator/">Loan Payment Calculator</a>
+      <a href="/util/compound-interest/">Compound Interest Calculator</a>
+    </nav>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+  </aside>
+  <footer>Estimate only · emfls.github.io</footer>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 Canadian Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for Canadian:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/ca-home-buyers-plan-hbp-60000-fhsa-stacking-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada HBP Repayment &amp; FHSA Stacking Calculator 2026</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Combine Canada</span>
+    </a>
+    <a href="/util/ca-individual-pension-plan-ipp-vs-rrsp-33810-corporate-deduction-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada IPP vs. RRSP Calculator 2026 | Corporate Deduction</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare a Canadian Individual Pension Plan with the 2026 CA$33,810 RRSP limit. Estimate corp...</span>
+    </a>
+    <a href="/util/ca-lifelong-learning-plan-llp-20000-rrsp-10-year-repayment-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada LLP Calculator 2026 | $20,000 RRSP &amp; 10-Year Repayment</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate tax-free Canada LLP withdrawals, 10-year RRSP repayments, tax on shortfalls and the...</span>
+    </a>
+    <a href="/util/ca-lifetime-capital-gains-exemption-lcge-1-25m-amt-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada LCGE &amp; Alternative Minimum Tax Calculator 2026</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate regular tax and 20.5% federal AMT on a Canadian business, farm or fishing property ...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+<script type="module" src="./app.js"></script>
+</body>
+</html>

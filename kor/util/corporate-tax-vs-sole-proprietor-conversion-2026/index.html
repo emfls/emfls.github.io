@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>2026년 개인사업자 vs 법인전환 세금 비교 계산기 (법인세 10% 인상 & 성실신고 기준)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="description" content="2026년 법인세 전 구간 +1%p 인상(10%~25%) 및 성실신고확인대상 매출 기준(도소매 15억, 제조·IT 7.5억, 서비스 5억)을 완벽 반영한 개인사업자 종합소득세 vs 법인전환 실효세율 및 4대보험료 절세 비교 계산기." />
+  <link rel="canonical" href="https://emfls.github.io/kor/util/corporate-tax-vs-sole-proprietor-conversion-2026/" />
+  <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+
+  <!-- Preconnects -->
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+
+  <!-- P0 Localhost Guarded Google AdSense -->
+  <script>
+    if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+      var s = document.createElement('script');
+      s.async = true;
+      s.crossOrigin = 'anonymous';
+      s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+      document.head.appendChild(s);
+    }
+  </script>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="2026년 개인사업자 vs 법인전환 세금 비교 계산기" />
+  <meta property="og:description" content="2026 법인세 10% 인상 및 성실신고 5억/7.5억/15억 기준 반영 세부담 실시간 비교" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://emfls.github.io/kor/util/corporate-tax-vs-sole-proprietor-conversion-2026/" />
+  <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --danger: #dc2626;
+      --success: #16a34a;
+      --warning: #d97706;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 1rem;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    h1 {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.4rem;
+      color: #334155;
+    }
+    input[type="number"], select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="number"]:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+    }
+    .input-hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 640px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+    .badge-success {
+      background: #dcfce7;
+      color: #15803d;
+    }
+    .badge-warning {
+      background: #fef3c7;
+      color: #b45309;
+    }
+    .alert-box {
+      padding: 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      margin-bottom: 1.25rem;
+      font-weight: 500;
+    }
+    .alert-danger {
+      background: #fee2e2;
+      border: 1px solid #f87171;
+      color: #991b1b;
+    }
+    .alert-warning {
+      background: #fef3c7;
+      border: 1px solid #fcd34d;
+      color: #92400e;
+    }
+    .alert-info {
+      background: #e0f2fe;
+      border: 1px solid #7dd3fc;
+      color: #0369a1;
+    }
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    .comparison-table th, .comparison-table td {
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      text-align: left;
+    }
+    .comparison-table th {
+      background: #f1f5f9;
+      font-weight: 700;
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 0.95rem;
+    }
+    .stat-row:last-child {
+      border-bottom: none;
+      font-weight: 700;
+      font-size: 1.05rem;
+      padding-top: 0.75rem;
+    }
+    .ad-container {
+      margin: 2rem 0;
+      text-align: center;
+      background: #f1f5f9;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+      padding: 10px;
+      min-height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chart-container {
+      background: #ffffff;
+      padding: 1.25rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin: 1.5rem 0;
+    }
+    .faq-item {
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.75rem;
+    }
+    .faq-q {
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 0.25rem;
+    }
+    .faq-a {
+      font-size: 0.92rem;
+      color: #475569;
+    }
+    .links-box {
+      margin-top: 2rem;
+      padding: 1.25rem;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .links-box a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+    .links-box a:hover {
+      text-decoration: underline;
+    }
+  </style>
+
+  <!-- Schema: WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026년 개인사업자 vs 법인전환 세금 비교 계산기",
+    "url": "https://emfls.github.io/kor/util/corporate-tax-vs-sole-proprietor-conversion-2026/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "All",
+    "browserRequirements": "Requires JavaScript",
+    "description": "2026년 법인세율 1%p 인상(10%~25%) 및 성실신고확인대상 매출 기준을 반영하여 개인사업자 종합소득세·지역건보료와 법인전환 시 법인세·대표급여 세부담을 실시간 비교하는 정밀 계산기"
+  }
+  </script>
+
+  <!-- Schema: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "2026년 법인세율 인상이 법인전환 기준에 어떤 영향을 주나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "2026년 1월 1일 개시 사업연도부터 과세표준 2억 원 이하 구간 세율이 종전 9%에서 10%(지방세 포함 11%)로, 2억~200억 구간이 종전 19%에서 20%(지방세 포함 22%)로 1%p 상향됩니다. 하지만 개인사업자 최고세율(45% + 지방세 4.5% = 49.5%)에 비하면 여전히 압도적으로 낮아, 순이익 5천만~1억 원 초과 시 법인 전환의 절세 효과는 유효합니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "성실신고확인대상자가 되면 왜 법인전환을 고려해야 하나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "성실신고확인대상(도소매 15억, 제조·IT 7.5억, 서비스 5억 원 이상)이 되면 세무대리인의 정밀 확인서 제출이 의무화되어 세무 비용이 수백만 원 추가되고, 국세청 전산 분석 및 세무조사 선정 리스크가 급증합니다. 법인으로 전환하면 법인 매출 기준(도소매 15억 등 동일 적용 전까지)으로 유예되거나 소규모 법인 요건에 맞춰 관리할 수 있습니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "법인 잉여금을 대표가 개인적으로 인출할 때 세금은 어떻게 되나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "법인 이익은 대표이사 급여(근로소득), 상여금, 배당(15.4% 원천징수, 2천만 원 초과 시 금융소득종합과세), 또는 퇴직소득(낮은 실효세율)으로 인출할 수 있습니다. 무단 인출 시 가지급금 인정이자가 부과되므로 계획적인 배당과 급여 분산이 필수적입니다."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Schema: BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "홈",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "한국어 계산기 허브",
+        "item": "https://emfls.github.io/kor/util/finance-tax-2026/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "개인 vs 법인전환 계산기",
+        "item": "https://emfls.github.io/kor/util/corporate-tax-vs-sole-proprietor-conversion-2026/"
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>2026년 개인사업자 vs 법인전환 세금 비교 계산기</h1>
+      <p class="subtitle">2026 법인세 전 구간 +1%p 인상(10%~25%) & 성실신고확인대상 기준 완벽 반영</p>
+    </header>
+
+    <!-- Top AdSlot -->
+    
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="다음 필수 확인 계산기" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">다음 필수 확인 계산기 (Next Check)</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">방금 계산한 결과를 바탕으로 바로 이어서 점검하세요:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/kor/util/vat-simplified-taxpayer-104m-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">간이과세 1억 400만 부가세 계산기 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">개인사업자 유지 시 간이과세·부가세 부담을 먼저 점검하세요.</span></a>
+    <a href="/kor/util/comprehensive-income-tax-freelancer-3-3-refund-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">종합소득세 환급·납부액 계산기 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">개인사업자 종소세 실효세율과 법인 전환 시 세후 잉여금을 대조하세요.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+<div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+        if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+      </script>
+    </div>
+
+    <!-- Input Card -->
+    <div class="card">
+      <h2 style="font-size: 1.2rem; margin-bottom: 1.25rem; color: #0f172a;">💼 사업 실적 및 시뮬레이션 설정</h2>
+      <form id="corp-calc-form">
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="annualRevenue">연간 총 매출액 (원)</label>
+            <input inputmode="decimal" type="number" id="annualRevenue" value="300000000" step="1000000" min="0" />
+            <div class="input-hint">부가가치세 제외 연간 공급가액 (성실신고 판정 기준)</div>
+          </div>
+          <div class="form-group">
+            <label for="netProfit">연간 순이익 / 사업소득 (원)</label>
+            <input inputmode="decimal" type="number" id="netProfit" value="100000000" step="1000000" min="0" />
+            <div class="input-hint">총 매출액에서 필요경비(원가, 인건비, 임차료 등)를 차감한 순소득</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="industryType">사업 영위 업종 (성실신고 기준 구분)</label>
+            <select id="industryType">
+              <option value="service" selected>서비스업·부동산임대·전문직 (성실신고 기준 5억 원)</option>
+              <option value="manufacturing">제조업·음식숙박·건설·정보통신 IT (성실신고 기준 7.5억 원)</option>
+              <option value="retail">도매 및 소매업·농축수산업 (성실신고 기준 15억 원)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="ceoSalaryRatio">법인 전환 시 대표이사 급여 배분율 (%)</label>
+            <input inputmode="decimal" type="number" id="ceoSalaryRatio" value="50" min="0" max="100" step="5" />
+            <div class="input-hint">순이익 중 대표이사 인건비(손금 비용 인정)로 책정할 비율 (기본 50%)</div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Alert / Notice Box -->
+    <div id="res-faithful-alert" class="alert-box alert-info">
+      성실신고확인대상 여부를 분석 중입니다...
+    </div>
+
+    <!-- Results Card -->
+    <div class="card">
+      <h2 style="font-size: 1.2rem; margin-bottom: 1.25rem; color: #0f172a;">📊 개인사업자 vs 법인전환 실시간 세부담 비교 결과</h2>
+      <div id="res-diff" class="badge badge-success">비교 결과 계산 중...</div>
+      
+      <div class="grid-2">
+        <!-- Sole Proprietor -->
+        <div style="background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border);">
+          <h3 style="font-size: 1.05rem; margin-bottom: 0.75rem; color: #334155;">👤 개인사업자 유지 시</h3>
+          <div class="stat-row">
+            <span>종합소득세 + 지방세:</span>
+            <span id="res-sole-tax">0원</span>
+          </div>
+          <div class="stat-row">
+            <span>지역 건강보험료 (8.008%):</span>
+            <span id="res-sole-nhis">0원</span>
+          </div>
+          <div class="stat-row">
+            <span>총 세부담 및 보험료:</span>
+            <span id="res-sole-total" style="color: var(--danger);">0원</span>
+          </div>
+          <div class="stat-row">
+            <span>실효 부담률:</span>
+            <span id="res-sole-rate">0%</span>
+          </div>
+        </div>
+
+        <!-- Corporation -->
+        <div style="background: #f0fdf4; padding: 1.25rem; border-radius: 8px; border: 1px solid #bbf7d0;">
+          <h3 style="font-size: 1.05rem; margin-bottom: 0.75rem; color: #166534;">🏢 법인 전환 시 (급여 분산)</h3>
+          <div class="stat-row">
+            <span>법인세 (2026 10%~20%) + 지방세:</span>
+            <span id="res-corp-tax">0원</span>
+          </div>
+          <div class="stat-row">
+            <span>대표이사 근로소득세 + 지방세:</span>
+            <span id="res-ceo-tax">0원</span>
+          </div>
+          <div class="stat-row">
+            <span>직장 건강보험료 (8.008%):</span>
+            <span id="res-ceo-nhis">0원</span>
+          </div>
+          <div class="stat-row">
+            <span>총 세부담 및 보험료:</span>
+            <span id="res-corp-total" style="color: var(--success);">0원</span>
+          </div>
+          <div class="stat-row">
+            <span>실효 부담률:</span>
+            <span id="res-corp-rate">0%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SVG Chart -->
+      <div class="chart-container">
+        <h4 style="font-size: 0.95rem; margin-bottom: 1rem; color: #475569;">📊 총 세부담 및 4대보험료 시각화 비교</h4>
+        <svg id="svg-chart" viewBox="0 0 450 110" width="100%" height="110" style="overflow: visible;">
+          <!-- Sole bar -->
+          <text x="0" y="25" font-size="12" font-weight="600" fill="#334155">개인사업자</text>
+          <rect x="80" y="12" width="200" height="18" rx="4" fill="#ef4444" id="chart-bar-sole"></rect>
+          <text x="290" y="26" font-size="11" font-weight="600" fill="#ef4444" id="chart-txt-sole">0원</text>
+
+          <!-- Corp bar -->
+          <text x="0" y="65" font-size="12" font-weight="600" fill="#334155">법인전환</text>
+          <rect x="80" y="52" width="150" height="18" rx="4" fill="#10b981" id="chart-bar-corp"></rect>
+          <text x="240" y="66" font-size="11" font-weight="600" fill="#10b981" id="chart-txt-corp">0원</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Educational Deep-Dive Content -->
+    <div class="card">
+      <h2 style="font-size: 1.3rem; margin-bottom: 1rem; color: #0f172a;">📘 2026년 법인세 개정과 법인전환 전략 심층 분석</h2>
+      
+      <h3 style="font-size: 1.05rem; margin: 1.25rem 0 0.5rem 0; color: #1e293b;">1. 2026년 1월 1일 법인세율 +1%p 인상 법정 확정 수치</h3>
+      <p style="font-size: 0.93rem; color: #334155; margin-bottom: 1rem;">
+        정부 세제개편안 및 세법 개정에 따라 2026년 1월 1일 이후 개시하는 사업연도부터 중소·중견·대기업 전 구간 법인세율이 각각 1%p씩 상향 조정됩니다.
+        과세표준 2억 원 이하 구간은 종전 9%에서 <strong>10% (지방소득세 포함 11%)</strong>로 환원되며, 2억 초과 ~ 200억 이하 구간은 종전 19%에서 <strong>20% (지방소득세 포함 22%)</strong>로 인상됩니다.
+        그럼에도 불구하고 개인사업자의 종합소득세 최고세율이 45%(지방세 포함 49.5%)에 달하고 8,800만 원 초과 시 35%, 1.5억 초과 시 38%의 높은 세율이 적용되는 점을 감안하면,
+        순이익이 7,000만 원을 초과하는 시점부터는 법인 전환을 통한 소득 분산이 절대적으로 유리합니다.
+      </p>
+
+      <h3 style="font-size: 1.05rem; margin: 1.25rem 0 0.5rem 0; color: #1e293b;">2. 성실신고확인대상 경계 매출과 법인 전환 타이밍</h3>
+      <p style="font-size: 0.93rem; color: #334155; margin-bottom: 1rem;">
+        개인사업자의 가장 큰 세무 부담 중 하나는 <strong>성실신고확인제도</strong>입니다. 업종별 수입금액이 일정 기준 이상이 되면 종합소득세 신고 시 세무대리인의 확인서를 의무적으로 첨부해야 합니다.
+      </p>
+      <div style="overflow-x: auto;">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>업종 구분</th>
+              <th>성실신고 기준 매출</th>
+              <th>해당 업종 예시</th>
+              <th>주요 리스크 및 불이익</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>제1유형</strong></td>
+              <td><strong>연 15억 원 이상</strong></td>
+              <td>농업, 임업, 어업, 광업, 도매 및 소매업, 부동산매매업</td>
+              <td rowspan="3">확인서 미제출 시 산출세액의 5% 가산세 + 수탁 세무사 징계 리스크 + 국세청 정밀 기획 세무조사 우선 선정</td>
+            </tr>
+            <tr>
+              <td><strong>제2유형</strong></td>
+              <td><strong>연 7.5억 원 이상</strong></td>
+              <td>제조업, 숙박 및 음식점업, 건설업, 운수창고업, 정보통신업(IT)</td>
+            </tr>
+            <tr>
+              <td><strong>제3유형</strong></td>
+              <td><strong>연 5억 원 이상</strong></td>
+              <td>부동산임대업, 전문·과학·기술서비스업, 보건업, 교육서비스업</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="font-size: 1.05rem; margin: 1.25rem 0 0.5rem 0; color: #1e293b;">3. 법인 전환 시 핵심 절세 메커니즘 3가지</h3>
+      <ul style="padding-left: 1.25rem; font-size: 0.93rem; color: #334155; line-height: 1.8;">
+        <li><strong>대표이사 인건비 손금 인정:</strong> 개인사업자는 사업주 본인에게 지급하는 급여가 필요경비로 인정되지 않지만, 법인은 대표이사 급여를 전액 법인의 비용(손금)으로 털어내 법인세 과세표준을 획기적으로 낮출 수 있습니다.</li>
+        <li><strong>건강보험료 직장가입자 전환:</strong> 개인사업자는 사업소득뿐만 아니라 보유 부동산, 자동차 등에 대해 지역건보료가 고액 부과되지만, 법인 대표이사는 보수월액에 대해서만 직장건보료(8.008%)가 부과되어 개인 자산에 대한 건보료 폭탄을 회피할 수 있습니다.</li>
+        <li><strong>소득 시기 분산 및 잉여금 유보:</strong> 개인사업자는 당해 연도 벌어들인 순이익 전체에 대해 즉시 세금을 내야 하지만, 법인은 법인세(10~20%)만 낸 뒤 사내유보금으로 재투자하거나, 추후 배당·퇴직금으로 수년에 걸쳐 저율로 인출할 수 있습니다.</li>
+      </ul>
+
+      <h2 style="font-size: 1.15rem; margin: 1.5rem 0 0.75rem 0; color: #0f172a;">⚖️ 4. 개인사업자 vs 법인 주요 장단점 총괄 비교</h2>
+      <div style="overflow-x: auto;">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>구분</th>
+              <th>개인사업자</th>
+              <th>법인 사업자 (주식회사)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>적용 세율</strong></td>
+              <td>6% ~ 45% (8단계 초과누진, 지방세 별도)</td>
+              <td>10% ~ 25% (2026년 기준 4단계, 지방세 별도)</td>
+            </tr>
+            <tr>
+              <td><strong>자금 인출</strong></td>
+              <td>사업용 계좌에서 자유롭게 인출 가능</td>
+              <td>급여, 배당, 퇴직금 등 정당한 명목 필수 (가지급금 주의)</td>
+            </tr>
+            <tr>
+              <td><strong>건강보험</strong></td>
+              <td>지역가입자 (소득 + 재산 + 자동차 합산 부과)</td>
+              <td>직장가입자 (대표 급여 기준 8.008% 부과)</td>
+            </tr>
+            <tr>
+              <td><strong>신용도 및 자금조달</strong></td>
+              <td>대표자 개인 신용에 의존, 투자 유치 어려움</td>
+              <td>법인 공시 신용도, 정부 R&D, 벤처투자(VC) 유치 용이</td>
+            </tr>
+            <tr>
+              <td><strong>유지 관리 비용</strong></td>
+              <td>기장료 월 7~10만 원 선, 설립 절차 간단</td>
+              <td>설립 등기비, 기장료 월 15~20만 원, 결산 및 조정료 발생</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Second AdSlot -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+        if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+      </script>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="card">
+      <h2 style="font-size: 1.2rem; margin-bottom: 1rem; color: #0f172a;">❓ 자주 묻는 질문 (FAQ)</h2>
+      <div class="faq-item">
+        <div class="faq-q">Q. 순이익이 얼마일 때 법인으로 전환하는 것이 가장 유리한가요?</div>
+        <div class="faq-a">A. 통상 연간 순이익(매출 - 경비)이 5,000만~7,000만 원을 넘어가면 개인 종합소득세율(24% 구간 진입)이 법인세율(10%)을 훌쩍 넘어서므로 법인 전환을 검토하기 시작합니다. 특히 순이익이 1억 원을 넘는 경우 법인 유지비용(세무기장료, 등기비용 등)을 제하고도 연간 수백만~수천만 원 이상의 실질 세금을 절감할 수 있습니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Q. 2026년 법인세율 인상으로 법인전환 매력이 떨어지지 않았나요?</div>
+        <div class="faq-a">A. 2026년부터 2억 이하 법인세율이 9%에서 10%로 1%p 오르지만, 이는 과거 2022년 이전 수준으로 정상화된 것에 불과합니다. 개인사업자의 소득세율은 여전히 최고 45%(지방세 포함 49.5%)에 달하고 건보료 부담도 계속 증가하고 있으므로, 1%p 인상에도 불구하고 법인 전환의 절세 격차는 여전히 매우 큽니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Q. 법인 돈을 마음대로 쓰면 왜 횡령이나 가지급금이 되나요?</div>
+        <div class="faq-a">A. 법인은 대표 개인과 법적으로 완전히 분리된 별개의 '인격체(법인)'입니다. 따라서 회사의 돈은 대표의 개인 돈이 아니며, 급여나 배당 같은 법적 원인 없이 인출하면 '가지급금'으로 분류되어 연 4.6%의 인정이자가 대표 소득에 가산되고 법인세 손금 불산입 불이익을 받게 됩니다.</div>
+      </div>
+    </div>
+
+    <!-- Hub Link Box -->
+    <div class="links-box">
+      <a href="/kor/util/finance-tax-2026/">📊 2026 금융·세무 계산기 허브</a>
+      <a href="/kor/util/severance-pay-exact-tax-calculator-2026/">💰 2026 퇴직금 & 퇴직소득세 정확 계산기</a>
+      <a href="/kor/util/crypto-virtual-asset-tax-250man-2029-simulator/">🪙 가상자산 250만 공제 과세 시뮬레이터</a>
+      <a href="/kor/util/credit-loan-minus-account-dsr-5year-trap-2026/">🏦 마이너스통장 DSR 5년 만기 함정 계산기</a>
+    </div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 대한민국 세무·금융·복지 핵심 계산기</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">2026년도 국세청·고용노동부 기준 연계 계산 도구:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/kor/util/didimdol-mortgage-loan-limit-rate-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 내집마련 디딤돌대출 한도(2억·2.4억·3.2억)·자격 판정 &amp; 월 상환액 계산기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2025.6.27 개편 현행 주택도시기금 내집마련 디딤돌대출 유형별 한도(일반 2억, 생애최초 2.4억, 신혼·2자녀 3.2억) 및 소득(6,000만/7,000만/8...</span>
+    </a>
+    <a href="/kor/util/divorce-child-support-property-division-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 양육비 산정기준표 계산기 &amp; 이혼 재산분할·취득세 1.5% 특례 시뮬레이터</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">서울가정법원 양육비 산정기준표(부모 합산소득 11구간 × 자녀 나이 6구간)로 비양육자 월 양육비와 성년까지 누적액을 계산하고, 기여도별 재산분할 금액과 부동산 이전...</span>
+    </a>
+    <a href="/kor/util/dual-income-year-end-tax-optimization-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 맞벌이 부부 연말정산 최적화 시뮬레이터 | 공제 몰아주기 vs 분산 절세 비교</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 최신 소득세법 기준 맞벌이 부부 연말정산 인적공제(1인당 150만 원), 의료비(총급여 3% 문턱 15%), 신용카드(총급여 25% 문턱), 교육비 최적 ...</span>
+    </a>
+    <a href="/kor/util/earned-income-child-tax-credit-eitc-330man-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 근로장려금 &amp; 자녀장려금 계산기 | 맞벌이 4,400만·최대 330만 원</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 최신 국세청 기준 근로장려금(단독 2,200만, 홑벌이 3,200만, 맞벌이 4,400만 원 최대 330만 원) 및 자녀장려금(1인당 100만 원), 재산...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>2026 글로벌 세무·금융·복지 계산기 전수 보기 &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</body>
+</html>

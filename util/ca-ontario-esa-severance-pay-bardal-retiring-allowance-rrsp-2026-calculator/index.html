@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026 Ontario Severance Pay & Bardal vs CRA Retiring Allowance RRSP Calculator</title>
+  <meta name="description" content="Calculate 2026 Ontario ESA statutory termination & severance pay vs Common Law Bardal factors, and CRA pre-1996 retiring allowance tax-free RRSP rollover.">
+  <link rel="canonical" href="https://emfls.github.io/util/ca-ontario-esa-severance-pay-bardal-retiring-allowance-rrsp-2026-calculator/">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+
+  <script>
+  if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+    const adScript = document.createElement('script');
+    adScript.async = true;
+    adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+    adScript.crossOrigin = 'anonymous';
+    document.head.append(adScript);
+  }
+  </script>
+
+  <style id="emfls-responsive-guard">
+    *, *::before, *::after { box-sizing: border-box; }
+    img, canvas, svg, video { max-width: 100%; height: auto; }
+    body, html { overflow-x: hidden; }
+  </style>
+
+  <style>
+    :root {
+      --primary: #991b1b;
+      --primary-accent: #dc2626;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --border: #e2e8f0;
+      --success: #15803d;
+      --indigo: #4338ca;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background-color: var(--bg);
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(135deg, #7f1d1d, #b91c1c);
+      color: white;
+      padding: 2.5rem 1rem;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.85rem;
+      font-weight: 800;
+    }
+    header p {
+      margin: 0;
+      opacity: 0.95;
+      font-size: 1.05rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .nav-breadcrumbs {
+      font-size: 0.85rem;
+      margin-bottom: 0.75rem;
+      opacity: 0.9;
+    }
+    .nav-breadcrumbs a {
+      color: #fecaca;
+      text-decoration: none;
+    }
+    .nav-breadcrumbs a:hover {
+      text-decoration: underline;
+    }
+    .container {
+      max-width: 1060px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .ad-container {
+      margin: 1.5rem 0;
+      text-align: center;
+      background: #edf2f7;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .calc-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 768px) {
+      .calc-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+    .card h2 {
+      margin-top: 0;
+      font-size: 1.25rem;
+      color: var(--primary);
+      border-bottom: 2px solid #fee2e2;
+      padding-bottom: 0.5rem;
+    }
+    .form-group {
+      margin-bottom: 1.1rem;
+    }
+    label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: var(--text);
+    }
+    .help-text {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+    input[type="number"], select {
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      background: #fff;
+    }
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.4rem;
+    }
+    .checkbox-group input {
+      width: auto;
+    }
+    .res-hero {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      padding: 1.25rem;
+      text-align: center;
+      margin-bottom: 1.25rem;
+    }
+    .res-hero-val {
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.1;
+      margin: 0.35rem 0;
+    }
+    .res-hero-sub {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .res-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 0.9rem;
+    }
+    .res-row:last-child {
+      border-bottom: none;
+    }
+    .res-label {
+      color: var(--text-muted);
+    }
+    .res-val {
+      font-weight: 600;
+      color: var(--text);
+    }
+    .gap-box {
+      margin-top: 1rem;
+      background: #f5f3ff;
+      border: 1px solid #ddd6fe;
+      border-radius: 8px;
+      padding: 1rem;
+      color: #5b21b6;
+      font-size: 0.85rem;
+    }
+    .tax-box {
+      margin-top: 1rem;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 8px;
+      padding: 1rem;
+      color: #166534;
+      font-size: 0.85rem;
+    }
+    .chart-container {
+      margin-top: 1.25rem;
+      background: #fff;
+      border: 1px solid #f1f5f9;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .content-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    .content-section h3 {
+      color: var(--primary);
+      margin-top: 1.5rem;
+      font-size: 1.15rem;
+    }
+    .content-section ul, .content-section ol {
+      padding-left: 1.3rem;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+    .content-section li {
+      margin-bottom: 0.5rem;
+    }
+    footer {
+      background: #0f172a;
+      color: #94a3b8;
+      padding: 2rem 1rem;
+      text-align: center;
+      font-size: 0.85rem;
+    }
+    footer a {
+      color: #f87171;
+      text-decoration: none;
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 Ontario Severance Pay & Bardal vs CRA Retiring Allowance RRSP Calculator",
+    "url": "https://emfls.github.io/util/ca-ontario-esa-severance-pay-bardal-retiring-allowance-rrsp-2026-calculator/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "All",
+    "browserRequirements": "Requires JavaScript",
+    "description": "Calculate 2026 Ontario ESA statutory termination & severance pay vs Common Law Bardal factors, and CRA pre-1996 retiring allowance tax-free RRSP rollover."
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the difference between Ontario ESA severance and Common Law reasonable notice?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Ontario Employment Standards Act (ESA) establishes a bare statutory minimum (up to 8 weeks termination pay plus 26 weeks severance). Common Law reasonable notice (under the Bardal factors) is typically much higher, often awarding 1 month of pay per year of service up to 24 months."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Who qualifies for statutory severance pay under the Ontario ESA?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "To qualify for statutory severance pay under the ESA, an employee must have completed at least 5 years of service, AND the employer must have an annual Ontario payroll of at least $2.5 million (or have terminated 50 or more employees within a 6-month period)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does the CRA Retiring Allowance RRSP rollover work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under ITA s. 60(j.1), you can roll over $2,000 for each year of service prior to 1996, plus $1,500 for each year prior to 1989 for which employer pension contributions did not vest, directly into an RRSP without using your existing RRSP contribution room."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Canada Tax & RRSP Calculators",
+        "item": "https://emfls.github.io/util/ca-2026-cra-tax-rrsp-tfsa-real-estate-calculators/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Ontario Severance & Bardal Calculator",
+        "item": "https://emfls.github.io/util/ca-ontario-esa-severance-pay-bardal-retiring-allowance-rrsp-2026-calculator/"
+      }
+    ]
+  }
+  </script>
+<style id="emfls-cro-calc-first-b2-v1">
+/* EMFLS CRO B2 — mobile calculator-first ordering for non-Patch-B EN templates (CSS-only, reversible) */
+@media (max-width: 760px) {
+  main:has(form, input, select),
+  .tool-shell:has(form, input, select),
+  .container:has(form, input, select) {
+    display: flex;
+    flex-direction: column;
+  }
+  main:has(form, input, select) > *,
+  .tool-shell:has(form, input, select) > *,
+  .container:has(form, input, select) > * {
+    order: 4;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  main:has(form, input, select) > nav,
+  main:has(form, input, select) > header,
+  main:has(form, input, select) > .hero,
+  main:has(form, input, select) > h1,
+  main:has(form, input, select) > .lead,
+  .tool-shell:has(form, input, select) > nav,
+  .tool-shell:has(form, input, select) > header,
+  .tool-shell:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > h1,
+  .tool-shell:has(form, input, select) > .lead,
+  .container:has(form, input, select) > nav,
+  .container:has(form, input, select) > header,
+  .container:has(form, input, select) > .hero,
+  .container:has(form, input, select) > h1,
+  .container:has(form, input, select) > .lead {
+    order: 0;
+  }
+  main:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .tool-shell:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .container:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav) {
+    order: 1;
+  }
+  main:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .tool-shell:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .container:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container) {
+    order: 2;
+  }
+  main:has(form, input, select) > .emfls-next-check,
+  .tool-shell:has(form, input, select) > .emfls-next-check,
+  .container:has(form, input, select) > .emfls-next-check {
+    order: 2;
+  }
+  main:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .tool-shell:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .container:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]) {
+    order: 3;
+  }
+  main:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > .hero,
+  .container:has(form, input, select) > header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+}
+</style>
+</head>
+<body>
+  <header>
+    <div class="nav-breadcrumbs">
+      <a href="/">Home</a> &gt; <a href="/util/ca-2026-cra-tax-rrsp-tfsa-real-estate-calculators/">Canada Tax &amp; RRSP Calculators</a> &gt; Ontario Severance Calculator
+    </div>
+    <h1>2026 Ontario Severance Pay &amp; Bardal vs CRA Retiring Allowance Calculator</h1>
+    <p>Ontario ESA Statutory Minimums • Common Law Bardal Factors • CRA Pre-1996 RRSP Tax Rollover</p>
+  </header>
+
+  <div class="container">
+    
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="Next essential calculators" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">Next Essential Check</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">Run these 2 companion checks with the numbers you just calculated:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/util/ca-rrsp-vs-tfsa-oas-clawback-2026-calculator/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">RRSP vs TFSA &amp; OAS Clawback &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">Compare after-tax wealth factoring in the 15% OAS clawback ($95,323).</span></a>
+    <a href="/util/ca-cpp-age-60-vs-65-vs-70-breakeven-calculator-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">CPP Age 60 vs 65 vs 70 Break-Even &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">Find the exact break-even age for early vs deferred CPP benefits.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+<div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </div>
+
+    <div class="calc-layout">
+      <!-- Input Card -->
+      <div class="card">
+        <h2>Employment &amp; Severance Details</h2>
+
+        <div class="form-group">
+          <label for="annualSalary">Annual Base Salary ($ CAD)</label>
+          <input inputmode="decimal" type="number" id="annualSalary" value="95000" min="0" step="5000">
+        </div>
+
+        <div class="form-group">
+          <label for="yearsOfService">Completed Years of Service</label>
+          <input inputmode="decimal" type="number" id="yearsOfService" value="10" min="0" max="45" step="1">
+        </div>
+
+        <div class="form-group">
+          <label for="completedMonths">Additional Months of Service (0 - 11)</label>
+          <input inputmode="decimal" type="number" id="completedMonths" value="6" min="0" max="11" step="1">
+        </div>
+
+        <div class="form-group">
+          <label for="age">Employee Age</label>
+          <input inputmode="decimal" type="number" id="age" value="50" min="18" max="75" step="1">
+          <div class="help-text">Bardal common law factor: age &gt; 50 receives enhanced notice.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="jobRole">Job Seniority &amp; Specialisation</label>
+          <select id="jobRole">
+            <option value="executive">Executive / C-Suite / Director</option>
+            <option value="management">Senior / Middle Management</option>
+            <option value="professional" selected>Specialised Professional / Senior Technical</option>
+            <option value="clerical">Clerical / Operational / General Support</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <div class="checkbox-group">
+            <input type="checkbox" id="employerPayrollOver2_5M" checked>
+            <label for="employerPayrollOver2_5M" style="margin:0; font-weight:normal;">Employer Ontario Payroll is $2.5M+ (Qualifies for ESA Severance)</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="startYear">Employment Start Year (for Pre-1996 CRA Rollover)</label>
+          <input inputmode="decimal" type="number" id="startYear" value="1994" min="1960" max="2026" step="1">
+          <div class="help-text">Years before 1996 qualify for $2,000/yr tax-free RRSP rollover.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="pre1989NonVestedYears">Pre-1989 Non-Vested Pension Years (if applicable)</label>
+          <input inputmode="decimal" type="number" id="pre1989NonVestedYears" value="0" min="0" max="30" step="1">
+          <div class="help-text">Adds $1,500/yr for non-vested RPP/DPSP years prior to 1989.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="rrspRolloverPercent">Retiring Allowance Rollover Intent (%)</label>
+          <input inputmode="decimal" type="number" id="rrspRolloverPercent" value="100" min="0" max="100" step="10">
+        </div>
+
+        <div class="form-group">
+          <label for="marginalTaxRate">Estimated Marginal Tax Rate (%)</label>
+          <input inputmode="decimal" type="number" id="marginalTaxRate" value="43" min="15" max="54" step="1">
+        </div>
+      </div>
+
+      <!-- Output Card -->
+      <div class="card">
+        <h2>Entitlements &amp; Tax Sheltering</h2>
+
+        <div class="res-hero">
+          <div class="res-hero-sub">Estimated Common Law Notice (Bardal)</div>
+          <div class="res-hero-val" id="resBardalTotal">$0</div>
+          <div class="res-hero-sub" id="resBardalWeeks">0 weeks</div>
+        </div>
+
+        <div class="res-row">
+          <span class="res-label">ESA Statutory Minimum:</span>
+          <span class="res-val" id="resEsaTotal">$0</span>
+        </div>
+        <div class="res-row">
+          <span class="res-label">Statutory Notice Breakdown:</span>
+          <span class="res-val" id="resEsaWeeks">0 weeks</span>
+        </div>
+
+        <div class="gap-box">
+          <strong>Common Law Negotiation Uplift (Severance Gap):</strong>
+          <div style="font-size:1.1rem; font-weight:700; margin:0.25rem 0;" id="resGapAmount">$0</div>
+          <div id="resGapWeeks">+0 weeks above ESA legal floor</div>
+        </div>
+
+        <div class="tax-box">
+          <strong>CRA Retiring Allowance RRSP Rollover (s. 60(j.1)):</strong>
+          <div class="res-row" style="border:none; padding: 0.2rem 0;">
+            <span>Eligible Rollover Room:</span>
+            <strong id="resCraLimit">$0</strong>
+          </div>
+          <div class="res-row" style="border:none; padding: 0.2rem 0;">
+            <span>Rolled to RRSP (Zero Room Used):</span>
+            <strong id="resRrspTransferred">$0</strong>
+          </div>
+          <div class="res-row" style="border:none; padding: 0.2rem 0;">
+            <span>Immediate Tax Sheltered:</span>
+            <strong style="color:var(--success);" id="resTaxSheltered">$0</strong>
+          </div>
+        </div>
+
+        <div class="res-row" style="margin-top:1rem;">
+          <span class="res-label">CRA Withholding on Cash Portion:</span>
+          <span class="res-val" style="color:var(--primary);" id="resWithholdingTax">$0</span>
+        </div>
+        <div class="res-row">
+          <span class="res-label">Estimated Net Cash in Hand:</span>
+          <span class="res-val" id="resNetCash">$0</span>
+        </div>
+
+        <div class="chart-container">
+          <div style="font-size: 0.82rem; font-weight: 600; color: #475569; margin-bottom: 0.5rem;">
+            Compensation Comparison &amp; Tax Sheltering Structure
+          </div>
+          <svg id="chartSvg" width="100%" height="190" viewBox="0 0 320 190">
+            <line x1="20" y1="20" x2="300" y2="20" stroke="#f1f5f9" stroke-width="1" />
+            <line x1="20" y1="95" x2="300" y2="95" stroke="#f1f5f9" stroke-width="1" />
+            <line x1="20" y1="170" x2="300" y2="170" stroke="#cbd5e1" stroke-width="1.5" />
+
+            <rect id="barEsa" x="25" y="110" width="50" height="60" fill="#64748b" rx="3" />
+            <rect id="barBardal" x="95" y="40" width="50" height="130" fill="#dc2626" rx="3" />
+            <rect id="barRrsp" x="165" y="120" width="50" height="50" fill="#15803d" rx="3" />
+            <rect id="barCash" x="235" y="80" width="50" height="90" fill="#2563eb" rx="3" />
+
+            <text id="lblEsa" x="50" y="102" font-size="9" font-weight="700" fill="#64748b" text-anchor="middle">$0</text>
+            <text id="lblBardal" x="120" y="32" font-size="9" font-weight="700" fill="#dc2626" text-anchor="middle">$0</text>
+            <text id="lblRrsp" x="190" y="112" font-size="9" font-weight="700" fill="#15803d" text-anchor="middle">$0</text>
+            <text id="lblCash" x="260" y="72" font-size="9" font-weight="700" fill="#2563eb" text-anchor="middle">$0</text>
+
+            <text x="50" y="184" font-size="9" fill="#64748b" text-anchor="middle">ESA Min</text>
+            <text x="120" y="184" font-size="9" fill="#64748b" text-anchor="middle">Bardal</text>
+            <text x="190" y="184" font-size="9" fill="#64748b" text-anchor="middle">RRSP Rollover</text>
+            <text x="260" y="184" font-size="9" fill="#64748b" text-anchor="middle">Net Cash</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h2>Ontario Severance &amp; Common Law Notice Legal Principles</h2>
+      <p>Under Canadian employment law, dismissed employees are entitled to compensation governed by two distinct frameworks: the statutory floor set by the Employment Standards Act, 2000 (ESA), and common law reasonable notice established in landmark judicial decisions.</p>
+
+      <h3>1. Ontario ESA Statutory Minimums</h3>
+      <ul>
+        <li><strong>Termination Pay (In Lieu of Notice):</strong> 1 week of regular pay per year of service, starting after 3 months of service, capped at 8 weeks maximum.</li>
+        <li><strong>Statutory Severance Pay:</strong> Granted if the employee has 5 or more years of service AND the employer has an annual Ontario payroll of $2.5 million or more. Calculated as 1 week per year of service (including partial years prorated), capped at 26 weeks.</li>
+        <li><strong>Total ESA Ceiling:</strong> Maximum possible statutory entitlement is 34 weeks (8 weeks termination + 26 weeks severance).</li>
+      </ul>
+
+      <h3>2. Common Law Reasonable Notice (Bardal Factors)</h3>
+      <p>Unless ousted by an enforceable employment contract with a valid termination clause, dismissed employees are entitled to common law reasonable notice determined under <em>Bardal v. Globe &amp; Mail Ltd.</em> (1960). Courts assess:</p>
+      <ol>
+        <li><strong>Age:</strong> Older workers (especially 50+) generally receive enhanced notice periods due to greater re-employment hurdles.</li>
+        <li><strong>Character of Employment:</strong> Senior executives and specialized technical professionals command higher notice periods.</li>
+        <li><strong>Length of Service:</strong> Tenured employees frequently receive approximately 3 to 4 weeks (or ~1 month) of pay per year of service.</li>
+        <li><strong>Availability of Similar Employment:</strong> Industry labor market conditions at the time of termination.</li>
+      </ol>
+
+      <h3>3. CRA Retiring Allowance RRSP Rollover (ITA s. 60(j.1))</h3>
+      <p>A retiring allowance (severance pay) qualifies for a unique tax shelter under paragraph 60(j.1) of the federal Income Tax Act. Employees who worked prior to 1996 can roll over <strong>$2,000 for each year of service before 1996</strong>, plus <strong>$1,500 for each year before 1989</strong> without pension vesting, directly into their RRSP <em>without using any existing RRSP contribution room</em>. This defers thousands in immediate CRA withholding tax.</p>
+    </div>
+
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </div>
+  </div>
+
+  
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 Canadian Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for Canadian:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/ca-ontario-non-resident-speculation-tax-nrst-25-percent-rebate-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Ontario 25% NRST &amp; 4-Year PR Rebate Calculator 2026</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate Ontario’s 25% NRST, Toronto and Ontario land transfer taxes, and financing costs. C...</span>
+    </a>
+    <a href="/util/ca-ontario-toronto-land-transfer-tax-first-time-buyer-rebate-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Ontario &amp; Toronto Land Transfer Tax Calculator 2026</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate 2026 Ontario and Toronto land transfer tax in CAD. Compare closing costs, apply up ...</span>
+    </a>
+    <a href="/util/ca-part-xiii-non-resident-dividend-pension-rrsp-withholding-nr301-treaty-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada Part XIII Withholding Tax Calculator 2026 | NR301, RRSP &amp; RRIF</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare Canada</span>
+    </a>
+    <a href="/util/ca-pension-income-splitting-form-t1032-50-percent-oas-clawback-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada Pension Income Splitting Calculator 2026 | Form T1032</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Find the lowest-cost 2026 T1032 pension split. Compare federal and provincial tax, pension c...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+<footer>
+    <p>&copy; 2026 EMFLS Canadian Employment Tools. Formulated in accordance with Ontario ESA and CRA Income Tax Act guidelines.</p>
+    <p><a href="/util/ca-2026-cra-tax-rrsp-tfsa-real-estate-calculators/">Return to Canada Tax &amp; RRSP Hub</a> | <a href="/">All Free Calculators</a></p>
+  </footer>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

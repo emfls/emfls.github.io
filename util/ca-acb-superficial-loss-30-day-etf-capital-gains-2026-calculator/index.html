@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Canada ACB &amp; Superficial Loss Calculator 2026 | ETF ROC</title>
+  <meta name="description" content="Calculate Canadian weighted-average ACB, ETF return of capital, phantom distributions and 61-day superficial losses. Estimate the 2026 tax impact in CAD.">
+  <link rel="canonical" href="https://emfls.github.io/util/ca-acb-superficial-loss-30-day-etf-capital-gains-2026-calculator/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_CA">
+  <meta property="og:title" content="Canada ACB &amp; Superficial Loss Calculator 2026">
+  <meta property="og:description" content="Track ETF cost base, find the 61-day superficial loss window, and estimate the tax impact in CAD.">
+  <meta property="og:url" content="https://emfls.github.io/util/ca-acb-superficial-loss-30-day-etf-capital-gains-2026-calculator/">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Canada ACB &amp; Superficial Loss Calculator 2026">
+  <meta name="twitter:description" content="Track ETF cost base, find the 61-day superficial loss window, and estimate the tax impact in CAD.">
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <link rel="stylesheet" href="../new-tools.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QP5Q67GE5B')</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Canada ACB & Superficial Loss Calculator 2026",
+    "url": "https://emfls.github.io/util/ca-acb-superficial-loss-30-day-etf-capital-gains-2026-calculator/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": {"@type": "Offer", "price": "0", "priceCurrency": "CAD"}
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type":"Question","name":"Does Canada use FIFO to calculate ACB?","acceptedAnswer":{"@type":"Answer","text":"For identical shares or ETF units held by the same taxpayer in taxable accounts, pool the acquisition costs and commissions. Allocate the weighted-average ACB per unit to each unit sold."}},
+      {"@type":"Question","name":"What if ETF return of capital exceeds my ACB?","acceptedAnswer":{"@type":"Answer","text":"Reduce the pool ACB to zero and recognize the excess as a capital gain when it occurs. Later purchases or basis increases do not reverse the earlier gain."}},
+      {"@type":"Question","name":"How do I record a phantom ETF distribution?","acceptedAnswer":{"@type":"Answer","text":"Add the reinvested non-cash amount to ACB when unit count stays unchanged. Report the taxable amount from the tax slip separately. For a cash distribution reinvested into extra units, enter the new units as a purchase instead of adding the amount twice."}},
+      {"@type":"Question","name":"Does a partial repurchase deny the whole loss?","acceptedAnswer":{"@type":"Answer","text":"The CRA administrative approach multiplies the loss by the smallest of units sold, units acquired during the inclusive 61-day window, and identical units held on day +30, divided by units sold. Day +31 is outside the window for this sale."}},
+      {"@type":"Question","name":"What happens if I repurchase in a TFSA, RRSP or FHSA?","acceptedAnswer":{"@type":"Answer","text":"If the registered plan acquisition triggers the superficial loss rule, the denied portion generally cannot be recovered. A qualifying taxable replacement can generally carry the denied amount in the replacement property’s ACB."}}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type":"ListItem","position":1,"name":"EMFLS","item":"https://emfls.github.io/"},
+      {"@type":"ListItem","position":2,"name":"Utilities","item":"https://emfls.github.io/util/"},
+      {"@type":"ListItem","position":3,"name":"Canada ACB Calculator","item":"https://emfls.github.io/util/ca-acb-superficial-loss-30-day-etf-capital-gains-2026-calculator/"}
+    ]
+  }
+  </script>
+  <style>
+    [hidden] { display: none !important; }
+    .trail { display: flex; flex-wrap: wrap; gap: .6rem; margin-bottom: 12px; color: #dbeafe; }
+    .trail a { color: inherit; }
+    .takeaways { border-left: 5px solid #2563eb; }
+    .takeaways ul { padding-left: 1.3rem; margin-bottom: 0; }
+    .warning { background: #fff5df; border-left: 5px solid #a85412; }
+    .warning p { margin-bottom: 0; }
+    fieldset { border: 1px solid #cad6e6; border-radius: 12px; margin: 0 0 22px; padding: 14px; min-width: 0; }
+    legend { font-weight: 800; padding: 0 6px; }
+    .row { display: grid; grid-template-columns: minmax(155px, 1.2fr) minmax(132px, 1fr) 2fr auto; gap: 10px; align-items: end; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid #d9e0ea; }
+    .row > *, .grid > * { min-width: 0; }
+    .row-inputs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .purchase-row { grid-template-columns: 1fr 1fr auto; }
+    #add-purchase { margin-bottom: 14px; }
+    .row label { font-size: .87rem; }
+    label input, label select { display: block; margin-top: 4px; min-width: 0; }
+    .row input, .row select { padding: 9px 7px; }
+    button.secondary { width: auto; }
+    .window, .metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 14px 0; }
+    .window div, .metrics div { border: 1px solid #c8ddfc; background: #f2f7ff; padding: 10px; border-radius: 10px; }
+    dt { color: #374761; font-size: .88rem; line-height: 1.35; }
+    dd { margin: 3px 0 0; font-weight: 800; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+    .emfls-ad-slot { width: 100%; max-width: 520px; min-height: 278px; margin: 38px auto; text-align: center; }
+    .ad-label { height: 28px; font-size: .8rem; color: #cbd5e1; }
+    .emfls-ad-slot ins { height: 250px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { text-align: left; vertical-align: top; padding: 9px 6px; border-bottom: 1px solid #d9e0ea; }
+    th[scope="row"] { width: 35%; }
+    @media (max-width: 800px) {
+      .row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .row-inputs { grid-column: 1 / -1; }
+    }
+    @media (max-width: 480px) {
+      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .window, .row, .row-inputs { grid-template-columns: 1fr; }
+      .row [data-remove] { justify-self: start; }
+      input[type="date"] { width: 100%; font-size: .875rem; }
+    }
+  </style>
+  <script type="module" src="./app.js"></script>
+  <meta property="og:image" content="https://emfls.github.io/assets/og/ca-acb-superficial-loss-30-day-etf-capital-gains-2026-calculator.webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:image" content="https://emfls.github.io/assets/og/ca-acb-superficial-loss-30-day-etf-capital-gains-2026-calculator.webp">
+<style id="emfls-cro-calc-first-v1">
+/* EMFLS CRO v1 — calculator-first on mobile (CSS-only, no DOM/content/JS change; reversible by deleting this <style>) */
+@media (max-width: 760px) {
+  main.tool-shell { display: flex; flex-direction: column; }
+  main.tool-shell > * { order: 3; }
+  main.tool-shell > .hero, main.tool-shell > header, main.tool-shell > nav { order: 0; }
+  main.tool-shell > section.takeaways + section.panel { order: 1; }
+  main.tool-shell > section.takeaways + section.panel + aside.emfls-ad-slot { order: 1; }
+  main.tool-shell > section.takeaways { order: 2; }
+}
+</style>
+</head>
+<body>
+<main class="tool-shell">
+  <nav class="trail" aria-label="Breadcrumb">
+    <a href="/">EMFLS</a><span aria-hidden="true">/</span><a href="/util/">Utilities</a><span aria-hidden="true">/</span><span aria-current="page">Canada ACB Calculator</span>
+  </nav>
+  <header class="hero">
+    <h1>Canada ACB &amp; Superficial Loss Calculator 2026</h1>
+    <p>Track the cost base of a non-registered investment, including ETF return of capital and phantom distributions. Check how much of a loss you can claim.</p>
+  </header>
+  <section class="panel takeaways" aria-labelledby="takeaways">
+    <h2 id="takeaways">Key takeaways</h2>
+    <ul>
+      <li>Canada uses weighted-average cost for identical units. Return of capital reduces ACB, and reinvested non-cash distributions increase it.</li>
+      <li>The superficial loss window includes day −30, the sale date and day +30. Day +31 is the first day outside this sale’s window.</li>
+      <li>The standard 2026 inclusion rate is <strong>50%</strong> for taxable capital gains and allowable capital losses.</li>
+    </ul>
+  </section>
+  <aside class="panel warning" aria-labelledby="registered-warning">
+    <h2 id="registered-warning">A registered repurchase can cost you the loss permanently</h2>
+    <p>If a TFSA, RRSP or FHSA repurchase triggers the rule, the denied loss generally cannot be recovered. Check affiliated accounts and automatic reinvestments before selling at a loss. <a href="https://laws-lois.justice.gc.ca/eng/acts/I-3.3/section-251.1.html">Affiliated persons under the Income Tax Act</a></p>
+  </aside>
+
+  <section class="panel" aria-labelledby="inputs-title">
+    <h2 id="inputs-title">Calculate your ACB and sale</h2>
+    <p class="note">Use Canadian dollars and one group of identical securities. This worksheet models one taxable sale and one replacement account scenario.</p>
+    <noscript><p>Enable JavaScript to use this calculator.</p></noscript>
+    <form id="calculator" hidden novalidate>
+      <fieldset>
+        <legend>Pre-sale ACB ledger</legend>
+        <p class="note">Enter the selling taxpayer’s taxable positions in date order. For an existing pool, use a purchase row with its opening units and ACB per unit. Put same-day events in transaction order and include only events before the sale.</p>
+        <div id="events"></div>
+        <button type="button" class="secondary" id="add-event">Add ACB event</button>
+      </fieldset>
+      <fieldset>
+        <legend>2026 sale</legend>
+        <div class="grid">
+          <label>Sale date <input name="sale-date" type="date" min="2026-01-01" max="2026-12-31" value="2026-11-20" required></label>
+          <label>Units sold <input name="sale-units" type="number" inputmode="decimal" min="0" step="any" value="100" required></label>
+          <label>Sale price per unit ($) <input name="sale-price" type="number" inputmode="decimal" min="0" step="any" value="22" required></label>
+          <label>Selling commission ($) <input name="sale-commission" type="number" inputmode="decimal" min="0" step="any" value="9.95" required></label>
+          <label>Combined marginal tax rate (%) <input name="tax-rate" type="number" inputmode="decimal" min="0" max="100" step="any" value="35" required></label>
+        </div>
+        <dl id="window" class="window" aria-label="Superficial loss dates">
+          <div><dt>Day −30 · Window opens</dt><dd data-window="start">—</dd></div>
+          <div><dt>Day +30 · Window closes</dt><dd data-window="end">—</dd></div>
+          <div><dt>Day +31 · First re-entry outside window</dt><dd data-window="safeReentry">—</dd></div>
+        </dl>
+      </fieldset>
+      <fieldset>
+        <legend>Identical property and day +30 holdings</legend>
+        <p class="note">Enter qualifying purchases by you or an affiliated person, such as a spouse, common-law partner or controlled corporation. List pre-sale acquisitions here too if they fall in the window. These rows count units only. Use a separate review if replacement units are spread across multiple owners or account types.</p>
+        <div id="purchases"></div>
+        <button type="button" class="secondary" id="add-purchase">Add replacement purchase</button>
+        <div class="grid">
+          <label>Replacement account <select name="account">
+            <option value="taxable">Non-registered</option>
+            <option value="TFSA">TFSA</option>
+            <option value="RRSP">RRSP</option>
+            <option value="FHSA">FHSA</option>
+          </select></label>
+          <label>Identical units held or acquirable at end of day +30 <input name="held" type="number" inputmode="decimal" min="0" step="any" value="60" required></label>
+          <label class="full" id="replacement-basis">Day +30 taxable replacement pool ACB before adding denied loss ($)
+            <input name="replacement-acb" type="number" inputmode="decimal" min="0" step="any" value="1332.90" required aria-describedby="replacement-note">
+            <small id="replacement-note" class="note">Use the replacement owner’s full taxable pool at day +30, including retained units in that pool, purchase commissions and any ROC or phantom adjustments. The example assumes no other units survive the sale.</small>
+          </label>
+        </div>
+      </fieldset>
+      <p id="error" class="error" role="status" hidden></p>
+      <section id="results" aria-labelledby="results-title">
+        <h2 id="results-title">Your estimate</h2>
+        <dl class="metrics">
+          <div><dt>Pre-sale weighted-average ACB</dt><dd data-money="totalACB">—</dd></div>
+          <div><dt>Pre-sale ACB per unit</dt><dd data-money="acbPerUnit">—</dd></div>
+          <div><dt>ACB of units sold</dt><dd data-money="basisSold">—</dd></div>
+          <div><dt>Net sale proceeds</dt><dd data-money="netProceeds">—</dd></div>
+          <div><dt>Gross capital gain or loss on sale</dt><dd data-money="grossCapitalGain">—</dd></div>
+          <div><dt>Units acquired within the window</dt><dd id="acquired">—</dd></div>
+          <div><dt>Superficial loss denied</dt><dd data-money="deniedLoss">—</dd></div>
+          <div><dt>Capital loss allowed before inclusion</dt><dd data-money="allowedLoss">—</dd></div>
+          <div><dt>Denied loss deferred into taxable ACB</dt><dd data-money="deferredLoss">—</dd></div>
+          <div><dt>Denied loss permanently lost in registered plan</dt><dd data-money="permanentLoss">—</dd></div>
+          <div><dt>2026 capital gain from excess ROC</dt><dd data-money="rocGain2026">—</dd></div>
+          <div><dt>Taxable gain or allowable loss on sale (50%)</dt><dd data-money="includedSale">—</dd></div>
+          <div><dt>Net taxable gain or allowable loss including 2026 excess ROC (50%)</dt><dd data-money="includedNet">—</dd></div>
+          <div><dt id="tax-label">Estimated tax impact</dt><dd data-money="taxEffect">—</dd></div>
+          <div><dt>ACB remaining immediately after sale</dt><dd data-money="remainingACB">—</dd></div>
+          <div><dt>Day +30 adjusted replacement ACB</dt><dd data-money="adjustedReplacementACB">—</dd></div>
+        </dl>
+        <p id="loss-summary" class="note" role="status"></p>
+      </section>
+
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="Next essential calculators" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">Next Essential Check</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">Run these 2 companion checks with the numbers you just calculated:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/util/ca-rrsp-vs-tfsa-oas-clawback-2026-calculator/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">RRSP vs TFSA &amp; OAS Clawback &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">Compare after-tax wealth factoring in the 15% OAS clawback ($95,323).</span></a>
+    <a href="/util/ca-cpp-age-60-vs-65-vs-70-breakeven-calculator-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">CPP Age 60 vs 65 vs 70 Break-Even &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">Find the exact break-even age for early vs deferred CPP benefits.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+    </form>
+    <p class="note">A negative tax estimate is potential savings if you can offset eligible taxable capital gains. The estimate covers this sale and excess ROC entered for 2026. Report taxable distributions separately.</p>
+    <p class="note">Calculation inputs are processed in your browser. Analytics and advertising may receive ordinary device and usage data.</p>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+  </aside>
+
+  <section class="panel" aria-labelledby="parameters">
+    <h2 id="parameters">Official 2026 parameters</h2>
+    <table>
+      <thead><tr><th scope="col">Parameter</th><th scope="col">Rule and source</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Capital gains inclusion</th><td>50% under the standard rule. The proposed increase was cancelled. <a href="https://laws-lois.justice.gc.ca/eng/acts/I-3.3/section-38.html">Income Tax Act, s. 38</a> · <a href="https://www.pm.gc.ca/en/news/news-releases/2025/03/21/prime-minister-mark-carney-cancels-proposed-capital-gains-tax-increase">Cancellation announcement</a></td></tr>
+        <tr><th scope="row">Identical property ACB</th><td>Pool purchase costs and commissions and divide by total units. <a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/about-your-tax-return/tax-return/completing-a-tax-return/personal-income/line-12700-capital-gains/special-rules-other-transactions.html">CRA special rules</a></td></tr>
+        <tr><th scope="row">ROC and phantom distributions</th><td>ROC reduces ACB to a minimum of $0, with any excess realized as a gain at the time of the adjustment. Reinvested distributions increase ACB. <a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/about-your-tax-return/tax-return/completing-a-tax-return/personal-income/line-12700-capital-gains/completing-schedule-3/tax-treatment-mutual-funds.html">CRA fund tax treatment</a></td></tr>
+        <tr><th scope="row">Superficial loss window</th><td>61 calendar days, inclusive. Identical property must be acquired within the window and owned or acquirable at its end. <a href="https://laws-lois.justice.gc.ca/eng/acts/I-3.3/section-54.html">Income Tax Act, s. 54</a></td></tr>
+        <tr><th scope="row">Partial denial</th><td>Multiply the loss by the smallest of units sold, acquired in the window and held at its end, divided by units sold. <a href="https://taxinterpretations.com/cra/severed-letters/2004-0073011e5">CRA technical interpretation 2004-0073011E5</a></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="panel faq" aria-labelledby="faq">
+    <h2 id="faq">Frequently asked questions</h2>
+    <details><summary>Does Canada use FIFO to calculate ACB?</summary><p>For identical shares or ETF units held by the same taxpayer in taxable accounts, pool the acquisition costs and commissions. Allocate the weighted-average ACB per unit to each unit sold.</p></details>
+    <details><summary>What if ETF return of capital exceeds my ACB?</summary><p>Reduce the pool ACB to zero and recognize the excess as a capital gain when it occurs. Later purchases or basis increases do not reverse the earlier gain.</p></details>
+    <details><summary>How do I record a phantom ETF distribution?</summary><p>Add the reinvested non-cash amount to ACB when unit count stays unchanged. Report the taxable amount from the tax slip separately. For a cash distribution reinvested into extra units, enter the new units as a purchase instead of adding the amount twice.</p></details>
+    <details><summary>Does a partial repurchase deny the whole loss?</summary><p>The CRA administrative approach multiplies the loss by the smallest of units sold, units acquired during the inclusive 61-day window, and identical units held on day +30, divided by units sold. Day +31 is outside the window for this sale.</p></details>
+    <details><summary>What happens if I repurchase in a TFSA, RRSP or FHSA?</summary><p>If the registered plan acquisition triggers the superficial loss rule, the denied portion generally cannot be recovered. A qualifying taxable replacement can generally carry the denied amount in the replacement property’s ACB.</p></details>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+  </aside>
+
+  <nav class="panel links" aria-label="Related calculators">
+    <a href="/util/compound-interest/">Compound Interest Calculator</a>
+    <a href="/util/roi-calculator/">ROI Calculator</a>
+    <a href="/util/loan-payment-calculator/">Loan Payment Calculator</a>
+  </nav>
+  <footer>EMFLS · Estimates in Canadian dollars</footer>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 Canadian Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for Canadian:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/ca-accelerated-biweekly-vs-monthly-mortgage-amortization-interest-savings-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada Accelerated Bi-Weekly vs Monthly Mortgage Calculator 2026</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate Canadian semi-annual compounding mortgage interest savings. Compare Regular Bi-Wee...</span>
+    </a>
+    <a href="/util/ca-alberta-land-title-transfer-mortgage-registration-fee-vs-bc-ontario-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Alberta Land Title &amp; Mortgage Fee Calculator vs. BC &amp; Ontario</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate Alberta land title and mortgage registration fees and compare 2026 closing taxes i...</span>
+    </a>
+    <a href="/util/ca-alternative-minimum-tax-amt-20-5-percent-181440-exemption-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada Alternative Minimum Tax Calculator 2026 | 20.5% AMT</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate Canada’s 2026 alternative minimum tax using the 20.5% rate and $181,440 federal exe...</span>
+    </a>
+    <a href="/util/ca-atlantic-canada-new-brunswick-pei-2-percent-cliff-newfoundland-ltt-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Atlantic Canada Land Transfer Tax Calculator 2026</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare New Brunswick and PEI transfer tax, Newfoundland and Labrador registration fees, and...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+
+<template id="event-template">
+  <div class="row event-row">
+    <label>Event <select data-field="type">
+      <option value="buy">Purchase</option>
+      <option value="roc">Return of capital</option>
+      <option value="phantom">Phantom distribution</option>
+    </select></label>
+    <label>Date <input data-field="date" type="date" required></label>
+    <div class="row-inputs" data-buy>
+      <label>Units <input data-field="units" type="number" inputmode="decimal" min="0" step="any" required></label>
+      <label>Unit cost ($) <input data-field="price" type="number" inputmode="decimal" min="0" step="any" required></label>
+      <label>Commission ($) <input data-field="commission" type="number" inputmode="decimal" min="0" step="any" value="0" required></label>
+    </div>
+    <label data-distribution hidden>Distribution total ($) <input data-field="amount" type="number" inputmode="decimal" min="0" step="any" required></label>
+    <button type="button" class="secondary" data-remove aria-label="Remove ACB event">Remove</button>
+  </div>
+</template>
+<template id="purchase-template">
+  <div class="row purchase-row">
+    <label>Purchase date <input data-field="date" type="date" required></label>
+    <label>Units acquired <input data-field="units" type="number" inputmode="decimal" min="0" step="any" required></label>
+    <button type="button" class="secondary" data-remove aria-label="Remove replacement purchase">Remove</button>
+  </div>
+</template>
+</body>
+</html>

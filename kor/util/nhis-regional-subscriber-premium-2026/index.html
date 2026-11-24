@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>2026 건강보험 지역가입자 보험료 계산기 (요율 7.19%·재산점수 211.5원·1억 공제·자동차 폐지)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="description" content="2026년 개정 국민건강보험 지역가입자 보험료율 7.19%, 부과점수당 211.5원, 재산세 과표 1억 원 기본공제, 자동차 보험료 폐지 및 퇴직자 임의계속가입 절세액 계산기." />
+  <link rel="canonical" href="https://emfls.github.io/kor/util/nhis-regional-subscriber-premium-2026/" />
+  <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+
+  <!-- Preconnects -->
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="2026 지역가입자 건강보험료 계산기 (7.19%·211.5원·1억공제)" />
+  <meta property="og:description" content="2026년 건강보험료율 7.19%, 재산점수 211.5원, 재산 1억 공제 반영 월 지역보험료 및 임의계속가입 36개월 절세액 즉시 산출" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://emfls.github.io/kor/util/nhis-regional-subscriber-premium-2026/" />
+  <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --success: #16a34a;
+      --success-bg: #f0fdf4;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+    .wrapper {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 3rem 1rem;
+    }
+    .header-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+    .header-nav a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 0.75rem;
+      line-height: 1.3;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-box {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-box h2 {
+      font-size: 1.1rem;
+      color: var(--primary-dark);
+      margin-bottom: 0.5rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .badge-nhis {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #7dd3fc;
+    }
+    .warning-box {
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      color: #92400e;
+    }
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    @media (max-width: 600px) {
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .result-item {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .result-item .label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+    .result-item .val {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .calculator-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+    }
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      color: #334155;
+    }
+    .form-group .helper-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+    .form-control {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .statutory-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.875rem;
+    }
+    .statutory-table th, .statutory-table td {
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      text-align: left;
+    }
+    .statutory-table th {
+      background: #f8fafc;
+      font-weight: 700;
+    }
+    .faq-section {
+      margin-top: 2.5rem;
+    }
+    .faq-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .faq-question {
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 0.35rem;
+    }
+    .faq-answer {
+      font-size: 0.9rem;
+      color: #475569;
+    }
+    .internal-nav {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+    .internal-nav ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .ad-container {
+      margin: 2rem 0;
+      text-align: center;
+      min-height: 250px;
+    }
+  </style>
+
+  <!-- JSON-LD: WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 건강보험 지역가입자 보험료 계산기",
+    "description": "2026년 국민건강보험 지역가입자 보험료율 7.19%, 부과점수당 211.5원, 재산세 과표 1억 원 기본공제, 자동차 폐지 및 임의계속가입 비교 계산기",
+    "url": "https://emfls.github.io/kor/util/nhis-regional-subscriber-premium-2026/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All",
+    "inLanguage": "ko-KR"
+  }
+  </script>
+
+  <!-- JSON-LD: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "2026년 지역가입자 건강보험료 부과체계의 핵심 변경사항은 무엇인가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "건강보험료율이 7.19%로 인상되고 재산 부과점수당 금액이 211.5원으로 인상되었습니다. 다만 재산세 과세표준 1억 원 기본공제가 유지되고, 배기량 상관없이 자동차에 부과되던 건강보험료는 전면 폐지되었습니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "퇴직 후 건강보험료 폭탄을 막는 임의계속가입제도란 무엇인가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "퇴직 후 지역가입자로 전환되었을 때 보험료가 급증하는 경우, 퇴직 전 직장에서 납부하던 본인부담 건강보험료를 최대 36개월간 유지할 수 있는 제도로 최초 지역고지서 납부기한으로부터 2개월 이내에 건강보험공단에 신청해야 합니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "지역가입자의 전세 및 월세 보증금은 재산보험료에 어떻게 반영되나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "주택임차보증금(전월세)의 경우 30%만 재산 과세표준으로 평가하며, 무주택자 기본공제(최대 5,000만 원) 및 재산 1억 공제를 거친 후 잔여액에 대해서만 점수가 산정됩니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "근로소득과 연금소득은 지역가입자 소득에 몇 %가 반영되나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "사업소득, 이자·배당소득(연 1천만 원 초과 시)은 100% 반영되지만, 근로소득 및 국민연금·공무원연금 등 공적연금 소득은 50%만 반영하여 보험료를 산정합니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "재산세 과표 1억 원 이하이면 재산보험료가 0원인가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "네, 주택·토지 재산세 과표와 전월세 평가액 합산액에서 기본공제 1억 원을 차감하므로 과표 1억 원 이하 1주택자나 무주택자는 재산점수가 0점이 되어 재산보험료가 전혀 부과되지 않습니다."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- JSON-LD: BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "홈",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "한국어 계산기 허브",
+        "item": "https://emfls.github.io/kor/util/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "2026 건강보험 지역가입자 보험료 계산기",
+        "item": "https://emfls.github.io/kor/util/nhis-regional-subscriber-premium-2026/"
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <div class="wrapper">
+    <nav class="header-nav">
+      <a href="/kor/util/">← 한국어 도구 목록</a>
+      <span>2026 국민건강보험법 시행령 기준</span>
+    </nav>
+
+    <h1>2026 건강보험 지역가입자 보험료 계산기</h1>
+    <p class="subtitle">소득요율 7.19% · 재산점수당 211.5원 · 재산 1억 공제 · 자동차 0원 폐지 · 임의계속가입 비교</p>
+
+    <!-- Ad Slot 1 (Top) -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center; min-height: 250px"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"></ins>
+      <script>
+        if (!['127.0.0.1', 'localhost', ''].includes(window.location.hostname)) {
+          if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+        }
+      </script>
+    </div>
+
+    <!-- Summary Box -->
+    <div class="summary-box">
+      <span class="badge badge-nhis">2026 건강보험 확정요율</span>
+      <h2>월 예상 지역 건강보험료</h2>
+      <div class="result-grid">
+        <div class="result-item">
+          <div class="label">월 총 납부 보험료 (건보+장기요양)</div>
+          <div class="val" id="res-monthly-total">242,500원 / 월</div>
+        </div>
+        <div class="result-item">
+          <div class="label">연간 총 납부액</div>
+          <div class="val" id="res-annual-total" style="color: var(--primary);">2,910,000원 / 연</div>
+        </div>
+        <div class="result-item">
+          <div class="label">월 소득 건강보험료</div>
+          <div class="val" id="res-income-nhis" style="font-size: 1.1rem;">119,830원</div>
+        </div>
+        <div class="result-item">
+          <div class="label">월 재산 건강보험료</div>
+          <div class="val" id="res-property-nhis" style="font-size: 1.1rem;">94,540원 (447점)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Voluntary Continuation Box (Hidden unless advantageous) -->
+    <div id="res-voluntary-box" class="warning-box" style="display: none; background: #f0fdf4; border-left: 4px solid #16a34a; color: #15803d;">
+      <strong>💡 임의계속가입제도 신청 강력 권고!</strong><br />
+      퇴직 전 직장에서 내던 건강보험료가 지역보험료보다 훨씬 저렴합니다. 임의계속가입을 신청하시면 <strong><span id="res-vol-saving">월 120,000원 절감</span></strong>을 누릴 수 있습니다 (최초 고지서 납부기한 2개월 이내 신청 필수).
+    </div>
+
+    <!-- Loss Aversion Warning Box -->
+    <div class="warning-box">
+      <strong>⚠️ 직장 퇴직 및 피부양자 박탈 시 발생하는 지역건보료 쇼크에 대비하세요!</strong><br />
+      지역가입자는 소득뿐만 아니라 <strong>부동산 재산(전월세 포함)</strong>에도 건강보험료가 부과됩니다. 2026년에는 점수당 단가가 <strong>211.5원</strong>으로 인상되었으므로, 재산 1억 공제 활용 및 퇴직 직후 <strong>임의계속가입(36개월 유지)</strong> 신청 여부를 반드시 검토해야 합니다.
+    </div>
+
+    <!-- Calculator Card -->
+    <div class="calculator-card">
+      <form id="regional-nhis-form">
+        <div class="form-group">
+          <label for="annualBusinessIncome">연간 사업소득 / 기타소득 (원, 100% 반영)</label>
+          <input inputmode="decimal" type="number" id="annualBusinessIncome" class="form-control" value="20000000" min="0" step="1000000" />
+          <div class="helper-text">종합소득세 신고 기준 필요경비를 차감한 순소득금액.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="annualSalaryPensionIncome">연간 근로소득 / 공적연금소득 (원, 50% 반영)</label>
+          <input inputmode="decimal" type="number" id="annualSalaryPensionIncome" class="form-control" value="0" min="0" step="1000000" />
+          <div class="helper-text">국민연금, 공무원연금 등 공적연금 수령액 (50%만 건보료 부과).</div>
+        </div>
+
+        <div class="form-group">
+          <label for="annualFinancialIncome">연간 금융소득 (이자 + 배당, 원)</label>
+          <input inputmode="decimal" type="number" id="annualFinancialIncome" class="form-control" value="5000000" min="0" step="1000000" />
+          <div class="helper-text">연 1,000만 원 이하 시 0원 반영, 1,000만 원 초과 시 전액 100% 반영.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="propertyTaxBase">주택·토지·건축물 재산세 과세표준 (원)</label>
+          <input inputmode="decimal" type="number" id="propertyTaxBase" class="form-control" value="250000000" min="0" step="10000000" />
+          <div class="helper-text">재산세 납세고지서 상의 '과세표준' (시세가 아닌 공시가의 약 60%).</div>
+        </div>
+
+        <div class="form-group">
+          <label for="jeonseDeposit">전세·월세 보증금 (원, 무주택자 30% 반영)</label>
+          <input inputmode="decimal" type="number" id="jeonseDeposit" class="form-control" value="0" min="0" step="10000000" />
+          <div class="helper-text">주택 임차보증금 (보증금의 30%가 재산 과표로 환산됨).</div>
+        </div>
+
+        <div class="form-group">
+          <label for="previousWorkplacePremium">퇴직 전 직장 건강보험료 본인부담금 (원, 선택사항)</label>
+          <input inputmode="decimal" type="number" id="previousWorkplacePremium" class="form-control" value="120000" min="0" step="10000" />
+          <div class="helper-text">퇴직 전 월급명세서 상의 건강보험료 (임의계속가입 유불리 비교용).</div>
+        </div>
+      </form>
+
+      <!-- Detailed Breakdown Table -->
+      <table class="statutory-table">
+        <thead>
+          <tr>
+            <th>구분</th>
+            <th>산출 금액</th>
+            <th>비고</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>월 소득 건강보험료</td>
+            <td id="res-income-nhis">119,830원</td>
+            <td>연소득 환산액 × 7.19%</td>
+          </tr>
+          <tr>
+            <td>월 재산 건강보험료</td>
+            <td id="res-property-nhis">94,540원</td>
+            <td>재산 과표 1억 공제 후 211.5원/점</td>
+          </tr>
+          <tr>
+            <td>월 자동차 건강보험료</td>
+            <td id="res-car-nhis" style="color: var(--success); font-weight: 700;">0원 (폐지)</td>
+            <td>2024년 2월 이후 완전 폐지</td>
+          </tr>
+          <tr>
+            <td>월 장기요양보험료</td>
+            <td id="res-ltc">28,150원</td>
+            <td>건강보험료의 13.14%</td>
+          </tr>
+          <tr>
+            <td>월 총 부과 건강보험료</td>
+            <td style="font-weight: 800; color: var(--primary);">242,520원</td>
+            <td>매월 10일 납부 고지액</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- SVG Breakdown Chart -->
+      <div style="margin-top: 1.5rem; text-align: center;">
+        <h4 style="font-size: 0.95rem; margin-bottom: 0.75rem; color: #334155;">월 건강보험료 구성 비중 (소득 / 재산 / 장기요양)</h4>
+        <svg viewBox="0 0 400 130" style="width: 100%; max-width: 460px; height: auto; background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
+          <!-- Income -->
+          <text x="10" y="32" font-size="12" fill="#0284c7" font-weight="600">소득 보험료</text>
+          <rect id="bar-income" x="110" y="18" width="130" height="20" rx="4" fill="#0284c7" />
+          
+          <!-- Property -->
+          <text x="10" y="72" font-size="12" fill="#64748b" font-weight="600">재산 보험료</text>
+          <rect id="bar-property" x="110" y="58" width="100" height="20" rx="4" fill="#94a3b8" />
+
+          <!-- LTC -->
+          <text x="10" y="112" font-size="12" fill="#ea580c" font-weight="600">장기요양보험료</text>
+          <rect id="bar-ltc" x="110" y="98" width="30" height="20" rx="4" fill="#fdba74" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+      <h2 style="font-size: 1.3rem; margin-bottom: 1rem; color: #0f172a;">2026 지역가입자 건강보험료 자주 묻는 질문 (FAQ)</h2>
+      
+      <div class="faq-item">
+        <div class="faq-question">Q. 지역가입자 최저 건강보험료는 얼마인가요?</div>
+        <div class="faq-answer">
+          소득과 재산이 거의 없는 취약계층이라도 법정 최저 건강보험료(2026년 기준 월 19,780원)가 기본 부과되며, 여기에 장기요양보험료(13.14%)가 가산되어 최소 약 22,370원을 매월 납부하게 됩니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 자동차 건강보험료는 완전히 사라진 것이 맞나요?</div>
+        <div class="faq-answer">
+          네, 국민건강보험법 시행령 개정으로 배기량과 차량 가액에 상관없이 자동차에 부과되던 건강보험 점수가 완전히 폐지되었습니다. 수입차나 대형차를 소유하더라도 자동차로 인한 추가 건보료는 0원입니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 피부양자에서 탈락하는 기준은 무엇인가요?</div>
+        <div class="faq-answer">
+          연간 합산 소득(사업소득, 근로/연금소득, 1천만 초과 금융소득)이 2,000만 원을 초과하거나, 재산세 과세표준이 9억 원을 초과하면 피부양자 자격이 자동 상실됩니다. 또한 재산 과표가 5억 4천만 원~9억 원인 경우 연소득이 1,000만 원만 넘어도 탈락합니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 임의계속가입은 언제 어떻게 신청해야 하나요?</div>
+        <div class="faq-answer">
+          퇴직 후 국민건강보험공단으로부터 최초 지역보험료 고지서를 받은 날로부터 <strong>납부기한 2개월 이내</strong>에 신분증을 지참하여 지사를 방문하거나 유선/국민건강보험 웹사이트에서 '임의계속가입 신청서'를 제출해야 합니다. 기한을 넘기면 절대 소급 적용되지 않습니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 프리랜서 3.3% 사업소득자는 소득이 어떻게 반영되나요?</div>
+        <div class="faq-answer">
+          5월 종합소득세 신고 시 단순경비율 또는 기준경비율을 적용받아 확정된 '소득금액'(총수입 - 필요경비)이 100% 반영되어 그해 11월분 보험료부터 다음 해 10월분까지 1년간 부과됩니다.
+        </div>
+      </div>
+    </section>
+
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="다음 필수 확인 계산기" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">다음 필수 확인 계산기 (Next Check)</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">방금 계산한 결과를 바탕으로 바로 이어서 점검하세요:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/kor/util/retiree-nhis-voluntary-continuation-36m-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">퇴직자 건보 임의계속가입(36개월) &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">지역건보료가 너무 높다면 직장보험료 그대로 36개월 유지하는 임의계속가입을 비교하세요.</span></a>
+    <a href="/kor/util/health-insurance-dependent-disqualification-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">건보 피부양자 자격 판정기 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">가족 밑으로 피부양자 등재가 가능한 소득·재산 기준을 확인하세요.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+
+    <!-- Ad Slot 2 (Bottom) -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center; min-height: 250px"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"></ins>
+      <script>
+        if (!['127.0.0.1', 'localhost', ''].includes(window.location.hostname)) {
+          if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+        }
+      </script>
+    </div>
+
+    <!-- Internal Navigation Hub -->
+    <div class="internal-nav">
+      <strong>관련 세무·보험 계산기:</strong>
+      <ul>
+        <li><a href="/kor/util/finance-tax-2026/">2026 세금·연봉·부동산 계산기 모음 허브</a></li>
+        <li><a href="/kor/util/health-insurance-dependent-disqualification-2026/">건보료 피부양자 자격 박탈 기준 계산기</a></li>
+        <li><a href="/kor/util/salary-take-home-4-insurance-2026/">2026 연봉 실수령액 & 4대보험 인상 계산기</a></li>
+        <li><a href="/kor/util/financial-income-comprehensive-tax-dividend-isa-2026/">2026 금융소득종합과세 & 고배당 분리과세 계산기</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 대한민국 세무·금융·복지 핵심 계산기</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">2026년도 국세청·고용노동부 기준 연계 계산 도구:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/kor/util/one-house-12ok-capital-gains-tax-80-percent-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 1세대 1주택 12억 비과세 &amp; 장특공 80% 양도소득세 계산기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 1세대 1주택 12억 원 초과 고가주택 양도소득세 계산기. 표 2 장기보유특별공제 최대 80%(보유 40% + 거주 40%) 및 2년 거주 미충족 시 표 ...</span>
+    </a>
+    <a href="/kor/util/overseas-direct-purchase-customs-vat-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 해외직구 관부가세 계산기 | 미국 $200·일반 $150 목록통관·FTA 면제</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026 해외직구 미국 $200·일반 $150 면세 한도와 의류 13%·신발 13%·화장품 6.5%·건강기능식품 8%·전자 0% 관세율, 부가세 10%, 한미·한EU...</span>
+    </a>
+    <a href="/kor/util/overseas-stock-250man-tax-loss-harvesting-spouse-gift-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 해외주식 양도세 22% 연말 손익통산 &amp; 배우자 증여(6억) 계산기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 미국주식 양도세 22% 연간 250만 원 공제, 12월 결제 전 손익통산(Loss Harvesting) 절세액 및 배우자 6억 비과세 증여 1년 이월과세 ...</span>
+    </a>
+    <a href="/kor/util/parental-leave-pay-250man-6-plus-6-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 육아휴직급여 계산기 (월 250만 원 &amp; 6+6 부모육아휴직제 450만 원)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 개정 남녀고용평등법 육아휴직급여 계산기. 월 상한 250만 원 인상, 사후지급금(25%) 폐지 100% 즉시 지급, 6+6 부모육아휴직제 최대 450만 원...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>2026 글로벌 세무·금융·복지 계산기 전수 보기 &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</body>
+</html>

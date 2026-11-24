@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <title>2026 Canada Commercial Equipment Lease vs Buy &amp; CRA CCA Tax Shield Calculator</title>
+  <meta name="description" content="Compare commercial equipment lease vs buy decisions in Canada. Calculate CRA Capital Cost Allowance (CCA Class 8, 10, 50), Accelerated Investment Incentive (AII), after-tax cash flows, and Net Present Value (NPV).">
+  <link rel="canonical" href="https://emfls.github.io/util/ca-commercial-equipment-lease-vs-buy-cca-tax-shield-2026-calculator/">
+
+  <!-- GA4 & AdSense Tags -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+
+  <!-- Localhost Guard -->
+  <script>
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      window['adsbygoogle'] = { push: function() {} };
+    }
+  </script>
+
+  <!-- JSON-LD 1: WebPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "2026 Canada Commercial Equipment Lease vs Buy & CRA CCA Tax Shield Calculator",
+    "url": "https://emfls.github.io/util/ca-commercial-equipment-lease-vs-buy-cca-tax-shield-2026-calculator/",
+    "description": "Financial decision engine comparing commercial equipment acquisition via capital purchase vs operating lease in Canada with CRA tax shields.",
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://emfls.github.io/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Canada Tax & Real Estate Calculators",
+          "item": "https://emfls.github.io/util/ca-2026-cra-tax-rrsp-tfsa-real-estate-calculators/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Equipment Lease vs Buy Calculator",
+          "item": "https://emfls.github.io/util/ca-commercial-equipment-lease-vs-buy-cca-tax-shield-2026-calculator/"
+        }
+      ]
+    }
+  }
+  </script>
+
+  <!-- JSON-LD 2: SoftwareApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "2026 Canada Equipment Lease vs Buy NPV Calculator",
+    "operatingSystem": "All",
+    "applicationCategory": "BusinessApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "CAD"
+    }
+  }
+  </script>
+
+  <!-- JSON-LD 3: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How does the CRA Accelerated Investment Incentive (AII) impact equipment purchase decisions in 2026?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The CRA Accelerated Investment Incentive (AII) suspends the traditional half-year rule and provides an enhanced first-year Capital Cost Allowance (CCA) deduction equal to 150% (1.5x) of the normal net capital cost addition. This substantially increases the first-year tax shield, making direct purchases or debt-financed acquisitions more attractive in Year 1."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is Net Present Value (NPV) the standard metric for comparing lease vs buy decisions in Canada?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Leasing involves recurring monthly operational cash outflows, while buying requires a large initial capital outlay or down payment followed by loan amortizations. Because money has time value, NPV discounts all future after-tax cash outflows back to today's dollars using the company's weighted average cost of capital (WACC). The option with the lower NPV of cost preserves the most enterprise value."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the corporate tax deduction difference between leasing and buying commercial equipment in Canada?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "When leasing under an operating lease, 100% of the periodic lease rental payments are deductible as current business operating expenses. When buying, the asset cannot be expensed immediately; instead, the business claims declining-balance Capital Cost Allowance (CCA) depreciation plus deductible interest paid on equipment loans."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --primary: #0d9488;
+      --primary-dark: #0f766e;
+      --secondary: #e11d48;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #16a34a;
+      --success-bg: #f0fdf4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 0;
+    }
+    .header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 1rem;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 0.25rem;
+    }
+    .header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+    .container {
+      max-width: 1040px;
+      margin: 1.5rem auto;
+      padding: 0 1rem;
+    }
+    .ad-container {
+      margin: 1.5rem 0;
+      text-align: center;
+      background: #f1f5f9;
+      padding: 0.5rem;
+      border-radius: 8px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 840px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+    .card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .card h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #1e293b;
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 0.5rem;
+    }
+    .form-group {
+      margin-bottom: 1.1rem;
+    }
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+      color: #334155;
+    }
+    .hint {
+      font-size: 0.775rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      background: #ffffff;
+      color: #0f172a;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+    }
+    .results-box {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid var(--primary);
+    }
+    .results-box.lease {
+      border-left-color: var(--secondary);
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.35rem 0;
+      font-size: 0.925rem;
+    }
+    .stat-row.total {
+      font-weight: 700;
+      font-size: 1.05rem;
+      border-top: 1px dashed var(--border);
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      color: #0f172a;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .badge-success { background: #ccfbf1; color: #0f766e; }
+    .badge-primary { background: #ffe4e6; color: #be123c; }
+    .verdict-banner {
+      background: var(--success-bg);
+      border: 1px solid #bbf7d0;
+      padding: 1.25rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .verdict-banner h3 {
+      font-size: 1.15rem;
+      color: #14532d;
+      margin-bottom: 0.35rem;
+    }
+    .chart-container {
+      margin-top: 1rem;
+      text-align: center;
+    }
+    .article-section {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      margin-top: 2rem;
+    }
+    .article-section h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 1.25rem 0 0.5rem 0;
+    }
+    .article-section h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 1rem 0 0.4rem 0;
+      color: #334155;
+    }
+    .article-section p, .article-section ul {
+      margin-bottom: 1rem;
+      color: #334155;
+      font-size: 0.95rem;
+    }
+    .article-section ul {
+      padding-left: 1.5rem;
+    }
+    .nav-breadcrumbs {
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      color: var(--text-muted);
+    }
+    .nav-breadcrumbs a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <nav class="nav-breadcrumbs">
+      <a href="https://emfls.github.io/">Home</a> &gt;
+      <a href="https://emfls.github.io/util/ca-2026-cra-tax-rrsp-tfsa-real-estate-calculators/">Canada Tax &amp; Finance Hub</a> &gt;
+      <span>Commercial Equipment Lease vs Buy Calculator</span>
+    </nav>
+    <h1>2026 Canada Commercial Equipment Lease vs Buy Calculator</h1>
+    <p>CRA CCA Tax Shields, Accelerated Investment Incentive (AII) &amp; Net Present Value (NPV) Analysis</p>
+  </header>
+
+  <main class="container">
+    <!-- Ad Slot 1: Top Display Slot -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </div>
+
+    <!-- Recommendation Verdict Banner -->
+    <div class="verdict-banner">
+      <div id="decisionVerdict"><span class="badge badge-success">CALCULATING NPV</span></div>
+      <p id="npvSavingsSummary" style="margin-top: 0.5rem; font-size: 0.95rem; color: #166534;">Compare the present value of all after-tax cash flows.</p>
+    </div>
+
+    <div class="grid">
+      <!-- Input Parameters -->
+      <section class="card">
+        <h2>Commercial Asset &amp; Financing Inputs</h2>
+
+        <div class="form-group">
+          <label for="equipmentCost">Total Equipment Cost (CAD, ex-tax)</label>
+          <input inputmode="decimal" type="number" id="equipmentCost" value="120000" step="5000" min="5000" max="2000000">
+        </div>
+
+        <div class="form-group">
+          <label for="ccaClass">CRA Capital Cost Allowance (CCA) Class</label>
+          <select id="ccaClass">
+            <option value="class8" selected>Class 8 (20% - Office Equipment, Tools &gt;$500, Machinery)</option>
+            <option value="class10">Class 10 (30% - Automotive, Vans, Contractor Equipment)</option>
+            <option value="class50">Class 50 (55% - Computer Systems, Servers &amp; Software)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="acceleratedIncentive">CRA Accelerated Investment Incentive (AII)</label>
+          <select id="acceleratedIncentive">
+            <option value="true" selected>Enabled (1.5x First-Year CCA Multiplier)</option>
+            <option value="false">Disabled (Standard 50% Half-Year Rule)</option>
+          </select>
+          <div class="hint">Enhanced first-year capital cost allowance</div>
+        </div>
+
+        <div class="form-group">
+          <label for="usefulLifeYears">Financing / Analysis Term (Years)</label>
+          <select id="usefulLifeYears">
+            <option value="3">3 Years (36 Months)</option>
+            <option value="4">4 Years (48 Months)</option>
+            <option value="5" selected>5 Years (60 Months)</option>
+            <option value="7">7 Years (84 Months)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="salvageValue">Estimated Terminal Resale / Salvage Value ($)</label>
+          <input inputmode="decimal" type="number" id="salvageValue" value="15000" step="1000" min="0" max="500000">
+          <div class="hint">Expected asset value recovered at end of term (Buy option)</div>
+        </div>
+
+        <div class="form-group">
+          <label for="loanInterestRate">Equipment Loan Interest Rate (% p.a.)</label>
+          <input inputmode="decimal" type="number" id="loanInterestRate" value="6.5" step="0.25" min="1.0" max="25.0">
+        </div>
+
+        <div class="form-group">
+          <label for="downPaymentPercent">Equipment Purchase Down Payment (%)</label>
+          <input inputmode="decimal" type="number" id="downPaymentPercent" value="10" step="5" min="0" max="50">
+        </div>
+
+        <div class="form-group">
+          <label for="monthlyLeasePayment">Monthly Operating Lease Payment (CAD)</label>
+          <input inputmode="decimal" type="number" id="monthlyLeasePayment" value="2450" step="50" min="100" max="50000">
+        </div>
+
+        <div class="form-group">
+          <label for="leaseBuyoutResidual">End-of-Lease Buyout Option ($)</label>
+          <input inputmode="decimal" type="number" id="leaseBuyoutResidual" value="10000" step="1000" min="0" max="200000">
+          <div class="hint">Residual payout if company retains asset at lease end</div>
+        </div>
+
+        <div class="form-group">
+          <label for="corporateTaxRate">Corporate Income Tax Rate (%)</label>
+          <select id="corporateTaxRate">
+            <option value="12.2" selected>12.2% (Ontario Small Business Deduction rate)</option>
+            <option value="11.0">11.0% (Saskatchewan Small Business rate)</option>
+            <option value="26.5">26.5% (General Corporate Tax Rate - Federal + ON)</option>
+            <option value="31.0">31.0% (General Corporate Rate - High Province)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="discountRate">Cost of Capital / WACC Discount Rate (%)</label>
+          <input inputmode="decimal" type="number" id="discountRate" value="7.0" step="0.5" min="1.0" max="20.0">
+          <div class="hint">Discount rate for Net Present Value (NPV) calculation</div>
+        </div>
+      </section>
+
+      <!-- Side-by-Side Outputs -->
+      <section class="card">
+        <h2>Side-by-Side NPV &amp; Cash Flow Analysis</h2>
+
+        <!-- Buy Option -->
+        <div class="results-box">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.5rem;">
+            <strong style="color: #0d9488; font-size: 1.05rem;">Buy Option (Ownership + CCA Shield)</strong>
+            <span class="badge badge-success">Capital Asset</span>
+          </div>
+          <div class="stat-row">
+            <span>Initial Down Payment (t=0):</span>
+            <span id="buyDownPayment">$12,000</span>
+          </div>
+          <div class="stat-row">
+            <span>Annual Amortized Loan Repayment:</span>
+            <span id="buyAnnualLoan">$25,984/yr</span>
+          </div>
+          <div class="stat-row">
+            <span>Total CCA Depreciation Claimed:</span>
+            <span id="buyCCAClaimed" style="color: #0f766e;">$87,256</span>
+          </div>
+          <div class="stat-row">
+            <span>Total Combined Tax Shield (CCA + Int):</span>
+            <span id="buyTaxShield" style="color: #0f766e;">-$13,320</span>
+          </div>
+          <div class="stat-row">
+            <span>Net Nominal Cash Outflow:</span>
+            <span id="buyNominalCost">$113,600</span>
+          </div>
+          <div class="stat-row total">
+            <span>Net Present Value (NPV of Cost):</span>
+            <strong id="buyNPV" style="color: #0d9488;">$84,150</strong>
+          </div>
+        </div>
+
+        <!-- Lease Option -->
+        <div class="results-box lease">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.5rem;">
+            <strong style="color: #e11d48; font-size: 1.05rem;">Lease Option (Operating Rental)</strong>
+            <span class="badge badge-primary">Operating Expense</span>
+          </div>
+          <div class="stat-row">
+            <span>Annual Lease Expense:</span>
+            <span id="leaseAnnualCost">$29,400/yr</span>
+          </div>
+          <div class="stat-row">
+            <span>Total Operating Lease Deductions:</span>
+            <span id="leaseDeductions">$147,000</span>
+          </div>
+          <div class="stat-row">
+            <span>Total Lease Tax Shield:</span>
+            <span id="leaseTaxShield" style="color: #be123c;">-$17,934</span>
+          </div>
+          <div class="stat-row">
+            <span>Total Gross Outflow (incl Buyout):</span>
+            <span id="leaseGrossOutflow">$157,000</span>
+          </div>
+          <div class="stat-row">
+            <span>Net Nominal Cash Outflow:</span>
+            <span id="leaseNominalCost">$139,066</span>
+          </div>
+          <div class="stat-row total">
+            <span>Net Present Value (NPV of Cost):</span>
+            <strong id="leaseNPV" style="color: #e11d48;">$98,420</strong>
+          </div>
+        </div>
+
+        <!-- Comparison Chart -->
+        <div class="chart-container">
+          <svg id="npvChart" width="100%" height="220" viewBox="0 0 400 220"></svg>
+        </div>
+      </section>
+    </div>
+
+    <!-- Ad Slot 2: Mid-Article Display Slot -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </div>
+
+    <!-- Educational In-Depth Guide -->
+    <article class="article-section">
+      <h2>Commercial Equipment Financing in Canada: Lease vs Buy Decision Matrix (2026 Guide)</h2>
+      <p>Canadian business owners and Chief Financial Officers (CFOs) face a recurrent financial dilemma when expanding operations: should they buy commercial equipment utilizing cash or bank debt, or enter into an operating or capital lease agreement? A correct evaluation requires modeling both nominal cash flows and the Net Present Value (NPV) of after-tax corporate outlays under current Canada Revenue Agency (CRA) rules.</p>
+
+      <h3>1. Capital Cost Allowance (CCA) and the Accelerated Investment Incentive</h3>
+      <p>When purchasing commercial machinery or technology in Canada, the cost cannot be expensed in full against revenues in Year 1. Instead, the asset is pooled under its designated <strong>Capital Cost Allowance (CCA) class</strong>:</p>
+      <ul>
+        <li><strong>Class 8 (20% declining balance):</strong> Miscellaneous office furniture, photocopiers, communication equipment, and general manufacturing tools costing $500 or more.</li>
+        <li><strong>Class 10 (30% declining balance):</strong> Motor vehicles, vans, trailers, and general contractor mobile machinery.</li>
+        <li><strong>Class 50 (55% declining balance):</strong> General-purpose computer hardware and systems software.</li>
+      </ul>
+      <p>Under the CRA's <strong>Accelerated Investment Incentive (AII)</strong>, the traditional half-year rule is replaced with an enhanced first-year allowance equal to 1.5 times the regular rate. For example, a Class 8 asset receives a 30% deduction in Year 1 rather than the standard 10% under the traditional half-year restriction, front-loading significant tax deductions to maximize early liquidity.</p>
+
+      <h3>2. Why Net Present Value (NPV) Governs the Decision</h3>
+      <p>Simple nominal comparisons can be deeply misleading. An equipment purchase requires substantial upfront equity capital (or down payment) and debt servicing over time, but leaves the enterprise with salvageable asset value at the end of its useful life. Conversely, leasing spreads disbursements evenly across monthly operational expenditures.</p>
+      <p>By discounting each year's after-tax net cash outflow by the firm's <strong>cost of capital (WACC)</strong>, NPV quantifies the true economic cost in today's dollars. The alternative yielding the <strong>lowest NPV of cost</strong> represents the economically superior choice that creates shareholder value.</p>
+    </article>
+  
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 Canadian Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for Canadian:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/ca-commercial-general-liability-eo-insurance-provincial-rst-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Canada Commercial General Liability &amp; Provincial Insurance Tax Calculator</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate 2026 Canadian commercial general liability (CGL), E&amp;O and cyber insurance costs. I...</span>
+    </a>
+    <a href="/util/ca-construction-holdback-10-percent-ontario-annual-release-bc-55-day-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Canada Construction Holdback (10%) &amp; Cash-Flow Release Calculator | Ontario Annual Reform vs BC 55-Day</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate statutory Canadian construction holdbacks under the Ontario Construction Act (Janu...</span>
+    </a>
+    <a href="/util/ca-consumer-proposal-vs-bankruptcy-surplus-income-2026-osb-directive-11r2-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">CA Consumer Proposal vs Bankruptcy Calculator (2026 OSB Directive 11R2)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate Canadian personal bankruptcy surplus income payments under 2026 OSB Directive No. ...</span>
+    </a>
+    <a href="/util/ca-corporate-class-swap-etf-vs-dividend-etf-non-registered-after-tax-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada Swap ETF vs Dividend ETF After-Tax Calculator (2026)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare corporate-class total-return swap ETFs with distributing ETFs after Canadian taxes, ...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

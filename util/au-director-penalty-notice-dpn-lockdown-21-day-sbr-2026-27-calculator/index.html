@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <title>2026–27 Australia ATO Director Penalty Notice (DPN) Lockdown vs 21-Day SBR Calculator</title>
+  <meta name="description" content="Calculates ATO TAA 1953 Div 269 PAYG, GST, and SGC liability, splits Lockdown DPN (non-remittable personal liability) vs Non-Lockdown DPN (21-day statutory window), and models Part 5.3B SBR (<$1M) settlement savings.">
+  <link rel="canonical" href="https://emfls.github.io/util/au-director-penalty-notice-dpn-lockdown-21-day-sbr-2026-27-calculator/">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+    <script>
+  if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+    const adScript = document.createElement('script');
+    adScript.async = true;
+    adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+    adScript.crossOrigin = 'anonymous';
+    document.head.append(adScript);
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026–27 Australia ATO Director Penalty Notice (DPN) Lockdown vs 21-Day SBR Calculator",
+    "url": "https://emfls.github.io/util/au-director-penalty-notice-dpn-lockdown-21-day-sbr-2026-27-calculator/",
+    "description": "Calculates ATO TAA 1953 Div 269 PAYG, GST, and SGC liability, splits Lockdown DPN (non-remittable personal liability) vs Non-Lockdown DPN (21-day statutory window), and models Part 5.3B SBR (<$1M) settlement savings.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the difference between an ATO Lockdown DPN and Non-Lockdown DPN?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under TAA 1953 Division 269, a Lockdown DPN is automatically triggered if BAS (PAYG/GST) is reported more than 3 months late, or if SGC statements are not lodged by their exact due date. For Lockdown DPNs, personal director liability CANNOT be remitted by placing the company into liquidation or voluntary administration. A Non-Lockdown DPN gives directors a strict 21-day statutory window from the posting date to remit liability via liquidation, administration, or Small Business Restructuring."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are the rules for Small Business Restructuring (SBR) under Part 5.3B?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "To qualify for SBR, a company's total liabilities must be under $1,000,000 AUD, all tax lodgments must be up to date, and employee entitlements must be paid. SBR allows the company to propose a restructuring plan (often settling unsecured debt for 15c to 40c on the dollar) while existing directors remain in control."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When does the 21-day DPN notice period begin?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under Section 269-25(4) of Schedule 1 to the TAA 1953, the 21 days begins on the date the ATO posts the notice, NOT the date you receive it in the mail. Weekends and public holidays are included, making immediate action critical."
+        }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Australia Commercial Hub",
+        "item": "https://emfls.github.io/util/australia-business-tax-hub-2026.html"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "2026–27 Australia ATO Director Penalty Notice (DPN) Lockdown vs 21-Day SBR Calculator",
+        "item": "https://emfls.github.io/util/au-director-penalty-notice-dpn-lockdown-21-day-sbr-2026-27-calculator/"
+      }
+    ]
+  }
+  </script>
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #d97706;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 16px;
+    }
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding: 16px 0;
+    }
+    h1 {
+      font-size: 1.75rem;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .ad-slot {
+      margin: 20px 0;
+      min-height: 100px;
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    @media (min-width: 768px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
+    }
+    .card h2 {
+      font-size: 1.25rem;
+      margin-bottom: 16px;
+      color: var(--primary-dark);
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 8px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.875rem;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .help-text {
+      font-size: 0.775rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    input[type="number"], select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      background: #fff;
+    }
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .kpi-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .kpi {
+      background: #f8fafc;
+      padding: 14px;
+      border-radius: 8px;
+      border-left: 4px solid var(--primary);
+    }
+    .kpi-label {
+      font-size: 0.775rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+    .kpi-val {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 4px;
+    }
+    .tag-danger {
+      color: var(--danger);
+      font-weight: 700;
+    }
+    .tag-safe {
+      color: var(--success);
+      font-weight: 700;
+    }
+    .highlight-card {
+      padding: 16px;
+      border-radius: 8px;
+      margin-top: 16px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+    }
+    .table-container {
+      overflow-x: auto;
+      max-width: 100%;
+      margin-top: 16px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 16px;
+    }
+    th, td {
+      padding: 10px 12px;
+      text-align: right;
+      border-bottom: 1px solid var(--border);
+    }
+    th:first-child, td:first-child {
+      text-align: left;
+    }
+    th {
+      background: #f1f5f9;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .chart-container {
+      margin-top: 20px;
+      padding: 12px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    footer {
+      margin-top: 48px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+    }
+    .hub-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .hub-links a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+  </style>
+<style id="emfls-cro-calc-first-b2-v1">
+/* EMFLS CRO B2 — mobile calculator-first ordering for non-Patch-B EN templates (CSS-only, reversible) */
+@media (max-width: 760px) {
+  main:has(form, input, select),
+  .tool-shell:has(form, input, select),
+  .container:has(form, input, select) {
+    display: flex;
+    flex-direction: column;
+  }
+  main:has(form, input, select) > *,
+  .tool-shell:has(form, input, select) > *,
+  .container:has(form, input, select) > * {
+    order: 4;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  main:has(form, input, select) > nav,
+  main:has(form, input, select) > header,
+  main:has(form, input, select) > .hero,
+  main:has(form, input, select) > h1,
+  main:has(form, input, select) > .lead,
+  .tool-shell:has(form, input, select) > nav,
+  .tool-shell:has(form, input, select) > header,
+  .tool-shell:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > h1,
+  .tool-shell:has(form, input, select) > .lead,
+  .container:has(form, input, select) > nav,
+  .container:has(form, input, select) > header,
+  .container:has(form, input, select) > .hero,
+  .container:has(form, input, select) > h1,
+  .container:has(form, input, select) > .lead {
+    order: 0;
+  }
+  main:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .tool-shell:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .container:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav) {
+    order: 1;
+  }
+  main:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .tool-shell:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .container:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container) {
+    order: 2;
+  }
+  main:has(form, input, select) > .emfls-next-check,
+  .tool-shell:has(form, input, select) > .emfls-next-check,
+  .container:has(form, input, select) > .emfls-next-check {
+    order: 2;
+  }
+  main:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .tool-shell:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .container:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]) {
+    order: 3;
+  }
+  main:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > .hero,
+  .container:has(form, input, select) > header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+}
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>2026–27 Australia ATO Director Penalty Notice & SBR Calculator</h1>
+      <p class="subtitle">Evaluate TAA 1953 Division 269 PAYG, GST, and SGC liability, Lockdown DPN personal non-remittable exposure, 21-day statutory notice windows, and Part 5.3B SBR settlement savings.</p>
+    </header>
+
+    <div class="ad-slot">
+      <ins class="adsbygoogle"
+           style="display:block;min-height:250px"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Unpaid Company ATO Tax Liabilities</h2>
+        <div class="form-group">
+          <label for="unpaidPayg">Unpaid PAYG Withholding ($ AUD)</label>
+          <input inputmode="decimal" type="number" id="unpaidPayg" value="60000" min="0" step="5000">
+        </div>
+
+        <div class="form-group">
+          <label for="unpaidGst">Unpaid Net GST ($ AUD)</label>
+          <input inputmode="decimal" type="number" id="unpaidGst" value="45000" min="0" step="5000">
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="isBasLateMoreThan3Months">
+          <label for="isBasLateMoreThan3Months" style="margin-bottom:0; font-size:0.85rem;">BAS unlodged > 3 months after statutory due date (Triggers Lockdown!)</label>
+        </div>
+
+        <div class="form-group" style="margin-top: 16px;">
+          <label for="unpaidSgc">Unpaid Super Guarantee Charge (SGC) ($ AUD)</label>
+          <input inputmode="decimal" type="number" id="unpaidSgc" value="25000" min="0" step="2500">
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="isSgcLatePastDueDate" checked>
+          <label for="isSgcLatePastDueDate" style="margin-bottom:0; font-size:0.85rem;">SGC statement unlodged by statutory due date (Locks down immediately!)</label>
+        </div>
+
+        <div class="form-group" style="margin-top: 16px;">
+          <label for="totalCompanyLiabilities">Total Company Liabilities ($ AUD - Cap is $1,000,000)</label>
+          <input inputmode="decimal" type="number" id="totalCompanyLiabilities" value="450000" min="0" step="25000">
+          <p class="help-text">Corporations Act Part 5.3B SBR is only available if total liabilities < $1M.</p>
+        </div>
+
+        <div class="form-group">
+          <label for="sbrDividendCents">Proposed SBR Creditor Dividend (cents on the dollar)</label>
+          <input inputmode="decimal" type="number" id="sbrDividendCents" value="25" min="5" max="90" step="5">
+          <p class="help-text">Typically 20c to 35c on dollar (75% debt forgiveness).</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Director Personal Exposure & Defense Analysis</h2>
+        <div class="kpi-row">
+          <div class="kpi">
+            <div class="kpi-label">Lockdown DPN (Fatal)</div>
+            <div class="kpi-val tag-danger" id="lockdownVal">$0</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Non-Lockdown DPN (21 Days)</div>
+            <div class="kpi-val" id="nonLockdownVal">$0</div>
+          </div>
+        </div>
+
+        <div class="kpi-row">
+          <div class="kpi">
+            <div class="kpi-label">SBR Restructuring Debt Saved</div>
+            <div class="kpi-val tag-safe" id="sbrSavedVal">$0</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Net Director Exposure</div>
+            <div class="kpi-val tag-danger" id="netExposureVal">$0</div>
+          </div>
+        </div>
+
+        <div class="highlight-card" id="dpnInsightBox">
+          <strong>ATO Enforcement Alert:</strong> <span id="dpnInsightText">Calculating...</span>
+        </div>
+
+        <div class="chart-container">
+          <svg id="dpnChart" width="100%" height="160" viewBox="0 0 460 160" preserveAspectRatio="none"></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 32px;">
+      <h2>DPN Liability Breakdown & Statutory Action Guide</h2>
+      <div class="table-container">
+        <table id="dpnTable">
+        <thead>
+          <tr>
+            <th>Tax Liability Type</th>
+            <th>Total Amount</th>
+            <th>Status</th>
+            <th>Personal Remittance Options</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>PAYG Withholding</td>
+            <td id="tblPayg">$0</td>
+            <td id="tblPaygStatus">-</td>
+            <td id="tblPaygRemit">-</td>
+          </tr>
+          <tr>
+            <td>Net GST</td>
+            <td id="tblGst">$0</td>
+            <td id="tblGstStatus">-</td>
+            <td id="tblGstRemit">-</td>
+          </tr>
+          <tr>
+            <td>Superannuation Guarantee (SGC)</td>
+            <td id="tblSgc">$0</td>
+            <td id="tblSgcStatus">-</td>
+            <td id="tblSgcRemit">-</td>
+          </tr>
+          <tr style="font-weight: bold; background-color: #f8fafc;">
+            <td>Total Company ATO Debt</td>
+            <td id="tblTotalAto">$0</td>
+            <td colspan="2" id="tblSbrStatus">SBR Status: Checking...</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="ad-slot">
+      <ins class="adsbygoogle"
+           style="display:block;min-height:250px"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+    </div>
+
+    
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 Australian Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for Australian:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/au-division-293-super-tax-250k-threshold-calculator-2026-27/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">ATO 2026–27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Australia Division 293 Tax Calculator 2026–27 | $250k Threshold</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate your 2026–27 Division 293 super tax with the $250,000 threshold and $32,500 concess...</span>
+    </a>
+    <a href="/util/au-division-293-super-tax-calculator-2026-27/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">ATO 2026–27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Australia Division 293 Super Tax Calculator 2026–27</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate your 2026–27 Division 293 super tax using the A$250,000 threshold and A$32,500 conc...</span>
+    </a>
+    <a href="/util/au-division-296-super-tax-3-million-10-million-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">ATO 2026–27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Australia Division 296 Super Tax Calculator 2026–27</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate Australia’s Division 296 super tax for 2026–27 using the $3 million and $10 million...</span>
+    </a>
+    <a href="/util/au-division-7a-loan-minimum-yearly-repayment-8-77-percent-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">ATO 2026–27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Australia Division 7A Minimum Yearly Repayment Calculator 2026–27 (8.77%)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate the 2026–27 Division 7A minimum yearly repayment at 8.77%, project loan amortisati...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+<footer>
+      <p>&copy; 2026 Statutory & Business Calculators. Comprehensive actuarial and regulatory reference tools.</p>
+      <div class="hub-links">
+        <a href="https://emfls.github.io/util/australia-business-tax-hub-2026.html">Australia Commercial Hub</a>
+        <a href="https://emfls.github.io/util/us-tax-hub-2026.html">US Statutory Tax Hub</a>
+        <a href="https://emfls.github.io/util/uk-property-finance-hub-2026.html">UK Property & Commercial Hub</a>
+        <a href="https://emfls.github.io/util/canada-tax-corporate-hub-2026.html">Canada Corporate Hub</a>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module">
+    import { calcDpnExposure } from './model.mjs';
+
+    function fmt(num) {
+      return '$' + Math.round(num).toLocaleString('en-AU');
+    }
+
+    function render() {
+      const unpaidPayg = Number(document.getElementById('unpaidPayg').value) || 0;
+      const unpaidGst = Number(document.getElementById('unpaidGst').value) || 0;
+      const unpaidSgc = Number(document.getElementById('unpaidSgc').value) || 0;
+      const isBasLateMoreThan3Months = document.getElementById('isBasLateMoreThan3Months').checked;
+      const isSgcLatePastDueDate = document.getElementById('isSgcLatePastDueDate').checked;
+      const totalCompanyLiabilities = Number(document.getElementById('totalCompanyLiabilities').value) || 450000;
+      const sbrDividendCents = Number(document.getElementById('sbrDividendCents').value) || 25;
+
+      const res = calcDpnExposure({
+        unpaidPayg,
+        unpaidGst,
+        unpaidSgc,
+        isBasLateMoreThan3Months,
+        isSgcLatePastDueDate,
+        totalCompanyLiabilities,
+        sbrDividendCents
+      });
+
+      document.getElementById('lockdownVal').innerText = fmt(res.totalLockdownDpn);
+      document.getElementById('nonLockdownVal').innerText = fmt(res.totalNonLockdownDpn);
+      document.getElementById('sbrSavedVal').innerText = fmt(res.sbrDebtForgiven);
+      document.getElementById('netExposureVal').innerText = fmt(res.totalDirectorPersonalExposure);
+
+      const insight = document.getElementById('dpnInsightText');
+      if (res.totalLockdownDpn > 0) {
+        insight.innerHTML = `⚠️ <strong>CRITICAL LOCKDOWN ALERT:</strong> ${fmt(res.totalLockdownDpn)} is LOCKED DOWN. You cannot remit this by liquidating or placing company into administration! Directors must pay in full from personal assets. For the remaining ${fmt(res.totalNonLockdownDpn)}, you have 21 days from ATO postal date.`;
+      } else {
+        insight.innerHTML = `✅ <strong>NON-LOCKDOWN STATUS:</strong> All debts reported within statutory limits. You have 21 days to pay, liquidate, or execute Part 5.3B Small Business Restructuring to extinguish personal liability.`;
+      }
+
+      // Table updates
+      document.getElementById('tblPayg').innerText = fmt(res.unpaidPayg);
+      document.getElementById('tblPaygStatus').innerText = isBasLateMoreThan3Months ? 'LOCKDOWN (Late > 3 Mo)' : 'Standard (21-Day)';
+      document.getElementById('tblPaygStatus').className = isBasLateMoreThan3Months ? 'tag-danger' : 'tag-safe';
+      document.getElementById('tblPaygRemit').innerText = isBasLateMoreThan3Months ? 'None (Must pay 100%)' : 'Liquidate / VA / SBR within 21 days';
+
+      document.getElementById('tblGst').innerText = fmt(res.unpaidGst);
+      document.getElementById('tblGstStatus').innerText = isBasLateMoreThan3Months ? 'LOCKDOWN (Late > 3 Mo)' : 'Standard (21-Day)';
+      document.getElementById('tblGstStatus').className = isBasLateMoreThan3Months ? 'tag-danger' : 'tag-safe';
+      document.getElementById('tblGstRemit').innerText = isBasLateMoreThan3Months ? 'None (Must pay 100%)' : 'Liquidate / VA / SBR within 21 days';
+
+      document.getElementById('tblSgc').innerText = fmt(res.unpaidSgc);
+      document.getElementById('tblSgcStatus').innerText = isSgcLatePastDueDate ? 'LOCKDOWN (Late past due date)' : 'Standard (Lodged on time)';
+      document.getElementById('tblSgcStatus').className = isSgcLatePastDueDate ? 'tag-danger' : 'tag-safe';
+      document.getElementById('tblSgcRemit').innerText = isSgcLatePastDueDate ? 'None (Personal guarantee permanent)' : 'Liquidate / VA / SBR within 21 days';
+
+      document.getElementById('tblTotalAto').innerText = fmt(res.totalAtoDebt);
+      document.getElementById('tblSbrStatus').innerText = res.isSbrEligible ? `Eligible for SBR (< $1M cap) - ${res.sbrDividendCents}c/$ dividend` : 'Ineligible for SBR (Total liabilities >= $1,000,000 AUD)';
+
+      // SVG Bar Chart
+      const svg = document.getElementById('dpnChart');
+      const maxVal = Math.max(res.totalAtoDebt, res.totalDirectorPersonalExposure, 1000) * 1.1;
+      const hAto = (res.totalAtoDebt / maxVal) * 100;
+      const hLock = (res.totalLockdownDpn / maxVal) * 100;
+      const hExp = (res.totalDirectorPersonalExposure / maxVal) * 100;
+
+      let html = '';
+      html += `<rect x="50" y="${120 - hAto}" width="60" height="${hAto}" fill="#0284c7" rx="4" />`;
+      html += `<text x="80" y="140" font-size="10" text-anchor="middle" fill="#0f172a">Total ATO Debt</text>`;
+      html += `<text x="80" y="${115 - hAto}" font-size="10" text-anchor="middle" fill="#0284c7" font-weight="bold">${fmt(res.totalAtoDebt)}</text>`;
+
+      html += `<rect x="180" y="${120 - hLock}" width="60" height="${hLock}" fill="#dc2626" rx="4" />`;
+      html += `<text x="210" y="140" font-size="10" text-anchor="middle" fill="#0f172a">Lockdown (Fatal)</text>`;
+      html += `<text x="210" y="${115 - hLock}" font-size="10" text-anchor="middle" fill="#dc2626" font-weight="bold">${fmt(res.totalLockdownDpn)}</text>`;
+
+      html += `<rect x="310" y="${120 - hExp}" width="60" height="${hExp}" fill="#d97706" rx="4" />`;
+      html += `<text x="340" y="140" font-size="10" text-anchor="middle" fill="#0f172a">Director Net Risk</text>`;
+      html += `<text x="340" y="${115 - hExp}" font-size="10" text-anchor="middle" fill="#d97706" font-weight="bold">${fmt(res.totalDirectorPersonalExposure)}</text>`;
+
+      svg.innerHTML = html;
+    }
+
+    document.querySelectorAll('input, select').forEach(el => el.addEventListener('input', render));
+    render();
+  </script>
+</body>
+</html>

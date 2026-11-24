@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 
@@ -71,7 +72,40 @@ def test_ad_and_official_cta_contract():
 
 
 def test_japanese_travel_pages_and_sitemap_discover_the_new_page():
-    assert len(TRAVEL_PAGES) == 25
+    expected_places = {
+        "alexandra",
+        "angmokio",
+        "bedok",
+        "bishan",
+        "bukit-panjang",
+        "central",
+        "choa-chu-kang",
+        "clementi",
+        "dover",
+        "east",
+        "eunos",
+        "jurong-east",
+        "marinabay",
+        "north",
+        "northeast",
+        "orchard",
+        "pasir-ris",
+        "punggol",
+        "queenstown",
+        "sembawang",
+        "tampines",
+        "tiong-bahru",
+        "toapayoh",
+        "west",
+        "woodlands",
+    }
+    retired = "jp/report/travel/singapore-alexandra.html"
+    if not (ROOT / retired).exists():
+        ledger = json.loads((ROOT / "data/approved-pruning-ledger.json").read_text(encoding="utf-8"))
+        assert ledger["schemaVersion"] == 2 and "BATCH_01" in ledger["batchIds"]
+        assert ledger["sha256ByPath"][retired] == "0a3ba5451b1eeaeaf6ac9de758d9f1b7156b5e7224435e455f0bc03b4bac5846"
+        expected_places.remove("alexandra")
+    assert {page.name for page in TRAVEL_PAGES} == {f"singapore-{place}.html" for place in expected_places}
     for page in TRAVEL_PAGES:
         html = page.read_text(encoding="utf-8")
         assert '<html lang="ja">' in html

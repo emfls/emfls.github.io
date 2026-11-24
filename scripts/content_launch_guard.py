@@ -3,12 +3,14 @@
 
 import argparse
 import csv
+import hashlib
 import io
 import json
 import os
 import re
 import subprocess
 import unicodedata
+import xml.etree.ElementTree as ET
 from datetime import date, datetime
 from html.parser import HTMLParser
 from pathlib import Path
@@ -1083,6 +1085,15 @@ ARABIC_RETIREMENT_EVIDENCE = {
     "engagementSeconds": 256,
     "totalAdRevenue": 0.015871,
 }
+PRUNING_LEDGER_PATH = "data/approved-pruning-ledger.json"
+CALCULATOR_PREFIXES = ("util/", "kor/util/")
+PRUNING_PROTECTION_PATHS = (
+    "data/revenue-opportunities.json",
+    "data/experiments.json",
+    "data/content-launch-experiments.json",
+    "data/cluster-exclusions.json",
+    "data/cluster_exclusions.json",
+)
 RAW_MEASUREMENT_HISTORY_PREFIX = "data/performance/"
 SEOUL = ZoneInfo("Asia/Seoul")
 TRUSTED_BASE_JSON_PATHS = (
@@ -1915,7 +1926,99 @@ def _changed_tuple(item):
     raise ValueError("changed path entries must contain status/path or status/path/blob transition")
 
 
-def validate_launch(root, manifest, changed_paths, trusted_base=None, ops_dir=None):
+def _git_bytes(root, *args):
+    return subprocess.check_output(["git", *args], cwd=root)
+
+
+def _pruning_paths(value):
+    identity = _normalized_launch_url(value)
+    if identity is None:
+        if not isinstance(value, str):
+            raise ValueError("invalid protected pruning path")
+        identity = _normalized_launch_url("/" + value.lstrip("/"))
+    if identity is None:
+        raise ValueError("invalid protected pruning path")
+    path = identity.lstrip("/")
+    if not path or path.endswith("/"):
+        return {path + "index.html"}
+    if not Path(path).suffix:
+        return {path, path + ".html", path + "/index.html"}
+    return {path}
+
+
+def _pruning_protections(root, state_root, docs, revision, changed):
+    protected, prefixes = set(), set()
+    for path in PRUNING_PROTECTION_PATHS:
+        documents = [docs.get(path, {})]
+        for source in dict.fromkeys((root, state_root)):
+            documents.append(_read(source / path, {}))
+        base_path = _git_bytes(root, "ls-tree", "-z", revision, "--", path)
+        if base_path:
+            documents.append(json.loads(_git_bytes(root, "show", f"{revision}:{path}")))
+        for document in documents:
+            for row in document.get("protectedWinners", []):
+                protected.update(_pruning_paths(row["url"]))
+            for row in document.get("experiments", []):
+                if row.get("status") == "OBSERVING":
+                    protected.update(_pruning_paths(row["url"]))
+            for key in ("cluster_exclusions", "clusterExclusions"):
+                for value in document.get(key, []):
+                    paths = _pruning_paths(value)
+                    protected.update(paths)
+                    prefixes.update(path[:-len("index.html")] for path in paths if path.endswith("/index.html"))
+
+    def read_sitemap(ref, path):
+        protected.add(path)
+        xml = ET.fromstring(_git_bytes(root, "show", f"{ref}:{path}"))
+        for loc in xml.iter():
+            if loc.tag.rsplit("}", 1)[-1] == "loc" and loc.text:
+                protected.update(_pruning_paths(loc.text.strip()))
+
+    for path in _git_bytes(root, "ls-tree", "-rz", "--name-only", revision).decode().split("\0"):
+        if path and Path(path).match("sitemap*.xml"):
+            read_sitemap(revision, path)
+    for status, path, _, _ in changed:
+        if status in {"A", "M"} and Path(path).match("sitemap*.xml"):
+            read_sitemap("HEAD", path)
+    return protected, tuple(sorted(prefixes))
+
+
+def _approved_batch_deletions(root, state_root, trusted_base, change_ref, changed):
+    deleted = {path for status, path, _, _ in changed if status == "D"}
+    if not deleted or not change_ref or not trusted_base:
+        return set()
+    if any(path == PRUNING_LEDGER_PATH for _, path, _, _ in changed):
+        return set()
+
+    try:
+        if not _git_bytes(root, "ls-tree", "-z", change_ref, "--", PRUNING_LEDGER_PATH):
+            return set()
+        ledger = json.loads(_git_bytes(root, "show", f"{change_ref}:{PRUNING_LEDGER_PATH}"))
+        if ledger.get("schemaVersion") != 2 or ledger.get("batchIds") != ["BATCH_01", "BATCH_02"]:
+            return set()
+        hashes = ledger["sha256ByPath"]
+        if not isinstance(hashes, dict):
+            return set()
+        protected, prefixes = _pruning_protections(root, state_root, trusted_base["json"], change_ref, changed)
+        approved = set()
+        for path in deleted & hashes.keys():
+            if (
+                path in protected or path.startswith((RAW_MEASUREMENT_HISTORY_PREFIX, *prefixes))
+                or path.casefold().startswith(CALCULATOR_PREFIXES)
+                or path.startswith("/") or "\\" in path
+                or any(part in {"", ".", ".."} for part in path.split("/"))
+            ):
+                continue
+            original = _git_bytes(root, "show", f"{change_ref}:{path}")
+            if hashlib.sha256(original).hexdigest() != hashes[path]:
+                continue
+            approved.add(path)
+        return approved
+    except (AttributeError, KeyError, OSError, TypeError, ValueError, subprocess.CalledProcessError, ET.ParseError):
+        return set()
+
+
+def validate_launch(root, manifest, changed_paths, trusted_base=None, ops_dir=None, *, change_base_ref=None):
     root = Path(root)
     state_root = Path(ops_dir or root)
     changed = [_changed_tuple(row) for row in changed_paths]
@@ -1981,13 +2084,15 @@ def validate_launch(root, manifest, changed_paths, trusted_base=None, ops_dir=No
                     errors.add("EDITORIAL_DECISION_BLOCKED")
                 if requires_ymyl_review({"keyword": keyword}) and decision != "APPROVE":
                     errors.add("YMYL_REVIEW_REQUIRED")
-    # Only exact, evidenced Arabic retirement exceptions and this exact JP
-    # Travel canary are authorized; keep every other deletion and rename closed.
+    # Preserve existing retirement exceptions. Batch approval comes from the change base.
+    approved_batch = _approved_batch_deletions(root, state_root, trusted_base, change_base_ref, changed)
+    if any(status == "D" and path.casefold().startswith(CALCULATOR_PREFIXES) for status, path, _, _ in changed):
+        errors.add("CALCULATOR_DELETION_BLOCKED")
     unauthorized_deletion = any(
         row[0].startswith(("D", "R"))
         and not (
             row[0] == "D"
-            and (row[1] in approved_arabic_retirement_paths or row[1] in APPROVED_JP_TRAVEL_CANARY_DELETIONS)
+            and (row[1] in approved_arabic_retirement_paths or row[1] in APPROVED_JP_TRAVEL_CANARY_DELETIONS or row[1] in approved_batch)
         )
         for row in changed
     )
@@ -2098,36 +2203,40 @@ def validate_launch(root, manifest, changed_paths, trusted_base=None, ops_dir=No
 
 
 def _git_changes(root, base_ref):
-    result = subprocess.run(["git", "diff", "--name-status", base_ref, "HEAD"], cwd=str(root), text=True, capture_output=True, check=True)
+    result = subprocess.run(
+        ["git", "diff", "--name-status", "-z", "--find-renames", base_ref, "HEAD"],
+        cwd=str(root), text=True, capture_output=True, check=True,
+    )
     rows = []
-    for line in result.stdout.splitlines():
-        parts = line.split("\t")
-        if len(parts) >= 2:
-            status, path = parts[0], parts[-1]
-            if status == "A" and (
-                path in APPROVED_NAVIGATION_HUB_ADDITIONS
-                or path in APPROVED_RPM_OPTIMIZATION_20261113_TRANSITIONS
-            ):
-                after = subprocess.run(
-                    ["git", "rev-parse", f"HEAD:{path}"],
-                    cwd=str(root), text=True, capture_output=True, check=True,
-                ).stdout.strip()
-                rows.append((status, path, None, after))
-            elif status == "M" and (
-                path in APPROVED_PROTECTED_WINNER_TRANSITIONS
-                or path in APPROVED_MONETIZATION_TRANSITIONS
-            ):
-                before = subprocess.run(
-                    ["git", "rev-parse", f"{base_ref}:{path}"],
-                    cwd=str(root), text=True, capture_output=True, check=True,
-                ).stdout.strip()
-                after = subprocess.run(
-                    ["git", "rev-parse", f"HEAD:{path}"],
-                    cwd=str(root), text=True, capture_output=True, check=True,
-                ).stdout.strip()
-                rows.append((status, path, before, after))
-            else:
-                rows.append((status, path))
+    fields = iter(result.stdout.rstrip("\0").split("\0")) if result.stdout else iter(())
+    for status in fields:
+        path = next(fields)
+        if status.startswith(("R", "C")):
+            path = next(fields)
+        if status == "A" and (
+            path in APPROVED_NAVIGATION_HUB_ADDITIONS
+            or path in APPROVED_RPM_OPTIMIZATION_20261113_TRANSITIONS
+        ):
+            after = subprocess.run(
+                ["git", "rev-parse", f"HEAD:{path}"],
+                cwd=str(root), text=True, capture_output=True, check=True,
+            ).stdout.strip()
+            rows.append((status, path, None, after))
+        elif status == "M" and (
+            path in APPROVED_PROTECTED_WINNER_TRANSITIONS
+            or path in APPROVED_MONETIZATION_TRANSITIONS
+        ):
+            before = subprocess.run(
+                ["git", "rev-parse", f"{base_ref}:{path}"],
+                cwd=str(root), text=True, capture_output=True, check=True,
+            ).stdout.strip()
+            after = subprocess.run(
+                ["git", "rev-parse", f"HEAD:{path}"],
+                cwd=str(root), text=True, capture_output=True, check=True,
+            ).stdout.strip()
+            rows.append((status, path, before, after))
+        else:
+            rows.append((status, path))
     return rows
 
 
@@ -2163,7 +2272,10 @@ def main():
         try:
             change_ref = _validated_change_base(args.root, args.change_base_ref or args.base_ref)
             changed_paths = _git_changes(args.root, change_ref)
-            errors = validate_launch(args.root, manifest, changed_paths, trusted_base=trusted_base, ops_dir=args.ops_dir)
+            errors = validate_launch(
+                args.root, manifest, changed_paths, trusted_base=trusted_base, ops_dir=args.ops_dir,
+                change_base_ref=change_ref,
+            )
         except (OSError, TypeError, ValueError, KeyError, subprocess.CalledProcessError, csv.Error):
             errors = ["CHANGE_BASE_REVISION_UNAVAILABLE"]
     print(json.dumps({"status": "FAIL" if errors else "PASS", "errors": errors}))

@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>US Year-End Bonus Tax Withholding 22% vs 37% vs Aggregate Refund Calculator 2026</title>
+  <meta name="description" content="Calculate 2026 IRS year-end bonus tax withholding. Compare Flat 22% vs Aggregate Method overwithholding, SSA $184,500 wage base FICA limits, and April 2027 tax refund.">
+  <link rel="canonical" href="https://emfls.github.io/util/us-year-end-bonus-tax-withholding-22-percent-vs-37-percent-aggregate-refund-2026-calculator/">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","G-QP5Q67GE5B");</script>
+  <script>
+  if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+    const adScript = document.createElement('script');
+    adScript.async = true;
+    adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+    adScript.crossOrigin = 'anonymous';
+    document.head.append(adScript);
+  }
+  </script>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card: #111827;
+      --border: #1e293b;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --primary: #3b82f6;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 1rem;
+    }
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+    h1 {
+      font-size: 1.6rem;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    p.lead {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      overflow-x: hidden;
+      margin-bottom: 1.5rem;
+    }
+    h2 {
+      font-size: 1.15rem;
+      margin-bottom: 1rem;
+      color: #e5e7eb;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+    input, select {
+      width: 100%;
+      background: #1f2937;
+      border: 1px solid #374151;
+      color: #fff;
+      padding: 0.6rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .results-hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .stat-card {
+      background: #1f2937;
+      padding: 0.85rem;
+      border-radius: 6px;
+      border-left: 3px solid var(--primary);
+    }
+    .stat-card.success { border-left-color: var(--success); }
+    .stat-card.warning { border-left-color: var(--warning); }
+    .stat-card.danger { border-left-color: var(--danger); }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .stat-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      margin-top: 0.25rem;
+    }
+    .stat-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+    .warning-box {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid var(--warning);
+      border-radius: 6px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .warning-box h3 {
+      color: var(--warning);
+      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .warning-box p {
+      color: #d1d5db;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+    th, td {
+      padding: 0.65rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      background: #1f2937;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    details {
+      background: #1f2937;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      border: 1px solid var(--border);
+    }
+    summary {
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: #e5e7eb;
+    }
+    details p {
+      padding: 0.5rem 1rem 0.75rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .emfls-ad-slot {
+      margin: 1.5rem 0;
+      background: #111827;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem;
+      text-align: center;
+    }
+    .ad-label {
+      font-size: 0.7rem;
+      color: #4b5563;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.25rem;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .links a {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      margin-right: 1rem;
+    }
+    .links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "US Year-End Bonus Tax Withholding 22% vs 37% vs Aggregate Calculator 2026",
+    "url": "https://emfls.github.io/util/us-year-end-bonus-tax-withholding-22-percent-vs-37-percent-aggregate-refund-2026-calculator/",
+    "description": "Calculate 2026 year-end bonus paycheck tax withholding. Compare IRS flat 22% rate against Aggregate Method overwithholding, SSA $184,500 wage base, and true April 2027 tax refund.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Why is my year-end bonus taxed at 22% by default?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under IRS Publication 15, supplemental wages (such as bonuses, commissions, and severance) up to $1,000,000 are subject to a statutory flat federal withholding rate of 22%. Cumulative supplemental wages exceeding $1,000,000 are subject to mandatory 37% withholding."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between Flat 22% and the Aggregate Withholding Method?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under the flat 22% method, employers withhold exactly 22% for federal taxes regardless of your regular bracket. Under the aggregate method, employers combine your regular paycheck and bonus into a single pay period and annualize it, often bumping you artificially into the 32%, 35%, or 37% brackets and causing severe overwithholding."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I pay Social Security tax on a bonus if I already earn over $184,500?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. For 2026, the SSA Social Security wage base cap is $184,500. Once your year-to-date cumulative earnings exceed $184,500, no further 6.2% Social Security tax is withheld from your bonus, saving you $620 per $10,000."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Will I get overwithheld bonus taxes back on my tax return in April 2027?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Withholding is simply an estimated advance payment toward your annual tax liability. When you file Form 1040 in April 2027, your bonus is blended into your true marginal tax bracket. If your employer withheld at 35% under the aggregate method but your true top bracket is 24%, the difference is refunded dollar-for-dollar."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I defer my year-end bonus into my 401(k) to avoid taxes?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, if your employer allows bonus deferrals and you have remaining capacity under the 2026 employee contribution limit ($24,500). Deferring into a traditional 401(k) exempts that portion of the bonus from federal income tax withholding, although FICA taxes (Social Security and Medicare) still apply."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Calculators",
+        "item": "https://emfls.github.io/util/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "US Year-End Bonus Tax Calculator",
+        "item": "https://emfls.github.io/util/us-year-end-bonus-tax-withholding-22-percent-vs-37-percent-aggregate-refund-2026-calculator/"
+      }
+    ]
+  }
+  </script>
+<style id="emfls-cro-calc-first-b2-v1">
+/* EMFLS CRO B2 — mobile calculator-first ordering for non-Patch-B EN templates (CSS-only, reversible) */
+@media (max-width: 760px) {
+  main:has(form, input, select),
+  .tool-shell:has(form, input, select),
+  .container:has(form, input, select) {
+    display: flex;
+    flex-direction: column;
+  }
+  main:has(form, input, select) > *,
+  .tool-shell:has(form, input, select) > *,
+  .container:has(form, input, select) > * {
+    order: 4;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  main:has(form, input, select) > nav,
+  main:has(form, input, select) > header,
+  main:has(form, input, select) > .hero,
+  main:has(form, input, select) > h1,
+  main:has(form, input, select) > .lead,
+  .tool-shell:has(form, input, select) > nav,
+  .tool-shell:has(form, input, select) > header,
+  .tool-shell:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > h1,
+  .tool-shell:has(form, input, select) > .lead,
+  .container:has(form, input, select) > nav,
+  .container:has(form, input, select) > header,
+  .container:has(form, input, select) > .hero,
+  .container:has(form, input, select) > h1,
+  .container:has(form, input, select) > .lead {
+    order: 0;
+  }
+  main:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .tool-shell:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .container:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav) {
+    order: 1;
+  }
+  main:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .tool-shell:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .container:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container) {
+    order: 2;
+  }
+  main:has(form, input, select) > .emfls-next-check,
+  .tool-shell:has(form, input, select) > .emfls-next-check,
+  .container:has(form, input, select) > .emfls-next-check {
+    order: 2;
+  }
+  main:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .tool-shell:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .container:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]) {
+    order: 3;
+  }
+  main:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > .hero,
+  .container:has(form, input, select) > header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>US Year-End Bonus Tax Withholding & April 2027 Refund Calculator</h1>
+    <p class="lead">Compare IRS Flat 22% vs Aggregate Method withholding shock, $184,500 SSA wage base FICA limits, and calculate your true April 2027 tax refund.</p>
+  </header>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+  </aside>
+
+  <!-- Loss Aversion Warning Box -->
+  <div class="warning-box">
+    <h3>⚠️ The "Bonus Paycheck Shock": Why Your Net Payout Feels Too Low</h3>
+    <p>Many employees are shocked when 40% to 50% of their December bonus disappears. If your employer uses the <strong>Aggregate Method</strong>, payroll software assumes you earn that bonus every single pay period, withholding at inflated 32% to 37% rates. That excess withholding is <strong>NOT lost money</strong>—it is an interest-free loan to the government that you will recover on your April 2027 IRS Form 1040 refund.</p>
+  </div>
+
+  <div class="grid">
+    <!-- Input Panel -->
+    <section class="panel" aria-labelledby="input-heading">
+      <h2 id="input-heading">1. Paycheck & Bonus Inputs</h2>
+      
+      <div class="form-group">
+        <label for="input-bonus">Year-End Gross Bonus Amount ($)</label>
+        <input inputmode="decimal" type="number" id="input-bonus" value="25000" min="500" max="5000000" step="500">
+      </div>
+
+      <div class="form-group">
+        <label for="input-salary">Regular Annual Base Salary ($)</label>
+        <input inputmode="decimal" type="number" id="input-salary" value="120000" min="10000" max="2000000" step="1000">
+      </div>
+
+      <div class="form-group">
+        <label for="input-ytd">Prior YTD Wages Paid to Date ($)</label>
+        <input inputmode="decimal" type="number" id="input-ytd" value="110000" min="0" max="2000000" step="1000">
+        <span style="font-size:0.75rem;color:var(--muted)">Crucial for calculating $184,500 Social Security cap!</span>
+      </div>
+
+      <div class="form-group">
+        <label for="input-status">Tax Filing Status (2026)</label>
+        <select id="input-status">
+          <option value="single" selected>Single ($16,100 Std Ded)</option>
+          <option value="mfj">Married Filing Jointly ($32,200 Std Ded)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="input-freq">Regular Pay Frequency</label>
+        <select id="input-freq">
+          <option value="biweekly" selected>Bi-Weekly (26 paychecks/yr)</option>
+          <option value="semimonthly">Semi-Monthly (24 paychecks/yr)</option>
+          <option value="monthly">Monthly (12 paychecks/yr)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="input-401k-pct">Pre-Tax 401(k) Bonus Deferral (%): <span id="label-401k-pct">0%</span></label>
+        <input type="range" id="input-401k-pct" min="0" max="100" value="0" step="5" oninput="document.getElementById('label-401k-pct').textContent=this.value+'%'">
+      </div>
+
+      <div class="form-group">
+        <label for="input-prior-401k">Prior YTD 401(k) Contributions ($)</label>
+        <input inputmode="decimal" type="number" id="input-prior-401k" value="12000" min="0" max="24500" step="500">
+        <span style="font-size:0.75rem;color:var(--muted)">2026 Max Limit: $24,500</span>
+      </div>
+    </section>
+
+    <!-- Results Panel -->
+    <section class="panel" aria-labelledby="results-heading">
+      <h2 id="results-heading">2. Withholding vs April 2027 Refund</h2>
+
+      <div class="results-hero">
+        <div class="stat-card success">
+          <div class="stat-label">Flat 22% Take-Home Cash</div>
+          <div class="stat-value" id="out-flat-takehome">$0</div>
+          <div class="stat-sub">Fed Withheld: <span id="out-flat-withheld">$0</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Aggregate Take-Home Cash</div>
+          <div class="stat-value" id="out-agg-takehome">$0</div>
+          <div class="stat-sub">Fed Withheld: <span id="out-agg-withheld">$0</span></div>
+        </div>
+      </div>
+
+      <div class="results-hero">
+        <div class="stat-card warning">
+          <div class="stat-label">Social Security (6.2%)</div>
+          <div class="stat-value" id="out-ss-tax">$0</div>
+          <div class="stat-sub" id="out-ss-status">Wage base check</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Medicare (1.45%+)</div>
+          <div class="stat-value" id="out-medicare-tax">$0</div>
+          <div class="stat-sub" id="out-medicare-status">1.45% base</div>
+        </div>
+      </div>
+
+      <div class="stat-card" style="margin-bottom:1rem;background:#172033;border-left:3px solid #8b5cf6;">
+        <div class="stat-label">True 2026 Federal Marginal Tax on Bonus</div>
+        <div class="stat-value" id="out-true-tax">$0</div>
+        <div class="stat-sub">What you actually owe IRS on Form 1040</div>
+      </div>
+
+      <div class="panel" style="padding:0.75rem;margin-bottom:1rem;background:#1e293b;">
+        <h3 style="font-size:0.85rem;color:#e5e7eb;margin-bottom:0.4rem;">Tax Return Reconciliation (April 2027):</h3>
+        <p style="font-size:0.85rem;margin-bottom:0.25rem;">• Under Flat 22%: <strong id="out-flat-reconcile">--</strong></p>
+        <p style="font-size:0.85rem;">• Under Aggregate Method: <strong id="out-agg-reconcile">--</strong></p>
+      </div>
+
+      <div id="box-401k-deferral" style="display:none;background:#064e3b;padding:0.6rem 0.8rem;border-radius:6px;font-size:0.8rem;color:#a7f3d0;margin-bottom:1rem;">
+        💰 401(k) Pre-tax Deferral: <strong><span id="out-401k-saved">$0</span></strong> shielded from federal tax withholding!
+      </div>
+
+      <!-- Chart Container -->
+      <div id="chart-container" style="background:#111827;border-radius:6px;padding:0.5rem;border:1px solid var(--border)"></div>
+    </section>
+  </div>
+
+  <!-- Statutory Reference Table -->
+  <section class="panel" aria-labelledby="table-heading">
+    <h2 id="table-heading">Official 2026 IRS & SSA Tax Parameters</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Tax Component</th>
+            <th>2026 Statutory Rate</th>
+            <th>Statutory Cap / Threshold</th>
+            <th>Regulatory Reference</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Supplemental Flat Withholding</strong></td>
+            <td>22.0%</td>
+            <td>First $1,000,000 cumulative supplemental wages</td>
+            <td>IRS Pub. 15 (Circular E)</td>
+          </tr>
+          <tr>
+            <td><strong>High Supplemental Flat Rate</strong></td>
+            <td>37.0% (Mandatory)</td>
+            <td>Portion exceeding $1,000,000 in calendar year</td>
+            <td>IRC § 3402(g)</td>
+          </tr>
+          <tr>
+            <td><strong>Social Security (OASDI)</strong></td>
+            <td>6.20%</td>
+            <td><strong>$184,500 wage base limit</strong> ($11,439 max tax)</td>
+            <td>SSA 2026 Fact Sheet</td>
+          </tr>
+          <tr>
+            <td><strong>Standard Medicare (HI)</strong></td>
+            <td>1.45%</td>
+            <td>No wage ceiling (all earnings)</td>
+            <td>IRC § 3101(b)</td>
+          </tr>
+          <tr>
+            <td><strong>Additional Medicare Tax</strong></td>
+            <td>0.90% (Employee-only)</td>
+            <td>$200,000 (Single) / $250,000 (MFJ)</td>
+            <td>ACA § 9015 / Form 8959</td>
+          </tr>
+          <tr>
+            <td><strong>401(k) Elective Deferral</strong></td>
+            <td>Pre-Tax Shelter</td>
+            <td><strong>$24,500</strong> ($32,000 for age 50+)</td>
+            <td>IRS Notice 2025-XX / COLA</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Statutory FAQ & Regulatory Guide -->
+  <section class="panel" aria-labelledby="faq-heading">
+    <h2 id="faq-heading">Frequently Asked Questions: Bonus Tax Withholding</h2>
+    <details>
+      <summary>Why is my bonus taxed at a higher rate than my normal paycheck?</summary>
+      <p>In reality, bonuses are taxed at the exact same statutory income tax rates as regular wages when you file your annual return. The perception of higher taxes comes from <em>withholding methods</em>: either the 22% flat supplemental rate or the aggregate method, which annualizes your single paycheck and withholds as if you made that amount 26 times a year.</p>
+    </details>
+    <details>
+      <summary>Can I ask my employer to withhold using the Flat 22% method instead of Aggregate?</summary>
+      <p>Employers have the legal option under IRS rules to choose either method. If paid as a separate check or itemized separately, most payroll providers (like ADP, Gusto, Workday) default to the flat 22% rate. Check with your HR or payroll department before bonus processing.</p>
+    </details>
+    <details>
+      <summary>What happens if my bonus pushes me into the 0.9% Additional Medicare Tax threshold?</summary>
+      <p>Employers are required to begin withholding the 0.9% Additional Medicare tax once your compensation from that specific employer exceeds $200,000 in a calendar year, regardless of your marital status. If you are Married Filing Jointly with a $250,000 threshold, any excess withheld is reconciled on IRS Form 8959 in April.</p>
+    </details>
+    <details>
+      <summary>If I earn more than $184,500, why does my bonus take-home jump higher?</summary>
+      <p>Because the 2026 Social Security tax wage base caps out at $184,500. Once your year-to-date earnings hit that ceiling, your employer stops deducting the 6.2% Social Security tax, instantly giving you an extra $62 in cash for every $1,000 earned.</p>
+    </details>
+    <details>
+      <summary>How can I legally reduce tax withholding on my upcoming December bonus?</summary>
+      <p>The most effective strategy is increasing your pre-tax 401(k) or 403(b) contribution percentage for that specific bonus paycheck, up to the remaining annual limit ($24,500 for 2026). This completely shields that portion from federal income tax withholding.</p>
+    </details>
+  </section>
+
+  <section class="panel" aria-labelledby="scope-title">
+    <h2 id="scope-title">Assumptions & Statutory Notes</h2>
+    <p>Calculations use official 2026 IRS tax brackets, Rev. Proc. 2025-32 inflation adjustments, and the 2026 SSA $184,500 wage base. State and local income taxes (SALT) are excluded as they vary by municipality. Consult a CPA or enrolled agent for personalized year-end tax planning.</p>
+    <nav class="links" aria-label="Related calculators">
+      <a href="/util/irs-tax-brackets-401k-catchup-calculator/">IRS Tax Brackets & 401(k) Catch-Up</a>
+      <a href="/util/us-section-179-equipment-deduction-calculator/">Section 179 Equipment Deduction</a>
+      <a href="/util/compound-interest/">Compound Interest Calculator</a>
+    </nav>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+  </aside>
+  <footer>Estimate only · emfls.github.io</footer>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 United States Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for United States:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/us-1031-exchange-boot-capital-gains-deferral-calculator-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 1031 Exchange Calculator | Boot, Tax &amp; Carryover Basis</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate 2026 Section 1031 cash and mortgage boot, taxable gain, unrecaptured Section 1250 t...</span>
+    </a>
+    <a href="/util/us-1099-self-employment-quarterly-tax-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">US 1099-NEC Self-Employment &amp; Quarterly Tax Calculator 2026</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026 statutory calculator for US 1099-NEC Self-Employment &amp; Quarterly Tax Calculator 2026.</span>
+    </a>
+    <a href="/util/us-2-1-mortgage-buydown-vs-permanent-discount-points-vs-price-cut-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">US 2-1 Mortgage Buydown vs Discount Points vs Price Cut Calculator (2026)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare 2026 US 2-1 temporary buydown, permanent discount points, and seller price cut finan...</span>
+    </a>
+    <a href="/util/us-401k-employer-match-true-up-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 401(k) Max-Out &amp; Employer Match True-Up Calculator</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026 statutory calculator for 2026 401(k) Max-Out &amp; Employer Match True-Up Calculator.</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+<script type="module" src="./app.js"></script>
+</body>
+</html>

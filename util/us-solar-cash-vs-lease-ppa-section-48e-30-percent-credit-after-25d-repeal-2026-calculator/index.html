@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>US Solar Cash vs Lease/PPA Section 48E (30%) Credit Calculator (2026)</title>
+<meta name="description" content="Calculate 2026 US residential solar ROI after Section 25D repeal. Compare cash purchase (0% credit) against third-party owned leases and PPAs capturing the Section 48E 30% credit.">
+<link rel="canonical" href="https://emfls.github.io/util/us-solar-cash-vs-lease-ppa-section-48e-30-percent-credit-after-25d-repeal-2026-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="US Solar Cash vs Lease/PPA Section 48E (30%) Credit Calculator (2026)">
+<meta property="og:description" content="Model the financial impact of Section 25D repeal in 2026. Compare cash vs lease vs Year-5 buyout with commercial Section 48E 30% credits.">
+<meta property="og:url" content="https://emfls.github.io/util/us-solar-cash-vs-lease-ppa-section-48e-30-percent-credit-after-25d-repeal-2026-calculator/">
+<link rel="stylesheet" href="../new-tools.css">
+<link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+<link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+<meta name="google-adsense-account" content="ca-pub-8830524482034754">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","G-QP5Q67GE5B");</script>
+<script>
+if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+  const adScript = document.createElement('script');
+  adScript.async = true;
+  adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+  adScript.crossOrigin = 'anonymous';
+  document.head.append(adScript);
+}
+</script>
+<style>
+:root {
+  --bg-color: #f8fafc;
+  --card-bg: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #475569;
+  --border-color: #e2e8f0;
+  --primary: #2563eb;
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-main);
+  line-height: 1.5;
+  padding: 0 1rem 3rem;
+  overflow-x: hidden;
+}
+.site-header {
+  max-width: 900px;
+  margin: 0 auto 1.5rem;
+  padding: 1rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+}
+.brand { font-size: 1.25rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+.site-header nav a { margin-left: 1rem; color: var(--text-muted); text-decoration: none; font-size: 0.95rem; }
+main { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem; width: 100%; overflow-x: hidden; }
+.hero h1 { font-size: 1.75rem; font-weight: 800; margin-bottom: 0.5rem; }
+.hero p { color: var(--text-muted); font-size: 1rem; }
+.panel {
+  overflow-x: hidden;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.grid-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; }
+.field { display: flex; flex-direction: column; gap: 0.35rem; min-width: 0; }
+.field label { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+.field input, .field select {
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #fdfdfd;
+}
+.results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-top: 1rem; }
+.result-card {
+  padding: 1rem;
+  border-radius: 8px;
+  background: #f1f5f9;
+  border-left: 4px solid var(--primary);
+  min-width: 0;
+}
+.result-card.highlight { border-left-color: var(--success); background: #ecfdf5; }
+.result-card.warning-border { border-left-color: var(--warning); background: #fffbeb; }
+.result-card .label { font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); margin-bottom: 0.25rem; }
+.result-card .val { font-size: 1.35rem; font-weight: 800; color: var(--text-main); }
+.result-card .sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem; }
+.alert {
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-top: 1rem;
+}
+.alert.warning { background: #fff1f2; border: 1px solid #fecdd3; color: #9f1239; }
+.chart-container { width: 100%; margin-top: 1.5rem; overflow: hidden; }
+.key-takeaways ul { padding-left: 1.25rem; margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.table-wrap { width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 1rem; }
+.statutory-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.statutory-table th, .statutory-table td { border: 1px solid var(--border-color); padding: 0.65rem 0.85rem; text-align: left; }
+.statutory-table th { background: #f8fafc; font-weight: 600; }
+.faq details { border-bottom: 1px solid var(--border-color); padding: 0.75rem 0; }
+.faq summary { font-weight: 600; cursor: pointer; color: var(--primary); }
+.faq p { margin-top: 0.5rem; font-size: 0.95rem; color: var(--text-muted); }
+.links { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem; }
+.links a { color: var(--primary); text-decoration: none; font-size: 0.9rem; }
+.emfls-ad-slot { background: #ffffff; border: 1px solid var(--border-color); border-radius: 8px; padding: 0.5rem; text-align: center; margin: 1rem 0; }
+.ad-label { font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
+footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); margin-top: 2rem; }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "US Solar Cash vs Lease/PPA Section 48E (30%) Credit Calculator",
+  "url": "https://emfls.github.io/util/us-solar-cash-vs-lease-ppa-section-48e-30-percent-credit-after-25d-repeal-2026-calculator/",
+  "applicationCategory": "FinancialApplication",
+  "operatingSystem": "All",
+  "browserRequirements": "Requires JavaScript. Requires HTML5.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "featureList": [
+    "2026 Section 25D residential solar credit repeal modeling (0% credit for homeowner purchase)",
+    "Commercial Section 48E Clean Electricity Investment Credit 30% pass-through modeling",
+    "25-year cumulative cash vs loan vs escalating lease vs Year-5 buyout comparison",
+    "Utility rate inflation and panel degradation compounding simulation",
+    "Break-even payback year and net lifetime family wealth calculations"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Did the Section 25D residential solar tax credit expire in 2026?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Under the 2025 federal tax reform act (H.R. 1), the Section 25D residential clean energy tax credit for homeowner-owned cash and loan solar systems expired on December 31, 2025, dropping federal direct credits to 0% for residential purchases in 2026."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why do solar leases and PPAs still receive the 30% tax credit in 2026?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Third-party owned (TPO) systems such as solar leases and Power Purchase Agreements (PPAs) are commercial installations owned by the solar provider. They qualify under Section 48E (Clean Electricity Investment Credit), which remains active at 30% through December 31, 2027."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is a solar lease better than buying cash in 2026 without the 25D credit?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Because solar companies can monetize the 30% Section 48E commercial credit and MACRS depreciation, they can offer Day-1 monthly lease rates lower than local utility electric bills. However, escalating leases (1.9%–2.9%/yr) can become expensive in later years unless a Year-5 buyout option is exercised."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does a Year-5 Fair Market Value (FMV) buyout work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Many prepaid and custom TPO lease structures allow the homeowner to purchase the system after Year 5 at Fair Market Value (typically 35%–40% of original cost). This allows the homeowner to capture the benefit of the commercial credit before taking full long-term ownership."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the typical break-even payback period for a 2026 cash solar system?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Without the 30% Section 25D federal credit, typical cash solar payback periods have lengthened from 6–8 years to approximately 9–13 years, depending on local utility electricity rates and annual net metering export values."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://emfls.github.io/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Calculators",
+      "item": "https://emfls.github.io/util/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "US Solar Section 48E Credit Calculator",
+      "item": "https://emfls.github.io/util/us-solar-cash-vs-lease-ppa-section-48e-30-percent-credit-after-25d-repeal-2026-calculator/"
+    }
+  ]
+}
+</script>
+<style id="emfls-cro-calc-first-b2-v1">
+/* EMFLS CRO B2 — mobile calculator-first ordering for non-Patch-B EN templates (CSS-only, reversible) */
+@media (max-width: 760px) {
+  main:has(form, input, select),
+  .tool-shell:has(form, input, select),
+  .container:has(form, input, select) {
+    display: flex;
+    flex-direction: column;
+  }
+  main:has(form, input, select) > *,
+  .tool-shell:has(form, input, select) > *,
+  .container:has(form, input, select) > * {
+    order: 4;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  main:has(form, input, select) > nav,
+  main:has(form, input, select) > header,
+  main:has(form, input, select) > .hero,
+  main:has(form, input, select) > h1,
+  main:has(form, input, select) > .lead,
+  .tool-shell:has(form, input, select) > nav,
+  .tool-shell:has(form, input, select) > header,
+  .tool-shell:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > h1,
+  .tool-shell:has(form, input, select) > .lead,
+  .container:has(form, input, select) > nav,
+  .container:has(form, input, select) > header,
+  .container:has(form, input, select) > .hero,
+  .container:has(form, input, select) > h1,
+  .container:has(form, input, select) > .lead {
+    order: 0;
+  }
+  main:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .tool-shell:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .container:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav) {
+    order: 1;
+  }
+  main:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .tool-shell:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .container:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container) {
+    order: 2;
+  }
+  main:has(form, input, select) > .emfls-next-check,
+  .tool-shell:has(form, input, select) > .emfls-next-check,
+  .container:has(form, input, select) > .emfls-next-check {
+    order: 2;
+  }
+  main:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .tool-shell:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .container:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]) {
+    order: 3;
+  }
+  main:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > .hero,
+  .container:has(form, input, select) > header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <a href="/" class="brand">EMFLS</a>
+  <nav>
+    <a href="/util/">Calculators</a>
+    <a href="/util/2026-global-tax-finance-calculators/">Articles</a>
+  </nav>
+</header>
+<main>
+  <section class="hero">
+    <h1>US Solar Cash vs Lease/PPA Section 48E (30%) Credit Calculator</h1>
+    <p>Model the 2026 solar financing policy shock: Compare cash purchase (0% Section 25D credit) against third-party owned leases/PPAs capturing the 30% Section 48E commercial credit.</p>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+  </aside>
+
+  <section class="panel">
+    <div class="grid-form">
+      <div class="field">
+        <label for="systemSizeKw">System Size (kW DC)</label>
+        <input type="number" inputmode="decimal" id="systemSizeKw" value="8.5" min="2.0" max="50.0" step="0.5">
+      </div>
+      <div class="field">
+        <label for="grossSystemCost">Gross System Cost ($)</label>
+        <input type="number" inputmode="decimal" id="grossSystemCost" value="27500" min="5000" max="200000" step="500">
+      </div>
+      <div class="field">
+        <label for="utilityRateKwh">Utility Electricity Rate ($/kWh)</label>
+        <input type="number" inputmode="decimal" id="utilityRateKwh" value="0.22" min="0.05" max="0.75" step="0.01">
+      </div>
+      <div class="field">
+        <label for="utilityInflationRate">Utility Rate Inflation (%/yr)</label>
+        <input type="number" inputmode="decimal" id="utilityInflationRate" value="4.0" min="0.0" max="10.0" step="0.5">
+      </div>
+      <div class="field">
+        <label for="leaseYear1MonthlyPmt">Lease/PPA Year 1 Payment ($/mo)</label>
+        <input type="number" inputmode="decimal" id="leaseYear1MonthlyPmt" value="115" min="20" max="1000" step="5">
+      </div>
+      <div class="field">
+        <label for="leaseEscalatorRate">Lease Annual Escalator (%)</label>
+        <input type="number" inputmode="decimal" id="leaseEscalatorRate" value="1.9" min="0.0" max="3.5" step="0.1">
+      </div>
+      <div class="field">
+        <label for="loanInterestRate">Solar Loan APR (%)</label>
+        <input type="number" inputmode="decimal" id="loanInterestRate" value="7.5" min="1.0" max="18.0" step="0.25">
+      </div>
+    </div>
+
+    <div class="results-grid">
+      <div class="result-card warning-border">
+        <div class="label">Lost Section 25D Credit</div>
+        <div class="val" id="resLost25d">$8,250</div>
+        <div class="sub">0% for homeowner cash/loan in 2026</div>
+      </div>
+      <div class="result-card highlight">
+        <div class="label">Section 48E Commercial Credit</div>
+        <div class="val" id="resSec48e">$8,250</div>
+        <div class="sub">30% captured by TPO Lease/PPA</div>
+      </div>
+      <div class="result-card">
+        <div class="label">25-Year Net Cash Savings</div>
+        <div class="val" id="resCash25Yr">$0</div>
+        <div class="sub">After full system payoff</div>
+      </div>
+      <div class="result-card">
+        <div class="label">Cash Break-Even Year</div>
+        <div class="val" id="resCashBreakEven">-</div>
+        <div class="sub">Without 25D tax subsidy</div>
+      </div>
+    </div>
+
+    <div class="results-grid" style="margin-top:1.5rem;">
+      <div class="result-card highlight">
+        <div class="label">25-Year Net Lease Savings</div>
+        <div class="val" id="resLease25Yr">$0</div>
+        <div class="sub">With 30% credit passed through</div>
+      </div>
+      <div class="result-card highlight">
+        <div class="label">TPO Lease + Yr 5 Buyout</div>
+        <div class="val" id="resBuyout25Yr">$0</div>
+        <div class="sub">Maximum lifetime wealth strategy</div>
+      </div>
+    </div>
+
+    <div class="chart-container" id="savingsChart"></div>
+  </section>
+
+  <section class="panel key-takeaways" aria-labelledby="takeaways-title">
+    <h2 id="takeaways-title">Answer-First: 2026 Solar Financing Policy Rules</h2>
+    <ul>
+      <li><strong>Section 25D Repeal (0% Cash Credit):</strong> Under 2025 federal legislation (H.R. 1), the homeowner residential solar credit expired December 31, 2025. Homeowners who buy with cash or solar loans receive zero federal tax credit in 2026.</li>
+      <li><strong>Section 48E Commercial Credit (30% Active):</strong> Third-party owned (TPO) systems (leases and PPAs) are owned by commercial entities and remain eligible for the 30% Clean Electricity Investment Credit through 2027.</li>
+      <li><strong>The TPO + Year-5 Buyout Arbitrage:</strong> By entering a third-party lease, the solar developer captures the 30% §48E credit and MACRS depreciation. If the contract includes a Year-5 Fair Market Value (FMV) buyout, the homeowner can purchase the system at a steep discount, capturing the tax credit indirectly.</li>
+      <li><strong>Cash Payback Extension:</strong> Without the 30% federal credit, direct cash purchase break-even periods have lengthened by 3 to 5 years, making utility escalation rates the decisive variable in solar ROI.</li>
+    </ul>
+  </section>
+
+  <section class="panel" aria-labelledby="schedule-title">
+    <h2 id="schedule-title">25-Year Cumulative Savings Trajectory</h2>
+    <div class="table-wrap" role="region" tabindex="0" aria-label="25-Year Cumulative Savings Schedule">
+      <table class="statutory-table">
+        <thead>
+          <tr>
+            <th>Timeline</th>
+            <th>Solar Output</th>
+            <th>Cash Cumulative</th>
+            <th>Lease Cumulative</th>
+            <th>Yr-5 Buyout Cumulative</th>
+          </tr>
+        </thead>
+        <tbody id="scheduleBody">
+          <tr><td colspan="5" style="text-align:center;">Calculating schedule...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel faq" aria-labelledby="faq-title">
+    <h2 id="faq-title">Frequently Asked Questions</h2>
+    <details>
+      <summary>Did the Section 25D residential solar tax credit expire in 2026?</summary>
+      <p>Under the 2025 federal tax reform act (H.R. 1), the Section 25D residential clean energy tax credit for homeowner-owned cash and loan solar systems expired on December 31, 2025, dropping federal direct credits to 0% for residential purchases in 2026.</p>
+    </details>
+    <details>
+      <summary>Why do solar leases and PPAs still receive the 30% tax credit in 2026?</summary>
+      <p>Third-party owned (TPO) systems such as solar leases and Power Purchase Agreements (PPAs) are commercial installations owned by the solar provider. They qualify under Section 48E (Clean Electricity Investment Credit), which remains active at 30% through December 31, 2027.</p>
+    </details>
+    <details>
+      <summary>Is a solar lease better than buying cash in 2026 without the 25D credit?</summary>
+      <p>Because solar companies can monetize the 30% Section 48E commercial credit and MACRS depreciation, they can offer Day-1 monthly lease rates lower than local utility electric bills. However, escalating leases (1.9%–2.9%/yr) can become expensive in later years unless a Year-5 buyout option is exercised.</p>
+    </details>
+    <details>
+      <summary>How does a Year-5 Fair Market Value (FMV) buyout work?</summary>
+      <p>Many prepaid and custom TPO lease structures allow the homeowner to purchase the system after Year 5 at Fair Market Value (typically 35%–40% of original cost). This allows the homeowner to capture the benefit of the commercial credit before taking full long-term ownership.</p>
+    </details>
+    <details>
+      <summary>What is the typical break-even payback period for a 2026 cash solar system?</summary>
+      <p>Without the 30% Section 25D federal credit, typical cash solar payback periods have lengthened from 6–8 years to approximately 9–13 years, depending on local utility electricity rates and annual net metering export values.</p>
+    </details>
+  </section>
+
+  <section class="panel" aria-labelledby="scope-title">
+    <h2 id="scope-title">Calculation assumptions and methodology</h2>
+    <p>Calculations assume standard PV solar degradation of 0.5% per year and local utility rate inflation. Section 48E credits reflect statutory rates for commercial clean energy properties placed in service before 2028.</p>
+    <nav class="links" aria-label="Related calculators">
+      <a href="/util/compound-interest/">Compound Interest Calculator</a>
+      <a href="/util/loan-payment-calculator/">Loan Payment Calculator</a>
+      <a href="/util/heloc-vs-cashout-refinance-calculator/">HELOC vs Cash-Out Refinance</a>
+    </nav>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+  </aside>
+  <footer>Estimate only · emfls.github.io</footer>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 United States Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for United States:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/us-solo-401k-vs-sep-ira-contribution-limit-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Solo 401(k) vs SEP IRA Calculator ($72,000 / $83,250)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare 2026 Solo 401(k) and SEP IRA limits, the $11,250 age 60–63 catch-up, Mega Backdoor R...</span>
+    </a>
+    <a href="/util/us-solo-401k-vs-sep-ira-self-employed-72000-contribution-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Solo 401(k) vs SEP IRA Calculator | $72,000–$83,250</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare 2026 Solo 401(k) and SEP IRA contributions for Schedule C profit or owner W-2 wages....</span>
+    </a>
+    <a href="/util/us-student-loan-forgiveness-tax-bomb-1099-c-form-982-insolvency-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Student Loan Forgiveness Tax Bomb Calculator | Form 982</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate 2026 federal and state tax on student loan forgiveness, Form 982 insolvency savings...</span>
+    </a>
+    <a href="/util/us-student-loan-interest-deduction-2500-magi-phaseout-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Student Loan Interest Deduction Calculator | $2,500 Limit and MAGI Phase-Out</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate your 2026 student loan interest deduction up to $2,500, see what the MAGI phase-out...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+<script type="module" src="./app.js"></script>
+</body>
+</html>

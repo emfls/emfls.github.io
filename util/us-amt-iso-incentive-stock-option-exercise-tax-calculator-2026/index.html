@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2026 ISO AMT Calculator | Exercise &amp; Hold Crossover</title>
+  <meta name="description" content="Estimate 2026 federal AMT on incentive stock options, model the 50% exemption phase-out, and find the maximum ISO spread and shares with zero AMT.">
+  <link rel="canonical" href="https://emfls.github.io/util/us-amt-iso-incentive-stock-option-exercise-tax-calculator-2026/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="EMFLS">
+  <meta property="og:url" content="https://emfls.github.io/util/us-amt-iso-incentive-stock-option-exercise-tax-calculator-2026/">
+  <meta property="og:title" content="2026 ISO AMT Calculator">
+  <meta property="og:description" content="Estimate federal AMT on an ISO exercise and find your zero-AMT crossover under the 2026 rules.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="2026 ISO AMT Calculator">
+  <meta name="twitter:description" content="Estimate your ISO exercise AMT, zero-AMT share limit, and potential minimum tax credit.">
+  <link rel="stylesheet" href="../new-tools.css">
+  <link rel="preconnect" href="https://www.googletagmanager.com">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { window.dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 ISO AMT Calculator",
+    "url": "https://emfls.github.io/util/us-amt-iso-incentive-stock-option-exercise-tax-calculator-2026/",
+    "description": "Estimate 2026 US federal alternative minimum tax and the zero-AMT crossover for an incentive stock option exercise and hold.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript",
+    "inLanguage": "en-US",
+    "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type": "Question", "name": "How does an ISO exercise create AMT?", "acceptedAnswer": {"@type": "Answer", "text": "For a typical vested ISO exercise with shares held past year-end, multiply the exercise-date fair market value minus the strike price by the shares exercised, with a floor of zero. Add that bargain element to alternative minimum taxable income. Additional AMT is the positive difference between tentative minimum tax and the regular tax comparison amount."}},
+      {"@type": "Question", "name": "What changed in the 2026 AMT exemption phase-out?", "acceptedAnswer": {"@type": "Answer", "text": "The exemption falls by 50 cents per dollar of AMTI above $500,000 for single, head of household, and married filing separately, or $1 million for married filing jointly. When the exemption phases out, another dollar can increase taxable AMTI by $1.50. That produces a 39% or 42% tentative marginal rate at 26% or 28%, respectively. In the 2026 phase-out bands shown here, the 28% bracket already applies."}},
+      {"@type": "Question", "name": "How is the zero-AMT share limit calculated?", "acceptedAnswer": {"@type": "Answer", "text": "The calculator finds the largest spread in whole cents that keeps tentative minimum tax at or below regular tax. It divides that spread by the positive spread per share and rounds down to a whole share. Existing AMT makes a zero-AMT exercise unavailable. If the per-share spread is zero and baseline AMT is zero, AMT sets no share limit."}},
+      {"@type": "Question", "name": "What makes an ISO sale qualifying or disqualifying?", "acceptedAnswer": {"@type": "Answer", "text": "To qualify, sell after both the one-year anniversary of share transfer at exercise and the two-year anniversary of grant. A qualifying gain is generally long-term capital gain for regular tax. An earlier sale can create ordinary income, and gain beyond the ordinary income portion may be capital gain. A same-year sale generally eliminates the ISO exercise adjustment for those shares."}},
+      {"@type": "Question", "name": "Can I recover ISO-related AMT through Form 8801?", "acceptedAnswer": {"@type": "Answer", "text": "AMT attributable to the ISO deferral may generate a credit for future years. The estimate subtracts AMT on exclusion items such as the standard deduction or SALT from total modeled AMT. Future credit use generally depends on how much regular tax exceeds tentative minimum tax in that year. Unused eligible credit may carry forward."}}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "EMFLS", "item": "https://emfls.github.io/"},
+      {"@type": "ListItem", "position": 2, "name": "Calculators", "item": "https://emfls.github.io/util/"},
+      {"@type": "ListItem", "position": 3, "name": "2026 ISO AMT Calculator", "item": "https://emfls.github.io/util/us-amt-iso-incentive-stock-option-exercise-tax-calculator-2026/"}
+    ]
+  }
+  </script>
+  <style>
+    [hidden] { display: none !important; }
+    .hero nav { display: flex; flex-wrap: wrap; gap: .55rem; margin-bottom: 1rem; font-size: .9rem; }
+    .hero nav a { color: inherit; }
+    .iso-tool .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .iso-tool .grid > div { min-width: 0; }
+    .iso-tool input, .iso-tool select { min-width: 0; }
+    .iso-tool a:focus-visible, .iso-tool summary:focus-visible, .table-scroll:focus-visible { outline: 3px solid #d97706; outline-offset: 3px; }
+    .takeaways { border-inline-start: 4px solid #2563eb; }
+    .takeaways ul { padding-inline-start: 1.3em; margin-bottom: 0; }
+    .takeaways li + li { margin-top: .35rem; }
+    .risk { background: #fff7e6; border-inline-start: 4px solid #b45309; }
+    .risk p:last-child { margin-bottom: 0; }
+    .result { white-space: normal; }
+    .result h3 { margin: 0; }
+    .metrics { margin: .8rem 0; }
+    .metrics div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, auto); gap: .7rem; padding: .42rem 0; border-bottom: 1px solid #bfd3ef; }
+    .metrics dd { margin: 0; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .primary dd { font-size: 1.24rem; color: #173f8a; }
+    .result details { margin-top: .9rem; }
+    summary { cursor: pointer; font-weight: 700; }
+    .table-scroll { overflow-x: auto; }
+    table { border-collapse: collapse; width: 100%; font-variant-numeric: tabular-nums; }
+    th, td { text-align: right; padding: .55rem .6rem; border-bottom: 1px solid #d9e0ea; }
+    th:first-child { text-align: left; }
+    .ad-slot { margin: 24px auto; width: 100%; min-height: 280px; color: #cbd5e1; text-align: center; }
+    .ad-label { font-size: .75rem; line-height: 24px; }
+    .ad-slot ins { display: block; width: 100%; height: 280px; min-height: 280px; }
+    @media (max-width: 650px) {
+      .iso-tool .grid { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 375px) {
+      .metrics div { grid-template-columns: minmax(0, 1fr); gap: .1rem; }
+      .metrics dd { text-align: left; }
+    }
+  </style>
+  <meta property="og:image" content="https://emfls.github.io/assets/og/us-amt-iso-incentive-stock-option-exercise-tax-calculator-2026.webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:image" content="https://emfls.github.io/assets/og/us-amt-iso-incentive-stock-option-exercise-tax-calculator-2026.webp">
+<style id="emfls-cro-calc-first-v1">
+/* EMFLS CRO v1 — calculator-first on mobile (CSS-only, no DOM/content/JS change; reversible by deleting this <style>) */
+@media (max-width: 760px) {
+  main.tool-shell { display: flex; flex-direction: column; }
+  main.tool-shell > * { order: 3; }
+  main.tool-shell > .hero, main.tool-shell > header, main.tool-shell > nav { order: 0; }
+  main.tool-shell > section.takeaways + section.panel { order: 1; }
+  main.tool-shell > section.takeaways + section.panel + aside.emfls-ad-slot { order: 1; }
+  main.tool-shell > section.takeaways { order: 2; }
+}
+</style>
+</head>
+<body>
+  <main class="tool-shell iso-tool">
+    <header class="hero">
+      <nav aria-label="Breadcrumb">
+        <a href="/">EMFLS</a><span aria-hidden="true">›</span><a href="/util/">Calculators</a><span aria-hidden="true">›</span><span aria-current="page">ISO AMT</span>
+      </nav>
+      <h1>2026 ISO AMT Calculator</h1>
+      <p>Estimate the federal tax cost of exercising and holding incentive stock options. See how many shares fit below the 2026 alternative minimum tax crossover.</p>
+    </header>
+
+    <section class="panel takeaways" aria-labelledby="takeaways">
+      <h2 id="takeaways">Key takeaways</h2>
+      <ul>
+        <li><strong><a href="#calc-heading">Find the zero-AMT cutoff.</a></strong> Extra AMT starts when tentative minimum tax exceeds regular federal income tax.</li>
+        <li><strong>The exemption phases out twice as fast in 2026.</strong> Each $1 of AMTI above the threshold removes $0.50 of exemption. In the actual 2026 phase-out bands, the resulting marginal tentative AMT rate is 42%.</li>
+        <li><strong>Budget cash for exercise and tax.</strong> Holding shares can trigger AMT before you receive any sale proceeds.</li>
+      </ul>
+    </section>
+
+    <section class="panel" aria-labelledby="calc-heading">
+      <h2 id="calc-heading">Estimate your exercise</h2>
+      <form id="iso-form" autocomplete="off" novalidate>
+        <div class="grid">
+          <div>
+            <label for="status">Filing status</label>
+            <select id="status">
+              <option value="single" selected>Single</option>
+              <option value="hoh">Head of household</option>
+              <option value="mfj">Married filing jointly</option>
+              <option value="mfs">Married filing separately</option>
+            </select>
+          </div>
+          <div>
+            <label for="ordinaryAgi">2026 ordinary adjusted gross income ($)</label>
+            <input id="ordinaryAgi" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="180000" required aria-describedby="agi-note">
+            <p class="note" id="agi-note">Before deductions and the ISO adjustment. Use combined AGI for a joint return.</p>
+          </div>
+          <div>
+            <label for="deduction">Deduction method</label>
+            <select id="deduction">
+              <option value="standard" selected>Basic standard deduction</option>
+              <option value="itemized">Itemized deductions</option>
+            </select>
+          </div>
+          <div id="itemized-fields" class="full grid" hidden>
+            <div>
+              <label for="itemizedDeductions">Allowed itemized deductions ($)</label>
+              <input id="itemizedDeductions" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="28000" required disabled aria-describedby="deduction-note">
+              <p class="note" id="deduction-note">Use your allowed Schedule A total after applicable limits, including any reduction for the 37% bracket.</p>
+            </div>
+            <div>
+              <label for="salt">Deducted SALT and other Schedule A taxes ($)</label>
+              <input id="salt" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="12000" required disabled aria-describedby="salt-note">
+              <p class="note" id="salt-note">Use deductible taxes from Schedule A line 7, generally capped SALT. If you file separately and your spouse itemizes, select itemized even if your own deductions are $0.</p>
+            </div>
+          </div>
+          <div>
+            <label for="strikePrice">Exercise (strike) price per share ($)</label>
+            <input id="strikePrice" type="number" inputmode="decimal" min="0" max="100000" step="0.01" value="5.00" required>
+          </div>
+          <div>
+            <label for="fmvPrice">Fair market value per share at exercise ($)</label>
+            <input id="fmvPrice" type="number" inputmode="decimal" min="0" max="100000" step="0.01" value="30.00" required>
+          </div>
+          <div>
+            <label for="sharesExercised">Shares to exercise and hold</label>
+            <input id="sharesExercised" type="number" inputmode="decimal" min="0" max="1000000" step="1" value="2500" required>
+          </div>
+        </div>
+      </form>
+      <p id="error" class="error" role="alert" hidden></p>
+      <noscript><p>Enable JavaScript to calculate your exercise estimate.</p></noscript>
+      <div id="results" class="result" hidden>
+        <h3>2026 exercise and hold estimate</h3>
+        <div aria-live="polite" aria-atomic="true">
+          <dl class="metrics primary">
+            <div><dt>Additional federal AMT</dt><dd id="amtOwed"></dd></div>
+            <div><dt>Maximum ISO spread with zero AMT</dt><dd id="maxIsoSpread"></dd></div>
+            <div><dt>Maximum whole shares with zero AMT</dt><dd id="maxIsoShares"></dd></div>
+          </dl>
+          <p id="crossover-note" class="note"></p>
+        </div>
+        <dl class="metrics">
+          <div><dt>Exercise cash cost</dt><dd id="exerciseCost"></dd></div>
+          <div><dt>ISO bargain element</dt><dd id="isoSpread"></dd></div>
+          <div><dt>Estimated new minimum tax credit</dt><dd id="estimatedNewMinimumTaxCredit"></dd></div>
+        </dl>
+        <details>
+          <summary>Regular tax and Form 6251 breakdown</summary>
+          <dl class="metrics">
+            <div><dt>Deduction used for regular tax</dt><dd id="deductionAmount"></dd></div>
+            <div><dt>Deduction add-back for AMT</dt><dd id="deductionAddBack"></dd></div>
+            <div><dt>Regular taxable income</dt><dd id="regularTaxableIncome"></dd></div>
+            <div><dt>Regular federal income tax</dt><dd id="regularTax"></dd></div>
+            <div><dt>AMTI (line 4)</dt><dd id="amti"></dd></div>
+            <div id="mfs-row" hidden><dt>Separate-filer adjustment included above</dt><dd id="mfsAdjustment"></dd></div>
+            <div><dt>Remaining exemption (line 5)</dt><dd id="exemption"></dd></div>
+            <div><dt>AMTI after exemption (line 6)</dt><dd id="amtTaxableIncome"></dd></div>
+            <div><dt>Tentative minimum tax (line 9)</dt><dd id="tentativeMinimumTax"></dd></div>
+            <div><dt>AMT before this exercise</dt><dd id="baselineAmt"></dd></div>
+          </dl>
+        </details>
+      </div>
+    </section>
+
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="Next essential calculators" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">Next Essential Check</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">Run these 2 companion checks with the numbers you just calculated:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/util/us-capital-gains-niit-3-8-tax-loss-harvesting-calculator-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">Capital Gains &amp; NIIT 2026 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">Compare disqualifying sale vs holding 1 year for LTCG rates.</span></a>
+    <a href="/util/us-estimated-quarterly-tax-safe-harbor-1040es-2026-calculator/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">IRS Quarterly Safe Harbor &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">Avoid Form 2210 penalties on large ISO exercise AMT bills.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+
+    <!-- Populate data-ad-slot for both units with IDs issued to the specified publisher before requesting display ads. -->
+    <aside class="ad-slot" aria-label="Advertisement">
+      <div class="ad-label">Advertisement</div>
+      <ins data-ad-slot="6016035748" class="adsbygoogle" data-ad-client="ca-pub-8830524482034754" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    </aside>
+
+    <aside class="panel risk" aria-labelledby="risk-heading">
+      <h2 id="risk-heading">A price drop can leave you with a tax bill</h2>
+      <p>AMT on a typical exercise and hold uses the share value at exercise. If the shares fall after year-end or remain illiquid, you may still owe tax based on the earlier value. A future credit may take years to use.</p>
+      <p><strong>Check both holding periods before selling.</strong> A qualifying sale occurs after both the one-year anniversary of share transfer at exercise and the two-year anniversary of grant. Its gain is generally long-term capital gain for regular tax. An earlier sale may create ordinary income plus a capital gain or loss. A sale in the exercise year generally removes the AMT exercise adjustment for the shares sold.</p>
+    </aside>
+
+    <section class="panel" aria-labelledby="parameters">
+      <h2 id="parameters">Official 2026 AMT parameters</h2>
+      <div class="table-scroll" tabindex="0" role="region" aria-label="Scrollable AMT parameters table">
+        <table>
+          <thead>
+            <tr><th scope="col">Filing status</th><th scope="col">Basic standard deduction</th><th scope="col">AMT exemption</th><th scope="col">50% phase-out starts</th><th scope="col">Exemption reaches $0</th><th scope="col">26% bracket ends</th></tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row">Single</th><td>$16,100</td><td>$90,100</td><td>$500,000</td><td>$680,200</td><td>$244,500</td></tr>
+            <tr><th scope="row">Head of household</th><td>$24,150</td><td>$90,100</td><td>$500,000</td><td>$680,200</td><td>$244,500</td></tr>
+            <tr><th scope="row">Married filing jointly</th><td>$32,200</td><td>$140,200</td><td>$1,000,000</td><td>$1,280,400</td><td>$244,500</td></tr>
+            <tr><th scope="row">Married filing separately</th><td>$16,100</td><td>$70,100</td><td>$500,000</td><td>$640,200</td><td>$122,250</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>The phase-out thresholds use AMTI before the exemption. The 28% rate applies above the 26% cutoff, which uses AMTI after the exemption. Separate filers above $640,200 add 50% of the excess to AMTI, capped at $70,100.</p>
+      <p>Sources <a href="https://www.irs.gov/irb/2025-45_IRB">IRS Revenue Procedure 2025-32</a>, <a href="https://www.govinfo.gov/content/pkg/PLAW-119publ21/html/PLAW-119publ21.htm">Public Law 119-21 §70107</a>, <a href="https://www.irs.gov/pub/irs-dft/i6251--dft.pdf">2026 Form 6251 draft instructions</a>, <a href="https://www.irs.gov/forms-pubs/about-form-8801">Form 8801</a>, and <a href="https://www.irs.gov/publications/p525">IRS Publication 525</a>.</p>
+    </section>
+
+    <section class="panel" aria-labelledby="scope">
+      <h2 id="scope">What the estimate covers</h2>
+      <p>The estimate uses the 2026 ordinary-income rate schedules before credits. It adds back either the basic standard deduction or the entered Schedule A taxes. It assumes the entered options qualify as ISOs, the shares are vested at exercise and held through year-end, and the ISO spread is the only AMT deferral item.</p>
+      <p>Actual return calculations can differ because of IRS tax-table and return rounding, preferential income rates, other deductions or AMT adjustments, and credits. The estimate excludes state taxes, payroll taxes, sale proceeds, and prior-year minimum tax credit balances. The share limit is a tax calculation and may exceed your available grants.</p>
+    </section>
+
+    <aside class="ad-slot" aria-label="Advertisement">
+      <div class="ad-label">Advertisement</div>
+      <ins data-ad-slot="3423411629" class="adsbygoogle" data-ad-client="ca-pub-8830524482034754" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    </aside>
+
+    <section class="panel faq" aria-labelledby="faq">
+      <h2 id="faq">Frequently asked questions</h2>
+      <details>
+        <summary>How does an ISO exercise create AMT?</summary>
+        <p>For a typical vested ISO exercise with shares held past year-end, multiply the exercise-date fair market value minus the strike price by the shares exercised, with a floor of zero. Add that bargain element to alternative minimum taxable income. Additional AMT is the positive difference between tentative minimum tax and the regular tax comparison amount.</p>
+      </details>
+      <details>
+        <summary>What changed in the 2026 AMT exemption phase-out?</summary>
+        <p>The exemption falls by 50 cents per dollar of AMTI above $500,000 for single, head of household, and married filing separately, or $1 million for married filing jointly. When the exemption phases out, another dollar can increase taxable AMTI by $1.50. That produces a 39% or 42% tentative marginal rate at 26% or 28%, respectively. In the 2026 phase-out bands shown here, the 28% bracket already applies.</p>
+      </details>
+      <details>
+        <summary>How is the zero-AMT share limit calculated?</summary>
+        <p>The calculator finds the largest spread in whole cents that keeps tentative minimum tax at or below regular tax. It divides that spread by the positive spread per share and rounds down to a whole share. Existing AMT makes a zero-AMT exercise unavailable. If the per-share spread is zero and baseline AMT is zero, AMT sets no share limit.</p>
+      </details>
+      <details>
+        <summary>What makes an ISO sale qualifying or disqualifying?</summary>
+        <p>To qualify, sell after both the one-year anniversary of share transfer at exercise and the two-year anniversary of grant. A qualifying gain is generally long-term capital gain for regular tax. An earlier sale can create ordinary income, and gain beyond the ordinary income portion may be capital gain. A same-year sale generally eliminates the ISO exercise adjustment for those shares.</p>
+      </details>
+      <details>
+        <summary>Can I recover ISO-related AMT through Form 8801?</summary>
+        <p>AMT attributable to the ISO deferral may generate a credit for future years. The estimate subtracts AMT on exclusion items such as the standard deduction or SALT from total modeled AMT. Future credit use generally depends on how much regular tax exceeds tentative minimum tax in that year. Unused eligible credit may carry forward.</p>
+      </details>
+    </section>
+
+    <section class="panel" aria-labelledby="related">
+      <h2 id="related">Related calculators</h2>
+      <nav class="links" aria-label="Related calculators">
+        <a href="/util/irs-tax-brackets-401k-catchup-calculator/">IRS tax brackets and 401(k)</a>
+        <a href="/util/compound-interest/">Compound interest</a>
+        <a href="/util/roi-calculator/">Return on investment</a>
+      </nav>
+    </section>
+  
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 United States Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for United States:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/us-amt-iso-stock-option-exercise-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 ISO Stock Option Exercise &amp; AMT Crossover Calculator</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026 statutory calculator for 2026 ISO Stock Option Exercise &amp; AMT Crossover Calculator.</span>
+    </a>
+    <a href="/util/us-augusta-rule-section-280a-14-day-tax-free-home-rental-scorp-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Augusta Rule Calculator | Section 280A(g) 14-Day Home Rental</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate 2026 Augusta Rule home-rental tax savings for an S corp, C corp or partnership. Com...</span>
+    </a>
+    <a href="/util/us-auto-loan-interest-deduction-obbba-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Auto Loan Interest Tax Deduction Calculator | OBBBA</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate the 2026 federal auto loan interest deduction, $10,000 cap, MAGI phaseout, 2025–202...</span>
+    </a>
+    <a href="/util/us-backdoor-roth-ira-pro-rata-rule-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Backdoor Roth IRA Pro-Rata Rule Calculator</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026 statutory calculator for 2026 Backdoor Roth IRA Pro-Rata Rule Calculator.</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+  <footer>Federal tax planning estimate · EMFLS</footer>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

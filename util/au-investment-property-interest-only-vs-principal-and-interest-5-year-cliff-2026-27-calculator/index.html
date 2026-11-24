@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AU Investment Property Interest-Only vs P&I 5-Year Cliff Calculator 2026–27</title>
+  <meta name="description" content="Calculate Australian investment property 5-year Interest-Only (IO) repayment cliff jump (+20%–35%), tax deductions, and non-deductible home loan offset arbitrage.">
+  <link rel="canonical" href="https://emfls.github.io/util/au-investment-property-interest-only-vs-principal-and-interest-5-year-cliff-2026-27-calculator/">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","G-QP5Q67GE5B");</script>
+  <script>
+  if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+    const adScript = document.createElement('script');
+    adScript.async = true;
+    adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+    adScript.crossOrigin = 'anonymous';
+    document.head.append(adScript);
+  }
+  </script>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card: #111827;
+      --border: #1e293b;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --primary: #3b82f6;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 1rem;
+    }
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+    h1 {
+      font-size: 1.6rem;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    p.lead {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      overflow-x: hidden;
+    }
+    h2 {
+      font-size: 1.15rem;
+      margin-bottom: 1rem;
+      color: #e5e7eb;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+    input, select {
+      width: 100%;
+      background: #1f2937;
+      border: 1px solid #374151;
+      color: #fff;
+      padding: 0.6rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+    input[type="checkbox"] {
+      width: auto;
+      margin-right: 0.5rem;
+      transform: scale(1.2);
+    }
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      color: #fff;
+      font-size: 0.9rem;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .results-hero {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    .kpi-card {
+      background: #1f2937;
+      border: 1px solid #374151;
+      border-radius: 6px;
+      padding: 0.85rem;
+    }
+    .kpi-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .kpi-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      margin-top: 0.25rem;
+    }
+    .kpi-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+    .cliff-warning {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid var(--danger);
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+      color: #f87171;
+    }
+    .table-wrap {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      display: block;
+      margin: 1rem 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      min-width: 460px;
+    }
+    th, td {
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #1f2937;
+    }
+    th {
+      background: #1f2937;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .chart-box {
+      background: #111827;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem;
+      margin-top: 1rem;
+    }
+    details {
+      background: #111827;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      padding: 0.75rem 1rem;
+    }
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #e5e7eb;
+    }
+    details p {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .emfls-ad-slot {
+      margin: 1.5rem 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem;
+      text-align: center;
+    }
+    .ad-label {
+      font-size: 0.7rem;
+      color: #4b5563;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.25rem;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .links a {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      margin-right: 1rem;
+    }
+    .links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "AU Investment Property Interest-Only vs P&I 5-Year Cliff Calculator 2026–27",
+    "url": "https://emfls.github.io/util/au-investment-property-interest-only-vs-principal-and-interest-5-year-cliff-2026-27-calculator/",
+    "description": "Calculate Australian mortgage repayments when a 5-year Interest-Only (IO) investment loan converts to Principal & Interest, triggering a repayment cliff.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the 5-year Interest-Only repayment cliff in Australia?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "When an Australian 5-year Interest-Only loan term expires, the borrower can no longer just pay interest. The full remaining principal must be repaid over the remaining 25 years (instead of 30), resulting in an immediate 20% to 35% jump in monthly mortgage payments."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why do property investors use Interest-Only loans despite higher interest rates?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Investment loan interest is 100% tax-deductible in Australia. Investors often minimize payments on deductible investment debt so they can funnel excess cash into their non-deductible home loan offset account, saving non-deductible interest."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can you extend an Interest-Only loan beyond 5 years?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Lenders may allow an extension or refinancing for another 5-year IO period, but borrowers must pass current APRA serviceability assessment buffers (typically assessed at current rate + 3.00%), which can be difficult in high-interest rate environments."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Calculators",
+        "item": "https://emfls.github.io/util/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "AU Investment Property IO vs P&I Cliff Calculator",
+        "item": "https://emfls.github.io/util/au-investment-property-interest-only-vs-principal-and-interest-5-year-cliff-2026-27-calculator/"
+      }
+    ]
+  }
+  </script>
+<style id="emfls-cro-calc-first-b2-v1">
+/* EMFLS CRO B2 — mobile calculator-first ordering for non-Patch-B EN templates (CSS-only, reversible) */
+@media (max-width: 760px) {
+  main:has(form, input, select),
+  .tool-shell:has(form, input, select),
+  .container:has(form, input, select) {
+    display: flex;
+    flex-direction: column;
+  }
+  main:has(form, input, select) > *,
+  .tool-shell:has(form, input, select) > *,
+  .container:has(form, input, select) > * {
+    order: 4;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  main:has(form, input, select) > nav,
+  main:has(form, input, select) > header,
+  main:has(form, input, select) > .hero,
+  main:has(form, input, select) > h1,
+  main:has(form, input, select) > .lead,
+  .tool-shell:has(form, input, select) > nav,
+  .tool-shell:has(form, input, select) > header,
+  .tool-shell:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > h1,
+  .tool-shell:has(form, input, select) > .lead,
+  .container:has(form, input, select) > nav,
+  .container:has(form, input, select) > header,
+  .container:has(form, input, select) > .hero,
+  .container:has(form, input, select) > h1,
+  .container:has(form, input, select) > .lead {
+    order: 0;
+  }
+  main:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .tool-shell:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .container:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav) {
+    order: 1;
+  }
+  main:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .tool-shell:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .container:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container) {
+    order: 2;
+  }
+  main:has(form, input, select) > .emfls-next-check,
+  .tool-shell:has(form, input, select) > .emfls-next-check,
+  .container:has(form, input, select) > .emfls-next-check {
+    order: 2;
+  }
+  main:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .tool-shell:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .container:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]) {
+    order: 3;
+  }
+  main:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > .hero,
+  .container:has(form, input, select) > header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>AU Investment Property Interest-Only vs P&I Calculator</h1>
+    <p class="lead">Model the brutal Year-6 repayment cliff (+20%–35%), tax deductions, and home loan offset arbitrage over 10 years.</p>
+  </header>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+  </aside>
+
+  <div class="grid">
+    <!-- Input Panel -->
+    <section class="panel" aria-labelledby="input-heading">
+      <h2 id="input-heading">Loan & Strategy Specifications</h2>
+
+      <div class="form-group">
+        <label for="loan-amount">Investment Loan Amount ($AUD)</label>
+        <input inputmode="decimal" type="number" id="loan-amount" value="750000" min="100000" max="3000000" step="10000">
+      </div>
+
+      <div class="form-group">
+        <label for="io-years">Interest-Only Period (Years)</label>
+        <select id="io-years">
+          <option value="3">3 Years</option>
+          <option value="5" selected>5 Years (Standard)</option>
+          <option value="7">7 Years</option>
+          <option value="10">10 Years</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="io-rate">Interest-Only Interest Rate (%/yr)</label>
+        <input inputmode="decimal" type="number" id="io-rate" value="6.35" min="3.0" max="11.0" step="0.05">
+        <span class="kpi-sub">Typically +0.25% to +0.45% higher than P&I</span>
+      </div>
+
+      <div class="form-group">
+        <label for="pi-rate">Principal & Interest Rate (%/yr)</label>
+        <input inputmode="decimal" type="number" id="pi-rate" value="6.05" min="3.0" max="11.0" step="0.05">
+      </div>
+
+      <div class="form-group">
+        <label for="tax-bracket">Investor Marginal Tax Bracket (ATO FY 26/27)</label>
+        <select id="tax-bracket">
+          <option value="0.32">32% ($45k–$135k incl. Medicare)</option>
+          <option value="0.39" selected>39% ($135k–$190k incl. Medicare)</option>
+          <option value="0.47">47% ($190k+ Top Marginal Rate)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-label" for="ppor-offset">
+          <input type="checkbox" id="ppor-offset" checked>
+          <span>Funnel IO Cash Savings into Home Loan Offset</span>
+        </label>
+      </div>
+
+      <div class="form-group">
+        <label for="ppor-rate">Non-Deductible Home Mortgage Rate (%/yr)</label>
+        <input inputmode="decimal" type="number" id="ppor-rate" value="5.95" min="3.0" max="10.0" step="0.05">
+      </div>
+    </section>
+
+    <!-- Results Panel -->
+    <section class="panel" aria-labelledby="results-heading">
+      <h2 id="results-heading">Repayment Cliff & Cash Flow Impact</h2>
+
+      <div class="cliff-warning">
+        ⚠️ <strong>Year 6 Repayment Cliff Alert:</strong> When your 5-year IO period ends, your monthly payment jumps by <strong id="out-cliff-jump">+0 / mo</strong> because the remaining loan re-amortizes over 25 years!
+      </div>
+
+      <div class="results-hero">
+        <div class="kpi-card">
+          <div class="kpi-label">Years 1–5 (IO Payment)</div>
+          <div class="kpi-value" style="color:var(--warning)" id="out-io-monthly">$0 / mo</div>
+          <div class="kpi-sub">Interest-only phase</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">Year 6+ (Post-Cliff P&I)</div>
+          <div class="kpi-value" style="color:var(--danger)" id="out-cliff-monthly">$0 / mo</div>
+          <div class="kpi-sub">25-year re-amortization</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">Standard 30-Yr P&I</div>
+          <div class="kpi-value" style="color:var(--primary)" id="out-pi-monthly">$0 / mo</div>
+          <div class="kpi-sub">Smooth day-1 payment</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">Initial Monthly Relief</div>
+          <div class="kpi-value" style="color:var(--success)" id="out-cashflow-gap">$0 / mo</div>
+          <div class="kpi-sub">IO cash flow advantage</div>
+        </div>
+      </div>
+
+      <div id="ppor-notice" style="background:#1f2937;padding:0.75rem;border-radius:6px;margin-bottom:1rem;font-size:0.85rem;">
+        <div><strong>PPOR Offset Strategy:</strong> Directing cash savings saves approx <strong style="color:var(--success)" id="out-ppor-saved">$0</strong> in non-deductible home mortgage interest over 10 years!</div>
+        <div style="margin-top:0.35rem;color:var(--muted)">10-Year Deductible Tax Shield Advantage: <span id="out-tax-advantage">$0</span></div>
+      </div>
+
+      <div class="chart-box">
+        <div style="font-size:0.8rem;color:var(--muted);font-weight:600;">Monthly Repayment Jump at Year 5 Cliff</div>
+        <div id="chart-container"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Detailed Schedule Table -->
+  <section class="panel" aria-labelledby="table-heading">
+    <h2 id="table-heading">10-Year Payment & Debt Trajectory Comparison</h2>
+    <div class="table-wrap" role="region" tabindex="0">
+      <table>
+        <thead>
+          <tr>
+            <th>Year</th>
+            <th>Strategy A Monthly (IO)</th>
+            <th>Strategy B Monthly (P&I)</th>
+            <th>Strategy A Loan Balance</th>
+            <th>Strategy B Loan Balance</th>
+          </tr>
+        </thead>
+        <tbody id="schedule-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Statutory FAQ & Regulatory Guide -->
+  <section class="panel" aria-labelledby="faq-heading">
+    <h2 id="faq-heading">APRA & Australian Tax Office Guidelines</h2>
+    <details>
+      <summary>How does negative gearing interact with Interest-Only loans?</summary>
+      <p>Because no principal is paid off during the IO term, 100% of your mortgage payments consist of tax-deductible interest. This maximizes tax write-offs against your salary income at your marginal tax bracket.</p>
+    </details>
+    <details>
+      <summary>What should you do before the 5-year cliff arrives?</summary>
+      <p>Approximately 6 months before your IO period expires, consult a mortgage broker to either request an IO extension from your current lender, refinance to a new 30-year term with another bank, or prepare your cash flow budget for the higher P&I payment.</p>
+    </details>
+    <details>
+      <summary>Why does the loan amortize over 25 years instead of 30?</summary>
+      <p>A standard mortgage contract has a total duration of 30 years. If the first 5 years are spent paying only interest, you must repay 100% of the loan principal within the remaining 25 years.</p>
+    </details>
+  </section>
+
+  <section class="panel" aria-labelledby="scope-title">
+    <h2 id="scope-title">Assumptions & Statutory Notes</h2>
+    <p>Calculations assume Australian monthly interest compounding. Does not constitute credit or financial advice. Consult an Australian Credit Licensee (ACL) and registered tax agent.</p>
+    <nav class="links" aria-label="Related calculators">
+      <a href="/util/compound-interest/">Compound Interest Calculator</a>
+      <a href="/util/loan-payment-calculator/">Loan Payment Calculator</a>
+      <a href="/util/au-mortgage-offset-vs-redraw-calculator/">AU Mortgage Offset vs Redraw</a>
+    </nav>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+  </aside>
+  <footer>Estimate only · emfls.github.io</footer>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 Australian Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for Australian:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/au-land-tax-thresholds-nsw-vic-qld-absentee-surcharge-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">ATO 2026–27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Australia Land Tax Calculator 2026 | NSW, VIC &amp; QLD</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare 2026 investment property land tax in NSW, Victoria and Queensland. Estimate foreign ...</span>
+    </a>
+    <a href="/util/au-life-insurance-inside-super-vs-outside-super-non-dependant-tax-stepped-level-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">ATO 2026–27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">AU Life Insurance Inside Super vs Outside Super Tax &amp; Premium Calculator (2026–27)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate Australian life insurance costs inside vs outside super, non-dependant death benef...</span>
+    </a>
+    <a href="/util/au-long-service-leave-payout-entitlement-nsw-vic-qld-wa-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">ATO 2026–27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Australia Long Service Leave Payout &amp; Tax Calculator 2026–27</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate unused long service leave in NSW, Victoria, Queensland and WA. Compare your 2026–27...</span>
+    </a>
+    <a href="/util/au-luxury-car-tax-lct-91661-car-depreciation-limit-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">ATO 2026–27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Australia Luxury Car Tax &amp; Car Limit Calculator 2026–27</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate 2026–27 Australian luxury car tax using the $91,661 and $80,809 thresholds. Estima...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+<script type="module" src="./app.js"></script>
+</body>
+</html>

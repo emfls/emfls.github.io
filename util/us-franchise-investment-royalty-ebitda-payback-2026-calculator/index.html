@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026 US Franchise Investment, Royalty Fee, Store EBITDA & Payback Calculator | EMFLS</title>
+  <meta name="description" content="Calculates FDD Item 7 total franchise investment, SBA 7(a) financing debt service, top-line ongoing royalties and ad fund fees, store EBITDA, DSCR, cash-on-cash ROI, and months to payback.">
+  <link rel="canonical" href="https://emfls.github.io/util/us-franchise-investment-royalty-ebitda-payback-2026-calculator/">
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+
+  <!-- AdSense Guard -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+
+  <!-- JSON-LD WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 US Franchise Investment, Royalty Fee, Store EBITDA & Payback Calculator",
+    "description": "Calculates FDD Item 7 total franchise investment, SBA 7(a) financing debt service, top-line ongoing royalties and ad fund fees, store EBITDA, DSCR, cash-on-cash ROI, and months to payback.",
+    "url": "https://emfls.github.io/util/us-franchise-investment-royalty-ebitda-payback-2026-calculator/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+
+  <!-- JSON-LD FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How are franchise royalties calculated?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Franchise royalties (typically 4% to 8%) and national advertising fund fees (1% to 3%) are calculated on GROSS sales revenue, not on net profit. This means the franchisor is paid before food, labor, rent, and debt service."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is a healthy Debt Service Coverage Ratio (DSCR) for an SBA franchise loan?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SBA lenders generally require a minimum DSCR of 1.25x (Store EBITDA divided by Annual Debt Service). A DSCR of 1.50x or greater provides strong downside protection against economic downturns."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is an acceptable payback period for a franchise investment?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A standard franchise payback period ranges from 36 to 60 months (3 to 5 years). High-performing service franchises can achieve payback in under 36 months, while heavy capital buildouts (e.g. drive-thru QSR) may take up to 7 years."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- JSON-LD BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://emfls.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "US Business Calculators",
+        "item": "https://emfls.github.io/util/us-tax-finance-calculators-2026/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Franchise ROI & Payback Calculator",
+        "item": "https://emfls.github.io/util/us-franchise-investment-royalty-ebitda-payback-2026-calculator/"
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-accent: #2563eb;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --border: #e2e8f0;
+      --success: #16a34a;
+      --warning: #d97706;
+      --danger: #dc2626;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+    header {
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 1.85rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    p.lead {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin: 0;
+    }
+    .ad-container {
+      min-height: 100px;
+      margin: 20px 0;
+      background: #f1f5f9;
+      border: 1px dashed #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    @media (min-width: 768px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    h2 {
+      font-size: 1.25rem;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 8px;
+      margin-top: 0;
+      color: var(--primary);
+    }
+    .form-group {
+      margin-bottom: 14px;
+    }
+    label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+    input, select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+    .metric-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .metric-label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .metric-val {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .metric-val.green { color: var(--success); }
+    .metric-val.amber { color: var(--warning); }
+    .metric-val.red { color: var(--danger); }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-left: 6px;
+    }
+    .badge-success { background: #dcfce7; color: #15803d; }
+    .badge-warning { background: #fef3c7; color: #b45309; }
+    .badge-danger { background: #fee2e2; color: #b91c1c; }
+    .alert-box {
+      background: #fffbeb;
+      border-left: 4px solid var(--warning);
+      padding: 12px 14px;
+      margin: 16px 0;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      color: #92400e;
+    }
+    .chart-container {
+      margin-top: 16px;
+      text-align: center;
+    }
+    footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+    footer a {
+      color: var(--primary-accent);
+      text-decoration: none;
+      margin: 0 8px;
+    }
+  </style>
+<style id="emfls-cro-calc-first-b2-v1">
+/* EMFLS CRO B2 — mobile calculator-first ordering for non-Patch-B EN templates (CSS-only, reversible) */
+@media (max-width: 760px) {
+  main:has(form, input, select),
+  .tool-shell:has(form, input, select),
+  .container:has(form, input, select) {
+    display: flex;
+    flex-direction: column;
+  }
+  main:has(form, input, select) > *,
+  .tool-shell:has(form, input, select) > *,
+  .container:has(form, input, select) > * {
+    order: 4;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  main:has(form, input, select) > nav,
+  main:has(form, input, select) > header,
+  main:has(form, input, select) > .hero,
+  main:has(form, input, select) > h1,
+  main:has(form, input, select) > .lead,
+  .tool-shell:has(form, input, select) > nav,
+  .tool-shell:has(form, input, select) > header,
+  .tool-shell:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > h1,
+  .tool-shell:has(form, input, select) > .lead,
+  .container:has(form, input, select) > nav,
+  .container:has(form, input, select) > header,
+  .container:has(form, input, select) > .hero,
+  .container:has(form, input, select) > h1,
+  .container:has(form, input, select) > .lead {
+    order: 0;
+  }
+  main:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .tool-shell:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .container:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav) {
+    order: 1;
+  }
+  main:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .tool-shell:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .container:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container) {
+    order: 2;
+  }
+  main:has(form, input, select) > .emfls-next-check,
+  .tool-shell:has(form, input, select) > .emfls-next-check,
+  .container:has(form, input, select) > .emfls-next-check {
+    order: 2;
+  }
+  main:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .tool-shell:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .container:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]) {
+    order: 3;
+  }
+  main:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > .hero,
+  .container:has(form, input, select) > header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+}
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>2026 US Franchise Investment & EBITDA Payback Calculator</h1>
+      <p class="lead">Model FDD Item 7 total capital requirements, top-line royalties, SBA loan debt service, and true owner payback.</p>
+    </header>
+
+    <!-- Top Ad Slot -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block; width:100%; height:90px;"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="horizontal"></ins>
+      <script>
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+          if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+        }
+      </script>
+    </div>
+
+    <div class="grid">
+      <!-- Inputs Column -->
+      <div class="card">
+        <h2>1. Initial Investment (FDD Item 7)</h2>
+        <div class="form-group">
+          <label for="franchiseFee">Initial Franchise Fee ($)</label>
+          <input type="number" id="franchiseFee" value="35000" step="5000" inputmode="decimal">
+        </div>
+        <div class="form-group">
+          <label for="buildoutCost">Leasehold Improvements / Buildout ($)</label>
+          <input type="number" id="buildoutCost" value="250000" step="10000" inputmode="decimal">
+        </div>
+        <div class="form-group">
+          <label for="equipmentCost">Equipment, POS & Signage ($)</label>
+          <input type="number" id="equipmentCost" value="120000" step="5000" inputmode="decimal">
+        </div>
+        <div class="form-group">
+          <label for="inventoryCost">Opening Inventory & Supplies ($)</label>
+          <input type="number" id="inventoryCost" value="25000" step="5000" inputmode="decimal">
+        </div>
+        <div class="form-group">
+          <label for="workingCapital">Working Capital Reserve ($)</label>
+          <input type="number" id="workingCapital" value="40000" step="5000" inputmode="decimal">
+        </div>
+        <div class="form-group">
+          <label for="cashEquityPercent">Cash Equity Down Payment (%)</label>
+          <input type="number" id="cashEquityPercent" value="25" min="10" max="100" step="5" inputmode="decimal">
+        </div>
+        <div class="form-group">
+          <label for="sbaInterestRate">SBA 7(a) Interest Rate (%)</label>
+          <input inputmode="decimal" type="number" id="sbaInterestRate" value="10.5" step="0.25">
+        </div>
+
+        <h2>2. Annual Store Unit Economics</h2>
+        <div class="form-group">
+          <label for="grossSales">Annual Gross Sales ($)</label>
+          <input type="number" id="grossSales" value="950000" step="25000" inputmode="decimal">
+        </div>
+        <div class="form-group">
+          <label for="cogsPercent">Cost of Goods Sold (COGS %)</label>
+          <input inputmode="decimal" type="number" id="cogsPercent" value="30" step="1">
+        </div>
+        <div class="form-group">
+          <label for="laborPercent">Direct Labor & Payroll (% of Sales)</label>
+          <input inputmode="decimal" type="number" id="laborPercent" value="28" step="1">
+        </div>
+        <div class="form-group">
+          <label for="rentAndOccupancy">Annual Rent & Occupancy ($)</label>
+          <input type="number" id="rentAndOccupancy" value="72000" step="2000" inputmode="decimal">
+        </div>
+        <div class="form-group">
+          <label for="royaltyPercent">Ongoing Royalty Fee (% of Gross Sales)</label>
+          <input inputmode="decimal" type="number" id="royaltyPercent" value="5.0" step="0.5">
+        </div>
+        <div class="form-group">
+          <label for="adFundPercent">National Brand Ad Fund (% of Gross Sales)</label>
+          <input inputmode="decimal" type="number" id="adFundPercent" value="2.0" step="0.5">
+        </div>
+      </div>
+
+      <!-- Results Column -->
+      <div class="card">
+        <h2>Executive Payback & Profit Summary</h2>
+
+        <div class="metric-box">
+          <div class="metric-label">Total Item 7 Investment</div>
+          <div class="metric-val" id="dispTotalInvestment">$470,000</div>
+        </div>
+
+        <div class="metric-box">
+          <div class="metric-label">Cash Down Required</div>
+          <div class="metric-val" id="dispCashInvested">$117,500</div>
+        </div>
+
+        <div class="metric-box">
+          <div class="metric-label">Annual Debt Service (SBA)</div>
+          <div class="metric-val" id="dispAnnualDebtService">$57,000</div>
+        </div>
+
+        <div class="metric-box">
+          <div class="metric-label">Annual Franchisor Fees (Royalty + Ad)</div>
+          <div class="metric-val amber" id="dispFranchisorFees">$66,500</div>
+        </div>
+
+        <div class="metric-box">
+          <div class="metric-label">Store EBITDA (Pre-Debt)</div>
+          <div class="metric-val green" id="dispStoreEbitda">$145,000</div>
+        </div>
+
+        <div class="metric-box">
+          <div class="metric-label">Free Cash Flow (Post-Debt)</div>
+          <div class="metric-val green" id="dispFreeCashFlow">$88,000</div>
+        </div>
+
+        <div class="metric-box">
+          <div class="metric-label">Debt Service Coverage (DSCR)</div>
+          <div class="metric-val" id="dispDscr">2.54x <span class="badge badge-success" id="badgeDscr">HEALTHY</span></div>
+        </div>
+
+        <div class="metric-box">
+          <div class="metric-label">Cash-on-Cash Return</div>
+          <div class="metric-val green" id="dispCashOnCash">74.9%</div>
+        </div>
+
+        <div class="metric-box">
+          <div class="metric-label">Payback Period</div>
+          <div class="metric-val green" id="dispPayback">16 Months</div>
+        </div>
+
+        <div class="alert-box" id="royaltyAlert">
+          <strong>The Top-Line Royalty Trap:</strong> Franchisor royalties ($66,500) consume 31.4% of your total operational earnings before debt. Royalties must be paid even if the store loses money!
+        </div>
+
+        <div class="chart-container">
+          <svg id="waterfallSvg" width="100%" height="220" viewBox="0 0 460 220"></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Ad Slot -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block; width:100%; height:90px;"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="horizontal"></ins>
+      <script>
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+          if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+        }
+      </script>
+    </div>
+
+    
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 United States Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for United States:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/us-fsa-vs-hsa-open-enrollment-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 US FSA vs HSA Open Enrollment Calculator</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026 statutory calculator for 2026 US FSA vs HSA Open Enrollment Calculator.</span>
+    </a>
+    <a href="/util/us-hdhp-hsa-vs-ppo-open-enrollment-out-of-pocket-max-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">US HDHP + HSA vs PPO Open-Enrollment Calculator (2026) — Out-of-Pocket Max &amp; Tax Breakeven</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare High-Deductible Health Plans (HDHP + HSA) vs Traditional PPO plans for 2026 Open Enr...</span>
+    </a>
+    <a href="/util/us-healthcare-fsa-3400-carryover-680-tax-savings-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Health Care FSA Calculator | $3,400 Limit &amp; $680 Carryover</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate 2026 health FSA payroll tax savings, use-it-or-lose-it risk and a break-even electi...</span>
+    </a>
+    <a href="/util/us-heloc-vs-cash-out-refinance-750k-interest-deduction-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 US HELOC vs Cash-Out Refinance Calculator | $750K Interest Deduction</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare keeping your first mortgage with a HELOC against cash-out refinancing. See payments,...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+<footer>
+      <p>&copy; 2026 EMFLS Financial Tools. Statutory formulas based on FTC Franchise Rule 16 C.F.R. Part 436 and SBA Standard Operating Procedures (SOP 50 10).</p>
+      <p>
+        <a href="/util/2026-global-tax-finance-calculators/">Global Authority Hub</a> |
+        <a href="/util/us-tax-finance-calculators-2026/">US Pillar Hub</a>
+      </p>
+    </footer>
+  </div>
+
+  <script type="module">
+    import { calcFranchiseEconomics } from './model.mjs';
+
+    function fmt(val) {
+      return '$' + Math.round(val).toLocaleString('en-US');
+    }
+
+    function render() {
+      const params = {
+        franchiseFee: document.getElementById('franchiseFee').value,
+        buildoutCost: document.getElementById('buildoutCost').value,
+        equipmentCost: document.getElementById('equipmentCost').value,
+        inventoryCost: document.getElementById('inventoryCost').value,
+        workingCapital: document.getElementById('workingCapital').value,
+        cashEquityPercent: document.getElementById('cashEquityPercent').value,
+        sbaInterestRate: document.getElementById('sbaInterestRate').value,
+        grossSales: document.getElementById('grossSales').value,
+        cogsPercent: document.getElementById('cogsPercent').value,
+        laborPercent: document.getElementById('laborPercent').value,
+        rentAndOccupancy: document.getElementById('rentAndOccupancy').value,
+        royaltyPercent: document.getElementById('royaltyPercent').value,
+        adFundPercent: document.getElementById('adFundPercent').value
+      };
+
+      const res = calcFranchiseEconomics(params);
+
+      document.getElementById('dispTotalInvestment').textContent = fmt(res.totalInvestment);
+      document.getElementById('dispCashInvested').textContent = fmt(res.cashInvested);
+      document.getElementById('dispAnnualDebtService').textContent = fmt(res.annualDebtService);
+      document.getElementById('dispFranchisorFees').textContent = fmt(res.totalFranchisorFees);
+      document.getElementById('dispStoreEbitda').textContent = fmt(res.storeEbitda);
+      document.getElementById('dispFreeCashFlow').textContent = fmt(res.annualFreeCashFlow);
+
+      const dscrEl = document.getElementById('dispDscr');
+      const badgeDscr = document.getElementById('badgeDscr');
+      if (res.dscr >= 1.5) {
+        dscrEl.innerHTML = res.dscr + 'x <span class="badge badge-success">HEALTHY</span>';
+      } else if (res.dscr >= 1.2) {
+        dscrEl.innerHTML = res.dscr + 'x <span class="badge badge-warning">TIGHT</span>';
+      } else {
+        dscrEl.innerHTML = res.dscr + 'x <span class="badge badge-danger">AT RISK</span>';
+      }
+
+      document.getElementById('dispCashOnCash').textContent = res.cashOnCashRoi + '%';
+      document.getElementById('dispPayback').textContent = res.monthsToPayback < 900 ? (res.monthsToPayback + ' Months') : 'N/A (Loss)';
+
+      document.getElementById('royaltyAlert').innerHTML = '<strong>The Top-Line Royalty Trap:</strong> Franchisor fees (' + fmt(res.totalFranchisorFees) + ') take <strong>' + res.royaltyAsPercentOfEbitda + '%</strong> of total store operational cash earnings before debt!';
+
+      drawChart(res);
+    }
+
+    function drawChart(res) {
+      const svg = document.getElementById('waterfallSvg');
+      svg.innerHTML = '';
+
+      const items = [
+        { label: 'Sales', val: res.grossSales, color: '#2563eb' },
+        { label: 'COGS', val: res.cogsDollars, color: '#dc2626' },
+        { label: 'Labor', val: res.laborDollars, color: '#dc2626' },
+        { label: 'Rent', val: res.rentAndOccupancy, color: '#dc2626' },
+        { label: 'Royalty', val: res.totalFranchisorFees, color: '#d97706' },
+        { label: 'Debt', val: res.annualDebtService, color: '#9333ea' },
+        { label: 'Net Cash', val: Math.max(0, res.annualFreeCashFlow), color: '#16a34a' }
+      ];
+
+      const maxVal = Math.max(res.grossSales, 1000);
+      const w = 460;
+      const h = 220;
+      const barW = 44;
+      const gap = 16;
+      const startX = 20;
+
+      let html = '';
+      items.forEach((item, i) => {
+        const x = startX + i * (barW + gap);
+        const barH = Math.max(4, Math.round((item.val / maxVal) * 140));
+        const y = 170 - barH;
+
+        html += '<rect x="' + x + '" y="' + y + '" width="' + barW + '" height="' + barH + '" rx="4" fill="' + item.color + '" />';
+        html += '<text x="' + (x + barW/2) + '" y="' + (y - 5) + '" text-anchor="middle" font-size="10" font-weight="bold" fill="#334155">$' + Math.round(item.val / 1000) + 'k</text>';
+        html += '<text x="' + (x + barW/2) + '" y="190" text-anchor="middle" font-size="11" fill="#475569">' + item.label + '</text>';
+      });
+
+      html += '<line x1="10" y1="170" x2="450" y2="170" stroke="#cbd5e1" stroke-width="1" />';
+      svg.innerHTML = html;
+    }
+
+    document.querySelectorAll('input').forEach(el => el.addEventListener('input', render));
+    render();
+  </script>
+</body>
+</html>

@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <title>2026 Canada CRA Late Payroll Remittance Penalty & Director Liability Calculator</title>
+  <meta name="description" content="Calculates CRA ITA s.227(9) late payroll remittance penalty tiers (3%/5%/7%/10%/20%), $500 threshold exemption, daily compound prescribed interest, and s.227.1 joint-and-several director personal liability.">
+  <link rel="canonical" href="https://emfls.github.io/util/ca-cra-late-payroll-remittance-penalty-3-5-7-10-20-ita-227-1-2026-calculator/">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+    <script>
+  if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+    const adScript = document.createElement('script');
+    adScript.async = true;
+    adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+    adScript.crossOrigin = 'anonymous';
+    document.head.append(adScript);
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 Canada CRA Late Payroll Remittance Penalty & Director Liability Calculator",
+    "url": "https://emfls.github.io/util/ca-cra-late-payroll-remittance-penalty-3-5-7-10-20-ita-227-1-2026-calculator/",
+    "description": "Calculates CRA ITA s.227(9) late payroll remittance penalty tiers (3%/5%/7%/10%/20%), $500 threshold exemption, daily compound prescribed interest, and s.227.1 joint-and-several director personal liability.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What are the CRA late payroll remittance penalty tiers under ITA s. 227(9)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For standard failures, CRA applies graduated penalties on the portion exceeding $500: 3% if 1–3 days late, 5% if 4–5 days late, 7% if 6–7 days late, and 10% if more than 7 days late. If the failure is gross negligence or repeated, the penalty jumps to 20% on the entire amount with no $500 exemption."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are corporate directors personally liable for unremitted payroll deductions?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Under Section 227.1 of the Income Tax Act, corporate directors are jointly and severally liable with the corporation for all unremitted payroll source deductions, penalties, and daily compounded interest. CRA can collect against personal bank accounts, home equity, and wages."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the 2-year limitation period defense under ITA s. 227.1(4)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under ITA s. 227.1(4), CRA cannot commence an assessment or enforcement action against an individual director more than 2 years after that person ceased to be a director of the corporation (documented via corporate filings/registry resignation)."
+        }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Canada Corporate Hub",
+        "item": "https://emfls.github.io/util/canada-tax-corporate-hub-2026.html"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "2026 Canada CRA Late Payroll Remittance Penalty & Director Liability Calculator",
+        "item": "https://emfls.github.io/util/ca-cra-late-payroll-remittance-penalty-3-5-7-10-20-ita-227-1-2026-calculator/"
+      }
+    ]
+  }
+  </script>
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #d97706;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 16px;
+    }
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding: 16px 0;
+    }
+    h1 {
+      font-size: 1.75rem;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .ad-slot {
+      margin: 20px 0;
+      min-height: 100px;
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    @media (min-width: 768px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
+    }
+    .card h2 {
+      font-size: 1.25rem;
+      margin-bottom: 16px;
+      color: var(--primary-dark);
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 8px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.875rem;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .help-text {
+      font-size: 0.775rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    input[type="number"], select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      background: #fff;
+    }
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .kpi-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .kpi {
+      background: #f8fafc;
+      padding: 14px;
+      border-radius: 8px;
+      border-left: 4px solid var(--primary);
+    }
+    .kpi-label {
+      font-size: 0.775rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+    .kpi-val {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 4px;
+    }
+    .tag-danger {
+      color: var(--danger);
+      font-weight: 700;
+    }
+    .tag-safe {
+      color: var(--success);
+      font-weight: 700;
+    }
+    .highlight-card {
+      padding: 16px;
+      border-radius: 8px;
+      margin-top: 16px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+    }
+    .table-container {
+      overflow-x: auto;
+      max-width: 100%;
+      margin-top: 16px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 16px;
+    }
+    th, td {
+      padding: 10px 12px;
+      text-align: right;
+      border-bottom: 1px solid var(--border);
+    }
+    th:first-child, td:first-child {
+      text-align: left;
+    }
+    th {
+      background: #f1f5f9;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .chart-container {
+      margin-top: 20px;
+      padding: 12px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    footer {
+      margin-top: 48px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+    }
+    .hub-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .hub-links a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+  </style>
+<style id="emfls-cro-calc-first-b2-v1">
+/* EMFLS CRO B2 — mobile calculator-first ordering for non-Patch-B EN templates (CSS-only, reversible) */
+@media (max-width: 760px) {
+  main:has(form, input, select),
+  .tool-shell:has(form, input, select),
+  .container:has(form, input, select) {
+    display: flex;
+    flex-direction: column;
+  }
+  main:has(form, input, select) > *,
+  .tool-shell:has(form, input, select) > *,
+  .container:has(form, input, select) > * {
+    order: 4;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  main:has(form, input, select) > nav,
+  main:has(form, input, select) > header,
+  main:has(form, input, select) > .hero,
+  main:has(form, input, select) > h1,
+  main:has(form, input, select) > .lead,
+  .tool-shell:has(form, input, select) > nav,
+  .tool-shell:has(form, input, select) > header,
+  .tool-shell:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > h1,
+  .tool-shell:has(form, input, select) > .lead,
+  .container:has(form, input, select) > nav,
+  .container:has(form, input, select) > header,
+  .container:has(form, input, select) > .hero,
+  .container:has(form, input, select) > h1,
+  .container:has(form, input, select) > .lead {
+    order: 0;
+  }
+  main:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .tool-shell:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .container:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav) {
+    order: 1;
+  }
+  main:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .tool-shell:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .container:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container) {
+    order: 2;
+  }
+  main:has(form, input, select) > .emfls-next-check,
+  .tool-shell:has(form, input, select) > .emfls-next-check,
+  .container:has(form, input, select) > .emfls-next-check {
+    order: 2;
+  }
+  main:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .tool-shell:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .container:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]) {
+    order: 3;
+  }
+  main:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > .hero,
+  .container:has(form, input, select) > header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+}
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>2026 Canada CRA Late Payroll Remittance & Director Liability Calculator</h1>
+      <p class="subtitle">Calculate Income Tax Act s. 227(9) penalty tiers (3%/5%/7%/10%/20%), $500 threshold exemption, daily compound prescribed interest, and s. 227.1 personal joint-and-several director liability exposure.</p>
+    </header>
+
+    <div class="ad-slot">
+      <ins class="adsbygoogle"
+           style="display:block;min-height:250px"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Payroll Remittance Arrears</h2>
+        <div class="form-group">
+          <label for="remittanceAmount">Total Unremitted Payroll Deductions ($ CAD)</label>
+          <input inputmode="decimal" type="number" id="remittanceAmount" value="40000" min="0" step="2500">
+          <p class="help-text">Combined CPP, EI, and federal/provincial income tax withheld.</p>
+        </div>
+
+        <div class="form-group">
+          <label for="daysLate">Days Past Statutory Due Date</label>
+          <input inputmode="decimal" type="number" id="daysLate" value="12" min="0" max="365" step="1">
+          <p class="help-text">Tiers: 1–3d (3%) | 4–5d (5%) | 6–7d (7%) | >7d (10%).</p>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="isGrossNegligence">
+          <label for="isGrossNegligence" style="margin-bottom:0; font-size:0.85rem;">Gross Negligence / Willful Default (ITA s. 227(9.1) 20% Penalty - $500 Exemption Eliminated!)</label>
+        </div>
+
+        <div class="form-group" style="margin-top: 16px;">
+          <label for="annualInterestRate">CRA Prescribed Annual Interest Rate (% p.a.)</label>
+          <input inputmode="decimal" type="number" id="annualInterestRate" value="9.0" min="0" max="25" step="0.5">
+          <p class="help-text">Compounded daily under ITA s. 227(9.2).</p>
+        </div>
+
+        <div class="form-group">
+          <label for="directorCount">Number of Directors Sharing Liability</label>
+          <input inputmode="decimal" type="number" id="directorCount" value="2" min="1" max="10" step="1">
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="hasResignedOver2Years">
+          <label for="hasResignedOver2Years" style="margin-bottom:0; font-size:0.85rem;">Director resigned & filed with registry > 2 years ago (ITA s. 227.1(4) Limitation Defense!)</label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Penalty & Director Personal Liability</h2>
+        <div class="kpi-row">
+          <div class="kpi">
+            <div class="kpi-label">CRA Statutory Penalty</div>
+            <div class="kpi-val tag-danger" id="penaltyVal">$0</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Compound Interest Arrears</div>
+            <div class="kpi-val" id="interestVal">$0</div>
+          </div>
+        </div>
+
+        <div class="kpi-row">
+          <div class="kpi">
+            <div class="kpi-label">Total Crown Debt</div>
+            <div class="kpi-val tag-danger" id="totalDebtVal">$0</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Director Personal Exposure</div>
+            <div class="kpi-val tag-danger" id="directorRiskVal">$0</div>
+          </div>
+        </div>
+
+        <div class="highlight-card" id="craInsightBox">
+          <strong>CRA Enforcement & Defense:</strong> <span id="craInsightText">Calculating...</span>
+        </div>
+
+        <div class="chart-container">
+          <svg id="craChart" width="100%" height="160" viewBox="0 0 460 160" preserveAspectRatio="none"></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 32px;">
+      <h2>Statutory Breakdown & Liability Allocation</h2>
+      <div class="table-container">
+        <table id="craTable">
+        <thead>
+          <tr>
+            <th>Assessment Component</th>
+            <th>Statutory Basis</th>
+            <th>Amount ($ CAD)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Deemed Trust Payroll Principal</td>
+            <td>ITA s. 227(4) Deemed Trust</td>
+            <td id="tblPrincipal">$0</td>
+          </tr>
+          <tr>
+            <td>Statutory Exemption Deduction</td>
+            <td>ITA s. 227(9) $500 Threshold</td>
+            <td id="tblExemption">-$0</td>
+          </tr>
+          <tr>
+            <td>Statutory Penalty Assessed</td>
+            <td id="tblTierLabel">10% (>7 Days Late)</td>
+            <td class="tag-danger" id="tblPenalty">$0</td>
+          </tr>
+          <tr>
+            <td>Daily Prescribed Compound Interest</td>
+            <td>ITA s. 227(9.2) Prescribed Rate</td>
+            <td id="tblInterest">$0</td>
+          </tr>
+          <tr style="font-weight: bold; background-color: #f8fafc;">
+            <td>Total Crown Claim</td>
+            <td>Principal + Penalty + Interest</td>
+            <td class="tag-danger" id="tblTotalCrown">$0</td>
+          </tr>
+          <tr style="font-weight: bold; color: #dc2626;">
+            <td>Joint & Several Director Liability</td>
+            <td id="tblDirectorDefense">ITA s. 227.1 Personal Liability</td>
+            <td id="tblDirectorTotal">$0</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="ad-slot">
+      <ins class="adsbygoogle"
+           style="display:block;min-height:250px"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+    </div>
+
+    
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 Canadian Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for Canadian:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/ca-csbfp-small-business-financing-loan-1-15m-2-percent-fee-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Canada Small Business Financing Program (CSBFP) $1.15M Loan Calculator | ISED Government Rules</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate Canada CSBFP business loans up to $1,150,000: 2% government registration fee, Prim...</span>
+    </a>
+    <a href="/util/ca-dividend-tax-credit-eligible-vs-ineligible-vs-interest-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada Dividend Tax Credit Calculator 2026 | OAS Clawback</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare 2026 Canadian eligible and non-eligible dividends, capital gains and interest after ...</span>
+    </a>
+    <a href="/util/ca-ei-clawback-30-percent-86125-benefit-repayment-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Canada EI Clawback Calculator | $86,125 Threshold</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate your 2026 Canada EI repayment at 30%, check the 10-year exemption and see how an RR...</span>
+    </a>
+    <a href="/util/ca-ei-regular-benefits-729-clawback-86125-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada EI Regular Benefits &amp; Clawback Calculator 2026</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate 2026 Canadian EI regular benefits up to $729 per week, regional payable weeks, work...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+<footer>
+      <p>&copy; 2026 Statutory & Business Calculators. Comprehensive actuarial and regulatory reference tools.</p>
+      <div class="hub-links">
+        <a href="https://emfls.github.io/util/canada-tax-corporate-hub-2026.html">Canada Corporate Hub</a>
+        <a href="https://emfls.github.io/util/us-tax-hub-2026.html">US Statutory Tax Hub</a>
+        <a href="https://emfls.github.io/util/uk-property-finance-hub-2026.html">UK Property & Commercial Hub</a>
+        <a href="https://emfls.github.io/util/australia-business-tax-hub-2026.html">Australia Commercial Hub</a>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module">
+    import { calcCraLatePayrollRemittance } from './model.mjs';
+
+    function fmt(num) {
+      return '$' + Math.round(num).toLocaleString('en-CA');
+    }
+
+    function render() {
+      const remittanceAmount = Number(document.getElementById('remittanceAmount').value) || 0;
+      const daysLate = Number(document.getElementById('daysLate').value) || 0;
+      const isGrossNegligence = document.getElementById('isGrossNegligence').checked;
+      const annualInterestRate = Number(document.getElementById('annualInterestRate').value) || 9.0;
+      const directorCount = Number(document.getElementById('directorCount').value) || 2;
+      const hasResignedOver2Years = document.getElementById('hasResignedOver2Years').checked;
+
+      const res = calcCraLatePayrollRemittance({
+        remittanceAmount,
+        daysLate,
+        isGrossNegligence,
+        annualInterestRate,
+        directorCount,
+        hasResignedOver2Years
+      });
+
+      document.getElementById('penaltyVal').innerText = fmt(res.basePenalty);
+      document.getElementById('interestVal').innerText = fmt(res.dailyInterestAmount);
+      document.getElementById('totalDebtVal').innerText = fmt(res.totalCrownLiability);
+      document.getElementById('directorRiskVal').innerText = fmt(res.directorPersonalLiability);
+
+      const insight = document.getElementById('craInsightText');
+      if (res.isShieldedByLimitation) {
+        insight.innerHTML = `🛡️ <strong>2-YEAR STATUTE OF LIMITATIONS DEFENSE (ITA s. 227.1(4)):</strong> Because director resigned > 2 years ago, personal liability cannot be assessed by CRA against this director. Exposure is $0!`;
+      } else if (isGrossNegligence) {
+        insight.innerHTML = `⚠️ <strong>GROSS NEGLIGENCE WARNING:</strong> Under ITA s. 227(9.1), the penalty is 20% on the entire ${fmt(res.remittanceAmount)} ($500 exemption void). Directors are jointly and severally liable for ${fmt(res.directorPersonalLiability)}.`;
+      } else {
+        insight.innerHTML = `Under ITA s. 227(9), ${res.tierLabel} applies to arrears exceeding $500. Corporate directors face joint and several personal liability under s. 227.1 for the entire ${fmt(res.totalCrownLiability)} debt.`;
+      }
+
+      // Table updates
+      document.getElementById('tblPrincipal').innerText = fmt(res.remittanceAmount);
+      document.getElementById('tblExemption').innerText = '-' + fmt(res.exemptionApplied);
+      document.getElementById('tblTierLabel').innerText = res.tierLabel;
+      document.getElementById('tblPenalty').innerText = fmt(res.basePenalty);
+      document.getElementById('tblInterest').innerText = fmt(res.dailyInterestAmount);
+      document.getElementById('tblTotalCrown').innerText = fmt(res.totalCrownLiability);
+      document.getElementById('tblDirectorTotal').innerText = fmt(res.directorPersonalLiability);
+      document.getElementById('tblDirectorDefense').innerText = res.isShieldedByLimitation ? 'Protected by 2-Year Limitation s. 227.1(4)' : `ITA s. 227.1 (${directorCount} Directors Joint & Several)`;
+
+      // SVG Bar Chart
+      const svg = document.getElementById('craChart');
+      const maxVal = Math.max(res.totalCrownLiability, res.remittanceAmount, 1000) * 1.1;
+      const hPrin = (res.remittanceAmount / maxVal) * 100;
+      const hPen = (res.basePenalty / maxVal) * 100;
+      const hCrown = (res.totalCrownLiability / maxVal) * 100;
+
+      let html = '';
+      html += `<rect x="50" y="${120 - hPrin}" width="60" height="${hPrin}" fill="#0284c7" rx="4" />`;
+      html += `<text x="80" y="140" font-size="10" text-anchor="middle" fill="#0f172a">Principal</text>`;
+      html += `<text x="80" y="${115 - hPrin}" font-size="10" text-anchor="middle" fill="#0284c7" font-weight="bold">${fmt(res.remittanceAmount)}</text>`;
+
+      html += `<rect x="180" y="${120 - hPen}" width="60" height="${hPen}" fill="#dc2626" rx="4" />`;
+      html += `<text x="210" y="140" font-size="10" text-anchor="middle" fill="#0f172a">Penalty</text>`;
+      html += `<text x="210" y="${115 - hPen}" font-size="10" text-anchor="middle" fill="#dc2626" font-weight="bold">${fmt(res.basePenalty)}</text>`;
+
+      html += `<rect x="310" y="${120 - hCrown}" width="60" height="${hCrown}" fill="#b91c1c" rx="4" />`;
+      html += `<text x="340" y="140" font-size="10" text-anchor="middle" fill="#0f172a">Crown Debt</text>`;
+      html += `<text x="340" y="${115 - hCrown}" font-size="10" text-anchor="middle" fill="#b91c1c" font-weight="bold">${fmt(res.totalCrownLiability)}</text>`;
+
+      svg.innerHTML = html;
+    }
+
+    document.querySelectorAll('input, select').forEach(el => el.addEventListener('input', render));
+    render();
+  </script>
+</body>
+</html>

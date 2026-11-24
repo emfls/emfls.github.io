@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026 Canada Commercial General Liability & Provincial Insurance Tax Calculator</title>
+  <meta name="description" content="Calculate 2026 Canadian commercial general liability (CGL), E&O and cyber insurance costs. Includes exact non-recoverable provincial insurance tax (0% to 15% RST).">
+  <link rel="canonical" href="https://emfls.github.io/util/ca-commercial-general-liability-eo-insurance-provincial-rst-2026-calculator/">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+
+  <script>
+  if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+    const adScript = document.createElement('script');
+    adScript.async = true;
+    adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+    adScript.crossOrigin = 'anonymous';
+    document.head.append(adScript);
+  }
+  </script>
+
+  <style id="emfls-responsive-guard">
+    *, *::before, *::after { box-sizing: border-box; }
+    img, canvas, svg, video { max-width: 100%; height: auto; }
+    body, html { overflow-x: hidden; }
+  </style>
+
+  <style>
+    :root {
+      --primary: #991b1b;
+      --primary-accent: #dc2626;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --border: #e2e8f0;
+      --warning-bg: #fffbeb;
+      --warning-border: #fef3c7;
+      --warning-text: #92400e;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background-color: var(--bg);
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(135deg, #7f1d1d, #b91c1c);
+      color: white;
+      padding: 2.5rem 1rem;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.85rem;
+      font-weight: 800;
+    }
+    header p {
+      margin: 0;
+      opacity: 0.95;
+      font-size: 1.05rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .nav-breadcrumbs {
+      font-size: 0.85rem;
+      margin-bottom: 0.75rem;
+      opacity: 0.9;
+    }
+    .nav-breadcrumbs a {
+      color: #fecaca;
+      text-decoration: none;
+    }
+    .nav-breadcrumbs a:hover {
+      text-decoration: underline;
+    }
+    .container {
+      max-width: 1060px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .ad-container {
+      margin: 1.5rem 0;
+      text-align: center;
+      background: #edf2f7;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .calc-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 768px) {
+      .calc-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+    .card h2 {
+      margin-top: 0;
+      font-size: 1.25rem;
+      color: var(--primary);
+      border-bottom: 2px solid #fee2e2;
+      padding-bottom: 0.5rem;
+    }
+    .form-group {
+      margin-bottom: 1.1rem;
+    }
+    label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: var(--text);
+    }
+    .help-text {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+    input[type="number"], select {
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      background: #fff;
+    }
+    .res-hero {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      padding: 1.25rem;
+      text-align: center;
+      margin-bottom: 1.25rem;
+    }
+    .res-hero-val {
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.1;
+      margin: 0.35rem 0;
+    }
+    .res-hero-sub {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .res-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 0.9rem;
+    }
+    .res-row:last-child {
+      border-bottom: none;
+    }
+    .res-label {
+      color: var(--text-muted);
+    }
+    .res-val {
+      font-weight: 600;
+      color: var(--text);
+    }
+    .notice-box {
+      margin-top: 1rem;
+      background: var(--warning-bg);
+      border: 1px solid var(--warning-border);
+      border-radius: 8px;
+      padding: 1rem;
+      color: var(--warning-text);
+      font-size: 0.85rem;
+      display: none;
+    }
+    .chart-container {
+      margin-top: 1.25rem;
+      background: #fff;
+      border: 1px solid #f1f5f9;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .content-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    .content-section h3 {
+      color: var(--primary);
+      margin-top: 1.5rem;
+      font-size: 1.15rem;
+    }
+    .content-section ul, .content-section ol {
+      padding-left: 1.3rem;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+    .content-section li {
+      margin-bottom: 0.5rem;
+    }
+    footer {
+      background: #0f172a;
+      color: #94a3b8;
+      padding: 2rem 1rem;
+      text-align: center;
+      font-size: 0.85rem;
+    }
+    footer a {
+      color: #f87171;
+      text-decoration: none;
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 Canada Commercial General Liability & Insurance Tax Calculator",
+    "url": "https://emfls.github.io/util/ca-commercial-general-liability-eo-insurance-provincial-rst-2026-calculator/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "All",
+    "browserRequirements": "Requires JavaScript",
+    "description": "Calculate 2026 Canadian commercial general liability (CGL), E&O and cyber insurance costs. Includes exact non-recoverable provincial insurance tax (0% to 15% RST)."
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can Canadian businesses claim back provincial sales tax (RST/PST) on insurance premiums?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Unlike federal GST/HST which can be recovered as an Input Tax Credit (ITC), provincial insurance taxes (such as Ontario 8% RST, Quebec 9%, or Newfoundland 15% RST) are strictly non-recoverable and represent an outright sunk business overhead cost."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which Canadian provinces do not charge provincial tax on commercial insurance?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Alberta (AB), British Columbia (BC), New Brunswick (NB), Nova Scotia (NS), and Prince Edward Island (PE) do not charge provincial retail sales tax or insurance premium tax to the commercial policyholder, making their tax rate 0%."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between CGL and E&O insurance in Canada?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Commercial General Liability (CGL) covers third-party bodily injury and property damage occurring on your premises or operations. Errors & Omissions (E&O) / Professional Liability covers financial losses caused by professional advice, consulting, design, or services."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Canada Tax & Business Calculators",
+        "item": "https://emfls.github.io/util/ca-2026-cra-tax-rrsp-tfsa-real-estate-calculators/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Commercial Insurance & Provincial Tax Calculator",
+        "item": "https://emfls.github.io/util/ca-commercial-general-liability-eo-insurance-provincial-rst-2026-calculator/"
+      }
+    ]
+  }
+  </script>
+<style id="emfls-cro-calc-first-b2-v1">
+/* EMFLS CRO B2 — mobile calculator-first ordering for non-Patch-B EN templates (CSS-only, reversible) */
+@media (max-width: 760px) {
+  main:has(form, input, select),
+  .tool-shell:has(form, input, select),
+  .container:has(form, input, select) {
+    display: flex;
+    flex-direction: column;
+  }
+  main:has(form, input, select) > *,
+  .tool-shell:has(form, input, select) > *,
+  .container:has(form, input, select) > * {
+    order: 4;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  main:has(form, input, select) > nav,
+  main:has(form, input, select) > header,
+  main:has(form, input, select) > .hero,
+  main:has(form, input, select) > h1,
+  main:has(form, input, select) > .lead,
+  .tool-shell:has(form, input, select) > nav,
+  .tool-shell:has(form, input, select) > header,
+  .tool-shell:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > h1,
+  .tool-shell:has(form, input, select) > .lead,
+  .container:has(form, input, select) > nav,
+  .container:has(form, input, select) > header,
+  .container:has(form, input, select) > .hero,
+  .container:has(form, input, select) > h1,
+  .container:has(form, input, select) > .lead {
+    order: 0;
+  }
+  main:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .tool-shell:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .container:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav) {
+    order: 1;
+  }
+  main:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .tool-shell:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .container:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container) {
+    order: 2;
+  }
+  main:has(form, input, select) > .emfls-next-check,
+  .tool-shell:has(form, input, select) > .emfls-next-check,
+  .container:has(form, input, select) > .emfls-next-check {
+    order: 2;
+  }
+  main:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .tool-shell:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .container:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]) {
+    order: 3;
+  }
+  main:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > .hero,
+  .container:has(form, input, select) > header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+}
+</style>
+</head>
+<body>
+  <header>
+    <div class="nav-breadcrumbs">
+      <a href="/">Home</a> &gt; <a href="/util/ca-2026-cra-tax-rrsp-tfsa-real-estate-calculators/">Canada Tax Calculators</a> &gt; Commercial Insurance
+    </div>
+    <h1>2026 Canada Commercial Liability &amp; Provincial Insurance Tax Calculator</h1>
+    <p>Commercial General Liability (CGL) • E&amp;O • Cyber • Non-Recoverable Provincial RST / PST (0% to 15%)</p>
+  </header>
+
+  <div class="container">
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </div>
+
+    <div class="calc-layout">
+      <!-- Input Card -->
+      <div class="card">
+        <h2>Business Covers &amp; Province</h2>
+
+        <div class="form-group">
+          <label for="provinceCode">Province of Operation</label>
+          <select id="provinceCode">
+            <option value="NL">Newfoundland &amp; Labrador (15.0% RST - Highest in Canada)</option>
+            <option value="QC">Quebec (9.0% Tax on Insurance Premiums)</option>
+            <option value="ON" selected>Ontario (8.0% Retail Sales Tax)</option>
+            <option value="MB">Manitoba (7.0% Retail Sales Tax)</option>
+            <option value="SK">Saskatchewan (6.0% Provincial Sales Tax)</option>
+            <option value="AB">Alberta (0.0% Provincial Tax)</option>
+            <option value="BC">British Columbia (0.0% PST Exempt on Insurance)</option>
+            <option value="NB">New Brunswick (0.0% Provincial Tax)</option>
+            <option value="NS">Nova Scotia (0.0% Provincial Tax)</option>
+            <option value="PE">Prince Edward Island (0.0% Provincial Tax)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="cglLimit">Commercial General Liability (CGL)</label>
+          <select id="cglLimit">
+            <option value="2m" selected>$2,000,000 Standard Commercial Limit</option>
+            <option value="5m">$5,000,000 Corporate / Enterprise Limit</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="eoLimit">Errors &amp; Omissions (E&amp;O) / Professional Liability</label>
+          <select id="eoLimit">
+            <option value="none">None ($0)</option>
+            <option value="1m" selected>$1,000,000 Professional Services Cover</option>
+            <option value="2m">$2,000,000 Mid-Tier Consulting Cover</option>
+            <option value="5m">$5,000,000 High-Exposure Professional Shield</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="propertyLimit">Commercial Property &amp; Tools Floater</label>
+          <select id="propertyLimit">
+            <option value="none">None ($0)</option>
+            <option value="50k" selected>$50,000 Mobile Equipment &amp; Tools</option>
+            <option value="150k">$150,000 Office Contents &amp; Inventory</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="cyberLimit">Cyber Risk &amp; Extortion Shield</label>
+          <select id="cyberLimit">
+            <option value="none">None ($0)</option>
+            <option value="1m" selected>$1,000,000 Cyber Incident Response</option>
+            <option value="2m">$2,000,000 Comprehensive Cyber Shield</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="annualRevenue">Annual Gross Revenue ($ CAD)</label>
+          <input inputmode="decimal" type="number" id="annualRevenue" value="500000" min="0" step="25000">
+        </div>
+      </div>
+
+      <!-- Output Card -->
+      <div class="card">
+        <h2>Total Invoice &amp; Sunk Tax Load</h2>
+
+        <div class="res-hero">
+          <div class="res-hero-sub">Total Annual Out-of-Pocket Cost</div>
+          <div class="res-hero-val" id="resTotalAnnual">$0</div>
+          <div class="res-hero-sub">Approx. <span id="resMonthly">$0</span> / month</div>
+        </div>
+
+        <div class="res-row">
+          <span class="res-label">Base Insurer Net Premium:</span>
+          <span class="res-val" id="resBasePremium">$0</span>
+        </div>
+        <div class="res-row">
+          <span class="res-label">Provincial Insurance Tax:</span>
+          <span class="res-val" style="color:var(--primary);" id="resProvTax">$0</span>
+        </div>
+        <div class="res-row">
+          <span class="res-label">Provincial Tax Rate:</span>
+          <span class="res-val" id="resTaxRateLabel">0%</span>
+        </div>
+        <div class="res-row">
+          <span class="res-label">Commercial General Liability (CGL):</span>
+          <span class="res-val" id="resCgl">$0</span>
+        </div>
+        <div class="res-row">
+          <span class="res-label">Errors &amp; Omissions (E&amp;O):</span>
+          <span class="res-val" id="resEo">$0</span>
+        </div>
+        <div class="res-row">
+          <span class="res-label">Property &amp; Tools Floater:</span>
+          <span class="res-val" id="resProp">$0</span>
+        </div>
+        <div class="res-row">
+          <span class="res-label">Cyber Insurance:</span>
+          <span class="res-val" id="resCyber">$0</span>
+        </div>
+
+        <div id="taxAlertBox" class="notice-box">
+          <strong>⚠️ Non-Recoverable Sunk Tax Alert:</strong>
+          <div>In <span id="resTaxProvinceName">Ontario</span>, the <strong id="resLostTaxAmount">$0</strong> insurance tax is strictly non-recoverable as a GST/HST Input Tax Credit (ITC). It represents a permanent cash drag on operations compared to 0% tax provinces like Alberta and BC!</div>
+        </div>
+
+        <div class="chart-container">
+          <div style="font-size: 0.82rem; font-weight: 600; color: #475569; margin-bottom: 0.5rem;">
+            Total Commercial Policy Cost Across Canadian Provinces (AB 0% vs NL 15%)
+          </div>
+          <svg id="chartSvg" width="100%" height="190" viewBox="0 0 330 190">
+            <line x1="20" y1="20" x2="310" y2="20" stroke="#f1f5f9" stroke-width="1" />
+            <line x1="20" y1="95" x2="310" y2="95" stroke="#f1f5f9" stroke-width="1" />
+            <line x1="20" y1="170" x2="310" y2="170" stroke="#cbd5e1" stroke-width="1.5" />
+
+            <rect id="bar_AB" x="25" y="60" width="40" height="110" fill="#2563eb" rx="3" />
+            <rect id="bar_SK" x="75" y="53" width="40" height="117" fill="#4f46e5" rx="3" />
+            <rect id="bar_MB" x="125" y="50" width="40" height="120" fill="#7c3aed" rx="3" />
+            <rect id="bar_ON" x="175" y="47" width="40" height="123" fill="#9333ea" rx="3" />
+            <rect id="bar_QC" x="225" y="44" width="40" height="126" fill="#c026d3" rx="3" />
+            <rect id="bar_NL" x="275" y="35" width="40" height="135" fill="#dc2626" rx="3" />
+
+            <text id="lbl_AB" x="45" y="52" font-size="8" font-weight="700" fill="#2563eb" text-anchor="middle">$0</text>
+            <text id="lbl_SK" x="95" y="45" font-size="8" font-weight="700" fill="#4f46e5" text-anchor="middle">$0</text>
+            <text id="lbl_MB" x="145" y="42" font-size="8" font-weight="700" fill="#7c3aed" text-anchor="middle">$0</text>
+            <text id="lbl_ON" x="195" y="39" font-size="8" font-weight="700" fill="#9333ea" text-anchor="middle">$0</text>
+            <text id="lbl_QC" x="245" y="36" font-size="8" font-weight="700" fill="#c026d3" text-anchor="middle">$0</text>
+            <text id="lbl_NL" x="295" y="27" font-size="8" font-weight="700" fill="#dc2626" text-anchor="middle">$0</text>
+
+            <text x="45" y="184" font-size="8" fill="#64748b" text-anchor="middle">AB(0%)</text>
+            <text x="95" y="184" font-size="8" fill="#64748b" text-anchor="middle">SK(6%)</text>
+            <text x="145" y="184" font-size="8" fill="#64748b" text-anchor="middle">MB(7%)</text>
+            <text x="195" y="184" font-size="8" fill="#64748b" text-anchor="middle">ON(8%)</text>
+            <text x="245" y="184" font-size="8" fill="#64748b" text-anchor="middle">QC(9%)</text>
+            <text x="295" y="184" font-size="8" fill="#64748b" text-anchor="middle">NL(15%)</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h2>Canadian Commercial Liability &amp; Provincial Insurance Sales Tax</h2>
+      <p>Operating a commercial business in Canada involves navigating complex provincial sales tax statutes governing property and casualty insurance policies:</p>
+
+      <h3>1. Non-Recoverable Provincial Insurance Tax</h3>
+      <ul>
+        <li><strong>No Input Tax Credit (ITC):</strong> Unlike the federal GST/HST which businesses routinely claim back as an input tax credit, provincial insurance taxes (e.g. Ontario 8% RST, Quebec 9% tax, Newfoundland 15% RST) cannot be claimed back. They represent a permanent cost addition to your corporate insurance overhead.</li>
+        <li><strong>Wide Provincial Variance:</strong> A business with a $10,000 commercial policy pays $0 provincial tax in Alberta, British Columbia, and the Maritimes, but pays $800 in Ontario and a staggering $1,500 in Newfoundland and Labrador for identical coverage.</li>
+      </ul>
+
+      <h3>2. Essential Commercial Liability Protections</h3>
+      <p>Standard Canadian commercial packages combine:</p>
+      <ol>
+        <li><strong>Commercial General Liability (CGL):</strong> Protects against third-party bodily injury, property damage, and slip-and-fall claims. $2M is the standard minimum, with $5M required for municipal or corporate vendor contracts.</li>
+        <li><strong>Errors &amp; Omissions (E&amp;O):</strong> Mandatory for professional service providers, IT developers, engineers, and consultants where financial loss is the primary risk rather than physical property damage.</li>
+        <li><strong>Cyber Insurance:</strong> Vital under Canada's Digital Privacy Act and PIPEDA mandatory breach notification laws.</li>
+      </ol>
+    </div>
+
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </div>
+  </div>
+
+  
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 Canadian Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for Canadian:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/ca-construction-holdback-10-percent-ontario-annual-release-bc-55-day-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Canada Construction Holdback (10%) &amp; Cash-Flow Release Calculator | Ontario Annual Reform vs BC 55-Day</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate statutory Canadian construction holdbacks under the Ontario Construction Act (Janu...</span>
+    </a>
+    <a href="/util/ca-consumer-proposal-vs-bankruptcy-surplus-income-2026-osb-directive-11r2-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">CA Consumer Proposal vs Bankruptcy Calculator (2026 OSB Directive 11R2)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate Canadian personal bankruptcy surplus income payments under 2026 OSB Directive No. ...</span>
+    </a>
+    <a href="/util/ca-corporate-class-swap-etf-vs-dividend-etf-non-registered-after-tax-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada Swap ETF vs Dividend ETF After-Tax Calculator (2026)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare corporate-class total-return swap ETFs with distributing ETFs after Canadian taxes, ...</span>
+    </a>
+    <a href="/util/ca-cpp-age-60-vs-65-vs-70-breakeven-calculator-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada CPP Age 60 vs 65 vs 70 Break-Even &amp; CPP2 Calculator (2026)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare Canada Pension Plan payments at 60, 65 and 70, find the month delaying CPP catches u...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+<footer>
+    <p>&copy; 2026 EMFLS Canadian Commercial Finance. Formulated in compliance with provincial retail sales tax and insurance taxation acts.</p>
+    <p><a href="/util/ca-2026-cra-tax-rrsp-tfsa-real-estate-calculators/">Return to Canada Tax &amp; RRSP Hub</a> | <a href="/">All Free Calculators</a></p>
+  </footer>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

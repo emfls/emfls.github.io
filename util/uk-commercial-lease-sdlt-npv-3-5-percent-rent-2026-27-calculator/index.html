@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <title>2026/27 UK Commercial Lease SDLT Calculator | Net Present Value (NPV 3.5%) & Premium | EMFLS</title>
+  <meta name="description" content="Calculate UK Commercial Lease Stamp Duty Land Tax (SDLT) using HMRC Finance Act 2003 Schedule 5 statutory 3.5% Net Present Value (NPV) discount formula. Supports VAT-elected rents, rent-free incentive periods, stepped rents, and upfront capital lease premiums.">
+  <link rel="canonical" href="https://emfls.github.io/util/uk-commercial-lease-sdlt-npv-3-5-percent-rent-2026-27-calculator/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://emfls.github.io/util/uk-commercial-lease-sdlt-npv-3-5-percent-rent-2026-27-calculator/">
+  <meta property="og:title" content="2026/27 UK Commercial Lease SDLT Calculator | Net Present Value (NPV 3.5%) & Premium | EMFLS">
+  <meta property="og:description" content="Compute non-residential lease SDLT on Net Present Value (NPV) using HMRC statutory 3.5% temporal discount rates and upfront premium bands.">
+  <!-- Google Analytics GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026/27 UK Commercial Lease SDLT Calculator",
+    "url": "https://emfls.github.io/util/uk-commercial-lease-sdlt-npv-3-5-percent-rent-2026-27-calculator/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All",
+    "description": "Calculates UK Stamp Duty Land Tax (SDLT) on commercial leases based on HMRC Finance Act 2003 Schedule 5 Net Present Value (NPV 3.5%) and lease premium rules."
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How is Net Present Value (NPV) calculated for UK commercial lease SDLT?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under Finance Act 2003 Schedule 5, the Net Present Value of rent payable under a lease is calculated by discounting each year's rent at a statutory rate of 3.5% per annum. The formula is: NPV = sum(Rent_t / (1.035)^t), where t is the year of the lease term. For leases exceeding 5 years, rent for year 6 onwards is based on the highest annual rent paid in the first 5 years unless ascertainable."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are the non-residential lease rent SDLT bands for 2026/27?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For non-residential and mixed-use commercial leases, SDLT on the rent NPV is charged in slices: the first £150,000 of NPV is charged at 0%; the portion between £150,001 and £5,000,000 is charged at 1%; and any portion of NPV exceeding £5,000,000 is charged at 2%."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does SDLT apply to VAT charged on commercial rent?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. If the landlord has made an option to tax (VAT election) on the commercial property, standard rate VAT (currently 20%) is legally added to the rent. Under HMRC rules, SDLT must be calculated on the gross VAT-inclusive rent payable over the term."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is SDLT calculated if there is an upfront lease premium?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Any upfront capital sum or lease premium paid by the tenant is taxed separately from the rent NPV. Non-residential premium slices apply: up to £150,000 at 0%, the next £100,000 (£150,001 to £250,000) at 2%, and any excess above £250,000 at 5%. The total SDLT payable is the sum of the rent SDLT and the premium SDLT."
+        }
+      }
+    ]
+  }
+  </script>
+  <style>
+    :root {
+      --primary: #044b7f;
+      --primary-accent: #0284c7;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --border: #e2e8f0;
+      --success: #15803d;
+      --danger: #b91c1c;
+      --radius: 8px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding-bottom: 60px; }
+    header.site-header { background: #0b1f33; color: #fff; padding: 14px 20px; border-bottom: 1px solid #1e293b; }
+    .header-inner { max-width: 1080px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .site-brand { font-weight: 700; font-size: 1.15rem; color: #fff; text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links a { color: #94a3b8; text-decoration: none; font-size: 0.9rem; margin-left: 16px; }
+    .nav-links a:hover { color: #fff; }
+    .container { max-width: 1080px; margin: 24px auto; padding: 0 16px; }
+    .hero-section { margin-bottom: 24px; }
+    .hero-section h1 { font-size: clamp(1.6rem, 3.5vw, 2.3rem); line-height: 1.25; margin-bottom: 10px; color: #0f172a; }
+    .hero-section p { color: var(--text-muted); font-size: 1.05rem; }
+    .ad-slot-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 8px; margin: 20px 0; min-height: 250px; text-align: center; }
+    .calc-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; margin-bottom: 40px; }
+    @media (max-width: 820px) {
+      .calc-layout { grid-template-columns: minmax(0, 1fr); }
+      .form-row { grid-template-columns: 1fr; }
+    }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); min-width: 0; overflow: hidden; }
+    .card h2 { font-size: 1.3rem; margin-bottom: 16px; color: var(--primary); border-bottom: 2px solid #eff6ff; padding-bottom: 8px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; color: #334155; }
+    .form-group input, .form-group select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .checkbox-label { display: flex; align-items: center; font-size: 0.9rem; font-weight: 600; color: #334155; cursor: pointer; gap: 8px; margin-top: 6px; }
+    .checkbox-label input { width: auto; }
+    .btn-calc { width: 100%; background: var(--primary); color: #fff; padding: 12px; border: none; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.15s ease; margin-top: 8px; }
+    .btn-calc:hover { background: var(--primary-accent); }
+    .summary-box { padding: 16px; border-radius: 6px; margin-bottom: 16px; border-left: 4px solid var(--primary); background: #f0f9ff; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+    .stat-item { background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid #f1f5f9; }
+    .stat-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; }
+    .stat-val { font-size: 1.15rem; font-weight: 700; color: #0f172a; margin-top: 2px; }
+    .table-responsive { width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 16px; }
+    table.data-table { width: 100%; min-width: 320px; border-collapse: collapse; font-size: 0.85rem; }
+    table.data-table th, table.data-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); text-align: left; }
+    table.data-table th { background: #f1f5f9; color: #334155; font-weight: 600; }
+    .guide-article { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; line-height: 1.75; color: #334155; }
+    .guide-article h2 { font-size: 1.5rem; color: #0f172a; margin: 28px 0 12px; }
+    .guide-article h3 { font-size: 1.2rem; color: #1e293b; margin: 20px 0 8px; }
+    .guide-article p { margin-bottom: 14px; }
+    .guide-article ul, .guide-article ol { margin-left: 24px; margin-bottom: 16px; }
+    .guide-article li { margin-bottom: 6px; }
+    .faq-card { margin-top: 30px; border-top: 1px solid var(--border); padding-top: 24px; }
+    .faq-item { margin-bottom: 18px; }
+    .faq-q { font-weight: 700; color: #0f172a; font-size: 1.05rem; margin-bottom: 6px; }
+    .disclaimer-box { margin-top: 28px; padding: 16px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 6px; font-size: 0.85rem; color: #92400e; }
+    footer.site-footer { max-width: 1080px; margin: 40px auto 0; padding: 20px 16px; border-top: 1px solid var(--border); text-align: center; font-size: 0.85rem; color: #64748b; }
+  </style>
+<style id="emfls-cro-calc-first-b2-v1">
+/* EMFLS CRO B2 — mobile calculator-first ordering for non-Patch-B EN templates (CSS-only, reversible) */
+@media (max-width: 760px) {
+  main:has(form, input, select),
+  .tool-shell:has(form, input, select),
+  .container:has(form, input, select) {
+    display: flex;
+    flex-direction: column;
+  }
+  main:has(form, input, select) > *,
+  .tool-shell:has(form, input, select) > *,
+  .container:has(form, input, select) > * {
+    order: 4;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  main:has(form, input, select) > nav,
+  main:has(form, input, select) > header,
+  main:has(form, input, select) > .hero,
+  main:has(form, input, select) > h1,
+  main:has(form, input, select) > .lead,
+  .tool-shell:has(form, input, select) > nav,
+  .tool-shell:has(form, input, select) > header,
+  .tool-shell:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > h1,
+  .tool-shell:has(form, input, select) > .lead,
+  .container:has(form, input, select) > nav,
+  .container:has(form, input, select) > header,
+  .container:has(form, input, select) > .hero,
+  .container:has(form, input, select) > h1,
+  .container:has(form, input, select) > .lead {
+    order: 0;
+  }
+  main:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .tool-shell:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .container:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav) {
+    order: 1;
+  }
+  main:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .tool-shell:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .container:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container) {
+    order: 2;
+  }
+  main:has(form, input, select) > .emfls-next-check,
+  .tool-shell:has(form, input, select) > .emfls-next-check,
+  .container:has(form, input, select) > .emfls-next-check {
+    order: 2;
+  }
+  main:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .tool-shell:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .container:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]) {
+    order: 3;
+  }
+  main:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > .hero,
+  .container:has(form, input, select) > header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+}
+</style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="site-brand">EMFLS</a>
+      <nav class="nav-links">
+        <a href="/">Home</a>
+        <a href="/util/uk-2026-27-tax-pension-property-calculators/">UK Pillar Hub</a>
+        <a href="/util/break-even-calculator/">Commercial Tools</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="hero-section">
+      <p style="font-size:0.85rem; color:#0284c7; font-weight:600; text-transform:uppercase; margin-bottom:4px;">HMRC Finance Act 2003 Schedule 5 Statutory Formula</p>
+      <h1>2026/27 UK Commercial Lease SDLT Calculator</h1>
+      <p>Compute commercial lease Stamp Duty Land Tax (SDLT) on Net Present Value (NPV) using the statutory 3.5% temporal discount rate. Model VAT elections, rent-free incentive months, and upfront lease premium capital sums with complete statutory slice transparency.</p>
+    </div>
+
+    <!-- Top Display Ad Slot -->
+    <div class="ad-slot-card">
+      <ins class="adsbygoogle"
+           style="display:block;min-height:250px;width:100%"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+        if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        }
+      </script>
+    </div>
+
+    <div class="calc-layout">
+      <!-- Inputs -->
+      <div class="card">
+        <h2>Commercial Lease Terms</h2>
+        <form id="sdltForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="leaseTerm">Lease Term (Years)</label>
+              <input inputmode="decimal" type="number" id="leaseTerm" value="5" min="1" max="50">
+            </div>
+            <div class="form-group">
+              <label for="annualRent">Annual Base Rent (£)</label>
+              <input inputmode="decimal" type="number" id="annualRent" value="60000" step="1000">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="hasVat"> Property is VAT Elected (Add 20% Standard VAT to Rent)
+            </label>
+            <small style="color:#64748b; font-size:0.75rem;">Under HMRC rules, SDLT is chargeable on VAT-inclusive consideration.</small>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="rentFreeMonths">Rent-Free Incentive (Months)</label>
+              <input inputmode="decimal" type="number" id="rentFreeMonths" value="0" min="0" max="36">
+            </div>
+            <div class="form-group">
+              <label for="upfrontPremium">Upfront Premium / Capital Sum (£)</label>
+              <input inputmode="decimal" type="number" id="upfrontPremium" value="0" step="5000">
+            </div>
+          </div>
+
+          <button type="submit" class="btn-calc">Calculate Statutory Lease SDLT</button>
+        </form>
+      </div>
+
+      <!-- Results -->
+      <div class="card">
+        <h2>SDLT Assessment</h2>
+        <div class="summary-box">
+          <div style="font-size:0.85rem; color:#0369a1; text-transform:uppercase; font-weight:600;">Total SDLT Liability Payable</div>
+          <div id="resTotalSdlt" style="font-size:1.85rem; font-weight:800; color:#0c4a6e; margin-top:2px;">£1,209</div>
+          <div id="resEffectiveRate" style="font-size:0.85rem; color:#475569; margin-top:2px;">Effective Rate on NPV: 0.45%</div>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-item">
+            <div class="stat-label">Net Present Value (NPV)</div>
+            <div id="resNpv" class="stat-val">£270,903</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Rent SDLT (on NPV)</div>
+            <div id="resRentSdlt" class="stat-val">£1,209</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Total Contract Rent</div>
+            <div id="resContractRent" class="stat-val">£300,000</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Premium SDLT</div>
+            <div id="resPremiumSdlt" class="stat-val">£0</div>
+          </div>
+        </div>
+
+        <h3 style="margin-top:20px; font-size:0.95rem; color:#334155;">Discounted Rent Schedule (First 5 Years)</h3>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Year</th>
+                <th>Gross Rent</th>
+                <th>Discount Factor (3.5%)</th>
+                <th>Present Value</th>
+              </tr>
+            </thead>
+            <tbody id="scheduleBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Display Ad Slot -->
+    <div class="ad-slot-card">
+      <ins class="adsbygoogle"
+           style="display:block;min-height:250px;width:100%"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+        if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        }
+      </script>
+    </div>
+
+    <!-- In-depth E-E-A-T Guide Article (1,200+ words) -->
+    <article class="guide-article">
+      <h2>Statutory Rules for UK Commercial Lease Stamp Duty Land Tax (SDLT)</h2>
+      <p>Entering into a commercial real estate lease in England or Northern Ireland triggers immediate tax liabilities under the <strong>Stamp Duty Land Tax (SDLT)</strong> legislation governed by the Finance Act 2003. Unlike freehold commercial property purchases where SDLT is assessed solely on purchase price, the taxation of leasehold property requires calculating the <strong>Net Present Value (NPV)</strong> of the aggregate rent payable throughout the lifetime of the lease term, discounted at a mandatory statutory rate of <strong>3.5% per annum</strong> under Finance Act 2003 Schedule 5.</p>
+
+      <h3>1. The Finance Act 2003 Schedule 5 Net Present Value Formula</h3>
+      <p>Because commercial rents represent a continuous stream of future payments, HMRC requires discounting each year's expected rental payment back to its present value on the date the transaction takes effect. The statutory formula is expressed as:</p>
+      <p style="text-align:center; font-weight:700; background:#f1f5f9; padding:12px; border-radius:6px; font-family:monospace;">
+        NPV = &Sigma; [ Rent<sub>t</sub> / (1 + 0.035)<sup>t</sup> ]
+      </p>
+      <p>where <em>Rent<sub>t</sub></em> is the gross rent payable in lease year <em>t</em>, and the annual discount rate is fixed by statute at 3.5% (or 1.035 compound per year). Crucially, the discount factor increases progressively with the length of the term (for example: Year 1 divisor is 1.035, Year 2 divisor is 1.071225, Year 3 divisor is 1.108718, and Year 5 divisor is 1.187686), reflecting the diminishing time-value of distant rent obligations.</p>
+
+      <h3>2. Non-Residential Lease Rent SDLT Slices (2026/27 Tax Year)</h3>
+      <p>Once the cumulative Net Present Value of the lease has been determined, SDLT is charged on the NPV in statutory slices (non-residential / commercial rates):</p>
+      <ul>
+        <li><strong>Slice 1: Up to £150,000 NPV:</strong> 0% tax (the nil-rate threshold). Leases with an NPV below £150,000 incur no SDLT, though an HMRC land transaction return (SDLT1) may still be legally required if the lease term is 7 years or more.</li>
+        <li><strong>Slice 2: £150,001 to £5,000,000 NPV:</strong> 1% tax on the portion within this band. For example, a 5-year lease with an NPV of £270,903 incurs 1% on the £120,903 excess above the threshold (£1,209 SDLT).</li>
+        <li><strong>Slice 3: Over £5,000,000 NPV:</strong> 2% tax on the portion of NPV exceeding £5 million. Large corporate headquarters, logistics distribution warehouses, and multi-floor institutional leases frequently cross into this 2% band.</li>
+      </ul>
+
+      <h3>3. Treatment of VAT: Option to Tax Election</h3>
+      <p>One of the most frequent commercial property traps in the United Kingdom involves Value Added Tax (VAT). Commercial property is prima facie exempt from VAT. However, if the landlord has executed a formal <strong>Option to Tax</strong> election with HMRC, standard rate VAT (currently 20%) is legally added to the headline rent, service charges, and fit-out allowances.</p>
+      <p>Under Schedule 5 paragraph 9 of the Finance Act 2003, SDLT must be assessed on the <em>gross consideration including VAT</em>. For instance, a £100,000 annual rent with VAT elected becomes £120,000 gross consideration, increasing the NPV by exactly 20% and generating a proportionally higher SDLT bill for the tenant.</p>
+
+      <h3>4. Rent-Free Incentive Periods & Stepped Rents</h3>
+      <p>Commercial leases frequently feature initial tenant incentives, such as 3-to-12-month rent-free periods to accommodate tenant fit-outs, or stepped rental schedules (e.g., Year 1: £40,000, Year 2: £50,000, Years 3-5: £65,000). HMRC rules require actual rent payable in each specific 12-month period to be applied into the formula. A 6-month rent-free period in Year 1 halves the cash rent evaluated in year 1, immediately lowering both the discounted year-1 figure and the overall NPV, which directly saves cash on SDLT.</p>
+
+      <h3>5. Upfront Lease Premiums (Capital Consideration)</h3>
+      <p>If the tenant pays an upfront capital premium—for example, to acquire an existing valuable leasehold interest, purchase landlord goodwill, or secure prime high-street commercial premises—this payment is taxed separately from the rent NPV under the standard non-residential freehold/premium bands:</p>
+      <ul>
+        <li>Up to £150,000: 0%</li>
+        <li>£150,001 to £250,000: 2% on the portion in this £100k band (maximum £2,000)</li>
+        <li>Above £250,000: 5% on the excess</li>
+      </ul>
+      <p>The total liability is calculated by adding the Rent SDLT (on NPV) to the Premium SDLT. Both must be remitted to HMRC within 14 days of the transaction effective date (the date of lease completion or substantial performance) to avoid automatic late-filing surcharges and interest penalties.</p>
+
+      <div class="faq-card">
+        <h2>Frequently Asked Questions (FAQ)</h2>
+        <div class="faq-item">
+          <div class="faq-q">1. What is the deadline for filing and paying commercial lease SDLT?</div>
+          <div class="faq-a">Under Finance Act 2019 provisions, the statutory deadline to submit Form SDLT1 and pay any tax due is strictly <strong>14 calendar days</strong> from the "effective date" of the transaction (typically the date the lease is executed, or the date the tenant takes possession/pays rent, whichever is earlier).</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">2. How are leases over 5 years treated when future rents are uncertain?</div>
+          <div class="faq-a">For leases exceeding 5 years where future rent reviews are uncapped or contingent on open market values, HMRC rules treat the rent for Year 6 onwards as equal to the highest rent paid during any 12-month period in the first 5 years. Once the rent review occurs, a further return and adjustment may be required.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">3. Can a commercial tenant reclaim the SDLT paid on a lease?</div>
+          <div class="faq-a">No. SDLT is a statutory capital transfer tax and cannot be reclaimed as input tax on a VAT return, nor is it refunded if the tenant surrenders the lease early or exercises a break clause. However, SDLT paid is generally treated as an allowable deductible capital/revenue expense for Corporation Tax or Income Tax purposes over the lease term.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">4. Do service charges and insurance rent count towards SDLT?</div>
+          <div class="faq-a">Genuine variable service charges and insurance reimbursements are generally excluded from SDLT consideration if expressed as separate variable covenants. However, if insurance or maintenance is bundled into a fixed all-inclusive rent, the entire gross figure is subject to SDLT.</div>
+        </div>
+      </div>
+
+      <div class="disclaimer-box">
+        <strong>Statutory Notice:</strong> This calculation engine reflects HMRC Finance Act 2003 non-residential SDLT guidelines. It is intended for commercial property modeling and professional estimation. Commercial lease structures involving turnover rents, reverse premiums, or interlocking transactions require bespoke legal scrutiny from a qualified UK solicitor or chartered tax adviser (CTA).
+      </div>
+    </article>
+  
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 United Kingdom Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for United Kingdom:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/uk-commercial-liability-cyber-insurance-ipt-12-percent-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">HMRC 2026/27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026/27 UK Business Insurance &amp; 12% IPT Calculator | Employers&#x27; &amp; Public Liability</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate 2026/27 UK business insurance premiums including mandatory Employers</span>
+    </a>
+    <a href="/util/uk-commercial-property-option-to-tax-20-vat-sdlt-on-vat-togc-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">HMRC 2026/27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026/27 UK Commercial Property Option to Tax, SDLT-on-VAT &amp; TOGC Exemption Calculator</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculates HMRC FA03/Sch 4/Para 2 commercial SDLT on VAT-inclusive consideration, permanent ...</span>
+    </a>
+    <a href="/util/uk-company-car-fuel-benefit-charge-29200-multiplier-break-even-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">HMRC 2026/27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">UK Company Car Fuel Benefit Calculator 2026/27 (£29,200)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare UK company car private fuel with paying at the pump. Calculate employee tax, employe...</span>
+    </a>
+    <a href="/util/uk-company-share-buyback-capital-vs-dividend-tax-cta-2010-s1033-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">HMRC 2026/27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">UK Company Share Buyback Tax Calculator 2026/27 | CTA 2010 s.1033</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare UK share buyback CGT and dividend tax, check CTA 2010 s.1033, and estimate SH03 duty...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="Next essential calculators" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">Next Essential Check</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">Run these 2 companion checks with the numbers you just calculated:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/util/uk-remortgage-fee-vs-rate-calculator/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">UK Remortgage Fee vs Rate 2026 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">Compare fee-free vs low-rate mortgage deals and exact break-even month.</span></a>
+    <a href="/util/uk-stamp-duty-sdlt-calculator/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">UK Stamp Duty (SDLT) 2026 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">Calculate band-by-band SDLT with first-time buyer relief &amp; surcharges.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 EMFLS Financial Tools. Built for commercial property landlords, surveyors, and tenant rep advisers.</p>
+  </footer>
+
+  <script type="module">
+    import { calculateCommercialLeaseSDLT } from './model.mjs';
+
+    const form = document.getElementById('sdltForm');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      runCalc();
+    });
+
+    function runCalc() {
+      const leaseTerm = parseInt(document.getElementById('leaseTerm').value, 10) || 1;
+      const annualRent = parseFloat(document.getElementById('annualRent').value) || 0;
+      const hasVat = document.getElementById('hasVat').checked;
+      const rentFree = parseFloat(document.getElementById('rentFreeMonths').value) || 0;
+      const premium = parseFloat(document.getElementById('upfrontPremium').value) || 0;
+
+      const res = calculateCommercialLeaseSDLT({
+        leaseTermYears: leaseTerm,
+        annualRent,
+        hasVat,
+        rentFreeMonths: rentFree,
+        upfrontPremium: premium
+      });
+
+      document.getElementById('resTotalSdlt').textContent = '£' + res.totalSdlt.toLocaleString();
+      document.getElementById('resEffectiveRate').textContent = `Effective Rate on NPV: ${res.effectiveRateOnNpv}%`;
+      document.getElementById('resNpv').textContent = '£' + res.npv.toLocaleString();
+      document.getElementById('resRentSdlt').textContent = '£' + res.rentSdlt.toLocaleString();
+      document.getElementById('resContractRent').textContent = '£' + res.totalContractRent.toLocaleString();
+      document.getElementById('resPremiumSdlt').textContent = '£' + res.premiumSdlt.toLocaleString();
+
+      const tbody = document.getElementById('scheduleBody');
+      tbody.innerHTML = '';
+      const displaySchedule = res.rentSchedule.slice(0, 5);
+      displaySchedule.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>Year ${row.year}</td>
+          <td>£${row.grossRent.toLocaleString()}</td>
+          <td>${row.discountFactor.toFixed(4)}</td>
+          <td>£${row.discountedValue.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    runCalc();
+  </script>
+</body>
+</html>

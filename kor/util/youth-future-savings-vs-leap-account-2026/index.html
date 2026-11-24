@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>2026 신설 청년미래적금 계산기 (3년·최대 12% 정부기여금 매칭·이자 비과세)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="description" content="2026년 신설 청년미래적금(3년 만기, 월 최대 50만 원, 12% 정부기여금 매칭, 이자 비과세) 만기 수령액, 시중 과세 적금 환산 금리 및 기존 5년 청년도약계좌 비교 계산기." />
+  <link rel="canonical" href="https://emfls.github.io/kor/util/youth-future-savings-vs-leap-account-2026/" />
+  <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+
+  <!-- Preconnects -->
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="2026 청년미래적금 계산기 (3년 만기·12% 정부기여금 매칭)" />
+  <meta property="og:description" content="2026년 청년도약계좌 후속 신설 청년미래적금 만기 수령액 및 일반 적금 대비 연 15% 환산 수익률 즉시 계산" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://emfls.github.io/kor/util/youth-future-savings-vs-leap-account-2026/" />
+  <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --success: #16a34a;
+      --success-bg: #f0fdf4;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+    .wrapper {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 3rem 1rem;
+    }
+    .header-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+    .header-nav a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 0.75rem;
+      line-height: 1.3;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-box {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-box h2 {
+      font-size: 1.1rem;
+      color: var(--primary-dark);
+      margin-bottom: 0.5rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .badge-youth {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #7dd3fc;
+    }
+    .warning-box {
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      color: #92400e;
+    }
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    @media (max-width: 600px) {
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .result-item {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .result-item .label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+    .result-item .val {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .calculator-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+    }
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      color: #334155;
+    }
+    .form-group .helper-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+    .form-control {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .statutory-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.875rem;
+    }
+    .statutory-table th, .statutory-table td {
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      text-align: left;
+    }
+    .statutory-table th {
+      background: #f8fafc;
+      font-weight: 700;
+    }
+    .faq-section {
+      margin-top: 2.5rem;
+    }
+    .faq-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .faq-question {
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 0.35rem;
+    }
+    .faq-answer {
+      font-size: 0.9rem;
+      color: #475569;
+    }
+    .internal-nav {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+    .internal-nav ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .ad-container {
+      margin: 2rem 0;
+      text-align: center;
+      min-height: 250px;
+    }
+  </style>
+
+  <!-- JSON-LD: WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 청년미래적금 계산기",
+    "description": "2026년 신설 청년미래적금 3년 만기 수령액, 최대 12% 정부기여금 매칭, 이자 비과세 및 일반 적금 대비 환산 수익률 계산기",
+    "url": "https://emfls.github.io/kor/util/youth-future-savings-vs-leap-account-2026/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All",
+    "inLanguage": "ko-KR"
+  }
+  </script>
+
+  <!-- JSON-LD: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "2026년 청년미래적금이란 무엇이며 청년도약계좌와 어떻게 다른가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "청년도약계좌가 5년 만기로 중도해지율이 높았던 한계를 개선하여 만기를 3년(36개월)으로 단축하고, 월 최대 50만 원 납입 시 소득에 따라 최대 12%의 정부기여금을 매칭해 주는 2026년 신규 청년 자산형성 정책상품입니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "청년미래적금 가입 대상과 연령 요건은 어떻게 되나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "만 19세부터 만 34세 이하 청년이 대상이며, 군복무를 마친 경우 복무기간(최대 6년)만큼 연령 기준이 연장되어 최고 만 40세까지 가입할 수 있습니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "우대형과 일반형의 정부기여금 매칭 비율은 얼마인가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "개인소득 3,600만 원 이하(소상공인 1억 이하) 우대형은 납입액의 12%(월 최대 6만 원, 3년 216만 원), 6,000만 원 이하(소상공인 3억 이하) 일반형은 6%(월 최대 3만 원, 3년 108만 원)의 기여금을 정부가 전액 지원합니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "기존에 청년도약계좌를 가입한 사람은 갈아탈 수 있나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "청년도약계좌는 2025년 12월 31일로 신규 가입이 종료되었습니다. 기존 가입자는 5년 만기 완주 시 최대 약 5,000만 원 목돈 마련이 가능하며, 3년 이상 유지 시 비과세 혜택을 챙겨 특별중도해지 후 청년미래적금으로 신규 가입하는 방안을 고려할 수 있습니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "청년미래적금의 비과세 혜택은 얼마나 큰가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "일반 시중은행 적금에서 차감되는 15.4%의 이자소득세가 전액 면제되므로, 정부기여금과 합산 시 시중 적금 금리 기준 연 10.5%~15.1%에 해당하는 파격적인 세후 확정 수익률 효과를 누릴 수 있습니다."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- JSON-LD: BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "홈",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "한국어 계산기 허브",
+        "item": "https://emfls.github.io/kor/util/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "2026 청년미래적금 계산기",
+        "item": "https://emfls.github.io/kor/util/youth-future-savings-vs-leap-account-2026/"
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <div class="wrapper">
+    <nav class="header-nav">
+      <a href="/kor/util/">← 한국어 도구 목록</a>
+      <span>2026 금융위원회 청년정책 기준</span>
+    </nav>
+
+    <h1>2026 신설 청년미래적금 계산기</h1>
+    <p class="subtitle">3년 만기 · 월 최대 50만 원 · 최대 12% 정부기여금 매칭 · 이자소득 전액 비과세</p>
+
+    <!-- Ad Slot 1 (Top) -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center; min-height: 250px"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"></ins>
+      <script>
+        if (!['127.0.0.1', 'localhost', ''].includes(window.location.hostname)) {
+          if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+        }
+      </script>
+    </div>
+
+    <!-- Summary Box -->
+    <div class="summary-box">
+      <span class="badge badge-youth">2026 신규 정책상품</span>
+      <h2>3년 만기 시 총 수령액</h2>
+      <div class="result-grid">
+        <div class="result-item">
+          <div class="label">최종 만기 수령액 (원금+이자+기여금)</div>
+          <div class="val" id="res-total-payout">21,547,500원</div>
+        </div>
+        <div class="result-item">
+          <div class="label">총 순이익 및 수익률</div>
+          <div class="val" id="res-total-profit" style="color: var(--success);">+3,547,500원 (19.71%)</div>
+        </div>
+        <div class="result-item">
+          <div class="label">일반 시중 적금 환산 금리</div>
+          <div class="val" id="res-equiv-rate" style="color: var(--primary);">연 15.11% 상당</div>
+        </div>
+        <div class="result-item">
+          <div class="label">월 정부기여금 지원액</div>
+          <div class="val" id="res-monthly-match" style="font-size: 1.1rem;">60,000원 / 월</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loss Aversion Warning Box -->
+    <div class="warning-box">
+      <strong>⚠️ 5년 묶이는 도약계좌 중도해지 손실 대신 3년 청년미래적금으로 유동성 확보!</strong><br />
+      청년도약계좌는 5년 만기 완주 시 최대 5,000만 원 목돈을 주지만 긴 납입기간으로 중도해지율이 높았습니다. 2026 신설 청년미래적금은 <strong>3년 만기</strong>로 유동성 부담을 대폭 줄이면서도 <strong>12% 정부기여금 매칭 + 15.4% 비과세</strong>를 결합해 시중 적금 금리 연 15% 수준의 압도적 수익률을 보장합니다.
+    </div>
+
+    <!-- Calculator Card -->
+    <div class="calculator-card">
+      <form id="future-savings-form">
+        <div class="form-group">
+          <label for="incomeType">소득 구간 및 지원 유형</label>
+          <select id="incomeType" class="form-control">
+            <option value="preferential" selected>우대형: 개인소득 3,600만 이하 (정부기여금 12% 매칭)</option>
+            <option value="standard">일반형: 개인소득 6,000만 이하 (정부기여금 6% 매칭)</option>
+            <option value="tax_free_only">비과세형: 개인소득 6,000만~7,500만 이하 (이자 비과세 전용)</option>
+          </select>
+          <div class="helper-text">가구 중위소득 기준: 우대형(150% 이하), 일반형/비과세형(200% 이하) 충족 필요.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="monthlyDeposit">월 납입액 (원)</label>
+          <input inputmode="decimal" type="number" id="monthlyDeposit" class="form-control" value="500000" min="100000" max="500000" step="50000" />
+          <div class="helper-text">월 10만 원 ~ 최대 50만 원 자유적립 (권장: 최대 한도 50만 원).</div>
+        </div>
+
+        <div class="form-group">
+          <label for="bankRatePercent">은행 기본+우대 금리 (연 %)</label>
+          <input inputmode="decimal" type="number" id="bankRatePercent" class="form-control" value="5.0" min="1.0" max="8.0" step="0.1" />
+          <div class="helper-text">시중 취급은행 공시 기본금리 + 우대조건 금리 합산 (통상 연 4.5%~5.0%).</div>
+        </div>
+      </form>
+
+      <!-- Detailed Breakdown Table -->
+      <table class="statutory-table">
+        <thead>
+          <tr>
+            <th>구분</th>
+            <th>산출 금액</th>
+            <th>비고</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>3년 누적 본인 납입 원금</td>
+            <td id="res-principal">18,000,000원</td>
+            <td>월 50만 원 × 36개월</td>
+          </tr>
+          <tr>
+            <td>은행 적금 이자</td>
+            <td id="res-bank-interest">1,387,500원 (비과세)</td>
+            <td>연 5.0% 단리적수 기준</td>
+          </tr>
+          <tr>
+            <td>정부기여금 총액</td>
+            <td id="res-match-amount" style="font-weight: 700; color: var(--success);">2,160,000원 (12% 매칭)</td>
+            <td>월 60,000원 × 36개월</td>
+          </tr>
+          <tr>
+            <td>이자소득세 절세액</td>
+            <td id="res-tax-saved">213,675원 절세</td>
+            <td>일반 적금 15.4% 비과세</td>
+          </tr>
+          <tr>
+            <td>만기 총 수령액</td>
+            <td style="font-weight: 800; color: var(--primary);">21,547,500원</td>
+            <td>원금 + 은행이자 + 정부지원금</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- SVG Breakdown Chart -->
+      <div style="margin-top: 1.5rem; text-align: center;">
+        <h4 style="font-size: 0.95rem; margin-bottom: 0.75rem; color: #334155;">3년 만기 수령액 구성 (원금 / 이자 / 정부기여금)</h4>
+        <svg viewBox="0 0 400 130" style="width: 100%; max-width: 460px; height: auto; background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
+          <!-- Principal -->
+          <text x="10" y="32" font-size="12" fill="#64748b" font-weight="600">본인 납입 원금</text>
+          <rect id="bar-principal" x="110" y="18" width="220" height="20" rx="4" fill="#94a3b8" />
+          
+          <!-- Bank Interest -->
+          <text x="10" y="72" font-size="12" fill="#0284c7" font-weight="600">은행 비과세 이자</text>
+          <rect id="bar-interest" x="110" y="58" width="30" height="20" rx="4" fill="#38bdf8" />
+
+          <!-- Government Match -->
+          <text x="10" y="112" font-size="12" fill="#16a34a" font-weight="700">정부기여금 매칭</text>
+          <rect id="bar-match" x="110" y="98" width="50" height="20" rx="4" fill="#16a34a" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+      <h2 style="font-size: 1.3rem; margin-bottom: 1rem; color: #0f172a;">2026 청년미래적금 자주 묻는 질문 (FAQ)</h2>
+      
+      <div class="faq-item">
+        <div class="faq-question">Q. 청년미래적금의 출범 시기와 가입 신청 방법은 어떻게 되나요?</div>
+        <div class="faq-answer">
+          2026년 상반기 출시 예정이며, KB국민·신한·하나·우리·NH농협 등 주요 시중은행 모바일 뱅킹 앱을 통해 비대면으로 서류 제출 없이 원스톱 자격 확인 및 개설이 가능합니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 청년도약계좌와 중복 가입이 가능한가요?</div>
+        <div class="faq-answer">
+          정부 지원 자산형성 상품의 중복 가입은 원칙적으로 제한됩니다. 다만 청년희망적금 만기 수령 후 도약계좌로 연계가입했던 것처럼, 도약계좌를 3년 이상 유지하여 비과세 혜택을 챙겨 해지하거나 만기 도래 후 미래적금으로 갈아타는 절차는 허용됩니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 납입 도중 소득이 오르면 정부기여금이 취소되나요?</div>
+        <div class="faq-answer">
+          가입 시점의 전년도 소득을 기준으로 유형(우대형/일반형)이 결정되며, 매년 국세청 소득 심사를 통해 차년도 기여금 매칭 비율이 유지되거나 조정됩니다. 최초 가입 자격을 충족했다면 중도 탈락하지 않고 비과세 혜택은 만기까지 유지됩니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 3년을 다 채우지 못하고 중도해지하면 기여금을 못 받나요?</div>
+        <div class="faq-answer">
+          일반 중도해지 시에는 정부기여금이 지급되지 않고 이자소득세가 과세될 수 있습니다. 다만 생애최초 주택구입, 혼인·출산, 퇴직·폐업 등 법정 특별중도해지 사유에 해당할 경우 기여금 전액 수령 및 비과세 혜택이 정상 인정됩니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 군 복무 기간은 어떻게 산정되어 나이 제한을 늘려주나요?</div>
+        <div class="faq-answer">
+          병역법에 따른 현역병, 공익근무요원, 직업군인 등의 복무기간(최대 6년)을 현재 나이에서 차감하여 계산합니다. 예를 들어 만 36세 청년이 군 복무를 2년 마쳤다면 만 34세로 인정받아 정상 가입할 수 있습니다.
+        </div>
+      </div>
+    </section>
+
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="다음 필수 확인 계산기" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">다음 필수 확인 계산기 (Next Check)</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">방금 계산한 결과를 바탕으로 바로 이어서 점검하세요:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/kor/util/isa-maturity-pension-transfer-300man-credit-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">ISA 만기 연금전환 300만 공제 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">청년 적금 만기 목돈을 ISA·연금으로 굴릴 때 비과세+세액공제 효과를 비교하세요.</span></a>
+    <a href="/kor/util/jeonse-loan-youth-newborn-beotimmok-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">청년 버팀목 전세대출 계산기 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">목돈 마련과 동시에 월 주거비 이자를 줄이는 1~2%대 청년 전세대출을 확인하세요.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+
+    <!-- Ad Slot 2 (Bottom) -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center; min-height: 250px"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"></ins>
+      <script>
+        if (!['127.0.0.1', 'localhost', ''].includes(window.location.hostname)) {
+          if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+        }
+      </script>
+    </div>
+
+    <!-- Internal Navigation Hub -->
+    <div class="internal-nav">
+      <strong>관련 금융·절세 계산기:</strong>
+      <ul>
+        <li><a href="/kor/util/finance-tax-2026/">2026 세금·연봉·부동산 계산기 모음 허브</a></li>
+        <li><a href="/kor/util/salary-take-home-4-insurance-2026/">2026 연봉 실수령액 & 4대보험 인상 계산기</a></li>
+        <li><a href="/kor/util/pension-irp-isa-tax-credit-2026/">연금저축·IRP·ISA 세액공제 900만 원 절세 계산기</a></li>
+        <li><a href="/kor/util/financial-income-comprehensive-tax-dividend-isa-2026/">2026 금융소득종합과세 & 고배당 분리과세 계산기</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 대한민국 세무·금융·복지 핵심 계산기</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">2026년도 국세청·고용노동부 기준 연계 계산 도구:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/kor/util/annual-leave-allowance-ordinary-wage-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 연차수당·통상임금 계산기 | 정기상여금·209시간</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">정기상여금 산입 전후의 통상시급, 미사용 연차수당과 연장·야간·휴일근로 단가를 비교하세요. 209시간과 근속연수에 따른 법정 연차를 반영합니다.</span>
+    </a>
+    <a href="/kor/util/apartment-management-fee-long-term-repair-refund-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 장기수선충당금 반환 계산기 | 아파트·오피스텔 퇴거 관리비 일할 정산</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">아파트 장기수선충당금·오피스텔 수선적립금 변동구간 합산 반환 청구액과 10년 소멸시효, 중도 퇴거일 마지막 달 관리비·공과금 일할 상계 정산표를 한 번에 계산합니다.</span>
+    </a>
+    <a href="/kor/util/basic-pension-247man-income-recognition-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 기초연금 선정기준액 &amp; 소득인정액 계산기 | 단독 247만·부부 395.2만 원</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 보건복지부 확정 단독가구 247만 원, 부부가구 395.2만 원 기초연금 선정기준액 및 최대 349,700원/559,520원 수급액, 근로소득 116만 원...</span>
+    </a>
+    <a href="/kor/util/business-simple-vs-standard-expense-rate-tax-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 종합소득세 단순경비율 vs 기준경비율 vs 장부신고 절세 비교 계산기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 개인사업자 및 프리랜서 종합소득세 추계신고(단순경비율·기준경비율) vs 간편장부 vs 복식부기 세액 실시간 비교. 직전연도 수입금액별 기준, 무기장가산세 ...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>2026 글로벌 세무·금융·복지 계산기 전수 보기 &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</body>
+</html>

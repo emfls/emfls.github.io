@@ -710,7 +710,7 @@ def test_git_changes_captures_blobs_for_the_approved_adsense_collector_transitio
     def fake_run(command, **kwargs):
         calls.append(command)
         if command[:3] == ["git", "diff", "--name-status"]:
-            return type("Result", (), {"stdout": f"M\t{path}\n"})()
+            return type("Result", (), {"stdout": f"M\0{path}\0"})()
         if command == ["git", "rev-parse", f"base-sha:{path}"]:
             return type("Result", (), {"stdout": before_blob + "\n"})()
         if command == ["git", "rev-parse", f"HEAD:{path}"]:
@@ -820,11 +820,11 @@ def test_git_changes_ignore_ci_generated_worktree_files(monkeypatch, tmp_path):
 
     def fake_run(command, **kwargs):
         captured["command"] = command
-        return type("Result", (), {"stdout": "A\tkor/report/camp/new.html\n"})()
+        return type("Result", (), {"stdout": "A\0kor/report/camp/new.html\0"})()
 
     monkeypatch.setattr("scripts.content_launch_guard.subprocess.run", fake_run)
     assert _git_changes(tmp_path, "base-sha") == [("A", "kor/report/camp/new.html")]
-    assert captured["command"] == ["git", "diff", "--name-status", "base-sha", "HEAD"]
+    assert captured["command"] == ["git", "diff", "--name-status", "-z", "--find-renames", "base-sha", "HEAD"]
 
 
 def test_final_guard_blocks_hold_and_no_new_page_candidates(tmp_path):
@@ -982,8 +982,8 @@ def test_git_changes_captures_exact_added_navigation_hub_blob(monkeypatch, tmp_p
     path = "kor/report/index.html"
     after = "49525525f01f3c95dbafd19622ba773656928474"
     def fake_run(command, **kwargs):
-        if command == ["git", "diff", "--name-status", "base-sha", "HEAD"]:
-            return type("Result", (), {"stdout": f"A\t{path}\n"})()
+        if command == ["git", "diff", "--name-status", "-z", "--find-renames", "base-sha", "HEAD"]:
+            return type("Result", (), {"stdout": f"A\0{path}\0"})()
         assert command == ["git", "rev-parse", f"HEAD:{path}"]
         return type("Result", (), {"stdout": after + "\n"})()
     monkeypatch.setattr("scripts.content_launch_guard.subprocess.run", fake_run)

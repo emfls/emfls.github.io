@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026–27 Australia Business Loan Factor Rate & MCA True APR Converter | EMFLS</title>
+  <meta name="description" content="Converts Australian commercial factor rates (1.15 to 1.50) and merchant cash advances (MCA) into exact IRR and annualized True Effective APR using deterministic numerical root-finding, highlighting the fixed factor prepay penalty.">
+  <link rel="canonical" href="https://emfls.github.io/util/au-business-loan-factor-rate-mca-true-apr-converter-2026-27-calculator/">
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+
+  <!-- GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+
+  <!-- AdSense Guard -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+
+  <!-- JSON-LD WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026–27 Australia Business Loan Factor Rate & MCA True APR Converter",
+    "description": "Converts Australian commercial factor rates (1.15 to 1.50) and merchant cash advances (MCA) into exact IRR and annualized True Effective APR using deterministic numerical root-finding, highlighting the fixed factor prepay penalty.",
+    "url": "https://emfls.github.io/util/au-business-loan-factor-rate-mca-true-apr-converter-2026-27-calculator/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "AUD"
+    }
+  }
+  </script>
+
+  <!-- JSON-LD FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the difference between a factor rate and an annual percentage rate (APR)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A factor rate (e.g. 1.25) multiplies your principal to determine a fixed total repayment ($100k x 1.25 = $125k). Unlike APR, it does not account for reducing balance as you make daily or weekly payments. Because you repay principal rapidly, your average capital in use is only half, causing the True Effective APR to be roughly double the simple factor percentage (often 50% to 80%+ APR)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I save on interest if I pay off an Australian factor rate loan early?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Generally, NO. Most merchant cash advance and factor rate contracts in Australia enforce a fixed charge: you must pay the full $125,000 regardless of whether you pay it off in 3 months or 12 months, meaning early repayment actually spikes your effective APR even higher."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does an establishment fee affect the True APR?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "An upfront establishment fee (e.g. 3% = $3,000) reduces your net disbursed cash to $97,000 while leaving total repayment at $125,000. This upfront capital haircut adds several percentage points to your effective annualized cost."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- JSON-LD BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://emfls.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Australia Commercial Finance",
+        "item": "https://emfls.github.io/util/au-tax-finance-calculators-2026/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Factor Rate & MCA True APR Converter",
+        "item": "https://emfls.github.io/util/au-business-loan-factor-rate-mca-true-apr-converter-2026-27-calculator/"
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --primary: #044e54;
+      --accent: #0f766e;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --border: #e2e8f0;
+      --danger: #dc2626;
+      --success: #16a34a;
+      --warning: #d97706;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 24px 16px;
+    }
+    header {
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 1.8rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    p.lead {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      margin: 0;
+    }
+    .ad-container {
+      min-height: 100px;
+      margin: 20px 0;
+      background: #f1f5f9;
+      border: 1px dashed #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    @media (min-width: 768px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    h2 {
+      font-size: 1.25rem;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 8px;
+      margin-top: 0;
+      color: var(--primary);
+    }
+    .form-group {
+      margin-bottom: 14px;
+    }
+    label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+    input, select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+    .metric-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .metric-label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .metric-val {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .metric-val.red { color: var(--danger); }
+    .metric-val.green { color: var(--success); }
+    .alert-box {
+      background: #fef2f2;
+      border-left: 4px solid var(--danger);
+      padding: 12px 14px;
+      margin: 16px 0;
+      border-radius: 4px;
+      font-size: 0.88rem;
+      color: #991b1b;
+    }
+    .chart-container {
+      margin-top: 16px;
+      text-align: center;
+    }
+    footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+      margin: 0 8px;
+    }
+  </style>
+<style id="emfls-cro-calc-first-b2-v1">
+/* EMFLS CRO B2 — mobile calculator-first ordering for non-Patch-B EN templates (CSS-only, reversible) */
+@media (max-width: 760px) {
+  main:has(form, input, select),
+  .tool-shell:has(form, input, select),
+  .container:has(form, input, select) {
+    display: flex;
+    flex-direction: column;
+  }
+  main:has(form, input, select) > *,
+  .tool-shell:has(form, input, select) > *,
+  .container:has(form, input, select) > * {
+    order: 4;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  main:has(form, input, select) > nav,
+  main:has(form, input, select) > header,
+  main:has(form, input, select) > .hero,
+  main:has(form, input, select) > h1,
+  main:has(form, input, select) > .lead,
+  .tool-shell:has(form, input, select) > nav,
+  .tool-shell:has(form, input, select) > header,
+  .tool-shell:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > h1,
+  .tool-shell:has(form, input, select) > .lead,
+  .container:has(form, input, select) > nav,
+  .container:has(form, input, select) > header,
+  .container:has(form, input, select) > .hero,
+  .container:has(form, input, select) > h1,
+  .container:has(form, input, select) > .lead {
+    order: 0;
+  }
+  main:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .tool-shell:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .container:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav) {
+    order: 1;
+  }
+  main:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .tool-shell:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .container:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container) {
+    order: 2;
+  }
+  main:has(form, input, select) > .emfls-next-check,
+  .tool-shell:has(form, input, select) > .emfls-next-check,
+  .container:has(form, input, select) > .emfls-next-check {
+    order: 2;
+  }
+  main:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .tool-shell:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .container:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]) {
+    order: 3;
+  }
+  main:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > .hero,
+  .container:has(form, input, select) > header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+}
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>2026–27 Australia Factor Rate & MCA True APR Converter</h1>
+      <p class="lead">Reveal the true annualized cost of commercial factor rates, establishment fees, and daily repayments.</p>
+    </header>
+
+    <!-- Top Ad Slot -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block; width:100%; height:90px;"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="horizontal"></ins>
+      <script>
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+          if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+        }
+      </script>
+    </div>
+
+    <div class="grid">
+      <!-- Inputs Column -->
+      <div class="card">
+        <h2>1. Loan & Factor Rate Terms</h2>
+        <div class="form-group">
+          <label for="principal">Borrowed Amount ($AUD)</label>
+          <input type="number" id="principal" value="100000" step="5000" inputmode="decimal">
+        </div>
+        <div class="form-group">
+          <label for="factorRate">Factor Rate (e.g. 1.25 for 1.25x)</label>
+          <input inputmode="decimal" type="number" id="factorRate" value="1.25" min="1.05" max="1.60" step="0.01">
+        </div>
+        <div class="form-group">
+          <label for="termMonths">Loan Term (Months)</label>
+          <input type="number" id="termMonths" value="12" min="2" max="24" step="1" inputmode="decimal">
+        </div>
+        <div class="form-group">
+          <label for="frequency">Repayment Frequency</label>
+          <select id="frequency">
+            <option value="weekly" selected>Weekly (52 payments/yr)</option>
+            <option value="daily">Daily Business Days (260 payments/yr)</option>
+            <option value="monthly">Monthly (12 payments/yr)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="originationFeePercent">Establishment Fee (%)</label>
+          <input inputmode="decimal" type="number" id="originationFeePercent" value="3.0" step="0.5">
+        </div>
+        <div class="form-group">
+          <label for="bankRate">Bank Term Loan Benchmark Rate (%)</label>
+          <input inputmode="decimal" type="number" id="bankRate" value="9.25" step="0.25">
+        </div>
+      </div>
+
+      <!-- Results Column -->
+      <div class="card">
+        <h2>True Effective Cost & Comparison</h2>
+
+        <div class="metric-box">
+          <div class="metric-label">Total Repayment Amount</div>
+          <div class="metric-val" id="dispTotalRepayment">$125,000</div>
+        </div>
+
+        <div class="metric-box">
+          <div class="metric-label">Net Disbursed Cash in Bank</div>
+          <div class="metric-val" id="dispNetDisbursed">$97,000</div>
+        </div>
+
+        <div class="metric-box">
+          <div class="metric-label">Periodic Repayment</div>
+          <div class="metric-val" id="dispPayment">$2,404/wk</div>
+        </div>
+
+        <div class="metric-box">
+          <div class="metric-label">Nominal Annual Percentage Rate (APR)</div>
+          <div class="metric-val red" id="dispNominalApr">46.8%</div>
+        </div>
+
+        <div class="metric-box">
+          <div class="metric-label">True Effective Compounded APR (EAR)</div>
+          <div class="metric-val red" id="dispEffectiveApr">58.7%</div>
+        </div>
+
+        <div class="metric-box">
+          <div class="metric-label">Total Cost vs Australian Major Bank</div>
+          <div class="metric-val red" id="dispCostMultiple">5.5x More Expensive</div>
+        </div>
+
+        <div class="metric-box">
+          <div class="metric-label">Potential Bank Savings</div>
+          <div class="metric-val green" id="dispBankSavings">$22,900</div>
+        </div>
+
+        <div class="alert-box" id="factorAlert">
+          <strong>The Fixed Factor Penalty:</strong> Unlike standard Australian commercial bank loans where interest reduces as you pay off debt, a factor rate locks in $28,000 in total fees from Day 1. Early payout provides zero interest rebate!
+        </div>
+
+        <div class="chart-container">
+          <svg id="mcaChartSvg" width="100%" height="200" viewBox="0 0 460 200"></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Ad Slot -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block; width:100%; height:90px;"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="horizontal"></ins>
+      <script>
+        if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+          if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+        }
+      </script>
+    </div>
+
+    
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 Australian Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for Australian:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/au-business-public-liability-pi-insurance-stamp-duty-gst-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">ATO 2026–27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026–27 Australia Business Insurance Stamp Duty &amp; 10% GST Calculator</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate 2026–27 Australian small business public liability, PI &amp; cyber insurance costs. In...</span>
+    </a>
+    <a href="/util/au-capital-gains-tax-50-discount-calculator-2026-27/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">ATO 2026–27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Australia Capital Gains Tax (CGT) Calculator 2026–27 | 50% Discount &amp; 15% Bracket</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate Australian CGT for 2026–27 using the 50% discount, the new 15% resident bracket, ca...</span>
+    </a>
+    <a href="/util/au-car-expense-91-cents-per-km-vs-logbook-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">ATO 2026–27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Australia Car Expense Calculator 2026–27 | 91¢/km vs Logbook</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare the ATO’s 91¢/km car deduction with the 12-week logbook method for 2026–27. Estimate...</span>
+    </a>
+    <a href="/util/au-car-fbt-statutory-formula-20-percent-vs-operating-cost-logbook-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">ATO 2026–27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Australia Car FBT Calculator 2026–27 | Statutory vs Logbook</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare Australian car fringe benefits tax under the 20% statutory formula and logbook opera...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+<footer>
+      <p>&copy; 2026 EMFLS Australian Business Finance. Formulations conform to Australian Securities and Investments Commission (ASIC) and AFCA commercial lending standards.</p>
+      <p>
+        <a href="/util/2026-global-tax-finance-calculators/">Global Authority Hub</a> |
+        <a href="/util/au-tax-finance-calculators-2026/">AU Pillar Hub</a>
+      </p>
+    </footer>
+  </div>
+
+  <script type="module">
+    import { calcFactorRateToApr } from './model.mjs';
+
+    function fmt(val) {
+      return '$' + Math.round(val).toLocaleString('en-AU');
+    }
+
+    function render() {
+      const params = {
+        principal: document.getElementById('principal').value,
+        factorRate: document.getElementById('factorRate').value,
+        termMonths: document.getElementById('termMonths').value,
+        frequency: document.getElementById('frequency').value,
+        originationFeePercent: document.getElementById('originationFeePercent').value,
+        bankRate: document.getElementById('bankRate').value
+      };
+
+      const res = calcFactorRateToApr(params);
+
+      document.getElementById('dispTotalRepayment').textContent = fmt(res.totalRepayment);
+      document.getElementById('dispNetDisbursed').textContent = fmt(res.netDisbursed);
+
+      let freqSuffix = '/wk';
+      if (res.frequency === 'daily') freqSuffix = '/day';
+      if (res.frequency === 'monthly') freqSuffix = '/mo';
+      document.getElementById('dispPayment').textContent = fmt(res.periodicPayment) + freqSuffix;
+
+      document.getElementById('dispNominalApr').textContent = res.nominalApr + '%';
+      document.getElementById('dispEffectiveApr').textContent = res.effectiveApr + '%';
+      document.getElementById('dispCostMultiple').textContent = res.effectiveRateMultipleVsBank + 'x Bank Benchmark';
+      document.getElementById('dispBankSavings').textContent = fmt(res.potentialSavingsWithBank);
+
+      drawChart(res);
+    }
+
+    function drawChart(res) {
+      const svg = document.getElementById('mcaChartSvg');
+      svg.innerHTML = '';
+
+      const items = [
+        { label: 'Major Bank (9.25%)', apr: 9.25, color: '#16a34a' },
+        { label: 'Nominal APR', apr: res.nominalApr, color: '#f59e0b' },
+        { label: 'True Effective APR', apr: res.effectiveApr, color: '#dc2626' }
+      ];
+
+      const maxApr = Math.max(res.effectiveApr, 25);
+      const w = 460;
+      const h = 200;
+      const barW = 80;
+      const gap = 45;
+      const startX = 60;
+
+      let html = '';
+      items.forEach((item, i) => {
+        const x = startX + i * (barW + gap);
+        const barH = Math.max(6, Math.round((item.apr / maxApr) * 130));
+        const y = 150 - barH;
+
+        html += '<rect x="' + x + '" y="' + y + '" width="' + barW + '" height="' + barH + '" rx="4" fill="' + item.color + '" />';
+        html += '<text x="' + (x + barW/2) + '" y="' + (y - 6) + '" text-anchor="middle" font-size="12" font-weight="bold" fill="#0f172a">' + item.apr.toFixed(1) + '%</text>';
+        html += '<text x="' + (x + barW/2) + '" y="' + 172 + '" text-anchor="middle" font-size="11" fill="#475569">' + item.label + '</text>';
+      });
+
+      html += '<line x1="20" y1="150" x2="440" y2="150" stroke="#cbd5e1" stroke-width="1" />';
+      svg.innerHTML = html;
+    }
+
+    document.querySelectorAll('input, select').forEach(el => el.addEventListener('input', render));
+    render();
+  </script>
+</body>
+</html>

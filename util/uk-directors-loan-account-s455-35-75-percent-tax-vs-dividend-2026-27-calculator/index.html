@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Director's Loan Account (DLA) s455 Tax vs Dividend Calculator (2026/27) – UK HMRC</title>
+  <meta name="description" content="Calculate UK HMRC Section 455 tax (35.75% from 6 April 2026), Beneficial Loan BIK tax, and compare clearing an overdrawn DLA via dividend vs salary vs loan.">
+  <link rel="canonical" href="https://emfls.github.io/util/uk-directors-loan-account-s455-35-75-percent-tax-vs-dividend-2026-27-calculator/">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+
+  <script>
+  if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+    const adScript = document.createElement('script');
+    adScript.async = true;
+    adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+    adScript.crossOrigin = 'anonymous';
+    document.head.append(adScript);
+  }
+  </script>
+
+  <style id="emfls-responsive-guard">
+    *, *::before, *::after { box-sizing: border-box; }
+    img, canvas, svg, video { max-width: 100%; height: auto; }
+    body, html { overflow-x: hidden; }
+  </style>
+
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    h1 {
+      font-size: 1.85rem;
+      color: #ffffff;
+      margin: 0 0 0.5rem 0;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin: 0;
+    }
+    .calc-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .calc-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+    }
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+      color: #e2e8f0;
+    }
+    input[type="number"], select {
+      width: 100%;
+      padding: 0.65rem;
+      background: #0b1120;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      color: #ffffff;
+      font-size: 0.95rem;
+    }
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #293548;
+      font-size: 0.9rem;
+    }
+    .result-row:last-child { border-bottom: none; }
+    .result-val { font-weight: 600; color: #ffffff; }
+    .pill-tag {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .bg-emerald { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .bg-blue { background: rgba(2, 132, 199, 0.2); color: #38bdf8; }
+    .takeaways-box {
+      background: #1e293b;
+      border-left: 4px solid var(--primary);
+      padding: 1.2rem;
+      border-radius: 0.5rem;
+      margin: 1.5rem 0;
+    }
+    .warning-box {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-left: 4px solid var(--danger);
+      padding: 1.2rem;
+      border-radius: 0.5rem;
+      margin: 1.5rem 0;
+    }
+    .stat-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.85rem;
+    }
+    .stat-table th, .stat-table td {
+      padding: 0.65rem;
+      border: 1px solid var(--border);
+      text-align: left;
+    }
+    .stat-table th {
+      background: #111827;
+      color: #94a3b8;
+    }
+    .emfls-ad-slot {
+      margin: 1.5rem auto;
+      text-align: center;
+      max-width: 960px;
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026/27 UK Director's Loan Account s455 Tax vs Dividend Calculator",
+    "url": "https://emfls.github.io/util/uk-directors-loan-account-s455-35-75-percent-tax-vs-dividend-2026-27-calculator/",
+    "description": "Calculate Corporation Tax Act 2010 Section 455 tax (35.75% from April 2026), Beneficial Loan Benefit-in-Kind (BIK), and compare dividend vs salary extraction.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the new Section 455 tax rate for 2026/27?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Starting 6 April 2026, the Section 455 tax rate on loans to participators increases to 35.75%, matching the higher dividend tax rate. This tax applies if an overdrawn director's loan account is not repaid within 9 months and 1 day of the company's accounting period end."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can Section 455 tax be reclaimed from HMRC?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Once the director repays the loan to the company, the Section 455 tax is refundable by HMRC, payable 9 months and 1 day after the end of the accounting period in which the repayment was made."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the 30-day 'Bed and Breakfasting' rule for director loans?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under CTA 2010 s.464A/464B anti-avoidance rules, if a director repays an overdrawn loan of £5,000 or more and borrows £5,000 or more back within 30 days, the repayment is disregarded for s455 purposes, and the tax remains payable."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When does an overdrawn director loan trigger a Benefit in Kind (BIK)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If the loan balance exceeds £10,000 at any point in the tax year and the director does not pay interest at or above HMRC's Official Rate of Interest (currently 3.75%), the interest shortfall is treated as a taxable Benefit in Kind, triggering employer Class 1A NI (15%) and director income tax."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is it cheaper to declare a dividend or pay s455 tax?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A dividend creates a permanent tax liability (e.g. 35.75% for higher rate) but eliminates the loan forever with no BIK or paperwork. Section 455 requires 35.75% upfront cash outflow, but is 100% refundable once repaid; however, it incurs annual BIK charges while unpaid."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://emfls.github.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Calculators", "item": "https://emfls.github.io/util/" },
+      { "@type": "ListItem", "position": 3, "name": "UK DLA s455 Calculator 2026/27", "item": "https://emfls.github.io/util/uk-directors-loan-account-s455-35-75-percent-tax-vs-dividend-2026-27-calculator/" }
+    ]
+  }
+  </script>
+<style id="emfls-cro-calc-first-b2-v1">
+/* EMFLS CRO B2 — mobile calculator-first ordering for non-Patch-B EN templates (CSS-only, reversible) */
+@media (max-width: 760px) {
+  main:has(form, input, select),
+  .tool-shell:has(form, input, select),
+  .container:has(form, input, select) {
+    display: flex;
+    flex-direction: column;
+  }
+  main:has(form, input, select) > *,
+  .tool-shell:has(form, input, select) > *,
+  .container:has(form, input, select) > * {
+    order: 4;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  main:has(form, input, select) > nav,
+  main:has(form, input, select) > header,
+  main:has(form, input, select) > .hero,
+  main:has(form, input, select) > h1,
+  main:has(form, input, select) > .lead,
+  .tool-shell:has(form, input, select) > nav,
+  .tool-shell:has(form, input, select) > header,
+  .tool-shell:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > h1,
+  .tool-shell:has(form, input, select) > .lead,
+  .container:has(form, input, select) > nav,
+  .container:has(form, input, select) > header,
+  .container:has(form, input, select) > .hero,
+  .container:has(form, input, select) > h1,
+  .container:has(form, input, select) > .lead {
+    order: 0;
+  }
+  main:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .tool-shell:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .container:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav) {
+    order: 1;
+  }
+  main:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .tool-shell:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .container:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container) {
+    order: 2;
+  }
+  main:has(form, input, select) > .emfls-next-check,
+  .tool-shell:has(form, input, select) > .emfls-next-check,
+  .container:has(form, input, select) > .emfls-next-check {
+    order: 2;
+  }
+  main:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .tool-shell:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .container:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]) {
+    order: 3;
+  }
+  main:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > .hero,
+  .container:has(form, input, select) > header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+}
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🇬🇧 2026/27 Director's Loan Account s455 Tax vs Dividend Calculator</h1>
+      <p class="subtitle">Evaluate HMRC 35.75% s455 Corporation Tax, Beneficial Loan BIK (3.75% ORI + 15% Class 1A NI), and compare Dividend vs Salary extraction.</p>
+    </header>
+
+    <aside class="emfls-ad-slot" aria-label="Advertisement">
+      <div style="font-size:0.7rem;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.25rem;">Advertisement</div>
+      <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </aside>
+
+    <div class="takeaways-box">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+        <strong style="color:#38bdf8;font-size:1.1rem;">⚡ Recommended Extraction Strategy:</strong>
+        <span id="recBadge" class="pill-tag bg-blue">Option B: Dividend</span>
+      </div>
+      <p id="recSummary" style="margin:0;font-size:0.95rem;color:#cbd5e1;">Comparing options...</p>
+    </div>
+
+    <div class="calc-grid">
+      <!-- Inputs -->
+      <div class="card">
+        <h2 style="font-size:1.2rem;margin-top:0;color:#38bdf8;">DLA & Director Inputs</h2>
+
+        <div class="form-group">
+          <label for="loanAmount">Overdrawn Loan Balance (£)</label>
+          <input inputmode="decimal" type="number" id="loanAmount" class="calc-input" value="50000" step="1000">
+        </div>
+
+        <div class="form-group">
+          <label for="directorTaxBracket">Director's Personal Tax Bracket</label>
+          <select id="directorTaxBracket" class="calc-input">
+            <option value="basic">Basic Rate (20% Income / 10.75% Dividend)</option>
+            <option value="higher" selected>Higher Rate (40% Income / 35.75% Dividend)</option>
+            <option value="additional">Additional Rate (45% Income / 39.35% Dividend)</option>
+          </select>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+          <div class="form-group">
+            <label for="interestPaid">Interest Paid by Director (%)</label>
+            <input inputmode="decimal" type="number" id="interestPaid" class="calc-input" value="0.0" step="0.25">
+          </div>
+          <div class="form-group">
+            <label for="monthsOverdrawn">Months Kept Overdrawn</label>
+            <input inputmode="decimal" type="number" id="monthsOverdrawn" class="calc-input" value="24" step="6">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="corpTaxRate">Company Corporation Tax Rate</label>
+          <select id="corpTaxRate" class="calc-input">
+            <option value="0.25" selected>25% (Main Rate, Profits &gt; £250k)</option>
+            <option value="0.19">19% (Small Profits Rate, &lt; £50k)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Option Comparison Summary -->
+      <div class="card">
+        <h2 style="font-size:1.2rem;margin-top:0;color:#38bdf8;">Three Strategy Comparison</h2>
+
+        <div class="result-row">
+          <span>Option A: s455 Tax (35.75%)</span>
+          <span class="result-val" id="s455Amount" style="color:#f87171;">£0</span>
+        </div>
+        <div class="result-row">
+          <span>Annual BIK Charge (&gt; £10k)</span>
+          <span class="result-val" id="annualBikDisplay">£0</span>
+        </div>
+        <div class="result-row">
+          <span>Total BIK over Holding Period</span>
+          <span class="result-val" id="totalBikOverdrawn">£0</span>
+        </div>
+        <div class="result-row" style="background:rgba(239,68,68,0.1);padding:0.6rem;">
+          <strong>Option A Total Upfront Outflow</strong>
+          <span class="result-val" id="optionATotalOutflow" style="color:#f87171;">£0</span>
+        </div>
+
+        <div class="result-row" style="margin-top:0.8rem;">
+          <span>Option B: Dividend Tax Rate</span>
+          <span class="result-val" id="dividendTaxRateDisplay">35.75%</span>
+        </div>
+        <div class="result-row">
+          <span>Personal Dividend Tax Payable</span>
+          <span class="result-val" id="dividendTaxAmount">£0</span>
+        </div>
+        <div class="result-row" style="background:rgba(2,132,199,0.1);padding:0.6rem;">
+          <strong>Option B Total Permanent Cost</strong>
+          <span class="result-val" id="optionBTotal" style="color:#38bdf8;">£0</span>
+        </div>
+
+        <div class="result-row" style="margin-top:0.8rem;">
+          <span>Option C: Net Cost via Salary</span>
+          <span class="result-val" id="optionCTotal">£0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Salary Breakdown Table -->
+    <div class="card" style="margin-top:1.5rem;">
+      <h3 style="font-size:1.1rem;margin-top:0;color:#e2e8f0;">Option C: Gross Salary Clearance Breakdown</h3>
+      <table class="stat-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Calculated Amount</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Gross Salary Needed</td>
+            <td id="grossBonusNeeded" class="result-val">£0</td>
+            <td>To deliver exact net cash matching loan</td>
+          </tr>
+          <tr>
+            <td>PAYE Income Tax & Employee NI (Deducted)</td>
+            <td id="payeAndNi">£0</td>
+            <td>Personal tax paid via payroll</td>
+          </tr>
+          <tr>
+            <td>Employer Class 1 NI (15.0%)</td>
+            <td id="employerNi">£0</td>
+            <td>Autumn Budget 2024 employer NI hike</td>
+          </tr>
+          <tr>
+            <td>Corporation Tax Relief (Deduction)</td>
+            <td id="ctRelief" style="color:#34d399;">£0</td>
+            <td>Reduces company Corporation Tax liability</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="warning-box">
+      <strong style="color:#ef4444;display:block;margin-bottom:0.4rem;">⚠️ Warning: The 30-Day "Bed & Breakfasting" Anti-Avoidance Trap</strong>
+      <p style="margin:0;font-size:0.875rem;color:#cbd5e1;">
+        Under <strong>CTA 2010 Section 464A & 464B</strong>, if you repay an overdrawn director's loan of £5,000 or more, and then borrow £5,000 or more from the company within <strong>30 days</strong>, HMRC treats the repayment as ineffective.
+        The full <strong>35.75% s455 tax</strong> remains due. Do not cycle company funds across year-end without formal dividend documentation.
+      </p>
+    </div>
+
+    <!-- Navigation Hubs -->
+    <nav class="emfls-hub-nav" aria-label="Country Tax and Financial Hubs" style="margin:1.5rem 0;padding:1rem;background:#111827;border-radius:8px;border:1px solid #1f2937;font-size:0.85rem;">
+      <strong style="color:#e5e7eb;display:block;margin-bottom:0.5rem;">Explore Tier-1 Country Statutory Calculators & Directories:</strong>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <a href="/util/uk-tax-finance-calculators-2026/" style="color:#3b82f6;text-decoration:none;">🇬🇧 UK Tax & HMRC Hub (2026/27)</a>
+        <a href="/util/us-tax-finance-calculators-2026/" style="color:#3b82f6;text-decoration:none;">🇺🇸 US Tax & Finance Hub (2026)</a>
+        <a href="/util/au-tax-finance-calculators-2026/" style="color:#3b82f6;text-decoration:none;">🇦🇺 AU Tax & ATO Hub (FY26/27)</a>
+        <a href="/util/ca-tax-finance-calculators-2026/" style="color:#3b82f6;text-decoration:none;">🇨🇦 CA Tax & CRA Hub (2026)</a>
+        <a href="/util/" style="color:#3b82f6;text-decoration:none;">🌐 All Web Tools & Calculators</a>
+      </div>
+    </nav>
+
+    <aside class="emfls-ad-slot" aria-label="Advertisement">
+      <div style="font-size:0.7rem;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.25rem;">Advertisement</div>
+      <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </aside>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 United Kingdom Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for United Kingdom:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/uk-discretionary-trust-10-year-iht-periodic-charge-6-percent-exit-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">HMRC 2026/27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">UK Discretionary Trust IHT Calculator 2026/27 | 10-Year &amp; Exit Charges</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate UK discretionary trust inheritance tax on entry, at the 10-year anniversary and on ...</span>
+    </a>
+    <a href="/util/uk-dividend-tax-2026-27-plus-2-percent-hike-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">HMRC 2026/27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">UK Dividend Tax Calculator 2026/27 | April Hike &amp; ISA</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate UK dividend tax at the new 10.75%, 35.75% and 39.35% rates. Compare 2025/26, check...</span>
+    </a>
+    <a href="/util/uk-dividend-tax-personal-allowance-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">HMRC 2026/27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">UK Dividend Tax &amp; Personal Allowance Calculator 2026/27</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate 2026/27 UK dividend tax at 10.75%, 35.75% and 39.35%. See how the £500 dividend all...</span>
+    </a>
+    <a href="/util/uk-dividend-tax-vs-salary-director-calculator-2026-27/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">HMRC 2026/27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">UK Director Salary vs Dividend Tax Calculator 2026/27</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare £12,570 salary plus dividends, £5,000 salary plus dividends and all-PAYE take-home u...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</body>
+</html>

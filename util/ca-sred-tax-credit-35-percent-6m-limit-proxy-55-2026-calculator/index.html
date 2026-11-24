@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <title>2026 Canada SR&amp;ED Tax Credit Calculator | Bill C-15 $6M Limit &amp; 35% Refund</title>
+  <meta name="description" content="Calculate Canadian Scientific Research and Experimental Development (SR&amp;ED) tax credits under Bill C-15. Model the $6M expenditure limit, 55% proxy overhead, $15M–$75M capital phase-out, and provincial credits.">
+  <link rel="canonical" href="https://emfls.github.io/util/ca-sred-tax-credit-35-percent-6m-limit-proxy-55-2026-calculator/">
+
+  <!-- GA4 & AdSense Tags -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+
+  <!-- Localhost Guard -->
+  <script>
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      window['adsbygoogle'] = { push: function() {} };
+    }
+  </script>
+
+  <!-- JSON-LD 1: WebPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "2026 Canada SR&ED Tax Credit Calculator (Bill C-15 $6M Overhaul)",
+    "url": "https://emfls.github.io/util/ca-sred-tax-credit-35-percent-6m-limit-proxy-55-2026-calculator/",
+    "description": "Canada Revenue Agency (CRA) SR&ED Investment Tax Credit calculation tool modeling the Bill C-15 expenditure cap expansion and 55% proxy overhead.",
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://emfls.github.io/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Canada Tax & Real Estate Calculators",
+          "item": "https://emfls.github.io/util/ca-2026-cra-tax-rrsp-tfsa-real-estate-calculators/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "SR&ED Tax Credit Calculator",
+          "item": "https://emfls.github.io/util/ca-sred-tax-credit-35-percent-6m-limit-proxy-55-2026-calculator/"
+        }
+      ]
+    }
+  }
+  </script>
+
+  <!-- JSON-LD 2: SoftwareApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "2026 Canada SR&ED Tax Credit Calculator",
+    "operatingSystem": "All",
+    "applicationCategory": "BusinessApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "CAD"
+    }
+  }
+  </script>
+
+  <!-- JSON-LD 3: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How did Bill C-15 enhance the SR&ED tax credit in 2026?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Bill C-15 doubled the enhanced SR&ED expenditure limit for Canadian-Controlled Private Corporations (CCPCs) from $3 million to $6 million per year, providing up to $2.1 million in refundable cash credits at the 35% rate. It also widened the taxable capital phase-out range to $15 million – $75 million."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the Prescribed Proxy Amount (PPA) in Canadian SR&ED claims?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Prescribed Proxy Amount (PPA) allows claimants to calculate eligible overhead expenditures as a flat 55% of directly engaged R&D employee salaries without needing to itemize individual utility, office, or administrative invoices."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What percentage of subcontractor fees are eligible for SR&ED?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under CRA rules, 80% of expenditures paid to arm's-length third-party Canadian contractors performing eligible SR&ED work qualify for the scientific research tax credit pool."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    :root {
+      --primary: #0d9488;
+      --primary-dark: #0f766e;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #16a34a;
+      --success-bg: #f0fdf4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .header {
+      background: #ffffff;
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 1rem;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 0.25rem;
+    }
+    .header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+    .container {
+      max-width: 1040px;
+      margin: 1.5rem auto;
+      padding: 0 1rem;
+    }
+    .ad-container {
+      margin: 1.5rem 0;
+      text-align: center;
+      background: #f1f5f9;
+      padding: 0.5rem;
+      border-radius: 8px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 840px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+    .card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .card h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #1e293b;
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 0.5rem;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+      color: #334155;
+    }
+    .hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      background: #ffffff;
+      color: #0f172a;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+    }
+    .results-box {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid var(--primary);
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.35rem 0;
+      font-size: 0.925rem;
+    }
+    .stat-row.total {
+      font-weight: 700;
+      font-size: 1.15rem;
+      border-top: 1px dashed var(--border);
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      color: #0d9488;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .badge-success { background: #ccfbf1; color: #0f766e; }
+    .badge-primary { background: #e0f2fe; color: #0369a1; }
+    .verdict-banner {
+      background: var(--success-bg);
+      border: 1px solid #bbf7d0;
+      padding: 1.25rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .chart-container {
+      margin-top: 1rem;
+      text-align: center;
+    }
+    .article-section {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.75rem;
+      margin-top: 2rem;
+    }
+    .article-section h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 1.25rem 0 0.5rem 0;
+    }
+    .article-section h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 1rem 0 0.4rem 0;
+      color: #334155;
+    }
+    .article-section p, .article-section ul {
+      margin-bottom: 1rem;
+      color: #334155;
+      font-size: 0.95rem;
+    }
+    .article-section ul {
+      padding-left: 1.5rem;
+    }
+    .nav-breadcrumbs {
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+      color: var(--text-muted);
+    }
+    .nav-breadcrumbs a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <nav class="nav-breadcrumbs">
+      <a href="https://emfls.github.io/">Home</a> &gt;
+      <a href="https://emfls.github.io/util/ca-2026-cra-tax-rrsp-tfsa-real-estate-calculators/">Canada Tax Hub</a> &gt;
+      <span>SR&amp;ED Tax Credit Calculator</span>
+    </nav>
+    <h1>2026 Canada SR&amp;ED Tax Credit Calculator (Bill C-15 Overhaul)</h1>
+    <p>35% Refundable ITC, $6M Enhanced Expenditure Limit &amp; 55% Prescribed Proxy Overhead</p>
+  </header>
+
+  <main class="container">
+    <!-- Ad Slot 1: Top Display Slot -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </div>
+
+    <!-- Recommendation Verdict Banner -->
+    <div class="verdict-banner">
+      <div id="c15Advantage"><span class="badge badge-success">MODELING BILL C-15 SR&amp;ED RULES</span></div>
+    </div>
+
+    <div class="grid">
+      <!-- Input Parameters -->
+      <section class="card">
+        <h2>R&amp;D Expenditures &amp; Corporate Status</h2>
+
+        <div class="form-group">
+          <label for="directSalaries">Direct Canadian R&amp;D Employee Salaries (CAD)</label>
+          <input inputmode="decimal" type="number" id="directSalaries" value="1200000" step="50000" min="0">
+        </div>
+
+        <div class="form-group">
+          <label for="useProxyMethod">Overhead Calculation Method</label>
+          <select id="useProxyMethod">
+            <option value="true" selected>Prescribed Proxy Method (55% of Direct Salaries)</option>
+            <option value="false">Traditional Method (Itemized Invoices)</option>
+          </select>
+          <div class="hint">Proxy adds 55% overhead with zero audit invoice burden</div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="contractorCosts">Arm's-Length Subcontractors</label>
+            <input inputmode="decimal" type="number" id="contractorCosts" value="350000" step="25000" min="0">
+            <div class="hint">80% statutory eligibility</div>
+          </div>
+          <div class="form-group">
+            <label for="materialsCosts">Direct Materials Consumed</label>
+            <input inputmode="decimal" type="number" id="materialsCosts" value="150000" step="10000" min="0">
+            <div class="hint">100% eligibility</div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="isCcpc">Corporate Ownership</label>
+            <select id="isCcpc">
+              <option value="true" selected>Canadian-Controlled Private Corp (CCPC - 35% Refundable)</option>
+              <option value="false">Non-CCPC / Public / Foreign (15% Non-Refundable)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="provincialJurisdiction">Provincial R&amp;D Program</label>
+            <select id="provincialJurisdiction">
+              <option value="ontario" selected>Ontario (OITC 8% Refundable)</option>
+              <option value="quebec">Quebec (14% Refundable)</option>
+              <option value="bc">British Columbia (10% Refundable)</option>
+              <option value="alberta">Alberta (8% Refundable)</option>
+              <option value="none">None / Other (0%)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="taxableCapital">Prior-Year Taxable Capital Employed in Canada ($)</label>
+          <input inputmode="decimal" type="number" id="taxableCapital" value="18000000" step="1000000" min="0">
+          <div class="hint">Bill C-15 Phase-out range: $15M to $75M (formerly $10M to $50M)</div>
+        </div>
+      </section>
+
+      <!-- Results Column -->
+      <section class="card">
+        <h2>Total R&amp;D Cash Refund &amp; ITC Credits</h2>
+
+        <div class="results-box">
+          <div class="stat-row">
+            <span>Total Qualified SR&amp;ED Expenditure Pool:</span>
+            <strong id="qualifiedPool">$2,290,000</strong>
+          </div>
+          <div class="stat-row">
+            <span>Proxy Overhead Generated (55%):</span>
+            <span id="proxyOverheadText" style="color:#0f766e;">+$660,000</span>
+          </div>
+          <div class="stat-row">
+            <span>Bill C-15 Adjusted Expenditure Limit:</span>
+            <span id="adjustedLimitText" style="color:#0284c7; font-weight:700;">$5,700,000</span>
+          </div>
+          <hr style="margin: 0.5rem 0; border: none; border-top: 1px dashed var(--border);">
+          <div class="stat-row">
+            <span>Federal Refundable ITC (35% Cash):</span>
+            <strong id="refundableItc" style="color: #0f766e;">$801,500</strong>
+          </div>
+          <div class="stat-row">
+            <span>Federal Non-Refundable Basic ITC (15%):</span>
+            <span id="basicItc">$0</span>
+          </div>
+          <div class="stat-row">
+            <span>Provincial R&amp;D Tax Credit Top-Up:</span>
+            <strong id="provincialCreditText" style="color: #0284c7;">$183,200</strong>
+          </div>
+          <div class="stat-row total">
+            <span>Total Federal + Provincial R&amp;D Funding:</span>
+            <strong id="totalFundingText" style="color: #0d9488;">$984,700</strong>
+          </div>
+        </div>
+
+        <!-- Chart Container -->
+        <div class="chart-container">
+          <svg id="sredChart" width="100%" height="220" viewBox="0 0 400 220"></svg>
+        </div>
+      </section>
+    </div>
+
+    <!-- Ad Slot 2: Mid-Article Display Slot -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </div>
+
+    <!-- Educational In-Depth Guide -->
+    <article class="article-section">
+      <h2>Understanding the Bill C-15 Canadian SR&amp;ED Tax Reform (2026 Guide)</h2>
+      <p>The Scientific Research and Experimental Development (SR&amp;ED) tax incentive is Canada’s cornerstone federal research funding program, delivering billions annually in direct tax credits. Through landmark legislation enacted under <strong>Bill C-15</strong>, the Canadian government modernized the program to supercharge scaling domestic tech companies and high-growth innovators.</p>
+
+      <h3>1. Doubling the Enhanced Limit to $6,000,000</h3>
+      <p>For decades, Canadian-Controlled Private Corporations (CCPCs) were restricted to an enhanced expenditure limit of $3,000,000. Bill C-15 doubled this threshold to <strong>$6,000,000</strong>. Small-to-medium Canadian tech firms can now earn up to <strong>$2,100,000 in pure cash refunds</strong> (at the 35% refundable rate) every fiscal year, providing massive non-dilutive liquidity to scale software, biotechnology, clean energy, and advanced manufacturing initiatives.</p>
+
+      <h3>2. Expanded Taxable Capital Phase-Out ($15M to $75M)</h3>
+      <p>Under prior rules, fast-growing tech companies faced a severe "cliff-edge" between $10 million and $50 million of taxable capital. Bill C-15 expanded this buffer dramatically:</p>
+      <ul>
+        <li><strong>Full 100% Limit ($6M):</strong> Preserved for corporations with taxable capital under <strong>$15,000,000</strong>.</li>
+        <li><strong>Gradual Phase-Out:</strong> The expenditure limit scales down linearly between <strong>$15 million and $75 million</strong> of taxable capital.</li>
+        <li><strong>General Corporate Rate:</strong> Once taxable capital exceeds $75 million, the company receives the 15% non-refundable basic rate.</li>
+      </ul>
+
+      <h3>3. The Prescribed Proxy Method (55% Overhead Multiplier)</h3>
+      <p>Rather than tracking and auditing individual utility receipts, office cleaning, and administrative overhead, the CRA permits claimants to utilize the <strong>Prescribed Proxy Amount (PPA)</strong>. Under this statutory method, an automatic <strong>55% overhead factor</strong> is added directly to all eligible Canadian R&amp;D employee salaries, drastically increasing your qualified claim pool.</p>
+    </article>
+  
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 Canadian Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for Canadian:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/ca-ssag-spousal-support-without-child-rule-of-65-duration-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Canada Spousal Support Advisory Guidelines (SSAG) Calculator | &quot;Without Child&quot; Formula &amp; Rule of 65</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate official Canada SSAG spousal support quantum and duration ranges under the Without...</span>
+    </a>
+    <a href="/util/ca-tax-finance-calculators-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Canada CRA Tax, RRSP, TFSA &amp; Real Estate Calculators Directory</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Official CRA 2026 statutory financial calculation directory. Calculate Construction Lien Hol...</span>
+    </a>
+    <a href="/util/ca-tax-on-split-income-tosi-excluded-business-shares-age-65-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada TOSI Exemption &amp; Penalty Calculator 2026</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Check 2026 Canadian TOSI exclusions for family dividends and compare top-rate tax with regul...</span>
+    </a>
+    <a href="/util/ca-term-life-vs-whole-life-participating-insurance-btid-tfsa-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada Term Life vs Whole Life Participating Insurance (BTID in TFSA) 2026 Calculator</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare Buy Term and Invest the Difference (BTID) in a Canadian TFSA vs 20-Pay Participating...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

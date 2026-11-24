@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2026 주택 취득세 계산기 | 생애최초·출산 감면, 다주택 중과</title>
+  <meta name="description" content="2026년 아파트·주택 매매 취득세와 지방교육세, 농어촌특별세를 계산하고 생애최초 200만·300만 원과 출산·양육 500만 원 감면을 비교하세요.">
+  <link rel="canonical" href="https://emfls.github.io/kor/util/real-estate-acquisition-tax-2026/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:title" content="2026 주택 취득세 계산기 | 생애최초·출산 감면, 다주택 중과">
+  <meta property="og:description" content="주택 매매 취득세와 부가 세목을 계산하고 생애최초·출산 감면 적용 전후를 비교하세요.">
+  <meta property="og:url" content="https://emfls.github.io/kor/util/real-estate-acquisition-tax-2026/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="2026 주택 취득세 계산기 | 생애최초·출산 감면, 다주택 중과">
+  <meta name="twitter:description" content="2026년 아파트·주택 매매 취득세와 생애최초·출산 감면을 계산하세요.">
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <script>
+    if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      gtag('js', new Date());
+      gtag('config', 'G-QP5Q67GE5B');
+      const analytics = document.createElement('script');
+      analytics.async = true;
+      analytics.src = 'https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B';
+      document.head.append(analytics);
+      const ads = document.createElement('script');
+      ads.async = true;
+      ads.crossOrigin = 'anonymous';
+      ads.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+      document.head.append(ads);
+    }
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      --ink: #202528;
+      --muted: #505d63;
+      --line: #d6e0df;
+      --paper: #f4f7f6;
+      --green: #07564e;
+      --mint: #e2f2ed;
+      --gold: #d7a43a;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); line-height: 1.65; overflow-wrap: anywhere; }
+    [hidden] { display: none !important; }
+    a { color: var(--green); text-underline-offset: .2em; }
+    :focus-visible { outline: 3px solid #a56405; outline-offset: 3px; }
+    .wrap { width: min(100% - 2rem, 68rem); margin-inline: auto; }
+    header { background: #123a36; color: #fff; padding: 1.2rem 0 2.5rem; }
+    nav, footer { display: flex; flex-wrap: wrap; gap: .35rem 1rem; }
+    header nav { font-size: .88rem; color: #c0ded6; }
+    header a { color: inherit; }
+    h1, h2, h3, p { margin: 0; }
+    h1 { max-width: 22ch; margin-top: 1.5rem; font-size: clamp(1.95rem, 5vw, 3.45rem); line-height: 1.15; letter-spacing: -.05em; }
+    header p { max-width: 44rem; margin-top: .85rem; color: #e2f3ec; }
+    main { padding-block: 1.25rem 2rem; }
+    main > * + * { margin-top: 1.25rem; }
+    .panel { min-width: 0; padding: clamp(1rem, 3vw, 1.6rem); border: 1px solid var(--line); border-radius: 1rem; background: #fff; }
+    .summary { background: var(--mint); border-color: #bfded3; border-left: 4px solid var(--green); }
+    .warning { background: #fff8e6; border-color: #ead5a3; border-left: 4px solid #a97115; }
+    h2 { font-size: clamp(1.22rem, 3vw, 1.55rem); line-height: 1.35; letter-spacing: -.035em; }
+    h3 { font-size: 1.06rem; }
+    .panel h2 + p, .panel h3 + p { margin-top: .5rem; }
+    .grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; gap: 1rem; }
+    form { margin-top: 1rem; }
+    .fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
+    .full { grid-column: 1 / -1; }
+    label { display: block; font-weight: 650; }
+    input:not([type=checkbox]), select { display: block; min-width: 0; width: 100%; max-width: 100%; min-height: 2.8rem; margin-top: .25rem; border: 1px solid #879a99; border-radius: .5rem; padding: .5rem .65rem; color: var(--ink); background: white; font: inherit; }
+    input[type=date] { padding-inline: .45rem; }
+    .hint { color: var(--muted); font-size: .846rem; font-weight: 400; }
+    fieldset { min-width: 0; margin: 1rem 0 0; padding: .65rem .7rem .8rem; border: 1px solid var(--line); border-radius: .65rem; }
+    legend { font-weight: 750; padding-inline: .28rem; }
+    .check { display: flex; align-items: flex-start; gap: .45rem; padding-block: .18rem; }
+    .check input { flex: 0 0 auto; margin: .35rem 0 0; accent-color: var(--green); width: 1rem; height: 1rem; }
+    #birth-dates { margin: .65rem 0; }
+    .result { border-top: 4px solid var(--green); font-variant-numeric: tabular-nums; }
+    .total { display: block; color: var(--green); font-size: clamp(1.65rem, 5vw, 2.7rem); line-height: 1.2; font-weight: 800; letter-spacing: -.055em; margin: .55rem 0 .28rem; }
+    dl { margin: .9rem 0; }
+    .tax-line { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: .35rem; border-bottom: 1px solid var(--line); padding: .38rem 0; }
+    dd { text-align: right; font-weight: 700; margin: 0; }
+    figure { margin: 1rem 0 0; }
+    svg { display: block; width: 100%; height: auto; }
+    .legend { display: flex; gap: .25rem .75rem; flex-wrap: wrap; margin-top: .35rem; }
+    .dot::before { content: ""; display: inline-block; width: .65rem; height: .65rem; border-radius: .14rem; margin-right: .25rem; background: var(--swatch); }
+    .ad { min-width: 0; min-height: 250px; }
+    table { width: 100%; table-layout: fixed; border-collapse: collapse; margin-top: .65rem; font-size: .9rem; }
+    caption { text-align: left; margin-bottom: .35rem; color: var(--muted); font-size: .85rem; }
+    th, td { text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); padding: .48rem .42rem; }
+    thead th { background: var(--mint); }
+    .compare th:first-child { width: 34%; }
+    .rates th:first-child { width: 40%; }
+    .selected { background: #ecf8f4; }
+    .sources { padding-left: 1.2rem; margin: .5rem 0 0; }
+    details { border-bottom: 1px solid var(--line); padding: .65rem 0; }
+    summary { cursor: pointer; font-weight: 700; }
+    details p { margin-top: .4rem; }
+    footer { padding-bottom: 2rem; font-size: .9rem; }
+    @media (max-width: 47rem) { .grid { grid-template-columns: minmax(0, 1fr); } }
+    @media (max-width: 26rem) { .wrap { width: calc(100% - 1.25rem); } .fields { grid-template-columns: minmax(0, 1fr); } th, td { padding-inline: .28rem; } }
+  </style>
+  <script type="module" src="./app.js"></script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "2026년 아파트·주택 취득세 계산기",
+  "url": "https://emfls.github.io/kor/util/real-estate-acquisition-tax-2026/",
+  "inLanguage": "ko-KR",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "KRW"
+  }
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "8억 원, 전용 84.98㎡ 아파트를 1주택으로 사면 취득세가 얼마인가요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "감면 전 취득세 본세는 2.33%인 1,864만 원, 지방교육세는 186만 4천 원입니다. 국민주택규모에 해당해 농어촌특별세가 면제되는 사례라면 세금 합계는 2,050만 4천 원입니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "전용 59㎡ 아파트도 생애최초 감면 한도가 300만 원인가요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "일반 아파트는 전용면적만으로 소형 특례를 받을 수 없습니다. 소형 특례는 법에서 정한 주택 유형에 전용 60㎡ 이하와 비수도권 3억 원 또는 수도권 6억 원 이하 요건을 함께 적용합니다. 지정 인구감소지역 주택은 별도 300만 원 한도 대상입니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "출산 전에 집을 샀어도 500만 원 감면을 받을 수 있나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "출생일 전 1년 이내 취득분도 대상이 될 수 있습니다. 출생 사실이 가족관계등록부에 확인되어야 하며, 12억 원 이하 주택을 자녀와 거주할 목적으로 취득하고 법정 1가구 1주택 요건을 충족해야 합니다. 출산 대상 기간은 2028년 12월 31일까지입니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "생애최초와 출산·양육 감면을 동시에 받을 수 있나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "두 요건을 모두 충족하면 취득세 본세 감면액이 큰 하나를 적용합니다. 500만 원은 출산·양육 감면 한도이며, 계산된 본세가 그보다 작으면 본세 범위까지만 감면됩니다."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "다주택 중과에도 농어촌특별세가 면제되나요?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "국민주택규모 및 부속토지 요건을 충족하는 주택의 농어촌특별세는 중과 사례에서도 면제됩니다. 규모를 초과하면 취득세 본세가 8%일 때 0.6%, 12%일 때 1.0%를 적용합니다. 지방교육세는 두 중과 구간 모두 0.4%입니다."
+      }
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "한국어 도구",
+      "item": "https://emfls.github.io/kor/util/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "주택 취득세 계산기",
+      "item": "https://emfls.github.io/kor/util/real-estate-acquisition-tax-2026/"
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <nav aria-label="현재 위치"><a href="/kor/util/">한국어 도구</a><span aria-hidden="true">/</span><span aria-current="page">주택 취득세 계산기</span></nav>
+      <h1>2026년 아파트·주택 취득세 계산기</h1>
+      <p>잔금 전에 취득세·지방교육세·농어촌특별세를 합산하고 생애최초와 출산·양육 감면을 비교하세요.</p>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="panel summary" aria-labelledby="summary-title">
+      <h2 id="summary-title">취득세 핵심 요약</h2>
+      <p>주택 매매 취득세 본세는 <strong>기본 1~3%</strong>, 다주택·법인 중과는 <strong>8% 또는 12%</strong>입니다. 요건을 충족하면 생애최초는 <strong>최대 200만 원</strong>(특례 300만 원), 출산·양육은 <strong>최대 500만 원</strong>을 감면합니다. 두 감면에 모두 해당하면 본세 감면액이 큰 하나를 적용합니다.</p>
+    </section>
+
+    <section class="grid" aria-label="취득세 계산">
+      <div class="panel">
+        <h2>주택 매매 정보</h2>
+        <form id="calculator" autocomplete="off">
+          <div class="fields">
+            <label class="full" for="price">취득가액 (원)
+              <input id="price" name="price" type="text" inputmode="decimal" value="800,000,000" maxlength="22" aria-describedby="price-help">
+              <span id="price-help" class="hint">신고할 취득가액을 원 단위로 입력하세요. 8억 원 = 800,000,000원</span>
+            </label>
+            <label for="area">전용면적 (㎡)
+              <input id="area" name="area" type="text" inputmode="decimal" value="84.98" maxlength="14">
+            </label>
+            <label for="houses">취득 후 세대 주택 수
+              <select id="houses" name="houses">
+                <option value="1" selected>1주택</option><option value="2">2주택</option>
+                <option value="3">3주택</option><option value="4">4주택 이상</option>
+              </select>
+            </label>
+          </div>
+          <fieldset>
+            <legend>지역·중과 조건</legend>
+            <label class="check"><input type="checkbox" name="adjusted"> 취득 주택이 조정대상지역에 있음</label>
+            <label class="check" id="temporary-option" hidden><input type="checkbox" name="temporary" disabled> 법정 일시적 2주택 요건에 해당</label>
+            <label class="check"><input type="checkbox" name="ruralTown"> 비수도권 비도시지역 읍·면에 위치</label>
+            <label class="check"><input type="checkbox" name="corporate"> 법인 취득</label>
+          </fieldset>
+          <fieldset id="relief-options">
+            <legend>감면 요건 확인</legend>
+            <label class="check"><input type="checkbox" name="first"> 본인·배우자의 무주택 이력 등 생애최초 실거주 취득 요건 충족</label>
+            <label class="check"><input type="checkbox" name="declining"> 취득 주택이 지정 인구감소지역에 있음</label>
+            <label class="check"><input type="checkbox" name="smallType"> 소형 특례 대상 유형 (아파트 제외 공동주택, 도시형 생활주택, 호별 전용면적이 기재된 다가구)</label>
+            <label class="check" id="metro-option" hidden><input type="checkbox" name="metro" disabled> 소형주택이 수도권에 있음</label>
+            <label class="check"><input type="checkbox" name="birth"> 출생 등록·자녀와 거주·자녀당 최초 신청·법정 1가구 1주택 요건 충족</label>
+            <p class="hint">출산·양육 1가구 1주택은 취득 후 3개월 이내에 충족하는 경우를 포함합니다. 2주택이면 일시적 2주택도 선택하세요.</p>
+            <div class="fields" id="birth-dates" hidden>
+              <label for="purchase-date">취득일<input id="purchase-date" name="purchaseDate" type="date" min="2026-01-01" max="2026-12-31" value="2026-11-24"></label>
+              <label for="birth-date">자녀 출생일<input id="birth-date" name="birthDate" type="date" min="2024-01-01" max="2028-12-31"></label>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+
+      <div class="panel result">
+        <h2>예상 납부액</h2>
+        <div role="status" aria-atomic="true">
+          <output class="total" id="total" for="price area houses">—</output>
+          <p class="hint" id="result-note">계산기를 불러오는 중입니다.</p>
+        </div>
+        <dl id="tax-lines">
+          <div class="tax-line"><dt>감면 전 취득세 본세</dt><dd id="gross">—</dd></div>
+          <div class="tax-line"><dt>취득세 본세 감면액</dt><dd id="relief">—</dd></div>
+          <div class="tax-line"><dt>납부할 취득세 본세</dt><dd id="acquisition">—</dd></div>
+          <div class="tax-line"><dt>지방교육세</dt><dd id="education">—</dd></div>
+          <div class="tax-line"><dt>농어촌특별세</dt><dd id="rural">—</dd></div>
+        </dl>
+        <figure id="tax-chart">
+          <figcaption class="hint">납부액 세목별 비중</figcaption>
+          <svg viewBox="0 0 400 16" aria-hidden="true" focusable="false">
+            <defs><clipPath id="chart-edges"><rect width="400" height="16" rx="8"></rect></clipPath></defs>
+            <rect width="400" height="16" rx="8" fill="#e2ebe9"></rect>
+            <g clip-path="url(#chart-edges)">
+              <rect id="bar-acquisition" width="0" height="16" fill="#07564e"></rect>
+              <rect id="bar-education" width="0" height="16" fill="#548989"></rect>
+              <rect id="bar-rural" width="0" height="16" fill="#d7a43a"></rect>
+            </g>
+          </svg>
+          <div class="legend hint" aria-hidden="true">
+            <span class="dot" style="--swatch:#07564e">취득세</span><span class="dot" style="--swatch:#548989">지방교육세</span><span class="dot" style="--swatch:#d7a43a">농어촌특별세</span>
+          </div>
+        </figure>
+        <noscript><p>실시간 계산에는 자바스크립트가 필요합니다. 아래에서 세율과 감면 요건을 확인할 수 있습니다.</p></noscript>
+      </div>
+    </section>
+
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="다음 필수 확인 계산기" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">다음 필수 확인 계산기 (Next Check)</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">방금 계산한 결과를 바탕으로 바로 이어서 점검하세요:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/kor/util/real-estate-brokerage-fee-commission-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">2026 부동산 중개수수료(복비) &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">취득세와 함께 매매 잔금일에 필요한 법정 복비 상한액을 계산하세요.</span></a>
+    <a href="/kor/util/stress-dsr-3-mortgage-limit-refinance-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">스트레스 DSR 주담대 한도 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">내 연봉으로 매매 자금 대출이 최대 얼마까지 나오는지 확인하세요.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+
+    <section class="panel" aria-labelledby="compare-title">
+      <h2 id="compare-title">감면별 납부액 비교</h2>
+      <table class="compare">
+        <caption>감면 선택 전에는 요건 충족을 가정한 금액을 표시합니다.</caption>
+        <thead><tr><th scope="col">구분</th><th scope="col">본세 감면</th><th scope="col">예상 합계</th></tr></thead>
+        <tbody>
+          <tr id="row-standard"><th scope="row">일반 <span class="hint" id="status-standard"></span></th><td>—</td><td id="total-standard">—</td></tr>
+          <tr id="row-first"><th scope="row">생애최초<br><span class="hint" id="status-first">한도 200만 원</span></th><td id="relief-first">—</td><td id="total-first">—</td></tr>
+          <tr id="row-birth"><th scope="row">출산·양육<br><span class="hint" id="status-birth">한도 500만 원</span></th><td id="relief-birth">—</td><td id="total-birth">—</td></tr>
+        </tbody>
+      </table>
+      <p class="hint">예상액은 세목별로 10원 미만을 버립니다. 농어촌특별세가 과세되는 경우 감면액의 20%가 합계에 더해질 수 있습니다.</p>
+    </section>
+
+    <div class="ad">
+      <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </div>
+
+    <aside class="panel warning" aria-labelledby="warning-title">
+      <h2 id="warning-title">잔금 전에 확인할 추징 위험</h2>
+      <p>일시적 2주택 처분기한을 넘기면 중과세율과의 차액 및 가산세가 생길 수 있습니다. 2026년 개정으로 두 주택 모두 조정대상지역에 있으면 2년 기한이 적용될 수 있으므로 계약·계약금 지급일에 따른 경과조치도 확인하세요. 감면받은 주택을 법정 3년 이내에 매각·증여하거나 임대 등 다른 용도로 사용하면 추징될 수 있습니다. 매매 취득세는 통상 취득일부터 60일 이내에 신고·납부하며, 그 전에 등기하면 등기 접수일까지 신고·납부해야 합니다.</p>
+      <p>분양권·입주권·주거용 오피스텔 등은 주택 수에 영향을 줄 수 있습니다. 중과 제외 주택, 고급주택, 지분 취득, 개별 조례 감면과 가산세는 관할 시·군·구 세무부서에서 확인하세요.</p>
+    </aside>
+
+    <section class="panel" aria-labelledby="rates-title">
+      <h2 id="rates-title">2026년 주택 취득세율</h2>
+      <table class="rates">
+        <caption>과세표준 대비 세율. 농특세는 국민주택규모 이하 / 초과 순서입니다.</caption>
+        <thead><tr><th scope="col">매매 조건</th><th scope="col">취득세</th><th scope="col">지방교육세</th><th scope="col">농특세</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">기본 · 6억 원 이하</th><td>1%</td><td>0.1%</td><td>0% / 0.2%</td></tr>
+          <tr><th scope="row">기본 · 6억 초과~9억 원 이하</th><td>1~3%</td><td>0.1~0.3%</td><td>0% / 0.2%</td></tr>
+          <tr><th scope="row">기본 · 9억 원 초과</th><td>3%</td><td>0.3%</td><td>0% / 0.2%</td></tr>
+          <tr><th scope="row">조정 2주택·비조정 3주택</th><td>8%</td><td>0.4%</td><td>0% / 0.6%</td></tr>
+          <tr><th scope="row">조정 3주택 이상·비조정 4주택 이상·법인</th><td>12%</td><td>0.4%</td><td>0% / 1.0%</td></tr>
+        </tbody>
+      </table>
+      <p class="hint">기본세율은 1주택·비조정대상지역 2주택·법정 일시적 2주택에 적용합니다. 6억 초과~9억 원은 (취득가액을 억 원 단위로 환산한 값 × 2/3 − 3) ÷ 100을 소수점 넷째 자리까지 반올림합니다.</p>
+      <p class="hint">국민주택규모는 전용 85㎡ 이하입니다. 비수도권의 도시지역이 아닌 읍·면은 100㎡ 이하입니다. 농특세 비과세는 부속토지 면적 요건을 충족하는 일반적 사례를 기준으로 계산합니다.</p>
+    </section>
+
+    <section class="panel" aria-labelledby="relief-title">
+      <h2 id="relief-title">2026년 취득세 감면 요건</h2>
+      <table>
+        <thead><tr><th scope="col">감면</th><th scope="col">본세 한도</th><th scope="col">주요 요건</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">생애최초</th><td>200만 원</td><td>12억 원 이하, 성년인 본인과 배우자의 주택 소유 이력 요건을 충족한 실거주 목적 매매</td></tr>
+          <tr><th scope="row">생애최초 특례</th><td>300만 원</td><td>지정 인구감소지역 주택 또는 전용 60㎡ 이하 대상 소형주택이면서 비수도권 3억 원·수도권 6억 원 이하</td></tr>
+          <tr><th scope="row">출산·양육</th><td>500만 원</td><td>12억 원 이하, 법정 1가구 1주택, 자녀와 거주할 목적으로 출산 전 1년~후 5년 이내 취득</td></tr>
+        </tbody>
+      </table>
+      <p class="hint">생애최초 감면은 2028년 12월 31일까지의 취득분에 적용됩니다. 출산·양육 감면의 출산 대상 기간은 2024년 1월 1일~2028년 12월 31일입니다.</p>
+    </section>
+
+    <div class="ad">
+      <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </div>
+
+    <section class="panel" aria-labelledby="faq-title">
+      <h2 id="faq-title">자주 묻는 질문</h2>
+      <details>
+        <summary>8억 원, 전용 84.98㎡ 아파트를 1주택으로 사면 취득세가 얼마인가요?</summary>
+        <p>감면 전 취득세 본세는 2.33%인 1,864만 원, 지방교육세는 186만 4천 원입니다. 국민주택규모에 해당해 농어촌특별세가 면제되는 사례라면 세금 합계는 2,050만 4천 원입니다.</p>
+      </details>
+      <details>
+        <summary>전용 59㎡ 아파트도 생애최초 감면 한도가 300만 원인가요?</summary>
+        <p>일반 아파트는 전용면적만으로 소형 특례를 받을 수 없습니다. 소형 특례는 법에서 정한 주택 유형에 전용 60㎡ 이하와 비수도권 3억 원 또는 수도권 6억 원 이하 요건을 함께 적용합니다. 지정 인구감소지역 주택은 별도 300만 원 한도 대상입니다.</p>
+      </details>
+      <details>
+        <summary>출산 전에 집을 샀어도 500만 원 감면을 받을 수 있나요?</summary>
+        <p>출생일 전 1년 이내 취득분도 대상이 될 수 있습니다. 출생 사실이 가족관계등록부에 확인되어야 하며, 12억 원 이하 주택을 자녀와 거주할 목적으로 취득하고 법정 1가구 1주택 요건을 충족해야 합니다. 출산 대상 기간은 2028년 12월 31일까지입니다.</p>
+      </details>
+      <details>
+        <summary>생애최초와 출산·양육 감면을 동시에 받을 수 있나요?</summary>
+        <p>두 요건을 모두 충족하면 취득세 본세 감면액이 큰 하나를 적용합니다. 500만 원은 출산·양육 감면 한도이며, 계산된 본세가 그보다 작으면 본세 범위까지만 감면됩니다.</p>
+      </details>
+      <details>
+        <summary>다주택 중과에도 농어촌특별세가 면제되나요?</summary>
+        <p>국민주택규모 및 부속토지 요건을 충족하는 주택의 농어촌특별세는 중과 사례에서도 면제됩니다. 규모를 초과하면 취득세 본세가 8%일 때 0.6%, 12%일 때 1.0%를 적용합니다. 지방교육세는 두 중과 구간 모두 0.4%입니다.</p>
+      </details>
+    </section>
+
+    <section class="panel" aria-labelledby="source-title">
+      <h2 id="source-title">법령 근거</h2>
+      <ul class="sources">
+        <li><a href="https://www.law.go.kr/LSW/lsPdfPrint.do?ancYnChk=0&amp;bylChaChk=N&amp;efGubun=Y&amp;efYd=20260701&amp;joAllCheck=Y&amp;joEfOutPutYn=on&amp;lsiSeq=282559&amp;mokChaChk=N">지방세법 제11조·제13조의2·제17조·제20조·제151조</a></li>
+        <li><a href="https://www.law.go.kr/LSW/lsInfoP.do?lsiSeq=290815&amp;viewCls=lsRvsDocInfoR">지방세법 시행령 개정문 · 일시적 2주택 경과조치</a></li>
+        <li><a href="https://www.law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&amp;lsJoLnkSeq=1025285313">지방세특례제한법 제36조의3 · 생애최초</a></li>
+        <li><a href="https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1033454967">지방세특례제한법 제36조의5 · 출산·양육</a></li>
+        <li><a href="https://law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1024639949">지방세특례제한법 제180조 · 중복 감면</a></li>
+        <li><a href="https://www.law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&amp;lsJoLnkSeq=1032879999">농어촌특별세법 제5조</a> · <a href="https://www.law.go.kr/lsInfoP.do?joNo=000400&amp;lsId=003233">농어촌특별세법 시행령 제4조</a></li>
+        <li><a href="https://law.go.kr/LSW/lsLinkCommonInfo.do?chrClsCd=010202&amp;lsJoLnkSeq=1033500883">주택법 제2조 · 국민주택규모</a></li>
+      </ul>
+    </section>
+  
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 대한민국 세무·금융·복지 핵심 계산기</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">2026년도 국세청·고용노동부 기준 연계 계산 도구:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/kor/util/real-estate-brokerage-fee-commission-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 부동산 중개수수료 계산기 (공인중개사 복비 상한요율·월세 70배 예외 공식·부가세 10%/4%)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 공인중개사법 시행규칙 주택 매매·전세·월세 중개보수 상한요율, 5천만 원 미만 월세 70배 환산 공식, 일반과세(10%) vs 간이과세(4%) 부가세 정밀...</span>
+    </a>
+    <a href="/kor/util/retiree-nhis-voluntary-continuation-36m-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 퇴직자 건강보험 임의계속가입 vs 지역가입자 비교 계산기 | 36개월 총 건보료 절감액</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 최신 국민건강보험법 기준 퇴직자 임의계속가입(최대 36개월·7.19%) vs 지역가입자(재산공제 1억·자동차 폐지·점수당 211.5원) vs 피부양자 자격...</span>
+    </a>
+    <a href="/kor/util/retirement-pension-db-vs-dc-wage-peak-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 퇴직연금 DB·DC 계산기 | 임금피크제 전환 시점</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">월급·근속일수·임금피크제 삭감률을 입력해 DB 유지, 지금 DC 전환, 임금피크제 직전 DC 전환의 예상 퇴직급여와 손익분기 수익률을 비교하세요.</span>
+    </a>
+    <a href="/kor/util/retirement-severance-irp-50-percent-tax-reduction-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 퇴직금·퇴직소득세 계산기 &amp; IRP 연금 30%·40%·50% 감면 비교기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 소득세법 근속연수공제 및 환산급여공제 기준 퇴직소득세 계산. IRP 연금수령 시 10년차까지 30%, 11~20년차 40%, 21년차 이상 50% 세금 감...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>2026 글로벌 세무·금융·복지 계산기 전수 보기 &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+  <footer class="wrap" aria-label="관련 도구">
+    <a href="/kor/util/">한국어 도구 모음</a><a href="/kor/util/compound-interest/">복리 계산기</a><a href="/util/">전체 웹 도구</a>
+  </footer>
+</body>
+</html>

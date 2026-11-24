@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 NIIT (3.8%) &amp; Additional Medicare Tax (0.9%) Calculator</title>
+<meta name="description" content="Estimate 2026 Net Investment Income Tax and Additional Medicare Tax. See your filing thresholds and model NIIT savings from losses, muni bonds, or deductions.">
+<link rel="canonical" href="https://emfls.github.io/util/us-net-investment-income-tax-niit-calculator/">
+<link rel="icon" href="/icon-192.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="2026 NIIT &amp; Additional Medicare Tax Calculator">
+<meta property="og:description" content="Estimate the 3.8% investment income tax and 0.9% Medicare surtax and compare strategies that could lower NIIT.">
+<meta property="og:url" content="https://emfls.github.io/util/us-net-investment-income-tax-niit-calculator/">
+<meta property="og:image" content="https://emfls.github.io/assets/og/calc-us-niit-calculator.webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="2026 NIIT &amp; Additional Medicare Tax Calculator">
+<meta name="twitter:description" content="Estimate both federal surtaxes and compare three ways to reduce NIIT.">
+<meta name="twitter:image" content="https://emfls.github.io/assets/og/calc-us-niit-calculator.webp">
+<link rel="stylesheet" href="../new-tools.css">
+<link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+<link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-QP5Q67GE5B');
+</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "2026 NIIT & Additional Medicare Tax Calculator",
+  "url": "https://emfls.github.io/util/us-net-investment-income-tax-niit-calculator/",
+  "description": "Estimate the 3.8% Net Investment Income Tax and 0.9% Additional Medicare Tax for 2026.",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How is the 3.8% NIIT calculated?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Multiply 3.8% by the smaller of your net investment income and the amount of MAGI above your filing threshold. Either amount can bring the tax base to zero."}
+    },
+    {
+      "@type": "Question",
+      "name": "Can a traditional IRA withdrawal trigger NIIT?",
+      "acceptedAnswer": {"@type": "Answer", "text": "The taxable portion of a traditional IRA withdrawal generally raises MAGI. This can make more of your separate investment income subject to NIIT even though the IRA withdrawal itself is excluded from net investment income."}
+    },
+    {
+      "@type": "Question",
+      "name": "Does NIIT apply to municipal bonds or the sale of a home?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Federally tax-exempt municipal bond interest and home-sale gains excluded under Section 121 are outside net investment income. Include otherwise eligible taxable gains, including taxable gains from selling investments or the taxable portion of a home-sale gain."}
+    },
+    {
+      "@type": "Question",
+      "name": "Why can a two-earner couple owe Additional Medicare Tax with no surtax withheld?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Each employer withholds the extra 0.9% on wages it pays an employee above $200,000. Two spouses earning $150,000 each have $300,000 in combined Medicare wages. On a joint return they owe $450 of Additional Medicare Tax on the $50,000 above their $250,000 threshold."}
+    },
+    {
+      "@type": "Question",
+      "name": "How can a 401(k) or HSA contribution reduce NIIT?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Eligible pre-tax 401(k) deferrals and eligible HSA contributions can lower NIIT MAGI. A lower MAGI saves NIIT when it lowers the smaller of net investment income and MAGI above the threshold. At or below the threshold, NIIT is zero."}
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://emfls.github.io/"},
+    {"@type": "ListItem", "position": 2, "name": "Utilities", "item": "https://emfls.github.io/util/"},
+    {"@type": "ListItem", "position": 3, "name": "NIIT & Additional Medicare Tax Calculator", "item": "https://emfls.github.io/util/us-net-investment-income-tax-niit-calculator/"}
+  ]
+}
+</script>
+<style>
+  .breadcrumb { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: .75rem; font-size: .9rem; }
+  .breadcrumb a { color: #fff; }
+  .takeaways { border-left: 4px solid #2563eb; }
+  .warning { background: #fffbeb; border-left: 4px solid #d97706; }
+  .tax-inputs { border: 0; padding: 0; margin: 0 0 1.25rem; min-inline-size: 0; }
+  .tax-inputs legend { font-weight: 750; padding: 0; margin-bottom: .5rem; }
+  .tax-inputs p { margin: .25rem 0 .75rem; }
+  .grid > div { min-width: 0; }
+  .niit-results > .panel { margin-bottom: 18px; }
+  .tax-amounts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .75rem; margin: 0; }
+  .tax-amounts div { background: #eaf3ff; padding: 12px; border-radius: 10px; }
+  .tax-amounts div:last-child { background: #173f8a; color: #fff; }
+  .tax-amounts dt { font-weight: 650; }
+  .tax-amounts dd { margin: .2rem 0 0; font-size: clamp(1.2rem, 3vw, 1.8rem); font-weight: 750; overflow-wrap: anywhere; }
+  .amount-detail { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: .75rem; }
+  .amount-detail dd { text-align: right; margin: 0; font-variant-numeric: tabular-nums; }
+  .error:empty, #scenario-notes:empty { display: none; }
+  .ad-space { min-height: 280px; margin: 18px 0; color: #cbd5e1; text-align: center; font-size: .8rem; }
+  .ad-space .adsbygoogle { display: block; width: 100%; min-height: 280px; }
+  .ad-space:has(ins[data-ad-slot="none"]) { display: none; }
+  table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+  th, td { padding: .55rem .35rem; border-bottom: 1px solid #d9e0ea; text-align: left; }
+  @media (max-width: 650px) {
+    .grid, .tax-amounts { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>
+<script type="module" src="./app.js"></script>
+<style id="emfls-cro-calc-first-v1">
+/* EMFLS CRO v1 — calculator-first on mobile (CSS-only, no DOM/content/JS change; reversible by deleting this <style>) */
+@media (max-width: 760px) {
+  main.tool-shell { display: flex; flex-direction: column; }
+  main.tool-shell > * { order: 3; }
+  main.tool-shell > .hero, main.tool-shell > header, main.tool-shell > nav { order: 0; }
+  main.tool-shell > section.takeaways + section.panel { order: 1; }
+  main.tool-shell > section.takeaways + section.panel + aside.emfls-ad-slot { order: 1; }
+  main.tool-shell > section.takeaways { order: 2; }
+}
+</style>
+</head>
+<body>
+<main class="tool-shell">
+  <header class="hero">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="/">EMFLS</a><span aria-hidden="true">›</span>
+      <a href="/util/">Utilities</a><span aria-hidden="true">›</span>
+      <span aria-current="page">NIIT Calculator</span>
+    </nav>
+    <h1>2026 NIIT &amp; Additional Medicare Tax Calculator</h1>
+    <p>Estimate your 3.8% Net Investment Income Tax and 0.9% Additional Medicare Tax using the income each tax covers.</p>
+  </header>
+
+  <section class="panel takeaways" aria-labelledby="takeaways">
+    <h2 id="takeaways">Key takeaways</h2>
+    <ul>
+      <li><strong>3.8% NIIT</strong> applies to the smaller of net investment income and modified adjusted gross income (MAGI) above the filing threshold.</li>
+      <li><strong>0.9% Additional Medicare Tax</strong> applies to Medicare wages plus net self-employment earnings above the filing threshold.</li>
+      <li>For joint filers both thresholds are $250,000. Qualifying surviving spouses use $250,000 for NIIT and $200,000 for Additional Medicare Tax.</li>
+    </ul>
+  </section>
+
+  <form id="tax-form" autocomplete="off">
+    <section class="panel" aria-labelledby="income-heading">
+      <h2 id="income-heading">Your 2026 income</h2>
+      <p class="note" id="income-note">Use full-year amounts in U.S. dollars. Combine both spouses’ amounts for a joint return.</p>
+      <fieldset class="tax-inputs" aria-describedby="income-note">
+        <legend>Filing status and income</legend>
+        <div class="grid">
+          <div>
+            <label for="filing">Filing status</label>
+            <select id="filing" name="filing">
+              <option value="single">Single</option>
+              <option value="hoh">Head of household</option>
+              <option value="mfj" selected>Married filing jointly</option>
+              <option value="mfs">Married filing separately</option>
+              <option value="qss">Qualifying surviving spouse</option>
+            </select>
+          </div>
+          <div>
+            <label for="magi">NIIT MAGI ($)</label>
+            <input id="magi" type="number" inputmode="decimal" min="-1000000000" max="1000000000" step="0.01" value="326000" aria-describedby="magi-note" required>
+            <p class="note" id="magi-note">Enter Form 8960 MAGI including applicable investment income. For most filers this is adjusted gross income.</p>
+          </div>
+          <div>
+            <label for="w2Wages">Medicare wages and tips ($)</label>
+            <input id="w2Wages" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="300000" aria-describedby="wages-note">
+            <p class="note" id="wages-note">Use W-2 box 5 plus any other Form 8959 Part I Medicare wages and tips.</p>
+          </div>
+          <div>
+            <label for="netSeEarnings">Net self-employment earnings ($)</label>
+            <input id="netSeEarnings" type="number" inputmode="decimal" min="-1000000000" max="1000000000" step="0.01" value="0" aria-describedby="se-note">
+            <p class="note" id="se-note">Use Medicare-taxable Schedule SE earnings. On a joint return, combine positive amounts from each spouse’s Schedule SE.</p>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset class="tax-inputs">
+        <legend>Net investment income components</legend>
+        <p class="note">Use the amounts eligible for Form 8960. Include other taxable investment income such as eligible nonqualified annuity income in the other investment income field.</p>
+        <div class="grid">
+          <div>
+            <label for="interest">Taxable interest ($)</label>
+            <input id="interest" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="5000">
+          </div>
+          <div>
+            <label for="dividends">Taxable dividends ($)</label>
+            <input id="dividends" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="4000">
+          </div>
+          <div>
+            <label for="capitalGains">Net taxable capital gain or allowable loss ($)</label>
+            <input id="capitalGains" type="number" inputmode="decimal" min="-1000000000" max="1000000000" step="0.01" value="15000">
+          </div>
+          <div>
+            <label for="passiveIncome">Net rent, royalties, passive business and other investment income ($)</label>
+            <input id="passiveIncome" type="number" inputmode="decimal" min="-1000000000" max="1000000000" step="0.01" value="3000">
+          </div>
+          <div>
+            <label for="expenses">Eligible allocable investment expenses ($)</label>
+            <input id="expenses" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="1000">
+          </div>
+        </div>
+      </fieldset>
+    </section>
+
+    <p id="error" class="error" role="alert"></p>
+    <div id="results" class="niit-results" aria-live="polite" hidden>
+      <section class="panel" aria-labelledby="results-heading">
+        <h2 id="results-heading">Estimated federal surtaxes</h2>
+        <dl class="tax-amounts">
+          <div><dt>3.8% NIIT</dt><dd id="niitTax"></dd></div>
+          <div><dt>0.9% Additional Medicare Tax</dt><dd id="addlMedicareTax"></dd></div>
+          <div><dt>Combined liability</dt><dd id="totalTax"></dd></div>
+        </dl>
+        <dl class="amount-detail">
+          <dt>NIIT threshold</dt><dd id="niitThreshold"></dd>
+          <dt>Net investment income</dt><dd id="netInvestmentIncome"></dd>
+          <dt>MAGI over NIIT threshold</dt><dd id="magiExcess"></dd>
+          <dt>Amount taxed at 3.8%</dt><dd id="niitBase"></dd>
+          <dt>Additional Medicare Tax threshold</dt><dd id="medicareThreshold"></dd>
+          <dt>Amount taxed at 0.9%</dt><dd id="medicareBase"></dd>
+        </dl>
+        <p class="note">Liability shown before withholding and estimated payments. Form 8959 handles RRTA compensation separately. This estimate covers Medicare wages and self-employment income.</p>
+      </section>
+    </div>
+    <noscript><p class="panel">Enable JavaScript to calculate the estimates.</p></noscript>
+
+    <!-- Set data-ad-slot to an AdSense display unit ID issued for the specified publisher. -->
+    <aside class="ad-space" aria-label="Advertisement">
+      <div>Advertisement</div>
+      <ins class="adsbygoogle" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="rectangle" data-full-width-responsive="true"></ins>
+    </aside>
+
+    <section class="panel" aria-labelledby="sim-heading">
+      <h2 id="sim-heading">Compare NIIT savings</h2>
+      <p>Enter eligible changes you haven’t already included above. Each strategy is compared with the original estimate. The combined scenario recalculates the tax after applying all three changes.</p>
+      <div class="grid">
+        <div>
+          <label for="harvest">Capital losses to offset gains ($)</label>
+          <input id="harvest" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="5000" aria-describedby="harvest-note">
+          <p class="note" id="harvest-note">Use eligible realized losses that offset entered net taxable gains after applying wash-sale rules. The same amount reduces MAGI and NII in this scenario.</p>
+        </div>
+        <div>
+          <label for="muni">Taxable interest replaced with tax-exempt muni interest ($)</label>
+          <input id="muni" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="2500" aria-describedby="muni-note">
+          <p class="note" id="muni-note">Enter the taxable interest you would stop receiving. The model reduces MAGI and NII by that amount.</p>
+        </div>
+        <div>
+          <label for="pretax">MAGI reduction from an eligible pre-tax 401(k) or HSA contribution ($)</label>
+          <input id="pretax" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="10000" aria-describedby="pretax-note">
+          <p class="note" id="pretax-note">Enter the combined eligible MAGI reduction after applying contribution limits. This scenario leaves investment income and the baseline Medicare calculation unchanged.</p>
+        </div>
+      </div>
+      <div id="scenario-results" aria-live="polite" hidden>
+        <dl class="amount-detail">
+          <dt>NIIT saved from harvesting</dt><dd id="harvestSaved"></dd>
+          <dt>NIIT saved from muni shift</dt><dd id="muniSaved"></dd>
+          <dt>NIIT saved from pre-tax contributions</dt><dd id="pretaxSaved"></dd>
+          <dt><strong>NIIT saved with all changes</strong></dt><dd><strong id="combinedSaved"></strong></dd>
+          <dt>MAGI after all changes</dt><dd id="combinedMagi"></dd>
+          <dt>NIIT after all changes</dt><dd id="combinedNiit"></dd>
+        </dl>
+        <p class="note" id="scenario-notes"></p>
+      </div>
+    </section>
+  </form>
+
+  <section class="panel warning" aria-labelledby="warning-heading">
+    <h2 id="warning-heading">Avoid a surprise at filing</h2>
+    <p>Two spouses who each earn $150,000 in Medicare wages can owe <strong>$450</strong> of Additional Medicare Tax on a joint return. Their combined wages exceed the $250,000 threshold by $50,000, while each employer withholds the surtax only after paying its employee more than $200,000.</p>
+    <p>A taxable traditional IRA withdrawal can also raise MAGI above the NIIT threshold. For example, $10,000 of additional MAGI above the threshold can expose up to $10,000 of existing investment income to NIIT, adding up to <strong>$380</strong>.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="limits-heading">
+    <h2 id="limits-heading">Official 2026 federal thresholds</h2>
+    <p>These statutory thresholds are set in dollars and have no annual inflation adjustment.</p>
+    <table aria-describedby="limits-heading">
+      <thead><tr><th scope="col">Filing status</th><th scope="col">NIIT MAGI<br>3.8%</th><th scope="col">Medicare income<br>0.9%</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Single</th><td>$200,000</td><td>$200,000</td></tr>
+        <tr><th scope="row">Head of household</th><td>$200,000</td><td>$200,000</td></tr>
+        <tr><th scope="row">Married filing jointly</th><td>$250,000</td><td>$250,000</td></tr>
+        <tr><th scope="row">Married filing separately</th><td>$125,000</td><td>$125,000</td></tr>
+        <tr><th scope="row">Qualifying surviving spouse</th><td>$250,000</td><td>$200,000</td></tr>
+      </tbody>
+    </table>
+    <h3>What counts as investment income?</h3>
+    <p>Include taxable interest and dividends, eligible net capital gains, rents, royalties, passive business income and other eligible investment income. Subtract only allowable deductions properly allocable to investment income. Exclude federally tax-exempt municipal bond interest, the Section 121 excluded portion of home-sale gains, Social Security benefits, and 401(k), IRA and Roth IRA distributions. Taxable distributions and taxable Social Security benefits can still affect MAGI.</p>
+    <p>Use the applicable form instructions to determine allowable losses, expense limits and adjustments. This individual estimate uses the figures supplied and leaves out regular income tax and state tax.</p>
+    <div class="links">
+      <a href="https://www.irs.gov/instructions/i8960">IRS Form 8960 instructions</a>
+      <a href="https://www.irs.gov/taxtopics/tc559">IRS Topic 559</a>
+      <a href="https://www.irs.gov/instructions/i8959">IRS Form 8959 instructions</a>
+      <a href="https://www.irs.gov/taxtopics/tc560">IRS Topic 560</a>
+    </div>
+  </section>
+
+  <aside class="ad-space" aria-label="Advertisement">
+    <div>Advertisement</div>
+    <ins class="adsbygoogle" data-ad-client="ca-pub-8830524482034754" data-ad-slot="3423411629" data-ad-format="rectangle" data-full-width-responsive="true"></ins>
+  </aside>
+
+  <section class="panel faq" aria-labelledby="faq-heading">
+    <h2 id="faq-heading">Frequently asked questions</h2>
+    <details>
+      <summary>How is the 3.8% NIIT calculated?</summary>
+      <p>Multiply 3.8% by the smaller of your net investment income and the amount of MAGI above your filing threshold. Either amount can bring the tax base to zero.</p>
+    </details>
+    <details>
+      <summary>Can a traditional IRA withdrawal trigger NIIT?</summary>
+      <p>The taxable portion of a traditional IRA withdrawal generally raises MAGI. This can make more of your separate investment income subject to NIIT even though the IRA withdrawal itself is excluded from net investment income.</p>
+    </details>
+    <details>
+      <summary>Does NIIT apply to municipal bonds or the sale of a home?</summary>
+      <p>Federally tax-exempt municipal bond interest and home-sale gains excluded under Section 121 are outside net investment income. Include otherwise eligible taxable gains, including taxable gains from selling investments or the taxable portion of a home-sale gain.</p>
+    </details>
+    <details>
+      <summary>Why can a two-earner couple owe Additional Medicare Tax with no surtax withheld?</summary>
+      <p>Each employer withholds the extra 0.9% on wages it pays an employee above $200,000. Two spouses earning $150,000 each have $300,000 in combined Medicare wages. On a joint return they owe $450 of Additional Medicare Tax on the $50,000 above their $250,000 threshold.</p>
+    </details>
+    <details>
+      <summary>How can a 401(k) or HSA contribution reduce NIIT?</summary>
+      <p>Eligible pre-tax 401(k) deferrals and eligible HSA contributions can lower NIIT MAGI. A lower MAGI saves NIIT when it lowers the smaller of net investment income and MAGI above the threshold. At or below the threshold, NIIT is zero.</p>
+    </details>
+  </section>
+
+  <nav class="panel" aria-labelledby="related">
+    <h2 id="related">Related calculators</h2>
+    <div class="links">
+      <a href="/util/irs-tax-brackets-401k-catchup-calculator/">IRS tax brackets and 401(k) catch-up</a>
+      <a href="/util/hsa-tax-savings-calculator/">HSA tax savings</a>
+      <a href="/util/compound-interest/">Compound interest</a>
+    </div>
+  </nav>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 United States Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for United States:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/us-new-jersey-mansion-tax-3-5-percent-exit-tax-git-rep-3-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">New Jersey Mansion Tax &amp; Exit Tax Calculator 2026</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate New Jersey</span>
+    </a>
+    <a href="/util/us-new-york-estate-tax-cliff-7-35m-105-percent-santa-clause-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 New York Estate Tax Cliff Calculator · $7.35M Exclusion</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate 2026 New York estate tax at the $7.35M exclusion and $7,717,500 cliff. Compare taxa...</span>
+    </a>
+    <a href="/util/us-no-tax-on-overtime-tips-deduction-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 No Tax on Overtime &amp; Tips Calculator</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate your 2026 Schedule 1-A deductions on qualified overtime and tips, federal income ta...</span>
+    </a>
+    <a href="/util/us-non-qualified-stock-options-nso-exercise-ordinary-income-vs-ltcg-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 NSO Exercise Tax &amp; Withholding Gap Calculator</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate 2026 US non-qualified stock option exercise income, payroll taxes and the 22% fede...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+<footer>Federal tax estimate · emfls.github.io</footer>
+</body>
+</html>

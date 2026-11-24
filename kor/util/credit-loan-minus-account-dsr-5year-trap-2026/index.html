@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>2026년 신용대출·마이너스통장 이자 & DSR 5년 산정 만기 함정 계산기</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="description" content="마이너스통장은 사용하지 않아도 약정한도 전액이 5년 만기 분할상환으로 DSR에 잡혀 주택담보대출 한도가 1억 이상 날아갑니다. 1금융 40% vs 2금융 50% DSR 계산과 마통 해지 시 복원 한도 실시간 시뮬레이터." />
+  <link rel="canonical" href="https://emfls.github.io/kor/util/credit-loan-minus-account-dsr-5year-trap-2026/" />
+  <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+
+  <!-- Preconnects -->
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+
+  <!-- P0 Localhost Guarded Google AdSense -->
+  <script>
+    if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+      var s = document.createElement('script');
+      s.async = true;
+      s.crossOrigin = 'anonymous';
+      s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+      document.head.appendChild(s);
+    }
+  </script>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="2026년 마이너스통장 DSR 5년 만기 함정 계산기" />
+  <meta property="og:description" content="안 쓰는 마이너스통장 하나 때문에 주택담보대출 한도가 1억 이상 사라지는 DSR 함정 분석" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://emfls.github.io/kor/util/credit-loan-minus-account-dsr-5year-trap-2026/" />
+  <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --danger: #dc2626;
+      --success: #16a34a;
+      --warning: #d97706;
+      --info: #0284c7;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 1rem;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    h1 {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.4rem;
+      color: #334155;
+    }
+    input[type="number"], select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="number"]:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+    }
+    .input-hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 640px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+    .badge-danger { background: #fee2e2; color: #b91c1c; }
+    .badge-success { background: #dcfce7; color: #15803d; }
+    .badge-warning { background: #fef3c7; color: #b45309; }
+    .badge-info { background: #e0f2fe; color: #0369a1; }
+
+    .alert-box {
+      padding: 1rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      margin-bottom: 1.25rem;
+      font-weight: 500;
+    }
+    .alert-danger { background: #fee2e2; border: 1px solid #f87171; color: #991b1b; }
+    .alert-warning { background: #fef3c7; border: 1px solid #fcd34d; color: #92400e; }
+    .alert-info { background: #e0f2fe; border: 1px solid #7dd3fc; color: #0369a1; }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    .comparison-table th, .comparison-table td {
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      text-align: left;
+    }
+    .comparison-table th {
+      background: #f1f5f9;
+      font-weight: 700;
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 0.95rem;
+    }
+    .stat-row:last-child {
+      border-bottom: none;
+      font-weight: 700;
+      font-size: 1.05rem;
+      padding-top: 0.75rem;
+    }
+    .ad-container {
+      margin: 2rem 0;
+      text-align: center;
+      background: #f1f5f9;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+      padding: 10px;
+      min-height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chart-container {
+      background: #ffffff;
+      padding: 1.25rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin: 1.5rem 0;
+    }
+    .faq-item {
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.75rem;
+    }
+    .faq-q {
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 0.25rem;
+    }
+    .faq-a {
+      font-size: 0.92rem;
+      color: #475569;
+    }
+    .links-box {
+      margin-top: 2rem;
+      padding: 1.25rem;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .links-box a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+    .links-box a:hover {
+      text-decoration: underline;
+    }
+  </style>
+
+  <!-- Schema: WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026년 마이너스통장 DSR 5년 만기 함정 계산기",
+    "url": "https://emfls.github.io/kor/util/credit-loan-minus-account-dsr-5year-trap-2026/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All",
+    "browserRequirements": "Requires JavaScript",
+    "description": "마이너스통장의 약정한도 5년 의제 분할상환 규제로 인해 증발하는 주택담보대출 한도와 실제 이자 부담 및 DSR 40%/50% 규제를 정밀 시뮬레이션하는 금융 계산기"
+  }
+  </script>
+
+  <!-- Schema: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "마이너스통장에서 돈을 하나도 안 써도 DSR에 잡히나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "네, 그렇습니다. 금융당국의 DSR 산정 규정에 따라 한도대출(마이너스통장)은 실제 사용 잔액이 0원이라 할지라도 '개설된 약정한도 전액'을 부채로 간주하며, 만기를 5년(60개월)으로 의제하여 매년 한도의 20%를 원금으로 갚고 있는 것으로 계산합니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "주택담보대출을 받기 전에 마이너스통장을 해지하면 한도가 복원되나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "네, 즉시 복원됩니다. 마이너스통장을 해지하거나 약정한도를 대폭 감액하면 해당 금액만큼의 DSR 연간 부채 원리금 부담이 사라지므로, 30~40년 만기 주택담보대출 기준 마통 한도의 약 3~4배에 달하는 대출 한도가 즉시 살아납니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "스트레스 DSR 2단계가 적용되면 마이너스통장에 어떤 영향이 있나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "스트레스 DSR 2단계 시행에 따라 신용대출 및 한도대출에도 가산금리가 반영되어 DSR 산정 시 연간 이자 부담액이 더 커지게 됩니다. 이는 차주의 잔여 DSR 여력을 추가로 갉아먹어 주담대 한도를 더 크게 축소시키는 요인이 됩니다."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Schema: BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "홈",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "한국어 계산기 허브",
+        "item": "https://emfls.github.io/kor/util/finance-tax-2026/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "마이너스통장 DSR 함정 계산기",
+        "item": "https://emfls.github.io/kor/util/credit-loan-minus-account-dsr-5year-trap-2026/"
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>2026년 마이너스통장(한도대출) 이자 & DSR 5년 함정 계산기</h1>
+      <p class="subtitle">실제 잔액 0원이어도 5년 분할상환 의제 산정! 증발하는 주담대 한도 실시간 복원 분석</p>
+    </header>
+
+    <!-- Top AdSlot -->
+    
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="다음 필수 확인 계산기" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">다음 필수 확인 계산기 (Next Check)</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">방금 계산한 결과를 바탕으로 바로 이어서 점검하세요:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/kor/util/stress-dsr-3-mortgage-limit-refinance-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">스트레스 DSR 주담대 한도 계산기 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">마이너스통장 한도가 주담대 대출 가능액을 얼마나 깎아먹는지 확인하세요.</span></a>
+    <a href="/kor/util/revolving-card-loan-interest-trap-payoff-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">리볼빙·카드론 대환 절감액 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">고금리 카드대출이 있다면 저금리 대환 시 총이자 절감액을 계산하세요.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+<div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+        if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+      </script>
+    </div>
+
+    <!-- Input Card -->
+    <div class="card">
+      <h2 style="font-size: 1.2rem; margin-bottom: 1.25rem; color: #0f172a;">🏦 차주 소득 및 마이너스통장 조건 입력</h2>
+      <form id="minus-dsr-form">
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="annualIncome">연간 세전 소득 (원)</label>
+            <input inputmode="decimal" type="number" id="annualIncome" value="60000000" step="1000000" min="1" />
+            <div class="input-hint">근로소득 원천징수영수증 또는 소득금액증명원 상의 연소득</div>
+          </div>
+          <div class="form-group">
+            <label for="financialSector">신청 금융기관 업권</label>
+            <select id="financialSector">
+              <option value="bank" selected>1금융권 시중은행 (DSR 상한 40%)</option>
+              <option value="nonBank">2금융권 상호금융·보험·저축은행 (DSR 상한 50%)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="minusAccountLimit">마이너스통장 약정 한도 (원)</label>
+            <input inputmode="decimal" type="number" id="minusAccountLimit" value="50000000" step="1000000" min="0" />
+            <div class="input-hint">은행에 개설된 총 대출 한도 금액 (잔액이 아닌 개설 한도)</div>
+          </div>
+          <div class="form-group">
+            <label for="minusAccountRate">마이너스통장 대출 금리 (%)</label>
+            <input inputmode="decimal" type="number" id="minusAccountRate" value="5.0" step="0.1" min="0" />
+            <div class="input-hint">현재 적용 중인 연 이자율 (기본 5.0%)</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="actualUsedAmount">실제 사용/인출 잔액 (원)</label>
+            <input inputmode="decimal" type="number" id="actualUsedAmount" value="10000000" step="500000" min="0" />
+            <div class="input-hint">실제 통장에서 꺼내 쓰고 있는 마이너스 잔액 (이자 계산 기준)</div>
+          </div>
+          <div class="form-group">
+            <label for="existingAnnualDebtService">기타 기존 대출 연간 원리금 상환액 (원)</label>
+            <input inputmode="decimal" type="number" id="existingAnnualDebtService" value="5000000" step="500000" min="0" />
+            <div class="input-hint">자동차할부, 학자금, 카드론 등 기존 타 대출의 1년간 총 원리금 상환액</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="mortgageInterestRate">희망 주택담보대출 금리 (%)</label>
+            <input inputmode="decimal" type="number" id="mortgageInterestRate" value="4.0" step="0.1" min="0.1" />
+            <div class="input-hint">신규 신청하려는 주담대 예상 금리 (기본 4.0%)</div>
+          </div>
+          <div class="form-group">
+            <label for="mortgageTermYears">희망 주택담보대출 만기 (년)</label>
+            <input inputmode="decimal" type="number" id="mortgageTermYears" value="30" step="1" min="5" max="50" />
+            <div class="input-hint">주택담보대출 상환 기간 (기본 30년, 최장 40~50년)</div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Alert / Status Notice -->
+    <div id="res-status-alert" class="alert-box alert-info">
+      DSR 및 주담대 영향도를 분석 중입니다...
+    </div>
+
+    <!-- Results Card -->
+    <div class="card">
+      <h2 style="font-size: 1.2rem; margin-bottom: 1.25rem; color: #0f172a;">🚨 DSR 5년 산정 및 주택담보대출 한도 영향 분석 결과</h2>
+      <div id="res-wiped-badge" class="badge badge-danger">손실 한도 분석 중...</div>
+
+      <div class="grid-2">
+        <!-- Minus DSR Impact -->
+        <div style="background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border);">
+          <h3 style="font-size: 1.05rem; margin-bottom: 0.75rem; color: #334155;">🚨 마통의 DSR 산정 부채액 (5년 의제)</h3>
+          <div class="stat-row">
+            <span>DSR 원금 산정액 (한도/5년):</span>
+            <span id="res-minus-dsr-principal" style="color: var(--danger);">0원/년</span>
+          </div>
+          <div class="stat-row">
+            <span>DSR 합산 연간 부채액:</span>
+            <span id="res-minus-dsr-burden" style="color: var(--danger); font-size: 1.1rem;">0원/년</span>
+          </div>
+          <div class="stat-row">
+            <span>실제 사용 잔액 연 이자:</span>
+            <span id="res-actual-annual-interest">0원/년</span>
+          </div>
+          <div class="stat-row">
+            <span>현재 총 DSR 비율:</span>
+            <span id="res-current-dsr">0%</span>
+          </div>
+        </div>
+
+        <!-- Mortgage Wiped Out -->
+        <div style="background: #f0fdf4; padding: 1.25rem; border-radius: 8px; border: 1px solid #bbf7d0;">
+          <h3 style="font-size: 1.05rem; margin-bottom: 0.75rem; color: #166534;">🏠 주택담보대출 한도 비교</h3>
+          <div class="stat-row">
+            <span>현재 가능한 주담대 한도:</span>
+            <span id="res-current-mortgage" style="color: #334155;">0원</span>
+          </div>
+          <div class="stat-row">
+            <span>마통 해지 시 주담대 한도:</span>
+            <span id="res-restored-mortgage" style="color: var(--success); font-size: 1.15rem;">0원</span>
+          </div>
+          <div class="stat-row">
+            <span>마통 때문에 증발한 주담대:</span>
+            <span id="res-wiped-mortgage" style="color: var(--danger); font-size: 1.2rem; font-weight: 800;">0원</span>
+          </div>
+          <div class="stat-row">
+            <span>DSR 잔여 연간 상환 여력:</span>
+            <span id="res-remaining-capacity">0원/년</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SVG Chart -->
+      <div class="chart-container">
+        <h4 style="font-size: 0.95rem; margin-bottom: 1rem; color: #475569;">📊 마이너스통장 보유 여부에 따른 주택담보대출 한도 비교</h4>
+        <svg id="svg-chart" viewBox="0 0 450 110" width="100%" height="110" style="overflow: visible;">
+          <!-- Restored Bar -->
+          <text x="0" y="25" font-size="12" font-weight="600" fill="#334155">마통 해지 시</text>
+          <rect x="90" y="12" width="260" height="18" rx="4" fill="#10b981" id="chart-bar-restored"></rect>
+          <text x="360" y="26" font-size="11" font-weight="600" fill="#10b981" id="chart-txt-restored">0원</text>
+
+          <!-- Current Bar -->
+          <text x="0" y="65" font-size="12" font-weight="600" fill="#334155">현재 가능 한도</text>
+          <rect x="90" y="52" width="150" height="18" rx="4" fill="#ef4444" id="chart-bar-current"></rect>
+          <text x="250" y="66" font-size="11" font-weight="600" fill="#ef4444" id="chart-txt-current">0원</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Educational Deep-Dive Content -->
+    <div class="card">
+      <h2 style="font-size: 1.3rem; margin-bottom: 1rem; color: #0f172a;">📘 마이너스통장 DSR 5년 산정 규정과 치명적 함정 해설</h2>
+
+      <h3 style="font-size: 1.05rem; margin: 1.25rem 0 0.5rem 0; color: #1e293b;">1. 잔액 0원이어도 5,000만 원 전액이 부채로 잡히는 이유</h3>
+      <p style="font-size: 0.93rem; color: #334155; margin-bottom: 1rem;">
+        금융위원회와 금융감독원의 은행업감독업무시행세칙에 따르면, 한도대출(마이너스통장)은 언제든지 차주가 인출하여 사용할 수 있는 잠재 부채로 간주됩니다.
+        따라서 통장 잔고가 0원이라 하더라도 <strong>은행과 약정한 총 한도금액 전액</strong>이 금융기관 전산상 대출 잔액으로 등재되어 DSR 산정에 그대로 포함됩니다.
+      </p>
+
+      <h3 style="font-size: 1.05rem; margin: 1.25rem 0 0.5rem 0; color: #1e293b;">2. 왜 1년 만기인데 5년 분할상환으로 나눌까?</h3>
+      <p style="font-size: 0.93rem; color: #334155; margin-bottom: 1rem;">
+        과거에는 신용대출을 10년 만기로 나누어 계산했으나, 가계부채 억제 정책에 따라 2021년 7년, 그리고 <strong>현행 5년(60개월)</strong>으로 대폭 단축되었습니다.
+        만기가 1년마다 연장되는 대출이라도 DSR 계산 시에는 5년 동안 원금을 전액 갚아야 하는 것으로 의제하므로,
+        약정한도 5,000만 원의 20%인 <strong>매년 1,000만 원의 원금 상환액</strong>에 이자(약 250만 원)까지 합쳐져 연간 1,250만 원이라는 막대한 부채 상환액이 발생합니다.
+      </p>
+
+      <h2 style="font-size: 1.15rem; margin: 1.5rem 0 0.75rem 0; color: #0f172a;">⚖️ 3. 마통 5천만 원이 주담대 1.5억~2억을 날리는 메커니즘</h2>
+      <p style="font-size: 0.93rem; color: #334155; margin-bottom: 1rem;">
+        연소득 6,000만 원 차주의 은행권 DSR 40% 한도는 연간 2,400만 원입니다.
+        만약 5,000만 원짜리 마이너스통장을 가지고 있다면, 연간 부채로 1,250만 원이 먼저 빠져나가기 때문에 주담대에 쓸 수 있는 연간 상환 여력은 1,150만 원으로 반토막이 납니다.
+        30년 만기(금리 4.0%) 원리금균등 주택담보대출은 1,250만 원의 연간 상환액으로 <strong>약 2억 1,800만 원</strong>을 빌릴 수 있는 돈입니다.
+        즉, <strong>안 쓰고 비상금으로 열어둔 마통 5천만 원 때문에 아파트 매수를 위한 주담대 한도가 2억 넘게 증발</strong>하는 비극이 발생합니다.
+      </p>
+
+      <div style="overflow-x: auto;">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>구분</th>
+              <th>마이너스통장 보유 상태</th>
+              <th>마이너스통장 해지 후</th>
+              <th>차이 및 복원 효과</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>마통 DSR 연간 부채</strong></td>
+              <td>1,250만 원 (원금 1,000만 + 이자 250만)</td>
+              <td>0원</td>
+              <td>연간 1,250만 원 상환 여력 회복</td>
+            </tr>
+            <tr>
+              <td><strong>주담대 사용 가능 여력</strong></td>
+              <td>연 650만 원 (기존 대출 500만 감안)</td>
+              <td>연 1,900만 원</td>
+              <td>약 3배 증가</td>
+            </tr>
+            <tr>
+              <td><strong>30년 주택담보대출 한도</strong></td>
+              <td>약 1억 1,300만 원</td>
+              <td>약 3억 3,100만 원</td>
+              <td><strong>+2억 1,800만 원 즉시 복원</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="font-size: 1.05rem; margin: 1.25rem 0 0.5rem 0; color: #1e293b;">4. 내집 마련 차주를 위한 실전 대출 공략법</h3>
+      <ul style="padding-left: 1.25rem; font-size: 0.93rem; color: #334155; line-height: 1.8;">
+        <li><strong>주담대 실행 전 무조건 마통 해지/감액:</strong> 아파트 청약이나 매매 잔금을 앞두고 있다면, 주담대 사전 심사 신청 최소 2주 전에 마이너스통장을 완전히 해지하거나 꼭 필요한 최소 금액(예: 1,000만 원)으로 한도를 축소해야 합니다.</li>
+        <li><strong>주담대 실행 후 신용대출 개설 순서 지키기:</strong> 주택담보대출은 30~40년 장기 분할이라 DSR 잠식률이 낮습니다. 따라서 주담대를 먼저 최대한도로 실행하여 잔금을 치른 뒤, 필요시 신용대출이나 마통을 나중에 개설하는 것이 한도 극대화의 정석입니다.</li>
+        <li><strong>신용대출 갈아타기 시 만기 분할 방식 선택:</strong> 최근 일부 은행에서 최장 10년 만기 분할상환 신용대출 상품을 출시하고 있습니다. 5년 의제 마통 대신 10년 분할상환 방식을 선택하면 DSR 원금 부담이 절반으로 줄어듭니다.</li>
+      </ul>
+    </div>
+
+    <!-- Second AdSlot -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+        if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+      </script>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="card">
+      <h2 style="font-size: 1.2rem; margin-bottom: 1rem; color: #0f172a;">❓ 자주 묻는 질문 (FAQ)</h2>
+      <div class="faq-item">
+        <div class="faq-q">Q. 마이너스통장을 해지하면 신용점수가 떨어지나요?</div>
+        <div class="faq-a">A. 아니오, 오히려 신용점수에 긍정적인 영향을 줍니다. 개설된 대출 한도가 사라져 개인의 총 부채 위험도가 감소하므로 KCB나 NICE 신용점수가 상승하거나 안정적으로 유지됩니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Q. 마통 한도를 5,000만 원에서 1,000만 원으로 감액해도 바로 반영되나요?</div>
+        <div class="faq-a">A. 네. 모바일 뱅킹 앱에서 즉시 한도 감액을 신청하면 한국신용정보원(신정원) 전산에 영업일 기준 1~2일 내로 전산 통보되어 모든 금융기관의 DSR 심사에 축소된 한도가 즉시 반영됩니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Q. 전세자금대출을 받을 때도 마이너스통장이 DSR에 걸리나요?</div>
+        <div class="faq-a">A. 현재 전세자금대출 자체는 차주 단위 DSR 규제 대상에서 제외되어 있습니다. 그러나 은행 내부 심사 기준(DTI 또는 신용대출 한도 규제)에 따라 마이너스통장 한도만큼 전세대출 가능액을 차감하는 경우가 많으므로 사전 확인이 필요합니다.</div>
+      </div>
+    </div>
+
+    <!-- Hub Link Box -->
+    <div class="links-box">
+      <a href="/kor/util/finance-tax-2026/">📊 2026 금융·세무 계산기 허브</a>
+      <a href="/kor/util/corporate-tax-vs-sole-proprietor-conversion-2026/">💼 개인사업자 vs 법인전환 세금 비교</a>
+      <a href="/kor/util/severance-pay-exact-tax-calculator-2026/">💰 2026 퇴직금 & 퇴직소득세 정확 계산기</a>
+      <a href="/kor/util/crypto-virtual-asset-tax-250man-2029-simulator/">🪙 가상자산 250만 공제 과세 시뮬레이터</a>
+    </div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 대한민국 세무·금융·복지 핵심 계산기</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">2026년도 국세청·고용노동부 기준 연계 계산 도구:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/kor/util/didimdol-mortgage-loan-limit-rate-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 내집마련 디딤돌대출 한도(2억·2.4억·3.2억)·자격 판정 &amp; 월 상환액 계산기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2025.6.27 개편 현행 주택도시기금 내집마련 디딤돌대출 유형별 한도(일반 2억, 생애최초 2.4억, 신혼·2자녀 3.2억) 및 소득(6,000만/7,000만/8...</span>
+    </a>
+    <a href="/kor/util/divorce-child-support-property-division-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 양육비 산정기준표 계산기 &amp; 이혼 재산분할·취득세 1.5% 특례 시뮬레이터</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">서울가정법원 양육비 산정기준표(부모 합산소득 11구간 × 자녀 나이 6구간)로 비양육자 월 양육비와 성년까지 누적액을 계산하고, 기여도별 재산분할 금액과 부동산 이전...</span>
+    </a>
+    <a href="/kor/util/dual-income-year-end-tax-optimization-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 맞벌이 부부 연말정산 최적화 시뮬레이터 | 공제 몰아주기 vs 분산 절세 비교</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 최신 소득세법 기준 맞벌이 부부 연말정산 인적공제(1인당 150만 원), 의료비(총급여 3% 문턱 15%), 신용카드(총급여 25% 문턱), 교육비 최적 ...</span>
+    </a>
+    <a href="/kor/util/earned-income-child-tax-credit-eitc-330man-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 근로장려금 &amp; 자녀장려금 계산기 | 맞벌이 4,400만·최대 330만 원</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 최신 국세청 기준 근로장려금(단독 2,200만, 홑벌이 3,200만, 맞벌이 4,400만 원 최대 330만 원) 및 자녀장려금(1인당 100만 원), 재산...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>2026 글로벌 세무·금융·복지 계산기 전수 보기 &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</body>
+</html>

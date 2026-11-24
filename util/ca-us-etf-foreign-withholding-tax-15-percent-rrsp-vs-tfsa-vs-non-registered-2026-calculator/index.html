@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Canada U.S. ETF Withholding Tax Calculator 2026 | RRSP vs TFSA vs VFV</title>
+  <meta name="description" content="Estimate the 15% U.S. dividend withholding drag for Canadians. Compare RRSP, TFSA and taxable accounts, VFV vs VOO, and currency conversion break-even.">
+  <link rel="canonical" href="https://emfls.github.io/util/ca-us-etf-foreign-withholding-tax-15-percent-rrsp-vs-tfsa-vs-non-registered-2026-calculator/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_CA">
+  <meta property="og:site_name" content="emfls">
+  <meta property="og:title" content="Canada U.S. ETF Withholding Tax Calculator 2026">
+  <meta property="og:description" content="Compare U.S. dividend withholding across Canadian accounts and see when switching from VFV to VOO in an RRSP covers your FX costs.">
+  <meta property="og:url" content="https://emfls.github.io/util/ca-us-etf-foreign-withholding-tax-15-percent-rrsp-vs-tfsa-vs-non-registered-2026-calculator/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Canada U.S. ETF Withholding Tax Calculator 2026">
+  <meta name="twitter:description" content="Compare U.S. dividend withholding across Canadian accounts and see when switching from VFV to VOO in an RRSP covers your FX costs.">
+  <link rel="stylesheet" href="../new-tools.css">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QP5Q67GE5B')</script>
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+  <script>
+    if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+      const adsScript = document.createElement('script');
+      adsScript.async = true;
+      adsScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+      adsScript.crossOrigin = 'anonymous';
+      document.head.append(adsScript);
+    }
+  </script>
+  <style>
+    .tool-nav { margin-bottom: 12px; }
+    .tool-nav a { color: #eaf3ff; }
+    .takeaways, .warning { padding: 16px 20px; border-radius: 10px; }
+    .takeaways { background: #edf5ff; border-left: 4px solid #2563eb; }
+    .warning { background: #fff4dc; border-left: 4px solid #a15b00; }
+    .takeaways p, .warning p { margin-bottom: 0; }
+    .grid > div { min-width: 0; }
+    .field-note { display: block; margin-top: 4px; }
+    #fwt-error:empty { display: none; }
+    #fwt-results { margin-top: 24px; }
+    table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    caption { text-align: left; font-weight: 750; margin-bottom: 8px; }
+    th, td { text-align: left; vertical-align: top; padding: 10px 8px; border-bottom: 1px solid #d9e0ea; overflow-wrap: anywhere; }
+    thead { background: #eaf3ff; }
+    th:first-child { width: 32%; }
+    .numeric { font-variant-numeric: tabular-nums; }
+    .rrsp-total { padding: 12px; background: #edf5ff; border-radius: 10px; }
+    .emfls-ad-slot { width: min(100%, 520px); min-height: 278px; margin: 24px auto; text-align: center; }
+    .ad-label { min-height: 28px; font: 12px/28px system-ui, sans-serif; color: #cbd5e1; }
+    .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+    @media (max-width: 540px) {
+      th, td { padding: 8px 4px; font-size: .8rem; line-height: 1.35; }
+    }
+  </style>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Canada U.S. ETF Withholding Tax Calculator 2026",
+  "url": "https://emfls.github.io/util/ca-us-etf-foreign-withholding-tax-15-percent-rrsp-vs-tfsa-vs-non-registered-2026-calculator/",
+  "description": "Estimate U.S. dividend withholding, 25-year wealth lost and RRSP currency conversion break-even.",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "CAD"
+  }
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why does VOO generally avoid U.S. dividend withholding in an RRSP while VFV incurs it?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Article XXI(2) of the Canada–U.S. tax treaty generally exempts qualifying U.S. dividends received directly by an eligible RRSP. With VFV or XUS, the Canadian fund receives the U.S. dividends and generally incurs withholding before the money reaches your RRSP."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does buying a U.S.-listed ETF avoid withholding in a TFSA, FHSA or RESP?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Qualifying U.S. dividends generally face 15% withholding in these accounts under either wrapper. These accounts fall outside the treaty retirement exemption used in this comparison, and the modeled withholding is unrecoverable in the account."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I recover the full 15% in a non-registered account?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Full recovery is possible if all withholding qualifies and the applicable Canadian tax limit covers it. For the federal credit, use CRA Form T2209. A Canadian ETF may designate eligible amounts on a T3 slip. A provincial or territorial credit may also apply."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When does Norbert’s Gambit pay for itself?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Break-even depends on the amount invested, eligible dividend yield, return and total conversion cost. At C$100,000, 1.5% gross U.S. dividend yield and 7% total return, a C$20 Gambit breaks even in about 0.10 year. A 1.5% retail FX fee takes about 7.18 years."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this estimate cover all withholding on international ETFs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It covers the U.S. withholding layer. The countries that issued the underlying stocks may withhold their own tax before the dividend reaches the fund. Those amounts depend on the fund structure, source country and treaties, and can still apply when an RRSP receives a distribution free of U.S. withholding."
+      }
+    }
+  ]
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "EMFLS",
+      "item": "https://emfls.github.io/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "All tools",
+      "item": "https://emfls.github.io/util/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Canada U.S. ETF Withholding Tax Calculator 2026",
+      "item": "https://emfls.github.io/util/ca-us-etf-foreign-withholding-tax-15-percent-rrsp-vs-tfsa-vs-non-registered-2026-calculator/"
+    }
+  ]
+}
+  </script>
+  <script type="module" src="./app.js"></script>
+<style id="emfls-cro-calc-first-b2-v1">
+/* EMFLS CRO B2 — mobile calculator-first ordering for non-Patch-B EN templates (CSS-only, reversible) */
+@media (max-width: 760px) {
+  main:has(form, input, select),
+  .tool-shell:has(form, input, select),
+  .container:has(form, input, select) {
+    display: flex;
+    flex-direction: column;
+  }
+  main:has(form, input, select) > *,
+  .tool-shell:has(form, input, select) > *,
+  .container:has(form, input, select) > * {
+    order: 4;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  main:has(form, input, select) > nav,
+  main:has(form, input, select) > header,
+  main:has(form, input, select) > .hero,
+  main:has(form, input, select) > h1,
+  main:has(form, input, select) > .lead,
+  .tool-shell:has(form, input, select) > nav,
+  .tool-shell:has(form, input, select) > header,
+  .tool-shell:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > h1,
+  .tool-shell:has(form, input, select) > .lead,
+  .container:has(form, input, select) > nav,
+  .container:has(form, input, select) > header,
+  .container:has(form, input, select) > .hero,
+  .container:has(form, input, select) > h1,
+  .container:has(form, input, select) > .lead {
+    order: 0;
+  }
+  main:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .tool-shell:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .container:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav) {
+    order: 1;
+  }
+  main:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .tool-shell:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .container:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container) {
+    order: 2;
+  }
+  main:has(form, input, select) > .emfls-next-check,
+  .tool-shell:has(form, input, select) > .emfls-next-check,
+  .container:has(form, input, select) > .emfls-next-check {
+    order: 2;
+  }
+  main:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .tool-shell:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .container:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]) {
+    order: 3;
+  }
+  main:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > .hero,
+  .container:has(form, input, select) > header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+}
+</style>
+</head>
+<body>
+  <main class="tool-shell">
+    <nav class="links tool-nav" aria-label="Breadcrumb">
+      <a href="/">EMFLS</a>
+      <a href="/util/">All tools</a>
+    </nav>
+
+    <header class="hero">
+      <h1>Canada U.S. ETF Withholding Tax Calculator 2026</h1>
+      <p>Compare RRSP, TFSA, FHSA, RESP and taxable accounts. Calculate the dividend tax drag and see when switching from VFV to VOO in an RRSP could pay for the currency conversion.</p>
+    </header>
+
+    <section class="panel" aria-labelledby="calculator-title">
+      <div class="takeaways">
+        <h2>Key takeaways</h2>
+        <p><strong>A U.S.-listed ETF held directly in an eligible RRSP generally incurs 0% U.S. withholding on qualifying U.S. dividends.</strong> A Canadian-listed wrapper such as VFV or XUS generally incurs 15% at the fund level. At a 1.5% U.S. dividend yield, that costs 0.225% of portfolio value in year one. TFSA, FHSA and RESP holdings generally face the same 15% withholding. Taxable accounts may qualify for a foreign tax credit.</p>
+      </div>
+
+      <h2 id="calculator-title" style="margin-top:24px">Your ETF assumptions</h2>
+      <noscript><p>Enable JavaScript to calculate estimates in your browser.</p></noscript>
+      <form id="fwt-inputs" class="grid" method="dialog" novalidate>
+        <div>
+          <label for="amount">Portfolio value (CAD)</label>
+          <input id="amount" name="amount" type="number" inputmode="decimal" min="0.01" max="100000000" step="any" value="100000" required>
+        </div>
+        <div>
+          <label for="yield">Gross U.S. dividend yield (%)</label>
+          <input id="yield" name="dividendYieldPct" type="number" inputmode="decimal" min="0" max="100" step="any" value="1.5" aria-describedby="yield-note" required>
+          <small id="yield-note" class="note field-note">Enter the yield attributable to dividends subject to U.S. withholding before tax.</small>
+        </div>
+        <div>
+          <label for="return">Annual total return before withholding (%)</label>
+          <input id="return" name="totalReturnPct" type="number" inputmode="decimal" min="-80" max="50" step="any" value="7" aria-describedby="return-note" required>
+          <small id="return-note" class="note field-note">Include dividends in the return. The same return applies to all four cases.</small>
+        </div>
+        <div>
+          <label for="credit">Taxable-account withholding recovered (%)</label>
+          <input id="credit" name="creditRecoveryPct" type="number" inputmode="decimal" min="0" max="100" step="any" value="100" aria-describedby="credit-note" required>
+          <small id="credit-note" class="note field-note">100% is the full-credit scenario. Enter a lower share if the tax slip or Canadian tax limit reduces the credit.</small>
+        </div>
+        <div>
+          <label for="retail">Retail FX fee (%)</label>
+          <input id="retail" name="retailFxPct" type="number" inputmode="decimal" min="0" max="100" step="any" value="1.5" required>
+        </div>
+        <div>
+          <label for="gambit">Norbert’s Gambit all-in cost (CAD)</label>
+          <input id="gambit" name="gambitCost" type="number" inputmode="decimal" min="0" max="100000000" step="any" value="20" aria-describedby="gambit-note" required>
+          <small id="gambit-note" class="note field-note">Include commissions, journaling fees and bid–ask spreads. C$20 is illustrative.</small>
+        </div>
+      </form>
+
+      <p class="error" id="fwt-error" role="alert"></p>
+      <p class="sr-only" id="fwt-status" role="status" aria-live="polite"></p>
+      <section id="fwt-results" aria-label="Calculation results" hidden>
+        <table class="numeric">
+          <caption>Withholding by account and ETF wrapper (CAD)</caption>
+          <thead>
+            <tr><th scope="col">Account and holding</th><th scope="col">Year 1 withheld</th><th scope="col">Year 1 lost (% of portfolio)</th><th scope="col">25-year wealth lost</th></tr>
+          </thead>
+          <tbody>
+            <tr data-scenario="rrspDirect"><th scope="row">RRSP · U.S.-listed ETF</th><td></td><td></td><td></td></tr>
+            <tr data-scenario="rrspWrapper"><th scope="row">RRSP · Canadian wrapper</th><td></td><td></td><td></td></tr>
+            <tr data-scenario="otherRegistered"><th scope="row">TFSA / FHSA / RESP · either wrapper</th><td></td><td></td><td></td></tr>
+            <tr data-scenario="taxable"><th scope="row">Non-registered · either wrapper</th><td></td><td></td><td></td></tr>
+          </tbody>
+        </table>
+        <p class="note">Year 1 loss is after any assumed credit. The 25-year loss is the shortfall versus the same holding with zero net withholding.</p>
+        <p class="rrsp-total">Estimated 25-year savings from switching VFV to VOO within the same RRSP before FX: <strong id="rrsp-gross-savings"></strong></p>
+        <table class="numeric">
+          <caption>VFV → VOO in an RRSP after one-time CAD → USD costs</caption>
+          <thead>
+            <tr><th scope="col">Conversion method</th><th scope="col">Upfront fee (CAD)</th><th scope="col">Break-even</th><th scope="col">20-year net savings (CAD)</th></tr>
+          </thead>
+          <tbody>
+            <tr data-conversion="retail"><th scope="row">Retail FX</th><td></td><td></td><td></td></tr>
+            <tr data-conversion="gambit"><th scope="row">Norbert’s Gambit</th><td></td><td></td><td></td></tr>
+          </tbody>
+        </table>
+        <p class="note">Negative net savings mean the Canadian wrapper finishes ahead. Break-even is the estimated time when both balances match, shown as a fraction of a year.</p>
+      </section>
+
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="Next essential calculators" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">Next Essential Check</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">Run these 2 companion checks with the numbers you just calculated:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/util/ca-rrsp-vs-tfsa-oas-clawback-2026-calculator/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">RRSP vs TFSA &amp; OAS Clawback &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">Compare after-tax wealth factoring in the 15% OAS clawback ($95,323).</span></a>
+    <a href="/util/ca-cpp-age-60-vs-65-vs-70-breakeven-calculator-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">CPP Age 60 vs 65 vs 70 Break-Even &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">Find the exact break-even age for early vs deferred CPP benefits.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+    </section>
+
+    <aside class="emfls-ad-slot" aria-label="Advertisement">
+      <div class="ad-label">Advertisement</div>
+      <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </aside>
+
+    <section class="panel" aria-labelledby="rules-title">
+      <h2 id="rules-title">2026 official withholding parameters</h2>
+      <table>
+        <thead>
+          <tr><th scope="col">Canadian account</th><th scope="col">U.S. dividend withholding</th><th scope="col">Basis</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">RRSP · direct U.S.-listed ETF (VOO, VTI, SCHD)</th><td>0% on qualifying dividends</td><td>Canada–U.S. treaty, Article XXI(2)</td></tr>
+          <tr><th scope="row">RRSP · Canadian wrapper (VFV, XUS)</th><td>15%, unrecoverable in the account</td><td>Treaty Article X(2)(b). The Canadian fund receives the dividend.</td></tr>
+          <tr><th scope="row">TFSA / FHSA / RESP · either wrapper</th><td>15%, generally unrecoverable in the account</td><td>Treaty Article X(2)(b). These plans fall outside the retirement-plan exemption in this comparison.</td></tr>
+          <tr><th scope="row">Non-registered · either wrapper</th><td>15% before any credit</td><td>Treaty Article X(2)(b) and CRA Form T2209. Fund-level tax may qualify when designated on the tax slip.</td></tr>
+        </tbody>
+      </table>
+      <p class="note">Treaty rates assume eligibility and proper documentation. Foreign dividends are generally taxable as foreign income in Canada and are ineligible for the Canadian dividend tax credit.</p>
+      <ul>
+        <li><a href="https://www.canada.ca/en/department-finance/programs/tax-policy/tax-treaties/country/united-states-america-convention-consolidated-1980-1983-1984-1995-1997-2007.html">Finance Canada · Canada–U.S. tax treaty</a></li>
+        <li><a href="https://www.canada.ca/en/revenue-agency/services/forms-publications/forms/t2209.html">CRA · Form T2209 federal foreign tax credits</a></li>
+        <li><a href="https://www.canada.ca/en/revenue-agency/services/tax/technical-information/income-tax/income-tax-folios-index/series-5-international-residency/folio-2-foreign-tax-credits-deductions/income-tax-folio-s5-f2-c1-foreign-tax-credit.html">CRA · Foreign tax credit calculation and limits</a></li>
+        <li><a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/first-home-savings-account/investments-your-fhsa.html">CRA · Withholding on FHSA investments</a></li>
+        <li><a href="https://www.vanguard.ca/en/tools-and-resources/tax-centre">Vanguard Canada · ETF withholding by account</a></li>
+      </ul>
+      <aside class="warning" aria-labelledby="warning-title">
+        <h3 id="warning-title">Higher dividend yields magnify the loss</h3>
+        <p>At an illustrative 3.5% yield on qualifying dividends, such as a SCHD-style scenario, 15% withholding costs 0.525% of portfolio value in year one. That is C$525 on C$100,000. For an options-income ETF such as JEPI, use the portion of yield attributable to distributions subject to U.S. withholding. Its headline yield can include multiple sources of income. <a href="https://am.jpmorgan.com/content/dam/jpm-am-aem/americas/us/en/literature/fact-sheet/etfs/FS-JEPI.pdf">J.P. Morgan · JEPI fund fact sheet</a></p>
+      </aside>
+    </section>
+
+    <section class="panel" aria-labelledby="method-title">
+      <h2 id="method-title">How the estimate works</h2>
+      <p>Multiply gross U.S. dividend yield by 15% to get annual withholding as a share of the portfolio. Reduce this drag by any assumed credit. Wealth lost is the difference between compounding the gross return for 25 years and compounding that return minus the net drag.</p>
+      <p>For the FX comparison, the conversion fee comes out of the starting balance. The remaining balance compounds at the gross return. The Canadian wrapper compounds at the same return less its withholding drag. Break-even solves for when both balances are equal. The 20-year comparison includes the growth forgone on the fee.</p>
+      <p>The model assumes one starting investment, constant yearly rates and reinvestment of dividends and any assumed credit at year-end. It isolates U.S. withholding and one-way FX costs. Fund fees, Canadian income taxes, RRSP withdrawal taxes, return conversion costs and exchange-rate movements can affect the comparison.</p>
+      <p>For international equity ETFs, taxes charged by the underlying countries may apply before the U.S. or Canadian fund receives the dividend. A U.S.-listed fund held in an RRSP may still incur that underlying withholding. Use this model for the U.S. withholding layer and check the fund structure separately. <a href="https://www.blackrock.com/ca/individual/en/literature/brochure/withholding-tax-reference-guide-en-ca.pdf">BlackRock Canada · Foreign withholding by fund structure</a></p>
+      <p>Norbert’s Gambit uses a dual-listed security and requires broker support for journaling. Costs and timing depend on your broker and the trade. <a href="https://www.questrade.com/learning/investing-basics/norberts-gambit-currency-conversion">Questrade · Norbert’s Gambit and journaling</a></p>
+      <nav class="links" aria-label="Related calculators">
+        <a href="/util/fin-calc/">Simple Finance Calculator</a>
+        <a href="/util/compound-interest/">Compound Interest Calculator</a>
+        <a href="/util/roi-calculator/">ROI Calculator</a>
+      </nav>
+    </section>
+
+    <section class="panel faq">
+      <h2>Frequently asked questions</h2>
+      <details>
+        <summary>Why does VOO generally avoid U.S. dividend withholding in an RRSP while VFV incurs it?</summary>
+        <p>Article XXI(2) of the Canada–U.S. tax treaty generally exempts qualifying U.S. dividends received directly by an eligible RRSP. With VFV or XUS, the Canadian fund receives the U.S. dividends and generally incurs withholding before the money reaches your RRSP.</p>
+      </details>
+      <details>
+        <summary>Does buying a U.S.-listed ETF avoid withholding in a TFSA, FHSA or RESP?</summary>
+        <p>Qualifying U.S. dividends generally face 15% withholding in these accounts under either wrapper. These accounts fall outside the treaty retirement exemption used in this comparison, and the modeled withholding is unrecoverable in the account.</p>
+      </details>
+      <details>
+        <summary>Can I recover the full 15% in a non-registered account?</summary>
+        <p>Full recovery is possible if all withholding qualifies and the applicable Canadian tax limit covers it. For the federal credit, use CRA Form T2209. A Canadian ETF may designate eligible amounts on a T3 slip. A provincial or territorial credit may also apply.</p>
+      </details>
+      <details>
+        <summary>When does Norbert’s Gambit pay for itself?</summary>
+        <p>Break-even depends on the amount invested, eligible dividend yield, return and total conversion cost. At C$100,000, 1.5% gross U.S. dividend yield and 7% total return, a C$20 Gambit breaks even in about 0.10 year. A 1.5% retail FX fee takes about 7.18 years.</p>
+      </details>
+      <details>
+        <summary>Does this estimate cover all withholding on international ETFs?</summary>
+        <p>It covers the U.S. withholding layer. The countries that issued the underlying stocks may withhold their own tax before the dividend reaches the fund. Those amounts depend on the fund structure, source country and treaties, and can still apply when an RRSP receives a distribution free of U.S. withholding.</p>
+      </details>
+    </section>
+
+    <aside class="emfls-ad-slot" aria-label="Advertisement">
+      <div class="ad-label">Advertisement</div>
+      <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </aside>
+  
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 Canadian Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for Canadian:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/ca-us-snowbird-183-day-substantial-presence-test-form-8840-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada–U.S. Snowbird 183-Day Test &amp; Form 8840 Calculator 2026</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate your 2026 U.S. substantial presence score, remaining travel days, and Form 8840 da...</span>
+    </a>
+    <a href="/util/ca-vancouver-empty-homes-tax-3-percent-plus-bc-svt-6-percent-stack-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Vancouver Empty Homes Tax + B.C. SVT Calculator 2026</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate Vancouver’s 3% Empty Homes Tax and B.C.’s 1% or 3% vacancy tax. Compare the 2026 ta...</span>
+    </a>
+    <a href="/util/ca-year-end-tax-loss-selling-t-plus-1-dec-30-superficial-loss-30-day-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada Year-End Tax-Loss Selling T+1 Dec 30 Superficial Loss Calculator 2026</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate Canadian tax-loss selling under T+1 settlement (Dec 30 deadline), CRA 61-day super...</span>
+    </a>
+    <a href="/util/ca-acb-superficial-loss-30-day-etf-capital-gains-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada ACB &amp; Superficial Loss Calculator 2026 | ETF ROC</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate Canadian weighted-average ACB, ETF return of capital, phantom distributions and 61...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+  <footer>Estimate only · emfls.github.io</footer>
+</body>
+</html>

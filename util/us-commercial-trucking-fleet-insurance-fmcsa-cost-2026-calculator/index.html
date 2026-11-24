@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026 US Commercial Trucking & Fleet Insurance Calculator | FMCSA Limits</title>
+  <meta name="description" content="Calculate 2026 US commercial trucking insurance costs for owner-operators and fleets. Includes FMCSA $750k/$1M/$5M primary liability, cargo, physical damage, and CPM drag.">
+  <link rel="canonical" href="https://emfls.github.io/util/us-commercial-trucking-fleet-insurance-fmcsa-cost-2026-calculator/">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+
+  <script>
+  if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+    const adScript = document.createElement('script');
+    adScript.async = true;
+    adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+    adScript.crossOrigin = 'anonymous';
+    document.head.append(adScript);
+  }
+  </script>
+
+  <style id="emfls-responsive-guard">
+    *, *::before, *::after { box-sizing: border-box; }
+    img, canvas, svg, video { max-width: 100%; height: auto; }
+    body, html { overflow-x: hidden; }
+  </style>
+
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-accent: #2563eb;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --border: #e2e8f0;
+      --warning-bg: #fffbeb;
+      --warning-border: #fef3c7;
+      --warning-text: #92400e;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background-color: var(--bg);
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(135deg, #0f172a, #1e3a8a);
+      color: white;
+      padding: 2.5rem 1rem;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.85rem;
+      font-weight: 800;
+    }
+    header p {
+      margin: 0;
+      opacity: 0.95;
+      font-size: 1.05rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .nav-breadcrumbs {
+      font-size: 0.85rem;
+      margin-bottom: 0.75rem;
+      opacity: 0.9;
+    }
+    .nav-breadcrumbs a {
+      color: #93c5fd;
+      text-decoration: none;
+    }
+    .nav-breadcrumbs a:hover {
+      text-decoration: underline;
+    }
+    .container {
+      max-width: 1060px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .ad-container {
+      margin: 1.5rem 0;
+      text-align: center;
+      background: #edf2f7;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .calc-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 768px) {
+      .calc-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+    .card h2 {
+      margin-top: 0;
+      font-size: 1.25rem;
+      color: var(--primary);
+      border-bottom: 2px solid #eff6ff;
+      padding-bottom: 0.5rem;
+    }
+    .form-group {
+      margin-bottom: 1.1rem;
+    }
+    label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: var(--text);
+    }
+    .help-text {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+    input[type="number"], select {
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      background: #fff;
+    }
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.4rem;
+    }
+    .checkbox-group input {
+      width: auto;
+    }
+    .res-hero {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 1.25rem;
+      text-align: center;
+      margin-bottom: 1.25rem;
+    }
+    .res-hero-val {
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.1;
+      margin: 0.35rem 0;
+    }
+    .res-hero-sub {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .res-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 0.9rem;
+    }
+    .res-row:last-child {
+      border-bottom: none;
+    }
+    .res-label {
+      color: var(--text-muted);
+    }
+    .res-val {
+      font-weight: 600;
+      color: var(--text);
+    }
+    .notice-box {
+      margin-top: 1rem;
+      background: var(--warning-bg);
+      border: 1px solid var(--warning-border);
+      border-radius: 8px;
+      padding: 1rem;
+      color: var(--warning-text);
+      font-size: 0.85rem;
+      display: none;
+    }
+    .chart-container {
+      margin-top: 1.25rem;
+      background: #fff;
+      border: 1px solid #f1f5f9;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .content-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    .content-section h3 {
+      color: var(--primary);
+      margin-top: 1.5rem;
+      font-size: 1.15rem;
+    }
+    .content-section ul, .content-section ol {
+      padding-left: 1.3rem;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+    .content-section li {
+      margin-bottom: 0.5rem;
+    }
+    footer {
+      background: #0f172a;
+      color: #94a3b8;
+      padding: 2rem 1rem;
+      text-align: center;
+      font-size: 0.85rem;
+    }
+    footer a {
+      color: #60a5fa;
+      text-decoration: none;
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 US Commercial Trucking & Fleet Insurance Calculator",
+    "url": "https://emfls.github.io/util/us-commercial-trucking-fleet-insurance-fmcsa-cost-2026-calculator/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "All",
+    "browserRequirements": "Requires JavaScript",
+    "description": "Calculate 2026 US commercial trucking insurance costs for owner-operators and fleets. Includes FMCSA $750k/$1M/$5M primary liability, cargo, physical damage, and CPM drag."
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What are the FMCSA minimum liability insurance requirements for commercial trucks?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under 49 CFR Part 387, for freight vehicles exceeding 10,001 lbs GVWR, the federal minimum is $750,000 for general freight, $1,000,000 for oil transport, and $5,000,000 for hazardous materials. Most freight brokers require $1,000,000 Combined Single Limit (CSL)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is insurance so expensive for a New Authority trucking company?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Carriers operating with less than 2 years of active DOT/MC authority are classified as high risk due to lack of safety audit data. Premiums average $12,000 to $20,000 per truck annually, dropping by 40-50% after 2 years of clean operation."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the typical insurance cost per mile (CPM) for an owner-operator?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "At 100,000 miles per year, typical insurance drag ranges from $0.09 to $0.18 per mile for established fleets, but can reach $0.20 to $0.28 per mile for newly formed authorities."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "US Tax & Financial Calculators",
+        "item": "https://emfls.github.io/util/us-tax-finance-calculators-2026/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Trucking Fleet Insurance Calculator",
+        "item": "https://emfls.github.io/util/us-commercial-trucking-fleet-insurance-fmcsa-cost-2026-calculator/"
+      }
+    ]
+  }
+  </script>
+<style id="emfls-cro-calc-first-b2-v1">
+/* EMFLS CRO B2 — mobile calculator-first ordering for non-Patch-B EN templates (CSS-only, reversible) */
+@media (max-width: 760px) {
+  main:has(form, input, select),
+  .tool-shell:has(form, input, select),
+  .container:has(form, input, select) {
+    display: flex;
+    flex-direction: column;
+  }
+  main:has(form, input, select) > *,
+  .tool-shell:has(form, input, select) > *,
+  .container:has(form, input, select) > * {
+    order: 4;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  main:has(form, input, select) > nav,
+  main:has(form, input, select) > header,
+  main:has(form, input, select) > .hero,
+  main:has(form, input, select) > h1,
+  main:has(form, input, select) > .lead,
+  .tool-shell:has(form, input, select) > nav,
+  .tool-shell:has(form, input, select) > header,
+  .tool-shell:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > h1,
+  .tool-shell:has(form, input, select) > .lead,
+  .container:has(form, input, select) > nav,
+  .container:has(form, input, select) > header,
+  .container:has(form, input, select) > .hero,
+  .container:has(form, input, select) > h1,
+  .container:has(form, input, select) > .lead {
+    order: 0;
+  }
+  main:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .tool-shell:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .container:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav) {
+    order: 1;
+  }
+  main:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .tool-shell:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .container:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container) {
+    order: 2;
+  }
+  main:has(form, input, select) > .emfls-next-check,
+  .tool-shell:has(form, input, select) > .emfls-next-check,
+  .container:has(form, input, select) > .emfls-next-check {
+    order: 2;
+  }
+  main:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .tool-shell:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .container:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]) {
+    order: 3;
+  }
+  main:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > .hero,
+  .container:has(form, input, select) > header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+}
+</style>
+</head>
+<body>
+  <header>
+    <div class="nav-breadcrumbs">
+      <a href="/">Home</a> &gt; <a href="/util/us-tax-finance-calculators-2026/">US Tax Calculators</a> &gt; Trucking Fleet Insurance
+    </div>
+    <h1>2026 US Commercial Trucking &amp; Fleet Insurance Calculator</h1>
+    <p>FMCSA Federal Minimums ($750k / $1M / $5M) • Motor Truck Cargo • Stated Physical Damage • Cost-Per-Mile Drag</p>
+  </header>
+
+  <div class="container">
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </div>
+
+    <div class="calc-layout">
+      <!-- Input Card -->
+      <div class="card">
+        <h2>Fleet &amp; Authority Parameters</h2>
+
+        <div class="form-group">
+          <label for="cargoType">FMCSA Freight Classification &amp; Liability Floor</label>
+          <select id="cargoType">
+            <option value="general" selected>General Dry Freight / Reefer ($750k FMCSA / $1M Market CSL)</option>
+            <option value="oil">Oil &amp; Moderate Hazard ($1,000,000 FMCSA Min)</option>
+            <option value="hazmat">High-Hazard Materials &amp; Explosives ($5,000,000 FMCSA Min)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="fleetSize">Fleet Size (Power Units / Tractors)</label>
+          <input inputmode="decimal" type="number" id="fleetSize" value="1" min="1" max="250" step="1">
+          <div class="help-text">3+ units qualify for commercial fleet tier discounts.</div>
+        </div>
+
+        <div class="form-group">
+          <div class="checkbox-group">
+            <input type="checkbox" id="isNewAuthority">
+            <label for="isNewAuthority" style="margin:0; font-weight:normal;">New Authority (&lt; 2 Years DOT/MC Operating History)</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="operatingRadius">Operating Radius</label>
+          <select id="operatingRadius">
+            <option value="local">Local (&lt; 100 Miles) - 15% Discount</option>
+            <option value="regional" selected>Regional (100 - 500 Miles) - Standard</option>
+            <option value="otr">Over-the-Road Long Haul (500+ Miles) - 25% Surcharge</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="tractorTrailerValue">Combined Stated Value per Rig ($)</label>
+          <input inputmode="decimal" type="number" id="tractorTrailerValue" value="120000" min="0" step="5000">
+          <div class="help-text">Tractor + trailer value for comprehensive and collision coverage.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="cargoLimit">Motor Truck Cargo (MTC) Limit</label>
+          <select id="cargoLimit">
+            <option value="100k" selected>$100,000 Standard Broker Contract Requirement</option>
+            <option value="250k">$250,000 High-Value Freight</option>
+            <option value="500k">$500,000 Specialized / Electronics</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="annualMilesPerTruck">Annual Miles per Truck</label>
+          <input inputmode="decimal" type="number" id="annualMilesPerTruck" value="100000" min="10000" step="5000">
+        </div>
+
+        <div class="form-group">
+          <div class="checkbox-group">
+            <input type="checkbox" id="hasPhysicalDamage" checked>
+            <label for="hasPhysicalDamage" style="margin:0; font-weight:normal;">Include Physical Damage (Comp &amp; Collision @ 3.5%)</label>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="hasBobtail" checked>
+            <label for="hasBobtail" style="margin:0; font-weight:normal;">Include Bobtail / Non-Trucking Liability ($600/yr)</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Output Card -->
+      <div class="card">
+        <h2>Annual Premium &amp; Mile Drag</h2>
+
+        <div class="res-hero">
+          <div class="res-hero-sub">Total Annual Fleet Premium</div>
+          <div class="res-hero-val" id="resTotalAnnual">$0</div>
+          <div class="res-hero-sub">Approx. <span id="resMonthly">$0</span> / month</div>
+        </div>
+
+        <div class="res-row">
+          <span class="res-label">Annual Cost per Truck:</span>
+          <span class="res-val" id="resCostPerTruck">$0</span>
+        </div>
+        <div class="res-row">
+          <span class="res-label">Insurance Drag (Cost Per Mile):</span>
+          <span class="res-val" style="color:var(--primary-accent);" id="resCpm">$0.000 / mi</span>
+        </div>
+        <div class="res-row">
+          <span class="res-label">Primary Auto Liability:</span>
+          <span class="res-val" id="resPrimaryLiability">$0</span>
+        </div>
+        <div class="res-row">
+          <span class="res-label">Physical Damage (Comp/Collision):</span>
+          <span class="res-val" id="resPhysicalDamage">$0</span>
+        </div>
+        <div class="res-row">
+          <span class="res-label">Motor Truck Cargo (MTC):</span>
+          <span class="res-val" id="resCargo">$0</span>
+        </div>
+        <div class="res-row">
+          <span class="res-label">Bobtail / Non-Trucking Liability:</span>
+          <span class="res-val" id="resBobtail">$0</span>
+        </div>
+
+        <div id="authNoticeBox" class="notice-box">
+          <strong>⚠️ New Authority Rate Surcharge:</strong>
+          <div>Carriers under 2 years experience pay an estimated <strong id="resAuthSavings">$0</strong> extra per power unit compared to established fleets. Maintaining clean roadside inspections and safety records drops premiums drastically after Year 2!</div>
+        </div>
+
+        <div class="chart-container">
+          <div style="font-size: 0.82rem; font-weight: 600; color: #475569; margin-bottom: 0.5rem;">
+            Annual Fleet Insurance Cost Breakdown
+          </div>
+          <svg id="chartSvg" width="100%" height="190" viewBox="0 0 320 190">
+            <line x1="20" y1="20" x2="300" y2="20" stroke="#f1f5f9" stroke-width="1" />
+            <line x1="20" y1="95" x2="300" y2="95" stroke="#f1f5f9" stroke-width="1" />
+            <line x1="20" y1="170" x2="300" y2="170" stroke="#cbd5e1" stroke-width="1.5" />
+
+            <rect id="barPrimary" x="25" y="50" width="50" height="120" fill="#1e3a8a" rx="3" />
+            <rect id="barPhys" x="95" y="90" width="50" height="80" fill="#2563eb" rx="3" />
+            <rect id="barCargo" x="165" y="130" width="50" height="40" fill="#059669" rx="3" />
+            <rect id="barBobtail" x="235" y="150" width="50" height="20" fill="#d97706" rx="3" />
+
+            <text id="lblPrimary" x="50" y="42" font-size="9" font-weight="700" fill="#1e3a8a" text-anchor="middle">$0</text>
+            <text id="lblPhys" x="120" y="82" font-size="9" font-weight="700" fill="#2563eb" text-anchor="middle">$0</text>
+            <text id="lblCargo" x="190" y="122" font-size="9" font-weight="700" fill="#059669" text-anchor="middle">$0</text>
+            <text id="lblBobtail" x="260" y="142" font-size="9" font-weight="700" fill="#d97706" text-anchor="middle">$0</text>
+
+            <text x="50" y="184" font-size="9" fill="#64748b" text-anchor="middle">Primary</text>
+            <text x="120" y="184" font-size="9" fill="#64748b" text-anchor="middle">Phys Dam</text>
+            <text x="190" y="184" font-size="9" fill="#64748b" text-anchor="middle">Cargo</text>
+            <text x="260" y="184" font-size="9" fill="#64748b" text-anchor="middle">Bobtail</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h2>FMCSA Regulations &amp; Commercial Fleet Insurance Dynamics</h2>
+      <p>Commercial motor carriers operating across state lines are subject to strict federal financial responsibility requirements administered by the Federal Motor Carrier Safety Administration (FMCSA) under 49 CFR Part 387.</p>
+
+      <h3>1. Primary Auto Liability &amp; Form BMC-91X</h3>
+      <ul>
+        <li><strong>Statutory Minimums:</strong> Non-hazardous property haulers exceeding 10,001 pounds Gross Vehicle Weight Rating (GVWR) must file BMC-91X proof of at least $750,000 public liability. Hazardous commodities require either $1,000,000 or $5,000,000 depending on placarding.</li>
+        <li><strong>Broker Market Reality:</strong> Virtually all major freight brokers, shippers, and 3PLs require a minimum of $1,000,000 Combined Single Limit (CSL) regardless of the $750,000 federal minimum. Carrying only $750,000 severely restricts load board access.</li>
+      </ul>
+
+      <h3>2. Essential Operational Extensions</h3>
+      <p>A compliant carrier requires multi-layer protection beyond primary liability:</p>
+      <ol>
+        <li><strong>Motor Truck Cargo (MTC):</strong> Protects against loss, damage, or theft of transported freight. The universal industry contract requirement is $100,000 per trailer.</li>
+        <li><strong>Physical Damage:</strong> Protects financed or owned tractors and trailers against collision, turnover, fire, and storm loss based on stated value.</li>
+        <li><strong>Bobtail / Non-Trucking Liability (NTL):</strong> Essential for owner-operators operating their tractor without a trailer or off-dispatch.</li>
+      </ol>
+    </div>
+
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </div>
+  </div>
+
+  
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 United States Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for United States:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/us-dc-vs-maryland-real-estate-transfer-recordation-tax-first-time-buyer-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">DC vs Maryland Transfer &amp; Recordation Tax Calculator (2026)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare 2026 DC and Maryland deed taxes by buyer and seller. Check DC first-time buyer price...</span>
+    </a>
+    <a href="/util/us-dependent-care-fsa-7500-vs-child-tax-credit-obbba-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Dependent Care FSA vs. Child Care Credit &amp; $2,200 CTC Calculator</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare the 2026 $7,500 dependent care FSA, up to 50% child care credit, and $2,200 Child Ta...</span>
+    </a>
+    <a href="/util/us-dependent-care-fsa-vs-tax-credit-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Dependent Care FSA ($7,500) vs Child Care Tax Credit Calculator | OBBBA Rules</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026 statutory calculator for 2026 Dependent Care FSA ($7,500) vs Child Care Tax Credit Calc...</span>
+    </a>
+    <a href="/util/us-depreciation-recapture-section-1250-25-percent-section-1245-rental-sale-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Rental Property Depreciation Recapture Tax Calculator</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate 2026 rental sale tax, Section 1245 recapture, Section 1250 gain, capital gains, NII...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+<footer>
+    <p>&copy; 2026 EMFLS Logistics &amp; Financial Tools. Built in compliance with FMCSA 49 CFR Part 387 statutory standards.</p>
+    <p><a href="/util/us-tax-finance-calculators-2026/">Return to US Tax &amp; Finance Hub</a> | <a href="/">All Free Calculators</a></p>
+  </footer>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

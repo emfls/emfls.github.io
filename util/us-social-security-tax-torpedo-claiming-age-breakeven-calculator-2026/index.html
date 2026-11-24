@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Social Security Tax Torpedo &amp; Claiming Age Calculator 2026</title>
+  <meta name="description" content="How much of your Social Security is taxable? Estimate the 2026 senior deduction and compare claiming at ages 62, 67 and 70.">
+  <link rel="canonical" href="https://emfls.github.io/util/us-social-security-tax-torpedo-claiming-age-breakeven-calculator-2026/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Social Security Tax Torpedo &amp; Claiming Age Calculator 2026">
+  <meta property="og:description" content="How much of your Social Security is taxable? Estimate the 2026 senior deduction and compare claiming at ages 62, 67 and 70.">
+  <meta property="og:url" content="https://emfls.github.io/util/us-social-security-tax-torpedo-claiming-age-breakeven-calculator-2026/">
+  <meta property="og:site_name" content="EMFLS">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="2026 Social Security Tax Torpedo &amp; Claiming Age Break-Even Calculator">
+  <meta name="twitter:description" content="Estimate Social Security taxes and the $6,000 senior deduction, then compare ages 62, 67 and 70.">
+  <link rel="stylesheet" href="../new-tools.css">
+  <link rel="preconnect" href="https://www.googletagmanager.com">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QP5Q67GE5B')</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 Social Security Tax Torpedo & Claiming Age Break-Even Calculator",
+    "url": "https://emfls.github.io/util/us-social-security-tax-torpedo-claiming-age-breakeven-calculator-2026/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": {"@type": "Offer", "price": 0, "priceCurrency": "USD"}
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type": "Question", "name": "Did OBBBA eliminate federal tax on Social Security?", "acceptedAnswer": {"@type": "Answer", "text": "No. IRC §86 still uses provisional income to determine taxable benefits. The temporary Schedule 1-A deduction lowers taxable income by up to $6,000 per eligible senior for 2025–2028."}},
+      {"@type": "Question", "name": "How is provisional income calculated?", "acceptedAnswer": {"@type": "Answer", "text": "In this calculator, add ordinary income, taxable traditional IRA withdrawals, tax-exempt municipal interest and half of annual Social Security. The result determines how much of the benefit is included in taxable income, up to 85%."}},
+      {"@type": "Question", "name": "How can a $1,000 IRA withdrawal cost $407 in federal tax?", "acceptedAnswer": {"@type": "Answer", "text": "If the entire withdrawal stays in the 85% benefit phase-in and the 22% tax bracket, it adds $850 of taxable benefits and $1,000 of IRA income. That adds $407 of tax before any deduction phase-out. A qualified Roth IRA distribution adds no federal income tax in this model."}},
+      {"@type": "Question", "name": "How does the senior deduction phase out for a joint return?", "acceptedAnswer": {"@type": "Answer", "text": "For each eligible spouse, subtract 6% of joint MAGI above $150,000 from $6,000, with a floor of zero. If both qualify, the combined deduction is $10,800 at $160,000 and zero at $250,000."}},
+      {"@type": "Question", "name": "When does delaying Social Security break even?", "acceptedAnswer": {"@type": "Answer", "text": "With full retirement age 67 and flat gross benefits, age 67 catches age 62 at about 78.7, age 70 catches age 67 at 82.5, and age 70 catches age 62 at about 80.4. Future COLAs and discounting change these ages."}}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "EMFLS", "item": "https://emfls.github.io/"},
+      {"@type": "ListItem", "position": 2, "name": "Calculators", "item": "https://emfls.github.io/util/"},
+      {"@type": "ListItem", "position": 3, "name": "Social Security Tax & Claiming Age", "item": "https://emfls.github.io/util/us-social-security-tax-torpedo-claiming-age-breakeven-calculator-2026/"}
+    ]
+  }
+  </script>
+  <script type="module" src="./app.js"></script>
+  <style>
+    .tool-nav { display:flex; flex-wrap:wrap; gap:8px 20px; margin-bottom:16px }
+    .tool-nav a { color:#dbeafe; font-weight:700 }
+    .takeaways { border-left:5px solid #2563eb }
+    .warning { border-left:5px solid #b45309; background:#fff7e8 }
+    .panel > :last-child { margin-bottom:0 }
+    .jump-links { margin-top:16px }
+    .hero .jump-links a { color:#fff }
+    input, select { min-width:0 }
+    .fields { margin-bottom:16px }
+    .fields .note { margin:4px 0 0 }
+    .results { margin-top:20px; border-top:1px solid #d9e0ea; padding-top:18px }
+    .metrics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin:0 0 16px }
+    .metrics div { background:#eaf3ff; border-radius:10px; padding:12px }
+    .metrics dt { font-size:.88rem; font-weight:700 }
+    .metrics dd { margin:2px 0 0; color:#173f8a; font-size:clamp(1.2rem,4vw,1.65rem); font-weight:800; overflow-wrap:anywhere }
+    .table-scroll { overflow-x:auto; margin:12px 0 }
+    .table-scroll:focus-visible { outline:3px solid #f59e0b; outline-offset:2px }
+    table { border-collapse:collapse; width:100%; font-variant-numeric:tabular-nums }
+    caption { text-align:left; font-weight:800; margin-bottom:6px }
+    th, td { text-align:left; border-bottom:1px solid #d9e0ea; padding:8px }
+    thead th { background:#edf3fc }
+    .claim-table { min-width:330px }
+    .rules-table { min-width:480px }
+    .emfls-ad-slot { width:100%; max-width:728px; min-height:278px; margin:24px auto; background:#101e33; border-radius:10px; overflow:hidden; text-align:center }
+    .ad-label { height:28px; color:#b5c4db; font-size:.75rem; line-height:28px }
+    .error:empty, [hidden] { display:none }
+    @media (max-width:650px) {
+      .metrics { grid-template-columns:1fr }
+      th, td { padding:6px }
+    }
+  </style>
+  <meta property="og:image" content="https://emfls.github.io/assets/og/us-social-security-tax-torpedo-claiming-age-breakeven-calculator-2026.webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:image" content="https://emfls.github.io/assets/og/us-social-security-tax-torpedo-claiming-age-breakeven-calculator-2026.webp">
+<style id="emfls-cro-calc-first-v1">
+/* EMFLS CRO v1 — calculator-first on mobile (CSS-only, no DOM/content/JS change; reversible by deleting this <style>) */
+@media (max-width: 760px) {
+  main.tool-shell { display: flex; flex-direction: column; }
+  main.tool-shell > * { order: 3; }
+  main.tool-shell > .hero, main.tool-shell > header, main.tool-shell > nav { order: 0; }
+  main.tool-shell > section.takeaways + section.panel { order: 1; }
+  main.tool-shell > section.takeaways + section.panel + aside.emfls-ad-slot { order: 1; }
+  main.tool-shell > section.takeaways { order: 2; }
+}
+</style>
+</head>
+<body>
+<main class="tool-shell">
+  <nav class="tool-nav" aria-label="Breadcrumb">
+    <a href="/">EMFLS</a>
+    <a href="/util/">Calculators</a>
+  </nav>
+  <header class="hero">
+    <h1>2026 Social Security Tax Torpedo &amp; Claiming Age Break-Even Calculator</h1>
+    <p>Compare benefits at 62, 67 and 70, estimate taxable Social Security, and see how the OBBBA senior deduction changes the tax on your next IRA withdrawal.</p>
+    <div class="links jump-links"><a href="#claiming">Compare claiming ages</a><a href="#tax">Estimate federal tax</a></div>
+  </header>
+
+  <section class="panel takeaways">
+    <h2>Key takeaways</h2>
+    <ul>
+      <li><strong>Age 62 pays 70% of your full benefit. Age 70 pays 124%.</strong> With a full retirement age of 67 and flat gross payments, the age-70 strategy overtakes age 62 at about 80.4.</li>
+      <li><strong>Up to 85% of Social Security can enter taxable income.</strong> OBBBA preserved the $25,000 single and $32,000 joint provisional-income thresholds.</li>
+      <li><strong>The $6,000 senior deduction lowers taxable income.</strong> The phase-out starts at $75,000 of modified adjusted gross income (MAGI) for single filers and $150,000 for joint filers.</li>
+    </ul>
+  </section>
+
+  <section class="panel" id="claiming">
+    <h2>Compare claiming at 62, 67 and 70</h2>
+    <p>Use this comparison if your full retirement age is 67, which generally applies if you were born in 1960 or later.</p>
+    <noscript><p>Enable JavaScript to run the calculator.</p></noscript>
+    <form id="claim-form" class="grid fields" novalidate>
+      <div>
+        <label for="pia">Monthly benefit at full retirement age ($)</label>
+        <input id="pia" type="number" inputmode="decimal" min="0" max="20000" step="any" value="2500" required>
+      </div>
+      <div>
+        <label for="pia-year">Benefit amount basis</label>
+        <select id="pia-year">
+          <option value="before">Before the 2026 COLA (+2.8%)</option>
+          <option value="after">Already includes the 2026 COLA</option>
+        </select>
+      </div>
+      <div>
+        <label for="future-cola">Future annual COLA (%)</label>
+        <input id="future-cola" type="number" inputmode="decimal" min="0" max="20" step="any" value="0" required>
+      </div>
+      <div>
+        <label for="discount">Annual discount rate (%)</label>
+        <input id="discount" type="number" inputmode="decimal" min="0" max="20" step="any" value="0" required>
+      </div>
+      <div>
+        <label for="total-age">Compare cumulative benefits by age</label>
+        <input id="total-age" type="number" inputmode="decimal" min="70" max="120" step="1" value="90" required>
+      </div>
+    </form>
+    <p id="claim-error" class="error" role="alert"></p>
+    <div id="claim-results" class="results" aria-live="polite" hidden>
+      <div class="table-scroll" tabindex="0" role="region" aria-label="Benefit comparison">
+        <table class="claim-table">
+          <caption id="benefit-caption">Gross benefits</caption>
+          <thead><tr><th scope="col">Claim at</th><th scope="col">Monthly at 2026 rates</th><th scope="col">Cumulative value</th></tr></thead>
+          <tbody id="benefits"></tbody>
+        </table>
+      </div>
+      <div class="table-scroll" tabindex="0" role="region" aria-label="Break-even ages">
+        <table class="claim-table">
+          <caption>When the later claim catches up</caption>
+          <thead><tr><th scope="col">Claiming ages</th><th scope="col">Break-even age</th><th scope="col">First full month at or ahead</th></tr></thead>
+          <tbody id="crossings"></tbody>
+        </table>
+      </div>
+    </div>
+    <p class="note">Gross worker benefits use 2026 as the age-62 starting basis. Future COLAs apply annually from that starting point, including while waiting to claim. The discount rate values each month-end payment at age 62. Fractional ages interpolate between payments. The model uses unrounded benefits and excludes the earnings test, taxes, Medicare and survivor benefits.</p>
+  </section>
+
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="Next essential calculators" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">Next Essential Check</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">Run these 2 companion checks with the numbers you just calculated:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/util/us-roth-conversion-ladder-irmaa-bracket-filler-calculator-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">Roth Conversion &amp; IRMAA Cliff &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">Fill low brackets before claiming to defuse the tax torpedo.</span></a>
+    <a href="/util/us-rule-72t-sepp-5-percent-floor-early-retirement-2026-calculator/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">Rule 72(t) SEPP Early Retirement &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">Need penalty-free bridge income before age 62? Model SEPP.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+  </aside>
+
+  <section class="panel" id="tax">
+    <h2>Estimate 2026 federal income tax</h2>
+    <p>Use household totals for a joint return. Age eligibility is for tax year 2026 and is independent of when you started benefits.</p>
+    <form id="tax-form" class="grid fields" novalidate>
+      <div>
+        <label for="filing">Filing status</label>
+        <select id="filing">
+          <option value="single">Single</option>
+          <option value="hoh">Head of household</option>
+          <option value="mfj">Married filing jointly</option>
+          <option value="mfsTogether">Married filing separately · lived together</option>
+          <option value="mfsApart">Married filing separately · apart all year</option>
+        </select>
+      </div>
+      <div>
+        <label for="tax-claim">Annual Social Security basis</label>
+        <select id="tax-claim">
+          <option value="62">Claim at 62 · 12 months</option>
+          <option value="67" selected>Claim at 67 · 12 months</option>
+          <option value="70">Claim at 70 · 12 months</option>
+          <option value="custom">Enter actual annual total</option>
+        </select>
+      </div>
+      <div id="other-ss-field">
+        <label for="other-ss">Other household Social Security ($)</label>
+        <input id="other-ss" type="number" inputmode="decimal" min="0" max="1000000" step="any" value="0" required aria-describedby="other-ss-note">
+        <p class="note" id="other-ss-note">Enter annual benefits on this return in addition to the modeled worker benefit.</p>
+      </div>
+      <div id="actual-ss-field" hidden>
+        <label for="actual-ss">Total annual Social Security ($)</label>
+        <input id="actual-ss" type="number" inputmode="decimal" min="0" max="1000000" step="any" value="30840" required disabled>
+      </div>
+      <div>
+        <label for="other-income">Other annual ordinary income ($)</label>
+        <input id="other-income" type="number" inputmode="decimal" min="0" max="100000000" step="any" value="24000" required aria-describedby="other-income-note">
+        <p class="note" id="other-income-note">Include taxable pension, wages and other ordinary income. Enter traditional IRA withdrawals separately.</p>
+      </div>
+      <div>
+        <label for="ira">Taxable traditional IRA withdrawals ($)</label>
+        <input id="ira" type="number" inputmode="decimal" min="0" max="100000000" step="any" value="8000" required>
+      </div>
+      <div>
+        <label for="muni">Tax-exempt municipal interest ($)</label>
+        <input id="muni" type="number" inputmode="decimal" min="0" max="100000000" step="any" value="0" required>
+      </div>
+      <div>
+        <label for="senior">Your senior deduction eligibility</label>
+        <select id="senior">
+          <option value="under">Under 65</option>
+          <option value="eligible" selected>65+ with a qualifying SSN</option>
+          <option value="age">65+ without a qualifying SSN</option>
+        </select>
+      </div>
+      <div id="spouse-field" hidden>
+        <label for="spouse">Spouse’s senior deduction eligibility</label>
+        <select id="spouse" disabled>
+          <option value="under" selected>Under 65</option>
+          <option value="eligible">65+ with a qualifying SSN</option>
+          <option value="age">65+ without a qualifying SSN</option>
+        </select>
+      </div>
+      <div>
+        <label for="deduction-method">Deduction method</label>
+        <select id="deduction-method">
+          <option value="standard">Standard deduction</option>
+          <option value="itemized">Itemized deduction</option>
+        </select>
+        <p id="mfs-note" class="note" hidden>If your spouse itemizes, select itemized and enter your own allowed total.</p>
+      </div>
+      <div id="itemized-field" hidden>
+        <label for="itemized">Itemized deductions ($)</label>
+        <input id="itemized" type="number" inputmode="decimal" min="0" max="100000000" step="any" value="0" required disabled>
+      </div>
+    </form>
+    <p id="tax-error" class="error" role="alert"></p>
+    <div id="tax-results" class="results" aria-live="polite" hidden>
+      <h3>Tax on the next $1,000 withdrawal</h3>
+      <dl class="metrics">
+        <div><dt>Traditional IRA</dt><dd id="traditional-rate"></dd></div>
+        <div><dt>Extra federal tax</dt><dd id="extra-tax"></dd></div>
+        <div><dt>Qualified Roth IRA</dt><dd id="roth-rate"></dd></div>
+      </dl>
+      <p id="withdrawal-detail"></p>
+      <table>
+        <caption>Annual federal tax breakdown</caption>
+        <tbody>
+          <tr><th scope="row">Gross Social Security</th><td id="annual-ss"></td></tr>
+          <tr><th scope="row">Provisional income</th><td id="provisional-income"></td></tr>
+          <tr><th scope="row">Taxable Social Security</th><td id="taxable-ss"></td></tr>
+          <tr><th scope="row">Schedule 1-A MAGI</th><td id="magi"></td></tr>
+          <tr><th scope="row">Standard or itemized deduction</th><td id="deduction"></td></tr>
+          <tr><th scope="row">Enhanced senior deduction</th><td id="senior-bonus"></td></tr>
+          <tr><th scope="row">Taxable income</th><td id="taxable-income"></td></tr>
+          <tr><th scope="row">Estimated federal income tax</th><td id="federal-tax"></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">This estimate uses ordinary federal brackets and assumes no AGI adjustments or foreign-income addbacks. It excludes preferential capital gains rates, credits, other special deductions, the additional standard deduction for blindness, state tax, AMT, Medicare surcharges and the IRS tax-table rounding used on some returns.</p>
+  </section>
+
+  <aside class="panel warning" aria-labelledby="claiming-warning">
+    <h2 id="claiming-warning">The cost of claiming early or waiting</h2>
+    <p>Claiming at 62 gives you checks sooner and generally locks in a lower monthly benefit. Waiting raises the monthly payment but uses savings or other income to cover the gap. Consider cash needs, longevity and survivor benefits before choosing based on a single break-even age.</p>
+  </aside>
+
+  <section class="panel">
+    <h2>Official 2026 parameters</h2>
+    <div class="table-scroll" tabindex="0" role="region" aria-label="2026 federal tax thresholds">
+      <table class="rules-table">
+        <thead><tr><th scope="col">Filing status</th><th scope="col">§86 base amounts</th><th scope="col">Standard deduction + age 65 add-on</th><th scope="col">Senior bonus MAGI phase-out</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Single</th><td>$25,000 / $34,000</td><td>$16,100 + $2,050</td><td>$75,000–$175,000</td></tr>
+          <tr><th scope="row">Head of household</th><td>$25,000 / $34,000</td><td>$24,150 + $2,050</td><td>$75,000–$175,000</td></tr>
+          <tr><th scope="row">Married filing jointly</th><td>$32,000 / $44,000</td><td>$32,200 + $1,650 per eligible spouse</td><td>$150,000–$250,000</td></tr>
+          <tr><th scope="row">Married filing separately</th><td>$0 / $0 if you lived together at any time. $25,000 / $34,000 if apart all year.</td><td>$16,100 + $1,650</td><td>Ineligible</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul>
+      <li><strong>Social Security inclusion.</strong> Above the first base, the initial phase-in includes 50% of excess provisional income, limited to half the benefit. Above the second base, add 85% of the excess over that base to the first tier, then cap total inclusion at 85% of the benefit. MFS filers who lived with their spouse go directly into the 85% phase-in.</li>
+      <li><strong>Enhanced senior deduction, 2025–2028.</strong> Up to $6,000 per qualifying person aged 65 or older, reduced by 6% of MAGI above the starting threshold per qualifying person. Two eligible spouses can deduct up to $12,000.</li>
+      <li><strong>SSA benefit adjustments.</strong> The 2026 COLA is +2.8%. At FRA 67, early claims reduce the benefit by 5/9 of 1% per month for the first 36 months and 5/12 of 1% for each earlier month. Delaying from 67 adds 2/3 of 1% per month up to age 70.</li>
+    </ul>
+    <p class="links"><a href="https://www.irs.gov/publications/p915">IRS Publication 915</a><a href="https://www.irs.gov/pub/irs-drop/rp-25-32.pdf">IRS 2026 brackets and deductions</a><a href="https://www.irs.gov/newsroom/working-families-tax-cuts-individuals-and-workers">IRS senior deduction</a><a href="https://www.irs.gov/pub/irs-dft/f1040s1a--dft.pdf">Draft 2026 Schedule 1-A</a><a href="https://www.ssa.gov/cola/factsheets/2026.html">SSA 2026 COLA</a><a href="https://www.ssa.gov/oact/progdata/ar_drc.html">SSA claiming adjustments</a></p>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+  </aside>
+
+  <section class="panel faq">
+    <h2>Frequently asked questions</h2>
+    <details><summary>Did OBBBA eliminate federal tax on Social Security?</summary><p>No. IRC §86 still uses provisional income to determine taxable benefits. The temporary Schedule 1-A deduction lowers taxable income by up to $6,000 per eligible senior for 2025–2028.</p></details>
+    <details><summary>How is provisional income calculated?</summary><p>In this calculator, add ordinary income, taxable traditional IRA withdrawals, tax-exempt municipal interest and half of annual Social Security. The result determines how much of the benefit is included in taxable income, up to 85%.</p></details>
+    <details><summary>How can a $1,000 IRA withdrawal cost $407 in federal tax?</summary><p>If the entire withdrawal stays in the 85% benefit phase-in and the 22% tax bracket, it adds $850 of taxable benefits and $1,000 of IRA income. That adds $407 of tax before any deduction phase-out. A qualified Roth IRA distribution adds no federal income tax in this model.</p></details>
+    <details><summary>How does the senior deduction phase out for a joint return?</summary><p>For each eligible spouse, subtract 6% of joint MAGI above $150,000 from $6,000, with a floor of zero. If both qualify, the combined deduction is $10,800 at $160,000 and zero at $250,000.</p></details>
+    <details><summary>When does delaying Social Security break even?</summary><p>With full retirement age 67 and flat gross benefits, age 67 catches age 62 at about 78.7, age 70 catches age 67 at 82.5, and age 70 catches age 62 at about 80.4. Future COLAs and discounting change these ages.</p></details>
+  </section>
+
+  <nav class="panel" aria-labelledby="related-heading">
+    <h2 id="related-heading">Related calculators</h2>
+    <div class="links">
+      <a href="/util/irs-tax-brackets-401k-catchup-calculator/">IRS Tax Brackets &amp; 401(k) Catch-Up</a>
+      <a href="/util/hsa-tax-savings-calculator/">HSA Tax Savings</a>
+      <a href="/util/compound-interest/">Compound Interest</a>
+    </div>
+  </nav>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 United States Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for United States:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/us-social-security-wep-gpo-repeal-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">US Social Security Fairness Act Calculator | WEP &amp; GPO Repeal</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026 statutory calculator for US Social Security Fairness Act Calculator | WEP &amp; GPO Repeal.</span>
+    </a>
+    <a href="/util/us-solar-cash-vs-lease-ppa-section-48e-30-percent-credit-after-25d-repeal-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">US Solar Cash vs Lease/PPA Section 48E (30%) Credit Calculator (2026)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate 2026 US residential solar ROI after Section 25D repeal. Compare cash purchase (0% ...</span>
+    </a>
+    <a href="/util/us-solo-401k-vs-sep-ira-contribution-limit-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Solo 401(k) vs SEP IRA Calculator ($72,000 / $83,250)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare 2026 Solo 401(k) and SEP IRA limits, the $11,250 age 60–63 catch-up, Mega Backdoor R...</span>
+    </a>
+    <a href="/util/us-solo-401k-vs-sep-ira-self-employed-72000-contribution-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Solo 401(k) vs SEP IRA Calculator | $72,000–$83,250</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare 2026 Solo 401(k) and SEP IRA contributions for Schedule C profit or owner W-2 wages....</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+<footer>Estimate only · emfls.github.io</footer>
+</body>
+</html>

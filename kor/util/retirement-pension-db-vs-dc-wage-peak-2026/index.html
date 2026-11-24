@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2026 퇴직연금 DB·DC 계산기 | 임금피크제 전환 시점</title>
+  <meta name="description" content="월급·근속일수·임금피크제 삭감률을 입력해 DB 유지, 지금 DC 전환, 임금피크제 직전 DC 전환의 예상 퇴직급여와 손익분기 수익률을 비교하세요.">
+  <link rel="canonical" href="https://emfls.github.io/kor/util/retirement-pension-db-vs-dc-wage-peak-2026/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:site_name" content="EMFLS">
+  <meta property="og:title" content="2026 퇴직연금 DB·DC 계산기 | 임금피크제 전환 시점">
+  <meta property="og:description" content="퇴직연금 세 가지 시나리오의 예상 수령액과 DC 손익분기 수익률을 한눈에 비교하세요.">
+  <meta property="og:url" content="https://emfls.github.io/kor/util/retirement-pension-db-vs-dc-wage-peak-2026/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="2026 퇴직연금 DB·DC 계산기 | 임금피크제 전환 시점">
+  <meta name="twitter:description" content="임금피크제 전후 DB 감소액과 DC 전환 시점별 예상 퇴직급여를 비교하세요.">
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { window.dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+  <script>
+    if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+      const loader = document.createElement('script');
+      loader.async = true;
+      loader.crossOrigin = 'anonymous';
+      loader.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+      document.head.append(loader);
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "2026 퇴직연금 DB·DC 및 임금피크제 전환 시점 계산기",
+      "url": "https://emfls.github.io/kor/util/retirement-pension-db-vs-dc-wage-peak-2026/",
+      "description": "DB 유지, 지금 DC 전환, 임금피크제 직전 DC 전환의 예상 퇴직급여와 손익분기 수익률을 비교하는 계산기입니다.",
+      "inLanguage": "ko-KR",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": 0, "priceCurrency": "KRW" }
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "임금피크제 때문에 DB 퇴직급여가 얼마나 줄 수 있나요?",
+          "acceptedAnswer": { "@type": "Answer", "text": "퇴직 직전 평균임금이 낮아지면 그 임금이 전체 근속기간에 적용될 수 있습니다. 예를 들어 평균임금 30일분이 500만 원에서 350만 원으로 줄고 총 근속이 25년이면, 같은 산정 규칙에서는 1억 2,500만 원에서 8,750만 원으로 3,750만 원 줄어듭니다. 회사의 별도 감소 예방 조치가 있으면 실제 결과는 달라집니다." }
+        },
+        {
+          "@type": "Question",
+          "name": "퇴직 전 3개월 평균임금에 상여금과 연차수당도 들어가나요?",
+          "acceptedAnswer": { "@type": "Answer", "text": "평균임금에 산입되는 연간 상여금과 연차수당의 3/12을 직전 3개월 기본급과 임금성 수당에 더한 뒤 해당 기간의 역일수로 나눕니다. 1일 통상임금이 더 높으면 그 금액을 씁니다. 급여명세서의 모든 상여금이나 연차수당이 자동으로 산입되는 것은 아니므로 지급 성격과 발생 시점을 확인하세요." }
+        },
+        {
+          "@type": "Question",
+          "name": "DB에서 DC로 바꾸면 과거 근속분은 어떻게 계산하나요?",
+          "acceptedAnswer": { "@type": "Answer", "text": "이 계산기는 과거 근속분 전체를 전환 직전 평균임금 30일분에 근속연수를 곱해 한 번에 이전한다고 가정합니다. 고용노동부는 DC 도입 시 과거기간을 소급하는 경우 결정 직전 1년 임금총액을 기준으로 하되 1년당 평균임금 30일분 이상이어야 한다고 해석합니다. 실제 소급 범위와 이전액은 회사 퇴직연금규약에서 확인하세요." }
+        },
+        {
+          "@type": "Question",
+          "name": "DC로 전환한 뒤 DB로 돌아갈 수 있나요?",
+          "acceptedAnswer": { "@type": "Answer", "text": "이미 DC에 쌓인 적립금을 DB로 되돌려 이전할 수 없습니다. DB와 DC를 모두 운영하는 사업장에서는 규약에 따라 향후 근속분만 DB로 적용할 수 있는 경우가 있습니다. 기존 DC 적립금은 별도로 운용되므로 전환 전에 인사팀에 적용 범위를 확인하세요." }
+        },
+        {
+          "@type": "Question",
+          "name": "DC 손익분기 수익률과 가장 유리한 전환 시점은 무슨 뜻인가요?",
+          "acceptedAnswer": { "@type": "Answer", "text": "손익분기 수익률은 해당 전환 시나리오의 퇴직 시점 DC 잔액이 DB 유지액과 같아지는 일정한 연간 순수익률입니다. 전환 시점 비교는 입력한 수익률로 각 근속연도 시작점에 전환했을 때의 결과를 계산한 것입니다. 임금 인상률, 삭감 시점, 실제 납입일, 투자 손실에 따라 순위가 달라질 수 있습니다." }
+        }
+      ]
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "한국어 무료 도구", "item": "https://emfls.github.io/kor/util/" },
+        { "@type": "ListItem", "position": 2, "name": "퇴직연금 DB·DC 계산기", "item": "https://emfls.github.io/kor/util/retirement-pension-db-vs-dc-wage-peak-2026/" }
+      ]
+    }
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #142d2b;
+      --muted: #4d6560;
+      --paper: #f6f8f4;
+      --surface: #fff;
+      --line: #d7e2db;
+      --teal: #076551;
+      --mint: #e7f4ed;
+      --db: #37546b;
+      --dc: #00735b;
+      --peak: #9a4a1f;
+      font-family: system-ui, -apple-system, "Malgun Gothic", sans-serif;
+      line-height: 1.65;
+      color: var(--ink);
+      background: var(--paper);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; overflow-wrap: anywhere; }
+    a { color: var(--teal); text-underline-offset: .19em; }
+    :focus-visible { outline: 3px solid #247b65; outline-offset: 3px; }
+    p { margin: .55rem 0; }
+    h1, h2, h3 { line-height: 1.26; margin: 0 0 .6rem; }
+    h1 { font-size: clamp(1.85rem, 4.7vw, 3.45rem); letter-spacing: -.05em; }
+    h2 { font-size: clamp(1.35rem, 3vw, 1.72rem); letter-spacing: -.035em; }
+    h3 { font-size: 1rem; }
+    small, .subtle { color: var(--muted); }
+    .shell { width: min(1120px, calc(100% - 2rem)); margin-inline: auto; min-width: 0; }
+    .mast { border-bottom: 1px solid var(--line); }
+    .mast .shell { display: flex; align-items: center; gap: .65rem; flex-wrap: wrap; padding-block: .82rem; font-size: .88rem; }
+    .mast a { font-weight: 700; }
+    .hero { padding: clamp(1.8rem, 5vw, 3.7rem) 0 1.35rem; }
+    .hero p { max-width: 48rem; color: var(--muted); }
+    .year { display: inline-block; margin-bottom: .6rem; color: var(--teal); font-weight: 750; font-size: .85rem; }
+    .answer, .panel, .risk, .scenario {
+      border: 1px solid var(--line);
+      border-radius: 1rem;
+      min-width: 0;
+    }
+    .answer, .panel, .risk { padding: clamp(.95rem, 3vw, 1.55rem); }
+    .answer { background: var(--mint); border-color: #bddbca; margin-bottom: 1.1rem; }
+    .answer p { margin: .3rem 0; }
+    .calculator {
+      display: grid;
+      grid-template-columns: minmax(0, .86fr) minmax(0, 1.35fr);
+      gap: 1.1rem;
+      align-items: start;
+    }
+    .panel, .scenario { background: var(--surface); }
+    .section-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: .25rem .65rem; }
+    button { border: 1px solid #adc5b9; background: #fff; color: var(--teal); border-radius: .5rem; padding: .34rem .64rem; font: inherit; font-size: .85rem; cursor: pointer; }
+    .fields, .scenarios { display: grid; gap: .75rem; }
+    .fields { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: .85rem; }
+    .field { display: block; min-width: 0; }
+    .field > span:first-child { display: block; font-size: .86rem; font-weight: 700; line-height: 1.35; margin-bottom: .34rem; }
+    .control { display: flex; align-items: center; gap: .3rem; min-width: 0; border: 1px solid #adc5b9; border-radius: .56rem; background: #fff; padding-right: .55rem; }
+    .control:focus-within { outline: 2px solid var(--teal); outline-offset: 1px; }
+    input { width: 100%; min-width: 0; border: 0; background: transparent; padding: .52rem .48rem; border-radius: .56rem; color: var(--ink); font: inherit; font-weight: 700; font-variant-numeric: tabular-nums; }
+    input:focus-visible { outline: 0; }
+    .control:has([aria-invalid="true"]) { border-color: #ac4128; }
+    .unit { flex-shrink: 0; color: var(--muted); font-size: .76rem; }
+    .input-note, .result-note { font-size: .86rem; }
+    form details { margin-top: .85rem; border-top: 1px solid var(--line); padding-top: .65rem; }
+    summary { cursor: pointer; font-weight: 700; }
+    .error { color: #902d1d; font-weight: 700; }
+    .scenarios { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: .65rem; }
+    .scenario { padding: .83rem; border-top: 4px solid var(--series); }
+    .db { --series: var(--db); }
+    .dc { --series: var(--dc); }
+    .peak { --series: var(--peak); }
+    .amount { display: block; font-size: clamp(1.12rem, 2.05vw, 1.56rem); color: var(--series); font-weight: 800; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
+    .card-note { display: block; margin-top: .35rem; font-size: .8rem; }
+    .badge { display: block; margin-top: .6rem; color: var(--series); background: var(--paper); border-radius: .45rem; padding: .28rem .4rem; font-size: .77rem; font-weight: 720; }
+    .risk { background: #fff3e7; border-color: #e6c6a7; margin-top: .95rem; }
+    .risk h3 { color: #813d1c; }
+    .risk p { font-size: .92rem; }
+    .chart { margin: 1.1rem 0 0; }
+    .chart figure { margin: .75rem 0 0; }
+    #growth-chart { display: block; width: 100%; height: auto; }
+    .legend { display: flex; flex-wrap: wrap; gap: .32rem 1rem; font-size: .86rem; }
+    .legend span::before { content: ""; display: inline-block; width: 1.15rem; border-top: 3px solid var(--series); vertical-align: .2em; margin-right: .33rem; }
+    .legend .db::before { border-top-style: dashed; }
+    .legend .peak::before { border-top-style: dotted; }
+    .data { margin-top: .7rem; }
+    .data table { table-layout: fixed; font-variant-numeric: tabular-nums; font-size: .82rem; }
+    .data th:not(:first-child), .data td:not(:first-child) { text-align: right; }
+    .ad { min-height: 250px; min-width: 0; margin: 1.25rem 0; }
+    .ad small { display: block; color: var(--muted); font-size: .75rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: .65rem; }
+    caption { text-align: left; color: var(--muted); font-size: .86rem; }
+    th, td { padding: .56rem .45rem; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    thead th { background: var(--mint); }
+    .rules tbody th { width: 25%; }
+    .references { padding-left: 1.25rem; margin: .65rem 0 0; }
+    .help { margin-top: 1.1rem; }
+    .faq { border-top: 1px solid var(--line); padding: .68rem 0; }
+    .faq:last-child { padding-bottom: 0; }
+    footer { margin-top: 1.3rem; border-top: 1px solid var(--line); padding-block: 1.2rem 1.7rem; }
+    footer .shell { display: flex; flex-wrap: wrap; gap: .55rem 1.15rem; }
+    [hidden] { display: none !important; }
+    @media (max-width: 940px) {
+      .calculator { grid-template-columns: minmax(0, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .scenarios { grid-template-columns: minmax(0, 1fr); gap: .55rem; }
+      .scenario { border-top: 1px solid var(--line); border-left: 4px solid var(--series); }
+      .rules { font-size: .89rem; }
+      .data th, .data td { padding-inline: .18rem; }
+    }
+  </style>
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="mast">
+    <nav class="shell" aria-label="현재 위치">
+      <a href="/kor/util/">EMFLS 무료 도구</a><span aria-hidden="true">/</span><span>퇴직연금 DB·DC</span>
+    </nav>
+  </header>
+  <main class="shell">
+    <header class="hero">
+      <span class="year">2026년 법정 기준</span>
+      <h1>퇴직연금 DB·DC 비교 계산기</h1>
+      <p>임금피크제 직전에 DC로 바꾸면 얼마나 차이 날까요? 급여와 근속기간을 입력해 전환 시점별 세전 예상 퇴직급여를 비교하세요.</p>
+    </header>
+
+    <section class="answer" aria-labelledby="answer-title">
+      <h2 id="answer-title">핵심 요약</h2>
+      <p><strong>퇴직 직전 임금이 떨어지면 DB 퇴직급여는 전체 근속기간에 걸쳐 줄어들 수 있습니다.</strong> 임금이 계속 오르고 DC 수익률이 그보다 낮다면 DB 유지가 유리할 수 있지만, 실제 차이는 과거 근속기간과 삭감폭에도 달려 있습니다.</p>
+      <p id="answer-live" role="status" aria-atomic="true"></p>
+    </section>
+
+    <div class="calculator">
+      <form class="panel" id="inputs" aria-labelledby="input-title" novalidate>
+        <div class="section-head">
+          <h2 id="input-title">급여와 근속 조건</h2>
+          <button type="reset">예시로 초기화</button>
+        </div>
+        <p class="subtle input-note">월 임금과 연간 상여금은 세전 금액을 입력하세요.</p>
+        <div class="fields">
+          <label class="field"><span>현재 월 기본급·수당</span><span class="control"><input name="monthlyWage" type="text" inputmode="decimal" value="500" autocomplete="off" required><span class="unit">만원</span></span></label>
+          <label class="field"><span>연간 상여금·연차수당</span><span class="control"><input name="annualExtras" type="text" inputmode="decimal" value="600" autocomplete="off" required><span class="unit">만원</span></span></label>
+          <label class="field"><span>지금까지 근속일수</span><span class="control"><input name="pastDays" type="text" inputmode="decimal" value="5475" autocomplete="off" required><span class="unit">일</span></span></label>
+          <label class="field"><span>퇴직까지 남은 기간</span><span class="control"><input name="years" type="text" inputmode="decimal" value="8" autocomplete="off" required><span class="unit">년</span></span></label>
+          <label class="field"><span>임금피크제 적용 기간</span><span class="control"><input name="peakYears" type="text" inputmode="decimal" value="3" autocomplete="off" required aria-describedby="peak-hint"><span class="unit">년</span></span></label>
+          <label class="field"><span>임금피크제 삭감률</span><span class="control"><input name="peakCut" type="text" inputmode="decimal" value="30" autocomplete="off" required aria-describedby="peak-hint"><span class="unit">%</span></span></label>
+          <label class="field"><span>피크제 전 연 임금상승률</span><span class="control"><input name="wageGrowth" type="text" inputmode="decimal" value="3" autocomplete="off" required><span class="unit">%</span></span></label>
+          <label class="field"><span>DC 연 순수익률</span><span class="control"><input name="dcReturn" type="text" inputmode="decimal" value="4" autocomplete="off" required><span class="unit">%</span></span></label>
+        </div>
+        <p class="subtle input-note" id="peak-hint">임금피크제는 퇴직 직전의 연속된 기간입니다. 적용하지 않으면 0년을 입력하세요.</p>
+        <details id="advanced">
+          <summary>평균임금 세부 조건</summary>
+          <div class="fields">
+            <label class="field"><span>직전 3개월 역일수</span><span class="control"><input name="averageDays" type="text" inputmode="decimal" value="91" autocomplete="off" required><span class="unit">일</span></span></label>
+            <label class="field"><span>현재 1일 통상임금</span><span class="control"><input name="dailyOrdinaryWage" type="text" inputmode="decimal" value="0" autocomplete="off" required><span class="unit">만원</span></span></label>
+          </div>
+          <p class="subtle input-note">3개월 역일수는 모든 시점에 공통으로 적용합니다. 1일 통상임금을 입력하면 평균임금의 하한으로 반영하며, 모르면 0을 입력하세요.</p>
+        </details>
+        <p id="input-error" class="error" role="status" hidden></p>
+        <noscript><p class="error">자동 계산을 이용하려면 자바스크립트를 켜세요.</p></noscript>
+      </form>
+
+      <section class="panel" aria-labelledby="results-title">
+        <div class="section-head"><h2 id="results-title">퇴직급여 비교</h2><small>세전 일시금 환산</small></div>
+        <div id="results" hidden>
+          <div class="scenarios">
+            <article class="scenario db">
+              <h3>DB 유지</h3>
+              <strong class="amount" id="db-amount"></strong>
+              <small class="card-note" id="db-note"></small>
+            </article>
+            <article class="scenario dc">
+              <h3>지금 DC 전환</h3>
+              <strong class="amount" id="now-amount"></strong>
+              <small class="card-note" id="now-note"></small>
+              <span class="badge" id="now-threshold"></span>
+            </article>
+            <article class="scenario peak">
+              <h3>피크제 직전 DC 전환</h3>
+              <strong class="amount" id="peak-amount"></strong>
+              <small class="card-note" id="peak-note"></small>
+              <span class="badge" id="peak-threshold"></span>
+            </article>
+          </div>
+          <p class="subtle result-note">손익분기는 각 DC 전환안이 DB 유지액과 같아지는 연 순수익률입니다.</p>
+          <p id="best-switch"></p>
+          <aside class="risk" aria-labelledby="risk-title">
+            <h3 id="risk-title">손실회피 경고</h3>
+            <p id="risk-live"></p>
+            <p><strong>DC에 적립된 돈은 DB로 되돌려 이전할 수 없습니다.</strong> 전환이 가능한 날짜와 회사의 퇴직급여 감소 예방 조치를 먼저 확인하세요.</p>
+          </aside>
+        </div>
+      </section>
+
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="다음 필수 확인 계산기" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">다음 필수 확인 계산기 (Next Check)</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">방금 계산한 결과를 바탕으로 바로 이어서 점검하세요:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/kor/util/retirement-severance-irp-50-percent-tax-reduction-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">퇴직금 IRP 연금 30~50% 절세 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">임금피크제 직전 DC 전환 후 퇴직 시 IRP 연금 수령 절세 효과를 합산하세요.</span></a>
+    <a href="/kor/util/severance-pay-exact-tax-calculator-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">퇴직금 &amp; 퇴직소득세 정확 계산기 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">DB형 유지 시 3개월 평균임금 하락이 퇴직금 실수령액에 미치는 영향을 확인하세요.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+    </div>
+
+    <section class="panel chart" id="chart-panel" aria-labelledby="chart-title" hidden>
+      <h2 id="chart-title">연도별 예상 퇴직급여</h2>
+      <div class="legend">
+        <span class="db">DB 유지</span><span class="dc">지금 DC 전환</span><span class="peak" id="peak-legend">피크제 직전 DC 전환</span>
+      </div>
+      <figure>
+        <svg id="growth-chart" viewBox="0 0 480 235" role="img" aria-labelledby="chart-title chart-desc">
+          <desc id="chart-desc"></desc>
+          <g id="chart-grid"></g>
+          <g id="chart-lines"></g>
+        </svg>
+        <figcaption class="subtle result-note">DB는 각 시점에 퇴직한다고 가정한 금액입니다. 피크제 직전 전환안은 전환 전까지 DB 예상액, 전환 후에는 DC 잔액을 표시합니다.</figcaption>
+      </figure>
+      <details class="data">
+        <summary>연도별 금액 표 보기</summary>
+        <table>
+          <caption>시점별 예상 금액 (만원)</caption>
+          <thead><tr><th scope="col">시점</th><th scope="col">DB 유지</th><th scope="col">지금 DC</th><th scope="col" id="peak-column">피크 직전 DC</th></tr></thead>
+          <tbody id="timeline"></tbody>
+        </table>
+      </details>
+    </section>
+
+    <aside class="ad" aria-label="광고">
+      <small>광고</small>
+      <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </aside>
+
+    <section class="panel" aria-labelledby="rules-title">
+      <h2 id="rules-title">2026년 법정 기준과 계산 방식</h2>
+      <table class="rules">
+        <thead><tr><th scope="col">항목</th><th scope="col">공식 기준</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">평균임금</th><td>사유 발생 직전 3개월 임금총액 ÷ 해당 기간의 총 역일수. 산입 대상인 연간 상여금·연차수당은 3/12을 반영합니다. 산출액보다 1일 통상임금이 높으면 통상임금을 적용합니다. (근로기준법 제2조)</td></tr>
+          <tr><th scope="row">DB 급여</th><td>계속근로 1년당 평균임금 30일분 이상. 일수 기준 예상액은 1일 평균임금 × 30 × (총 근속일수 ÷ 365)입니다. (근로자퇴직급여 보장법 제15조)</td></tr>
+          <tr><th scope="row">DC 회사 부담금</th><td>연간 임금총액의 1/12 이상을 규약에 따라 매년 1회 이상 정기 납입합니다. (근로자퇴직급여 보장법 제20조)</td></tr>
+          <tr><th scope="row">임금피크제</th><td>법에서 정한 임금조정 등으로 퇴직급여가 줄 수 있는 경우, 사용자는 사전에 알리고 근로자대표와 협의해 필요한 감소 예방 조치를 해야 합니다. (근로자퇴직급여 보장법 제32조 제5항)</td></tr>
+        </tbody>
+      </table>
+      <h3 class="help">시뮬레이션 가정</h3>
+      <ul class="references">
+        <li>첫해는 현재 급여를 사용하고 이후 임금은 매년 초 오릅니다. 피크제가 시작되면 직전 급여에서 한 번 삭감하고 퇴직까지 같은 수준을 유지합니다. 삭감률이 0%면 임금상승률을 계속 적용합니다.</li>
+        <li>현재까지는 입력한 근속일수, 앞으로는 해마다 365일을 적용합니다. 연간 상여금·연차수당과 입력한 통상임금도 월 임금과 같은 비율로 변한다고 가정합니다. 평균임금 산정 제외기간과 회사별 우대 조건은 별도로 확인하세요.</li>
+        <li>전환 직전 평균임금 30일분 × 과거 근속연수를 전액 이전하는 것으로 가정합니다. DC는 이전액에 매년 순수익률을 적용한 뒤 해당 연도 임금총액의 1/12을 연말에 더합니다. 수익률은 수수료를 반영한 값을 입력하며, 세금과 개인 추가납입은 계산에서 제외합니다.</li>
+        <li>전환 시점은 지금부터 마지막 근속연도 시작까지 1년 단위로 비교합니다. 실제 전환일, 과거기간 소급 여부, 정산액과 납입일은 퇴직연금규약을 따릅니다.</li>
+      </ul>
+      <h3 class="help">공식 근거</h3>
+      <ul class="references">
+        <li><a href="https://www.law.go.kr/lsInfoP.do?lsiSeq=284455">국가법령정보센터 근로자퇴직급여 보장법</a> · <a href="https://www.law.go.kr/lsLinkCommonInfo.do?chrClsCd=010202&amp;lsJoLnkSeq=1029728283">근로기준법 제2조</a></li>
+        <li><a href="https://1350.moel.go.kr/home/hp/retirementpaycal/retirementpaycal.jsp">고용노동부 퇴직금 계산 예제</a></li>
+        <li><a href="https://www.moel.go.kr/info/publicdata/qnrinfo/qnrInfoView.do?qnr_uid=2015120811010041">고용노동부 과거기간 소급 산정 해석</a> · <a href="https://www.moel.go.kr/info/publicdata/qnrinfo/qnrInfoView.do?qnr_uid=2016030300000007">DC 적립금의 DB 이전 해석</a></li>
+      </ul>
+    </section>
+
+    <section class="panel help" aria-labelledby="faq-title">
+      <h2 id="faq-title">자주 묻는 질문</h2>
+      <details class="faq">
+        <summary>임금피크제 때문에 DB 퇴직급여가 얼마나 줄 수 있나요?</summary>
+        <p>퇴직 직전 평균임금이 낮아지면 그 임금이 전체 근속기간에 적용될 수 있습니다. 예를 들어 평균임금 30일분이 500만 원에서 350만 원으로 줄고 총 근속이 25년이면, 같은 산정 규칙에서는 1억 2,500만 원에서 8,750만 원으로 3,750만 원 줄어듭니다. 회사의 별도 감소 예방 조치가 있으면 실제 결과는 달라집니다.</p>
+      </details>
+      <details class="faq">
+        <summary>퇴직 전 3개월 평균임금에 상여금과 연차수당도 들어가나요?</summary>
+        <p>평균임금에 산입되는 연간 상여금과 연차수당의 3/12을 직전 3개월 기본급과 임금성 수당에 더한 뒤 해당 기간의 역일수로 나눕니다. 1일 통상임금이 더 높으면 그 금액을 씁니다. 급여명세서의 모든 상여금이나 연차수당이 자동으로 산입되는 것은 아니므로 지급 성격과 발생 시점을 확인하세요.</p>
+      </details>
+      <details class="faq">
+        <summary>DB에서 DC로 바꾸면 과거 근속분은 어떻게 계산하나요?</summary>
+        <p>이 계산기는 과거 근속분 전체를 전환 직전 평균임금 30일분에 근속연수를 곱해 한 번에 이전한다고 가정합니다. 고용노동부는 DC 도입 시 과거기간을 소급하는 경우 결정 직전 1년 임금총액을 기준으로 하되 1년당 평균임금 30일분 이상이어야 한다고 해석합니다. 실제 소급 범위와 이전액은 회사 퇴직연금규약에서 확인하세요.</p>
+      </details>
+      <details class="faq">
+        <summary>DC로 전환한 뒤 DB로 돌아갈 수 있나요?</summary>
+        <p>이미 DC에 쌓인 적립금을 DB로 되돌려 이전할 수 없습니다. DB와 DC를 모두 운영하는 사업장에서는 규약에 따라 향후 근속분만 DB로 적용할 수 있는 경우가 있습니다. 기존 DC 적립금은 별도로 운용되므로 전환 전에 인사팀에 적용 범위를 확인하세요.</p>
+      </details>
+      <details class="faq">
+        <summary>DC 손익분기 수익률과 가장 유리한 전환 시점은 무슨 뜻인가요?</summary>
+        <p>손익분기 수익률은 해당 전환 시나리오의 퇴직 시점 DC 잔액이 DB 유지액과 같아지는 일정한 연간 순수익률입니다. 전환 시점 비교는 입력한 수익률로 각 근속연도 시작점에 전환했을 때의 결과를 계산한 것입니다. 임금 인상률, 삭감 시점, 실제 납입일, 투자 손실에 따라 순위가 달라질 수 있습니다.</p>
+      </details>
+    </section>
+
+    <aside class="ad" aria-label="광고">
+      <small>광고</small>
+      <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </aside>
+  
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 대한민국 세무·금융·복지 핵심 계산기</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">2026년도 국세청·고용노동부 기준 연계 계산 도구:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/kor/util/retirement-severance-irp-50-percent-tax-reduction-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 퇴직금·퇴직소득세 계산기 &amp; IRP 연금 30%·40%·50% 감면 비교기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 소득세법 근속연수공제 및 환산급여공제 기준 퇴직소득세 계산. IRP 연금수령 시 10년차까지 30%, 11~20년차 40%, 21년차 이상 50% 세금 감...</span>
+    </a>
+    <a href="/kor/util/revolving-card-loan-interest-trap-payoff-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 신용카드 리볼빙·카드론 최고 20% 이자폭탄 &amp; 은행/햇살론 대환 절감액 계산기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">신용카드 리볼빙(일부결제금액이월약정) 연 15~19.9% 복리 덫과 카드론 다중채무의 이자 스노우볼을 실측하고, 1금융권 대환대출 또는 햇살론(연 7~9%) 전환 시...</span>
+    </a>
+    <a href="/kor/util/salary-take-home-4-insurance-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 연봉 실수령액 계산기 (국민연금 9.5%·건보 7.19% 4대보험 인상 비교)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 국민연금 9.5%(근로자 4.75%) 인상, 건강보험 7.19%(3.595%), 장기요양 13.14%, 최저시급 10,320원 반영 연봉별 월 실수령액 및...</span>
+    </a>
+    <a href="/kor/util/severance-pay-exact-tax-calculator-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 퇴직금 &amp; 퇴직소득세 정확 계산기 (3개월 평균임금 및 환산급여공제 5단계)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 근로기준법상 3개월 평균임금(상여금 및 연차수당 3/12 산입)과 소득세법 제48조 퇴직소득세(근속연수공제, 환산급여공제 5단계, 기본세율 8단계) 및 I...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>2026 글로벌 세무·금융·복지 계산기 전수 보기 &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+  <footer>
+    <nav class="shell" aria-label="관련 도구">
+      <a href="/kor/util/">한국어 무료 도구 모음</a>
+      <a href="/kor/util/compound-interest/">복리·단리 계산기</a>
+      <a href="/util/">전체 웹 도구</a>
+    </nav>
+  </footer>
+</body>
+</html>

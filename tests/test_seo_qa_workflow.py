@@ -98,10 +98,13 @@ class SeoQaWorkflowTests(unittest.TestCase):
 
     def test_guard_reads_committed_manifest_snapshot(self):
         source = WORKFLOW.read_text(encoding="utf-8")
-        snapshot = source.index("git show HEAD:data/content-launch-manifest.json > /tmp/content-launch-manifest.json")
+        snapshot = source.index('git show "$MANIFEST_REF:data/content-launch-manifest.json"')
         guard = source.index("scripts/content_launch_guard.py")
         self.assertLess(snapshot, guard)
-        self.assertIn("--manifest /tmp/content-launch-manifest.json", source)
+        self.assertIn("MANIFEST_REF=HEAD", source)
+        self.assertIn('MANIFEST_REF="$TRUSTED_EVIDENCE_REF"', source)
+        self.assertIn('--manifest "$TRUSTED_GUARD_DIR/content-launch-manifest.json"', source)
+        self.assertIn('--base-ref "$TRUSTED_EVIDENCE_REF" --change-base-ref "$COMPARE_REF"', source)
 
     def test_local_qa_separates_ops_trust_snapshot_from_origin_main_change_set(self):
         local_qa = (ROOT / "scripts/local_qa.sh").read_text(encoding="utf-8")

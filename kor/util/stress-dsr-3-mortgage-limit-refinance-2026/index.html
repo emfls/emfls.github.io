@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>2026 스트레스 DSR 주담대 한도·갈아타기 계산기 | EMFLS</title>
+  <meta name="description" content="2026년 하반기 스트레스 DSR 기준으로 주택담보대출 한도를 계산하고, 중도상환수수료 1.20%와 0.65% 예시로 대환 손익분기와 순이자 절감액을 비교하세요.">
+  <link rel="canonical" href="https://emfls.github.io/kor/util/stress-dsr-3-mortgage-limit-refinance-2026/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:url" content="https://emfls.github.io/kor/util/stress-dsr-3-mortgage-limit-refinance-2026/">
+  <meta property="og:title" content="2026 스트레스 DSR 주담대 한도·갈아타기 계산기">
+  <meta property="og:description" content="지역과 금리 유형별 DSR 한도, 중도상환수수료를 뺀 대환 실익을 계산합니다.">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="2026 스트레스 DSR 주담대 한도·갈아타기 계산기">
+  <meta name="twitter:description" content="지역과 금리 유형별 DSR 한도, 중도상환수수료를 뺀 대환 실익을 계산합니다.">
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { window.dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+  <script>
+    if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+      const script = document.createElement('script');
+      script.async = true;
+      script.crossOrigin = 'anonymous';
+      script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+      document.head.append(script);
+    }
+  </script>
+  <script type="module" src="./app.js"></script>
+  <style>
+    :root {
+      color-scheme: light; --ink: #142522; --muted: #4a635d; --green: #07594a;
+      --line: #cddcd6; --paper: #fff; --soft: #eaf5ef;
+      font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      color: var(--ink); background: #f4f8f5; line-height: 1.6;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body { margin: 0; overflow-wrap: anywhere; word-break: keep-all; }
+    a { color: var(--green); text-underline-offset: .2em; }
+    :focus-visible { outline: 3px solid #237c65; outline-offset: 3px; }
+    .wrap { width: min(100% - 2rem, 70rem); margin-inline: auto; }
+    .site-nav { padding-block: .9rem; font-size: .9rem; }
+    .site-nav strong { margin-inline-end: .75rem; }
+    header { color: #fff; background: #103c33; padding-block: clamp(1.65rem, 4vw, 3.5rem); }
+    header p { color: #d8ede4; margin: 0; }
+    h1, h2, h3 { line-height: 1.26; margin: 0 0 .6rem; }
+    h1 { max-width: 25ch; margin-top: .5rem; font-size: clamp(1.85rem, 5vw, 3.3rem); letter-spacing: -.05em; }
+    h2 { font-size: clamp(1.35rem, 3vw, 1.9rem); letter-spacing: -.035em; }
+    h3 { font-size: 1.12rem; }
+    p { margin: 0 0 .8rem; }
+    p:last-child { margin-block-end: 0; }
+    main { padding-block: 1.25rem 2.5rem; }
+    main > * + * { margin-block-start: 1.25rem; }
+    .card { min-width: 0; padding: clamp(1rem, 2.7vw, 1.8rem); background: var(--paper);
+      border: 1px solid var(--line); border-radius: 1rem; }
+    .summary { background: var(--soft); border-inline-start: .3rem solid var(--green); }
+    .warn { background: #fff4df; border-color: #e5cc99; border-inline-start: .3rem solid #925420; }
+    .links { display: flex; flex-wrap: wrap; gap: .5rem 1rem; }
+    .jump a { padding: .45rem .8rem; border: 1px solid var(--line); border-radius: .5rem;
+      background: var(--paper); font-weight: 700; }
+    .columns, .fields, .metrics { display: grid; gap: .9rem; }
+    .fields, .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .columns { margin-top: 1rem; }
+    .columns > *, .fields > *, .metrics > * { min-width: 0; }
+    .field { display: grid; align-content: start; gap: .25rem; font-weight: 650; font-size: .9rem; }
+    input, select { width: 100%; min-width: 0; padding: .55rem .5rem; border: 1px solid #92ada3;
+      border-radius: .45rem; color: var(--ink); background: var(--paper); font: inherit; min-height: 2.75rem; }
+    input[readonly] { background: #eef3f0; }
+    [aria-invalid="true"] { border-color: #9d2e25; }
+    .note { font-size: .91rem; color: var(--muted); }
+    .field-note { margin-top: .75rem; }
+    .result { background: var(--soft); border-radius: .7rem; padding: .9rem; }
+    .result > * + * { margin-block-start: .65rem; }
+    .metrics { margin: 0; }
+    dt { font-size: .85rem; color: var(--muted); }
+    dd { margin: 0; font-size: clamp(1rem, 3vw, 1.5rem); font-weight: 760; letter-spacing: -.03em; }
+    table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: .88rem; }
+    caption { text-align: left; font-weight: 730; padding-block: .4rem; }
+    th, td { padding: .45rem .35rem; border-bottom: 1px solid var(--line); text-align: start; }
+    thead { background: #edf3ef; }
+    tbody th { font-weight: 650; }
+    tr[data-selected="true"] { background: #d4ece1; }
+    .num { text-align: end; font-variant-numeric: tabular-nums; }
+    .adsbygoogle { width: 100%; }
+    figure { margin: 1rem 0 0; }
+    svg { display: block; width: 100%; height: auto; background: #f5faf7; border-radius: .6rem; }
+    svg text { fill: var(--ink); font-size: 16px; }
+    .legend { display: flex; flex-wrap: wrap; gap: .35rem 1rem; margin-block: .45rem; font-size: .9rem; }
+    .legend span::before { content: ''; display: inline-block; width: 1rem; border-top: .2rem solid #086650; margin-right: .4rem; vertical-align: middle; }
+    .legend span + span::before { border-color: #85431b; border-top-style: dashed; }
+    details { border-top: 1px solid var(--line); padding: .75rem 0; }
+    details p { margin-top: .45rem; }
+    summary { cursor: pointer; font-weight: 700; }
+    .error { color: #8d2920; }
+    @media (min-width: 53rem) {
+      .columns { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); align-items: start; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="wrap site-nav" aria-label="현재 위치"><strong>EMFLS</strong><a href="/kor/util/">한국어 웹 도구</a> <span aria-hidden="true">/</span> 주담대 계산기</nav>
+  <header>
+    <div class="wrap">
+      <p>2026년 하반기 · 주택담보대출</p>
+      <h1>스트레스 DSR 주담대 한도와 갈아타기 계산기</h1>
+      <p>대출 한도가 얼마나 줄어드는지, 금리를 낮추면 전환 비용을 언제 회수하는지 확인하세요.</p>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="card summary" aria-labelledby="summary-title">
+      <h2 id="summary-title">핵심 요약</h2>
+      <p>변동형 주담대 한도를 계산할 때 수도권·규제지역은 약정금리에 <strong>3.00%p</strong>, 그 밖의 지역은 2026년 12월 31일까지 <strong>0.75%p</strong>를 더하는 기준을 적용합니다. 혼합형과 주기형은 지역과 고정기간 비중에 따라 가산폭이 달라집니다.</p>
+      <p>대환 비용은 <strong>갚는 기존 대출의 약정 수수료율</strong>로 계산합니다. 0.65%는 개편 발표 당시 5대 시중은행 평균 예시입니다.</p>
+    </section>
+    <nav class="links jump" aria-label="계산기 바로가기">
+      <a href="#dsr">DSR 한도 계산</a><a href="#refinance">갈아타기 실익 계산</a><a href="#rules">적용 기준</a>
+    </nav>
+    <noscript><p class="card">자동 계산을 사용하려면 자바스크립트를 켜 주세요. 적용 기준과 자주 묻는 질문은 아래에서 확인할 수 있습니다.</p></noscript>
+    <section class="card" id="dsr" aria-labelledby="dsr-title">
+      <h2 id="dsr-title">스트레스 DSR 주담대 한도</h2>
+      <p class="note">세전 인정소득과 금융회사가 DSR에 반영하는 기존 대출의 연간 상환액을 입력하세요. 신규 대출은 매월 원리금균등 상환으로 계산합니다.</p>
+      <div class="columns">
+        <div>
+          <form id="dsr-form" class="fields" autocomplete="off">
+            <label class="field">연소득 (만 원)<input name="income" type="number" inputmode="decimal" min="0" max="1000000000" step="any" value="8000" required></label>
+            <label class="field">금융권 DSR 상한<select name="dsr"><option value="40">은행권 40%</option><option value="50">제2금융권 50%</option></select></label>
+            <label class="field">기존 연간 원리금 (만 원)<input name="annualDebt" type="number" inputmode="decimal" min="0" max="1000000000" step="any" value="600" required></label>
+            <label class="field">약정금리 (연 %)<input name="rate" type="number" inputmode="decimal" min="0" max="30" step="any" value="4.20" required></label>
+            <label class="field">적용 기준<select name="policy"><option value="regional">수도권·규제지역 외</option><option value="metro">수도권·규제지역</option><option value="scenario">가정 비교</option></select></label>
+            <label class="field">기본 스트레스 금리 (%p)<input name="stressRate" type="number" inputmode="decimal" min="0" max="10" step="any" value="1.50" readonly required></label>
+            <label class="field">상환 만기<select name="years"><option value="30">30년</option><option value="40">40년</option></select></label>
+            <label class="field">금리 유형<select name="type"><option value="variable">변동형</option><option value="mixed">5년 혼합형</option><option value="periodic">5년 주기형</option><option value="fixed">전 기간 고정형</option></select></label>
+          </form>
+          <p id="dsr-context" class="note field-note">기본 1.50%p에 지역 기본비율 50%와 금리 유형별 비율을 차례로 곱합니다.</p>
+          <p id="dsr-error" class="error" role="status" hidden></p>
+        </div>
+        <div class="result" id="dsr-result">
+          <dl class="metrics" aria-live="polite" aria-atomic="true">
+            <div><dt>스트레스 반영 한도</dt><dd id="limit">—</dd></div>
+            <div><dt>스트레스 미반영 한도</dt><dd id="unstressed">—</dd></div>
+            <div><dt>한도 감소액</dt><dd id="reduction">—</dd></div>
+            <div><dt>심사금리</dt><dd id="screening">—</dd></div>
+          </dl>
+          <p class="note" id="budget">—</p>
+          <table>
+            <caption>금리 유형별 한도 비교</caption>
+            <thead><tr><th scope="col">금리 유형</th><th scope="col" class="num">유형 비율</th><th scope="col" class="num">가산폭</th><th scope="col" class="num">한도<br>(만 원)</th></tr></thead>
+            <tbody id="limit-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="다음 필수 확인 계산기" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">다음 필수 확인 계산기 (Next Check)</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">방금 계산한 결과를 바탕으로 바로 이어서 점검하세요:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/kor/util/mortgage-early-repayment-fee-refinance-breakeven-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">주담대 갈아타기 손익분기 계산기 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">중도상환수수료를 내고도 대환대출이 이득이 되는 시점을 확인하세요.</span></a>
+    <a href="/kor/util/didimdol-mortgage-loan-limit-rate-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">2026 디딤돌대출 한도·자격 판정 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">시중 주담대보다 금리가 낮은 정책자금(최대 3.2억) 자격을 확인하세요.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>
+      if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+    </script>
+    <section class="card" id="refinance" aria-labelledby="refinance-title">
+      <h2 id="refinance-title">주담대 갈아타기 실익</h2>
+      <p class="note">기존 잔액을 전액 대환하고, 남은 기간과 상환 방식이 같으며 두 금리가 만기까지 유지된다고 가정합니다. 30,000만 원은 3억 원입니다.</p>
+      <div class="columns">
+        <div>
+          <form id="refinance-form" class="fields" autocomplete="off">
+            <label class="field">기존 잔액 (만 원)<input name="principal" type="number" inputmode="decimal" min="0" max="1000000000" step="any" value="30000" required></label>
+            <label class="field">남은 기간 (년)<input name="remainingYears" type="number" inputmode="decimal" min="0" max="50" step="any" value="25" required></label>
+            <label class="field">기존 금리 (연 %)<input name="oldRate" type="number" inputmode="decimal" min="0" max="30" step="any" value="4.90" required></label>
+            <label class="field">신규 금리 (연 %)<input name="newRate" type="number" inputmode="decimal" min="0" max="30" step="any" value="3.85" required></label>
+            <label class="field">기존 대출 경과 (개월)<input name="elapsedMonths" type="number" inputmode="decimal" min="0" max="600" step="any" value="18" required></label>
+            <label class="field">인지세 등 부대비용 (만 원)<input name="expenses" type="number" inputmode="decimal" min="0" max="1000000000" step="any" value="30" required></label>
+            <label class="field">개편 전 수수료율 (%)<input name="oldFeeRate" type="number" inputmode="decimal" min="0" max="10" step="any" value="1.20" required></label>
+            <label class="field">개편 후 수수료율 (%)<input name="newFeeRate" type="number" inputmode="decimal" min="0" max="10" step="any" value="0.65" required></label>
+          </form>
+          <p class="note field-note">남은 기간은 월 단위로 반올림합니다. 수수료 두 칸은 현재 갚는 대출에 적용될 수 있는 서로 다른 약정의 비교용입니다.</p>
+          <p id="refinance-error" class="error" role="status" hidden></p>
+        </div>
+        <div class="result" id="refinance-result">
+          <dl class="metrics" aria-live="polite" aria-atomic="true">
+            <div><dt>월 상환액 절감</dt><dd id="monthly-savings">—</dd></div>
+            <div><dt>기존 → 신규 월 상환액 (만 원)</dt><dd id="payments">—</dd></div>
+          </dl>
+          <table>
+            <caption>약정 수수료율별 대환 손익</caption>
+            <thead><tr><th scope="col">항목</th><th scope="col" class="num" id="old-fee-label">개편 전</th><th scope="col" class="num" id="new-fee-label">개편 후</th></tr></thead>
+            <tbody id="refinance-rows"></tbody>
+          </table>
+          <p class="note">이자 기준은 누적 이자 절감액, 현금흐름 기준은 누적 월 납입액 차이가 초기비용을 처음 메우는 시점입니다.</p>
+        </div>
+      </div>
+      <figure id="chart" hidden>
+        <figcaption><strong>갈아타기 후 누적 순이자 절감액</strong> <span class="note">(만 원)</span></figcaption>
+        <div class="legend"><span>개편 전 수수료율</span><span>개편 후 수수료율</span></div>
+        <svg viewBox="0 0 520 216" role="img" aria-labelledby="chart-title chart-desc">
+          <title id="chart-title">대환 후 누적 순이자 절감액 추이</title>
+          <desc id="chart-desc"></desc>
+          <path id="chart-axis" fill="none" stroke="#869f96" stroke-width="1.5"/>
+          <path id="chart-old" fill="none" stroke="#086650" stroke-width="3"/>
+          <path id="chart-new" fill="none" stroke="#85431b" stroke-width="3" stroke-dasharray="7 4"/>
+          <text id="chart-zero" x="63" text-anchor="end">0</text>
+          <text x="72" y="202">대환 시점</text>
+          <text id="chart-end" x="495" y="202" text-anchor="end"></text>
+        </svg>
+      </figure>
+    </section>
+    <aside class="card warn" aria-labelledby="warning-title">
+      <h2 id="warning-title">손실을 피하려면</h2>
+      <p>이사나 매도로 대출을 빨리 갚을 계획이라면 이자 기준 손익분기 개월수부터 확인하세요. 그 전에 상환하면 당시까지 아낀 이자로 전환 비용을 회수하기 어렵습니다. 새 대출을 다시 조기 상환할 때의 수수료도 별도로 확인하세요.</p>
+      <p>계약금 납부 전에는 금융회사에 DSR 인정소득, 기존 부채 반영액, 담보인정비율(LTV), 주택가격별 한도와 대환 가능 금액을 확인하세요. 수수료는 예정 상환일의 상환 견적서로 확인하는 편이 정확합니다.</p>
+    </aside>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>
+      if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+    </script>
+    <section class="card" id="rules" aria-labelledby="rules-title">
+      <h2 id="rules-title">2026년 하반기 적용 기준과 계산식</h2>
+      <table>
+        <caption>차주 단위 DSR과 지역별 주담대 심사 기준</caption>
+        <thead><tr><th scope="col">항목</th><th scope="col">수도권·규제지역</th><th scope="col">그 밖의 지역</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">일반 DSR 상한</th><td colspan="2">은행권 40% · 제2금융권 50%</td></tr>
+          <tr><th scope="row">기본 스트레스 금리</th><td>3.00%p <small>(하한)</small></td><td>1.50%p <small>(기준값)</small></td></tr>
+          <tr><th scope="row">기본 적용비율</th><td>3단계 100%</td><td>2단계 50%</td></tr>
+          <tr><th scope="row">변동형 가산폭</th><td>3.00%p</td><td>0.75%p</td></tr>
+          <tr><th scope="row">5년 혼합형 비율</th><td>80%</td><td>60%</td></tr>
+          <tr><th scope="row">5년 주기형 비율</th><td>40%</td><td>30%</td></tr>
+          <tr><th scope="row">전 기간 고정형 비율</th><td>0%</td><td>0%</td></tr>
+        </tbody>
+      </table>
+      <p class="note field-note">5년 혼합·주기형은 고정기간 또는 변경주기가 5년 이상이고 전체 만기의 30% 미만인 구간입니다. 표의 지역 기준은 2026년 7월 1일~12월 31일 적용분입니다. 수도권·규제지역의 만기는 계산기에서 30년으로 제한합니다.</p>
+      <p>연간 상환 여력은 <strong>연소득 × DSR 상한 − 기존 연간 원리금</strong>입니다. 0보다 작으면 한도를 0으로 표시합니다. 여력을 12로 나눈 월 상환액에서, 약정금리에 지역·유형 비율을 곱한 스트레스 금리를 더해 원금을 역산합니다.</p>
+      <table>
+        <caption>금융위원회 발표 당시 5대 시중은행 평균 수수료율</caption>
+        <thead><tr><th scope="col">주담대 금리</th><th scope="col">개편 전</th><th scope="col">개편 후</th></tr></thead>
+        <tbody><tr><th scope="row">고정</th><td>1.40%</td><td>0.65%</td></tr><tr><th scope="row">변동</th><td>1.20%</td><td>0.65%</td></tr></tbody>
+      </table>
+      <p class="note field-note">중도상환수수료는 잔액 × 약정 수수료율 × 남은 수수료 부과기간 비율로 추정합니다. 이 계산기는 36개월 기준 월 비례식을 사용합니다. 금융회사는 계약에 따라 실제 잔존일수와 면제 조건을 적용합니다. 5년 순이자 절감액은 기존·신규 누적 이자의 차이에서 수수료와 부대비용을 뺀 값이며, 남은 기간이 5년보다 짧으면 만기까지만 계산합니다.</p>
+      <p class="links field-note"><a href="https://better.fsc.go.kr/fsc_new/status/adminMap/OpertnDetail.do?muGpNo=60&amp;muNo=145&amp;postNo=4215&amp;stNo=11">금융위 하반기 스트레스 DSR 행정지도</a><a href="https://www.fsc.go.kr/no010101/85824">금융위 금리 유형별 적용비율 표</a><a href="https://www.fsc.go.kr/no010101/87517">금융위 금융 종합대책</a><a href="https://www.fsc.go.kr/no010101/84824">금융위 주담대 만기 관리 기준</a><a href="https://www.fsc.go.kr/no010101/83833">금융위 중도상환수수료 개편 안내</a></p>
+    </section>
+    <section class="card" aria-labelledby="faq-title">
+      <h2 id="faq-title">자주 묻는 질문</h2>
+      <details><summary>스트레스 DSR을 적용하면 실제 대출이자도 늘어나나요?</summary><p>스트레스 금리는 DSR 심사에서 상환 여력을 평가할 때만 더합니다. 실제 월 납입액은 계약서의 약정금리와 상환 일정에 따라 정해집니다.</p></details>
+      <details><summary>수도권과 지방의 5년 혼합형 가산폭은 왜 다른가요?</summary><p>30년 만기 예시에서 수도권·규제지역은 3.00%p에 혼합형 비율 80%를 곱해 2.40%p를 더합니다. 그 밖의 지역은 2026년 말까지 1.50%p에 지역 기본비율 50%와 혼합형 비율 60%를 곱해 0.45%p를 더합니다.</p></details>
+      <details><summary>계산기에 나온 한도만큼 대출받을 수 있나요?</summary><p>결과는 입력한 상환 여력으로 역산한 DSR 기준 한도입니다. 실제 승인액에는 담보인정비율, 주택가격별 한도, 금융회사 심사와 경과규정도 영향을 줍니다. 기존 대출의 연간 반영액은 금융회사 심사 기준에 맞춰 입력하세요.</p></details>
+      <details><summary>지금 갈아타면 기존 대출에도 수수료율 0.65%가 적용되나요?</summary><p>실비용 중심 개편은 2025년 1월 13일 이후 체결한 신규 계약부터 적용됐습니다. 0.65%는 당시 5대 시중은행 평균 예시입니다. 지금 대환할 때는 상환하는 기존 대출의 약정 수수료율과 면제 조건을 확인하세요.</p></details>
+      <details><summary>이자와 현금흐름 기준 손익분기는 어떻게 다른가요?</summary><p>이자 기준은 두 대출의 누적 이자 차이가 초기비용을 처음 메우는 달입니다. 현금흐름 기준은 월 납입액 차이의 합이 초기비용을 처음 메우는 달입니다. 납입액에는 원금도 들어가므로 두 시점이 다를 수 있습니다.</p></details>
+    </section>
+    <footer class="links"><a href="/kor/util/">한국어 도구 모음</a><a href="/kor/util/overseas-stock-tax-calculator/">해외주식 양도소득세 계산기</a><a href="/kor/util/compound-interest/">복리·단리 계산기</a></footer>
+  
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 대한민국 세무·금융·복지 핵심 계산기</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">2026년도 국세청·고용노동부 기준 연계 계산 도구:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/kor/util/sunshine-loan-saitdol2-refinance-savings-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 통합 햇살론 일반보증 &amp; 사잇돌2 대환대출 계산기 | 이자 절감 &amp; DSR 시뮬레이션</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 정책서민금융 통합 개편에 따른 통합 햇살론 일반보증(최대 1,500만 원, 연 10% 이내) 및 사잇돌2(최대 3,000만 원) 대환대출 모의계산. 고금리...</span>
+    </a>
+    <a href="/kor/util/unemployment-benefit-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 실업급여 계산기 | 상한 68,100원·하한 66,048원</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 구직급여 일액과 28일·30일 환산액을 계산하세요. 나이와 고용보험 가입기간별 소정급여일수, 2025년 대비 차액, 조기재취업수당을 확인할 수 있습니다.</span>
+    </a>
+    <a href="/kor/util/unemployment-benefit-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026·2027 실업급여 모의계산기 | 고용보험 구직급여 상한액·하한액 및 수급일수</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026 statutory calculator for 2026·2027 실업급여 모의계산기 | 고용보험 구직급여 상한액·하한액 및 수급일수.</span>
+    </a>
+    <a href="/kor/util/vat-simplified-taxpayer-104m-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 개인사업자 부가세 계산기 | 간이과세 1억 400만 원·납부면제 4,800만 원</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">스마트스토어·소상공인의 간이과세와 일반과세 부가세를 비교하세요. 업종별 부가가치율, 4,800만 원 납부면제, 매입 및 카드발행 공제를 반영합니다.</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>2026 글로벌 세무·금융·복지 계산기 전수 보기 &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 스트레스 DSR 주담대 한도·갈아타기 계산기",
+    "url": "https://emfls.github.io/kor/util/stress-dsr-3-mortgage-limit-refinance-2026/",
+    "inLanguage": "ko-KR",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "offers": {"@type": "Offer", "price": "0", "priceCurrency": "KRW"}
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type":"Question","name":"스트레스 DSR을 적용하면 실제 대출이자도 늘어나나요?","acceptedAnswer":{"@type":"Answer","text":"스트레스 금리는 DSR 심사에서 상환 여력을 평가할 때만 더합니다. 실제 월 납입액은 계약서의 약정금리와 상환 일정에 따라 정해집니다."}},
+      {"@type":"Question","name":"수도권과 지방의 5년 혼합형 가산폭은 왜 다른가요?","acceptedAnswer":{"@type":"Answer","text":"30년 만기 예시에서 수도권·규제지역은 3.00%p에 혼합형 비율 80%를 곱해 2.40%p를 더합니다. 그 밖의 지역은 2026년 말까지 1.50%p에 지역 기본비율 50%와 혼합형 비율 60%를 곱해 0.45%p를 더합니다."}},
+      {"@type":"Question","name":"계산기에 나온 한도만큼 대출받을 수 있나요?","acceptedAnswer":{"@type":"Answer","text":"결과는 입력한 상환 여력으로 역산한 DSR 기준 한도입니다. 실제 승인액에는 담보인정비율, 주택가격별 한도, 금융회사 심사와 경과규정도 영향을 줍니다. 기존 대출의 연간 반영액은 금융회사 심사 기준에 맞춰 입력하세요."}},
+      {"@type":"Question","name":"지금 갈아타면 기존 대출에도 수수료율 0.65%가 적용되나요?","acceptedAnswer":{"@type":"Answer","text":"실비용 중심 개편은 2025년 1월 13일 이후 체결한 신규 계약부터 적용됐습니다. 0.65%는 당시 5대 시중은행 평균 예시입니다. 지금 대환할 때는 상환하는 기존 대출의 약정 수수료율과 면제 조건을 확인하세요."}},
+      {"@type":"Question","name":"이자와 현금흐름 기준 손익분기는 어떻게 다른가요?","acceptedAnswer":{"@type":"Answer","text":"이자 기준은 두 대출의 누적 이자 차이가 초기비용을 처음 메우는 달입니다. 현금흐름 기준은 월 납입액 차이의 합이 초기비용을 처음 메우는 달입니다. 납입액에는 원금도 들어가므로 두 시점이 다를 수 있습니다."}}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type":"ListItem","position":1,"name":"한국어 웹 도구","item":"https://emfls.github.io/kor/util/"},
+      {"@type":"ListItem","position":2,"name":"주담대 한도·갈아타기 계산기","item":"https://emfls.github.io/kor/util/stress-dsr-3-mortgage-limit-refinance-2026/"}
+    ]
+  }
+  </script>
+</body>
+</html>

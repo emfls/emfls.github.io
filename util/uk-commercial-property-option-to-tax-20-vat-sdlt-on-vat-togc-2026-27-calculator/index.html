@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <title>2026/27 UK Commercial Property Option to Tax, SDLT-on-VAT & TOGC Exemption Calculator</title>
+  <meta name="description" content="Calculates HMRC FA03/Sch 4/Para 2 commercial SDLT on VAT-inclusive consideration, permanent irrecoverable SDLT-on-VAT tax trap, VAT bridging finance costs, and TOGC exemption savings.">
+  <link rel="canonical" href="https://emfls.github.io/util/uk-commercial-property-option-to-tax-20-vat-sdlt-on-vat-togc-2026-27-calculator/">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+    <script>
+  if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+    const adScript = document.createElement('script');
+    adScript.async = true;
+    adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+    adScript.crossOrigin = 'anonymous';
+    document.head.append(adScript);
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026/27 UK Commercial Property Option to Tax, SDLT-on-VAT & TOGC Exemption Calculator",
+    "url": "https://emfls.github.io/util/uk-commercial-property-option-to-tax-20-vat-sdlt-on-vat-togc-2026-27-calculator/",
+    "description": "Calculates HMRC FA03/Sch 4/Para 2 commercial SDLT on VAT-inclusive consideration, permanent irrecoverable SDLT-on-VAT tax trap, VAT bridging finance costs, and TOGC exemption savings.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the SDLT-on-VAT trap in UK commercial property?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under HMRC FA03/Sch 4/Para 2, Stamp Duty Land Tax (SDLT) is charged on the total consideration including VAT. Even though a VAT-registered commercial buyer can reclaim the 20% VAT on their VAT return, the SDLT charged on that 20% VAT is completely irrecoverable from HMRC, representing a permanent additional tax."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does TOGC (Transfer of a Going Concern) eliminate VAT and SDLT-on-VAT?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under the VAT (Special Provisions) Order 1995, if an income-producing commercial property is sold with continuing tenancies, and the buyer is VAT-registered and opts to tax (notifying HMRC via Form VAT1614A prior to completion), the sale is treated as outside the scope of VAT. No VAT is charged on the invoice, and SDLT is charged strictly on the net purchase price."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are current UK non-residential commercial SDLT rates for 2026/27?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For commercial property in England and Northern Ireland, SDLT is 0% on the first £150,000, 2% on the portion between £150,001 and £250,000, and 5% on the portion above £250,000."
+        }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "UK Property Hub",
+        "item": "https://emfls.github.io/util/uk-property-finance-hub-2026.html"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "2026/27 UK Commercial Property Option to Tax, SDLT-on-VAT & TOGC Exemption Calculator",
+        "item": "https://emfls.github.io/util/uk-commercial-property-option-to-tax-20-vat-sdlt-on-vat-togc-2026-27-calculator/"
+      }
+    ]
+  }
+  </script>
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #d97706;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 16px;
+    }
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding: 16px 0;
+    }
+    h1 {
+      font-size: 1.75rem;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .ad-slot {
+      margin: 20px 0;
+      min-height: 100px;
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    @media (min-width: 768px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
+    }
+    .card h2 {
+      font-size: 1.25rem;
+      margin-bottom: 16px;
+      color: var(--primary-dark);
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 8px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.875rem;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .help-text {
+      font-size: 0.775rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    input[type="number"], select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      background: #fff;
+    }
+    .kpi-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .kpi {
+      background: #f8fafc;
+      padding: 14px;
+      border-radius: 8px;
+      border-left: 4px solid var(--primary);
+    }
+    .kpi-label {
+      font-size: 0.775rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+    .kpi-val {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-top: 4px;
+    }
+    .tag-danger {
+      color: var(--danger);
+      font-weight: 700;
+    }
+    .tag-safe {
+      color: var(--success);
+      font-weight: 700;
+    }
+    .highlight-card {
+      padding: 16px;
+      border-radius: 8px;
+      margin-top: 16px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+    }
+    .table-container {
+      overflow-x: auto;
+      max-width: 100%;
+      margin-top: 16px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 16px;
+    }
+    th, td {
+      padding: 10px 12px;
+      text-align: right;
+      border-bottom: 1px solid var(--border);
+    }
+    th:first-child, td:first-child {
+      text-align: left;
+    }
+    th {
+      background: #f1f5f9;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .chart-container {
+      margin-top: 20px;
+      padding: 12px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    footer {
+      margin-top: 48px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+    }
+    .hub-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .hub-links a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+  </style>
+<style id="emfls-cro-calc-first-b2-v1">
+/* EMFLS CRO B2 — mobile calculator-first ordering for non-Patch-B EN templates (CSS-only, reversible) */
+@media (max-width: 760px) {
+  main:has(form, input, select),
+  .tool-shell:has(form, input, select),
+  .container:has(form, input, select) {
+    display: flex;
+    flex-direction: column;
+  }
+  main:has(form, input, select) > *,
+  .tool-shell:has(form, input, select) > *,
+  .container:has(form, input, select) > * {
+    order: 4;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  main:has(form, input, select) > nav,
+  main:has(form, input, select) > header,
+  main:has(form, input, select) > .hero,
+  main:has(form, input, select) > h1,
+  main:has(form, input, select) > .lead,
+  .tool-shell:has(form, input, select) > nav,
+  .tool-shell:has(form, input, select) > header,
+  .tool-shell:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > h1,
+  .tool-shell:has(form, input, select) > .lead,
+  .container:has(form, input, select) > nav,
+  .container:has(form, input, select) > header,
+  .container:has(form, input, select) > .hero,
+  .container:has(form, input, select) > h1,
+  .container:has(form, input, select) > .lead {
+    order: 0;
+  }
+  main:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .tool-shell:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .container:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav) {
+    order: 1;
+  }
+  main:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .tool-shell:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .container:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container) {
+    order: 2;
+  }
+  main:has(form, input, select) > .emfls-next-check,
+  .tool-shell:has(form, input, select) > .emfls-next-check,
+  .container:has(form, input, select) > .emfls-next-check {
+    order: 2;
+  }
+  main:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .tool-shell:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .container:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]) {
+    order: 3;
+  }
+  main:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > .hero,
+  .container:has(form, input, select) > header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+}
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>2026/27 UK Commercial Property Option to Tax & SDLT Calculator</h1>
+      <p class="subtitle">Evaluate HMRC FA03/Sch 4/Para 2 gross consideration SDLT, permanent irrecoverable SDLT-on-VAT losses, VAT bridging debt costs, and TOGC relief savings.</p>
+    </header>
+
+    <div class="ad-slot">
+      <ins class="adsbygoogle"
+           style="display:block;min-height:250px"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>Commercial Property Transaction Terms</h2>
+        <div class="form-group">
+          <label for="netPrice">Net Purchase Price (£)</label>
+          <input inputmode="decimal" type="number" id="netPrice" value="1000000" min="50000" step="25000">
+          <p class="help-text">Agreed commercial property price excluding VAT.</p>
+        </div>
+
+        <div class="form-group">
+          <label for="isOptionToTax">Seller Option to Tax (OTT) Status</label>
+          <select id="isOptionToTax">
+            <option value="true" selected>Opted to Tax (20% Standard Rate VAT Applicable)</option>
+            <option value="false">Exempt Supply (No Option to Tax)</option>
+          </select>
+          <p class="help-text">VATA 1994 s.51/Sch 10 makes supply standard rated.</p>
+        </div>
+
+        <div class="form-group">
+          <label for="bridgingMonths">Months to HMRC VAT Reclaim Refund</label>
+          <input inputmode="decimal" type="number" id="bridgingMonths" value="3" min="1" max="12" step="1">
+          <p class="help-text">Delay between paying 20% VAT at completion and receiving VAT credit from HMRC.</p>
+        </div>
+
+        <div class="form-group">
+          <label for="bridgingAnnualRate">Bridging Debt / Capital Cost (% p.a.)</label>
+          <input inputmode="decimal" type="number" id="bridgingAnnualRate" value="8.5" min="0" max="25" step="0.5">
+          <p class="help-text">Interest rate to bridge the 20% VAT cash drain prior to HMRC reimbursement.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Tax & Cash-Flow Impact Analysis</h2>
+        <div class="kpi-row">
+          <div class="kpi">
+            <div class="kpi-label">Irrecoverable SDLT on VAT</div>
+            <div class="kpi-val tag-danger" id="irrecoverableSdltVal">£0</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">VAT Bridging Cost</div>
+            <div class="kpi-val" id="bridgingCostVal">£0</div>
+          </div>
+        </div>
+
+        <div class="kpi-row">
+          <div class="kpi">
+            <div class="kpi-label">Total Permanent Deadweight Loss</div>
+            <div class="kpi-val tag-danger" id="permanentLossVal">£0</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">TOGC Upfront Cash Relief</div>
+            <div class="kpi-val tag-safe" id="togcUpfrontVal">£0</div>
+          </div>
+        </div>
+
+        <div class="highlight-card" id="insightBox">
+          <strong>HMRC Statutory Insight:</strong> <span id="insightText">Calculating...</span>
+        </div>
+
+        <div class="chart-container">
+          <svg id="waterfallChart" width="100%" height="160" viewBox="0 0 460 160" preserveAspectRatio="none"></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 32px;">
+      <h2>Option to Tax (OTT) vs Valid TOGC Comparison Table</h2>
+      <div class="table-container">
+        <table id="compTable">
+        <thead>
+          <tr>
+            <th>Line Item</th>
+            <th>Option to Tax (OTT)</th>
+            <th>Valid TOGC Structure</th>
+            <th>Variance / Savings</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Net Property Price</td>
+            <td id="tblNetOtt">£0</td>
+            <td id="tblNetTogc">£0</td>
+            <td>£0</td>
+          </tr>
+          <tr>
+            <td>20% VAT Payable at Completion</td>
+            <td id="tblVatOtt">£0</td>
+            <td>£0 (Outside Scope)</td>
+            <td class="tag-safe" id="tblVatSaved">£0</td>
+          </tr>
+          <tr>
+            <td>Commercial SDLT Paid</td>
+            <td id="tblSdltOtt">£0</td>
+            <td id="tblSdltTogc">£0</td>
+            <td class="tag-safe" id="tblSdltSaved">£0</td>
+          </tr>
+          <tr style="font-weight: bold; background-color: #f8fafc;">
+            <td>Total Upfront Completion Cash Drain</td>
+            <td id="tblTotalOtt">£0</td>
+            <td id="tblTotalTogc">£0</td>
+            <td class="tag-safe" id="tblUpfrontSaved">£0</td>
+          </tr>
+          <tr style="font-weight: bold; color: #dc2626;">
+            <td>Permanent Irrecoverable Loss (SDLT + Interest)</td>
+            <td id="tblPermOtt">£0</td>
+            <td>£0</td>
+            <td class="tag-safe" id="tblPermSaved">£0</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="ad-slot">
+      <ins class="adsbygoogle"
+           style="display:block;min-height:250px"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+    </div>
+
+    
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 United Kingdom Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for United Kingdom:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/uk-company-car-fuel-benefit-charge-29200-multiplier-break-even-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">HMRC 2026/27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">UK Company Car Fuel Benefit Calculator 2026/27 (£29,200)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare UK company car private fuel with paying at the pump. Calculate employee tax, employe...</span>
+    </a>
+    <a href="/util/uk-company-share-buyback-capital-vs-dividend-tax-cta-2010-s1033-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">HMRC 2026/27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">UK Company Share Buyback Tax Calculator 2026/27 | CTA 2010 s.1033</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare UK share buyback CGT and dividend tax, check CTA 2010 s.1033, and estimate SH03 duty...</span>
+    </a>
+    <a href="/util/uk-corporation-tax-marginal-relief-associated-companies-calculator-2026-27/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">HMRC 2026/27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">UK Corporation Tax &amp; Marginal Relief Calculator 2026/27</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate UK Corporation Tax and Marginal Relief for 2026/27. Adjust for associated companies...</span>
+    </a>
+    <a href="/util/uk-director-company-pension-contribution-vs-dividend-corporation-tax-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">HMRC 2026/27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">UK Director SIPP vs Dividend Tax Calculator 2026/27</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare a company SIPP contribution, dividends at 10.75% or 35.75%, and a director bonus. Se...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="Next essential calculators" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">Next Essential Check</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">Run these 2 companion checks with the numbers you just calculated:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/util/uk-remortgage-fee-vs-rate-calculator/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">UK Remortgage Fee vs Rate 2026 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">Compare fee-free vs low-rate mortgage deals and exact break-even month.</span></a>
+    <a href="/util/uk-stamp-duty-sdlt-calculator/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">UK Stamp Duty (SDLT) 2026 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">Calculate band-by-band SDLT with first-time buyer relief &amp; surcharges.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+<footer>
+      <p>&copy; 2026 Statutory & Business Calculators. Comprehensive actuarial and regulatory reference tools.</p>
+      <div class="hub-links">
+        <a href="https://emfls.github.io/util/uk-property-finance-hub-2026.html">UK Property & Commercial Hub</a>
+        <a href="https://emfls.github.io/util/us-tax-hub-2026.html">US Statutory Tax Hub</a>
+        <a href="https://emfls.github.io/util/australia-business-tax-hub-2026.html">Australia Commercial Hub</a>
+        <a href="https://emfls.github.io/util/canada-tax-corporate-hub-2026.html">Canada Corporate Hub</a>
+      </div>
+    </footer>
+  </div>
+
+  <script type="module">
+    import { calcOptionToTaxEconomics } from './model.mjs';
+
+    function fmt(num) {
+      return '£' + Math.round(num).toLocaleString('en-GB');
+    }
+
+    function render() {
+      const netPrice = Number(document.getElementById('netPrice').value) || 1000000;
+      const isOptionToTax = document.getElementById('isOptionToTax').value === 'true';
+      const bridgingMonths = Number(document.getElementById('bridgingMonths').value) || 3;
+      const bridgingAnnualRate = Number(document.getElementById('bridgingAnnualRate').value) || 8.5;
+
+      const res = calcOptionToTaxEconomics({
+        netPrice,
+        isOptionToTax,
+        bridgingMonths,
+        bridgingAnnualRate
+      });
+
+      document.getElementById('irrecoverableSdltVal').innerText = fmt(res.irrecoverableSdltOnVat);
+      document.getElementById('bridgingCostVal').innerText = fmt(res.vatBridgingCost);
+      document.getElementById('permanentLossVal').innerText = fmt(res.permanentEconomicLoss);
+      document.getElementById('togcUpfrontVal').innerText = fmt(res.upfrontCashSavedTogc);
+
+      const insight = document.getElementById('insightText');
+      if (res.irrecoverableSdltOnVat > 0) {
+        insight.innerHTML = `Under FA03/Sch 4/Para 2, HMRC levies SDLT on the <strong>VAT-inclusive £${res.grossPrice.toLocaleString()}</strong>. Even though you recover the £${res.vatAmount.toLocaleString()} VAT from HMRC, the extra <strong>£${res.irrecoverableSdltOnVat.toLocaleString()} in SDLT can NEVER be recovered</strong>! Structuring as a valid TOGC saves this permanently.`;
+      } else {
+        insight.innerHTML = `Transaction is not subject to Option to Tax. Standard commercial SDLT applies strictly to the net consideration.`;
+      }
+
+      // Table update
+      document.getElementById('tblNetOtt').innerText = fmt(res.netPrice);
+      document.getElementById('tblNetTogc').innerText = fmt(res.netPrice);
+      document.getElementById('tblVatOtt').innerText = fmt(res.vatAmount);
+      document.getElementById('tblVatSaved').innerText = '+' + fmt(res.vatAmount);
+      document.getElementById('tblSdltOtt').innerText = fmt(res.sdltOnGross);
+      document.getElementById('tblSdltTogc').innerText = fmt(res.baseSdltOnNet);
+      document.getElementById('tblSdltSaved').innerText = '+' + fmt(res.irrecoverableSdltOnVat);
+      document.getElementById('tblTotalOtt').innerText = fmt(res.completionCashRequiredOtt);
+      document.getElementById('tblTotalTogc').innerText = fmt(res.completionCashRequiredTogc);
+      document.getElementById('tblUpfrontSaved').innerText = '+' + fmt(res.upfrontCashSavedTogc);
+      document.getElementById('tblPermOtt').innerText = fmt(res.permanentEconomicLoss);
+      document.getElementById('tblPermSaved').innerText = '+' + fmt(res.permanentEconomicLoss);
+
+      // SVG Bar Chart
+      const svg = document.getElementById('waterfallChart');
+      const maxVal = Math.max(res.completionCashRequiredOtt, res.completionCashRequiredTogc) * 1.1;
+      const hOtt = (res.completionCashRequiredOtt / maxVal) * 100;
+      const hTogc = (res.completionCashRequiredTogc / maxVal) * 100;
+
+      let html = '';
+      html += `<rect x="60" y="${120 - hOtt}" width="80" height="${hOtt}" fill="#dc2626" rx="4" />`;
+      html += `<text x="100" y="140" font-size="11" text-anchor="middle" fill="#0f172a">Option to Tax</text>`;
+      html += `<text x="100" y="${115 - hOtt}" font-size="10" text-anchor="middle" fill="#dc2626" font-weight="bold">${fmt(res.completionCashRequiredOtt)}</text>`;
+
+      html += `<rect x="240" y="${120 - hTogc}" width="80" height="${hTogc}" fill="#16a34a" rx="4" />`;
+      html += `<text x="280" y="140" font-size="11" text-anchor="middle" fill="#0f172a">TOGC Structure</text>`;
+      html += `<text x="280" y="${115 - hTogc}" font-size="10" text-anchor="middle" fill="#16a34a" font-weight="bold">${fmt(res.completionCashRequiredTogc)}</text>`;
+
+      svg.innerHTML = html;
+    }
+
+    document.querySelectorAll('input, select').forEach(el => el.addEventListener('input', render));
+    render();
+  </script>
+</body>
+</html>

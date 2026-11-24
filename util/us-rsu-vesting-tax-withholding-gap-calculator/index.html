@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>2026 RSU Vesting Tax Calculator | 22% Withholding Gap</title>
+  <meta name="description" content="Estimate your 2026 RSU tax shortfall, sell-to-cover shares, and quarterly federal payments using IRS brackets and state withholding presets.">
+  <link rel="canonical" href="https://emfls.github.io/util/us-rsu-vesting-tax-withholding-gap-calculator/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="2026 RSU Vesting Tax Calculator | 22% Withholding Gap">
+  <meta property="og:description" content="Compare RSU payroll withholding with your estimated tax and calculate sell-to-cover shares and quarterly federal payments.">
+  <meta property="og:url" content="https://emfls.github.io/util/us-rsu-vesting-tax-withholding-gap-calculator/">
+  <meta property="og:image" content="https://emfls.github.io/assets/og/calc-us-rsu-vesting-gap.webp">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="2026 RSU Vesting Tax Calculator | 22% Withholding Gap">
+  <meta name="twitter:description" content="Compare RSU payroll withholding with your estimated tax and calculate sell-to-cover shares and quarterly federal payments.">
+  <meta name="twitter:image" content="https://emfls.github.io/assets/og/calc-us-rsu-vesting-gap.webp">
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <link rel="stylesheet" href="../new-tools.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 RSU Vesting Tax Withholding Gap Calculator",
+    "url": "https://emfls.github.io/util/us-rsu-vesting-tax-withholding-gap-calculator/",
+    "operatingSystem": "Any",
+    "applicationCategory": "FinanceApplication",
+    "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type":"Question","name":"Why can I owe more tax when my employer withheld 22%?","acceptedAnswer":{"@type":"Answer","text":"The 22% flat rate is a federal payroll withholding method for eligible supplemental wages up to $1 million. Your regular federal tax on the vest is the difference between federal income tax with and without the RSU wages. One vest can cross several brackets."}},
+      {"@type":"Question","name":"What happens if my supplemental wages cross $1 million?","acceptedAnswer":{"@type":"Answer","text":"Under the flat-rate method, the portion of the vest that brings cumulative supplemental wages to $1 million uses 22%. The portion above $1 million must use 37%. Include applicable prior bonuses, equity pay and other supplemental wages from the employer and related employers."}},
+      {"@type":"Question","name":"How does sell-to-cover affect my delivered shares?","acceptedAnswer":{"@type":"Answer","text":"Estimated sell-to-cover divides total payroll withholding by the share price and rounds up to whole shares. Net shares are the vesting shares left after that sale. An actual brokerage sale can differ because of execution prices, fees or fractional-share policies."}},
+      {"@type":"Question","name":"Why can Additional Medicare Tax differ from payroll withholding?","acceptedAnswer":{"@type":"Answer","text":"An employer starts withholding 0.9% after paying you $200,000 in Medicare wages. The return threshold is $250,000 for joint filers, $125,000 for separate filers and $200,000 for most other filers. Joint filers combine spouses’ Medicare wages on the return."}},
+      {"@type":"Question","name":"How does the 110% safe harbor affect estimated payments?","acceptedAnswer":{"@type":"Answer","text":"The general federal payment target is the lower of 90% of current tax and 100% of eligible prior-year tax. The prior-year percentage rises to 110% if 2025 AGI exceeded $150,000, or $75,000 for 2026 married filing separately. Timing and the under-$1,000 exception also affect whether payments are required."}}
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type":"ListItem","position":1,"name":"EMFLS","item":"https://emfls.github.io/"},
+      {"@type":"ListItem","position":2,"name":"Calculators","item":"https://emfls.github.io/util/"},
+      {"@type":"ListItem","position":3,"name":"RSU Vesting Tax Withholding Gap Calculator","item":"https://emfls.github.io/util/us-rsu-vesting-tax-withholding-gap-calculator/"}
+    ]
+  }
+  </script>
+  <style>
+    [hidden] { display: none !important; }
+    .rsu-tool .grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    @media (max-width: 650px) { .rsu-tool .grid { grid-template-columns: minmax(0,1fr); } }
+    .rsu-tool input, .rsu-tool select { min-width: 0; }
+    .rsu-tool h2, .rsu-tool h3 { line-height: 1.25; }
+    .rsu-tool fieldset { min-width: 0; border: 0; margin: 0; padding: 0; }
+    .rsu-tool legend { font-size: 1.15rem; font-weight: 750; margin-bottom: 10px; padding: 0; }
+    .rsu-tool .note { margin: 5px 0 0; }
+    .hero .links { margin: 0 0 14px; }
+    .hero .links a { color: #fff; }
+    .takeaways { border-left: 5px solid #2563eb; }
+    .takeaways p, .gap-warning p { margin-bottom: 0; }
+    .gap-warning { background: #fff5df; border-left: 5px solid #c57406; }
+    .settings { border-top: 1px solid #d9e0ea; margin-top: 18px; padding-top: 12px; }
+    .settings > summary { font-weight: 750; cursor: pointer; margin-bottom: 10px; }
+    .check { display: flex; align-items: baseline; gap: 8px; }
+    .check input { width: auto; }
+    .rsu-tool .result { white-space: normal; margin-top: 0; }
+    .metrics { display: grid; grid-template-columns: repeat(auto-fit,minmax(min(100%,190px),1fr)); gap: 10px; margin: 0; }
+    .metrics > div { min-width: 0; background: #fff; border-radius: 10px; padding: 10px 12px; }
+    .metrics dt { font-size: .94rem; color: #3a4b62; }
+    .metrics dd { font-size: clamp(1.2rem,3vw,1.55rem); font-weight: 800; margin: 2px 0 0; }
+    .shortfall { color: #9b291d; }
+    .table-wrap { overflow-x: auto; }
+    .rsu-tool table { width: 100%; border-collapse: collapse; text-align: left; }
+    .rsu-tool caption { text-align: left; font-weight: 750; padding-top: 6px; }
+    .rsu-tool th, .rsu-tool td { padding: 7px 8px; border-bottom: 1px solid #d9e0ea; }
+    .tax-breakdown th:not(:first-child), .tax-breakdown td { text-align: right; overflow-wrap: anywhere; }
+    .ad-space, .ad-space .adsbygoogle { display: block; width: 100%; min-height: 280px; }
+    .ad-space { margin-bottom: 18px; }
+  </style>
+  <script type="module" src="./app.js"></script>
+<style id="emfls-cro-calc-first-v1">
+/* EMFLS CRO v1 — calculator-first on mobile (CSS-only, no DOM/content/JS change; reversible by deleting this <style>) */
+@media (max-width: 760px) {
+  main.tool-shell { display: flex; flex-direction: column; }
+  main.tool-shell > * { order: 3; }
+  main.tool-shell > .hero, main.tool-shell > header, main.tool-shell > nav { order: 0; }
+  main.tool-shell > section.takeaways + section.panel { order: 1; }
+  main.tool-shell > section.takeaways + section.panel + aside.emfls-ad-slot { order: 1; }
+  main.tool-shell > section.takeaways { order: 2; }
+}
+</style>
+</head>
+<body>
+<main class="tool-shell rsu-tool">
+  <header class="hero">
+    <nav class="links" aria-label="Breadcrumb"><a href="/">EMFLS</a><span aria-hidden="true">/</span><a href="/util/">Calculators</a></nav>
+    <h1>2026 RSU Vesting Tax Withholding Gap Calculator</h1>
+    <p>Compare 22% federal withholding with your estimated tax, see how many shares sell-to-cover may use, and plan quarterly federal payments.</p>
+  </header>
+
+  <section class="panel takeaways" aria-labelledby="takeaways-title">
+    <h2 id="takeaways-title">Key takeaways</h2>
+    <p><strong>22% is a federal withholding rate.</strong> In the example below, a $60,000 vest adds $16,170 in regular federal income tax. At 22%, payroll withholds $13,200 for federal income tax, leaving a $2,970 federal gap. State tax and payroll withholding determine how much of the vest actually goes to sell-to-cover.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="inputs-title">
+    <h2 id="inputs-title">Your vest and payroll</h2>
+    <p class="note">The prefilled values are an example. Replace them with your estimates and amounts from your paystub.</p>
+    <noscript><p>Enable JavaScript to calculate your results.</p></noscript>
+    <form id="rsu-form" novalidate>
+      <div class="grid">
+        <div><label for="shares">Shares vesting</label><input id="shares" name="shares" type="number" inputmode="decimal" min="0" max="1000000000" step="1" value="500" required></div>
+        <div><label for="sharePrice">Market price per share at vest ($)</label><input id="sharePrice" name="sharePrice" type="number" inputmode="decimal" min="0.01" max="1000000000" step="0.01" value="120" required></div>
+        <div>
+          <label for="filing">Federal filing status</label>
+          <select id="filing" name="filing"><option value="single">Single</option><option value="mfj">Married filing jointly</option><option value="mfs">Married filing separately</option><option value="hoh">Head of household</option></select>
+        </div>
+        <div><label for="deduction">Federal standard or itemized deduction ($)</label><input id="deduction" name="deduction" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="16100" aria-describedby="deduction-note"><p class="note" id="deduction-note">Clear to use the basic standard deduction for your filing status.</p></div>
+        <div><label for="baseSalary">Your annual taxable wages before this vest ($)</label><input id="baseSalary" name="baseSalary" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="180000" required aria-describedby="salary-note"><p class="note" id="salary-note">Use projected W-2 Box 1 wages, including other vests and bonuses during 2026.</p></div>
+        <div id="spouse-fields" hidden><label for="spouseIncome">Spouse’s annual taxable wages ($)</label><input id="spouseIncome" name="spouseIncome" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="0" disabled required></div>
+        <div><label for="state">State wage-tax preset</label>
+          <select id="state" name="state">
+            <option value="CA">California</option><option value="NY">New York</option><option value="MA">Massachusetts</option><option value="WA">Washington</option><option value="TX">Texas</option><option value="FL">Florida</option><option value="custom">Custom</option>
+          </select>
+          <p class="note" id="state-note"></p>
+        </div>
+        <div><label for="ytdSocialWages">YTD Social Security wages before vest ($)</label><input id="ytdSocialWages" name="ytdSocialWages" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="160000" required aria-describedby="ytd-note"><p class="note" id="ytd-note">Use wages at the vesting employer before this vest.</p></div>
+        <div><label for="ytdSupplemental">YTD supplemental wages before vest ($)</label><input id="ytdSupplemental" name="ytdSupplemental" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="0" required aria-describedby="supplemental-note"><p class="note" id="supplemental-note">Prior bonuses and equity pay from this employer and related employers.</p></div>
+      </div>
+
+      <details class="settings" id="adjustments">
+        <summary>Medicare and state adjustments</summary>
+        <div class="grid">
+          <div><label for="ytdMedicareWages">YTD employer Medicare wages before vest ($)</label><input id="ytdMedicareWages" name="ytdMedicareWages" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" aria-describedby="employer-medicare-note"><p class="note" id="employer-medicare-note">Defaults to the YTD Social Security wages entered above. Override if your payroll amounts differ.</p></div>
+          <div><label for="annualMedicareWages">Annual Medicare wages before this vest ($)</label><input id="annualMedicareWages" name="annualMedicareWages" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" aria-describedby="annual-medicare-note"><p class="note" id="annual-medicare-note">Defaults to annual taxable wages entered above. Use projected W-2 Box 5 wages for the filer or both joint filers.</p></div>
+          <div><label for="stateWithholdingRate">State withholding rate (%)</label><input id="stateWithholdingRate" name="stateWithholdingRate" type="number" inputmode="decimal" min="0" max="100" step="0.01" aria-describedby="rates-note"></div>
+          <div><label for="stateTaxRate">State tax rate on this vest (%)</label><input id="stateTaxRate" name="stateTaxRate" type="number" inputmode="decimal" min="0" max="100" step="0.01" aria-describedby="rates-note"></div>
+          <p class="full note" id="rates-note">Leave the rates blank to use the selected preset. Enter an estimated marginal rate on the vest to override it.</p>
+          <div id="ca-deduction-fields"><label for="caDeduction">California deduction ($)</label><input id="caDeduction" name="caDeduction" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" aria-describedby="ca-deduction-note"><p class="note" id="ca-deduction-note">Defaults to California’s basic standard deduction. Used with the California schedule.</p></div>
+          <div id="ca-sdi-fields"><label class="check"><input id="includeCaSdi" name="includeCaSdi" type="checkbox" checked> Include 1.3% California SDI</label></div>
+        </div>
+      </details>
+
+      <details class="settings">
+        <summary>Federal quarterly payment inputs</summary>
+        <fieldset>
+          <legend>Form 1040-ES planning</legend>
+          <div class="grid">
+            <div><label for="otherWithholding">Other 2026 federal withholding ($)</label><input id="otherWithholding" name="otherWithholding" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="22500" aria-describedby="other-note"><p class="note" id="other-note">Include other federal income tax and Additional Medicare withholding. Exclude this vest and estimated payments already made. Clear to pause the quarterly estimate.</p></div>
+            <div><label for="federalTaxOverride">Expected 2026 federal tax override ($)</label><input id="federalTaxOverride" name="federalTaxOverride" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" aria-describedby="override-note"><p class="note" id="override-note">Optional. Use Form 1040-ES worksheet line 11c after credits and before withholding. This accounts for other income, taxes and both refundable and nonrefundable credits.</p></div>
+            <div><label for="priorAgi">2025 adjusted gross income ($)</label><input id="priorAgi" name="priorAgi" type="number" inputmode="decimal" min="-1000000000" max="1000000000" step="0.01" value="175000" aria-describedby="prior-note"></div>
+            <div><label for="priorTax">Eligible 2025 federal tax ($)</label><input id="priorTax" name="priorTax" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="36000" aria-describedby="prior-note"></div>
+            <label class="check full"><input id="priorEligible" name="priorEligible" type="checkbox" checked> Use the prior-year method for a qualifying full-year 2025 return</label>
+            <p class="note full" id="prior-note">If either 2025 amount is blank, the calculator uses the 90% current-year method. Use the prior-year tax as defined in the Form 1040-ES instructions. For a zero-tax year, the exception requires U.S. citizenship or resident-alien status throughout 2025.</p>
+          </div>
+        </fieldset>
+      </details>
+    </form>
+    <p id="input-error" class="error" role="alert" hidden></p>
+  </section>
+
+  <section class="panel" id="results" aria-labelledby="results-title" hidden>
+    <h2 id="results-title">Your estimated April tax surprise</h2>
+    <div class="result">
+      <dl class="metrics">
+        <div><dt id="federal-gap-label">Federal income tax gap</dt><dd id="federal-gap"></dd></div>
+        <div><dt id="total-gap-label">All-in vest tax gap</dt><dd id="total-gap"></dd></div>
+        <div><dt>Gross vest value</dt><dd id="vest-value"></dd></div>
+      </dl>
+    </div>
+    <p class="note" id="result-status" role="status" aria-atomic="true"></p>
+    <div class="table-wrap" role="region" aria-label="Tax and withholding breakdown" tabindex="0">
+      <table class="tax-breakdown">
+        <caption>Tax attributable to this vest</caption>
+        <thead><tr><th scope="col">Tax</th><th scope="col">Withheld</th><th scope="col">Modeled tax</th></tr></thead>
+        <tbody id="tax-rows"></tbody>
+      </table>
+    </div>
+    <h3>Sell-to-cover and shares delivered</h3>
+    <dl class="metrics">
+      <div><dt>Sell-to-cover shares needed</dt><dd id="cover-shares"></dd></div>
+      <div><dt>Net shares delivered</dt><dd id="net-shares"></dd></div>
+      <div><dt>Extra shares to fund the gap</dt><dd id="extra-shares"></dd></div>
+    </dl>
+    <p class="note">Share counts use the vest price and round up. The estimate excludes sale fees and credits for leftover sale proceeds.</p>
+    <p id="share-note" hidden></p>
+
+    <h3>Federal estimated payments</h3>
+    <p id="estimate-missing" hidden>Enter projected other federal withholding to estimate quarterly payments.</p>
+    <div id="estimate-results" hidden>
+      <dl class="metrics">
+        <div><dt>Estimated payment per installment</dt><dd id="quarterly"></dd></div>
+        <div><dt>Annual safe-harbor target</dt><dd id="target"></dd></div>
+        <div><dt>Projected return balance before estimated payments</dt><dd id="balance"></dd></div>
+      </dl>
+      <p id="estimate-note" class="note"></p>
+    </div>
+    <p class="note">This models four equal, timely federal installments before crediting any estimated payments already made. For a late-year vest or missed installments, use Form 2210 and its annualized income installment method where applicable. <a href="https://www.irs.gov/pub/irs-pdf/f1040es.pdf">2026 Form 1040-ES</a> · <a href="https://www.irs.gov/forms-pubs/about-form-2210">Form 2210</a></p>
+  </section>
+
+  <aside class="panel gap-warning" aria-labelledby="warning-title">
+    <h2 id="warning-title">Set aside the gap before spending the proceeds</h2>
+    <p>A sell-to-cover transaction funds payroll withholding. A later stock-price drop can leave you with fewer dollars to cover a tax bill based on the higher vest-day price. A safe-harbor payment can still leave a balance due when you file.</p>
+  </aside>
+
+  <aside class="ad-space" aria-label="Advertisement">
+    <ins data-ad-slot="6016035748" class="adsbygoogle" data-ad-client="ca-pub-8830524482034754" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  </aside>
+
+  <section class="panel" aria-labelledby="rules-title">
+    <h2 id="rules-title">Official 2026 tax parameters</h2>
+    <div class="table-wrap" role="region" aria-label="2026 tax parameters" tabindex="0">
+      <table>
+        <thead><tr><th scope="col">Rule</th><th scope="col">2026 amount or rate</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Federal supplemental wages</th><td>22% when the optional flat method applies through $1 million. Mandatory 37% on the excess.</td></tr>
+          <tr><th scope="row">Federal regular income tax</th><td>10%, 12%, 22%, 24%, 32%, 35%, 37%.</td></tr>
+          <tr><th scope="row">Basic federal standard deduction</th><td>$16,100 single or separate, $32,200 joint, $24,150 head of household.</td></tr>
+          <tr><th scope="row">Employee Social Security</th><td>6.2% through $184,500 of wages. Maximum $11,439.</td></tr>
+          <tr><th scope="row">Employee Medicare</th><td>1.45% without a wage cap. Employers withhold an extra 0.9% above $200,000 of wages they pay to the employee.</td></tr>
+          <tr><th scope="row">Additional Medicare Tax on return</th><td>0.9% above $200,000 single or head of household, $250,000 joint, $125,000 separate.</td></tr>
+          <tr><th scope="row">California</th><td>10.23% bonus/equity withholding assumption, editable. State income tax tops out at 13.3% including the surtax. Covered wages have a separate 1.3% SDI contribution without a wage cap.</td></tr>
+          <tr><th scope="row">Other state presets</th><td>NY 11.70% supplemental withholding. MA 5% base withholding. WA, TX and FL have no state wage income tax. Local and other state payroll deductions vary.</td></tr>
+          <tr><th scope="row">Federal safe harbor</th><td>The lower of 90% of current-year tax or 100% of eligible prior-year tax. Use 110% if 2025 AGI was over $150,000, or $75,000 for separate filers. A projected balance under $1,000 after withholding generally requires no estimated payments.</td></tr>
+          <tr><th scope="row">Federal installment due dates</th><td>April 15, June 15 and September 15, 2026, and January 15, 2027, under the general schedule.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Federal sources <a href="https://www.irs.gov/irb/2025-45_IRB">Rev. Proc. 2025-32</a> · <a href="https://www.irs.gov/publications/p15">IRS Publication 15</a> · <a href="https://www.irs.gov/taxtopics/tc560">IRS Topic 560</a> · <a href="https://www.irs.gov/pub/irs-pdf/f1040es.pdf">2026 Form 1040-ES</a></p>
+    <p>State sources <a href="https://edd.ca.gov/siteassets/files/pdf_pub_ctr/de44.pdf">California EDD withholding</a> · <a href="https://www.ftb.ca.gov/forms/2026/2026-540-tax-rate-schedules.pdf">California tax schedules</a> · <a href="https://www.ftb.ca.gov/forms/2026/2026-540-es-instructions.html">California surtax</a> · <a href="https://www.tax.ny.gov/pdf/publications/withholding/nys50_t_nys.pdf">New York withholding</a> · <a href="https://www.mass.gov/info-details/tax-rates">Massachusetts tax rates</a></p>
+    <h3>What the estimate covers</h3>
+    <p>The model treats shares as delivered and taxable at vest. It stacks their value above annual wages, applies the deduction to total taxable income, and calculates the difference in regular income tax. Social Security, regular Medicare and any selected SDI are attributed to the vest using its payroll amounts. The all-in gap also accounts for any difference in Additional Medicare Tax and state income tax.</p>
+    <p>The model uses marginal schedules and excludes AMT, credit or deduction phaseouts, multistate allocation, local taxes and gains or losses after vest. For this estimate, the NY and MA state rates are editable scenarios. The MA 4% surtax above $1,107,750 and any related withholding can be reflected through those rate overrides. Calculations run in the browser.</p>
+  </section>
+
+  <section class="panel faq" aria-labelledby="faq-title">
+    <h2 id="faq-title">Frequently asked questions</h2>
+    <details><summary>Why can I owe more tax when my employer withheld 22%?</summary><p>The 22% flat rate is a federal payroll withholding method for eligible supplemental wages up to $1 million. Your regular federal tax on the vest is the difference between federal income tax with and without the RSU wages. One vest can cross several brackets.</p></details>
+    <details><summary>What happens if my supplemental wages cross $1 million?</summary><p>Under the flat-rate method, the portion of the vest that brings cumulative supplemental wages to $1 million uses 22%. The portion above $1 million must use 37%. Include applicable prior bonuses, equity pay and other supplemental wages from the employer and related employers.</p></details>
+    <details><summary>How does sell-to-cover affect my delivered shares?</summary><p>Estimated sell-to-cover divides total payroll withholding by the share price and rounds up to whole shares. Net shares are the vesting shares left after that sale. An actual brokerage sale can differ because of execution prices, fees or fractional-share policies.</p></details>
+    <details><summary>Why can Additional Medicare Tax differ from payroll withholding?</summary><p>An employer starts withholding 0.9% after paying you $200,000 in Medicare wages. The return threshold is $250,000 for joint filers, $125,000 for separate filers and $200,000 for most other filers. Joint filers combine spouses’ Medicare wages on the return.</p></details>
+    <details><summary>How does the 110% safe harbor affect estimated payments?</summary><p>The general federal payment target is the lower of 90% of current tax and 100% of eligible prior-year tax. The prior-year percentage rises to 110% if 2025 AGI exceeded $150,000, or $75,000 for 2026 married filing separately. Timing and the under-$1,000 exception also affect whether payments are required.</p></details>
+  </section>
+
+  <aside class="ad-space" aria-label="Advertisement">
+    <ins data-ad-slot="3423411629" class="adsbygoogle" data-ad-client="ca-pub-8830524482034754" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  </aside>
+
+  <nav class="panel" aria-labelledby="related-title">
+    <h2 id="related-title">Related calculators</h2>
+    <div class="links">
+      <a href="/util/irs-tax-brackets-401k-catchup-calculator/">Federal tax brackets and 401(k) catch-up</a>
+      <a href="/util/hsa-tax-savings-calculator/">HSA tax savings</a>
+      <a href="/util/compound-interest/">Compound interest</a>
+    </div>
+  </nav>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 United States Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for United States:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/us-rule-72t-sepp-5-percent-floor-early-retirement-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Rule 72(t) SEPP Calculator &amp; Rule of 55 Comparison</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare all three IRS SEPP methods, the 5% interest ceiling floor, IRA carve-outs, early mod...</span>
+    </a>
+    <a href="/util/us-rule-of-55-401k-early-withdrawal-vs-ira-10-percent-penalty-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">IRS Rule of 55 Calculator 2026 | 401(k) vs. IRA</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Check whether you qualify for the IRS Rule of 55 and compare 401(k) withdrawals, IRA rollove...</span>
+    </a>
+    <a href="/util/us-s-corp-vs-llc-reasonable-salary-tax-savings-calculator-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 S-Corp vs LLC Tax Savings &amp; Reasonable Salary Calculator</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare 2026 S-corp and single-member LLC federal taxes, payroll costs, QBI, and the break-e...</span>
+    </a>
+    <a href="/util/us-salt-deduction-cap-40400-obbba-phaseout-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 SALT Deduction Calculator | $40,400 Cap &amp; $505,000 Phase-Down</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate your 2026 SALT deduction under OBBBA. Check your MAGI phase-down, compare itemizin...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+<footer>Estimate only · emfls.github.io</footer>
+</body>
+</html>

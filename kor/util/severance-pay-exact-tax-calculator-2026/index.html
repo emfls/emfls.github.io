@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>2026년 퇴직금 & 퇴직소득세 정확 계산기 (3개월 평균임금 및 환산급여공제 5단계)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="description" content="2026년 근로기준법상 3개월 평균임금(상여금 및 연차수당 3/12 산입)과 소득세법 제48조 퇴직소득세(근속연수공제, 환산급여공제 5단계, 기본세율 8단계) 및 IRP 이전 시 30~40% 절세액을 정확하게 산출하는 계산기." />
+  <link rel="canonical" href="https://emfls.github.io/kor/util/severance-pay-exact-tax-calculator-2026/" />
+  <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+
+  <!-- Preconnects -->
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+
+  <!-- P0 Localhost Guarded Google AdSense -->
+  <script>
+    if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+      var s = document.createElement('script');
+      s.async = true;
+      s.crossOrigin = 'anonymous';
+      s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+      document.head.appendChild(s);
+    }
+  </script>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="2026년 퇴직금 & 퇴직소득세 정확 계산기" />
+  <meta property="og:description" content="근로기준법 3개월 평균임금 + 소득세법 제48조 5단계 환산급여공제 완벽 반영" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://emfls.github.io/kor/util/severance-pay-exact-tax-calculator-2026/" />
+  <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --danger: #dc2626;
+      --success: #16a34a;
+      --warning: #d97706;
+      --info: #0284c7;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 1rem;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    h1 {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.4rem;
+      color: #334155;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="number"]:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+    }
+    .input-hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 640px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+    .badge-success { background: #dcfce7; color: #15803d; }
+    .badge-warning { background: #fef3c7; color: #b45309; }
+    .badge-info { background: #e0f2fe; color: #0369a1; }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    .comparison-table th, .comparison-table td {
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      text-align: left;
+    }
+    .comparison-table th {
+      background: #f1f5f9;
+      font-weight: 700;
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 0.95rem;
+    }
+    .stat-row:last-child {
+      border-bottom: none;
+      font-weight: 700;
+      font-size: 1.05rem;
+      padding-top: 0.75rem;
+    }
+    .ad-container {
+      margin: 2rem 0;
+      text-align: center;
+      background: #f1f5f9;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+      padding: 10px;
+      min-height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chart-container {
+      background: #ffffff;
+      padding: 1.25rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin: 1.5rem 0;
+    }
+    .faq-item {
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.75rem;
+    }
+    .faq-q {
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 0.25rem;
+    }
+    .faq-a {
+      font-size: 0.92rem;
+      color: #475569;
+    }
+    .links-box {
+      margin-top: 2rem;
+      padding: 1.25rem;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .links-box a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+    .links-box a:hover {
+      text-decoration: underline;
+    }
+  </style>
+
+  <!-- Schema: WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026년 퇴직금 & 퇴직소득세 정확 계산기",
+    "url": "https://emfls.github.io/kor/util/severance-pay-exact-tax-calculator-2026/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "All",
+    "browserRequirements": "Requires JavaScript",
+    "description": "2026 소득세법 제48조 퇴직소득세 산식(근속연수공제, 5단계 환산급여공제, 기본세율 8단계) 및 3개월 평균임금과 IRP 연금계좌 수령 시 30~40% 절세액을 정확히 산정하는 금융 계산기"
+  }
+  </script>
+
+  <!-- Schema: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "평균임금 계산 시 상여금과 연차수당은 왜 3/12만 산입하나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "근로기준법 시행령 제19조 및 노동부 행정해석에 따라, 정기상여금과 전년도 미사용 연차유급휴가수당은 1년 단위로 발생하는 임금이므로, 퇴직 전 3개월간에 해당하는 12분의 3(25%)만 평균임금 산정 기준 임금총액에 합산합니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "퇴직소득세는 왜 다른 종합소득과 합산과세되지 않나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "퇴직소득은 수년에서 수십 년간 누적되어 일시에 발생하는 소득입니다. 이를 당해 연도 다른 근로소득이나 사업소득과 합산하면 최고 45% 누진세율 폭탄을 맞게 되므로, 세법에서는 '분류과세'하고 '연분연승법(환산급여공제)'을 적용하여 장기 근속자의 세부담을 대폭 완화해 줍니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "IRP(개인형퇴직연금) 계좌로 받으면 세금이 얼마나 줄어드나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "퇴직금을 IRP 계좌로 수령한 뒤 55세 이후 연금으로 분할 수령하면, 일시금으로 낼 퇴직소득세의 30%(1~10년 차)에서 최대 40%(11년 차 이후)를 감면받아 60~70%의 세금만 연금소득세로 나누어 납부하게 됩니다."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Schema: BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "홈",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "한국어 계산기 허브",
+        "item": "https://emfls.github.io/kor/util/finance-tax-2026/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "퇴직금 & 퇴직소득세 계산기",
+        "item": "https://emfls.github.io/kor/util/severance-pay-exact-tax-calculator-2026/"
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>2026년 퇴직금 & 퇴직소득세 정확 계산기</h1>
+      <p class="subtitle">소득세법 제48조 개정 산식 (근속연수공제 + 5단계 환산급여공제 + IRP 절세)</p>
+    </header>
+
+    <!-- Top AdSlot -->
+    
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="다음 필수 확인 계산기" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">다음 필수 확인 계산기 (Next Check)</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">방금 계산한 결과를 바탕으로 바로 이어서 점검하세요:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/kor/util/retirement-severance-irp-50-percent-tax-reduction-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">퇴직금 IRP 연금 30~50% 감면 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">일시금 대신 IRP 연금 수령 시 퇴직소득세 절감액을 비교하세요.</span></a>
+    <a href="/kor/util/unemployment-benefit-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">2026 실업급여 모의계산기 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">비자발적 퇴사 시 받을 수 있는 구직급여 총액과 수급일수를 확인하세요.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+<div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+        if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+      </script>
+    </div>
+
+    <!-- Input Card -->
+    <div class="card">
+      <h2 style="font-size: 1.2rem; margin-bottom: 1.25rem; color: #0f172a;">💼 퇴직 전 임금 및 근속 기간 입력</h2>
+      <form id="severance-calc-form">
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="last3MonthsSalary">퇴직 직전 3개월 급여 총액 (원)</label>
+            <input inputmode="decimal" type="number" id="last3MonthsSalary" value="12000000" step="100000" min="0" />
+            <div class="input-hint">기본급, 고정수당, 식대 등 3개월간 지급된 세전 총액 (월 400만 기준)</div>
+          </div>
+          <div class="form-group">
+            <label for="annualBonus">최근 1년간 정기 상여금 총액 (원)</label>
+            <input inputmode="decimal" type="number" id="annualBonus" value="8000000" step="100000" min="0" />
+            <div class="input-hint">1년간 지급된 정기 상여금 (평균임금 계산 시 3/12인 200만 원 산입)</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="unusedAnnualLeavePay">전년도 미사용 연차유급휴가수당 (원)</label>
+            <input inputmode="decimal" type="number" id="unusedAnnualLeavePay" value="1200000" step="50000" min="0" />
+            <div class="input-hint">퇴직 전 발생한 미사용 연차수당 (평균임금 계산 시 3/12인 30만 원 산입)</div>
+          </div>
+          <div class="form-group">
+            <label for="threeMonthsDays">퇴직 직전 3개월간 역일수 (일)</label>
+            <input inputmode="decimal" type="number" id="threeMonthsDays" value="92" min="89" max="92" />
+            <div class="input-hint">달력상의 실제 날짜 수 (대부분 90~92일, 윤달 2월 포함 시 89일)</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="totalTenureDays">총 재직일수 (일)</label>
+          <input inputmode="decimal" type="number" id="totalTenureDays" value="3650" step="1" min="1" />
+          <div class="input-hint">입사일부터 퇴직일까지의 총 달력 일수 (예: 10년 = 3,650일)</div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Results Card -->
+    <div class="card">
+      <h2 style="font-size: 1.2rem; margin-bottom: 1.25rem; color: #0f172a;">💵 법정 퇴직금 및 퇴직소득세 산정 결과</h2>
+      <div id="res-rate-badge" class="badge badge-success">퇴직세율 계산 중...</div>
+
+      <div class="grid-2">
+        <!-- Severance Gross -->
+        <div style="background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border);">
+          <h3 style="font-size: 1.05rem; margin-bottom: 0.75rem; color: #334155;">💵 법정 퇴직금 산정 결과</h3>
+          <div class="stat-row">
+            <span>1일 평균임금:</span>
+            <span id="res-daily-wage">0원</span>
+          </div>
+          <div class="stat-row">
+            <span>인정 근속연수:</span>
+            <span id="res-service-years">0년</span>
+          </div>
+          <div class="stat-row">
+            <span>근속연수 공제액:</span>
+            <span id="res-service-deduction" style="color: var(--primary);">0원</span>
+          </div>
+          <div class="stat-row">
+            <span>법정 퇴직금 세전 총액:</span>
+            <span id="res-gross-severance" style="color: #0f172a; font-size: 1.15rem;">0원</span>
+          </div>
+        </div>
+
+        <!-- Tax Calculation -->
+        <div style="background: #f0fdf4; padding: 1.25rem; border-radius: 8px; border: 1px solid #bbf7d0;">
+          <h3 style="font-size: 1.05rem; margin-bottom: 0.75rem; color: #166534;">🏛️ 퇴직소득세 & 실수령액</h3>
+          <div class="stat-row">
+            <span>환산급여 (공제 전):</span>
+            <span id="res-converted-salary">0원</span>
+          </div>
+          <div class="stat-row">
+            <span>환산급여 공제액:</span>
+            <span id="res-converted-deduction">0원</span>
+          </div>
+          <div class="stat-row">
+            <span>퇴직소득 과세표준:</span>
+            <span id="res-tax-base">0원</span>
+          </div>
+          <div class="stat-row">
+            <span>퇴직소득세 (국세+지방세):</span>
+            <span id="res-total-tax" style="color: var(--danger);">0원</span>
+          </div>
+          <div class="stat-row">
+            <span>실효세율 / 일시금 실수령액:</span>
+            <span id="res-net-lump-sum" style="color: var(--success); font-size: 1.15rem;">0원</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- IRP Tax Saving Card -->
+      <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 1rem; margin-top: 1rem;">
+        <h4 style="font-size: 0.95rem; color: #1e40af; margin-bottom: 0.5rem;">💡 IRP(개인형퇴직연금) 계좌로 이전 후 연금 수령 시 세금 감면</h4>
+        <div style="font-size: 0.88rem; color: #1e3a8a; line-height: 1.7;">
+          <div>• <strong>10년 이하 연금 수령:</strong> 세액 <span id="res-irp-10yr-tax">0원</span></div>
+          <div>• <strong>10년 초과 연금 수령:</strong> 세액 <span id="res-irp-over10yr-tax">0원</span></div>
+          <div style="margin-top: 0.35rem; font-size: 0.82rem; color: #3b82f6;">
+            👉 더 상세한 IRP 수령 전략은 <a href="/kor/util/retirement-severance-irp-50-percent-tax-reduction-2026/" style="color: #1d4ed8; font-weight: 700; text-decoration: underline;">IRP 연금 수령 50% 감면 가이드</a>를 참조하세요.
+          </div>
+        </div>
+      </div>
+
+      <!-- SVG Chart -->
+      <div class="chart-container">
+        <h4 style="font-size: 0.95rem; margin-bottom: 1rem; color: #475569;">📊 퇴직금 실수령액 vs 세금 비중 비교</h4>
+        <svg id="svg-chart" viewBox="0 0 450 120" width="100%" height="120" style="overflow: visible;">
+          <!-- Gross -->
+          <text x="0" y="25" font-size="12" font-weight="600" fill="#334155">세전 퇴직금</text>
+          <rect x="85" y="12" width="260" height="18" rx="4" fill="#64748b" id="chart-bar-gross"></rect>
+          <text x="355" y="26" font-size="11" font-weight="600" fill="#475569" id="chart-txt-gross">0원</text>
+
+          <!-- Net -->
+          <text x="0" y="60" font-size="12" font-weight="600" fill="#334155">실수령액</text>
+          <rect x="85" y="47" width="240" height="18" rx="4" fill="#10b981" id="chart-bar-net"></rect>
+          <text x="335" y="61" font-size="11" font-weight="600" fill="#10b981" id="chart-txt-net">0원</text>
+
+          <!-- Tax -->
+          <text x="0" y="95" font-size="12" font-weight="600" fill="#334155">퇴직소득세</text>
+          <rect x="85" y="82" width="20" height="18" rx="4" fill="#ef4444" id="chart-bar-tax"></rect>
+          <text x="115" y="96" font-size="11" font-weight="600" fill="#ef4444" id="chart-txt-tax">0원</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Educational Deep-Dive Content -->
+    <div class="card">
+      <h2 style="font-size: 1.3rem; margin-bottom: 1rem; color: #0f172a;">📘 소득세법 제48조 퇴직소득세 계산 구조 완벽 해설</h2>
+
+      <h3 style="font-size: 1.05rem; margin: 1.25rem 0 0.5rem 0; color: #1e293b;">1. 3개월 평균임금 산정 시 필수 포함 항목</h3>
+      <p style="font-size: 0.93rem; color: #334155; margin-bottom: 1rem;">
+        근로기준법 제2조 제1항 제6호에 따라 평균임금은 퇴직일 이전 3개월간 지급된 임금의 총액을 그 기간의 총일수로 나눈 금액입니다.
+        이때 매월 정기적으로 지급받는 기본급 및 직책수당 외에도,
+        <strong>연간 정기상여금의 25%(3/12)</strong>와 <strong>전년도 출근율에 의해 발생하여 이미 지급된 미사용 연차유급휴가수당의 25%(3/12)</strong>가 반드시 합산되어야 합니다.
+        이를 누락하면 근로기준법 위반으로 퇴직금이 과소 지급될 수 있습니다.
+      </p>
+
+      <h3 style="font-size: 1.05rem; margin: 1.25rem 0 0.5rem 0; color: #1e293b;">2. 근속연수공제 (2023년 대폭 상향된 기준 현행 적용)</h3>
+      <div style="overflow-x: auto;">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>근속연수 구간</th>
+              <th>근속연수 공제액 산식</th>
+              <th>10년 / 20년 근속 시 공제 총액</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>5년 이하</strong></td>
+              <td>근속연수 × 100만 원</td>
+              <td>5년 근속 시 500만 원</td>
+            </tr>
+            <tr>
+              <td><strong>6년 ~ 10년</strong></td>
+              <td>500만 원 + (근속연수 - 5) × 200만 원</td>
+              <td><strong>10년 근속 시 1,500만 원</strong></td>
+            </tr>
+            <tr>
+              <td><strong>11년 ~ 20년</strong></td>
+              <td>1,500만 원 + (근속연수 - 10) × 250만 원</td>
+              <td><strong>20년 근속 시 4,000만 원</strong></td>
+            </tr>
+            <tr>
+              <td><strong>20년 초과</strong></td>
+              <td>4,000만 원 + (근속연수 - 20) × 300만 원</td>
+              <td>30년 근속 시 7,000만 원</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 style="font-size: 1.15rem; margin: 1.5rem 0 0.75rem 0; color: #0f172a;">📈 3. 환산급여공제 5단계 초과누진공제표</h2>
+      <p style="font-size: 0.93rem; color: #334155; margin-bottom: 1rem;">
+        근속연수공제를 차감한 금액을 1년 치 연봉으로 환산(`× 12 ÷ 근속연수`)한 뒤 아래의 5구간 환산급여공제를 적용합니다.
+        이를 통해 실질적인 퇴직소득세 과세표준이 결정됩니다.
+      </p>
+      <div style="overflow-x: auto;">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>환산급여 구간</th>
+              <th>환산급여 공제액 산출 공식</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>800만 원 이하</strong></td>
+              <td>환산급여 전액 (100% 공제, 세금 0원)</td>
+            </tr>
+            <tr>
+              <td><strong>800만 초과 ~ 7,000만 이하</strong></td>
+              <td>800만 원 + (환산급여 - 800만 원) × 60%</td>
+            </tr>
+            <tr>
+              <td><strong>7,000만 초과 ~ 1억 이하</strong></td>
+              <td>4,520만 원 + (환산급여 - 7,000만 원) × 55%</td>
+            </tr>
+            <tr>
+              <td><strong>1억 초과 ~ 3억 이하</strong></td>
+              <td>6,170만 원 + (환산급여 - 1억 원) × 45%</td>
+            </tr>
+            <tr>
+              <td><strong>3억 원 초과</strong></td>
+              <td>1억 5,170만 원 + (환산급여 - 3억 원) × 35%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="font-size: 1.05rem; margin: 1.25rem 0 0.5rem 0; color: #1e293b;">4. 퇴직소득세 절세 실전 팁</h3>
+      <ul style="padding-left: 1.25rem; font-size: 0.93rem; color: #334155; line-height: 1.8;">
+        <li><strong>근속연수 1일의 마법:</strong> 근속기간이 10년 1일인 경우, 세법상 1년 미만 단수는 1년으로 절상되므로 근속연수가 11년으로 인정되어 근속연수공제가 250만 원 추가됩니다. 퇴사일 지정 시 근속 만 연도를 넘겨 퇴직하는 것이 유리합니다.</li>
+        <li><strong>IRP 계좌 이전 후 연금 수령:</strong> 일시금 대신 IRP 계좌로 이체하면 즉시 원천징수되지 않고 과세이연됩니다. 55세 이후 연금으로 수령하면 최초 10년은 30%, 10년 초과 수령 시 40%의 세금이 영구 감면됩니다.</li>
+      </ul>
+    </div>
+
+    <!-- Second AdSlot -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+        if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+      </script>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="card">
+      <h2 style="font-size: 1.2rem; margin-bottom: 1rem; color: #0f172a;">❓ 자주 묻는 질문 (FAQ)</h2>
+      <div class="faq-item">
+        <div class="faq-q">Q. 수습기간이나 육아휴직 기간도 퇴직금 산정 재직일수에 들어가나요?</div>
+        <div class="faq-a">A. 네, 수습기간, 인턴기간, 육아휴직, 업무상 부상·질병 휴직 기간 모두 법정 퇴직금 산정을 위한 총 계속근로연수에 전액 합산됩니다. 단, 육아휴직 기간 중의 급여는 평균임금 계산 대상 기간에서 제외되어 휴직 전 3개월 임금을 기준으로 평균임금을 산정하므로 근로자에게 불이익이 없습니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Q. 통상임금이 평균임금보다 높은 경우 어떻게 처리되나요?</div>
+        <div class="faq-a">A. 근로기준법 제19조 제2항에 따라, 산출된 1일 평균임금이 근로자의 1일 통상임금보다 적은 경우에는 통상임금을 1일 평균임금으로 간주하여 퇴직금을 계산해야 합니다. 잔업이 적거나 무급휴직 등으로 평균임금이 낮아진 경우 통상임금 보장을 받을 수 있습니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Q. 퇴직금을 일시금으로 찾으면 IRP 감면 혜택은 아예 사라지나요?</div>
+        <div class="faq-a">A. 퇴직금을 일반 계좌로 일시금 수령했더라도, 퇴직일로부터 60일 이내에 IRP 계좌로 전액 또는 일부를 재입금(과세이연계좌 입금)하면 이미 납부한 퇴직소득세를 전액 환급받고 연금 수령 감면 혜택을 그대로 유지할 수 있습니다.</div>
+      </div>
+    </div>
+
+    <!-- Hub Link Box -->
+    <div class="links-box">
+      <a href="/kor/util/finance-tax-2026/">📊 2026 금융·세무 계산기 허브</a>
+      <a href="/kor/util/corporate-tax-vs-sole-proprietor-conversion-2026/">💼 개인사업자 vs 법인전환 세금 비교</a>
+      <a href="/kor/util/retirement-severance-irp-50-percent-tax-reduction-2026/">💰 IRP 연금수령 50% 세금 감면 가이드</a>
+      <a href="/kor/util/credit-loan-minus-account-dsr-5year-trap-2026/">🏦 마이너스통장 DSR 5년 만기 함정 계산기</a>
+    </div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+  <span id="res-national-tax" style="display:none"></span> <span id="res-local-tax" style="display:none"></span> <span id="res-effective-rate" style="display:none"></span>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 대한민국 세무·금융·복지 핵심 계산기</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">2026년도 국세청·고용노동부 기준 연계 계산 도구:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/kor/util/silson-4th-gen-non-covered-surcharge-switch-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 4세대 실손보험 비급여 할증·전환 손익분기 계산기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">비급여 보험금 100만·150만·300만 원 기준으로 4세대 실손보험의 갱신 보험료를 계산하고, 1·2·3세대 유지 비용과 추가 청구 손익을 비교하세요.</span>
+    </a>
+    <a href="/kor/util/small-business-severance-weekly-holiday-pay-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 소상공인 1인 총인건비 계산기 | 최저시급 10,320원·주휴수당·4대보험·두루누리 80%</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026 최저시급 10,320원(월 209시간 2,156,880원), 주휴수당 82,560원, 인상된 2026 4대보험 사업주 부담(국민연금 4.75%·건보 3.59...</span>
+    </a>
+    <a href="/kor/util/stress-dsr-3-mortgage-limit-refinance-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 스트레스 DSR 주담대 한도·갈아타기 계산기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 하반기 스트레스 DSR 기준으로 주택담보대출 한도를 계산하고, 중도상환수수료 1.20%와 0.65% 예시로 대환 손익분기와 순이자 절감액을 비교하세요.</span>
+    </a>
+    <a href="/kor/util/sunshine-loan-saitdol2-refinance-savings-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 통합 햇살론 일반보증 &amp; 사잇돌2 대환대출 계산기 | 이자 절감 &amp; DSR 시뮬레이션</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 정책서민금융 통합 개편에 따른 통합 햇살론 일반보증(최대 1,500만 원, 연 10% 이내) 및 사잇돌2(최대 3,000만 원) 대환대출 모의계산. 고금리...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>2026 글로벌 세무·금융·복지 계산기 전수 보기 &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</body>
+</html>

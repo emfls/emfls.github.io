@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>2026 금융소득종합과세 & 고배당 분리과세 특례 계산기 (2천만 원·건보료 8.1% 폭탄·ISA 절세)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="description" content="2026년 금융소득 2,000만 원 초과 시 종합소득세 누진세율 및 직장가입자 보수외 건보료(8.13%), 신설 고배당기업 배당소득 분리과세 특례(14%~30%) 비교 및 ISA 절세액 계산기." />
+  <link rel="canonical" href="https://emfls.github.io/kor/util/financial-income-comprehensive-tax-dividend-isa-2026/" />
+  <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+
+  <!-- Preconnects -->
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="2026 금융소득종합과세 & 고배당 분리과세 계산기" />
+  <meta property="og:description" content="2026년 이자·배당 2,000만 원 초과 시 종합소득세 및 건보료 폭탄 방어, 고배당 분리과세 특례 절세액 즉시 비교" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://emfls.github.io/kor/util/financial-income-comprehensive-tax-dividend-isa-2026/" />
+  <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --success: #16a34a;
+      --success-bg: #f0fdf4;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+    .wrapper {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 3rem 1rem;
+    }
+    .header-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+    .header-nav a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 0.75rem;
+      line-height: 1.3;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-box {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-box h2 {
+      font-size: 1.1rem;
+      color: var(--primary-dark);
+      margin-bottom: 0.5rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .badge-fin {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #7dd3fc;
+    }
+    .warning-box {
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      color: #92400e;
+    }
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    @media (max-width: 600px) {
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .result-item {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .result-item .label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+    .result-item .val {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .calculator-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+    }
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      color: #334155;
+    }
+    .form-group .helper-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+    .form-control {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .statutory-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.875rem;
+    }
+    .statutory-table th, .statutory-table td {
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      text-align: left;
+    }
+    .statutory-table th {
+      background: #f8fafc;
+      font-weight: 700;
+    }
+    .faq-section {
+      margin-top: 2.5rem;
+    }
+    .faq-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .faq-question {
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 0.35rem;
+    }
+    .faq-answer {
+      font-size: 0.9rem;
+      color: #475569;
+    }
+    .internal-nav {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+    .internal-nav ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .ad-container {
+      margin: 2rem 0;
+      text-align: center;
+      min-height: 250px;
+    }
+  </style>
+
+  <!-- JSON-LD: WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 금융소득종합과세 및 고배당 분리과세 계산기",
+    "description": "2026년 금융소득 2,000만 원 초과 시 종합과세 세액, 직장인 건강보험료 추가부과(8.13%), 신설 고배당 분리과세 특례 및 ISA 절세 계산기",
+    "url": "https://emfls.github.io/kor/util/financial-income-comprehensive-tax-dividend-isa-2026/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All",
+    "inLanguage": "ko-KR"
+  }
+  </script>
+
+  <!-- JSON-LD: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "금융소득이 2,000만 원을 1원이라도 넘으면 전체가 종합과세되나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "아닙니다. 2,000만 원까지는 14%(지방세 포함 15.4%)로 원천징수 분리과세되고, 2,000만 원을 초과하는 금액만 근로·사업소득 등 다른 종합소득과 합산되어 6%~45% 누진세율이 적용됩니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "2026년 신설된 고배당기업 배당소득 분리과세 특례란 무엇인가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "정부 밸류업 프로그램의 일환으로 배당성향 및 배당수익률 요건을 충족한 고배당 상장기업의 배당소득에 대해 종합과세 합산 대신 별도 분리과세(2,000만 이하 14%, 2천만~3억 20%, 3억~50억 25%, 50억 초과 30%)를 선택할 수 있게 하여 최고 49.5%의 종합소득세율 대비 큰 절세 혜택을 제공합니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "직장인의 경우 금융소득 2,000만 원 초과 시 건강보험료가 얼마나 더 나오나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "연간 근로소득 외 종합소득(금융소득 등)이 2,000만 원을 초과할 경우, 초과금액 전체에 대해 2026년 건강보험료율 7.19%와 장기요양보험료율 13.14%가 적용되어 초과분의 약 8.135%가 매월 보수외소득월액 건강보험료로 추가 고지됩니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "ISA(개인종합자산관리계좌)를 활용하면 금융소득종합과세를 피할 수 있나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "네, ISA 계좌 내에서 발생한 배당 및 이자소득은 일반형 200만 원(서민형 400만 원, 세법개정 확대 시 500만/1,000만 원)까지 전액 비과세되며, 한도 초과분도 무조건 9.9% 분리과세로 종결되어 금융소득종합과세 2,000만 원 한도 및 건보료 부과 대상에서 100% 제외됩니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "금융소득종합과세 대상자가 되면 가족의 건강보험 피부양자 자격도 박탈되나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "건강보험 피부양자는 금융소득이 연 1,000만 원을 초과하는 순간 전액 합산 소득으로 잡히며, 총 연소득이 2,000만 원을 초과하면 피부양자 자격이 즉시 박탈되어 지역가입자로 전환됩니다."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- JSON-LD: BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "홈",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "한국어 계산기 허브",
+        "item": "https://emfls.github.io/kor/util/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "2026 금융소득종합과세 & 고배당 분리과세 계산기",
+        "item": "https://emfls.github.io/kor/util/financial-income-comprehensive-tax-dividend-isa-2026/"
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <div class="wrapper">
+    <nav class="header-nav">
+      <a href="/kor/util/">← 한국어 도구 목록</a>
+      <span>2026 소득세법 & 조특법 개정 기준</span>
+    </nav>
+
+    <h1>2026 금융소득종합과세 & 고배당 분리과세 특례 계산기</h1>
+    <p class="subtitle">2,000만 원 초과 종합과세 · 건보료 8.13% 추가 부담 방어 · 신설 고배당 분리과세 · ISA 절세</p>
+
+    <!-- Ad Slot 1 (Top) -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center; min-height: 250px"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"></ins>
+      <script>
+        if (!['127.0.0.1', 'localhost', ''].includes(window.location.hostname)) {
+          if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+        }
+      </script>
+    </div>
+
+    <!-- Summary Box -->
+    <div class="summary-box">
+      <span class="badge badge-fin" id="res-recommend-badge">2026 세법개정 반영</span>
+      <h2>종합과세 vs 고배당 분리과세 특례 비교</h2>
+      <div class="result-grid">
+        <div class="result-item">
+          <div class="label">종합과세 합산 시 총 부담 (세금+건보)</div>
+          <div class="val" id="res-total-burden" style="color: var(--danger);">5,850,000원</div>
+        </div>
+        <div class="result-item">
+          <div class="label">고배당 분리과세 특례 시 총 부담</div>
+          <div class="val" id="res-special-burden" style="color: var(--success);">4,320,000원</div>
+        </div>
+        <div class="result-item">
+          <div class="label">특례 선택 시 총 절감액</div>
+          <div class="val" id="res-special-saving" style="color: var(--success); font-size: 1.1rem;">-1,530,000원 절감</div>
+        </div>
+        <div class="result-item">
+          <div class="label">직장인 건보료 추가 부과액 (연간)</div>
+          <div class="val" id="res-extra-nhis" style="color: #ea580c; font-size: 1.1rem;">1,220,000원 (월 101,666원)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loss Aversion Warning Box -->
+    <div class="warning-box">
+      <strong>⚠️ 금융소득 2,000만 원 초과 시 세금보다 무서운 '건보료 8.13% 폭탄' 주의!</strong><br />
+      직장인도 이자·배당이 연 2,000만 원을 초과하면 초과액 전체에 대해 <strong>연 8.134%(건보 7.19% + 장기요양 13.14%)</strong>의 보수외 건강보험료가 추가 고지됩니다. 2026년 신설된 <strong>고배당기업 배당 분리과세 특례</strong>나 <strong>ISA 계좌(비과세+9.9% 분리과세)</strong>를 활용하면 종합과세와 건보료 폭탄을 원천 차단할 수 있습니다.
+    </div>
+
+    <!-- Calculator Card -->
+    <div class="calculator-card">
+      <form id="financial-form">
+        <div class="form-group">
+          <label for="financialIncome">연간 총 금융소득 (이자 + 배당금, 원)</label>
+          <input inputmode="decimal" type="number" id="financialIncome" class="form-control" value="35000000" min="0" step="1000000" />
+          <div class="helper-text">국내외 주식 배당금, 은행 이자, 채권 이자 등 연간 총 금융소득.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="highDividendPortion">이 중 '고배당기업' 배당금 (원)</label>
+          <input inputmode="decimal" type="number" id="highDividendPortion" class="form-control" value="20000000" min="0" step="1000000" />
+          <div class="helper-text">밸류업 고배당 상장기업 주식에서 수령한 배당금 (분리과세 특례 대상).</div>
+        </div>
+
+        <div class="form-group">
+          <label for="otherTaxableIncome">타 종합소득 과세표준 (근로/사업소득, 원)</label>
+          <input inputmode="decimal" type="number" id="otherTaxableIncome" class="form-control" value="60000000" min="0" step="5000000" />
+          <div class="helper-text">연말정산 또는 종합소득세 과세표준 (예: 연봉 8천 직장인 약 5~6천만 원).</div>
+        </div>
+
+        <div class="form-group">
+          <label for="isEmployee">직장 건강보험 가입자 여부</label>
+          <select id="isEmployee" class="form-control">
+            <option value="yes" selected>직장가입자 (연 2,000만 원 초과 시 보수외 건보료 추가 부과 대상)</option>
+            <option value="no">지역가입자 / 피부양자</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="isaType">ISA(개인종합자산관리계좌) 유형</label>
+          <select id="isaType" class="form-control">
+            <option value="general" selected>일반형 (비과세 200만 원, 확대안 500만 원)</option>
+            <option value="rural">서민형 / 농어민형 (비과세 400만 원, 확대안 1,000만 원)</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem;">
+          <input type="checkbox" id="isIsaExpanded" checked />
+          <label for="isIsaExpanded" style="margin-bottom: 0; font-size: 0.9rem; cursor: pointer;">
+            2026 세법개정 ISA 비과세 한도 확대안 적용 (일반 500만 / 서민 1,000만 원)
+          </label>
+        </div>
+      </form>
+
+      <!-- Detailed Breakdown Table -->
+      <table class="statutory-table">
+        <thead>
+          <tr>
+            <th>구분</th>
+            <th>산출 금액</th>
+            <th>비고</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>금융소득 소득세 (국세)</td>
+            <td id="res-income-tax">3,200,000원</td>
+            <td>2천만 14% + 초과분 누진세율</td>
+          </tr>
+          <tr>
+            <td>지방소득세 (국세의 10%)</td>
+            <td id="res-local-tax">320,000원</td>
+            <td>지방소득세 1.4%</td>
+          </tr>
+          <tr>
+            <td>보수외소득 건강보험료 (추가분)</td>
+            <td id="res-extra-nhis" style="font-weight: 700; color: #ea580c;">1,220,000원</td>
+            <td>2천만 초과분 × 8.134%</td>
+          </tr>
+          <tr>
+            <td>ISA 계좌 활용 시 예상 절세액</td>
+            <td id="res-isa-saving" style="font-weight: 700; color: var(--success);">+495,000원 절세</td>
+            <td>비과세 한도 내 100% 면제 + 9.9% 분리과세</td>
+          </tr>
+          <tr>
+            <td>ISA 비과세 적용 한도</td>
+            <td id="res-isa-limit">500만 원</td>
+            <td>초과분 9.9% 저율 분리과세</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- SVG Comparison Chart -->
+      <div style="margin-top: 1.5rem; text-align: center;">
+        <h4 style="font-size: 0.95rem; margin-bottom: 0.75rem; color: #334155;">종합과세 합산 총부담 vs 고배당 분리과세 특례 비교</h4>
+        <svg viewBox="0 0 400 110" style="width: 100%; max-width: 460px; height: auto; background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
+          <!-- Comprehensive Bar -->
+          <text x="10" y="32" font-size="12" fill="#dc2626" font-weight="600">종합과세 합산</text>
+          <rect id="bar-comprehensive" x="110" y="18" width="260" height="22" rx="4" fill="#f87171" />
+          
+          <!-- Special Bar -->
+          <text x="10" y="78" font-size="12" fill="#16a34a" font-weight="700">고배당 분리과세</text>
+          <rect id="bar-special" x="110" y="64" width="180" height="22" rx="4" fill="#16a34a" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+      <h2 style="font-size: 1.3rem; margin-bottom: 1rem; color: #0f172a;">2026 금융소득종합과세 자주 묻는 질문 (FAQ)</h2>
+      
+      <div class="faq-item">
+        <div class="faq-question">Q. 배당소득에 Gross-up(배당가산액) 제도가 적용되는 이유는 무엇인가요?</div>
+        <div class="faq-answer">
+          법인이 법인세를 낸 뒤 배당을 지급했는데 주주가 다시 종합소득세를 내면 이중과세가 발생합니다. 이를 조정하기 위해 국내 일반법인 배당금의 11%를 배당가산액으로 합산하여 세금을 계산한 뒤, 가산액만큼 배당세액공제로 차감해 줍니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 고배당기업 배당 분리과세 특례의 신청 기간과 적용 기한은 언제까지인가요?</div>
+        <div class="faq-answer">
+          2026년부터 2028년 12월 31일까지 3년간 한시적으로 적용되며, 5월 종합소득세 신고 시 홈택스에서 고배당기업 배당소득 분리과세 특례 신청서를 작성하여 제출하면 됩니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 해외주식 배당금이나 미국 배당 ETF도 고배당 분리과세 특례를 받을 수 있나요?</div>
+        <div class="faq-answer">
+          아닙니다. 고배당기업 배당소득 분리과세 특례는 국내 자본시장 밸류업 프로그램에 참여하는 국내 상장법인 배당금에 한정되며, 해외주식 직투 배당금이나 해외 상장 ETF는 특례 대상이 아닙니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 보수외소득월액 건강보험료는 언제부터 부과되나요?</div>
+        <div class="faq-answer">
+          국세청이 매년 5월 종합소득세 확정신고 결과를 국민건강보험공단에 통보하면, 그해 11월분 건강보험료부터 이듬해 10월분까지 12개월간 매월 추가 고지됩니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 금융소득종합과세를 피하기 위한 가장 효과적인 포트폴리오 전략은 무엇인가요?</div>
+        <div class="faq-answer">
+          1순위로 비과세·저율분리과세 혜택이 있는 ISA 계좌를 적극 활용하고, 2순위로 비과세종합저축(만 65세 이상)이나 연금저축·IRP로 과세를 이연하며, 3순위로 부부간 금융자산 증여(10년간 6억 원 비과세)를 통해 명의를 분산하는 것이 정석입니다.
+        </div>
+      </div>
+    </section>
+
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="다음 필수 확인 계산기" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">다음 필수 확인 계산기 (Next Check)</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">방금 계산한 결과를 바탕으로 바로 이어서 점검하세요:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/kor/util/health-insurance-extra-income-20m-surcharge-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">직장인 보수외소득 건보료 계산기 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">월급 외 금융·임대소득이 2,000만 원을 넘을 때 추가 건보료를 확인하세요.</span></a>
+    <a href="/kor/util/overseas-stock-250man-tax-loss-harvesting-spouse-gift-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">해외주식 양도세 22% 손익통산 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">배당 대신 시세차익·손익통산으로 절세하는 전략을 비교하세요.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+
+    <!-- Ad Slot 2 (Bottom) -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center; min-height: 250px"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"></ins>
+      <script>
+        if (!['127.0.0.1', 'localhost', ''].includes(window.location.hostname)) {
+          if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+        }
+      </script>
+    </div>
+
+    <!-- Internal Navigation Hub -->
+    <div class="internal-nav">
+      <strong>관련 세무·금융 계산기:</strong>
+      <ul>
+        <li><a href="/kor/util/finance-tax-2026/">2026 세금·연봉·부동산 계산기 모음 허브</a></li>
+        <li><a href="/kor/util/overseas-stock-250man-tax-loss-harvesting-spouse-gift-2026/">해외주식 250만 절세 & 손익통산 계산기</a></li>
+        <li><a href="/kor/util/pension-irp-isa-tax-credit-2026/">연금저축·IRP·ISA 세액공제 900만 원 절세 계산기</a></li>
+        <li><a href="/kor/util/nhis-regional-subscriber-premium-2026/">2026 지역가입자 건강보험료 계산기</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 대한민국 세무·금융·복지 핵심 계산기</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">2026년도 국세청·고용노동부 기준 연계 계산 도구:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/kor/util/gift-tax-deduction-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 가족간 증여세 면제한도 계산기 | 혼인·출산 1억 추가공제 및 세율</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026 statutory calculator for 2026 가족간 증여세 면제한도 계산기 | 혼인·출산 1억 추가공제 및 세율.</span>
+    </a>
+    <a href="/kor/util/gift-tax-marriage-childbirth-3ok-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 혼인·출산 증여세 계산기 | 부부 합산 3억 원 공제</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 혼인·출산 증여세를 계산하세요. 기본공제와 특례공제, 10년 합산 증여, 세대생략 할증, 기한 내 신고 3% 공제와 부부 합산 3억 원 사례를 확인할 수 ...</span>
+    </a>
+    <a href="/kor/util/health-insurance-dependent-disqualification-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 건강보험 피부양자 탈락 판정 및 지역가입자 보험료 계산기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 국민건강보험 피부양자 자격 요건 판정기. 연 소득 2,000만 원, 금융소득 1,000만 원 함정, 사업소득 1원 탈락 기준, 재산세 과세표준 5.4억/9...</span>
+    </a>
+    <a href="/kor/util/health-insurance-extra-income-20m-surcharge-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 직장가입자 보수외소득월액 건강보험료 계산기 (월급 외 소득 2,000만 원 초과)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 국민건강보험법 제69조 및 제71조에 따른 직장가입자 보수외소득(이자·배당·사업·부동산임대·기타소득) 연 2,000만 원 공제 후 초과 소득월액 건강보험료...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>2026 글로벌 세무·금융·복지 계산기 전수 보기 &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</body>
+</html>

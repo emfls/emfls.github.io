@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FHA Loan MIP vs Conventional PMI Calculator (2026) – Lifetime Fee Comparison</title>
+  <meta name="description" content="Compare 2026 FHA 3.5% down vs Conventional loan mortgage insurance. Calculate Upfront MIP (1.75%), annual 0.55% lifetime MIP vs cancellable PMI, and refinance breakeven.">
+  <link rel="canonical" href="https://emfls.github.io/util/us-fha-loan-mip-lifetime-vs-conventional-pmi-3-5-percent-down-2026-calculator/">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+
+  <script>
+  if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+    const adScript = document.createElement('script');
+    adScript.async = true;
+    adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+    adScript.crossOrigin = 'anonymous';
+    document.head.append(adScript);
+  }
+  </script>
+
+  <style id="emfls-responsive-guard">
+    *, *::before, *::after { box-sizing: border-box; }
+    img, canvas, svg, video { max-width: 100%; height: auto; }
+    body, html { overflow-x: hidden; }
+  </style>
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    h1 {
+      font-size: 1.85rem;
+      color: #ffffff;
+      margin: 0 0 0.5rem 0;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin: 0;
+    }
+    .calc-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .calc-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+    }
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+      color: #e2e8f0;
+    }
+    input[type="number"], select {
+      width: 100%;
+      padding: 0.65rem;
+      background: #0b1120;
+      border: 1px solid var(--border);
+      border-radius: 0.375rem;
+      color: #ffffff;
+      font-size: 0.95rem;
+    }
+    input[type="checkbox"] {
+      margin-right: 0.5rem;
+      accent-color: var(--primary);
+    }
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid #293548;
+      font-size: 0.9rem;
+    }
+    .result-row:last-child { border-bottom: none; }
+    .result-val { font-weight: 600; color: #ffffff; }
+    .pill-tag {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .bg-emerald { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .bg-blue { background: rgba(37, 99, 235, 0.2); color: #60a5fa; }
+    .takeaways-box {
+      background: #1e293b;
+      border-left: 4px solid var(--primary);
+      padding: 1.2rem;
+      border-radius: 0.5rem;
+      margin: 1.5rem 0;
+    }
+    .warning-box {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-left: 4px solid var(--danger);
+      padding: 1.2rem;
+      border-radius: 0.5rem;
+      margin: 1.5rem 0;
+    }
+    .stat-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.85rem;
+    }
+    .stat-table th, .stat-table td {
+      padding: 0.65rem;
+      border: 1px solid var(--border);
+      text-align: left;
+    }
+    .stat-table th {
+      background: #111827;
+      color: #94a3b8;
+    }
+    .emfls-ad-slot {
+      margin: 1.5rem auto;
+      text-align: center;
+      max-width: 960px;
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 FHA vs Conventional Loan MIP/PMI Calculator",
+    "url": "https://emfls.github.io/util/us-fha-loan-mip-lifetime-vs-conventional-pmi-3-5-percent-down-2026-calculator/",
+    "description": "Calculate and compare 2026 HUD FHA loan mortgage insurance premiums (UFMIP 1.75% and lifetime annual 0.55%) against cancellable Conventional PMI at 3.5% vs 5% down payment.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can FHA mortgage insurance (MIP) be removed without refinancing in 2026?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For loans originated with less than 10% down payment (such as the standard 3.5% down), FHA annual MIP lasts for the entire life of the 30-year loan and cannot be cancelled automatically. Borrowers must refinance into a conventional loan once they build at least 20% equity to eliminate mortgage insurance."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the 2026 FHA Upfront Mortgage Insurance Premium (UFMIP)?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The 2026 FHA Upfront MIP is 1.75% of the base loan amount. For example, on a $400,000 base loan, the UFMIP is $7,000, which can either be paid in cash at closing or rolled into the total financed loan balance."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When does Conventional PMI drop off automatically?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under the Homeowners Protection Act of 1998, private mortgage insurance (PMI) on conventional loans terminates automatically when the principal balance reaches 78% of the original home value, or upon written homeowner request when equity reaches 80%."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are the 2026 FHA single-family loan limits?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For 2026, the nationwide FHA single-family baseline loan limit floor is $541,287 for low-cost areas and reaches up to $1,249,125 for high-cost housing markets."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is FHA or Conventional cheaper overall?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "FHA loans frequently offer lower interest rates (often 0.50% lower) and lower credit score requirements, making monthly payments lower initially. However, because FHA annual MIP never cancels while Conventional PMI cancels at 78% LTV, conventional loans typically cost less over a 7- to 30-year horizon."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://emfls.github.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Calculators", "item": "https://emfls.github.io/util/" },
+      { "@type": "ListItem", "position": 3, "name": "FHA vs Conventional Calculator 2026", "item": "https://emfls.github.io/util/us-fha-loan-mip-lifetime-vs-conventional-pmi-3-5-percent-down-2026-calculator/" }
+    ]
+  }
+  </script>
+<style id="emfls-cro-calc-first-b2-v1">
+/* EMFLS CRO B2 — mobile calculator-first ordering for non-Patch-B EN templates (CSS-only, reversible) */
+@media (max-width: 760px) {
+  main:has(form, input, select),
+  .tool-shell:has(form, input, select),
+  .container:has(form, input, select) {
+    display: flex;
+    flex-direction: column;
+  }
+  main:has(form, input, select) > *,
+  .tool-shell:has(form, input, select) > *,
+  .container:has(form, input, select) > * {
+    order: 4;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  main:has(form, input, select) > nav,
+  main:has(form, input, select) > header,
+  main:has(form, input, select) > .hero,
+  main:has(form, input, select) > h1,
+  main:has(form, input, select) > .lead,
+  .tool-shell:has(form, input, select) > nav,
+  .tool-shell:has(form, input, select) > header,
+  .tool-shell:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > h1,
+  .tool-shell:has(form, input, select) > .lead,
+  .container:has(form, input, select) > nav,
+  .container:has(form, input, select) > header,
+  .container:has(form, input, select) > .hero,
+  .container:has(form, input, select) > h1,
+  .container:has(form, input, select) > .lead {
+    order: 0;
+  }
+  main:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .tool-shell:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .container:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav) {
+    order: 1;
+  }
+  main:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .tool-shell:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .container:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container) {
+    order: 2;
+  }
+  main:has(form, input, select) > .emfls-next-check,
+  .tool-shell:has(form, input, select) > .emfls-next-check,
+  .container:has(form, input, select) > .emfls-next-check {
+    order: 2;
+  }
+  main:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .tool-shell:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .container:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]) {
+    order: 3;
+  }
+  main:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > .hero,
+  .container:has(form, input, select) > header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+}
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🏠 2026 FHA vs Conventional Loan MIP & PMI Calculator</h1>
+      <p class="subtitle">Compare 3.5% down FHA (1.75% UFMIP + Lifetime 0.55% MIP) vs Conventional Cancellable PMI, Monthly Cashflow, and Refinance Breakeven.</p>
+    </header>
+
+    <aside class="emfls-ad-slot" aria-label="Advertisement">
+      <div style="font-size:0.7rem;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.25rem;">Advertisement</div>
+      <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </aside>
+
+    <div class="takeaways-box">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+        <strong style="color:#60a5fa;font-size:1.1rem;">⚡ Key Takeaway: FHA Rate Discount vs Lifetime MIP Trap</strong>
+        <span id="winnerBadge" class="pill-tag bg-emerald">FHA Cheaper Initially</span>
+      </div>
+      <p id="summaryText" style="margin:0;font-size:0.95rem;color:#cbd5e1;">Comparing monthly payments and lifetime insurance fees...</p>
+    </div>
+
+    <div class="calc-grid">
+      <!-- Inputs -->
+      <div class="card">
+        <h2 style="font-size:1.2rem;margin-top:0;color:#38bdf8;">Loan & Property Inputs</h2>
+
+        <div class="form-group">
+          <label for="homePrice">Home Purchase Price ($)</label>
+          <input inputmode="decimal" type="number" id="homePrice" class="calc-input" value="450000" step="5000">
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+          <div class="form-group">
+            <label for="fhaDownPercent">FHA Down (%)</label>
+            <input inputmode="decimal" type="number" id="fhaDownPercent" class="calc-input" value="3.5" step="0.5">
+          </div>
+          <div class="form-group">
+            <label for="convDownPercent">Conventional Down (%)</label>
+            <input inputmode="decimal" type="number" id="convDownPercent" class="calc-input" value="5.0" step="0.5">
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+          <div class="form-group">
+            <label for="fhaInterestRate">FHA Interest Rate (%)</label>
+            <input inputmode="decimal" type="number" id="fhaInterestRate" class="calc-input" value="6.25" step="0.125">
+          </div>
+          <div class="form-group">
+            <label for="convInterestRate">Conventional Rate (%)</label>
+            <input inputmode="decimal" type="number" id="convInterestRate" class="calc-input" value="6.75" step="0.125">
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+          <div class="form-group">
+            <label for="convPmiAnnualRate">Conv. Annual PMI (%)</label>
+            <input inputmode="decimal" type="number" id="convPmiAnnualRate" class="calc-input" value="0.65" step="0.05">
+          </div>
+          <div class="form-group">
+            <label for="appreciationRate">Annual Appreciation (%)</label>
+            <input inputmode="decimal" type="number" id="appreciationRate" class="calc-input" value="3.5" step="0.5">
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:0.5rem;">
+          <label style="display:flex;align-items:center;cursor:pointer;">
+            <input type="checkbox" id="financeUfmip" checked>
+            <span>Finance 1.75% Upfront MIP into FHA Loan</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Comparison Outputs -->
+      <div class="card">
+        <h2 style="font-size:1.2rem;margin-top:0;color:#38bdf8;">Monthly & Upfront Comparison</h2>
+
+        <div class="result-row">
+          <span>Initial Monthly Payment (P&I + MI)</span>
+          <span><strong id="fhaInitialMonthly" style="color:#34d399;">$0</strong> vs <strong id="convInitialMonthly" style="color:#60a5fa;">$0</strong></span>
+        </div>
+        <div class="result-row">
+          <span>Principal & Interest Only (P&I)</span>
+          <span><span id="fhaMonthlyPI">$0</span> vs <span id="convMonthlyPI">$0</span></span>
+        </div>
+        <div class="result-row">
+          <span>Initial Monthly Insurance (MIP / PMI)</span>
+          <span><span id="fhaMonthlyMip">$0</span> vs <span id="convMonthlyPmi">$0</span></span>
+        </div>
+        <div class="result-row">
+          <span>Upfront Down Payment Paid</span>
+          <span><span id="fhaDownPaid">$0</span> vs <span id="convDownPaid">$0</span></span>
+        </div>
+        <div class="result-row">
+          <span>1.75% Upfront MIP (UFMIP) Financed</span>
+          <span class="result-val" id="ufmipFinanced">$0</span>
+        </div>
+        <div class="result-row">
+          <span>Total Starting Financed Loan</span>
+          <span><span id="fhaTotalLoan">$0</span> vs <span id="convTotalLoan">$0</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lifetime Insurance Comparison Card -->
+    <div class="card" style="margin-top:1.5rem;">
+      <h2 style="font-size:1.2rem;margin-top:0;color:#38bdf8;">📊 Lifetime Mortgage Insurance & Total Cost Timeline</h2>
+
+      <div style="display:grid;grid-template-columns:1fr;gap:1.5rem;">
+        <table class="stat-table">
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>FHA Loan (3.5% Down)</th>
+              <th>Conventional Loan (5.0% Down)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Mortgage Insurance Duration</td>
+              <td id="fhaMipDurationDisplay" style="color:#f87171;font-weight:600;">Lifetime (30 Yrs)</td>
+              <td id="convPmiDropMonthDisplay" style="color:#34d399;font-weight:600;">Month 92 (~7.7 yrs)</td>
+            </tr>
+            <tr>
+              <td>Total Lifetime Mortgage Insurance Paid</td>
+              <td class="result-val" id="fhaTotalMip" style="color:#f87171;">$0</td>
+              <td class="result-val" id="convTotalPmi" style="color:#34d399;">$0</td>
+            </tr>
+            <tr>
+              <td>5-Year Cumulative Payments (P&I + MI + Down)</td>
+              <td id="fha5Yr">$0</td>
+              <td id="conv5Yr">$0</td>
+            </tr>
+            <tr>
+              <td>10-Year Cumulative Payments</td>
+              <td id="fha10Yr">$0</td>
+              <td id="conv10Yr">$0</td>
+            </tr>
+            <tr>
+              <td>30-Year Total Lifetime Cost</td>
+              <td id="fha30Yr">$0</td>
+              <td id="conv30Yr">$0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div style="background:#0f172a;border-radius:0.5rem;padding:1rem;margin-top:1rem;border:1px solid var(--border);">
+        <strong style="color:#e2e8f0;display:block;margin-bottom:0.4rem;">🎯 The "FHA Refinance-Out" Strategic Window</strong>
+        <p style="margin:0;font-size:0.875rem;color:#94a3b8;">
+          Because FHA MIP lasts for the entire 30 years when putting down &lt; 10%, most savvy homeowners use FHA for its lower interest rate and flexible credit underwriting, then refinance into a Conventional loan once equity hits 20% (80% LTV).
+          Based on your home appreciation rate, your loan hits 80% LTV at <strong id="natural80Month" style="color:#38bdf8;">Month 0</strong>.
+          Estimated closing costs to refinance (~2.5%): <strong id="refiCostEst" style="color:#f59e0b;">$0</strong>.
+          Payoff breakeven: <strong id="refiBreakevenDisplay" style="color:#34d399;">0 months</strong>.
+        </p>
+      </div>
+    </div>
+
+    <div class="warning-box">
+      <strong style="color:#ef4444;display:block;margin-bottom:0.4rem;">⚠️ Warning: The FHA 10% Down Payment Cliff</strong>
+      <p style="margin:0;font-size:0.875rem;color:#cbd5e1;">
+        If you put down <strong>10.0% or more</strong> on an FHA loan, annual MIP automatically cancels after <strong>11 years</strong>.
+        However, if you put down <strong>9.9% or less</strong> (such as the standard 3.5%), MIP is locked for the entire 30-year duration.
+        Never stay in an FHA loan for 30 years without evaluating refinancing once your equity reaches 20%.
+      </p>
+    </div>
+
+    <!-- Statutory Table -->
+    <div class="card" style="margin-top:1.5rem;">
+      <h3 style="font-size:1.1rem;margin-top:0;color:#e2e8f0;">2026 HUD FHA Statutory Limits & Parameters</h3>
+      <table class="stat-table">
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>2026 Statutory Value</th>
+            <th>Regulatory Reference</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>National Baseline Loan Limit Floor</td>
+            <td>$541,287</td>
+            <td>HUD Mortgagee Letter (Single-Family)</td>
+          </tr>
+          <tr>
+            <td>High-Cost Area Loan Limit Ceiling</td>
+            <td>$1,249,125</td>
+            <td>150% of National Conforming Limit</td>
+          </tr>
+          <tr>
+            <td>Upfront MIP (UFMIP)</td>
+            <td>1.75% of Base Loan</td>
+            <td>HUD 24 CFR § 203.284</td>
+          </tr>
+          <tr>
+            <td>Annual MIP (&lt;= $726k, &gt;95% LTV)</td>
+            <td>0.55% per annum</td>
+            <td>HUD Reduced MIP Rate (March 2023–2026)</td>
+          </tr>
+          <tr>
+            <td>Conventional PMI Cancellation Threshold</td>
+            <td>78% LTV Automatic / 80% Request</td>
+            <td>Homeowners Protection Act of 1998</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Navigation Hubs -->
+    <nav class="emfls-hub-nav" aria-label="Country Tax and Financial Hubs" style="margin:1.5rem 0;padding:1rem;background:#111827;border-radius:8px;border:1px solid #1f2937;font-size:0.85rem;">
+      <strong style="color:#e5e7eb;display:block;margin-bottom:0.5rem;">Explore Tier-1 Country Statutory Calculators & Directories:</strong>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <a href="/util/us-tax-finance-calculators-2026/" style="color:#3b82f6;text-decoration:none;">🇺🇸 US Tax & Finance Hub (2026)</a>
+        <a href="/util/uk-tax-finance-calculators-2026/" style="color:#3b82f6;text-decoration:none;">🇬🇧 UK Tax & HMRC Hub (2026/27)</a>
+        <a href="/util/au-tax-finance-calculators-2026/" style="color:#3b82f6;text-decoration:none;">🇦🇺 AU Tax & ATO Hub (FY26/27)</a>
+        <a href="/util/ca-tax-finance-calculators-2026/" style="color:#3b82f6;text-decoration:none;">🇨🇦 CA Tax & CRA Hub (2026)</a>
+        <a href="/util/" style="color:#3b82f6;text-decoration:none;">🌐 All Web Tools & Calculators</a>
+      </div>
+    </nav>
+
+    <aside class="emfls-ad-slot" aria-label="Advertisement">
+      <div style="font-size:0.7rem;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.25rem;">Advertisement</div>
+      <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </aside>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 United States Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for United States:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/us-firpta-15-percent-10-percent-foreign-seller-real-estate-withholding-8288b-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 IRS FIRPTA Withholding &amp; Form 8288-B Release Calculator</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate 0%, 10%, or 15% FIRPTA withholding for a foreign seller, compare it with estimated...</span>
+    </a>
+    <a href="/util/us-florida-save-our-homes-3-percent-cap-500000-portability-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Florida Save Our Homes &amp; $500,000 Portability Calculator 2026</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate Florida</span>
+    </a>
+    <a href="/util/us-form-2210-underpayment-estimated-tax-penalty-quarterly-safe-harbor-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 IRS Form 2210 Underpayment Penalty &amp; Safe Harbor Calculator</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate your 2026 federal underpayment penalty by installment, check the IRS safe harbor, a...</span>
+    </a>
+    <a href="/util/us-franchise-investment-royalty-ebitda-payback-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 US Franchise Investment, Royalty Fee, Store EBITDA &amp; Payback Calculator</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculates FDD Item 7 total franchise investment, SBA 7(a) financing debt service, top-line ...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</body>
+</html>

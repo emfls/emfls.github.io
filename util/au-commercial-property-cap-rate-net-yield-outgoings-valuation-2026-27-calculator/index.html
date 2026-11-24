@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <title>2026–27 Australia Commercial Property Cap Rate & Valuation Calculator | Net Yield & 1.35x DSCR Floor</title>
+  <meta name="description" content="Calculate Australian commercial real estate market valuations using capitalisation rates, net operating income (NOI), outgoings recovery (net vs gross lease), and bank 1.35x DSCR stress test.">
+  <link rel="canonical" href="https://emfls.github.io/util/au-commercial-property-cap-rate-net-yield-outgoings-valuation-2026-27-calculator/">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Australia Commercial Property Cap Rate & Valuation Calculator 2026-27",
+    "url": "https://emfls.github.io/util/au-commercial-property-cap-rate-net-yield-outgoings-valuation-2026-27-calculator/",
+    "description": "Calculates commercial property valuations in Australia using cap rates, NOI outgoings recovery, and commercial bank 1.35x DSCR covenant floor.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://emfls.github.io/" },
+      { "@type": "ListItem", "position": 2, "name": "Calculators", "item": "https://emfls.github.io/util/" },
+      { "@type": "ListItem", "position": 3, "name": "AU Commercial Property Cap Rate Calculator", "item": "https://emfls.github.io/util/au-commercial-property-cap-rate-net-yield-outgoings-valuation-2026-27-calculator/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a capitalisation rate (cap rate) in Australian commercial property?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The capitalisation rate is the ratio between a property's Net Operating Income (NOI) and its current market value (Cap Rate = NOI / Property Value). A lower cap rate reflects higher capital value and lower perceived risk, while a higher cap rate indicates higher yields or greater leasing risk."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why do Australian commercial lenders require a minimum 1.30x to 1.35x DSCR?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Australian commercial banks (such as CBA, NAB, ANZ, Westpac) require a Debt Service Coverage Ratio (DSCR = NOI / Annual Debt Service) of at least 1.30x to 1.35x to ensure the rental income provides a 30% to 35% safety buffer against tenant default, interest rate hikes, or extended vacancy."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between a Net Lease and a Gross Lease?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "In a Net Lease (typical in Australian industrial, retail, and office commercial leases), the tenant pays passing rent plus 100% of building outgoings (council rates, water rates, insurance, management). In a Gross Lease, the landlord absorbs all outgoings, resulting in lower net operating income."
+        }
+      }
+    ]
+  }
+  </script>
+  <style>
+    :root {
+      --primary: #065f46;
+      --primary-light: #ecfdf5;
+      --accent: #d97706;
+      --text: #1f2937;
+      --border: #e5e7eb;
+      --bg-card: #ffffff;
+      --danger: #dc2626;
+      --success: #16a34a;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.6; color: var(--text); background: #f8fafc; padding: 20px 12px; }
+    .container { max-width: 960px; margin: 0 auto; }
+    header { margin-bottom: 24px; text-align: center; }
+    h1 { font-size: 1.85rem; color: var(--primary); margin-bottom: 12px; line-height: 1.3; }
+    .subtitle { font-size: 1.05rem; color: #4b5563; max-width: 820px; margin: 0 auto; }
+    .ad-slot-card { min-height: 250px; background: rgba(0,0,0,0.02); border: 1px dashed #cbd5e1; border-radius: 8px; margin: 24px 0; display: flex; align-items: center; justify-content: center; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 24px; margin-bottom: 32px; }
+    @media (min-width: 768px) { .grid { grid-template-columns: 1fr 1fr; } }
+    .card { background: var(--bg-card); border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+    .card h2 { font-size: 1.35rem; color: var(--primary); margin-bottom: 16px; border-bottom: 2px solid var(--primary-light); padding-bottom: 8px; }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-weight: 600; font-size: 0.92rem; margin-bottom: 6px; color: #374151; }
+    .input-desc { font-size: 0.8rem; color: #6b7280; margin-top: 4px; }
+    input[type="number"], select { width: 100%; padding: 10px 14px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 1rem; }
+    input[type="number"]:focus, select:focus { outline: none; border-color: var(--primary); ring: 2px var(--primary-light); }
+    .status-badge { padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 0.95rem; font-weight: 600; }
+    .badge-pass { background: #f0fdf4; border: 1px solid #86efac; color: var(--success); }
+    .badge-fail { background: #fef2f2; border: 1px solid #fecaca; color: var(--danger); }
+    .result-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+    .result-row.total { border-top: 2px solid var(--primary); border-bottom: 2px solid var(--primary); font-weight: 700; font-size: 1.25rem; color: var(--primary); margin: 12px 0; }
+    .dscr-box { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 16px; margin-top: 20px; }
+    .dscr-title { font-weight: 700; color: #1e293b; font-size: 1.05rem; margin-bottom: 8px; }
+    .explanation { background: #fff; border-radius: 12px; padding: 24px; border: 1px solid var(--border); margin-top: 28px; }
+    .explanation h3 { color: var(--primary); margin: 20px 0 10px 0; font-size: 1.2rem; }
+    .explanation p, .explanation li { font-size: 0.95rem; color: #4b5563; margin-bottom: 10px; }
+    .explanation ul { padding-left: 20px; }
+    .hub-links { margin-top: 32px; padding: 18px; background: #f1f5f9; border-radius: 8px; text-align: center; }
+    .hub-links a { color: var(--primary); font-weight: 600; text-decoration: underline; margin: 0 12px; }
+  </style>
+<style id="emfls-cro-calc-first-b2-v1">
+/* EMFLS CRO B2 — mobile calculator-first ordering for non-Patch-B EN templates (CSS-only, reversible) */
+@media (max-width: 760px) {
+  main:has(form, input, select),
+  .tool-shell:has(form, input, select),
+  .container:has(form, input, select) {
+    display: flex;
+    flex-direction: column;
+  }
+  main:has(form, input, select) > *,
+  .tool-shell:has(form, input, select) > *,
+  .container:has(form, input, select) > * {
+    order: 4;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  main:has(form, input, select) > nav,
+  main:has(form, input, select) > header,
+  main:has(form, input, select) > .hero,
+  main:has(form, input, select) > h1,
+  main:has(form, input, select) > .lead,
+  .tool-shell:has(form, input, select) > nav,
+  .tool-shell:has(form, input, select) > header,
+  .tool-shell:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > h1,
+  .tool-shell:has(form, input, select) > .lead,
+  .container:has(form, input, select) > nav,
+  .container:has(form, input, select) > header,
+  .container:has(form, input, select) > .hero,
+  .container:has(form, input, select) > h1,
+  .container:has(form, input, select) > .lead {
+    order: 0;
+  }
+  main:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .tool-shell:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .container:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav) {
+    order: 1;
+  }
+  main:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .tool-shell:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .container:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container) {
+    order: 2;
+  }
+  main:has(form, input, select) > .emfls-next-check,
+  .tool-shell:has(form, input, select) > .emfls-next-check,
+  .container:has(form, input, select) > .emfls-next-check {
+    order: 2;
+  }
+  main:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .tool-shell:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .container:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]) {
+    order: 3;
+  }
+  main:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > .hero,
+  .container:has(form, input, select) > header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+}
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Australia Commercial Property Cap Rate & Valuation Calculator</h1>
+      <p class="subtitle">Institutional-grade commercial real estate underwriting: NOI calculation, net vs gross outgoings recovery, cap rate valuation, and Australian commercial bank 1.35x DSCR stress covenants.</p>
+    </header>
+
+    <!-- Top Display Ad Slot -->
+    <div class="ad-slot-card">
+      <ins class="adsbygoogle"
+           style="display:block;min-height:250px;width:100%"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+        if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        }
+      </script>
+    </div>
+
+    <div class="grid">
+      <!-- Input Card -->
+      <div class="card">
+        <h2>Income & Property Parameters</h2>
+
+        <div class="form-group">
+          <label for="passingGrossRent">Gross Passing Rental Income ($/yr)</label>
+          <input inputmode="decimal" type="number" id="passingGrossRent" value="180000" min="10000" step="5000">
+          <div class="input-desc">Annual contractual rent paid by commercial tenant(s).</div>
+        </div>
+
+        <div class="form-group">
+          <label for="outgoings">Annual Building Outgoings ($/yr)</label>
+          <input inputmode="decimal" type="number" id="outgoings" value="28000" min="0" step="1000">
+          <div class="input-desc">Council rates, water rates, building insurance, land tax & management.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="leaseType">Lease Type & Outgoings Recovery</label>
+          <select id="leaseType">
+            <option value="1.0" selected>Net Lease (100% Outgoings Recovered)</option>
+            <option value="0.75">Semi-Gross Lease (75% Recovered)</option>
+            <option value="0.50">Semi-Gross Lease (50% Recovered)</option>
+            <option value="0.0">Gross Lease (0% Recovered - Owner Pays)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="capRate">Capitalisation Rate (Cap Rate %)</label>
+          <input inputmode="decimal" type="number" id="capRate" value="6.25" min="2.0" max="15.0" step="0.25">
+          <div class="input-desc">Target yield reflecting asset class, location, and weighted average lease expiry (WALE).</div>
+        </div>
+
+        <div class="form-group">
+          <label for="lvr">Target Loan-to-Value Ratio (LVR %)</label>
+          <input inputmode="decimal" type="number" id="lvr" value="65" min="0" max="80" step="5">
+          <div class="input-desc">Commercial bank gearing standard (typically 60%–70% max).</div>
+        </div>
+
+        <div class="form-group">
+          <label for="interestRate">Commercial Loan Interest Rate (% p.a.)</label>
+          <input inputmode="decimal" type="number" id="interestRate" value="6.75" min="1.0" max="15.0" step="0.25">
+          <div class="input-desc">Commercial bank base rate + lending margin.</div>
+        </div>
+      </div>
+
+      <!-- Result Card -->
+      <div class="card">
+        <h2>Valuation & Bank Underwriting</h2>
+
+        <div id="dscrStatus" class="status-badge badge-pass">
+          ✅ <strong>Lender DSCR Passed: 1.48x</strong> (Exceeds Australian commercial bank 1.35x covenant floor).
+        </div>
+
+        <div class="result-row">
+          <span>Net Operating Income (NOI)</span>
+          <strong id="outNoi">$174,600</strong>
+        </div>
+        <div class="result-row total">
+          <span>Implied Commercial Valuation</span>
+          <strong id="outValuation">$2,793,600</strong>
+        </div>
+
+        <div class="result-row">
+          <span>Net Initial Yield (NIY)</span>
+          <strong id="outNetYield">6.25%</strong>
+        </div>
+        <div class="result-row">
+          <span>Gross Yield</span>
+          <strong id="outGrossYield">6.44%</strong>
+        </div>
+
+        <div class="result-row">
+          <span>Required Bank Debt (LVR Gearing)</span>
+          <strong id="outLoanAmount">$1,815,840</strong>
+        </div>
+        <div class="result-row">
+          <span>Required Equity Contribution</span>
+          <strong id="outEquity">$977,760</strong>
+        </div>
+        <div class="result-row">
+          <span>Annual Debt Service (P&I 25yr)</span>
+          <strong id="outDebtService">$150,680</strong>
+        </div>
+
+        <div class="dscr-box">
+          <div class="dscr-title">Bank Covenant Stress Test (DSCR)</div>
+          <div class="result-row" style="border-bottom:none">
+            <span>Debt Service Coverage Ratio</span>
+            <strong id="outDscr" style="font-size:1.15rem;color:var(--primary)">1.48x</strong>
+          </div>
+          <div class="result-row" style="border-bottom:none;padding-top:4px">
+            <span>Bank Minimum Covenant Floor</span>
+            <strong>1.35x</strong>
+          </div>
+          <div class="result-row" style="border-bottom:none;padding-top:4px">
+            <span>Max Bank Borrowing Capacity</span>
+            <strong id="outMaxBorrowing">$1,561,000</strong>
+          </div>
+          <div class="result-row" style="border-bottom:none;padding-top:4px">
+            <span>Pre-Tax Cash Flow After Debt</span>
+            <strong id="outCashFlow">$23,920 / yr</strong>
+          </div>
+          <div class="result-row" style="border-bottom:none;padding-top:4px">
+            <span>Cash-on-Cash Return</span>
+            <strong id="outCashOnCash">2.45%</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Display Ad Slot -->
+    <div class="ad-slot-card">
+      <ins class="adsbygoogle"
+           style="display:block;min-height:250px;width:100%"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+        if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        }
+      </script>
+    </div>
+
+    <!-- Commercial Underwriting Guide -->
+    <section class="explanation">
+      <h3>Australian Commercial Property Underwriting Principles</h3>
+      <p>Commercial real estate in Sydney, Melbourne, Brisbane, Perth, and regional Australia is appraised primarily through the <strong>Income Capitalisation Method</strong> rather than comparable residential sales.</p>
+
+      <h3>1. Capitalisation Rate (Cap Rate) Dynamics</h3>
+      <p>The Cap Rate represents the unleveraged rate of return expected on an investment property:</p>
+      <ul>
+        <li><strong>Formula:</strong> $	ext{Property Value} = rac{	ext{Net Operating Income (NOI)}}{	ext{Cap Rate}}$</li>
+        <li><strong>Compression:</strong> When cap rates compress (fall from 6.5% to 5.5%), commercial property valuations increase sharply.</li>
+        <li><strong>Decompression:</strong> Higher interest rates force cap rates upward, lowering asset valuations unless accompanied by strong rental growth.</li>
+      </ul>
+
+      <h3>2. The Bank 1.35x DSCR Covenant Rule</h3>
+      <p>Unlike residential mortgages governed by APRA serviceability buffers, Australian commercial property loans are assessed on the property's ability to service debt independently:</p>
+      <ul>
+        <li><strong>Debt Service Coverage Ratio (DSCR):</strong> Calculated as $rac{	ext{NOI}}{	ext{Annual Debt Service}}$.</li>
+        <li><strong>The 1.35x Floor:</strong> Commercial lenders (CBA, NAB, Westpac, ANZ, Macquarie) mandate a minimum 1.30x to 1.35x DSCR. If your projected debt service pushes DSCR below 1.35x, banks will reduce the allowable loan amount (forcing higher cash equity) or require personal cross-collateral guarantees.</li>
+      </ul>
+
+      <div class="hub-links">
+        <strong>Explore Real Estate & Financial Hubs:</strong>
+        <a href="/util/">All Financial Calculators</a> |
+        <a href="/util/au-commercial-property-cap-rate-net-yield-outgoings-valuation-2026-27-calculator/">AU Commercial Property Cap Rate</a> |
+        <a href="/util/uk-leasehold-extension-80-year-marriage-value-reform-2026-27-calculator/">UK Leasehold Extension</a>
+      </div>
+    </section>
+  </div>
+
+  <script type="module">
+    import { calcAuCommercialProperty } from './model.mjs';
+
+    function fmtAud(n) {
+      return '$' + Math.round(n).toLocaleString('en-AU');
+    }
+
+    function update() {
+      const passingGrossRent = parseFloat(document.getElementById('passingGrossRent').value) || 0;
+      const outgoings = parseFloat(document.getElementById('outgoings').value) || 0;
+      const recoveryRate = parseFloat(document.getElementById('leaseType').value) || 1.0;
+      const capRate = (parseFloat(document.getElementById('capRate').value) || 6.25) / 100;
+      const lvr = (parseFloat(document.getElementById('lvr').value) || 65) / 100;
+      const interestRate = (parseFloat(document.getElementById('interestRate').value) || 6.75) / 100;
+
+      const res = calcAuCommercialProperty({
+        passingGrossRent,
+        outgoings,
+        outgoingsRecoveryRate: recoveryRate,
+        capRate,
+        lvr,
+        interestRate,
+        loanTermYears: 25,
+        isInterestOnly: false
+      });
+
+      const dscrBadge = document.getElementById('dscrStatus');
+      if (res.passesLenderDscr) {
+        dscrBadge.className = 'status-badge badge-pass';
+        dscrBadge.innerHTML = '✅ <strong>Lender DSCR Passed: ' + res.dscr + 'x</strong> (Exceeds Australian commercial bank 1.35x covenant floor).';
+      } else {
+        dscrBadge.className = 'status-badge badge-fail';
+        dscrBadge.innerHTML = '⚠️ <strong>Covenant Warning: DSCR ' + res.dscr + 'x</strong> (Below bank 1.35x floor. Requires higher cash equity or loan paydown).';
+      }
+
+      document.getElementById('outNoi').textContent = fmtAud(res.noi);
+      document.getElementById('outValuation').textContent = fmtAud(res.impliedValuation);
+      document.getElementById('outNetYield').textContent = res.netInitialYield.toFixed(2) + '%';
+      document.getElementById('outGrossYield').textContent = res.grossYield.toFixed(2) + '%';
+      document.getElementById('outLoanAmount').textContent = fmtAud(res.loanAmount);
+      document.getElementById('outEquity').textContent = fmtAud(res.equityRequired);
+      document.getElementById('outDebtService').textContent = fmtAud(res.annualDebtService);
+      document.getElementById('outDscr').textContent = res.dscr + 'x';
+      document.getElementById('outMaxBorrowing').textContent = fmtAud(res.maxBorrowingCapacity);
+      document.getElementById('outCashFlow').textContent = fmtAud(res.netCashFlowAfterDebt) + ' / yr';
+      document.getElementById('outCashOnCash').textContent = res.cashOnCashReturn.toFixed(2) + '%';
+    }
+
+    const inputs = ['passingGrossRent', 'outgoings', 'leaseType', 'capRate', 'lvr', 'interestRate'];
+    inputs.forEach(id => {
+      document.getElementById(id).addEventListener('input', update);
+    });
+    update();
+  </script>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 Australian Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for Australian:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/au-commonwealth-seniors-health-card-cshc-income-test-deeming-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">ATO 2026–27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Australia CSHC Income Test &amp; Deeming Calculator 2026–27</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Check the September 2026 Commonwealth Seniors Health Card income test, pension deeming, rema...</span>
+    </a>
+    <a href="/util/au-contractor-abn-daily-rate-vs-payg-salary-super-12-percent-leave-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">ATO 2026–27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">AU Contractor ABN Daily Rate vs PAYG Salary (Super 12% &amp; Leave) 2026–27 Calculator</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate the exact minimum contractor ABN daily and hourly rate (ex-GST &amp; inc-GST) to match...</span>
+    </a>
+    <a href="/util/au-debt-consolidation-mortgage-refinance-30-year-interest-trap-vs-personal-loan-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">ATO 2026–27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">AU Debt Consolidation 30-Year Interest Trap vs Personal Loan Calculator (2026–27)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate the ASIC Moneysmart 30-year interest trap of rolling credit card debt into your Au...</span>
+    </a>
+    <a href="/util/au-debt-recycling-non-deductible-home-loan-to-tax-deductible-investment-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">ATO 2026–27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Australia Debt Recycling Calculator 2026–27 | Offset vs ETF Investing</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare debt recycling, a 100% mortgage offset and direct ETF investing. Estimate Australian...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</body>
+</html>

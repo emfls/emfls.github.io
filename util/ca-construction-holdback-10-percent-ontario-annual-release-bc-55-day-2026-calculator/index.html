@@ -1,0 +1,525 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <title>2026 Canada Construction Holdback (10%) & Cash-Flow Release Calculator | Ontario Annual Reform vs BC 55-Day | EMFLS</title>
+  <meta name="description" content="Calculate statutory Canadian construction holdbacks under the Ontario Construction Act (January 1, 2026 Mandatory Annual Release Reform) and British Columbia Builders Lien Act (45-day lien period, 55-day release, and mandatory joint trust accounts for projects >$100,000). Model working capital unlocking, line-of-credit carrying cost savings, and milestone release schedules.">
+  <link rel="canonical" href="https://emfls.github.io/util/ca-construction-holdback-10-percent-ontario-annual-release-bc-55-day-2026-calculator/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://emfls.github.io/util/ca-construction-holdback-10-percent-ontario-annual-release-bc-55-day-2026-calculator/">
+  <meta property="og:title" content="2026 Canada Construction Holdback (10%) & Cash-Flow Release Calculator | Ontario Annual Reform vs BC 55-Day | EMFLS">
+  <meta property="og:description" content="Model Canadian 10% statutory construction holdback cash flow, Ontario 2026 mandatory annual release schedules, and BC 55-day release calendars.">
+  <!-- Google Analytics GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 Canada Construction Holdback (10%) & Cash-Flow Release Calculator",
+    "url": "https://emfls.github.io/util/ca-construction-holdback-10-percent-ontario-annual-release-bc-55-day-2026-calculator/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All",
+    "description": "Calculates mandatory 10% construction holdbacks, Ontario 2026 mandatory annual holdback release interest savings, and BC Builders Lien Act 55-day release calendars."
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the statutory construction holdback in Canada?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under provincial construction lien legislation—such as Section 22 of the Ontario Construction Act and Section 4 of the British Columbia Builders Lien Act—each payer in the construction pyramid (owner, general contractor, subcontractor) is legally mandated to retain 10% of the price of services or materials provided on each progress billing. This holdback acts as a statutory trust fund protecting potential lien claimants."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the Ontario January 1, 2026 Mandatory Annual Holdback Release Reform?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Effective January 1, 2026, amendments to the Ontario Construction Act make annual or phased release of holdback mandatory for contracts that exceed one year or specify phased milestones. Owners can no longer contractually withhold holdback until ultimate multi-year project completion. Within 14 days of the contract anniversary, a Form 6 notice must be published, triggering mandatory owner release within 60 to 74 days, followed by contractor flow-down within 14 days, saving contractors substantial financing interest."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does holdback release work in British Columbia under the Builders Lien Act?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "In British Columbia, upon issuance of a Certificate of Completion (Form 3) or project substantial performance, a 45-day statutory lien filing period begins. On Day 55 (the 10-day buffer period following the 45-day lien window), if no liens have been registered against title, the holdback may safely be paid out to the contractor."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When is a mandatory joint holdback account required in British Columbia?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under Section 5 of the BC Builders Lien Act, for all private construction projects where the prime contract value exceeds $100,000, the owner and general contractor must establish a joint interest-bearing holdback trust account at a financial institution. Failure to deposit holdback into this joint account constitutes a breach of statutory trust."
+        }
+      }
+    ]
+  }
+  </script>
+  <style>
+    :root {
+      --primary: #c2410c;
+      --primary-accent: #ea580c;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --border: #e2e8f0;
+      --success: #15803d;
+      --danger: #b91c1c;
+      --radius: 8px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding-bottom: 60px; }
+    header.site-header { background: #431407; color: #fff; padding: 14px 20px; border-bottom: 1px solid #7c2d12; }
+    .header-inner { max-width: 1080px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .site-brand { font-weight: 700; font-size: 1.15rem; color: #fff; text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links a { color: #fed7aa; text-decoration: none; font-size: 0.9rem; margin-left: 16px; }
+    .nav-links a:hover { color: #fff; }
+    .container { max-width: 1080px; margin: 24px auto; padding: 0 16px; }
+    .hero-section { margin-bottom: 24px; }
+    .hero-section h1 { font-size: clamp(1.6rem, 3.5vw, 2.3rem); line-height: 1.25; margin-bottom: 10px; color: #0f172a; }
+    .hero-section p { color: var(--text-muted); font-size: 1.05rem; }
+    .ad-slot-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 8px; margin: 20px 0; min-height: 250px; text-align: center; }
+    .calc-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 24px; margin-bottom: 40px; }
+    @media (max-width: 820px) {
+      .calc-layout { grid-template-columns: minmax(0, 1fr); }
+      .form-row { grid-template-columns: 1fr; }
+    }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); min-width: 0; overflow: hidden; }
+    .card h2 { font-size: 1.3rem; margin-bottom: 16px; color: var(--primary); border-bottom: 2px solid #fff7ed; padding-bottom: 8px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; color: #334155; }
+    .form-group input, .form-group select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .btn-calc { width: 100%; background: var(--primary); color: #fff; padding: 12px; border: none; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.15s ease; margin-top: 8px; }
+    .btn-calc:hover { background: var(--primary-accent); }
+    .summary-box { padding: 16px; border-radius: 6px; margin-bottom: 16px; border-left: 4px solid var(--primary); background: #fff7ed; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+    .stat-item { background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid #f1f5f9; }
+    .stat-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; }
+    .stat-val { font-size: 1.15rem; font-weight: 700; color: #0f172a; margin-top: 2px; }
+    .table-responsive { width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 16px; }
+    table.data-table { width: 100%; min-width: 320px; border-collapse: collapse; font-size: 0.85rem; }
+    table.data-table th, table.data-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); text-align: left; }
+    table.data-table th { background: #f1f5f9; color: #334155; font-weight: 600; }
+    .guide-article { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; line-height: 1.75; color: #334155; }
+    .guide-article h2 { font-size: 1.5rem; color: #0f172a; margin: 28px 0 12px; }
+    .guide-article h3 { font-size: 1.2rem; color: #1e293b; margin: 20px 0 8px; }
+    .guide-article p { margin-bottom: 14px; }
+    .guide-article ul, .guide-article ol { margin-left: 24px; margin-bottom: 16px; }
+    .guide-article li { margin-bottom: 6px; }
+    .faq-card { margin-top: 30px; border-top: 1px solid var(--border); padding-top: 24px; }
+    .faq-item { margin-bottom: 18px; }
+    .faq-q { font-weight: 700; color: #0f172a; font-size: 1.05rem; margin-bottom: 6px; }
+    .disclaimer-box { margin-top: 28px; padding: 16px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 6px; font-size: 0.85rem; color: #92400e; }
+    footer.site-footer { max-width: 1080px; margin: 40px auto 0; padding: 20px 16px; border-top: 1px solid var(--border); text-align: center; font-size: 0.85rem; color: #64748b; }
+  </style>
+<style id="emfls-cro-calc-first-b2-v1">
+/* EMFLS CRO B2 — mobile calculator-first ordering for non-Patch-B EN templates (CSS-only, reversible) */
+@media (max-width: 760px) {
+  main:has(form, input, select),
+  .tool-shell:has(form, input, select),
+  .container:has(form, input, select) {
+    display: flex;
+    flex-direction: column;
+  }
+  main:has(form, input, select) > *,
+  .tool-shell:has(form, input, select) > *,
+  .container:has(form, input, select) > * {
+    order: 4;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  main:has(form, input, select) > nav,
+  main:has(form, input, select) > header,
+  main:has(form, input, select) > .hero,
+  main:has(form, input, select) > h1,
+  main:has(form, input, select) > .lead,
+  .tool-shell:has(form, input, select) > nav,
+  .tool-shell:has(form, input, select) > header,
+  .tool-shell:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > h1,
+  .tool-shell:has(form, input, select) > .lead,
+  .container:has(form, input, select) > nav,
+  .container:has(form, input, select) > header,
+  .container:has(form, input, select) > .hero,
+  .container:has(form, input, select) > h1,
+  .container:has(form, input, select) > .lead {
+    order: 0;
+  }
+  main:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .tool-shell:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .container:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav) {
+    order: 1;
+  }
+  main:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .tool-shell:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .container:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container) {
+    order: 2;
+  }
+  main:has(form, input, select) > .emfls-next-check,
+  .tool-shell:has(form, input, select) > .emfls-next-check,
+  .container:has(form, input, select) > .emfls-next-check {
+    order: 2;
+  }
+  main:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .tool-shell:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .container:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]) {
+    order: 3;
+  }
+  main:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > .hero,
+  .container:has(form, input, select) > header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+}
+</style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="site-brand">EMFLS</a>
+      <nav class="nav-links">
+        <a href="/">Home</a>
+        <a href="/util/ca-2026-cra-tax-rrsp-tfsa-real-estate-calculators/">Canada Pillar Hub</a>
+        <a href="/util/roi-calculator/">Financial Models</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="hero-section">
+      <p style="font-size:0.85rem; color:#ea580c; font-weight:600; text-transform:uppercase; margin-bottom:4px;">Ontario Construction Act 2026 & BC Builders Lien Act</p>
+      <h1>2026 Canada Construction Holdback (10%) & Cash-Flow Calculator</h1>
+      <p>Model mandatory 10% statutory holdbacks, calculate interest carrying savings under the Ontario January 1, 2026 Mandatory Annual Release Reform, and establish statutory BC 55-day holdback release dates and mandatory joint trust account requirements.</p>
+    </div>
+
+    <!-- Top Display Ad Slot -->
+    <div class="ad-slot-card">
+      <ins class="adsbygoogle"
+           style="display:block;min-height:250px;width:100%"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+        if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        }
+      </script>
+    </div>
+
+    <div class="calc-layout">
+      <!-- Inputs -->
+      <div class="card">
+        <h2>Contract Parameters</h2>
+        <form id="holdbackForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="province">Governing Province</label>
+              <select id="province">
+                <option value="ON" selected>Ontario (Construction Act - 2026 Annual Release)</option>
+                <option value="BC">British Columbia (Builders Lien Act - 55-Day Release)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="totalContract">Total Contract Value ($ CAD)</label>
+              <input inputmode="decimal" type="number" id="totalContract" value="3000000" step="50000">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="duration">Project Duration (Years)</label>
+              <input inputmode="decimal" type="number" id="duration" value="3" min="1" max="10">
+            </div>
+            <div class="form-group">
+              <label for="locRate">Line of Credit Carrying Rate (% p.a.)</label>
+              <input inputmode="decimal" type="number" id="locRate" value="7.5" step="0.25">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="startDate">Contract Commencement Date</label>
+            <input type="date" id="startDate" value="2026-02-01">
+          </div>
+
+          <button type="submit" class="btn-calc">Model Holdback Cash Flow</button>
+        </form>
+      </div>
+
+      <!-- Results -->
+      <div class="card">
+        <h2>Holdback & Interest Impact</h2>
+        <div class="summary-box">
+          <div style="font-size:0.85rem; color:#9a3412; text-transform:uppercase; font-weight:600;">Total 10% Statutory Holdback Retained</div>
+          <div id="resTotalHoldback" style="font-size:1.85rem; font-weight:800; color:#7c2d12; margin-top:2px;">$300,000 CAD</div>
+          <div id="resSavingsHeader" style="font-size:0.85rem; color:#475569; margin-top:2px;">Financing Interest Saved via Annual Release: $22,500 CAD</div>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-item">
+            <div class="stat-label">Annual Progress Holdback</div>
+            <div id="resAnnualHoldback" class="stat-val">$100,000 / yr</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">End-of-Project Carrying Cost</div>
+            <div id="resTraditionalCost" class="stat-val">$33,750 CAD</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Ontario Interest Savings</div>
+            <div id="resInterestSaved" class="stat-val" style="color:var(--success);">$22,500 CAD</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">BC Joint Account Rule</div>
+            <div id="resBcAccount" class="stat-val" style="font-size:1.0rem;">Mandatory (&gt;$100k)</div>
+          </div>
+        </div>
+
+        <h3 id="scheduleTitle" style="margin-top:20px; font-size:0.95rem; color:#334155;">Ontario Annual Release Statutory Calendar</h3>
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Year</th>
+                <th>Holdback</th>
+                <th>Form 6 Deadline</th>
+                <th>Release Date</th>
+                <th>Interest Saved</th>
+              </tr>
+            </thead>
+            <tbody id="scheduleBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Display Ad Slot -->
+    <div class="ad-slot-card">
+      <ins class="adsbygoogle"
+           style="display:block;min-height:250px;width:100%"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+        if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        }
+      </script>
+    </div>
+
+    <!-- In-depth E-E-A-T Guide Article (1,200+ words) -->
+    <article class="guide-article">
+      <h2>Comprehensive Guide to Canadian Construction Holdbacks & 2026 Reforms</h2>
+      <p>In the Canadian construction sector, the <strong>statutory construction holdback</strong> is one of the most powerful legal instruments balancing commercial liquidity with trade contractor security. Codified across provincial lien statutes—principally the <strong>Ontario Construction Act (R.S.O. 1990, c. C.30)</strong> and the <strong>British Columbia Builders Lien Act (S.B.C. 1997, c. 45)</strong>—the law mandates that every payer in the construction hierarchy retain <strong>10% of the value of services or materials supplied</strong> on every progress billing.</p>
+
+      <h3>1. The Purpose and Structure of the 10% Statutory Holdback</h3>
+      <p>The construction industry operates on a pyramid credit structure: project owners contract with general contractors (GCs), who engage specialized trade subcontractors, who in turn hire sub-subcontractors and purchase building materials from commercial suppliers. Because downstream trades provide valuable labour and materials on credit before being paid, the 10% holdback serves two critical statutory functions:</p>
+      <ul>
+        <li><strong>Capped Owner Liability:</strong> By retaining 10% of each invoice, the project owner establishes a statutory trust fund. If an insolvent general contractor fails to pay downstream subtrades, the owner’s maximum exposure to construction liens registered against the property title is strictly limited to that 10% holdback fund, provided the owner complied with all statutory retention rules.</li>
+        <li><strong>Security Fund for Unpaid Trades:</strong> Subcontractors, suppliers, and construction workers hold statutory lien rights against the holdback fund, ensuring a guaranteed pool of capital is preserved to satisfy valid lien claims.</li>
+      </ul>
+
+      <h3>2. The Ontario January 1, 2026 Mandatory Annual Release Reform</h3>
+      <p>Historically, one of the greatest financial burdens imposed on Canadian general contractors and civil engineering firms was the indefinite locking of holdback funds on multi-year infrastructure, commercial towers, and transit projects. Contracts lasting 3 to 5 years routinely trapped millions of dollars in 10% holdbacks until the entire project achieved substantial performance.</p>
+      <p>To eliminate this liquidity trap and curb predatory retention clauses, Ontario enacted historic amendments to the Construction Act taking effect on <strong>January 1, 2026</strong>. Under the 2026 statutory regime:</p>
+      <ul>
+        <li><strong>Mandatory Annual Release:</strong> For all construction contracts with a completion period exceeding one year (or contracts structured with phased milestones), holdback release is now <em>mandatory on an annual basis</em>. Project owners and developers can no longer contractually enforce clauses deferring holdback until final project completion.</li>
+        <li><strong>Statutory Timeline and Form 6 Notice:</strong> Within 14 days following each contract anniversary date, the payer must publish a formal Notice of Contract Anniversary (Form 6) in a recognized construction trade newspaper. Provided no liens have been preserved, the owner must release the accrued 10% annual holdback within 60 to 74 days after notice publication.</li>
+        <li><strong>14-Day Mandatory Flow-Down:</strong> General contractors receiving released holdback funds must flow down corresponding payments to their subcontractors within <strong>14 calendar days</strong> of receipt, ensuring liquidity immediately cascades through the supply chain.</li>
+      </ul>
+
+      <h3>3. Quantifying Contractor Carrying Cost Savings</h3>
+      <p>Because contractors and trades must finance operating cash flow, payroll, and materials while 10% of their invoices are held back, they typically borrow against commercial bank lines of credit (often priced at Prime + 2.0% to 3.0%, or approximately 7.0% to 8.5% per annum). Releasing holdbacks annually instead of holding them until project termination dramatically reduces cumulative debt interest carrying costs:</p>
+      <p style="text-align:center; font-weight:700; background:#fff7ed; padding:12px; border-radius:6px; font-family:monospace; color:#9a3412;">
+        Carrying Interest Saved = Holdback<sub>annual</sub> &times; Line of Credit Rate &times; Years Accelerated
+      </p>
+      <p>On a $3,000,000 multi-year project with a 3-year timeline at 7.5% interest, annual release unlocks $100,000 in Year 1 (accelerated by 2 years) and $100,000 in Year 2 (accelerated by 1 year), generating direct interest savings of <strong>$22,500 CAD</strong> while dramatically reducing working capital stress.</p>
+
+      <h3>4. British Columbia Builders Lien Act (The 55-Day Release Rule)</h3>
+      <p>In British Columbia, holdback administration follows the rigorous procedural timeline of the <em>Builders Lien Act</em>:</p>
+      <ul>
+        <li><strong>Certificate of Completion (Form 3):</strong> Once a payment certifier issues a Certificate of Completion (or substantial performance is achieved), a <strong>45-day statutory lien filing window</strong> commences. All trades must register their claims of lien within this 45-day window.</li>
+        <li><strong>The 55-Day Holdback Release Date:</strong> The statutory holdback period officially expires 55 days after the Certificate of Completion is issued (providing a 10-day buffer following the 45-day lien period). If no claims of lien have been filed, the payer may safely release the full 10% holdback.</li>
+        <li><strong>Mandatory Joint Trust Account (Section 5):</strong> On all private construction contracts where the contract value exceeds <strong>$100,000 CAD</strong>, the owner and general contractor must open a joint interest-bearing holdback trust account at a financial institution. The owner must deposit the 10% holdback into this account, which can only be operated with the joint signatures of both owner and contractor.</li>
+      </ul>
+
+      <div class="faq-card">
+        <h2>Frequently Asked Questions (FAQ)</h2>
+        <div class="faq-item">
+          <div class="faq-q">1. Can an owner and contractor contractually waive the 10% holdback requirement?</div>
+          <div class="faq-a">No. Provincial construction lien legislation is public policy law. Section 5 of the Ontario Construction Act explicitly renders void any contract clause or agreement that purports to waive, diminish, or contract out of the 10% statutory holdback obligation.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">2. Does the holdback apply to HST / GST on construction billings?</div>
+          <div class="faq-a">The holdback is calculated on the value of the services and materials supplied <em>before</em> sales taxes (HST/GST). However, when the holdback is subsequently released and invoiced, the applicable tax (such as 13% HST in Ontario or 5% GST in BC) must be accounted for according to Canada Revenue Agency (CRA) guidelines.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">3. What happens if a subcontractor preserves a lien before holdback release?</div>
+          <div class="faq-a">If a claim of lien is preserved or registered against property title prior to holdback release, the owner must immediately suspend payment of the holdback. The owner can only release funds once the lien is discharged by payment, settled, or vacated by paying security into court under Section 44 of the Act.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">4. What is a "Finishing Holdback" in Ontario?</div>
+          <div class="faq-a">Under Section 22(2) of the Ontario Act, if substantial performance is certified but minor deficient or incomplete items remain, the owner must release the main 10% holdback while retaining a separate 10% "Finishing Holdback" calculated solely on the estimated value of the remaining work.</div>
+        </div>
+      </div>
+
+      <div class="disclaimer-box">
+        <strong>Statutory Notice:</strong> This interactive calculator is designed for construction commercial managers, estimators, and project accountants. It provides financial projections based on Canadian construction lien statutes. Lien deadlines, trust account protocols, and dispute adjudication mechanisms vary by province and contract language. Consult a specialized Canadian construction lawyer regarding specific contractual disputes or lien preservation deadlines.
+      </div>
+    </article>
+  
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 Canadian Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for Canadian:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/ca-consumer-proposal-vs-bankruptcy-surplus-income-2026-osb-directive-11r2-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">CA Consumer Proposal vs Bankruptcy Calculator (2026 OSB Directive 11R2)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate Canadian personal bankruptcy surplus income payments under 2026 OSB Directive No. ...</span>
+    </a>
+    <a href="/util/ca-corporate-class-swap-etf-vs-dividend-etf-non-registered-after-tax-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada Swap ETF vs Dividend ETF After-Tax Calculator (2026)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare corporate-class total-return swap ETFs with distributing ETFs after Canadian taxes, ...</span>
+    </a>
+    <a href="/util/ca-cpp-age-60-vs-65-vs-70-breakeven-calculator-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada CPP Age 60 vs 65 vs 70 Break-Even &amp; CPP2 Calculator (2026)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare Canada Pension Plan payments at 60, 65 and 70, find the month delaying CPP catches u...</span>
+    </a>
+    <a href="/util/ca-cpp-oas-start-age-60-65-70-breakeven-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada CPP &amp; OAS Break-Even Calculator 2026 | Start at 60, 65 or 70</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare Canadian CPP and OAS start ages, monthly payments, inflation-indexed lifetime income...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 EMFLS Financial Tools. Built for Canadian construction executives, trade contractors, and quantity surveyors.</p>
+  </footer>
+
+  <script type="module">
+    import { calculateConstructionHoldback } from './model.mjs';
+
+    const form = document.getElementById('holdbackForm');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      runCalc();
+    });
+
+    function runCalc() {
+      const province = document.getElementById('province').value;
+      const totalContract = parseFloat(document.getElementById('totalContract').value) || 0;
+      const duration = parseInt(document.getElementById('duration').value, 10) || 1;
+      const locRate = parseFloat(document.getElementById('locRate').value) || 0;
+      const startDate = document.getElementById('startDate').value || '2026-02-01';
+
+      const res = calculateConstructionHoldback({
+        province,
+        totalContractValue: totalContract,
+        projectDurationYears: duration,
+        lineOfCreditInterestRate: locRate,
+        startDate
+      });
+
+      document.getElementById('resTotalHoldback').textContent = '$' + res.totalHoldback.toLocaleString() + ' CAD';
+      document.getElementById('resSavingsHeader').textContent = `Financing Interest Saved via Annual Release: $${res.ontarioAnnualReform.totalInterestSaved.toLocaleString()} CAD`;
+
+      document.getElementById('resAnnualHoldback').textContent = '$' + res.annualHoldbackAccrued.toLocaleString() + ' / yr';
+      document.getElementById('resTraditionalCost').textContent = '$' + res.traditionalTotalInterestCost.toLocaleString() + ' CAD';
+      document.getElementById('resInterestSaved').textContent = '$' + res.ontarioAnnualReform.totalInterestSaved.toLocaleString() + ' CAD';
+
+      const bcAccEl = document.getElementById('resBcAccount');
+      if (res.bcBuildersLien.mandatoryJointAccountRequired) {
+        bcAccEl.textContent = 'Mandatory (>$100k)';
+        bcAccEl.style.color = 'var(--primary)';
+      } else {
+        bcAccEl.textContent = 'Not Required (<$100k)';
+        bcAccEl.style.color = 'var(--text-muted)';
+      }
+
+      const tbody = document.getElementById('scheduleBody');
+      tbody.innerHTML = '';
+      if (province === 'ON') {
+        document.getElementById('scheduleTitle').textContent = 'Ontario Annual Release Statutory Calendar (2026 Reform)';
+        res.ontarioAnnualReform.schedule.forEach(row => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>Year ${row.year}</td>
+            <td>$${row.holdbackRetained.toLocaleString()}</td>
+            <td>${row.form6NoticeDeadline}</td>
+            <td>${row.mandatoryReleaseDate}</td>
+            <td style="color:var(--success); font-weight:700;">$${row.interestSaved.toLocaleString()}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } else {
+        document.getElementById('scheduleTitle').textContent = 'British Columbia 55-Day Release Calendar (Builders Lien Act)';
+        const tr1 = document.createElement('tr');
+        tr1.innerHTML = `
+          <td>Completion</td>
+          <td>$${res.totalHoldback.toLocaleString()}</td>
+          <td>Certificate Issued</td>
+          <td>${res.bcBuildersLien.substantialCompletionDate}</td>
+          <td>Day 0</td>
+        `;
+        const tr2 = document.createElement('tr');
+        tr2.innerHTML = `
+          <td>Lien Window</td>
+          <td>45 Days</td>
+          <td>Lien Filing Deadline</td>
+          <td>${res.bcBuildersLien.lienFiling45DayDeadline}</td>
+          <td>Day 45</td>
+        `;
+        const tr3 = document.createElement('tr');
+        tr3.innerHTML = `
+          <td>Holdback Release</td>
+          <td>55 Days</td>
+          <td>Safe Release Date</td>
+          <td>${res.bcBuildersLien.holdbackRelease55DayDate}</td>
+          <td style="color:var(--success); font-weight:700;">Day 55</td>
+        `;
+        tbody.appendChild(tr1);
+        tbody.appendChild(tr2);
+        tbody.appendChild(tr3);
+      }
+    }
+
+    runCalc();
+  </script>
+</body>
+</html>

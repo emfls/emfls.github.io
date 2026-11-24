@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canada Year-End Tax-Loss Selling T+1 Dec 30 Superficial Loss Calculator 2026</title>
+  <meta name="description" content="Calculate Canadian tax-loss selling under T+1 settlement (Dec 30 deadline), CRA 61-day superficial loss window (safe rebuy Jan 31), Form T1A 3-year carryback, and TFSA loss traps.">
+  <link rel="canonical" href="https://emfls.github.io/util/ca-year-end-tax-loss-selling-t-plus-1-dec-30-superficial-loss-30-day-2026-calculator/">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","G-QP5Q67GE5B");</script>
+  <script>
+  if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+    const adScript = document.createElement('script');
+    adScript.async = true;
+    adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+    adScript.crossOrigin = 'anonymous';
+    document.head.append(adScript);
+  }
+  </script>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card: #111827;
+      --border: #1e293b;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --primary: #3b82f6;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 1rem;
+    }
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+    h1 {
+      font-size: 1.6rem;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    p.lead {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      overflow-x: hidden;
+      margin-bottom: 1.5rem;
+    }
+    h2 {
+      font-size: 1.15rem;
+      margin-bottom: 1rem;
+      color: #e5e7eb;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+    input, select {
+      width: 100%;
+      background: #1f2937;
+      border: 1px solid #374151;
+      color: #fff;
+      padding: 0.6rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      color: #fff;
+      font-size: 0.9rem;
+    }
+    input[type="checkbox"] {
+      width: auto;
+      transform: scale(1.2);
+    }
+    .results-hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .stat-card {
+      background: #1f2937;
+      padding: 0.85rem;
+      border-radius: 6px;
+      border-left: 3px solid var(--primary);
+    }
+    .stat-card.success { border-left-color: var(--success); }
+    .stat-card.warning { border-left-color: var(--warning); }
+    .stat-card.danger { border-left-color: var(--danger); }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .stat-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      margin-top: 0.25rem;
+    }
+    .stat-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+    .warning-box {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid var(--danger);
+      border-radius: 6px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .warning-box h3 {
+      color: var(--danger);
+      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .warning-box p {
+      color: #d1d5db;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+    th, td {
+      padding: 0.65rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      background: #1f2937;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    details {
+      background: #1f2937;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      border: 1px solid var(--border);
+    }
+    summary {
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: #e5e7eb;
+    }
+    details p {
+      padding: 0.5rem 1rem 0.75rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .emfls-ad-slot {
+      margin: 1.5rem 0;
+      background: #111827;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem;
+      text-align: center;
+    }
+    .ad-label {
+      font-size: 0.7rem;
+      color: #4b5563;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.25rem;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .links a {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      margin-right: 1rem;
+    }
+    .links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Canada Year-End Tax-Loss Selling T+1 Superficial Loss Calculator 2026",
+    "url": "https://emfls.github.io/util/ca-year-end-tax-loss-selling-t-plus-1-dec-30-superficial-loss-30-day-2026-calculator/",
+    "description": "Calculate Canadian tax-loss selling under T+1 settlement (Dec 30 deadline), CRA 61-day superficial loss window (safe rebuy Jan 31), Form T1A 3-year carryback, and TFSA loss traps.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the last trade date for 2026 Canadian tax-loss selling under T+1?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under North American T+1 settlement rules, the last trade date for a trade to settle in 2026 (on Thursday, December 31) is Wednesday, December 30, 2026. Trades placed on December 31 will settle on Monday, January 4, 2027 and will not count for the 2026 tax year."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does the CRA 61-day Superficial Loss Rule work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under Income Tax Act s. 54, if you or an affiliated person (such as your spouse, a controlled corporation, or your TFSA/RRSP) buys identical property within 30 days before or 30 days after settlement, and still owns it at the end of the window, the capital loss is denied."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When is the earliest safe date to rebuy shares sold on 30 December 2026?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For a trade settling on 31 December 2026, the 30-day post-settlement window ends on 30 January 2027. The earliest safe rebuy date is Sunday, 31 January 2027 (Day 31), or market open on Monday, 1 February 2027."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is transferring losing shares into a TFSA or RRSP disastrous?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "If you transfer shares at a loss in-kind to a TFSA or RRSP, or repurchase in a registered account within 30 days, the superficial loss rule applies. However, because registered accounts have no tax ACB, the denied loss cannot be added to the cost basis—the tax deduction is PERMANENTLY DESTROYED."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I carry back 2026 capital losses to prior tax years?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Under CRA Form T1A (Request for Loss Carryback), net capital losses realized in 2026 can be carried back up to 3 calendar years (2025, 2024, or 2023) to offset prior taxable capital gains and trigger an immediate cash tax refund."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Calculators",
+        "item": "https://emfls.github.io/util/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Canada Tax-Loss Selling Calculator",
+        "item": "https://emfls.github.io/util/ca-year-end-tax-loss-selling-t-plus-1-dec-30-superficial-loss-30-day-2026-calculator/"
+      }
+    ]
+  }
+  </script>
+<style id="emfls-cro-calc-first-b2-v1">
+/* EMFLS CRO B2 — mobile calculator-first ordering for non-Patch-B EN templates (CSS-only, reversible) */
+@media (max-width: 760px) {
+  main:has(form, input, select),
+  .tool-shell:has(form, input, select),
+  .container:has(form, input, select) {
+    display: flex;
+    flex-direction: column;
+  }
+  main:has(form, input, select) > *,
+  .tool-shell:has(form, input, select) > *,
+  .container:has(form, input, select) > * {
+    order: 4;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  main:has(form, input, select) > nav,
+  main:has(form, input, select) > header,
+  main:has(form, input, select) > .hero,
+  main:has(form, input, select) > h1,
+  main:has(form, input, select) > .lead,
+  .tool-shell:has(form, input, select) > nav,
+  .tool-shell:has(form, input, select) > header,
+  .tool-shell:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > h1,
+  .tool-shell:has(form, input, select) > .lead,
+  .container:has(form, input, select) > nav,
+  .container:has(form, input, select) > header,
+  .container:has(form, input, select) > .hero,
+  .container:has(form, input, select) > h1,
+  .container:has(form, input, select) > .lead {
+    order: 0;
+  }
+  main:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .tool-shell:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .container:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav) {
+    order: 1;
+  }
+  main:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .tool-shell:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .container:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container) {
+    order: 2;
+  }
+  main:has(form, input, select) > .emfls-next-check,
+  .tool-shell:has(form, input, select) > .emfls-next-check,
+  .container:has(form, input, select) > .emfls-next-check {
+    order: 2;
+  }
+  main:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .tool-shell:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .container:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]) {
+    order: 3;
+  }
+  main:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > .hero,
+  .container:has(form, input, select) > header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Canada Year-End Tax-Loss Selling & Superficial Loss Calculator (2026)</h1>
+    <p class="lead">Model T+1 settlement deadlines (Dec 30), CRA 61-day superficial loss windows (Jan 31 safe rebuy), Form T1A 3-year carryback, and TFSA registered traps.</p>
+  </header>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+  </aside>
+
+  <!-- Loss Aversion Warning Box -->
+  <div class="warning-box">
+    <h3>⚠️ The TFSA / RRSP Permanent Loss Destruction Trap</h3>
+    <p>Never transfer losing stocks in-kind into your TFSA or RRSP, and never buy back identical shares in your registered account within 30 days! Under <strong>ITA s. 54</strong>, the superficial loss rule triggers, but because registered accounts are tax-exempt, the denied loss <strong>CANNOT be added to your ACB</strong>. Your capital loss deduction is <strong>permanently destroyed and lost forever</strong>.</p>
+  </div>
+
+  <div class="grid">
+    <!-- Input Panel -->
+    <section class="panel" aria-labelledby="input-heading">
+      <h2 id="input-heading">1. Position & Trade Details</h2>
+      
+      <div class="form-group">
+        <label for="input-loss">Total Unrealized Capital Loss ($ CAD)</label>
+        <input inputmode="decimal" type="number" id="input-loss" value="20000" min="500" max="5000000" step="500">
+        <span style="font-size:0.75rem;color:var(--muted)">Adjusted Cost Base (ACB) minus Current Market Value</span>
+      </div>
+
+      <div class="form-group">
+        <label for="input-gains-2026">2026 Realized Capital Gains ($ CAD)</label>
+        <input inputmode="decimal" type="number" id="input-gains-2026" value="8000" min="0" max="5000000" step="500">
+        <span style="font-size:0.75rem;color:var(--muted)">Gains already locked in this year</span>
+      </div>
+
+      <div class="form-group">
+        <label for="input-date">Execution Trade Date (2026)</label>
+        <input type="date" id="input-date" value="2026-12-30" min="2026-12-01" max="2026-12-31">
+        <span style="font-size:0.75rem;color:var(--muted)"><strong>Deadline: Dec 30, 2026</strong> (Dec 31 trade settles in 2027!)</span>
+      </div>
+
+      <div class="form-group">
+        <label for="input-prov">Province of Residence</label>
+        <select id="input-prov">
+          <option value="ON" selected>Ontario (53.53% Top Rate)</option>
+          <option value="BC">British Columbia (53.50% Top Rate)</option>
+          <option value="QC">Quebec (53.31% Top Rate)</option>
+          <option value="AB">Alberta (48.00% Top Rate)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Prior Net Taxable Capital Gains (Form T1A Carryback)</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.5rem;margin-top:0.25rem;">
+          <div>
+            <span style="font-size:0.7rem;color:var(--muted)">2025 Gains</span>
+            <input inputmode="decimal" type="number" id="input-gains-2025" value="5000" min="0" step="500">
+          </div>
+          <div>
+            <span style="font-size:0.7rem;color:var(--muted)">2024 Gains</span>
+            <input inputmode="decimal" type="number" id="input-gains-2024" value="4000" min="0" step="500">
+          </div>
+          <div>
+            <span style="font-size:0.7rem;color:var(--muted)">2023 Gains</span>
+            <input inputmode="decimal" type="number" id="input-gains-2023" value="2000" min="0" step="500">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-label" for="input-superficial">
+          <input type="checkbox" id="input-superficial">
+          <span>Repurchased identical security within 30-day window</span>
+        </label>
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-label" for="input-reg-trap">
+          <input type="checkbox" id="input-reg-trap">
+          <span style="color:#f87171">Repurchased inside TFSA / RRSP / FHSA</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- Results Panel -->
+    <section class="panel" aria-labelledby="results-heading">
+      <h2 id="results-heading">2. Tax Recovery & Safe Calendar</h2>
+
+      <div id="box-disallowed" style="display:none;background:#7f1d1d;padding:0.75rem 1rem;border-radius:6px;font-size:0.85rem;color:#fecaca;margin-bottom:1rem;">
+        <span id="out-disallowed-msg">Warning message</span>
+      </div>
+
+      <div class="results-hero">
+        <div class="stat-card success">
+          <div class="stat-label">Total Cash Tax Recovery</div>
+          <div class="stat-value" id="out-cash-recovery">$0</div>
+          <div class="stat-sub">Immediate 2026 savings + T1A refund</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">2026 Offset Savings</div>
+          <div class="stat-value" id="out-2026-savings">$0</div>
+          <div class="stat-sub">Reduces April 2027 tax balance</div>
+        </div>
+      </div>
+
+      <div class="results-hero">
+        <div class="stat-card warning">
+          <div class="stat-label">Form T1A 3-Year Carryback Refund</div>
+          <div class="stat-value" id="out-t1a-refund">$0</div>
+          <div class="stat-sub">Cash cheque from CRA (2023-2025)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Remaining Loss Carryforward</div>
+          <div class="stat-value" id="out-carryforward">$0</div>
+          <div class="stat-sub">Shields future capital gains forever</div>
+        </div>
+      </div>
+
+      <div class="panel" style="padding:0.75rem;margin-bottom:1rem;background:#1e293b;">
+        <h3 style="font-size:0.85rem;color:#e5e7eb;margin-bottom:0.4rem;">CRA Settlement & Safe Rebuy Calendar:</h3>
+        <p style="font-size:0.85rem;margin-bottom:0.25rem;">• Official Settlement Date: <strong style="color:#60a5fa" id="out-settle-date">2026-12-31</strong></p>
+        <p style="font-size:0.85rem;">• <strong>Earliest Safe Rebuy Date:</strong> <strong style="color:var(--success)" id="out-rebuy-date">2027-01-31</strong> (Day 31)</p>
+      </div>
+
+      <!-- Chart Container -->
+      <div id="chart-container" style="background:#111827;border-radius:6px;padding:0.5rem;border:1px solid var(--border)"></div>
+    </section>
+  </div>
+
+  <!-- Statutory Reference Table -->
+  <section class="panel" aria-labelledby="table-heading">
+    <h2 id="table-heading">CRA Tax-Loss Selling Statutory Milestones (ITA s. 54)</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Rule / Milestone</th>
+            <th>2026 Statutory Date</th>
+            <th>CRA Regulatory Provision</th>
+            <th>Financial Impact</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Last Trade Date (T+1)</strong></td>
+            <td><strong>Wednesday, Dec 30, 2026</strong></td>
+            <td>TSX / NYSE T+1 Settlement</td>
+            <td>Trades on Dec 31 settle in 2027 (loss delayed)</td>
+          </tr>
+          <tr>
+            <td><strong>2026 Settlement Date</strong></td>
+            <td>Thursday, Dec 31, 2026</td>
+            <td>ITA s. 248(1) Disposition</td>
+            <td>Final day to trigger 2026 tax year loss</td>
+          </tr>
+          <tr>
+            <td><strong>Superficial 61-Day Window</strong></td>
+            <td>Dec 1, 2026 to Jan 30, 2027</td>
+            <td>ITA s. 54 "Superficial Loss"</td>
+            <td>Affiliated buying in window denies loss deduction</td>
+          </tr>
+          <tr>
+            <td><strong>Earliest Safe Rebuy Date</strong></td>
+            <td><strong>Sunday, Jan 31, 2027</strong></td>
+            <td>Day 31 After Settlement</td>
+            <td>Rebuying on/after this date protects deduction</td>
+          </tr>
+          <tr>
+            <td><strong>Form T1A Carryback</strong></td>
+            <td>2025, 2024, or 2023</td>
+            <td>ITA s. 111(1)(b)</td>
+            <td>Recovers income taxes paid in prior 3 years</td>
+          </tr>
+          <tr>
+            <td><strong>TFSA / RRSP In-Kind Transfer</strong></td>
+            <td>PROHIBITED FOR LOSSES</td>
+            <td>ITA s. 40(2)(g)(i)</td>
+            <td><strong>Permanent loss destruction ($0 tax relief)</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Statutory FAQ & Regulatory Guide -->
+  <section class="panel" aria-labelledby="faq-heading">
+    <h2 id="faq-heading">Frequently Asked Questions: Canadian Tax-Loss Selling</h2>
+    <details>
+      <summary>Can my spouse buy the shares while I claim the capital loss?</summary>
+      <p>No. Under ITA s. 54, an "affiliated person" includes your spouse or common-law partner, a corporation you or your spouse control, and a trust where you or your spouse are beneficiaries. If your spouse buys the identical security within the 61-day window, your capital loss is disallowed.</p>
+    </details>
+    <details>
+      <summary>Can I maintain market exposure during the 30-day superficial loss window?</summary>
+      <p>Yes, by purchasing a non-identical replacement asset. For example, if you sell an S&P 500 index ETF (e.g., VFV) at a loss, you can immediately buy a total US market ETF (e.g., VUN) or a NASDAQ-100 ETF. Because the underlying benchmark index is distinct, CRA does not consider them identical property.</p>
+    </details>
+    <details>
+      <summary>How do I receive money from the Form T1A 3-year loss carryback?</summary>
+      <p>When you file your 2026 T1 General Income Tax Return, you include Form T1A (Request for Loss Carryback). You specify how much allowable capital loss to apply against net taxable capital gains in 2025, 2024, or 2023. The CRA recalculates your prior tax returns and issues a refund via direct deposit or cheque.</p>
+    </details>
+    <details>
+      <summary>What is an Allowable Capital Loss (ACL)?</summary>
+      <p>In Canada, capital losses are subject to the capital gains inclusion rate (50%). An Allowable Capital Loss (ACL) is 50% of your total realized capital loss. Only allowable capital losses can be used to offset taxable capital gains.</p>
+    </details>
+    <details>
+      <summary>Do Canadian mutual funds or ETF distributions affect year-end loss harvesting?</summary>
+      <p>Yes. Canadian mutual funds and ETFs frequently distribute annual taxable capital gains in mid-to-late December. If you hold shares on the record date, you receive the distribution regardless of whether you sell before Dec 30. Check the fund issuer's estimated distribution schedule before selling.</p>
+    </details>
+  </section>
+
+  <section class="panel" aria-labelledby="scope-title">
+    <h2 id="scope-title">Assumptions & Statutory Notes</h2>
+    <p>Calculations use statutory rules under the Canadian Income Tax Act (ITA s. 54, 40(2), 111(1)). T+1 settlement applies to Canadian (TSX) and US securities. Marginal tax rates use combined 2026 federal and provincial top tax brackets. Consult a Chartered Professional Accountant (CPA) for complex tax situations.</p>
+    <nav class="links" aria-label="Related calculators">
+      <a href="/util/compound-interest/">Compound Interest Calculator</a>
+      <a href="/util/loan-payment-calculator/">Loan Payment Calculator</a>
+      <a href="/util/irs-tax-brackets-401k-catchup-calculator/">IRS Tax Brackets & 401(k) Catch-Up</a>
+    </nav>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+  </aside>
+  <footer>Estimate only · emfls.github.io</footer>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 Canadian Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for Canadian:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/ca-acb-superficial-loss-30-day-etf-capital-gains-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada ACB &amp; Superficial Loss Calculator 2026 | ETF ROC</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate Canadian weighted-average ACB, ETF return of capital, phantom distributions and 61...</span>
+    </a>
+    <a href="/util/ca-accelerated-biweekly-vs-monthly-mortgage-amortization-interest-savings-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada Accelerated Bi-Weekly vs Monthly Mortgage Calculator 2026</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate Canadian semi-annual compounding mortgage interest savings. Compare Regular Bi-Wee...</span>
+    </a>
+    <a href="/util/ca-alberta-land-title-transfer-mortgage-registration-fee-vs-bc-ontario-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Alberta Land Title &amp; Mortgage Fee Calculator vs. BC &amp; Ontario</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate Alberta land title and mortgage registration fees and compare 2026 closing taxes i...</span>
+    </a>
+    <a href="/util/ca-alternative-minimum-tax-amt-20-5-percent-181440-exemption-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada Alternative Minimum Tax Calculator 2026 | 20.5% AMT</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate Canada’s 2026 alternative minimum tax using the 20.5% rate and $181,440 federal exe...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+<script type="module" src="./app.js"></script>
+</body>
+</html>

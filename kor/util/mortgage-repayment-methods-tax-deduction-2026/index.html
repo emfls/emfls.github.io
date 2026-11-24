@@ -1,0 +1,606 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>2026 주택담보대출 상환방식 비교 계산기 (원리금균등 vs 원금균등 vs 체증식 & 연말정산 2,000만 소득공제)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="description" content="2026년 주택담보대출 원리금균등·원금균등·체증식 월 상환액 및 총 이자 비교, 장기주택저당차입금 기준시가 6억 이하 최대 2,000만 원 이자 소득공제 환급액 계산기." />
+  <link rel="canonical" href="https://emfls.github.io/kor/util/mortgage-repayment-methods-tax-deduction-2026/" />
+  <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+
+  <!-- Preconnects -->
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="2026 주담대 상환방식 & 연말정산 소득공제 계산기" />
+  <meta property="og:description" content="원리금균등 vs 원금균등 vs 체증식 월 납입액 및 총 이자 수천만 원 차이, 6억 이하 2천만 원 소득공제 환급액 즉시 비교" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://emfls.github.io/kor/util/mortgage-repayment-methods-tax-deduction-2026/" />
+  <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --success: #16a34a;
+      --success-bg: #f0fdf4;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+    .wrapper {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 3rem 1rem;
+    }
+    .header-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+    .header-nav a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 0.75rem;
+      line-height: 1.3;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-box {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-box h2 {
+      font-size: 1.1rem;
+      color: var(--primary-dark);
+      margin-bottom: 0.5rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .badge-mortgage {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #7dd3fc;
+    }
+    .warning-box {
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      color: #92400e;
+    }
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    @media (max-width: 600px) {
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .result-item {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .result-item .label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+    .result-item .val {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .calculator-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+    }
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      color: #334155;
+    }
+    .form-group .helper-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+    .form-control {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .statutory-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.875rem;
+    }
+    .statutory-table th, .statutory-table td {
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      text-align: left;
+    }
+    .statutory-table th {
+      background: #f8fafc;
+      font-weight: 700;
+    }
+    .faq-section {
+      margin-top: 2.5rem;
+    }
+    .faq-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .faq-question {
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 0.35rem;
+    }
+    .faq-answer {
+      font-size: 0.9rem;
+      color: #475569;
+    }
+    .internal-nav {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+    .internal-nav ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .ad-container {
+      margin: 2rem 0;
+      text-align: center;
+      min-height: 250px;
+    }
+  </style>
+
+  <!-- JSON-LD: WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 주택담보대출 상환방식 및 소득공제 계산기",
+    "description": "2026년 주택담보대출 원리금균등, 원금균등, 체증식 상환액 비교 및 장기주택저당차입금 연 최대 2,000만 원 이자 소득공제 환급액 계산기",
+    "url": "https://emfls.github.io/kor/util/mortgage-repayment-methods-tax-deduction-2026/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All",
+    "inLanguage": "ko-KR"
+  }
+  </script>
+
+  <!-- JSON-LD: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "원리금균등과 원금균등 상환방식 중 어느 것이 이자를 더 적게 내나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "원금균등분할상환 방식이 매월 원금을 가장 빠르게 갚아나가므로 대출기간 전체 총 납부 이자가 가장 적습니다. 3억 원 30년 대출 시 원금균등이 원리금균등보다 약 2,000만~3,000만 원 이상의 이자를 아낄 수 있습니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "체증식 분할상환 방식은 어떤 사람에게 유리한가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "체증식은 초기 상환액이 가장 적어 현재 소득은 적지만 향후 소득 증가가 예상되는 만 39세 이하 사회초년생이나, 5~10년 내 주택 매도 계획이 있어 초기 현금흐름을 확보하려는 매수자에게 유리합니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "2026년 장기주택저당차입금 소득공제 기준시가 한도는 얼마인가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "취득 당시 주택의 기준시가가 6억 원 이하이어야 합니다. 2024년 세법개정으로 기존 5억 원에서 6억 원으로 상향 조정된 기준이 2026년에도 그대로 유지됩니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "연말정산 소득공제 최대 2,000만 원 한도를 받기 위한 조건은 무엇인가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "상환기간이 15년 이상이면서, 금리가 고정금리이고 거치기간이 없는 비거치식 분할상환 방식이어야 최고 한도인 연 2,000만 원 소득공제가 적용됩니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "1주택자도 장기주택저당차입금 이자 소득공제를 받을 수 있나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "네, 무주택자뿐만 아니라 1세대 1주택 세대주도 취득 당시 기준시가 6억 원 이하 요건을 충족하면 연말정산에서 이자상환액 전액을 공제받을 수 있습니다."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- JSON-LD: BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "홈",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "한국어 계산기 허브",
+        "item": "https://emfls.github.io/kor/util/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "2026 주담대 상환방식 & 소득공제 계산기",
+        "item": "https://emfls.github.io/kor/util/mortgage-repayment-methods-tax-deduction-2026/"
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <div class="wrapper">
+    <nav class="header-nav">
+      <a href="/kor/util/">← 한국어 도구 목록</a>
+      <span>2026 소득세법 제52조 기준</span>
+    </nav>
+
+    <h1>2026 주담대 상환방식 & 연말정산 소득공제 계산기</h1>
+    <p class="subtitle">원리금균등 · 원금균등 · 체증식 월 상환액 비교 · 기준시가 6억 이하 최대 2,000만 원 이자 소득공제</p>
+
+    <!-- Ad Slot 1 (Top) -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center; min-height: 250px"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"></ins>
+      <script>
+        if (!['127.0.0.1', 'localhost', ''].includes(window.location.hostname)) {
+          if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+        }
+      </script>
+    </div>
+
+    <!-- Summary Box -->
+    <div class="summary-box">
+      <span class="badge badge-mortgage">30년 주담대 상환비교</span>
+      <h2>상환방식별 월 납입액 & 총 이자</h2>
+      <div class="result-grid">
+        <div class="result-item">
+          <div class="label">원리금균등 (매월 고정 납입)</div>
+          <div class="val" id="res-level-monthly">1,467,000원 / 월</div>
+        </div>
+        <div class="result-item">
+          <div class="label">원금균등 선택 시 절감 총이자</div>
+          <div class="val" id="res-saving" style="color: var(--success);">-39,000,000원 절감</div>
+        </div>
+        <div class="result-item">
+          <div class="label">체증식 (초기 최저 납입)</div>
+          <div class="val" id="res-graduated-first" style="font-size: 1.1rem;">953,000원 / 초기월</div>
+        </div>
+        <div class="result-item">
+          <div class="label">연말정산 예상 환급액 (첫해)</div>
+          <div class="val" id="res-refund" style="color: var(--success); font-size: 1.1rem;">+2,060,000원 환급</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loss Aversion Warning Box -->
+    <div class="warning-box">
+      <strong>⚠️ 무심코 선택한 '원리금균등', 원금균등보다 수천만 원 이자를 더 냅니다!</strong><br />
+      대출 3억 원 기준 <strong>원금균등</strong>을 선택하면 원금을 매월 빠르게 갚아 30년 동안 <strong>약 3,900만 원 이상의 이자를 아낄 수 있습니다</strong>. 또한 15년 이상 고정금리·비거치식 상품을 선택하면 연간 최대 <strong>2,000만 원 소득공제(연말정산 100만~500만 원 환급)</strong>를 챙길 수 있습니다.
+    </div>
+
+    <!-- Calculator Card -->
+    <div class="calculator-card">
+      <form id="mortgage-form">
+        <div class="form-group">
+          <label for="principal">대출 원금 (원)</label>
+          <input inputmode="decimal" type="number" id="principal" class="form-control" value="300000000" min="10000000" step="10000000" />
+          <div class="helper-text">주택담보대출 실행 총금액.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="annualRate">대출 금리 (연 %)</label>
+          <input inputmode="decimal" type="number" id="annualRate" class="form-control" value="4.2" min="1.0" max="15.0" step="0.1" />
+          <div class="helper-text">적용 약정 대출 금리.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="termYears">대출 기간 (년)</label>
+          <select id="termYears" class="form-control">
+            <option value="10">10년 (120개월)</option>
+            <option value="15">15년 (180개월)</option>
+            <option value="20">20년 (240개월)</option>
+            <option value="30" selected>30년 (360개월)</option>
+            <option value="40">40년 (480개월)</option>
+            <option value="50">50년 (600개월)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="propertyBaseValue">취득 당시 주택 기준시가 (원)</label>
+          <input inputmode="decimal" type="number" id="propertyBaseValue" class="form-control" value="500000000" min="0" step="50000000" />
+          <div class="helper-text">장기주택저당차입금 소득공제 요건: 취득 당시 기준시가 6억 원 이하.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="deductionType">소득공제 대출 상품 유형</label>
+          <select id="deductionType" class="form-control">
+            <option value="fixed_non_grace_15y" selected>15년 이상 + 고정금리 & 비거치식 (한도 2,000만 원)</option>
+            <option value="fixed_or_non_grace_15y">15년 이상 + 고정금리 OR 비거치식 (한도 1,500만 원)</option>
+            <option value="fixed_or_non_grace_10y">10년~15년 + 고정금리 OR 비거치식 (한도 600만 원)</option>
+            <option value="other_15y">15년 이상 기타 (변동금리 거치식 등 - 한도 800만 원)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="marginalTaxRate">소득세 한계세율 (과세표준 구간)</label>
+          <select id="marginalTaxRate" class="form-control">
+            <option value="0.06">6% (과표 1,400만 이하 직장인)</option>
+            <option value="0.15" selected>15% (과표 1,400만~5,000만 - 연봉 4~7천)</option>
+            <option value="0.24">24% (과표 5,000만~8,800만 - 연봉 7천~1.1억)</option>
+            <option value="0.35">35% (과표 8,800만~1.5억 - 연봉 1.1억 이상)</option>
+          </select>
+        </div>
+      </form>
+
+      <!-- Detailed Breakdown Table -->
+      <table class="statutory-table">
+        <thead>
+          <tr>
+            <th>상환 방식</th>
+            <th>월 납입액</th>
+            <th>총 납부 이자</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>원리금균등분할상환</td>
+            <td id="res-level-monthly">1,467,000원</td>
+            <td id="res-level-interest">228,120,000원</td>
+          </tr>
+          <tr>
+            <td>원금균등분할상환</td>
+            <td id="res-equal-first">1,883,000원 (첫달)</td>
+            <td id="res-equal-interest" style="font-weight: 700; color: var(--success);">189,520,000원</td>
+          </tr>
+          <tr>
+            <td>체증식분할상환</td>
+            <td id="res-graduated-first">953,000원</td>
+            <td id="res-graduated-interest" style="color: var(--danger);">262,330,000원</td>
+          </tr>
+          <tr>
+            <td>장기주택저당차입금 소득공제 한도</td>
+            <td colspan="2" id="res-deduction-cap">2,000만 원 한도 (기준시가 6억 이하 충족)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- SVG Breakdown Chart -->
+      <div style="margin-top: 1.5rem; text-align: center;">
+        <h4 style="font-size: 0.95rem; margin-bottom: 0.75rem; color: #334155;">상환방식별 총 납부 이자 비교 (30년 누적)</h4>
+        <svg viewBox="0 0 400 130" style="width: 100%; max-width: 460px; height: auto; background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
+          <!-- Equal Principal -->
+          <text x="10" y="32" font-size="12" fill="#16a34a" font-weight="700">원금균등 (최저이자)</text>
+          <rect id="bar-equal" x="130" y="18" width="180" height="20" rx="4" fill="#16a34a" />
+          
+          <!-- Level -->
+          <text x="10" y="72" font-size="12" fill="#0284c7" font-weight="600">원리금균등 (표준)</text>
+          <rect id="bar-level" x="130" y="58" width="220" height="20" rx="4" fill="#0284c7" />
+
+          <!-- Graduated -->
+          <text x="10" y="112" font-size="12" fill="#dc2626" font-weight="600">체증식 (최고이자)</text>
+          <rect id="bar-graduated" x="130" y="98" width="255" height="20" rx="4" fill="#f87171" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+      <h2 style="font-size: 1.3rem; margin-bottom: 1rem; color: #0f172a;">주담대 상환방식 자주 묻는 질문 (FAQ)</h2>
+      
+      <div class="faq-item">
+        <div class="faq-question">Q. 중도에 여유 자금이 생기면 원금을 갚는 것이 무조건 유리한가요?</div>
+        <div class="faq-answer">
+          네, 주택담보대출은 원금이 줄어들면 매월 발생하는 이자도 즉시 감소하므로 중도상환수수료 면제 시점(통상 3년 경과 후) 이후에는 원금을 일부라도 조기 상환하는 것이 가장 확실한 재테크입니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 디딤돌 대출이나 보금자리론에서도 체증식 상환이 가능한가요?</div>
+        <div class="faq-answer">
+          네, 한국주택금융공사의 보금자리론과 디딤돌 대출에서는 만 39세 이하 신혼부부 및 청년 가구에 한해 체증식 분할상환 옵션을 제공하고 있습니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 오피스텔 주택담보대출도 소득공제를 받을 수 있나요?</div>
+        <div class="faq-answer">
+          아닙니다. 주거용 오피스텔은 세법상 주택이 아닌 준주택으로 분류되므로 장기주택저당차입금 이자상환액 소득공제 대상에서 제외됩니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 분양권 상태에서 중도금 대출을 받다가 잔금대출로 전환한 경우도 공제되나요?</div>
+        <div class="faq-answer">
+          소유권 이전 등기일로부터 3개월 이내에 차입한 장기주택저당차입금으로 전환하거나 분양권 차입금을 대환한 경우 세법 요건 충족 시 정상 소득공제를 받을 수 있습니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 고정금리와 변동금리 중 소득공제 한도 차이는 왜 발생하나요?</div>
+        <div class="faq-answer">
+          정부는 가계부채의 질적 구조 개선(금리 변동 위험 완화)을 유도하기 위해 고정금리이면서 거치기간이 없는 비거치식 분할상환 대출에 최대 한도(2,000만 원) 혜택을 집중 부여하고 있습니다.
+        </div>
+      </div>
+    </section>
+
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="다음 필수 확인 계산기" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">다음 필수 확인 계산기 (Next Check)</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">방금 계산한 결과를 바탕으로 바로 이어서 점검하세요:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/kor/util/stress-dsr-3-mortgage-limit-refinance-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">스트레스 DSR 주담대 한도 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">원리금균등·원금균등 선택에 따른 월 상환액과 대출 최대 한도를 확인하세요.</span></a>
+    <a href="/kor/util/mortgage-early-repayment-fee-refinance-breakeven-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">주담대 갈아타기 손익분기 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">금리 인하 시 중도상환수수료를 내고 대환하는 것이 이득인지 계산하세요.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+
+    <!-- Ad Slot 2 (Bottom) -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center; min-height: 250px"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"></ins>
+      <script>
+        if (!['127.0.0.1', 'localhost', ''].includes(window.location.hostname)) {
+          if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+        }
+      </script>
+    </div>
+
+    <!-- Internal Navigation Hub -->
+    <div class="internal-nav">
+      <strong>관련 부동산 & 절세 계산기:</strong>
+      <ul>
+        <li><a href="/kor/util/finance-tax-2026/">2026 세금·연봉·부동산 계산기 모음 허브</a></li>
+        <li><a href="/kor/util/mortgage-early-repayment-fee-refinance-breakeven-2026/">주담대 중도상환수수료 & 갈아타기 손익분기 계산기</a></li>
+        <li><a href="/kor/util/stress-dsr-3-mortgage-limit-refinance-2026/">스트레스 DSR 3단계 대출 한도 계산기</a></li>
+        <li><a href="/kor/util/real-estate-brokerage-fee-commission-2026/">2026 부동산 중개수수료(복비) 상한요율 계산기</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 대한민국 세무·금융·복지 핵심 계산기</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">2026년도 국세청·고용노동부 기준 연계 계산 도구:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/kor/util/multi-house-capital-gains-tax-2026-2027-reform/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026~2027 다주택자 양도세 중과(+20%/30%p) vs 세제개편안 완화(+5%/10%p) 소급 환급 계산기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 5월 다주택자 양도소득세 중과유예 일몰 종료에 따른 법정 중과세율(+20%/30%p)과 2026.8 세제개편안 단계별 한시 완화(+5%/10%p) 세액 비...</span>
+    </a>
+    <a href="/kor/util/national-pension-early-vs-delayed-breakeven-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 국민연금 조기수령 vs 연기연금 손익분기 나이 계산기 (조기 -30%·연기 +36%·건보 피부양자 탈락 경보)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 국민연금 조기수령(1년당 -6%, 최대 -30%) vs 정상수령(만 65세) vs 연기연금(1년당 +7.2%, 최대 +36%) 손익분기 나이(76세/84세...</span>
+    </a>
+    <a href="/kor/util/nhis-medical-out-of-pocket-cap-refund-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 국민건강보험 본인부담상한제 계산기 | 소득 1~10분위 연간 병원비 초과 환급금</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 보건복지부 확정 건강보험 본인부담상한제 1~10분위 상한액(1분위 90만·10분위 843만 원, 요양병원 120일 초과 기준) 급여 본인부담금 초과 환급금...</span>
+    </a>
+    <a href="/kor/util/nhis-regional-subscriber-premium-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 건강보험 지역가입자 보험료 계산기 (요율 7.19%·재산점수 211.5원·1억 공제·자동차 폐지)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 개정 국민건강보험 지역가입자 보험료율 7.19%, 부과점수당 211.5원, 재산세 과표 1억 원 기본공제, 자동차 보험료 폐지 및 퇴직자 임의계속가입 절세...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>2026 글로벌 세무·금융·복지 계산기 전수 보기 &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</body>
+</html>

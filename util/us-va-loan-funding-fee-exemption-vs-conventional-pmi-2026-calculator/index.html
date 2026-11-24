@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>US VA Loan Funding Fee Exemption vs Conventional PMI Calculator 2026</title>
+  <meta name="description" content="Calculate 2026 VA funding fee tiers (2.15%/3.30%/1.50%/1.25%), 100% disability exemption waiver, zero PMI monthly savings, and 5-year vs 30-year conventional comparison.">
+  <link rel="canonical" href="https://emfls.github.io/util/us-va-loan-funding-fee-exemption-vs-conventional-pmi-2026-calculator/">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","G-QP5Q67GE5B");</script>
+  <script>
+  if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+    const adScript = document.createElement('script');
+    adScript.async = true;
+    adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+    adScript.crossOrigin = 'anonymous';
+    document.head.append(adScript);
+  }
+  </script>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card: #111827;
+      --border: #1e293b;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --primary: #3b82f6;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 1rem;
+    }
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+    h1 {
+      font-size: 1.6rem;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    p.lead {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      overflow-x: hidden;
+    }
+    h2 {
+      font-size: 1.15rem;
+      margin-bottom: 1rem;
+      color: #e5e7eb;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 0.35rem;
+    }
+    input, select {
+      width: 100%;
+      background: #1f2937;
+      border: 1px solid #374151;
+      color: #fff;
+      padding: 0.6rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+    input[type="checkbox"] {
+      width: auto;
+      margin-right: 0.5rem;
+      transform: scale(1.2);
+    }
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      color: #fff;
+      font-size: 0.9rem;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+    .results-hero {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    .kpi-card {
+      background: #1f2937;
+      border: 1px solid #374151;
+      border-radius: 6px;
+      padding: 0.85rem;
+    }
+    .kpi-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .kpi-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      margin-top: 0.25rem;
+    }
+    .kpi-sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+    .exemption-banner {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--success);
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+      color: #34d399;
+      display: none;
+    }
+    .table-wrap {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      display: block;
+      margin: 1rem 0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      min-width: 440px;
+    }
+    th, td {
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid #1f2937;
+    }
+    th {
+      background: #1f2937;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .chart-box {
+      background: #111827;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem;
+      margin-top: 1rem;
+    }
+    details {
+      background: #111827;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      padding: 0.75rem 1rem;
+    }
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #e5e7eb;
+    }
+    details p {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .emfls-ad-slot {
+      margin: 1.5rem 0;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.5rem;
+      text-align: center;
+    }
+    .ad-label {
+      font-size: 0.7rem;
+      color: #4b5563;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.25rem;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+    .links a {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      margin-right: 1rem;
+    }
+    .links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "US VA Loan Funding Fee Exemption vs Conventional PMI Calculator 2026",
+    "url": "https://emfls.github.io/util/us-va-loan-funding-fee-exemption-vs-conventional-pmi-2026-calculator/",
+    "description": "Calculate 2026 statutory VA funding fees, disabled veteran funding fee exemptions (0%), and compare zero-PMI VA loans against conventional loan private mortgage insurance.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All"
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What are the 2026 VA loan funding fee rates for home purchases?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "For down payments under 5%, the funding fee is 2.15% for first-time use and 3.30% for subsequent use. With 5% to 10% down, the fee drops to 1.50%. With 10% or more down, the fee is 1.25%."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Who is 100% exempt from the VA loan funding fee?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Veterans receiving VA disability compensation for a service-connected disability (10% rating or higher), active-duty service members awarded the Purple Heart, and eligible surviving spouses are 100% exempt ($0 funding fee)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is a VA loan often cheaper than a conventional loan even with the funding fee?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "VA loans never charge monthly private mortgage insurance (PMI), which saves homebuyers $150 to $350+ every month compared to conventional loans with under 20% down. Additionally, VA interest rates typically average 0.35% to 0.50% lower than conventional rates."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Calculators",
+        "item": "https://emfls.github.io/util/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "US VA Funding Fee vs Conventional Calculator",
+        "item": "https://emfls.github.io/util/us-va-loan-funding-fee-exemption-vs-conventional-pmi-2026-calculator/"
+      }
+    ]
+  }
+  </script>
+<style id="emfls-cro-calc-first-b2-v1">
+/* EMFLS CRO B2 — mobile calculator-first ordering for non-Patch-B EN templates (CSS-only, reversible) */
+@media (max-width: 760px) {
+  main:has(form, input, select),
+  .tool-shell:has(form, input, select),
+  .container:has(form, input, select) {
+    display: flex;
+    flex-direction: column;
+  }
+  main:has(form, input, select) > *,
+  .tool-shell:has(form, input, select) > *,
+  .container:has(form, input, select) > * {
+    order: 4;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  main:has(form, input, select) > nav,
+  main:has(form, input, select) > header,
+  main:has(form, input, select) > .hero,
+  main:has(form, input, select) > h1,
+  main:has(form, input, select) > .lead,
+  .tool-shell:has(form, input, select) > nav,
+  .tool-shell:has(form, input, select) > header,
+  .tool-shell:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > h1,
+  .tool-shell:has(form, input, select) > .lead,
+  .container:has(form, input, select) > nav,
+  .container:has(form, input, select) > header,
+  .container:has(form, input, select) > .hero,
+  .container:has(form, input, select) > h1,
+  .container:has(form, input, select) > .lead {
+    order: 0;
+  }
+  main:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .tool-shell:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .container:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav) {
+    order: 1;
+  }
+  main:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .tool-shell:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .container:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container) {
+    order: 2;
+  }
+  main:has(form, input, select) > .emfls-next-check,
+  .tool-shell:has(form, input, select) > .emfls-next-check,
+  .container:has(form, input, select) > .emfls-next-check {
+    order: 2;
+  }
+  main:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .tool-shell:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .container:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]) {
+    order: 3;
+  }
+  main:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > .hero,
+  .container:has(form, input, select) > header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+}
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>US VA Loan Funding Fee vs Conventional PMI Calculator 2026</h1>
+    <p class="lead">Model statutory 2026 VA funding fee tiers, 100% disabled veteran fee waivers, and compare monthly payments against Conventional PMI.</p>
+  </header>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+  </aside>
+
+  <div class="grid">
+    <!-- Input Panel -->
+    <section class="panel" aria-labelledby="input-heading">
+      <h2 id="input-heading">Mortgage & Veteran Parameters</h2>
+
+      <div class="form-group">
+        <label for="home-price">Home Purchase Price ($USD)</label>
+        <input inputmode="decimal" type="number" id="home-price" value="450000" min="50000" max="2500000" step="5000">
+      </div>
+
+      <div class="form-group">
+        <label for="down-payment">Down Payment (%)</label>
+        <input inputmode="decimal" type="number" id="down-payment" value="0" min="0" max="50" step="1">
+        <span class="kpi-sub">VA allows 0% down; Conventional typically requires 3%–5% min</span>
+      </div>
+
+      <div class="form-group">
+        <label for="usage-type">VA Loan Usage History</label>
+        <select id="usage-type">
+          <option value="first" selected>First-Time VA Loan Use (2.15% fee if &lt;5% down)</option>
+          <option value="subsequent">Subsequent VA Loan Use (3.30% fee if &lt;5% down)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-label" for="exempt-status">
+          <input type="checkbox" id="exempt-status">
+          <strong>100% Fee-Exempt Veteran (>=10% Disability / Purple Heart)</strong>
+        </label>
+        <span class="kpi-sub" style="margin-left: 1.7rem;">Waiver grants 0.00% funding fee ($0 cost)</span>
+      </div>
+
+      <div class="form-group">
+        <label class="checkbox-label" for="finance-fee">
+          <input type="checkbox" id="finance-fee" checked>
+          <span>Roll Funding Fee Into Loan (Financed)</span>
+        </label>
+      </div>
+
+      <div class="form-group">
+        <label for="va-rate">VA 30-Year Fixed Interest Rate (%)</label>
+        <input inputmode="decimal" type="number" id="va-rate" value="6.25" min="3.0" max="12.0" step="0.125">
+      </div>
+
+      <div class="form-group">
+        <label for="conv-rate">Conventional 30-Year Fixed Interest Rate (%)</label>
+        <input inputmode="decimal" type="number" id="conv-rate" value="6.75" min="3.0" max="12.0" step="0.125">
+      </div>
+
+      <div class="form-group">
+        <label for="pmi-rate">Conventional Annual PMI Rate (%)</label>
+        <input inputmode="decimal" type="number" id="pmi-rate" value="0.68" min="0.20" max="1.80" step="0.05">
+      </div>
+    </section>
+
+    <!-- Results Panel -->
+    <section class="panel" aria-labelledby="results-heading">
+      <h2 id="results-heading">Payment & Savings Comparison</h2>
+
+      <div id="exemption-banner" class="exemption-banner">
+        🎉 <strong>VA Disability Exemption Applied:</strong> You save <span id="out-exemption-savings">$0</span> in upfront funding fees!
+      </div>
+
+      <div class="results-hero">
+        <div class="kpi-card">
+          <div class="kpi-label">VA Monthly Payment</div>
+          <div class="kpi-value" style="color:var(--primary)" id="out-va-monthly">$0 / mo</div>
+          <div class="kpi-sub" id="out-va-fee">Fee: $0</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">Conventional Monthly</div>
+          <div class="kpi-value" style="color:var(--danger)" id="out-conv-monthly">$0 / mo</div>
+          <div class="kpi-sub">PMI: <span id="out-pmi-monthly">$0 / mo</span></div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">Monthly VA Savings</div>
+          <div class="kpi-value" style="color:var(--success)" id="out-monthly-diff">$0 / mo</div>
+          <div class="kpi-sub" id="out-pmi-dropoff">PMI Dropoff</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-label">5-Year Cumulative Advantage</div>
+          <div class="kpi-value" style="color:var(--success)" id="out-5yr-savings">$0</div>
+          <div class="kpi-sub">Lifetime: <span id="out-lifetime-savings">$0</span></div>
+        </div>
+      </div>
+
+      <div class="chart-box">
+        <div style="font-size:0.8rem;color:var(--muted);font-weight:600;">5-Year Total Cost Comparison (Upfront + Monthly Payments)</div>
+        <div id="chart-container"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Statutory Funding Fee Table -->
+  <section class="panel" aria-labelledby="table-heading">
+    <h2 id="table-heading">Official 2026 VA Funding Fee Statutory Schedule (Purchase Loans)</h2>
+    <div class="table-wrap" role="region" tabindex="0">
+      <table>
+        <thead>
+          <tr>
+            <th>Down Payment Tier</th>
+            <th>First-Time VA Use</th>
+            <th>Subsequent VA Use</th>
+            <th>Service-Connected Disability (>=10%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>0% to &lt;5% Down</strong></td>
+            <td>2.15%</td>
+            <td>3.30%</td>
+            <td style="color:var(--success);font-weight:600;">0.00% (EXEMPT)</td>
+          </tr>
+          <tr>
+            <td><strong>5% to &lt;10% Down</strong></td>
+            <td>1.50%</td>
+            <td>1.50%</td>
+            <td style="color:var(--success);font-weight:600;">0.00% (EXEMPT)</td>
+          </tr>
+          <tr>
+            <td><strong>10% or More Down</strong></td>
+            <td>1.25%</td>
+            <td>1.25%</td>
+            <td style="color:var(--success);font-weight:600;">0.00% (EXEMPT)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Statutory FAQ & Regulatory Guide -->
+  <section class="panel" aria-labelledby="faq-heading">
+    <h2 id="faq-heading">VA Loan Regulations & Guidelines Explained</h2>
+    <details>
+      <summary>Can the VA funding fee be financed into the loan?</summary>
+      <p>Yes. The vast majority of VA borrowers choose to roll the one-time funding fee into their total mortgage balance, meaning you do not need to pay it out of pocket at closing.</p>
+    </details>
+    <details>
+      <summary>Does a VA loan require monthly private mortgage insurance (PMI)?</summary>
+      <p>No. VA loans are backed by the federal government and strictly prohibit lenders from charging monthly mortgage insurance premiums, regardless of whether you put 0% or 10% down.</p>
+    </details>
+    <details>
+      <summary>What is the interest rate difference between VA and conventional loans?</summary>
+      <p>Because VA loans carry a federal guaranty and historically low default rates among veterans, lenders typically price VA 30-year fixed mortgages 0.25% to 0.50% lower than standard conforming conventional loans.</p>
+    </details>
+  </section>
+
+  <section class="panel" aria-labelledby="scope-title">
+    <h2 id="scope-title">Assumptions & Statutory Notes</h2>
+    <p>VA funding fee rates reflect statutory schedules under 38 U.S.C. § 3729. Conventional PMI estimates assume credit score 720+ with automatic Homeowners Protection Act cancellation upon reaching 78% original LTV.</p>
+    <nav class="links" aria-label="Related calculators">
+      <a href="/util/compound-interest/">Compound Interest Calculator</a>
+      <a href="/util/loan-payment-calculator/">Loan Payment Calculator</a>
+      <a href="/util/heloc-vs-cashout-refinance-calculator/">HELOC vs Cash-Out Refinance</a>
+    </nav>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+  </aside>
+  <footer>Estimate only · emfls.github.io</footer>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 United States Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for United States:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/us-wash-sale-rule-30-day-disallowed-loss-ira-trap-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">US Wash Sale Rule Calculator 2026 | Disallowed Loss, Basis &amp; IRA Trap</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate your 61-day wash sale window, disallowed loss, adjusted share basis, IRA loss, and...</span>
+    </a>
+    <a href="/util/us-washington-capital-gains-9-9-percent-vs-massachusetts-4-percent-millionaires-tax-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Washington 9.9% vs. Massachusetts 4% Surtax Calculator 2026</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare 2026 Washington capital gains tax, Massachusetts Fair Share surtax, and California i...</span>
+    </a>
+    <a href="/util/us-workers-comp-insurance-ncci-emr-payroll-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 US Workers&#x27; Compensation Insurance Premium Calculator | NCCI Class Code &amp; EMR</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate 2026 US workers</span>
+    </a>
+    <a href="/util/us-year-end-bonus-tax-withholding-22-percent-vs-37-percent-aggregate-refund-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">US Year-End Bonus Tax Withholding 22% vs 37% vs Aggregate Refund Calculator 2026</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate 2026 IRS year-end bonus tax withholding. Compare Flat 22% vs Aggregate Method over...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+<script type="module" src="./app.js"></script>
+</body>
+</html>

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <title>2026년 상가·오피스텔 부가세 환급 & 세후 임대수익률 계산기 | 포괄양수도·10년 추징</title>
+  <meta name="description" content="2026년 상가 및 오피스텔 분양 건물분 부가가치세 10% 조기환급, 10년(20기) 사후관리 추징 계산, 포괄양수도 비교, 취득세 4.6% 및 대출 레버리지 세후 자기자본 수익률(ROE) 시뮬레이터.">
+  <link rel="canonical" href="https://emfls.github.io/kor/util/commercial-property-vat-refund-rental-yield-2026/">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026년 상가·오피스텔 부가세 환급 및 임대수익률 계산기",
+    "url": "https://emfls.github.io/kor/util/commercial-property-vat-refund-rental-yield-2026/",
+    "description": "수익형 부동산 일반임대사업자 부가세 조기환급, 10년 사후관리 감가상각 추징, 포괄양수도 및 대출 레버리지 ROE 산출기.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "홈", "item": "https://emfls.github.io/kor/" },
+      { "@type": "ListItem", "position": 2, "name": "금융·세무 계산기", "item": "https://emfls.github.io/kor/util/finance-tax-2026/" },
+      { "@type": "ListItem", "position": 3, "name": "상가 부가세·임대수익률 계산기", "item": "https://emfls.github.io/kor/util/commercial-property-vat-refund-rental-yield-2026/" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "상가나 업무용 오피스텔 분양 시 부가가치세는 얼마나 환급받나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "총 분양가 중 토지분(면세)을 제외한 건물분 가액의 10%에 해당하는 부가가치세를 전액 조기환급받을 수 있습니다. 통상 수도권 상가의 경우 분양가의 약 50%~70%가 건물분에 해당합니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "부가세를 조기환급받기 위한 필수 사업자등록 요건은 무엇인가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "분양 계약체결일로부터 20일 이내에 세무서에 일반과세자로 임대사업자 등록을 완료해야 계약금 및 중도금 부가세를 환급받을 수 있습니다. 기한을 넘기면 매입세액 공제가 거부될 수 있습니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "10년 이내에 주거용으로 전환하거나 폐업하면 부가세가 추징되나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "네, 부가가치세법상 건물은 1과세기간(6개월)당 5%씩 감가상각되므로, 10년(20기) 동안 임대사업을 유지해야 합니다. 10년 내에 임차인이 전입신고하여 주거용으로 전용되거나 간이과세로 전환, 폐업할 경우 경과기간(5%×기수)을 뺀 잔여 추징률만큼 환급받은 부가세를 국세청에 반환해야 합니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "사업 포괄양수도 계약을 체결하면 어떤 점이 다른가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "기존 임대사업자의 모든 권리와 의무(임대차 계약, 10년 의무기간 승계)를 포괄적으로 넘겨받는 경우 부가가치세 과세 대상에서 제외됩니다. 따라서 매수인이 부가세를 별도로 납부하거나 환급받을 필요가 없어 자금 부담이 경감됩니다."
+        }
+      }
+    ]
+  }
+  </script>
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-light: #ccfbf1;
+      --accent: #2563eb;
+      --text: #1e293b;
+      --border: #e2e8f0;
+      --bg-card: #ffffff;
+      --danger: #dc2626;
+      --success: #16a34a;
+      --warning: #d97706;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; line-height: 1.6; color: var(--text); background: #f8fafc; padding: 20px 12px; }
+    .container { max-width: 960px; margin: 0 auto; }
+    header { margin-bottom: 24px; text-align: center; }
+    h1 { font-size: 1.85rem; color: var(--primary); margin-bottom: 12px; line-height: 1.35; }
+    .subtitle { font-size: 1.05rem; color: #475569; max-width: 820px; margin: 0 auto; }
+    .ad-slot-card { min-height: 250px; background: rgba(0,0,0,0.02); border: 1px dashed #cbd5e1; border-radius: 8px; margin: 24px 0; display: flex; align-items: center; justify-content: center; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 24px; margin-bottom: 32px; }
+    @media (min-width: 768px) { .grid { grid-template-columns: 1fr 1fr; } }
+    .card { background: var(--bg-card); border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05); border: 1px solid var(--border); }
+    .card h2 { font-size: 1.35rem; color: var(--primary); margin-bottom: 16px; border-bottom: 2px solid var(--primary-light); padding-bottom: 8px; }
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-weight: 600; font-size: 0.92rem; margin-bottom: 6px; color: #334155; }
+    .input-desc { font-size: 0.82rem; color: #64748b; margin-top: 4px; }
+    input[type="number"], select { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 1rem; }
+    input[type="number"]:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+    .status-badge { padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 0.95rem; font-weight: 600; }
+    .badge-pass { background: #f0fdf4; border: 1px solid #86efac; color: var(--success); }
+    .badge-warn { background: #fefce8; border: 1px solid #fef08a; color: var(--warning); }
+    .badge-fail { background: #fef2f2; border: 1px solid #fecaca; color: var(--danger); }
+    .result-row { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+    .result-row.total { border-top: 2px solid var(--primary); border-bottom: 2px solid var(--primary); font-weight: 700; font-size: 1.35rem; color: var(--primary); margin: 12px 0; }
+    .explanation { background: #fff; border-radius: 12px; padding: 24px; border: 1px solid var(--border); margin-top: 28px; }
+    .explanation h3 { color: var(--primary); margin: 22px 0 10px 0; font-size: 1.2rem; }
+    .explanation p, .explanation li { font-size: 0.95rem; color: #475569; margin-bottom: 10px; }
+    .explanation ul { padding-left: 20px; }
+    .hub-links { margin-top: 32px; padding: 18px; background: #f1f5f9; border-radius: 8px; text-align: center; }
+    .hub-links a { color: var(--primary); font-weight: 600; text-decoration: underline; margin: 0 10px; display: inline-block; }
+    .checkbox-wrap { display: flex; align-items: center; gap: 8px; margin-top: 8px; cursor: pointer; }
+    .checkbox-wrap input { width: 18px; height: 18px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>2026년 상가·오피스텔 부가세 환급 & 임대수익률 계산기</h1>
+      <p class="subtitle">분양가 건물분 부가세 10% 조기환급, 10년(20기) 사후관리 추징세액, 포괄양수도 및 대출 레버리지 세후 자기자본 수익률(ROE) 산출.</p>
+    </header>
+
+    <!-- 상단 광고 슬롯 -->
+    <div class="ad-slot-card">
+      <ins class="adsbygoogle"
+           style="display:block;min-height:250px;width:100%"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+        if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        }
+      </script>
+    </div>
+
+    <div class="grid">
+      <!-- 입력 폼 -->
+      <div class="card">
+        <h2>분양가 및 임대·대출 조건 입력</h2>
+
+        <div class="form-group">
+          <label for="purchasePrice">분양가 / 매매가 총액 (부가세 제외, 원)</label>
+          <input inputmode="decimal" type="number" id="purchasePrice" value="500000000" min="0" step="10000000">
+          <div class="input-desc">분양계약서 상의 순수 공급가액(토지분+건물분 합계).</div>
+        </div>
+
+        <div class="form-group">
+          <label for="buildingRatio">건물분 비율 (%)</label>
+          <input inputmode="decimal" type="number" id="buildingRatio" value="60" min="10" max="90" step="5">
+          <div class="input-desc">수도권 상가·오피스텔은 통상 60% 내외 (계약서 상 건물공급가액 비율).</div>
+        </div>
+
+        <div class="form-group">
+          <label class="checkbox-wrap">
+            <input type="checkbox" id="isComprehensiveTransfer">
+            <span>사업 포괄양수도 계약 (부가세 과세 제외)</span>
+          </label>
+          <div class="input-desc">기존 임대사업자 권리의무 포괄 승계 시 부가세 징수·환급 절차가 생략됩니다.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="elapsedPeriods">보유 경과 기간 (과세기간 6개월 단위, 기수)</label>
+          <select id="elapsedPeriods">
+            <option value="0" selected>0기: 신규 취득 / 분양 직후 (의무 10년 잔여)</option>
+            <option value="2">2기: 1년 경과 (잔여 9년, 추징률 90%)</option>
+            <option value="6">6기: 3년 경과 (잔여 7년, 추징률 70%)</option>
+            <option value="10">10기: 5년 경과 (잔여 5년, 추징률 50%)</option>
+            <option value="14">14기: 7년 경과 (잔여 3년, 추징률 30%)</option>
+            <option value="20">20기: 10년 만기 달성 (추징금 0원 완벽 소멸)</option>
+          </select>
+          <div class="input-desc">10년(20기) 내 주거용 전입 또는 폐업 시 잔여 추징세액 계산용.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="deposit">임대 보증금 (원)</label>
+          <input inputmode="decimal" type="number" id="deposit" value="30000000" min="0" step="5000000">
+        </div>
+
+        <div class="form-group">
+          <label for="monthlyRent">월 임대료 (부가세 별도, 원)</label>
+          <input inputmode="decimal" type="number" id="monthlyRent" value="2200000" min="0" step="100000">
+        </div>
+
+        <div class="form-group">
+          <label for="loanAmount">대출 원금 (원)</label>
+          <input inputmode="decimal" type="number" id="loanAmount" value="250000000" min="0" step="10000000">
+          <div class="input-desc">상가 담보대출 (보통 감정가의 50~70%).</div>
+        </div>
+
+        <div class="form-group">
+          <label for="loanRate">대출 금리 (연 %)</label>
+          <input inputmode="decimal" type="number" id="loanRate" value="4.5" min="0" max="15" step="0.1">
+        </div>
+
+        <div class="form-group">
+          <label for="annualExpenses">연간 기타 경비 (재산세·화재보험 등, 원)</label>
+          <input inputmode="decimal" type="number" id="annualExpenses" value="1000000" min="0" step="100000">
+        </div>
+      </div>
+
+      <!-- 결과 폼 -->
+      <div class="card">
+        <h2>부가세 환급 및 수익률 분석 결과</h2>
+
+        <div id="statusBadge" class="status-badge badge-pass">
+          ✅ <strong>긍정적 레버리지:</strong> 대출을 활용하여 자기자본 수익률이 극대화되는 구간입니다.
+        </div>
+
+        <div class="result-row">
+          <span>건물분 공급가액 (부가세 과세 대상)</span>
+          <strong id="outBuildingPrice">300,000,000원</strong>
+        </div>
+        <div class="result-row">
+          <span>토지분 공급가액 (면세 대상)</span>
+          <strong id="outLandPrice">200,000,000원</strong>
+        </div>
+        <div class="result-row">
+          <span>취득세 (상가 4.6% 정액)</span>
+          <strong id="outAcquisitionTax">23,000,000원</strong>
+        </div>
+
+        <div class="result-row total">
+          <span>일반임대사업자 조기환급 부가세</span>
+          <strong id="outVatRefund">30,000,000원</strong>
+        </div>
+
+        <div class="result-row">
+          <span>10년 내 주거전환·폐업 시 추징액</span>
+          <strong id="outClawback" style="color:var(--danger)">30,000,000원 (추징률 100%)</strong>
+        </div>
+        <div class="result-row">
+          <span>실제 투입 자기자본 (실투자금)</span>
+          <strong id="outNetEquity">243,000,000원</strong>
+        </div>
+        <div class="result-row">
+          <span>연간 총 임대료 수입 (월세 12개월)</span>
+          <strong id="outAnnualGrossRent">26,400,000원</strong>
+        </div>
+        <div class="result-row">
+          <span>연간 대출 이자 비용</span>
+          <strong id="outAnnualInterest" style="color:var(--danger)">11,250,000원</strong>
+        </div>
+        <div class="result-row">
+          <span>연간 순 임대소득 (이자·경비 차감 후)</span>
+          <strong id="outAnnualNetIncome" style="color:var(--primary)">14,150,000원</strong>
+        </div>
+
+        <div class="result-row" style="margin-top:12px;border-top:1px dashed var(--border);padding-top:12px;">
+          <span>명목 임대수익률 (대출 없을 때)</span>
+          <strong id="outNominalYield">5.15%</strong>
+        </div>
+        <div class="result-row">
+          <span>대출 레버리지 자기자본 수익률 (ROE)</span>
+          <strong id="outLeverageRoe" style="color:var(--accent);font-size:1.25rem">5.82%</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- 하단 광고 슬롯 -->
+    <div class="ad-slot-card">
+      <ins class="adsbygoogle"
+           style="display:block;min-height:250px;width:100%"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+        if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        }
+      </script>
+    </div>
+
+    <!-- 해설 가이드 -->
+    <section class="explanation">
+      <h3>2026년 상가·수익형 오피스텔 세무 및 투자 실무 가이드</h3>
+      <p>상가나 업무용 오피스텔 분양 시 가장 중요한 세무 전략은 일반임대사업자 등록을 통한 건물분 부가가치세 10% 조기환급과, 대출 레버리지를 활용한 실투자금 대비 자기자본 수익률(ROE)의 극대화입니다.</p>
+
+      <h3>1. 건물분 부가가치세 10% 조기환급 요건</h3>
+      <ul>
+        <li><strong>사업자등록 기한:</strong> 계약체결일로부터 20일 이내에 관할 세무서에 일반과세자로 임대사업자 등록을 마쳐야 환급받을 수 있습니다.</li>
+        <li><strong>조기환급 신청:</strong> 공급가액 결제 후 다음 달 25일까지 조기환급을 신청하면 신청일로부터 15일 이내에 환급금이 지정 계좌로 입금됩니다.</li>
+      </ul>
+
+      <h3>2. 10년(20개 과세기간) 사후관리 의무와 부가세 추징 규정</h3>
+      <p>부가가치세법 제32조에 따라 건물은 취득 후 1과세기간(6개월)마다 5%씩 가치가 감가상각됩니다. 따라서 취득 후 10년 이내에 다음 사유가 발생하면 남은 기간에 해당하는 부가세를 국세청에 추징(반환)해야 합니다:</p>
+      <ul>
+        <li>임차인이 전입신고를 하여 주거용으로 전용한 경우 (면세 전용 간주공급)</li>
+        <li>일반과세자에서 간이과세자로 전환하거나 임대사업을 폐업한 경우</li>
+        <li><strong>추징세액 공식:</strong> `환급세액 × (1 - 5% × 경과 과세기간 수)`</li>
+      </ul>
+
+      <h3>3. 대출 레버리지 투자 시 '역마진' 주의사항</h3>
+      <p>대출금리가 부동산의 명목 임대수익률보다 높아지면, 대출을 받을수록 자기자본 수익률(ROE)이 오히려 깎이는 <strong>부정적 레버리지(역마진)</strong>가 발생합니다. 금리 인상기에는 적정 부채비율(40~50% 이하)을 유지하는 것이 안전합니다.</p>
+
+      <div class="hub-links">
+        <strong>부동산·세무 특화 계산기 바로가기:</strong>
+        <a href="/kor/util/finance-tax-2026/">2026 금융·세무 통합 허브</a> |
+        <a href="/kor/util/vat-simplified-taxpayer-104m-2026/">간이과세 1억400만 기준 계산기</a> |
+        <a href="/kor/util/real-estate-acquisition-tax-2026/">신생아·생애최초 취득세 감면 계산기</a>
+      </div>
+    </section>
+
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="다음 필수 확인 계산기" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">다음 필수 확인 계산기 (Next Check)</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">방금 계산한 결과를 바탕으로 바로 이어서 점검하세요:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/kor/util/vat-simplified-taxpayer-104m-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">개인사업자 부가세·간이과세 계산기 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">상가 임대사업자 일반과세 조기환급 vs 간이과세 부가세 유불리를 비교하세요.</span></a>
+    <a href="/kor/util/corporate-tax-vs-sole-proprietor-conversion-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">개인사업자 vs 법인전환 세금 비교 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">임대소득 규모가 커질 때 법인 전환으로 절감되는 세후 수익을 확인하세요.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+  </div>
+
+  <script>
+    function updateCre() {
+      const purchasePrice = Math.max(0, parseInt(document.getElementById('purchasePrice').value, 10) || 0);
+      const buildingRatio = Math.min(100, Math.max(0, parseInt(document.getElementById('buildingRatio').value, 10) || 0)) / 100;
+      const isComp = document.getElementById('isComprehensiveTransfer').checked;
+      const elapsedPeriods = parseInt(document.getElementById('elapsedPeriods').value, 10);
+
+      const deposit = Math.max(0, parseInt(document.getElementById('deposit').value, 10) || 0);
+      const monthlyRent = Math.max(0, parseInt(document.getElementById('monthlyRent').value, 10) || 0);
+      const loanAmount = Math.max(0, parseInt(document.getElementById('loanAmount').value, 10) || 0);
+      const loanRate = Math.max(0, parseFloat(document.getElementById('loanRate').value) || 0) / 100;
+      const annualExpenses = Math.max(0, parseInt(document.getElementById('annualExpenses').value, 10) || 0);
+
+      const buildingPrice = Math.round(purchasePrice * buildingRatio);
+      const landPrice = purchasePrice - buildingPrice;
+      const rawVat = Math.round(buildingPrice * 0.1);
+      const vatRefund = isComp ? 0 : rawVat;
+
+      const clawbackRate = Math.max(0, 1.0 - (0.05 * elapsedPeriods));
+      const clawbackTax = isComp ? 0 : Math.round(rawVat * clawbackRate);
+
+      const acquisitionTax = Math.round(purchasePrice * 0.046);
+      const netEquity = Math.max(1, (purchasePrice + acquisitionTax) - deposit - loanAmount);
+
+      const annualGrossRent = monthlyRent * 12;
+      const annualInterest = Math.round(loanAmount * loanRate);
+      const annualNetIncome = annualGrossRent - annualInterest - annualExpenses;
+
+      const nominalInvestment = Math.max(1, (purchasePrice + acquisitionTax) - deposit);
+      const nominalYield = ((annualGrossRent - annualExpenses) / nominalInvestment) * 100;
+      const leverageRoe = (annualNetIncome / netEquity) * 100;
+
+      const badge = document.getElementById('statusBadge');
+      if (loanAmount > 0) {
+        if (leverageRoe > nominalYield) {
+          badge.className = 'status-badge badge-pass';
+          badge.innerHTML = '✅ <strong>긍정적 레버리지:</strong> 대출 금리보다 임대수익이 높아 자기자본 수익률이 증폭됩니다.';
+        } else {
+          badge.className = 'status-badge badge-fail';
+          badge.innerHTML = '⚠️ <strong>역마진 위험:</strong> 대출 금리가 높아 대출이자 부담으로 자기자본 수익률이 하락합니다.';
+        }
+      } else {
+        badge.className = 'status-badge badge-pass';
+        badge.innerHTML = 'ℹ️ <strong>무대출 순수익:</strong> 전액 자기자본 투자로 안정적 현금흐름이 발생합니다.';
+      }
+
+      document.getElementById('outBuildingPrice').innerText = buildingPrice.toLocaleString() + '원';
+      document.getElementById('outLandPrice').innerText = landPrice.toLocaleString() + '원';
+      document.getElementById('outAcquisitionTax').innerText = acquisitionTax.toLocaleString() + '원';
+      document.getElementById('outVatRefund').innerText = isComp ? '0원 (포괄양수도 면제)' : vatRefund.toLocaleString() + '원';
+      document.getElementById('outClawback').innerText = isComp ? '0원 (포괄승계)' : clawbackTax.toLocaleString() + '원 (' + Math.round(clawbackRate * 100) + '% 추징)';
+      document.getElementById('outNetEquity').innerText = netEquity.toLocaleString() + '원';
+      document.getElementById('outAnnualGrossRent').innerText = annualGrossRent.toLocaleString() + '원';
+      document.getElementById('outAnnualInterest').innerText = annualInterest.toLocaleString() + '원';
+      document.getElementById('outAnnualNetIncome').innerText = annualNetIncome.toLocaleString() + '원';
+      document.getElementById('outNominalYield').innerText = nominalYield.toFixed(2) + '%';
+      document.getElementById('outLeverageRoe').innerText = leverageRoe.toFixed(2) + '%';
+    }
+
+    const inputs = ['purchasePrice', 'buildingRatio', 'isComprehensiveTransfer', 'elapsedPeriods', 'deposit', 'monthlyRent', 'loanAmount', 'loanRate', 'annualExpenses'];
+    inputs.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', updateCre);
+        el.addEventListener('change', updateCre);
+      }
+    });
+    updateCre();
+  </script>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 대한민국 세무·금융·복지 핵심 계산기</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">2026년도 국세청·고용노동부 기준 연계 계산 도구:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/kor/util/comprehensive-income-tax-freelancer-3-3-refund-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 프리랜서 3.3% 종합소득세 환급 계산기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2025년 귀속 프리랜서·N잡러 3.3% 원천징수 환급액과 추가납부액을 계산하세요. 8단계 세율로 단순경비율·기준경비율·장부 신고를 비교합니다.</span>
+    </a>
+    <a href="/kor/util/comprehensive-real-estate-tax-12ok-18ok-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 종부세 계산기 | 1주택 12억 공제 vs 부부 공동명의 18억</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 주택 공시가격과 나이, 보유기간으로 단독명의·공동명의 특례 12억 공제와 부부 인별 9억 원씩 공제를 비교하세요. 농어촌특별세를 포함한 예상 납부액과 차이...</span>
+    </a>
+    <a href="/kor/util/corporate-business-car-1500m-tax-limit-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 법인차·업무용승용차 절세 계산기 | 감가상각 800만·운행기록부 1,500만 한도·리스 vs 렌트</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">업무용승용차 감가상각비 연 800만 원 한도와 이월, 운행기록부 미작성 1,500만 원 한도, 전용보험 미가입 손금불산입, 연두색 번호판 8,000만 원 기준을 반영...</span>
+    </a>
+    <a href="/kor/util/corporate-tax-vs-sole-proprietor-conversion-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 개인사업자 vs 법인전환 세금 비교 계산기 (법인세 10% 인상 &amp; 성실신고 기준)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 법인세 전 구간 +1%p 인상(10%~25%) 및 성실신고확인대상 매출 기준(도소매 15억, 제조·IT 7.5억, 서비스 5억)을 완벽 반영한 개인사업자 ...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>2026 글로벌 세무·금융·복지 계산기 전수 보기 &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</body>
+</html>

@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>2026년 출산·양육 지원금 총정리(첫만남이용권·부모급여·아동수당) & 연말정산 자녀세액공제 상향 계산기</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="description" content="2026년 첫만남이용권(첫째 200만/둘째 300만), 부모급여(0세 월 100만/1세 월 50만), 아동수당(월 10만) 및 2026 연말정산 자녀세액공제 상향(첫째 25만/둘째 30만/셋째 40만) 총 정부 수혜금액 실시간 계산기." />
+  <link rel="canonical" href="https://emfls.github.io/kor/util/child-birth-parental-allowance-tax-credit-2026/" />
+  <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+
+  <!-- Preconnects -->
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+
+  <!-- P0 Localhost Guarded Google AdSense -->
+  <script>
+    if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+      var s = document.createElement('script');
+      s.async = true;
+      s.crossOrigin = 'anonymous';
+      s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+      document.head.appendChild(s);
+    }
+  </script>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="2026 출산·양육 지원금 & 자녀세액공제 계산기" />
+  <meta property="og:description" content="첫만남이용권·부모급여·아동수당 및 2026 자녀세액공제 상향 1년차 수령액 즉시 시뮬레이션" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://emfls.github.io/kor/util/child-birth-parental-allowance-tax-credit-2026/" />
+  <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --danger: #dc2626;
+      --success: #16a34a;
+      --pink: #db2777;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+    .wrapper {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 3rem 1rem;
+    }
+    .header-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+    .header-nav a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    h1 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 0.75rem;
+      line-height: 1.35;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-box {
+      background: #fdf2f8;
+      border: 1px solid #fbcfe8;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-box h2 {
+      font-size: 1.1rem;
+      color: #be185d;
+      margin-bottom: 0.5rem;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      font-size: 0.95rem;
+    }
+    input[type="number"], select {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 1rem;
+      background: #fff;
+    }
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      cursor: pointer;
+    }
+    .checkbox-group input[type="checkbox"] {
+      width: 1.1rem;
+      height: 1.1rem;
+      accent-color: var(--primary);
+    }
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    @media (max-width: 640px) {
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .res-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .res-card.highlight {
+      background: #eff6ff;
+      border-color: #bfdbfe;
+    }
+    .res-title {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+    .res-value {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+    .ad-container {
+      min-height: 280px;
+      margin: 24px 0;
+      display: block;
+      overflow: hidden;
+      text-align: center;
+      background: #f1f5f9;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.25rem 0;
+      font-size: 0.9rem;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.65rem 0.75rem;
+      text-align: left;
+    }
+    th {
+      background: #f1f5f9;
+      font-weight: 700;
+    }
+    .table-container {
+      overflow-x: auto;
+      max-width: 100%;
+    }
+    .faq-item {
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+    .faq-q {
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 0.4rem;
+    }
+    .faq-a {
+      font-size: 0.92rem;
+      color: #334155;
+    }
+    .links-box {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+    .links-box a {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.4rem 0.8rem;
+      background: #e0f2fe;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+  </style>
+
+  <!-- Structured Data JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 출산·양육 지원금 & 자녀세액공제 계산기",
+    "url": "https://emfls.github.io/kor/util/child-birth-parental-allowance-tax-credit-2026/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All",
+    "browserRequirements": "Requires JavaScript",
+    "description": "2026년 첫만남이용권, 부모급여, 아동수당 및 연말정산 자녀세액공제 상향 정부 총 지원액 시뮬레이션"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "홈",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "금융·세무 계산기 허브",
+        "item": "https://emfls.github.io/kor/util/finance-tax-2026/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "출산·양육 지원금 계산기",
+        "item": "https://emfls.github.io/kor/util/child-birth-parental-allowance-tax-credit-2026/"
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "부모급여는 소득이나 재산에 관계없이 누구나 다 받나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "네, 부모급여는 부모의 소득 및 자산 기준 없이 0세(0~11개월) 아동을 둔 가정에 월 100만 원, 1세(12~23개월) 아동을 둔 가정에 월 50만 원이 100% 전액 현금 지급됩니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "2026년 연말정산 자녀세액공제는 얼마나 인상되었나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "2026년 개정 세법에 따라 첫째 자녀는 15만 원에서 25만 원으로, 둘째 자녀는 30만 원(합산 55만 원), 셋째 이상은 1인당 40만 원으로 대폭 상향되었습니다. 출생 당해 연도에는 추가 공제(첫째 30만, 둘째 50만, 셋째 70만 원)도 중복 적용됩니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "어린이집에 보내면 부모급여를 못 받나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "어린이집을 이용할 경우 보육료 바우처를 지원받고, 부모급여 지원액(0세 100만 원, 1세 50만 원)에서 보육료 바우처 금액을 차감한 나머지 잔액을 현금으로 계좌에 지급받게 됩니다."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <div class="wrapper">
+    <nav class="header-nav">
+      <a href="/kor/util/finance-tax-2026/">← 2026 금융·세무 허브</a>
+      <span>EMFLS 대한민국 출산·보육 가이드</span>
+    </nav>
+
+    <h1>2026년 출산·양육 지원금 총정리 & 자녀세액공제 상향 계산기</h1>
+    <p class="subtitle">첫만남이용권(최대 300만) · 부모급여(연 1,200만) · 아동수당(연 120만) 및 연말정산 자녀공제(최대 135만+) 통합 시뮬레이션</p>
+
+    <!-- Top Ad Slot -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+        if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+      </script>
+    </div>
+
+    <div class="summary-box">
+      <h2>👶 2026년 신생아 1년차 정부 총 수혜금액</h2>
+      <p>첫째 출생 시 1년간 <strong>현금·바우처·세제혜택 총 1,575만 원</strong>, 둘째 출생 시 <strong>1,725만 원</strong>을 지원받을 수 있습니다. 복지로 및 정부24 행복출산 원스톱 서비스를 통해 출생신고 즉시 일괄 신청할 수 있습니다.</p>
+    </div>
+
+    <div class="card">
+      <form id="child-support-form">
+        <div class="form-group">
+          <label for="childRank">대상 자녀 출생 순위:</label>
+          <select id="childRank">
+            <option value="1" selected>첫째아 (첫만남 200만 원 / 출생공제 30만 원)</option>
+            <option value="2">둘째아 (첫만남 300만 원 / 출생공제 50만 원)</option>
+            <option value="3">셋째 이상 (첫만남 300만 원 / 출생공제 70만 원)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="totalChildrenCount">총 부양 자녀 수 (기본공제 대상 자녀 수):</label>
+          <input inputmode="decimal" type="number" id="totalChildrenCount" value="1" min="1" max="5" />
+        </div>
+
+        <div class="form-group">
+          <label class="checkbox-group">
+            <input type="checkbox" id="isBirthYear" checked />
+            <span>2026년 출생 (첫만남이용권 및 출생 당해 연도 세액공제 적용)</span>
+          </label>
+          <label class="checkbox-group">
+            <input type="checkbox" id="useDaycare" />
+            <span>어린이집 등 보육기관 이용 중 (보육료 바우처 차액 지급)</span>
+          </label>
+        </div>
+      </form>
+
+      <div class="result-grid">
+        <div class="res-card highlight">
+          <div class="res-title">1년차(0세) 총 정부 지원 합계</div>
+          <div class="res-value" id="res-first-year-total" style="color: #0284c7;">1,575만 원</div>
+          <div style="font-size: 0.85rem; color: #1e40af;">바우처 200만 + 현금 1,320만 + 절세 55만</div>
+        </div>
+
+        <div class="res-card">
+          <div class="res-title">만 8세까지 누적 총 정부 수혜액</div>
+          <div class="res-value" id="res-lifetime-total" style="color: #16a34a;">3,335만 원</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">부모급여 + 아동수당 + 누적 세액공제</div>
+        </div>
+
+        <div class="res-card">
+          <div class="res-title">첫만남이용권 (국민행복카드)</div>
+          <div class="res-value" id="res-voucher" style="color: #db2777;">200만 원</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">출생일로부터 2년 내 사용</div>
+        </div>
+
+        <div class="res-card">
+          <div class="res-title">0세 부모급여 (월 100만 원)</div>
+          <div class="res-value" id="res-parental">연 1,200만 원</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">1세 때 월 50만 원 (연 600만) 추가</div>
+        </div>
+
+        <div class="res-card">
+          <div class="res-title">아동수당 (만 8세까지 매월 10만)</div>
+          <div class="res-value" id="res-child-allowance">연 120만 원</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">총 108개월 = 1,080만 원 전액 비과세</div>
+        </div>
+
+        <div class="res-card">
+          <div class="res-title">2026 연말정산 자녀세액공제</div>
+          <div class="res-value" id="res-tax-credit" style="color: #0f172a;">55만 원 환급</div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);" id="res-tax-desc"></div>
+        </div>
+      </div>
+
+      <!-- First Year Breakdown Chart -->
+      <div style="margin-top: 1.5rem; background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 1rem;">
+        <h4 style="font-size: 0.95rem; margin-bottom: 0.75rem;">📊 1년차 지원금 구성 비율 비교</h4>
+        <svg width="100%" height="110" viewBox="0 0 400 110" style="max-width: 100%;">
+          <text x="10" y="22" font-size="11" fill="#0f172a" font-weight="600">첫만남바우처</text>
+          <rect id="bar-voucher" x="120" y="10" width="35" height="15" fill="#db2777" rx="3"></rect>
+
+          <text x="10" y="50" font-size="11" fill="#0f172a" font-weight="600">부모급여(100만/월)</text>
+          <rect id="bar-parental" x="120" y="38" width="195" height="15" fill="#0284c7" rx="3"></rect>
+
+          <text x="10" y="78" font-size="11" fill="#0f172a" font-weight="600">아동수당(10만/월)</text>
+          <rect id="bar-allow" x="120" y="66" width="20" height="15" fill="#16a34a" rx="3"></rect>
+
+          <text x="10" y="104" font-size="11" fill="#0f172a" font-weight="600">연말정산 세액공제</text>
+          <rect id="bar-tax" x="120" y="92" width="10" height="15" fill="#f59e0b" rx="3"></rect>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Bottom Ad Slot -->
+    
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="다음 필수 확인 계산기" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">다음 필수 확인 계산기 (Next Check)</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">방금 계산한 결과를 바탕으로 바로 이어서 점검하세요:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/kor/util/parental-leave-pay-250man-6-plus-6-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">2026 육아휴직급여 &amp; 6+6 부모제 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">출산 지원금에 더해 부부 합산 최대 월 450만 원 육아휴직급여를 계산하세요.</span></a>
+    <a href="/kor/util/housing-subscription-score-newborn-loan-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">주택청약 가점 &amp; 신생아 특례대출 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">출산 가구 전용 신생아 특례대출 저금리 혜택과 청약 가점을 함께 확인하세요.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+<div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+        if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+      </script>
+    </div>
+
+    <div class="card">
+      <h3 style="margin-bottom: 1rem;">📋 2026년 출산·양육 정부 지원제도 한눈에 보기</h3>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>제도명</th>
+              <th>지원 금액</th>
+              <th>지급 방식</th>
+              <th>신청처</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>첫만남이용권</strong></td>
+              <td>첫째 <strong>200만 원</strong> / 둘째 이상 <strong>300만 원</strong></td>
+              <td>국민행복카드 바우처 (2년 내 사용)</td>
+              <td>정부24 / 주민센터</td>
+            </tr>
+            <tr>
+              <td><strong>부모급여 (0세)</strong></td>
+              <td>월 <strong>100만 원</strong> (연 1,200만 원)</td>
+              <td>매월 25일 계좌 현금 입금</td>
+              <td>복지로 / 주민센터</td>
+            </tr>
+            <tr>
+              <td><strong>부모급여 (1세)</strong></td>
+              <td>월 <strong>50만 원</strong> (연 600만 원)</td>
+              <td>매월 25일 계좌 현금 입금</td>
+              <td>복지로 / 주민센터</td>
+            </tr>
+            <tr>
+              <td><strong>아동수당</strong></td>
+              <td>만 8세까지 매월 <strong>10만 원</strong> (총 1,080만 원)</td>
+              <td>매월 25일 계좌 현금 입금</td>
+              <td>복지로 / 주민센터</td>
+            </tr>
+            <tr>
+              <td><strong>자녀세액공제</strong></td>
+              <td>첫째 <strong>25만</strong>, 둘째 <strong>30만</strong>, 셋째 <strong>40만</strong></td>
+              <td>연말정산 시 세액 직접 환급</td>
+              <td>국세청 홈택스</td>
+            </tr>
+            <tr>
+              <td><strong>출생 추가공제</strong></td>
+              <td>첫째 <strong>30만</strong>, 둘째 <strong>50만</strong>, 셋째 <strong>70만</strong></td>
+              <td>출생 당해 연도 추가 환급</td>
+              <td>국세청 홈택스</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="margin: 1.5rem 0 1rem 0;">💡 출산 지원금 놓치지 않는 신청 팁</h3>
+      <ul style="padding-left: 1.25rem; font-size: 0.93rem; color: #334155; line-height: 1.8;">
+        <li><strong>행복출산 원스톱 서비스 활용:</strong> 주민센터 방문 또는 정부24 온라인 출생신고 시 [행복출산 원스톱 서비스]를 선택하면 첫만남이용권, 부모급여, 아동수당, 전기료 30% 감면까지 한 번에 일괄 신청됩니다.</li>
+        <li><strong>출생 후 60일 이내 신청 필수:</strong> 부모급여와 아동수당은 출생 후 60일 이내에 신청해야 출생 월부터 소급하여 전액 지급받을 수 있습니다. 60일이 지나면 신청 월부터만 지급되니 주의하세요.</li>
+        <li><strong>육아휴직급여와의 중복 수령:</strong> 고용보험 육아휴직급여(2026년 최대 월 250만 원)와 부모급여는 전액 중복 수령이 가능합니다.</li>
+      </ul>
+    </div>
+
+    <!-- FAQ Accordion -->
+    <div class="card">
+      <h3 style="margin-bottom: 1rem;">❓ 출산 지원금 자주 묻는 질문 (FAQ)</h3>
+      <div class="faq-item">
+        <div class="faq-q">Q. 첫만남이용권 바우처는 어디서 사용할 수 있나요?</div>
+        <div class="faq-a">A. 유흥, 사행업소, 마사지 등 일부 제한 업종을 제외한 대부분의 온·오프라인 매장(대형마트, 백화점, 병원, 산후조리원, 육아용품점 등)에서 국민행복카드로 결제 시 자동 차감됩니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Q. 맞벌이 부부 중 누구 명의로 자녀세액공제를 받아야 하나요?</div>
+        <div class="faq-a">A. 총급여가 높아 더 높은 한계세율을 적용받는 부모 쪽에 자녀 기본공제와 세액공제를 몰아주는 것이 가구 전체의 환급액을 극대화하는 표준 전략입니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Q. 쌍둥이를 낳으면 첫만남이용권은 어떻게 되나요?</div>
+        <div class="faq-a">A. 쌍둥이 중 첫째 아동에게 200만 원, 둘째 아동에게 300만 원이 지급되어 총 500만 원의 첫만남이용권 바우처를 받게 됩니다.</div>
+      </div>
+    </div>
+
+    <div class="links-box">
+      <a href="/kor/util/finance-tax-2026/">📊 2026 금융·세무 계산기 허브</a>
+      <a href="/kor/util/parental-leave-pay-250man-6-plus-6-2026/">🍼 육아휴직급여 250만 계산기</a>
+      <a href="/kor/util/salary-take-home-4-insurance-2026/">💵 2026 연봉 실수령액 계산기</a>
+      <a href="/kor/util/housing-subscription-score-newborn-loan-2026/">🏡 신생아 특례 청약 가점 계산기</a>
+    </div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 대한민국 세무·금융·복지 핵심 계산기</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">2026년도 국세청·고용노동부 기준 연계 계산 도구:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/kor/util/commercial-property-vat-refund-rental-yield-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 상가·오피스텔 부가세 환급 &amp; 세후 임대수익률 계산기 | 포괄양수도·10년 추징</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 상가 및 오피스텔 분양 건물분 부가가치세 10% 조기환급, 10년(20기) 사후관리 추징 계산, 포괄양수도 비교, 취득세 4.6% 및 대출 레버리지 세후 ...</span>
+    </a>
+    <a href="/kor/util/comprehensive-income-tax-freelancer-3-3-refund-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 프리랜서 3.3% 종합소득세 환급 계산기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2025년 귀속 프리랜서·N잡러 3.3% 원천징수 환급액과 추가납부액을 계산하세요. 8단계 세율로 단순경비율·기준경비율·장부 신고를 비교합니다.</span>
+    </a>
+    <a href="/kor/util/comprehensive-real-estate-tax-12ok-18ok-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 종부세 계산기 | 1주택 12억 공제 vs 부부 공동명의 18억</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 주택 공시가격과 나이, 보유기간으로 단독명의·공동명의 특례 12억 공제와 부부 인별 9억 원씩 공제를 비교하세요. 농어촌특별세를 포함한 예상 납부액과 차이...</span>
+    </a>
+    <a href="/kor/util/corporate-business-car-1500m-tax-limit-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 법인차·업무용승용차 절세 계산기 | 감가상각 800만·운행기록부 1,500만 한도·리스 vs 렌트</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">업무용승용차 감가상각비 연 800만 원 한도와 이월, 운행기록부 미작성 1,500만 원 한도, 전용보험 미가입 손금불산입, 연두색 번호판 8,000만 원 기준을 반영...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>2026 글로벌 세무·금융·복지 계산기 전수 보기 &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</body>
+</html>

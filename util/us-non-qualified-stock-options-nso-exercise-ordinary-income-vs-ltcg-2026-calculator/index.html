@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 NSO Exercise Tax &amp; Withholding Gap Calculator</title>
+<meta name="description" content="Calculate 2026 US non-qualified stock option exercise income, payroll taxes and the 22% federal withholding gap. Compare a same-day sale with holding the shares.">
+<link rel="canonical" href="https://emfls.github.io/util/us-non-qualified-stock-options-nso-exercise-ordinary-income-vs-ltcg-2026-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="EMFLS">
+<meta property="og:title" content="2026 NSO Exercise Tax &amp; Withholding Gap Calculator">
+<meta property="og:description" content="Estimate W-2 exercise income, the 22% or 37% withholding gap, and after-tax profit from selling now or holding shares.">
+<meta property="og:url" content="https://emfls.github.io/util/us-non-qualified-stock-options-nso-exercise-ordinary-income-vs-ltcg-2026-calculator/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2026 NSO Exercise Tax &amp; Withholding Gap Calculator">
+<meta name="twitter:description" content="Estimate W-2 exercise income, the 22% or 37% withholding gap, and after-tax profit from selling now or holding shares.">
+<link rel="stylesheet" href="../new-tools.css">
+<link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+<link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+<meta name="google-adsense-account" content="ca-pub-8830524482034754">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QP5Q67GE5B')</script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "2026 NSO Exercise Tax & Withholding Gap Calculator",
+  "url": "https://emfls.github.io/util/us-non-qualified-stock-options-nso-exercise-ordinary-income-vs-ltcg-2026-calculator/",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any",
+  "offers": {"@type": "Offer", "price": 0, "priceCurrency": "USD"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How is an NSO exercise reported on Form W-2?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For a typical vested employee NSO, the spread at exercise is ordinary wage income. It is generally reported in Box 12 with code V and included in Boxes 1, 3 up to the Social Security cap, and 5."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why can 22% withholding leave a tax bill?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The flat supplemental withholding method takes 22% through $1 million of cumulative supplemental wages and 37% above that amount. The income tax on the exercise applies your regular brackets to the spread. If the entire spread falls in the 35% bracket and is withheld at 22%, the federal income-tax gap is 13% of the spread."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why can Additional Medicare withholding differ from the tax I owe?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "An employer starts withholding 0.9% once it pays you more than $200,000 in Medicare wages. On a joint return, the 0.9% tax applies above $250,000 in combined Medicare wages, so the amount withheld can differ from the liability."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When does an NSO stock sale qualify for long-term rates?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Shares from a typical vested NSO exercise must be held for more than one year. Only the gain above your basis qualifies. Basis is the strike cost plus wages recognized at exercise, which equals exercise-day fair market value for an in-the-money exercise."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if the stock falls after I exercise?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Selling below your basis creates a capital loss. It does not reverse the W-2 income from exercise. Capital losses generally offset capital gains first, and separate limits apply to deductions against other income."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "EMFLS", "item": "https://emfls.github.io/"},
+    {"@type": "ListItem", "position": 2, "name": "All tools", "item": "https://emfls.github.io/util/"},
+    {"@type": "ListItem", "position": 3, "name": "NSO Exercise Tax Calculator", "item": "https://emfls.github.io/util/us-non-qualified-stock-options-nso-exercise-ordinary-income-vs-ltcg-2026-calculator/"}
+  ]
+}
+</script>
+<style>
+  .nso-tool [hidden] { display: none; }
+  .nso-breadcrumb { display: flex; flex-wrap: wrap; gap: 0.35rem 0.7rem; color: #e2e8f0; margin: 0 0 16px; }
+  .nso-breadcrumb a { color: #bfdbfe; }
+  .nso-tool .takeaways { border-left: 5px solid #3b82f6; }
+  .nso-tool .warning { border-left: 5px solid #d97706; background: #fff7e6; }
+  .nso-tool h3 { margin: 0 0 0.65rem; }
+  .nso-tool p:last-child, .nso-tool ul:last-child { margin-bottom: 0; }
+  .nso-tool .field-note { margin: 5px 0 0; }
+  .nso-tool fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
+  .nso-tool fieldset + fieldset { margin-top: 24px; padding-top: 16px; border-top: 1px solid #d9e0ea; }
+  .nso-tool legend { font-size: 1.13rem; font-weight: 750; padding: 0 0 10px; }
+  .nso-tool input, .nso-tool select, .nso-tool .grid > * { min-width: 0; }
+  .nso-tool .metric { background: #eff6ff; border: 1px solid #c5ddfb; border-radius: 12px; padding: 14px; }
+  .nso-tool .metric dd { color: #153b78; font-size: clamp(1.22rem, 3vw, 1.65rem); font-weight: 800; }
+  .nso-tool dl { margin: 0; }
+  .nso-tool dd { margin: 0; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+  .nso-tool .breakdown div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, max-content); gap: 12px; padding: 7px 0; border-bottom: 1px solid #e2e8f0; }
+  .nso-tool .breakdown dd { text-align: right; font-weight: 650; }
+  .nso-tool .gap-note { background: #fff7e6; border: 1px solid #efcb83; padding: 12px; border-radius: 10px; }
+  .nso-tool .detail-grid { margin-top: 24px; }
+  .nso-tool .table-scroll { overflow-x: auto; }
+  .nso-tool .table-scroll:focus-visible, .nso-tool summary:focus-visible { outline: 3px solid #d97706; outline-offset: 2px; }
+  .nso-tool table { width: 100%; border-collapse: collapse; }
+  .nso-tool th, .nso-tool td { text-align: left; vertical-align: top; border-bottom: 1px solid #d9e0ea; padding: 8px; }
+  .nso-tool .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .nso-tool .emfls-ad-slot { width: 100%; max-width: 680px; min-height: 278px; margin: 32px auto; text-align: center; }
+  .nso-tool .ad-label { height: 28px; color: #cbd5e1; font: 12px/20px system-ui, sans-serif; }
+  @media (max-width: 650px) {
+    .nso-tool .grid { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>
+<script type="module" src="./app.js"></script>
+<style id="emfls-cro-calc-first-v1">
+/* EMFLS CRO v1 — calculator-first on mobile (CSS-only, no DOM/content/JS change; reversible by deleting this <style>) */
+@media (max-width: 760px) {
+  main.tool-shell { display: flex; flex-direction: column; }
+  main.tool-shell > * { order: 3; }
+  main.tool-shell > .hero, main.tool-shell > header, main.tool-shell > nav { order: 0; }
+  main.tool-shell > section.takeaways + section.panel { order: 1; }
+  main.tool-shell > section.takeaways + section.panel + aside.emfls-ad-slot { order: 1; }
+  main.tool-shell > section.takeaways { order: 2; }
+}
+</style>
+</head>
+<body>
+<main class="tool-shell nso-tool">
+  <nav class="nso-breadcrumb" aria-label="Breadcrumb">
+    <a href="/">EMFLS</a><span aria-hidden="true">›</span>
+    <a href="/util/">All tools</a><span aria-hidden="true">›</span>
+    <span aria-current="page">NSO Exercise Tax Calculator</span>
+  </nav>
+  <header class="hero">
+    <h1>2026 NSO Exercise Tax &amp; Withholding Gap Calculator</h1>
+    <p>Estimate the tax on exercising US employee non-qualified stock options and compare the cash from a same-day sale with the after-tax profit from holding.</p>
+  </header>
+
+  <section class="panel takeaways" aria-labelledby="takeaways-title">
+    <h2 id="takeaways-title">Key takeaways</h2>
+    <ul>
+      <li>The taxable W-2 spread is the exercise-day fair market value minus your strike price, multiplied by shares, with a floor of $0.</li>
+      <li>If $30,000 of spread falls entirely in the 32% bracket, 22% withholding leaves a $3,000 federal income-tax gap before other payments or credits.</li>
+      <li>After more than one year, gains above your exercise basis generally qualify for long-term capital gains rates. The W-2 tax on the exercise spread still applies.</li>
+    </ul>
+  </section>
+
+  <section class="panel" aria-labelledby="inputs-title">
+    <h2 id="inputs-title">Exercise and sale inputs</h2>
+    <noscript><p>Enable JavaScript to calculate in your browser.</p></noscript>
+    <form id="nso-form" method="dialog" aria-labelledby="inputs-title">
+      <fieldset>
+        <legend>2026 exercise</legend>
+        <div class="grid">
+          <div>
+            <label for="filing">Filing status</label>
+            <select id="filing" name="filing"><option value="single">Single</option><option value="mfj">Married filing jointly</option></select>
+          </div>
+          <div>
+            <label for="shares">Shares exercised</label>
+            <input id="shares" name="shares" type="number" inputmode="decimal" min="1" max="10000000" step="1" value="1000" required>
+          </div>
+          <div>
+            <label for="strikePrice">Strike price per share ($)</label>
+            <input id="strikePrice" name="strikePrice" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="15" required>
+          </div>
+          <div>
+            <label for="fmvAtExercise">Fair market value per share at exercise ($)</label>
+            <input id="fmvAtExercise" name="fmvAtExercise" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="45" required>
+          </div>
+          <div>
+            <label for="taxableIncome">2026 taxable ordinary income before exercise ($)</label>
+            <input id="taxableIncome" name="taxableIncome" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="218900" required aria-describedby="taxable-note">
+            <p class="note field-note" id="taxable-note">Use full-year household ordinary income after deductions and before this exercise. Exclude preferential gains and dividends.</p>
+          </div>
+          <div>
+            <label for="employerWages">YTD Medicare wages at the exercising employer ($)</label>
+            <input id="employerWages" name="employerWages" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="190000" required aria-describedby="wages-note">
+            <p class="note field-note" id="wages-note">Use wages already paid before this exercise. Include prior bonuses paid by this employer.</p>
+          </div>
+          <div>
+            <label for="socialSecurityWages">YTD Social Security wages at the exercising employer ($)</label>
+            <input id="socialSecurityWages" name="socialSecurityWages" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="184500" required>
+          </div>
+          <div>
+            <label for="otherMedicareWages">Other 2026 household Medicare wages ($)</label>
+            <input id="otherMedicareWages" name="otherMedicareWages" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="45000" required aria-describedby="other-note">
+            <p class="note field-note" id="other-note">Include remaining pay, other employers and a spouse’s wages on a joint return. Exclude the YTD wages above and this exercise.</p>
+          </div>
+          <div>
+            <label for="priorSupplemental">Prior 2026 supplemental wages ($)</label>
+            <input id="priorSupplemental" name="priorSupplemental" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="0" required aria-describedby="supplemental-note">
+            <p class="note field-note" id="supplemental-note">Include bonuses and other supplemental wages already paid by this employer or businesses under common control.</p>
+          </div>
+          <div>
+            <label for="stateRate">Estimated state tax rate (%)</label>
+            <input id="stateRate" name="stateRate" type="number" inputmode="decimal" min="0" max="100" step="0.01" value="5" required aria-describedby="state-note">
+            <p class="note field-note" id="state-note">Applied to positive gains at sale and assumed withheld at exercise.</p>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Hold scenario</legend>
+        <div class="grid">
+          <div>
+            <label for="exitPrice">Future sale price per share ($)</label>
+            <input id="exitPrice" name="exitPrice" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="60" required>
+          </div>
+          <div>
+            <label for="saleTiming">When you sell</label>
+            <select id="saleTiming" name="saleTiming">
+              <option value="long">More than 1 year later (long-term)</option>
+              <option value="sameYearShort">In 2026 (short-term)</option>
+              <option value="laterYearShort">In a later tax year, held 1 year or less (short-term)</option>
+            </select>
+          </div>
+          <div id="sale-income-field">
+            <label for="saleTaxableIncome">Sale-year taxable ordinary income ($)</label>
+            <input id="saleTaxableIncome" name="saleTaxableIncome" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="218900" required aria-describedby="sale-income-note">
+            <p class="note field-note" id="sale-income-note">Enter projected income after deductions and before this sale.</p>
+          </div>
+          <div>
+            <label for="saleMagi">Sale-year modified adjusted gross income ($)</label>
+            <input id="saleMagi" name="saleMagi" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="235000" required aria-describedby="magi-note">
+            <p class="note field-note" id="magi-note">Use projected sale-year MAGI before the sale. Include any other income in that year.</p>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+    <p class="error" id="input-error" role="alert" hidden></p>
+    <p class="sr-only" id="calculation-status" role="status" aria-atomic="true"></p>
+  </section>
+
+  <section class="panel" id="nso-results" aria-labelledby="results-title" hidden>
+    <h2 id="results-title">Exercise and sale estimates</h2>
+    <dl class="grid">
+      <div class="metric"><dt>Taxable W-2 bargain element</dt><dd data-amount="spread"></dd></div>
+      <div class="metric"><dt>Federal income tax minus withholding</dt><dd data-amount="federalGap"></dd></div>
+      <div class="metric"><dt>Same-day after-tax profit</dt><dd data-amount="sameDayNetProfit"></dd></div>
+      <div class="metric"><dt>Hold after-tax profit</dt><dd data-amount="holdNetProfit"></dd></div>
+    </dl>
+    <p class="gap-note" id="gap-note"></p>
+    <div class="grid detail-grid">
+      <div>
+        <h3>Exercise tax and cash needed</h3>
+        <dl class="breakdown">
+          <div><dt>Strike cost</dt><dd data-amount="strikeCost"></dd></div>
+          <div><dt>Federal income tax</dt><dd data-amount="federalTax"></dd></div>
+          <div><dt>Federal income tax withheld</dt><dd data-amount="federalWithholding"></dd></div>
+          <div><dt>Social Security</dt><dd data-amount="socialSecurity"></dd></div>
+          <div><dt>Medicare</dt><dd data-amount="medicare"></dd></div>
+          <div><dt>Additional Medicare Tax</dt><dd data-amount="additionalMedicare"></dd></div>
+          <div><dt>Additional Medicare withheld</dt><dd data-amount="additionalMedicareWithheld"></dd></div>
+          <div><dt>State tax at exercise</dt><dd data-amount="stateExerciseTax"></dd></div>
+          <div><dt>Total tax on exercise</dt><dd data-amount="exerciseTax"></dd></div>
+          <div><dt>Cash to exercise and hold at payroll</dt><dd data-amount="cashAtExercise"></dd></div>
+          <div><dt>Strike plus full estimated exercise tax</dt><dd data-amount="cashWithTaxReserve"></dd></div>
+        </dl>
+      </div>
+      <div>
+        <h3>Comparison after sale</h3>
+        <dl class="breakdown">
+          <div><dt>Same-day net cash after withholding</dt><dd data-amount="sameDayNetCash"></dd></div>
+          <div><dt>Stock cost basis</dt><dd data-amount="basis"></dd></div>
+          <div><dt>Future sale proceeds</dt><dd data-amount="exitProceeds"></dd></div>
+          <div><dt>Post-exercise capital gain or loss</dt><dd data-amount="capitalGain"></dd></div>
+          <div><dt>Federal tax on sale gain</dt><dd data-amount="saleFederalTax"></dd></div>
+          <div><dt>Net Investment Income Tax (NIIT)</dt><dd data-amount="niit"></dd></div>
+          <div><dt>State tax on sale gain</dt><dd data-amount="stateSaleTax"></dd></div>
+          <div><dt>Total sale tax</dt><dd data-amount="saleTax"></dd></div>
+          <div><dt>Hold profit minus same-day profit</dt><dd data-amount="holdAdvantage"></dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <aside class="panel warning" aria-labelledby="loss-title">
+    <h2 id="loss-title">A falling share price can erase the gain</h2>
+    <p>Holding puts the cash you paid for the shares and exercise taxes at risk. The W-2 income is based on exercise-day value even if the stock later falls. Try a future sale price below the exercise value to see the downside. A later capital loss follows separate deduction rules, and this estimate assigns it no tax benefit.</p>
+  </aside>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+  </aside>
+
+  <section class="panel" aria-labelledby="parameters-title">
+    <h2 id="parameters-title">2026 official federal parameters</h2>
+    <div class="table-scroll" tabindex="0" role="region" aria-labelledby="parameters-title">
+      <table>
+        <thead><tr><th scope="col">Rule</th><th scope="col">Single</th><th scope="col">Married filing jointly</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Regular federal income tax</th><td colspan="2">10%, 12%, 22%, 24%, 32%, 35%, 37%, applied progressively</td></tr>
+          <tr><th scope="row">12%, 22%, 24%, 32%, 35%, 37% brackets start above</th><td>$12,400 / $50,400 / $105,700 / $201,775 / $256,225 / $640,600</td><td>$24,800 / $100,800 / $211,400 / $403,550 / $512,450 / $768,700</td></tr>
+          <tr><th scope="row">Supplemental federal withholding</th><td colspan="2">22% optional flat method through $1 million in cumulative supplemental wages and 37% on the excess</td></tr>
+          <tr><th scope="row">Employee Social Security</th><td colspan="2">6.2% up to $184,500 in wages</td></tr>
+          <tr><th scope="row">Employee Medicare</th><td colspan="2">1.45% with no wage cap</td></tr>
+          <tr><th scope="row">Additional Medicare Tax liability</th><td>0.9% above $200,000</td><td>0.9% above $250,000</td></tr>
+          <tr><th scope="row">Employer Additional Medicare withholding</th><td colspan="2">0.9% above $200,000 paid to the employee</td></tr>
+          <tr><th scope="row">Long-term gains, 0% and 15% ceiling</th><td>$49,450 / $545,500</td><td>$98,900 / $613,700</td></tr>
+          <tr><th scope="row">Higher long-term gains rate</th><td colspan="2">20% above the 15% ceiling</td></tr>
+          <tr><th scope="row">NIIT (3.8% on the lesser of net investment income and excess MAGI)</th><td>MAGI threshold $200,000</td><td>MAGI threshold $250,000</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Official references include <a href="https://www.irs.gov/pub/irs-drop/rp-25-32.pdf">IRS 2026 tax brackets and capital gains thresholds</a> · <a href="https://www.irs.gov/publications/p15">IRS Publication 15</a> · <a href="https://www.irs.gov/taxtopics/tc560">Additional Medicare Tax</a> · <a href="https://www.irs.gov/taxtopics/tc559">NIIT</a></p>
+  </section>
+
+  <section class="panel" aria-labelledby="assumptions-title">
+    <h2 id="assumptions-title">What the estimates include</h2>
+    <p>The calculator models a typical vested employee NSO without a readily determinable value at grant. It applies regular federal brackets to the added exercise income, without an ISO-style AMT adjustment. The model excludes overall AMT, credits, deductions or benefits that change with income, self-employment income, and Social Security reconciliation across employers.</p>
+    <p>Same-day sale assumes execution at exercise-day fair market value. Later sales use 2026 rates and thresholds for comparison, with no other preferential gains, investment income or capital losses. Sale profit subtracts strike cost and estimated taxes. The calculation excludes fees, the time value of money and any tax benefit from losses.</p>
+    <p class="note">For exercise and reporting rules, see <a href="https://www.irs.gov/publications/p525">IRS Publication 525</a> · <a href="https://www.irs.gov/taxtopics/tc409">IRS capital gains and losses</a></p>
+    <p class="note">Inputs are processed in your browser. Analytics and advertising may receive ordinary usage and device data.</p>
+    <nav class="links" aria-label="Related calculators">
+      <a href="/util/irs-tax-brackets-401k-catchup-calculator/">US tax brackets and 401(k)</a>
+      <a href="/util/compound-interest/">Compound interest</a>
+      <a href="/util/roi-calculator/">Return on investment</a>
+    </nav>
+  </section>
+
+  <section class="panel faq" aria-labelledby="faq-title">
+    <h2 id="faq-title">Frequently asked questions</h2>
+    <details>
+      <summary>How is an NSO exercise reported on Form W-2?</summary>
+      <p>For a typical vested employee NSO, the spread at exercise is ordinary wage income. It is generally reported in Box 12 with code V and included in Boxes 1, 3 up to the Social Security cap, and 5.</p>
+    </details>
+    <details>
+      <summary>Why can 22% withholding leave a tax bill?</summary>
+      <p>The flat supplemental withholding method takes 22% through $1 million of cumulative supplemental wages and 37% above that amount. The income tax on the exercise applies your regular brackets to the spread. If the entire spread falls in the 35% bracket and is withheld at 22%, the federal income-tax gap is 13% of the spread.</p>
+    </details>
+    <details>
+      <summary>Why can Additional Medicare withholding differ from the tax I owe?</summary>
+      <p>An employer starts withholding 0.9% once it pays you more than $200,000 in Medicare wages. On a joint return, the 0.9% tax applies above $250,000 in combined Medicare wages, so the amount withheld can differ from the liability.</p>
+    </details>
+    <details>
+      <summary>When does an NSO stock sale qualify for long-term rates?</summary>
+      <p>Shares from a typical vested NSO exercise must be held for more than one year. Only the gain above your basis qualifies. Basis is the strike cost plus wages recognized at exercise, which equals exercise-day fair market value for an in-the-money exercise.</p>
+    </details>
+    <details>
+      <summary>What if the stock falls after I exercise?</summary>
+      <p>Selling below your basis creates a capital loss. It does not reverse the W-2 income from exercise. Capital losses generally offset capital gains first, and separate limits apply to deductions against other income.</p>
+    </details>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+  </aside>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 United States Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for United States:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/us-nua-net-unrealized-appreciation-401k-company-stock-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 NUA Calculator: 401(k) Company Stock vs. IRA Rollover</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare the federal tax and after-tax wealth of a 401(k) employer stock NUA distribution ver...</span>
+    </a>
+    <a href="/util/us-nua-net-unrealized-appreciation-401k-employer-stock-irc-402e4-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 NUA Calculator: 401(k) Company Stock vs. IRA Rollover</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare after-tax cash and 20 years of wealth for 401(k) employer stock. Estimate NUA, the R...</span>
+    </a>
+    <a href="/util/us-nyc-mansion-tax-mortgage-recording-tax-cema-refinance-savings-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">NYC Mansion Tax, Mortgage Recording Tax &amp; CEMA Calculator 2026</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate NYC buyer closing taxes for condos, 1–3 family homes and co-ops. Compare CEMA refin...</span>
+    </a>
+    <a href="/util/us-obbba-charitable-deduction-0-5-agi-floor-35-cap-universal-2000-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 OBBBA Charitable Deduction Calculator</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare the 2026 $1,000/$2,000 charitable deduction with Schedule A</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+<footer>Estimate only · emfls.github.io</footer>
+</body>
+</html>

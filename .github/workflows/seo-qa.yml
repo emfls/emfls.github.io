@@ -70,9 +70,17 @@ jobs:
           fi
           TRUSTED_GUARD_DIR="$(mktemp -d)"
           git archive "$COMPARE_REF" scripts | tar -x -C "$TRUSTED_GUARD_DIR"
-          git show HEAD:data/content-launch-manifest.json > /tmp/content-launch-manifest.json
+          # Operational launch evidence moved out of Git. Keep its trusted
+          # snapshot independent of the commit that supplies guard code and the diff.
+          TRUSTED_EVIDENCE_REF="9a5ef58d459697642f36d2f494be6c48387ac9b3"
+          MANIFEST_REF=HEAD
+          if ! git cat-file -e "$MANIFEST_REF:data/content-launch-manifest.json"; then
+            MANIFEST_REF="$TRUSTED_EVIDENCE_REF"
+          fi
+          git show "$MANIFEST_REF:data/content-launch-manifest.json" > "$TRUSTED_GUARD_DIR/content-launch-manifest.json"
           PYTHONPATH="$TRUSTED_GUARD_DIR" python3 "$TRUSTED_GUARD_DIR/scripts/content_launch_guard.py" \
-            --root . --manifest /tmp/content-launch-manifest.json --base-ref "$COMPARE_REF"
+            --root . --manifest "$TRUSTED_GUARD_DIR/content-launch-manifest.json" \
+            --base-ref "$TRUSTED_EVIDENCE_REF" --change-base-ref "$COMPARE_REF"
 
       - name: Render revenue growth control center
         run: python3 scripts/quality_audit.py --audit /tmp/site-audit-full.json --as-of "$(date +%F)" --revenue data/revenue-opportunities.json --dashboard reports/site-quality-dashboard.html

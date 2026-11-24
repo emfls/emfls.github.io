@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2026 주담대 중도상환수수료·대환대출 손익분기점 계산기 | EMFLS</title>
+  <meta name="description" content="주택담보대출 중도상환수수료를 계산하고 인지세, 국민주택채권 할인비용을 반영해 대환대출 비용 회수 시점과 3년·만기 순절감액을 비교하세요.">
+  <link rel="canonical" href="https://emfls.github.io/kor/util/mortgage-early-repayment-fee-refinance-breakeven-2026/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:title" content="2026 주담대 중도상환수수료·대환대출 손익분기점 계산기">
+  <meta property="og:description" content="중도상환수수료와 대환 비용을 반영해 몇 개월이면 비용을 회수하는지 계산하세요.">
+  <meta property="og:url" content="https://emfls.github.io/kor/util/mortgage-early-repayment-fee-refinance-breakeven-2026/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="2026 주담대 중도상환수수료·대환대출 손익분기점 계산기">
+  <meta name="twitter:description" content="중도상환수수료, 대환 초기비용, 손익분기점과 기간별 순절감액을 비교하세요.">
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <script>
+    if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { window.dataLayer.push(arguments); }
+      gtag('js', new Date());
+      gtag('config', 'G-QP5Q67GE5B');
+      for (const src of [
+        'https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B',
+        'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754'
+      ]) {
+        const tag = document.createElement('script');
+        tag.src = src;
+        tag.async = true;
+        tag.crossOrigin = 'anonymous';
+        document.head.append(tag);
+      }
+    }
+  </script>
+  <style>
+    :root { color-scheme: light; font: 100%/1.6 system-ui, -apple-system, "Apple SD Gothic Neo", "맑은 고딕", sans-serif; color: #172b30; background: #f2f6f5; }
+    *, *::before, *::after { box-sizing: border-box; }
+    body, h1, h2, h3, p, figure, dl, dd { margin: 0; }
+    a { color: #075b53; text-underline-offset: .2em; }
+    :focus-visible { outline: 3px solid #007c71; outline-offset: 3px; }
+    [hidden] { display: none !important; }
+    main { width: min(100% - 2rem, 71rem); margin-inline: auto; padding-block: 1.25rem 3rem; overflow-wrap: anywhere; }
+    nav, .preset { display: flex; flex-wrap: wrap; gap: .6rem 1rem; align-items: center; }
+    .hero { padding-block: 2rem 1.25rem; }
+    h1 { font-size: clamp(1.8rem, 4.5vw, 3.4rem); max-width: 22ch; line-height: 1.19; letter-spacing: -.055em; }
+    h2 { font-size: 1.36rem; line-height: 1.35; letter-spacing: -.03em; }
+    h3 { font-size: 1.04rem; }
+    .hero p, h2 + p, h3 + p { margin-top: .65rem; }
+    .summary, .warning, .panel { margin-block: 1rem; padding: clamp(1rem, 3vw, 1.5rem); border-radius: 1rem; min-width: 0; }
+    .summary { background: #dcefe9; border: 1px solid #b5d8cd; }
+    .warning { background: #fff3df; border: 1px solid #e7c891; }
+    .panel { background: white; border: 1px solid #d3e1de; }
+    .workspace { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 1rem; }
+    .workspace > .panel { margin-block: 0; }
+    .fields, .metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; margin-top: 1rem; }
+    label { display: block; font-weight: 650; line-height: 1.4; }
+    .field { min-width: 0; }
+    .field input:not([type="checkbox"]) { width: 100%; min-width: 0; margin-top: .35rem; display: block; }
+    input, button, select { font: inherit; color: inherit; }
+    input:not([type="checkbox"]), button, select { min-height: 44px; border-radius: .55rem; border: 1px solid #829c96; padding: .4rem .55rem; background: white; }
+    button, select, summary { cursor: pointer; }
+    .full { grid-column: 1 / -1; }
+    .choice { display: flex; gap: .5rem; align-items: flex-start; }
+    .hint, figcaption { color: #425b59; font-size: .875rem; margin-top: .3rem; }
+    .primary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; padding: 1rem; margin: 1rem 0; border-radius: .8rem; background: #123f3a; color: white; }
+    .primary dt, .metrics dt { font-size: .9rem; }
+    dd { font-weight: 750; font-variant-numeric: tabular-nums; }
+    .primary dd { font-size: clamp(1.05rem, 3.5vw, 1.75rem); }
+    .metrics > div { padding-top: .55rem; border-top: 1px solid #d3e1de; min-width: 0; }
+    .negative { color: #9a2e22; }
+    #error { color: #9a2e22; font-weight: 700; }
+    figure { margin-top: 1.1rem; }
+    .chart { display: block; width: 100%; height: auto; margin-top: .6rem; background: #f2f7f5; border-radius: .6rem; }
+    .ad { min-height: 250px; min-width: 0; width: 100%; margin-block: 1.25rem; }
+    table { width: 100%; table-layout: fixed; border-collapse: collapse; margin-block: .75rem 1rem; font-size: .92rem; }
+    th, td { text-align: left; vertical-align: top; padding: .5rem .35rem; border-bottom: 1px solid #d3e1de; }
+    thead th { background: #e6f0ee; }
+    .rules th:first-child { width: 29%; }
+    .sources { padding-left: 1.2rem; margin-bottom: 0; }
+    details { border-top: 1px solid #d3e1de; padding-block: .7rem; }
+    details:first-of-type { margin-top: .8rem; }
+    summary { font-weight: 700; }
+    details p { margin-top: .5rem; }
+    @media (max-width: 52rem) { .workspace { grid-template-columns: minmax(0, 1fr); } }
+    @media (max-width: 25rem) { main { width: calc(100% - 1.25rem); } .fields { gap: .65rem; } }
+  </style>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"2026 주담대 중도상환수수료·대환대출 손익분기점 계산기","url":"https://emfls.github.io/kor/util/mortgage-early-repayment-fee-refinance-breakeven-2026/","inLanguage":"ko-KR","applicationCategory":"FinanceApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"KRW"}}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+    {"@type":"Question","name":"2026년에 주담대를 갈아타면 기존 대출에도 0.65%가 적용되나요?","acceptedAnswer":{"@type":"Answer","text":"기존 대출을 체결할 때 약정한 수수료율을 입력하세요. 0.65%는 2025년 1월 13일 개편 당시 5대 시중은행의 평균 예시입니다. 금융회사는 실비용을 매년 재산정하며 은행, 상품, 금리 유형 및 계약 시점에 따라 적용 요율이 달라집니다."}},
+    {"@type":"Question","name":"3년이 지나면 수수료가 얼마나 남나요?","acceptedAnswer":{"@type":"Answer","text":"일반적인 은행 주담대는 약정상 부과기간이 끝나면 0원입니다. 계산기는 1,095일을 기준으로 계산합니다. 윤년이나 상품별 부과기간 차이가 있을 수 있으므로 실제 면제일은 은행에서 확인하세요."}},
+    {"@type":"Question","name":"연간 10% 면제 특약을 어떻게 반영하나요?","acceptedAnswer":{"@type":"Answer","text":"특약이 있으면 옵션을 켜세요. 예시는 잔액의 10%를 차감합니다. 최초 대출금 기준이거나 이미 한도를 일부 사용했다면 은행이 알려준 미사용 면제 한도를 원 단위로 입력하세요."}},
+    {"@type":"Question","name":"인지세와 국민주택채권 할인비용은 어떻게 입력하나요?","acceptedAnswer":{"@type":"Answer","text":"인지세는 새 대출 약정액에 따른 세액의 50%를 계산합니다. 국민주택채권을 매입 후 즉시 매도한다면 액면액과 실제 매도대금의 차액을 은행 견적에서 확인해 넣으세요. 별도 말소비용 등이 있다면 기타 비용에 더하세요."}},
+    {"@type":"Question","name":"월 납입액이 줄어드는 시점과 손익분기점은 어떻게 다른가요?","acceptedAnswer":{"@type":"Answer","text":"월 납입액에는 원금과 이자가 모두 들어갑니다. 손익분기점은 순수 이자 절감액이 초기비용을 채운 시점입니다. 매달 남은 원금이 달라지므로 첫 달 이자로 계산한 추정치와 실제 상환표를 따르는 누적 시점이 다를 수 있습니다."}}
+  ]}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"무료 웹 도구","item":"https://emfls.github.io/kor/util/"},{"@type":"ListItem","position":2,"name":"주담대 대환대출 손익분기점 계산기","item":"https://emfls.github.io/kor/util/mortgage-early-repayment-fee-refinance-breakeven-2026/"}]}
+  </script>
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+<main>
+  <nav aria-label="현재 위치"><a href="/kor/util/">무료 웹 도구</a><span aria-current="page">주담대 갈아타기 계산기</span></nav>
+  <header class="hero">
+    <h1>2026 주담대 중도상환수수료·대환대출 손익분기점 계산기</h1>
+    <p>같은 만기로 갈아탈 때 이자가 얼마나 줄고, 수수료와 부대비용을 언제 회수하는지 확인하세요.</p>
+  </header>
+  <section class="summary" aria-labelledby="summary-title">
+    <h2 id="summary-title">핵심 요약</h2>
+    <p>잔액 3억 원, 금리 4.6% → 3.7%, 남은 만기 25년의 기본 예시에서는 중도상환수수료가 <strong>97만 5천 원</strong>입니다. 인지세와 채권 할인비용을 더한 <strong>120만 원</strong>은 누적 이자 절감으로 <strong>6개월째</strong> 회수합니다.</p>
+    <p>2025년 개편 당시 5대 은행 평균은 <strong>0.65%</strong>였습니다. 개편 전 1.20%·1.40%와 비교할 수 있으며, 실제 계산에는 기존 대출 약정의 요율을 사용하세요.</p>
+  </section>
+
+  <div class="workspace">
+    <section class="panel" aria-labelledby="input-title">
+      <h2 id="input-title">대출·비용 입력</h2>
+      <p class="hint">기존 대출잔액 전액을 같은 잔여기간의 원리금균등 대출로 갈아타는 조건입니다.</p>
+      <form id="loan-form">
+        <div class="fields">
+          <div class="field"><label for="balance">대출 잔액 (만 원)</label><input id="balance" type="number" inputmode="decimal" min="0.0001" max="1000000" step="0.0001" value="30000" required aria-describedby="balance-hint"><p id="balance-hint" class="hint">3억 원</p></div>
+          <div class="field"><label for="termMonths">남은 상환기간 (개월)</label><input id="termMonths" type="number" inputmode="decimal" min="1" max="600" step="1" value="300" required aria-describedby="term-hint"><p id="term-hint" class="hint">25년</p></div>
+          <div class="field"><label for="oldRate">기존 연 금리 (%)</label><input id="oldRate" type="number" inputmode="decimal" min="0" max="100" step="any" value="4.6" required></div>
+          <div class="field"><label for="newRate">신규 연 금리 (%)</label><input id="newRate" type="number" inputmode="decimal" min="0" max="100" step="any" value="3.7" required></div>
+          <div class="field"><label for="elapsedMonths">대출 경과 (개월)</label><input id="elapsedMonths" type="number" inputmode="decimal" min="0" step="any" value="18" required></div>
+          <div class="field"><label for="elapsedDays">실제 경과일 (선택)</label><input id="elapsedDays" type="number" inputmode="decimal" min="0" step="1" aria-describedby="days-hint"></div>
+          <p id="days-hint" class="hint full">실제 경과일을 입력하면 개월 환산값보다 우선합니다. 18개월은 약 547.5일로 환산합니다.</p>
+          <div class="field"><label for="feeRate">기존 약정 수수료율 (%)</label><input id="feeRate" type="number" inputmode="decimal" min="0" max="100" step="any" value="0.65" required></div>
+          <div class="field"><label for="legacyRate">개편 전 비교 요율</label><select id="legacyRate"><option value="1.4">1.40% (고정)</option><option value="1.2">1.20% (변동)</option></select></div>
+          <div class="preset full" role="group" aria-label="약정 요율 예시">
+            <button type="button" id="apply-reform">0.65% 예시 적용</button>
+            <button type="button" id="apply-legacy">개편 전 요율 적용</button>
+          </div>
+          <div class="full"><label class="choice"><input id="waiver" type="checkbox" aria-controls="waiver-fields"> 연간 10% 면제 특약 적용</label></div>
+          <div id="waiver-fields" class="field full" hidden>
+            <label for="availableWaiver">실제 미사용 면제 한도 (원, 선택)</label>
+            <input id="availableWaiver" type="number" inputmode="decimal" min="0" step="1" disabled aria-describedby="waiver-hint">
+            <p id="waiver-hint" class="hint">비워 두면 잔액의 10%를 적용합니다. 한도를 모두 사용했다면 0원을 입력하세요.</p>
+          </div>
+          <div class="field"><label for="bondCost">채권 할인비용 (원)</label><input id="bondCost" type="number" inputmode="decimal" min="0" max="10000000000" step="1" value="150000" required></div>
+          <div class="field"><label for="otherCost">기타 비용 (원)</label><input id="otherCost" type="number" inputmode="decimal" min="0" max="10000000000" step="1" value="0" required></div>
+          <p class="hint full">채권 할인비용 15만 원은 예시입니다. 은행 견적을 확인해 바꾸세요. 지출이 없다면 0원을 입력하세요.</p>
+        </div>
+      </form>
+      <noscript><p>실시간 계산을 이용하려면 자바스크립트를 켜 주세요.</p></noscript>
+    </section>
+
+    <section class="panel" aria-labelledby="result-title">
+      <h2 id="result-title">대환대출 예상 손익</h2>
+      <p id="error" role="status" hidden></p>
+      <p id="loading" class="hint">자바스크립트가 실행되면 결과가 표시됩니다.</p>
+      <div id="results" hidden>
+        <dl class="primary" aria-live="polite" aria-atomic="true">
+          <div><dt>누적 손익분기점</dt><dd id="actualBreakEven"></dd></div>
+          <div><dt>대환 초기비용</dt><dd id="upfrontCost"></dd></div>
+        </dl>
+        <p id="recovery-note" class="hint"></p>
+        <dl class="metrics">
+          <div><dt>중도상환수수료</dt><dd id="fee"></dd></div>
+          <div><dt>인지세 본인부담 (50%)</dt><dd id="stampCost"></dd></div>
+          <div><dt>0.65% 수수료 예시</dt><dd id="reformFee"></dd></div>
+          <div><dt id="legacy-label">개편 전 수수료 예시</dt><dd id="legacyFee"></dd></div>
+          <div><dt>0.65% 적용 시 수수료 절감</dt><dd id="feeDifference"></dd></div>
+          <div><dt>부과 잔존일수</dt><dd id="remainingDays"></dd></div>
+          <div><dt>월 원리금 절감액</dt><dd id="monthlyPaymentSavings"></dd></div>
+          <div><dt>첫 달 이자 절감액</dt><dd id="firstMonthInterestSavings"></dd></div>
+          <div><dt>기존 월 납입액</dt><dd id="oldPayment"></dd></div>
+          <div><dt>신규 월 납입액</dt><dd id="newPayment"></dd></div>
+          <div><dt id="three-year-label">3년 누적 순절감액</dt><dd id="threeYearNet"></dd></div>
+          <div><dt>만기 누적 순절감액</dt><dd id="maturityNet"></dd></div>
+        </dl>
+        <figure>
+          <h3>대환 후 누적 순이자 절감액</h3>
+          <svg class="chart" viewBox="0 0 440 176" role="img" aria-labelledby="chart-title chart-desc">
+            <title id="chart-title">대환 후 월별 누적 순이자 절감액</title>
+            <desc id="chart-desc"></desc>
+            <line id="zero-line" x1="99" x2="423" stroke="#627a76" stroke-dasharray="4 4"/>
+            <polyline id="curve" fill="none" stroke="#087564" stroke-width="2.5" stroke-linejoin="round"/>
+            <circle id="break-even-dot" r="4" fill="#087564"/>
+            <g fill="#36534e" font-family="system-ui, sans-serif" font-size="12">
+              <text id="chart-high" x="93" y="24" text-anchor="end"></text>
+              <text id="chart-low" x="93" y="148" text-anchor="end"></text>
+              <text x="99" y="167">0개월</text>
+              <text id="chart-term" x="423" y="167" text-anchor="end"></text>
+            </g>
+          </svg>
+          <figcaption>매달 누적 이자 차이에서 초기비용을 뺍니다. 점선은 손익 0원, 점은 비용을 회수한 첫 달입니다.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="다음 필수 확인 계산기" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">다음 필수 확인 계산기 (Next Check)</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">방금 계산한 결과를 바탕으로 바로 이어서 점검하세요:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/kor/util/stress-dsr-3-mortgage-limit-refinance-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">스트레스 DSR 대환 한도 계산기 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">갈아타기 심사 시 스트레스 DSR 3단계로 기존 대출액 전액 대환이 가능한지 확인하세요.</span></a>
+    <a href="/kor/util/mortgage-repayment-methods-tax-deduction-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">원리금균등 vs 체증식 &amp; 소득공제 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">대환 시 상환방식 변경과 장기주택저당차입금 이자 소득공제 한도를 비교하세요.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+  </div>
+
+  <aside class="warning" aria-labelledby="warning-title">
+    <h2 id="warning-title">손실 주의 · 매도나 재대환 시점을 먼저 확인하세요</h2>
+    <p>비용 회수 전에 집을 팔거나 다시 갈아타면 순손실이 날 수 있습니다. 실행일 기준 기존 은행의 상환 견적과 신규 은행의 금리·비용을 확인하세요. 계산은 두 금리가 유지된다고 가정하며, 신규 대출을 다시 중도상환할 때 붙는 비용과 소득공제 효과는 제외합니다.</p>
+  </aside>
+
+  <div class="ad" aria-label="광고">
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>
+      if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+    </script>
+  </div>
+
+  <section class="panel" aria-labelledby="rules-title">
+    <h2 id="rules-title">2026년 적용 법령과 은행 약정 기준</h2>
+    <table class="rules">
+      <thead><tr><th scope="col">항목</th><th scope="col">적용 기준</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">법상 부과기간</th><td>일반 은행 대출은 계약일로부터 3년 이내에 부과할 수 있습니다. 계산기는 3년을 1,095일로 환산합니다.</td></tr>
+        <tr><th scope="row">2025년 실비용 개편</th><td>2025년 1월 13일 신규 계약부터 적용. 개편 당시 금융위 발표 5대 은행 평균은 고정 1.40% → 0.65%, 변동 1.20% → 0.65%였습니다. 당시 5대 은행 공시 범위는 0.58~0.74%였습니다.</td></tr>
+        <tr><th scope="row">2026년 은행 공시 예</th><td>KB국민은행은 2026년 1월 1일 이후 신규 부동산담보대출에 변동 0.55%, 그 외 공시 요건 충족 시 0.75%를 안내합니다. 해당 은행의 2025년 개편 후 공시 예시는 0.58%였습니다.</td></tr>
+        <tr><th scope="row">연간 10% 면제</th><td>특약이 있는 상품에 적용합니다. 상품에 따라 최초 대출금이 기준일 수 있습니다. 미사용 한도를 확인하세요.</td></tr>
+        <tr><th scope="row">수수료 계산식</th><td>면제 한도를 뺀 상환 원금(최소 0원) × 약정 수수료율 × (부과 잔존일수 ÷ 1,095일). 실제 일수 계산과 원 단위 처리 방식은 은행 약정을 따릅니다.</td></tr>
+      </tbody>
+    </table>
+    <h3>인지세와 대환 초기비용</h3>
+    <table>
+      <thead><tr><th scope="col">신규 대출 약정액</th><th scope="col">인지세액</th><th scope="col">본인 50%</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">5천만 원 이하</th><td>비과세</td><td>0원</td></tr>
+        <tr><th scope="row">5천만 원 초과~1억 원 이하</th><td>70,000원</td><td>35,000원</td></tr>
+        <tr><th scope="row">1억 원 초과~10억 원 이하</th><td>150,000원</td><td>75,000원</td></tr>
+        <tr><th scope="row">10억 원 초과</th><td>350,000원</td><td>175,000원</td></tr>
+      </tbody>
+    </table>
+    <p>초기비용에는 중도상환수수료, 본인 부담 인지세, 국민주택채권 할인비용과 기타 비용을 더합니다. 단순 회수 기간은 초기비용을 첫 달 이자 절감액(잔액 × 금리차 ÷ 12)으로 나눕니다. 누적 회수 시점은 매월 원리금균등 상환표의 이자를 비교해 구합니다.</p>
+    <ul class="sources">
+      <li><a href="https://obank.kbstar.com/quics?cc=b030779%3Ab030008&amp;page=C019482&amp;prcode=LN20001350">KB국민은행 · 연간 10% 면제 특약이 있는 상품 사례</a></li>
+      <li><a href="https://www.fsc.go.kr/po010101/83833">금융위원회 · 2025년 중도상환수수료 개편 보도자료</a></li>
+      <li><a href="https://law.go.kr/LSW/lsLinkCommonInfo.do?chrClsCd=010202&amp;lsJoLnkSeq=1025272337">국가법령정보센터 · 금융소비자보호법 제20조</a></li>
+      <li><a href="https://www.law.go.kr/lsInfoP.do?lsiSeq=276139">국가법령정보센터 · 인지세법 제3조·제6조</a></li>
+      <li><a href="https://obank.kbstar.com/quics?page=C016694">KB국민은행 · 계약 시점별 중도상환수수료 공시</a></li>
+      <li><a href="https://obank.kbstar.com/quics?cc=b030779%3Ab030008&amp;isNew=N&amp;page=C019482&amp;prcode=LN20000137">KB국민은행 · 주택담보대출 인지세·채권 고객 부담 안내</a></li>
+    </ul>
+  </section>
+
+  <div class="ad" aria-label="광고">
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>
+      if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+    </script>
+  </div>
+
+  <section class="panel" aria-labelledby="faq-title">
+    <h2 id="faq-title">자주 묻는 질문</h2>
+    <details><summary>2026년에 주담대를 갈아타면 기존 대출에도 0.65%가 적용되나요?</summary><p>기존 대출을 체결할 때 약정한 수수료율을 입력하세요. 0.65%는 2025년 1월 13일 개편 당시 5대 시중은행의 평균 예시입니다. 금융회사는 실비용을 매년 재산정하며 은행, 상품, 금리 유형 및 계약 시점에 따라 적용 요율이 달라집니다.</p></details>
+    <details><summary>3년이 지나면 수수료가 얼마나 남나요?</summary><p>일반적인 은행 주담대는 약정상 부과기간이 끝나면 0원입니다. 계산기는 1,095일을 기준으로 계산합니다. 윤년이나 상품별 부과기간 차이가 있을 수 있으므로 실제 면제일은 은행에서 확인하세요.</p></details>
+    <details><summary>연간 10% 면제 특약을 어떻게 반영하나요?</summary><p>특약이 있으면 옵션을 켜세요. 예시는 잔액의 10%를 차감합니다. 최초 대출금 기준이거나 이미 한도를 일부 사용했다면 은행이 알려준 미사용 면제 한도를 원 단위로 입력하세요.</p></details>
+    <details><summary>인지세와 국민주택채권 할인비용은 어떻게 입력하나요?</summary><p>인지세는 새 대출 약정액에 따른 세액의 50%를 계산합니다. 국민주택채권을 매입 후 즉시 매도한다면 액면액과 실제 매도대금의 차액을 은행 견적에서 확인해 넣으세요. 별도 말소비용 등이 있다면 기타 비용에 더하세요.</p></details>
+    <details><summary>월 납입액이 줄어드는 시점과 손익분기점은 어떻게 다른가요?</summary><p>월 납입액에는 원금과 이자가 모두 들어갑니다. 손익분기점은 순수 이자 절감액이 초기비용을 채운 시점입니다. 매달 남은 원금이 달라지므로 첫 달 이자로 계산한 추정치와 실제 상환표를 따르는 누적 시점이 다를 수 있습니다.</p></details>
+  </section>
+  <nav aria-label="관련 도구">
+    <a href="/kor/util/fin-calc/">금융 계산기</a>
+    <a href="/kor/util/">한국어 웹 도구</a>
+    <a href="/util/" hreflang="en" lang="en">English tools</a>
+  </nav>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 대한민국 세무·금융·복지 핵심 계산기</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">2026년도 국세청·고용노동부 기준 연계 계산 도구:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/kor/util/mortgage-repayment-methods-tax-deduction-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 주택담보대출 상환방식 비교 계산기 (원리금균등 vs 원금균등 vs 체증식 &amp; 연말정산 2,000만 소득공제)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 주택담보대출 원리금균등·원금균등·체증식 월 상환액 및 총 이자 비교, 장기주택저당차입금 기준시가 6억 이하 최대 2,000만 원 이자 소득공제 환급액 계산기.</span>
+    </a>
+    <a href="/kor/util/multi-house-capital-gains-tax-2026-2027-reform/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026~2027 다주택자 양도세 중과(+20%/30%p) vs 세제개편안 완화(+5%/10%p) 소급 환급 계산기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 5월 다주택자 양도소득세 중과유예 일몰 종료에 따른 법정 중과세율(+20%/30%p)과 2026.8 세제개편안 단계별 한시 완화(+5%/10%p) 세액 비...</span>
+    </a>
+    <a href="/kor/util/national-pension-early-vs-delayed-breakeven-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 국민연금 조기수령 vs 연기연금 손익분기 나이 계산기 (조기 -30%·연기 +36%·건보 피부양자 탈락 경보)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 국민연금 조기수령(1년당 -6%, 최대 -30%) vs 정상수령(만 65세) vs 연기연금(1년당 +7.2%, 최대 +36%) 손익분기 나이(76세/84세...</span>
+    </a>
+    <a href="/kor/util/nhis-medical-out-of-pocket-cap-refund-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 국민건강보험 본인부담상한제 계산기 | 소득 1~10분위 연간 병원비 초과 환급금</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 보건복지부 확정 건강보험 본인부담상한제 1~10분위 상한액(1분위 90만·10분위 843만 원, 요양병원 120일 초과 기준) 급여 본인부담금 초과 환급금...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>2026 글로벌 세무·금융·복지 계산기 전수 보기 &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+</body>
+</html>

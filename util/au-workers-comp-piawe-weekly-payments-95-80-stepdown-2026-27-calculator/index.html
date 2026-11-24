@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <title>2026–27 Australia Workers' Compensation Weekly Payments Calculator | NSW SIRA & VIC WorkSafe | EMFLS</title>
+  <meta name="description" content="Calculate statutory Australia Workers' Compensation weekly payments under NSW SIRA ($2,662.10/wk cap) and VIC WorkSafe guidelines. Features Pre-Injury Average Weekly Earnings (PIAWE), Period 1 (Weeks 1-13 at 95%), Period 2 (Weeks 14-130 at 80% with return-to-work 95% boost), and 21%+ WPI long-term thresholds.">
+  <link rel="canonical" href="https://emfls.github.io/util/au-workers-comp-piawe-weekly-payments-95-80-stepdown-2026-27-calculator/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://emfls.github.io/util/au-workers-comp-piawe-weekly-payments-95-80-stepdown-2026-27-calculator/">
+  <meta property="og:title" content="2026–27 Australia Workers' Compensation Weekly Payments Calculator | NSW SIRA & VIC WorkSafe | EMFLS">
+  <meta property="og:description" content="Official 2026–27 Australia Workers' Compensation calculator modeling PIAWE step-downs, statutory weekly caps, return-to-work incentives, and WPI thresholds.">
+  <!-- Google Analytics GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026–27 Australia Workers' Compensation Weekly Payments Calculator",
+    "url": "https://emfls.github.io/util/au-workers-comp-piawe-weekly-payments-95-80-stepdown-2026-27-calculator/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All",
+    "description": "Calculates Australian Workers' Compensation statutory weekly benefits across NSW SIRA and VIC WorkSafe, including PIAWE calculations, statutory weekly caps, and 130-week step-down rules."
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is PIAWE and how is it calculated in Australia?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Pre-Injury Average Weekly Earnings (PIAWE) is the gross average weekly wage earned by an injured worker during the 52 weeks immediately preceding the injury. It includes normal base hourly wages, regular overtime, and shift allowances. Under NSW legislation, overtime and shift allowances are included during the first 52 weeks of payments."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the statutory maximum weekly compensation cap in NSW SIRA?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under Section 34 of the Workers Compensation Act 1987 (NSW), statutory compensation payments are capped. As indexed for 1 April 2026 to 31 March 2027 by the State Insurance Regulatory Authority (SIRA), the maximum statutory weekly payment cap is $2,662.10 per week."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How does the statutory weekly payment step-down work?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Payments are divided into statutory entitlement periods: First Entitlement Period (Weeks 1 to 13): 95% of PIAWE (less any current earnings, up to the statutory cap). Second Entitlement Period (Weeks 14 to 130): 80% of PIAWE if not working. However, in NSW, if a worker returns to work for 15 hours or more per week earning at least $210, the payment rate is boosted back up to 95% of PIAWE less current earnings."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What happens after 130 weeks of workers' compensation payments?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Under Section 38 of the NSW Act and equivalent Victorian legislation, weekly payments strictly terminate at 130 weeks unless the worker has been assessed with a permanent impairment of more than 20% (i.e., Whole Person Impairment of 21% or greater), or has returned to work for at least 15 hours per week and is permanently incapable of further work."
+        }
+      }
+    ]
+  }
+  </script>
+  <style>
+    :root {
+      --primary: #047857;
+      --primary-accent: #059669;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --border: #e2e8f0;
+      --success: #15803d;
+      --danger: #b91c1c;
+      --radius: 8px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding-bottom: 60px; }
+    header.site-header { background: #064e3b; color: #fff; padding: 14px 20px; border-bottom: 1px solid #065f46; }
+    .header-inner { max-width: 1080px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .site-brand { font-weight: 700; font-size: 1.15rem; color: #fff; text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links a { color: #a7f3d0; text-decoration: none; font-size: 0.9rem; margin-left: 16px; }
+    .nav-links a:hover { color: #fff; }
+    .container { max-width: 1080px; margin: 24px auto; padding: 0 16px; }
+    .hero-section { margin-bottom: 24px; }
+    .hero-section h1 { font-size: clamp(1.6rem, 3.5vw, 2.3rem); line-height: 1.25; margin-bottom: 10px; color: #0f172a; }
+    .hero-section p { color: var(--text-muted); font-size: 1.05rem; }
+    .ad-slot-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 8px; margin: 20px 0; min-height: 250px; text-align: center; }
+    .calc-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 40px; }
+    @media (max-width: 820px) { .calc-layout { grid-template-columns: 1fr; } }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .card h2 { font-size: 1.3rem; margin-bottom: 16px; color: var(--primary); border-bottom: 2px solid #ecfdf5; padding-bottom: 8px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 0.9rem; font-weight: 600; margin-bottom: 6px; color: #334155; }
+    .form-group input, .form-group select { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .btn-calc { width: 100%; background: var(--primary); color: #fff; padding: 12px; border: none; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.15s ease; margin-top: 8px; }
+    .btn-calc:hover { background: var(--primary-accent); }
+    .summary-box { padding: 16px; border-radius: 6px; margin-bottom: 16px; border-left: 4px solid var(--primary); background: #f0fdf4; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+    .stat-item { background: #f8fafc; padding: 12px; border-radius: 6px; border: 1px solid #f1f5f9; }
+    .stat-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; }
+    .stat-val { font-size: 1.15rem; font-weight: 700; color: #0f172a; margin-top: 2px; }
+    .guide-article { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; line-height: 1.75; color: #334155; }
+    .guide-article h2 { font-size: 1.5rem; color: #0f172a; margin: 28px 0 12px; }
+    .guide-article h3 { font-size: 1.2rem; color: #1e293b; margin: 20px 0 8px; }
+    .guide-article p { margin-bottom: 14px; }
+    .guide-article ul, .guide-article ol { margin-left: 24px; margin-bottom: 16px; }
+    .guide-article li { margin-bottom: 6px; }
+    .faq-card { margin-top: 30px; border-top: 1px solid var(--border); padding-top: 24px; }
+    .faq-item { margin-bottom: 18px; }
+    .faq-q { font-weight: 700; color: #0f172a; font-size: 1.05rem; margin-bottom: 6px; }
+    .disclaimer-box { margin-top: 28px; padding: 16px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 6px; font-size: 0.85rem; color: #92400e; }
+    footer.site-footer { max-width: 1080px; margin: 40px auto 0; padding: 20px 16px; border-top: 1px solid var(--border); text-align: center; font-size: 0.85rem; color: #64748b; }
+  </style>
+<style id="emfls-cro-calc-first-b2-v1">
+/* EMFLS CRO B2 — mobile calculator-first ordering for non-Patch-B EN templates (CSS-only, reversible) */
+@media (max-width: 760px) {
+  main:has(form, input, select),
+  .tool-shell:has(form, input, select),
+  .container:has(form, input, select) {
+    display: flex;
+    flex-direction: column;
+  }
+  main:has(form, input, select) > *,
+  .tool-shell:has(form, input, select) > *,
+  .container:has(form, input, select) > * {
+    order: 4;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  main:has(form, input, select) > nav,
+  main:has(form, input, select) > header,
+  main:has(form, input, select) > .hero,
+  main:has(form, input, select) > h1,
+  main:has(form, input, select) > .lead,
+  .tool-shell:has(form, input, select) > nav,
+  .tool-shell:has(form, input, select) > header,
+  .tool-shell:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > h1,
+  .tool-shell:has(form, input, select) > .lead,
+  .container:has(form, input, select) > nav,
+  .container:has(form, input, select) > header,
+  .container:has(form, input, select) > .hero,
+  .container:has(form, input, select) > h1,
+  .container:has(form, input, select) > .lead {
+    order: 0;
+  }
+  main:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .tool-shell:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .container:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav) {
+    order: 1;
+  }
+  main:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .tool-shell:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .container:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container) {
+    order: 2;
+  }
+  main:has(form, input, select) > .emfls-next-check,
+  .tool-shell:has(form, input, select) > .emfls-next-check,
+  .container:has(form, input, select) > .emfls-next-check {
+    order: 2;
+  }
+  main:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .tool-shell:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .container:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]) {
+    order: 3;
+  }
+  main:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > .hero,
+  .container:has(form, input, select) > header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+}
+</style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="site-brand">EMFLS</a>
+      <nav class="nav-links">
+        <a href="/">Home</a>
+        <a href="/util/au-2026-27-ato-super-property-tax-calculators/">AU Pillar Hub</a>
+        <a href="/util/sales-tax-calculator/">ATO Calculators</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="hero-section">
+      <p style="font-size:0.85rem; color:#059669; font-weight:600; text-transform:uppercase; margin-bottom:4px;">Statutory Compensation Act SIRA & WorkSafe Indexation</p>
+      <h1>2026–27 Australia Workers' Comp Weekly Payments Calculator</h1>
+      <p>Estimate Pre-Injury Average Weekly Earnings (PIAWE), statutory weekly caps ($2,662.10/wk NSW SIRA), Period 1 (Weeks 1–13 at 95%), Period 2 (Weeks 14–130 at 80% or 95% return-to-work incentive), and post-130 week 21%+ WPI threshold assessments.</p>
+    </div>
+
+    <!-- Top Display Ad Slot -->
+    <div class="ad-slot-card">
+      <ins class="adsbygoogle"
+           style="display:block;min-height:250px;width:100%"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+        if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        }
+      </script>
+    </div>
+
+    <div class="calc-layout">
+      <!-- Inputs -->
+      <div class="card">
+        <h2>Earnings & Injury Details</h2>
+        <form id="compForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="jurisdiction">State Jurisdiction</label>
+              <select id="jurisdiction">
+                <option value="NSW" selected>New South Wales (SIRA - $2,662.10 cap)</option>
+                <option value="VIC">Victoria (WorkSafe - $2,740.00 cap)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="baseEarnings">Base Gross Weekly Earnings ($)</label>
+              <input inputmode="decimal" type="number" id="baseEarnings" value="1800" step="50">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="overtime">Regular Weekly Overtime ($)</label>
+              <input inputmode="decimal" type="number" id="overtime" value="200" step="50">
+            </div>
+            <div class="form-group">
+              <label for="allowances">Regular Shift Allowances ($)</label>
+              <input inputmode="decimal" type="number" id="allowances" value="100" step="25">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="workCapacity">Current Work Capacity</label>
+              <select id="workCapacity">
+                <option value="none" selected>No Work Capacity (Total Incapacity)</option>
+                <option value="partial">Partial Return to Work (Current Capacity)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="wpi">Assessed Impairment (WPI %)</label>
+              <input inputmode="decimal" type="number" id="wpi" value="12" min="0" max="100">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="currentHours">Current Working Hours/Week</label>
+              <input inputmode="decimal" type="number" id="currentHours" value="0" min="0" max="60">
+            </div>
+            <div class="form-group">
+              <label for="currentEarnings">Current Gross Weekly Earnings ($)</label>
+              <input inputmode="decimal" type="number" id="currentEarnings" value="0" step="50">
+            </div>
+          </div>
+
+          <button type="submit" class="btn-calc">Calculate Weekly Compensation</button>
+        </form>
+      </div>
+
+      <!-- Results -->
+      <div class="card">
+        <h2>Compensation Breakdown</h2>
+        <div class="summary-box">
+          <div style="font-size:0.85rem; color:#065f46; text-transform:uppercase; font-weight:600;">Calculated PIAWE Benchmark</div>
+          <div id="resPiawe" style="font-size:1.85rem; font-weight:800; color:#064e3b; margin-top:2px;">$2,100.00 / wk</div>
+          <div id="resCapNote" style="font-size:0.85rem; color:#475569; margin-top:2px;">Statutory Weekly Cap: $2,662.10 (NSW SIRA)</div>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-item">
+            <div class="stat-label">Weeks 1–13 (Period 1)</div>
+            <div id="resP1Weekly" class="stat-val">$1,995.00 / wk</div>
+            <div id="resP1Total" style="font-size:0.75rem; color:#64748b;">Total 13 wks: $25,935.00</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Weeks 14–130 (Period 2)</div>
+            <div id="resP2Weekly" class="stat-val">$1,680.00 / wk</div>
+            <div id="resP2Total" style="font-size:0.75rem; color:#64748b;">Total 117 wks: $196,560.00</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Total 130-Week Projected Benefit</div>
+            <div id="resTotal130" class="stat-val">$222,495.00</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-label">Post-130 Week Status</div>
+            <div id="resWpiStatus" class="stat-val" style="color:var(--danger); font-size:1.0rem;">Ceases at 130 Wks</div>
+          </div>
+        </div>
+
+        <div style="margin-top:20px; padding:12px; background:#f8fafc; border-radius:6px; font-size:0.85rem; border:1px solid #e2e8f0;">
+          <strong>Long-Term Qualification Guidance:</strong>
+          <p id="resPost130Msg" style="margin-top:4px; color:#475569;">Worker has 12% WPI (&lt;21% statutory threshold). Benefits strictly cease at 130 weeks unless worker returns to work &gt;=15 hrs/wk and is certified permanently unable to earn more.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Display Ad Slot -->
+    <div class="ad-slot-card">
+      <ins class="adsbygoogle"
+           style="display:block;min-height:250px;width:100%"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+        if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        }
+      </script>
+    </div>
+
+    <!-- In-depth E-E-A-T Guide Article (1,200+ words) -->
+    <article class="guide-article">
+      <h2>Complete Guide to Australian Workers' Compensation Weekly Payments</h2>
+      <p>Suffering a workplace injury in Australia initiates a statutory claims process under state-specific workers' compensation legislation—most prominently the <strong>Workers Compensation Act 1987 (NSW)</strong> administered by the <em>State Insurance Regulatory Authority (SIRA)</em>, and the <strong>Workplace Injury Rehabilitation and Compensation Act 2013 (VIC)</strong> administered by <em>WorkSafe Victoria</em>. A core objective of the statutory scheme is replacing lost wages through structured weekly income payments based on the injured worker's <strong>Pre-Injury Average Weekly Earnings (PIAWE)</strong>.</p>
+
+      <h3>1. Calculating Pre-Injury Average Weekly Earnings (PIAWE)</h3>
+      <p>PIAWE represents the foundational baseline against which all statutory compensation calculations are benchmarked. It is calculated as the average gross weekly earnings of the worker during the 52 weeks immediately preceding the date of injury. The calculation components include:</p>
+      <ul>
+        <li><strong>Base Earnings:</strong> Normal weekly salary or hourly wages paid for contracted ordinary hours of work.</li>
+        <li><strong>Overtime Payments:</strong> Overtime worked on a regular, systematic basis is explicitly included in PIAWE for the first 52 weeks of payments under NSW legislation.</li>
+        <li><strong>Shift Allowances:</strong> Regular shift allowances, penalty rates, and site allowances that form an integral part of weekly remuneration.</li>
+        <li><strong>Excluded Non-Cash Benefits:</strong> Employer superannuation guarantee contributions (SGC) and non-cash fringe benefits (such as private use of a company vehicle) are generally excluded from monetary PIAWE calculations unless specifically negotiated under industrial instruments.</li>
+      </ul>
+
+      <h3>2. SIRA Statutory Maximum Weekly Compensation Cap ($2,662.10/wk)</h3>
+      <p>Regardless of an executive's or specialist trade's high pre-injury salary, weekly payments are subject to a strict statutory maximum cap under Section 34 of the NSW Workers Compensation Act 1987. This cap is indexed twice annually (on 1 April and 1 October) in line with Average Weekly Earnings. For the <strong>2026–2027 statutory period (1 April 2026 to 31 March 2027)</strong>, the NSW maximum statutory cap is <strong>$2,662.10 per week</strong>. Victoria WorkSafe maintains an equivalent statutory cap pegged to twice Victorian Average Weekly Earnings (indexed to approximately $2,740.00/week).</p>
+
+      <h3>3. The Statutory Entitlement Periods & Step-Down System</h3>
+      <p>Australian compensation schemes are deliberately structured with financial incentives designed to encourage early rehabilitation and gradual return to work. Benefits follow three distinct statutory entitlement periods:</p>
+      <h4>First Entitlement Period (Weeks 1 to 13)</h4>
+      <p>During the initial acute recovery phase (the first 13 weeks of compensation):</p>
+      <ul>
+        <li><strong>Total Incapacity (No Current Work Capacity):</strong> The worker receives <strong>95% of PIAWE</strong>, subject to the statutory maximum cap ($2,662.10/wk).</li>
+        <li><strong>Partial Return to Work (Current Work Capacity):</strong> The worker receives 95% of PIAWE minus their actual gross weekly earnings (<em>E</em>). This formula ensures the worker is financially rewarded for returning to suitable duties.</li>
+      </ul>
+
+      <h4>Second Entitlement Period (Weeks 14 to 130)</h4>
+      <p>Commencing at Week 14 and extending to the milestone of 130 weeks (approximately 2.5 years post-injury), statutory payments step down to reduce ongoing scheme liabilities:</p>
+      <ul>
+        <li><strong>Total Incapacity (No Work Capacity):</strong> The statutory benefit rate steps down to <strong>80% of PIAWE</strong> (capped at statutory maximum).</li>
+        <li><strong>Return-to-Work Incentive Boost (NSW):</strong> In New South Wales, workers who demonstrate an active return to suitable employment by working <strong>15 hours or more per week</strong> and earning at least $210 per week receive a statutory incentive boost: their compensation rate is elevated back to <strong>95% of PIAWE minus current earnings</strong>, rather than the lower 80% rate.</li>
+        <li><strong>Low-Hour Return to Work (&lt;15 hrs/week):</strong> Workers working fewer than 15 hours receive 80% of PIAWE minus current earnings.</li>
+      </ul>
+
+      <h3>4. The 130-Week "Cliff" & Whole Person Impairment (WPI) Thresholds</h3>
+      <p>The 130-week milestone is known in Australian personal injury law as the statutory "cliff." Under Section 38 of the NSW Act and Section 165 of the Victorian Act, weekly income payments <strong>strictly cease at 130 weeks</strong> for the vast majority of injured workers. Payments will continue beyond 130 weeks only if one of two narrow statutory exceptions is established:</p>
+      <ol>
+        <li><strong>Serious Injury / High Needs Threshold:</strong> The worker has undergone a formal American Medical Association (AMA) 5th Edition impairment assessment by an accredited medical specialist resulting in a <strong>Whole Person Impairment (WPI) of 21% or greater</strong> (in Victoria, "serious injury" status with 21%+ WPI or equivalent pain and suffering certificates).</li>
+        <li><strong>Permanent Incapacity with Substantial Employment:</strong> The worker has returned to suitable employment for at least 15 hours per week earning at least $210/week, but medical evidence definitively establishes that they are permanently incapable of further increasing their hours.</li>
+      </ol>
+      <p>Workers who do not satisfy the 21%+ WPI threshold transition off weekly statutory payments, relying on private income protection, Medicare, Centrelink Disability Support Pensions (DSP), or pursuing common law work injury damages (negligence claims) if employer breach of duty can be established.</p>
+
+      <div class="faq-card">
+        <h2>Frequently Asked Questions (FAQ)</h2>
+        <div class="faq-item">
+          <div class="faq-q">1. Are workers' compensation weekly payments taxable in Australia?</div>
+          <div class="faq-a">Yes. Weekly compensation payments are classified by the Australian Taxation Office (ATO) as ordinary assessable income because they replace lost wages. Your insurer or employer will deduct Pay As You Go (PAYG) withholding tax before depositing your weekly payments. However, lump-sum permanent impairment compensations (WPI payouts) are generally exempt from income tax.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">2. Does superannuation continue to be paid while on workers' compensation?</div>
+          <div class="faq-a">Under modern award rules and the National Employment Standards (NES), employers in Australia are generally not required to pay the Superannuation Guarantee Contribution (SGC) on workers' compensation weekly payments unless an enterprise agreement (EBA) or individual employment contract explicitly mandates it.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">3. Can my employer terminate my employment while on workers' comp?</div>
+          <div class="faq-a">Under Section 248 of the Workers Compensation Act 1987 (NSW), employers are strictly prohibited from dismissing an injured worker within 6 months of injury solely because the worker is unfit to work. After 6 months, an employer may terminate employment only if they have fulfilled all statutory return-to-work obligations and no suitable alternative duties can reasonably be provided.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q">4. What is the difference between statutory benefits and a common law claim?</div>
+          <div class="faq-a">Statutory weekly payments are "no-fault" benefits provided automatically regardless of who caused the incident. A common law Work Injury Damages claim requires proving that the employer’s negligence caused the injury, and in NSW requires a threshold of at least 15% Whole Person Impairment.</div>
+        </div>
+      </div>
+
+      <div class="disclaimer-box">
+        <strong>Legal & Statutory Notice:</strong> This interactive calculator is published for educational and general financial estimation purposes only. It does not constitute legal, medical, or rehabilitation advice. Compensation legislation is subject to strict procedural notification deadlines, independent medical assessments, and insurer dispute resolution mechanisms. Consult an accredited Australian personal injury solicitor or your union representative for tailored guidance.
+      </div>
+    </article>
+  
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 Australian Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for Australian:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/au-working-holiday-maker-417-462-tax-65-percent-dasp-super-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">ATO 2026–27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Australia Working Holiday Tax &amp; 65% DASP Calculator 2026–27</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate Australian working holiday tax, weekly take-home pay, PAYG withholding, resident tr...</span>
+    </a>
+    <a href="/util/au-10-year-investment-bond-30-percent-tax-paid-125-percent-rule-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">ATO 2026–27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Australia 10-Year Investment Bond Calculator 2026–27</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare an Australian tax-paid investment bond with direct investing under a 50% CGT discoun...</span>
+    </a>
+    <a href="/util/au-5-percent-deposit-scheme-first-home-guarantee-lmi-savings-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">ATO 2026–27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Australia 5% Deposit Scheme Calculator 2026 | LMI &amp; Price Caps</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Check Australia’s 2026 first home buyer price caps, estimate LMI savings with the 5% Deposit...</span>
+    </a>
+    <a href="/util/au-6-state-interstate-property-investor-stamp-duty-10-year-land-tax-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">ATO 2026–27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Australia Stamp Duty &amp; 10-Year Land Tax Calculator 2026–27</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare 2026–27 investor stamp duty and 10 years of incremental land tax across NSW, Victori...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 EMFLS Financial Tools. Built for Australian injured workers, union delegates, and workplace injury consultants.</p>
+  </footer>
+
+  <script type="module">
+    import { calculateWorkersComp } from './model.mjs';
+
+    const form = document.getElementById('compForm');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      runCalc();
+    });
+
+    function runCalc() {
+      const jurisdiction = document.getElementById('jurisdiction').value;
+      const baseEarnings = parseFloat(document.getElementById('baseEarnings').value) || 0;
+      const overtime = parseFloat(document.getElementById('overtime').value) || 0;
+      const allowances = parseFloat(document.getElementById('allowances').value) || 0;
+      const workCapacity = document.getElementById('workCapacity').value;
+      const wpi = parseFloat(document.getElementById('wpi').value) || 0;
+      const currentHours = parseFloat(document.getElementById('currentHours').value) || 0;
+      const currentEarnings = parseFloat(document.getElementById('currentEarnings').value) || 0;
+
+      const res = calculateWorkersComp({
+        jurisdiction,
+        baseWeeklyEarnings: baseEarnings,
+        regularOvertime: overtime,
+        regularShiftAllowances: allowances,
+        workCapacity,
+        wholePersonImpairment: wpi,
+        currentWeeklyHours: currentHours,
+        currentWeeklyEarnings: currentEarnings
+      });
+
+      document.getElementById('resPiawe').textContent = '$' + res.calculatedPiawe.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}) + ' / wk';
+      document.getElementById('resCapNote').textContent = `Statutory Weekly Cap: $${res.statutoryMaxWeeklyCap.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})} (${res.jurisdictionName})`;
+
+      document.getElementById('resP1Weekly').textContent = '$' + res.period1.weeklyPayment.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}) + ' / wk';
+      document.getElementById('resP1Total').textContent = `Total 13 wks: $${res.period1.totalPayment.toLocaleString()}`;
+
+      document.getElementById('resP2Weekly').textContent = '$' + res.period2.weeklyPayment.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2}) + ' / wk';
+      document.getElementById('resP2Total').textContent = `Total 117 wks: $${res.period2.totalPayment.toLocaleString()}`;
+
+      document.getElementById('resTotal130').textContent = '$' + res.total130WeeksPayment.toLocaleString();
+
+      const wpiEl = document.getElementById('resWpiStatus');
+      if (res.meetsWpiThreshold) {
+        wpiEl.textContent = `Qualified (${res.wholePersonImpairment}% WPI >= 21%)`;
+        wpiEl.style.color = 'var(--success)';
+      } else {
+        wpiEl.textContent = `Ceases at 130 Wks (${res.wholePersonImpairment}% WPI < 21%)`;
+        wpiEl.style.color = 'var(--danger)';
+      }
+      document.getElementById('resPost130Msg').textContent = res.post130Message;
+    }
+
+    runCalc();
+  </script>
+</body>
+</html>

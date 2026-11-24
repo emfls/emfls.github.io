@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>2026 1세대 1주택 12억 비과세 & 장특공 80% 양도소득세 계산기</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="description" content="2026년 1세대 1주택 12억 원 초과 고가주택 양도소득세 계산기. 표 2 장기보유특별공제 최대 80%(보유 40% + 거주 40%) 및 2년 거주 미충족 시 표 1 세금 폭탄 차액 정밀 비교." />
+  <link rel="canonical" href="https://emfls.github.io/kor/util/one-house-12ok-capital-gains-tax-80-percent-2026/" />
+  <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+
+  <!-- Preconnects -->
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="2026 1세대 1주택 12억 비과세 & 장특공 80% 양도세 계산기" />
+  <meta property="og:description" content="12억 초과분 안분계산, 표 2 보유 40%+거주 40% 최대 80% 공제 및 2년 거주 요건 세금 차액 비교" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://emfls.github.io/kor/util/one-house-12ok-capital-gains-tax-80-percent-2026/" />
+  <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-dark: #3730a3;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --success: #16a34a;
+      --success-bg: #f0fdf4;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+    .wrapper {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 3rem 1rem;
+    }
+    .header-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+    .header-nav a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 0.75rem;
+      line-height: 1.3;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-box {
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-box h2 {
+      font-size: 1.1rem;
+      color: var(--primary-dark);
+      margin-bottom: 0.5rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .badge-exempt {
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid #bbf7d0;
+    }
+    .badge-save {
+      background: #e0e7ff;
+      color: #3730a3;
+      border: 1px solid #a5b4fc;
+    }
+    .badge-regular {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+    }
+    .loss-aversion-box {
+      background: var(--danger-bg);
+      border-left: 4px solid var(--danger);
+      padding: 1rem;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      color: #991b1b;
+    }
+    .calculator-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+    }
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      color: #334155;
+    }
+    .form-group .helper-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+    .form-control {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    @media (max-width: 600px) {
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .result-item {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .result-item .label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+    .result-item .val {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .statutory-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.875rem;
+    }
+    .statutory-table th, .statutory-table td {
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      text-align: left;
+    }
+    .statutory-table th {
+      background: #f8fafc;
+      font-weight: 700;
+    }
+    .faq-section {
+      margin-top: 2.5rem;
+    }
+    .faq-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .faq-question {
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 0.35rem;
+    }
+    .faq-answer {
+      font-size: 0.9rem;
+      color: #475569;
+    }
+    .internal-nav {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+    .internal-nav ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .ad-container {
+      margin: 2rem 0;
+      text-align: center;
+      min-height: 250px;
+    }
+  </style>
+
+  <!-- JSON-LD: WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 1세대 1주택 12억 비과세 및 장특공 80% 양도세 계산기",
+    "description": "1세대 1주택 12억 초과분 양도차익 안분계산, 표 2 장기보유특별공제 최대 80%(보유 40%+거주 40%) 및 2년 거주 요건 세금 비교",
+    "url": "https://emfls.github.io/kor/util/one-house-12ok-capital-gains-tax-80-percent-2026/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All",
+    "inLanguage": "ko-KR"
+  }
+  </script>
+
+  <!-- JSON-LD: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "1세대 1주택 12억 비과세의 정확한 요건은 무엇인가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "양도일 현재 1세대가 국내에 1주택만을 보유하고 보유기간이 2년 이상이어야 합니다. 취득 당시 조정대상지역에 소재한 주택의 경우 보유기간 중 2년 이상 거주해야 비과세 혜택을 받습니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "12억 초과 고가주택은 전체 양도차익에 대해 세금을 내나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "아닙니다. 전체 양도차익 중 12억 원을 초과하는 비율인 '(양도가액 - 12억 원) / 양도가액' 만큼만 과세대상 양도차익으로 산정되며, 여기에 장기보유특별공제(최대 80%)를 차감하여 세금을 계산합니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "장기보유특별공제 80%를 받으려면 왜 거주 2년이 필수인가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "소득세법 제95조에 따라 1세대 1주택 표 2(보유 연 4% + 거주 연 4%)를 적용받으려면 보유기간 3년 이상 및 실제 거주기간 2년 이상 요건을 동시에 충족해야 합니다. 거주기간이 2년 미만이면 표 1 일반공제(연 2% 최대 30%)로 급락하여 세금이 수천만~수억 원 폭증합니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "필요경비로 인정되는 항목에는 어떤 것들이 있나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "취득세, 등록면허세, 부동산 중개보수, 샷시 교체·발코니 확장·난방 배관 공사 등 자본적 지출액이 인정됩니다. 단순 도배, 장판, 싱크대 교체 등 수익적 지출은 제외됩니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "기본공제 250만 원은 주택 수에 상관없이 적용되나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "네. 양도소득 기본공제는 부동산 자산군에 대해 연간 1회 250만 원이 인별로 일괄 공제됩니다."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- JSON-LD: BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "홈",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "한국어 계산기 허브",
+        "item": "https://emfls.github.io/kor/util/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "1세대 1주택 12억 비과세 계산기",
+        "item": "https://emfls.github.io/kor/util/one-house-12ok-capital-gains-tax-80-percent-2026/"
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <div class="wrapper">
+    <nav class="header-nav">
+      <a href="/kor/util/">← 한국어 도구 목록</a>
+      <span>2026 소득세법 제95조·제89조 기준</span>
+    </nav>
+
+    <h1>2026 1세대 1주택 12억 비과세 & 장특공 80% 계산기</h1>
+    <p class="subtitle">12억 초과분 안분계산 및 표 2(보유 40%+거주 40%) vs 표 1(거주 2년 미만 함정) 양도세 비교</p>
+
+    <!-- Ad Slot 1 (Top) -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center; min-height: 250px"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"></ins>
+      <script>
+        if (!['127.0.0.1', 'localhost', ''].includes(window.location.hostname)) {
+          if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+        }
+      </script>
+    </div>
+
+    <!-- Summary Box -->
+    <div class="summary-box">
+      <h2>양도소득세 산출 결과 요약</h2>
+      <div id="res-tax-badge" class="badge badge-exempt">계산 대기 중</div>
+
+      <div class="result-grid">
+        <div class="result-item">
+          <div class="label">최종 납부 양도소득세 (지방세 포함)</div>
+          <div id="res-total-tax" class="val" style="color:var(--danger);">0원</div>
+        </div>
+        <div class="result-item">
+          <div class="label">세후 순 양도차익</div>
+          <div id="res-net-gain" class="val" style="color:var(--success);">0원</div>
+        </div>
+      </div>
+
+      <div style="margin-top:1rem; padding-top:0.75rem; border-top:1px dashed #c7d2fe; font-size:0.9rem; color:#334155;">
+        12억 초과 과세대상 차익: <strong id="res-taxable-gain">0원</strong> | 
+        장특공 공제액: <strong id="res-special-deduction">0원</strong> (<span id="res-deduction-rate">0%</span>)
+      </div>
+    </div>
+
+    <!-- Residence 2-year Trap Alert -->
+    <div id="residence-trap-alert" class="loss-aversion-box" style="display:none;">
+      ⚠️ <strong>거주기간 2년 미만 세금 폭탄 경고</strong>: 현재 보유기간이 3년 이상이지만 실제 거주기간이 2년 미만이어서 <strong>표 2(최대 80%) 대신 표 1 일반공제(최대 30%)</strong>가 적용되었습니다! 2년 실거주 요건을 충족하면 양도세를 무려 <strong id="res-trap-diff" style="color:#b91c1c;">0원</strong> 절감할 수 있습니다.
+    </div>
+
+    <!-- Input Form -->
+    <div class="calculator-card">
+      <form id="cgt-form" onsubmit="event.preventDefault();">
+        <div class="form-group">
+          <label for="salePrice">양도가액 (실제 매매가격, 원)</label>
+          <input inputmode="decimal" type="number" id="salePrice" class="form-control" value="1800000000" step="50000000" min="0" />
+          <div class="helper-text">12억 원 초과 시 초과분만 안분 과세됩니다.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="acquisitionPrice">취득가액 (매수 당시 실거래가, 원)</label>
+          <input inputmode="decimal" type="number" id="acquisitionPrice" class="form-control" value="1000000000" step="50000000" min="0" />
+        </div>
+
+        <div class="form-group">
+          <label for="necessaryExpenses">필요경비 (취득세, 법무사·중개보수, 샷시·확장 공사비, 원)</label>
+          <input inputmode="decimal" type="number" id="necessaryExpenses" class="form-control" value="40000000" step="5000000" min="0" />
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+          <div class="form-group">
+            <label for="holdingYears">보유기간 (년)</label>
+            <input inputmode="decimal" type="number" id="holdingYears" class="form-control" value="10" step="1" min="0" max="50" />
+            <div class="helper-text">연 4% (3년 12% ~ 최대 40%)</div>
+          </div>
+          <div class="form-group">
+            <label for="residencyYears">실 거주기간 (년)</label>
+            <input inputmode="decimal" type="number" id="residencyYears" class="form-control" value="10" step="1" min="0" max="50" />
+            <div class="helper-text">2년 이상 필수 (연 4% 최대 40%)</div>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:0.5rem; margin-bottom:0;">
+          <div style="display:flex; align-items:center; gap:0.5rem;">
+            <input type="checkbox" id="isOneHouse" checked />
+            <label for="isOneHouse" style="margin-bottom:0; cursor:pointer;">양도일 현재 1세대 1주택 (비과세 요건 대상)</label>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Statutory Table -->
+    <h3 style="font-size:1.15rem; margin-bottom:0.75rem;">장기보유특별공제율 비교표 (표 2 vs 표 1)</h3>
+    <table class="statutory-table">
+      <thead>
+        <tr>
+          <th>보유 / 거주기간</th>
+          <th>표 2 (1주택 + 2년 거주)</th>
+          <th>표 1 (거주 2년 미만 / 일반)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>3년 이상 ~ 4년 미만</td>
+          <td>보유 12% + 거주 12% (최대 24%)</td>
+          <td>6%</td>
+        </tr>
+        <tr>
+          <td>5년 이상 ~ 6년 미만</td>
+          <td>보유 20% + 거주 20% (최대 40%)</td>
+          <td>10%</td>
+        </tr>
+        <tr>
+          <td>7년 이상 ~ 8년 미만</td>
+          <td>보유 28% + 거주 28% (최대 56%)</td>
+          <td>14%</td>
+        </tr>
+        <tr>
+          <td>10년 이상</td>
+          <td><strong>보유 40% + 거주 40% (최대 80%)</strong></td>
+          <td>20%</td>
+        </tr>
+        <tr>
+          <td>15년 이상</td>
+          <td>최대 80%</td>
+          <td><strong>최대 30%</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- FAQ Section -->
+    <div class="faq-section">
+      <h3 style="font-size:1.15rem; margin-bottom:1rem;">자주 묻는 질문 (FAQ)</h3>
+      <div class="faq-item">
+        <div class="faq-question">Q. 2년 거주 요건은 연속해서 살아야 하나요?</div>
+        <div class="faq-answer">아닙니다. 보유기간 전체 중 실제 주민등록상 전입하여 거주한 기간의 총합이 2년(730일) 이상이면 연속 거주하지 않았더라도 거주 요건을 충족합니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">Q. 양도가액 12억 원 기준은 계약일 기준인가요, 잔금일 기준인가요?</div>
+        <div class="faq-answer">양도시기는 원칙적으로 잔금청산일(또는 소유권이전등기접수일 중 빠른 날) 기준입니다. 따라서 잔금 청산일 당시의 실거래가액이 12억 원 이하인지 여부를 판정합니다.</div>
+      </div>
+    </div>
+
+    <!-- Ad Slot 2 (Bottom) -->
+    
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="다음 필수 확인 계산기" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">다음 필수 확인 계산기 (Next Check)</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">방금 계산한 결과를 바탕으로 바로 이어서 점검하세요:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/kor/util/multi-house-capital-gains-tax-2026-2027-reform/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">다주택자 양도세 중과 시뮬레이터 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">일시적 2주택 기한을 넘기거나 추가 보유 시 중과세율 차이를 확인하세요.</span></a>
+    <a href="/kor/util/comprehensive-real-estate-tax-12ok-18ok-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">2026 종부세 12억 vs 18억 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">매도 대신 보유를 선택했을 때 매년 내는 종부세 부담을 비교하세요.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+<div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center; min-height: 250px"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"></ins>
+      <script>
+        if (!['127.0.0.1', 'localhost', ''].includes(window.location.hostname)) {
+          if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+        }
+      </script>
+    </div>
+
+    <!-- Internal Links -->
+    <nav class="internal-nav">
+      <strong>관련 금융 & 법정 계산기 바로가기</strong>
+      <ul>
+        <li><a href="/kor/util/">한국어 재무·세무 도구 전체보기</a></li>
+        <li><a href="/kor/util/compound-interest/">복리 vs 단리 월 불입 이자 계산기</a></li>
+        <li><a href="/kor/util/jeonse-vs-wolse-conversion-rate-loan-2026/">2026 전세 vs 월세 전환율 계산기</a></li>
+        <li><a href="/util/">Global Financial Calculators Hub (English)</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 대한민국 세무·금융·복지 핵심 계산기</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">2026년도 국세청·고용노동부 기준 연계 계산 도구:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/kor/util/overseas-direct-purchase-customs-vat-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 해외직구 관부가세 계산기 | 미국 $200·일반 $150 목록통관·FTA 면제</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026 해외직구 미국 $200·일반 $150 면세 한도와 의류 13%·신발 13%·화장품 6.5%·건강기능식품 8%·전자 0% 관세율, 부가세 10%, 한미·한EU...</span>
+    </a>
+    <a href="/kor/util/overseas-stock-250man-tax-loss-harvesting-spouse-gift-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 해외주식 양도세 22% 연말 손익통산 &amp; 배우자 증여(6억) 계산기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 미국주식 양도세 22% 연간 250만 원 공제, 12월 결제 전 손익통산(Loss Harvesting) 절세액 및 배우자 6억 비과세 증여 1년 이월과세 ...</span>
+    </a>
+    <a href="/kor/util/parental-leave-pay-250man-6-plus-6-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 육아휴직급여 계산기 (월 250만 원 &amp; 6+6 부모육아휴직제 450만 원)</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 개정 남녀고용평등법 육아휴직급여 계산기. 월 상한 250만 원 인상, 사후지급금(25%) 폐지 100% 즉시 지급, 6+6 부모육아휴직제 최대 450만 원...</span>
+    </a>
+    <a href="/kor/util/pension-irp-isa-tax-credit-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 연금저축·IRP·ISA 세액공제 및 중도해지 계산기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 연금저축·IRP 기본 900만 원, ISA 만기 전환 시 최대 1,200만 원 공제대상액을 계산하세요. 중도해지 세금과 20년 세후 복리도 비교할 수 있습니다.</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>2026 글로벌 세무·금융·복지 계산기 전수 보기 &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</body>
+</html>

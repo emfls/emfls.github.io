@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026/27 UK Bridging Loan Calculator | Retained vs Rolled-Up Interest & 75% LTV</title>
+  <meta name="description" content="Calculate UK bridging loan finance costs: compare Retained vs Rolled-Up interest, 2% arrangement fee, Day-One net cash in hand, early redemption rebate, and 75% LTV limits.">
+  <link rel="canonical" href="https://emfls.github.io/util/uk-bridging-loan-retained-vs-rolled-up-interest-ltv-2026-27-calculator/">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+
+  <script>
+  if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+    const adScript = document.createElement('script');
+    adScript.async = true;
+    adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+    adScript.crossOrigin = 'anonymous';
+    document.head.append(adScript);
+  }
+  </script>
+
+  <style id="emfls-responsive-guard">
+    *, *::before, *::after { box-sizing: border-box; }
+    img, canvas, svg, video { max-width: 100%; height: auto; }
+    body, html { overflow-x: hidden; }
+  </style>
+
+  <style>
+    :root {
+      --primary: #065f46;
+      --primary-accent: #059669;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #475569;
+      --border: #e2e8f0;
+      --warning-bg: #fffbeb;
+      --warning-border: #fef3c7;
+      --warning-text: #92400e;
+      --danger: #b91c1c;
+      --accent: #d97706;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background-color: var(--bg);
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: linear-gradient(135deg, #064e3b, #047857);
+      color: white;
+      padding: 2.5rem 1rem;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.85rem;
+      font-weight: 800;
+    }
+    header p {
+      margin: 0;
+      opacity: 0.95;
+      font-size: 1.05rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .nav-breadcrumbs {
+      font-size: 0.85rem;
+      margin-bottom: 0.75rem;
+      opacity: 0.9;
+    }
+    .nav-breadcrumbs a {
+      color: #a7f3d0;
+      text-decoration: none;
+    }
+    .nav-breadcrumbs a:hover {
+      text-decoration: underline;
+    }
+    .container {
+      max-width: 1060px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .ad-container {
+      margin: 1.5rem 0;
+      text-align: center;
+      background: #edf2f7;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .calc-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 768px) {
+      .calc-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+    .card h2 {
+      margin-top: 0;
+      font-size: 1.25rem;
+      color: var(--primary);
+      border-bottom: 2px solid #ecfdf5;
+      padding-bottom: 0.5rem;
+    }
+    .form-group {
+      margin-bottom: 1.1rem;
+    }
+    label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: var(--text);
+    }
+    .help-text {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+    input[type="number"], select {
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      background: #fff;
+    }
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+    .comp-col {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .comp-col.highlight {
+      background: #ecfdf5;
+      border-color: #a7f3d0;
+    }
+    .comp-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+    .comp-hero {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text);
+      text-align: center;
+      margin-bottom: 0.25rem;
+    }
+    .res-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.45rem 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 0.85rem;
+    }
+    .res-row:last-child {
+      border-bottom: none;
+    }
+    .res-label {
+      color: var(--text-muted);
+    }
+    .res-val {
+      font-weight: 600;
+      color: var(--text);
+    }
+    .notice-box {
+      margin-top: 1rem;
+      background: var(--warning-bg);
+      border: 1px solid var(--warning-border);
+      border-radius: 8px;
+      padding: 1rem;
+      color: var(--warning-text);
+      font-size: 0.85rem;
+      display: none;
+    }
+    .chart-container {
+      margin-top: 1.25rem;
+      background: #fff;
+      border: 1px solid #f1f5f9;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .content-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    .content-section h3 {
+      color: var(--primary);
+      margin-top: 1.5rem;
+      font-size: 1.15rem;
+    }
+    .content-section ul, .content-section ol {
+      padding-left: 1.3rem;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+    .content-section li {
+      margin-bottom: 0.5rem;
+    }
+    footer {
+      background: #0f172a;
+      color: #94a3b8;
+      padding: 2rem 1rem;
+      text-align: center;
+      font-size: 0.85rem;
+    }
+    footer a {
+      color: #34d399;
+      text-decoration: none;
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026/27 UK Bridging Loan Calculator",
+    "url": "https://emfls.github.io/util/uk-bridging-loan-retained-vs-rolled-up-interest-ltv-2026-27-calculator/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "All",
+    "browserRequirements": "Requires JavaScript",
+    "description": "Calculate UK bridging loan finance costs: compare Retained vs Rolled-Up interest, 2% arrangement fee, Day-One net cash in hand, early redemption rebate, and 75% LTV limits."
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is the difference between Retained and Rolled-Up interest on a UK bridging loan?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "With Retained interest, the full term's interest is deducted upfront from your gross loan advance, meaning zero monthly payments and unused interest is rebated upon early exit. With Rolled-Up interest, you receive more net cash on Day One, but interest compounds monthly and is settled in full at loan redemption."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What fees are standard on a UK bridging loan?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Most UK bridging lenders charge a 2.0% facility arrangement fee on the gross loan amount, legal fees (£1,200 to £2,500), an independent RICS valuation fee, and occasionally a 1% exit fee."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the maximum LTV for UK bridging finance?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The typical maximum gross LTV is 70% to 75% of the open market property value, though heavy refurbishment or planning gain bridges can advance up to 100% of purchase costs with additional collateral."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "UK Tax & Property Calculators",
+        "item": "https://emfls.github.io/util/uk-2026-27-tax-pension-property-calculators/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "UK Bridging Loan Calculator",
+        "item": "https://emfls.github.io/util/uk-bridging-loan-retained-vs-rolled-up-interest-ltv-2026-27-calculator/"
+      }
+    ]
+  }
+  </script>
+<style id="emfls-cro-calc-first-b2-v1">
+/* EMFLS CRO B2 — mobile calculator-first ordering for non-Patch-B EN templates (CSS-only, reversible) */
+@media (max-width: 760px) {
+  main:has(form, input, select),
+  .tool-shell:has(form, input, select),
+  .container:has(form, input, select) {
+    display: flex;
+    flex-direction: column;
+  }
+  main:has(form, input, select) > *,
+  .tool-shell:has(form, input, select) > *,
+  .container:has(form, input, select) > * {
+    order: 4;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  main:has(form, input, select) > nav,
+  main:has(form, input, select) > header,
+  main:has(form, input, select) > .hero,
+  main:has(form, input, select) > h1,
+  main:has(form, input, select) > .lead,
+  .tool-shell:has(form, input, select) > nav,
+  .tool-shell:has(form, input, select) > header,
+  .tool-shell:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > h1,
+  .tool-shell:has(form, input, select) > .lead,
+  .container:has(form, input, select) > nav,
+  .container:has(form, input, select) > header,
+  .container:has(form, input, select) > .hero,
+  .container:has(form, input, select) > h1,
+  .container:has(form, input, select) > .lead {
+    order: 0;
+  }
+  main:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .tool-shell:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .container:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav) {
+    order: 1;
+  }
+  main:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .tool-shell:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .container:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container) {
+    order: 2;
+  }
+  main:has(form, input, select) > .emfls-next-check,
+  .tool-shell:has(form, input, select) > .emfls-next-check,
+  .container:has(form, input, select) > .emfls-next-check {
+    order: 2;
+  }
+  main:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .tool-shell:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .container:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]) {
+    order: 3;
+  }
+  main:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > .hero,
+  .container:has(form, input, select) > header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+}
+</style>
+</head>
+<body>
+  <header>
+    <div class="nav-breadcrumbs">
+      <a href="/">Home</a> &gt; <a href="/util/uk-2026-27-tax-pension-property-calculators/">UK Property Calculators</a> &gt; Bridging Loan Calculator
+    </div>
+    <h1>2026/27 UK Bridging Loan Calculator</h1>
+    <p>Retained vs Rolled-Up Interest • 2% Facility Fee • Day-One Net Advance • Early Exit Rebate</p>
+  </header>
+
+  <div class="container">
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </div>
+
+    <div class="calc-layout">
+      <!-- Input Card -->
+      <div class="card">
+        <h2>Loan &amp; Property Terms</h2>
+
+        <div class="form-group">
+          <label for="propertyValue">Property Market Value (£)</label>
+          <input inputmode="decimal" type="number" id="propertyValue" value="500000" min="50000" step="10000">
+        </div>
+
+        <div class="form-group">
+          <label for="grossLoan">Gross Facility Loan (£)</label>
+          <input inputmode="decimal" type="number" id="grossLoan" value="350000" min="25000" step="5000">
+        </div>
+
+        <div class="form-group">
+          <label for="monthlyRate">Monthly Interest Rate (% per month)</label>
+          <input inputmode="decimal" type="number" id="monthlyRate" value="0.85" min="0.4" max="2.5" step="0.05">
+          <div class="help-text">Typical market rates: 0.65% to 0.95% per month.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="termMonths">Loan Facility Term (Months)</label>
+          <input inputmode="decimal" type="number" id="termMonths" value="12" min="1" max="24" step="1">
+        </div>
+
+        <div class="form-group">
+          <label for="arrangementFeePercent">Lender Arrangement Fee (%)</label>
+          <input inputmode="decimal" type="number" id="arrangementFeePercent" value="2.0" min="0" max="4.0" step="0.25">
+        </div>
+
+        <div class="form-group">
+          <label for="otherFees">Legal, Valuation &amp; Admin Fees (£)</label>
+          <input inputmode="decimal" type="number" id="otherFees" value="2500" min="0" step="250">
+        </div>
+
+        <div class="form-group">
+          <label for="exitFeePercent">Exit Fee (%)</label>
+          <input inputmode="decimal" type="number" id="exitFeePercent" value="0.0" min="0" max="3.0" step="0.5">
+        </div>
+
+        <div class="form-group">
+          <label for="maxLtvPercent">Maximum Allowable Gross LTV (%)</label>
+          <input inputmode="decimal" type="number" id="maxLtvPercent" value="75" min="50" max="85" step="5">
+        </div>
+      </div>
+
+      <!-- Output Card -->
+      <div class="card">
+        <h2>Advance &amp; Redemption Comparison</h2>
+
+        <div class="comparison-grid">
+          <div class="comp-col">
+            <div class="comp-title">Retained Interest</div>
+            <div class="comp-hero" id="resRetainedAdvance">£0</div>
+            <div style="font-size:0.78rem; color:var(--text-muted); text-align:center;">Net Day-1 Cash</div>
+            <div class="res-row" style="margin-top:0.6rem;">
+              <span class="res-label">Retained Interest:</span>
+              <span class="res-val" id="resRetainedInterest">£0</span>
+            </div>
+            <div class="res-row">
+              <span class="res-label">Final Redemption:</span>
+              <span class="res-val" id="resRetainedRedemption">£0</span>
+            </div>
+            <div class="res-row">
+              <span class="res-label">Total Cost:</span>
+              <span class="res-val" id="resRetainedTotalCost">£0</span>
+            </div>
+            <div class="res-row">
+              <span class="res-label">6-Mo Rebate:</span>
+              <span class="res-val" style="color:var(--primary-accent);" id="resRetainedRebate">£0</span>
+            </div>
+          </div>
+
+          <div class="comp-col highlight">
+            <div class="comp-title">Rolled-Up Interest</div>
+            <div class="comp-hero" style="color:var(--primary);" id="resRolledAdvance">£0</div>
+            <div style="font-size:0.78rem; color:var(--text-muted); text-align:center;">Net Day-1 Cash</div>
+            <div class="res-row" style="margin-top:0.6rem;">
+              <span class="res-label">Compound Interest:</span>
+              <span class="res-val" id="resRolledInterest">£0</span>
+            </div>
+            <div class="res-row">
+              <span class="res-label">Final Redemption:</span>
+              <span class="res-val" id="resRolledRedemption">£0</span>
+            </div>
+            <div class="res-row">
+              <span class="res-label">Total Cost:</span>
+              <span class="res-val" id="resRolledTotalCost">£0</span>
+            </div>
+            <div class="res-row">
+              <span class="res-label">Final Exit LTV:</span>
+              <span class="res-val" id="resRolledFinalLtv">0.0%</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="font-size:0.85rem; font-weight:700; color:var(--primary); text-align:center; padding:0.5rem; background:#ecfdf5; border-radius:6px;" id="resDay1Advantage">
+          +£0 more cash Day-1 via Rolled-Up
+        </div>
+
+        <div id="ltvWarningBox" class="notice-box">
+          <strong>⚠️ 75% LTV Cap Warning:</strong>
+          <div>This facility exceeds the maximum allowable gross borrowing limit of <strong id="resLtvCapAmount">£0</strong>. Lenders will reduce the advance or require additional security.</div>
+        </div>
+
+        <div class="chart-container">
+          <div style="font-size: 0.82rem; font-weight: 600; color: #475569; margin-bottom: 0.5rem;">
+            Net Day-1 Advance vs Final Redemption Comparison (£)
+          </div>
+          <svg id="chartSvg" width="100%" height="190" viewBox="0 0 320 190">
+            <line x1="15" y1="20" x2="305" y2="20" stroke="#f1f5f9" stroke-width="1" />
+            <line x1="15" y1="95" x2="305" y2="95" stroke="#f1f5f9" stroke-width="1" />
+            <line x1="15" y1="170" x2="305" y2="170" stroke="#cbd5e1" stroke-width="1.5" />
+
+            <rect id="barRDay1" x="25" y="80" width="50" height="90" fill="#2563eb" rx="3" />
+            <rect id="barRRedeem" x="95" y="40" width="50" height="130" fill="#1e3a8a" rx="3" />
+            <rect id="barRoDay1" x="175" y="65" width="50" height="105" fill="#059669" rx="3" />
+            <rect id="barRoRedeem" x="245" y="30" width="50" height="140" fill="#064e3b" rx="3" />
+
+            <text id="lblRDay1" x="50" y="72" font-size="8" font-weight="700" fill="#2563eb" text-anchor="middle">£0</text>
+            <text id="lblRRedeem" x="120" y="32" font-size="8" font-weight="700" fill="#1e3a8a" text-anchor="middle">£0</text>
+            <text id="lblRoDay1" x="200" y="57" font-size="8" font-weight="700" fill="#059669" text-anchor="middle">£0</text>
+            <text id="lblRoRedeem" x="270" y="22" font-size="8" font-weight="700" fill="#064e3b" text-anchor="middle">£0</text>
+
+            <text x="50" y="184" font-size="8" fill="#64748b" text-anchor="middle">Ret Day-1</text>
+            <text x="120" y="184" font-size="8" fill="#64748b" text-anchor="middle">Ret Exit</text>
+            <text x="200" y="184" font-size="8" fill="#64748b" text-anchor="middle">Roll Day-1</text>
+            <text x="270" y="184" font-size="8" fill="#64748b" text-anchor="middle">Roll Exit</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <h2>UK Short-Term Bridging Finance Mechanics &amp; Interest Structure</h2>
+      <p>Bridging finance is a flexible, short-term property loan (typically 1 to 18 months) used to secure auction purchases, fund property refurbishments, or bridge the gap between buying and selling a property.</p>
+
+      <h3>1. Retained vs Rolled-Up Interest Mechanics</h3>
+      <ul>
+        <li><strong>Retained Interest:</strong> The lender deducts the full facility term's interest upfront from your gross loan advance. You make zero monthly payments during the loan term. Crucially, if you redeem early (e.g., selling or refinancing in Month 6 of a 12-month facility), the unused 6 months of retained interest are refunded/rebated to you.</li>
+        <li><strong>Rolled-Up Interest:</strong> No interest is deducted upfront on Day One, maximizing your immediate cash in hand. Instead, interest accrues monthly (often on a compound basis) and is repaid in a single lump sum when the loan is redeemed.</li>
+      </ul>
+
+      <h3>2. Fee Stacking &amp; Gross LTV Boundaries</h3>
+      <p>Lenders calculate maximum loan limits (typically 75% LTV) based on the <em>gross loan</em>, which includes facility arrangement fees (usually 2.0%), broker fees, and retained interest. When opting for rolled-up interest, developers must ensure that compounding interest at exit does not breach the lender's final redemption LTV thresholds.</p>
+    </div>
+
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </div>
+  </div>
+
+  
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 United Kingdom Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for United Kingdom:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/uk-btl-commercial-mortgage-icr-125-vs-145-stress-test-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">HMRC 2026/27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026/27 UK BTL &amp; Commercial Mortgage ICR Stress Test Calculator | 125% vs 145%</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate UK Buy-to-Let mortgage borrowing power under PRA SS13/16 ICR stress testing. Compa...</span>
+    </a>
+    <a href="/util/uk-business-rates-2026-27-five-multiplier-rhl-revaluation-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">HMRC 2026/27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026/27 UK (England) Business Rates Calculator | New Five-Multiplier System</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate commercial business rates in England under the statutory April 2026 Five-Multiplie...</span>
+    </a>
+    <a href="/util/uk-buy-to-let-personal-name-section-24-vs-limited-company-spv-2026-27-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">HMRC 2026/27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">UK Buy-to-Let Tax Calculator 2026/27 | Section 24 vs SPV</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare personal and limited company buy-to-let tax, annual cash flow, 10-year wealth and th...</span>
+    </a>
+    <a href="/util/uk-buy-to-let-section-24-landlord-tax-calculator-2026-27/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">HMRC 2026/27 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">UK Buy-to-Let Section 24 Landlord Tax Calculator 2026/27 vs 2027/28</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Compare UK buy-to-let cash flow under Section 24 in 2026/27 and the Budget 2026 rates for 20...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+<footer>
+    <p>&copy; 2026 EMFLS UK Property Finance Tools. Formulated in accordance with UK bridging loan underwriting practices.</p>
+    <p><a href="/util/uk-2026-27-tax-pension-property-calculators/">Return to UK Property &amp; Tax Hub</a> | <a href="/">All Free Calculators</a></p>
+  </footer>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>2026~2029년 가상자산(코인) 과세 시뮬레이터 (250만 공제 & 2029 유예·손실이월)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="description" content="가상자산(비트코인, 알트코인) 소득세 기본공제 250만 원, 22% 분리과세 및 2029년 추가 유예 법안(3년 결손금 손실이월공제)을 반영한 실시간 세액 시뮬레이터와 연말 분할 매도 절세 팁." />
+  <link rel="canonical" href="https://emfls.github.io/kor/util/crypto-virtual-asset-tax-250man-2029-simulator/" />
+  <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+
+  <!-- Preconnects -->
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+
+  <!-- P0 Localhost Guarded Google AdSense -->
+  <script>
+    if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+      var s = document.createElement('script');
+      s.async = true;
+      s.crossOrigin = 'anonymous';
+      s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+      document.head.appendChild(s);
+    }
+  </script>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="2026~2029년 가상자산(코인) 과세 시뮬레이터" />
+  <meta property="og:description" content="기본공제 250만 원, 22% 분리과세 및 2029년 유예·3년 손실이월 세액 시뮬레이터" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://emfls.github.io/kor/util/crypto-virtual-asset-tax-250man-2029-simulator/" />
+  <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --danger: #dc2626;
+      --success: #16a34a;
+      --warning: #d97706;
+      --info: #0284c7;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 1rem;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    h1 {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.4rem;
+      color: #334155;
+    }
+    input[type="number"], select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input[type="number"]:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+    }
+    .input-hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 640px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+    .badge-success { background: #dcfce7; color: #15803d; }
+    .badge-warning { background: #fef3c7; color: #b45309; }
+    .badge-info { background: #e0f2fe; color: #0369a1; }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    .comparison-table th, .comparison-table td {
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      text-align: left;
+    }
+    .comparison-table th {
+      background: #f1f5f9;
+      font-weight: 700;
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px dashed var(--border);
+      font-size: 0.95rem;
+    }
+    .stat-row:last-child {
+      border-bottom: none;
+      font-weight: 700;
+      font-size: 1.05rem;
+      padding-top: 0.75rem;
+    }
+    .ad-container {
+      margin: 2rem 0;
+      text-align: center;
+      background: #f1f5f9;
+      border: 1px dashed #cbd5e1;
+      border-radius: 8px;
+      padding: 10px;
+      min-height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chart-container {
+      background: #ffffff;
+      padding: 1.25rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin: 1.5rem 0;
+    }
+    .faq-item {
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.75rem;
+    }
+    .faq-q {
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 0.25rem;
+    }
+    .faq-a {
+      font-size: 0.92rem;
+      color: #475569;
+    }
+    .links-box {
+      margin-top: 2rem;
+      padding: 1.25rem;
+      background: #f8fafc;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .links-box a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+    .links-box a:hover {
+      text-decoration: underline;
+    }
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
+
+  <!-- Schema: WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026~2029년 가상자산(코인) 과세 시뮬레이터",
+    "url": "https://emfls.github.io/kor/util/crypto-virtual-asset-tax-250man-2029-simulator/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All",
+    "browserRequirements": "Requires JavaScript",
+    "description": "가상자산 소득세 기본공제 250만 원, 22% 분리과세 및 2029년 추가 유예(3년 손실이월공제) 개정안과 연말 분할 매도 비과세 하베스팅 전략을 시뮬레이션하는 계산기"
+  }
+  </script>
+
+  <!-- Schema: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "2026년 현재 비트코인을 팔면 세금을 내야 하나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "아닙니다. 2026년 현재 가상자산 양도소득세는 과세가 유예된 상태이므로 세금이 0원(전액 비과세)입니다. 법률상 2027년 1월 1일 시행으로 예정되어 있으나 국회에서 2029년으로 2년 추가 유예하는 소득세법 개정안이 유력하게 논의되고 있습니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "손실 이월공제(3년)가 신설되면 어떤 점이 유리한가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "기존 정부안은 당해 연도 발생한 손실만 상계할 수 있었으나, 2029 유예 개정안에는 3년간 발생한 누적 투자 손실을 향후 이익에서 공제할 수 있도록 규정하여, 하락장에서 손실을 보고 이듬해 상승장에서 수익을 냈을 때의 억울한 세부담을 없애줍니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "연말 분할 매도(250만 원 하베스팅)는 어떻게 하는 건가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "가상자산 소득세는 매년 1월 1일부터 12월 31일까지의 실현 수익 중 250만 원까지 비과세됩니다. 따라서 미실현 수익이 있는 경우 매년 12월 말에 250만 원 한도만큼 매도하여 수익을 확정한 뒤 다시 매수하면 취득가액을 높여 향후 양도세를 매년 55만 원씩 아낄 수 있습니다."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Schema: BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "홈",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "한국어 계산기 허브",
+        "item": "https://emfls.github.io/kor/util/finance-tax-2026/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "가상자산 과세 시뮬레이터",
+        "item": "https://emfls.github.io/kor/util/crypto-virtual-asset-tax-250man-2029-simulator/"
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>2026~2029년 가상자산(코인) 과세 시뮬레이터</h1>
+      <p class="subtitle">기본공제 250만 원 · 22% 분리과세 · 2029년 추가 유예(3년 손실이월) & 연말 분할 절세</p>
+    </header>
+
+    <!-- Top AdSlot -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+        if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+      </script>
+    </div>
+
+    <!-- Input Card -->
+    <div class="card">
+      <h2 style="font-size: 1.2rem; margin-bottom: 1.25rem; color: #0f172a;">🪙 가상자산 매매 실적 및 시뮬레이션 옵션</h2>
+      <form id="crypto-calc-form">
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="annualGains">연간 총 매도 이익 (원)</label>
+            <input inputmode="decimal" type="number" id="annualGains" value="20000000" step="500000" min="0" />
+            <div class="input-hint">수익 난 코인들의 총 양도차익 합계</div>
+          </div>
+          <div class="form-group">
+            <label for="annualLosses">연간 총 매도 손실 (원)</label>
+            <input inputmode="decimal" type="number" id="annualLosses" value="5000000" step="500000" min="0" />
+            <div class="input-hint">손실 보고 매도한 코인들의 손실액 (당해 연도 손익 통산)</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label for="transactionFees">거래 수수료 및 부대비용 (원)</label>
+            <input inputmode="decimal" type="number" id="transactionFees" value="200000" step="10000" min="0" />
+            <div class="input-hint">거래소 매매 수수료 및 출금 수수료 등 공제 대상 경비</div>
+          </div>
+          <div class="form-group">
+            <label for="priorLossCarryforward">직전 3개년 누적 이월결손금 (원)</label>
+            <input inputmode="decimal" type="number" id="priorLossCarryforward" value="3000000" step="500000" min="0" />
+            <div class="input-hint">과거 3년간 차감하지 못한 가상자산 투자 손실액 (2029 개정안)</div>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="checkbox-label" for="apply2029DelayReform">
+              <input type="checkbox" id="apply2029DelayReform" checked style="width: 18px; height: 18px;" />
+              2029년 추가 유예안 적용 (3년 손실이월 공제 활성화)
+            </label>
+            <div class="input-hint">체크 해제 시 과거 손실 이월이 불가능한 정부 원안(2027)으로 산정</div>
+          </div>
+          <div class="form-group">
+            <label for="stagedSellingYears">연말 250만 분할 매도 계획 연수</label>
+            <select id="stagedSellingYears">
+              <option value="1">1년 (일괄 매도 / 분할 없음)</option>
+              <option value="2">2년 분할 매도 (총 500만 비과세 활용)</option>
+              <option value="3" selected>3년 분할 매도 (총 750만 비과세 활용)</option>
+              <option value="4">4년 분할 매도 (총 1,000만 비과세 활용)</option>
+              <option value="5">5년 분할 매도 (총 1,250만 비과세 활용)</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Results Card -->
+    <div class="card">
+      <h2 style="font-size: 1.2rem; margin-bottom: 1.25rem; color: #0f172a;">📊 손익 통산 및 22% 과세 세액 시뮬레이션 결과</h2>
+      <div id="res-status-badge" class="badge badge-info">시뮬레이션 산출 중...</div>
+
+      <div class="grid-2">
+        <!-- Net Base -->
+        <div style="background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border);">
+          <h3 style="font-size: 1.05rem; margin-bottom: 0.75rem; color: #334155;">📊 손익 통산 및 과세표준</h3>
+          <div class="stat-row">
+            <span>당해 연도 순매매차익:</span>
+            <span id="res-net-profit">0원</span>
+          </div>
+          <div class="stat-row">
+            <span>과거 3개년 결손금 공제:</span>
+            <span id="res-loss-offset" style="color: var(--primary);">0원</span>
+          </div>
+          <div class="stat-row">
+            <span>법정 기본공제:</span>
+            <span>2,500,000원</span>
+          </div>
+          <div class="stat-row">
+            <span>최종 과세표준:</span>
+            <span id="res-tax-base" style="font-size: 1.15rem; color: #0f172a;">0원</span>
+          </div>
+        </div>
+
+        <!-- Projected Tax -->
+        <div style="background: #f0fdf4; padding: 1.25rem; border-radius: 8px; border: 1px solid #bbf7d0;">
+          <h3 style="font-size: 1.05rem; margin-bottom: 0.75rem; color: #166534;">🏛️ 과세 시행 시 예상 세금</h3>
+          <div class="stat-row">
+            <span>예상 납부세액 (22% 분리과세):</span>
+            <span id="res-projected-tax" style="color: var(--danger);">0원</span>
+          </div>
+          <div class="stat-row">
+            <span>실효세율 (순익 대비):</span>
+            <span id="res-effective-rate">0%</span>
+          </div>
+          <div class="stat-row">
+            <span>세후 실수령 순익:</span>
+            <span id="res-net-take-home" style="color: var(--success); font-size: 1.15rem;">0원</span>
+          </div>
+          <div class="stat-row">
+            <span>2026년 현재 실제 납부세액:</span>
+            <span style="color: #2563eb; font-weight: 700;">0원 (유예 중 전액 비과세)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Staged Tax Harvest Box -->
+      <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 1rem; margin-top: 1rem;">
+        <h4 style="font-size: 0.95rem; color: #1e40af; margin-bottom: 0.5rem;">💡 연말 250만 원 분할 매도(Tax-Loss & Gain Harvesting) 시뮬레이션</h4>
+        <div style="font-size: 0.88rem; color: #1e3a8a; line-height: 1.7;">
+          <div>• <strong>계획 연수 분할 시 총 납부세액:</strong> <span id="res-staged-tax" style="font-weight: 700;">0원</span></div>
+          <div>• <strong>일괄 매도 대비 절세 금액:</strong> <span id="res-staged-saving" style="color: #16a34a; font-weight: 800; font-size: 1rem;">0원</span></div>
+          <div style="font-size: 0.8rem; color: #64748b; margin-top: 0.25rem;">
+            * 매년 12월 말 기본공제 250만 원 한도 내에서 분할 실현(매도 후 재매수)하여 취득원가를 높이는 절세 기법입니다.
+          </div>
+        </div>
+      </div>
+
+      <!-- SVG Chart -->
+      <div class="chart-container">
+        <h4 style="font-size: 0.95rem; margin-bottom: 1rem; color: #475569;">📊 순수익 vs 일시 매도 세액 vs 분할 매도 세액 비교</h4>
+        <svg id="svg-chart" viewBox="0 0 450 120" width="100%" height="120" style="overflow: visible;">
+          <!-- Net Profit -->
+          <text x="0" y="25" font-size="12" font-weight="600" fill="#334155">순매매수익</text>
+          <rect x="90" y="12" width="260" height="18" rx="4" fill="#3b82f6" id="chart-bar-profit"></rect>
+          <text x="360" y="26" font-size="11" font-weight="600" fill="#3b82f6" id="chart-txt-profit">0원</text>
+
+          <!-- Lump Tax -->
+          <text x="0" y="60" font-size="12" font-weight="600" fill="#334155">일괄 매도 세액</text>
+          <rect x="90" y="47" width="100" height="18" rx="4" fill="#ef4444" id="chart-bar-lumptax"></rect>
+          <text x="200" y="61" font-size="11" font-weight="600" fill="#ef4444" id="chart-txt-lumptax">0원</text>
+
+          <!-- Staged Tax -->
+          <text x="0" y="95" font-size="12" font-weight="600" fill="#334155">분할 매도 세액</text>
+          <rect x="90" y="82" width="40" height="18" rx="4" fill="#10b981" id="chart-bar-stagedtax"></rect>
+          <text x="140" y="96" font-size="11" font-weight="600" fill="#10b981" id="chart-txt-stagedtax">0원</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Educational Deep-Dive Content -->
+    <div class="card">
+      <h2 style="font-size: 1.3rem; margin-bottom: 1rem; color: #0f172a;">📘 가상자산 소득세 법안 및 2029년 개정 방향 심층 분석</h2>
+
+      <h3 style="font-size: 1.05rem; margin: 1.25rem 0 0.5rem 0; color: #1e293b;">1. 2026년 현행 가상자산 과세 유예 상황과 향후 일정</h3>
+      <p style="font-size: 0.93rem; color: #334155; margin-bottom: 1rem;">
+        가상자산 소득세는 당초 2021년 도입된 이후 2022년, 2023년, 2025년을 거쳐 수차례 유예되었습니다.
+        현재 법령상으로는 2027년 1월 1일 시행으로 규정되어 있으나,
+        국회 기획재정위원회에서는 투자자 보호 인프라 구축 및 글로벌 규제 동향에 맞추어 <strong>2029년 1월 1일로 2년 추가 유예(제4차 유예)</strong>하는 소득세법 개정안을 발의하여 논의 중에 있습니다.
+        따라서 <strong>2026년 현재 가상자산을 매도하여 수익을 거두더라도 세금은 일절 발생하지 않습니다.</strong>
+      </p>
+
+      <h3 style="font-size: 1.05rem; margin: 1.25rem 0 0.5rem 0; color: #1e293b;">2. 2029 유예 개정안의 핵심: 3년 결손금 손실이월공제</h3>
+      <p style="font-size: 0.93rem; color: #334155; margin-bottom: 1rem;">
+        기존 정부 원안의 가장 큰 맹점은 주식시장과 달리 과거 손실을 이월해주지 않아,
+        ‘작년에 1억을 잃고 올해 3천만 원을 벌어 총 7천만 원 손실 상태인데도 세금을 내야 하는’ 불합리함이 있었습니다.
+        2029 개정안은 이러한 모순을 바로잡기 위해 <strong>직전 3개년간의 가상자산 양도차손을 이월하여 당해 연도 이익에서 공제</strong>할 수 있도록 제도화했습니다.
+      </p>
+
+      <h2 style="font-size: 1.15rem; margin: 1.5rem 0 0.75rem 0; color: #0f172a;">⚖️ 3. 가상자산 vs 해외주식 vs 국내주식 세제 총괄 비교</h2>
+      <div style="overflow-x: auto;">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th>구분</th>
+              <th>가상자산 (과세 시행 시)</th>
+              <th>해외주식 (미국주식 등)</th>
+              <th>국내상장주식</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>기본 공제액</strong></td>
+              <td>연 250만 원</td>
+              <td>연 250만 원</td>
+              <td>대주주 제외 전액 비과세</td>
+            </tr>
+            <tr>
+              <td><strong>세율</strong></td>
+              <td>22% (소득세 20% + 지방세 2%)</td>
+              <td>22% (양도세 20% + 지방세 2%)</td>
+              <td>거래세만 부과 (소득세 0원)</td>
+            </tr>
+            <tr>
+              <td><strong>과세 방식</strong></td>
+              <td>분리과세 (타 소득과 합산 안 됨)</td>
+              <td>분류과세 (종합소득과 합산 안 됨)</td>
+              <td>비과세</td>
+            </tr>
+            <tr>
+              <td><strong>손실 이월공제</strong></td>
+              <td>3년 이월 허용 (2029 개정안)</td>
+              <td><strong>이월공제 불가</strong> (당해 연도만 통산)</td>
+              <td>해당 없음</td>
+            </tr>
+            <tr>
+              <td><strong>건강보험료 반영</strong></td>
+              <td>금융소득 종합과세 편입 여부 논의 중</td>
+              <td>양도소득으로 건보료 미반영</td>
+              <td>건보료 미반영</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 style="font-size: 1.05rem; margin: 1.25rem 0 0.5rem 0; color: #1e293b;">4. 가상자산 투자자의 실전 절세 행동 강령</h3>
+      <ul style="padding-left: 1.25rem; font-size: 0.93rem; color: #334155; line-height: 1.8;">
+        <li><strong>의제취득가액 특례 숙지:</strong> 향후 과세가 시행될 때, 취득가액을 입증하기 어렵거나 과거 헐값에 산 코인에 대해 과세 시행 직전 연도 말일(예: 2028년 12월 31일)의 시가를 취득가액으로 의제해 주는 특례가 적용됩니다. 이에 따라 과세 시행 이전의 시세차익은 사실상 전액 비과세 혜택을 받습니다.</li>
+        <li><strong>손실 확정(Tax-Loss Harvesting):</strong> 이익이 많이 난 해에는 물려있는 잡코인을 12월 31일 이전에 손절 매도하여 당해 연도 양도차익을 상쇄시키는 손익 통산 기법을 적극 활용해야 합니다.</li>
+        <li><strong>거래소 거래 내역 CSV 백업:</strong> 해외 거래소(바이낸스, 바이비트 등)나 개인 콜드월렛(메타마스크, 레저)의 거래 내역은 수년이 지나면 조회가 어려워질 수 있으므로, 매년 말 입출금 및 스왑 내역을 엑셀로 백업해 두어야 추후 소명 요구 시 불이익을 피할 수 있습니다.</li>
+      </ul>
+    </div>
+
+    <!-- Second AdSlot -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+        if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+      </script>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="card">
+      <h2 style="font-size: 1.2rem; margin-bottom: 1rem; color: #0f172a;">❓ 자주 묻는 질문 (FAQ)</h2>
+      <div class="faq-item">
+        <div class="faq-q">Q. 스테이킹이나 에어드롭으로 받은 코인은 어떻게 과세되나요?</div>
+        <div class="faq-a">A. 스테이킹 보상 및 에어드롭 수익은 세법상 '기타소득'으로 분류되어 지급받은 시점의 시가 상당액이 수입금액이 됩니다. 연간 300만 원 이하일 경우 분리과세를 선택할 수 있으나, 향후 가상자산 양도소득세 시행 시 양도차익 과세 체계와 연동하여 정밀 지침이 발표될 예정입니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Q. 해외 거래소나 탈중앙화 거래소(DEX) 수익도 국세청이 알 수 있나요?</div>
+        <div class="faq-a">A. OECD의 '가상자산 보고체계(CARF)' 도입에 따라 주요 국가 간 가상자산 계좌 정보 자동 교환이 2027년부터 본격화됩니다. 또한 해외 거래소에서 국내 거래소로 입금 시 100만 원 이상에 대해 트래블룰(Travel Rule)이 적용되므로 자금 출처가 모두 전산 추적됩니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Q. 기본공제 250만 원이 해외주식 기본공제와 합쳐지나요?</div>
+        <div class="faq-a">A. 아닙니다. 가상자산 소득세의 250만 원 기본공제는 소득세법상 '기타소득' 분리과세 한도이며, 해외주식의 250만 원 기본공제는 '양도소득세' 한도이므로 서로 별개로 각각 250만 원씩(합계 500만 원) 전액 공제받을 수 있습니다.</div>
+      </div>
+    </div>
+
+    <!-- Hub Link Box -->
+    <div class="links-box">
+      <a href="/kor/util/finance-tax-2026/">📊 2026 금융·세무 계산기 허브</a>
+      <a href="/kor/util/overseas-stock-tax-calculator/">📈 해외주식 양도소득세 250만 공제 계산기</a>
+      <a href="/kor/util/corporate-tax-vs-sole-proprietor-conversion-2026/">💼 개인사업자 vs 법인전환 세금 비교</a>
+      <a href="/kor/util/credit-loan-minus-account-dsr-5year-trap-2026/">🏦 마이너스통장 DSR 5년 만기 함정 계산기</a>
+    </div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+  <span id="res-comp-overseas" style="display:none"></span> <span id="res-comp-domestic" style="display:none"></span>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 대한민국 세무·금융·복지 핵심 계산기</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">2026년도 국세청·고용노동부 기준 연계 계산 도구:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/kor/util/didimdol-mortgage-loan-limit-rate-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 내집마련 디딤돌대출 한도(2억·2.4억·3.2억)·자격 판정 &amp; 월 상환액 계산기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2025.6.27 개편 현행 주택도시기금 내집마련 디딤돌대출 유형별 한도(일반 2억, 생애최초 2.4억, 신혼·2자녀 3.2억) 및 소득(6,000만/7,000만/8...</span>
+    </a>
+    <a href="/kor/util/divorce-child-support-property-division-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 양육비 산정기준표 계산기 &amp; 이혼 재산분할·취득세 1.5% 특례 시뮬레이터</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">서울가정법원 양육비 산정기준표(부모 합산소득 11구간 × 자녀 나이 6구간)로 비양육자 월 양육비와 성년까지 누적액을 계산하고, 기여도별 재산분할 금액과 부동산 이전...</span>
+    </a>
+    <a href="/kor/util/dual-income-year-end-tax-optimization-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 맞벌이 부부 연말정산 최적화 시뮬레이터 | 공제 몰아주기 vs 분산 절세 비교</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 최신 소득세법 기준 맞벌이 부부 연말정산 인적공제(1인당 150만 원), 의료비(총급여 3% 문턱 15%), 신용카드(총급여 25% 문턱), 교육비 최적 ...</span>
+    </a>
+    <a href="/kor/util/earned-income-child-tax-credit-eitc-330man-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 근로장려금 &amp; 자녀장려금 계산기 | 맞벌이 4,400만·최대 330만 원</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 최신 국세청 기준 근로장려금(단독 2,200만, 홑벌이 3,200만, 맞벌이 4,400만 원 최대 330만 원) 및 자녀장려금(1인당 100만 원), 재산...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>2026 글로벌 세무·금융·복지 계산기 전수 보기 &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</body>
+</html>

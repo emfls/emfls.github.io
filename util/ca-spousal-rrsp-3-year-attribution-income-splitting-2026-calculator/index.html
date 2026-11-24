@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>2026 Canada Spousal RRSP Attribution &amp; Tax Savings Calculator</title>
+  <meta name="description" content="Compare December and first-60-days spousal RRSP contributions, find your attribution-free withdrawal date, and estimate Canadian income-splitting savings.">
+  <link rel="canonical" href="https://emfls.github.io/util/ca-spousal-rrsp-3-year-attribution-income-splitting-2026-calculator/">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_CA">
+  <meta property="og:title" content="2026 Canada Spousal RRSP Attribution &amp; Tax Savings Calculator">
+  <meta property="og:description" content="See why a December 2026 contribution can clear attribution a full year before a first-60-days 2027 contribution.">
+  <meta property="og:url" content="https://emfls.github.io/util/ca-spousal-rrsp-3-year-attribution-income-splitting-2026-calculator/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="2026 Canada Spousal RRSP Attribution &amp; Tax Savings Calculator">
+  <meta name="twitter:description" content="Check CRA's three-calendar-year window and estimate the family tax cost of withdrawing early.">
+  <link rel="stylesheet" href="../new-tools.css">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QP5Q67GE5B')</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 Canada Spousal RRSP Attribution & Tax Savings Calculator",
+    "url": "https://emfls.github.io/util/ca-spousal-rrsp-3-year-attribution-income-splitting-2026-calculator/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "inLanguage": "en-CA",
+    "isAccessibleForFree": true,
+    "offers": {"@type": "Offer", "price": "0", "priceCurrency": "CAD"}
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Can a February 2027 contribution count for 2026?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. A contribution from January 1 through March 1, 2027 can qualify for a 2026 deduction if the contributor has remaining room. For attribution, the contribution was made in 2027. With no later contributions, the window clears on January 1, 2030."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why does a December 31, 2026 contribution clear on January 1, 2029?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A withdrawal in 2029 looks back to calendar years 2027, 2028 and 2029. A December 31, 2026 contribution falls outside that window. A contribution in any of those later years can make some or all of the withdrawal attributable."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What if we contribute to several spousal RRSPs?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Count this contributor’s spousal contributions across the annuitant’s plans for the withdrawal year and the prior two calendar years. A contribution later in the withdrawal year can count. Form T2205 accounts for contributions already attributed in an earlier year."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much can I deduct for a 2026 spousal RRSP contribution?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The deduction uses the contributor’s available RRSP deduction room. The 2026 dollar cap on new room is C$33,810. Your actual limit can be lower because of income or pension adjustments, or higher because of unused room."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does converting to a spousal RRIF avoid attribution?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The required annual minimum stays taxable to the annuitant. Payments above the minimum can still be attributed to the contributor. The minimum is zero in the year the RRIF is established."
+        }
+      }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "EMFLS", "item": "https://emfls.github.io/"},
+      {"@type": "ListItem", "position": 2, "name": "Tools", "item": "https://emfls.github.io/util/"},
+      {"@type": "ListItem", "position": 3, "name": "Spousal RRSP calculator", "item": "https://emfls.github.io/util/ca-spousal-rrsp-3-year-attribution-income-splitting-2026-calculator/"}
+    ]
+  }
+  </script>
+  <script type="module" src="./app.js"></script>
+  <style>
+    [hidden] { display: none !important; }
+    .tool-nav { display: flex; flex-wrap: wrap; gap: 6px 12px; margin-bottom: 14px; color: #e2e8f0; }
+    .tool-nav a { color: inherit; }
+    .takeaways { border-top: 5px solid #2563eb; }
+    .date-card { margin: 0; padding: 12px 16px; border-radius: 10px; background: #eef4ff; }
+    .date-card strong { display: block; color: #173f8a; font-size: 1.23rem; }
+    .warning { margin: 16px 0 0; padding: 12px 16px; border-radius: 10px; border-inline-start: 4px solid #b45309; background: #fff4dd; color: #713f12; }
+    fieldset { min-inline-size: 0; margin: 0 0 20px; padding: 0; border: 0; }
+    legend { margin-bottom: 10px; font-weight: 800; }
+    input { min-width: 0; }
+    input[type="checkbox"] { width: auto; accent-color: #2563eb; }
+    .field-hint { display: block; margin-top: 5px; }
+    #contribution-presets { margin-top: 12px; }
+    #contribution-presets [aria-pressed="true"] { background: #174ea6; }
+    details > summary { cursor: pointer; font-weight: 700; }
+    .other-contribution { align-items: end; margin: 12px 0; grid-template-columns: 1fr 1fr auto; }
+    .other-contribution button, #add-contribution { width: auto; }
+    .metrics { margin: 14px 0 0; }
+    .metrics > div { min-width: 0; padding: 10px 14px; background: #f7faff; border: 1px solid #dae5f6; border-radius: 10px; }
+    .metrics dd { margin: 2px 0 0; overflow-wrap: anywhere; font-size: 1.25rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .status { margin: 0; border-radius: 10px; background: #e6f5ed; padding: 12px 16px; color: #14532d; }
+    .status[data-state="attributed"] { background: #fff1e9; color: #842b14; }
+    .status[data-state="no-withdrawal"] { background: #eef4ff; color: #173f8a; }
+    .status p { margin: 0; }
+    .ad-placement { margin: 32px auto; width: min(100%, 520px); min-height: 278px; text-align: center; }
+    .ad-label { display: block; line-height: 28px; font-size: .75rem; color: #cbd5e1; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px 8px; border-bottom: 1px solid #d9e0ea; text-align: left; vertical-align: top; }
+    tbody th { width: 33%; }
+    @media (max-width: 650px) {
+      .other-contribution { grid-template-columns: 1fr; }
+    }
+  </style>
+<style id="emfls-cro-calc-first-v1">
+/* EMFLS CRO v1 — calculator-first on mobile (CSS-only, no DOM/content/JS change; reversible by deleting this <style>) */
+@media (max-width: 760px) {
+  main.tool-shell { display: flex; flex-direction: column; }
+  main.tool-shell > * { order: 3; }
+  main.tool-shell > .hero, main.tool-shell > header, main.tool-shell > nav { order: 0; }
+  main.tool-shell > section.takeaways + section.panel { order: 1; }
+  main.tool-shell > section.takeaways + section.panel + aside.emfls-ad-slot { order: 1; }
+  main.tool-shell > section.takeaways { order: 2; }
+}
+</style>
+</head>
+<body>
+  <main class="tool-shell">
+    <nav class="tool-nav" aria-label="Breadcrumb">
+      <a href="/">EMFLS</a><span aria-hidden="true">›</span>
+      <a href="/util/">Tools</a><span aria-hidden="true">›</span>
+      <span aria-current="page">Spousal RRSP</span>
+    </nav>
+    <header class="hero">
+      <h1>Canada Spousal RRSP Attribution Calculator (2026)</h1>
+      <p>Compare contribution dates, see who reports the withdrawal, and estimate the tax you keep or lose through income splitting.</p>
+    </header>
+
+    <section class="panel takeaways" aria-labelledby="takeaways">
+      <h2 id="takeaways">Key takeaways</h2>
+      <p><strong>A one-day shift across New Year’s can delay an attribution-free withdrawal by a full calendar year.</strong> The CRA checks contributions in the withdrawal year and the two preceding calendar years. Both examples below can qualify for a 2026 deduction if you have room.</p>
+      <div class="grid">
+        <p class="date-card">Pay on Dec 31, 2026 <strong>Jan 1, 2029</strong> Attribution window covers 2026–2028.</p>
+        <p class="date-card">Pay Jan 1–Mar 1, 2027 <strong>Jan 1, 2030</strong> Attribution window covers 2027–2029.</p>
+      </div>
+      <p class="warning"><strong>Early withdrawal can erase the rate benefit.</strong> On a C$20,000 withdrawal, attributing the full amount to a contributor at 43% instead of an annuitant at 25% adds C$3,600 in estimated family income tax. A later spousal contribution can move the clearance date again.</p>
+    </section>
+
+    <section class="panel" aria-labelledby="calculator">
+      <h2 id="calculator">Calculate your deduction and withdrawal tax</h2>
+      <noscript><p>Enable JavaScript to update the example results below.</p></noscript>
+      <form id="scenario" method="dialog" novalidate>
+        <fieldset>
+          <legend>Contribution and tax rates</legend>
+          <div class="grid">
+            <div>
+              <label for="contributor-rate">Contributor marginal tax rate (%)</label>
+              <input id="contributor-rate" type="number" inputmode="decimal" min="0" max="100" step="0.01" value="43" required aria-describedby="rate-hint">
+              <small id="rate-hint" class="note field-hint">Combined federal and provincial or territorial rate. Used for the deduction and attributed income.</small>
+            </div>
+            <div>
+              <label for="spouse-rate">Annuitant’s withdrawal tax rate (%)</label>
+              <input id="spouse-rate" type="number" inputmode="decimal" min="0" max="100" step="0.01" value="25" required>
+            </div>
+            <div>
+              <label for="contribution-amount">Spousal RRSP contribution (CAD)</label>
+              <input id="contribution-amount" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="20000" required>
+            </div>
+            <div>
+              <label for="deduction-room">Contributor’s available 2026 deduction room (CAD)</label>
+              <input id="deduction-room" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="33810" required aria-describedby="room-hint">
+              <small id="room-hint" class="note field-hint">Use your CRA limit less deductions already allocated to other contributions. The default illustrates the annual new-room cap.</small>
+            </div>
+            <div class="full">
+              <label for="contribution-date">Contribution date</label>
+              <input id="contribution-date" type="date" min="1000-01-01" max="9996-12-31" value="2026-12-15" required>
+              <div id="contribution-presets" class="actions" aria-label="Contribution date examples">
+                <button type="button" class="secondary" data-date="2026-12-15" aria-pressed="true">Dec 15, 2026</button>
+                <button type="button" class="secondary" data-date="2026-12-31" aria-pressed="false">Dec 31, 2026</button>
+                <button type="button" class="secondary" data-date="2027-02-15" aria-pressed="false">First 60 days · Feb 15, 2027</button>
+              </div>
+            </div>
+            <details class="full">
+              <summary>Other spousal contributions (optional)</summary>
+              <p class="note">Add amounts paid by this contributor into any of the annuitant’s spousal RRSPs. Include planned contributions later in the same withdrawal year.</p>
+              <div id="other-contributions"></div>
+              <button id="add-contribution" type="button" class="secondary">Add a contribution</button>
+            </details>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Planned withdrawal</legend>
+          <div class="grid">
+            <div>
+              <label for="withdrawal-date">Withdrawal date</label>
+              <input id="withdrawal-date" type="date" min="1000-01-01" max="9999-12-31" value="2029-01-01" required>
+            </div>
+            <div>
+              <label for="withdrawal-amount">Gross withdrawal amount (CAD)</label>
+              <input id="withdrawal-amount" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="20000" required>
+            </div>
+            <div class="full">
+              <label for="rrif"><input id="rrif" type="checkbox" aria-controls="rrif-options"> Withdraw from a converted spousal RRIF</label>
+            </div>
+            <div id="rrif-options" class="full" hidden>
+              <label for="rrif-minimum">RRIF minimum available against this withdrawal (CAD)</label>
+              <input id="rrif-minimum" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="0" aria-describedby="minimum-hint">
+              <small id="minimum-hint" class="note field-hint">Use your issuer’s remaining minimum for the year, or the full minimum if you enter the full year’s payouts from that fund. Enter zero for the year the RRIF is set up.</small>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+      <template id="contribution-template">
+        <div class="grid other-contribution">
+          <label>Additional contribution date
+            <input type="date" min="1000-01-01" max="9996-12-31" required>
+          </label>
+          <label>Additional contribution (CAD)
+            <input type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" required>
+          </label>
+          <button type="button" class="secondary">Remove</button>
+        </div>
+      </template>
+      <p id="scenario-error" class="error" role="alert" hidden></p>
+      <section id="results" aria-labelledby="result-title">
+        <h2 id="result-title">Your estimated results (CAD)</h2>
+        <div class="status" id="attribution-status" data-state="safe" role="status" aria-atomic="true">
+          <strong id="status-label">SAFE — Taxed to spouse</strong>
+          <p id="status-details">CRA lookback: 2027–2029.</p>
+        </div>
+        <dl class="grid metrics">
+          <div><dt>Earliest date outside attribution window</dt><dd id="earliest-date">Jan 1, 2029</dd></div>
+          <div><dt>Immediate 2026 deduction benefit (estimated)</dt><dd id="deduction-benefit">$8,600.00</dd></div>
+          <div><dt>Withdrawal income reported by contributor</dt><dd id="contributor-income">$0.00</dd></div>
+          <div><dt>Withdrawal income reported by annuitant</dt><dd id="spouse-income">$20,000.00</dd></div>
+          <div><dt>Income-splitting tax difference</dt><dd id="splitting-savings">$3,600.00</dd></div>
+          <div><dt>Extra income tax from early attribution</dt><dd id="extra-tax">$0.00</dd></div>
+          <div><dt>Total estimated withdrawal tax</dt><dd id="withdrawal-tax">$5,000.00</dd></div>
+          <div id="rrif-result" hidden><dt>Withdrawal covered by RRIF minimum</dt><dd id="exempt-amount">$0.00</dd></div>
+        </dl>
+        <p class="note" id="deduction-note">2026 deduction modelled on $20,000.00.</p>
+        <p class="warning" id="room-warning" hidden></p>
+        <p class="note">The clearance date uses the last entered contribution. Tax differences compare the same withdrawal at the rates entered. A negative figure means the comparison favours the other taxpayer.</p>
+      </section>
+    </section>
+
+    <aside class="emfls-ad-slot ad-placement" aria-label="Advertisement">
+      <span class="ad-label">Advertisement</span>
+      <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </aside>
+
+    <section class="panel" aria-labelledby="parameters">
+      <h2 id="parameters">2026 official CRA parameters</h2>
+      <table aria-labelledby="parameters">
+        <thead><tr><th scope="col">Parameter</th><th scope="col">2026 rule</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">New room dollar cap</th><td>C$33,810. New room generally starts with the lesser of 18% of 2025 earned income and C$33,810. Unused room is added separately and pension adjustments may change the limit.</td></tr>
+          <tr><th scope="row">Whose room?</th><td>The contributor uses their own RRSP deduction room, including for contributions to the annuitant’s spousal RRSP.</td></tr>
+          <tr><th scope="row">2026 contribution deadline</th><td>Mar 1, 2027. Contributions made Jan 1–Mar 1, 2027 fall in calendar year 2027 for attribution.</td></tr>
+          <tr><th scope="row">Attribution window</th><td>The withdrawal year plus the two preceding calendar years, under Income Tax Act subsection 146(8.3) for RRSPs. The RRIF rule appears in subsection 146.3(5.1).</td></tr>
+          <tr><th scope="row">Spousal RRIF minimum</th><td>The annual minimum stays taxable to the annuitant. Only the excess can be attributed, up to the applicable contributions.</td></tr>
+        </tbody>
+      </table>
+      <p class="links">
+        <a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/rrsps-related-plans/contributing-a-rrsp-prpp/contributions-affect-your-rrsp-prpp-deduction-limit.html">CRA deduction limits</a>
+        <a href="https://www.canada.ca/en/revenue-agency/services/tax/businesses/topics/completing-slips-summaries/financial-slips-summaries/rrsp-contribution-receipt-return/contribution-year.html">CRA contribution dates</a>
+        <a href="https://www.canada.ca/en/revenue-agency/services/forms-publications/forms/t2205.html">CRA Form T2205</a>
+        <a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/registered-retirement-income-fund-rrif/receiving-income-a-rrif.html">CRA RRIF minimum</a>
+      </p>
+      <h3>How the estimate works</h3>
+      <p>The calculator multiplies the deductible contribution by your contributor rate. The tax saved through splitting equals the amount taxable to the annuitant multiplied by the difference between your rates, compared with paying contributor-rate tax on the whole withdrawal. The extra tax from attribution applies the same rate difference to the contributor’s portion, compared with taxing the entire withdrawal to the annuitant.</p>
+      <p class="note">This models one withdrawal type at a time and assumes none of the listed contributions were previously attributed. If you have prior attribution, mixed RRSP/RRIF withdrawals, or a statutory exception such as separation or non-residency, use Form T2205 and the CRA guidance. The deduction benefit estimates the reduction in tax, and the cash refund depends on the full return. Estimates use constant rates and exclude withholding, benefit changes, and tax on excess contributions.</p>
+      <p class="note">Calculator inputs are processed in your browser. Analytics and advertising may receive ordinary usage and device data.</p>
+    </section>
+
+    <section class="panel faq" aria-labelledby="faq">
+      <h2 id="faq">Spousal RRSP FAQ</h2>
+      <details>
+        <summary>Can a February 2027 contribution count for 2026?</summary>
+        <p>Yes. A contribution from January 1 through March 1, 2027 can qualify for a 2026 deduction if the contributor has remaining room. For attribution, the contribution was made in 2027. With no later contributions, the window clears on January 1, 2030.</p>
+      </details>
+      <details>
+        <summary>Why does a December 31, 2026 contribution clear on January 1, 2029?</summary>
+        <p>A withdrawal in 2029 looks back to calendar years 2027, 2028 and 2029. A December 31, 2026 contribution falls outside that window. A contribution in any of those later years can make some or all of the withdrawal attributable.</p>
+      </details>
+      <details>
+        <summary>What if we contribute to several spousal RRSPs?</summary>
+        <p>Count this contributor’s spousal contributions across the annuitant’s plans for the withdrawal year and the prior two calendar years. A contribution later in the withdrawal year can count. Form T2205 accounts for contributions already attributed in an earlier year.</p>
+      </details>
+      <details>
+        <summary>How much can I deduct for a 2026 spousal RRSP contribution?</summary>
+        <p>The deduction uses the contributor’s available RRSP deduction room. The 2026 dollar cap on new room is C$33,810. Your actual limit can be lower because of income or pension adjustments, or higher because of unused room.</p>
+      </details>
+      <details>
+        <summary>Does converting to a spousal RRIF avoid attribution?</summary>
+        <p>The required annual minimum stays taxable to the annuitant. Payments above the minimum can still be attributed to the contributor. The minimum is zero in the year the RRIF is established.</p>
+      </details>
+    </section>
+
+    <aside class="emfls-ad-slot ad-placement" aria-label="Advertisement">
+      <span class="ad-label">Advertisement</span>
+      <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+    </aside>
+
+    <section class="panel" aria-labelledby="related-tools">
+      <h2 id="related-tools">Related calculators</h2>
+      <div class="links">
+        <a href="/util/compound-interest/">Compound interest calculator</a>
+        <a href="/util/loan-payment-calculator/">Loan and mortgage payment calculator</a>
+        <a href="/util/roi-calculator/">ROI calculator</a>
+      </div>
+    </section>
+  
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 Canadian Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for Canadian:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/ca-spousal-support-vs-child-support-tax-deduction-ita-60b-form-t1158-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">Canada Spousal vs Child Support Tax Calculator 2026</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Estimate the 2026 CRA spousal support deduction, child support priority, recipient tax and a...</span>
+    </a>
+    <a href="/util/ca-sred-tax-credit-35-percent-6m-limit-proxy-55-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Canada SR&amp;ED Tax Credit Calculator | Bill C-15 $6M Limit &amp; 35% Refund</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate Canadian Scientific Research and Experimental Development (SR&amp;ED) tax credits unde...</span>
+    </a>
+    <a href="/util/ca-ssag-spousal-support-without-child-rule-of-65-duration-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Canada Spousal Support Advisory Guidelines (SSAG) Calculator | &quot;Without Child&quot; Formula &amp; Rule of 65</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate official Canada SSAG spousal support quantum and duration ranges under the Without...</span>
+    </a>
+    <a href="/util/ca-tax-finance-calculators-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">CRA 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Canada CRA Tax, RRSP, TFSA &amp; Real Estate Calculators Directory</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Official CRA 2026 statutory financial calculation directory. Calculate Construction Lien Hol...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+  <footer>Estimate only · emfls.github.io</footer>
+</body>
+</html>

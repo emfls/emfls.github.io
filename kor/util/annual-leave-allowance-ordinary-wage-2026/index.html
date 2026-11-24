@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2026 연차수당·통상임금 계산기 | 정기상여금·209시간 | EMFLS</title>
+  <meta name="description" content="정기상여금 산입 전후의 통상시급, 미사용 연차수당과 연장·야간·휴일근로 단가를 비교하세요. 209시간과 근속연수에 따른 법정 연차를 반영합니다.">
+  <link rel="canonical" href="https://emfls.github.io/kor/util/annual-leave-allowance-ordinary-wage-2026/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="EMFLS">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:title" content="2026 연차수당·통상임금 계산기">
+  <meta property="og:description" content="정기상여금 산입 전후의 통상시급, 미사용 연차수당, 연장·야간·휴일근로 단가를 비교하세요.">
+  <meta property="og:url" content="https://emfls.github.io/kor/util/annual-leave-allowance-ordinary-wage-2026/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="2026 연차수당·통상임금 계산기">
+  <meta name="twitter:description" content="대법원 전원합의체 판결을 반영한 정기상여금 산입 전후 수당 비교.">
+  <meta name="google-adsense-account" content="ca-pub-8830524482034754">
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172b31;
+      --muted: #4c6268;
+      --line: #d5e3e1;
+      --teal: #075d54;
+      --mint: #e6f5ef;
+      --paper: #fff;
+      font-family: system-ui, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); background: #f3f7f6; line-height: 1.65; overflow-wrap: anywhere; }
+    [hidden] { display: none !important; }
+    h1, h2, h3, p, figure { margin: 0; }
+    h1 { font-size: clamp(1.85rem, 5vw, 3rem); line-height: 1.2; letter-spacing: -.045em; }
+    h2 { font-size: 1.35rem; line-height: 1.35; }
+    h3 { font-size: 1.05rem; }
+    a { color: var(--teal); text-underline-offset: .2em; }
+    :focus-visible { outline: 3px solid #16786b; outline-offset: 3px; }
+    .shell { width: min(100% - 2rem, 70rem); margin-inline: auto; }
+    header { background: #163b3a; color: white; padding-block: 1.25rem 2.25rem; }
+    .crumbs { display: flex; flex-wrap: wrap; gap: .35rem .7rem; align-items: center; font-size: .875rem; margin-bottom: 1.1rem; }
+    header a { color: #bfeee0; }
+    header p { margin-top: .8rem; color: #d7eae5; }
+    main { display: grid; gap: 1.25rem; padding-block: 1.25rem 2rem; }
+    .panel { background: var(--paper); border: 1px solid var(--line); border-radius: 1rem; padding: clamp(1rem, 3vw, 1.5rem); min-width: 0; }
+    .summary { background: var(--mint); border-color: #b4dbcd; }
+    .summary p, .warning p, .notes p { margin-top: .45rem; }
+    .warning { background: #fff5e0; border-color: #f0d297; color: #62440c; }
+    .layout { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 5fr); gap: 1rem; align-items: start; }
+    fieldset { border: 0; padding: 0; margin: 1rem 0 0; min-width: 0; }
+    legend { padding: 0; margin-bottom: .5rem; font-weight: 750; }
+    .fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+    label { display: block; font-size: .9rem; font-weight: 650; min-width: 0; }
+    label input {
+      display: block; margin-top: .25rem; width: 100%; min-width: 0; border: 1px solid #9eb7b3;
+      border-radius: .55rem; background: white; color: var(--ink); padding: .5rem .6rem; font: inherit;
+      font-size: 1rem; min-height: 2.75rem; font-variant-numeric: tabular-nums;
+    }
+    label input[aria-invalid="true"] { border: 2px solid #a52d26; }
+    .help { color: var(--muted); font-size: .88rem; }
+    fieldset .help { margin-block: .5rem; }
+    .actions { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin-top: .75rem; }
+    .badge { background: var(--mint); border-radius: .55rem; padding: .25rem .65rem; color: var(--teal); font-weight: 750; }
+    button { border: 1px solid #a8c0bc; border-radius: .55rem; background: #fff; color: var(--teal); padding: .5rem .65rem; font: inherit; font-size: .875rem; font-weight: 700; cursor: pointer; min-height: 2.75rem; }
+    button:disabled { opacity: .6; cursor: default; }
+    .error { color: #982f29; font-weight: 700; margin-top: .7rem; }
+    .metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; margin: .8rem 0; }
+    .metric { padding: .8rem; border-radius: .75rem; background: var(--mint); min-width: 0; }
+    .metric span, .metric small { display: block; }
+    .metric span { font-size: .88rem; font-weight: 700; }
+    .metric strong { display: block; color: var(--teal); font-size: clamp(1.05rem, 3vw, 1.45rem); font-variant-numeric: tabular-nums; }
+    .metric small { color: var(--muted); }
+    .result-warning { border-radius: .6rem; padding: .65rem .8rem; margin-block: .65rem; }
+    figure { margin-block: 1rem; }
+    figcaption { font-weight: 700; margin-bottom: .35rem; }
+    .chart-row { display: grid; grid-template-columns: minmax(0, 4rem) minmax(0, 1fr) minmax(0, max-content); align-items: center; gap: .5rem; margin-top: .3rem; font-size: .86rem; }
+    .chart-row svg { display: block; width: 100%; height: 14px; border-radius: .25rem; }
+    .chart-row strong { max-width: 7rem; text-align: right; }
+    table { width: 100%; table-layout: fixed; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+    caption { text-align: left; font-weight: 750; margin-bottom: .4rem; }
+    th, td { padding: .5rem .4rem; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    thead { background: #edf4f3; }
+    td:nth-child(n+2), .compare thead th:nth-child(n+2) { text-align: right; }
+    .compare { font-size: .84rem; }
+    .compare col:first-child { width: 34%; }
+    .compare td:last-child { color: var(--teal); font-weight: 700; }
+    .compare + p { margin-top: .6rem; }
+    .rules { margin-block: .75rem; font-size: .92rem; }
+    .rules col:first-child { width: 30%; }
+    .rules td:nth-child(n+2) { text-align: left; }
+    .ad-space { min-width: 0; }
+    details { border-bottom: 1px solid var(--line); padding: .75rem 0; }
+    details:last-child { border-bottom: 0; }
+    details p { margin-top: .5rem; color: var(--muted); }
+    summary { cursor: pointer; font-weight: 700; }
+    footer { border-top: 1px solid var(--line); padding-block: 1.25rem; }
+    footer nav { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; }
+    @media (max-width: 48rem) { .layout { grid-template-columns: minmax(0, 1fr); } }
+    @media (max-width: 24rem) {
+      .shell { width: calc(100% - 1.25rem); }
+      .panel { padding: .85rem; }
+      th, td { padding-inline: .25rem; }
+    }
+  </style>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "2026 연차수당·통상임금 계산기",
+      "url": "https://emfls.github.io/kor/util/annual-leave-allowance-ordinary-wage-2026/",
+      "inLanguage": "ko-KR",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "웹 브라우저",
+      "offers": {"@type": "Offer", "price": 0, "priceCurrency": "KRW"}
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {"@type": "Question", "name": "2026년에는 재직조건부 정기상여금도 통상임금에 들어가나요?", "acceptedAnswer": {"@type": "Answer", "text": "소정근로의 대가로 정기적·일률적으로 지급하기로 한 상여금이라면 재직 조건이 있어도 산입됩니다. 근무일수 조건은 소정근로일수 이내여야 합니다. 순수 실적 연동 성과급은 일반적으로 제외되며, 실적과 무관하게 지급이 보장된 최소액은 산입될 수 있습니다."}},
+        {"@type": "Question", "name": "통상시급을 계산할 때 왜 209시간으로 나누나요?", "acceptedAnswer": {"@type": "Answer", "text": "주 40시간 근무에 유급주휴 8시간을 더해 월로 환산한 일반적인 기준이 209시간입니다. 근무시간이나 유급 처리 시간이 다르면 본인의 월 통상임금 산정 기준시간으로 바꾸세요."}},
+        {"@type": "Question", "name": "근속연수와 출근율에 따라 연차는 며칠 발생하나요?", "acceptedAnswer": {"@type": "Answer", "text": "1년 미만은 1개월 개근마다 1일씩 최대 11일입니다. 1년간 출근율 80% 이상이면 그 1년을 마친 다음 날 근로관계가 존속하는 경우 15일이 발생합니다. 3년부터 최초 1년을 초과한 근속 2년마다 1일씩 더해 최대 25일입니다. 1년 이상이어도 직전 1년 출근율이 80% 미만이면 개근한 달마다 1일을 적용합니다."}},
+        {"@type": "Question", "name": "남은 연차는 전부 1일 통상임금으로 정산되나요?", "acceptedAnswer": {"@type": "Answer", "text": "계산기는 통상임금 기준으로 보상 대상인 미사용 일수의 세전 예상액을 산출합니다. 취업규칙 등에 평균임금 기준이 있는지 확인하세요. 법정 연차 사용촉진 절차를 적법하게 마쳐 연차가 소멸한 경우 등에는 보상 의무가 없을 수 있습니다."}},
+        {"@type": "Question", "name": "휴일 밤에 일하면 휴일근로와 야간근로 가산을 함께 받나요?", "acceptedAnswer": {"@type": "Answer", "text": "근로기준법 제56조가 적용되면 휴일근로 단가는 8시간 이내 1.5배, 8시간 초과분 2배입니다. 오후 10시부터 다음 날 오전 6시까지 겹치는 시간에는 야간 가산 0.5배를 더합니다. 예를 들어 휴일근로 8시간 이내와 야간근로가 겹치면 해당 시간은 총 2배입니다."}}
+      ]
+    }
+  </script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "EMFLS", "item": "https://emfls.github.io/"},
+        {"@type": "ListItem", "position": 2, "name": "한국어 무료 도구", "item": "https://emfls.github.io/kor/util/"},
+        {"@type": "ListItem", "position": 3, "name": "2026 연차수당·통상임금 계산기", "item": "https://emfls.github.io/kor/util/annual-leave-allowance-ordinary-wage-2026/"}
+      ]
+    }
+  </script>
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header>
+    <div class="shell">
+      <nav class="crumbs" aria-label="현재 위치"><a href="/">EMFLS</a><span aria-hidden="true">/</span><a href="/kor/util/">한국어 무료 도구</a></nav>
+      <h1>2026 연차수당·통상임금 계산기</h1>
+      <p>정기상여금 산입 전후의 시급, 미사용 연차수당, 시간외근로 단가를 비교합니다.</p>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="panel summary" aria-labelledby="answer-title">
+      <h2 id="answer-title">정기상여금은 연간 약정액을 12로 나눠 더하세요</h2>
+      <p>2024년 12월 19일 대법원 전원합의체 판결로 통상임금 판단에서 <strong>고정성 요건이 폐지</strong>됐습니다. 소정근로의 대가로 정기적·일률적으로 정한 상여금이라면 재직 조건이나 소정근로일수 이내의 근무일수 조건이 있어도 포함됩니다.</p>
+      <p><strong>미사용 연차수당</strong>은 월 통상임금 ÷ 월 기준시간(기본 209시간) × 1일 소정근로시간(기본 8시간) × 보상 대상 미사용 연차일수입니다.</p>
+    </section>
+
+    <div class="layout">
+      <section class="panel" aria-labelledby="input-title">
+        <h2 id="input-title">급여와 연차 입력</h2>
+        <form id="calculator">
+          <fieldset>
+            <legend>월 급여와 연간 상여금</legend>
+            <div class="fields">
+              <label for="basePay">월 기본급 (원)<input id="basePay" type="number" inputmode="decimal" min="0" step="1" value="2800000" required></label>
+              <label for="fixedPay">월 고정수당 (원)<input id="fixedPay" type="number" inputmode="decimal" min="0" step="1" value="200000" required></label>
+            </div>
+            <label for="annualBonus">새로 산입하는 정기상여금 (연 원)<input id="annualBonus" type="number" inputmode="decimal" min="0" step="1" value="6000000" aria-describedby="bonus-help" required></label>
+            <p id="bonus-help" class="help">급여에 이미 포함한 금액은 빼고 입력하세요. 재직·근무일수 조건부 상여금은 규정상 약정액을 입력하고 순수 실적 연동 성과급은 제외하세요.</p>
+          </fieldset>
+          <fieldset>
+            <legend>근로시간과 정산 일수</legend>
+            <div class="fields">
+              <label for="monthlyHours">월 기준시간<input id="monthlyHours" type="number" inputmode="decimal" min=".01" step=".01" value="209" aria-describedby="hours-help" required></label>
+              <label for="dailyHours">1일 소정근로시간<input id="dailyHours" type="number" inputmode="decimal" min=".01" max="8" step=".01" value="8" required></label>
+            </div>
+            <p id="hours-help" class="help">월 209시간은 주 40시간과 유급주휴 8시간 기준입니다.</p>
+            <label for="unusedDays">보상 대상 미사용 연차 (일)<input id="unusedDays" type="number" inputmode="decimal" min="0" step="any" value="5" aria-describedby="unused-help" required></label>
+            <p id="unused-help" class="help">정산 대상 잔여 일수를 입력하세요. 여러 발생 기간의 잔여분도 입력할 수 있습니다.</p>
+          </fieldset>
+          <fieldset>
+            <legend>법정 연차 발생일수</legend>
+            <div class="fields">
+              <label for="years">만 근속연수 (년)<input id="years" type="number" inputmode="decimal" min="0" step="1" value="5" required></label>
+              <label id="attendance-field" for="attendance">직전 1년 출근율 (%)<input id="attendance" type="number" inputmode="decimal" min="0" max="100" step="any" value="100" required></label>
+              <label id="months-field" for="perfectMonths" hidden>개근 월수<input id="perfectMonths" type="number" inputmode="decimal" min="0" max="12" step="1" value="0" required></label>
+            </div>
+            <p class="help">만 1년 미만은 근속연수에 0을 입력하세요. 만 1년 이상은 연차 발생일에 근로관계가 이어진 경우를 기준으로 합니다.</p>
+            <div class="actions">
+              <output class="badge" id="legal-days" for="years attendance perfectMonths">법정 발생 연차 계산 중</output>
+              <button type="button" id="use-legal-days" disabled>발생일수 전부 적용</button>
+            </div>
+          </fieldset>
+          <p id="input-error" class="error" role="status" hidden></p>
+        </form>
+        <noscript><p class="error">계산하려면 자바스크립트를 켜세요.</p></noscript>
+      </section>
+
+      <section class="panel" aria-labelledby="result-title">
+        <h2 id="result-title">정기상여금 산입 전후 비교</h2>
+        <div id="results">
+          <div class="metrics" aria-live="polite">
+            <div class="metric"><span>미사용 연차수당 차액</span><strong id="leave-increase">—</strong><small>입력한 미사용 일수 기준</small></div>
+            <div class="metric"><span>시간외근로 단가 차액</span><strong id="overtime-increase">—</strong><small>연장근로 1시간 기준</small></div>
+          </div>
+          <p id="minimum-warning" class="warning result-warning" role="status" hidden><strong>최저임금 위반 여부 확인 필요</strong><br>신 기준 통상시급이 2026년 최저시급 10,320원보다 낮습니다. 실제 위반 여부는 최저임금 산입 대상 임금과 적용 기준시간으로 별도 판단합니다.</p>
+          <figure>
+            <figcaption>미사용 연차수당 비교</figcaption>
+            <div class="chart-row">
+              <span>구 기준</span>
+              <svg viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true"><rect width="100" height="14" fill="#edf4f3"/><rect id="previous-bar" width="0" height="14" fill="#7d979c"/></svg>
+              <strong id="previous-chart-value">—</strong>
+            </div>
+            <div class="chart-row">
+              <span>신 기준</span>
+              <svg viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true"><rect width="100" height="14" fill="#edf4f3"/><rect id="current-bar" width="0" height="14" fill="#087465"/></svg>
+              <strong id="current-chart-value">—</strong>
+            </div>
+          </figure>
+          <table class="compare">
+            <caption>세전 금액 및 시간당 단가</caption>
+            <colgroup><col><col><col><col></colgroup>
+            <thead><tr><th scope="col">항목</th><th scope="col">구 기준<br>상여 제외</th><th scope="col">2026 신 기준<br>상여 산입</th><th scope="col">인상 차액</th></tr></thead>
+            <tbody>
+              <tr data-metric="monthly"><th scope="row">월 통상임금</th><td>—</td><td>—</td><td>—</td></tr>
+              <tr data-metric="hourly"><th scope="row">통상시급</th><td>—</td><td>—</td><td>—</td></tr>
+              <tr data-metric="daily"><th scope="row">1일 통상임금</th><td>—</td><td>—</td><td>—</td></tr>
+              <tr data-metric="leave"><th scope="row">미사용 연차수당</th><td>—</td><td>—</td><td>—</td></tr>
+              <tr data-metric="overtime"><th scope="row">연장 ×1.5</th><td>—</td><td>—</td><td>—</td></tr>
+              <tr data-metric="night"><th scope="row">야간 가산 +0.5</th><td>—</td><td>—</td><td>—</td></tr>
+              <tr data-metric="holiday"><th scope="row">휴일 8시간 이내 ×1.5</th><td>—</td><td>—</td><td>—</td></tr>
+              <tr data-metric="holidayExtra"><th scope="row">휴일 8시간 초과 ×2.0</th><td>—</td><td>—</td><td>—</td></tr>
+            </tbody>
+          </table>
+          <p class="help">원 단위로 반올림해 표시합니다. 차액은 반올림 전 금액으로 계산합니다. 가산율은 근로기준법 제56조의 법정 최저 기준입니다.</p>
+        </div>
+      </section>
+
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="다음 필수 확인 계산기" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">다음 필수 확인 계산기 (Next Check)</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">방금 계산한 결과를 바탕으로 바로 이어서 점검하세요:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/kor/util/severance-pay-exact-tax-calculator-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">퇴직금 3개월 평균임금 계산기 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">연차수당 3/12 산입이 퇴직금을 얼마나 올려주는지 바로 확인하세요.</span></a>
+    <a href="/kor/util/salary-take-home-4-insurance-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">2026 연봉 실수령액 계산기 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">인상된 4대보험 요율 기준 월 실수령액을 비교해 보세요.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+    </div>
+
+    <aside class="panel warning" aria-labelledby="warning-title">
+      <h2 id="warning-title">급여명세서에서 빠진 상여금과 가산수당을 확인하세요</h2>
+      <p>산입 대상 상여금이 통상임금에서 누락되면 연차수당과 시간외근로수당이 함께 줄어들 수 있습니다. 급여명세서에서 상여금 지급 규정, 월 기준시간, 연장·야간·휴일근로 시간을 대조하세요. 연차 정산은 실제 보상 대상 일수와 취업규칙상 산정 기준도 확인해야 합니다.</p>
+    </aside>
+
+    <div class="ad-space">
+      <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>
+        if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+      </script>
+    </div>
+
+    <section class="panel notes" aria-labelledby="rules-title">
+      <h2 id="rules-title">2026년 계산에 적용한 법령·판례 기준</h2>
+      <table class="rules">
+        <colgroup><col><col></colgroup>
+        <thead><tr><th scope="col">항목</th><th scope="col">적용 기준</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">구 기준 비교</th><td>고정성 요건으로 입력한 조건부 상여금이 제외되던 사례를 가정해 월 기본급과 통상임금에 해당하는 고정수당을 합산합니다.</td></tr>
+          <tr><th scope="row">신 기준 통상임금</th><td>구 기준 월액에 산입 대상 정기상여금 연간 약정액의 12분의 1을 더합니다. 새 법리는 원칙적으로 2024년 12월 19일 선고일 이후 통상임금 산정에 적용됩니다. <a href="https://www.law.go.kr/LSW/precInfoP.do?mode=0&amp;precSeq=600537">대법원 2020다247190</a> · <a href="https://portal.scourt.go.kr/pgp/main.on?c=900&amp;jisCntntsSrno=2025000004897&amp;pgDvs=1&amp;rnum=222&amp;srchwd=%2A&amp;w2xPath=PGP1011M04">대법원 2023다302838</a></td></tr>
+          <tr><th scope="row">최저임금·209시간</th><td>시간급 10,320원. 주 40시간과 유급주휴 8시간에 해당하는 월 209시간으로 환산하면 2,156,880원입니다. <a href="https://www.moel.go.kr/info/lawinfo/instruction/view.do?bbs_seq=20250800121">고용노동부 고시 제2025-47호</a></td></tr>
+          <tr><th scope="row">법정 연차</th><td>1년 미만은 월 개근마다 1일(최대 11일). 1년간 출근율 80% 이상이면 15일, 3년부터 2년마다 1일 가산(최대 25일). 1년 이상이고 80% 미만이면 월 개근마다 1일. <a href="https://www.law.go.kr/lsLinkCommonInfo.do?lsJoLnkSeq=1012792285">근로기준법 제60·61조</a></td></tr>
+          <tr><th scope="row">시간외근로</th><td>연장 기본분 포함 1.5배, 야간(22시~다음 날 06시) 가산분 0.5배, 휴일 기본분 포함 8시간 이내 1.5배·초과분 2배. <a href="https://law.go.kr/LSW/lsLinkCommonInfo.do?chrClsCd=010202&amp;lsJoLnkSeq=1034323029">근로기준법 제56조</a></td></tr>
+        </tbody>
+      </table>
+      <p class="help">상시 5인 이상 사업장의 일반 근로자를 기준으로 합니다. 4주 평균 주 소정근로시간 15시간 미만이면 법정 연차 규정의 적용이 제외됩니다. 단시간근로자의 비례 산정과 개별 취업규칙은 별도로 확인하세요.</p>
+    </section>
+
+    <section class="panel" aria-labelledby="faq-title">
+      <h2 id="faq-title">자주 묻는 질문</h2>
+      <details><summary>2026년에는 재직조건부 정기상여금도 통상임금에 들어가나요?</summary><p>소정근로의 대가로 정기적·일률적으로 지급하기로 한 상여금이라면 재직 조건이 있어도 산입됩니다. 근무일수 조건은 소정근로일수 이내여야 합니다. 순수 실적 연동 성과급은 일반적으로 제외되며, 실적과 무관하게 지급이 보장된 최소액은 산입될 수 있습니다.</p></details>
+      <details><summary>통상시급을 계산할 때 왜 209시간으로 나누나요?</summary><p>주 40시간 근무에 유급주휴 8시간을 더해 월로 환산한 일반적인 기준이 209시간입니다. 근무시간이나 유급 처리 시간이 다르면 본인의 월 통상임금 산정 기준시간으로 바꾸세요.</p></details>
+      <details><summary>근속연수와 출근율에 따라 연차는 며칠 발생하나요?</summary><p>1년 미만은 1개월 개근마다 1일씩 최대 11일입니다. 1년간 출근율 80% 이상이면 그 1년을 마친 다음 날 근로관계가 존속하는 경우 15일이 발생합니다. 3년부터 최초 1년을 초과한 근속 2년마다 1일씩 더해 최대 25일입니다. 1년 이상이어도 직전 1년 출근율이 80% 미만이면 개근한 달마다 1일을 적용합니다.</p></details>
+      <details><summary>남은 연차는 전부 1일 통상임금으로 정산되나요?</summary><p>계산기는 통상임금 기준으로 보상 대상인 미사용 일수의 세전 예상액을 산출합니다. 취업규칙 등에 평균임금 기준이 있는지 확인하세요. 법정 연차 사용촉진 절차를 적법하게 마쳐 연차가 소멸한 경우 등에는 보상 의무가 없을 수 있습니다.</p></details>
+      <details><summary>휴일 밤에 일하면 휴일근로와 야간근로 가산을 함께 받나요?</summary><p>근로기준법 제56조가 적용되면 휴일근로 단가는 8시간 이내 1.5배, 8시간 초과분 2배입니다. 오후 10시부터 다음 날 오전 6시까지 겹치는 시간에는 야간 가산 0.5배를 더합니다. 예를 들어 휴일근로 8시간 이내와 야간근로가 겹치면 해당 시간은 총 2배입니다.</p></details>
+    </section>
+
+    <div class="ad-space">
+      <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>
+        if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+      </script>
+    </div>
+  
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 대한민국 세무·금융·복지 핵심 계산기</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">2026년도 국세청·고용노동부 기준 연계 계산 도구:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/kor/util/apartment-management-fee-long-term-repair-refund-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 장기수선충당금 반환 계산기 | 아파트·오피스텔 퇴거 관리비 일할 정산</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">아파트 장기수선충당금·오피스텔 수선적립금 변동구간 합산 반환 청구액과 10년 소멸시효, 중도 퇴거일 마지막 달 관리비·공과금 일할 상계 정산표를 한 번에 계산합니다.</span>
+    </a>
+    <a href="/kor/util/basic-pension-247man-income-recognition-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 기초연금 선정기준액 &amp; 소득인정액 계산기 | 단독 247만·부부 395.2만 원</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 보건복지부 확정 단독가구 247만 원, 부부가구 395.2만 원 기초연금 선정기준액 및 최대 349,700원/559,520원 수급액, 근로소득 116만 원...</span>
+    </a>
+    <a href="/kor/util/business-simple-vs-standard-expense-rate-tax-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 종합소득세 단순경비율 vs 기준경비율 vs 장부신고 절세 비교 계산기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 개인사업자 및 프리랜서 종합소득세 추계신고(단순경비율·기준경비율) vs 간편장부 vs 복식부기 세액 실시간 비교. 직전연도 수입금액별 기준, 무기장가산세 ...</span>
+    </a>
+    <a href="/kor/util/buy-house-mortgage-vs-jeonse-invest-10year-wealth-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 내 집 마련 vs 전세+ETF투자 10년 순자산 비교기 | 손익분기 집값 상승률</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">매매(30년 주담대, 취득세, 재산세, 집값 상승 시나리오) vs 전세(보증금 대출이자, 아낀 목돈과 매월 세이브 자금 ETF 복리투자) 10년 후 순자산과 손익분기...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>2026 글로벌 세무·금융·복지 계산기 전수 보기 &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+
+  <footer>
+    <nav class="shell" aria-label="관련 도구">
+      <a href="/kor/util/fin-calc/">금융 계산기</a>
+      <a href="/kor/util/">한국어 무료 도구</a>
+      <a href="/util/">전체 웹 도구</a>
+    </nav>
+  </footer>
+</body>
+</html>

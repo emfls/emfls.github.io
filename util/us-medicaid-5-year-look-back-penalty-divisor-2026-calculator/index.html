@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <title>2026 Medicaid 5-Year Look-Back &amp; Penalty Divisor Calculator</title>
+  <meta name="description" content="Estimate a nursing-home Medicaid transfer penalty, partial-month days and private-pay costs. Compare 2026 divisor presets and review California's Medi-Cal transition.">
+  <link rel="canonical" href="https://emfls.github.io/util/us-medicaid-5-year-look-back-penalty-divisor-2026-calculator/">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { window.dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B', { allow_google_signals: false, allow_ad_personalization_signals: false });
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+  <style>
+    :root { color-scheme: light; --paper: #f4f6f3; --ink: #152b32; --muted: #485d62; --line: #cbd8d4; --green: #09594e; --hero: #102e35; }
+    *, *::before, *::after { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 1rem/1.6 system-ui, sans-serif; overflow-wrap: anywhere; }
+    h1, h2, h3, p { margin: 0 0 .8rem; }
+    h1, h2, h3 { line-height: 1.15; }
+    h1 { max-width: 21ch; font: 500 clamp(2.25rem, 5vw, 4.15rem)/1.04 Georgia, serif; letter-spacing: -.035em; }
+    h2 { font: 500 clamp(1.65rem, 3vw, 2.3rem)/1.15 Georgia, serif; letter-spacing: -.02em; }
+    h3 { margin-top: 1.5rem; font-size: 1.14rem; }
+    a { color: var(--green); text-underline-offset: .2em; }
+    :focus-visible { outline: 3px solid #b45d1f; outline-offset: 3px; }
+    .wrap { width: min(100% - 2rem, 74rem); margin-inline: auto; }
+    .masthead { background: radial-gradient(ellipse at top right, #20544f, transparent 65%), var(--hero); color: #f6fbf8; padding: 1.25rem 0 3.2rem; }
+    nav { display: flex; flex-wrap: wrap; gap: .35rem 1.4rem; font-size: .9rem; }
+    .masthead a { color: #d0ede0; }
+    .eyebrow { color: #b9ddd0; margin-top: 2.4rem; text-transform: uppercase; font-size: .77rem; font-weight: 750; letter-spacing: .14em; }
+    .lede { max-width: 62ch; color: #deece9; margin: 1.1rem 0 0; }
+    main { margin-top: -1.35rem; padding-bottom: 3rem; }
+    .calculator { display: grid; gap: 1rem; align-items: start; }
+    .card { min-width: 0; padding: clamp(1rem, 3vw, 1.65rem); border: 1px solid var(--line); border-radius: 1rem; background: #fff; }
+    .subtle, .help { color: var(--muted); }
+    .help { display: block; font-size: .84rem; margin-top: .3rem; }
+    fieldset { min-width: 0; margin: 1.15rem 0; padding: 0; border: 0; }
+    legend { padding: 0 0 .5rem; font-weight: 750; color: var(--green); }
+    .fields { display: grid; gap: .85rem; }
+    label { display: block; min-width: 0; font-size: .91rem; font-weight: 650; }
+    label span { font-weight: 400; }
+    input, select, button { max-width: 100%; font: inherit; border-radius: .55rem; min-height: 2.85rem; }
+    input, select { display: block; width: 100%; min-width: 0; margin-top: .25rem; border: 1px solid #839a96; background: #fcfdfc; color: var(--ink); padding: .55rem; }
+    .actions { display: flex; flex-wrap: wrap; gap: .65rem; }
+    button { cursor: pointer; border: 1px solid var(--green); padding: .45rem 1.15rem; font-weight: 700; }
+    .primary { background: var(--green); color: white; }
+    .secondary { background: white; color: var(--green); }
+    .results { background: #fdfefd; }
+    .notice { padding: .72rem .85rem; border-inline-start: 4px solid #398675; background: #e9f4ef; border-radius: .35rem; }
+    .caution { background: #fbf2e4; border-color: #a16b25; }
+    .error { color: #8b201a; font-weight: 650; }
+    .error:empty { display: none; }
+    .kpis { display: grid; gap: .65rem; margin: 1rem 0; }
+    .kpi { min-width: 0; padding: .8rem; border-radius: .75rem; border: 1px solid var(--line); background: #edf6f2; }
+    .kpi span { display: block; font-size: .83rem; color: #36534f; }
+    .kpi output { display: block; color: #10483f; font-size: clamp(1.12rem, 2.1vw, 1.65rem); line-height: 1.25; font-weight: 750; margin-top: .2rem; }
+    .table-scroll { overflow-x: auto; max-width: 100%; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: .91rem; }
+    caption { text-align: left; font-weight: 750; margin-bottom: .35rem; }
+    th, td { padding: .55rem .55rem .55rem 0; vertical-align: top; border-bottom: 1px solid var(--line); }
+    th { font-weight: 650; }
+    td:last-child { padding-right: 0; }
+    .scenario table { min-width: 27rem; }
+    article table { min-width: 35rem; }
+    .ad-space { min-height: 250px; margin-block: 1rem; }
+    .adsbygoogle { display: block; }
+    .reading { max-width: 57rem; margin-inline: auto; }
+    .reading > section + section { margin-top: 1.25rem; }
+    .reading p { max-width: 76ch; }
+    details { border-top: 1px solid var(--line); padding-block: .85rem; }
+    summary { cursor: pointer; font-weight: 700; }
+    details p { padding-top: .6rem; margin-bottom: 0; }
+    footer { border-top: 1px solid var(--line); padding-block: 1.2rem; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    @media (min-width: 34rem) {
+      .fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .wide { grid-column: 1 / -1; }
+      .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+    @media (min-width: 62rem) {
+      .calculator { grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr); }
+      .calculator > .ad-space { grid-column: 2; margin: 0; }
+    }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 Medicaid 5-Year Look-Back and Penalty Divisor Calculator",
+    "url": "https://emfls.github.io/util/us-medicaid-5-year-look-back-penalty-divisor-2026-calculator/",
+    "description": "Educational nursing-home Medicaid transfer penalty and private-pay gap calculator with regional divisor examples and a California transition screen.",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript",
+    "offers": { "@type": "Offer", "price": 0, "priceCurrency": "USD" },
+    "inLanguage": "en-US"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Does a transfer exactly five years before applying count?",
+        "acceptedAnswer": {"@type":"Answer","text":"Under the federal rule, a transfer on the cutoff date is within review because the statute covers transfers on or after that date. The federal reference date is when the applicant is both institutionalized and has applied. Confirm how your agency records the reference and transfer dates, especially for month-end dates and California cases."}
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use the federal gift-tax exclusion as a Medicaid exemption?",
+        "acceptedAnswer": {"@type":"Answer","text":"Medicaid evaluates what you received in exchange and whether a Medicaid-specific exception applies. A gift can be within a federal tax exclusion and still count as an uncompensated transfer for Medicaid. Keep proof of payment, fair market value and any facts supporting a statutory exception."}
+      },
+      {
+        "@type": "Question",
+        "name": "When does the penalty start, and who pays during it?",
+        "acceptedAnswer": {"@type":"Answer","text":"For modern transfers under the federal rule, the penalty generally starts when the applicant would otherwise qualify for covered institutional care, or at the statutory transfer-month start if later, subject to existing penalties. During the gap, determine what the facility bills and what income, insurance or other funds are available. The calculator shows a gross private-pay estimate at the entered rate."}
+      },
+      {
+        "@type": "Question",
+        "name": "Why can my state's notice show a different number of days?",
+        "acceptedAnswer": {"@type":"Answer","text":"The model expresses fractions using a 30-day month and preserves the exact ratio in the breakdown. An agency may use a published daily divisor, a facility-region rate, or its own treatment of partial days. Check the divisor, effective date, included transfers and rounding shown on the notice before comparing it with this estimate."}
+      },
+      {
+        "@type": "Question",
+        "name": "Can a community spouse keep the maximum CSRA or buy an annuity automatically?",
+        "acceptedAnswer": {"@type":"Answer","text":"The state calculates the allowance under spousal impoverishment rules using the household's facts and applicable standards. An annuity has separate federal and state requirements, including disclosure and potentially a state remainder-beneficiary designation. Ask an elder law attorney to review both the resource assessment and any proposed contract before committing funds."}
+      }
+    ]
+  }
+  </script>
+<style id="emfls-cro-calc-first-b2-v1">
+/* EMFLS CRO B2 — mobile calculator-first ordering for non-Patch-B EN templates (CSS-only, reversible) */
+@media (max-width: 760px) {
+  main:has(form, input, select),
+  .tool-shell:has(form, input, select),
+  .container:has(form, input, select) {
+    display: flex;
+    flex-direction: column;
+  }
+  main:has(form, input, select) > *,
+  .tool-shell:has(form, input, select) > *,
+  .container:has(form, input, select) > * {
+    order: 4;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  main:has(form, input, select) > nav,
+  main:has(form, input, select) > header,
+  main:has(form, input, select) > .hero,
+  main:has(form, input, select) > h1,
+  main:has(form, input, select) > .lead,
+  .tool-shell:has(form, input, select) > nav,
+  .tool-shell:has(form, input, select) > header,
+  .tool-shell:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > h1,
+  .tool-shell:has(form, input, select) > .lead,
+  .container:has(form, input, select) > nav,
+  .container:has(form, input, select) > header,
+  .container:has(form, input, select) > .hero,
+  .container:has(form, input, select) > h1,
+  .container:has(form, input, select) > .lead {
+    order: 0;
+  }
+  main:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .tool-shell:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav),
+  .container:has(form, input, select) > :is(section, div, form):has(input, select):not(header):not(nav) {
+    order: 1;
+  }
+  main:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .tool-shell:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container),
+  .container:has(form, input, select) > :is(aside.emfls-ad-slot, .ad-wrap, .ad-container) {
+    order: 2;
+  }
+  main:has(form, input, select) > .emfls-next-check,
+  .tool-shell:has(form, input, select) > .emfls-next-check,
+  .container:has(form, input, select) > .emfls-next-check {
+    order: 2;
+  }
+  main:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .tool-shell:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]),
+  .container:has(form, input, select) > :is(.takeaways, .takeaways-box, .summary, .warning-box, section:has(.takeaways), section[aria-labelledby*="takeaways"]) {
+    order: 3;
+  }
+  main:has(form, input, select) > .hero,
+  .tool-shell:has(form, input, select) > .hero,
+  .container:has(form, input, select) > header {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    margin-bottom: 12px;
+  }
+}
+</style>
+</head>
+<body>
+  <header class="masthead">
+    <div class="wrap">
+      <nav aria-label="Calculator collections">
+        <a href="/util/us-tax-finance-calculators-2026/">US tax &amp; finance calculators</a>
+        <a href="/util/2026-global-tax-finance-calculators/">Global calculators</a>
+      </nav>
+      <p class="eyebrow">US nursing-home Medicaid · 2026</p>
+      <h1>Medicaid 5-year look-back &amp; penalty divisor calculator</h1>
+      <p class="lede">Estimate the coverage gap from an uncompensated transfer and the private-pay budget it could require. Includes a California Medi-Cal transition check.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="calculator">
+      <section class="card" aria-labelledby="input-title">
+        <h2 id="input-title">Your inputs</h2>
+        <p class="subtle">Replace the example values with your figures. Start with one transfer date.</p>
+        <form id="calculator-form">
+          <fieldset>
+            <legend>Location and dates</legend>
+            <div class="fields">
+              <label class="wide">State or benchmark
+                <select id="state" aria-describedby="divisor-help">
+                  <option value="national">National benchmark — $10,500</option>
+                  <optgroup label="Illustrative state presets">
+                    <option value="ny">New York — $14,500</option>
+                    <option value="ca">California — $13,000</option>
+                    <option value="fl">Florida — $10,800</option>
+                    <option value="tx">Texas — $7,900</option>
+                    <option value="nj">New Jersey — $12,800</option>
+                    <option value="pa">Pennsylvania — $12,400</option>
+                    <option value="il">Illinois — $9,500</option>
+                  </optgroup>
+                  <optgroup label="Published 2026 monthly rates">
+                    <option value="nyCentral">New York · Central — $14,146</option>
+                    <option value="nyNortheast">New York · Northeastern — $14,783</option>
+                    <option value="nyWest">New York · Western — $13,765</option>
+                    <option value="nyNorthMetro">New York · Northern Metropolitan — $15,024</option>
+                    <option value="nyCity">New York · New York City — $15,282</option>
+                    <option value="nyLongIsland">New York · Long Island — $15,193</option>
+                    <option value="nyRochester">New York · Rochester — $15,675</option>
+                    <option value="caAppr">California · statewide APPR — $14,440</option>
+                  </optgroup>
+                  <option value="custom">Other state · enter your own divisor</option>
+                </select>
+                <span id="divisor-help" class="help">Benchmark and state examples are planning inputs. Use the applicable agency rate when available.</span>
+              </label>
+              <label class="wide">Custom monthly divisor ($) <span>· optional override</span>
+                <input id="override" type="number" inputmode="decimal" min="1" max="10000000" step="0.01" aria-describedby="override-help">
+                <span id="override-help" class="help">For a daily rate, multiply by 30 to use the model. The agency may apply its own rounding or billing rules.</span>
+              </label>
+              <label>Transfer date
+                <input id="transfer-date" type="date" min="1900-01-01" max="9999-12-31" value="2024-10-15" required>
+              </label>
+              <label>Expected application date
+                <input id="application-date" type="date" min="1905-01-01" max="9999-12-31" value="2026-11-24" aria-describedby="date-help" required>
+              </label>
+              <p class="help wide" id="date-help">For the federal screen, use the first date both application and institutionalization apply.</p>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Transfer, household and care cost</legend>
+            <div class="fields">
+              <label>Total uncompensated transfer ($)
+                <input id="transfer" type="number" inputmode="decimal" min="0" max="10000000" step="0.01" value="62500" required>
+              </label>
+              <label>Exempt transfers ($)
+                <input id="exempt" type="number" inputmode="decimal" min="0" max="10000000" step="0.01" value="10000" required>
+                <span class="help">Enter the portion of the total you can document as exempt.</span>
+              </label>
+              <label>Marital status
+                <select id="marital">
+                  <option value="single">Single</option>
+                  <option value="married">Married · community spouse</option>
+                </select>
+              </label>
+              <label>Countable assets ($)
+                <input id="assets" type="number" inputmode="decimal" min="0" max="10000000" step="0.01" value="120000" required>
+                <span class="help">Starting balance for the separate household illustration.</span>
+              </label>
+              <label class="wide">Monthly nursing-home cost ($)
+                <input id="cost" type="number" inputmode="decimal" min="0.01" max="80000" step="0.01" value="12000" required>
+              </label>
+            </div>
+          </fieldset>
+          <div class="actions">
+            <button class="primary" type="submit">Calculate</button>
+            <button class="secondary" type="reset">Reset</button>
+          </div>
+          <noscript><p class="notice caution">Enable JavaScript to calculate an estimate.</p></noscript>
+        </form>
+      </section>
+
+      <section class="card results" aria-labelledby="results-title">
+        <h2 id="results-title" tabindex="-1">Your estimate</h2>
+        <p class="error" id="input-error" role="status"></p>
+        <div id="estimate" hidden>
+          <p id="rule-status" class="notice"></p>
+          <p id="ca-status" class="notice caution" hidden></p>
+          <p id="year-status" class="notice caution" hidden></p>
+          <div class="kpis">
+            <div class="kpi"><span>Net non-exempt transfer</span><output id="net" aria-live="off"></output></div>
+            <div class="kpi"><span>Federal-model penalty</span><output id="term" aria-live="off"></output></div>
+            <div class="kpi"><span>Gross private-pay gap</span><output id="gap" aria-live="off"></output></div>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <caption>Penalty breakdown</caption>
+              <tbody>
+                <tr><th scope="row">60-month cutoff date</th><td id="cutoff"></td></tr>
+                <tr><th scope="row">Transfer included in federal model</th><td id="included"></td></tr>
+                <tr><th scope="row">Monthly divisor used</th><td id="divisor"></td></tr>
+                <tr><th scope="row">Full penalty months</th><td id="months"></td></tr>
+                <tr><th scope="row">Transfer remainder after full months</th><td id="remainder"></td></tr>
+                <tr><th scope="row">Exact partial-month days (30-day basis)</th><td id="day-fraction"></td></tr>
+                <tr><th scope="row">Monthly care cost used</th><td id="care-cost"></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <h3>Household resource context</h3>
+          <p id="household" class="subtle"></p>
+          <div class="scenario">
+            <h3>Private pay vs. gift and annuity illustration</h3>
+            <p id="scenario-context" class="subtle"></p>
+            <div class="table-scroll" tabindex="0" role="region" aria-label="Scenario comparison table">
+              <table>
+                <caption class="sr-only">Equal-horizon comparison of private pay and a hypothetical gift and annuity</caption>
+                <thead><tr><th scope="col">During the same care period</th><th scope="col">Private pay</th><th scope="col">Half gift + hypothetical MCA</th></tr></thead>
+                <tbody>
+                  <tr><th scope="row">Gift held by recipients</th><td>$0.00</td><td id="scenario-gift"></td></tr>
+                  <tr><th scope="row">Care bill (private-pay drain)</th><td id="base-drain"></td><td id="gift-drain"></td></tr>
+                  <tr><th scope="row">Care funding shortfall</th><td id="base-short"></td><td id="gift-short"></td></tr>
+                  <tr><th scope="row">Household funds left after care</th><td id="base-left"></td><td id="gift-left"></td></tr>
+                  <tr><th scope="row">Illustrative estate value*</th><td id="base-estate"></td><td id="gift-estate"></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="help">*Household funds plus gifted value held by recipients, less any unfunded bill. Gifted funds leave the household. This model assumes a no-fee, no-interest payout of the retained half and does not assess Medicaid eligibility, actual estate protection, or annuity compliance.</p>
+          </div>
+        </div>
+        <p class="notice caution"><strong>Educational estimate only — consult a qualified attorney.</strong> Confirm the timing, rate, exceptions and eligibility with an elder law attorney in the state where you plan to apply.</p>
+        <p class="sr-only" id="result-announcement" role="status" aria-atomic="true"></p>
+      </section>
+
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="Next essential calculators" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">Next Essential Check</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">Run these 2 companion checks with the numbers you just calculated:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/util/us-roth-conversion-ladder-irmaa-bracket-filler-calculator-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">Roth Conversion &amp; Medicare IRMAA &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">Check how retirement distributions affect Medicare IRMAA surcharges.</span></a>
+    <a href="/util/us-social-security-tax-torpedo-claiming-age-breakeven-calculator-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">Social Security Tax Torpedo &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">Model senior taxable income and claiming break-even age alongside care planning.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+      <div class="ad-space" aria-label="Advertisement">
+        <ins class="adsbygoogle" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+      </div>
+    </div>
+
+    <article class="reading" aria-labelledby="method-title">
+      <section class="card">
+        <h2 id="method-title">How the Medicaid look-back and penalty work</h2>
+        <p>When a person applies for Medicaid payment for nursing-facility care, the agency can review what the applicant or their spouse did with assets before the application. A gift, a sale below fair market value, or a waiver of an enforceable right to property may leave an uncompensated amount. Under the federal rule, an uncompensated transfer on or after the look-back date can trigger a period in which Medicaid withholds payment for specified long-term care services. The agency makes separate findings about the amount transferred, whether an exception applies and when the penalty can begin. See <a href="https://uscode.house.gov/us/usc/119-120/t42/s1396p/">42 U.S.C. § 1396p(c)</a>.</p>
+        <h3>1. Establish the dates and document the transfer</h3>
+        <p>For an institutionalized applicant, the federal reference date is the first date on which the person is both institutionalized and has applied for Medicaid. If admission and application occur on different days, the later event generally determines when both conditions are met. This calculator subtracts 60 calendar months and uses the final valid day of the target month when needed. A transfer before the cutoff produces a zero federal-model penalty. A transfer on the cutoff remains in the federal model. Keep the bank record, deed, settlement statement or other evidence of when ownership or access actually changed. Ask the agency how it records the dates if the transaction sat near a month boundary or involved several settlement steps.</p>
+        <h3>2. Find the uncompensated value and evaluate exceptions</h3>
+        <p>Start with the fair market value of what left the household and subtract the documented compensation received. For example, a property interest worth $80,000 sold for $55,000 gives a starting uncompensated value of $25,000. The calculator subtracts the qualifying exempt portion entered and floors the result at zero. When the agency reviews several gifts, it can consider cumulative uncompensated amounts. This form uses one date, so avoid assigning one date to a total that mixes transactions from inside and outside the review period. Prepare a dated transfer log and confirm which amounts belong in the aggregate before modeling them.</p>
+        <p>Federal exceptions include certain transfers to or for the sole benefit of a spouse and transfers to or for the sole benefit of a blind or disabled child, subject to the statutory conditions. A home transfer to a qualifying caregiver son or daughter generally requires that the child lived in the home for at least two years immediately before institutionalization and provided care that allowed the parent to remain there. Other home exceptions have their own requirements, including an equity and one-year residency rule for a qualifying sibling. Preserve occupancy records, professional statements and evidence of what care was provided. Ask how the state reviews returned assets, evidence of another purpose and an undue-hardship claim. The relevant exceptions appear in <a href="https://uscode.house.gov/us/usc/119-120/t42/s1396p/">42 U.S.C. § 1396p(c)(2)</a>.</p>
+        <h3>3. Separate the divisor, the billed rate and the start date</h3>
+        <p>The federal formula divides cumulative uncompensated value by a private-pay nursing-facility average for the state or an authorized local community at application. The divisor determines the modeled duration. The home’s actual private-pay rate determines the budget estimate. This page divides in cents, reports full months, and expresses the remaining dollar ratio as an exact fraction of 30 days. Dollar formatting and the displayed decimal days are rounded for readability, while the payment estimate uses the underlying unrounded duration. The remainder is the portion of the transfer used to compute a partial month. Federal law bars disregarding a fractional period of ineligibility. Handling of fractional days and daily billing is specific to the agency.</p>
+        <p>For transfers made on or after February 8, 2006, federal law generally begins the penalty at the later of the statutory transfer-month starting point and the date the applicant could otherwise receive covered institutional care based on an approved application, with restrictions on overlapping penalty periods. Money may already have gone to the recipient when a family learns that coverage is delayed. The gross gap shown here multiplies the model duration by the entered facility rate. Ask the facility for a written private rate, the room type, additional services and partial-month billing terms. Available income and insurance can change how much cash the family must supply. The estimate focuses on the penalty window and excludes earlier costs while the applicant meets other eligibility criteria.</p>
+      </section>
+
+      <section class="card" aria-labelledby="standards-title">
+        <h2 id="standards-title">2026 and 2027 statutory reference</h2>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="2026 and 2027 statutory standards">
+          <table>
+            <caption>Federal nursing-facility rules and California transition</caption>
+            <thead><tr><th scope="col">Rule or standard</th><th scope="col">2026</th><th scope="col">2027</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Federal look-back for modern transfers</th><td>60 months</td><td>60 months under § 1396p(c)</td></tr>
+              <tr><th scope="row">Federal CSRA resource standards</th><td>$32,532 minimum / $162,660 maximum</td><td>Confirm the applicable CMS release</td></tr>
+              <tr><th scope="row">Case-specific state or regional divisor</th><td>Use the agency’s effective rate</td><td>Obtain the rate applicable to the case</td></tr>
+              <tr><th scope="row">California transfer review</th><td>30-month framework with transition exclusions and prior-month review</td><td>Phased monthly review continues under ACWDL 25-18</td></tr>
+              <tr><th scope="row">California asset test for affected groups</th><td>$130,000 for one person, plus $65,000 per qualifying additional person</td><td>Budget schedules $21,000 for an individual or $31,000 for a couple no sooner than July 1. Confirm implementation and exceptions.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="help">Sources for the annual amounts and transition dates: <a href="https://www.medicaid.gov/federal-policy-guidance/downloads/cib04272026.pdf">CMS 2026 resource standards</a>, <a href="https://www.medicaid.gov/medicaid/eligibility-policy/spousal-impoverishment">CMS spousal impoverishment updates</a>, <a href="https://www.dhcs.ca.gov/wp-content/uploads/2025/12/25-18.pdf">DHCS ACWDL 25-18</a> and <a href="https://www.dhcs.ca.gov/fa/wp-content/uploads/2026/07/DHCS-FY-2026-27-Budget-Act-Highlights.pdf">California budget highlights</a>.</p>
+        <h3>Choosing a divisor</h3>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Divisor presets and agency references">
+          <table>
+            <caption>Monthly planning presets and agency references</caption>
+            <thead><tr><th scope="col">Location</th><th scope="col">Model preset</th><th scope="col">Agency reference</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">New York</th><td>$14,500</td><td>$13,765–$15,675 per month across seven regions. Select the facility’s region. <a href="https://healthweb-back.health.ny.gov/health_care/medicaid/publications/docs/gis/25ma14.pdf">NY DOH 2026 GIS 25 MA/14</a></td></tr>
+              <tr><th scope="row">California</th><td>$13,000</td><td>$14,440 statewide APPR for 2026. Apply the transition rules in addition to checking the rate. <a href="https://www.dhcs.ca.gov/wp-content/uploads/2026/04/26-03.pdf">DHCS ACWDL 26-03</a></td></tr>
+              <tr><th scope="row">Florida</th><td>$10,800</td><td>The linked schedule lists $10,438 effective January 1, 2024. Confirm the rate for your case. <a href="https://ffic.myflfamilies.com/manual/essfiles/49261.pdf">DCF Appendix A-35</a></td></tr>
+              <tr><th scope="row">Texas</th><td>$7,900</td><td>Confirm the daily rate and method with Texas HHSC. <a href="https://fhb.hhs.texas.gov/handbooks/medicaid-elderly-people-disabilities-handbook/appendix-xxxiii-medicaid-elderly-people-disabilities-information">Texas HHSC MEPD handbook</a></td></tr>
+              <tr><th scope="row">New Jersey</th><td>$12,800</td><td>$420.67 per day effective April 1, 2026, up from $402.74. Confirm the effective-date rule for pending cases. <a href="https://www.nj.gov/humanservices/dmahs/documents/providers-stakeholders/resources/medicaid/2026/26-04_Increase_in_the_Penalty_Divisor-Effective_April-1-2026.pdf">NJ Medicaid Communication 26-04</a></td></tr>
+              <tr><th scope="row">Pennsylvania</th><td>$12,400</td><td>Pennsylvania uses an average daily private-pay rate. Confirm the current schedule. <a href="https://www.pa.gov/agencies/dhs/resources/aging-physical-disabilities/medicaid-payment-long-term-care">PA DHS long-term care guidance</a></td></tr>
+              <tr><th scope="row">Illinois</th><td>$9,500</td><td>Illinois uses the community’s monthly rate at application and accounts for partial days. <a href="https://www.ilga.gov/agencies/JCAR/EntirePart?titlepart=08900120">89 Ill. Adm. Code § 120.388</a></td></tr>
+              <tr><th scope="row">National benchmark</th><td>$10,500</td><td>Illustrative planning input. Federal law uses an applicable state or local average.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <h3>California’s asset-test transition</h3>
+        <p>California restored asset limits for affected Medi-Cal groups in January 2026 after a two-year gap. The county’s institutional long-term care review examines up to 30 months before the application or, for a current member entering care, before admission. It excludes January 2024 through December 2025. In the first half of 2026 the earliest reviewed months can include transfers before January 2024. From July 2026 the review adds months from January 2026 until the 30-month window fills. The calculator shows this prior-month screen separately. Ask the county about same-month transactions, the asset balance at transfer, applicable private-pay rate and hardship criteria. The federal-model gap remains illustrative when California is selected. See <a href="https://www.dhcs.ca.gov/wp-content/uploads/2025/12/25-18.pdf">DHCS transfer guidance and review calendar</a>.</p>
+        <h3>How the community spouse allowance fits</h3>
+        <p>The community spouse is the spouse who remains in the community. The agency can evaluate the couple’s combined countable resources using an assessment tied to the start of a qualifying period of institutionalization. Under the federal spousal impoverishment framework the agency determines how much the community spouse may keep, considering the state’s method and any applicable order or hearing decision. The 2026 minimum and maximum resource standards give context for that calculation. An income maintenance allowance is a separate calculation. A qualifying transfer to the spouse can avoid a transfer penalty while the underlying assets still affect eligibility under the resource rules. Use the asset field for the scenario budget and ask for an actual resource assessment. See <a href="https://uscode.house.gov/us/usc/119-124/t42/s1396r-5/">42 U.S.C. § 1396r-5</a>.</p>
+      </section>
+
+      <section class="card">
+        <h2>Worked examples and the gift-and-annuity comparison</h2>
+        <h3>Partial month and private-pay gap</h3>
+        <p>Assume a $62,500 uncompensated transfer in October 2024, of which $10,000 qualifies for an exception. With a November 24, 2026 federal reference date, the October 2024 transfer falls inside the window. The $52,500 result divided by a $10,500 illustrative divisor yields five full months and a zero remainder. At $12,000 a month, the gross care bill for that period is $60,000. If the exempt portion were $5,000, the numerator would rise to $57,500. Five full months would account for $52,500, leaving $5,000. That remainder represents exactly 100/7 days on a 30-day model, or about 14.285714 days. The gross cost becomes $65,714.29 using the unrounded duration.</p>
+        <h3>A transfer on the cutoff</h3>
+        <p>Suppose the person was already institutionalized when they applied on November 24, 2026. The cutoff is November 24, 2021. A transfer on November 23, 2021 falls outside the federal screen and adds zero to this model. A gift made on November 24, 2021 remains within review and may create a penalty if it was uncompensated and no exception applies. If several gifts crossed the boundary, verify individual dates with the agency instead of applying one date to the total. Separately, the final assessment may depend on an earlier application or additional facts about the institutional stay.</p>
+        <h3>What the half-a-loaf model compares</h3>
+        <p>The comparison starts with the entered countable-asset balance and assumes a new, non-exempt hypothetical gift equal to half of it, rounded down to the nearest cent. It computes a separate theoretical penalty horizon from that gift and uses the same horizon in both scenarios. The private-pay case budgets from the full starting balance. The gift-and-annuity case treats the retained half as though a contract could make the principal available for care across that period, with no fees or interest. The model reports the gross bill, the shortfall and what remains on each side. Its estate-value row adds the gift held by recipients and deducts any uncovered care cost, with a floor of zero. Recipient-held value is at risk if care funding falls short or the recipient cannot help.</p>
+        <p>For a $120,000 balance, $10,500 divisor and $12,000 care bill, a $60,000 hypothetical gift creates about 5.714286 months of modeled penalty. The same-period care bill is $68,571.43 either way. Private pay leaves $51,428.57 in the household. The hypothetical payout funds $60,000 of care and leaves $8,571.43 unfunded. Gift recipients hold $60,000, so the combined illustrative value after accounting for the uncovered bill is also $51,428.57. This equal-period comparison makes the funding risk visible. The household loses direct access to the gift and needs a separate source of cash to meet the bill.</p>
+        <p>Actual annuities can carry fees, contract restrictions, and income or resource consequences. Depending on the contract, federal law addresses disclosure, state remainder-beneficiary priority, actuarial soundness, equal payments and restrictions on assignment, deferral and balloon payments. A modeled payout over a fixed horizon does not establish that a contract is available or would satisfy those tests. Timing, other resources, income, post-eligibility contributions, taxes and estate recovery can change the outcome. Ask an elder law attorney to review the proposal and the state’s requirements under <a href="https://uscode.house.gov/us/usc/119-120/t42/s1396p/">42 U.S.C. § 1396p(c) and (e)</a> before making a transfer or signing a contract.</p>
+      </section>
+
+      <div class="ad-space" aria-label="Advertisement">
+        <ins class="adsbygoogle" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }</script>
+      </div>
+      <section class="card" aria-labelledby="faq-title">
+        <h2 id="faq-title">Frequently asked questions</h2>
+        <details>
+          <summary>Does a transfer exactly five years before applying count?</summary>
+          <p>Under the federal rule, a transfer on the cutoff date is within review because the statute covers transfers on or after that date. The federal reference date is when the applicant is both institutionalized and has applied. Confirm how your agency records the reference and transfer dates, especially for month-end dates and California cases.</p>
+        </details>
+        <details>
+          <summary>Can I use the federal gift-tax exclusion as a Medicaid exemption?</summary>
+          <p>Medicaid evaluates what you received in exchange and whether a Medicaid-specific exception applies. A gift can be within a federal tax exclusion and still count as an uncompensated transfer for Medicaid. Keep proof of payment, fair market value and any facts supporting a statutory exception.</p>
+        </details>
+        <details>
+          <summary>When does the penalty start, and who pays during it?</summary>
+          <p>For modern transfers under the federal rule, the penalty generally starts when the applicant would otherwise qualify for covered institutional care, or at the statutory transfer-month start if later, subject to existing penalties. During the gap, determine what the facility bills and what income, insurance or other funds are available. The calculator shows a gross private-pay estimate at the entered rate.</p>
+        </details>
+        <details>
+          <summary>Why can my state's notice show a different number of days?</summary>
+          <p>The model expresses fractions using a 30-day month and preserves the exact ratio in the breakdown. An agency may use a published daily divisor, a facility-region rate, or its own treatment of partial days. Check the divisor, effective date, included transfers and rounding shown on the notice before comparing it with this estimate.</p>
+        </details>
+        <details>
+          <summary>Can a community spouse keep the maximum CSRA or buy an annuity automatically?</summary>
+          <p>The state calculates the allowance under spousal impoverishment rules using the household's facts and applicable standards. An annuity has separate federal and state requirements, including disclosure and potentially a state remainder-beneficiary designation. Ask an elder law attorney to review both the resource assessment and any proposed contract before committing funds.</p>
+        </details>
+      </section>
+    </article>
+  
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 United States Tax &amp; Financial Calculators</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">Explore official 2026 statutory planning tools for United States:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/util/us-medical-malpractice-claims-made-step-up-tail-erp-2026-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 US Medical Malpractice Claims-Made Step-Up, Tail ERP &amp; Occurrence Calculator</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculates 5-year claims-made step-up maturity schedule, lump-sum tail ERP multipliers (150%...</span>
+    </a>
+    <a href="/util/us-mega-backdoor-roth-401k-after-tax-limit-calculator-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 Mega Backdoor Roth 401(k) Calculator | $72,000 Limit</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">Calculate 2026 mega backdoor Roth 401(k) after-tax room, the $83,250 total with super catch-...</span>
+    </a>
+    <a href="/util/us-mega-backdoor-roth-401k-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 US Mega Backdoor Roth 401(k) Contribution Room Calculator | After-Tax Limit</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026 statutory calculator for 2026 US Mega Backdoor Roth 401(k) Contribution Room Calculator...</span>
+    </a>
+    <a href="/util/us-mortgage-points-break-even-calculator/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">IRS / 2026 Statutory</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">US Mortgage Discount Points Break-Even Calculator</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026 statutory calculator for US Mortgage Discount Points Break-Even Calculator.</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>Explore All 2026 Global Tax &amp; Finance Calculators &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</main>
+  <footer>
+    <div class="wrap reading"><p><strong>Educational estimate only — consult a qualified attorney.</strong></p></div>
+  </footer>
+
+  <script>
+    (() => {
+      'use strict';
+      const form = document.getElementById('calculator-form');
+      const byId = (id) => document.getElementById(id);
+      const update = (id, value) => { byId(id).textContent = value; };
+      const presets = {
+        national: 10500, ny: 14500, ca: 13000, fl: 10800, tx: 7900, nj: 12800, pa: 12400, il: 9500,
+        nyCentral: 14146, nyNortheast: 14783, nyWest: 13765, nyNorthMetro: 15024,
+        nyCity: 15282, nyLongIsland: 15193, nyRochester: 15675, caAppr: 14440
+      };
+      const published = new Set(['nyCentral', 'nyNortheast', 'nyWest', 'nyNorthMetro', 'nyCity', 'nyLongIsland', 'nyRochester', 'caAppr']);
+      const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+      const daysFormat = new Intl.NumberFormat('en-US', { maximumFractionDigits: 6 });
+      const dateFormat = new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeZone: 'UTC' });
+      const dollars = (cents) => currency.format(cents / 100);
+      const cents = (id) => Math.round(byId(id).valueAsNumber * 100);
+
+      function cutoffDate(application) {
+        const year = application.getUTCFullYear() - 5;
+        const month = application.getUTCMonth();
+        const lastDay = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+        return new Date(Date.UTC(year, month, Math.min(lastDay, application.getUTCDate())));
+      }
+
+      function californiaReview(transfer, application) {
+        const monthIndex = (date) => date.getUTCFullYear() * 12 + date.getUTCMonth();
+        const filed = monthIndex(application);
+        const given = monthIndex(transfer);
+        const january2024 = 2024 * 12;
+        const january2026 = 2026 * 12;
+
+        if (filed < january2026 || filed >= 2028 * 12) {
+          return 'California screen covers 2026–2027 applications. Confirm the case dates and review window with the county.';
+        }
+        if (given === filed) {
+          return 'California screen: transfer occurred in the application month. The transition chart covers prior months. Ask the county how it treats your same-month transfer.';
+        }
+        const excluded = given >= january2024 && given < january2026;
+        const reviewable = given >= filed - 30 && !excluded;
+        return reviewable
+          ? 'California screen: transfer month is within the DHCS review chart. The federal-model figures below are illustrative. The county determines any Medi-Cal penalty.'
+          : 'California screen: transfer month falls outside the DHCS transition review chart. The federal-model figures below use the separate 60-month rule.';
+      }
+
+      function exactDays(remainder, divisor) {
+        const numerator = remainder * 30;
+        let left = numerator;
+        let right = divisor;
+        while (right !== 0) {
+          const next = left % right;
+          left = right;
+          right = next;
+        }
+        const denominator = divisor / left;
+        return denominator === 1 ? String(numerator / left) : (numerator / left) + '/' + denominator;
+      }
+
+      // Input limits keep the intermediate product within the safe integer range.
+      function careBill(transfer, divisor, cost) {
+        const product = transfer * cost;
+        const remainder = product % divisor;
+        return (product - remainder) / divisor + Number(remainder * 2 >= divisor);
+      }
+
+      function renderScenario(assets, divisor, cost) {
+        const gift = Math.floor(assets / 2);
+        const retained = assets - gift;
+        const horizon = gift / divisor;
+        const bill = careBill(gift, divisor, cost);
+        const privateShortfall = Math.max(0, bill - assets);
+        const giftShortfall = Math.max(0, bill - retained);
+        const privateLeft = Math.max(0, assets - bill);
+        const giftLeft = Math.max(0, retained - bill);
+
+        update('scenario-context', 'Separate scenario using the entered assets and a new hypothetical gift. Both columns cover ' +
+          daysFormat.format(horizon) + ' model months. The gift is assumed to trigger the federal-model penalty.');
+        const amounts = {
+          'scenario-gift': gift, 'base-drain': bill, 'gift-drain': bill,
+          'base-short': privateShortfall, 'gift-short': giftShortfall,
+          'base-left': privateLeft, 'gift-left': giftLeft,
+          'base-estate': privateLeft, 'gift-estate': Math.max(0, gift + giftLeft - giftShortfall)
+        };
+        Object.entries(amounts).forEach(([id, amount]) => update(id, dollars(amount)));
+      }
+
+      function render(announce = false) {
+        const state = byId('state').value;
+        const override = byId('override');
+        override.required = state === 'custom';
+        const transferDate = byId('transfer-date').valueAsDate;
+        const application = byId('application-date').valueAsDate;
+        const invalid = Array.from(form.elements).find((control) => !control.validity.valid);
+        let error = '';
+        if (invalid) {
+          const label = invalid.labels[0].childNodes[0].textContent.trim();
+          error = label + ' — ' + invalid.validationMessage;
+        } else if (transferDate > application) {
+          error = 'Enter a transfer date on or before the expected application date.';
+        }
+        update('input-error', error);
+        byId('estimate').hidden = Boolean(error);
+        if (error) {
+          update('result-announcement', '');
+          return false;
+        }
+
+        const net = Math.max(0, cents('transfer') - cents('exempt'));
+        const cost = cents('cost');
+        const assets = cents('assets');
+        const cutoff = cutoffDate(application);
+        const divisor = override.value === '' ? presets[state] * 100 : cents('override');
+        const isInWindow = transferDate >= cutoff;
+        const included = isInWindow ? net : 0;
+        const fullMonths = Math.floor(included / divisor);
+        const remainder = included % divisor;
+        const partialDays = remainder * 30 / divisor;
+        const gap = careBill(included, divisor, cost);
+        const term = fullMonths + ' mo + ' + (partialDays > 0 && partialDays < 0.000001
+          ? '<0.000001' : partialDays >= 29.9999995 ? '<30' : daysFormat.format(partialDays)) + ' d';
+        let dateStatus = 'Inside the federal 60-month look-back.';
+        if (!isInWindow) dateStatus = 'Before the federal 60-month cutoff. This transfer produces zero modeled penalty.';
+        if (transferDate.getTime() === cutoff.getTime()) dateStatus = 'On the federal cutoff date. The statute includes this date.';
+        if (net === 0) dateStatus += ' No net non-exempt amount was entered.';
+        if (cents('exempt') > cents('transfer')) dateStatus += ' Exempt amount exceeds the total, so the net is $0.00.';
+        update('rule-status', dateStatus);
+
+        const isCalifornia = state === 'ca' || state === 'caAppr';
+        byId('ca-status').hidden = !isCalifornia;
+        if (isCalifornia) update('ca-status', californiaReview(transferDate, application));
+        const year = application.getUTCFullYear();
+        byId('year-status').hidden = year === 2026;
+        update('year-status', 'The built-in rates are 2026 references or examples. Enter the appropriate monthly rate for your application year.');
+
+        const rateSource = override.value !== '' ? 'custom override'
+          : published.has(state) ? 'published 2026 rate' : 'illustrative preset';
+        update('net', dollars(net));
+        update('term', term);
+        update('gap', dollars(gap));
+        update('cutoff', dateFormat.format(cutoff));
+        update('included', dollars(included));
+        update('divisor', dollars(divisor) + ' · ' + rateSource);
+        update('months', String(fullMonths));
+        update('remainder', dollars(remainder));
+        update('day-fraction', exactDays(remainder, divisor) + ' days');
+        update('care-cost', dollars(cost));
+        const spouseNote = byId('marital').value === 'married'
+          ? 'Community spouse: the 2026 federal CSRA standards range from $32,532 to $162,660. Confirm the state assessment and the standards for your year.'
+          : 'Single applicant: the CSRA applies when a qualifying spouse remains in the community. Check your state’s individual resource limit.';
+        update('household', dollars(assets) + ' entered countable assets. ' + spouseNote);
+        renderScenario(assets, divisor, cost);
+        if (announce) update('result-announcement', dateStatus + ' Penalty estimate ' + term + '. Gross private-pay gap ' + dollars(gap) + '.');
+        return true;
+      }
+
+      form.addEventListener('input', () => render());
+      form.addEventListener('change', () => render());
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (render(true)) {
+          byId('results-title').focus();
+        } else {
+          byId('transfer-date').focus();
+        }
+      });
+      form.addEventListener('reset', () => requestAnimationFrame(() => render(true)));
+      render();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>2026 부동산 중개수수료 계산기 (공인중개사 복비 상한요율·월세 70배 예외 공식·부가세 10%/4%)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+  <meta name="description" content="2026년 공인중개사법 시행규칙 주택 매매·전세·월세 중개보수 상한요율, 5천만 원 미만 월세 70배 환산 공식, 일반과세(10%) vs 간이과세(4%) 부가세 정밀 계산기." />
+  <link rel="canonical" href="https://emfls.github.io/kor/util/real-estate-brokerage-fee-commission-2026/" />
+  <link rel="icon" href="https://emfls.github.io/icon-192.png" />
+
+  <!-- Preconnects -->
+  <link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin />
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="2026 부동산 중개수수료(복비) 상한요율 계산기" />
+  <meta property="og:description" content="2026년 주택 매매·전월세 중개수수료 상한액, 월세 70배 공식, 부가세 10%/4% 및 법정 초과수수료 방어 즉시 계산" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://emfls.github.io/kor/util/real-estate-brokerage-fee-commission-2026/" />
+  <meta property="og:image" content="https://emfls.github.io/thumbnail.png" />
+
+  <style>
+    :root {
+      --primary: #0284c7;
+      --primary-dark: #0369a1;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --success: #16a34a;
+      --success-bg: #f0fdf4;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+    .wrapper {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 1.5rem 1rem 3rem 1rem;
+    }
+    .header-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+    }
+    .header-nav a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 0.75rem;
+      line-height: 1.3;
+    }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-box {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-box h2 {
+      font-size: 1.1rem;
+      color: var(--primary-dark);
+      margin-bottom: 0.5rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .badge-fee {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #7dd3fc;
+    }
+    .warning-box {
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 1.5rem;
+      font-size: 0.9rem;
+      color: #92400e;
+    }
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    @media (max-width: 600px) {
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .result-item {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .result-item .label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+    .result-item .val {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .calculator-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      margin-bottom: 2rem;
+    }
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+      color: #334155;
+    }
+    .form-group .helper-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+    .form-control {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    .statutory-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.875rem;
+    }
+    .statutory-table th, .statutory-table td {
+      border: 1px solid var(--border);
+      padding: 0.75rem;
+      text-align: left;
+    }
+    .statutory-table th {
+      background: #f8fafc;
+      font-weight: 700;
+    }
+    .faq-section {
+      margin-top: 2.5rem;
+    }
+    .faq-item {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+    .faq-question {
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 0.35rem;
+    }
+    .faq-answer {
+      font-size: 0.9rem;
+      color: #475569;
+    }
+    .internal-nav {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+    .internal-nav ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .ad-container {
+      margin: 2rem 0;
+      text-align: center;
+      min-height: 250px;
+    }
+  </style>
+
+  <!-- JSON-LD: WebApplication -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "2026 부동산 중개수수료 계산기",
+    "description": "2026년 공인중개사법 시행규칙 주택 매매, 전세, 월세 중개수수료 상한요율, 월세 70배 환산 공식 및 부가가치세 계산기",
+    "url": "https://emfls.github.io/kor/util/real-estate-brokerage-fee-commission-2026/",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "All",
+    "inLanguage": "ko-KR"
+  }
+  </script>
+
+  <!-- JSON-LD: FAQPage -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "부동산 중개수수료의 '상한요율'이란 무조건 그 요율을 내야 한다는 뜻인가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "아닙니다. 법정 상한요율은 공인중개사가 법적으로 요구할 수 있는 최고 한도일 뿐이며, 소비자는 계약 체결 전에 중개사와 상한요율 이내에서 얼마든지 수수료를 협의하여 할인할 수 있습니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "월세 계약 시 환산보증금 5천만 원 미만일 때의 70배 예외 공식이란 무엇인가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "일반적으로 월세는 '보증금 + (월세 × 100)'으로 거래금액을 환산하지만, 계산된 금액이 5,000만 원 미만일 경우 서민 부담 완화를 위해 '보증금 + (월세 × 70)'으로 재계산하여 더 낮은 중개수수료를 적용합니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "부동산에서 부가가치세를 10% 요구하는데 정상인가요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "공인중개사 사업자가 '일반과세자'인 경우 부가가치세 10%를 별도 청구할 수 있습니다. 단, 연매출 1억 400만 원 미만인 '간이과세자'는 부가세를 4%만 요구할 수 있으므로 홈택스에서 부동산의 사업자 유형을 확인해보는 것이 좋습니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "법정 한도액을 초과하여 중개수수료를 받으면 어떻게 되나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "공인중개사법 제33조에 따라 법정 초과수수료 수수는 엄격히 금지되며, 초과 수수한 금액은 법적으로 무효이므로 전액 반환 청구가 가능하고 해당 중개사는 영업정지 또는 형사처벌을 받을 수 있습니다."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "중개수수료 현금영수증 발행을 거부하거나 추가금을 요구하면 어떻게 하나요?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "공인중개업은 10만 원 이상 거래 시 소비자의 요구가 없더라도 현금영수증을 의무 발행해야 하는 업종입니다. 현금영수증 미발행 시 국세청에 신고하면 미발행 금액의 20% 포상금을 받을 수 있습니다."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- JSON-LD: BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "홈",
+        "item": "https://emfls.github.io/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "한국어 계산기 허브",
+        "item": "https://emfls.github.io/kor/util/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "2026 부동산 중개수수료 계산기",
+        "item": "https://emfls.github.io/kor/util/real-estate-brokerage-fee-commission-2026/"
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <div class="wrapper">
+    <nav class="header-nav">
+      <a href="/kor/util/">← 한국어 도구 목록</a>
+      <span>2026 공인중개사법 시행규칙 기준</span>
+    </nav>
+
+    <h1>2026 부동산 중개수수료 계산기</h1>
+    <p class="subtitle">매매·전월세 상한요율 · 월세 5천만 미만 70배 예외 공식 · 부가세(10%/4%) 및 한도액 판정</p>
+
+    <!-- Ad Slot 1 (Top) -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center; min-height: 250px"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"></ins>
+      <script>
+        if (!['127.0.0.1', 'localhost', ''].includes(window.location.hostname)) {
+          if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+        }
+      </script>
+    </div>
+
+    <!-- Summary Box -->
+    <div class="summary-box">
+      <span class="badge badge-fee">법정 상한 수수료</span>
+      <h2>최대 지급 중개보수 (복비)</h2>
+      <div class="result-grid">
+        <div class="result-item">
+          <div class="label">최종 지급액 (VAT 포함)</div>
+          <div class="val" id="res-total-fee">2,200,000원</div>
+        </div>
+        <div class="result-item">
+          <div class="label">중개수수료 본액</div>
+          <div class="val" id="res-raw-fee" style="color: var(--primary);">2,000,000원 (0.4%)</div>
+        </div>
+        <div class="result-item">
+          <div class="label">부가가치세 (VAT)</div>
+          <div class="val" id="res-vat-amount" style="font-size: 1.1rem;">+200,000원 (10%)</div>
+        </div>
+        <div class="result-item">
+          <div class="label">환산 거래가액</div>
+          <div class="val" id="res-transaction-amount" style="font-size: 1.1rem;">500,000,000원</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Limit Notice Box (if applicable) -->
+    <div id="res-limit-notice" class="warning-box" style="display: none; background: #f0fdf4; border-left: 4px solid #16a34a; color: #15803d;"></div>
+
+    <!-- Loss Aversion Warning Box -->
+    <div class="warning-box">
+      <strong>⚠️ 계약서 도장 찍기 전에 '중개수수료 협의'를 명시해야 과다 청구를 막습니다!</strong><br />
+      법정 요율은 '최고 한도'일 뿐입니다. 계약 체결 전에 중개보수 요율 협의를 명확히 하지 않으면 중개사가 일방적으로 상한선(0.4%~0.7%)과 부가세 10%를 청구하게 됩니다. 사업자등록증상 <strong>간이과세자(4%)</strong> 여부도 반드시 확인하세요.
+    </div>
+
+    <!-- Calculator Card -->
+    <div class="calculator-card">
+      <form id="brokerage-form">
+        <div class="form-group">
+          <label for="transactionType">거래 유형</label>
+          <select id="transactionType" class="form-control">
+            <option value="sale" selected>매매 / 교환</option>
+            <option value="rent">전세 / 월세 (임대차)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="propertyType">부동산 유형</label>
+          <select id="propertyType" class="form-control">
+            <option value="housing" selected>주택 (아파트·빌라·단독주택 등)</option>
+            <option value="officetel">주거용 오피스텔 (전용 85㎡ 이하, 주방·화장실 구비)</option>
+            <option value="commercial">상가 / 토지 / 업무용 오피스텔 (0.9% 협의)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="depositOrPrice">매매가 또는 보증금 (원)</label>
+          <input inputmode="decimal" type="number" id="depositOrPrice" class="form-control" value="500000000" min="0" step="10000000" />
+        </div>
+
+        <div class="form-group" id="rent-group" style="display: none;">
+          <label for="monthlyRent">월차임 (월세, 원 - 전세는 0)</label>
+          <input inputmode="decimal" type="number" id="monthlyRent" class="form-control" value="0" min="0" step="50000" />
+          <div class="helper-text">월세가 있을 경우 '보증금 + (월세 × 100)'으로 환산 (5천만 미만 시 70배 특례).</div>
+        </div>
+
+        <div class="form-group">
+          <label for="vatType">부동산 사업자 과세 유형 (부가세)</label>
+          <select id="vatType" class="form-control">
+            <option value="general" selected>일반과세자 (부가세 10% 별도 청구)</option>
+            <option value="simplified">간이과세자 (부가세 4% 청구 - 연매출 1.04억 미만)</option>
+            <option value="exempt">면세 / 부가세 포함 협의 (0%)</option>
+          </select>
+        </div>
+      </form>
+
+      <!-- Statutory Fee Table -->
+      <table class="statutory-table">
+        <thead>
+          <tr>
+            <th>거래 구간</th>
+            <th>주택 매매 상한요율</th>
+            <th>주택 임대차 상한요율</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>5천만 원 미만</td>
+            <td>0.6% (한도 25만 원)</td>
+            <td>0.5% (한도 20만 원)</td>
+          </tr>
+          <tr>
+            <td>5천만 ~ 2억 미만 (임대차 1억)</td>
+            <td>0.5% (한도 80만 원)</td>
+            <td>0.4% (한도 30만 원)</td>
+          </tr>
+          <tr>
+            <td>2억(임대차 1억) ~ 6억/9억 미만</td>
+            <td>0.4% (한도 없음)</td>
+            <td>0.3% (한도 없음)</td>
+          </tr>
+          <tr>
+            <td>9억/6억 ~ 12억 미만</td>
+            <td>0.5% (한도 없음)</td>
+            <td>0.4% (한도 없음)</td>
+          </tr>
+          <tr>
+            <td>12억 ~ 15억 미만</td>
+            <td>0.6% (한도 없음)</td>
+            <td>0.5% (한도 없음)</td>
+          </tr>
+          <tr>
+            <td>15억 원 이상</td>
+            <td>0.7% (한도 없음)</td>
+            <td>0.6% (한도 없음)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- SVG Breakdown Chart -->
+      <div style="margin-top: 1.5rem; text-align: center;">
+        <h4 style="font-size: 0.95rem; margin-bottom: 0.75rem; color: #334155;">중개수수료 본액 vs 부가가치세 구성</h4>
+        <svg viewBox="0 0 400 90" style="width: 100%; max-width: 460px; height: auto; background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
+          <!-- Fee -->
+          <text x="10" y="32" font-size="12" fill="#0284c7" font-weight="700">중개보수 본액</text>
+          <rect id="bar-fee" x="110" y="18" width="240" height="20" rx="4" fill="#0284c7" />
+          
+          <!-- VAT -->
+          <text x="10" y="72" font-size="12" fill="#64748b" font-weight="600">부가가치세</text>
+          <rect id="bar-vat" x="110" y="58" width="24" height="20" rx="4" fill="#94a3b8" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+      <h2 style="font-size: 1.3rem; margin-bottom: 1rem; color: #0f172a;">부동산 복비 자주 묻는 질문 (FAQ)</h2>
+      
+      <div class="faq-item">
+        <div class="faq-question">Q. 매수인과 매도인(임대인과 임차인)이 각각 수수료를 내야 하나요?</div>
+        <div class="faq-answer">
+          네, 공인중개사법에 따라 거래 당사자 쌍방(매도인과 매수인, 또는 임대인과 임차인)이 각각 법정 중개보수를 공인중개사에게 지급합니다. 계산된 수수료는 1인당 부담 금액입니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 오피스텔의 주거용과 업무용 구분은 어떻게 판단하나요?</div>
+        <div class="faq-answer">
+          전용면적 85㎡ 이하이면서 상하수도 시설이 갖추어진 전용 입식 부엌, 전용 화장실 및 목욕시설을 갖춘 경우 주거용 요율(매매 0.5%, 임대차 0.4%)이 적용되며, 그 외 업무용 오피스텔은 0.9% 이내 협의 대상입니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 중개보수는 언제 지급하는 것이 원칙인가요?</div>
+        <div class="faq-answer">
+          공인중개사법 시행령에 따라 개업공인중개사와 중개의뢰인 간의 약정에 따르되, 별도 약정이 없을 때는 거래대금의 잔금 지급이 완료된 날에 지급하는 것이 원칙입니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 계약이 중도 해제되거나 파기된 경우에도 중개수수료를 줘야 하나요?</div>
+        <div class="faq-answer">
+          개업공인중개사의 고의 또는 과실 없이 거래 당사자 간의 사정(변심, 채무불이행 등)으로 계약이 해제된 경우에는 중개보수를 청구할 수 있습니다. 반면 중개사의 과실로 계약이 무효·취소된 경우에는 수수료를 지급할 의무가 없습니다.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">Q. 부동산 계약 시 묵시적 갱신 후 중도 해지할 때 복비는 누가 내나요?</div>
+        <div class="faq-answer">
+          주택임대차보호법상 묵시적 갱신 기간 중 임차인이 계약 해지를 통지하여 3개월 후 계약이 종료될 경우, 새로운 임차인을 맞추는 중개보수는 임대인(집주인)이 부담하는 것이 법원 판례 및 국토교통부 유권해석의 기본 원칙입니다.
+        </div>
+      </div>
+    </section>
+
+<!-- EMFLS_NEXT_CHECK_V1_START -->
+<aside class="emfls-next-check" aria-label="다음 필수 확인 계산기" style="box-sizing:border-box;max-width:100%;margin:20px 0 8px;padding:16px;border:1px solid #bfdbfe;border-left:4px solid #2563eb;border-radius:12px;background:#eff6ff;">
+  <div style="font-size:0.98rem;font-weight:700;color:#0f172a;margin:0 0 4px;">다음 필수 확인 계산기 (Next Check)</div>
+  <p style="margin:0 0 12px;font-size:0.86rem;color:#334155;line-height:1.45;">방금 계산한 결과를 바탕으로 바로 이어서 점검하세요:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+    <a href="/kor/util/real-estate-acquisition-tax-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">2026 주택 취득세 계산기 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">매매 계약이라면 취득세·지방교육세·생애최초 감면액까지 합산하세요.</span></a>
+    <a href="/kor/util/jeonse-deposit-guarantee-hug-126-rule-2026/" style="display:block;box-sizing:border-box;padding:12px 14px;border:1px solid #cbd5e1;border-radius:10px;text-decoration:none;background:#ffffff;color:#0f172a;transition:border-color .15s;"><strong style="display:block;font-size:0.95rem;color:#1d4ed8;margin-bottom:4px;line-height:1.35;">HUG 전세보증보험 126% 한도 &rarr;</strong><span style="display:block;font-size:0.84rem;color:#475569;line-height:1.4;">전세 계약이라면 보증보험 가입 가능 여부와 보증료를 반드시 점검하세요.</span></a>
+  </div>
+</aside>
+<!-- EMFLS_NEXT_CHECK_V1_END -->
+
+    <!-- Ad Slot 2 (Bottom) -->
+    <div class="ad-container">
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center; min-height: 250px"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-8830524482034754"
+           data-ad-slot="6016035748"></ins>
+      <script>
+        if (!['127.0.0.1', 'localhost', ''].includes(window.location.hostname)) {
+          if (!['127.0.0.1','localhost',''].includes(location.hostname)) { (adsbygoogle = window.adsbygoogle || []).push({}); }
+        }
+      </script>
+    </div>
+
+    <!-- Internal Navigation Hub -->
+    <div class="internal-nav">
+      <strong>관련 부동산 & 세무 계산기:</strong>
+      <ul>
+        <li><a href="/kor/util/finance-tax-2026/">2026 세금·연봉·부동산 계산기 모음 허브</a></li>
+        <li><a href="/kor/util/real-estate-acquisition-tax-2026/">부동산 취득세 감면 & 다주택 중과세율 계산기</a></li>
+        <li><a href="/kor/util/one-house-12ok-capital-gains-tax-80-percent-2026/">1주택 12억 양도세 비과세 & 장특공 계산기</a></li>
+        <li><a href="/kor/util/jeonse-vs-wolse-conversion-rate-loan-2026/">전월세 전환율 5.0% 및 대출이자 비교 계산기</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <script type="module" src="./app.js"></script>
+
+<!-- EMFLS_CLUSTER_MESH_V1_START -->
+<section class="panel emfls-cluster-mesh" aria-labelledby="cluster-mesh-title" style="margin-top:24px;">
+  <h2 id="cluster-mesh-title" style="margin-top:0;margin-bottom:8px;font-size:1.25rem;color:#0f172a;">2026 대한민국 세무·금융·복지 핵심 계산기</h2>
+  <p style="margin:0 0 16px;color:#475569;font-size:0.92rem;">2026년도 국세청·고용노동부 기준 연계 계산 도구:</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-bottom:16px;">
+    <a href="/kor/util/retiree-nhis-voluntary-continuation-36m-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 퇴직자 건강보험 임의계속가입 vs 지역가입자 비교 계산기 | 36개월 총 건보료 절감액</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 최신 국민건강보험법 기준 퇴직자 임의계속가입(최대 36개월·7.19%) vs 지역가입자(재산공제 1억·자동차 폐지·점수당 211.5원) vs 피부양자 자격...</span>
+    </a>
+    <a href="/kor/util/retirement-pension-db-vs-dc-wage-peak-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 퇴직연금 DB·DC 계산기 | 임금피크제 전환 시점</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">월급·근속일수·임금피크제 삭감률을 입력해 DB 유지, 지금 DC 전환, 임금피크제 직전 DC 전환의 예상 퇴직급여와 손익분기 수익률을 비교하세요.</span>
+    </a>
+    <a href="/kor/util/retirement-severance-irp-50-percent-tax-reduction-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026 퇴직금·퇴직소득세 계산기 &amp; IRP 연금 30%·40%·50% 감면 비교기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">2026년 소득세법 근속연수공제 및 환산급여공제 기준 퇴직소득세 계산. IRP 연금수령 시 10년차까지 30%, 11~20년차 40%, 21년차 이상 50% 세금 감...</span>
+    </a>
+    <a href="/kor/util/revolving-card-loan-interest-trap-payoff-2026/" class="emfls-mesh-card" style="display:block;padding:12px 14px;border:1px solid #e2e8f0;border-radius:12px;text-decoration:none;color:#1e293b;background:#f8fafc;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:border-color .15s,box-shadow .15s;">
+      <span style="display:inline-block;background:#e0f2fe;color:#0369a1;font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:6px;margin-bottom:6px;">2026 국세청·고용부</span>
+      <strong style="display:block;font-size:0.92rem;color:#0f172a;line-height:1.35;margin-bottom:4px;">2026년 신용카드 리볼빙·카드론 최고 20% 이자폭탄 &amp; 은행/햇살론 대환 절감액 계산기</strong>
+      <span style="display:block;font-size:0.82rem;color:#64748b;line-height:1.4;">신용카드 리볼빙(일부결제금액이월약정) 연 15~19.9% 복리 덫과 카드론 다중채무의 이자 스노우볼을 실측하고, 1금융권 대환대출 또는 햇살론(연 7~9%) 전환 시...</span>
+    </a>
+  </div>
+  <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;text-align:center;">
+    <a href="/util/2026-global-tax-finance-calculators/" style="display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:0.92rem;color:#1d4ed8;text-decoration:none;padding:8px 16px;border-radius:8px;background:#eff6ff;">
+      <span>2026 글로벌 세무·금융·복지 계산기 전수 보기 &rarr;</span>
+    </a>
+  </div>
+</section>
+<!-- EMFLS_CLUSTER_MESH_V1_END -->
+</body>
+</html>
