@@ -322,3 +322,46 @@ def test_cli_dry_run_reports_no_changed_launch_url(tmp_path):
     assert result.returncode == 0
     assert "SKIP_NO_CHANGED_LAUNCH_URL" in result.stdout
     assert json.loads(report.read_text(encoding="utf-8"))["status"] == "SKIP_NO_CHANGED_LAUNCH_URL"
+
+
+def test_cli_dry_run_reports_invalid_changed_canonicals_and_keeps_valid_urls(tmp_path, monkeypatch, capsys):
+    from scripts import indexnow_submit
+
+    pages = {
+        "a-template.html": "{{CANONICAL}}",
+        "b-external.html": "https://example.com/article/",
+        "c-malformed.html": "https://[broken",
+        "d-valid.html": "https://emfls.github.io/d-valid.html",
+    }
+    for path, canonical in pages.items():
+        (tmp_path / path).write_text(f'<link rel="canonical" href="{canonical}">', encoding="utf-8")
+
+    monkeypatch.setattr(indexnow_submit, "_changed_paths", lambda *_: pages)
+    monkeypatch.delenv("INDEXNOW_KEY", raising=False)
+
+    verified = []
+
+    def verify(urls, _key):
+        verified.extend(urls)
+
+    monkeypatch.setattr(indexnow_submit, "wait_for_production_ready", verify)
+    report_path = tmp_path / "report.json"
+    args = ["--root", str(tmp_path), "--report", str(report_path), "--actor", "",
+            "--backfill-urls", "", "--dry-run"]
+
+    assert indexnow_submit.main(args) == 0
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert report["status"] == "DRY_RUN_VERIFIED"
+    assert report["errors"] == report["submitted"] == []
+    assert report["candidates"] == verified == [pages["d-valid.html"]]
+    assert report["skippedCanonicals"] == [
+        {"path": path, "reason": "URL_HOST_OR_SCHEME_INVALID"} for path in list(pages)[:3]
+    ]
+    warning = capsys.readouterr().err
+    assert all(path in warning for path in list(pages)[:3])
+
+    (tmp_path / "d-valid.html").unlink()
+    assert indexnow_submit.main(args) == 0
+    skipped_report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert skipped_report["status"] == "SKIP_NO_CHANGED_LAUNCH_URL"
+    assert skipped_report["skippedCanonicals"] == report["skippedCanonicals"]

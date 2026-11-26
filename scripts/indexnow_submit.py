@@ -6,6 +6,7 @@ import json
 import os
 import re
 import subprocess
+import sys
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -30,7 +31,10 @@ class GateError(RuntimeError):
 
 
 def ensure_same_host_https(url):
-    parsed = urlparse(str(url or ""))
+    try:
+        parsed = urlparse(str(url or ""))
+    except ValueError as error:
+        raise GateError("URL_HOST_OR_SCHEME_INVALID") from error
     if parsed.scheme != "https" or parsed.netloc != PUBLIC_HOST or parsed.username or parsed.password:
         raise GateError("URL_HOST_OR_SCHEME_INVALID")
     return url
@@ -65,7 +69,7 @@ def candidate_urls(manifest, changed_paths):
     return candidates
 
 
-def changed_indexable_page_urls(root, changed_paths):
+def changed_indexable_page_urls(root, changed_paths, *, skipped_canonicals=None):
     """Resolve changed, locally indexable HTML pages when the private launch manifest is absent."""
     root = Path(root).resolve()
     candidates = []
@@ -82,7 +86,14 @@ def changed_indexable_page_urls(root, changed_paths):
         canonical = _canonical(html)
         if not canonical:
             continue
-        url = ensure_same_host_https(canonical)
+        try:
+            url = ensure_same_host_https(canonical)
+        except GateError as error:
+            reason = str(error)
+            print(f"Skipping canonical in {raw_path!r}: {reason}", file=sys.stderr)
+            if skipped_canonicals is not None:
+                skipped_canonicals.append({"path": raw_path, "reason": reason})
+            continue
         if url not in candidates:
             candidates.append(url)
     return candidates
@@ -256,6 +267,7 @@ def build_report(
     before_sha="",
     after_sha="",
     indexnow_status="NOT_SENT",
+    skipped_canonicals=(),
 ):
     return {
         "schemaVersion": REPORT_SCHEMA_VERSION,
@@ -269,6 +281,7 @@ def build_report(
         "candidates": list(candidates),
         "submitted": list(submitted),
         "errors": list(errors),
+        "skippedCanonicals": list(skipped_canonicals),
         "status": status,
         "finalStatus": status,
         "indexnowStatus": indexnow_status,
@@ -320,6 +333,7 @@ def main(argv=None):
         return 0
 
     changed = _changed_paths(root, args.before, args.sha)
+    skipped_canonicals = []
     manifest_path = args.manifest if args.manifest.is_absolute() else root / args.manifest
     if manifest_path.is_file():
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -327,7 +341,7 @@ def main(argv=None):
     else:
         # Operational launch manifests now live in EMFLS_OPS_DIR and are not in Git.
         # Changed HTML still has to be indexable locally and pass the production canonical/noindex gate.
-        candidates = changed_indexable_page_urls(root, changed)
+        candidates = changed_indexable_page_urls(root, changed, skipped_canonicals=skipped_canonicals)
     for url in _backfill_urls(args.backfill_urls):
         ensure_same_host_https(url)
         if url not in candidates:
@@ -342,6 +356,7 @@ def main(argv=None):
             mode=mode,
             before_sha=args.before,
             after_sha=args.sha,
+            skipped_canonicals=skipped_canonicals,
         )
         _write_report(report_path, report)
         print("SKIP_NO_CHANGED_LAUNCH_URL")
@@ -359,6 +374,7 @@ def main(argv=None):
                 mode=mode,
                 before_sha=args.before,
                 after_sha=args.sha,
+                skipped_canonicals=skipped_canonicals,
             )
         else:
             submitted = submit_urls(candidates, key)
@@ -370,6 +386,7 @@ def main(argv=None):
                 mode=mode,
                 before_sha=args.before,
                 after_sha=args.sha,
+                skipped_canonicals=skipped_canonicals,
                 indexnow_status=submitted["status"],
             )
             report["submission"] = submitted
@@ -382,6 +399,7 @@ def main(argv=None):
             mode=mode,
             before_sha=args.before,
             after_sha=args.sha,
+            skipped_canonicals=skipped_canonicals,
         )
         _write_report(report_path, report)
         print(json.dumps(report, ensure_ascii=False))
