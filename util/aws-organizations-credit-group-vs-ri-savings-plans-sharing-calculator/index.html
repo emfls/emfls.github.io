@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AWS Credit Sharing vs. Savings Plans &amp; RI Calculator</title>
+<meta name="description" content="Estimate monthly AWS bills across three accounts. Compare credit group overrides, RI and Savings Plans sharing, cross-BU subsidies, and unused commitments.">
+<link rel="canonical" href="https://emfls.github.io/util/aws-organizations-credit-group-vs-ri-savings-plans-sharing-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AWS Credit Sharing vs. Savings Plans &amp; RI Calculator">
+<meta property="og:description" content="Compare Open, Prioritized, and Restricted sharing across three AWS accounts and see which business unit gets the benefit.">
+<meta property="og:url" content="https://emfls.github.io/util/aws-organizations-credit-group-vs-ri-savings-plans-sharing-calculator/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AWS Credit Sharing vs. Savings Plans &amp; RI Calculator">
+<meta name="twitter:description" content="Model AWS credit allocation, RI and Savings Plans utilization, and monthly chargeback across two business units.">
+<link rel="stylesheet" href="../new-tools.css">
+<meta name="google-adsense-account" content="ca-pub-8830524482034754">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QP5Q67GE5B')</script>
+<script>
+const adsHostname = location.hostname.toLowerCase().replace(/\.$/, '');
+const isLoopback = adsHostname === 'localhost' || adsHostname.endsWith('.localhost') ||
+  /^127(?:\.\d{1,3}){3}$/.test(adsHostname) || adsHostname === '[::1]' ||
+  /^\[::ffff:7f[\da-f]{2}:[\da-f]{1,4}\]$/.test(adsHostname);
+const adsEnabled = adsHostname !== '' && !isLoopback;
+
+if (adsEnabled) {
+  for (const origin of ['https://pagead2.googlesyndication.com', 'https://googleads.g.doubleclick.net']) {
+    const hint = document.createElement('link');
+    hint.rel = 'preconnect';
+    hint.href = origin;
+    hint.crossOrigin = '';
+    document.head.append(hint);
+  }
+  const adScript = document.createElement('script');
+  adScript.async = true;
+  adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+  adScript.crossOrigin = 'anonymous';
+  document.head.append(adScript);
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "AWS Credit Group Sharing vs. Savings Plans & RI Level Sharing Calculator",
+  "url": "https://emfls.github.io/util/aws-organizations-credit-group-vs-ri-savings-plans-sharing-calculator/",
+  "description": "Estimate AWS month-end chargeback, cross-business-unit benefits, unused Reserved Instance or Savings Plans commitment, and expiring credits across three linked accounts.",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Can a credit override its AWS credit sharing group?",
+      "acceptedAnswer": {"@type": "Answer", "text": "New credits inherit the credit group default. A per-credit preference overrides that default for the selected credit. Shared credits still require eligible service charges and sharing activation for the owner and recipients."}
+    },
+    {
+      "@type": "Question",
+      "name": "How do Open, Prioritized, and Restricted commitment sharing differ?",
+      "acceptedAnswer": {"@type": "Answer", "text": "The owner gets matching coverage first. Open shares surplus across sharing-enabled accounts. Prioritized covers the designated group first, then lets surplus reach other eligible accounts. Restricted keeps surplus within the designated group, so matching usage elsewhere can remain uncovered."}
+    },
+    {
+      "@type": "Question",
+      "name": "When do AWS sharing changes affect the monthly bill?",
+      "acceptedAnswer": {"@type": "Answer", "text": "AWS uses RI and Savings Plans sharing preferences in effect at 23:59:59 UTC on the last day of the month. AWS also uses the last-day credit sharing preference. Changes before close can reallocate benefits for the month to date."}
+    },
+    {
+      "@type": "Question",
+      "name": "Does the calculator estimate a new AWS discount rate?",
+      "acceptedAnswer": {"@type": "Answer", "text": "The simulator uses the existing rates you enter to estimate benefit allocation, chargeback, and unused commitment risk. It models one monthly commitment pool, so hourly usage variation can increase actual waste."}
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "EMFLS", "item": "https://emfls.github.io/"},
+    {"@type": "ListItem", "position": 2, "name": "Tools", "item": "https://emfls.github.io/util/"},
+    {"@type": "ListItem", "position": 3, "name": "AWS Credit Group Sharing vs. Savings Plans & RI Level Sharing Calculator", "item": "https://emfls.github.io/util/aws-organizations-credit-group-vs-ri-savings-plans-sharing-calculator/"}
+  ]
+}
+</script>
+<style>
+  .tool-nav { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 20px; margin-bottom: 14px; }
+  .tool-nav a { color: #e2e8f0; }
+  .tool-nav .logo { color: #fff; font-size: 1.25rem; font-weight: 800; text-decoration: none; }
+  .tool-nav .logo span { color: #60a5fa; }
+  .takeaways { border-inline-start: 5px solid #60a5fa; }
+  .takeaways p:last-child, .result p:last-child { margin-bottom: 0; }
+  .block { margin-top: 20px; }
+  .block h3 { margin-bottom: 6px; }
+  .grid > *, input, select, fieldset { min-width: 0; }
+  .tool-shell [hidden] { display: none; }
+  .account-grid { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  #hourly-fields, .account-grid fieldset { margin: 0; padding: 12px; border: 1px solid #d9e0ea; border-radius: 10px; }
+  legend { color: #173f8a; font-weight: 800; padding-inline: 4px; }
+  .role { margin: 0 0 10px; }
+  .account-grid input[type="number"] { margin-bottom: 9px; }
+  .check { display: flex; gap: 8px; align-items: start; font-size: .91rem; font-weight: 600; margin-top: 7px; }
+  .check input { flex: none; width: 1rem; height: 1rem; margin: .27rem 0 0; accent-color: #2563eb; }
+  .error:empty { display: none; }
+  .result { white-space: normal; }
+  .result h3 { margin: 0 0 10px; }
+  .result dl { margin: 0; }
+  .result dl > div { background: #fff; padding: 12px; border-radius: 8px; }
+  .result dt { font-size: .94rem; }
+  .result dd { font-size: 1.24rem; font-weight: 800; margin: 2px 0 0; }
+  .table-wrap { max-width: 100%; overflow-x: auto; margin-top: 14px; }
+  .table-wrap:focus-visible { outline: 3px solid #f59e0b; outline-offset: 2px; }
+  table { border-collapse: collapse; width: 100%; min-width: 650px; font-size: .91rem; }
+  caption { text-align: start; font-weight: 800; padding-bottom: 6px; }
+  th, td { border-bottom: 1px solid #b8cbe1; padding: 8px 6px; text-align: end; vertical-align: top; }
+  th:first-child { text-align: start; }
+  td { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tfoot, td:last-child { font-weight: 800; }
+  .warning { background: #fff7e6; border-inline-start: 5px solid #c77a12; }
+  .warning li + li { margin-top: 5px; }
+  .emfls-ad-slot { width: 100%; max-width: 520px; min-height: 278px; margin: 36px auto; text-align: center; }
+  .ad-label { height: 28px; font: 12px/20px system-ui,sans-serif; color: #cbd5e1; }
+  .emfls-ad-slot ins { width: 100%; height: 250px; }
+  @media (max-width: 760px) { .account-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main class="tool-shell">
+  <nav class="tool-nav" aria-label="Site navigation">
+    <a class="logo" href="/" aria-label="EMFLS home">emfls<span>.</span></a>
+    <a href="/util/">All tools</a>
+  </nav>
+
+  <header class="hero">
+    <h1>AWS Credit Group Sharing vs. Savings Plans &amp; RI Level Sharing Calculator</h1>
+    <p>Estimate monthly bills for three AWS accounts across two business units. See how sharing changes chargeback, cross-BU subsidies, and the cost of unused commitments.</p>
+  </header>
+
+  <section class="panel" aria-labelledby="estimate-title">
+    <h2 id="estimate-title">Estimate your monthly AWS bill</h2>
+    <noscript><p>Enable JavaScript to calculate in your browser.</p></noscript>
+    <form id="sharing-form" aria-labelledby="estimate-title">
+      <div class="block">
+        <h3>Reserved Instance or Savings Plans commitment</h3>
+        <p class="note">Model one commitment owned by Account 1. For an RI, enter the effective cost of matching capacity. For hourly input, use the number of hours the commitment covers this month.</p>
+        <div class="grid">
+          <div>
+            <label for="period">Commitment input period</label>
+            <select id="period" name="period">
+              <option value="monthly">Monthly</option>
+              <option value="hourly">Hourly</option>
+            </select>
+          </div>
+          <div>
+            <label for="commitment">Monthly commitment cost ($)</label>
+            <input id="commitment" name="commitment" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="1500" required>
+          </div>
+          <fieldset id="hourly-fields" class="full grid" disabled hidden>
+            <legend>Hourly commitment</legend>
+            <div>
+              <label for="hourly-commitment">Hourly commitment cost ($/h)</label>
+              <input id="hourly-commitment" name="hourlyCommitment" type="number" inputmode="decimal" min="0" max="1000000000" step="0.00001" value="2.08333" required>
+            </div>
+            <div>
+              <label for="hours">Covered hours this month</label>
+              <input id="hours" name="hours" type="number" inputmode="numeric" min="1" max="744" step="1" value="720" required>
+            </div>
+          </fieldset>
+          <div>
+            <label for="commitment-mode">RI/SP sharing mode</label>
+            <select id="commitment-mode" name="commitmentMode">
+              <option value="open">Open · organization-wide</option>
+              <option value="prioritized" selected>Prioritized · BU-A first, then organization</option>
+              <option value="restricted">Restricted · BU-A only</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <h3>AWS credit sharing</h3>
+        <p class="note">Enter one active Account 1 credit expiring in this billing month. Select the group default inherited by new credits, then test a per-credit override.</p>
+        <div class="grid">
+          <div>
+            <label for="credit">Remaining credit amount ($)</label>
+            <input id="credit" name="credit" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="1000" required>
+          </div>
+          <div>
+            <label for="credit-default">Credit group default</label>
+            <select id="credit-default" name="creditDefault">
+              <option value="open">Open · whole organization</option>
+              <option value="prioritized">Prioritized · BU-A first, then organization</option>
+              <option value="restricted" selected>Restricted · BU-A only</option>
+            </select>
+          </div>
+          <div>
+            <label for="credit-override">Per-credit sharing override</label>
+            <select id="credit-override" name="creditOverride">
+              <option value="inherit">Inherit the credit group default</option>
+              <option value="owner">Owner-only · Account 1</option>
+              <option value="group">Selected credit group · BU-A</option>
+              <option value="org">Whole organization · sharing-enabled accounts</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <h3 id="accounts-title">Monthly usage by account</h3>
+        <p class="note">The three accounts are active members of one organization. Enter matching RI/SP usage at On-Demand rates and that usage’s existing RI/SP rate as a percentage of On-Demand. Enter other charges separately so each charge appears once. Enable credit eligibility for uncovered matching usage only if this credit covers those services.</p>
+        <div class="grid account-grid" role="group" aria-labelledby="accounts-title">
+          <fieldset>
+            <legend>Account 1 · BU-A</legend>
+            <p class="note role">Commitment and credit owner</p>
+            <label for="a1-matching">Matching usage at On-Demand ($)</label>
+            <input id="a1-matching" name="a1Matching" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="1000" required>
+            <label for="a1-rate">RI/SP rate (% of On-Demand)</label>
+            <input id="a1-rate" name="a1Rate" type="number" inputmode="decimal" min="0.01" max="100" step="0.01" value="60" required>
+            <label for="a1-eligible">Other credit-eligible charges ($)</label>
+            <input id="a1-eligible" name="a1Eligible" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="100" required>
+            <label for="a1-ineligible">Other ineligible charges ($)</label>
+            <input id="a1-ineligible" name="a1Ineligible" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="50" required>
+            <label class="check"><input name="a1CreditMatching" type="checkbox" checked>Credit covers uncovered matching usage</label>
+            <label class="check"><input name="a1CommitmentEnabled" type="checkbox" checked>RI/SP sharing active</label>
+            <label class="check"><input name="a1CreditEnabled" type="checkbox" checked>Credit sharing active</label>
+          </fieldset>
+          <fieldset>
+            <legend>Account 2 · BU-A</legend>
+            <p class="note role">Sibling account</p>
+            <label for="a2-matching">Matching usage at On-Demand ($)</label>
+            <input id="a2-matching" name="a2Matching" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="700" required>
+            <label for="a2-rate">RI/SP rate (% of On-Demand)</label>
+            <input id="a2-rate" name="a2Rate" type="number" inputmode="decimal" min="0.01" max="100" step="0.01" value="50" required>
+            <label for="a2-eligible">Other credit-eligible charges ($)</label>
+            <input id="a2-eligible" name="a2Eligible" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="150" required>
+            <label for="a2-ineligible">Other ineligible charges ($)</label>
+            <input id="a2-ineligible" name="a2Ineligible" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="50" required>
+            <label class="check"><input name="a2CreditMatching" type="checkbox" checked>Credit covers uncovered matching usage</label>
+            <label class="check"><input name="a2CommitmentEnabled" type="checkbox" checked>RI/SP sharing active</label>
+            <label class="check"><input name="a2CreditEnabled" type="checkbox" checked>Credit sharing active</label>
+          </fieldset>
+          <fieldset>
+            <legend>Account 3 · BU-B</legend>
+            <p class="note role">Separate cost center</p>
+            <label for="a3-matching">Matching usage at On-Demand ($)</label>
+            <input id="a3-matching" name="a3Matching" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="2400" required>
+            <label for="a3-rate">RI/SP rate (% of On-Demand)</label>
+            <input id="a3-rate" name="a3Rate" type="number" inputmode="decimal" min="0.01" max="100" step="0.01" value="40" required>
+            <label for="a3-eligible">Other credit-eligible charges ($)</label>
+            <input id="a3-eligible" name="a3Eligible" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="200" required>
+            <label for="a3-ineligible">Other ineligible charges ($)</label>
+            <input id="a3-ineligible" name="a3Ineligible" type="number" inputmode="decimal" min="0" max="1000000000" step="0.01" value="100" required>
+            <label class="check"><input name="a3CreditMatching" type="checkbox" checked>Credit covers uncovered matching usage</label>
+            <label class="check"><input name="a3CommitmentEnabled" type="checkbox" checked>RI/SP sharing active</label>
+            <label class="check"><input name="a3CreditEnabled" type="checkbox" checked>Credit sharing active</label>
+          </fieldset>
+        </div>
+      </div>
+    </form>
+    <p id="error" class="error" role="alert"></p>
+
+    <section id="results" class="result" aria-labelledby="results-title" hidden>
+      <h3 id="results-title">Monthly estimate</h3>
+      <dl class="grid">
+        <div><dt>Organization net bill</dt><dd id="net"></dd></div>
+        <div><dt>Cross-BU subsidy to BU-B</dt><dd id="cross-bu"></dd></div>
+        <div><dt>Unused RI/SP commitment cost</dt><dd id="unused-commitment"></dd></div>
+        <div><dt>Unused expiring credit</dt><dd id="unused-credit"></dd></div>
+      </dl>
+      <p id="allocation-note" class="note" role="status"></p>
+      <div class="table-wrap" role="region" aria-labelledby="bill-caption" tabindex="0">
+        <table>
+          <caption id="bill-caption">Net bill by account (monthly USD)</caption>
+          <thead>
+            <tr><th scope="col">Account</th><th scope="col">Usage before benefits</th><th scope="col">On-Demand charges covered</th><th scope="col">Commitment fee</th><th scope="col">Credit applied</th><th scope="col">Net bill</th></tr>
+          </thead>
+          <tbody id="bill-rows"></tbody>
+          <tfoot id="bill-total"></tfoot>
+        </table>
+      </div>
+      <p class="note">Scroll the table horizontally on narrow screens. The modeled commitment fee stays with Account 1.</p>
+    </section>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (adsEnabled) { (window.adsbygoogle = window.adsbygoogle || []).push({}); } else { document.currentScript.parentElement.hidden = true; }</script>
+  </aside>
+
+  <section class="panel warning" aria-labelledby="close-title">
+    <h2 id="close-title">Month-end governance at 23:59:59 UTC</h2>
+    <p>The final monthly AWS bill uses RI/SP sharing preferences active at <strong>23:59:59 UTC on the last day of the month</strong>. AWS also uses the last-day credit sharing preference. Mid-month changes can recalculate allocations for the month to date.</p>
+    <ul>
+      <li>Verify the AWS Cost Category, BU membership, and account-level activation for credits and commitments in Billing preferences.</li>
+      <li>Review the inherited credit default, each expiring credit’s override and applicable products, and each commitment’s sharing rule in Inventory.</li>
+      <li>Record the approved settings before cutoff. Check for stranded commitment cost and credits that will expire with a balance.</li>
+      <li>Reconcile the finalized Bills page and Cost and Usage Report with internal chargeback, including any approved BU-A-to-BU-B subsidy.</li>
+    </ul>
+  </section>
+
+  <section class="panel takeaways" aria-labelledby="method-title">
+    <h2 id="method-title">How the estimate works</h2>
+    <p><strong>RI/SP commitment.</strong> The owner gets matching coverage first. Open considers all sharing-enabled accounts together. Prioritized considers BU-A first and offers the remainder to BU-B. Restricted stops at BU-A. Within each tier the model covers the largest percentage savings first, using the input rate, then account order for ties. In AWS, Open represents the organization-wide setting when no commitment-level override applies.</p>
+    <p><strong>AWS credit.</strong> Apply the credit against the owner’s remaining eligible usage charges, then to the highest eligible balance within each allowed tier. The modeled commitment fee is outside the credit pool. The inherited Prioritized default can spill beyond BU-A. The selected credit-group override stays within BU-A. A per-credit override represents an allowed set of accounts subject to account-level activation.</p>
+    <p><strong>Chargeback.</strong> Each net bill equals usage before benefits minus covered On-Demand charges, plus the owner’s commitment fee where applicable, minus credit applied. The BU-B subsidy adds its avoided On-Demand charges and consumed credit. It is the gross benefit to BU-B before any internal reimbursement. Unused commitment cost is included in the owner’s fee.</p>
+    <p><strong>Scope.</strong> Use rates already on your AWS agreement. The model estimates allocation, chargeback, and waste using one monthly pool and one representative rate per account. AWS applies matching rules at the usage-line level, and hourly commitment capacity cannot carry between hours. Monthly pooling can understate waste when usage varies. Taxes, multiple commitments and credits, and upfront cash timing are outside the estimate.</p>
+    <p class="note"><a href="https://aws.amazon.com/about-aws/whats-new/2026/11/aws-benefits-sharing-capabilities/">Nov 17, 2026 AWS benefits sharing announcement</a> · <a href="https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/useconsolidatedbilling-credits.html">Applying AWS credits</a> · <a href="https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/ri-turn-off.html">RI and Savings Plans sharing</a> · <a href="https://docs.aws.amazon.com/savingsplans/latest/userguide/sp-applying.html">How Savings Plans apply to usage</a></p>
+  </section>
+
+  <section class="panel faq" aria-labelledby="faq-title">
+    <h2 id="faq-title">Frequently asked questions</h2>
+    <details>
+      <summary>Can a credit override its AWS credit sharing group?</summary>
+      <p>New credits inherit the credit group default. A per-credit preference overrides that default for the selected credit. Shared credits still require eligible service charges and sharing activation for the owner and recipients.</p>
+    </details>
+    <details>
+      <summary>How do Open, Prioritized, and Restricted commitment sharing differ?</summary>
+      <p>The owner gets matching coverage first. Open shares surplus across sharing-enabled accounts. Prioritized covers the designated group first, then lets surplus reach other eligible accounts. Restricted keeps surplus within the designated group, so matching usage elsewhere can remain uncovered.</p>
+    </details>
+    <details>
+      <summary>When do AWS sharing changes affect the monthly bill?</summary>
+      <p>AWS uses RI and Savings Plans sharing preferences in effect at 23:59:59 UTC on the last day of the month. AWS also uses the last-day credit sharing preference. Changes before close can reallocate benefits for the month to date.</p>
+    </details>
+    <details>
+      <summary>Does the calculator estimate a new AWS discount rate?</summary>
+      <p>The simulator uses the existing rates you enter to estimate benefit allocation, chargeback, and unused commitment risk. It models one monthly commitment pool, so hourly usage variation can increase actual waste.</p>
+    </details>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (adsEnabled) { (window.adsbygoogle = window.adsbygoogle || []).push({}); } else { document.currentScript.parentElement.hidden = true; }</script>
+  </aside>
+
+  <section class="panel" aria-labelledby="related-title">
+    <h2 id="related-title">Related tools</h2>
+    <div class="links">
+      <a href="/util/percentage-calculator/">Percentage calculator</a>
+      <a href="/util/roi-calculator/">ROI calculator</a>
+      <a href="/util/break-even-calculator/">Break-even calculator</a>
+    </div>
+  </section>
+</main>
+<footer>Planning estimates · emfls.github.io</footer>
+
+<script id="calculator-script">
+'use strict';
+
+const accountLabels = ['Account 1 · BU-A', 'Account 2 · BU-A', 'Account 3 · BU-B'];
+const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+const get = id => document.getElementById(id);
+const form = get('sharing-form');
+const fields = form.elements;
+const dollars = cents => money.format(cents / 100);
+const unitsPerCent = 10_000n;
+const roundDivide = (amount, divisor) => (amount + divisor / 2n) / divisor;
+
+function allocateCommitment(accounts, commitmentUnits, mode) {
+  const eligible = [1, 2].filter(index => accounts[0].commitmentEnabled && accounts[index].commitmentEnabled);
+  // Each account represents one rate. A lower cost ratio means a higher percentage savings.
+  eligible.sort((a, b) => accounts[a].rateBasisPoints - accounts[b].rateBasisPoints || a - b);
+  let recipients = eligible;
+  if (mode === 'restricted') recipients = eligible.filter(index => index === 1);
+  if (mode === 'prioritized') recipients = [1, 2].filter(index => eligible.includes(index));
+  const covered = [0, 0, 0];
+  // Both the hourly pool and basis-point costs fit in millionths of a dollar.
+  let remaining = commitmentUnits;
+  for (const index of [0, ...recipients]) {
+    const { matching, rateBasisPoints } = accounts[index];
+    const rate = BigInt(rateBasisPoints);
+    const matchingCost = BigInt(matching) * rate;
+    const consumed = remaining < matchingCost ? remaining : matchingCost;
+    covered[index] = Number(roundDivide(consumed, rate));
+    remaining -= consumed;
+  }
+  return { covered, unused: Number(roundDivide(remaining, unitsPerCent)) };
+}
+
+function allocateCredit(accounts, eligibleCharges, credit, groupDefault, override) {
+  const scope = override === 'inherit' ? groupDefault : override;
+  let recipients = [1, 2].filter(index => accounts[0].creditEnabled && accounts[index].creditEnabled);
+  recipients.sort((a, b) => eligibleCharges[b] - eligibleCharges[a] || a - b);
+  if (scope === 'owner') recipients = [];
+  if (scope === 'restricted' || scope === 'group') recipients = recipients.filter(index => index === 1);
+  if (scope === 'prioritized') recipients = [1, 2].filter(index => recipients.includes(index));
+
+  const applied = [0, 0, 0];
+  let remaining = credit;
+  for (const index of [0, ...recipients]) {
+    applied[index] = Math.min(remaining, eligibleCharges[index]);
+    remaining -= applied[index];
+  }
+  return { applied, unused: remaining };
+}
+
+function estimate({ accounts, commitmentUnits, credit, commitmentMode, creditDefault, override }) {
+  const coverage = allocateCommitment(accounts, commitmentUnits, commitmentMode);
+  const commitmentFee = Number(roundDivide(commitmentUnits, unitsPerCent));
+  const eligibleCharges = accounts.map((account, index) =>
+    account.otherEligible + (account.creditMatching ? account.matching - coverage.covered[index] : 0)
+  );
+  const credits = allocateCredit(accounts, eligibleCharges, credit, creditDefault, override);
+  const rows = accounts.map((account, index) => {
+    const gross = account.matching + account.otherEligible + account.otherIneligible;
+    const covered = coverage.covered[index];
+    const fee = index === 0 ? commitmentFee : 0;
+    const applied = credits.applied[index];
+    return { gross, covered, fee, credit: applied, net: gross - covered + fee - applied };
+  });
+  return {
+    rows,
+    net: rows.reduce((sum, row) => sum + row.net, 0),
+    crossBU: rows[2].covered + rows[2].credit,
+    unusedCommitment: coverage.unused,
+    unusedCredit: credits.unused
+  };
+}
+
+function billRow(label, values) {
+  const row = document.createElement('tr');
+  const heading = document.createElement('th');
+  heading.scope = 'row';
+  heading.textContent = label;
+  row.append(heading);
+  for (const value of values) {
+    const cell = document.createElement('td');
+    cell.textContent = dollars(value);
+    row.append(cell);
+  }
+  return row;
+}
+
+function update() {
+  const hourly = fields.period.value === 'hourly';
+  fields.commitment.disabled = hourly;
+  fields.commitment.parentElement.hidden = hourly;
+  get('hourly-fields').disabled = !hourly;
+  get('hourly-fields').hidden = !hourly;
+  if (!form.checkValidity()) {
+    const invalid = form.querySelector('input:invalid, select:invalid');
+    const label = invalid.labels[0].textContent.trim();
+    get('results').hidden = true;
+    get('error').textContent = label + '. ' + invalid.validationMessage;
+    return;
+  }
+  get('error').textContent = '';
+  const cents = name => Math.round(fields[name].valueAsNumber * 100);
+  const accounts = [1, 2, 3].map(number => {
+    const prefix = 'a' + number;
+    return {
+      matching: cents(prefix + 'Matching'),
+      rateBasisPoints: Math.round(fields[prefix + 'Rate'].valueAsNumber * 100),
+      otherEligible: cents(prefix + 'Eligible'),
+      otherIneligible: cents(prefix + 'Ineligible'),
+      creditMatching: fields[prefix + 'CreditMatching'].checked,
+      commitmentEnabled: fields[prefix + 'CommitmentEnabled'].checked,
+      creditEnabled: fields[prefix + 'CreditEnabled'].checked
+    };
+  });
+  // The hourly field accepts five decimal places. Convert to millionths before multiplying.
+  const commitmentUnits = hourly
+    ? BigInt(Math.round(fields.hourlyCommitment.valueAsNumber * 100_000)) * BigInt(fields.hours.valueAsNumber) * 10n
+    : BigInt(cents('commitment')) * unitsPerCent;
+  const result = estimate({
+    accounts,
+    commitmentUnits,
+    credit: cents('credit'),
+    commitmentMode: fields.commitmentMode.value,
+    creditDefault: fields.creditDefault.value,
+    override: fields.creditOverride.value
+  });
+  get('net').textContent = dollars(result.net);
+  get('cross-bu').textContent = dollars(result.crossBU);
+  get('unused-commitment').textContent = dollars(result.unusedCommitment);
+  get('unused-credit').textContent = dollars(result.unusedCredit);
+  const values = row => [row.gross, row.covered, row.fee, row.credit, row.net];
+  const total = result.rows.reduce((sums, row) => values(row).map((value, index) => sums[index] + value), [0, 0, 0, 0, 0]);
+  get('bill-rows').replaceChildren(...result.rows.map((row, index) => billRow(accountLabels[index], values(row))));
+  get('bill-total').replaceChildren(billRow('Organization total', total));
+  const buB = result.rows[2];
+  get('results').hidden = false;
+  get('allocation-note').textContent = 'Net bill ' + dollars(result.net) + '. BU-B receives ' +
+    dollars(buB.covered) + ' in RI/SP coverage and ' + dollars(buB.credit) + ' in credit.';
+}
+
+form.addEventListener('input', update);
+form.addEventListener('submit', event => {
+  event.preventDefault();
+  update();
+});
+update();
+</script>
+</body>
+</html>

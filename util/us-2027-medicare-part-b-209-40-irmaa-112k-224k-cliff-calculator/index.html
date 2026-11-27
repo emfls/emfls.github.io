@@ -14,8 +14,6 @@
 <meta name="twitter:title" content="2027 Medicare Part B &amp; IRMAA Calculator | $209.40 Base Premium">
 <meta name="twitter:description" content="Estimate 2027 Medicare Part B and Part D IRMAA using 2025 MAGI. Find your next surcharge cliff, compare 2026 rates, and model an SSA-44 income change.">
 <link rel="stylesheet" href="../new-tools.css">
-<link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
-<link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
 <meta name="google-adsense-account" content="ca-pub-8830524482034754">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
 <script>
@@ -25,7 +23,20 @@ gtag('js', new Date());
 gtag('config', 'G-QP5Q67GE5B');
 </script>
 <script>
-if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+const adsHostname = location.hostname.toLowerCase().replace(/\.$/, '');
+const isLoopback = adsHostname === 'localhost' || adsHostname.endsWith('.localhost') ||
+  /^127(?:\.\d{1,3}){3}$/.test(adsHostname) || adsHostname === '[::1]' ||
+  /^\[::ffff:7f[\da-f]{2}:[\da-f]{1,4}\]$/.test(adsHostname);
+const adsEnabled = adsHostname !== '' && !isLoopback;
+
+if (adsEnabled) {
+  for (const origin of ['https://pagead2.googlesyndication.com', 'https://googleads.g.doubleclick.net']) {
+    const hint = document.createElement('link');
+    hint.rel = 'preconnect';
+    hint.href = origin;
+    hint.crossOrigin = '';
+    document.head.append(hint);
+  }
   const adScript = document.createElement('script');
   adScript.async = true;
   adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
@@ -184,27 +195,28 @@ if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
           <div>
             <label for="part-b-count">People with Part B</label>
             <select id="part-b-count" aria-describedby="coverage-note">
+              <option value="0">None</option>
               <option value="1">1 person</option>
               <option value="2" selected>2 spouses</option>
             </select>
           </div>
           <div>
-            <label for="part-d-count">Of those with Part D</label>
-            <select id="part-d-count">
+            <label for="part-d-count">People with Part D</label>
+            <select id="part-d-count" aria-describedby="coverage-note">
               <option value="0">None</option>
               <option value="1">1 person</option>
               <option value="2" selected>2 spouses</option>
             </select>
           </div>
         </div>
-        <p id="coverage-note" class="note">Choose two for joint returns. For separate returns or a change to individual filing, calculate each beneficiary separately.</p>
+        <p id="coverage-note" class="note">Count Part B and Part D enrollment separately. For non-joint returns, calculate one beneficiary at a time.</p>
         <details class="options">
           <summary>Include your Part D plan premiums</summary>
           <div class="grid">
             <div class="full">
               <label for="plan-cost">Combined monthly plan premiums ($)</label>
               <input id="plan-cost" type="number" inputmode="decimal" step=".01" min="0" max="1000000" placeholder="Optional" aria-describedby="plan-note">
-              <p id="plan-note" class="note">Add the premiums charged by the drug plans for the people selected above.</p>
+              <p id="plan-note" class="note">Add the drug plan premiums for the people with Part D.</p>
             </div>
           </div>
         </details>
@@ -310,7 +322,7 @@ if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
   <section class="panel" aria-labelledby="ssa-title">
     <h2 id="ssa-title">Request a lower IRMAA with Form SSA-44</h2>
     <p>If you received an IRMAA notice and a qualifying life-changing event changed your income or filing status, gather proof of the event and the tax return or estimate for the more recent year. Work stoppage, fewer work hours, marriage and the death of a spouse are qualifying event categories. If both spouses received notices, each can contact SSA about their own determination.</p>
-    <p class="note">The estimates assume 12 months of full Part B coverage and the selected Part D enrollment. Deductibles, late-enrollment penalties, premium reductions and other plan costs are separate.</p>
+    <p class="note">The estimates assume 12 months of the selected Part B and Part D coverage. Deductibles, late-enrollment penalties, premium reductions and other plan costs are separate.</p>
     <div class="links">
       <a href="https://www.ssa.gov/medicare/lower-irmaa">Request a reduction from SSA</a>
       <a href="https://www.ssa.gov/forms/ssa-44.pdf">Download Form SSA-44 (PDF)</a>
@@ -460,20 +472,24 @@ if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
     const effectiveFiling = revised && el('override-filing').value || filing;
 
     const partB = el('part-b-count');
-    partB.options[1].disabled = filing !== 'joint' || effectiveFiling !== 'joint';
-    if (partB.selectedOptions[0].disabled) partB.value = '1';
-    const partBCount = Number(partB.value);
-
     const partD = el('part-d-count');
-    partD.options[2].disabled = partBCount < 2;
-    if (partD.selectedOptions[0].disabled) partD.value = '1';
+    const allowTwo = filing === 'joint' && effectiveFiling === 'joint';
+    for (const select of [partB, partD]) {
+      if (!allowTwo && select.value === '2') select.value = '1';
+      const twoPeople = select.options[2];
+      twoPeople.disabled = !allowTwo;
+      twoPeople.hidden = !allowTwo;
+    }
+    const partBCount = Number(partB.value);
     const partDCount = Number(partD.value);
     const planInput = el('plan-cost');
     planInput.disabled = partDCount === 0;
 
     const baseInputs = [el('agi'), el('interest')];
     let error = '';
-    if (baseInputs.some(input => !input.validity.valid)) {
+    if (partBCount === 0 && partDCount === 0) {
+      error = 'Select at least one Part B or Part D enrollee.';
+    } else if (baseInputs.some(input => !input.validity.valid)) {
       error = 'Enter valid 2025 income and interest amounts with no more than two decimal places.';
     } else if (revised && !overrideMagi.validity.valid) {
       error = 'Enter a valid updated MAGI for the SSA-44 scenario.';
