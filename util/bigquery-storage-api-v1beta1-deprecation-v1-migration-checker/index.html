@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BigQuery Storage API v1beta1 Shutdown Checker: Audit Projects, gRPC &amp; Connectors Before Aug 31, 2027</title>
+<meta name="description" content="Check BigQuery Storage Read API snippets, project rollout risk and deployed connectors before the v1beta1 shutdown on August 31, 2027.">
+<link rel="canonical" href="https://emfls.github.io/util/bigquery-storage-api-v1beta1-deprecation-v1-migration-checker/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="BigQuery Storage API v1beta1 Shutdown Checker">
+<meta property="og:description" content="Check BigQuery Storage Read API snippets, project rollout risk and deployed connectors before the v1beta1 shutdown on August 31, 2027.">
+<meta property="og:url" content="https://emfls.github.io/util/bigquery-storage-api-v1beta1-deprecation-v1-migration-checker/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="BigQuery Storage API v1beta1 Shutdown Checker">
+<meta name="twitter:description" content="Check BigQuery Storage Read API snippets, project rollout risk and deployed connectors before the v1beta1 shutdown on August 31, 2027.">
+<link rel="stylesheet" href="../new-tools.css">
+<meta name="google-adsense-account" content="ca-pub-8830524482034754">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QP5Q67GE5B')</script>
+<script>
+let adsEnabled = false;
+if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+  const hostname = location.hostname.replace(/\.$/, '').toLowerCase();
+  const loopback = hostname === 'localhost' || hostname.endsWith('.localhost') ||
+    /^127(?:\.\d{1,3}){3}$/.test(hostname) || hostname === '[::1]' ||
+    /^\[::ffff:7f[\da-f]{2}:[\da-f]{1,4}\]$/.test(hostname);
+  if (!loopback) {
+    adsEnabled = true;
+    for (const origin of ['https://pagead2.googlesyndication.com', 'https://googleads.g.doubleclick.net']) {
+      const hint = document.createElement('link');
+      hint.rel = 'preconnect';
+      hint.href = origin;
+      hint.crossOrigin = '';
+      document.head.append(hint);
+    }
+    const adScript = document.createElement('script');
+    adScript.async = true;
+    adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+    adScript.crossOrigin = 'anonymous';
+    document.head.append(adScript);
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "BigQuery Storage API v1beta1 Shutdown Checker",
+  "url": "https://emfls.github.io/util/bigquery-storage-api-v1beta1-deprecation-v1-migration-checker/",
+  "description": "Check BigQuery Storage Read API snippets, project rollout risk and deployed connectors before the v1beta1 shutdown on August 31, 2027.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Why can production work while a new or DR project fails?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Since November 20, 2026, only projects with active v1beta1 usage between March 1 and August 31, 2026 can access that API. A new, staging or disaster-recovery project without that history can fail even when the same workload still works in production."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What shuts down on August 31, 2027?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "All calls to BigQuery Storage Read API v1beta1 will return NOT_FOUND. BigQuery core REST jobs and queries (bigquery/v2) and the BigQuery Storage Write API v1 are outside this shutdown."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How should I investigate NOT_FOUND from CreateReadSession or ReadRows?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Check the effective API version and the target table path, existence, dataset location and caller permissions. For ReadRows, also verify that the stream came from a valid read session. Compare the same v1 read in the existing and clean test or DR projects."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I confirm which API my connector uses?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Look up the deployed release and its read settings in the official vendor or Google release notes. Then run a controlled read and compare sanitized Storage API method names in Cloud Audit Logs or Service Runtime API metrics."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "EMFLS", "item": "https://emfls.github.io/"},
+    {"@type": "ListItem", "position": 2, "name": "Tools", "item": "https://emfls.github.io/util/"},
+    {"@type": "ListItem", "position": 3, "name": "BigQuery Storage API v1beta1 Shutdown Checker", "item": "https://emfls.github.io/util/bigquery-storage-api-v1beta1-deprecation-v1-migration-checker/"}
+  ]
+}
+</script>
+<style>
+  .tool-nav { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 20px; margin-bottom: 14px; }
+  .tool-nav a { color: #e2e8f0; }
+  .tool-nav .logo { color: #fff; font-size: 1.25rem; font-weight: 800; text-decoration: none; }
+  .tool-nav .logo span { color: #60a5fa; }
+  .takeaways { border-inline-start: 5px solid #60a5fa; }
+  .takeaways p:last-child, .finding ol { margin-bottom: 0; }
+  .tool-shell [hidden] { display: none; }
+  .panel, .hero { overflow-wrap: anywhere; }
+  .lanes { margin: 0; padding-inline-start: 1.4rem; }
+  .lanes li + li { margin-top: 6px; }
+  .preset-label { margin-bottom: 6px; }
+  .block { margin-top: 18px; }
+  fieldset, .grid > * { min-width: 0; }
+  fieldset { margin: 18px 0; padding: 12px; border: 1px solid #d9e0ea; border-radius: 10px; }
+  legend { color: #173f8a; font-weight: 800; padding-inline: 4px; }
+  .actions > *, select, textarea { min-width: 0; max-width: 100%; }
+  textarea { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+  .result { white-space: normal; }
+  .result h3, .finding h5 { margin: 0 0 6px; }
+  .result h4 { margin: 16px 0 8px; }
+  .finding { border-inline-start: 4px solid #64748b; background: #fff; border-radius: 8px; margin: 8px 0; padding: 12px; }
+  .finding h5 { font-size: 1rem; }
+  .finding p { margin: 4px 0 8px; }
+  .finding .verdict { font-weight: 800; }
+  .finding.action { border-color: #b45309; }
+  .finding.action .verdict { color: #92400e; }
+  .finding.pass { border-color: #15803d; }
+  .finding.pass .verdict { color: #166534; }
+  .finding.data { border-color: #2563eb; }
+  .finding.data .verdict { color: #1e40af; }
+  .emfls-ad-slot { width: 100%; max-width: 520px; min-height: 278px; margin: 36px auto; text-align: center; }
+  .ad-label { height: 28px; font: 12px/20px system-ui,sans-serif; color: #cbd5e1; }
+  .emfls-ad-slot ins { width: 100%; height: 250px; }
+</style>
+</head>
+<body>
+<main class="tool-shell">
+  <nav class="tool-nav" aria-label="Site navigation">
+    <a class="logo" href="/" aria-label="EMFLS home">emfls<span>.</span></a>
+    <a href="/util/">All tools</a>
+  </nav>
+
+  <header class="hero">
+    <h1>BigQuery Storage API v1beta1 Shutdown Checker</h1>
+    <p>Audit projects, gRPC clients and connectors before <strong>August 31, 2027</strong>, when all BigQuery Storage Read <code>v1beta1</code> calls will return <code>NOT_FOUND</code>.</p>
+  </header>
+
+  <section class="panel takeaways" aria-labelledby="project-risk-title">
+    <h2 id="project-risk-title">Why existing projects work while new or DR projects fail</h2>
+    <p>Effective <strong>November 20, 2026</strong>, access to <code>google.cloud.bigquery.storage.v1beta1</code> is restricted to Google Cloud projects that actively used <code>v1beta1</code> between <strong>March 1, 2026 and August 31, 2026</strong>. The same legacy workload can keep working in production and fail in a new, staging or disaster-recovery (DR) project without that usage history.</p>
+    <p>Effective <strong>August 31, 2027</strong>, the BigQuery Storage Read <code>v1beta1</code> API on <code>bigquerystorage.googleapis.com</code> shuts down for every project. BigQuery core REST jobs and queries (<code>bigquery.googleapis.com/bigquery/v2</code>) and BigQuery Storage Write API <code>v1</code> are outside this shutdown.</p>
+    <p>Investigate <code>NOT_FOUND</code> by checking the API version, resource names, table existence, dataset location and caller permissions. Older archived <code>v1beta1</code> RPC pages may show pre-announcement text. Use the <a href="https://cloud.google.com/bigquery/docs/release-notes#November_25_2026">November 25, 2026 BigQuery release notes</a> for the shutdown timeline.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="checker-title">
+    <h2 id="checker-title">Check your BigQuery Storage Read migration</h2>
+    <ol class="lanes">
+      <li><strong>Direct gRPC, protobuf and client code.</strong> Identify beta and stable Read API references, core REST and Storage Write calls.</li>
+      <li><strong>Project and environment rollout.</strong> Select project history and the observed symptom to get a verification checklist.</li>
+      <li><strong>Connectors and drivers.</strong> Verify the deployed release and the API it calls during a real read.</li>
+    </ol>
+    <noscript><p>Enable JavaScript to run the checker in this browser.</p></noscript>
+    <form id="checker-form" aria-labelledby="checker-title" autocomplete="off">
+      <p id="examples-label" class="preset-label"><strong>Load an example</strong></p>
+      <div class="actions" role="group" aria-labelledby="examples-label">
+        <button class="secondary" type="button" data-preset="legacy">Legacy Python/Java v1beta1 import</button>
+        <button class="secondary" type="button" data-preset="current">Compliant v1 BigQueryReadClient</button>
+        <button class="secondary" type="button" data-preset="dr">New DR Project + Spark/JDBC Connector Triage</button>
+        <button class="secondary" type="button" data-preset="outside">Core BigQuery SQL REST / Storage Write v1</button>
+      </div>
+      <div class="block">
+        <label for="snippet">Sanitized code, proto descriptors or API method names</label>
+        <p class="note" id="snippet-help">The checker runs entirely in this browser and makes zero network calls. It sends no snippets, project IDs, keys or logs. Paste only the relevant references with private details removed.</p>
+        <textarea id="snippet" aria-describedby="snippet-help" spellcheck="false" maxlength="24000" rows="7" placeholder="from google.cloud.bigquery_storage_v1beta1 import BigQueryStorageClient"></textarea>
+      </div>
+      <fieldset>
+        <legend>Project and environment rollout</legend>
+        <div class="grid">
+          <div>
+            <label for="project-history">Project history</label>
+            <select id="project-history">
+              <option value="unknown">Unknown</option>
+              <option value="active">Active v1beta1 usage Mar 1 – Aug 31, 2026</option>
+              <option value="clean">New / staging / DR project without Mar–Aug 2026 v1beta1 usage</option>
+            </select>
+          </div>
+          <div>
+            <label for="symptom">Observed symptom</label>
+            <select id="symptom">
+              <option value="testing">Testing migration</option>
+              <option value="working">Working today</option>
+              <option value="not-found">NOT_FOUND on CreateReadSession / ReadRows</option>
+            </select>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Connector or driver triage (optional)</legend>
+        <div class="grid">
+          <div>
+            <label for="connector">Deployed connector or driver</label>
+            <select id="connector" aria-describedby="connector-help">
+              <option value="">Select a connector or driver</option>
+              <option value="simba">Simba ODBC/JDBC</option>
+              <option value="google">Google BigQuery ODBC/JDBC</option>
+              <option value="spark">Spark BigQuery connector</option>
+              <option value="beam">Apache Beam BigQuery I/O</option>
+              <option value="trino">Trino BigQuery plugin</option>
+              <option value="scio">Scio BigQuery</option>
+              <option value="other">Other or unknown connector</option>
+            </select>
+          </div>
+          <div>
+            <label for="observed-api">API observed during a connector read</label>
+            <select id="observed-api">
+              <option value="unknown">Unknown or unverified</option>
+              <option value="legacy">Storage Read v1beta1</option>
+              <option value="current">Storage Read v1</option>
+              <option value="outside">BigQuery core REST / Storage Write v1 only</option>
+            </select>
+          </div>
+        </div>
+        <p class="note" id="connector-help">Use sanitized evidence from the deployed read path. A package name, release number or service hostname alone does not establish which API ran.</p>
+      </fieldset>
+      <div class="actions">
+        <button type="submit">Check readiness</button>
+        <button class="secondary" id="clear" type="button">Clear</button>
+      </div>
+    </form>
+    <p id="status" class="note" role="status"></p>
+    <section class="result" id="results" aria-labelledby="results-title" hidden>
+      <h3 id="results-title">Findings and remediation</h3>
+      <div id="findings"></div>
+    </section>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (adsEnabled) { (window.adsbygoogle = window.adsbygoogle || []).push({}); } else { document.currentScript.parentElement.hidden = true; }</script>
+  </aside>
+
+  <section class="panel" aria-labelledby="scope-title">
+    <h2 id="scope-title">Verify the effective API before rollout</h2>
+    <p>For custom clients, migrate beta imports and generated stubs to <code>google.cloud.bigquery.storage.v1</code> and use the <code>BigQueryRead</code> service. Confirm the effective RPC in a deployed run. <code>ReadSession</code>, <code>CreateReadSession</code> and <code>ReadRows</code> can appear without a version in snippets.</p>
+    <p>For connectors, check the installed release and read configuration against the official vendor or Google release notes for a <code>v1</code> default. In sanitized Cloud Audit Logs or Service Runtime (<code>serviceruntime</code>) API metrics, compare <code>google.cloud.bigquery.storage.v1beta1.BigQueryStorage.*</code> with <code>google.cloud.bigquery.storage.v1.BigQueryRead.*</code> for the same controlled read.</p>
+    <p class="note"><a href="https://cloud.google.com/bigquery/docs/release-notes">BigQuery release notes</a> · <a href="https://cloud.google.com/bigquery/docs/reference/storage">Storage Read API guide</a> · <a href="https://cloud.google.com/bigquery/docs/reference/storage/rpc/google.cloud.bigquery.storage.v1">Storage Read v1 RPC reference</a></p>
+  </section>
+
+  <section class="panel faq" aria-labelledby="faq-title">
+    <h2 id="faq-title">Frequently asked questions</h2>
+    <details>
+      <summary>Why can production work while a new or DR project fails?</summary>
+      <p>Since November 20, 2026, only projects with active v1beta1 usage between March 1 and August 31, 2026 can access that API. A new, staging or disaster-recovery project without that history can fail even when the same workload still works in production.</p>
+    </details>
+    <details>
+      <summary>What shuts down on August 31, 2027?</summary>
+      <p>All calls to BigQuery Storage Read API v1beta1 will return NOT_FOUND. BigQuery core REST jobs and queries (bigquery/v2) and the BigQuery Storage Write API v1 are outside this shutdown.</p>
+    </details>
+    <details>
+      <summary>How should I investigate NOT_FOUND from CreateReadSession or ReadRows?</summary>
+      <p>Check the effective API version and the target table path, existence, dataset location and caller permissions. For ReadRows, also verify that the stream came from a valid read session. Compare the same v1 read in the existing and clean test or DR projects.</p>
+    </details>
+    <details>
+      <summary>How do I confirm which API my connector uses?</summary>
+      <p>Look up the deployed release and its read settings in the official vendor or Google release notes. Then run a controlled read and compare sanitized Storage API method names in Cloud Audit Logs or Service Runtime API metrics.</p>
+    </details>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (adsEnabled) { (window.adsbygoogle = window.adsbygoogle || []).push({}); } else { document.currentScript.parentElement.hidden = true; }</script>
+  </aside>
+
+  <section class="panel" aria-labelledby="related-title">
+    <h2 id="related-title">Related tools</h2>
+    <div class="links">
+      <a href="/util/azure-key-vault-management-api-retirement-arm-bicep-sdk-checker/">Azure Key Vault API Retirement Checker</a>
+      <a href="/util/">All EMFLS tools</a>
+    </div>
+  </section>
+</main>
+<footer>BigQuery Storage Read migration · emfls.github.io</footer>
+<script id="checker-script">
+'use strict';
+
+const lanes = {
+  snippet: 'Direct gRPC, protobuf and client code',
+  project: 'Project and environment rollout',
+  connector: 'Connector and driver triage'
+};
+const verdicts = {
+  action: 'ACTION REQUIRED · Migrate to google.cloud.bigquery.storage.v1',
+  pass: 'COMPLIANT v1',
+  data: 'OUTSIDE THIS v1beta1 SHUTDOWN',
+  unknown: 'API VERSION UNVERIFIED',
+  verify: 'VERIFY IN BOTH PROJECTS',
+  restricted: 'BETA ACCESS RESTRICTED'
+};
+
+function snippetFindings(source) {
+  if (!source.trim()) return [];
+  const findings = [];
+  const legacy = /\b(?:google[./]cloud[./]bigquery[./]storage[./]v1beta1|bigquery_storage_v1beta1|v1beta1\.BigQueryStorageClient)(?![\w-])|\bbigquerystorage\.googleapis\.com\/v1beta1(?![\w-])/i;
+  const stableRead = /\b(?:BigQueryReadClient|BigQueryRead)(?![\w-])/i;
+  const stablePackage = /\b(?:google[./]cloud[./]bigquery[./]storage[./]v1|bigquery_storage_v1)(?![\w-])/i;
+  const write = /\b(?:BigQueryWriteClient|BigQueryWrite|AppendRows)(?![\w-])/i;
+  const core = /\bbigquery\/v2(?![\w-])/i;
+  const unversionedRead = /\b(?:ReadSession|CreateReadSession|ReadRows)(?![\w-])/i;
+  const hasWrite = write.test(source);
+  const hasLegacy = legacy.test(source);
+  const hasStable = stableRead.test(source) || (stablePackage.test(source) && !hasWrite);
+
+  if (hasLegacy) findings.push({
+    lane: 'snippet', title: 'Legacy Storage Read reference', status: 'action',
+    detail: 'The snippet contains a BigQuery Storage Read v1beta1 marker.',
+    steps: [
+      'Update imports and regenerate protobuf or gRPC stubs for google.cloud.bigquery.storage.v1. Use the BigQueryRead service or BigQueryReadClient.',
+      'Confirm the deployed read calls google.cloud.bigquery.storage.v1.BigQueryRead, then run the project checks below.'
+    ]
+  });
+  if (hasStable) findings.push({
+    lane: 'snippet', title: 'Stable Storage API reference', status: 'pass',
+    detail: 'The snippet contains a v1 marker or BigQueryRead client reference. Confirm that the deployed read uses this path.',
+    steps: ['Verify that the runtime method is under google.cloud.bigquery.storage.v1.BigQueryRead.']
+  });
+  if (core.test(source) || hasWrite) findings.push({
+    lane: 'snippet', title: 'BigQuery core REST or Storage Write reference', status: 'data',
+    detail: 'BigQuery core REST v2 and the Storage Write API v1 are outside this Storage Read shutdown.',
+    steps: ['Check any separate Storage Read paths used by the same workload.']
+  });
+  // These RPC or message names occur without a version in imports and descriptors.
+  if (!hasLegacy && !hasStable && (unversionedRead.test(source) || findings.length === 0)) findings.push({
+    lane: 'snippet', title: 'No versioned Storage Read reference identified', status: 'unknown',
+    detail: unversionedRead.test(source) ?
+      'ReadSession, CreateReadSession and ReadRows names alone cannot distinguish v1beta1 from v1.' :
+      'The pasted text has no recognized API package, client or method marker.',
+    steps: ['Check the fully qualified import, protobuf package or deployed RPC service and method.']
+  });
+  return findings;
+}
+
+const projectHistory = {
+  active: 'A project with active v1beta1 usage from March 1 through August 31, 2026 can retain beta access until the shutdown.',
+  clean: 'A project without active v1beta1 usage in that window has been ineligible for beta access since November 20, 2026.',
+  unknown: 'Establish whether this project actively used v1beta1 from March 1 through August 31, 2026 using available historical records.'
+};
+const projectSymptoms = {
+  working: 'A successful read today can still use the beta API. Verify the effective runtime method before treating the workload as migrated.',
+  'not-found': 'NOT_FOUND may reflect the beta restriction or an issue with the target resource or read stream. Verify both the API version and resource details.',
+  testing: 'Use the same candidate v1 deployment and equivalent sample data in both projects.'
+};
+
+function projectFinding(history, symptom) {
+  const status = history === 'clean' ? 'restricted' : 'verify';
+  return {
+    lane: 'project', title: 'Project rollout risk', status,
+    detail: projectHistory[history] + ' ' + projectSymptoms[symptom],
+    steps: [
+      'Run the following sequence twice using each project’s workload identity: once in an existing project and once in a clean, non-allowlisted test or DR project.',
+      'Call v1 CreateReadSession against a known sample table, then use ReadRows to decode a sample in the Arrow or Avro format your workload uses.',
+      'Verify the expected results of a row restriction and column selection. Exercise transient-error retry and stream resume behavior, checking for missing or duplicate rows.',
+      'If CreateReadSession or ReadRows returns NOT_FOUND, confirm the deployed API version (v1beta1 or v1). Verify the exact projects/{project}/datasets/{dataset}/tables/{table} path, table existence, dataset location and caller permissions for the table and read session. For ReadRows, also verify the stream name and session validity.',
+      'Compare the API version, returned data and retry results across both projects before rollout.'
+    ]
+  };
+}
+
+const connectorObservations = {
+  unknown: ['unknown', 'Verify the deployed connector’s effective API with a controlled read.'],
+  legacy: ['action', 'The selected runtime evidence shows Storage Read v1beta1. Upgrade or configure the deployed read path for v1 and retest.'],
+  current: ['pass', 'The selected runtime evidence shows Storage Read v1 for the observed connector path.'],
+  outside: ['data', 'The selected runtime evidence shows only core REST or Storage Write v1. If this connector has another read mode, trace that mode separately.']
+};
+
+function connectorFinding(title, observed) {
+  const [status, detail] = connectorObservations[observed];
+  return {
+    lane: 'connector', title, status, detail,
+    steps: [
+      'Identify the connector or driver release actually loaded in each deployment, including bundled dependencies. Check the official vendor or Google release notes for that release’s v1 default and verify read mode or configuration overrides.',
+      'Run a representative read and inspect sanitized Cloud Audit Logs or Service Runtime (serviceruntime) API metrics for that window. Compare google.cloud.bigquery.storage.v1beta1.BigQueryStorage.* with google.cloud.bigquery.storage.v1.BigQueryRead.*.',
+      'If the telemetry lacks the exact service and method, inspect a sanitized client or gRPC trace or check the deployed generated stubs. Repeat the read check after any update or configuration change.'
+    ]
+  };
+}
+
+const presets = {
+  legacy: {
+    snippet: 'from google.cloud.bigquery_storage_v1beta1 import BigQueryStorageClient\nimport com.google.cloud.bigquery.storage.v1beta1.Storage.ReadSession;',
+    history: 'active',
+    symptom: 'working'
+  },
+  current: {
+    snippet: 'from google.cloud import bigquery_storage_v1\nclient = bigquery_storage_v1.BigQueryReadClient()'
+  },
+  dr: { snippet: '', history: 'clean', symptom: 'not-found', connector: 'spark' },
+  outside: {
+    snippet: 'POST https://bigquery.googleapis.com/bigquery/v2/projects/example-project/queries\nfrom google.cloud.bigquery_storage_v1 import BigQueryWriteClient',
+    symptom: 'working'
+  }
+};
+
+const get = id => document.getElementById(id);
+const form = get('checker-form');
+const snippet = get('snippet');
+const historySelect = get('project-history');
+const symptom = get('symptom');
+const connector = get('connector');
+const observedApi = get('observed-api');
+const statusLine = get('status');
+const results = get('results');
+const findingsList = get('findings');
+
+function element(tag, text, className) {
+  const node = document.createElement(tag);
+  if (text) node.textContent = text;
+  if (className) node.className = className;
+  return node;
+}
+
+function renderFinding(finding) {
+  const style = { verify: 'unknown', restricted: 'action' }[finding.status] || finding.status;
+  const card = element('article', '', 'finding ' + style);
+  card.append(element('h5', finding.title), element('p', verdicts[finding.status], 'verdict'),
+    element('p', finding.detail));
+  const checklist = element('ol');
+  for (const step of finding.steps) checklist.append(element('li', step));
+  card.append(checklist);
+  return card;
+}
+
+function runCheck() {
+  const findings = snippetFindings(snippet.value);
+  const needsRollout = findings.length === 0 || findings.some(finding => finding.status !== 'data') ||
+    historySelect.value !== 'unknown' || symptom.value === 'not-found' ||
+    Boolean(connector.value) || ['legacy', 'current'].includes(observedApi.value);
+  if (needsRollout) findings.push(projectFinding(historySelect.value, symptom.value));
+  if (connector.value || observedApi.value !== 'unknown') {
+    const title = connector.value ? connector.selectedOptions[0].textContent : 'Connector API evidence';
+    findings.push(connectorFinding(title, observedApi.value));
+  }
+  findingsList.replaceChildren();
+  for (const [lane, label] of Object.entries(lanes)) {
+    const group = findings.filter(finding => finding.lane === lane);
+    if (!group.length) continue;
+    const section = element('section');
+    section.append(element('h4', label), ...group.map(renderFinding));
+    findingsList.append(section);
+  }
+  results.hidden = false;
+  const actions = findings.filter(finding => finding.status === 'action').length;
+  statusLine.textContent = findings.length + (findings.length === 1 ? ' finding.' : ' findings.') +
+    (actions ? ' Review the migration actions below.' : ' Review the results below.');
+}
+
+function clearResults() {
+  results.hidden = true;
+  findingsList.replaceChildren();
+  statusLine.textContent = '';
+}
+
+form.addEventListener('submit', event => {
+  event.preventDefault();
+  runCheck();
+});
+form.addEventListener('input', clearResults);
+for (const button of form.querySelectorAll('[data-preset]')) {
+  button.addEventListener('click', () => {
+    const preset = presets[button.dataset.preset];
+    form.reset();
+    snippet.value = preset.snippet;
+    historySelect.value = preset.history || 'unknown';
+    symptom.value = preset.symptom || 'testing';
+    connector.value = preset.connector || '';
+    runCheck();
+  });
+}
+get('clear').addEventListener('click', () => {
+  form.reset();
+  clearResults();
+  snippet.focus();
+});
+</script>
+</body>
+</html>
