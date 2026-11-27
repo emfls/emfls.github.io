@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>US S-Corp Reasonable Salary & QBI Tax Calculator 2026</title>
+  <meta name="description" content="Calculate 2026 US S-Corp reasonable salary vs distribution SE tax savings ($184,500 OASDI cap, 0.9% Medicare), Section 199A 20% QBI impact, and CPA fees.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://emfls.github.io/util/us-s-corp-reasonable-salary-se-tax-qbi-2026-calculator/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="US S-Corp Reasonable Salary & QBI Tax Calculator 2026">
+  <meta property="og:description" content="Calculate 2026 US S-Corp reasonable salary vs distribution SE tax savings ($184,500 OASDI cap, 0.9% Medicare), Section 199A 20% QBI impact, and CPA fees.">
+  <meta property="og:url" content="https://emfls.github.io/util/us-s-corp-reasonable-salary-se-tax-qbi-2026-calculator/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="US S-Corp Reasonable Salary & QBI Tax Calculator 2026">
+  <meta name="twitter:description" content="Calculate 2026 US S-Corp reasonable salary vs distribution SE tax savings ($184,500 OASDI cap, 0.9% Medicare), Section 199A 20% QBI impact, and CPA fees.">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QP5Q67GE5B');
+  </script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "2026 US S-Corp Reasonable Salary vs Distribution SE Tax &amp; QBI 199A Calculator", "url": "https://emfls.github.io/util/us-s-corp-reasonable-salary-se-tax-qbi-2026-calculator/", "applicationCategory": "FinanceApplication", "operatingSystem": "All", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Calculate 2026 US S-Corp reasonable salary vs distribution SE tax savings ($184,500 OASDI cap, 0.9% Medicare), Section 199A 20% QBI impact, and CPA fees."}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://emfls.github.io/"}, {"@type": "ListItem", "position": 2, "name": "US Tax & Finance Calculators 2026", "item": "https://emfls.github.io/util/us-tax-finance-calculators-2026/"}, {"@type": "ListItem", "position": 3, "name": "US S-Corp Salary vs Distribution", "item": "https://emfls.github.io/util/us-s-corp-reasonable-salary-se-tax-qbi-2026-calculator/"}]}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is the 2026 Social Security (OASDI) wage cap for S-Corp salaries?", "acceptedAnswer": {"@type": "Answer", "text": "For 2026, the official SSA OASDI taxable wage base is $184,500. Both the employee and employer pay 6.2% up to $184,500 ($11,439 each, or $22,878 combined). Any W-2 wages above $184,500 owe 0% Social Security tax but still owe 2.9% Medicare (plus 0.9% Additional Medicare above $200k/$250k)."}}, {"@type": "Question", "name": "At what profit level does an S-Corp make sense in 2026?", "acceptedAnswer": {"@type": "Answer", "text": "For most solo service businesses, an S-Corp begins generating clear net savings once consistent annual net profit exceeds $95,000 to $120,000—enough for self-employment tax savings to outweigh QBI deduction reductions and $2,500–$3,500 in annual payroll and Form 1120-S CPA costs."}}, {"@type": "Question", "name": "Does an S-Corp save money if my reasonable salary is already above $184,500?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, though savings shrink to Medicare taxes (2.9% base Medicare + 0.9% Additional Medicare = 3.8% saved on K-1 distributions above $200k/$250k). For a business netting $500,000 with a $185,000 W-2 salary, shielding $315,000 from 3.8% Medicare still saves nearly $12,000 per year."}}, {"@type": "Question", "name": "Why did my QBI deduction drop when I switched to an S-Corp in the calculator?", "acceptedAnswer": {"@type": "Answer", "text": "Under IRC Section 199A, W-2 wages do not qualify as Qualified Business Income—only K-1 pass-through profit qualifies. However, for non-SSTB businesses above the QBI phase-out threshold, S-Corp W-2 wages can actually restore a QBI deduction that a Schedule C sole proprietor with $0 W-2 wages would otherwise lose."}}, {"@type": "Question", "name": "Do state S-Corp taxes affect the break-even calculation?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. States like California (1.5% franchise tax, $800 minimum), New York City (Unincorporated/General Corporation Tax rules), Illinois (1.5% replacement tax), and Texas have state-level entity fees that should be added into the Annual S-Corp Admin Cost input above."}}]}</script>
+  <style>
+:root {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-alt: #f1f5f9;
+  --text: #0f172a;
+  --muted: #475569;
+  --border: #cbd5e1;
+  --accent: #1d4ed8;
+  --accent-dark: #1e3a8a;
+  --accent-soft: #eff6ff;
+  --ok-bg: #ecfdf5;
+  --ok-text: #065f46;
+  --ok-border: #6ee7b7;
+  --warn-bg: #fffbeb;
+  --warn-text: #92400e;
+  --warn-border: #fcd34d;
+  --danger-bg: #fef2f2;
+  --danger-text: #991b1b;
+  --danger-border: #fca5a5;
+  --radius: 12px;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  background: var(--bg); color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+  line-height: 1.62;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.wrap { width: 100%; max-width: 1040px; margin: 0 auto; padding: 12px 14px 48px; }
+.topbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.82rem; color: var(--muted); margin-bottom: 8px; }
+.breadcrumb { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.hero { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); color: #ffffff; border-radius: var(--radius); padding: 14px 16px; margin-bottom: 14px; }
+.hero h1 { margin: 0 0 6px; font-size: clamp(1.16rem, 3.6vw, 1.58rem); line-height: 1.24; letter-spacing: -0.015em; }
+.hero p { margin: 0; font-size: 0.88rem; color: #dbeafe; line-height: 1.45; }
+.calc-grid { display: flex; flex-direction: column; gap: 14px; margin-bottom: 16px; }
+@media (min-width: 860px) { .calc-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); align-items: start; gap: 18px; } }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; min-width: 0; width: 100%; max-width: 100%; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04); }
+.card h2 { margin: 0 0 12px; font-size: 1.08rem; color: var(--text); }
+.preset-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.preset-btn { background: var(--accent-soft); color: var(--accent-dark); border: 1px solid #bfdbfe; border-radius: 999px; padding: 6px 11px; font-size: 0.78rem; font-weight: 600; cursor: pointer; }
+.preset-btn:hover { background: #dbeafe; }
+.field-grid { display: flex; flex-direction: column; gap: 11px; }
+.field { display: flex; flex-direction: column; gap: 4px; min-width: 0; width: 100%; }
+.field label { font-size: 0.85rem; font-weight: 600; color: var(--text); }
+.field .hint { font-size: 0.76rem; color: var(--muted); }
+.field input[type="number"], .field select { width: 100%; max-width: 100%; min-height: 42px; padding: 9px 11px; font-size: 0.95rem; color: var(--text); background: #ffffff; border: 1px solid var(--border); border-radius: 8px; }
+.field input:focus, .field select:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.check-field { display: flex; align-items: flex-start; gap: 9px; padding: 8px 10px; background: var(--surface-alt); border-radius: 8px; font-size: 0.86rem; }
+.check-field input[type="checkbox"] { width: 18px; height: 18px; margin-top: 2px; flex: 0 0 auto; }
+.primary-btn { width: 100%; margin-top: 6px; padding: 11px 16px; background: var(--accent); color: #ffffff; border: none; border-radius: 8px; font-size: 0.96rem; font-weight: 700; cursor: pointer; }
+.primary-btn:hover { background: var(--accent-dark); }
+.kpi-hero { background: var(--accent-soft); border: 1px solid #bfdbfe; border-radius: 10px; padding: 14px; margin-bottom: 12px; }
+.kpi-label { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--accent-dark); }
+.kpi-value { font-size: clamp(1.45rem, 5vw, 2.02rem); font-weight: 800; color: #0f172a; margin: 2px 0 4px; word-break: break-word; }
+.kpi-sub { font-size: 0.84rem; color: var(--muted); }
+.status-banner { border-radius: 8px; padding: 10px 12px; font-size: 0.85rem; font-weight: 600; margin-bottom: 12px; border: 1px solid var(--border); }
+.status-ok { background: var(--ok-bg); color: var(--ok-text); border-color: var(--ok-border); }
+.status-warn { background: var(--warn-bg); color: var(--warn-text); border-color: var(--warn-border); }
+.status-danger { background: var(--danger-bg); color: var(--danger-text); border-color: var(--danger-border); }
+.metrics-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 12px; }
+.metric-box { background: var(--surface-alt); border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; min-width: 0; }
+.metric-box .m-label { font-size: 0.74rem; color: var(--muted); margin-bottom: 2px; }
+.metric-box .m-val { font-size: 0.98rem; font-weight: 700; color: var(--text); word-break: break-word; }
+.breakdown-list { list-style: none; margin: 0; padding: 0; border-top: 1px solid #e2e8f0; }
+.breakdown-list li { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-bottom: 1px solid #e2e8f0; font-size: 0.86rem; }
+.breakdown-list li span:first-child { color: var(--muted); }
+.breakdown-list li span:last-child { font-weight: 600; text-align: right; }
+.next-check-card { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: var(--radius); padding: 14px 16px; margin: 14px 0 16px; }
+.next-check-card h2 { margin: 0 0 8px; font-size: 0.98rem; color: #0c4a6e; }
+.next-check-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+@media (min-width: 680px) { .next-check-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.next-link { display: block; background: #ffffff; border: 1px solid #bae6fd; border-radius: 8px; padding: 11px 12px; color: #0f172a; }
+.next-link:hover { border-color: var(--accent); text-decoration: none; background: #f8fafc; }
+.next-link strong { display: block; color: var(--accent-dark); font-size: 0.92rem; margin-bottom: 3px; }
+.next-link span { display: block; font-size: 0.81rem; color: var(--muted); }
+.ad-slot-wrap { min-height: 250px; margin: 16px 0; background: #f1f5f9; border: 1px dashed #cbd5e1; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 8px; overflow: hidden; }
+.ad-label { font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: #64748b; margin-bottom: 4px; }
+.content-section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 18px; margin-bottom: 16px; min-width: 0; width: 100%; max-width: 100%; }
+.content-section h2 { margin: 0 0 10px; font-size: 1.2rem; color: #0f172a; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; }
+.content-section h3 { margin: 16px 0 6px; font-size: 1.02rem; color: #1e293b; }
+.content-section p { margin: 0 0 11px; color: #334155; font-size: 0.94rem; }
+.content-section ul, .content-section ol { margin: 0 0 12px; padding-left: 20px; color: #334155; font-size: 0.93rem; }
+.content-section li { margin-bottom: 6px; }
+.table-wrap { width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 12px 0; border: 1px solid #e2e8f0; border-radius: 8px; }
+table { width: 100%; border-collapse: collapse; min-width: 480px; font-size: 0.86rem; }
+th, td { padding: 9px 10px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+th { background: #f1f5f9; color: #0f172a; font-weight: 700; }
+.callout { background: var(--warn-bg); border-left: 4px solid #d97706; padding: 12px 14px; border-radius: 6px; font-size: 0.88rem; color: #78350f; margin: 12px 0; }
+.faq-item { border-bottom: 1px solid #e2e8f0; padding: 12px 0; }
+.faq-item:last-child { border-bottom: none; }
+.faq-item h3 { margin: 0 0 6px; font-size: 0.98rem; color: #0f172a; }
+.faq-item p { margin: 0; font-size: 0.91rem; color: #334155; }
+.site-footer { margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 0.82rem; color: var(--muted); display: flex; flex-direction: column; gap: 8px; }
+.footer-links { display: flex; flex-wrap: wrap; gap: 12px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Home</a><span>/</span>
+        <a href="/util/us-tax-finance-calculators-2026/">US Tax & Finance Calculators 2026</a><span>/</span>
+        <span>US S-Corp Salary vs Distribution</span>
+      </nav>
+      <span>2026 SSA Cap $184,500 · QBI 199A</span>
+    </header>
+
+    <section class="hero">
+      <h1>2026 US S-Corp Reasonable Salary vs Distribution SE Tax &amp; QBI 199A Calculator</h1>
+      <p>Compare Single-Member LLC self-employment tax against an S-Corp W-2 salary + K-1 distribution split using the official 2026 $184,500 SSA OASDI cap, 0.9% Additional Medicare, and Section 199A 20% QBI deduction.</p>
+    </section>
+
+    <main>
+      <div class="calc-grid">
+        <section class="card" aria-labelledby="inputs-heading">
+          <h2 id="inputs-heading">Business Profit, W-2 Salary & Tax Profile</h2>
+          
+          <div class="preset-row">
+            <button type="button" class="preset-btn" data-preset="consult220">$220k Consultant ($95k W-2)</button>
+            <button type="button" class="preset-btn" data-preset="agency400">$400k Agency ($145k W-2)</button>
+            <button type="button" class="preset-btn" data-preset="early90">$90k Early LLC</button>
+          </div>
+          <div class="field-grid">
+            <div class="field">
+              <label for="netBusinessProfit">Annual Net Business Profit Before Owner Pay ($ USD)</label>
+              <input type="number" id="netBusinessProfit" value="220000" min="10000" max="10000000" step="5000">
+            </div>
+            <div class="field">
+              <label for="reasonableSalary">S-Corp W-2 Reasonable Salary ($ USD)</label>
+              <input type="number" id="reasonableSalary" value="95000" min="10000" max="10000000" step="5000">
+              <span class="hint">2026 SSA OASDI cap: $184,500 (6.2% each = $11,439 max). IRS scrutinizes artificially low W-2 splits.</span>
+            </div>
+            <div class="field">
+              <label for="filingStatus">Federal Tax Filing Status (Additional 0.9% Medicare Threshold)</label>
+              <select id="filingStatus">
+                <option value="single" selected>Single ($200,000 Additional Medicare threshold)</option>
+                <option value="mfj">Married Filing Jointly ($250,000 Additional Medicare threshold)</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="federalMarginalRatePct">Federal Marginal Income Tax Bracket (%)</label>
+              <select id="federalMarginalRatePct">
+                <option value="12">12% Bracket</option>
+                <option value="22">22% Bracket</option>
+                <option value="24" selected>24% Bracket</option>
+                <option value="32">32% Bracket</option>
+                <option value="35">35% Bracket</option>
+                <option value="37">37% Bracket</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="scorpComplianceCost">Annual S-Corp Payroll, 1120-S CPA &amp; State Admin Fees ($)</label>
+              <input type="number" id="scorpComplianceCost" value="2800" min="0" max="50000" step="200">
+            </div>
+            <label class="check-field" for="qbiEligible">
+              <input type="checkbox" id="qbiEligible" checked>
+              <span><strong>Eligible for Section 199A 20% QBI Deduction</strong> (models the exact QBI reduction caused by S-Corp W-2 wages)</span>
+            </label>
+            <button type="button" id="calcBtn" class="primary-btn">Calculate 2026 S-Corp Net Savings</button>
+          </div>
+        
+        </section>
+
+        <section class="card" aria-labelledby="results-heading" aria-live="polite">
+          <h2 id="results-heading">2026 LLC vs S-Corp Net Tax Savings</h2>
+          
+          <div class="kpi-hero">
+            <div class="kpi-label">Net Annual S-Corp Advantage (After QBI &amp; CPA Costs)</div>
+            <div class="kpi-value" id="resNetSave">$8,342</div>
+            <div class="kpi-sub" id="resSub">Gross SE Tax Saved $14,321 · Less QBI/Deduction Shift &amp; $2,800 Compliance</div>
+          </div>
+          <div class="status-banner status-ok" id="resStatusBanner">S-Corp Election Recommended: Net annual tax savings comfortably exceed payroll and 1120-S CPA costs.</div>
+          <div class="metrics-grid">
+            <div class="metric-box"><div class="m-label">LLC Self-Employment Tax</div><div class="m-val" id="resLlcSe">$28,799</div></div>
+            <div class="metric-box"><div class="m-label">S-Corp Payroll FICA Tax</div><div class="m-val" id="resScFica">$14,535</div></div>
+            <div class="metric-box"><div class="m-label">S-Corp K-1 Distribution</div><div class="m-val" id="resK1">$114,933</div></div>
+            <div class="metric-box"><div class="m-label">QBI Tax Cost Delta</div><div class="m-val" id="resQbiCost">-$4,250</div></div>
+          </div>
+          <ul class="breakdown-list">
+            <li><span>W-2 Salary Ratio (% of Profit)</span><span id="resSalPct">43.2%</span></li>
+            <li><span>LLC 20% QBI Deduction</span><span id="resLlcQbi">$41,126</span></li>
+            <li><span>S-Corp 20% QBI Deduction (on K-1 only)</span><span id="resScQbi">$22,987</span></li>
+            <li><span>Gross SE / FICA Tax Savings</span><span id="resGrossSe">$14,264</span></li>
+          </ul>
+        
+        </section>
+      </div>
+
+      <section class="next-check-card" aria-label="Next Essential Check">
+        <h2>Next Check: Related US Tax &amp; Property Calculators</h2>
+        <div class="next-check-grid">
+          <a class="next-link" href="/util/us-solo-401k-vs-sep-ira-contribution-limit-2026-calculator/"><strong>2026 US Solo 401(k) vs SEP IRA Contribution Calculator</strong><span>Coordinate your S-Corp W-2 reasonable salary with maximum employer + employee Solo 401(k) deferrals.</span></a>
+<a class="next-link" href="/util/us-self-employed-health-insurance-deduction-form-7206-scorp-2-percent-2026-calculator/"><strong>2026 S-Corp 2% Shareholder Health Insurance (Form 7206)</strong><span>Model W-2 Box 1 inclusion rules so >2% S-Corp owners preserve the full health insurance deduction.</span></a>
+        </div>
+      </section>
+
+      <div class="ad-slot-wrap" aria-label="Advertisement">
+  <span class="ad-label">Advertisement</span>
+  <ins class="adsbygoogle"
+       style="display:block;width:100%;min-height:250px;"
+       data-ad-client="ca-pub-8830524482034754"
+       data-ad-slot="6016035748"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+    if (!['127.0.0.1', 'localhost', ''].includes(location.hostname)) {
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    }
+  </script>
+</div>
+
+      
+      <section class="content-section">
+        <h2>How the 2026 S-Corp Election Saves Self-Employment Tax (and Where Hidden Offsets Bite)</h2>
+        <p>When a US freelancer, agency founder, or independent consultant operates as a default Single-Member LLC (Schedule C sole proprietorship), <strong>92.35% of net business profit</strong> is hit with federal Self-Employment (SE) tax: <strong>12.4% Social Security (OASDI)</strong> up to the official <strong>2026 SSA wage base of $184,500</strong> (maximum $22,878), plus <strong>2.9% Medicare</strong> on every dollar with no ceiling, plus an extra <strong>0.9% Additional Medicare Tax</strong> above $200,000 (Single) or $250,000 (Married Filing Jointly). For a solo business netting $220,000 in 2026, Schedule C self-employment taxes alone top $28,700 before federal or state income tax is even touched.</p>
+        <p>Filing IRS Form 2553 to elect <strong>S-Corporation tax status</strong> splits your business profit into two legally distinct streams: a <strong>W-2 Reasonable Salary</strong> (subject to standard 15.3% combined employee + employer FICA payroll tax up to $184,500 OASDI) and <strong>Schedule K-1 Owner Distributions</strong> (completely exempt from the 15.3% Social Security, Medicare, and 0.9% Additional Medicare payroll taxes). However, many online S-Corp calculators exaggerate savings by ignoring two real-world offsets that this 2026 calculator models explicitly: the <strong>Section 199A 20% Qualified Business Income (QBI) deduction shrinkage</strong> and annual S-Corp payroll/Form 1120-S CPA compliance overhead.</p>
+
+        <h3>The Section 199A QBI Trade-Off Every S-Corp Owner Must Understand</h3>
+        <p>Under IRC Section 199A, eligible pass-through owners can deduct 20% of Qualified Business Income—but <strong>W-2 wages paid to an S-Corp shareholder-employee do NOT count as QBI</strong>. Under a Single-Member LLC netting $220,000, roughly $205,600 (net profit minus half of SE tax) qualifies for the 20% QBI deduction (~$41,126 deduction). Once you elect S-Corp status and pay yourself a $95,000 W-2 salary, only the remaining K-1 pass-through profit (~$114,900) qualifies for 20% QBI (~$22,987 deduction). In the 24% federal bracket, losing ~$18,139 of QBI deduction costs roughly $4,353 in extra federal income tax—partially offsetting your $14,264 FICA savings. Even after that QBI offset and $2,800 in payroll/1120-S CPA fees, however, the net S-Corp advantage remains strongly positive above roughly $100,000–$120,000 in net profit.</p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>2026 Tax Component</th>
+                <th>Single-Member LLC (Schedule C)</th>
+                <th>S-Corporation (Form 1120-S)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>2026 OASDI Wage Cap (12.4%)</strong></td><td>$184,500 (on 92.35% of net profit)</td><td>$184,500 (on W-2 salary ONLY; K-1 exempt)</td></tr>
+              <tr><td><strong>Medicare (2.9% + 0.9% Add.)</strong></td><td>All SE earnings (uncapped)</td><td>W-2 salary ONLY (K-1 completely exempt)</td></tr>
+              <tr><td><strong>Section 199A 20% QBI Base</strong></td><td>Net profit minus 1/2 SE tax</td><td>K-1 net profit only (W-2 wages excluded, but satisfies W-2 wage test at high income)</td></tr>
+              <tr><td><strong>Compliance Overhead</strong></td><td>Minimal (Schedule C on Form 1040)</td><td>Payroll software + Form 1120-S ($2,200–$4,500/yr)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+        
+
+      <div class="ad-slot-wrap" aria-label="Advertisement">
+  <span class="ad-label">Advertisement</span>
+  <ins class="adsbygoogle"
+       style="display:block;width:100%;min-height:250px;"
+       data-ad-client="ca-pub-8830524482034754"
+       data-ad-slot="6016035748"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+    if (!['127.0.0.1', 'localhost', ''].includes(location.hostname)) {
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    }
+  </script>
+</div>
+
+      
+      <section class="content-section">
+        <h2>Setting an IRS-Defensible 2026 Reasonable Salary Without Overpaying FICA</h2>
+        <p>There is no statutory "50/50" or "60/40" IRS safe harbor for S-Corp reasonable compensation—that popular rule of thumb has zero backing in the Internal Revenue Code or Tax Court precedent. Under IRC § 3121 and Revenue Ruling 74-44, if an S-Corp shareholder performs substantial services and takes distributions while paying an artificially tiny W-2 salary, the IRS can reclassify distributions as wages and assess back payroll taxes plus 100% Trust Fund Recovery Penalties and accuracy penalties.</p>
+        <p>Instead, tax attorneys and CPAs substantiate reasonable salary using three objective methods:</p>
+        <ul>
+          <li><strong>Cost Approach (Many-Hats Method):</strong> Break your annual hours into specific functional roles (e.g., 55% senior technical execution, 20% sales/business development, 15% project management, 10% bookkeeping) and price each slice using Bureau of Labor Statistics (BLS) regional wage medians.</li>
+          <li><strong>Market Approach (Comparable Replacement Cost):</strong> Document what an unrelated business would pay an experienced employee to perform your exact duties in your metropolitan area.</li>
+          <li><strong>High-Income QBI Wage-Limitation Synergy:</strong> Above the 2026 Section 199A taxable income phase-in thresholds (for non-SSTB businesses), QBI is capped at <strong>50% of W-2 wages paid</strong>. For owners netting $350,000–$600,000+, paying a slightly higher W-2 salary (often near 28.57% of profit) actually <em>unlocks</em> a much larger QBI deduction that outweighs the extra Medicare payroll tax!</li>
+        </ul>
+
+        <h3>Worked 2026 Profit-Level Comparison: When S-Corp Savings Accelerate</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Net Business Profit</th>
+                <th>Reasonable W-2 Salary</th>
+                <th>LLC SE Tax</th>
+                <th>S-Corp FICA Tax</th>
+                <th>Estimated Net Annual Savings</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>$100,000</td><td>$55,000</td><td>$14,130</td><td>$8,415</td><td>~$1,500 – $2,200 (Borderline)</td></tr>
+              <tr><td>$220,000</td><td>$95,000</td><td>$28,799</td><td>$14,535</td><td><strong>~$8,300+ / yr (Strong Win)</strong></td></tr>
+              <tr><td>$400,000</td><td>$145,000</td><td>$35,127</td><td>$22,185</td><td><strong>~$6,500 – $9,500+ / yr</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>Beyond payroll tax arbitrage, electing S-Corp status also enables strategic retirement and healthcare stacking. Pairing your W-2 reasonable salary with a Solo 401(k) lets you contribute both the employee elective deferral and a 25% employer profit-sharing contribution calculated on W-2 wages, while reporting health insurance premiums properly in W-2 Box 1 preserves your Form 7206 self-employed health insurance deduction without triggering FICA payroll tax on those premiums. Finally, consider state Pass-Through Entity Tax (PTET) elections available in over 35 states in 2026: paying state income tax at the S-Corp entity level bypasses the individual SALT deduction cap on Schedule A, frequently adding another $2,000 to $6,000 in annual federal tax savings on top of self-employment tax reductions.</p>
+
+        <div class="callout">
+          <strong>Form 2553 Filing Deadline:</strong> To elect S-Corp status for a calendar tax year, Form 2553 must generally be filed by <strong>March 15</strong> of that tax year (or within 2 months and 15 days of forming a new LLC). Missed deadlines can often be rescued retroactively using IRS Rev. Proc. 2013-30 late election relief if reasonable cause is documented.
+        </div>
+      </section>
+        
+
+      <section class="content-section" aria-labelledby="faq-heading">
+        <h2 id="faq-heading">Frequently Asked Questions (2026/27)</h2>
+        <div class="faq-item"><h3>What is the 2026 Social Security (OASDI) wage cap for S-Corp salaries?</h3><p>For 2026, the official SSA OASDI taxable wage base is $184,500. Both the employee and employer pay 6.2% up to $184,500 ($11,439 each, or $22,878 combined). Any W-2 wages above $184,500 owe 0% Social Security tax but still owe 2.9% Medicare (plus 0.9% Additional Medicare above $200k/$250k).</p></div>
+<div class="faq-item"><h3>At what profit level does an S-Corp make sense in 2026?</h3><p>For most solo service businesses, an S-Corp begins generating clear net savings once consistent annual net profit exceeds $95,000 to $120,000—enough for self-employment tax savings to outweigh QBI deduction reductions and $2,500–$3,500 in annual payroll and Form 1120-S CPA costs.</p></div>
+<div class="faq-item"><h3>Does an S-Corp save money if my reasonable salary is already above $184,500?</h3><p>Yes, though savings shrink to Medicare taxes (2.9% base Medicare + 0.9% Additional Medicare = 3.8% saved on K-1 distributions above $200k/$250k). For a business netting $500,000 with a $185,000 W-2 salary, shielding $315,000 from 3.8% Medicare still saves nearly $12,000 per year.</p></div>
+<div class="faq-item"><h3>Why did my QBI deduction drop when I switched to an S-Corp in the calculator?</h3><p>Under IRC Section 199A, W-2 wages do not qualify as Qualified Business Income—only K-1 pass-through profit qualifies. However, for non-SSTB businesses above the QBI phase-out threshold, S-Corp W-2 wages can actually restore a QBI deduction that a Schedule C sole proprietor with $0 W-2 wages would otherwise lose.</p></div>
+<div class="faq-item"><h3>Do state S-Corp taxes affect the break-even calculation?</h3><p>Yes. States like California (1.5% franchise tax, $800 minimum), New York City (Unincorporated/General Corporation Tax rules), Illinois (1.5% replacement tax), and Texas have state-level entity fees that should be added into the Annual S-Corp Admin Cost input above.</p></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/util/us-tax-finance-calculators-2026/">US Tax & Finance Calculators 2026</a>
+        <a href="/util/2026-global-tax-finance-calculators/">Global 2026 Tax &amp; Finance Hub</a>
+      </div>
+      <p>Educational tax modeling based on 2026 federal SSA ($184,500 OASDI cap) and IRC Section 199A rules. State entity taxes, QBI SSTB phase-outs, and reasonable compensation audits vary by fact pattern. Consult a licensed CPA before filing Form 2553.</p>
+    </footer>
+  </div>
+
+  <script>
+/**
+ * Tool #557: 2026 US S-Corp Reasonable Salary vs Distribution SE Tax & QBI 199A Savings Calculator
+ * Pure ESM, Zero External Dependencies.
+ * Official 2026 Parameters:
+ *   - 2026 SSA OASDI Wage Base: $184,500 (6.2% employee + 6.2% employer = $11,439 each / $22,878 max)
+ *   - Medicare: 2.9% (1.45% + 1.45%), Additional Medicare 0.9% above $200,000 (single) / $250,000 (MFJ)
+ *   - Sole Prop / Single-Member LLC SE Tax Base: 92.35% of net profit (deductible half SE tax reduces QBI & income)
+ *   - Section 199A QBI Deduction: 20% of qualified business income (S-Corp W-2 reduces QBI vs LLC net profit - 1/2 SE tax)
+ */
+
+const US_SCORP_2026 = {
+  oasdiWageCap: 184_500,
+  oasdiRateEach: 0.062,
+  medicareRateEach: 0.0145,
+  addMedicareRate: 0.009,
+  addMedicareThreshold: {
+    single: 200_000,
+    mfj: 250_000,
+  },
+  seFactor: 0.9235,
+  qbiRate: 0.20,
+};
+
+function clamp(v, lo = 0, hi = Number.POSITIVE_INFINITY) {
+  const n = Number(v);
+  return Number.isFinite(n) ? Math.min(hi, Math.max(lo, n)) : lo;
+}
+
+function calcUsSCorpSavings2026(input = {}) {
+  const netBusinessProfit = clamp(input.netBusinessProfit ?? 220_000, 10_000, 10_000_000);
+  const reasonableSalary = clamp(input.reasonableSalary ?? 95_000, 10_000, netBusinessProfit);
+  const filingStatus = input.filingStatus === 'mfj' ? 'mfj' : 'single';
+  const federalMarginalRatePct = clamp(input.federalMarginalRatePct ?? 24, 10, 37);
+  const qbiEligible = Boolean(input.qbiEligible ?? true);
+  const scorpComplianceCost = clamp(input.scorpComplianceCost ?? 2800, 0, 50_000);
+
+  const margRate = federalMarginalRatePct / 100;
+  const addMedThresh = US_SCORP_2026.addMedicareThreshold[filingStatus];
+
+  // --- Scenario A: Single-Member LLC / Sole Proprietorship ---
+  const llcSeEarnings = netBusinessProfit * US_SCORP_2026.seFactor;
+  const llcOasdiTax = Math.min(llcSeEarnings, US_SCORP_2026.oasdiWageCap) * (US_SCORP_2026.oasdiRateEach * 2);
+  const llcMedicareTax = llcSeEarnings * (US_SCORP_2026.medicareRateEach * 2);
+  const llcAddMedicareTax = Math.max(0, llcSeEarnings - addMedThresh) * US_SCORP_2026.addMedicareRate;
+  const llcTotalSeTax = llcOasdiTax + llcMedicareTax + llcAddMedicareTax;
+  const llcHalfSeDeduction = (llcOasdiTax + llcMedicareTax) * 0.5;
+  const llcQbiBase = Math.max(0, netBusinessProfit - llcHalfSeDeduction);
+  const llcQbiDeduction = qbiEligible ? llcQbiBase * US_SCORP_2026.qbiRate : 0;
+
+  // --- Scenario B: S-Corporation (W-2 Reasonable Salary + K-1 Distribution) ---
+  const scorpOasdiEmp = Math.min(reasonableSalary, US_SCORP_2026.oasdiWageCap) * US_SCORP_2026.oasdiRateEach;
+  const scorpOasdiEr = scorpOasdiEmp;
+  const scorpMedEmp = reasonableSalary * US_SCORP_2026.medicareRateEach;
+  const scorpMedEr = scorpMedEmp;
+  const scorpAddMed = Math.max(0, reasonableSalary - addMedThresh) * US_SCORP_2026.addMedicareRate;
+
+  const scorpEmployerFica = scorpOasdiEr + scorpMedEr;
+  const scorpEmployeeFica = scorpOasdiEmp + scorpMedEmp + scorpAddMed;
+  const scorpTotalPayrollTax = scorpEmployerFica + scorpEmployeeFica;
+
+  // K-1 pass-through profit after deducting W-2 salary, employer FICA, and S-Corp compliance costs
+  const scorpK1Distribution = Math.max(0, netBusinessProfit - reasonableSalary - scorpEmployerFica - scorpComplianceCost);
+  // Only K-1 pass-through business income qualifies for Section 199A QBI (W-2 wages do NOT qualify for QBI)
+  const scorpQbiDeduction = qbiEligible ? scorpK1Distribution * US_SCORP_2026.qbiRate : 0;
+
+  // Tax deltas (positive = S-Corp saves money)
+  const grossSeTaxSavings = llcTotalSeTax - scorpTotalPayrollTax;
+
+  // Federal income tax effect of deductions:
+  // LLC deducts llcHalfSeDeduction + llcQbiDeduction
+  // S-Corp deducts scorpEmployerFica + scorpComplianceCost + scorpQbiDeduction
+  const llcTotalFedDeductions = llcHalfSeDeduction + llcQbiDeduction;
+  const scorpTotalFedDeductions = scorpEmployerFica + scorpComplianceCost + scorpQbiDeduction;
+  const qbiReductionDelta = llcQbiDeduction - scorpQbiDeduction;
+  const qbiTaxCostAtMarginal = qbiReductionDelta * margRate;
+  const incomeTaxEffect = (scorpTotalFedDeductions - llcTotalFedDeductions) * margRate; // negative if LLC had larger deductions
+
+  const netAnnualSCorpSavings = grossSeTaxSavings + incomeTaxEffect - scorpComplianceCost;
+  const salaryRatioPct = (reasonableSalary / netBusinessProfit) * 100;
+
+  return {
+    oasdiWageCap: US_SCORP_2026.oasdiWageCap,
+    netBusinessProfit,
+    reasonableSalary,
+    salaryRatioPct,
+    filingStatus,
+    federalMarginalRatePct,
+    qbiEligible,
+    scorpComplianceCost,
+    llc: {
+      seEarnings: llcSeEarnings,
+      oasdiTax: llcOasdiTax,
+      medicareTax: llcMedicareTax,
+      addMedicareTax: llcAddMedicareTax,
+      totalSeTax: llcTotalSeTax,
+      halfSeDeduction: llcHalfSeDeduction,
+      qbiDeduction: llcQbiDeduction,
+    },
+    scorp: {
+      employerFica: scorpEmployerFica,
+      employeeFica: scorpEmployeeFica,
+      totalPayrollTax: scorpTotalPayrollTax,
+      k1Distribution: scorpK1Distribution,
+      qbiDeduction: scorpQbiDeduction,
+    },
+    grossSeTaxSavings,
+    qbiReductionDelta,
+    qbiTaxCostAtMarginal,
+    incomeTaxEffect,
+    netAnnualSCorpSavings,
+    worthElecting: netAnnualSCorpSavings > 1500,
+  };
+}
+
+
+(function() {
+  const $ = (id) => document.getElementById(id);
+  const fmt = (n) => (n < 0 ? '-' : '') + '$' + Math.round(Math.abs(n)).toLocaleString('en-US');
+
+  function run() {
+    const r = calcUsSCorpSavings2026({
+      netBusinessProfit: parseFloat($('netBusinessProfit').value),
+      reasonableSalary: parseFloat($('reasonableSalary').value),
+      filingStatus: $('filingStatus').value,
+      federalMarginalRatePct: parseFloat($('federalMarginalRatePct').value),
+      qbiEligible: $('qbiEligible').checked,
+      scorpComplianceCost: parseFloat($('scorpComplianceCost').value),
+    });
+
+    $('resNetSave').textContent = fmt(r.netAnnualSCorpSavings);
+    $('resSub').textContent = `Gross SE/FICA Saved ${fmt(r.grossSeTaxSavings)} · Less QBI/Deduction Shift & ${fmt(r.scorpComplianceCost)} Admin`;
+    $('resLlcSe').textContent = fmt(r.llc.totalSeTax);
+    $('resScFica').textContent = fmt(r.scorp.totalPayrollTax);
+    $('resK1').textContent = fmt(r.scorp.k1Distribution);
+    $('resQbiCost').textContent = r.qbiTaxCostAtMarginal > 0 ? `-${fmt(r.qbiTaxCostAtMarginal)}` : '$0';
+    $('resSalPct').textContent = `${r.salaryRatioPct.toFixed(1)}%`;
+    $('resLlcQbi').textContent = fmt(r.llc.qbiDeduction);
+    $('resScQbi').textContent = fmt(r.scorp.qbiDeduction);
+    $('resGrossSe').textContent = fmt(r.grossSeTaxSavings);
+
+    const b = $('resStatusBanner');
+    if (r.salaryRatioPct < 25) {
+      b.className = 'status-banner status-danger';
+      b.textContent = `IRS Audit Risk Warning: W-2 salary is only ${r.salaryRatioPct.toFixed(1)}% of net profit. Document market wage comparables before filing Form 2553.`;
+    } else if (r.worthElecting) {
+      b.className = 'status-banner status-ok';
+      b.textContent = `S-Corp Election Pays Off: Net annual advantage of ${fmt(r.netAnnualSCorpSavings)} after accounting for QBI reduction and ${fmt(r.scorpComplianceCost)} admin overhead.`;
+    } else {
+      b.className = 'status-banner status-warn';
+      b.textContent = `Marginal Benefit (${fmt(r.netAnnualSCorpSavings)}/yr): Staying a Single-Member LLC may be simpler until net profit or distribution spread widens.`;
+    }
+  }
+
+  document.querySelectorAll('.preset-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const p = btn.dataset.preset;
+      if (p === 'consult220') {
+        $('netBusinessProfit').value = 220000; $('reasonableSalary').value = 95000; $('federalMarginalRatePct').value = '24'; $('scorpComplianceCost').value = 2800;
+      } else if (p === 'agency400') {
+        $('netBusinessProfit').value = 400000; $('reasonableSalary').value = 145000; $('federalMarginalRatePct').value = '32'; $('scorpComplianceCost').value = 4000;
+      } else {
+        $('netBusinessProfit').value = 90000; $('reasonableSalary').value = 55000; $('federalMarginalRatePct').value = '22'; $('scorpComplianceCost').value = 2500;
+      }
+      run();
+    });
+  });
+
+  ['netBusinessProfit','reasonableSalary','filingStatus','federalMarginalRatePct','qbiEligible','scorpComplianceCost'].forEach((id) => {
+    $(id).addEventListener('input', run);
+    $(id).addEventListener('change', run);
+  });
+  $('calcBtn').addEventListener('click', run);
+  run();
+})();
+
+  </script>
+</body>
+</html>
