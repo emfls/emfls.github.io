@@ -20,7 +20,15 @@
   <link rel="stylesheet" href="../new-tools.css">
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QP5Q67GE5B')</script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754" crossorigin="anonymous"></script>
+  <script>
+  if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+    const adScript = document.createElement('script');
+    adScript.async = true;
+    adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+    adScript.crossOrigin = 'anonymous';
+    document.head.append(adScript);
+  }
+  </script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -40,7 +48,7 @@
       {"@type":"Question","name":"Does Canada use FIFO to calculate ACB?","acceptedAnswer":{"@type":"Answer","text":"For identical shares or ETF units held by the same taxpayer in taxable accounts, pool the acquisition costs and commissions. Allocate the weighted-average ACB per unit to each unit sold."}},
       {"@type":"Question","name":"What if ETF return of capital exceeds my ACB?","acceptedAnswer":{"@type":"Answer","text":"Reduce the pool ACB to zero and recognize the excess as a capital gain when it occurs. Later purchases or basis increases do not reverse the earlier gain."}},
       {"@type":"Question","name":"How do I record a phantom ETF distribution?","acceptedAnswer":{"@type":"Answer","text":"Add the reinvested non-cash amount to ACB when unit count stays unchanged. Report the taxable amount from the tax slip separately. For a cash distribution reinvested into extra units, enter the new units as a purchase instead of adding the amount twice."}},
-      {"@type":"Question","name":"Does a partial repurchase deny the whole loss?","acceptedAnswer":{"@type":"Answer","text":"The CRA administrative approach multiplies the loss by the smallest of units sold, units acquired during the inclusive 61-day window, and identical units held on day +30, divided by units sold. Day +31 is outside the window for this sale."}},
+      {"@type":"Question","name":"Does a partial repurchase deny the whole loss?","acceptedAnswer":{"@type":"Answer","text":"The CRA administrative approach multiplies the loss by the smallest of units sold, units acquired during the inclusive 61-day window, and identical units held on day +30, divided by units sold. Day +31 marks only the first calendar day after this sale’s ±30 calendar-day window (weekends and exchange holidays are not settlement days) and does not guarantee deductibility. Under section 54 of the Income Tax Act, the superficial-loss rule considers acquisitions of the same or identical property by you or an affiliated person within the window and whether you or an affiliated person owns or has a right to acquire the replacement property at the end of Day +30."}},
       {"@type":"Question","name":"What happens if I repurchase in a TFSA, RRSP or FHSA?","acceptedAnswer":{"@type":"Answer","text":"If the registered plan acquisition triggers the superficial loss rule, the denied portion generally cannot be recovered. A qualifying taxable replacement can generally carry the denied amount in the replacement property’s ACB."}}
     ]
   }
@@ -126,7 +134,7 @@
     <h2 id="takeaways">Key takeaways</h2>
     <ul>
       <li>Canada uses weighted-average cost for identical units. Return of capital reduces ACB, and reinvested non-cash distributions increase it.</li>
-      <li>The superficial loss window includes day −30, the sale date and day +30. Day +31 is the first day outside this sale’s window.</li>
+      <li>The superficial-loss window includes Day −30 through Day +30, counted in calendar days from the sale settlement date. Day +31 is the first calendar day after this sale’s window (an exchange trade settles outside the window only if its actual settlement date is on or after Day +31) and does not guarantee the loss is deductible.</li>
       <li>The standard 2026 inclusion rate is <strong>50%</strong> for taxable capital gains and allowable capital losses.</li>
     </ul>
   </section>
@@ -143,13 +151,16 @@
       <fieldset>
         <legend>Pre-sale ACB ledger</legend>
         <p class="note">Enter the selling taxpayer’s taxable positions in date order. For an existing pool, use a purchase row with its opening units and ACB per unit. Put same-day events in transaction order and include only events before the sale.</p>
+        <p class="note">For ordinary exchange trades, enter the settlement date shown on your broker’s confirmation, not the trade date. The superficial-loss window uses calendar days.</p>
         <div id="events"></div>
         <button type="button" class="secondary" id="add-event">Add ACB event</button>
       </fieldset>
       <fieldset>
         <legend>2026 sale</legend>
+        <p id="sale-settlement-note" class="note">For ordinary exchange trades, enter the settlement date shown on your broker’s confirmation, not the trade date. The superficial-loss window uses calendar days.</p>
+        <p id="sale-year-end-note" class="note">Year-end note: if a late-December 2026 trade settles in January 2027 (such as a Dec 31, 2026 TSX trade settling Jan 4, 2027), it is a 2027 disposition—do not substitute the 2026 trade date here. <a href="https://www.tsx.com/en/resource/3407/">TSX settlement schedule</a></p>
         <div class="grid">
-          <label>Sale date <input name="sale-date" type="date" min="2026-01-01" max="2026-12-31" value="2026-11-20" required></label>
+          <label>Settlement date (2026 sale) <input name="sale-date" type="date" min="2026-01-01" max="2026-12-31" value="2026-11-20" required aria-describedby="sale-settlement-note sale-year-end-note"></label>
           <label>Units sold <input name="sale-units" type="number" inputmode="decimal" min="0" step="any" value="100" required></label>
           <label>Sale price per unit ($) <input name="sale-price" type="number" inputmode="decimal" min="0" step="any" value="22" required></label>
           <label>Selling commission ($) <input name="sale-commission" type="number" inputmode="decimal" min="0" step="any" value="9.95" required></label>
@@ -158,12 +169,14 @@
         <dl id="window" class="window" aria-label="Superficial loss dates">
           <div><dt>Day −30 · Window opens</dt><dd data-window="start">—</dd></div>
           <div><dt>Day +30 · Window closes</dt><dd data-window="end">—</dd></div>
-          <div><dt>Day +31 · First re-entry outside window</dt><dd data-window="safeReentry">—</dd></div>
+          <div><dt>Day +31 · First calendar day after window</dt><dd data-window="safeReentry">—</dd></div>
         </dl>
+        <p class="note">Day +31 is a calendar boundary for this sale only—it may fall on a weekend or exchange holiday, so verify your broker’s actual settlement date. For an acquisition of the same or identical property within the window, check whether you or an affiliated person still owns or has a right to acquire that property at the end of Day +30. <a href="https://laws-lois.justice.gc.ca/eng/acts/I-3.3/section-54.html">Income Tax Act, s. 54</a></p>
       </fieldset>
       <fieldset>
         <legend>Identical property and day +30 holdings</legend>
         <p class="note">Enter qualifying purchases by you or an affiliated person, such as a spouse, common-law partner or controlled corporation. List pre-sale acquisitions here too if they fall in the window. These rows count units only. Use a separate review if replacement units are spread across multiple owners or account types.</p>
+        <p id="purchase-settlement-note" class="note">For ordinary exchange trades, enter the settlement date shown on your broker’s confirmation, not the trade date. The superficial-loss window uses calendar days.</p>
         <div id="purchases"></div>
         <button type="button" class="secondary" id="add-purchase">Add replacement purchase</button>
         <div class="grid">
@@ -233,6 +246,7 @@
         <tr><th scope="row">Capital gains inclusion</th><td>50% under the standard rule. The proposed increase was cancelled. <a href="https://laws-lois.justice.gc.ca/eng/acts/I-3.3/section-38.html">Income Tax Act, s. 38</a> · <a href="https://www.pm.gc.ca/en/news/news-releases/2025/03/21/prime-minister-mark-carney-cancels-proposed-capital-gains-tax-increase">Cancellation announcement</a></td></tr>
         <tr><th scope="row">Identical property ACB</th><td>Pool purchase costs and commissions and divide by total units. <a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/about-your-tax-return/tax-return/completing-a-tax-return/personal-income/line-12700-capital-gains/special-rules-other-transactions.html">CRA special rules</a></td></tr>
         <tr><th scope="row">ROC and phantom distributions</th><td>ROC reduces ACB to a minimum of $0, with any excess realized as a gain at the time of the adjustment. Reinvested distributions increase ACB. <a href="https://www.canada.ca/en/revenue-agency/services/tax/individuals/topics/about-your-tax-return/tax-return/completing-a-tax-return/personal-income/line-12700-capital-gains/completing-schedule-3/tax-treatment-mutual-funds.html">CRA fund tax treatment</a></td></tr>
+        <tr><th scope="row">Settlement date</th><td>Use the settlement date for ordinary exchange purchases and sales. <a href="https://www.canada.ca/en/revenue-agency/services/forms-publications/publications/t4091/t5008-guide-return-securities-transactions.html">CRA T5008 Guide, Box 14</a></td></tr>
         <tr><th scope="row">Superficial loss window</th><td>61 calendar days, inclusive. Identical property must be acquired within the window and owned or acquirable at its end. <a href="https://laws-lois.justice.gc.ca/eng/acts/I-3.3/section-54.html">Income Tax Act, s. 54</a></td></tr>
         <tr><th scope="row">Partial denial</th><td>Multiply the loss by the smallest of units sold, acquired in the window and held at its end, divided by units sold. <a href="https://taxinterpretations.com/cra/severed-letters/2004-0073011e5">CRA technical interpretation 2004-0073011E5</a></td></tr>
       </tbody>
@@ -244,7 +258,7 @@
     <details><summary>Does Canada use FIFO to calculate ACB?</summary><p>For identical shares or ETF units held by the same taxpayer in taxable accounts, pool the acquisition costs and commissions. Allocate the weighted-average ACB per unit to each unit sold.</p></details>
     <details><summary>What if ETF return of capital exceeds my ACB?</summary><p>Reduce the pool ACB to zero and recognize the excess as a capital gain when it occurs. Later purchases or basis increases do not reverse the earlier gain.</p></details>
     <details><summary>How do I record a phantom ETF distribution?</summary><p>Add the reinvested non-cash amount to ACB when unit count stays unchanged. Report the taxable amount from the tax slip separately. For a cash distribution reinvested into extra units, enter the new units as a purchase instead of adding the amount twice.</p></details>
-    <details><summary>Does a partial repurchase deny the whole loss?</summary><p>The CRA administrative approach multiplies the loss by the smallest of units sold, units acquired during the inclusive 61-day window, and identical units held on day +30, divided by units sold. Day +31 is outside the window for this sale.</p></details>
+    <details><summary>Does a partial repurchase deny the whole loss?</summary><p>The CRA administrative approach multiplies the loss by the smallest of units sold, units acquired during the inclusive 61-day window, and identical units held on day +30, divided by units sold. Day +31 marks only the first calendar day after this sale’s ±30 calendar-day window (weekends and exchange holidays are not settlement days) and does not guarantee deductibility. Under section 54 of the Income Tax Act, the superficial-loss rule considers acquisitions of the same or identical property by you or an affiliated person within the window and whether you or an affiliated person owns or has a right to acquire the replacement property at the end of Day +30.</p></details>
     <details><summary>What happens if I repurchase in a TFSA, RRSP or FHSA?</summary><p>If the registered plan acquisition triggers the superficial loss rule, the denied portion generally cannot be recovered. A qualifying taxable replacement can generally carry the denied amount in the replacement property’s ACB.</p></details>
   </section>
 
@@ -303,7 +317,7 @@
       <option value="roc">Return of capital</option>
       <option value="phantom">Phantom distribution</option>
     </select></label>
-    <label>Date <input data-field="date" type="date" required></label>
+    <label>Settlement / event date <input data-field="date" type="date" required></label>
     <div class="row-inputs" data-buy>
       <label>Units <input data-field="units" type="number" inputmode="decimal" min="0" step="any" required></label>
       <label>Unit cost ($) <input data-field="price" type="number" inputmode="decimal" min="0" step="any" required></label>
@@ -315,7 +329,7 @@
 </template>
 <template id="purchase-template">
   <div class="row purchase-row">
-    <label>Purchase date <input data-field="date" type="date" required></label>
+    <label>Purchase settlement date <input data-field="date" type="date" required aria-describedby="purchase-settlement-note"></label>
     <label>Units acquired <input data-field="units" type="number" inputmode="decimal" min="0" step="any" required></label>
     <button type="button" class="secondary" data-remove aria-label="Remove replacement purchase">Remove</button>
   </div>

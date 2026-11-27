@@ -74,7 +74,9 @@ export function trackACB(events, saleDate) {
 
 export function calculate({ events, sale, acquisitions, heldAtDay30, account, replacementACB, marginalRate }) {
   const window = superficialLossWindow(sale.date);
-  if (!sale.date.startsWith(TAX_YEAR + '-')) throw new RangeError('Enter a sale date in 2026.');
+  if (!sale.date.startsWith(TAX_YEAR + '-')) {
+    throw new RangeError('Enter a 2026 settlement date (trades settling in 2027 belong to the 2027 tax year).');
+  }
   const pool = trackACB(events, sale.date);
   const enteredUnits = positiveUnits(sale.units, 'Units sold');
   // Allow the small representation difference between 0.3 and 0.1 + 0.2.
