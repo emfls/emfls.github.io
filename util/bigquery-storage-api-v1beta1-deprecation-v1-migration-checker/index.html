@@ -310,42 +310,59 @@ const verdicts = {
 function snippetFindings(source) {
   if (!source.trim()) return [];
   const findings = [];
-  const legacy = /\b(?:google[./]cloud[./]bigquery[./]storage[./]v1beta1|bigquery_storage_v1beta1|v1beta1\.BigQueryStorageClient)(?![\w-])|\bbigquerystorage\.googleapis\.com\/v1beta1(?![\w-])/i;
-  const stableRead = /\b(?:BigQueryReadClient|BigQueryRead)(?![\w-])/i;
-  const stablePackage = /\b(?:google[./]cloud[./]bigquery[./]storage[./]v1|bigquery_storage_v1)(?![\w-])/i;
-  const write = /\b(?:BigQueryWriteClient|BigQueryWrite|AppendRows)(?![\w-])/i;
+  const legacy = /\b(?:google[./]cloud[./]bigquery[./]storage[./]v1beta1|cloud\.google\.com\/go\/bigquery\/storage\/apiv1beta1|bigquery_storage_v1beta1|v1beta1\.BigQueryStorageClient|apiv1beta1\.NewBigQueryStorageClient|NewBigQueryStorageClient)(?![\w-])|\bbigquerystorage\.googleapis\.com\/v1beta1(?![\w-])/i;
+  const beta2 = /\b(?:google[./]cloud[./]bigquery[./]storage[./]v1beta2|cloud\.google\.com\/go\/bigquery\/storage\/apiv1beta2|bigquery_storage_v1beta2|apiv1beta2)(?![\w-])|\bbigquerystorage\.googleapis\.com\/v1beta2(?![\w-])/i;
+  const stablePackage = /\b(?:google[./]cloud[./]bigquery[./]storage[./]v1|cloud\.google\.com\/go\/bigquery\/storage\/apiv1|bigquery_storage_v1)(?![\w-])/i;
+  const readClientOrService = /\b(?:NewBigQueryReadClient|BigQueryReadClient|BigQueryRead)(?![\w-])/i;
+  const write = /\b(?:NewBigQueryWriteClient|BigQueryWriteClient|BigQueryWrite|AppendRows)(?![\w-])/i;
   const core = /\bbigquery\/v2(?![\w-])/i;
-  const unversionedRead = /\b(?:ReadSession|CreateReadSession|ReadRows)(?![\w-])/i;
+  const unversionedRead = /\b(?:ReadSession|CreateReadSession|ReadRows|NewBigQueryReadClient|BigQueryReadClient|BigQueryRead)(?![\w-])/i;
+
   const hasWrite = write.test(source);
   const hasLegacy = legacy.test(source);
-  const hasStable = stableRead.test(source) || (stablePackage.test(source) && !hasWrite);
+  const hasBeta2 = beta2.test(source);
+  const hasExplicitV1 = stablePackage.test(source);
+  const hasReadMarker = readClientOrService.test(source);
+  const hasStableRead = hasExplicitV1 && (hasReadMarker || !hasWrite) && !hasBeta2;
 
   if (hasLegacy) findings.push({
-    lane: 'snippet', title: 'Legacy Storage Read reference', status: 'action',
-    detail: 'The snippet contains a BigQuery Storage Read v1beta1 marker.',
+    lane: 'snippet', title: 'Legacy Storage Read v1beta1 reference', status: 'action',
+    detail: 'The snippet contains a BigQuery Storage Read v1beta1 package, service, or legacy client marker.',
     steps: [
-      'Update imports and regenerate protobuf or gRPC stubs for google.cloud.bigquery.storage.v1. Use the BigQueryRead service or BigQueryReadClient.',
+      'Update imports and regenerate protobuf or gRPC stubs for google.cloud.bigquery.storage.v1 (or Go cloud.google.com/go/bigquery/storage/apiv1 with NewBigQueryReadClient).',
       'Confirm the deployed read calls google.cloud.bigquery.storage.v1.BigQueryRead, then run the project checks below.'
     ]
   });
-  if (hasStable) findings.push({
-    lane: 'snippet', title: 'Stable Storage API reference', status: 'pass',
-    detail: 'The snippet contains a v1 marker or BigQueryRead client reference. Confirm that the deployed read uses this path.',
+  if (hasBeta2) findings.push({
+    lane: 'snippet', title: 'Beta v1beta2 Storage reference (not stable v1)', status: 'unknown',
+    detail: 'The snippet references Storage API v1beta2 (or Go apiv1beta2). While separate from the August 31, 2027 v1beta1 shutdown, v1beta2 is not proof of stable v1 migration.',
+    steps: [
+      'Verify whether this path should migrate to stable google.cloud.bigquery.storage.v1 (Go storage/apiv1) rather than remaining on v1beta2.',
+      'Confirm the effective runtime RPC method in Cloud Audit Logs or Service Runtime metrics.'
+    ]
+  });
+  if (hasStableRead) findings.push({
+    lane: 'snippet', title: 'Explicit Storage Read v1 reference', status: 'pass',
+    detail: 'The snippet pairs an explicit v1 package (google.cloud.bigquery.storage.v1, bigquery_storage_v1, or Go storage/apiv1) with Storage Read usage. Confirm that the deployed read executes this path.',
     steps: ['Verify that the runtime method is under google.cloud.bigquery.storage.v1.BigQueryRead.']
   });
   if (core.test(source) || hasWrite) findings.push({
     lane: 'snippet', title: 'BigQuery core REST or Storage Write reference', status: 'data',
-    detail: 'BigQuery core REST v2 and the Storage Write API v1 are outside this Storage Read shutdown.',
+    detail: 'BigQuery core REST v2 and the Storage Write API (such as BigQueryWriteClient / NewBigQueryWriteClient) are outside this Storage Read v1beta1 shutdown.',
     steps: ['Check any separate Storage Read paths used by the same workload.']
   });
-  // These RPC or message names occur without a version in imports and descriptors.
-  if (!hasLegacy && !hasStable && (unversionedRead.test(source) || findings.length === 0)) findings.push({
-    lane: 'snippet', title: 'No versioned Storage Read reference identified', status: 'unknown',
-    detail: unversionedRead.test(source) ?
-      'ReadSession, CreateReadSession and ReadRows names alone cannot distinguish v1beta1 from v1.' :
-      'The pasted text has no recognized API package, client or method marker.',
-    steps: ['Check the fully qualified import, protobuf package or deployed RPC service and method.']
-  });
+  if (!hasLegacy && !hasBeta2 && !hasStableRead && !hasWrite && !core.test(source)) {
+    const hasConstructorOnly = hasReadMarker && !hasExplicitV1;
+    findings.push({
+      lane: 'snippet', title: 'No versioned Storage Read package identified', status: 'unknown',
+      detail: hasConstructorOnly
+        ? 'Client or service names like BigQueryReadClient / BigQueryRead also appear in beta packages (such as v1beta2) and cannot prove stable v1 without an explicit v1 import.'
+        : (unversionedRead.test(source)
+            ? 'ReadSession, CreateReadSession and ReadRows names alone cannot distinguish v1beta1 from v1.'
+            : 'The pasted text has no recognized versioned Storage Read package, client or method marker.'),
+      steps: ['Paste the explicit versioned import (e.g., bigquery_storage_v1 or cloud.google.com/go/bigquery/storage/apiv1) or check deployed RPC telemetry.']
+    });
+  }
   return findings;
 }
 
