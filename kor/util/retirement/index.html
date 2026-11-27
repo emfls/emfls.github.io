@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2026 퇴직금 계산기 · 1일 평균임금 및 예상 수령액 간편 시뮬레이터 | EMFLS</title>
+<meta name="description" content="퇴직 전 3개월 임금, 재직일수, 상여금과 연차수당을 반영해 1일 평균임금과 세전 예상 퇴직금을 계산하세요. 통상임금 적용 기준과 IRP 과세이연도 확인할 수 있습니다.">
+<link rel="canonical" href="https://emfls.github.io/kor/util/retirement/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="2026 퇴직금 계산기 · EMFLS">
+<meta property="og:description" content="재직 기간과 세전 임금을 입력해 1일 평균임금과 예상 퇴직금을 확인하세요.">
+<meta property="og:url" content="https://emfls.github.io/kor/util/retirement/">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="/util/new-tools.css">
+<meta name="google-adsense-account" content="ca-pub-8830524482034754">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QP5Q67GE5B')</script>
+<script>
+let adsEnabled = false;
+if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+  const hostname = location.hostname.replace(/\.$/, '').toLowerCase();
+  const loopback = hostname === 'localhost' || hostname.endsWith('.localhost') ||
+    /^127(?:\.\d{1,3}){3}$/.test(hostname) || hostname === '[::1]' ||
+    /^\[::ffff:7f[\da-f]{2}:[\da-f]{1,4}\]$/.test(hostname);
+  if (!loopback) {
+    adsEnabled = true;
+    for (const origin of ['https://pagead2.googlesyndication.com', 'https://googleads.g.doubleclick.net']) {
+      const hint = document.createElement('link');
+      hint.rel = 'preconnect';
+      hint.href = origin;
+      hint.crossOrigin = '';
+      document.head.append(hint);
+    }
+    const adScript = document.createElement('script');
+    adScript.async = true;
+    adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+    adScript.crossOrigin = 'anonymous';
+    document.head.append(adScript);
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "2026 퇴직금 계산기",
+  "url": "https://emfls.github.io/kor/util/retirement/",
+  "description": "퇴직 전 3개월 임금과 재직 기간을 바탕으로 1일 평균임금과 세전 퇴직금을 계산합니다.",
+  "inLanguage": "ko",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "KRW"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "퇴직금은 어떻게 계산하나요?",
+      "acceptedAnswer": {"@type": "Answer", "text": "1일 평균임금에 30일을 곱한 뒤 재직일수를 365로 나눈 값을 곱합니다. 법정 퇴직금은 원칙적으로 계속근로기간이 1년 이상이고 4주 평균 주 소정근로시간이 15시간 이상인 근로자에게 적용됩니다."}
+    },
+    {
+      "@type": "Question",
+      "name": "상여금과 연차수당은 얼마를 반영하나요?",
+      "acceptedAnswer": {"@type": "Answer", "text": "평균임금 산입 대상인 퇴직 전 1년간의 상여금과 연차수당은 각각 3/12을 반영합니다. 퇴직으로 비로소 지급 사유가 생기는 미사용 연차수당은 평균임금 산정에 포함하지 않습니다."}
+    },
+    {
+      "@type": "Question",
+      "name": "1일 통상임금이 1일 평균임금보다 높으면 어떻게 되나요?",
+      "acceptedAnswer": {"@type": "Answer", "text": "근로기준법에 따라 1일 통상임금을 퇴직금 계산 기준으로 적용합니다. 계산기에 1일 통상임금을 입력하면 두 금액을 비교해 더 높은 금액을 적용합니다."}
+    },
+    {
+      "@type": "Question",
+      "name": "IRP로 퇴직금을 받으면 세금은 언제 내나요?",
+      "acceptedAnswer": {"@type": "Answer", "text": "퇴직급여를 개인형퇴직연금(IRP)으로 이전하면 이전된 금액의 퇴직소득세 납부가 인출 시점까지 미뤄집니다. 정확한 퇴직소득세는 근속연수공제, 환산급여와 환산급여공제 등에 따라 달라지며, IRP에서 연금으로 받을지 일시금으로 받을지에 따라서도 세 부담이 달라질 수 있습니다."}
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "EMFLS", "item": "https://emfls.github.io/"},
+    {"@type": "ListItem", "position": 2, "name": "2026 퇴직금 계산기", "item": "https://emfls.github.io/kor/util/retirement/"}
+  ]
+}
+</script>
+<style>
+  .tool-shell, .tool-shell * { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+  .tool-shell [hidden] { display: none; }
+  .tool-nav { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; margin-bottom: 14px; color: #e2e8f0; }
+  .tool-nav .logo { color: #fff; font-size: 1.25rem; font-weight: 800; text-decoration: none; }
+  .logo span { color: #60a5fa; }
+  fieldset { margin: 18px 0; padding: 12px; border: 1px solid #d9e0ea; border-radius: 10px; }
+  legend { padding-inline: 4px; color: #173f8a; font-weight: 800; }
+  input { display: block; }
+  .field-hint { margin: 6px 0 0; }
+  .result { white-space: normal; }
+  .result h3 { margin-top: 0; }
+  .total { margin: 0; color: #173f8a; font-size: clamp(1.5rem, 5vw, 2.3rem); font-weight: 800; }
+  .breakdown { margin-bottom: 0; }
+  .breakdown div { border-top: 1px solid #b9d1ee; padding-block: 8px; }
+  .breakdown dd { margin: 0; font-weight: 700; }
+  .faq summary:focus-visible { outline: 3px solid #f59e0b; outline-offset: 2px; }
+  .emfls-ad-slot { width: 100%; max-width: 520px; min-height: 278px; margin: 36px auto; text-align: center; }
+  .ad-label { height: 28px; font: 12px/20px system-ui,sans-serif; color: #cbd5e1; }
+  .emfls-ad-slot ins { width: 100%; height: 250px; }
+</style>
+</head>
+<body>
+<main class="tool-shell">
+  <nav class="tool-nav" aria-label="현재 위치">
+    <a class="logo" href="/" aria-label="EMFLS 홈">emfls<span>.</span></a>
+    <span aria-current="page">퇴직금 계산기</span>
+  </nav>
+
+  <header class="hero">
+    <h1>2026 퇴직금 계산기</h1>
+    <p>재직 기간과 퇴직 전 3개월의 임금으로 1일 평균임금과 세전 예상 퇴직금을 계산합니다.</p>
+  </header>
+
+  <section class="panel" aria-labelledby="calculator-title">
+    <h2 id="calculator-title">예상 퇴직금 계산</h2>
+    <p class="note" id="scope">근로자퇴직급여 보장법 제4조·제8조에 따른 퇴직금제도 기준입니다. 중간정산, 육아휴직 등 산정 제외기간, 주 소정근로시간이 달라진 기간은 별도로 확인하세요.</p>
+    <noscript><p>계산기를 사용하려면 자바스크립트를 켜 주세요.</p></noscript>
+    <form id="retirement-form" autocomplete="off" aria-describedby="scope">
+      <p id="presets-label"><strong>예시 불러오기</strong></p>
+      <div class="actions" role="group" aria-labelledby="presets-label">
+        <button class="secondary" type="button" data-preset="three">3년차 직장인</button>
+        <button class="secondary" type="button" data-preset="five">5년차 상여금 포함</button>
+        <button class="secondary" type="button" data-preset="ten">10년 근속</button>
+      </div>
+      <fieldset>
+        <legend>근무 기간과 시간</legend>
+        <div class="grid">
+          <div>
+            <label for="start-date">입사일</label>
+            <input id="start-date" type="date" min="1900-01-01" max="9999-12-31" required>
+          </div>
+          <div>
+            <label for="retirement-date">퇴직일</label>
+            <input id="retirement-date" type="date" min="1900-01-01" max="9999-12-31" aria-describedby="date-help" required>
+            <p class="note field-hint" id="date-help">마지막 근무일의 다음 날을 입력하세요.</p>
+          </div>
+          <div class="full">
+            <label for="weekly-hours">4주 평균 주 소정근로시간 (시간)</label>
+            <input id="weekly-hours" type="number" min="0" max="168" step="any" inputmode="decimal" placeholder="40" required>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>임금과 수당</legend>
+        <div class="grid">
+          <div class="full">
+            <label for="wages">퇴직 전 3개월 임금 총액 (세전, 원)</label>
+            <input id="wages" type="number" min="0" max="999999999999" step="1" inputmode="numeric" placeholder="9000000" aria-describedby="pay-period wages-help" required>
+            <p class="note field-hint" id="pay-period">입사일과 퇴직일을 입력하면 임금 산정 기간이 표시됩니다.</p>
+            <p class="note field-hint" id="wages-help">해당 기간의 기본급과 임금에 해당하는 수당을 합산하세요. 아래에 따로 입력하는 상여금과 연차수당은 여기서 빼 주세요.</p>
+          </div>
+          <div>
+            <label for="bonus">연간 상여금 총액 (원, 선택)</label>
+            <input id="bonus" type="number" min="0" max="999999999999" step="1" inputmode="numeric" aria-describedby="bonus-help">
+            <p class="note field-hint" id="bonus-help">퇴직 전 1년간 평균임금에 산입되는 상여금의 총액을 입력하세요.</p>
+          </div>
+          <div>
+            <label for="leave-pay">연차수당 (원, 선택)</label>
+            <input id="leave-pay" type="number" min="0" max="999999999999" step="1" inputmode="numeric" aria-describedby="leave-help">
+            <p class="note field-hint" id="leave-help">퇴직 전에 이미 지급 사유가 생긴 미사용 연차수당 중 평균임금에 산입되는 금액을 입력하세요.</p>
+          </div>
+          <div class="full">
+            <label for="ordinary-wage">1일 통상임금 (원, 선택)</label>
+            <input id="ordinary-wage" type="number" min="0" max="999999999999" step="1" inputmode="numeric" aria-describedby="ordinary-help">
+            <p class="note field-hint" id="ordinary-help">1일 통상임금이 1일 평균임금보다 높으면 통상임금을 적용합니다. 비워 두면 평균임금으로 추정합니다.</p>
+          </div>
+        </div>
+      </fieldset>
+      <div class="actions">
+        <button type="submit">퇴직금 계산하기</button>
+        <button class="secondary" type="reset">초기화</button>
+      </div>
+    </form>
+    <p id="status" class="note" role="status"></p>
+    <section class="result" id="results" aria-labelledby="results-title" hidden>
+      <h3 id="results-title">세전 예상 퇴직금</h3>
+      <p class="total" id="severance"></p>
+      <p class="note" id="wage-basis"></p>
+      <dl class="breakdown grid">
+        <div><dt>재직일수</dt><dd id="service-days"></dd></div>
+        <div><dt>평균임금 산정 일수</dt><dd id="wage-days"></dd></div>
+        <div><dt>상여금 반영액 (3/12)</dt><dd id="included-bonus"></dd></div>
+        <div><dt>연차수당 반영액 (3/12)</dt><dd id="included-leave"></dd></div>
+        <div><dt>1일 평균임금</dt><dd id="average-wage"></dd></div>
+        <div><dt>적용 1일 임금</dt><dd id="applied-wage"></dd></div>
+      </dl>
+    </section>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="광고">
+    <div class="ad-label">광고</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (adsEnabled) { (window.adsbygoogle = window.adsbygoogle || []).push({}); } else { document.currentScript.parentElement.hidden = true; }</script>
+  </aside>
+
+  <section class="panel" aria-labelledby="method-title">
+    <h2 id="method-title">평균임금과 퇴직금 산식</h2>
+    <p><strong>1일 평균임금</strong> = (퇴직 전 3개월 임금 총액 + 연간 상여금 × 3/12 + 연차수당 × 3/12) ÷ 해당 기간의 실제 달력 일수</p>
+    <p><strong>세전 예상 퇴직금</strong> = 적용 1일 임금 × 30일 × (재직일수 ÷ 365)</p>
+    <p>재직일수에는 입사일을 포함하고 퇴직일은 제외합니다. 1일 임금과 수당 반영액은 소수 둘째 자리까지 표시하며 퇴직금은 중간 반올림 없이 계산한 뒤 원 단위로 반올림합니다.</p>
+    <p>IRP로 퇴직급여를 이전하면 이전된 금액의 퇴직소득세가 인출 시점까지 이연됩니다. 세후 수령액은 근속연수공제와 환산급여 등에 따라 산정되는 퇴직소득세 및 IRP 수령 방식에 따라 달라집니다.</p>
+    <p class="note">공식 자료 · <a href="https://www.moel.go.kr/retirementpayCal.do">고용노동부 퇴직금 계산기</a> · <a href="https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7880&amp;mi=6600">국세청 퇴직소득세 계산방법</a></p>
+  </section>
+
+  <section class="panel faq" aria-labelledby="faq-title">
+    <h2 id="faq-title">자주 묻는 질문</h2>
+    <details>
+      <summary>퇴직금은 어떻게 계산하나요?</summary>
+      <p>1일 평균임금에 30일을 곱한 뒤 재직일수를 365로 나눈 값을 곱합니다. 법정 퇴직금은 원칙적으로 계속근로기간이 1년 이상이고 4주 평균 주 소정근로시간이 15시간 이상인 근로자에게 적용됩니다.</p>
+    </details>
+    <details>
+      <summary>상여금과 연차수당은 얼마를 반영하나요?</summary>
+      <p>평균임금 산입 대상인 퇴직 전 1년간의 상여금과 연차수당은 각각 3/12을 반영합니다. 퇴직으로 비로소 지급 사유가 생기는 미사용 연차수당은 평균임금 산정에 포함하지 않습니다.</p>
+    </details>
+    <details>
+      <summary>1일 통상임금이 1일 평균임금보다 높으면 어떻게 되나요?</summary>
+      <p>근로기준법에 따라 1일 통상임금을 퇴직금 계산 기준으로 적용합니다. 계산기에 1일 통상임금을 입력하면 두 금액을 비교해 더 높은 금액을 적용합니다.</p>
+    </details>
+    <details>
+      <summary>IRP로 퇴직금을 받으면 세금은 언제 내나요?</summary>
+      <p>퇴직급여를 개인형퇴직연금(IRP)으로 이전하면 이전된 금액의 퇴직소득세 납부가 인출 시점까지 미뤄집니다. 정확한 퇴직소득세는 근속연수공제, 환산급여와 환산급여공제 등에 따라 달라지며, IRP에서 연금으로 받을지 일시금으로 받을지에 따라서도 세 부담이 달라질 수 있습니다.</p>
+    </details>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="광고">
+    <div class="ad-label">광고</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (adsEnabled) { (window.adsbygoogle = window.adsbygoogle || []).push({}); } else { document.currentScript.parentElement.hidden = true; }</script>
+  </aside>
+
+  <nav class="panel" aria-labelledby="related-title">
+    <h2 id="related-title">관련 계산기</h2>
+    <div class="links">
+      <a href="/kor/util/retirement-pension-withdrawal/">퇴직연금 인출 계산기</a>
+      <a href="/kor/util/retirement-severance-irp-50-percent-tax-reduction-2026/">퇴직소득세와 IRP 수령 방식 비교</a>
+      <a href="/kor/util/fin-calc/">금융 계산기</a>
+    </div>
+  </nav>
+</main>
+<footer>EMFLS</footer>
+<script id="calculator-script">
+'use strict';
+
+const get = id => document.getElementById(id);
+const form = get('retirement-form');
+const startDate = get('start-date');
+const retirementDate = get('retirement-date');
+const payPeriod = get('pay-period');
+const statusLine = get('status');
+const results = get('results');
+const day = 86400000;
+const datePrompt = payPeriod.textContent;
+const wholeNumber = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 0 });
+const decimalNumber = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 2 });
+const calendarDate = new Intl.DateTimeFormat('ko-KR', { dateStyle: 'medium', timeZone: 'UTC' });
+
+const presets = {
+  three: {
+    'start-date': '2024-01-01', 'retirement-date': '2026-12-01', 'weekly-hours': 40,
+    wages: 9000000, bonus: '', 'leave-pay': '', 'ordinary-wage': ''
+  },
+  five: {
+    'start-date': '2022-01-01', 'retirement-date': '2026-12-01', 'weekly-hours': 40,
+    wages: 12000000, bonus: 4800000, 'leave-pay': 600000, 'ordinary-wage': 125000
+  },
+  ten: {
+    'start-date': '2016-12-01', 'retirement-date': '2026-12-01', 'weekly-hours': 40,
+    wages: 15000000, bonus: 3600000, 'leave-pay': 800000, 'ordinary-wage': 185000
+  }
+};
+
+function threeMonthsBefore(timestamp) {
+  const date = new Date(timestamp);
+  const originalDay = date.getUTCDate();
+  date.setUTCDate(1);
+  date.setUTCMonth(date.getUTCMonth() - 3);
+  const nextMonth = new Date(date);
+  nextMonth.setUTCMonth(nextMonth.getUTCMonth() + 1);
+  const lastDay = new Date(Number(nextMonth) - day).getUTCDate();
+  date.setUTCDate(Math.min(originalDay, lastDay));
+  return Number(date);
+}
+
+function updatePeriod() {
+  const start = startDate.valueAsNumber;
+  const end = retirementDate.valueAsNumber;
+  const wrongOrder = Number.isFinite(start) && Number.isFinite(end) && end <= start;
+  retirementDate.setCustomValidity(wrongOrder ? '퇴직일은 입사일보다 늦어야 합니다.' : '');
+  if (!startDate.validity.valid || !retirementDate.validity.valid) {
+    payPeriod.textContent = datePrompt;
+    return null;
+  }
+  const periodStart = Math.max(start, threeMonthsBefore(end));
+  const wageDays = (end - periodStart) / day;
+  payPeriod.textContent = `${calendarDate.format(periodStart)} ~ ${calendarDate.format(end - day)} (${wageDays}일)`;
+  return { start, end, wageDays };
+}
+
+function won(value, formatter = decimalNumber) {
+  return `${formatter.format(value)}원`;
+}
+
+function calculate() {
+  results.hidden = true;
+  statusLine.textContent = '';
+  const period = updatePeriod();
+  if (!form.reportValidity() || !period) return;
+
+  const { start, end, wageDays } = period;
+  const anniversary = new Date(start);
+  anniversary.setUTCFullYear(anniversary.getUTCFullYear() + 1);
+  if (end < Number(anniversary) || get('weekly-hours').valueAsNumber < 15) {
+    statusLine.textContent = '입력한 근무 조건은 법정 퇴직금 요건(계속근로 1년 이상 및 4주 평균 주 소정근로시간 15시간 이상)을 충족하지 않습니다.';
+    return;
+  }
+
+  const serviceDays = (end - start) / day;
+  const includedBonus = Number(get('bonus').value) * 3 / 12;
+  const includedLeave = Number(get('leave-pay').value) * 3 / 12;
+  const averageWage = (get('wages').valueAsNumber + includedBonus + includedLeave) / wageDays;
+  const ordinaryWage = get('ordinary-wage');
+  const appliedWage = Math.max(averageWage, Number(ordinaryWage.value));
+  const total = appliedWage * 30 * serviceDays / 365;
+
+  const amount = won(total, wholeNumber);
+  get('severance').textContent = amount;
+  get('wage-basis').textContent = ordinaryWage.value === ''
+    ? '1일 평균임금을 적용했습니다. 1일 통상임금을 입력하면 두 임금을 비교할 수 있습니다.'
+    : appliedWage > averageWage
+      ? '1일 통상임금이 더 높아 통상임금을 적용했습니다.'
+      : '1일 평균임금이 통상임금 이상이므로 평균임금을 적용했습니다.';
+  get('service-days').textContent = `${wholeNumber.format(serviceDays)}일`;
+  get('wage-days').textContent = `${wageDays}일`;
+  get('included-bonus').textContent = won(includedBonus);
+  get('included-leave').textContent = won(includedLeave);
+  get('average-wage').textContent = won(averageWage);
+  get('applied-wage').textContent = won(appliedWage);
+  results.hidden = false;
+  statusLine.textContent = `세전 예상 퇴직금은 ${amount}입니다.`;
+}
+
+form.addEventListener('submit', event => {
+  event.preventDefault();
+  calculate();
+});
+form.addEventListener('input', () => {
+  updatePeriod();
+  results.hidden = true;
+  statusLine.textContent = '';
+});
+form.addEventListener('reset', () => {
+  retirementDate.setCustomValidity('');
+  payPeriod.textContent = datePrompt;
+  results.hidden = true;
+  statusLine.textContent = '';
+  startDate.focus();
+});
+for (const button of form.querySelectorAll('[data-preset]')) {
+  button.addEventListener('click', () => {
+    for (const [id, value] of Object.entries(presets[button.dataset.preset])) get(id).value = value;
+    calculate();
+  });
+}
+updatePeriod();
+</script>
+</body>
+</html>

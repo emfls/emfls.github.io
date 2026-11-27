@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Screen DPI, PPI &amp; Viewport Pixel Ratio Checker | EMFLS</title>
+<meta name="description" content="See your live screen size, viewport and device pixel ratio. Calculate physical PPI, dot pitch, megapixels, aspect ratio and Retina viewing distance.">
+<link rel="canonical" href="https://emfls.github.io/util/screen-dpi-checker/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Screen DPI, PPI &amp; Viewport Pixel Ratio Checker">
+<meta property="og:description" content="See your live screen size, viewport and device pixel ratio. Calculate physical PPI, dot pitch, megapixels, aspect ratio and Retina viewing distance.">
+<meta property="og:url" content="https://emfls.github.io/util/screen-dpi-checker/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Screen DPI, PPI &amp; Viewport Pixel Ratio Checker">
+<meta name="twitter:description" content="See your live screen size, viewport and device pixel ratio. Calculate physical PPI, dot pitch, megapixels, aspect ratio and Retina viewing distance.">
+<link rel="stylesheet" href="/util/new-tools.css">
+<meta name="google-adsense-account" content="ca-pub-8830524482034754">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QP5Q67GE5B')</script>
+<script>
+let adsEnabled = false;
+if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+  const hostname = location.hostname.replace(/\.$/, '').toLowerCase();
+  const loopback = hostname === 'localhost' || hostname.endsWith('.localhost') ||
+    /^127(?:\.\d{1,3}){3}$/.test(hostname) || hostname === '[::1]' ||
+    /^\[::ffff:7f[\da-f]{2}:[\da-f]{1,4}\]$/.test(hostname);
+  if (!loopback) {
+    adsEnabled = true;
+    for (const origin of ['https://pagead2.googlesyndication.com', 'https://googleads.g.doubleclick.net']) {
+      const hint = document.createElement('link');
+      hint.rel = 'preconnect';
+      hint.href = origin;
+      hint.crossOrigin = '';
+      document.head.append(hint);
+    }
+    const adScript = document.createElement('script');
+    adScript.async = true;
+    adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+    adScript.crossOrigin = 'anonymous';
+    document.head.append(adScript);
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Screen DPI, PPI & Viewport Pixel Ratio Checker",
+  "url": "https://emfls.github.io/util/screen-dpi-checker/",
+  "description": "See your live screen size, viewport and device pixel ratio. Calculate physical PPI, dot pitch, megapixels, aspect ratio and Retina viewing distance.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What do screen size, viewport size, and device pixel ratio measure?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Screen size is the display size reported by the browser in CSS pixels. Viewport size is the inner window size in CSS pixels, including any scrollbars. Device pixel ratio (DPR) gives the number of device pixels per CSS pixel along one axis and can change with page zoom, display scaling, or a move to another display."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can the browser detect my physical DPI or PPI automatically?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Physical screen density requires the display’s native pixel resolution and its diagonal in inches. Browser-reported CSS dimensions and DPR describe how the browser renders the page. Enter the native resolution and diagonal from your display specifications to calculate PPI."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How are PPI, dot pitch, megapixels, and aspect ratio calculated?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "PPI is the diagonal pixel count divided by the diagonal size in inches. Dot pitch is 25.4 divided by PPI in millimeters. Megapixels are width times height divided by one million. Aspect ratio reduces width and height by their greatest common divisor."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does the Retina viewing distance estimate mean?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The calculator estimates the distance where one pixel subtends one arcminute, a common idealized threshold for 20/20 vision. It divides the pixel pitch by the tangent of one arcminute. Individual vision, contrast, and the display’s subpixel layout can affect whether pixels are visible."
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "EMFLS",
+      "item": "https://emfls.github.io/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Tools",
+      "item": "https://emfls.github.io/util/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Screen DPI, PPI & Viewport Pixel Ratio Checker",
+      "item": "https://emfls.github.io/util/screen-dpi-checker/"
+    }
+  ]
+}
+</script>
+<style>
+  .tool-shell, .tool-shell :where(*) { box-sizing: border-box; min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+  .tool-nav { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 20px; margin-bottom: 14px; }
+  .tool-nav a { color: #e2e8f0; }
+  .tool-nav .logo { color: #fff; font-size: 1.25rem; font-weight: 800; text-decoration: none; }
+  .tool-nav .logo span { color: #60a5fa; }
+  .tool-shell [hidden] { display: none; }
+  .metrics, .ppi-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .metrics { margin: 0; }
+  .metric { padding: 12px; border: 1px solid #d9e0ea; border-radius: 10px; background: #f8fafc; }
+  .metric dt { font-weight: 700; }
+  .metric dd { margin: 4px 0 0; font-size: 1.15rem; font-weight: 800; color: #173f8a; font-variant-numeric: tabular-nums; }
+  .ppi-form fieldset { margin: 0; padding: 0; border: 0; }
+  .ppi-form .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+  .ppi-form .actions > * { flex: 1 1 180px; white-space: normal; }
+  .ppi-fields { margin-top: 16px; }
+  .ppi-fields input { width: 100%; }
+  .ppi-form .calculate { width: auto; margin-top: 14px; }
+  #ppi-status { color: #9b1c1c; }
+  #ppi-status:empty { margin: 0; }
+  .ppi-result { white-space: normal; }
+  .ppi-result h3 { margin: 0 0 10px; }
+  .emfls-ad-slot { width: 100%; max-width: 520px; min-height: 278px; margin: 36px auto; overflow: hidden; text-align: center; }
+  .ad-label { height: 28px; font: 12px/20px system-ui,sans-serif; color: #cbd5e1; }
+  .emfls-ad-slot ins { width: 100%; height: 250px; }
+  @media (max-width: 650px) {
+    .metrics, .ppi-fields { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>
+</head>
+<body>
+<main class="tool-shell">
+  <nav class="tool-nav" aria-label="Site navigation">
+    <a class="logo" href="/" aria-label="EMFLS home">emfls<span>.</span></a>
+    <a href="/util/">All tools</a>
+  </nav>
+
+  <header class="hero">
+    <h1>Screen DPI, PPI &amp; Viewport Pixel Ratio Checker</h1>
+    <p>Check your live browser dimensions and calculate the physical pixel density of any display from its size and native resolution.</p>
+  </header>
+
+  <noscript><p class="panel">Enable JavaScript to see live measurements and calculate screen density.</p></noscript>
+
+  <section class="panel" aria-labelledby="live-title">
+    <h2 id="live-title">Live screen and viewport measurements</h2>
+    <dl class="metrics">
+      <div class="metric">
+        <dt>Screen width × height</dt>
+        <dd id="screen-size">—</dd>
+      </div>
+      <div class="metric">
+        <dt>Viewport width × height</dt>
+        <dd id="viewport-size">—</dd>
+      </div>
+      <div class="metric">
+        <dt>Device pixel ratio (DPR)</dt>
+        <dd id="pixel-ratio">—</dd>
+      </div>
+    </dl>
+    <p class="note">The browser reports these dimensions in CSS pixels. Resize the window or change page zoom to see them update. Measurements and calculations run locally.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="ppi-title">
+    <h2 id="ppi-title">Physical Screen PPI and Retina Viewing Distance Calculator</h2>
+    <p>Enter the display’s diagonal and native resolution. The smartphone preset uses an example resolution of 1206 × 2622 pixels.</p>
+    <form id="ppi-form" class="ppi-form" aria-labelledby="ppi-title" novalidate>
+      <fieldset id="ppi-controls" disabled>
+        <legend>Display specifications</legend>
+        <p id="preset-label"><strong>Load a preset</strong></p>
+        <div class="actions" role="group" aria-labelledby="preset-label">
+          <button class="secondary" type="button" data-preset="uhd">27&quot; 4K UHD Monitor</button>
+          <button class="secondary" type="button" data-preset="qhd">27&quot; 1440p QHD</button>
+          <button class="secondary" type="button" data-preset="laptop">14&quot; Laptop 3024×1964</button>
+          <button class="secondary" type="button" data-preset="phone">6.3&quot; Smartphone</button>
+        </div>
+        <div class="ppi-fields">
+          <div>
+            <label for="diagonal">Diagonal (inches)</label>
+            <input id="diagonal" type="number" inputmode="decimal" step="any" value="27" required>
+          </div>
+          <div>
+            <label for="width">Width (pixels)</label>
+            <input id="width" type="number" inputmode="numeric" min="1" step="1" value="3840" required>
+          </div>
+          <div>
+            <label for="height">Height (pixels)</label>
+            <input id="height" type="number" inputmode="numeric" min="1" step="1" value="2160" required>
+          </div>
+        </div>
+        <button class="calculate" type="submit">Calculate</button>
+      </fieldset>
+    </form>
+    <p id="ppi-status" class="note" role="status"></p>
+    <section id="ppi-results" class="result ppi-result" aria-labelledby="ppi-results-title" hidden>
+      <h3 id="ppi-results-title">Physical display results</h3>
+      <dl class="metrics" aria-live="polite" aria-atomic="true">
+        <div class="metric">
+          <dt>Pixel density</dt>
+          <dd id="ppi">—</dd>
+        </div>
+        <div class="metric">
+          <dt>Dot pitch</dt>
+          <dd id="pitch">—</dd>
+        </div>
+        <div class="metric">
+          <dt>Total megapixels</dt>
+          <dd id="megapixels">—</dd>
+        </div>
+        <div class="metric">
+          <dt>Aspect ratio</dt>
+          <dd id="aspect-ratio">—</dd>
+        </div>
+        <div class="metric">
+          <dt>Retina viewing distance</dt>
+          <dd id="retina-distance">—</dd>
+        </div>
+      </dl>
+      <p class="note">Viewing distance assumes one arcminute per pixel. Results use the entered diagonal and native resolution and round only for display.</p>
+    </section>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (adsEnabled) { (window.adsbygoogle = window.adsbygoogle || []).push({}); } else { document.currentScript.parentElement.hidden = true; }</script>
+  </aside>
+
+  <section class="panel faq" aria-labelledby="faq-title">
+    <h2 id="faq-title">Frequently asked questions</h2>
+    <details>
+      <summary>What do screen size, viewport size, and device pixel ratio measure?</summary>
+      <p>Screen size is the display size reported by the browser in CSS pixels. Viewport size is the inner window size in CSS pixels, including any scrollbars. Device pixel ratio (DPR) gives the number of device pixels per CSS pixel along one axis and can change with page zoom, display scaling, or a move to another display.</p>
+    </details>
+    <details>
+      <summary>Can the browser detect my physical DPI or PPI automatically?</summary>
+      <p>Physical screen density requires the display’s native pixel resolution and its diagonal in inches. Browser-reported CSS dimensions and DPR describe how the browser renders the page. Enter the native resolution and diagonal from your display specifications to calculate PPI.</p>
+    </details>
+    <details>
+      <summary>How are PPI, dot pitch, megapixels, and aspect ratio calculated?</summary>
+      <p>PPI is the diagonal pixel count divided by the diagonal size in inches. Dot pitch is 25.4 divided by PPI in millimeters. Megapixels are width times height divided by one million. Aspect ratio reduces width and height by their greatest common divisor.</p>
+    </details>
+    <details>
+      <summary>What does the Retina viewing distance estimate mean?</summary>
+      <p>The calculator estimates the distance where one pixel subtends one arcminute, a common idealized threshold for 20/20 vision. It divides the pixel pitch by the tangent of one arcminute. Individual vision, contrast, and the display’s subpixel layout can affect whether pixels are visible.</p>
+    </details>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (adsEnabled) { (window.adsbygoogle = window.adsbygoogle || []).push({}); } else { document.currentScript.parentElement.hidden = true; }</script>
+  </aside>
+
+  <section class="panel" aria-labelledby="related-title">
+    <h2 id="related-title">More tools</h2>
+    <div class="links">
+      <a href="/util/break-even-calculator/">Break-even calculator</a>
+      <a href="/util/">All EMFLS tools</a>
+    </div>
+  </section>
+</main>
+<footer>Screen DPI checker · emfls.github.io</footer>
+<script id="checker-script">
+'use strict';
+
+const get = id => document.getElementById(id);
+const number = new Intl.NumberFormat('en-US', { maximumSignificantDigits: 9 });
+const formatSize = (width, height) => number.format(width) + ' × ' + number.format(height) + ' CSS px';
+
+function updateLiveMetrics() {
+  get('screen-size').textContent = formatSize(window.screen.width, window.screen.height);
+  get('viewport-size').textContent = formatSize(window.innerWidth, window.innerHeight);
+  get('pixel-ratio').textContent = number.format(window.devicePixelRatio) + '×';
+}
+
+let resolutionQuery;
+function watchPixelRatio() {
+  resolutionQuery?.removeEventListener('change', watchPixelRatio);
+  // The query stops matching when zoom or a display change alters the ratio.
+  resolutionQuery = window.matchMedia('(resolution: ' + window.devicePixelRatio + 'dppx)');
+  resolutionQuery.addEventListener('change', watchPixelRatio);
+  updateLiveMetrics();
+}
+
+window.addEventListener('resize', updateLiveMetrics);
+window.addEventListener('pageshow', watchPixelRatio);
+watchPixelRatio();
+
+const form = get('ppi-form');
+const diagonalInput = get('diagonal');
+const widthInput = get('width');
+const heightInput = get('height');
+const results = get('ppi-results');
+const statusLine = get('ppi-status');
+const oneArcminute = Math.PI / (180 * 60);
+const presets = {
+  uhd: [27, 3840, 2160],
+  qhd: [27, 2560, 1440],
+  laptop: [14, 3024, 1964],
+  phone: [6.3, 1206, 2622]
+};
+
+function greatestCommonDivisor(first, second) {
+  while (second !== 0) {
+    const remainder = first % second;
+    first = second;
+    second = remainder;
+  }
+  return first;
+}
+
+function isPixelCount(value) {
+  return Number.isSafeInteger(value) && value > 0;
+}
+
+function calculate() {
+  const diagonal = diagonalInput.valueAsNumber;
+  const width = widthInput.valueAsNumber;
+  const height = heightInput.valueAsNumber;
+
+  if (!Number.isFinite(diagonal) || diagonal <= 0 || !isPixelCount(width) || !isPixelCount(height)) {
+    results.hidden = true;
+    statusLine.textContent = 'Enter a diagonal greater than zero and positive whole numbers for pixel width and height.';
+    return;
+  }
+
+  const ppi = Math.hypot(width, height) / diagonal;
+  const pitch = 25.4 / ppi;
+  const distance = (1 / ppi) / Math.tan(oneArcminute);
+  const distanceCm = distance * 2.54;
+  if (![ppi, pitch, distance, distanceCm].every(value => Number.isFinite(value) && value > 0)) {
+    results.hidden = true;
+    statusLine.textContent = 'These measurements are outside the calculation range.';
+    return;
+  }
+
+  const divisor = greatestCommonDivisor(width, height);
+  get('ppi').textContent = number.format(ppi) + ' PPI';
+  get('pitch').textContent = number.format(pitch) + ' mm';
+  get('megapixels').textContent = number.format(width * height / 1_000_000) + ' MP';
+  get('aspect-ratio').textContent = (width / divisor) + ':' + (height / divisor);
+  get('retina-distance').textContent = number.format(distance) + ' in (' + number.format(distanceCm) + ' cm)';
+  statusLine.textContent = '';
+  results.hidden = false;
+}
+
+form.addEventListener('input', calculate);
+form.addEventListener('submit', event => {
+  event.preventDefault();
+  calculate();
+});
+for (const button of form.querySelectorAll('[data-preset]')) {
+  button.addEventListener('click', () => {
+    const [diagonal, width, height] = presets[button.dataset.preset];
+    diagonalInput.value = diagonal;
+    widthInput.value = width;
+    heightInput.value = height;
+    calculate();
+  });
+}
+
+get('ppi-controls').removeAttribute('disabled');
+calculate();
+</script>
+</body>
+</html>

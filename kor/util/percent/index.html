@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>퍼센트 계산기 (할인율·증감률·비율·부가세 10% 즉시 계산) | EMFLS</title>
+<meta name="description" content="전체 값의 퍼센트, 비율·달성률, 증감률, 두 번 할인한 결제금액을 즉시 계산하세요. 부가세 10% 포함 금액에서 공급가액과 세액도 역산합니다.">
+<link rel="canonical" href="https://emfls.github.io/kor/util/percent/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="퍼센트 계산기 | EMFLS">
+<meta property="og:description" content="비율·증감률·중복 할인과 부가세 10% 역산을 한 곳에서 계산하세요.">
+<meta property="og:url" content="https://emfls.github.io/kor/util/percent/">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="/util/new-tools.css">
+<meta name="google-adsense-account" content="ca-pub-8830524482034754">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QP5Q67GE5B')</script>
+<script>
+let adsEnabled = false;
+if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+  const hostname = location.hostname.replace(/\.$/, '').toLowerCase();
+  const loopback = hostname === 'localhost' || hostname.endsWith('.localhost') ||
+    /^127(?:\.\d{1,3}){3}$/.test(hostname) || hostname === '[::1]' ||
+    /^\[::ffff:7f[\da-f]{2}:[\da-f]{1,4}\]$/.test(hostname);
+  if (!loopback) {
+    adsEnabled = true;
+    for (const origin of ['https://pagead2.googlesyndication.com', 'https://googleads.g.doubleclick.net']) {
+      const hint = document.createElement('link');
+      hint.rel = 'preconnect';
+      hint.href = origin;
+      hint.crossOrigin = '';
+      document.head.append(hint);
+    }
+    const adScript = document.createElement('script');
+    adScript.async = true;
+    adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+    adScript.crossOrigin = 'anonymous';
+    document.head.append(adScript);
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "퍼센트 계산기",
+  "url": "https://emfls.github.io/kor/util/percent/",
+  "inLanguage": "ko",
+  "description": "전체 값의 퍼센트, 비율, 증감률, 두 번 할인한 결제금액과 부가세 10%를 계산합니다.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "KRW"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "25만 원의 15%는 얼마인가요?",
+      "acceptedAnswer": {"@type": "Answer", "text": "250,000에 15를 곱하고 100으로 나누면 37,500원입니다. 15% 할인액으로 계산했다면 정가에서 37,500원을 뺀 212,500원이 결제금액입니다."}
+    },
+    {
+      "@type": "Question",
+      "name": "달성률과 증감률은 어떻게 다른가요?",
+      "acceptedAnswer": {"@type": "Answer", "text": "목표 100건 중 80건을 달성했다면 달성률은 80%입니다. 실적이 100건에서 80건으로 바뀌었다면 증감률은 −20%입니다. 증감률은 변한 양을 이전 값의 절댓값으로 나눕니다. 이전 값이 0이면 증감률을 계산할 수 없습니다."}
+    },
+    {
+      "@type": "Question",
+      "name": "20% 할인하고 10% 쿠폰을 쓰면 총 몇 % 할인인가요?",
+      "acceptedAnswer": {"@type": "Answer", "text": "총 할인율은 28%입니다. 정가가 100,000원이면 1차 할인 후 80,000원이고, 쿠폰은 이 금액의 10%인 8,000원을 추가로 깎습니다. 최종 결제금액은 72,000원입니다."}
+    },
+    {
+      "@type": "Question",
+      "name": "부가세 포함 금액에서 공급가액은 어떻게 구하나요?",
+      "acceptedAnswer": {"@type": "Answer", "text": "세율이 10%이면 부가세 포함 금액을 1.1로 나누어 공급가액을 구한 뒤, 포함 금액에서 공급가액을 빼면 부가세가 나옵니다. 110,000원이면 공급가액은 100,000원, 부가세는 10,000원입니다."}
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "EMFLS", "item": "https://emfls.github.io/"},
+    {"@type": "ListItem", "position": 2, "name": "퍼센트 계산기", "item": "https://emfls.github.io/kor/util/percent/"}
+  ]
+}
+</script>
+<style>
+  .tool-shell, .tool-shell * { min-width: 0; max-width: 100%; overflow-wrap: anywhere; }
+  .tool-shell [hidden] { display: none !important; }
+  .tool-nav { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; margin-bottom: 14px; color: #e2e8f0; }
+  .tool-nav a { color: #fff; font-size: 1.2rem; font-weight: 800; }
+  .preset-label { margin: 0 0 6px; }
+  .preset-buttons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 20px; }
+  .preset-buttons button { padding: 8px; min-height: 44px; }
+  .mode-panel { border: 0; padding: 0; margin: 16px 0; min-inline-size: 0; }
+  .mode-panel legend { padding: 0; margin-bottom: 8px; font-weight: 800; color: #173f8a; }
+  .mode-panel .grid { margin-top: 8px; }
+  .mode-panel .note { margin-bottom: 0; }
+  #shop-choice { margin-bottom: 8px; }
+  .result { white-space: normal; font-variant-numeric: tabular-nums; }
+  .result h3 { margin: 0; font-size: 1rem; }
+  #results { margin: 6px 0 0; }
+  #results p { margin: 0; }
+  #results dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 0; }
+  #results dl div { padding: 9px 12px; border-radius: 8px; background: #fff; }
+  #results dl div:first-child { grid-column: 1 / -1; background: #d9eaff; }
+  #results dt { color: #334155; font-size: .9rem; }
+  #results dd { margin: 1px 0 0; font-weight: 800; }
+  #results dl div:first-child dd { color: #173f8a; font-size: 1.5rem; }
+  .formula-list { padding-inline-start: 1.3em; margin-bottom: 0; }
+  .formula-list li + li { margin-top: 8px; }
+  .emfls-ad-slot { width: 100%; max-width: 520px; min-height: 278px; margin: 36px auto; text-align: center; overflow: hidden; }
+  .ad-label { height: 28px; font: 12px/20px system-ui,sans-serif; color: #cbd5e1; }
+  .emfls-ad-slot ins { width: 100%; height: 250px; }
+  summary:focus-visible { outline: 3px solid #b45309; outline-offset: 2px; }
+  @media (max-width: 420px) {
+    #results dl { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>
+</head>
+<body>
+<main class="tool-shell">
+  <nav class="tool-nav" aria-label="현재 위치">
+    <a href="/">EMFLS</a>
+    <span aria-hidden="true">›</span>
+    <span aria-current="page">퍼센트 계산기</span>
+  </nav>
+
+  <header class="hero">
+    <h1>퍼센트 계산기</h1>
+    <p>일부 값, 달성률, 연봉·주가 증감률부터 중복 할인과 부가세 10% 역산까지 계산하세요.</p>
+  </header>
+
+  <section class="panel" aria-labelledby="calculator-title">
+    <h2 id="calculator-title">퍼센트 계산하기</h2>
+    <noscript><p>자동 계산을 사용하려면 JavaScript를 켜세요. 아래 계산식은 그대로 볼 수 있습니다.</p></noscript>
+    <form id="percent-form" autocomplete="off" aria-labelledby="calculator-title">
+      <p class="preset-label" id="presets-label"><strong>예시로 시작하기</strong></p>
+      <div class="preset-buttons" role="group" aria-labelledby="presets-label">
+        <button class="secondary" type="button" data-preset="shopping">쇼핑 더블할인</button>
+        <button class="secondary" type="button" data-preset="salary">연봉 인상률</button>
+        <button class="secondary" type="button" data-preset="stock">주식 수익률</button>
+        <button class="secondary" type="button" data-preset="vat">부가세 역산</button>
+      </div>
+
+      <label for="calc-mode">계산 종류</label>
+      <select id="calc-mode">
+        <option value="portion">전체 값의 X%는 얼마?</option>
+        <option value="ratio">A는 B의 몇 %? (비율·달성률)</option>
+        <option value="change">A에서 B로 변하면 몇 %? (증감률)</option>
+        <option value="shopping">중복 할인·부가세 10% 역산</option>
+      </select>
+
+      <fieldset class="mode-panel" data-mode="portion">
+        <legend>전체 값과 퍼센트</legend>
+        <div class="grid">
+          <div>
+            <label for="whole">전체 값</label>
+            <input id="whole" type="text" inputmode="decimal" value="250,000" maxlength="28">
+          </div>
+          <div>
+            <label for="portion-rate">퍼센트 (%)</label>
+            <input id="portion-rate" type="text" inputmode="decimal" value="15" maxlength="28">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="mode-panel" data-mode="ratio" hidden disabled>
+        <legend>일부 값과 기준값</legend>
+        <div class="grid">
+          <div>
+            <label for="part">비교할 값 (A)</label>
+            <input id="part" type="text" inputmode="decimal" placeholder="예: 80" maxlength="28">
+          </div>
+          <div>
+            <label for="base">기준값 또는 목표 (B)</label>
+            <input id="base" type="text" inputmode="decimal" placeholder="예: 100" maxlength="28">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="mode-panel" data-mode="change" hidden disabled>
+        <legend>변하기 전과 후의 값</legend>
+        <div class="grid">
+          <div>
+            <label for="before">이전 값 (A)</label>
+            <input id="before" type="text" inputmode="decimal" placeholder="예: 45,000,000" maxlength="28">
+          </div>
+          <div>
+            <label for="after">이후 값 (B)</label>
+            <input id="after" type="text" inputmode="decimal" placeholder="예: 48,600,000" maxlength="28">
+          </div>
+        </div>
+        <p class="note">주식 수익률을 구할 때는 매수가와 매도가를 같은 단위로 입력하세요. 수수료와 세금은 계산식에 포함되지 않습니다.</p>
+      </fieldset>
+
+      <fieldset class="mode-panel" data-mode="shopping" hidden disabled>
+        <legend>할인 또는 부가세</legend>
+        <label for="shop-choice">계산할 항목</label>
+        <select id="shop-choice">
+          <option value="discount">1차 할인 후 추가 쿠폰 적용</option>
+          <option value="vat">부가세 포함 금액에서 역산</option>
+        </select>
+        <div id="discount-fields">
+          <div class="grid">
+            <div class="full">
+              <label for="list-price">정가 (원)</label>
+              <input id="list-price" type="text" inputmode="decimal" placeholder="예: 100,000" maxlength="28">
+            </div>
+            <div>
+              <label for="first-discount">1차 할인율 (%)</label>
+              <input id="first-discount" type="text" inputmode="decimal" placeholder="예: 20" maxlength="28">
+            </div>
+            <div>
+              <label for="coupon">추가 쿠폰 할인율 (%)</label>
+              <input id="coupon" type="text" inputmode="decimal" value="0" maxlength="28">
+            </div>
+          </div>
+          <p class="note">쿠폰은 1차 할인가에 적용합니다. 쿠폰이 없으면 0으로 두세요. 정가에 부가세 10%가 포함된 경우 결과의 공급가액과 부가세를 참고할 수 있습니다.</p>
+        </div>
+        <div id="vat-fields" hidden>
+          <label for="gross">부가세 10% 포함 금액 (원)</label>
+          <input id="gross" type="text" inputmode="decimal" placeholder="예: 110,000" maxlength="28" disabled>
+        </div>
+      </fieldset>
+
+      <p class="note" id="number-format">숫자에 천 단위 쉼표와 소수점을 쓸 수 있습니다. 결과는 소수점 이하 최대 8자리까지 표시합니다.</p>
+      <button type="submit">계산하기</button>
+    </form>
+
+    <section class="result" aria-labelledby="result-title">
+      <h3 id="result-title">계산 결과</h3>
+      <div id="results" role="status" aria-atomic="true">값을 입력하면 결과가 표시됩니다.</div>
+    </section>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="광고">
+    <div class="ad-label">광고</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (adsEnabled) { (window.adsbygoogle = window.adsbygoogle || []).push({}); } else { document.currentScript.parentElement.hidden = true; }</script>
+  </aside>
+
+  <section class="panel" aria-labelledby="formulas-title">
+    <h2 id="formulas-title">퍼센트 계산식</h2>
+    <ul class="formula-list">
+      <li><strong>전체 값의 X%.</strong> 전체 값 × (X ÷ 100)</li>
+      <li><strong>비율·달성률 (%).</strong> 비교할 값 ÷ 기준값 × 100</li>
+      <li><strong>증감률 (%).</strong> (이후 값 − 이전 값) ÷ 이전 값의 절댓값 × 100</li>
+      <li><strong>중복 할인.</strong> 정가 × (1 − 1차 할인율 ÷ 100) × (1 − 쿠폰 할인율 ÷ 100). 총 체감 할인율은 (정가 − 최종 결제금액) ÷ 정가 × 100입니다.</li>
+      <li><strong>부가세 10% 역산.</strong> 공급가액은 부가세 포함 금액 ÷ 1.1, 부가세는 부가세 포함 금액 ÷ 11입니다.</li>
+    </ul>
+    <p class="note">계산 중간에 원 단위로 반올림하지 않습니다. 판매처가 할인 단계마다 금액을 반올림하거나 쿠폰 한도를 적용하면 실제 결제금액이 달라질 수 있습니다.</p>
+  </section>
+
+  <section class="panel faq" aria-labelledby="faq-title">
+    <h2 id="faq-title">자주 묻는 질문</h2>
+    <details>
+      <summary>25만 원의 15%는 얼마인가요?</summary>
+      <p>250,000에 15를 곱하고 100으로 나누면 37,500원입니다. 15% 할인액으로 계산했다면 정가에서 37,500원을 뺀 212,500원이 결제금액입니다.</p>
+    </details>
+    <details>
+      <summary>달성률과 증감률은 어떻게 다른가요?</summary>
+      <p>목표 100건 중 80건을 달성했다면 달성률은 80%입니다. 실적이 100건에서 80건으로 바뀌었다면 증감률은 −20%입니다. 증감률은 변한 양을 이전 값의 절댓값으로 나눕니다. 이전 값이 0이면 증감률을 계산할 수 없습니다.</p>
+    </details>
+    <details>
+      <summary>20% 할인하고 10% 쿠폰을 쓰면 총 몇 % 할인인가요?</summary>
+      <p>총 할인율은 28%입니다. 정가가 100,000원이면 1차 할인 후 80,000원이고, 쿠폰은 이 금액의 10%인 8,000원을 추가로 깎습니다. 최종 결제금액은 72,000원입니다.</p>
+    </details>
+    <details>
+      <summary>부가세 포함 금액에서 공급가액은 어떻게 구하나요?</summary>
+      <p>세율이 10%이면 부가세 포함 금액을 1.1로 나누어 공급가액을 구한 뒤, 포함 금액에서 공급가액을 빼면 부가세가 나옵니다. 110,000원이면 공급가액은 100,000원, 부가세는 10,000원입니다.</p>
+    </details>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="광고">
+    <div class="ad-label">광고</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (adsEnabled) { (window.adsbygoogle = window.adsbygoogle || []).push({}); } else { document.currentScript.parentElement.hidden = true; }</script>
+  </aside>
+
+  <section class="panel" aria-labelledby="related-title">
+    <h2 id="related-title">함께 쓰는 계산기</h2>
+    <nav class="links" aria-labelledby="related-title">
+      <a href="/kor/util/date-calculator/">날짜 계산기</a>
+      <a href="/kor/util/fin-calc/">단리·적금·할부 계산기</a>
+      <a href="/kor/util/overseas-stock-tax-calculator/">해외주식 양도소득세 계산기</a>
+    </nav>
+  </section>
+</main>
+<script>
+'use strict';
+
+const get = id => document.getElementById(id);
+const form = get('percent-form');
+const mode = get('calc-mode');
+const shopChoice = get('shop-choice');
+const results = get('results');
+const panels = form.querySelectorAll('[data-mode]');
+const formatter = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 8 });
+const scientific = new Intl.NumberFormat('ko-KR', {
+  notation: 'scientific', maximumFractionDigits: 8
+});
+
+const presets = {
+  shopping: { mode: 'shopping', choice: 'discount', values: {
+    'list-price': '100,000', 'first-discount': '20', coupon: '10'
+  } },
+  salary: { mode: 'change', values: { before: '45,000,000', after: '48,600,000' } },
+  stock: { mode: 'change', values: { before: '50,000', after: '46,500' } },
+  vat: { mode: 'shopping', choice: 'vat', values: { gross: '110,000' } }
+};
+
+function parseNumber(value) {
+  const text = value.trim().replace(/^−/, '-');
+  if (!/^[+-]?(?:(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d*)?|\.\d+)$/.test(text)) {
+    return NaN;
+  }
+  return Number(text.replace(/,/g, ''));
+}
+
+function readNumber(id, label, { min = -Infinity, max = Infinity, nonzero = false } = {}) {
+  const input = get(id);
+  const value = parseNumber(input.value);
+  const reject = message => {
+    input.setAttribute('aria-invalid', 'true');
+    input.setAttribute('aria-describedby', 'results');
+    throw new RangeError(message);
+  };
+
+  if (!Number.isFinite(value)) reject(label + '에 숫자를 입력해 주세요. 예: 250,000 또는 12.5');
+  if (Math.abs(value) > Number.MAX_SAFE_INTEGER) reject(label + '의 절댓값은 9,007,199,254,740,991 이하여야 합니다.');
+  if (nonzero && value === 0) reject(label + '은 0 이외의 값을 입력해 주세요.');
+  if (min === 0 && max === 100 && (value < min || value > max)) {
+    reject(label + '은 0%부터 100%까지 입력해 주세요.');
+  }
+  if (value < min) reject(label + '은 0 이상이어야 합니다.');
+  return value;
+}
+
+function format(value, unit = '') {
+  const normalizeZero = value === 0 ? 0 : value;
+  const numberFormat = value !== 0 && Math.abs(value) < 0.00000001 ? scientific : formatter;
+  return numberFormat.format(normalizeZero) + unit;
+}
+
+function vatRows(gross, suffix = '') {
+  return [
+    ['공급가액' + suffix, gross * 10 / 11, '원'],
+    ['부가세' + suffix, gross / 11, '원']
+  ];
+}
+
+function calculate() {
+  switch (mode.value) {
+    case 'portion': {
+      const whole = readNumber('whole', '전체 값');
+      const rate = readNumber('portion-rate', '퍼센트');
+      return [[format(whole) + '의 ' + format(rate, '%'), whole * (rate / 100)]];
+    }
+    case 'ratio': {
+      const part = readNumber('part', '비교할 값');
+      const base = readNumber('base', '기준값', { nonzero: true });
+      return [['비율·달성률', part / base * 100, '%']];
+    }
+    case 'change': {
+      const before = readNumber('before', '이전 값', { nonzero: true });
+      const after = readNumber('after', '이후 값');
+      const difference = after - before;
+      return [
+        ['증감률', difference / Math.abs(before) * 100, '%'],
+        ['변화량', difference]
+      ];
+    }
+    case 'shopping': {
+      if (shopChoice.value === 'vat') {
+        const gross = readNumber('gross', '부가세 포함 금액', { min: 0 });
+        return vatRows(gross);
+      }
+      const price = readNumber('list-price', '정가', { min: 0, nonzero: true });
+      const discount = readNumber('first-discount', '1차 할인율', { min: 0, max: 100 });
+      const coupon = readNumber('coupon', '추가 쿠폰 할인율', { min: 0, max: 100 });
+      const afterDiscount = price * ((100 - discount) / 100);
+      const final = afterDiscount * ((100 - coupon) / 100);
+      const totalRate = discount + coupon * ((100 - discount) / 100);
+      return [
+        ['최종 결제금액', final, '원'],
+        ['총 체감 할인율', totalRate, '%'],
+        ['총 할인액', price * (totalRate / 100), '원'],
+        ['1차 할인가', afterDiscount, '원'],
+        ...vatRows(final, ' (부가세 10% 포함 시)')
+      ];
+    }
+  }
+}
+
+function syncFields() {
+  for (const panel of panels) {
+    const inactive = panel.dataset.mode !== mode.value;
+    panel.hidden = inactive;
+    panel.disabled = inactive;
+  }
+
+  const vatOnly = shopChoice.value === 'vat';
+  get('discount-fields').hidden = vatOnly;
+  for (const field of get('discount-fields').querySelectorAll('input')) field.disabled = vatOnly;
+  get('vat-fields').hidden = !vatOnly;
+  get('gross').disabled = !vatOnly;
+}
+
+function render() {
+  for (const input of form.querySelectorAll('[aria-invalid]')) {
+    input.removeAttribute('aria-invalid');
+    input.removeAttribute('aria-describedby');
+  }
+
+  try {
+    const rows = calculate();
+    const list = document.createElement('dl');
+    for (const [label, value, unit] of rows) {
+      if (!Number.isFinite(value)) throw new RangeError('계산 범위를 초과했습니다. 더 작은 값을 사용해 주세요.');
+      const row = document.createElement('div');
+      const term = document.createElement('dt');
+      const detail = document.createElement('dd');
+      term.textContent = label;
+      detail.textContent = format(value, unit);
+      row.append(term, detail);
+      list.append(row);
+    }
+    results.replaceChildren(list);
+  } catch (error) {
+    if (!(error instanceof RangeError)) throw error;
+    results.textContent = error.message;
+  }
+}
+
+form.addEventListener('input', event => {
+  if (event.target.matches('input')) render();
+});
+form.addEventListener('change', event => {
+  if (event.target === mode || event.target === shopChoice) {
+    syncFields();
+    render();
+  }
+});
+form.addEventListener('submit', event => {
+  event.preventDefault();
+  render();
+  form.querySelector('[aria-invalid="true"]')?.focus();
+});
+
+for (const button of form.querySelectorAll('[data-preset]')) {
+  button.addEventListener('click', () => {
+    const preset = presets[button.dataset.preset];
+    mode.value = preset.mode;
+    if (preset.choice) shopChoice.value = preset.choice;
+    for (const [id, value] of Object.entries(preset.values)) get(id).value = value;
+    syncFields();
+    render();
+  });
+}
+
+syncFields();
+render();
+</script>
+</body>
+</html>
