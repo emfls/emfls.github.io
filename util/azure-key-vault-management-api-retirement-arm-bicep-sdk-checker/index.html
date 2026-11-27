@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Azure Key Vault API Retirement Checker: Audit ARM, Bicep, Terraform &amp; SDKs Before Feb 27, 2027</title>
+<meta name="description" content="Check Azure Key Vault REST URLs, ARM, Bicep, Terraform and management SDKs for the Feb 27, 2027 API retirement. Review the RBAC default for new vaults.">
+<link rel="canonical" href="https://emfls.github.io/util/azure-key-vault-management-api-retirement-arm-bicep-sdk-checker/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Azure Key Vault API Retirement Checker">
+<meta property="og:description" content="Audit Key Vault management API versions and SDKs before Feb 27, 2027, and see how the new-vault RBAC default applies.">
+<meta property="og:url" content="https://emfls.github.io/util/azure-key-vault-management-api-retirement-arm-bicep-sdk-checker/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Azure Key Vault API Retirement Checker">
+<meta name="twitter:description" content="Check Key Vault management REST, ARM, Bicep, Terraform and SDKs against the 2026-02-01 API cutoff.">
+<link rel="stylesheet" href="../new-tools.css">
+<meta name="google-adsense-account" content="ca-pub-8830524482034754">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QP5Q67GE5B"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-QP5Q67GE5B')</script>
+<script>
+let adsEnabled = false;
+if (!['127.0.0.1','localhost',''].includes(location.hostname)) {
+  const hostname = location.hostname.replace(/\.$/, '').toLowerCase();
+  const loopback = hostname === 'localhost' || hostname.endsWith('.localhost') ||
+    /^127(?:\.\d{1,3}){3}$/.test(hostname) || hostname === '[::1]' ||
+    /^\[::ffff:7f[\da-f]{2}:[\da-f]{1,4}\]$/.test(hostname);
+  if (!loopback) {
+    adsEnabled = true;
+    for (const origin of ['https://pagead2.googlesyndication.com', 'https://googleads.g.doubleclick.net']) {
+      const hint = document.createElement('link');
+      hint.rel = 'preconnect';
+      hint.href = origin;
+      hint.crossOrigin = '';
+      document.head.append(hint);
+    }
+    const adScript = document.createElement('script');
+    adScript.async = true;
+    adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+    adScript.crossOrigin = 'anonymous';
+    document.head.append(adScript);
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Azure Key Vault API Retirement Checker",
+  "url": "https://emfls.github.io/util/azure-key-vault-management-api-retirement-arm-bicep-sdk-checker/",
+  "description": "Check Azure Key Vault management REST URLs, infrastructure declarations and SDK versions against the February 27, 2027 retirement cutoff.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What retires on February 27, 2027?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Azure Key Vault control-plane API versions older than 2026-02-01 retire. Audit the version on each management request and resource declaration, including child resources. Use a supported stable management API version at or above the cutoff."}
+    },
+    {
+      "@type": "Question",
+      "name": "Will my vaults or data-plane reads stop working?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Existing vaults remain in place. Calls to a vault.azure.net endpoint for secrets, keys and certificates use separate data-plane APIs and are outside this control-plane retirement. Data-plane preview APIs have their own lifecycle."}
+    },
+    {
+      "@type": "Question",
+      "name": "Does upgrading the API version switch existing vaults to Azure RBAC?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Existing vaults retain their access model unless enableRbacAuthorization is explicitly changed. Starting with API version 2026-02-01, newly created vaults default to Azure RBAC when the property is omitted."}
+    },
+    {
+      "@type": "Question",
+      "name": "Does the Terraform provider version tell me the API version?",
+      "acceptedAnswer": {"@type": "Answer", "text": "AzAPI declares the management API in the resource type. For AzureRM, check the installed provider release and its resource documentation or inspect a sanitized request trace for the effective API version."}
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "EMFLS", "item": "https://emfls.github.io/"},
+    {"@type": "ListItem", "position": 2, "name": "Tools", "item": "https://emfls.github.io/util/"},
+    {"@type": "ListItem", "position": 3, "name": "Azure Key Vault API Retirement Checker", "item": "https://emfls.github.io/util/azure-key-vault-management-api-retirement-arm-bicep-sdk-checker/"}
+  ]
+}
+</script>
+<style>
+  .tool-nav { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 20px; margin-bottom: 14px; }
+  .tool-nav a { color: #e2e8f0; }
+  .tool-nav .logo { color: #fff; font-size: 1.25rem; font-weight: 800; text-decoration: none; }
+  .tool-nav .logo span { color: #60a5fa; }
+  .takeaways { border-inline-start: 5px solid #60a5fa; }
+  .takeaways p:last-child, .finding ol { margin-bottom: 0; }
+  .tool-shell [hidden] { display: none; }
+  .panel, .hero { overflow-wrap: anywhere; }
+  .lanes { margin: 0; padding-inline-start: 1.4rem; }
+  .lanes li + li { margin-top: 6px; }
+  .preset-label { margin-bottom: 6px; }
+  .block { margin-top: 18px; }
+  fieldset, .grid > * { min-width: 0; }
+  fieldset { margin: 18px 0; padding: 12px; border: 1px solid #d9e0ea; border-radius: 10px; }
+  legend { color: #173f8a; font-weight: 800; padding-inline: 4px; }
+  textarea { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+  .result { white-space: normal; }
+  .result h3, .finding h5 { margin: 0 0 6px; }
+  .result h4 { margin: 16px 0 8px; }
+  .finding { border-inline-start: 4px solid #64748b; background: #fff; border-radius: 8px; margin: 8px 0; padding: 12px; }
+  .finding h5 { font-size: 1rem; }
+  .finding p { margin: 4px 0 8px; }
+  .finding .verdict { font-weight: 800; }
+  .finding.action { border-color: #b45309; }
+  .finding.action .verdict { color: #92400e; }
+  .finding.pass { border-color: #15803d; }
+  .finding.pass .verdict { color: #166534; }
+  .finding.data { border-color: #2563eb; }
+  .finding.data .verdict { color: #1e40af; }
+  .emfls-ad-slot { width: 100%; max-width: 520px; min-height: 278px; margin: 36px auto; text-align: center; }
+  .ad-label { height: 28px; font: 12px/20px system-ui,sans-serif; color: #cbd5e1; }
+  .emfls-ad-slot ins { width: 100%; height: 250px; }
+</style>
+</head>
+<body>
+<main class="tool-shell">
+  <nav class="tool-nav" aria-label="Site navigation">
+    <a class="logo" href="/" aria-label="EMFLS home">emfls<span>.</span></a>
+    <a href="/util/">All tools</a>
+  </nav>
+
+  <header class="hero">
+    <h1>Azure Key Vault API Retirement Checker</h1>
+    <p>Audit ARM, Bicep, Terraform and SDKs before February 27, 2027. Key Vault management API versions older than <strong>2026-02-01</strong> retire on that date.</p>
+  </header>
+
+  <section class="panel" aria-labelledby="checker-title">
+    <h2 id="checker-title">Check your Key Vault references</h2>
+    <ol class="lanes">
+      <li><strong>Management REST.</strong> Check <code>api-version</code> on <code>management.azure.com</code> Key Vault requests.</li>
+      <li><strong>Infrastructure as code.</strong> Check ARM JSON <code>apiVersion</code>, Bicep <code>type@version</code> and Terraform AzAPI resource types.</li>
+      <li><strong>Management SDKs and CLI.</strong> Check the installed package or tool, or enter the effective API version used by your client.</li>
+      <li><strong>Data-plane runtime.</strong> Identify <code>*.vault.azure.net</code> requests for secrets, keys and certificates.</li>
+    </ol>
+    <noscript><p>Enable JavaScript to check your snippets in this browser.</p></noscript>
+    <form id="checker-form" aria-labelledby="checker-title" autocomplete="off">
+      <p id="examples-label" class="preset-label"><strong>Load an example</strong></p>
+      <div class="actions" role="group" aria-labelledby="examples-label">
+        <button class="secondary" type="button" data-preset="legacy">Legacy Bicep</button>
+        <button class="secondary" type="button" data-preset="current">Compliant Bicep · new vault</button>
+        <button class="secondary" type="button" data-preset="data">Data-plane URL</button>
+        <button class="secondary" type="button" data-preset="mixed">Mixed ARM template</button>
+      </div>
+      <div class="block">
+        <label for="snippet">Sanitized resource snippets or request URLs</label>
+        <p class="note" id="snippet-help">Paste resource headers, relevant properties or redacted URLs. Remove tokens, credentials, secret values and private identifiers. The checker processes text in this browser without Azure credentials or network requests.</p>
+        <textarea id="snippet" aria-describedby="snippet-help" spellcheck="false" maxlength="24000" rows="7" placeholder="resource vault 'Microsoft.KeyVault/vaults@2023-07-01'"></textarea>
+      </div>
+      <div class="block">
+        <label for="vault-operation">Operation for the RBAC check on vault declarations</label>
+        <select id="vault-operation">
+          <option value="unknown">Unknown or mixed</option>
+          <option value="create">Create new vaults</option>
+          <option value="update">Update existing vaults</option>
+        </select>
+      </div>
+      <fieldset>
+        <legend>SDK or CLI check (optional)</legend>
+        <div class="grid">
+          <div>
+            <label for="client">Installed package or tool</label>
+            <select id="client">
+              <option value="">Select a package or tool</option>
+              <option value="powershell">PowerShell · Az.KeyVault</option>
+              <option value="cli">Azure CLI</option>
+              <option value="dotnet">.NET · Azure.ResourceManager.KeyVault</option>
+              <option value="python">Python · azure-mgmt-keyvault</option>
+              <option value="go">Go · armkeyvault</option>
+              <option value="java">Java · azure-resourcemanager-keyvault</option>
+              <option value="javascript">JavaScript · @azure/arm-keyvault</option>
+              <option value="legacy">Other or legacy management package</option>
+              <option value="data">Data-plane SDK (secrets, keys or certificates)</option>
+            </select>
+          </div>
+          <div>
+            <label for="client-version">Installed version or Go track</label>
+            <input id="client-version" type="text" maxlength="50" placeholder="6.6.1 or v2" spellcheck="false">
+          </div>
+          <div class="full">
+            <label for="effective-api">Observed management API version (optional)</label>
+            <input id="effective-api" type="text" maxlength="50" placeholder="2026-02-01" spellcheck="false" aria-describedby="api-help">
+            <p class="note" id="api-help">Use the effective request version from a sanitized trace or SDK configuration. It takes priority over the package baseline for this check.</p>
+          </div>
+        </div>
+      </fieldset>
+      <div class="actions">
+        <button type="submit">Check readiness</button>
+        <button class="secondary" id="clear" type="button">Clear</button>
+      </div>
+    </form>
+    <p id="status" class="note" role="status"></p>
+    <section class="result" id="results" aria-labelledby="results-title" hidden>
+      <h3 id="results-title">Findings and remediation</h3>
+      <div id="findings"></div>
+    </section>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (adsEnabled) { (window.adsbygoogle = window.adsbygoogle || []).push({}); } else { document.currentScript.parentElement.hidden = true; }</script>
+  </aside>
+
+  <section class="panel takeaways" aria-labelledby="rbac-title">
+    <h2 id="rbac-title">Azure RBAC default for new vaults</h2>
+    <p>When a vault is created with API <code>2026-02-01</code> or later and <code>enableRbacAuthorization</code> is omitted, Azure defaults it to <code>true</code>. An existing vault keeps its current access model, Vault Access Policy or Azure RBAC, unless the setting is explicitly changed.</p>
+    <p>Review the deployment diff and verify least-privilege data-plane permissions for the workload identities. Treat any access-model change as a separate rollout. <a href="https://learn.microsoft.com/en-us/azure/key-vault/general/access-control-default">Microsoft Learn RBAC defaults</a></p>
+  </section>
+
+  <section class="panel" aria-labelledby="scope-title">
+    <h2 id="scope-title">What the checker can establish</h2>
+    <p>Compliance means a stable date meets the retirement cutoff or an installed client meets a documented baseline. For PowerShell management calls, that baseline is <code>Az.KeyVault</code> 6.6.1 or later. Verify that the exact API is published for the resource type and cloud, and check any request-level overrides. Preview management versions are flagged for migration even if their date is newer.</p>
+    <p>Paste literal Bicep resource headers, ARM JSON resource objects or templates, and AzAPI blocks. For values set by parameters, expressions, modules or the AzureRM provider, inspect the resolved deployment or request. A clean snippet does not cover callers outside the pasted text.</p>
+    <p class="note"><a href="https://learn.microsoft.com/en-us/azure/key-vault/general/migrate-api-version">Key Vault management API migration guide</a> · <a href="https://learn.microsoft.com/en-us/azure/key-vault/general/whats-new#control-plane-sdk-releases">Management SDK release baselines</a> · <a href="https://learn.microsoft.com/en-us/powershell/azure/release-notes-azureps#azkeyvault-661">Az.KeyVault 6.6.1 release notes</a></p>
+  </section>
+
+  <section class="panel faq" aria-labelledby="faq-title">
+    <h2 id="faq-title">Frequently asked questions</h2>
+    <details>
+      <summary>What retires on February 27, 2027?</summary>
+      <p>Azure Key Vault control-plane API versions older than 2026-02-01 retire. Audit the version on each management request and resource declaration, including child resources. Use a supported stable management API version at or above the cutoff.</p>
+    </details>
+    <details>
+      <summary>Will my vaults or data-plane reads stop working?</summary>
+      <p>Existing vaults remain in place. Calls to a vault.azure.net endpoint for secrets, keys and certificates use separate data-plane APIs and are outside this control-plane retirement. Data-plane preview APIs have their own lifecycle.</p>
+    </details>
+    <details>
+      <summary>Does upgrading the API version switch existing vaults to Azure RBAC?</summary>
+      <p>Existing vaults retain their access model unless enableRbacAuthorization is explicitly changed. Starting with API version 2026-02-01, newly created vaults default to Azure RBAC when the property is omitted.</p>
+    </details>
+    <details>
+      <summary>Does the Terraform provider version tell me the API version?</summary>
+      <p>AzAPI declares the management API in the resource type. For AzureRM, check the installed provider release and its resource documentation or inspect a sanitized request trace for the effective API version.</p>
+    </details>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (adsEnabled) { (window.adsbygoogle = window.adsbygoogle || []).push({}); } else { document.currentScript.parentElement.hidden = true; }</script>
+  </aside>
+
+  <section class="panel" aria-labelledby="related-title">
+    <h2 id="related-title">Related tools</h2>
+    <div class="links">
+      <a href="/util/url-encoder/">URL encoder and decoder</a>
+      <a href="/util/">All EMFLS tools</a>
+    </div>
+  </section>
+</main>
+<footer>Azure Key Vault readiness · emfls.github.io</footer>
+<script id="checker-script">
+'use strict';
+
+const cutoff = '2026-02-01';
+const vaultType = 'Microsoft.KeyVault/vaults';
+const isVaultType = type => /^Microsoft\.KeyVault\/vaults(?:\/[\w.-]+)*$/i.test(type);
+const isParentVault = type => type.toLowerCase() === vaultType.toLowerCase();
+const lanes = {
+  rest: 'Management REST',
+  iac: 'Infrastructure as code',
+  client: 'Management SDKs and CLI',
+  data: 'Data-plane runtime'
+};
+const verdicts = {
+  action: 'ACTION REQUIRED (Upgrade Management API >= 2026-02-01)',
+  pass: 'COMPLIANT (>= 2026-02-01)',
+  data: 'DATA PLANE (vault.azure.net — Not Part of This Control-Plane Retirement)',
+  unknown: 'INSUFFICIENT VERSION INFO'
+};
+
+function checkApiVersion(value) {
+  const version = typeof value === 'string' ? value.trim() : '';
+  const match = /^(\d{4}-\d{2}-\d{2})(-preview)?$/i.exec(version);
+  if (match) {
+    const date = new Date(match[1]);
+    if (Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === match[1]) {
+      const preview = Boolean(match[2]);
+      return { status: preview || match[1] < cutoff ? 'action' : 'pass', version, preview };
+    }
+  }
+  return { status: 'unknown', version: '', preview: false };
+}
+
+function rbacNote(setting, operation, check) {
+  if (setting === 'reference') {
+    return 'This Bicep existing declaration references a deployed vault and does not change its access model.';
+  }
+  if (setting === true || setting === false) {
+    const model = setting ? 'Azure RBAC' : 'Vault Access Policy';
+    return 'The snippet explicitly selects ' + model + '. Check the deployment diff for an access-model change and validate permissions for the workload identities.';
+  }
+  if (setting === 'expression') {
+    return 'Resolve enableRbacAuthorization before deployment and review any change to the current access model.';
+  }
+  if (operation === 'update') {
+    return 'An existing vault keeps its current access model unless enableRbacAuthorization is explicitly changed. Review the resolved deployment for any explicit setting.';
+  }
+  if (check.status === 'pass' && setting === 'omitted' && operation === 'create') {
+    return 'This create uses the Azure RBAC default (enableRbacAuthorization = true). Verify least-privilege data-plane role assignments for workload identities.';
+  }
+  return 'For a new vault at 2026-02-01 or later, omission defaults to Azure RBAC. Existing vaults keep their access model unless explicitly changed. Confirm the operation and the resolved property.';
+}
+
+function apiFinding(lane, title, value, instruction, rbac) {
+  const check = checkApiVersion(value);
+  const details = {
+    action: check.preview ? 'Preview management API ' + check.version + '. Use a supported stable version.' :
+      'Management API ' + check.version + ' is older than the retirement cutoff.',
+    pass: 'Management API ' + check.version + ' meets the stable version cutoff.',
+    unknown: 'A single resolved management API version could not be determined.'
+  };
+  const steps = {
+    action: [instruction, 'Verify the target API supports this resource and operation, then test the updated caller before the cutoff.'],
+    pass: ['Verify support for this exact version in your Azure cloud and test the effective request or deployment.'],
+    unknown: [instruction, 'Recheck using the resolved management API version.']
+  };
+  return {
+    lane, title, status: check.status, detail: details[check.status], steps: steps[check.status],
+    rbac: rbac ? rbacNote(rbac.setting, rbac.operation, check) : ''
+  };
+}
+
+function dataFinding(title) {
+  return {
+    lane: 'data', title, status: 'data',
+    detail: 'The February 27, 2027 management API retirement leaves existing vaults in place and does not affect data-plane APIs for secrets, keys or certificates.',
+    steps: ['Keep the data-plane client on a supported data-plane API. Review preview lifecycles separately if applicable.']
+  };
+}
+
+function urlFindings(source) {
+  const findings = [];
+  const urls = source.replace(/\\\//g, '/').replace(/&amp;/gi, '&').replace(/<[\w-]+>/g, 'redacted');
+  const candidates = urls.matchAll(/https:\/\/[^\s"'\x60\\<>()]+/gi);
+  for (const [candidate] of candidates) {
+    let url;
+    try {
+      url = new URL(candidate.replace(/[;,]+$/, ''));
+    } catch {
+      continue;
+    }
+    if (url.username || url.password) continue;
+    if (url.hostname === 'management.azure.com' && /\/providers\/Microsoft\.KeyVault\//i.test(url.pathname)) {
+      const versions = [...url.searchParams].filter(([key]) => key.toLowerCase() === 'api-version');
+      findings.push(apiFinding('rest', 'Key Vault management request', versions.length === 1 ? versions[0][1] : '',
+        'Set a single api-version query parameter to a supported stable management version, such as ' + cutoff + '.'));
+    } else if (/^[a-z0-9-]+\.vault\.azure\.net$/.test(url.hostname) &&
+               /^\/(secrets|keys|certificates)(?:\/|$)/i.test(url.pathname)) {
+      findings.push(dataFinding('Vault endpoint · /' + url.pathname.split('/')[1].toLowerCase()));
+    }
+  }
+  return findings;
+}
+
+function armFindings(root, operation) {
+  const findings = [];
+  const pending = [{ item: root, parentType: '' }];
+  while (pending.length) {
+    const { item, parentType } = pending.pop();
+    if (!item || typeof item !== 'object') continue;
+    if (Array.isArray(item)) {
+      for (let index = item.length - 1; index >= 0; index--) pending.push({ item: item[index], parentType });
+      continue;
+    }
+    const declared = typeof item.type === 'string' ? item.type : '';
+    const type = declared && parentType && !declared.includes('.') ? parentType + '/' + declared : declared;
+    if (isVaultType(type)) {
+      const properties = item.properties;
+      const setting = !properties || typeof properties !== 'object' || Array.isArray(properties) ? 'unseen' :
+        Object.hasOwn(properties, 'enableRbacAuthorization') ? booleanSetting(properties.enableRbacAuthorization) : 'omitted';
+      findings.push(apiFinding('iac', 'ARM declaration ' + (findings.length + 1) + ' · ' + type, item.apiVersion,
+        'Resolve and set the resource’s own apiVersion to a supported stable version at or above ' + cutoff + '.',
+        isParentVault(type) ? { operation, setting } : null));
+    }
+    for (const [container, prefix] of [[item.properties?.template?.resources, ''], [item.resources, type]]) {
+      if (Array.isArray(container)) pending.push({ item: container, parentType: prefix });
+      else if (container && typeof container === 'object') pending.push({ item: Object.values(container), parentType: prefix });
+    }
+  }
+  return findings;
+}
+
+function booleanSetting(value) {
+  return value === true || value === false ? value : 'expression';
+}
+
+// Keep quoted strings intact and match braces so fields stay with their own declaration.
+function tokenize(source) {
+  const tokens = [];
+  const blocks = [];
+  const pattern = /\/\*[\s\S]*?(?:\*\/|$)|\/\/[^\n]*|#[^\n]*|'{3}[\s\S]*?(?:'{3}|$)|"(?:\\[\s\S]|[^"\\])*"|'(?:\\[\s\S]|[^'\\])*'|\.\.\.|[\w-]+|[^\s]/g;
+  for (const match of source.matchAll(pattern)) {
+    const raw = match[0];
+    if (/^(?:\/\/|\/\*|#)/.test(raw)) continue;
+    const token = { raw, offset: match.index, owner: blocks.at(-1) };
+    tokens.push(token);
+    if (raw === '{') blocks.push(token);
+    if (raw === '}' && blocks.length) blocks.pop().closed = true;
+  }
+  return tokens;
+}
+
+function quoted(token) {
+  return token && /^(['"]).*\1$/s.test(token.raw) ? token.raw.slice(1, -1) : '';
+}
+
+function fieldIndex(tokens, blockIndex, key, separators) {
+  const block = tokens[blockIndex];
+  if (block?.raw !== '{') return -1;
+  for (let index = blockIndex + 1; index < tokens.length; index++) {
+    const token = tokens[index];
+    if (token.raw === '}' && token.owner === block) break;
+    if (token.owner === block && (token.raw === key || quoted(token) === key) &&
+        separators.includes(tokens[index + 1]?.raw)) return index + 2;
+  }
+  return -1;
+}
+
+function blockRbac(tokens, propertiesIndex, separators, syntax) {
+  const block = tokens[propertiesIndex];
+  if (block?.raw !== '{') return 'unseen';
+  if (syntax === 'hcl' && tokens[propertiesIndex + 1]?.raw === 'for') return 'expression';
+  for (let index = propertiesIndex + 1; index < tokens.length; index++) {
+    const token = tokens[index];
+    if (token.owner !== block) continue;
+    if (token.raw === '}') break;
+    if ((syntax === 'bicep' && token.raw === '...') ||
+        (syntax === 'hcl' && token.raw === ')' && separators.includes(tokens[index + 1]?.raw))) {
+      return 'expression';
+    }
+  }
+  const index = fieldIndex(tokens, propertiesIndex, 'enableRbacAuthorization', separators);
+  if (index < 0) return block.closed ? 'omitted' : 'unseen';
+  const value = tokens[index]?.raw;
+  const next = tokens[index + 1]?.raw;
+  if (next && /^[?=!&|.(\[]$/.test(next)) return 'expression';
+  if (value === 'true') return true;
+  if (value === 'false') return false;
+  return 'expression';
+}
+
+function declarationFindings(source, operation) {
+  const tokens = tokenize(source);
+  const bicepParents = new Map();
+  const findings = [];
+  for (const [index, token] of tokens.entries()) {
+    if (token.raw !== 'resource' && token.raw !== 'data') continue;
+    const declaration = tokens[index + 1]?.raw || '';
+    const terraformType = quoted(tokens[index + 1]);
+    const right = tokens[index + 3]?.raw;
+    const line = source.slice(0, token.offset).split('\n').length;
+
+    if (terraformType === 'azurerm_key_vault' || terraformType === 'azurerm_key_vault_access_policy') {
+      if (!quoted(tokens[index + 2]) || right !== '{') continue;
+      const finding = apiFinding('iac', 'Terraform AzureRM · line ' + line, '',
+        'Look up the Key Vault management API used by the locked AzureRM provider release or check a sanitized request trace.');
+      findings.push(finding);
+      continue;
+    }
+    if (/^azapi_(?:resource|update_resource|resource_action)$/.test(terraformType)) {
+      if (!quoted(tokens[index + 2]) || right !== '{') continue;
+      const typeIndex = fieldIndex(tokens, index + 3, 'type', ['=']);
+      const [type, version] = quoted(tokens[typeIndex]).split(/@(.*)/s);
+      if (!isVaultType(type)) continue;
+      const bodyIndex = fieldIndex(tokens, index + 3, 'body', ['=']);
+      const objectIndex = tokens[bodyIndex]?.raw === 'jsonencode' && tokens[bodyIndex + 1]?.raw === '(' ?
+        bodyIndex + 2 : bodyIndex;
+      const propertiesIndex = fieldIndex(tokens, objectIndex, 'properties', ['=', ':']);
+      const setting = blockRbac(tokens, propertiesIndex, ['=', ':'], 'hcl');
+      const scope = terraformType === 'azapi_update_resource' ? 'update' : operation;
+      findings.push(apiFinding('iac', 'Terraform AzAPI · line ' + line + ' · ' + type, version,
+        'Resolve and pin the AzAPI resource type suffix to a supported stable management API at or above ' + cutoff + '.',
+        isParentVault(type) && terraformType !== 'azapi_resource_action' && token.raw !== 'data' ? { operation: scope, setting } : null));
+      continue;
+    }
+
+    if (token.raw !== 'resource' || !/^[a-z_]\w*$/i.test(declaration)) continue;
+    const [declared, explicitVersion] = quoted(tokens[index + 2]).split(/@(.*)/s);
+    if (!declared) continue;
+    const parent = bicepParents.get(token.owner);
+    const nested = parent && !declared.includes('.');
+    const type = nested ? parent.type + '/' + declared : declared;
+    const version = explicitVersion ?? (nested ? parent.version : undefined);
+    if (!isVaultType(type)) continue;
+    const existing = right === 'existing';
+    const equalsIndex = index + (existing ? 4 : 3);
+    const blockIndex = tokens[equalsIndex]?.raw === '=' ? equalsIndex + 1 : -1;
+    if (tokens[blockIndex]?.raw === '{') bicepParents.set(tokens[blockIndex], { type, version });
+    const propertiesIndex = fieldIndex(tokens, blockIndex, 'properties', [':']);
+    const setting = existing ? 'reference' : blockRbac(tokens, propertiesIndex, [':'], 'bicep');
+    findings.push(apiFinding('iac', 'Bicep · line ' + line + ' · ' + type, version,
+      'Resolve and pin the Bicep type suffix to a supported stable management API at or above ' + cutoff + '.',
+      isParentVault(type) ? { operation, setting } : null));
+  }
+  return findings;
+}
+
+function snippetFindings(source, operation) {
+  const findings = urlFindings(source);
+  const trimmed = source.trim();
+  if (!trimmed) return findings;
+  // Accept a full JSON document or a pasted list of resource fields.
+  const json = trimmed.startsWith('"') ? '{' + trimmed.replace(/,\s*$/, '') + '}' : trimmed;
+  try {
+    findings.push(...armFindings(JSON.parse(json), operation));
+  } catch (error) {
+    if (!(error instanceof SyntaxError)) throw error;
+    findings.push(...declarationFindings(source, operation));
+    if (/"type"\s*:\s*"Microsoft\.KeyVault\/vaults\b/i.test(source)) {
+      findings.push(apiFinding('iac', 'ARM snippet', '',
+        'Paste valid JSON for the complete resource object or its type, apiVersion and properties fields.'));
+    }
+  }
+  return findings;
+}
+
+const clients = {
+  powershell: { title: 'Az.KeyVault', minimum: '6.6.1' },
+  cli: { title: 'Azure CLI', minimum: '2.90.0' },
+  dotnet: { title: 'Azure.ResourceManager.KeyVault', minimum: '1.4.0' },
+  go: { title: 'Go armkeyvault', minimum: '2.0.0' },
+  python: { title: 'azure-mgmt-keyvault' },
+  java: { title: 'azure-resourcemanager-keyvault' },
+  javascript: { title: '@azure/arm-keyvault' },
+  legacy: { title: 'Other or legacy management package' }
+};
+
+function compareVersions(version, minimum) {
+  const installed = version.split('.').map(Number);
+  const baseline = minimum.split('.').map(Number);
+  for (const [index, part] of baseline.entries()) {
+    if (installed[index] !== part) return installed[index] - part;
+  }
+  return 0;
+}
+
+function clientFinding(client, installed, effective) {
+  if (client === 'data') return dataFinding('Data-plane SDK');
+  const track = clients[client];
+  const title = track?.title || 'Management client';
+  const instruction = 'Verify the management package or tool in your deployment and enter the effective Key Vault api-version from a sanitized request.';
+  if (effective) return apiFinding('client', title, effective, instruction);
+
+  const version = installed.replace(/^v/i, '');
+  const stable = /^\d{1,8}\.\d{1,8}\.\d{1,8}$/.test(version);
+  if (track?.minimum && (stable || (client === 'go' && version === '2'))) {
+    const meetsBaseline = version === '2' || compareVersions(version, track.minimum) >= 0;
+    const baseline = client === 'go' ? 'v2' : track.minimum;
+    return {
+      lane: 'client', title,
+      status: meetsBaseline ? 'pass' : 'action',
+      detail: 'Installed ' + installed + (meetsBaseline ? ' meets' : ' is below') +
+        ' the documented management client baseline (' + baseline + ').',
+      steps: [
+        meetsBaseline ? 'Confirm the management path uses this client in the deployed environment.' :
+          'Update the deployed management client to the documented baseline or later.',
+        'Check the effective request API version, including any explicit overrides, before rollout.'
+      ]
+    };
+  }
+  return {
+    lane: 'client', title, status: 'unknown',
+    detail: track?.minimum ? 'Enter an installed stable version or the effective management API version.' :
+      'A package name or version alone does not establish the API actually used by this client.',
+    steps: ['Check the installed release against Microsoft’s management SDK guidance.', instruction]
+  };
+}
+
+const presets = {
+  legacy: {
+    snippet: "resource vault 'Microsoft.KeyVault/vaults@2023-07-01' = {\n  name: 'example-legacy-vault'\n}"
+  },
+  current: {
+    snippet: "resource vault 'Microsoft.KeyVault/vaults@2026-02-01' = {\n  name: 'example-new-vault'\n  properties: {\n    sku: { family: 'A', name: 'standard' }\n  }\n}",
+    operation: 'create'
+  },
+  data: {
+    snippet: 'GET https://example-vault.vault.azure.net/secrets/example?api-version=7.4'
+  },
+  mixed: {
+    snippet: JSON.stringify({
+      $schema: 'https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#',
+      contentVersion: '1.0.0.0',
+      resources: [
+        { type: vaultType, apiVersion: '2023-07-01', name: 'example-legacy-vault', properties: {} },
+        { type: vaultType, apiVersion: cutoff, name: 'example-current-vault', properties: { enableRbacAuthorization: true } },
+        { type: vaultType, apiVersion: "[parameters('vaultApiVersion')]", name: 'example-unresolved-vault' },
+        { type: 'Microsoft.Storage/storageAccounts', apiVersion: '2023-05-01', name: 'examplestorage' }
+      ]
+    }, null, 2)
+  }
+};
+
+const get = id => document.getElementById(id);
+const form = get('checker-form');
+const snippet = get('snippet');
+const operation = get('vault-operation');
+const client = get('client');
+const clientVersion = get('client-version');
+const effectiveApi = get('effective-api');
+const statusLine = get('status');
+const results = get('results');
+const findingsList = get('findings');
+
+function element(tag, text, className) {
+  const node = document.createElement(tag);
+  if (text) node.textContent = text;
+  if (className) node.className = className;
+  return node;
+}
+
+function renderFinding(finding) {
+  const card = element('article', '', 'finding ' + finding.status);
+  card.append(element('h5', finding.title), element('p', verdicts[finding.status], 'verdict'),
+    element('p', finding.detail));
+  if (finding.rbac) card.append(element('p', finding.rbac));
+  const checklist = element('ol');
+  for (const step of finding.steps) checklist.append(element('li', step));
+  card.append(checklist);
+  return card;
+}
+
+function runCheck() {
+  const source = snippet.value.trim();
+  const installed = clientVersion.value.trim();
+  const effective = effectiveApi.value.trim();
+  const findings = snippetFindings(source, operation.value);
+  if (client.value || installed || effective) findings.push(clientFinding(client.value, installed, effective));
+
+  findingsList.replaceChildren();
+  results.hidden = findings.length === 0;
+  if (findings.length === 0) {
+    statusLine.textContent = source ?
+      'No supported Key Vault references found. Use a sanitized URL, an explicit resource type, or the SDK or CLI check.' :
+      'Paste a sanitized snippet, load an example, or enter SDK or CLI details.';
+    return;
+  }
+  for (const [lane, label] of Object.entries(lanes)) {
+    const group = findings.filter(finding => finding.lane === lane);
+    if (!group.length) continue;
+    const section = element('section');
+    section.append(element('h4', label), ...group.map(renderFinding));
+    findingsList.append(section);
+  }
+  const counts = { action: 0, pass: 0, data: 0, unknown: 0 };
+  for (const finding of findings) counts[finding.status]++;
+  statusLine.textContent = counts.action + ' action required · ' + counts.pass + ' compliant · ' +
+    counts.data + ' data plane · ' + counts.unknown + ' insufficient version info';
+}
+
+form.addEventListener('submit', event => {
+  event.preventDefault();
+  runCheck();
+});
+form.addEventListener('input', () => {
+  results.hidden = true;
+  findingsList.replaceChildren();
+  statusLine.textContent = '';
+});
+for (const button of form.querySelectorAll('[data-preset]')) {
+  button.addEventListener('click', () => {
+    const preset = presets[button.dataset.preset];
+    snippet.value = preset.snippet;
+    operation.value = preset.operation || 'unknown';
+    runCheck();
+  });
+}
+get('clear').addEventListener('click', () => {
+  form.reset();
+  results.hidden = true;
+  findingsList.replaceChildren();
+  statusLine.textContent = '';
+  snippet.focus();
+});
+</script>
+</body>
+</html>
