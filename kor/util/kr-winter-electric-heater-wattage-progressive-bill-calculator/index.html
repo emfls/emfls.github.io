@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://pagead2.googlesyndication.com" crossorigin>
+<link rel="preconnect" href="https://googleads.g.doubleclick.net" crossorigin>
+<meta name="google-adsense-account" content="ca-pub-8830524482034754">
+<title>2026 겨울 전기히터·온풍기 소비전력(W) 누진세 폭탄 판정 &amp; 월 추가 전기요금 계산기</title>
+<meta name="description" content="카본히터·라디에이터·PTC 온풍기를 켜면 전기요금이 얼마나 늘까요? 한전 주택용 저압·고압 요율로 누진 3단계 진입 여부와 도시가스 보조난방 손익분기 시간을 계산하세요.">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#0d1117">
+<link rel="canonical" href="https://emfls.github.io/kor/util/kr-winter-electric-heater-wattage-progressive-bill-calculator/">
+<link rel="icon" href="/favicon.ico" type="image/x-icon">
+<meta property="og:type" content="website">
+<meta property="og:title" content="2026 겨울 전기히터·온풍기 소비전력(W) 누진세 폭탄 판정 &amp; 월 추가 전기요금 계산기">
+<meta property="og:description" content="카본히터·라디에이터·PTC 온풍기를 켜면 전기요금이 얼마나 늘까요? 한전 주택용 저압·고압 요율로 누진 3단계 진입 여부와 도시가스 보조난방 손익분기 시간을 계산하세요.">
+<meta property="og:url" content="https://emfls.github.io/kor/util/kr-winter-electric-heater-wattage-progressive-bill-calculator/">
+<meta property="og:site_name" content="emfls">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2026 겨울 전기히터·온풍기 소비전력(W) 누진세 폭탄 판정 &amp; 월 추가 전기요금 계산기">
+<meta name="twitter:description" content="카본히터·라디에이터·PTC 온풍기를 켜면 전기요금이 얼마나 늘까요? 한전 주택용 저압·고압 요율로 누진 3단계 진입 여부와 도시가스 보조난방 손익분기 시간을 계산하세요.">
+<meta name="twitter:url" content="https://emfls.github.io/kor/util/kr-winter-electric-heater-wattage-progressive-bill-calculator/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "2026 겨울 전기히터·온풍기 소비전력(W) 누진세 폭탄 판정 & 월 추가 전기요금 계산기",
+      "description": "카본히터·라디에이터·PTC 온풍기를 켜면 전기요금이 얼마나 늘까요? 한전 주택용 저압·고압 요율로 누진 3단계 진입 여부와 도시가스 보조난방 손익분기 시간을 계산하세요.",
+      "url": "https://emfls.github.io/kor/util/kr-winter-electric-heater-wattage-progressive-bill-calculator/",
+      "inLanguage": "ko-KR",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "KRW"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "emfls",
+        "url": "https://emfls.github.io/"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "홈",
+          "item": "https://emfls.github.io/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "한국어 도구",
+          "item": "https://emfls.github.io/kor/util/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "겨울 전기난방 요금 계산기",
+          "item": "https://emfls.github.io/kor/util/kr-winter-electric-heater-wattage-progressive-bill-calculator/"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "평소 380kWh를 쓰는 집에서 1,000W 히터를 하루 2시간씩 30일 켜면 어떻게 되나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "히터가 60kWh를 더 써서 월 440kWh가 됩니다. 3단계 기본요금이 적용되고 400kWh를 넘긴 40kWh에 3단계 전력량 단가가 붙습니다."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "아파트에 살면 무조건 주택용 고압을 골라야 하나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "아파트도 계약 방식에 따라 세대에 적용되는 요율이 다릅니다. 관리비 고지서의 전기 요율을 확인하고, 확인이 어려우면 관리사무소에 문의하세요."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "온도 조절로 히터가 중간에 꺼져도 켜 둔 시간을 모두 넣나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "정격 출력이 실제로 들어간 시간을 넣으세요. 2시간 동안 절반만 가열했다면 1시간으로 잡거나, 측정한 평균 소비전력을 넣고 2시간으로 계산하세요."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "도시가스와 비교할 때 어떤 단가를 넣나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "도시가스 고지서의 주택 난방용 사용 단가를 부가세 포함 원/MJ로 넣으세요. 세전 단가가 적혀 있다면 1.1을 곱하세요. 이미 내는 가스 기본료는 비교에서 빼고, 보일러로 같은 열을 얻는 데 드는 가스 사용료만 계산합니다."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9V95B488B2"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag() { window.dataLayer.push(arguments); }
+gtag('js', new Date());
+gtag('config', 'G-9V95B488B2');
+</script>
+<script>
+if (!['127.0.0.1', 'localhost', ''].includes(location.hostname)) {
+  const adScript = document.createElement('script');
+  adScript.async = true;
+  adScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+  adScript.crossOrigin = 'anonymous';
+  document.head.append(adScript);
+}
+</script>
+<style>
+:root{color-scheme:dark;--bg:#0d1117;--surface:#161b22;--field:#0f151e;--border:#30363d;--text:#e6edf3;--muted:#abb6c3;--accent:#79c0ff;--warning:#ffd38c}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:1rem/1.65 system-ui,-apple-system,sans-serif;word-break:keep-all;overflow-wrap:anywhere}
+a{color:var(--accent)}
+.site-header{border-bottom:1px solid var(--border)}
+.header-inner,.shell{width:min(100%,960px);margin-inline:auto;padding-inline:clamp(.75rem,3vw,1.5rem)}
+.header-inner,.header-inner nav,.presets{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem 1rem}
+.header-inner{min-height:3.5rem;justify-content:space-between;padding-block:.55rem}
+.brand{font-weight:800;letter-spacing:.05em;text-decoration:none}
+.breadcrumb,.note,.site-footer{color:var(--muted);font-size:.9rem}
+.breadcrumb{margin-top:1.05rem}
+h1{font-size:clamp(1.65rem,4.2vw,2.55rem);line-height:1.22;margin:.65rem 0 .85rem}
+h2{font-size:1.25rem;line-height:1.38;margin:0 0 .75rem}
+p{margin:.65rem 0}
+.panel{min-width:0;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:clamp(.8rem,3vw,1.45rem);margin-block:1.1rem}
+fieldset{border:0;padding:0;margin:0;min-inline-size:0}
+legend{font-weight:700;margin-bottom:.5rem;padding:0}
+.presets{gap:.55rem;margin-bottom:1.15rem}
+button,input,select{font:inherit;color:inherit;max-width:100%}
+button{min-height:44px;padding:.42rem .7rem;background:#223044;border:1px solid #476282;border-radius:8px;cursor:pointer;text-align:left}
+button:hover{background:#2d415a}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.grid,.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.75rem}
+label{display:block;font-weight:650;margin-bottom:.3rem}
+input,select{width:100%;min-width:0;min-height:44px;border:1px solid #515f70;border-radius:8px;background:var(--field);padding:.45rem .55rem}
+form details{margin-top:1rem}
+details+details{border-top:1px solid var(--border)}
+summary{cursor:pointer;font-weight:700;padding:.55rem 0}
+.cards{grid-template-columns:repeat(3,minmax(0,1fr));margin:0}
+.card{min-width:0;border:1px solid var(--border);border-radius:10px;background:var(--field);padding:.75rem}
+.card dt{color:var(--muted);font-size:.88rem}
+.card dd{margin:0;font-size:clamp(1.25rem,3.4vw,1.8rem);font-weight:800;font-variant-numeric:tabular-nums}
+.card.delta{border-color:#5185b8;color:var(--accent)}
+.status{padding:.65rem .75rem;background:var(--field);border-inline-start:3px solid var(--accent)}
+.status.warn{border-color:var(--warning);color:var(--warning)}
+.table-scroll{max-width:100%;overflow-x:auto;margin-block:.75rem}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+caption{text-align:left;font-weight:700;margin-bottom:.35rem}
+th,td{padding:.45rem .5rem;border-bottom:1px solid var(--border);text-align:right}
+th:first-child,td:first-child{text-align:left}
+.rate-table{min-width:34rem}
+.ad-wrap{min-width:0;max-width:100%;overflow:hidden;margin-block:1.25rem}
+.adsbygoogle{display:block;max-width:100%!important;overflow:hidden}
+.site-footer{padding:1rem 0 2rem}
+.coupang-spec-bridge-cta a{max-width:100%}
+@media(max-width:520px){.grid,.cards{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="header-inner"><a class="brand" href="/">EMFLS</a><nav aria-label="상단 메뉴"><a href="/kor/util/">계산기</a><a href="/kor/report/gov/">정부·세금</a><a href="/">홈</a></nav></div>
+</header>
+<main class="shell" id="main">
+  <nav class="breadcrumb" aria-label="현재 위치"><a href="/">홈</a> › <a href="/kor/util/">한국어 도구</a> › 겨울 전기난방 요금 계산기</nav>
+  <h1>2026 겨울 전기히터·온풍기 소비전력(W) 누진세 폭탄 판정 &amp; 월 추가 전기요금 계산기</h1>
+  <p>지난겨울 고지서에서 평소 월 사용량을 찾아 넣으세요. 히터를 한 대 더 켰을 때 전기요금이 얼마나 오르는지, 월 400kWh를 넘는지 바로 확인할 수 있습니다.</p>
+
+  <div class="ad-wrap" aria-hidden="true"><ins class="adsbygoogle" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins></div>
+
+  <section class="panel" aria-labelledby="input-title">
+    <h2 id="input-title">우리 집 사용량과 난방기 설정</h2>
+    <form id="heater-form">
+      <fieldset>
+        <legend>가동 예시</legend>
+        <div class="presets">
+          <button type="button" data-preset="400,3,30">원룸 6평 · 400W 미니 카본히터</button>
+          <button type="button" data-preset="1000,2,30">침실 4평 · 1,000W 라디에이터</button>
+          <button type="button" data-preset="1500,2,30">거실 12평 · 1,500~2,000W PTC 온풍기</button>
+        </div>
+      </fieldset>
+      <div class="grid">
+        <div><label for="supply">주택용 계약</label><select id="supply"><option value="low">저압</option><option value="high">고압</option></select></div>
+        <div><label for="baseline">평소 월 전기 사용량 (kWh)</label><input id="baseline" type="number" inputmode="decimal" min="0" max="100000" step="any" value="350" required></div>
+        <div><label for="power">난방기 소비전력 (W)</label><input id="power" type="number" inputmode="numeric" min="0" max="100000" step="1" value="1500" required list="power-options" aria-describedby="power-hint"><datalist id="power-options"><option value="400"></option><option value="1000"></option><option value="1500"></option><option value="2000"></option></datalist><p id="power-hint" class="note">거실 예시는 1,500W입니다. 2,000W 모델은 소비전력에서 2,000을 선택하거나 입력하세요.</p></div>
+        <div><label for="hours">하루 가동시간 (시간)</label><input id="hours" type="number" inputmode="decimal" min="0" max="24" step="any" value="2" required></div>
+        <div><label for="days">월 사용일수 (일)</label><input id="days" type="number" inputmode="numeric" min="0" max="31" step="1" value="30" required></div>
+        <div><label for="winter">검침기간 요금 기준</label><select id="winter"><option value="regular">11월 등 기타계절</option><option value="winter">12~2월 동계 · 1,000kWh 초과 특례</option></select></div>
+      </div>
+      <p class="note">원룸·침실·거실 버튼은 소비전력과 가동시간 예시입니다. 방 크기만으로 필요한 출력은 정해지지 않습니다.</p>
+      <details>
+        <summary>도시가스 비교 조건과 기금 요율</summary>
+        <div class="grid">
+          <div><label for="gas-price">도시가스 단가 (원/MJ, 부가세 포함)</label><input id="gas-price" type="number" inputmode="decimal" min="0.01" max="1000" step="any" value="22" required></div>
+          <div><label for="efficiency">보일러 난방 효율 (%)</label><input id="efficiency" type="number" inputmode="decimal" min="1" max="100" step="any" value="90" required></div>
+          <div><label for="fund">전력산업기반기금</label><select id="fund"><option value="27">현행 2.7%</option><option value="37">종전 3.7%로 비교</option></select></div>
+        </div>
+        <p class="note">가스 22원/MJ와 보일러 효율 90%는 예시입니다. 지역 고지서와 보일러 표시값에 맞춰 바꾸세요.</p>
+      </details>
+    </form>
+    <noscript><p>계산하려면 브라우저에서 자바스크립트를 켜 주세요.</p></noscript>
+  </section>
+
+  <section class="panel" aria-labelledby="result-title" aria-live="polite" aria-atomic="true">
+    <h2 id="result-title">예상 월 전기요금</h2>
+    <p id="input-error" class="status warn" hidden></p>
+    <div id="results" hidden>
+      <dl class="cards">
+        <div class="card"><dt>난방기 추가 전</dt><dd id="before">—</dd></div>
+        <div class="card"><dt>난방기 추가 후</dt><dd id="after">—</dd></div>
+        <div class="card delta"><dt>월 순증가 요금</dt><dd id="extra">—</dd></div>
+      </dl>
+      <p class="status" id="tier-status"></p>
+      <p id="gas-result"></p>
+      <p id="break-even"></p>
+    </div>
+  </section>
+
+<section class="coupang-spec-bridge-cta" aria-label="관련 준비물 규격 비교 및 쿠팡 로켓배송 안내" style="margin:2rem auto;max-width:920px;padding:1.35rem 1.5rem;border-radius:14px;border:1px solid #cbd5e1;background:linear-gradient(135deg,#f8fafc 0%,#eff6ff 100%);box-shadow:0 4px 12px rgba(15,23,42,0.05);box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif;word-break:keep-all;overflow-wrap:anywhere;">
+  <p style="margin:0 0 0.45rem;font-size:0.78rem;font-weight:700;color:#475569;">📢 이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</p>
+  <h2 style="margin:0 0 0.5rem;font-size:1.12rem;line-height:1.4;color:#0f172a;">계산된 소비전력(W) 기준 누진 부담 적은 저전력 난방기 비교하기</h2>
+  <p style="margin:0 0 1rem;font-size:0.93rem;line-height:1.6;color:#334155;">정격 소비전력(400W/800W/1,200W 단수 조절), 전도 시 자동 전원 차단, 과열 방지 센서 유무를 쿠팡 로켓배송 스펙표에서 직접 비교해 보세요. <span style="color:#64748b;font-size:0.85rem;">(실시간 가격·재고·로켓배송 여부는 쿠팡 상세 화면에서 최종 확인하세요.)</span></p>
+  <div style="display:flex;flex-wrap:wrap;gap:0.65rem;align-items:center;">
+    <a href="https://link.coupang.com/a/i2rqngXCyi" target="_blank" rel="sponsored noopener noreferrer" style="display:inline-block;padding:0.78rem 1.2rem;border-radius:10px;background:#1d4ed8;color:#ffffff;font-weight:700;font-size:0.92rem;text-decoration:none;">쿠팡 로켓배송 · 저전력 전기히터·온풍기 비교하기 →</a>
+    <a href="https://shopping.guidehollow.com/guides/appliances" target="_blank" rel="noopener" style="display:inline-block;padding:0.75rem 1.05rem;border-radius:10px;background:#ffffff;color:#1e293b;border:1px solid #94a3b8;font-weight:600;font-size:0.88rem;text-decoration:none;">📋 가전 공간·소음 5대 체크 가이드</a>
+  </div>
+</section>
+
+  <section class="panel" id="breakdown" aria-labelledby="breakdown-title">
+    <h2 id="breakdown-title">요금이 늘어난 과정</h2>
+    <ol>
+      <li>소비전력(W)을 1,000으로 나눈 뒤 하루 가동시간과 월 사용일수를 곱합니다. <strong id="usage-formula"></strong></li>
+      <li>가구 사용량에 난방기 사용량을 더합니다. <strong id="total-formula"></strong></li>
+      <li>구간별 사용량에 각 단가를 곱합니다. 기본요금은 월 합계가 속한 구간의 금액을 한 번 더합니다.</li>
+      <li>기후환경요금과 연료비조정요금을 더합니다. 저압은 전기요금계가 1,000원보다 작으면 1,000원을 적용하고, 여기에 부가세와 기금을 붙입니다. 두 청구액의 차이가 월 순증가 요금입니다.</li>
+    </ol>
+    <div class="table-scroll" id="bill-detail" tabindex="0" role="region" aria-label="난방기 사용 전후 요금 상세" hidden>
+      <table>
+        <caption>난방기를 켜기 전과 후의 요금</caption>
+        <thead><tr><th scope="col">항목</th><th scope="col">추가 전</th><th scope="col">추가 후</th></tr></thead>
+        <tbody id="bill-rows"></tbody>
+      </table>
+    </div>
+    <p>전력량요금·기후환경요금·연료비조정요금은 각각 원 미만을 버립니다. 부가세는 원 단위로 반올림하고 기금과 최종 청구액은 각각 10원 미만을 버립니다.</p>
+  </section>
+
+  <section class="panel" aria-labelledby="rates-title">
+    <h2 id="rates-title">한전 주택용 요금표</h2>
+    <div class="table-scroll" tabindex="0" role="region" aria-label="저압과 고압 요금표 가로 스크롤">
+      <table class="rate-table">
+        <caption>겨울·기타계절 주택용 요율</caption>
+        <thead><tr><th scope="col">누진 구간</th><th scope="col">저압 기본요금</th><th scope="col">저압 원/kWh</th><th scope="col">고압 기본요금</th><th scope="col">고압 원/kWh</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">1단계 · 0~200kWh</th><td>910원</td><td>120.0</td><td>730원</td><td>105.0</td></tr>
+          <tr><th scope="row">2단계 · 201~400kWh</th><td>1,600원</td><td>214.6</td><td>1,260원</td><td>174.0</td></tr>
+          <tr><th scope="row">3단계 · 400kWh 초과</th><td>7,300원</td><td>307.3</td><td>6,060원</td><td>242.3</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>12~2월에는 1,000kWh를 넘긴 사용량에 저압 736.2원/kWh, 고압 601.3원/kWh를 적용합니다. 기후환경요금은 9원/kWh, 2026년 4분기 연료비조정단가는 +5원/kWh입니다.</p>
+    <p>부가세는 10%입니다. 전력산업기반기금은 2025년 7월부터 2.7%이며, 설정에서 종전 3.7%도 비교할 수 있습니다.</p>
+    <ul>
+      <li><a href="https://easylaw.go.kr/CSP/common/CnpClsMain.laf?ccfNo=2&amp;cciNo=1&amp;cnpClsNo=1&amp;csmSeq=1008&amp;popMenu=ov">찾기쉬운 생활법령정보 주택용 전력 요금표</a></li>
+      <li><a href="https://www.kepco.co.kr/home/media/newsroom/notice/boardView.do?boardMngNo=14&amp;boardNo=2759">한국전력 2026년 4분기 연료비조정단가</a></li>
+      <li><a href="https://www.law.go.kr/법령/전기사업법시행령/제36조">전기사업법 시행령 제36조 기금 부과기준</a></li>
+    </ul>
+  </section>
+
+  <section class="panel" aria-labelledby="gas-title">
+    <h2 id="gas-title">도시가스 손익분기 시간 읽는 법</h2>
+    <p>전기히터가 사용하는 1kWh를 열 3.6MJ로 보고, 보일러로 그만큼의 열을 내는 데 필요한 가스량을 구합니다. 가스 사용료는 난방기 사용량(kWh) × 3.6 ÷ 보일러 효율(소수) × 가스 단가(원/MJ)로 계산합니다.</p>
+    <p>두 난방비가 같아지거나 누진 기본요금이 오르면서 유불리가 바뀌는 시간을 찾습니다. 손익분기 시간은 입력한 월 사용일수로 나눈 하루 기준이며, 원 단위 절사 전 금액으로 비교한 값입니다.</p>
+    <p class="note"><strong>참고용 계산입니다.</strong> 할인, 관리비의 공용 전기료, TV 수신료, 검침기간 일할 계산은 빠져 있습니다. 연료비조정단가는 2026년 4분기 기준으로 고정했습니다. 도시가스와 전기히터가 집 안을 데우는 범위나 체감 온도는 다를 수 있습니다. 실제 청구액은 고지서에서 확인하세요.</p>
+  </section>
+
+  <div class="ad-wrap" aria-hidden="true"><ins class="adsbygoogle" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins></div>
+
+  <section class="panel" aria-labelledby="faq-title">
+    <h2 id="faq-title">자주 묻는 질문</h2>
+  <details><summary>평소 380kWh를 쓰는 집에서 1,000W 히터를 하루 2시간씩 30일 켜면 어떻게 되나요?</summary><p>히터가 60kWh를 더 써서 월 440kWh가 됩니다. 3단계 기본요금이 적용되고 400kWh를 넘긴 40kWh에 3단계 전력량 단가가 붙습니다.</p></details>
+  <details><summary>아파트에 살면 무조건 주택용 고압을 골라야 하나요?</summary><p>아파트도 계약 방식에 따라 세대에 적용되는 요율이 다릅니다. 관리비 고지서의 전기 요율을 확인하고, 확인이 어려우면 관리사무소에 문의하세요.</p></details>
+  <details><summary>온도 조절로 히터가 중간에 꺼져도 켜 둔 시간을 모두 넣나요?</summary><p>정격 출력이 실제로 들어간 시간을 넣으세요. 2시간 동안 절반만 가열했다면 1시간으로 잡거나, 측정한 평균 소비전력을 넣고 2시간으로 계산하세요.</p></details>
+  <details><summary>도시가스와 비교할 때 어떤 단가를 넣나요?</summary><p>도시가스 고지서의 주택 난방용 사용 단가를 부가세 포함 원/MJ로 넣으세요. 세전 단가가 적혀 있다면 1.1을 곱하세요. 이미 내는 가스 기본료는 비교에서 빼고, 보일러로 같은 열을 얻는 데 드는 가스 사용료만 계산합니다.</p></details>
+  </section>
+
+  <nav class="panel" aria-labelledby="related-title">
+    <h2 id="related-title">함께 볼 계산기</h2>
+    <ul>
+      <li><a href="/kor/util/electricity-bill-progressive-rate-summer-ac-2026/">여름철 전기요금 누진제·에어컨 계산기</a></li>
+      <li><a href="/kor/util/finance-tax-2026/">2026년 세금·생활비 계산기</a></li>
+      <li><a href="/kor/util/">무료 웹 도구·계산기 모음</a></li>
+    </ul>
+  </nav>
+  <footer class="site-footer">© 2026 emfls</footer>
+</main>
+<script>
+'use strict';
+const tariffs = {
+  low: { base: [910, 1600, 7300], energy: [1200, 2146, 3073], superRate: 7362, minimum: 1000 },
+  high: { base: [730, 1260, 6060], energy: [1050, 1740, 2423], superRate: 6013, minimum: 0 }
+};
+const climateRate = 9;
+const fuelRate = 5;
+const get = (id) => document.getElementById(id);
+const write = (id, value) => { get(id).textContent = value; };
+const number = new Intl.NumberFormat('ko-KR', { maximumFractionDigits: 3 });
+const won = (amount) => number.format(Math.round(amount)) + '원';
+const tier = (usage) => usage <= 200 ? 1 : usage <= 400 ? 2 : 3;
+const floor10 = (amount) => Math.floor(amount / 10) * 10;
+// Stabilize arithmetic at won and kWh boundaries to avoid floating-point noise.
+const stable = (value) => Math.round(value * 1e8) / 1e8;
+const floorWon = (value) => Math.floor(stable(value));
+
+function energyCharge(usage, tariff, winter) {
+  const first = Math.min(usage, 200);
+  const second = Math.min(Math.max(usage - 200, 0), 200);
+  const third = Math.max(usage - 400, 0);
+  const superUsage = winter ? Math.max(usage - 1000, 0) : 0;
+  return (first * tariff.energy[0] + second * tariff.energy[1] +
+    (third - superUsage) * tariff.energy[2] + superUsage * tariff.superRate) / 10;
+}
+
+function bill(usage, tariff, winter, fund) {
+  const basic = tariff.base[tier(usage) - 1];
+  const energy = floorWon(energyCharge(usage, tariff, winter));
+  const climate = floorWon(usage * climateRate);
+  const fuel = floorWon(usage * fuelRate);
+  const minimumAdjustment = Math.max(tariff.minimum - basic - energy - climate - fuel, 0);
+  const subtotal = basic + energy + climate + fuel + minimumAdjustment;
+  const vat = Math.round(subtotal / 10);
+  const levy = Math.floor(subtotal * fund / 10000) * 10;
+  const total = floor10(subtotal + vat + levy);
+  return { usage, basic, energy, climate, fuel, minimumAdjustment, subtotal, vat, levy, total };
+}
+
+function breakEven(baseline, dailyKwh, tariff, winter, fund, gasPerKwh) {
+  if (!dailyKwh) return [];
+  const hours = [0, 24];
+  const boundaries = winter ? [200, 400, 1000] : [200, 400];
+  if (tariff.minimum > tariff.base[0]) {
+    boundaries.push((tariff.minimum - tariff.base[0]) / (tariff.energy[0] / 10 + climateRate + fuelRate));
+  }
+  for (const boundary of boundaries) {
+    const time = (boundary - baseline) / dailyKwh;
+    if (time > 0 && time < 24) hours.push(time);
+  }
+  hours.sort((a, b) => a - b);
+  const unroundedBill = (usage, bracket) => Math.max(tariff.minimum, tariff.base[bracket - 1] +
+    energyCharge(usage, tariff, winter) + usage * (climateRate + fuelRate)) * (1.1 + fund / 1000);
+  const base = unroundedBill(baseline, tier(baseline));
+  const gap = (time, bracket) => unroundedBill(baseline + dailyKwh * time, bracket) -
+    base - time * dailyKwh * gasPerKwh;
+  const times = [];
+  const nearlyZero = (value) => Math.abs(value) < 1e-7;
+  let previousGap = 0;
+  for (let i = 1; i < hours.length; i++) {
+    const start = hours[i - 1];
+    const end = hours[i];
+    const bracket = tier(baseline + dailyKwh * (start + end) / 2);
+    const startGap = gap(start, bracket);
+    const endGap = gap(end, bracket);
+    if (nearlyZero(startGap) && nearlyZero(endGap)) {
+      times.push({ from: start, to: end });
+    } else if (start > 0 && previousGap * startGap < 0 && !nearlyZero(previousGap) && !nearlyZero(startGap)) {
+      times.push({ at: start, jump: true });
+    }
+    if (startGap * endGap < 0 && !nearlyZero(startGap) && !nearlyZero(endGap)) {
+      times.push({ at: start - startGap * (end - start) / (endGap - startGap), jump: false });
+    } else if (nearlyZero(endGap) && !nearlyZero(startGap)) {
+      times.push({ at: end, jump: false });
+    }
+    previousGap = endGap;
+  }
+  return times;
+}
+
+function showBreakdown(before, after, fund) {
+  const fields = [
+    ['usage', '월 사용량', (amount) => number.format(amount) + 'kWh'],
+    ['basic', '기본요금', won],
+    ['energy', '전력량요금', won],
+    ['climate', '기후환경요금', won],
+    ['fuel', '연료비조정요금', won],
+    ['minimumAdjustment', '저압 최저요금 보정', won],
+    ['subtotal', '전기요금계', won],
+    ['vat', '부가세 10%', won],
+    ['levy', '기금 ' + fund / 10 + '%', won],
+    ['total', '최종 청구액', won]
+  ];
+  const rows = document.createDocumentFragment();
+  for (const [key, label, format] of fields) {
+    const row = document.createElement('tr');
+    const header = document.createElement('th');
+    header.scope = 'row';
+    header.textContent = label;
+    row.append(header);
+    for (const amount of [before[key], after[key]]) {
+      const cell = document.createElement('td');
+      cell.textContent = format(amount);
+      row.append(cell);
+    }
+    rows.append(row);
+  }
+  get('bill-rows').replaceChildren(rows);
+}
+
+const form = get('heater-form');
+const result = get('results');
+const detail = get('bill-detail');
+const error = get('input-error');
+const dailyTime = (hours) => {
+  const minutes = Math.round(hours * 60);
+  return minutes === 0 && hours > 0 ? '1분 미만' : Math.floor(minutes / 60) + '시간 ' + minutes % 60 + '분';
+};
+
+function render() {
+  const invalid = [...form.querySelectorAll('input')].find((input) => !input.validity.valid);
+  if (invalid) {
+    result.hidden = true;
+    detail.hidden = true;
+    write('usage-formula', '');
+    write('total-formula', '');
+    error.hidden = false;
+    error.textContent = invalid.labels[0].textContent + ' 입력값을 확인해 주세요. 허용 범위는 ' +
+      invalid.min + '~' + invalid.max + '입니다' + (invalid.step === '1' ? ' (정수만 입력).' : '.');
+    return;
+  }
+
+  error.hidden = true;
+  result.hidden = false;
+  detail.hidden = false;
+  const [rawBaseline, power, hours, days, gasPrice, efficiency] =
+    ['baseline', 'power', 'hours', 'days', 'gas-price', 'efficiency'].map((id) => get(id).valueAsNumber);
+  const baseline = stable(rawBaseline);
+  const tariff = tariffs[get('supply').value];
+  const winter = get('winter').value === 'winter';
+  const fund = Number(get('fund').value);
+  const monthlyKwhPerDailyHour = power * days / 1000;
+  const added = stable(monthlyKwhPerDailyHour * hours);
+  const total = stable(baseline + added);
+  const before = bill(baseline, tariff, winter, fund);
+  const after = bill(total, tariff, winter, fund);
+  const extra = after.total - before.total;
+  write('before', won(before.total));
+  write('after', won(after.total));
+  write('extra', '+' + won(extra));
+
+  const status = get('tier-status');
+  status.classList.toggle('warn', tier(total) === 3);
+  if (tier(total) < 3) {
+    status.textContent = '누진 3단계 미진입 · ' + tier(before.usage) + '단계 → ' + tier(total) +
+      '단계. 400kWh까지 ' + number.format(400 - total) + 'kWh 남았습니다.';
+  } else if (tier(before.usage) < 3) {
+    status.textContent = '누진 3단계 진입 · 월 400kWh를 넘겨 기본요금이 ' +
+      won(after.basic - before.basic) + ' 오르고, 초과분에 3단계 단가가 붙습니다.';
+  } else {
+    status.textContent = '누진 3단계 유지 · 평소에도 월 400kWh를 넘는 가구입니다.';
+  }
+  if (winter && total > 1000) status.textContent += ' 1,000kWh 초과분에는 동계 슈퍼유저 단가가 붙습니다.';
+
+  const gasPerKwh = 3.6 * gasPrice / (efficiency / 100);
+  const gasCost = added * gasPerKwh;
+  const difference = Math.round(extra - gasCost);
+  let comparison = ' 전기 추가요금과 거의 같습니다.';
+  if (difference > 0) comparison = ' 도시가스가 약 ' + won(difference) + ' 적게 듭니다.';
+  if (difference < 0) comparison = ' 전기가 약 ' + won(-difference) + ' 적게 듭니다.';
+  write('gas-result', '같은 열을 내는 도시가스 사용료는 월 약 ' + won(gasCost) + '입니다.' + comparison);
+
+  const crossings = breakEven(baseline, monthlyKwhPerDailyHour, tariff, winter, fund, gasPerKwh);
+  const descriptions = crossings.map((point) => point.from !== undefined
+    ? dailyTime(point.from) + '~' + dailyTime(point.to) + ' 구간에서 동일'
+    : '약 ' + dailyTime(point.at) + (point.jump ? ' 직후에 역전' : '에 동일'));
+  let crossingText = '하루 24시간 안에 도시가스와의 손익분기점이 없습니다.';
+  if (!monthlyKwhPerDailyHour) crossingText = '손익분기 시간을 보려면 소비전력과 월 사용일수를 입력하세요.';
+  else if (descriptions.length) crossingText = '도시가스 손익분기 · 하루 ' + descriptions.join(' · ') + '.';
+  write('break-even', crossingText);
+  write('usage-formula', number.format(power) + 'W ÷ 1,000 × ' + number.format(hours) + '시간 × ' +
+    number.format(days) + '일 = ' + number.format(added) + 'kWh.');
+  write('total-formula', number.format(baseline) + ' + ' + number.format(added) + ' = ' + number.format(total) + 'kWh.');
+  showBreakdown(before, after, fund);
+}
+
+form.addEventListener('submit', (event) => event.preventDefault());
+form.addEventListener('input', render);
+form.addEventListener('change', render);
+for (const button of form.querySelectorAll('[data-preset]')) {
+  button.addEventListener('click', () => {
+    const values = button.dataset.preset.split(',');
+    ['power', 'hours', 'days'].forEach((id, index) => { get(id).value = values[index]; });
+    render();
+  });
+}
+render();
+if (!['127.0.0.1', 'localhost', ''].includes(location.hostname)) {
+  for (const unit of document.querySelectorAll('.adsbygoogle')) {
+    if (!unit.dataset.adsbygoogleStatus) (window.adsbygoogle = window.adsbygoogle || []).push({});
+  }
+}
+</script>
+</body>
+</html>
