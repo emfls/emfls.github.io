@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AWS Pricing Calculator API GetUsageLinesEstimatedCost (500-Line &amp; RateType) Preflight Checker</title>
+<meta name="description" content="Validate AWS Pricing Calculator JSON locally. Check the 500-line limit, rateType, required billing fields, and GovCloud or China region exclusions.">
+<link rel="canonical" href="https://emfls.github.io/util/aws-bcm-pricing-calculator-api-500-lines-preflight-checker/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AWS Pricing Calculator API Preflight Checker">
+<meta property="og:description" content="Check a GetUsageLinesEstimatedCost payload before sending it to AWS.">
+<meta property="og:url" content="https://emfls.github.io/util/aws-bcm-pricing-calculator-api-500-lines-preflight-checker/">
+<meta name="twitter:card" content="summary">
+<link rel="stylesheet" href="../new-tools.css">
+<meta name="google-adsense-account" content="ca-pub-8830524482034754">
+<script>
+const hostname = location.hostname.replace(/\.$/, '').toLowerCase();
+const onlineHost = hostname && hostname !== 'localhost' && !hostname.endsWith('.localhost') &&
+  !/^127(?:\.\d{1,3}){3}$/.test(hostname) && hostname !== '[::1]' && !/^\[::ffff:7f[\da-f]{2}:[\da-f]{1,4}\]$/.test(hostname);
+if (onlineHost) {
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function () { window.dataLayer.push(arguments); };
+  window.gtag('js', new Date());
+  window.gtag('config', 'G-9V95B488B2');
+  const analytics = document.createElement('script');
+  analytics.async = true;
+  analytics.src = 'https://www.googletagmanager.com/gtag/js?id=G-9V95B488B2';
+  document.head.append(analytics);
+  const ads = document.createElement('script');
+  ads.async = true;
+  ads.crossOrigin = 'anonymous';
+  ads.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8830524482034754';
+  document.head.append(ads);
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "AWS Pricing Calculator API GetUsageLinesEstimatedCost (500-Line & RateType) Preflight Checker",
+      "url": "https://emfls.github.io/util/aws-bcm-pricing-calculator-api-500-lines-preflight-checker/",
+      "description": "Validate the line count, rate type, region and required fields of an AWS Pricing Calculator request in your browser.",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {"@type": "ListItem", "position": 1, "name": "EMFLS", "item": "https://emfls.github.io/"},
+        {"@type": "ListItem", "position": 2, "name": "Tools", "item": "https://emfls.github.io/util/"},
+        {"@type": "ListItem", "position": 3, "name": "AWS Pricing Calculator API Preflight Checker", "item": "https://emfls.github.io/util/aws-bcm-pricing-calculator-api-500-lines-preflight-checker/"}
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can GetUsageLinesEstimatedCost accept 501 usage lines?",
+          "acceptedAnswer": {"@type": "Answer", "text": "The API accepts 1 to 500 usage lines per request. Split 501 lines into two requests of 500 and 1, keep the same rate type, and reconcile priced lines and errors by key."}
+        },
+        {
+          "@type": "Question",
+          "name": "Which rateType values does the API accept?",
+          "acceptedAnswer": {"@type": "Answer", "text": "BEFORE_DISCOUNTS uses public On-Demand rates. AFTER_DISCOUNTS applies account discounts. AFTER_DISCOUNTS_AND_COMMITMENTS also applies Savings Plans and Reserved Instances. Your account preferences limit available modes. Billing transfer bill source accounts can use only BEFORE_DISCOUNTS."}
+        },
+        {
+          "@type": "Question",
+          "name": "Does the API support AWS GovCloud (US) or AWS China?",
+          "acceptedAnswer": {"@type": "Answer", "text": "AWS excludes GovCloud (US) and China from the launch. The checker flags us-gov-* and cn-* region codes. AWS documents the Pricing Calculator API endpoint in us-east-1."}
+        },
+        {
+          "@type": "Question",
+          "name": "Does this call cost money or save an estimate to my account?",
+          "acceptedAnswer": {"@type": "Answer", "text": "AWS charges $0 for the API call and returns an estimate without saving it to your account. Actual resource usage is billed at applicable rates. The estimate excludes taxes."}
+        }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+  .tool-nav { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 20px; margin-bottom: 14px; }
+  .tool-nav a { color: #e2e8f0; }
+  .tool-nav .logo { color: #fff; font-size: 1.25rem; font-weight: 800; text-decoration: none; }
+  .tool-nav .logo span { color: #60a5fa; }
+  .panel, .hero { overflow-wrap: anywhere; }
+  .privacy { border-inline-start: 4px solid #b45309; padding-inline-start: 12px; }
+  .input-block { margin-top: 16px; }
+  .input-block .note { margin: 4px 0 8px; }
+  textarea { display: block; min-width: 0; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+  .result { white-space: normal; }
+  .result h3 { margin: 0 0 12px; }
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr)); gap: 8px; margin: 0 0 14px; }
+  .summary-grid > div { min-width: 0; background: #fff; border-radius: 8px; padding: 8px 10px; }
+  .summary-grid dt { font-size: .85rem; color: #526075; }
+  .summary-grid dd { margin: 2px 0 0; font-weight: 800; }
+  [data-state="Pass"] { color: #166534; }
+  [data-state="Fix"] { color: #991b1b; }
+  .breakdown { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: .93rem; }
+  .breakdown th, .breakdown td { padding: 8px 4px; border-bottom: 1px solid #b8c3d5; vertical-align: top; text-align: left; overflow-wrap: anywhere; }
+  .breakdown th:first-child { width: 26%; }
+  .breakdown th:nth-child(2) { width: 20%; }
+  .breakdown td:nth-child(2) { font-weight: 700; }
+  .line-errors { padding-inline-start: 1.2rem; }
+  .emfls-ad-slot { width: 100%; max-width: 520px; min-height: 278px; margin: 36px auto; text-align: center; }
+  .ad-label { height: 28px; font: 12px/20px system-ui,sans-serif; color: #cbd5e1; }
+  .emfls-ad-slot ins { width: 100%; }
+</style>
+</head>
+<body>
+<main class="tool-shell">
+  <nav class="tool-nav" aria-label="Site navigation">
+    <a class="logo" href="/" aria-label="EMFLS home">emfls<span>.</span></a>
+    <a href="/util/">All tools</a>
+  </nav>
+
+  <header class="hero">
+    <h1>AWS Pricing Calculator API GetUsageLinesEstimatedCost (500-Line &amp; RateType) Preflight Checker</h1>
+    <p>Check a planned AWS workload request before you send it. AWS made this on-demand estimate operation generally available on November 20, 2026.</p>
+  </header>
+
+  <section class="panel" aria-labelledby="checker-title">
+    <h2 id="checker-title">Validate a request</h2>
+    <p class="privacy"><strong>NEVER paste AWS credentials, access keys, secret keys, session tokens, or signed headers.</strong> Use a sanitized sample. The checker processes the JSON entirely in your browser and works offline once loaded. Online ads and analytics load separately from the validation logic.</p>
+    <noscript><p>Enable JavaScript to validate the request in your browser.</p></noscript>
+    <div class="actions" role="group" aria-label="Load an example">
+      <button class="secondary" type="button" data-preset="valid">Valid request</button>
+      <button class="secondary" type="button" data-preset="limit">500 lines</button>
+      <button class="secondary" type="button" data-preset="over">501 lines</button>
+      <button class="secondary" type="button" data-preset="gov">GovCloud</button>
+      <button class="secondary" type="button" data-preset="china">China</button>
+      <button class="secondary" type="button" data-preset="invalid">Invalid rate and fields</button>
+    </div>
+
+    <form id="checker-form" autocomplete="off">
+      <div class="input-block">
+        <label for="payload">Request JSON</label>
+        <p class="note" id="payload-help">Paste the JSON object, such as the value of <code>--cli-input-json</code>. Use <code>usage</code> or the checker alias <code>usageLines</code>, plus <code>rateType</code>. You can include <code>region</code> as preflight metadata.</p>
+        <textarea id="payload" rows="10" spellcheck="false" autocapitalize="off" aria-describedby="payload-help" placeholder='{"usageLines":[],"rateType":"BEFORE_DISCOUNTS","region":"us-east-1"}'></textarea>
+      </div>
+      <div class="input-block">
+        <label for="region">AWS region when omitted from JSON</label>
+        <p class="note" id="region-help">For CLI JSON, enter the region you plan to pass with <code>--region</code>. A <code>region</code> property in the pasted object takes precedence.</p>
+        <input id="region" type="text" spellcheck="false" autocapitalize="off" aria-describedby="region-help" placeholder="us-east-1">
+      </div>
+      <div class="actions input-block">
+        <button type="submit">Validate request</button>
+        <button type="button" class="secondary" id="clear">Clear</button>
+      </div>
+    </form>
+
+    <p id="status" class="note" role="status">Paste a request or load an example.</p>
+    <section class="result" id="results" aria-labelledby="results-title" hidden>
+      <h3 id="results-title">Preflight breakdown</h3>
+      <dl class="summary-grid" id="summary"></dl>
+      <table class="breakdown" aria-labelledby="results-title">
+        <thead><tr><th scope="col">Check</th><th scope="col">Status</th><th scope="col">Finding</th></tr></thead>
+        <tbody id="breakdown"></tbody>
+      </table>
+      <details id="line-details" hidden>
+        <summary id="line-heading">Line-item findings</summary>
+        <ul class="line-errors" id="line-errors"></ul>
+      </details>
+    </section>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (onlineHost) { (window.adsbygoogle = window.adsbygoogle || []).push({}); } else { document.currentScript.parentElement.hidden = true; }</script>
+  </aside>
+
+  <section class="panel" aria-labelledby="examples-title">
+    <h2 id="examples-title">Worked examples</h2>
+    <ol>
+      <li><strong>One EC2 usage line.</strong> Load <em>Valid request</em> to check a sample with service code <code>AmazonEC2</code>, usage type <code>BoxUsage:t3.micro</code>, operation <code>RunInstances</code>, key <code>ec2a</code>, and an amount of 24 in the usage type’s pricing unit. With <code>BEFORE_DISCOUNTS</code>, AWS would use public On-Demand rates if it can price that tuple. For the CLI, rename <code>usageLines</code> to <code>usage</code> and pass <code>region</code> separately as <code>--region us-east-1</code>.</li>
+      <li><strong>501 usage lines.</strong> The request exceeds the limit by one. Send two requests of 500 and 1 under the same rate mode. Preserve unique keys across the original input, collect each response and reconcile <code>lineItems</code> and <code>errors</code> by key. Each response’s <code>totalCost</code> covers its priced lines only.</li>
+    </ol>
+  </section>
+
+  <section class="panel" aria-labelledby="scope-title">
+    <h2 id="scope-title">Scope and billing</h2>
+    <p>A pass covers request structure, field constraints, and the GovCloud and China exclusions. Check your IAM permission for <code>bcm-pricing-calculator:GetUsageLinesEstimatedCost</code>, account rate preferences, actual endpoint, and billable usage tuple before relying on a live result. The preflight returns no prices. <a href="https://docs.aws.amazon.com/cli/latest/reference/bcm-pricing-calculator/get-usage-lines-estimated-cost.html">AWS CLI operation reference</a> · <a href="https://docs.aws.amazon.com/service-authorization/latest/reference/list_bcm-pricing-calculator.html">AWS IAM action reference</a></p>
+    <p>The operation is stateless for estimates. AWS returns the result without saving an estimate to your account and charges no additional API fee. Actual AWS resources incur normal service charges. The usage estimate excludes taxes. <a href="https://aws.amazon.com/about-aws/whats-new/2026/11/aws-pricing-calculator-api/">AWS November 20, 2026 launch announcement</a> · <a href="https://aws.amazon.com/agreement/app/">AWS Customer Agreement §§ 3.1–3.2</a></p>
+    <p>AWS defines the request limits and rate modes. Separate tax law applies to actual purchases. For example, Washington’s retail sales tax can apply to eligible digital services sold at retail and sourced to the state. The checker does not determine taxability or sourcing. <a href="https://app.leg.wa.gov/rcw/default.aspx?cite=82.08.020">RCW 82.08.020(1)(b)</a> · <a href="https://app.leg.wa.gov/rcw/default.aspx?cite=82.32.730">RCW 82.32.730</a></p>
+    <p>Check the AWS service reference for endpoint configuration. The local region check screens region syntax and exclusions. <a href="https://docs.aws.amazon.com/aws-cost-management/latest/APIReference/Welcome.html">AWS Billing and Cost Management endpoints</a></p>
+  </section>
+
+  <section class="panel faq" aria-labelledby="faq-title">
+    <h2 id="faq-title">Frequently asked questions</h2>
+    <details>
+      <summary>Can GetUsageLinesEstimatedCost accept 501 usage lines?</summary>
+      <p>The API accepts 1 to 500 usage lines per request. Split 501 lines into two requests of 500 and 1, keep the same rate type, and reconcile priced lines and errors by key.</p>
+    </details>
+    <details>
+      <summary>Which rateType values does the API accept?</summary>
+      <p>BEFORE_DISCOUNTS uses public On-Demand rates. AFTER_DISCOUNTS applies account discounts. AFTER_DISCOUNTS_AND_COMMITMENTS also applies Savings Plans and Reserved Instances. Your account preferences limit available modes. Billing transfer bill source accounts can use only BEFORE_DISCOUNTS.</p>
+    </details>
+    <details>
+      <summary>Does the API support AWS GovCloud (US) or AWS China?</summary>
+      <p>AWS excludes GovCloud (US) and China from the launch. The checker flags us-gov-* and cn-* region codes. AWS documents the Pricing Calculator API endpoint in us-east-1.</p>
+    </details>
+    <details>
+      <summary>Does this call cost money or save an estimate to my account?</summary>
+      <p>AWS charges $0 for the API call and returns an estimate without saving it to your account. Actual resource usage is billed at applicable rates. The estimate excludes taxes.</p>
+    </details>
+  </section>
+
+  <aside class="emfls-ad-slot" aria-label="Advertisement">
+    <div class="ad-label">Advertisement</div>
+    <ins class="adsbygoogle" style="display:block;min-height:250px" data-ad-client="ca-pub-8830524482034754" data-ad-slot="6016035748" data-ad-format="auto" data-full-width-responsive="true"></ins>
+    <script>if (onlineHost) { (window.adsbygoogle = window.adsbygoogle || []).push({}); } else { document.currentScript.parentElement.hidden = true; }</script>
+  </aside>
+
+  <section class="panel" aria-labelledby="related-title">
+    <h2 id="related-title">Related EMFLS tools</h2>
+    <div class="links">
+      <a href="/util/aws-organizations-credit-group-vs-ri-savings-plans-sharing-calculator/">AWS Organizations credits and commitment sharing calculator</a>
+      <a href="/util/azure-key-vault-management-api-retirement-arm-bicep-sdk-checker/">Azure Key Vault management API retirement checker</a>
+      <a href="/util/bigquery-storage-api-v1beta1-deprecation-v1-migration-checker/">BigQuery Storage API migration checker</a>
+    </div>
+  </section>
+</main>
+<footer>AWS Pricing Calculator API preflight · emfls.github.io</footer>
+<script id="checker-script">
+(() => {
+  'use strict';
+
+  const limit = 500;
+  const rateModes = new Map([
+    ['BEFORE_DISCOUNTS', 'Public On-Demand rates.'],
+    ['AFTER_DISCOUNTS', 'Rates after eligible account discounts.'],
+    ['AFTER_DISCOUNTS_AND_COMMITMENTS', 'Rates after discounts and eligible Savings Plans or Reserved Instances.']
+  ]);
+  const billingText = /^[-a-zA-Z0-9._:, /()]*$/;
+  const keyText = /^[a-zA-Z0-9]*$/;
+  const stringFields = [
+    ['serviceCode', 32, billingText],
+    ['usageType', 128, billingText],
+    ['operation', 32, billingText],
+    ['key', 10, keyText]
+  ];
+  const isObject = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+  const pass = 'Pass';
+  const fix = 'Fix';
+
+  function validateLines(lines) {
+    const keys = new Map();
+    const findings = [];
+    lines.forEach((line, index) => {
+      const position = index + 1;
+      if (!isObject(line)) {
+        findings.push(`Line ${position} — use a JSON object.`);
+        return;
+      }
+
+      const errors = [];
+      for (const [field, maxLength, pattern] of stringFields) {
+        const value = line[field];
+        if (!Object.hasOwn(line, field)) {
+          errors.push(`add ${field}`);
+        } else if (typeof value !== 'string' || value.length > maxLength || !pattern.test(value)) {
+          errors.push(`${field} must be a string of up to ${maxLength} permitted characters`);
+        } else if (field === 'key') {
+          if (keys.has(value)) {
+            errors.push(`key duplicates line ${keys.get(value)}`);
+          } else {
+            keys.set(value, position);
+          }
+        }
+      }
+      if (!Number.isFinite(line.amount) || line.amount < 0) {
+        errors.push('amount must be a finite JSON number of 0 or greater');
+      }
+      if (errors.length) findings.push(`Line ${position} — ${errors.join(', ')}.`);
+    });
+    return findings;
+  }
+
+  function checkRequest(request, fallbackRegion) {
+    const checks = [];
+    const add = (label, state, finding, summary = state) => checks.push({ label, state, finding, summary });
+    const hasBothArrays = Object.hasOwn(request, 'usageLines') && Object.hasOwn(request, 'usage');
+    const lines = Object.hasOwn(request, 'usageLines') ? request.usageLines : request.usage;
+    let lineErrors = [];
+    if (hasBothArrays || !Array.isArray(lines)) {
+      add('Usage count', fix, hasBothArrays
+        ? 'Supply one array. AWS expects usage. This checker also accepts usageLines.'
+        : 'Add a JSON array named usage or usageLines.');
+    } else if (lines.length > limit) {
+      const batches = Math.ceil(lines.length / limit);
+      const lastBatch = lines.length % limit || limit;
+      add('Usage count', fix,
+        `Split into ${batches} requests of at most 500 lines. The final batch has ${lastBatch} line(s) when earlier batches are full. Keep the same rateType and reconcile results by key.`,
+        `${lines.length} / 500`);
+    } else if (lines.length === 0) {
+      add('Usage count', fix, 'Add at least one usage line.', '0 / 500');
+    } else {
+      add('Usage count', pass, 'The line count is within the 1–500 request limit.', `${lines.length} / 500`);
+    }
+
+    const mode = rateModes.get(request.rateType);
+    if (mode) {
+      add('Rate type', pass, `${mode} Available modes depend on AWS account preferences.`, request.rateType);
+    } else {
+      add('Rate type', fix, `Set rateType to ${[...rateModes.keys()].join(', ')}. Use the exact spelling and case.`);
+    }
+
+    const rawRegion = Object.hasOwn(request, 'region') ? request.region : fallbackRegion;
+    const region = typeof rawRegion === 'string' ? rawRegion.trim() : '';
+    if (/^us-gov-/i.test(region)) {
+      add('Partition', fix, 'AWS GovCloud (US) is unsupported for this operation.', 'Unsupported');
+    } else if (/^cn-/i.test(region)) {
+      add('Partition', fix, 'AWS China is unsupported for this operation.', 'Unsupported');
+    } else if (!/^[a-z]{2}(?:-[a-z]+)+-[1-9][0-9]*$/.test(region)) {
+      add('Partition', fix, 'Enter a lowercase AWS region code such as us-east-1.');
+    } else {
+      add('Partition', pass, 'The region code is outside the two excluded prefixes. Verify the actual AWS endpoint separately.', 'Prefix clear');
+    }
+
+    if (hasBothArrays || !Array.isArray(lines) || !lines.length) {
+      add('Line schema', 'Pending', 'Supply one nonempty usage array to check line fields.');
+    } else {
+      lineErrors = validateLines(lines);
+      if (lineErrors.length) {
+        add('Line schema', fix, 'Review the numbered findings below. Each line requires serviceCode, usageType, operation, key and amount.',
+          `${lineErrors.length} invalid`);
+      } else {
+        add('Line schema', pass, 'Required fields, documented formats, nonnegative amounts and unique keys pass.');
+      }
+    }
+
+    return { checks, lineErrors };
+  }
+
+  const payload = document.getElementById('payload');
+  const regionInput = document.getElementById('region');
+  const status = document.getElementById('status');
+  const results = document.getElementById('results');
+  const summary = document.getElementById('summary');
+  const breakdown = document.getElementById('breakdown');
+  const lineDetails = document.getElementById('line-details');
+  const lineHeading = document.getElementById('line-heading');
+  const lineList = document.getElementById('line-errors');
+
+  function node(tag, content) {
+    const element = document.createElement(tag);
+    element.textContent = content;
+    return element;
+  }
+
+  function setStatus(message) {
+    if (status.textContent !== message) status.textContent = message;
+  }
+
+  function render() {
+    results.hidden = true;
+    const input = payload.value.trim();
+    if (!input) {
+      setStatus('Paste a request or load an example.');
+      return;
+    }
+    let request;
+    try {
+      request = JSON.parse(input);
+    } catch {
+      setStatus('Invalid JSON. Paste a single JSON object with quoted property names and no trailing commas.');
+      return;
+    }
+    if (!isObject(request)) {
+      setStatus('Expected one JSON request object.');
+      return;
+    }
+
+    const { checks, lineErrors } = checkRequest(request, regionInput.value);
+    summary.replaceChildren();
+    breakdown.replaceChildren();
+    for (const check of checks) {
+      const card = node('div', '');
+      const value = node('dd', check.summary);
+      value.dataset.state = check.state;
+      card.append(node('dt', check.label), value);
+      summary.append(card);
+
+      const row = node('tr', '');
+      const label = node('th', check.label);
+      label.scope = 'row';
+      const verdict = node('td', check.state);
+      verdict.dataset.state = check.state;
+      row.append(label, verdict, node('td', check.finding));
+      breakdown.append(row);
+    }
+    lineDetails.hidden = !lineErrors.length;
+    lineHeading.textContent = `Line-item findings (${lineErrors.length})`;
+    lineList.replaceChildren(...lineErrors.slice(0, 100).map(error => node('li', error)));
+    if (lineErrors.length > 100) {
+      lineList.append(node('li', `${lineErrors.length - 100} additional invalid lines. Fix the first 100 and recheck.`));
+    }
+    results.hidden = false;
+    const failures = checks.filter(check => check.state === fix).length;
+    setStatus(failures ? `Preflight found ${failures} ${failures === 1 ? 'check' : 'checks'} to fix.` : 'All four local preflight checks passed.');
+  }
+
+  function loadPreset(name) {
+    const line = { serviceCode: 'AmazonEC2', usageType: 'BoxUsage:t3.micro', operation: 'RunInstances', key: 'ec2a', amount: 24 };
+    const request = { usageLines: [line], rateType: 'BEFORE_DISCOUNTS', region: 'us-east-1' };
+    if (name === 'limit' || name === 'over') {
+      const length = name === 'limit' ? limit : limit + 1;
+      request.usageLines = Array.from({ length }, (_, index) => ({ ...line, key: `ec2${index + 1}` }));
+    } else if (name === 'gov') {
+      request.region = 'us-gov-west-1';
+    } else if (name === 'china') {
+      request.region = 'cn-north-1';
+    } else if (name === 'invalid') {
+      request.rateType = 'ON_DEMAND';
+      delete line.operation;
+      line.amount = '24';
+    }
+    regionInput.value = '';
+    payload.value = JSON.stringify(request, null, 2);
+    payload.scrollTop = 0;
+    render();
+  }
+
+  document.querySelectorAll('[data-preset]').forEach(button => {
+    button.addEventListener('click', () => loadPreset(button.dataset.preset));
+  });
+  payload.addEventListener('input', render);
+  regionInput.addEventListener('input', render);
+  document.getElementById('checker-form').addEventListener('submit', event => {
+    event.preventDefault();
+    render();
+  });
+  document.getElementById('clear').addEventListener('click', () => {
+    payload.value = '';
+    regionInput.value = '';
+    lineDetails.open = false;
+    render();
+    payload.focus();
+  });
+  render();
+})();
+</script>
+</body>
+</html>
